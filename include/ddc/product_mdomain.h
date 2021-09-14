@@ -3,11 +3,11 @@
 #include <cstdint>
 #include <tuple>
 
-#include "mcoord.h"
-#include "mdomain.h"
-#include "mesh.h"
-#include "rcoord.h"
-#include "taggedtuple.h"
+#include "ddc/mcoord.h"
+#include "ddc/mdomain.h"
+#include "ddc/mesh.h"
+#include "ddc/rcoord.h"
+#include "ddc/taggedtuple.h"
 
 template <class... Meshes>
 class ProductMDomain;

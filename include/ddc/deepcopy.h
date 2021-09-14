@@ -1,6 +1,6 @@
 #pragma once
 
-#include "block_span.h"
+#include "ddc/block_span.h"
 
 namespace detail {
 template <class... Meshes, class ElementType, class Layout, class Functor, class... MCoords>

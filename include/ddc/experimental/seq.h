@@ -3,13 +3,13 @@
 #include <memory>
 #include <vector>
 
-#include "view.h"
+#include <experimental/mdspan>
 
 template <class ElementType>
-using SeqSpan = View1D<ElementType>;
+using SeqSpan = std::experimental::mdspan<ElementType, std::experimental::dextents<1>>
 
-template <class ElementType>
-class Seq
+        template <class ElementType>
+        class Seq
 {
 public:
     using value_type = ElementType;

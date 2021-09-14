@@ -3,9 +3,9 @@
 #include <cstddef>
 #include <utility>
 
-#include "taggedvector.h"
-
 #include <experimental/mdspan>
+
+#include "ddc/taggedvector.h"
 
 using MCoordElement = std::size_t;
 

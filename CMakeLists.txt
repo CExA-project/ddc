@@ -4,14 +4,21 @@ project(DDC VERSION 0.0.0 LANGUAGES CXX)
 
 # List of options
 option(BUILD_BENCHMARKS    "Build the benchmarks." OFF)
-option(BUILD_DOCUMENTATION "Build documentation"   ON)
+option(BUILD_DOCUMENTATION "Build the documentation" ON)
 
 
 # Dependencies
 
+# External dependencies
+find_package(PDI REQUIRED COMPONENTS C)
+
+# Embedded dependencies
+add_subdirectory(vendor/mdspan/ mdspan)
+add_subdirectory(vendor/googletest/ googletest)
+add_subdirectory(vendor/benchmark/ benchmark)
+
 ## Use CTest for running tests
 include(CTest)
-
 
 # Our project
 

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.15)
 project(DDC VERSION 0.0.0 LANGUAGES CXX)
 
 # List of options
+
 option(BUILD_BENCHMARKS    "Build the benchmarks." OFF)
 option(BUILD_DOCUMENTATION "Build the documentation" ON)
 
@@ -12,10 +13,6 @@ option(BUILD_DOCUMENTATION "Build the documentation" ON)
 find_package(PDI REQUIRED COMPONENTS C)
 find_package(mdspan CONFIG REQUIRED)
 find_package(GTest)
-find_package(benchmark)
-
-## Use CTest for running tests
-include(CTest)
 
 # Our project
 
@@ -51,19 +48,21 @@ target_link_libraries(PDI
 		PDI::PDI_C)
 add_library(DDC::PDI ALIAS PDI)
 
+## Use CTest for running tests
+include(CTest)
+
 ## if tests are enabled, build the tests in `tests/`
-if("${BUILD_TESTING}")
+if(${BUILD_TESTING})
 	add_subdirectory(tests/)
 endif()
 
 ## if benchmarks are enabled, build the benchmarks in `benchmarks/`
-if("${BUILD_BENCHMARKS}")
+if(${BUILD_BENCHMARKS})
 	add_subdirectory(benchmarks/)
 endif()
 
 ## if documentation is enabled, build the documentation docs
-
-if("${BUILD_DOCUMENTATION}")
+if(${BUILD_DOCUMENTATION})
 	add_subdirectory(docs/)
 endif()
 

@@ -73,13 +73,8 @@ install(
 
 install(
 	EXPORT DDCTargets
-	FILE DDCTargets.cmake
 	NAMESPACE DDC::
 	DESTINATION lib/cmake/DDC)
-
-export(
-	TARGETS DDC PDI
-	FILE DDCTargets.cmake)
 
 install(
 	DIRECTORY include/

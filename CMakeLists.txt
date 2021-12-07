@@ -8,23 +8,23 @@ option(BUILD_BENCHMARKS    "Build the benchmarks." OFF)
 option(BUILD_DOCUMENTATION "Build the documentation" OFF)
 option(DDC_BUILD_PDI_WRAPPER "Build the PDI wrapper" ON)
 
-set(DDC_DEPENDENCY_POLICIES AUTO EMBEDDED INSTALLED SUBPROJECT)
+set(DDC_DEPENDENCY_POLICIES "AUTO" "EMBEDDED" "INSTALLED" "SUBPROJECT")
 
-set(DDC_mdspan_DEPENDENCY_POLICY AUTO CACHE STRING "Policy to find the `mdspan` package. Options: ${DDC_DEPENDENCY_POLICIES}")
-set_property(CACHE DDC_mdspan_DEPENDENCY_POLICY PROPERTY STRINGS ${DDC_DEPENDENCY_POLICIES})
+set(DDC_mdspan_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `mdspan` package. Options: ${DDC_DEPENDENCY_POLICIES}")
+set_property(CACHE DDC_mdspan_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
 
 # Dependencies
 
-if(${DDC_mdspan_DEPENDENCY_POLICY} STREQUAL AUTO)
+if(DDC_mdspan_DEPENDENCY_POLICY STREQUAL "AUTO")
 	if(NOT ${mdspan_FOUND})
 		find_package(mdspan CONFIG)
 	endif()
 	if(NOT ${mdspan_FOUND})
 		add_subdirectory(vendor/mdspan)
 	endif()
-elseif(${DDC_mdspan_DEPENDENCY_POLICY} STREQUAL EMBEDDED)
+elseif(DDC_mdspan_DEPENDENCY_POLICY STREQUAL "EMBEDDED")
 	add_subdirectory(vendor/mdspan)
-elseif(${DDC_mdspan_DEPENDENCY_POLICY} STREQUAL INSTALLED)
+elseif(DDC_mdspan_DEPENDENCY_POLICY STREQUAL "INSTALLED")
 	find_package(mdspan CONFIG REQUIRED)
 endif()
 
@@ -49,7 +49,7 @@ install(
 	EXPORT DDCTargets)
 
 ## The PDI wrapper
-if(${DDC_BUILD_PDI_WRAPPER})
+if(DDC_BUILD_PDI_WRAPPER)
 	if(NOT ${PDI_FOUND})
 		find_package(PDI REQUIRED COMPONENTS C)
 	endif()
@@ -77,20 +77,20 @@ endif()
 include(CTest)
 
 ## if tests are enabled, build the tests in `tests/`
-if(${BUILD_TESTING})
-	set(DDC_GTest_DEPENDENCY_POLICY AUTO CACHE STRING "Policy to find the `GTest` package. Options: ${DDC_DEPENDENCY_POLICIES}")
+if(BUILD_TESTING)
+	set(DDC_GTest_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `GTest` package. Options: ${DDC_DEPENDENCY_POLICIES}")
 	set_property(CACHE DDC_GTest_DEPENDENCY_POLICY PROPERTY STRINGS ${DDC_DEPENDENCY_POLICIES})
 
-	if(${DDC_GTest_DEPENDENCY_POLICY} STREQUAL AUTO)
+	if(DDC_GTest_DEPENDENCY_POLICY STREQUAL "AUTO")
 		if(NOT ${GTest_FOUND})
 			find_package(GTest)
 		endif()
 		if(NOT ${GTest_FOUND})
 			add_subdirectory(vendor/googletest)
 		endif()
-	elseif(${DDC_GTest_DEPENDENCY_POLICY} STREQUAL EMBEDDED)
+	elseif(DDC_GTest_DEPENDENCY_POLICY STREQUAL "EMBEDDED")
 		add_subdirectory(vendor/googletest)
-	elseif(${DDC_GTest_DEPENDENCY_POLICY} STREQUAL INSTALLED)
+	elseif(DDC_GTest_DEPENDENCY_POLICY STREQUAL "INSTALLED")
 		find_package(GTest REQUIRED)
 	endif()
 
@@ -98,20 +98,20 @@ if(${BUILD_TESTING})
 endif()
 
 ## if benchmarks are enabled, build the benchmarks in `benchmarks/`
-if(${BUILD_BENCHMARKS})
-	set(DDC_benchmark_DEPENDENCY_POLICY AUTO CACHE STRING "Policy to find the `benchmark` package. Options: ${DDC_DEPENDENCY_POLICIES}")
+if(BUILD_BENCHMARKS)
+	set(DDC_benchmark_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `benchmark` package. Options: ${DDC_DEPENDENCY_POLICIES}")
 	set_property(CACHE DDC_benchmark_DEPENDENCY_POLICY PROPERTY STRINGS ${DDC_DEPENDENCY_POLICIES})
 
-	if(${DDC_benchmark_DEPENDENCY_POLICY} STREQUAL AUTO)
+	if(DDC_benchmark_DEPENDENCY_POLICY STREQUAL "AUTO")
 		if(NOT ${benchmark_FOUND})
 			find_package(benchmark)
 		endif()
 		if(NOT ${benchmark_FOUND})
 			add_subdirectory(vendor/benchmark)
 		endif()
-	elseif(${DDC_benchmark_DEPENDENCY_POLICY} STREQUAL EMBEDDED)
+	elseif(DDC_benchmark_DEPENDENCY_POLICY STREQUAL "EMBEDDED")
 		add_subdirectory(vendor/benchmark)
-	elseif(${DDC_benchmark_DEPENDENCY_POLICY} STREQUAL INSTALLED)
+	elseif(DDC_benchmark_DEPENDENCY_POLICY STREQUAL "INSTALLED")
 		find_package(benchmark REQUIRED)
 	endif()
 
@@ -119,7 +119,7 @@ if(${BUILD_BENCHMARKS})
 endif()
 
 ## if documentation is enabled, build the documentation docs
-if(${BUILD_DOCUMENTATION})
+if(BUILD_DOCUMENTATION)
 	add_subdirectory(docs/)
 endif()
 

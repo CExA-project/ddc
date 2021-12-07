@@ -1,0 +1,20 @@
+name: CMake
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.13
+      with:
+        source: 'include/ddc/ tests/'
+        exclude: ''
+        extensions: 'hpp,cpp'
+        clangFormatVersion: 12

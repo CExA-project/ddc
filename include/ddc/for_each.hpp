@@ -34,7 +34,7 @@ inline void for_each(
         Functor&& f) noexcept
 {
     for (DiscreteCoordinate<DDim1> const i1 : select<DDim1>(domain)) {
-        for (DiscreteCoordinate<DDim1> const i2 : select<DDim2>(domain)) {
+        for (DiscreteCoordinate<DDim2> const i2 : select<DDim2>(domain)) {
             f(DiscreteCoordinate<DDim1, DDim2>(i1, i2));
         }
     }

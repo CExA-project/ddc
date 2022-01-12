@@ -1,9 +1,9 @@
 #include <ddc/Chunk>
 #include <ddc/DiscreteCoordinate>
 #include <ddc/DiscreteDomain>
-#include <ddc/ForEach>
 #include <ddc/PdiEvent>
 #include <ddc/UniformDiscretization>
+#include <ddc/for_each>
 
 // Name of the axis
 struct X;

@@ -84,6 +84,13 @@ inline void for_each(omp_policy, DiscreteDomain<DDim1, DDim2> const& domain, Fun
 
 using default_policy = serial_policy;
 
+namespace policies {
+
+inline constexpr omp_policy omp;
+inline constexpr serial_policy serial;
+
+}; // namespace policies
+
 template <class... DDims, class Functor>
 inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {

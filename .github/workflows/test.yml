@@ -11,7 +11,8 @@ jobs:
     steps:
     - name: Checkout built branch
       uses: actions/checkout@v2
-      submodules: true
+      with:
+        submodules: true
     - name: Build 
       run: |
         mkdir build

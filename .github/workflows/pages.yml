@@ -6,6 +6,8 @@ on:
 jobs:
   pages:
     runs-on: ubuntu-latest
+    container:
+      image: jbigot/voicexx_env
     steps:
     - name: Checkout built branch
       uses: actions/checkout@v2

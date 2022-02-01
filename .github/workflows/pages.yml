@@ -6,25 +6,26 @@ on:
 jobs:
   pages:
     runs-on: ubuntu-latest
-    container:
-      image: jbigot/voicexx_env
     steps:
     - name: Checkout built branch
       uses: actions/checkout@v2
-      with: { fetch-depth: 0 }
-    - name: Checkout gh-pages
-      run: git worktree add -B gh-pages public remotes/origin/gh-pages
-    - name: Clean previous build
-      run: |
-        find public -mindepth 1 -maxdepth 1 '!' -name .git -exec rm -rf '{}' '+'
+      with:
+        fetch-depth: 0
+        submodules: true
+    - name: Get deps
+      run: sudo apt-get install -y doxygen
     - name: Build site
       run: |
-        cmake -DBUILD_DOCUMENTATION=ON .
+        cmake -DBUILD_DOCUMENTATION=ON -DDDC_BUILD_PDI_WRAPPER=OFF .
         make doc
-        mv docs/html/* public/
+    - name: Checkout gh-pages
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      run: git worktree add -B gh-pages public remotes/origin/gh-pages
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       run: |
+        find public -mindepth 1 -maxdepth 1 '!' -name .git -exec rm -rf '{}' '+'
+        mv docs/html/* public/
         git -C public config user.name "${GITHUB_ACTOR}"
         git -C public config user.email "${GITHUB_ACTOR}@noreply.example.com"
         git -C public add -A .

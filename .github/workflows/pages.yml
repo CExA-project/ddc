@@ -12,18 +12,21 @@ jobs:
       with:
         fetch-depth: 0
         submodules: true
-    - name: Get deps
-      run: sudo apt-get install -y doxygen
+    - name: Install deps
+      run: |
+        sudo apt-get install -y \
+            doxygen \
+            doxygen-latex \
+            graphviz \
+            texlive
     - name: Build site
       run: |
         cmake -DBUILD_DOCUMENTATION=ON -DDDC_BUILD_PDI_WRAPPER=OFF .
         make doc
-    - name: Checkout gh-pages
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
-      run: git worktree add -B gh-pages public remotes/origin/gh-pages
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       run: |
+        git worktree add -B gh-pages public remotes/origin/gh-pages
         find public -mindepth 1 -maxdepth 1 '!' -name .git -exec rm -rf '{}' '+'
         mv docs/html/* public/
         git -C public config user.name "${GITHUB_ACTOR}"

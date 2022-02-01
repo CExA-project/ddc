@@ -1,0 +1,29 @@
+name: pages
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+jobs:
+  pages:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout built branch
+      uses: actions/checkout@v2
+    - name: Checkout gh-pages
+      run: git worktree add -B gh-pages public remotes/origin/gh-pages
+    - name: Clean previous build
+      run: |
+        find public -mindepth 1 -maxdepth 1 '!' -name .git -exec rm -rf '{}' '+'
+    - name: Build site
+      run: |
+        cmake -DBUILD_DOCUMENTATION=ON .
+        make doc
+        mv docs/html/* public/
+    - name: Publish site
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      run: |
+        git -C public config user.name "${GITHUB_ACTOR}"
+        git -C public config user.email "${GITHUB_ACTOR}@noreply.example.com"
+        git -C public add -A .
+        git -C public commit -a -m "Update to match ${GITHUB_SHA} by ${GITHUB_EVENT_NAME} ${GITHUB_RUN_NUMBER}"
+        git -C public push

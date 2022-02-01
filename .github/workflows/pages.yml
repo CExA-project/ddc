@@ -9,6 +9,7 @@ jobs:
     steps:
     - name: Checkout built branch
       uses: actions/checkout@v2
+      with: { fetch-depth: 0 }
     - name: Checkout gh-pages
       run: git worktree add -B gh-pages public remotes/origin/gh-pages
     - name: Clean previous build

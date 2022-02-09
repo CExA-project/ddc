@@ -32,5 +32,5 @@ jobs:
         git -C public config user.name "${GITHUB_ACTOR}"
         git -C public config user.email "${GITHUB_ACTOR}@noreply.example.com"
         git -C public add -A .
-        git -C public commit -a -m "Update to match ${GITHUB_SHA} by ${GITHUB_EVENT_NAME} ${GITHUB_RUN_NUMBER}"
+        git -C public commit -a -m "Update to match ${GITHUB_SHA} by ${GITHUB_EVENT_NAME} ${GITHUB_RUN_NUMBER}" || true
         git -C public push

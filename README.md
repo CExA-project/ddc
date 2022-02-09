@@ -4,6 +4,8 @@
 
 See https://maison-de-la-simulation.github.io/ddc/
 
+If you like the project, please leave us a github star.
+
 ## Compilation
 
 to compile DDC:

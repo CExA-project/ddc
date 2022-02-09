@@ -1,3 +1,3 @@
 \mainpage About
 
-%DDC is a domain decomposition library.
+%DDC is a discrete data & computation library.

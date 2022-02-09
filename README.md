@@ -1,4 +1,8 @@
-# The Domain DeComposition library (DDC)
+# The discrete domain computation library (DDC)
+
+## Documentation
+
+See https://maison-de-la-simulation.github.io/ddc/
 
 ## Compilation
 

@@ -5,6 +5,9 @@
 #include <ddc/UniformDiscretization>
 #include <ddc/for_each>
 
+#include <Kokkos_Core.hpp>
+#include <Kokkos_DualView.hpp>
+
 // Name of the axis
 struct X;
 struct Y;
@@ -42,8 +45,14 @@ plugins:
   trace: ~
 )PDI_CFG";
 
+using dual_view = Kokkos::DualView<double**>;
+using device_view = dual_view::t_dev;
+using host_view = dual_view::t_host;
+
 int main()
 {
+    Kokkos::ScopeGuard guard;
+
     //! [mesh]
     // Origin on X
     Coordinate<X> const min_x(-1.);
@@ -52,7 +61,7 @@ int main()
     Coordinate<X> const dx(0.02);
 
     // Actual mesh on X
-    init_discretization<DDimX>(min_x, dx);
+    DDimX discretization_x(min_x, dx);
 
     // Origin on Y
     Coordinate<Y> const min_y(-1.);
@@ -61,7 +70,7 @@ int main()
     Coordinate<Y> const dy(0.01);
 
     // Actual mesh on Y
-    init_discretization<DDimY>(min_y, dy);
+    DDimY discretization_y(min_y, dy);
 
     // Two-dimensional mesh on X,Y
     //! [mesh]
@@ -79,8 +88,19 @@ int main()
 
     // Allocate data located at each point of `domain_xy` (including ghost region)
     //! [memory allocation]
-    Chunk<double, DiscreteDomain<DDimX, DDimY>> T_in(domain_xy);
-    Chunk<double, DiscreteDomain<DDimX, DDimY>> T_out(domain_xy);
+    // Using Kokkos to do the allocation
+    device_view T_in_kokkos(
+            "T_in",
+            domain_xy.extent<DDimX>().value(),
+            domain_xy.extent<DDimY>().value());
+    device_view T_out_kokkos(
+            "T_out",
+            domain_xy.extent<DDimX>().value(),
+            domain_xy.extent<DDimY>().value());
+    host_view T_in_kokkos_host = Kokkos::create_mirror_view(T_in_kokkos);
+    ChunkSpan T_in(T_in_kokkos, domain_xy);
+    ChunkSpan T_out(T_out_kokkos, domain_xy);
+    ChunkSpan T_in_host(T_in_kokkos_host, domain_xy);
     //! [memory allocation]
 
     //! [subdomains]
@@ -98,11 +118,13 @@ int main()
     //! [subdomains]
 
     // Initialize the whole domain
-    for_each(domain_xy, [&](DiscreteCoordinate<DDimX, DDimY> const ixy) {
-        double const x = to_real(select<DDimX>(ixy));
-        double const y = to_real(select<DDimY>(ixy));
-        T_in(ixy) = 0.75 * ((x * x + y * y) < 0.25);
-    });
+    for_each(
+            domain_xy,
+            KOKKOS_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
+                double const x = discretization_x.to_real(select<DDimX>(ixy));
+                double const y = discretization_y.to_real(select<DDimY>(ixy));
+                T_in(ixy) = 0.75 * ((x * x + y * y) < 0.25);
+            });
 
     PDI_init(PC_parse_string(PDI_CFG));
     PDI_expose("ghostwidth", &gw, PDI_OUT);
@@ -113,8 +135,11 @@ int main()
     double const Cy = ky * dt / (dy * dy);
     std::size_t iter = 0;
     for (; iter < nt; ++iter) {
+        // How to deal with PDI ?
+        // Contrary to the pure CPU case, data may be ready but not in an accessible memory space
         //! [io/pdi]
-        PdiEvent("temperature").with("iter", iter).and_with("temperature", T_in);
+        deepcopy(T_in_host, T_in);
+        PdiEvent("temperature").with("iter", iter).and_with("temperature", T_in_host);
         //! [io/pdi]
 
         //! [numerical scheme]
@@ -125,20 +150,24 @@ int main()
         deepcopy(temperature_g_y_right, temperature_i_y_left);
 
         // Stencil computation on inner domain `inner_xy`
-        for_each(inner_xy, [&](DiscreteCoordinate<DDimX, DDimY> const ixy) {
-            DiscreteCoordinate<DDimX> const ix = select<DDimX>(ixy);
-            DiscreteCoordinate<DDimY> const iy = select<DDimY>(ixy);
-            T_out(ix, iy) = T_in(ix, iy);
-            T_out(ix, iy) += Cx * (T_in(ix + 1, iy) - 2.0 * T_in(ix, iy) + T_in(ix - 1, iy));
-            T_out(ix, iy) += Cy * (T_in(ix, iy + 1) - 2.0 * T_in(ix, iy) + T_in(ix, iy - 1));
-        });
+        for_each(
+                inner_xy,
+                KOKKOS_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
+                    DiscreteCoordinate<DDimX> const ix = select<DDimX>(ixy);
+                    DiscreteCoordinate<DDimY> const iy = select<DDimY>(ixy);
+                    T_out(ix, iy) = T_in(ix, iy);
+                    T_out(ix, iy)
+                            += Cx * (T_in(ix + 1, iy) - 2.0 * T_in(ix, iy) + T_in(ix - 1, iy));
+                    T_out(ix, iy)
+                            += Cy * (T_in(ix, iy + 1) - 2.0 * T_in(ix, iy) + T_in(ix, iy - 1));
+                });
         //! [numerical scheme]
 
         // Copy buf2 into buf1, a swap could also do the job
         deepcopy(T_in, T_out);
     }
 
-    PdiEvent("temperature").with("iter", iter).and_with("temperature", T_in);
+    PdiEvent("temperature").with("iter", iter).and_with("temperature", T_in_host);
 
     PDI_finalize();
 

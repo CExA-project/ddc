@@ -7,6 +7,9 @@
 
 #include <experimental/mdspan>
 
+#include <Kokkos_Core.hpp>
+
+#include "ddc/detail/kokkos.hpp"
 #include "ddc/discrete_domain.hpp"
 
 template <class T>
@@ -107,7 +110,7 @@ public:
     template <class, class, class>
     friend class ChunkCommon;
 
-    template <class, class, class>
+    template <class, class, class, class>
     friend class ChunkSpan;
 
     template <class, class>
@@ -304,7 +307,7 @@ protected:
      */
     constexpr allocation_mdspan_type allocation_mdspan() const
     {
-        extents_type extents_s(::extents<DDims>(m_domain)...);
+        extents_type extents_s(::extents<DDims>(m_domain).value()...);
         if constexpr (std::is_same_v<LayoutStridedPolicy, std::experimental::layout_stride>) {
             mapping_type map(extents_s, m_internal_mdspan.mapping().strides());
             return allocation_mdspan_type(data(), map);

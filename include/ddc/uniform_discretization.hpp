@@ -58,9 +58,9 @@ public:
         assert(n > 1);
     }
 
-    UniformDiscretization(UniformDiscretization const& x) = delete;
+    UniformDiscretization(UniformDiscretization const& x) = default;
 
-    UniformDiscretization(UniformDiscretization&& x) = delete;
+    UniformDiscretization(UniformDiscretization&& x) = default;
 
     ~UniformDiscretization() = default;
 

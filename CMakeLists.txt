@@ -28,7 +28,7 @@ elseif(DDC_mdspan_DEPENDENCY_POLICY STREQUAL "INSTALLED")
 	find_package(mdspan CONFIG REQUIRED)
 endif()
 
-find_package(OpenMP REQUIRED)
+add_subdirectory(vendor/kokkos)
 
 # Our project
 
@@ -44,7 +44,7 @@ target_include_directories(DDC
 		"$<INSTALL_INTERFACE:include>"
 )
 target_link_libraries(DDC
-	INTERFACE std::mdspan OpenMP::OpenMP_CXX)
+	INTERFACE std::mdspan Kokkos::kokkos)
 add_library(DDC::DDC ALIAS DDC)
 install(
 	TARGETS DDC

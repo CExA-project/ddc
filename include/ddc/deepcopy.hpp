@@ -3,6 +3,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <Kokkos_Core.hpp>
+
 #include "ddc/chunk_span.hpp"
 
 namespace detail {
@@ -31,17 +33,15 @@ inline void for_each_impl(
  * @return to
  */
 template <class ChunkDst, class ChunkSrc>
-inline ChunkDst const& deepcopy(ChunkDst&& to, ChunkSrc&& from) noexcept
+inline ChunkDst const& deepcopy(ChunkDst&& dst, ChunkSrc&& src) noexcept
 {
     static_assert(is_chunk_v<ChunkDst>);
     static_assert(is_chunk_v<ChunkSrc>);
     static_assert(
-            std::is_assignable_v<decltype(*to.data()), decltype(*from.data())>,
+            std::is_assignable_v<decltype(*dst.data()), decltype(*src.data())>,
             "Not assignable");
     assert(to.domain().front() == from.domain().front());
     assert(to.domain().back() == from.domain().back());
-    detail::for_each_impl(to.span_view(), [&to, &from](auto&&... idxs) {
-        to(idxs...) = from(idxs...);
-    });
-    return to;
+    Kokkos::deep_copy(dst.allocation_kokkos_view(), src.allocation_kokkos_view());
+    return dst;
 }

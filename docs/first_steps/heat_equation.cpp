@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <ddc/Chunk>
 #include <ddc/DiscreteCoordinate>
 #include <ddc/DiscreteDomain>
@@ -19,6 +21,7 @@ static unsigned ny = 200;
 static unsigned gw = 1;
 static double kx = 100.;
 static double ky = 1.;
+static double cfl = 0.99;
 
 constexpr char const* const PDI_CFG = R"PDI_CFG(
 metadata:
@@ -108,8 +111,16 @@ int main()
     PDI_init(PC_parse_string(PDI_CFG));
     PDI_expose("ghostwidth", &gw, PDI_OUT);
 
-    double const cfl = 0.99;
-    double const dt = 0.5 * cfl / (kx / (dx * dx) + ky / (dy * dy));
+    // Some heuristic for the time step
+    double invdx2_max = 0.0;
+    for (auto ix : select<DDimX>(inner_xy)) {
+        invdx2_max = std::fmax(invdx2_max, 1.0 / (distance_at_left(ix) * distance_at_right(ix)));
+    }
+    double invdy2_max = 0.0;
+    for (auto iy : select<DDimY>(inner_xy)) {
+        invdy2_max = std::fmax(invdy2_max, 1.0 / (distance_at_left(iy) * distance_at_right(iy)));
+    }
+    double const dt = 0.5 * cfl / (kx * invdx2_max + ky * invdy2_max);
     std::size_t iter = 0;
     for (; iter < nt; ++iter) {
         //! [io/pdi]

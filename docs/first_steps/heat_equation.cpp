@@ -3,6 +3,7 @@
 #include <ddc/DiscreteDomain>
 #include <ddc/PdiEvent>
 #include <ddc/UniformDiscretization>
+#include <ddc/NonUniformDiscretization>
 #include <ddc/for_each>
 
 #include <Kokkos_Core.hpp>
@@ -13,11 +14,11 @@ struct X;
 struct Y;
 
 using DDimX = UniformDiscretization<X>;
-using DDimY = UniformDiscretization<Y>;
+using DDimY = NonUniformDiscretization<Y>;
 
 static unsigned nt = 10;
-static unsigned nx = 100;
-static unsigned ny = 200;
+static unsigned nx = 101;
+static unsigned ny = 201;
 static unsigned gw = 1;
 static double kx = 100.;
 static double ky = 1.;
@@ -69,8 +70,14 @@ int main()
     // Sampling step on Y
     Coordinate<Y> const dy(0.01);
 
+    std::vector<Coordinate<Y>> points;
+    points.reserve(ny);
+    for (std::size_t i = 0; i < ny; ++i) {
+        points.push_back(min_y + i * dy);
+    }
+
     // Actual mesh on Y
-    DDimY discretization_y(min_y, dy);
+    DDimY discretization_y(points);
 
     // Two-dimensional mesh on X,Y
     //! [mesh]

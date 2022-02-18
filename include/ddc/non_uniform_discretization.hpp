@@ -3,6 +3,8 @@
 #include <cassert>
 #include <vector>
 
+#include <Kokkos_Core.hpp>
+
 #include "ddc/coordinate.hpp"
 #include "ddc/discrete_coordinate.hpp"
 #include "ddc/discretization.hpp"
@@ -25,34 +27,52 @@ public:
     }
 
 private:
-    std::vector<rcoord_type> m_points;
+    Kokkos::View<rcoord_type*> m_points;
 
 public:
     NonUniformDiscretization() = default;
 
     /// @brief Construct a `NonUniformDiscretization` using a brace-list, i.e. `NonUniformDiscretization mesh({0., 1.})`
     explicit NonUniformDiscretization(std::initializer_list<rcoord_type> points)
-        : m_points(points.begin(), points.end())
     {
+        std::vector<rcoord_type> host_points(points.begin(), points.end());
+        Kokkos::View<rcoord_type*, Kokkos::HostSpace> host(host_points.data(), host_points.size());
+        Kokkos::resize(m_points, host.extent(0));
+        Kokkos::deep_copy(m_points, host);
     }
 
     /// @brief Construct a `NonUniformDiscretization` using a C++20 "common range".
     template <class InputRange>
-    inline constexpr NonUniformDiscretization(InputRange&& points)
-        : m_points(points.begin(), points.end())
+    explicit inline constexpr NonUniformDiscretization(InputRange const& points)
     {
+        if constexpr (Kokkos::is_view<InputRange>::value) {
+            Kokkos::deep_copy(m_points, points);
+        } else {
+            std::vector<rcoord_type> host_points(points.begin(), points.end());
+            Kokkos::View<rcoord_type*, Kokkos::HostSpace>
+                    host(host_points.data(), host_points.size());
+            Kokkos::resize(m_points, host.extent(0));
+            Kokkos::deep_copy(m_points, host);
+        }
     }
 
     /// @brief Construct a `NonUniformDiscretization` using a pair of iterators.
     template <class InputIt>
     inline constexpr NonUniformDiscretization(InputIt points_begin, InputIt points_end)
-        : m_points(points_begin, points_end)
     {
+        std::vector<rcoord_type> host_points(points_begin, points_end);
+        Kokkos::View<rcoord_type*, Kokkos::HostSpace> host(host_points.data(), host_points.size());
+        Kokkos::resize(m_points, host.extent(0));
+        Kokkos::deep_copy(m_points, host);
     }
 
-    NonUniformDiscretization(NonUniformDiscretization const& x) = delete;
+    NonUniformDiscretization(NonUniformDiscretization const& x) = default;
 
-    NonUniformDiscretization(NonUniformDiscretization&& x) = delete;
+    NonUniformDiscretization(NonUniformDiscretization&& x) = default;
+
+    NonUniformDiscretization& operator=(NonUniformDiscretization const& x) = default;
+
+    NonUniformDiscretization& operator=(NonUniformDiscretization&& x) = default;
 
     ~NonUniformDiscretization() = default;
 

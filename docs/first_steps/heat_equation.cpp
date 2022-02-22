@@ -3,7 +3,6 @@
 #include <ddc/Chunk>
 #include <ddc/DiscreteCoordinate>
 #include <ddc/DiscreteDomain>
-#include <ddc/NonUniformDiscretization>
 #include <ddc/PdiEvent>
 #include <ddc/UniformDiscretization>
 #include <ddc/for_each>

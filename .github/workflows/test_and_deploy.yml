@@ -81,6 +81,7 @@ jobs:
         git -C public commit -a -m "Update to match ${GITHUB_SHA} by ${GITHUB_EVENT_NAME} ${GITHUB_RUN_NUMBER}" || true
         git -C public push
   ddc_sync:
+    runs-on: ubuntu-latest
     steps:
     - name:
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}

@@ -6,9 +6,10 @@
 #include "ddc/discrete_domain.hpp"
 #include "ddc/for_each.hpp"
 
-/** iterates over a 1d domain
+/** A parallel reduction over a 1d domain
  * @param[in] domain the 1d domain to iterate
- * @param[in] f      a functor taking an index as parameter
+ * @param[in] reduce    a reduction operation
+ * @param[in] transform a functor taking a 1d discrete coordinate as parameter
  */
 template <class DDim, class T, class BinaryReductionOp, class BinaryTransformOp>
 inline T transform_reduce(
@@ -26,9 +27,10 @@ inline T transform_reduce(
     return init;
 }
 
-/** iterates over a 2d domain
- * @param[in] domain the 2d domain to iterate
- * @param[in] f      a functor taking a 2-index as parameter
+/** A parallel reduction over a 2d domain
+ * @param[in] domain    the 2d domain to iterate
+ * @param[in] reduce    a reduction operation
+ * @param[in] transform a functor taking a 2d discrete coordinate as parameter
  */
 template <class DDim1, class DDim2, class T, class BinaryReductionOp, class BinaryTransformOp>
 inline T transform_reduce(
@@ -50,6 +52,11 @@ inline T transform_reduce(
     return init;
 }
 
+/** A parallel reduction over a nd domain
+ * @param[in] domain    the nd domain to iterate
+ * @param[in] reduce    a reduction operation
+ * @param[in] transform a functor taking a nd discrete coordinate as parameter
+ */
 template <class... DDims, class T, class BinaryReductionOp, class BinaryTransformOp>
 inline T transform_reduce(
         DiscreteDomain<DDims...> const& domain,

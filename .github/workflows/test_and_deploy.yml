@@ -82,6 +82,7 @@ jobs:
         git -C public push
   ddc_sync:
     runs-on: ubuntu-latest
+    environment: ddc-deploy
     steps:
     - name:
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}

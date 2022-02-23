@@ -107,9 +107,21 @@ Numerical scheme</h1>
 <div class="line">        for_each(inner_xy, [&amp;](DiscreteCoordinate&lt;DDimX, DDimY&gt; <span class="keyword">const</span> ixy) {</div>
 <div class="line">            DiscreteCoordinate&lt;DDimX&gt; <span class="keyword">const</span> ix = select&lt;DDimX&gt;(ixy);</div>
 <div class="line">            DiscreteCoordinate&lt;DDimY&gt; <span class="keyword">const</span> iy = select&lt;DDimY&gt;(ixy);</div>
+<div class="line">            <span class="keywordtype">double</span> <span class="keyword">const</span> dx_l = distance_at_left(ix);</div>
+<div class="line">            <span class="keywordtype">double</span> <span class="keyword">const</span> dx_r = distance_at_right(ix);</div>
+<div class="line">            <span class="keywordtype">double</span> <span class="keyword">const</span> dx_m = 0.5 * (dx_l + dx_r);</div>
+<div class="line">            <span class="keywordtype">double</span> <span class="keyword">const</span> dy_l = distance_at_left(iy);</div>
+<div class="line">            <span class="keywordtype">double</span> <span class="keyword">const</span> dy_r = distance_at_right(iy);</div>
+<div class="line">            <span class="keywordtype">double</span> <span class="keyword">const</span> dy_m = 0.5 * (dy_l + dy_r);</div>
 <div class="line">            T_out(ix, iy) = T_in(ix, iy);</div>
-<div class="line">            T_out(ix, iy) += Cx * (T_in(ix + 1, iy) - 2.0 * T_in(ix, iy) + T_in(ix - 1, iy));</div>
-<div class="line">            T_out(ix, iy) += Cy * (T_in(ix, iy + 1) - 2.0 * T_in(ix, iy) + T_in(ix, iy - 1));</div>
+<div class="line">            T_out(ix, iy) += kx * dt</div>
+<div class="line">                             * (dx_l * T_in(ix + 1, iy) - 2.0 * dx_m * T_in(ix, iy)</div>
+<div class="line">                                + dx_r * T_in(ix - 1, iy))</div>
+<div class="line">                             / (dx_l * dx_m * dx_r);</div>
+<div class="line">            T_out(ix, iy) += ky * dt</div>
+<div class="line">                             * (dy_l * T_in(ix, iy + 1) - 2.0 * dy_m * T_in(ix, iy)</div>
+<div class="line">                                + dy_r * T_in(ix, iy - 1))</div>
+<div class="line">                             / (dy_l * dy_m * dy_r);</div>
 <div class="line">        });</div>
 </div><!-- fragment --> <h1><a class="anchor" id="autotoc_md5"></a>
 IO</h1>

@@ -47,51 +47,53 @@ $(document).ready(function(){initNavTree('deepcopy_8hpp_source.html',''); initRe
 <div class="title">deepcopy.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// SPDX-License-Identifier: MIT</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;ddc/chunk_span.hpp&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>detail {</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>ElementType, <span class="keyword">class</span>... DDims, <span class="keyword">class </span>Layout, <span class="keyword">class </span>Functor, <span class="keyword">class</span>... MCoords&gt;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> for_each_impl(</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a>&lt;ElementType, <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDims...&gt;</a>, Layout&gt; <span class="keyword">const</span> to,</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        Functor&amp;&amp; f,</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        MCoords&amp;&amp;... mcoords) noexcept</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordflow">if</span> constexpr (</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;            <span class="keyword">sizeof</span>...(MCoords)</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;            == <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a>&lt;ElementType, <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDims...&gt;</a>, Layout&gt;::rank()) {</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        f(std::forward&lt;MCoords&gt;(mcoords)...);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keyword">using</span> CurrentDDim = type_seq_element_t&lt;<span class="keyword">sizeof</span>...(MCoords), detail::TypeSeq&lt;DDims...&gt;&gt;;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp;&amp; ii : get_domain&lt;CurrentDDim&gt;(to)) {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            for_each_impl(to, std::forward&lt;Functor&gt;(f), std::forward&lt;MCoords&gt;(mcoords)..., ii);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        }</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;} <span class="comment">// namespace detail</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> ChunkDst, <span class="keyword">class</span> ChunkSrc&gt;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">inline</span> ChunkDst <span class="keyword">const</span>&amp; deepcopy(ChunkDst&amp;&amp; to, ChunkSrc&amp;&amp; from) noexcept</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    static_assert(is_chunk_v&lt;ChunkDst&gt;);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    static_assert(is_chunk_v&lt;ChunkSrc&gt;);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    static_assert(</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            std::is_assignable_v&lt;decltype(*to.data()), decltype(*from.data())&gt;,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            <span class="stringliteral">&quot;Not assignable&quot;</span>);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    assert(to.domain().front() == from.domain().front());</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    assert(to.domain().back() == from.domain().back());</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    detail::for_each_impl(to.span_view(), [&amp;to, &amp;from](<span class="keyword">auto</span>&amp;&amp;... idxs) {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        to(idxs...) = from(idxs...);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    });</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">return</span> to;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;ddc/chunk_span.hpp&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span>detail {</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>ElementType, <span class="keyword">class</span>... DDims, <span class="keyword">class </span>Layout, <span class="keyword">class </span>Functor, <span class="keyword">class</span>... MCoords&gt;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> for_each_impl(</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a>&lt;ElementType, <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDims...&gt;</a>, Layout&gt; <span class="keyword">const</span> to,</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        Functor&amp;&amp; f,</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        MCoords&amp;&amp;... mcoords) noexcept</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span> constexpr (</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;            <span class="keyword">sizeof</span>...(MCoords)</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;            == <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a>&lt;ElementType, <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDims...&gt;</a>, Layout&gt;::rank()) {</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        f(std::forward&lt;MCoords&gt;(mcoords)...);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keyword">using</span> CurrentDDim = type_seq_element_t&lt;<span class="keyword">sizeof</span>...(MCoords), detail::TypeSeq&lt;DDims...&gt;&gt;;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp;&amp; ii : get_domain&lt;CurrentDDim&gt;(to)) {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;            for_each_impl(to, std::forward&lt;Functor&gt;(f), std::forward&lt;MCoords&gt;(mcoords)..., ii);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    }</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;} <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> ChunkDst, <span class="keyword">class</span> ChunkSrc&gt;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">inline</span> ChunkDst <span class="keyword">const</span>&amp; deepcopy(ChunkDst&amp;&amp; to, ChunkSrc&amp;&amp; from) noexcept</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    static_assert(is_chunk_v&lt;ChunkDst&gt;);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    static_assert(is_chunk_v&lt;ChunkSrc&gt;);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    static_assert(</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            std::is_assignable_v&lt;decltype(*to.data()), decltype(*from.data())&gt;,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            <span class="stringliteral">&quot;Not assignable&quot;</span>);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    assert(to.domain().front() == from.domain().front());</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    assert(to.domain().back() == from.domain().back());</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    detail::for_each_impl(to.span_view(), [&amp;to, &amp;from](<span class="keyword">auto</span>&amp;&amp;... idxs) {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        to(idxs...) = from(idxs...);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    });</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">return</span> to;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="anamespace_3globalScope_4_html_classChunkSpan"><div class="ttname"><a href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a></div><div class="ttdef"><b>Definition:</b> chunk_span.hpp:20</div></div>
+<div class="ttc" id="anamespace_3globalScope_4_html_classChunkSpan"><div class="ttname"><a href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a></div><div class="ttdef"><b>Definition:</b> chunk_span.hpp:22</div></div>
 <div class="ttc" id="aclassDiscreteDomain_html"><div class="ttname"><a href="classDiscreteDomain.html">DiscreteDomain&lt; DDims... &gt;</a></div></div>
 </body>
 </html>

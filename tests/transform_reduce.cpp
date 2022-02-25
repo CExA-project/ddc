@@ -34,7 +34,7 @@ TEST(TransformReduce, OneDimension)
     int count = 0;
     for_each(dom, [&](ElemX const ix) { chunk(ix) = count++; });
     ASSERT_EQ(
-            transform_reduce(dom, 0, std::plus(), [&](ElemX ix) { return chunk(ix); }),
+            transform_reduce(dom, 0, std::plus(), [&](ElemX const ix) { return chunk(ix); }),
             dom.size() * (dom.size() - 1) / 2);
 }
 
@@ -45,6 +45,6 @@ TEST(TransformReduce, TwoDimensions)
     int count = 0;
     for_each(dom, [&](ElemXY const ixy) { chunk(ixy) = count++; });
     ASSERT_EQ(
-            transform_reduce(dom, 0, std::plus(), [&](ElemXY ixy) { return chunk(ixy); }),
+            transform_reduce(dom, 0, std::plus(), [&](ElemXY const ixy) { return chunk(ixy); }),
             dom.size() * (dom.size() - 1) / 2);
 }

@@ -49,7 +49,7 @@ std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_discretization(
 }
 
 template <class D, class... Args>
-void init_discretization(Args&&... a)
+void make_global_discretization(Args&&... a)
 {
     if (detail::Discretization<std::remove_cv_t<std::remove_reference_t<D>>>::s_disc) {
         throw std::runtime_error("Discretization function already initialized.");

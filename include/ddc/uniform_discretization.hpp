@@ -89,7 +89,15 @@ public:
         assert(n > 1);
     }
 
+    UniformDiscretization(UniformDiscretization const& x) = delete;
+
+    UniformDiscretization(UniformDiscretization&& x) = default;
+
     ~UniformDiscretization() = default;
+
+    UniformDiscretization& operator=(UniformDiscretization const& x) = delete;
+
+    UniformDiscretization& operator=(UniformDiscretization&& x) = default;
 
     /// @brief Lower bound index of the mesh
     constexpr rcoord_type origin() const noexcept
@@ -184,6 +192,18 @@ public:
         return init_ghosted(a, b, n, n_ghosts, n_ghosts);
     }
 };
+
+/** @brief Construct a `UniformDiscretization` from a bounded geometry and a number of points `n`.
+ *
+ * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
+ */
+template <class CDim>
+constexpr UniformDiscretization<CDim> discretize(std::size_t n)
+{
+    assert(CDim::rmin < CDim::rmax);
+    assert(n > 1);
+    return UniformDiscretization<CDim>(CDim::rmin, Coordinate<CDim>(CDim::rlength() / (n - 1)));
+}
 
 template <class>
 struct is_uniform_discretization : public std::false_type

@@ -12,27 +12,31 @@
 #include <gtest/gtest.h>
 
 namespace {
-    struct X;
-    struct Y;
 
-    using DDimX     = UniformDiscretization<X>;
-    using DDimY     = UniformDiscretization<Y>;
-    using NUDDimX   = NonUniformDiscretization<X>;
-    using NUDDimY   = NonUniformDiscretization<Y>;
+struct X;
+struct Y;
 
-    using DDomNull  = DiscreteDomain<nullptr_t>;
-    using DDomX     = DiscreteDomain<DDimX>;
-    using NUDDomX   = DiscreteDomain<NUDDimX>;
-    using DDomXY    = DiscreteDomain<DDimX, DDimY>;
-    using NUDDomXY  = DiscreteDomain<NUDDimX, NUDDimY>;
-}
+using DDimX = UniformDiscretization<X>;
+using DDimY = UniformDiscretization<Y>;
+using NUDDimX = NonUniformDiscretization<X>;
+using NUDDimY = NonUniformDiscretization<Y>;
 
-TEST(RectilinearDomainTest, NonDiscreteDomainSpecialization_Value) {
+using DDomNull = DiscreteDomain<nullptr_t>;
+using DDomX = DiscreteDomain<DDimX>;
+using NUDDomX = DiscreteDomain<NUDDimX>;
+using DDomXY  = DiscreteDomain<DDimX, DDimY>;
+using NUDDomXY = DiscreteDomain<NUDDimX, NUDDimY>;
+
+} // namespace
+
+TEST(RectilinearDomainTest, NonDiscreteDomainSpecialization_Value) 
+{
     EXPECT_FALSE(is_rectilinear_domain_v<nullptr_t>);
     EXPECT_FALSE(is_rectilinear_domain_v<X>);
 }
 
-TEST(RectilinearDomainTest, DiscreteDomainSpecialization_Value) {
+TEST(RectilinearDomainTest, DiscreteDomainSpecialization_Value) 
+{
     EXPECT_FALSE(is_rectilinear_domain_v<DDomNull>);
     
     EXPECT_TRUE(is_rectilinear_domain_v<DDomX>);

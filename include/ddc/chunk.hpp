@@ -74,8 +74,10 @@ public:
     /// Construct a Chunk on a domain with uninitialized values
     explicit Chunk(mdomain_type const& domain, Allocator const& allocator = Allocator())
         : m_allocator(allocator)
-        , base_type(std::allocator_traits<Allocator>::allocate(m_allocator, domain.size()), domain)
     {
+        static_cast<base_type&>(*this) = base_type(
+                std::allocator_traits<Allocator>::allocate(m_allocator, domain.size()),
+                domain);
     }
 
     /// Construct a Chunk from a deepcopy of a ChunkSpan

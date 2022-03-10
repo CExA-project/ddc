@@ -119,17 +119,17 @@ $(document).ready(function(){initNavTree('uniform__discretization_8hpp_source.ht
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;};</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>&gt;</div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="structis__uniform__disretization.html">   89</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structis__uniform__disretization.html">is_uniform_disretization</a> : <span class="keyword">public</span> std::false_type</div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="structis__uniform__discretization.html">   89</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structis__uniform__discretization.html">is_uniform_discretization</a> : <span class="keyword">public</span> std::false_type</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;{</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;};</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> CDim&gt;</div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="structis__uniform__disretization_3_01UniformDiscretization_3_01CDim_01_4_01_4.html">   94</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structis__uniform__disretization.html">is_uniform_disretization</a>&lt;<a class="code" href="classUniformDiscretization.html">UniformDiscretization</a>&lt;CDim&gt;&gt; : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="structis__uniform__discretization_3_01UniformDiscretization_3_01CDim_01_4_01_4.html">   94</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structis__uniform__discretization.html">is_uniform_discretization</a>&lt;<a class="code" href="classUniformDiscretization.html">UniformDiscretization</a>&lt;CDim&gt;&gt; : <span class="keyword">public</span> std::true_type</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;{</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;};</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;constexpr <span class="keywordtype">bool</span> is_uniform_disretization_v = <a class="code" href="structis__uniform__disretization.html">is_uniform_disretization&lt;DDim&gt;::value</a>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;constexpr <span class="keywordtype">bool</span> is_uniform_discretization_v = <a class="code" href="structis__uniform__discretization.html">is_uniform_discretization&lt;DDim&gt;::value</a>;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> CDim&gt;</div>
@@ -140,13 +140,13 @@ $(document).ready(function(){initNavTree('uniform__discretization_8hpp_source.ht
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;std::enable_if_t&lt;is_uniform_disretization_v&lt;DDim&gt;, <span class="keyword">typename</span> DDim::rcoord_type&gt; origin() noexcept</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;std::enable_if_t&lt;is_uniform_discretization_v&lt;DDim&gt;, <span class="keyword">typename</span> DDim::rcoord_type&gt; origin() noexcept</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;{</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">return</span> discretization&lt;DDim&gt;().origin();</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;}</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;std::enable_if_t&lt;is_uniform_disretization_v&lt;DDim&gt;, <span class="keyword">typename</span> DDim::rcoord_type&gt; step() noexcept</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;std::enable_if_t&lt;is_uniform_discretization_v&lt;DDim&gt;, <span class="keyword">typename</span> DDim::rcoord_type&gt; step() noexcept</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;{</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">return</span> discretization&lt;DDim&gt;().step();</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
@@ -196,11 +196,11 @@ $(document).ready(function(){initNavTree('uniform__discretization_8hpp_source.ht
 <div class="ttc" id="aclassUniformDiscretization_html_ac77ac9f0fe728b7604f74615b544b52f"><div class="ttname"><a href="classUniformDiscretization.html#ac77ac9f0fe728b7604f74615b544b52f">UniformDiscretization::UniformDiscretization</a></div><div class="ttdeci">constexpr UniformDiscretization(rcoord_type a, rcoord_type b, std::size_t n)</div><div class="ttdoc">Construct a UniformDiscretization from a segment  and a number of points n.</div><div class="ttdef"><b>Definition:</b> uniform_discretization.hpp:55</div></div>
 <div class="ttc" id="aclassUniformDiscretization_html_afb0660ef840bf122183332a79ce888bb"><div class="ttname"><a href="classUniformDiscretization.html#afb0660ef840bf122183332a79ce888bb">UniformDiscretization::mcoord_type</a></div><div class="ttdeci">DiscreteCoordinate&lt; UniformDiscretization &gt; mcoord_type</div><div class="ttdef"><b>Definition:</b> uniform_discretization.hpp:19</div></div>
 <div class="ttc" id="aclassDiscreteDomain_html"><div class="ttname"><a href="classDiscreteDomain.html">DiscreteDomain</a></div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:17</div></div>
-<div class="ttc" id="astructis__uniform__disretization_html"><div class="ttname"><a href="structis__uniform__disretization.html">is_uniform_disretization</a></div><div class="ttdef"><b>Definition:</b> uniform_discretization.hpp:89</div></div>
 <div class="ttc" id="aclassUniformDiscretization_html_aa679e3c486551a4fa5c930ffe08cd75a"><div class="ttname"><a href="classUniformDiscretization.html#aa679e3c486551a4fa5c930ffe08cd75a">UniformDiscretization::origin</a></div><div class="ttdeci">constexpr rcoord_type origin() const noexcept</div><div class="ttdoc">Lower bound index of the mesh.</div><div class="ttdef"><b>Definition:</b> uniform_discretization.hpp:70</div></div>
 <div class="ttc" id="aclassUniformDiscretization_html_a2b56fcf6685e7b74b8577c52cce5a035"><div class="ttname"><a href="classUniformDiscretization.html#a2b56fcf6685e7b74b8577c52cce5a035">UniformDiscretization::rdim_type</a></div><div class="ttdeci">CDim rdim_type</div><div class="ttdef"><b>Definition:</b> uniform_discretization.hpp:21</div></div>
 <div class="ttc" id="aclassUniformDiscretization_html_a524faba320f5ef9437fff2ba2d0d2015"><div class="ttname"><a href="classUniformDiscretization.html#a524faba320f5ef9437fff2ba2d0d2015">UniformDiscretization::step</a></div><div class="ttdeci">constexpr rcoord_type step() const</div><div class="ttdoc">Spacing step of the mesh.</div><div class="ttdef"><b>Definition:</b> uniform_discretization.hpp:76</div></div>
 <div class="ttc" id="aclassUniformDiscretization_html_a5e883613a110654331e2dee801213532"><div class="ttname"><a href="classUniformDiscretization.html#a5e883613a110654331e2dee801213532">UniformDiscretization::~UniformDiscretization</a></div><div class="ttdeci">~UniformDiscretization()=default</div></div>
 <div class="ttc" id="aclassUniformDiscretization_html_a531eb39b115772d09ade01a08bcc1444"><div class="ttname"><a href="classUniformDiscretization.html#a531eb39b115772d09ade01a08bcc1444">UniformDiscretization::rank</a></div><div class="ttdeci">static constexpr std::size_t rank()</div><div class="ttdef"><b>Definition:</b> uniform_discretization.hpp:24</div></div>
+<div class="ttc" id="astructis__uniform__discretization_html"><div class="ttname"><a href="structis__uniform__discretization.html">is_uniform_discretization</a></div><div class="ttdef"><b>Definition:</b> uniform_discretization.hpp:89</div></div>
 </body>
 </html>

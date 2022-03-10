@@ -73,7 +73,8 @@ public:
 
     /// Construct a Chunk on a domain with uninitialized values
     explicit Chunk(mdomain_type const& domain, Allocator const& allocator = Allocator())
-        : m_allocator(allocator)
+        : base_type()
+        , m_allocator(allocator)
     {
         static_cast<base_type&>(*this) = base_type(
                 std::allocator_traits<Allocator>::allocate(m_allocator, domain.size()),
@@ -96,7 +97,9 @@ public:
     /** Constructs a new Chunk by move
      * @param other the Chunk to move
      */
-    Chunk(Chunk&& other) : base_type(std::move(other))
+    Chunk(Chunk&& other)
+        : base_type(std::move(static_cast<base_type&>(other)))
+        , m_allocator(std::move(other.m_allocator))
     {
         other.m_internal_mdspan = internal_mdspan_type();
     }
@@ -117,7 +120,9 @@ public:
      */
     Chunk& operator=(Chunk&& other)
     {
-        static_cast<base_type&>(*this) = std::move(other);
+        static_cast<base_type&>(*this) = std::move(static_cast<base_type&>(other));
+        m_allocator = std::move(other.m_allocator);
+
         other.m_internal_mdspan = internal_mdspan_type();
         return *this;
     }

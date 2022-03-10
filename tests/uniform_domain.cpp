@@ -6,7 +6,7 @@
 #include <ddc/DiscreteCoordinate>
 #include <ddc/DiscreteDomain>
 #include <ddc/NonUniformDiscretization>
-#include <ddc/RectilinearDomain>
+#include <ddc/UniformDomain>
 #include <ddc/UniformDiscretization>
 
 #include <gtest/gtest.h>
@@ -30,19 +30,20 @@ using DDomXNUDDomY = DiscreteDomain<DDimX, NUDDimY>;
 
 } // namespace
 
-TEST(RectilinearDomainTest, NonDiscreteDomainSpecializationValue)
+TEST(UniformDomainTest, NonDiscreteDomainSpecializationValue)
 {
-    EXPECT_FALSE(is_rectilinear_domain_v<nullptr_t>);
-    EXPECT_FALSE(is_rectilinear_domain_v<X>);
+    EXPECT_FALSE(is_uniform_domain_v<nullptr_t>);
+    EXPECT_FALSE(is_uniform_domain_v<X>);
 }
 
-TEST(RectilinearDomainTest, DiscreteDomainSpecializationValue)
+TEST(UniformDomainTest, DiscreteDomainSpecializationValue)
 {
-    EXPECT_FALSE(is_rectilinear_domain_v<DDomNull>);
+    EXPECT_FALSE(is_uniform_domain_v<DDomNull>);
 
-    EXPECT_TRUE(is_rectilinear_domain_v<DDomX>);
-    EXPECT_TRUE(is_rectilinear_domain_v<DDomXY>);
-    EXPECT_TRUE(is_rectilinear_domain_v<NUDDomX>);
-    EXPECT_TRUE(is_rectilinear_domain_v<NUDDomXY>);
-    EXPECT_TRUE(is_rectilinear_domain_v<DDomXNUDDomY>);
+    EXPECT_TRUE(is_uniform_domain_v<DDomX>);
+    EXPECT_TRUE(is_uniform_domain_v<DDomXY>);
+
+    EXPECT_FALSE(is_uniform_domain_v<NUDDomX>);
+    EXPECT_FALSE(is_uniform_domain_v<NUDDomXY>);
+    EXPECT_FALSE(is_uniform_domain_v<DDomXNUDDomY>);
 }

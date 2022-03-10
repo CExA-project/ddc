@@ -24,7 +24,7 @@
 \snippet first_steps/heat_equation.cpp subdomains
 
 # Numerical scheme
-  Computes a single time step and stores the result in T_out. Iterating this step a chosen number of times while updating the boundary conditions and the chunks is our end goal.
+  Within a time loop, we update the ghost points, apply the numerical scheme over the inner domain and store the result in T_out.
 \snippet first_steps/heat_equation.cpp numerical scheme
 
 # IO

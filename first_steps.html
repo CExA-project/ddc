@@ -70,7 +70,12 @@ Definition of a mesh</h1>
 <div class="line">    <span class="comment">// Two-dimensional mesh on X,Y</span></div>
 </div><!-- fragment --> <h1><a class="anchor" id="autotoc_md1"></a>
 Domain of interest</h1>
-<div class="fragment"><div class="line">    <span class="comment">// Take (nx+2gw) x (ny+2gw) points of `mesh_xy` starting from (0,0)</span></div>
+<p>We initialize the full and the inner domain using DiscreteVectors that contain information on the spread of points in our space. For the inner domain, we further precise its origin using a DiscreteCoordinate as it is not the same as our space's origin.</p>
+<p>Ghost points will be used for stencil computation on inner domain boundaries' points. </p><div class="image">
+<img src="domains.png" alt=""/>
+<div class="caption">
+domains_image</div></div>
+   <div class="fragment"><div class="line">    <span class="comment">// Take (nx+2gw) x (ny+2gw) points of `mesh_xy` starting from (0,0)</span></div>
 <div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> domain_xy(</div>
 <div class="line">            DiscreteVector&lt;DDimX, DDimY&gt;(nx + 2 * gw, ny + 2 * gw));</div>
 <div class="line"> </div>
@@ -80,11 +85,12 @@ Domain of interest</h1>
 <div class="line">            DiscreteVector&lt;DDimX, DDimY&gt;(nx, ny));</div>
 </div><!-- fragment --> <h1><a class="anchor" id="autotoc_md2"></a>
 Memory allocation</h1>
+<p>We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains' points at t and t+dt.</p>
 <div class="fragment"><div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunk">Chunk&lt;double, DiscreteDomain&lt;DDimX, DDimY&gt;</a>&gt; T_in(domain_xy);</div>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunk">Chunk&lt;double, DiscreteDomain&lt;DDimX, DDimY&gt;</a>&gt; T_out(domain_xy);</div>
 </div><!-- fragment --> <h1><a class="anchor" id="autotoc_md3"></a>
 Subdomains</h1>
-<div class="fragment"><div class="line">    <span class="comment">// Ghost borders</span></div>
+<p>We define ChunkSpans corresponding to the inner and ghost borders. These will be used for the periodic boundary conditions. </p><div class="fragment"><div class="line">    <span class="comment">// Ghost borders</span></div>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_x_left = T_in[DiscreteCoordinate&lt;DDimX&gt;(gw - 1)];</div>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_x_right = T_in[DiscreteCoordinate&lt;DDimX&gt;(nx + 2 * gw - 1)];</div>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_y_left = T_in[DiscreteCoordinate&lt;DDimY&gt;(gw - 1)];</div>
@@ -97,7 +103,7 @@ Subdomains</h1>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_y_right = std::as_const(T_in)[DiscreteCoordinate&lt;DDimY&gt;(ny + gw)];</div>
 </div><!-- fragment --> <h1><a class="anchor" id="autotoc_md4"></a>
 Numerical scheme</h1>
-<div class="fragment"><div class="line">        <span class="comment">// Periodic boundary conditions</span></div>
+<p>Within a time loop, we update the ghost points, apply the numerical scheme over the inner domain and store the result in T_out. </p><div class="fragment"><div class="line">        <span class="comment">// Periodic boundary conditions</span></div>
 <div class="line">        deepcopy(temperature_g_x_left, temperature_i_x_right);</div>
 <div class="line">        deepcopy(temperature_g_x_right, temperature_i_x_left);</div>
 <div class="line">        deepcopy(temperature_g_y_left, temperature_i_y_right);</div>

@@ -6,8 +6,8 @@
 #include <ddc/DiscreteCoordinate>
 #include <ddc/DiscreteDomain>
 #include <ddc/NonUniformDiscretization>
-#include <ddc/UniformDomain>
 #include <ddc/UniformDiscretization>
+#include <ddc/UniformDomain>
 
 #include <gtest/gtest.h>
 

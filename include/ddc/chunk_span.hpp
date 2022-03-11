@@ -11,9 +11,8 @@
 
 #include "ddc/chunk_common.hpp"
 #include "ddc/discrete_domain.hpp"
-#include "ddc/memory.hpp"
 
-template <class ElementType, class, class Allocator = HostAllocator<ElementType>>
+template <class, class, class>
 class Chunk;
 
 template <

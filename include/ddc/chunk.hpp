@@ -4,13 +4,44 @@
 
 #include "ddc/chunk_common.hpp"
 #include "ddc/chunk_span.hpp"
-#include "ddc/memory.hpp"
 
-template <class, class, class>
+template <class T, std::size_t N>
+class AlignedAllocator;
+
+template <class ElementType, class, class Allocator = AlignedAllocator<ElementType, 64>>
 class Chunk;
 
 template <class ElementType, class SupportType, class Allocator>
 inline constexpr bool enable_chunk<Chunk<ElementType, SupportType, Allocator>> = true;
+
+template <class T, std::size_t N>
+class AlignedAllocator
+{
+public:
+    using value_type = T;
+
+    constexpr AlignedAllocator() = default;
+
+    constexpr AlignedAllocator(AlignedAllocator const& x) = default;
+
+    constexpr AlignedAllocator(AlignedAllocator&& x) noexcept = default;
+
+    ~AlignedAllocator() = default;
+
+    constexpr AlignedAllocator& operator=(AlignedAllocator const& x) = default;
+
+    constexpr AlignedAllocator& operator=(AlignedAllocator&& x) noexcept = default;
+
+    [[nodiscard]] T* allocate(std::size_t n) const
+    {
+        return new (std::align_val_t(N)) value_type[n];
+    }
+
+    void deallocate(T* p, std::size_t) const
+    {
+        operator delete[](p, std::align_val_t(N));
+    }
+};
 
 template <class ElementType, class... DDims, class Allocator>
 class Chunk<ElementType, DiscreteDomain<DDims...>, Allocator>
@@ -72,21 +103,18 @@ public:
     Chunk() = default;
 
     /// Construct a Chunk on a domain with uninitialized values
-    explicit Chunk(mdomain_type const& domain, Allocator const& allocator = Allocator())
-        : base_type()
-        , m_allocator(allocator)
+    explicit Chunk(mdomain_type const& domain, Allocator allocator = Allocator())
+        : base_type(std::allocator_traits<Allocator>::allocate(m_allocator, domain.size()), domain)
+        , m_allocator(std::move(allocator))
     {
-        static_cast<base_type&>(*this) = base_type(
-                std::allocator_traits<Allocator>::allocate(m_allocator, domain.size()),
-                domain);
     }
 
     /// Construct a Chunk from a deepcopy of a ChunkSpan
     template <class OElementType, class... ODDims, class LayoutType>
     explicit Chunk(
             ChunkSpan<OElementType, DiscreteDomain<ODDims...>, LayoutType> chunk_span,
-            Allocator const& allocator = Allocator())
-        : Chunk(chunk_span.domain(), allocator)
+            Allocator allocator = Allocator())
+        : Chunk(chunk_span.domain(), std::move(allocator))
     {
         deepcopy(span_view(), chunk_span);
     }
@@ -120,6 +148,7 @@ public:
      */
     Chunk& operator=(Chunk&& other)
     {
+        assert(this != &other);
         static_cast<base_type&>(*this) = std::move(static_cast<base_type&>(other));
         m_allocator = std::move(other.m_allocator);
 

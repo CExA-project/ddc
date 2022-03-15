@@ -20,17 +20,35 @@ class AlignedAllocator
 public:
     using value_type = T;
 
+    using is_always_equal = std::true_type;
+
+    template <class U>
+    struct rebind
+    {
+        using other = AlignedAllocator<U, N>;
+    };
+
     constexpr AlignedAllocator() = default;
 
     constexpr AlignedAllocator(AlignedAllocator const& x) = default;
 
     constexpr AlignedAllocator(AlignedAllocator&& x) noexcept = default;
 
+    template <class U>
+    constexpr explicit AlignedAllocator(AlignedAllocator<U, N> const& b) noexcept
+    {
+    }
+
     ~AlignedAllocator() = default;
 
     constexpr AlignedAllocator& operator=(AlignedAllocator const& x) = default;
 
     constexpr AlignedAllocator& operator=(AlignedAllocator&& x) noexcept = default;
+
+    template <class U>
+    constexpr AlignedAllocator& operator=(AlignedAllocator<U, N> const& b) noexcept
+    {
+    }
 
     [[nodiscard]] T* allocate(std::size_t n) const
     {
@@ -42,6 +60,18 @@ public:
         operator delete[](p, std::align_val_t(N));
     }
 };
+
+template <class T, std::size_t NT, class U, std::size_t NU>
+constexpr bool operator==(AlignedAllocator<T, NT> const&, AlignedAllocator<U, NU> const&) noexcept
+{
+    return std::is_same_v<AlignedAllocator<T, NT>, AlignedAllocator<U, NU>>;
+}
+
+template <class T, std::size_t NT, class U, std::size_t NU>
+constexpr bool operator!=(AlignedAllocator<T, NT> const&, AlignedAllocator<U, NU> const&) noexcept
+{
+    return !std::is_same_v<AlignedAllocator<T, NT>, AlignedAllocator<U, NU>>;
+}
 
 template <class ElementType, class... DDims, class Allocator>
 class Chunk<ElementType, DiscreteDomain<DDims...>, Allocator>

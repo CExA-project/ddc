@@ -56,7 +56,7 @@ Definition of a mesh</h1>
 <div class="line">    Coordinate&lt;X&gt; <span class="keyword">const</span> dx(0.02);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Actual mesh on X</span></div>
-<div class="line">    init_discretization&lt;DDimX&gt;(min_x, dx);</div>
+<div class="line">    init_discretization&lt;DDimX&gt;(min_x - dx, dx);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Origin on Y</span></div>
 <div class="line">    Coordinate&lt;Y&gt; <span class="keyword">const</span> min_y(-1.);</div>
@@ -65,7 +65,7 @@ Definition of a mesh</h1>
 <div class="line">    Coordinate&lt;Y&gt; <span class="keyword">const</span> dy(0.01);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Actual mesh on Y</span></div>
-<div class="line">    init_discretization&lt;DDimY&gt;(min_y, dy);</div>
+<div class="line">    init_discretization&lt;DDimY&gt;(min_y - dy, dy);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Two-dimensional mesh on X,Y</span></div>
 </div><!-- fragment --> <h1><a class="anchor" id="autotoc_md1"></a>
@@ -75,14 +75,13 @@ Domain of interest</h1>
 <img src="domains.png" alt=""/>
 <div class="caption">
 domains_image</div></div>
-   <div class="fragment"><div class="line">    <span class="comment">// Take (nx+2gw) x (ny+2gw) points of `mesh_xy` starting from (0,0)</span></div>
-<div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> domain_xy(</div>
-<div class="line">            DiscreteVector&lt;DDimX, DDimY&gt;(nx + 2 * gw, ny + 2 * gw));</div>
+   <div class="fragment"><div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimX&gt;</a> <span class="keyword">const</span> domain_x(DiscreteVector&lt;DDimX&gt;(nx + 2));</div>
+<div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimY&gt;</a> <span class="keyword">const</span> domain_y(DiscreteVector&lt;DDimY&gt;(ny + 2));</div>
+<div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a> domain_xy(domain_x, domain_y);</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// Take only the inner domain (i.e. without ghost zone)</span></div>
-<div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> inner_xy(</div>
-<div class="line">            DiscreteCoordinate&lt;DDimX, DDimY&gt;(gw, gw),</div>
-<div class="line">            DiscreteVector&lt;DDimX, DDimY&gt;(nx, ny));</div>
+<div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimX&gt;</a> <span class="keyword">const</span> inner_x(domain_x.front() + 1, DiscreteVector&lt;DDimX&gt;(nx));</div>
+<div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimY&gt;</a> <span class="keyword">const</span> inner_y(domain_y.front() + 1, DiscreteVector&lt;DDimY&gt;(ny));</div>
+<div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a> inner_xy(inner_x, inner_y);</div>
 </div><!-- fragment --> <h1><a class="anchor" id="autotoc_md2"></a>
 Memory allocation</h1>
 <p>We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains' points at t and t+dt.</p>
@@ -91,16 +90,16 @@ Memory allocation</h1>
 </div><!-- fragment --> <h1><a class="anchor" id="autotoc_md3"></a>
 Subdomains</h1>
 <p>We define ChunkSpans corresponding to the inner and ghost borders. These will be used for the periodic boundary conditions. </p><div class="fragment"><div class="line">    <span class="comment">// Ghost borders</span></div>
-<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_x_left = T_in[DiscreteCoordinate&lt;DDimX&gt;(gw - 1)];</div>
-<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_x_right = T_in[DiscreteCoordinate&lt;DDimX&gt;(nx + 2 * gw - 1)];</div>
-<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_y_left = T_in[DiscreteCoordinate&lt;DDimY&gt;(gw - 1)];</div>
-<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_y_right = T_in[DiscreteCoordinate&lt;DDimY&gt;(ny + 2 * gw - 1)];</div>
+<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_x_left = T_in[domain_x.front()][inner_y];</div>
+<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_x_right = T_in[domain_x.back()][inner_y];</div>
+<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_y_left = T_in[domain_y.front()][inner_x];</div>
+<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_y_right = T_in[domain_y.back()][inner_x];</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Inner borders</span></div>
-<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_x_left = std::as_const(T_in)[DiscreteCoordinate&lt;DDimX&gt;(gw)];</div>
-<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_x_right = std::as_const(T_in)[DiscreteCoordinate&lt;DDimX&gt;(nx + gw)];</div>
-<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_y_left = std::as_const(T_in)[DiscreteCoordinate&lt;DDimY&gt;(gw)];</div>
-<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_y_right = std::as_const(T_in)[DiscreteCoordinate&lt;DDimY&gt;(ny + gw)];</div>
+<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_x_left = std::as_const(T_in)[inner_x.front()][inner_y];</div>
+<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_x_right = std::as_const(T_in)[inner_x.back()][inner_y];</div>
+<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_y_left = std::as_const(T_in)[inner_y.front()][inner_x];</div>
+<div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_y_right = std::as_const(T_in)[inner_y.back()][inner_x];</div>
 </div><!-- fragment --> <h1><a class="anchor" id="autotoc_md4"></a>
 Numerical scheme</h1>
 <p>Within a time loop, we update the ghost points, apply the numerical scheme over the inner domain and store the result in T_out. </p><div class="fragment"><div class="line">        <span class="comment">// Periodic boundary conditions</span></div>

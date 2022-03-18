@@ -11,14 +11,19 @@ using B = std::allocator_traits<A>::rebind_alloc<U>;
 TEST(AlignedAllocatorTest, Traits)
 {
     using traits = std::allocator_traits<A>;
+    ASSERT_TRUE((std::is_same_v<traits::allocator_type, A>));
+    ASSERT_TRUE((std::is_same_v<traits::value_type, T>));
     ASSERT_TRUE((std::is_same_v<traits::pointer, T*>));
     ASSERT_TRUE((std::is_same_v<traits::const_pointer, T const*>));
     ASSERT_TRUE((std::is_same_v<traits::void_pointer, void*>));
     ASSERT_TRUE((std::is_same_v<traits::const_void_pointer, void const*>));
-    ASSERT_TRUE((std::is_same_v<traits::value_type, T>));
     ASSERT_TRUE((std::is_same_v<traits::difference_type, std::ptrdiff_t>));
     ASSERT_TRUE((std::is_same_v<traits::size_type, std::size_t>));
+    ASSERT_TRUE((std::is_same_v<traits::propagate_on_container_copy_assignment, std::false_type>));
+    ASSERT_TRUE((std::is_same_v<traits::propagate_on_container_move_assignment, std::false_type>));
+    ASSERT_TRUE((std::is_same_v<traits::propagate_on_container_swap, std::false_type>));
     ASSERT_TRUE((std::is_same_v<traits::rebind_alloc<U>, AlignedAllocator<U, 64>>));
+    ASSERT_TRUE((std::is_same_v<traits::is_always_equal, std::true_type>));
 }
 
 TEST(AlignedAllocatorTest, DefaultConstructor)

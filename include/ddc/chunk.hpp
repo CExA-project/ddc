@@ -20,8 +20,6 @@ class AlignedAllocator
 public:
     using value_type = T;
 
-    using is_always_equal = std::true_type;
-
     template <class U>
     struct rebind
     {

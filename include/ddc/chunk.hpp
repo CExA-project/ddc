@@ -2,11 +2,12 @@
 
 #pragma once
 
-#include "ddc/aligned_allocator.hpp"
+#include <memory>
+
 #include "ddc/chunk_common.hpp"
 #include "ddc/chunk_span.hpp"
 
-template <class ElementType, class, class Allocator = AlignedAllocator<ElementType, 64>>
+template <class ElementType, class, class Allocator = std::allocator<ElementType>>
 class Chunk;
 
 template <class ElementType, class SupportType, class Allocator>

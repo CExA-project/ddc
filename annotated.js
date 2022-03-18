@@ -1,7 +1,8 @@
 var annotated =
 [
+    [ "AlignedAllocator", "classAlignedAllocator.html", "classAlignedAllocator" ],
     [ "Chunk", "namespace_3globalScope_4.html#classChunk", null ],
-    [ "Chunk< ElementType, DiscreteDomain< DDims... > >", "classChunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_01_4.html", "classChunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_01_4" ],
+    [ "Chunk< ElementType, DiscreteDomain< DDims... >, Allocator >", "classChunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html", "classChunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4" ],
     [ "chunk_traits", "namespace_3globalScope_4.html#structchunk__traits", "namespace_3globalScope_4_structchunk__traits" ],
     [ "ChunkCommon", "namespace_3globalScope_4.html#classChunkCommon", null ],
     [ "ChunkCommon< ElementType, DiscreteDomain< DDims... >, LayoutStridedPolicy >", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4" ],

@@ -7,12 +7,16 @@
 #include "ddc/chunk_common.hpp"
 #include "ddc/chunk_span.hpp"
 
+/** A chunck
+ */
 template <class ElementType, class, class Allocator = std::allocator<ElementType>>
 class Chunk;
 
 template <class ElementType, class SupportType, class Allocator>
 inline constexpr bool enable_chunk<Chunk<ElementType, SupportType, Allocator>> = true;
 
+/** A chunck
+ */
 template <class ElementType, class... DDims, class Allocator>
 class Chunk<ElementType, DiscreteDomain<DDims...>, Allocator>
     : public ChunkCommon<ElementType, DiscreteDomain<DDims...>, std::experimental::layout_right>

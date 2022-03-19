@@ -118,6 +118,12 @@ inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexce
     for_each(default_policy(), domain, std::forward<Functor>(f));
 }
 
+template <class... DDims, class Functor>
+inline void for_each(DiscreteVector<DDims...> const& domain, Functor&& f) noexcept
+{
+    for_each(default_policy(), domain, std::forward<Functor>(f));
+}
+
 template <
         class ExecutionPolicy,
         class ElementType,

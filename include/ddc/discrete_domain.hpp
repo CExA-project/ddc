@@ -22,6 +22,8 @@ class DiscreteDomain
     template <class...>
     friend class DiscreteDomain;
 
+    friend std::tuple_element_t<0, std::tuple<DDims...>>;
+
 public:
     using mcoord_type = DiscreteCoordinate<DDims...>;
 
@@ -59,6 +61,8 @@ public:
 
     /** Construct a DiscreteDomain starting from (0, ..., 0) with size points.
      * @param size the number of points in each dimension
+     * 
+     * @deprecated use the version with explicit lower bound instead
      */
     [[deprecated]] constexpr DiscreteDomain(mlength_type const& size)
         : m_lbound((get<DDims>(size) - get<DDims>(size))...) // Hack to have expansion of zero

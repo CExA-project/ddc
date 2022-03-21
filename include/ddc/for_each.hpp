@@ -13,73 +13,78 @@ struct serial_policy
 {
 };
 
-/** iterates over a 1d domain
- * @param[in] domain the 1d domain to iterate
- * @param[in] f      a functor taking an index as parameter
- */
-template <class DDim, class Functor>
-inline void for_each(serial_policy, DiscreteDomain<DDim> const& domain, Functor&& f) noexcept
-{
-    for (DiscreteCoordinate<DDim> const i : domain) {
-        f(i);
-    }
-}
+namespace detail {
 
-/** iterates over a 2d domain
- * @param[in] domain the 2d domain to iterate
- * @param[in] f      a functor taking 2 indices as parameter
- */
-template <class DDim1, class DDim2, class Functor>
-inline void for_each(
-        serial_policy,
-        DiscreteDomain<DDim1, DDim2> const& domain,
-        Functor&& f) noexcept
+template <class... DDims, class Functor, class... DCoords>
+inline void for_each_serial(
+        DiscreteDomain<DDims...> const& domain,
+        Functor const& f,
+        DCoords const&... dcoords) noexcept
 {
-    for (DiscreteCoordinate<DDim1> const i1 : select<DDim1>(domain)) {
-        for (DiscreteCoordinate<DDim2> const i2 : select<DDim2>(domain)) {
-            f(DiscreteCoordinate<DDim1, DDim2>(i1, i2));
+    if constexpr (sizeof...(DCoords) == sizeof...(DDims)) {
+        f(DiscreteCoordinate<DDims...>(dcoords...));
+    } else {
+        using CurrentDDim = type_seq_element_t<sizeof...(DCoords), detail::TypeSeq<DDims...>>;
+        for (DiscreteCoordinate<CurrentDDim> const ii : select<CurrentDDim>(domain)) {
+            for_each_serial(domain, f, dcoords..., ii);
         }
     }
 }
 
-/** OpenMP parallel execution
- * - default scheduling
- * - collapsing in case of tightly nested loops
+} // namespace detail
+
+/** iterates over a nD domain
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking an index as parameter
+ */
+template <class... DDims, class Functor>
+inline void for_each(serial_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
+{
+    detail::for_each_serial(domain, std::forward<Functor>(f));
+}
+
+/** OpenMP parallel execution with default scheduling
  */
 struct omp_policy
 {
 };
 
-/** iterates over a 1d domain
- * @param[in] domain the 1d domain to iterate
- * @param[in] f      a functor taking an index as parameter
- */
-template <class DDim, class Functor>
-inline void for_each(omp_policy, DiscreteDomain<DDim> const& domain, Functor&& f) noexcept
+namespace detail {
+
+template <class... DDims, class Functor, class... DCoords>
+inline void for_each_omp(
+        DiscreteDomain<DDims...> const& domain,
+        Functor const& f,
+        DCoords const&... dcoords) noexcept
 {
-    DiscreteDomainIterator<DDim> const it_b = domain.begin();
-    DiscreteDomainIterator<DDim> const it_e = domain.end();
-#pragma omp parallel for default(none) shared(it_b, it_e, f)
-    for (DiscreteDomainIterator<DDim> it = it_b; it != it_e; ++it) {
-        f(*it);
+    if constexpr (sizeof...(DCoords) == sizeof...(DDims)) {
+        f(DiscreteCoordinate<DDims...>(dcoords...));
+    } else {
+        using CurrentDDim = type_seq_element_t<sizeof...(DCoords), detail::TypeSeq<DDims...>>;
+        for (DiscreteCoordinate<CurrentDDim> const ii : select<CurrentDDim>(domain)) {
+            for_each_omp(domain, f, dcoords..., ii);
+        }
     }
 }
 
-/** iterates over a 2d domain
- * @param[in] domain the 2d domain to iterate
- * @param[in] f      a functor taking 2 indices as parameter
+} // namespace detail
+
+/** iterates over a nd domain
+ * @param[in] domain the nd domain to iterate
+ * @param[in] f      a functor taking an index as parameter
  */
-template <class DDim1, class DDim2, class Functor>
-inline void for_each(omp_policy, DiscreteDomain<DDim1, DDim2> const& domain, Functor&& f) noexcept
+template <class... DDims, class Functor>
+inline void for_each(omp_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
-    DiscreteDomainIterator<DDim1> const it1_b = select<DDim1>(domain).begin();
-    DiscreteDomainIterator<DDim1> const it1_e = select<DDim1>(domain).end();
-    DiscreteDomainIterator<DDim2> const it2_b = select<DDim2>(domain).begin();
-    DiscreteDomainIterator<DDim2> const it2_e = select<DDim2>(domain).end();
-#pragma omp parallel for collapse(2) default(none) shared(it1_b, it1_e, it2_b, it2_e, f)
-    for (DiscreteDomainIterator<DDim1> it1 = it1_b; it1 != it1_e; ++it1) {
-        for (DiscreteDomainIterator<DDim2> it2 = it2_b; it2 != it2_e; ++it2) {
-            f(DiscreteCoordinate<DDim1, DDim2>(*it1, *it2));
+    using FirstDDim = type_seq_element_t<0, detail::TypeSeq<DDims...>>;
+    DiscreteDomainIterator<FirstDDim> const it_b = select<FirstDDim>(domain).begin();
+    DiscreteDomainIterator<FirstDDim> const it_e = select<FirstDDim>(domain).end();
+#pragma omp parallel for default(none) shared(it_b, it_e, domain, f)
+    for (DiscreteDomainIterator<FirstDDim> it = it_b; it != it_e; ++it) {
+        if constexpr (sizeof...(DDims) == 1) {
+            f(*it);
+        } else {
+            detail::for_each_omp(domain, f, *it);
         }
     }
 }

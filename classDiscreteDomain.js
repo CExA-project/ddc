@@ -12,7 +12,7 @@ var classDiscreteDomain =
     [ "~DiscreteDomain", "classDiscreteDomain.html#abd4bfc474004be35df9dd30ff8413c02", null ],
     [ "operator=", "classDiscreteDomain.html#a5869ce8018a7e19b806df2faf370dbc1", null ],
     [ "operator=", "classDiscreteDomain.html#a2c7ef71d94a3cf8e3fd9e4eb39c2d562", null ],
-    [ "operator==", "classDiscreteDomain.html#a13a5146bd8231749df51936e63d618eb", null ],
+    [ "operator==", "classDiscreteDomain.html#a9b135f274865628217eed3242c3656b4", null ],
     [ "operator!=", "classDiscreteDomain.html#aeccff5525a9fac785552fa3e5a5b3c6d", null ],
     [ "size", "classDiscreteDomain.html#a805cf8f9152837a4d8916cf19363cdb7", null ],
     [ "extents", "classDiscreteDomain.html#a46b1ae9a7e29b496275fd7ae1687a937", null ],

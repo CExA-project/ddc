@@ -88,8 +88,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5869ce8018a7e19b806df2faf370dbc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c7ef71d94a3cf8e3fd9e4eb39c2d562"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a2c7ef71d94a3cf8e3fd9e4eb39c2d562">operator=</a> (<a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> &amp;&amp;x)=default</td></tr>
 <tr class="separator:a2c7ef71d94a3cf8e3fd9e4eb39c2d562"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13a5146bd8231749df51936e63d618eb"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a13a5146bd8231749df51936e63d618eb">operator==</a> (<a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> const &amp;other) const</td></tr>
-<tr class="separator:a13a5146bd8231749df51936e63d618eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b135f274865628217eed3242c3656b4"><td class="memTemplParams" colspan="2">template&lt;class... ODims&gt; </td></tr>
+<tr class="memitem:a9b135f274865628217eed3242c3656b4"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a9b135f274865628217eed3242c3656b4">operator==</a> (<a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; ODims... &gt; const &amp;other) const</td></tr>
+<tr class="separator:a9b135f274865628217eed3242c3656b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeccff5525a9fac785552fa3e5a5b3c6d"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#aeccff5525a9fac785552fa3e5a5b3c6d">operator!=</a> (<a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> const &amp;other) const</td></tr>
 <tr class="separator:aeccff5525a9fac785552fa3e5a5b3c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a805cf8f9152837a4d8916cf19363cdb7"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a805cf8f9152837a4d8916cf19363cdb7">size</a> () const</td></tr>
@@ -513,13 +514,15 @@ template&lt;class... DDims&gt; </div>
 
 </div>
 </div>
-<a id="a13a5146bd8231749df51936e63d618eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13a5146bd8231749df51936e63d618eb">&#9670;&nbsp;</a></span>operator==()</h2>
+<a id="a9b135f274865628217eed3242c3656b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b135f274865628217eed3242c3656b4">&#9670;&nbsp;</a></span>operator==()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... DDims&gt; </div>
+<div class="memtemplate">
+template&lt;class... ODims&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -527,7 +530,7 @@ template&lt;class... DDims&gt; </div>
         <tr>
           <td class="memname">constexpr bool <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; DDims &gt;::operator== </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; DDims &gt; const &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; ODims... &gt; const &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
           <td> const</td>
         </tr>

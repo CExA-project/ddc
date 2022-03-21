@@ -153,7 +153,7 @@ if(DDC_BUILD_PDI_WRAPPER)
 		INTERFACE
 			DDC::DDC
 			PDI::PDI_C)
-	add_library(DDC::PDI ALIAS PDI_wrapper)
+	add_library(DDC::PDI_wrapper ALIAS PDI_wrapper)
 	install(
 		TARGETS PDI_wrapper
 		EXPORT DDCTargets)

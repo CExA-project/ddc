@@ -7,8 +7,6 @@
 #include "ddc/chunk_common.hpp"
 #include "ddc/chunk_span.hpp"
 
-/** A chunck
- */
 template <class ElementType, class, class Allocator = std::allocator<ElementType>>
 class Chunk;
 

@@ -58,7 +58,9 @@ public:
      * 
      * @deprecated use the version accepting a vector for n instead
      */
-    constexpr UniformDiscretization(rcoord_type a, rcoord_type b, std::size_t n)
+    [[deprecated(
+            "Use the version accepting a vector for n "
+            "instead.")]] constexpr UniformDiscretization(rcoord_type a, rcoord_type b, std::size_t n)
         : m_origin(a)
         , m_step((b - a) / (n - 1))
     {

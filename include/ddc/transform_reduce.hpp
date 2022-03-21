@@ -44,7 +44,7 @@ inline T transform_reduce(
  */
 template <class DDim1, class DDim2, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce(
-        serial_policy policy,
+        [[maybe_unused]] serial_policy policy,
         DiscreteDomain<DDim1, DDim2> const& domain,
         T init,
         BinaryReductionOp&& reduce,

@@ -23,14 +23,17 @@ for the JavaScript code in this file
 var NAVTREE =
 [
   [ "DDC", "index.html", [
-    [ "About", "index.html", null ],
+    [ "About", "index.html", [
+      [ "Discover more", "index.html#autotoc_md0", null ],
+      [ "Join us!", "index.html#autotoc_md1", null ]
+    ] ],
     [ "First steps: the heat equation", "first_steps.html", [
-      [ "Definition of a mesh", "first_steps.html#autotoc_md0", null ],
-      [ "Domain of interest", "first_steps.html#autotoc_md1", null ],
-      [ "Memory allocation", "first_steps.html#autotoc_md2", null ],
-      [ "Subdomains", "first_steps.html#autotoc_md3", null ],
-      [ "Numerical scheme", "first_steps.html#autotoc_md4", null ],
-      [ "IO", "first_steps.html#autotoc_md5", null ]
+      [ "Definition of a mesh", "first_steps.html#autotoc_md2", null ],
+      [ "Domain of interest", "first_steps.html#autotoc_md3", null ],
+      [ "Memory allocation", "first_steps.html#autotoc_md4", null ],
+      [ "Subdomains", "first_steps.html#autotoc_md5", null ],
+      [ "Numerical scheme", "first_steps.html#autotoc_md6", null ],
+      [ "IO", "first_steps.html#autotoc_md7", null ]
     ] ],
     [ "Deprecated List", "deprecated.html", null ],
     [ "API reference", "annotated.html", "annotated" ]

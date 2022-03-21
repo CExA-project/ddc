@@ -47,8 +47,31 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="title">About </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>DDC is a discrete domain computation library.</p>
-<p>If you like the project, please leave us a star on github: <a href="https://github.com/Maison-de-la-Simulation/ddc">https://github.com/Maison-de-la-Simulation/ddc</a> </p>
+<div class="textblock"><p>DDC is the discrete domain computation library, a C++-17 library that aims to offer to the C++/MPI world an equivalent to the <a href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html"><code>xarray.DataArray</code></a>/<a href="https://docs.dask.org/en/stable/array.html"><code>dask.Array</code></a> python environment. Where these two libraries are based on <a href="https://numpy.org/"><code>numpy</code></a>, DDC relies on <a href="https://github.com/kokkos/kokkos">Kokkos</a> and <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p0009r10.html">mdspan</a> to offer CPU/GPU performance-portable multi-dimensional arrays and iterators.</p>
+<p>DDC aims to offer abstractions to represent:</p><ul>
+<li>tagged continuous dimensions,</li>
+<li>discretizations of these (multiple kinds of meshes, function spaces, Fourier, etc.),</li>
+<li>domains in these discretized dimensions,</li>
+<li>associating data to the elements of these discrete domains,</li>
+<li>efficient distribution and iteration over this data.</li>
+</ul>
+<p>All these abstractions are handled at compilation using C++ template meta-programming to ensure zero overhead at execution and enable developers to change their design choices (<em>eg.</em> from a regular mesh to a non-uniform one) with performance portability.</p>
+<h1><a class="anchor" id="autotoc_md0"></a>
+Discover more</h1>
+<ul>
+<li>First, you should <a class="el" href="first_steps.html">have a look at our commented example / tutorial</a>.</li>
+<li>To know more, you can <a href="annotated.html">delve in the reference documentation</a>.</li>
+<li><a href="https://github.com/Maison-de-la-Simulation/ddc">Use the source, Luke</a>.</li>
+<li><a href="https://join.slack.com/t/ddc-lib/shared_invite/zt-14b6rjcrn-AwSfM6_arEamAKk_VgQPhg">You should definitely come see us on Slack</a>.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Join us!</h1>
+<p>If you like the project, <a href="https://github.com/Maison-de-la-Simulation/ddc">leave us a ⭐star⭐ on Github</a>.</p>
+<p><a href="https://join.slack.com/t/ddc-lib/shared_invite/zt-14b6rjcrn-AwSfM6_arEamAKk_VgQPhg"><div class="image">
+<img src="slack.png" alt=""/>
+<div class="caption">
+slack</div></div>
+    Come talk with us on Slack</a> </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -47,7 +47,7 @@ $(document).ready(function(){initNavTree('first_steps.html',''); initResizable()
 <div class="title">First steps: the heat equation </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md0"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md2"></a>
 Definition of a mesh</h1>
 <div class="fragment"><div class="line">    <span class="comment">// Origin on X</span></div>
 <div class="line">    Coordinate&lt;X&gt; <span class="keyword">const</span> min_x(-1.);</div>
@@ -68,7 +68,7 @@ Definition of a mesh</h1>
 <div class="line">    init_discretization&lt;DDimY&gt;(min_y - dy, dy);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Two-dimensional mesh on X,Y</span></div>
-</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md1"></a>
+</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md3"></a>
 Domain of interest</h1>
 <p>We initialize the full and the inner domain using DiscreteVectors that contain information on the spread of points in our space. For the inner domain, we further precise its origin using a DiscreteCoordinate as it is not the same as our space's origin.</p>
 <p>Ghost points will be used for stencil computation on inner domain boundaries' points. </p><div class="image">
@@ -82,12 +82,12 @@ domains_image</div></div>
 <div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimX&gt;</a> <span class="keyword">const</span> inner_x(domain_x.front() + 1, DiscreteVector&lt;DDimX&gt;(nx));</div>
 <div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimY&gt;</a> <span class="keyword">const</span> inner_y(domain_y.front() + 1, DiscreteVector&lt;DDimY&gt;(ny));</div>
 <div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a> inner_xy(inner_x, inner_y);</div>
-</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md2"></a>
+</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md4"></a>
 Memory allocation</h1>
 <p>We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains' points at t and t+dt.</p>
 <div class="fragment"><div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunk">Chunk&lt;double, DiscreteDomain&lt;DDimX, DDimY&gt;</a>&gt; T_in(domain_xy);</div>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunk">Chunk&lt;double, DiscreteDomain&lt;DDimX, DDimY&gt;</a>&gt; T_out(domain_xy);</div>
-</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md3"></a>
+</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md5"></a>
 Subdomains</h1>
 <p>We define ChunkSpans corresponding to the inner and ghost borders. These will be used for the periodic boundary conditions. </p><div class="fragment"><div class="line">    <span class="comment">// Ghost borders</span></div>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_g_x_left = T_in[domain_x.front()][inner_y];</div>
@@ -100,7 +100,7 @@ Subdomains</h1>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_x_right = std::as_const(T_in)[inner_x.back()][inner_y];</div>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_y_left = std::as_const(T_in)[inner_y.front()][inner_x];</div>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> temperature_i_y_right = std::as_const(T_in)[inner_y.back()][inner_x];</div>
-</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md4"></a>
+</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md6"></a>
 Numerical scheme</h1>
 <p>Within a time loop, we update the ghost points, apply the numerical scheme over the inner domain and store the result in T_out. </p><div class="fragment"><div class="line">        <span class="comment">// Periodic boundary conditions</span></div>
 <div class="line">        deepcopy(temperature_g_x_left, temperature_i_x_right);</div>
@@ -128,7 +128,7 @@ Numerical scheme</h1>
 <div class="line">                                + dy_r * T_in(ix, iy - 1))</div>
 <div class="line">                             / (dy_l * dy_m * dy_r);</div>
 <div class="line">        });</div>
-</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --> <h1><a class="anchor" id="autotoc_md7"></a>
 IO</h1>
 <div class="fragment"><div class="line">        <a class="code" href="classPdiEvent.html">PdiEvent</a>(<span class="stringliteral">&quot;temperature&quot;</span>).<a class="code" href="classPdiEvent.html#ab9850d319f22d470db5d395a80c315a0">with</a>(<span class="stringliteral">&quot;iter&quot;</span>, iter).<a class="code" href="classPdiEvent.html#a418674b56f3229f3d2b6eed12177dd5c">and_with</a>(<span class="stringliteral">&quot;temperature&quot;</span>, T_in);</div>
 </div><!-- fragment --></div></div><!-- contents -->

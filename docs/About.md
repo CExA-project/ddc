@@ -1,6 +1,6 @@
 \mainpage About
 
-%DDC is the discrete domain computation library, a C++-14 library that aims to offer to the C++/MPI
+%DDC is the discrete domain computation library, a C++-17 library that aims to offer to the C++/MPI
 world an equivalent to the
 [`xarray.DataArray`](https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html)/[`dask.Array`](https://docs.dask.org/en/stable/array.html)
 python environment.

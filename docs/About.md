@@ -17,7 +17,7 @@ DDC aims to offer abstractions to represent:
 * efficient distribution and iteration over this data.
 
 All these abstractions are handled at compilation using C++ template meta-programming to ensure zero
-overheads at execution and enable developers to change their design choices (*eg.* from a regular
+overhead at execution and enable developers to change their design choices (*eg.* from a regular
 mesh to a non-uniform one) with performance portability.
 
 # Discover more

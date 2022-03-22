@@ -62,7 +62,7 @@ if("${BUILD_TESTING}")
 	set(GOOGLETEST_PATH "${CMAKE_CURRENT_SOURCE_DIR}/vendor/googletest" CACHE PATH "Path to the googletest library source")
 
 	if("${DDC_GTest_DEPENDENCY_POLICY}" STREQUAL "AUTO")
-		if(NOT TARGET GTest::GTest)
+		if(NOT TARGET GTest::GTest AND NOT TARGET GTest::gtest)
 			find_package(GTest)
 			if(NOT GTest_FOUND)
 				add_subdirectory("${GOOGLETEST_PATH}")

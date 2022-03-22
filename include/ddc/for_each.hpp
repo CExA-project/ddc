@@ -33,7 +33,7 @@ inline void for_each_impl(
         DCoords const&... dcs) noexcept
 {
     if constexpr (sizeof...(DCoords) == sizeof...(DDims)) {
-        f(DiscreteCoordinate<DDims...> {dcs...});
+        f(DiscreteVector<DDims...> {dcs...});
     } else {
         using CurrentDDim = type_seq_element_t<sizeof...(DCoords), detail::TypeSeq<DDims...>>;
         for (size_t ii = 0; ii < select<CurrentDDim>(domain); ++ii) {

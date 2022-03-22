@@ -138,24 +138,24 @@ install(
 	
 ## The PDI wrapper
 
-if(DDC_BUILD_PDI_WRAPPER)
-	add_library(PDI_wrapper INTERFACE)
-	target_compile_features(PDI_wrapper INTERFACE cxx_std_17)
-	target_include_directories(PDI_wrapper
+if("${DDC_BUILD_PDI_WRAPPER}")
+	add_library(PDI_Wrapper INTERFACE)
+	target_compile_features(PDI_Wrapper INTERFACE cxx_std_17)
+	target_include_directories(PDI_Wrapper
 		INTERFACE
 			"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
 	)
-	target_include_directories(PDI_wrapper
+	target_include_directories(PDI_Wrapper
 		SYSTEM INTERFACE
 			"$<INSTALL_INTERFACE:include>"
 	)
-	target_link_libraries(PDI_wrapper
+	target_link_libraries(PDI_Wrapper
 		INTERFACE
 			DDC::DDC
 			PDI::PDI_C)
-	add_library(DDC::PDI_wrapper ALIAS PDI_wrapper)
+	add_library(DDC::PDI_Wrapper ALIAS PDI_Wrapper)
 	install(
-		TARGETS PDI_wrapper
+		TARGETS PDI_Wrapper
 		EXPORT DDCTargets)
 endif()
 

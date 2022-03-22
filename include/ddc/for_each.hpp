@@ -36,7 +36,7 @@ inline void for_each_impl(
         f(DiscreteVector<DDims...> {dcs...});
     } else {
         using CurrentDDim = type_seq_element_t<sizeof...(DCoords), detail::TypeSeq<DDims...>>;
-        for (size_t ii = 0; ii < select<CurrentDDim>(domain); ++ii) {
+        for (std::ptrdiff_t ii = 0; ii < select<CurrentDDim>(domain); ++ii) {
             for_each_impl(domain, f, dcs..., ii);
         }
     }

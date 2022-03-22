@@ -65,11 +65,12 @@ $(document).ready(function(){initNavTree('deepcopy_8hpp_source.html',''); initRe
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    static_assert(</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            std::is_assignable_v&lt;decltype(*to.data()), decltype(*from.data())&gt;,</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;            <span class="stringliteral">&quot;Not assignable&quot;</span>);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    assert(to.domain().front() == from.domain().front());</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    assert(to.domain().back() == from.domain().back());</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    for_each(to.domain(), [&amp;to, &amp;from](<span class="keyword">auto</span>&amp;&amp;... idxs) { to(idxs...) = from(idxs...); });</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordflow">return</span> to;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    assert(to.domain().extents() == from.domain().extents());</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    for_each_n(to.domain().extents(), [&amp;to, &amp;from](<span class="keyword">auto</span>&amp;&amp; idx) {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        to(to.domain().front() + idx) = from(from.domain().front() + idx);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    });</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> to;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </body>

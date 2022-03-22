@@ -43,7 +43,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"structis__uniform__domain.html"
+"structis__uniform__discretization_3_01UniformDiscretization_3_01CDim_01_4_01_4.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

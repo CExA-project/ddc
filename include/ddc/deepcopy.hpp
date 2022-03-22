@@ -22,7 +22,7 @@ inline ChunkDst const& deepcopy(ChunkDst&& to, ChunkSrc&& from) noexcept
             std::is_assignable_v<decltype(*to.data()), decltype(*from.data())>,
             "Not assignable");
     assert(to.domain().extents() == from.domain().extents());
-    for_each(to.domain().extents(), [&to, &from](auto&& idx) {
+    for_each_n(to.domain().extents(), [&to, &from](auto&& idx) {
         to(to.domain().front() + idx) = from(from.domain().front() + idx);
     });
     return to;

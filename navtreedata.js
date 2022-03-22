@@ -27,7 +27,7 @@ var NAVTREE =
       [ "Discover more", "index.html#autotoc_md0", null ],
       [ "Join us!", "index.html#autotoc_md1", null ]
     ] ],
-    [ "First steps: the heat equation", "first_steps.html", "first_steps" ],
+    [ "Commented example: the heat equation", "first_steps.html", "first_steps" ],
     [ "Deprecated List", "deprecated.html", null ],
     [ "API reference", "annotated.html", "annotated" ]
   ] ]

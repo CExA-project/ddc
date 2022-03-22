@@ -22,8 +22,6 @@ class DiscreteDomain
     template <class...>
     friend class DiscreteDomain;
 
-    friend std::tuple_element_t<0, std::tuple<DDims...>>;
-
 public:
     using mcoord_type = DiscreteCoordinate<DDims...>;
 

@@ -1,4 +1,4 @@
-# First steps: the heat equation {#first_steps}
+# Commented example: the heat equation {#first_steps}
 
 In \subpage heat_equation "examples/heat_equation.cpp" is a DDC example implementing a forward
 finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary

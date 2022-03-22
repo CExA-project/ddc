@@ -10,6 +10,14 @@
 
 namespace detail {
 
+/** A sequential reduction over a n-D domain
+ * @param[in] domain the range over which to apply the algorithm
+ * @param[in] init the initial value of the generalized sum
+ * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
+ *            results of transform, the results of other reduce and init. 
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be acceptable as input to reduce
+ */
 template <
         class... DDims,
         class T,
@@ -36,10 +44,13 @@ inline T transform_reduce_serial(
 
 } // namespace detail
 
-/** A parallel reduction over a nd domain
- * @param[in] domain    the nd domain to iterate
- * @param[in] reduce    a reduction operation
- * @param[in] transform a functor taking a nd discrete coordinate as parameter
+/** A reduction over a n-D domain using the default execution policy
+ * @param[in] domain the range over which to apply the algorithm
+ * @param[in] init the initial value of the generalized sum
+ * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
+ *            results of transform, the results of other reduce and init.
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be acceptable as input to reduce
  */
 template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce(

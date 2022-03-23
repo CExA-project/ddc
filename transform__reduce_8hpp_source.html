@@ -57,60 +57,66 @@ $(document).ready(function(){initNavTree('transform__reduce_8hpp_source.html',''
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;ddc/discrete_domain.hpp&quot;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;ddc/for_each.hpp&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, <span class="keyword">class</span> T, <span class="keyword">class</span> BinaryReductionOp, <span class="keyword">class</span> UnaryTransformOp&gt;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">inline</span> T transform_reduce(</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <a class="code" href="namespace_3globalScope_4.html#structserial__policy">serial_policy</a> policy,</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDim&gt;</a> <span class="keyword">const</span>&amp; domain,</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        T init,</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        BinaryReductionOp&amp;&amp; reduce,</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        UnaryTransformOp&amp;&amp; transform) noexcept</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="structDiscreteDomainIterator.html">DiscreteDomainIterator&lt;DDim&gt;</a> <span class="keyword">const</span> it_b = domain.begin();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="structDiscreteDomainIterator.html">DiscreteDomainIterator&lt;DDim&gt;</a> <span class="keyword">const</span> it_e = domain.end();</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="structDiscreteDomainIterator.html">DiscreteDomainIterator&lt;DDim&gt;</a> it = it_b; it != it_e; ++it) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        init = reduce(init, transform(*it));</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    }</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordflow">return</span> init;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim1, <span class="keyword">class</span> DDim2, <span class="keyword">class</span> T, <span class="keyword">class</span> BinaryReductionOp, <span class="keyword">class</span> UnaryTransformOp&gt;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">inline</span> T transform_reduce(</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        [[maybe_unused]] <a class="code" href="namespace_3globalScope_4.html#structserial__policy">serial_policy</a> policy,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDim1, DDim2&gt;</a> <span class="keyword">const</span>&amp; domain,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        T init,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        BinaryReductionOp&amp;&amp; reduce,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        UnaryTransformOp&amp;&amp; transform) noexcept</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="structDiscreteDomainIterator.html">DiscreteDomainIterator&lt;DDim1&gt;</a> <span class="keyword">const</span> it1_b = select&lt;DDim1&gt;(domain).begin();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="structDiscreteDomainIterator.html">DiscreteDomainIterator&lt;DDim1&gt;</a> <span class="keyword">const</span> it1_e = select&lt;DDim1&gt;(domain).end();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="structDiscreteDomainIterator.html">DiscreteDomainIterator&lt;DDim2&gt;</a> <span class="keyword">const</span> it2_b = select&lt;DDim2&gt;(domain).begin();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="structDiscreteDomainIterator.html">DiscreteDomainIterator&lt;DDim2&gt;</a> <span class="keyword">const</span> it2_e = select&lt;DDim2&gt;(domain).end();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="structDiscreteDomainIterator.html">DiscreteDomainIterator&lt;DDim1&gt;</a> it1 = it1_b; it1 != it1_e; ++it1) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="structDiscreteDomainIterator.html">DiscreteDomainIterator&lt;DDim2&gt;</a> it2 = it2_b; it2 != it2_e; ++it2) {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            init = reduce(init, transform(DiscreteCoordinate&lt;DDim1, DDim2&gt;(*it1, *it2)));</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">return</span> init;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... DDims, <span class="keyword">class </span>T, <span class="keyword">class </span>BinaryReductionOp, <span class="keyword">class </span>UnaryTransformOp&gt;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">inline</span> T transform_reduce(</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDims...&gt;</a> <span class="keyword">const</span>&amp; domain,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        T init,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        BinaryReductionOp&amp;&amp; reduce,</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        UnaryTransformOp&amp;&amp; transform) noexcept</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;{</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">return</span> transform_reduce(</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <a class="code" href="namespace_3globalScope_4.html#structserial__policy">serial_policy</a>(),</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            domain,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            init,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            std::forward&lt;BinaryReductionOp&gt;(reduce),</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            std::forward&lt;UnaryTransformOp&gt;(transform));</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>detail {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keyword">class</span>... DDims,</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keyword">class </span>T,</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keyword">class </span>BinaryReductionOp,</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keyword">class </span>UnaryTransformOp,</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keyword">class</span>... DCoords&gt;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">inline</span> T transform_reduce_serial(</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDims...&gt;</a> <span class="keyword">const</span>&amp; domain,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        T init,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        BinaryReductionOp <span class="keyword">const</span>&amp; reduce,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        UnaryTransformOp <span class="keyword">const</span>&amp; transform,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        DCoords <span class="keyword">const</span>&amp;... dcoords) noexcept</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordflow">if</span> constexpr (<span class="keyword">sizeof</span>...(DCoords) == <span class="keyword">sizeof</span>...(DDims)) {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">return</span> reduce(init, transform(DiscreteCoordinate&lt;DDims...&gt;(dcoords...)));</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keyword">using</span> CurrentDDim = type_seq_element_t&lt;<span class="keyword">sizeof</span>...(DCoords), detail::TypeSeq&lt;DDims...&gt;&gt;;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">for</span> (DiscreteCoordinate&lt;CurrentDDim&gt; <span class="keyword">const</span> ii : select&lt;CurrentDDim&gt;(domain)) {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            init = transform_reduce_serial(domain, init, reduce, transform, dcoords..., ii);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">return</span> init;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;} <span class="comment">// namespace detail</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... DDims, <span class="keyword">class </span>T, <span class="keyword">class </span>BinaryReductionOp, <span class="keyword">class </span>UnaryTransformOp&gt;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">inline</span> T transform_reduce(</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        [[maybe_unused]] <a class="code" href="namespace_3globalScope_4.html#structserial__policy">serial_policy</a> policy,</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDims...&gt;</a> <span class="keyword">const</span>&amp; domain,</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        T init,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        BinaryReductionOp&amp;&amp; reduce,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        UnaryTransformOp&amp;&amp; transform) noexcept</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> detail::transform_reduce_serial(</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            domain,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            init,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            std::forward&lt;BinaryReductionOp&gt;(reduce),</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            std::forward&lt;UnaryTransformOp&gt;(transform));</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... DDims, <span class="keyword">class </span>T, <span class="keyword">class </span>BinaryReductionOp, <span class="keyword">class </span>UnaryTransformOp&gt;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">inline</span> T transform_reduce(</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDims...&gt;</a> <span class="keyword">const</span>&amp; domain,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        T init,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        BinaryReductionOp&amp;&amp; reduce,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        UnaryTransformOp&amp;&amp; transform) noexcept</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;{</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">return</span> transform_reduce(</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <a class="code" href="namespace_3globalScope_4.html#structserial__policy">default_policy</a>(),</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            domain,</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            init,</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            std::forward&lt;BinaryReductionOp&gt;(reduce),</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            std::forward&lt;UnaryTransformOp&gt;(transform));</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="astructDiscreteDomainIterator_html"><div class="ttname"><a href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a></div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:14</div></div>
 <div class="ttc" id="anamespace_3globalScope_4_html_structserial__policy"><div class="ttname"><a href="namespace_3globalScope_4.html#structserial__policy">serial_policy</a></div><div class="ttdoc">Serial execution.</div><div class="ttdef"><b>Definition:</b> for_each.hpp:56</div></div>
-<div class="ttc" id="aclassDiscreteDomain_html"><div class="ttname"><a href="classDiscreteDomain.html">DiscreteDomain</a></div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:17</div></div>
+<div class="ttc" id="aclassDiscreteDomain_html"><div class="ttname"><a href="classDiscreteDomain.html">DiscreteDomain&lt; DDims... &gt;</a></div></div>
 </body>
 </html>

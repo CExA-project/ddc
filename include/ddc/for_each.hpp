@@ -28,6 +28,25 @@ inline void for_each_serial(
     }
 }
 
+template <class Element, class... DDims, class Functor>
+inline void for_each_omp(
+        detail::TaggedVector<Element, DDims...> const& start,
+        detail::TaggedVector<Element, DDims...> const& end,
+        Functor&& f) noexcept
+{
+    using FirstDDim = type_seq_element_t<0, detail::TypeSeq<DDims...>>;
+    Element const ib = select<FirstDDim>(start);
+    Element const ie = select<FirstDDim>(end);
+#pragma omp parallel for default(none) shared(ib, ie, start, end, f)
+    for (Element ii = ib; ii <= ie; ++ii) {
+        if constexpr (sizeof...(DDims) == 1) {
+            f(ii);
+        } else {
+            detail::for_each_serial(start, end, f, ii);
+        }
+    }
+}
+
 template <class X, class T, T v>
 constexpr T type_constant_v = std::integral_constant<T, v>::value;
 
@@ -38,7 +57,7 @@ struct serial_policy
 {
 };
 
-/** iterates over a nD domain
+/** iterates over a nD domain using the serial execution policy
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
@@ -48,7 +67,7 @@ inline void for_each(serial_policy, DiscreteDomain<DDims...> const& domain, Func
     detail::for_each_serial(domain.front(), domain.back(), std::forward<Functor>(f));
 }
 
-/** iterates over a nD extent
+/** iterates over a nD extent using the serial execution policy
  * @param[in] extent the extent over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
@@ -61,50 +80,32 @@ inline void for_each_n(serial_policy, DiscreteVector<DDims...> const& extent, Fu
             std::forward<Functor>(f));
 }
 
-/** OpenMP parallel execution with default scheduling
- */
+/// OpenMP parallel execution on the outer loop with default scheduling
 struct omp_policy
 {
 };
 
-namespace detail {
-
-template <class... DDims, class Functor, class... DCoords>
-inline void for_each_omp(
-        DiscreteDomain<DDims...> const& domain,
-        Functor const& f,
-        DCoords const&... dcoords) noexcept
-{
-    if constexpr (sizeof...(DCoords) == sizeof...(DDims)) {
-        f(DiscreteCoordinate<DDims...>(dcoords...));
-    } else {
-        using CurrentDDim = type_seq_element_t<sizeof...(DCoords), detail::TypeSeq<DDims...>>;
-        for (DiscreteCoordinate<CurrentDDim> const ii : select<CurrentDDim>(domain)) {
-            for_each_omp(domain, f, dcoords..., ii);
-        }
-    }
-}
-
-} // namespace detail
-
-/** iterates over a nd domain
- * @param[in] domain the nd domain to iterate
+/** iterates over a nD domain using the OpenMP execution policy
+ * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
 template <class... DDims, class Functor>
 inline void for_each(omp_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
-    using FirstDDim = type_seq_element_t<0, detail::TypeSeq<DDims...>>;
-    DiscreteDomainIterator<FirstDDim> const it_b = select<FirstDDim>(domain).begin();
-    DiscreteDomainIterator<FirstDDim> const it_e = select<FirstDDim>(domain).end();
-#pragma omp parallel for default(none) shared(it_b, it_e, domain, f)
-    for (DiscreteDomainIterator<FirstDDim> it = it_b; it != it_e; ++it) {
-        if constexpr (sizeof...(DDims) == 1) {
-            f(*it);
-        } else {
-            detail::for_each_omp(domain, f, *it);
-        }
-    }
+    detail::for_each_omp(domain.front(), domain.back(), std::forward<Functor>(f));
+}
+
+/** iterates over a nD extent using the OpenMP execution policy
+ * @param[in] extent the extent over which to iterate
+ * @param[in] f      a functor taking an index as parameter
+ */
+template <class... DDims, class Functor>
+inline void for_each_n(omp_policy, DiscreteVector<DDims...> const& extent, Functor&& f) noexcept
+{
+    detail::for_each_omp(
+            DiscreteVector<DDims...> {detail::type_constant_v<DDims, std::ptrdiff_t, 0>...},
+            DiscreteVector<DDims...> {get<DDims>(extent) - 1 ...},
+            std::forward<Functor>(f));
 }
 
 using default_policy = serial_policy;
@@ -116,12 +117,20 @@ inline constexpr serial_policy serial;
 
 }; // namespace policies
 
+/** iterates over a nD domain using the default execution policy
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking an index as parameter
+ */
 template <class... DDims, class Functor>
 inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
     for_each(default_policy(), domain, std::forward<Functor>(f));
 }
 
+/** iterates over a nD extent using the default execution policy
+ * @param[in] extent the extent over which to iterate
+ * @param[in] f      a functor taking an index as parameter
+ */
 template <class... DDims, class Functor>
 inline void for_each_n(DiscreteVector<DDims...> const& domain, Functor&& f) noexcept
 {

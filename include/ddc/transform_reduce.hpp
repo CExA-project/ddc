@@ -101,7 +101,6 @@ inline auto transform_reduce(
 
 /** A reduction over a nD domain using the default execution policy
  * @param[in] domain the range over which to apply the algorithm
- * @param[in] init the initial value of the generalized sum
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
  *            results of transform, the results of other reduce and init.
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input

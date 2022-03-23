@@ -3,6 +3,9 @@
 #include <limits>
 #include <utility>
 
+namespace reducer
+{
+
 template <class T>
 struct sum
 {
@@ -162,3 +165,5 @@ struct minmax
         max<T>::reduce(out.second, in.second);
     }
 };
+
+} // namespace reducer

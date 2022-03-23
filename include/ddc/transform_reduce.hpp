@@ -11,7 +11,7 @@
 
 namespace detail {
 
-/** A reduction over a n-D domain using the serial execution policy
+/** A serial reduction over a nD domain
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
  *            results of transform, the results of other reduce and init.
@@ -41,6 +41,7 @@ inline typename BinaryReductionOp::result_type transform_reduce_serial(
 } // namespace detail
 
 /** A reduction over a n-D domain using the OpenMP execution policy
+ * @param[in] policy the execution policy to use
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
  *            results of transform, the results of other reduce and init.
@@ -49,7 +50,7 @@ inline typename BinaryReductionOp::result_type transform_reduce_serial(
  */
 template <class... DDims, class BinaryReductionOp, class UnaryTransformOp>
 inline typename BinaryReductionOp::result_type transform_reduce(
-        omp_policy,
+        [[maybe_unused]] omp_policy policy,
         DiscreteDomain<DDims...> const& domain,
         BinaryReductionOp const& reduce,
         UnaryTransformOp const& transform) noexcept
@@ -78,7 +79,8 @@ inline typename BinaryReductionOp::result_type transform_reduce(
     return init;
 }
 
-/** A reduction over a n-D domain using the serial execution policy
+/** A reduction over a nD domain using the default execution policy
+ * @param[in] policy the execution policy to use
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
  *            results of transform, the results of other reduce and init.
@@ -86,7 +88,8 @@ inline typename BinaryReductionOp::result_type transform_reduce(
  *            range. The return type must be acceptable as input to reduce
  */
 template <class... DDims, class BinaryReductionOp, class UnaryTransformOp>
-inline typename BinaryReductionOp::result_type transform_reduce(serial_policy,
+inline auto transform_reduce(
+        [[maybe_unused]] serial_policy policy,
         DiscreteDomain<DDims...> const& domain,
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
@@ -97,20 +100,22 @@ inline typename BinaryReductionOp::result_type transform_reduce(serial_policy,
             std::forward<UnaryTransformOp>(transform));
 }
 
-/** A reduction over a n-D domain using the default execution policy
+/** A reduction over a nD domain using the default execution policy
  * @param[in] domain the range over which to apply the algorithm
+ * @param[in] init the initial value of the generalized sum
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
  *            results of transform, the results of other reduce and init.
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
 template <class... DDims, class BinaryReductionOp, class UnaryTransformOp>
-inline typename BinaryReductionOp::result_type transform_reduce(
+inline auto transform_reduce(
         DiscreteDomain<DDims...> const& domain,
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
 {
-    return detail::transform_reduce_serial(
+    return transform_reduce(
+            default_policy(),
             domain,
             std::forward<BinaryReductionOp>(reduce),
             std::forward<UnaryTransformOp>(transform));

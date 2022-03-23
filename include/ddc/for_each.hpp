@@ -132,9 +132,9 @@ inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexce
  * @param[in] f      a functor taking an index as parameter
  */
 template <class... DDims, class Functor>
-inline void for_each_n(DiscreteVector<DDims...> const& domain, Functor&& f) noexcept
+inline void for_each_n(DiscreteVector<DDims...> const& extent, Functor&& f) noexcept
 {
-    for_each_n(default_policy(), domain, std::forward<Functor>(f));
+    for_each_n(default_policy(), extent, std::forward<Functor>(f));
 }
 
 template <

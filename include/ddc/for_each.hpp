@@ -40,7 +40,7 @@ inline void for_each_omp(
 #pragma omp parallel for default(none) shared(ib, ie, start, end, f)
     for (Element ii = ib; ii <= ie; ++ii) {
         if constexpr (sizeof...(DDims) == 1) {
-            f(ii);
+            f(detail::TaggedVector<Element, FirstDDim> {ii});
         } else {
             detail::for_each_serial(start, end, f, ii);
         }

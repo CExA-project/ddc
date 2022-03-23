@@ -76,7 +76,6 @@ inline typename BinaryReductionOp::result_type transform_reduce(
             reduce.reduce(init, transform_reduce_serial(domain, reduce, transform, *it));
         }
     }
-    return init;
 }
 
 /** A reduction over a nD domain using the default execution policy

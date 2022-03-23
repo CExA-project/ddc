@@ -131,7 +131,7 @@ int main()
     // our zone at the end of the domain that will be mirrored to the
     // ghost
     DiscreteDomain const
-            x_domain_end(x_domain.back(), x_pre_ghost.extents());
+            x_domain_end(x_domain.back() - x_pre_ghost.extents() + 1, x_pre_ghost.extents());
     //! [X-domains]
 
     //! [Y-domains]

@@ -10,7 +10,7 @@
 
 namespace detail {
 
-/** A sequential reduction over a n-D domain
+/** A serial reduction over a nD domain
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] init the initial value of the generalized sum
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
@@ -44,7 +44,7 @@ inline T transform_reduce_serial(
 
 } // namespace detail
 
-/** A reduction over a n-D domain using the default execution policy
+/** A reduction over a nD domain using the default execution policy
  * @param[in] policy the execution policy to use
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] init the initial value of the generalized sum
@@ -68,7 +68,7 @@ inline T transform_reduce(
             std::forward<UnaryTransformOp>(transform));
 }
 
-/** A reduction over a n-D domain using the default execution policy
+/** A reduction over a nD domain using the default execution policy
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] init the initial value of the generalized sum
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the

@@ -3,8 +3,7 @@
 #include <limits>
 #include <utility>
 
-namespace reducer
-{
+namespace reducer {
 
 template <class T>
 struct sum

@@ -130,9 +130,8 @@ int main()
             x_domain_begin(x_domain.front(), x_post_ghost.extents());
     // our zone at the end of the domain that will be mirrored to the
     // ghost
-    DiscreteDomain const x_domain_end(
-            x_domain.back() - x_pre_ghost.extents(),
-            x_pre_ghost.extents());
+    DiscreteDomain const
+            x_domain_end(x_domain.back(), x_pre_ghost.extents());
     //! [X-domains]
 
     //! [Y-domains]
@@ -154,9 +153,8 @@ int main()
             y_domain_begin(y_domain.front(), y_post_ghost.extents());
     // our zone at the end of the domain that will be mirrored to the
     // ghost
-    DiscreteDomain const y_domain_end(
-            y_domain.back() - y_pre_ghost.extents(),
-            y_pre_ghost.extents());
+    DiscreteDomain const
+            y_domain_end(y_domain.back(), y_pre_ghost.extents());
     //! [Y-domains]
 
     //! [time-domains]

@@ -8,160 +8,110 @@ namespace reducer {
 template <class T>
 struct sum
 {
-    using result_type = T;
+    using value_type = T;
 
-    static constexpr void initialize(T& init) noexcept
+    constexpr value_type operator()(value_type const& lhs, value_type const& rhs) const noexcept
     {
-        init = 0;
-    }
-
-    static constexpr void reduce(T& out, T const& in) noexcept
-    {
-        out = out + in;
+        return lhs + rhs;
     }
 };
 
 template <class T>
 struct prod
 {
-    using result_type = T;
+    using value_type = T;
 
-    static constexpr void initialize(T& init) noexcept
+    constexpr value_type operator()(value_type const& lhs, value_type const& rhs) const noexcept
     {
-        init = 1;
-    }
-
-    static constexpr void reduce(T& out, T const& in) noexcept
-    {
-        out = out * in;
+        return lhs * rhs;
     }
 };
 
 struct land
 {
-    using result_type = bool;
+    using value_type = bool;
 
-    static constexpr void initialize(bool& init) noexcept
+    constexpr value_type operator()(value_type const& lhs, value_type const& rhs) const noexcept
     {
-        init = true;
-    }
-
-    static constexpr void reduce(bool& out, bool const& in) noexcept
-    {
-        out = out && in;
+        return lhs && rhs;
     }
 };
 
 struct lor
 {
-    using result_type = bool;
+    using value_type = bool;
 
-    static constexpr void initialize(bool& init) noexcept
+    constexpr value_type operator()(value_type const& lhs, value_type const& rhs) const noexcept
     {
-        init = false;
-    }
-
-    static constexpr void reduce(bool& out, bool const& in) noexcept
-    {
-        out = out || in;
+        return lhs || rhs;
     }
 };
 
 template <class T>
 struct band
 {
-    using result_type = T;
+    using value_type = T;
 
-    static constexpr void initialize(T& init) noexcept
+    constexpr value_type operator()(value_type const& lhs, value_type const& rhs) const noexcept
     {
-        init = ~T(0);
-    }
-
-    static constexpr void reduce(T& out, T const& in) noexcept
-    {
-        out = out & in;
+        return lhs & rhs;
     }
 };
 
 template <class T>
 struct bor
 {
-    using result_type = T;
+    using value_type = T;
 
-    static constexpr void initialize(T& init) noexcept
+    constexpr value_type operator()(value_type const& lhs, value_type const& rhs) const noexcept
     {
-        init = 0;
-    }
-
-    static constexpr void reduce(T& out, T const& in) noexcept
-    {
-        out = out | in;
+        return lhs | rhs;
     }
 };
 
 template <class T>
 struct bxor
 {
-    using result_type = T;
+    using value_type = T;
 
-    static constexpr void initialize(T& init) noexcept
+    constexpr value_type operator()(value_type const& lhs, value_type const& rhs) const noexcept
     {
-        init = 0;
-    }
-
-    static constexpr void reduce(T& out, T const& in) noexcept
-    {
-        out = out ^ in;
+        return lhs ^ rhs;
     }
 };
 
 template <class T>
 struct min
 {
-    using result_type = T;
+    using value_type = T;
 
-    static constexpr void initialize(T& init) noexcept
+    constexpr value_type operator()(value_type const& lhs, value_type const& rhs) const noexcept
     {
-        init = std::numeric_limits<T>::max();
-    }
-
-    static constexpr void reduce(T& out, T const& in) noexcept
-    {
-        out = out < in ? out : in;
+        return lhs < rhs ? lhs : rhs;
     }
 };
 
 template <class T>
 struct max
 {
-    using result_type = T;
+    using value_type = T;
 
-    static constexpr void initialize(T& init) noexcept
+    constexpr value_type operator()(value_type const& lhs, value_type const& rhs) const noexcept
     {
-        init = std::numeric_limits<T>::lowest();
-    }
-
-    static constexpr void reduce(T& out, T const& in) noexcept
-    {
-        out = out > in ? out : in;
+        return lhs > rhs ? lhs : rhs;
     }
 };
 
 template <class T>
 struct minmax
 {
-    using result_type = std::pair<T, T>;
+    using value_type = std::pair<T, T>;
 
-    static constexpr void initialize(std::pair<T, T>& init) noexcept
+    constexpr value_type operator()(value_type const& lhs, value_type const& rhs) const noexcept
     {
-        min<T>::initialize(init.first);
-        max<T>::initialize(init.second);
-    }
-
-    static constexpr void reduce(std::pair<T, T>& out, std::pair<T, T> const& in) noexcept
-    {
-        min<T>::reduce(out.first, in.first);
-        max<T>::reduce(out.second, in.second);
+        return value_type(
+                lhs.first < rhs.first ? lhs.first : rhs.first,
+                lhs.second > rhs.second ? lhs.second : rhs.second);
     }
 };
 

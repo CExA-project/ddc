@@ -80,6 +80,7 @@ void display(double time, ChunkType temp)
 {
     double const mean_temp = transform_reduce(
                                      temp.domain(),
+                                     0.,
                                      reducer::sum<double>(),
                                      temp)
                              / temp.domain().size();
@@ -160,6 +161,7 @@ int main()
     // max(1/dx^2)
     double const invdx2_max = transform_reduce(
             x_domain,
+            0.,
             reducer::max<double>(),
             [](DiscreteCoordinate<DDimX> ix) {
                 return 1.
@@ -168,6 +170,7 @@ int main()
     // max(1/dy^2)
     double const invdy2_max = transform_reduce(
             y_domain,
+            0.,
             reducer::max<double>(),
             [](DiscreteCoordinate<DDimY> iy) {
                 return 1.

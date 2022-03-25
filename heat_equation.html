@@ -204,7 +204,7 @@ $(document).ready(function(){initNavTree('heat_equation.html',''); initResizable
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="comment">// Initialization of the global domain in time:</span></div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="comment">// - the number of discrete time-points is equal to the number of</span></div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="comment">//   steps + 1</span></div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a> <span class="keyword">const</span> time_domain</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimT&gt;</a> <span class="keyword">const</span> time_domain</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;            = init_discretization(DDimT::</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;                                          init(Coordinate&lt;T&gt;(start_time),</div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                                               Coordinate&lt;T&gt;(end_time),</div>
@@ -213,94 +213,98 @@ $(document).ready(function(){initNavTree('heat_equation.html',''); initResizable
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="comment">// Maps temperature into the full domain (including ghosts) twice:</span></div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <span class="comment">// - once for the last fully computed time-step</span></div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <a class="code" href="namespace_3globalScope_4.html#classChunk">Chunk&lt;double, DiscreteDomain&lt;DDimX, DDimY&gt;</a>&gt; ghosted_last_temp(</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>(ghosted_x_domain, ghosted_y_domain));</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <span class="comment">// - once for time-step being computed</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <a class="code" href="namespace_3globalScope_4.html#classChunk">Chunk&lt;double, DiscreteDomain&lt;DDimX, DDimY&gt;</a>&gt; ghosted_next_temp(</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>(ghosted_x_domain, ghosted_y_domain));</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="comment">// Initialize the temperature on the main domain</span></div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    for_each(</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;            <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>(x_domain, y_domain),</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            [&amp;](DiscreteCoordinate&lt;DDimX, DDimY&gt; <span class="keyword">const</span> ixy) {</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;                <span class="keywordtype">double</span> <span class="keyword">const</span> x = to_real(select&lt;DDimX&gt;(ixy));</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;                <span class="keywordtype">double</span> <span class="keyword">const</span> y = to_real(select&lt;DDimY&gt;(ixy));</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;                ghosted_last_temp(ixy)</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;                        = 9.999 * ((x * x + y * y) &lt; 0.25);</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            });</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="comment">// display the initial data</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    display(to_real(time_domain.<a class="code" href="classDiscreteDomain.html#aa86d4b50cf388190d96e63420f9d6909">front</a>()),</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            ghosted_last_temp[x_domain][y_domain]);</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="comment">// time of the iteration where the last output happened</span></div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    DiscreteCoordinate&lt;DDimT&gt; last_output = time_domain.<a class="code" href="classDiscreteDomain.html#aa86d4b50cf388190d96e63420f9d6909">front</a>();</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> iter :</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;         <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a> {time_domain.<a class="code" href="classDiscreteDomain.html#aa86d4b50cf388190d96e63420f9d6909">front</a>() + 1, nb_time_steps - 1}) {</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;        <span class="comment">// Periodic boundary conditions</span></div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        deepcopy(</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                ghosted_last_temp[x_pre_ghost][y_domain],</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;                ghosted_last_temp[y_domain][x_domain_end]);</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        deepcopy(</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;                ghosted_last_temp[y_domain][x_post_ghost],</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                ghosted_last_temp[y_domain][x_domain_begin]);</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        deepcopy(</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;                ghosted_last_temp[x_domain][y_pre_ghost],</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                ghosted_last_temp[x_domain][y_domain_end]);</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        deepcopy(</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                ghosted_last_temp[x_domain][y_post_ghost],</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                ghosted_last_temp[x_domain][y_domain_begin]);</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;        <span class="comment">// a span excluding ghosts of the temperature at the time-step we</span></div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;        <span class="comment">// will build</span></div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;        <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> next_temp {</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;                ghosted_next_temp[x_domain][y_domain]};</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;        <span class="comment">// a read-only view of the temperature at the previous time-step</span></div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;        <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> last_temp {ghosted_last_temp.span_view()};</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160; </div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        <span class="comment">// Stencil computation on the main domain</span></div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        for_each(</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                next_temp.domain(),</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                [&amp;](DiscreteCoordinate&lt;DDimX, DDimY&gt; <span class="keyword">const</span> ixy) {</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                    DiscreteCoordinate&lt;DDimX&gt; const ix</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                            = select&lt;DDimX&gt;(ixy);</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                    DiscreteCoordinate&lt;DDimY&gt; const iy</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                            = select&lt;DDimY&gt;(ixy);</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                    double const dx_l = distance_at_left(ix);</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                    double const dx_r = distance_at_right(ix);</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;                    double const dx_m = 0.5 * (dx_l + dx_r);</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                    double const dy_l = distance_at_left(iy);</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                    double const dy_r = distance_at_right(iy);</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                    double const dy_m = 0.5 * (dy_l + dy_r);</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;                    next_temp(ix, iy) = last_temp(ix, iy);</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;                    next_temp(ix, iy)</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                            += kx * max_dt</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                               * (dx_l * last_temp(ix + 1, iy)</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                                  - 2.0 * dx_m * last_temp(ix, iy)</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                                  + dx_r * last_temp(ix - 1, iy))</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;                               / (dx_l * dx_m * dx_r);</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;                    next_temp(ix, iy)</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                            += ky * max_dt</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;                               * (dy_l * last_temp(ix, iy + 1)</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                                  - 2.0 * dy_m * last_temp(ix, iy)</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;                                  + dy_r * last_temp(ix, iy - 1))</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;                               / (dy_l * dy_m * dy_r);</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;                });</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;        <span class="keywordflow">if</span> (iter - last_output &gt;= t_output_period) {</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;            last_output = iter;</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;            display(to_real(iter), next_temp);</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        }</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <span class="comment">// Swap our two buffers</span></div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        std::swap(ghosted_last_temp, ghosted_next_temp);</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    }</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <span class="keywordflow">if</span> (last_output &lt; time_domain.<a class="code" href="classDiscreteDomain.html#a569cda957f2d1a99880d33e31b15acde">back</a>()) {</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;        display(to_real(time_domain.<a class="code" href="classDiscreteDomain.html#a569cda957f2d1a99880d33e31b15acde">back</a>()),</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                ghosted_last_temp[x_domain][y_domain]);</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    }</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;}</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>&lt;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;                    DDimX,</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;                    DDimY&gt;(ghosted_x_domain, ghosted_y_domain));</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="comment">// - once for time-step being computed</span></div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <a class="code" href="namespace_3globalScope_4.html#classChunk">Chunk&lt;double, DiscreteDomain&lt;DDimX, DDimY&gt;</a>&gt; ghosted_next_temp(</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;            <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>&lt;</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;                    DDimX,</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;                    DDimY&gt;(ghosted_x_domain, ghosted_y_domain));</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160; </div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="comment">// Initialize the temperature on the main domain</span></div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    for_each(</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain),</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            [&amp;](DiscreteCoordinate&lt;DDimX, DDimY&gt; <span class="keyword">const</span> ixy) {</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;                <span class="keywordtype">double</span> <span class="keyword">const</span> x = to_real(select&lt;DDimX&gt;(ixy));</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;                <span class="keywordtype">double</span> <span class="keyword">const</span> y = to_real(select&lt;DDimY&gt;(ixy));</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;                ghosted_last_temp(ixy)</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;                        = 9.999 * ((x * x + y * y) &lt; 0.25);</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            });</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="comment">// display the initial data</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    display(to_real(time_domain.<a class="code" href="classDiscreteDomain.html#aa86d4b50cf388190d96e63420f9d6909">front</a>()),</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            ghosted_last_temp[x_domain][y_domain]);</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="comment">// time of the iteration where the last output happened</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    DiscreteCoordinate&lt;DDimT&gt; last_output = time_domain.<a class="code" href="classDiscreteDomain.html#aa86d4b50cf388190d96e63420f9d6909">front</a>();</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160; </div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> iter :</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;         <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a> {time_domain.<a class="code" href="classDiscreteDomain.html#aa86d4b50cf388190d96e63420f9d6909">front</a>() + 1, nb_time_steps - 1}) {</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        <span class="comment">// Periodic boundary conditions</span></div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;        deepcopy(</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                ghosted_last_temp[x_pre_ghost][y_domain],</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                ghosted_last_temp[y_domain][x_domain_end]);</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        deepcopy(</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                ghosted_last_temp[y_domain][x_post_ghost],</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                ghosted_last_temp[y_domain][x_domain_begin]);</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        deepcopy(</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                ghosted_last_temp[x_domain][y_pre_ghost],</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;                ghosted_last_temp[x_domain][y_domain_end]);</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        deepcopy(</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                ghosted_last_temp[x_domain][y_post_ghost],</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                ghosted_last_temp[x_domain][y_domain_begin]);</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160; </div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;        <span class="comment">// a span excluding ghosts of the temperature at the time-step we</span></div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;        <span class="comment">// will build</span></div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;        <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> next_temp {</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                ghosted_next_temp[x_domain][y_domain]};</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        <span class="comment">// a read-only view of the temperature at the previous time-step</span></div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a> <span class="keyword">const</span> last_temp {ghosted_last_temp.span_view()};</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        <span class="comment">// Stencil computation on the main domain</span></div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        for_each(</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                next_temp.domain(),</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                [&amp;](DiscreteCoordinate&lt;DDimX, DDimY&gt; <span class="keyword">const</span> ixy) {</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                    DiscreteCoordinate&lt;DDimX&gt; const ix</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                            = select&lt;DDimX&gt;(ixy);</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;                    DiscreteCoordinate&lt;DDimY&gt; const iy</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                            = select&lt;DDimY&gt;(ixy);</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                    double const dx_l = distance_at_left(ix);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                    double const dx_r = distance_at_right(ix);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;                    double const dx_m = 0.5 * (dx_l + dx_r);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;                    double const dy_l = distance_at_left(iy);</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                    double const dy_r = distance_at_right(iy);</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                    double const dy_m = 0.5 * (dy_l + dy_r);</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                    next_temp(ix, iy) = last_temp(ix, iy);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                    next_temp(ix, iy)</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;                            += kx * max_dt</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;                               * (dx_l * last_temp(ix + 1, iy)</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                                  - 2.0 * dx_m * last_temp(ix, iy)</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;                                  + dx_r * last_temp(ix - 1, iy))</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                               / (dx_l * dx_m * dx_r);</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;                    next_temp(ix, iy)</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;                            += ky * max_dt</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;                               * (dy_l * last_temp(ix, iy + 1)</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;                                  - 2.0 * dy_m * last_temp(ix, iy)</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;                                  + dy_r * last_temp(ix, iy - 1))</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;                               / (dy_l * dy_m * dy_r);</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;                });</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        <span class="keywordflow">if</span> (iter - last_output &gt;= t_output_period) {</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;            last_output = iter;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;            display(to_real(iter), next_temp);</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        }</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        <span class="comment">// Swap our two buffers</span></div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        std::swap(ghosted_last_temp, ghosted_next_temp);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    }</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    <span class="keywordflow">if</span> (last_output &lt; time_domain.<a class="code" href="classDiscreteDomain.html#a569cda957f2d1a99880d33e31b15acde">back</a>()) {</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        display(to_real(time_domain.<a class="code" href="classDiscreteDomain.html#a569cda957f2d1a99880d33e31b15acde">back</a>()),</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;                ghosted_last_temp[x_domain][y_domain]);</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    }</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;}</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

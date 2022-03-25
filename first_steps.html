@@ -207,7 +207,7 @@ Time dimension</h3>
 <div class="line">    <span class="comment">// Initialization of the global domain in time:</span></div>
 <div class="line">    <span class="comment">// - the number of discrete time-points is equal to the number of</span></div>
 <div class="line">    <span class="comment">//   steps + 1</span></div>
-<div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a> <span class="keyword">const</span> time_domain</div>
+<div class="line">    <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimT&gt;</a> <span class="keyword">const</span> time_domain</div>
 <div class="line">            = init_discretization(DDimT::</div>
 <div class="line">                                          init(Coordinate&lt;T&gt;(start_time),</div>
 <div class="line">                                               Coordinate&lt;T&gt;(end_time),</div>
@@ -218,15 +218,19 @@ Data allocation</h1>
 <div class="fragment"><div class="line">    <span class="comment">// Maps temperature into the full domain (including ghosts) twice:</span></div>
 <div class="line">    <span class="comment">// - once for the last fully computed time-step</span></div>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunk">Chunk&lt;double, DiscreteDomain&lt;DDimX, DDimY&gt;</a>&gt; ghosted_last_temp(</div>
-<div class="line">            <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>(ghosted_x_domain, ghosted_y_domain));</div>
+<div class="line">            <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>&lt;</div>
+<div class="line">                    DDimX,</div>
+<div class="line">                    DDimY&gt;(ghosted_x_domain, ghosted_y_domain));</div>
 <div class="line">    <span class="comment">// - once for time-step being computed</span></div>
 <div class="line">    <a class="code" href="namespace_3globalScope_4.html#classChunk">Chunk&lt;double, DiscreteDomain&lt;DDimX, DDimY&gt;</a>&gt; ghosted_next_temp(</div>
-<div class="line">            <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>(ghosted_x_domain, ghosted_y_domain));</div>
+<div class="line">            <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>&lt;</div>
+<div class="line">                    DDimX,</div>
+<div class="line">                    DDimY&gt;(ghosted_x_domain, ghosted_y_domain));</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md9"></a>
 Initial conditions</h1>
 <div class="fragment"><div class="line">    <span class="comment">// Initialize the temperature on the main domain</span></div>
 <div class="line">    for_each(</div>
-<div class="line">            <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>(x_domain, y_domain),</div>
+<div class="line">            <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain),</div>
 <div class="line">            [&amp;](DiscreteCoordinate&lt;DDimX, DDimY&gt; <span class="keyword">const</span> ixy) {</div>
 <div class="line">                <span class="keywordtype">double</span> <span class="keyword">const</span> x = to_real(select&lt;DDimX&gt;(ixy));</div>
 <div class="line">                <span class="keywordtype">double</span> <span class="keyword">const</span> y = to_real(select&lt;DDimY&gt;(ixy));</div>

@@ -1,5 +1,6 @@
 var annotated =
 [
+    [ "reducer", "namespacereducer.html", "namespacereducer" ],
     [ "AlignedAllocator", "classAlignedAllocator.html", "classAlignedAllocator" ],
     [ "Chunk", "namespace_3globalScope_4.html#classChunk", null ],
     [ "Chunk< ElementType, DiscreteDomain< DDims... >, Allocator >", "classChunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html", "classChunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4" ],

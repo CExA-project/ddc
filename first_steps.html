@@ -184,7 +184,7 @@ Time dimension</h3>
 <div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdx2_max = transform_reduce(</div>
 <div class="line">            x_domain,</div>
 <div class="line">            0.,</div>
-<div class="line">            max,</div>
+<div class="line">            <a class="code" href="structreducer_1_1max.html">reducer::max&lt;double&gt;</a>(),</div>
 <div class="line">            [](DiscreteCoordinate&lt;DDimX&gt; ix) {</div>
 <div class="line">                <span class="keywordflow">return</span> 1.</div>
 <div class="line">                       / (distance_at_left(ix) * distance_at_right(ix));</div>
@@ -193,7 +193,7 @@ Time dimension</h3>
 <div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdy2_max = transform_reduce(</div>
 <div class="line">            y_domain,</div>
 <div class="line">            0.,</div>
-<div class="line">            max,</div>
+<div class="line">            <a class="code" href="structreducer_1_1max.html">reducer::max&lt;double&gt;</a>(),</div>
 <div class="line">            [](DiscreteCoordinate&lt;DDimY&gt; iy) {</div>
 <div class="line">                <span class="keywordflow">return</span> 1.</div>
 <div class="line">                       / (distance_at_left(iy) * distance_at_right(iy));</div>
@@ -322,5 +322,6 @@ Final output</h1>
 <div class="ttc" id="anamespace_3globalScope_4_html_classChunk"><div class="ttname"><a href="namespace_3globalScope_4.html#classChunk">Chunk</a></div><div class="ttdef"><b>Definition:</b> chunk.hpp:11</div></div>
 <div class="ttc" id="aclassDiscreteDomain_html_aa86d4b50cf388190d96e63420f9d6909"><div class="ttname"><a href="classDiscreteDomain.html#aa86d4b50cf388190d96e63420f9d6909">DiscreteDomain::front</a></div><div class="ttdeci">constexpr mcoord_type front() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:122</div></div>
 <div class="ttc" id="aclassDiscreteDomain_html_a569cda957f2d1a99880d33e31b15acde"><div class="ttname"><a href="classDiscreteDomain.html#a569cda957f2d1a99880d33e31b15acde">DiscreteDomain::back</a></div><div class="ttdeci">constexpr mcoord_type back() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:127</div></div>
+<div class="ttc" id="astructreducer_1_1max_html"><div class="ttname"><a href="structreducer_1_1max.html">reducer::max</a></div><div class="ttdef"><b>Definition:</b> reducer.hpp:95</div></div>
 </body>
 </html>

@@ -66,7 +66,7 @@ public:
     /// @brief Convert a mesh index into a position in `CDim`
     constexpr rcoord_type to_real(mcoord_type const& icoord) const noexcept
     {
-        return m_points[icoord.value()];
+        return m_points[icoord.uid()];
     }
 };
 

@@ -111,7 +111,7 @@ public:
     /// @brief Convert a mesh index into a position in `CDim`
     constexpr rcoord_type to_real(mcoord_type const& icoord) const noexcept
     {
-        return m_origin + rcoord_type(icoord.value()) * m_step;
+        return m_origin + rcoord_type(icoord.uid()) * m_step;
     }
 
     /** Construct a UniformDiscretization and associated ddom_type from a segment

@@ -84,7 +84,7 @@ protected:
     auto get_slicer_for(DiscreteCoordinate<ODDims...> const& c) const
     {
         if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
-            return get<QueryDDim>(c) - front<QueryDDim>(this->m_domain);
+            return (get<QueryDDim>(c) - front<QueryDDim>(this->m_domain).uid());
         } else {
             return std::experimental::full_extent;
         }
@@ -166,12 +166,12 @@ public:
     constexpr ChunkSpan(allocation_mdspan_type allocation_mdspan, mdomain_type const& domain)
     {
         namespace stdex = std::experimental;
-        extents_type extents_s((front<DDims>(domain) + ::extents<DDims>(domain))...);
+        extents_type extents_s((front<DDims>(domain) + ::extents<DDims>(domain)).uid()...);
         std::array<std::size_t, sizeof...(DDims)> strides_s {allocation_mdspan.mapping().stride(
                 type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
         stdex::layout_stride::mapping<extents_type> mapping_s(extents_s, strides_s);
         this->m_internal_mdspan = internal_mdspan_type(
-                allocation_mdspan.data() - mapping_s(front<DDims>(domain)...),
+                allocation_mdspan.data() - mapping_s(front<DDims>(domain).uid()...),
                 mapping_s);
         this->m_domain = domain;
     }
@@ -217,12 +217,12 @@ public:
     // Warning: Do not use DiscreteCoordinate because of template deduction issue with clang 12
     template <class... ODDims>
     constexpr reference operator()(
-            detail::TaggedVector<DiscreteCoordElement, ODDims> const&... mcoords) const noexcept
+            DiscreteElement<DiscreteCoordElement, ODDims> const&... mcoords) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((mcoords >= front<ODDims>(this->m_domain)) && ...));
         assert(((mcoords <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(take<DDims>(mcoords...)...);
+        return this->m_internal_mdspan(take<DDims>(mcoords...).uid()...);
     }
 
     /** Element access using a multi-dimensional DiscreteCoordinate
@@ -231,7 +231,7 @@ public:
      */
     template <class... ODDims, class = std::enable_if_t<sizeof...(ODDims) != 1>>
     constexpr reference operator()(
-            detail::TaggedVector<DiscreteCoordElement, ODDims...> const& mcoord) const noexcept
+            DiscreteElement<DiscreteCoordElement, ODDims...> const& mcoord) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((get<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));

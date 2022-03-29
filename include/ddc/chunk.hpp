@@ -164,12 +164,12 @@ public:
     // Warning: Do not use DiscreteCoordinate because of template deduction issue with clang 12
     template <class... ODDims>
     element_type const& operator()(
-            detail::TaggedVector<DiscreteCoordElement, ODDims> const&... mcoords) const noexcept
+            DiscreteElement<DiscreteCoordElement, ODDims> const&... mcoords) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((mcoords >= front<ODDims>(this->m_domain)) && ...));
         assert(((mcoords <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(take<DDims>(mcoords...)...);
+        return this->m_internal_mdspan(take<DDims>(mcoords...).uid()...);
     }
 
     /** Element access using a list of DiscreteCoordinate
@@ -179,12 +179,12 @@ public:
     // Warning: Do not use DiscreteCoordinate because of template deduction issue with clang 12
     template <class... ODDims>
     element_type& operator()(
-            detail::TaggedVector<DiscreteCoordElement, ODDims> const&... mcoords) noexcept
+            DiscreteElement<DiscreteCoordElement, ODDims> const&... mcoords) noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((mcoords >= front<ODDims>(this->m_domain)) && ...));
         assert(((mcoords <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(take<DDims>(mcoords...)...);
+        return this->m_internal_mdspan(take<DDims>(mcoords...).uid()...);
     }
 
     /** Element access using a multi-dimensional DiscreteCoordinate
@@ -193,7 +193,7 @@ public:
      */
     template <class... ODDims, class = std::enable_if_t<sizeof...(ODDims) != 1>>
     element_type const& operator()(
-            detail::TaggedVector<DiscreteCoordElement, ODDims...> const& mcoord) const noexcept
+            DiscreteElement<DiscreteCoordElement, ODDims...> const& mcoord) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((get<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));
@@ -207,7 +207,7 @@ public:
      */
     template <class... ODDims, class = std::enable_if_t<sizeof...(ODDims) != 1>>
     element_type& operator()(
-            detail::TaggedVector<DiscreteCoordElement, ODDims...> const& mcoord) noexcept
+            DiscreteElement<DiscreteCoordElement, ODDims...> const& mcoord) noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((get<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));

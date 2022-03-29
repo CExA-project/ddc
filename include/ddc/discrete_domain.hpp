@@ -210,9 +210,9 @@ constexpr DiscreteDomain<QueryDDims...> select(DiscreteDomain<DDims...> const& d
 }
 
 template <class... QueryDDims, class... DDims>
-constexpr DiscreteCoordinate<QueryDDims...> extents(DiscreteDomain<DDims...> const& domain) noexcept
+constexpr DiscreteVector<QueryDDims...> extents(DiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteCoordinate<QueryDDims...>(select<QueryDDims>(domain).size()...);
+    return DiscreteVector<QueryDDims...>(select<QueryDDims>(domain).size()...);
 }
 
 template <class... QueryDDims, class... DDims>
@@ -297,7 +297,7 @@ public:
 
     constexpr DiscreteDomainIterator& operator++()
     {
-        ++m_value;
+        ++m_value.uid();
         return *this;
     }
 
@@ -310,7 +310,7 @@ public:
 
     constexpr DiscreteDomainIterator& operator--()
     {
-        --m_value;
+        --m_value.uid();
         return *this;
     }
 
@@ -324,24 +324,24 @@ public:
     constexpr DiscreteDomainIterator& operator+=(difference_type __n)
     {
         if (__n >= difference_type(0))
-            m_value += static_cast<DiscreteCoordElement>(__n);
+            m_value.uid() += static_cast<DiscreteCoordElement>(__n);
         else
-            m_value -= static_cast<DiscreteCoordElement>(-__n);
+            m_value.uid() -= static_cast<DiscreteCoordElement>(-__n);
         return *this;
     }
 
     constexpr DiscreteDomainIterator& operator-=(difference_type __n)
     {
         if (__n >= difference_type(0))
-            m_value -= static_cast<DiscreteCoordElement>(__n);
+            m_value.uid() -= static_cast<DiscreteCoordElement>(__n);
         else
-            m_value += static_cast<DiscreteCoordElement>(-__n);
+            m_value.uid() += static_cast<DiscreteCoordElement>(-__n);
         return *this;
     }
 
-    constexpr DiscreteCoordElement operator[](difference_type __n) const
+    constexpr DiscreteCoordinate<DDim> operator[](difference_type __n) const
     {
-        return DiscreteCoordElement(m_value + __n);
+        return m_value + __n;
     }
 
     friend constexpr bool operator==(

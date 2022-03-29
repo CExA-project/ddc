@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-#include <ddc/aligned_allocator.hpp>
+#include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
 

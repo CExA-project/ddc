@@ -196,8 +196,8 @@ public:
             DiscreteElement<DiscreteCoordElement, ODDims...> const& mcoord) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
-        assert(((get<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));
-        assert(((get<ODDims>(mcoord) <= back<ODDims>(this->m_domain)) && ...));
+        assert(((select<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));
+        assert(((select<ODDims>(mcoord) <= back<ODDims>(this->m_domain)) && ...));
         return this->m_internal_mdspan(get<DDims>(mcoord)...);
     }
 
@@ -210,8 +210,8 @@ public:
             DiscreteElement<DiscreteCoordElement, ODDims...> const& mcoord) noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
-        assert(((get<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));
-        assert(((get<ODDims>(mcoord) <= back<ODDims>(this->m_domain)) && ...));
+        assert(((select<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));
+        assert(((select<ODDims>(mcoord) <= back<ODDims>(this->m_domain)) && ...));
         return this->m_internal_mdspan(get<DDims>(mcoord)...);
     }
 

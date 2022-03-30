@@ -82,6 +82,7 @@ constexpr DiscreteElement<ElementType, QueryTag> const& take(
 template <class ElementType, class... Tags>
 class DiscreteElement
 {
+    static_assert(std::is_integral_v<ElementType>);
     using tags_seq = detail::TypeSeq<Tags...>;
 
 private:
@@ -116,7 +117,7 @@ public:
 
     template <
             class... Params,
-            class = std::enable_if_t<(std::is_convertible_v<Params, ElementType> && ...)>,
+            class = std::enable_if_t<(std::is_integral_v<Params> && ...)>,
             class = std::enable_if_t<(!is_discrete_element_v<Params> && ...)>,
             class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
     explicit inline constexpr DiscreteElement(Params const&... params) noexcept
@@ -283,25 +284,15 @@ constexpr inline auto operator+(
 
 template <
         class ElementType,
-        class... Tags,
+        class Tag,
         class OElementType,
-        class = std::enable_if_t<std::is_convertible_v<OElementType, ElementType>>>
+        class = std::enable_if_t<std::is_integral_v<OElementType>>>
 constexpr inline auto operator+(
-        DiscreteElement<ElementType, Tags...> const& lhs,
+        DiscreteElement<ElementType, Tag> const& lhs,
         OElementType const& rhs)
 {
     using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
-    return DiscreteElement<RElementType, Tags...>((get<Tags>(lhs) + rhs)...);
-}
-
-template <class ElementType, class... Tags, class OElementType, class... OTags>
-constexpr inline auto operator-(
-        DiscreteElement<ElementType, Tags...> const& lhs,
-        DiscreteElement<OElementType, OTags...> const& rhs)
-{
-    static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
-    using RElementType = decltype(std::declval<ElementType>() - std::declval<OElementType>());
-    return detail::TaggedVector<RElementType, Tags...>((get<Tags>(lhs) - get<Tags>(rhs))...);
+    return DiscreteElement<RElementType, Tag>(get<Tag>(lhs) + rhs);
 }
 
 template <class ElementType, class... Tags, class OElementType, class... OTags>
@@ -316,13 +307,23 @@ constexpr inline auto operator-(
 
 template <
         class ElementType,
-        class... Tags,
+        class Tag,
         class OElementType,
-        class = std::enable_if_t<std::is_convertible_v<OElementType, ElementType>>>
+        class = std::enable_if_t<std::is_integral_v<OElementType>>>
 constexpr inline auto operator-(
-        DiscreteElement<ElementType, Tags...> const& lhs,
+        DiscreteElement<ElementType, Tag> const& lhs,
         OElementType const& rhs)
 {
     using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
-    return DiscreteElement<RElementType, Tags...>((get<Tags>(lhs) - rhs)...);
+    return DiscreteElement<RElementType, Tag>(get<Tag>(lhs) - rhs);
+}
+
+template <class ElementType, class... Tags, class OElementType, class... OTags>
+constexpr inline auto operator-(
+        DiscreteElement<ElementType, Tags...> const& lhs,
+        DiscreteElement<OElementType, OTags...> const& rhs)
+{
+    static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
+    using RElementType = decltype(std::declval<ElementType>() - std::declval<OElementType>());
+    return detail::TaggedVector<RElementType, Tags...>((get<Tags>(lhs) - get<Tags>(rhs))...);
 }

@@ -4,7 +4,7 @@
 
 #include <cstddef>
 
-#include "ddc/detail/tagged_array.hpp"
+#include "ddc/detail/discrete_element.hpp"
 #include "ddc/detail/tagged_vector.hpp"
 
 /** A DiscreteCoordElement is a scalar that identifies an element of the discrete dimension

@@ -15,17 +15,17 @@ template <class, class...>
 class DiscreteElement;
 
 template <class T>
-struct IsTaggedArray : std::false_type
+struct IsDiscreteElement : std::false_type
 {
 };
 
 template <class ElementType, class... Tags>
-struct IsTaggedArray<DiscreteElement<ElementType, Tags...>> : std::true_type
+struct IsDiscreteElement<DiscreteElement<ElementType, Tags...>> : std::true_type
 {
 };
 
 template <class T>
-inline constexpr bool is_tagged_array_v = IsTaggedArray<T>::value;
+inline constexpr bool is_discrete_element_v = IsDiscreteElement<T>::value;
 
 
 template <class QueryTag, class ElementType, class... Tags>
@@ -117,7 +117,7 @@ public:
     template <
             class... Params,
             class = std::enable_if_t<(std::is_convertible_v<Params, ElementType> && ...)>,
-            class = std::enable_if_t<(!is_tagged_array_v<Params> && ...)>,
+            class = std::enable_if_t<(!is_discrete_element_v<Params> && ...)>,
             class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
     explicit inline constexpr DiscreteElement(Params const&... params) noexcept
         : m_values {static_cast<ElementType>(params)...}
@@ -170,7 +170,7 @@ public:
     inline constexpr ElementType& get() noexcept
     {
         using namespace detail;
-        static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from TaggedArray");
+        static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteElement");
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }
 
@@ -178,7 +178,7 @@ public:
     inline constexpr ElementType const& get() const noexcept
     {
         using namespace detail;
-        static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from TaggedArray");
+        static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteElement");
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }
 

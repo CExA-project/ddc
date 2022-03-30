@@ -23,3 +23,8 @@
 #include "ddc/for_each.hpp"
 #include "ddc/reducer.hpp"
 #include "ddc/transform_reduce.hpp"
+
+// PDI wrapper
+#if defined(DDC_BUILD_PDI_WRAPPER)
+#include "ddc/pdi.hpp"
+#endif

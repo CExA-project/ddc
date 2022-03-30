@@ -54,13 +54,7 @@ $(document).ready(function(){initNavTree('first_steps.html',''); initResizable()
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;numeric&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="preprocessor">#include &lt;ddc/Chunk&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;ddc/DiscreteCoordinate&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;ddc/DiscreteDomain&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;ddc/DiscreteVector&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;ddc/UniformDiscretization&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;ddc/for_each&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;ddc/transform_reduce&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;ddc/ddc.hpp&gt;</span></div>
 </div><!-- fragment --><p> As you can see, DDC includes all follow the same convention: <code>&lt;ddc/SYMBOL&gt;</code> where <code>SYMBOL</code> is a the name of a DDC symbol. So for example, in order to use a class named <code><a class="el" href="namespace_3globalScope_4.html#classChunk">Chunk</a></code>, you should include <code>&lt;ddc/Chunk&gt;</code> and to use a free function template named <code>for_each</code>, you should include <code>&lt;ddc/for_each&gt;</code>.</p>
 <p>Then, we define the value of some parameters that would typically be read from some form of configuration file in a more realistic code.</p>
 <div class="fragment"><div class="line"><span class="comment">// Start of the domain of interest in the X dimension</span></div>

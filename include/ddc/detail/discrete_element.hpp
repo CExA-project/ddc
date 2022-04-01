@@ -272,6 +272,8 @@ constexpr inline bool operator>=(
     return lhs.uid() >= rhs.uid();
 }
 
+/// right external binary operators: +, -
+
 template <class ElementType, class... Tags, class OElementType, class... OTags>
 constexpr inline auto operator+(
         DiscreteElement<ElementType, Tags...> const& lhs,
@@ -286,7 +288,8 @@ template <
         class ElementType,
         class Tag,
         class OElementType,
-        class = std::enable_if_t<std::is_integral_v<OElementType>>>
+        class = std::enable_if_t<std::is_integral_v<OElementType>>,
+        class = std::enable_if_t<!detail::is_tagged_vector_v<OElementType>>>
 constexpr inline auto operator+(
         DiscreteElement<ElementType, Tag> const& lhs,
         OElementType const& rhs)
@@ -309,7 +312,8 @@ template <
         class ElementType,
         class Tag,
         class OElementType,
-        class = std::enable_if_t<std::is_integral_v<OElementType>>>
+        class = std::enable_if_t<std::is_integral_v<OElementType>>,
+        class = std::enable_if_t<!detail::is_tagged_vector_v<OElementType>>>
 constexpr inline auto operator-(
         DiscreteElement<ElementType, Tag> const& lhs,
         OElementType const& rhs)
@@ -317,6 +321,8 @@ constexpr inline auto operator-(
     using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
     return DiscreteElement<RElementType, Tag>(get<Tag>(lhs) - rhs);
 }
+
+/// binary operator: -
 
 template <class ElementType, class... Tags, class OElementType, class... OTags>
 constexpr inline auto operator-(

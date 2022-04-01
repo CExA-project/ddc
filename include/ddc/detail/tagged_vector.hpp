@@ -54,6 +54,24 @@ inline constexpr ElementType const& get_or(
     return tuple.template get_or<QueryTag>(default_value);
 }
 
+/// Unary operators: +, -
+
+template <class ElementType, class... Tags, class OElementType, class... OTags>
+constexpr inline detail::TaggedVector<ElementType, Tags...> operator+(
+        detail::TaggedVector<ElementType, Tags...> const& x)
+{
+    return x;
+}
+
+template <class ElementType, class... Tags, class OElementType, class... OTags>
+constexpr inline detail::TaggedVector<ElementType, Tags...> operator-(
+        detail::TaggedVector<ElementType, Tags...> const& x)
+{
+    return detail::TaggedVector<ElementType, Tags...>((-get<Tags>(x))...);
+}
+
+/// Internal binary operators: +, -
+
 template <class ElementType, class... Tags, class OElementType, class... OTags>
 constexpr inline auto operator+(
         detail::TaggedVector<ElementType, Tags...> const& lhs,
@@ -129,6 +147,8 @@ constexpr inline auto operator-(
     using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
     return detail::TaggedVector<RElementType, Tag>(lhs - get<Tag>(rhs));
 }
+
+/// external left binary operator: *
 
 template <
         class ElementType,

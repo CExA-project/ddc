@@ -107,8 +107,11 @@ constexpr inline auto operator-(IntegralType const& lhs, DiscreteVector<Tag> con
 
 /// external left binary operator: *
 
-template <class... Tags>
-constexpr inline auto operator*(std::ptrdiff_t const& lhs, DiscreteVector<Tags...> const& rhs)
+template <
+        class IntegralType,
+        class... Tags,
+        class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+constexpr inline auto operator*(IntegralType const& lhs, DiscreteVector<Tags...> const& rhs)
 {
     return DiscreteVector<Tags...>((lhs * get<Tags>(rhs))...);
 }
@@ -299,9 +302,14 @@ public:
         return *this;
     }
 
-    constexpr inline DiscreteVector& operator+=(std::ptrdiff_t const& rhs)
+    template <
+            class IntegralType,
+            std::size_t N = sizeof...(Tags),
+            class = std::enable_if_t<N == 1>,
+            class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+    constexpr inline DiscreteVector& operator+=(IntegralType const& rhs)
     {
-        ((m_values[type_seq_rank_v<Tags, tags_seq>] += rhs), ...);
+        m_values[0] += rhs;
         return *this;
     }
 
@@ -313,9 +321,14 @@ public:
         return *this;
     }
 
-    constexpr inline DiscreteVector& operator-=(std::ptrdiff_t const& rhs)
+    template <
+            class IntegralType,
+            std::size_t N = sizeof...(Tags),
+            class = std::enable_if_t<N == 1>,
+            class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+    constexpr inline DiscreteVector& operator-=(IntegralType const& rhs)
     {
-        ((m_values[type_seq_rank_v<Tags, tags_seq>] -= rhs), ...);
+        m_values[0] -= rhs;
         return *this;
     }
 

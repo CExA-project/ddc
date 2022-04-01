@@ -220,10 +220,10 @@ public:
         return *this;
     }
 
-    template <class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+    template <class IntegralType, std::size_t N = sizeof...(Tags), class = std::enable_if_t<N==1>, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
     constexpr inline DiscreteElement& operator+=(IntegralType const& rhs)
     {
-        ((m_values[type_seq_rank_v<Tags, tags_seq>] += rhs), ...);
+        m_values[0] += rhs;
         return *this;
     }
 
@@ -235,10 +235,10 @@ public:
         return *this;
     }
 
-    template <class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+    template <class IntegralType, std::size_t N = sizeof...(Tags), class = std::enable_if_t<N==1>, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
     constexpr inline DiscreteElement& operator-=(IntegralType const& rhs)
     {
-        ((m_values[type_seq_rank_v<Tags, tags_seq>] -= rhs), ...);
+        m_values[0] -= rhs;
         return *this;
     }
 };

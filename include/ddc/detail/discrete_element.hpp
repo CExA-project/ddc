@@ -54,8 +54,8 @@ inline constexpr std::size_t& uid(DiscreteElement<Tags...>& tuple) noexcept
 
 template <class QueryTag, class... Tags>
 inline constexpr std::size_t const& uid_or(
-        DiscreteElement<Tags...> const& tuple,
-        std::size_t const& default_value) noexcept
+    DiscreteElement<Tags...> const& tuple,
+    std::size_t const& default_value) noexcept
 {
     return tuple.template uid_or<QueryTag>(default_value);
 }
@@ -74,12 +74,12 @@ inline constexpr DiscreteElement<QueryTags...> select(DiscreteElement<Tags...>&&
 
 template <class QueryTag, class HeadTag, class... TailTags>
 constexpr DiscreteElement<QueryTag> const& take(
-        DiscreteElement<HeadTag> const& head,
-        DiscreteElement<TailTags> const&... tags)
+    DiscreteElement<HeadTag> const& head,
+    DiscreteElement<TailTags> const&... tags)
 {
     static_assert(
-            !type_seq_contains_v<detail::TypeSeq<HeadTag>, detail::TypeSeq<TailTags...>>,
-            "ERROR: tag redundant");
+        !type_seq_contains_v<detail::TypeSeq<HeadTag>, detail::TypeSeq<TailTags...>>,
+        "ERROR: tag redundant");
     if constexpr (std::is_same_v<QueryTag, HeadTag>) {
         return head;
     } else {
@@ -125,10 +125,10 @@ public:
     }
 
     template <
-            class... Params,
-            class = std::enable_if_t<(std::is_integral_v<Params> && ...)>,
-            class = std::enable_if_t<(!is_discrete_element_v<Params> && ...)>,
-            class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
+        class... Params,
+        class = std::enable_if_t<(std::is_integral_v<Params> && ...)>,
+        class = std::enable_if_t<(!is_discrete_element_v<Params> && ...)>,
+        class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
     explicit inline constexpr DiscreteElement(Params const&... params) noexcept
         : m_values {static_cast<value_type>(params)...}
     {
@@ -262,16 +262,16 @@ std::ostream& operator<<(std::ostream& out, DiscreteElement<Head, Tags...> const
 
 template <class... Tags, class... OTags>
 constexpr inline bool operator==(
-        DiscreteElement<Tags...> const& lhs,
-        DiscreteElement<OTags...> const& rhs) noexcept
+    DiscreteElement<Tags...> const& lhs,
+    DiscreteElement<OTags...> const& rhs) noexcept
 {
     return ((lhs.template uid<Tags>() == rhs.template uid<Tags>()) && ...);
 }
 
 template <class... Tags, class... OTags>
 constexpr inline bool operator!=(
-        DiscreteElement<Tags...> const& lhs,
-        DiscreteElement<OTags...> const& rhs) noexcept
+    DiscreteElement<Tags...> const& lhs,
+    DiscreteElement<OTags...> const& rhs) noexcept
 {
     return !(lhs == rhs);
 }
@@ -304,18 +304,18 @@ constexpr inline bool operator>=(DiscreteElement<Tag> const& lhs, DiscreteElemen
 
 template <class... Tags, class... OTags>
 constexpr inline auto operator+(
-        DiscreteElement<Tags...> const& lhs,
-        DiscreteVector<OTags...> const& rhs)
+    DiscreteElement<Tags...> const& lhs,
+    DiscreteVector<OTags...> const& rhs)
 {
     static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
     return DiscreteElement<Tags...>((uid<Tags>(lhs) + get<Tags>(rhs))...);
 }
 
 template <
-        class Tag,
-        class IntegralType,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>,
-        class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
+    class Tag,
+    class IntegralType,
+    class = std::enable_if_t<std::is_integral_v<IntegralType>>,
+    class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
 constexpr inline auto operator+(DiscreteElement<Tag> const& lhs, IntegralType const& rhs)
 {
     return DiscreteElement<Tag>(uid<Tag>(lhs) + rhs);
@@ -323,18 +323,18 @@ constexpr inline auto operator+(DiscreteElement<Tag> const& lhs, IntegralType co
 
 template <class... Tags, class... OTags>
 constexpr inline auto operator-(
-        DiscreteElement<Tags...> const& lhs,
-        DiscreteVector<OTags...> const& rhs)
+    DiscreteElement<Tags...> const& lhs,
+    DiscreteVector<OTags...> const& rhs)
 {
     static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
     return DiscreteElement<Tags...>((uid<Tags>(lhs) - get<Tags>(rhs))...);
 }
 
 template <
-        class Tag,
-        class IntegralType,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>,
-        class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
+    class Tag,
+    class IntegralType,
+    class = std::enable_if_t<std::is_integral_v<IntegralType>>,
+    class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
 constexpr inline auto operator-(DiscreteElement<Tag> const& lhs, IntegralType const& rhs)
 {
     return DiscreteElement<Tag>(uid<Tag>(lhs) - rhs);
@@ -344,8 +344,8 @@ constexpr inline auto operator-(DiscreteElement<Tag> const& lhs, IntegralType co
 
 template <class... Tags, class... OTags>
 constexpr inline auto operator-(
-        DiscreteElement<Tags...> const& lhs,
-        DiscreteElement<OTags...> const& rhs)
+    DiscreteElement<Tags...> const& lhs,
+    DiscreteElement<OTags...> const& rhs)
 {
     static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
     return DiscreteVector<Tags...>((uid<Tags>(lhs) - uid<Tags>(rhs))...);

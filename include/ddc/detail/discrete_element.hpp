@@ -7,7 +7,7 @@
 #include <ostream>
 #include <utility>
 
-#include "ddc/detail/tagged_vector.hpp"
+#include "ddc/detail/discrete_vector.hpp"
 #include "ddc/detail/type_seq.hpp"
 
 
@@ -272,14 +272,10 @@ constexpr inline bool operator>=(DiscreteElement<Tag> const& lhs, DiscreteElemen
 
 /// right external binary operators: +, -
 
-template <
-        class... Tags,
-        class IntegralType,
-        class... OTags,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+template <class... Tags, class... OTags>
 constexpr inline auto operator+(
         DiscreteElement<Tags...> const& lhs,
-        detail::TaggedVector<IntegralType, OTags...> const& rhs)
+        DiscreteVector<OTags...> const& rhs)
 {
     static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
     return DiscreteElement<Tags...>((uid<Tags>(lhs) + get<Tags>(rhs))...);
@@ -289,20 +285,16 @@ template <
         class Tag,
         class IntegralType,
         class = std::enable_if_t<std::is_integral_v<IntegralType>>,
-        class = std::enable_if_t<!detail::is_tagged_vector_v<IntegralType>>>
+        class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
 constexpr inline auto operator+(DiscreteElement<Tag> const& lhs, IntegralType const& rhs)
 {
     return DiscreteElement<Tag>(uid<Tag>(lhs) + rhs);
 }
 
-template <
-        class... Tags,
-        class IntegralType,
-        class... OTags,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+template <class... Tags, class... OTags>
 constexpr inline auto operator-(
         DiscreteElement<Tags...> const& lhs,
-        detail::TaggedVector<IntegralType, OTags...> const& rhs)
+        DiscreteVector<OTags...> const& rhs)
 {
     static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
     return DiscreteElement<Tags...>((uid<Tags>(lhs) - get<Tags>(rhs))...);
@@ -312,7 +304,7 @@ template <
         class Tag,
         class IntegralType,
         class = std::enable_if_t<std::is_integral_v<IntegralType>>,
-        class = std::enable_if_t<!detail::is_tagged_vector_v<IntegralType>>>
+        class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
 constexpr inline auto operator-(DiscreteElement<Tag> const& lhs, IntegralType const& rhs)
 {
     return DiscreteElement<Tag>(uid<Tag>(lhs) - rhs);
@@ -326,5 +318,5 @@ constexpr inline auto operator-(
         DiscreteElement<OTags...> const& rhs)
 {
     static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
-    return detail::TaggedVector<std::ptrdiff_t, Tags...>((uid<Tags>(lhs) - uid<Tags>(rhs))...);
+    return DiscreteVector<Tags...>((uid<Tags>(lhs) - uid<Tags>(rhs))...);
 }

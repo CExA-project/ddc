@@ -5,7 +5,7 @@
 #include <cstddef>
 
 #include "ddc/detail/discrete_element.hpp"
-#include "ddc/detail/tagged_vector.hpp"
+#include "ddc/detail/discrete_vector.hpp"
 
 /** A DiscreteCoordElement is a scalar that identifies an element of the discrete dimension
  */
@@ -21,10 +21,3 @@ using DiscreteVectorElement = std::ptrdiff_t;
  */
 template <class... Tags>
 using DiscreteCoordinate = DiscreteElement<Tags...>;
-
-/** A DiscreteVector is a vector in the discrete dimension
- * 
- * Each is tagged by its associated dimensions.
- */
-template <class... Tags>
-using DiscreteVector = detail::TaggedVector<DiscreteVectorElement, Tags...>;

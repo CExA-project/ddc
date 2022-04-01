@@ -64,7 +64,7 @@ constexpr inline DiscreteVector<Tags...> operator-(DiscreteVector<Tags...> const
 /// Internal binary operators: +, -
 
 template <class... Tags, class... OTags>
-constexpr inline auto operator+(
+constexpr inline DiscreteVector<Tags...> operator+(
         DiscreteVector<Tags...> const& lhs,
         DiscreteVector<OTags...> const& rhs)
 {
@@ -73,19 +73,23 @@ constexpr inline auto operator+(
 }
 
 template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline auto operator+(DiscreteVector<Tag> const& lhs, IntegralType const& rhs)
+constexpr inline DiscreteVector<Tag> operator+(
+        DiscreteVector<Tag> const& lhs,
+        IntegralType const& rhs)
 {
     return DiscreteVector<Tag>(get<Tag>(lhs) + rhs);
 }
 
 template <class IntegralType, class Tag, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline auto operator+(IntegralType const& lhs, DiscreteVector<Tag> const& rhs)
+constexpr inline DiscreteVector<Tag> operator+(
+        IntegralType const& lhs,
+        DiscreteVector<Tag> const& rhs)
 {
     return DiscreteVector<Tag>(lhs + get<Tag>(rhs));
 }
 
 template <class... Tags, class... OTags>
-constexpr inline auto operator-(
+constexpr inline DiscreteVector<Tags...> operator-(
         DiscreteVector<Tags...> const& lhs,
         DiscreteVector<OTags...> const& rhs)
 {
@@ -94,13 +98,17 @@ constexpr inline auto operator-(
 }
 
 template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline auto operator-(DiscreteVector<Tag> const& lhs, IntegralType const& rhs)
+constexpr inline DiscreteVector<Tag> operator-(
+        DiscreteVector<Tag> const& lhs,
+        IntegralType const& rhs)
 {
     return DiscreteVector<Tag>(get<Tag>(lhs) - rhs);
 }
 
 template <class IntegralType, class Tag, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline auto operator-(IntegralType const& lhs, DiscreteVector<Tag> const& rhs)
+constexpr inline DiscreteVector<Tag> operator-(
+        IntegralType const& lhs,
+        DiscreteVector<Tag> const& rhs)
 {
     return DiscreteVector<Tag>(lhs - get<Tag>(rhs));
 }

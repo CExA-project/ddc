@@ -311,7 +311,7 @@ constexpr inline bool operator>=(DiscreteElement<Tag> const& lhs, DiscreteElemen
 /// right external binary operators: +, -
 
 template <class... Tags, class... OTags>
-constexpr inline auto operator+(
+constexpr inline DiscreteElement<Tags...> operator+(
         DiscreteElement<Tags...> const& lhs,
         DiscreteVector<OTags...> const& rhs)
 {
@@ -324,13 +324,15 @@ template <
         class IntegralType,
         class = std::enable_if_t<std::is_integral_v<IntegralType>>,
         class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
-constexpr inline auto operator+(DiscreteElement<Tag> const& lhs, IntegralType const& rhs)
+constexpr inline DiscreteElement<Tag> operator+(
+        DiscreteElement<Tag> const& lhs,
+        IntegralType const& rhs)
 {
     return DiscreteElement<Tag>(uid<Tag>(lhs) + rhs);
 }
 
 template <class... Tags, class... OTags>
-constexpr inline auto operator-(
+constexpr inline DiscreteElement<Tags...> operator-(
         DiscreteElement<Tags...> const& lhs,
         DiscreteVector<OTags...> const& rhs)
 {
@@ -343,7 +345,9 @@ template <
         class IntegralType,
         class = std::enable_if_t<std::is_integral_v<IntegralType>>,
         class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
-constexpr inline auto operator-(DiscreteElement<Tag> const& lhs, IntegralType const& rhs)
+constexpr inline DiscreteElement<Tag> operator-(
+        DiscreteElement<Tag> const& lhs,
+        IntegralType const& rhs)
 {
     return DiscreteElement<Tag>(uid<Tag>(lhs) - rhs);
 }
@@ -351,7 +355,7 @@ constexpr inline auto operator-(DiscreteElement<Tag> const& lhs, IntegralType co
 /// binary operator: -
 
 template <class... Tags, class... OTags>
-constexpr inline auto operator-(
+constexpr inline DiscreteVector<Tags...> operator-(
         DiscreteElement<Tags...> const& lhs,
         DiscreteElement<OTags...> const& rhs)
 {

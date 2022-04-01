@@ -211,6 +211,36 @@ public:
     {
         return m_values[0];
     }
+
+    template <class... OTags>
+    constexpr inline DiscreteElement& operator+=(DiscreteVector<OTags...> const& rhs)
+    {
+        static_assert(type_seq_same_v<tags_seq, detail::TypeSeq<OTags...>>);
+        ((m_values[type_seq_rank_v<Tags, tags_seq>] += rhs.template get<Tags>()), ...);
+        return *this;
+    }
+
+    template <class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+    constexpr inline DiscreteElement& operator+=(IntegralType const& rhs)
+    {
+        ((m_values[type_seq_rank_v<Tags, tags_seq>] += rhs), ...);
+        return *this;
+    }
+
+    template <class... OTags>
+    constexpr inline DiscreteElement& operator-=(DiscreteVector<OTags...> const& rhs)
+    {
+        static_assert(type_seq_same_v<tags_seq, detail::TypeSeq<OTags...>>);
+        ((m_values[type_seq_rank_v<Tags, tags_seq>] -= rhs.template get<Tags>()), ...);
+        return *this;
+    }
+
+    template <class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+    constexpr inline DiscreteElement& operator-=(IntegralType const& rhs)
+    {
+        ((m_values[type_seq_rank_v<Tags, tags_seq>] -= rhs), ...);
+        return *this;
+    }
 };
 
 inline std::ostream& operator<<(std::ostream& out, DiscreteElement<> const&)

@@ -74,7 +74,7 @@ public:
      */
     constexpr DiscreteDomain(mcoord_type const& lbound, mlength_type const& size)
         : m_lbound(lbound)
-        , m_ubound((get<DDims>(lbound) + get<DDims>(size) - 1)...)
+        , m_ubound((uid<DDims>(lbound) + get<DDims>(size) - 1)...)
     {
     }
 
@@ -105,18 +105,18 @@ public:
 
     std::size_t size() const
     {
-        return (1ul * ... * (get<DDims>(m_ubound) + 1 - get<DDims>(m_lbound)));
+        return (1ul * ... * (uid<DDims>(m_ubound) + 1 - uid<DDims>(m_lbound)));
     }
 
     constexpr mlength_type extents() const noexcept
     {
-        return mlength_type((get<DDims>(m_ubound) + 1 - get<DDims>(m_lbound))...);
+        return mlength_type((uid<DDims>(m_ubound) + 1 - uid<DDims>(m_lbound))...);
     }
 
     template <class QueryDDim>
     inline constexpr DiscreteVector<QueryDDim> extent() const noexcept
     {
-        return DiscreteVector<QueryDDim>(get<QueryDDim>(m_ubound) + 1 - get<QueryDDim>(m_lbound));
+        return DiscreteVector<QueryDDim>(uid<QueryDDim>(m_ubound) + 1 - uid<QueryDDim>(m_lbound));
     }
 
     constexpr mcoord_type front() const noexcept
@@ -132,13 +132,13 @@ public:
     template <class... ODDims>
     constexpr auto restrict(DiscreteDomain<ODDims...> const& odomain) const
     {
-        assert(((get<ODDims>(m_lbound) <= get<ODDims>(odomain.m_lbound)) && ...));
-        assert(((get<ODDims>(m_ubound) >= get<ODDims>(odomain.m_ubound)) && ...));
+        assert(((uid<ODDims>(m_lbound) <= uid<ODDims>(odomain.m_lbound)) && ...));
+        assert(((uid<ODDims>(m_ubound) >= uid<ODDims>(odomain.m_ubound)) && ...));
         const DiscreteVector<DDims...> myextents = extents();
         const DiscreteVector<ODDims...> oextents = odomain.extents();
         return DiscreteDomain(
                 DiscreteCoordinate<DDims...>(
-                        (get_or<DDims>(odomain.m_lbound, get<DDims>(m_lbound)))...),
+                        (uid_or<DDims>(odomain.m_lbound, uid<DDims>(m_lbound)))...),
                 DiscreteVector<DDims...>((get_or<DDims>(oextents, get<DDims>(myextents)))...));
     }
 

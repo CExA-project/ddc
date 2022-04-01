@@ -11,7 +11,7 @@
 #include "ddc/detail/type_seq.hpp"
 
 
-template <class, class...>
+template <class...>
 class DiscreteElement;
 
 template <class T>
@@ -19,8 +19,8 @@ struct IsDiscreteElement : std::false_type
 {
 };
 
-template <class ElementType, class... Tags>
-struct IsDiscreteElement<DiscreteElement<ElementType, Tags...>> : std::true_type
+template <class... Tags>
+struct IsDiscreteElement<DiscreteElement<Tags...>> : std::true_type
 {
 };
 
@@ -28,44 +28,54 @@ template <class T>
 inline constexpr bool is_discrete_element_v = IsDiscreteElement<T>::value;
 
 
-template <class QueryTag, class ElementType, class... Tags>
-inline constexpr ElementType const& get(DiscreteElement<ElementType, Tags...> const& tuple) noexcept
+template <class Tag>
+inline constexpr std::size_t const& uid(DiscreteElement<Tag> const& tuple) noexcept
 {
-    return tuple.template get<QueryTag>();
+    return tuple.uid();
 }
 
-template <class QueryTag, class ElementType, class... Tags>
-inline constexpr ElementType& get(DiscreteElement<ElementType, Tags...>& tuple) noexcept
+template <class Tag>
+inline constexpr std::size_t& uid(DiscreteElement<Tag>& tuple) noexcept
 {
-    return tuple.template get<QueryTag>();
+    return tuple.uid();
 }
 
-template <class QueryTag, class ElementType, class... Tags>
-inline constexpr ElementType const& get_or(
-        DiscreteElement<ElementType, Tags...> const& tuple,
-        ElementType const& default_value) noexcept
+template <class QueryTag, class... Tags>
+inline constexpr std::size_t const& uid(DiscreteElement<Tags...> const& tuple) noexcept
 {
-    return tuple.template get_or<QueryTag>(default_value);
+    return tuple.template uid<QueryTag>();
 }
 
-template <class... QueryTags, class ElementType, class... Tags>
-inline constexpr DiscreteElement<ElementType, QueryTags...> select(
-        DiscreteElement<ElementType, Tags...> const& arr) noexcept
+template <class QueryTag, class... Tags>
+inline constexpr std::size_t& uid(DiscreteElement<Tags...>& tuple) noexcept
 {
-    return DiscreteElement<ElementType, QueryTags...>(arr);
+    return tuple.template uid<QueryTag>();
 }
 
-template <class... QueryTags, class ElementType, class... Tags>
-inline constexpr DiscreteElement<ElementType, QueryTags...> select(
-        DiscreteElement<ElementType, Tags...>&& arr) noexcept
+template <class QueryTag, class... Tags>
+inline constexpr std::size_t const& uid_or(
+        DiscreteElement<Tags...> const& tuple,
+        std::size_t const& default_value) noexcept
 {
-    return DiscreteElement<ElementType, QueryTags...>(std::move(arr));
+    return tuple.template uid_or<QueryTag>(default_value);
 }
 
-template <class QueryTag, class ElementType, class HeadTag, class... TailTags>
-constexpr DiscreteElement<ElementType, QueryTag> const& take(
-        DiscreteElement<ElementType, HeadTag> const& head,
-        DiscreteElement<ElementType, TailTags> const&... tags)
+template <class... QueryTags, class... Tags>
+inline constexpr DiscreteElement<QueryTags...> select(DiscreteElement<Tags...> const& arr) noexcept
+{
+    return DiscreteElement<QueryTags...>(arr);
+}
+
+template <class... QueryTags, class... Tags>
+inline constexpr DiscreteElement<QueryTags...> select(DiscreteElement<Tags...>&& arr) noexcept
+{
+    return DiscreteElement<QueryTags...>(std::move(arr));
+}
+
+template <class QueryTag, class HeadTag, class... TailTags>
+constexpr DiscreteElement<QueryTag> const& take(
+        DiscreteElement<HeadTag> const& head,
+        DiscreteElement<TailTags> const&... tags)
 {
     static_assert(
             !type_seq_contains_v<detail::TypeSeq<HeadTag>, detail::TypeSeq<TailTags...>>,
@@ -79,16 +89,17 @@ constexpr DiscreteElement<ElementType, QueryTag> const& take(
 }
 
 
-template <class ElementType, class... Tags>
+template <class... Tags>
 class DiscreteElement
 {
-    static_assert(std::is_integral_v<ElementType>);
     using tags_seq = detail::TypeSeq<Tags...>;
 
 private:
-    std::array<ElementType, sizeof...(Tags)> m_values;
+    std::array<std::size_t, sizeof...(Tags)> m_values;
 
 public:
+    using value_type = std::size_t;
+
     static constexpr std::size_t size() noexcept
     {
         return sizeof...(Tags);
@@ -102,16 +113,14 @@ public:
     inline constexpr DiscreteElement(DiscreteElement&&) = default;
 
     template <class... OTags>
-    explicit inline constexpr DiscreteElement(
-            DiscreteElement<ElementType, OTags> const&... other) noexcept
+    explicit inline constexpr DiscreteElement(DiscreteElement<OTags> const&... other) noexcept
         : m_values {take<Tags>(other...).uid()...}
     {
     }
 
-    template <class OElementType, class... OTags>
-    explicit inline constexpr DiscreteElement(
-            DiscreteElement<OElementType, OTags...> const& other) noexcept
-        : m_values {(static_cast<ElementType>(other.template get<Tags>()))...}
+    template <class... OTags>
+    explicit inline constexpr DiscreteElement(DiscreteElement<OTags...> const& other) noexcept
+        : m_values {other.template uid<Tags>()...}
     {
     }
 
@@ -121,7 +130,7 @@ public:
             class = std::enable_if_t<(!is_discrete_element_v<Params> && ...)>,
             class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
     explicit inline constexpr DiscreteElement(Params const&... params) noexcept
-        : m_values {static_cast<ElementType>(params)...}
+        : m_values {static_cast<value_type>(params)...}
     {
     }
 
@@ -130,61 +139,43 @@ public:
     constexpr inline DiscreteElement& operator=(DiscreteElement&& other) = default;
 
     template <class... OTags>
-    constexpr inline DiscreteElement& operator=(
-            DiscreteElement<ElementType, OTags...> const& other) noexcept
+    constexpr inline DiscreteElement& operator=(DiscreteElement<OTags...> const& other) noexcept
     {
         m_values = other.m_values;
         return *this;
     }
 
     template <class... OTags>
-    constexpr inline DiscreteElement& operator=(
-            DiscreteElement<ElementType, OTags...>&& other) noexcept
+    constexpr inline DiscreteElement& operator=(DiscreteElement<OTags...>&& other) noexcept
     {
         m_values = std::move(other.m_values);
         return *this;
     }
 
     /// Returns a reference to the underlying `std::array`
-    constexpr inline std::array<ElementType, sizeof...(Tags)>& array() noexcept
+    constexpr inline std::array<value_type, sizeof...(Tags)>& array() noexcept
     {
         return m_values;
     }
 
     /// Returns a const reference to the underlying `std::array`
-    constexpr inline std::array<ElementType, sizeof...(Tags)> const& array() const noexcept
+    constexpr inline std::array<value_type, sizeof...(Tags)> const& array() const noexcept
     {
         return m_values;
     }
 
-    constexpr inline ElementType& operator[](size_t pos)
+    constexpr inline value_type& operator[](size_t pos)
     {
         return m_values[pos];
     }
 
-    constexpr inline ElementType const& operator[](size_t pos) const
+    constexpr inline value_type const& operator[](size_t pos) const
     {
         return m_values[pos];
     }
 
     template <class QueryTag>
-    inline constexpr ElementType& get() noexcept
-    {
-        using namespace detail;
-        static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteElement");
-        return m_values[type_seq_rank_v<QueryTag, tags_seq>];
-    }
-
-    template <class QueryTag>
-    inline constexpr ElementType const& get() const noexcept
-    {
-        using namespace detail;
-        static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteElement");
-        return m_values[type_seq_rank_v<QueryTag, tags_seq>];
-    }
-
-    template <class QueryTag>
-    ElementType const& get_or(ElementType const& default_value) const&
+    value_type const& uid_or(value_type const& default_value) const&
     {
         if constexpr (in_tags_v<QueryTag, tags_seq>) {
             return m_values[type_seq_rank_v<QueryTag, tags_seq>];
@@ -193,143 +184,147 @@ public:
         }
     }
 
+    template <class QueryTag>
+    inline constexpr value_type& uid() noexcept
+    {
+        using namespace detail;
+        static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteElement");
+        return m_values[type_seq_rank_v<QueryTag, tags_seq>];
+    }
+
+    template <class QueryTag>
+    inline constexpr value_type const& uid() const noexcept
+    {
+        using namespace detail;
+        static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteElement");
+        return m_values[type_seq_rank_v<QueryTag, tags_seq>];
+    }
+
     template <std::size_t N = sizeof...(Tags)>
-    constexpr inline std::enable_if_t<N == 1, ElementType&> uid() noexcept
+    constexpr inline std::enable_if_t<N == 1, value_type&> uid() noexcept
     {
         return m_values[0];
     }
 
     template <std::size_t N = sizeof...(Tags)>
-    constexpr inline std::enable_if_t<N == 1, ElementType const&> uid() const noexcept
+    constexpr inline std::enable_if_t<N == 1, value_type const&> uid() const noexcept
     {
         return m_values[0];
     }
 };
 
-template <class ElementType>
-std::ostream& operator<<(std::ostream& out, DiscreteElement<ElementType> const&)
+inline std::ostream& operator<<(std::ostream& out, DiscreteElement<> const&)
 {
     out << "()";
     return out;
 }
 
-template <class ElementType, class Head, class... Tags>
-std::ostream& operator<<(std::ostream& out, DiscreteElement<ElementType, Head, Tags...> const& arr)
+template <class Head, class... Tags>
+std::ostream& operator<<(std::ostream& out, DiscreteElement<Head, Tags...> const& arr)
 {
     out << "(";
-    out << get<Head>(arr);
-    ((out << ", " << get<Tags>(arr)), ...);
+    out << uid<Head>(arr);
+    ((out << ", " << uid<Tags>(arr)), ...);
     out << ")";
     return out;
 }
 
 
-template <class ElementType, class... Tags, class... OTags>
+template <class... Tags, class... OTags>
 constexpr inline bool operator==(
-        DiscreteElement<ElementType, Tags...> const& lhs,
-        DiscreteElement<ElementType, OTags...> const& rhs) noexcept
+        DiscreteElement<Tags...> const& lhs,
+        DiscreteElement<OTags...> const& rhs) noexcept
 {
-    return ((lhs.template get<Tags>() == rhs.template get<Tags>()) && ...);
+    return ((lhs.template uid<Tags>() == rhs.template uid<Tags>()) && ...);
 }
 
-template <class ElementType, class... Tags, class... OTags>
+template <class... Tags, class... OTags>
 constexpr inline bool operator!=(
-        DiscreteElement<ElementType, Tags...> const& lhs,
-        DiscreteElement<ElementType, OTags...> const& rhs) noexcept
+        DiscreteElement<Tags...> const& lhs,
+        DiscreteElement<OTags...> const& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
-template <class ElementType, class Tag>
-constexpr inline bool operator<(
-        DiscreteElement<ElementType, Tag> const& lhs,
-        DiscreteElement<ElementType, Tag> const& rhs)
+template <class Tag>
+constexpr inline bool operator<(DiscreteElement<Tag> const& lhs, DiscreteElement<Tag> const& rhs)
 {
     return lhs.uid() < rhs.uid();
 }
 
-template <class ElementType, class Tag>
-constexpr inline bool operator<=(
-        DiscreteElement<ElementType, Tag> const& lhs,
-        DiscreteElement<ElementType, Tag> const& rhs)
+template <class Tag>
+constexpr inline bool operator<=(DiscreteElement<Tag> const& lhs, DiscreteElement<Tag> const& rhs)
 {
     return lhs.uid() <= rhs.uid();
 }
 
-template <class ElementType, class Tag>
-constexpr inline bool operator>(
-        DiscreteElement<ElementType, Tag> const& lhs,
-        DiscreteElement<ElementType, Tag> const& rhs)
+template <class Tag>
+constexpr inline bool operator>(DiscreteElement<Tag> const& lhs, DiscreteElement<Tag> const& rhs)
 {
     return lhs.uid() > rhs.uid();
 }
 
-template <class ElementType, class Tag>
-constexpr inline bool operator>=(
-        DiscreteElement<ElementType, Tag> const& lhs,
-        DiscreteElement<ElementType, Tag> const& rhs)
+template <class Tag>
+constexpr inline bool operator>=(DiscreteElement<Tag> const& lhs, DiscreteElement<Tag> const& rhs)
 {
     return lhs.uid() >= rhs.uid();
 }
 
 /// right external binary operators: +, -
 
-template <class ElementType, class... Tags, class OElementType, class... OTags>
+template <
+        class... Tags,
+        class IntegralType,
+        class... OTags,
+        class = std::enable_if_t<std::is_integral_v<IntegralType>>>
 constexpr inline auto operator+(
-        DiscreteElement<ElementType, Tags...> const& lhs,
-        detail::TaggedVector<OElementType, OTags...> const& rhs)
+        DiscreteElement<Tags...> const& lhs,
+        detail::TaggedVector<IntegralType, OTags...> const& rhs)
 {
     static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
-    using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
-    return DiscreteElement<RElementType, Tags...>((get<Tags>(lhs) + get<Tags>(rhs))...);
+    return DiscreteElement<Tags...>((uid<Tags>(lhs) + get<Tags>(rhs))...);
 }
 
 template <
-        class ElementType,
         class Tag,
-        class OElementType,
-        class = std::enable_if_t<std::is_integral_v<OElementType>>,
-        class = std::enable_if_t<!detail::is_tagged_vector_v<OElementType>>>
-constexpr inline auto operator+(
-        DiscreteElement<ElementType, Tag> const& lhs,
-        OElementType const& rhs)
+        class IntegralType,
+        class = std::enable_if_t<std::is_integral_v<IntegralType>>,
+        class = std::enable_if_t<!detail::is_tagged_vector_v<IntegralType>>>
+constexpr inline auto operator+(DiscreteElement<Tag> const& lhs, IntegralType const& rhs)
 {
-    using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
-    return DiscreteElement<RElementType, Tag>(get<Tag>(lhs) + rhs);
-}
-
-template <class ElementType, class... Tags, class OElementType, class... OTags>
-constexpr inline auto operator-(
-        DiscreteElement<ElementType, Tags...> const& lhs,
-        detail::TaggedVector<OElementType, OTags...> const& rhs)
-{
-    static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
-    using RElementType = decltype(std::declval<ElementType>() - std::declval<OElementType>());
-    return DiscreteElement<RElementType, Tags...>((get<Tags>(lhs) - get<Tags>(rhs))...);
+    return DiscreteElement<Tag>(uid<Tag>(lhs) + rhs);
 }
 
 template <
-        class ElementType,
-        class Tag,
-        class OElementType,
-        class = std::enable_if_t<std::is_integral_v<OElementType>>,
-        class = std::enable_if_t<!detail::is_tagged_vector_v<OElementType>>>
+        class... Tags,
+        class IntegralType,
+        class... OTags,
+        class = std::enable_if_t<std::is_integral_v<IntegralType>>>
 constexpr inline auto operator-(
-        DiscreteElement<ElementType, Tag> const& lhs,
-        OElementType const& rhs)
+        DiscreteElement<Tags...> const& lhs,
+        detail::TaggedVector<IntegralType, OTags...> const& rhs)
 {
-    using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
-    return DiscreteElement<RElementType, Tag>(get<Tag>(lhs) - rhs);
+    static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
+    return DiscreteElement<Tags...>((uid<Tags>(lhs) - get<Tags>(rhs))...);
+}
+
+template <
+        class Tag,
+        class IntegralType,
+        class = std::enable_if_t<std::is_integral_v<IntegralType>>,
+        class = std::enable_if_t<!detail::is_tagged_vector_v<IntegralType>>>
+constexpr inline auto operator-(DiscreteElement<Tag> const& lhs, IntegralType const& rhs)
+{
+    return DiscreteElement<Tag>(uid<Tag>(lhs) - rhs);
 }
 
 /// binary operator: -
 
-template <class ElementType, class... Tags, class OElementType, class... OTags>
+template <class... Tags, class... OTags>
 constexpr inline auto operator-(
-        DiscreteElement<ElementType, Tags...> const& lhs,
-        DiscreteElement<OElementType, OTags...> const& rhs)
+        DiscreteElement<Tags...> const& lhs,
+        DiscreteElement<OTags...> const& rhs)
 {
     static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
-    using RElementType = decltype(std::declval<ElementType>() - std::declval<OElementType>());
-    return detail::TaggedVector<RElementType, Tags...>((get<Tags>(lhs) - get<Tags>(rhs))...);
+    return detail::TaggedVector<std::ptrdiff_t, Tags...>((uid<Tags>(lhs) - uid<Tags>(rhs))...);
 }

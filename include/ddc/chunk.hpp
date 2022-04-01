@@ -161,10 +161,8 @@ public:
      * @param mcoords 1D discrete coordinates
      * @return const-reference to this element
      */
-    // Warning: Do not use DiscreteCoordinate because of template deduction issue with clang 12
     template <class... ODDims>
-    element_type const& operator()(
-            DiscreteElement<DiscreteCoordElement, ODDims> const&... mcoords) const noexcept
+    element_type const& operator()(DiscreteElement<ODDims> const&... mcoords) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((mcoords >= front<ODDims>(this->m_domain)) && ...));
@@ -176,10 +174,8 @@ public:
      * @param mcoords 1D discrete coordinates
      * @return reference to this element
      */
-    // Warning: Do not use DiscreteCoordinate because of template deduction issue with clang 12
     template <class... ODDims>
-    element_type& operator()(
-            DiscreteElement<DiscreteCoordElement, ODDims> const&... mcoords) noexcept
+    element_type& operator()(DiscreteElement<ODDims> const&... mcoords) noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((mcoords >= front<ODDims>(this->m_domain)) && ...));
@@ -192,13 +188,12 @@ public:
      * @return const-reference to this element
      */
     template <class... ODDims, class = std::enable_if_t<sizeof...(ODDims) != 1>>
-    element_type const& operator()(
-            DiscreteElement<DiscreteCoordElement, ODDims...> const& mcoord) const noexcept
+    element_type const& operator()(DiscreteElement<ODDims...> const& mcoord) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((select<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));
         assert(((select<ODDims>(mcoord) <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(get<DDims>(mcoord)...);
+        return this->m_internal_mdspan(uid<DDims>(mcoord)...);
     }
 
     /** Element access using a multi-dimensional DiscreteCoordinate
@@ -206,13 +201,12 @@ public:
      * @return reference to this element
      */
     template <class... ODDims, class = std::enable_if_t<sizeof...(ODDims) != 1>>
-    element_type& operator()(
-            DiscreteElement<DiscreteCoordElement, ODDims...> const& mcoord) noexcept
+    element_type& operator()(DiscreteElement<ODDims...> const& mcoord) noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((select<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));
         assert(((select<ODDims>(mcoord) <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(get<DDims>(mcoord)...);
+        return this->m_internal_mdspan(uid<DDims>(mcoord)...);
     }
 
     /** Access to the underlying allocation pointer

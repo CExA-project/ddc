@@ -20,7 +20,7 @@ using DiscreteVectorElement = std::ptrdiff_t;
  * Each one is tagged by its associated dimensions.
  */
 template <class... Tags>
-using DiscreteCoordinate = DiscreteElement<std::size_t, Tags...>;
+using DiscreteCoordinate = DiscreteElement<Tags...>;
 
 /** A DiscreteVector is a vector in the discrete dimension
  * 

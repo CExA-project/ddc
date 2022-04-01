@@ -84,7 +84,7 @@ protected:
     auto get_slicer_for(DiscreteCoordinate<ODDims...> const& c) const
     {
         if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
-            return (get<QueryDDim>(c) - front<QueryDDim>(this->m_domain).uid());
+            return (uid<QueryDDim>(c) - front<QueryDDim>(this->m_domain).uid());
         } else {
             return std::experimental::full_extent;
         }
@@ -214,15 +214,13 @@ public:
      * @param mcoords 1D discrete coordinates
      * @return reference to this element
      */
-    // Warning: Do not use DiscreteCoordinate because of template deduction issue with clang 12
     template <class... ODDims>
-    constexpr reference operator()(
-            DiscreteElement<DiscreteCoordElement, ODDims> const&... mcoords) const noexcept
+    constexpr reference operator()(DiscreteElement<ODDims> const&... mcoords) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((mcoords >= front<ODDims>(this->m_domain)) && ...));
         assert(((mcoords <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(take<DDims>(mcoords...).uid()...);
+        return this->m_internal_mdspan(uid(take<DDims>(mcoords...))...);
     }
 
     /** Element access using a multi-dimensional DiscreteCoordinate
@@ -230,13 +228,12 @@ public:
      * @return reference to this element
      */
     template <class... ODDims, class = std::enable_if_t<sizeof...(ODDims) != 1>>
-    constexpr reference operator()(
-            DiscreteElement<DiscreteCoordElement, ODDims...> const& mcoord) const noexcept
+    constexpr reference operator()(DiscreteElement<ODDims...> const& mcoord) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((select<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));
         assert(((select<ODDims>(mcoord) <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(get<DDims>(mcoord)...);
+        return this->m_internal_mdspan(uid<DDims>(mcoord)...);
     }
 
     /** Access to the underlying allocation pointer

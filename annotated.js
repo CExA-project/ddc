@@ -1,6 +1,17 @@
 var annotated =
 [
-    [ "reducer", "namespacereducer.html", "namespacereducer" ],
+    [ "reducer", "namespacereducer.html", [
+      [ "sum", "structreducer_1_1sum.html", "structreducer_1_1sum" ],
+      [ "prod", "structreducer_1_1prod.html", "structreducer_1_1prod" ],
+      [ "land", "structreducer_1_1land.html", "structreducer_1_1land" ],
+      [ "lor", "structreducer_1_1lor.html", "structreducer_1_1lor" ],
+      [ "band", "structreducer_1_1band.html", "structreducer_1_1band" ],
+      [ "bor", "structreducer_1_1bor.html", "structreducer_1_1bor" ],
+      [ "bxor", "structreducer_1_1bxor.html", "structreducer_1_1bxor" ],
+      [ "min", "structreducer_1_1min.html", "structreducer_1_1min" ],
+      [ "max", "structreducer_1_1max.html", "structreducer_1_1max" ],
+      [ "minmax", "structreducer_1_1minmax.html", "structreducer_1_1minmax" ]
+    ] ],
     [ "AlignedAllocator", "classAlignedAllocator.html", "classAlignedAllocator" ],
     [ "Chunk", "namespace_3globalScope_4.html#classChunk", null ],
     [ "Chunk< ElementType, DiscreteDomain< DDims... >, Allocator >", "classChunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html", "classChunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4" ],

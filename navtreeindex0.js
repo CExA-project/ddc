@@ -229,7 +229,6 @@ var NAVTREEINDEX0 =
 "index.html":[0],
 "index.html#autotoc_md0":[0,0],
 "index.html#autotoc_md1":[0,1],
-"namespacereducer.html":[3,0],
 "pages.html":[],
 "structDiscreteDomainIterator.html":[3,10],
 "structDiscreteDomainIterator.html#a0593837281763baf8bd25213c95c24c8":[3,10,8],
@@ -249,5 +248,6 @@ var NAVTREEINDEX0 =
 "structDiscreteDomainIterator.html#a902b1e134898f91e5305f6df0b236f10":[3,10,5],
 "structDiscreteDomainIterator.html#a9fd743288e4add38a596f93ab71c0254":[3,10,18],
 "structDiscreteDomainIterator.html#aa06574b9fb6c0047d1ca7aa09ccbdacf":[3,10,2],
-"structDiscreteDomainIterator.html#aa0e0cd39d8f6ad5a70839656d29b63a5":[3,10,10]
+"structDiscreteDomainIterator.html#aa0e0cd39d8f6ad5a70839656d29b63a5":[3,10,10],
+"structDiscreteDomainIterator.html#aa21da5a07729a7c1c596a91bc90934fc":[3,10,1]
 };

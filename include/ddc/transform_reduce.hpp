@@ -7,69 +7,140 @@
 #include "ddc/discrete_coordinate.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/for_each.hpp"
+#include "ddc/reducer.hpp"
 
-/** A parallel reduction over a 1d domain
- * @param[in] domain the 1d domain to iterate
- * @param[in] reduce    a reduction operation
- * @param[in] transform a functor taking a 1d discrete coordinate as parameter
+namespace detail {
+
+/** A serial reduction over a nD domain
+ * @param[in] domain the range over which to apply the algorithm
+ * @param[in] neutral the neutral element of the reduction operation
+ * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
+ *            results of transform, the results of other reduce and neutral.
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be acceptable as input to reduce
  */
-template <class DDim, class T, class BinaryReductionOp, class BinaryTransformOp>
-inline T transform_reduce(
-        serial_policy,
-        DiscreteDomain<DDim> const& domain,
-        T init,
-        BinaryReductionOp&& reduce,
-        BinaryTransformOp&& transform) noexcept
+template <
+        class... DDims,
+        class T,
+        class BinaryReductionOp,
+        class UnaryTransformOp,
+        class... DCoords>
+inline T transform_reduce_serial(
+        DiscreteDomain<DDims...> const& domain,
+        T const neutral,
+        BinaryReductionOp const& reduce,
+        UnaryTransformOp const& transform,
+        DCoords const&... dcoords) noexcept
 {
-    DiscreteDomainIterator<DDim> const it_b = domain.begin();
-    DiscreteDomainIterator<DDim> const it_e = domain.end();
-    for (DiscreteDomainIterator<DDim> it = it_b; it != it_e; ++it) {
-        init = reduce(init, transform(*it));
+    if constexpr (sizeof...(DCoords) == sizeof...(DDims)) {
+        return transform(DiscreteCoordinate<DDims...>(dcoords...));
+    } else {
+        using CurrentDDim = type_seq_element_t<sizeof...(DCoords), detail::TypeSeq<DDims...>>;
+        T result = neutral;
+        for (DiscreteCoordinate<CurrentDDim> const ii : select<CurrentDDim>(domain)) {
+            result = reduce(
+                    result,
+                    transform_reduce_serial(domain, neutral, reduce, transform, dcoords..., ii));
+        }
+        return result;
     }
-    return init;
 }
 
-/** A parallel reduction over a 2d domain
- * @param[in] domain    the 2d domain to iterate
- * @param[in] reduce    a reduction operation
- * @param[in] transform a functor taking a 2d discrete coordinate as parameter
+} // namespace detail
+
+/** A reduction over a n-D domain using the OpenMP execution policy
+ * @param[in] policy the execution policy to use
+ * @param[in] domain the range over which to apply the algorithm
+ * @param[in] neutral the neutral element of the reduction operation
+ * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
+ *            results of transform, the results of other reduce and neutral.
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be acceptable as input to reduce
  */
-template <class DDim1, class DDim2, class T, class BinaryReductionOp, class BinaryTransformOp>
+template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce(
-        serial_policy,
-        DiscreteDomain<DDim1, DDim2> const& domain,
-        T init,
-        BinaryReductionOp&& reduce,
-        BinaryTransformOp&& transform) noexcept
+        [[maybe_unused]] omp_policy policy,
+        DiscreteDomain<DDims...> const& domain,
+        T const neutral,
+        BinaryReductionOp const& reduce,
+        UnaryTransformOp const& transform) noexcept
 {
-    DiscreteDomainIterator<DDim1> const it1_b = select<DDim1>(domain).begin();
-    DiscreteDomainIterator<DDim1> const it1_e = select<DDim1>(domain).end();
-    DiscreteDomainIterator<DDim2> const it2_b = select<DDim2>(domain).begin();
-    DiscreteDomainIterator<DDim2> const it2_e = select<DDim2>(domain).end();
-    for (DiscreteDomainIterator<DDim1> it1 = it1_b; it1 != it1_e; ++it1) {
-        for (DiscreteDomainIterator<DDim2> it2 = it2_b; it2 != it2_e; ++it2) {
-            init = reduce(init, transform(DiscreteCoordinate<DDim1, DDim2>(*it1, *it2)));
+    using FirstDDim = type_seq_element_t<0, detail::TypeSeq<DDims...>>;
+    DiscreteDomainIterator<FirstDDim> const it_b = select<FirstDDim>(domain).begin();
+    DiscreteDomainIterator<FirstDDim> const it_e = select<FirstDDim>(domain).end();
+
+    T global_result = neutral;
+#pragma omp parallel default(none)                                                                 \
+        shared(global_result, neutral, it_b, it_e, domain, reduce, transform)
+    {
+        // Each thread has its private result
+        T thread_result = neutral;
+
+        // Distribute work among threads
+        // Do not use the global result in this region
+#pragma omp for
+        for (DiscreteDomainIterator<FirstDDim> it = it_b; it != it_e; ++it) {
+            if constexpr (sizeof...(DDims) == 1) {
+                thread_result = reduce(thread_result, transform(*it));
+            } else {
+                thread_result = reduce(
+                        thread_result,
+                        transform_reduce_serial(domain, neutral, reduce, transform, *it));
+            }
+        }
+
+        // Reduce thread private results into the global result
+#pragma omp critical
+        {
+            global_result = reduce(global_result, thread_result);
         }
     }
-    return init;
+    return global_result;
 }
 
-/** A parallel reduction over a nd domain
- * @param[in] domain    the nd domain to iterate
- * @param[in] reduce    a reduction operation
- * @param[in] transform a functor taking a nd discrete coordinate as parameter
+/** A reduction over a nD domain using the default execution policy
+ * @param[in] policy the execution policy to use
+ * @param[in] domain the range over which to apply the algorithm
+ * @param[in] neutral the neutral element of the reduction operation
+ * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
+ *            results of transform, the results of other reduce and neutral.
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be acceptable as input to reduce
  */
-template <class... DDims, class T, class BinaryReductionOp, class BinaryTransformOp>
+template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
+inline T transform_reduce(
+        [[maybe_unused]] serial_policy policy,
+        DiscreteDomain<DDims...> const& domain,
+        T neutral,
+        BinaryReductionOp&& reduce,
+        UnaryTransformOp&& transform) noexcept
+{
+    return detail::transform_reduce_serial(
+            domain,
+            neutral,
+            std::forward<BinaryReductionOp>(reduce),
+            std::forward<UnaryTransformOp>(transform));
+}
+
+/** A reduction over a nD domain using the default execution policy
+ * @param[in] domain the range over which to apply the algorithm
+ * @param[in] neutral the neutral element of the reduction operation
+ * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
+ *            results of transform, the results of other reduce and neutral.
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be acceptable as input to reduce
+ */
+template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce(
         DiscreteDomain<DDims...> const& domain,
-        T init,
+        T neutral,
         BinaryReductionOp&& reduce,
-        BinaryTransformOp&& transform) noexcept
+        UnaryTransformOp&& transform) noexcept
 {
     return transform_reduce(
-            serial_policy(),
+            default_policy(),
             domain,
-            init,
+            neutral,
             std::forward<BinaryReductionOp>(reduce),
-            std::forward<BinaryTransformOp>(transform));
+            std::forward<UnaryTransformOp>(transform));
 }

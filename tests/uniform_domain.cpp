@@ -1,13 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-#include <type_traits>
+#include <cstddef>
 
-#include <ddc/Coordinate>
-#include <ddc/DiscreteCoordinate>
-#include <ddc/DiscreteDomain>
-#include <ddc/NonUniformDiscretization>
-#include <ddc/UniformDiscretization>
-#include <ddc/UniformDomain>
+#include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
 
@@ -21,7 +16,7 @@ using DDimY = UniformDiscretization<Y>;
 using NUDDimX = NonUniformDiscretization<X>;
 using NUDDimY = NonUniformDiscretization<Y>;
 
-using DDomNull = DiscreteDomain<nullptr_t>;
+using DDomNull = DiscreteDomain<std::nullptr_t>;
 using DDomX = DiscreteDomain<DDimX>;
 using NUDDomX = DiscreteDomain<NUDDimX>;
 using DDomXY = DiscreteDomain<DDimX, DDimY>;
@@ -32,7 +27,7 @@ using DDomXNUDDomY = DiscreteDomain<DDimX, NUDDimY>;
 
 TEST(UniformDomainTest, NonDiscreteDomainSpecializationValue)
 {
-    EXPECT_FALSE(is_uniform_domain_v<nullptr_t>);
+    EXPECT_FALSE(is_uniform_domain_v<std::nullptr_t>);
     EXPECT_FALSE(is_uniform_domain_v<X>);
 }
 

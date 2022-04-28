@@ -226,6 +226,44 @@ public:
         return m_values[0];
     }
 
+    template <
+        std::size_t N = sizeof...(Tags),
+        class = std::enable_if_t<N == 1>>
+    constexpr inline DiscreteCoordinate& operator++()
+    {
+        ++m_values[0];
+        return *this;
+    }
+
+    template <
+        std::size_t N = sizeof...(Tags),
+        class = std::enable_if_t<N == 1>>
+    constexpr inline DiscreteCoordinate operator++(int)
+    {
+        DiscreteCoordinate const tmp = *this;
+        ++m_values[0];
+        return tmp;
+    }
+
+    template <
+        std::size_t N = sizeof...(Tags),
+        class = std::enable_if_t<N == 1>>
+    constexpr inline DiscreteCoordinate& operator--()
+    {
+        ++m_values[0];
+        return *this;
+    }
+
+    template <
+        std::size_t N = sizeof...(Tags),
+        class = std::enable_if_t<N == 1>>
+    constexpr inline DiscreteCoordinate operator--(int)
+    {
+        DiscreteCoordinate const tmp = *this;
+        ++m_values[0];
+        return tmp;
+    }
+
     template <class... OTags>
     constexpr inline DiscreteCoordinate& operator+=(DiscreteVector<OTags...> const& rhs)
     {

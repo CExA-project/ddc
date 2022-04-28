@@ -10,6 +10,7 @@
 #include <experimental/mdspan>
 
 #include "ddc/chunk_common.hpp"
+#include "ddc/discrete_coordinate.hpp"
 #include "ddc/discrete_domain.hpp"
 
 template <class, class, class>
@@ -215,7 +216,7 @@ public:
      * @return reference to this element
      */
     template <class... ODDims>
-    constexpr reference operator()(DiscreteElement<ODDims> const&... mcoords) const noexcept
+    constexpr reference operator()(DiscreteCoordinate<ODDims> const&... mcoords) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((mcoords >= front<ODDims>(this->m_domain)) && ...));
@@ -228,7 +229,7 @@ public:
      * @return reference to this element
      */
     template <class... ODDims, class = std::enable_if_t<sizeof...(ODDims) != 1>>
-    constexpr reference operator()(DiscreteElement<ODDims...> const& mcoord) const noexcept
+    constexpr reference operator()(DiscreteCoordinate<ODDims...> const& mcoord) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((select<ODDims>(mcoord) >= front<ODDims>(this->m_domain)) && ...));

@@ -27,22 +27,26 @@ template <class T>
 inline constexpr bool is_discrete_vector_v = IsDiscreteVector<T>::value;
 
 
+/** A DiscreteVectorElement is a scalar that represents the difference between two coordinates.
+ */
+using DiscreteVectorElement = std::ptrdiff_t;
+
 template <class QueryTag, class... Tags>
-inline constexpr std::ptrdiff_t const& get(DiscreteVector<Tags...> const& tuple) noexcept
+inline constexpr DiscreteVectorElement const& get(DiscreteVector<Tags...> const& tuple) noexcept
 {
     return tuple.template get<QueryTag>();
 }
 
 template <class QueryTag, class... Tags>
-inline constexpr std::ptrdiff_t& get(DiscreteVector<Tags...>& tuple) noexcept
+inline constexpr DiscreteVectorElement& get(DiscreteVector<Tags...>& tuple) noexcept
 {
     return tuple.template get<QueryTag>();
 }
 
 template <class QueryTag, class... Tags>
-inline constexpr std::ptrdiff_t const& get_or(
+inline constexpr DiscreteVectorElement const& get_or(
         DiscreteVector<Tags...> const& tuple,
-        std::ptrdiff_t const& default_value) noexcept
+        DiscreteVectorElement const& default_value) noexcept
 {
     return tuple.template get_or<QueryTag>(default_value);
 }
@@ -152,7 +156,6 @@ constexpr DiscreteVector<QueryTag> const& take(
     }
 }
 
-
 template <class T>
 class ConversionOperators
 {
@@ -162,17 +165,21 @@ template <class Tag>
 class ConversionOperators<DiscreteVector<Tag>>
 {
 public:
-    constexpr inline operator std::ptrdiff_t const &() const noexcept
+    constexpr inline operator DiscreteVectorElement const &() const noexcept
     {
         return static_cast<DiscreteVector<Tag> const*>(this)->m_values[0];
     }
 
-    constexpr inline operator std::ptrdiff_t&() noexcept
+    constexpr inline operator DiscreteVectorElement&() noexcept
     {
         return static_cast<DiscreteVector<Tag>*>(this)->m_values[0];
     }
 };
 
+/** A DiscreteVector is a vector in the discrete dimension
+ *
+ * Each is tagged by its associated dimensions.
+ */
 template <class... Tags>
 class DiscreteVector : public ConversionOperators<DiscreteVector<Tags...>>
 {
@@ -181,7 +188,7 @@ class DiscreteVector : public ConversionOperators<DiscreteVector<Tags...>>
     using tags_seq = detail::TypeSeq<Tags...>;
 
 private:
-    std::array<std::ptrdiff_t, sizeof...(Tags)> m_values;
+    std::array<DiscreteVectorElement, sizeof...(Tags)> m_values;
 
 public:
     static constexpr std::size_t size() noexcept
@@ -210,11 +217,11 @@ public:
 
     template <
             class... Params,
-            class = std::enable_if_t<(std::is_convertible_v<Params, std::ptrdiff_t> && ...)>,
+            class = std::enable_if_t<(std::is_convertible_v<Params, DiscreteVectorElement> && ...)>,
             class = std::enable_if_t<(!is_discrete_vector_v<Params> && ...)>,
             class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
     explicit inline constexpr DiscreteVector(Params const&... params) noexcept
-        : m_values {static_cast<std::ptrdiff_t>(params)...}
+        : m_values {static_cast<DiscreteVectorElement>(params)...}
     {
     }
 
@@ -237,23 +244,24 @@ public:
     }
 
     /// Returns a reference to the underlying `std::array`
-    constexpr inline std::array<std::ptrdiff_t, sizeof...(Tags)>& array() noexcept
+    constexpr inline std::array<DiscreteVectorElement, sizeof...(Tags)>& array() noexcept
     {
         return m_values;
     }
 
     /// Returns a const reference to the underlying `std::array`
-    constexpr inline std::array<std::ptrdiff_t, sizeof...(Tags)> const& array() const noexcept
+    constexpr inline std::array<DiscreteVectorElement, sizeof...(Tags)> const& array()
+            const noexcept
     {
         return m_values;
     }
 
-    constexpr inline std::ptrdiff_t& operator[](size_t pos)
+    constexpr inline DiscreteVectorElement& operator[](size_t pos)
     {
         return m_values[pos];
     }
 
-    constexpr inline std::ptrdiff_t const& operator[](size_t pos) const
+    constexpr inline DiscreteVectorElement const& operator[](size_t pos) const
     {
         return m_values[pos];
     }
@@ -271,7 +279,7 @@ public:
     }
 
     template <class QueryTag>
-    inline constexpr std::ptrdiff_t& get() noexcept
+    inline constexpr DiscreteVectorElement& get() noexcept
     {
         using namespace detail;
         static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteVector");
@@ -279,7 +287,7 @@ public:
     }
 
     template <class QueryTag>
-    inline constexpr std::ptrdiff_t const& get() const noexcept
+    inline constexpr DiscreteVectorElement const& get() const noexcept
     {
         using namespace detail;
         static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteVector");
@@ -287,7 +295,7 @@ public:
     }
 
     template <class QueryTag>
-    std::ptrdiff_t const& get_or(std::ptrdiff_t const& default_value) const&
+    DiscreteVectorElement const& get_or(DiscreteVectorElement const& default_value) const&
     {
         if constexpr (in_tags_v<QueryTag, tags_seq>) {
             return m_values[type_seq_rank_v<QueryTag, tags_seq>];
@@ -297,7 +305,7 @@ public:
     }
 
     template <std::size_t N = sizeof...(Tags)>
-    constexpr inline std::enable_if_t<N == 1, std::ptrdiff_t const&> value() const noexcept
+    constexpr inline std::enable_if_t<N == 1, DiscreteVectorElement const&> value() const noexcept
     {
         return m_values[0];
     }

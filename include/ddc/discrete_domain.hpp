@@ -9,6 +9,7 @@
 #include "ddc/coordinate.hpp"
 #include "ddc/detail/type_seq.hpp"
 #include "ddc/discrete_coordinate.hpp"
+#include "ddc/discrete_vector.hpp"
 
 template <class DDim>
 struct DiscreteDomainIterator;
@@ -282,7 +283,7 @@ public:
 
     using value_type = DiscreteCoordinate<DDim>;
 
-    using difference_type = DiscreteVectorElement;
+    using difference_type = std::ptrdiff_t;
 
     DiscreteDomainIterator() = default;
 
@@ -324,18 +325,18 @@ public:
     constexpr DiscreteDomainIterator& operator+=(difference_type __n)
     {
         if (__n >= difference_type(0))
-            m_value.uid() += static_cast<DiscreteCoordElement>(__n);
+            m_value.uid() += static_cast<DiscreteCoordinateElement>(__n);
         else
-            m_value.uid() -= static_cast<DiscreteCoordElement>(-__n);
+            m_value.uid() -= static_cast<DiscreteCoordinateElement>(-__n);
         return *this;
     }
 
     constexpr DiscreteDomainIterator& operator-=(difference_type __n)
     {
         if (__n >= difference_type(0))
-            m_value.uid() -= static_cast<DiscreteCoordElement>(__n);
+            m_value.uid() -= static_cast<DiscreteCoordinateElement>(__n);
         else
-            m_value.uid() += static_cast<DiscreteCoordElement>(-__n);
+            m_value.uid() += static_cast<DiscreteCoordinateElement>(-__n);
         return *this;
     }
 

@@ -94,6 +94,26 @@ constexpr DiscreteCoordinate<QueryTag> const& take(
     }
 }
 
+namespace detail {
+
+/// Returns a reference to the underlying `std::array`
+template <class... Tags>
+constexpr inline std::array<DiscreteCoordinateElement, sizeof...(Tags)>& array(
+        DiscreteCoordinate<Tags...>& v) noexcept
+{
+    return v.m_values;
+}
+
+/// Returns a reference to the underlying `std::array`
+template <class... Tags>
+constexpr inline std::array<DiscreteCoordinateElement, sizeof...(Tags)> const& array(
+        DiscreteCoordinate<Tags...> const& v) noexcept
+{
+    return v.m_values;
+}
+
+} // namespace detail
+
 /** A DiscreteCoordinate identifies an element of the discrete dimension
  *
  * Each one is tagged by its associated dimensions.
@@ -102,6 +122,12 @@ template <class... Tags>
 class DiscreteCoordinate
 {
     using tags_seq = detail::TypeSeq<Tags...>;
+
+    friend constexpr std::array<DiscreteCoordinateElement, sizeof...(Tags)>& detail::array<Tags...>(
+            DiscreteCoordinate<Tags...>& v) noexcept;
+
+    friend constexpr std::array<DiscreteCoordinateElement, sizeof...(Tags)> const& detail::array<
+            Tags...>(DiscreteCoordinate<Tags...> const& v) noexcept;
 
 private:
     std::array<DiscreteCoordinateElement, sizeof...(Tags)> m_values;
@@ -162,28 +188,6 @@ public:
         return *this;
     }
 
-    /// Returns a reference to the underlying `std::array`
-    constexpr inline std::array<value_type, sizeof...(Tags)>& array() noexcept
-    {
-        return m_values;
-    }
-
-    /// Returns a const reference to the underlying `std::array`
-    constexpr inline std::array<value_type, sizeof...(Tags)> const& array() const noexcept
-    {
-        return m_values;
-    }
-
-    constexpr inline value_type& operator[](size_t pos)
-    {
-        return m_values[pos];
-    }
-
-    constexpr inline value_type const& operator[](size_t pos) const
-    {
-        return m_values[pos];
-    }
-
     template <class QueryTag>
     value_type const& uid_or(value_type const& default_value) const&
     {
@@ -226,18 +230,14 @@ public:
         return m_values[0];
     }
 
-    template <
-        std::size_t N = sizeof...(Tags),
-        class = std::enable_if_t<N == 1>>
+    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     constexpr inline DiscreteCoordinate& operator++()
     {
         ++m_values[0];
         return *this;
     }
 
-    template <
-        std::size_t N = sizeof...(Tags),
-        class = std::enable_if_t<N == 1>>
+    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     constexpr inline DiscreteCoordinate operator++(int)
     {
         DiscreteCoordinate const tmp = *this;
@@ -245,18 +245,14 @@ public:
         return tmp;
     }
 
-    template <
-        std::size_t N = sizeof...(Tags),
-        class = std::enable_if_t<N == 1>>
+    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     constexpr inline DiscreteCoordinate& operator--()
     {
         ++m_values[0];
         return *this;
     }
 
-    template <
-        std::size_t N = sizeof...(Tags),
-        class = std::enable_if_t<N == 1>>
+    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     constexpr inline DiscreteCoordinate operator--(int)
     {
         DiscreteCoordinate const tmp = *this;

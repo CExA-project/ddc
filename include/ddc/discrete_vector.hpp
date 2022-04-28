@@ -176,6 +176,26 @@ public:
     }
 };
 
+namespace detail {
+
+/// Returns a reference to the underlying `std::array`
+template <class... Tags>
+constexpr inline std::array<DiscreteVectorElement, sizeof...(Tags)>& array(
+        DiscreteVector<Tags...>& v) noexcept
+{
+    return v.m_values;
+}
+
+/// Returns a reference to the underlying `std::array`
+template <class... Tags>
+constexpr inline std::array<DiscreteVectorElement, sizeof...(Tags)> const& array(
+        DiscreteVector<Tags...> const& v) noexcept
+{
+    return v.m_values;
+}
+
+} // namespace detail
+
 /** A DiscreteVector is a vector in the discrete dimension
  *
  * Each is tagged by its associated dimensions.
@@ -184,6 +204,11 @@ template <class... Tags>
 class DiscreteVector : public ConversionOperators<DiscreteVector<Tags...>>
 {
     friend class ConversionOperators<DiscreteVector<Tags...>>;
+
+    friend constexpr std::array<DiscreteVectorElement, sizeof...(Tags)>& detail::array<Tags...>(
+            DiscreteVector<Tags...>& v) noexcept;
+    friend constexpr std::array<DiscreteVectorElement, sizeof...(Tags)> const& detail::array<
+            Tags...>(DiscreteVector<Tags...> const& v) noexcept;
 
     using tags_seq = detail::TypeSeq<Tags...>;
 
@@ -243,19 +268,6 @@ public:
         return *this;
     }
 
-    /// Returns a reference to the underlying `std::array`
-    constexpr inline std::array<DiscreteVectorElement, sizeof...(Tags)>& array() noexcept
-    {
-        return m_values;
-    }
-
-    /// Returns a const reference to the underlying `std::array`
-    constexpr inline std::array<DiscreteVectorElement, sizeof...(Tags)> const& array()
-            const noexcept
-    {
-        return m_values;
-    }
-
     constexpr inline DiscreteVectorElement& operator[](size_t pos)
     {
         return m_values[pos];
@@ -310,18 +322,14 @@ public:
         return m_values[0];
     }
 
-    template <
-        std::size_t N = sizeof...(Tags),
-        class = std::enable_if_t<N == 1>>
+    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     constexpr inline DiscreteVector& operator++()
     {
         ++m_values[0];
         return *this;
     }
 
-    template <
-        std::size_t N = sizeof...(Tags),
-        class = std::enable_if_t<N == 1>>
+    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     constexpr inline DiscreteVector operator++(int)
     {
         DiscreteVector const tmp = *this;
@@ -329,18 +337,14 @@ public:
         return tmp;
     }
 
-    template <
-        std::size_t N = sizeof...(Tags),
-        class = std::enable_if_t<N == 1>>
+    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     constexpr inline DiscreteVector& operator--()
     {
         ++m_values[0];
         return *this;
     }
 
-    template <
-        std::size_t N = sizeof...(Tags),
-        class = std::enable_if_t<N == 1>>
+    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     constexpr inline DiscreteVector operator--(int)
     {
         DiscreteVector const tmp = *this;

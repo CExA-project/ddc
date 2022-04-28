@@ -13,10 +13,10 @@ namespace detail {
 
 template <class RetType, class Element, std::size_t N, class Functor, class... Is>
 inline void for_each_serial(
-        std::array<Element, N> const& start,
-        std::array<Element, N> const& end,
-        Functor const& f,
-        Is const&... is) noexcept
+    std::array<Element, N> const& start,
+    std::array<Element, N> const& end,
+    Functor const& f,
+    Is const&... is) noexcept
 {
     static constexpr std::size_t I = sizeof...(Is);
     if constexpr (I == N) {
@@ -30,9 +30,9 @@ inline void for_each_serial(
 
 template <class RetType, class Element, std::size_t N, class Functor>
 inline void for_each_omp(
-        std::array<Element, N> const& start,
-        std::array<Element, N> const& end,
-        Functor&& f) noexcept
+    std::array<Element, N> const& start,
+    std::array<Element, N> const& end,
+    Functor&& f) noexcept
 {
     Element const ib = start[0];
     Element const ie = end[0];
@@ -61,7 +61,7 @@ template <class... DDims, class Functor>
 inline void for_each(serial_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
     detail::for_each_serial<DiscreteCoordinate<
-            DDims...>>(domain.front().array(), domain.back().array(), std::forward<Functor>(f));
+        DDims...>>(detail::array(domain.front()), detail::array(domain.back()), std::forward<Functor>(f));
 }
 
 /** iterates over a nD extent using the serial execution policy
@@ -72,9 +72,9 @@ template <class... DDims, class Functor>
 inline void for_each_n(serial_policy, DiscreteVector<DDims...> const& extent, Functor&& f) noexcept
 {
     detail::for_each_serial<DiscreteVector<DDims...>>(
-            std::array<DiscreteVectorElement, sizeof...(DDims)> {},
-            std::array<DiscreteVectorElement, sizeof...(DDims)> {get<DDims>(extent) - 1 ...},
-            std::forward<Functor>(f));
+        std::array<DiscreteVectorElement, sizeof...(DDims)> {},
+        std::array<DiscreteVectorElement, sizeof...(DDims)> {get<DDims>(extent) - 1 ...},
+        std::forward<Functor>(f));
 }
 
 /// OpenMP parallel execution on the outer loop with default scheduling
@@ -90,7 +90,7 @@ template <class... DDims, class Functor>
 inline void for_each(omp_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
     detail::for_each_omp<DiscreteCoordinate<
-            DDims...>>(domain.front().array(), domain.back().array(), std::forward<Functor>(f));
+        DDims...>>(detail::array(domain.front()), detail::array(domain.back()), std::forward<Functor>(f));
 }
 
 /** iterates over a nD extent using the OpenMP execution policy
@@ -101,9 +101,9 @@ template <class... DDims, class Functor>
 inline void for_each_n(omp_policy, DiscreteVector<DDims...> const& extent, Functor&& f) noexcept
 {
     detail::for_each_omp<DiscreteVector<DDims...>>(
-            std::array<DiscreteVectorElement, sizeof...(DDims)> {},
-            std::array<DiscreteVectorElement, sizeof...(DDims)> {get<DDims>(extent) - 1 ...},
-            std::forward<Functor>(f));
+        std::array<DiscreteVectorElement, sizeof...(DDims)> {},
+        std::array<DiscreteVectorElement, sizeof...(DDims)> {get<DDims>(extent) - 1 ...},
+        std::forward<Functor>(f));
 }
 
 using default_policy = serial_policy;
@@ -136,23 +136,23 @@ inline void for_each_n(DiscreteVector<DDims...> const& extent, Functor&& f) noex
 }
 
 template <
-        class ExecutionPolicy,
-        class ElementType,
-        class... DDims,
-        class LayoutPolicy,
-        class Functor>
+    class ExecutionPolicy,
+    class ElementType,
+    class... DDims,
+    class LayoutPolicy,
+    class Functor>
 inline void for_each_elem(
-        ExecutionPolicy&& policy,
-        ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutPolicy> chunk_span,
-        Functor&& f) noexcept
+    ExecutionPolicy&& policy,
+    ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutPolicy> chunk_span,
+    Functor&& f) noexcept
 {
     for_each(std::forward<ExecutionPolicy>(policy), chunk_span.domain(), std::forward<Functor>(f));
 }
 
 template <class ElementType, class... DDims, class LayoutPolicy, class Functor>
 inline void for_each_elem(
-        ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutPolicy> chunk_span,
-        Functor&& f) noexcept
+    ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutPolicy> chunk_span,
+    Functor&& f) noexcept
 {
     for_each(default_policy(), chunk_span.domain(), std::forward<Functor>(f));
 }

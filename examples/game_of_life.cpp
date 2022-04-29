@@ -21,8 +21,8 @@ static unsigned length = 5;
 static unsigned height = 5;
 
 void blinker_init(
-    DiscreteDomain<DDimX, DDimY> const& domain,
-    Chunk<cell, DiscreteDomain<DDimX, DDimY>>& cells)
+        DiscreteDomain<DDimX, DDimY> const& domain,
+        Chunk<cell, DiscreteDomain<DDimX, DDimY>>& cells)
 {
     for_each(domain, [&](DiscreteCoordinate<DDimX, DDimY> const ixy) {
         DiscreteCoordinate<DDimX> const ix = select<DDimX>(ixy);
@@ -38,18 +38,18 @@ void blinker_init(
 
 template <class ElementType, class DDimX, class DDimY>
 std::ostream& print_2DChunk(
-    std::ostream& os,
-    ChunkSpan<ElementType, DiscreteDomain<DDimX, DDimY>> chunk)
-    {
+        std::ostream& os,
+        ChunkSpan<ElementType, DiscreteDomain<DDimX, DDimY>> chunk)
+{
     for_each(
             select<DDimY>(chunk.domain()),
             [&](DiscreteCoordinate<DDimY> const iy) {
                 for_each(
                         select<DDimX>(chunk.domain()),
                         [&](DiscreteCoordinate<DDimX> const ix) {
-                os << (chunk(ix, iy) ? "*" : ".");
-                });
-            os << "\n";
+                            os << (chunk(ix, iy) ? "*" : ".");
+                        });
+                os << "\n";
             });
     return os;
 }
@@ -81,15 +81,15 @@ int main()
                     for (int i = -1; i < 2; ++i) {
                         for (int j = -1; j < 2; j++) {
                             if (cells_in(ix + i, iy + j)) {
-                                std::cout << "ix : "<< ix
+                                std::cout << "ix : " << ix
                                           << " | i : " << i
-                                          <<" | ix + i : " << ix + i
+                                          << " | ix + i : " << ix + i
                                           << "\n";
                                 alive_neighbors++;
                             }
                         }
                     }
-                    // Update the future status of the current cell depending on its current status and 
+                    // Update the future status of the current cell depending on its current status and
                     // its current number of alive neighbors
                     if (cells_in(ixy)) {
                         alive_neighbors--;

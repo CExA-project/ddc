@@ -157,7 +157,7 @@ public:
         assert(n > 1);
         rcoord_type discretization_step {(b - a) / (n - 1)};
         UniformDiscretization
-                disc(a - n_ghosts_before[0] * discretization_step, discretization_step);
+                disc(a - n_ghosts_before.value() * discretization_step, discretization_step);
         ddom_type ghosted_domain = ddom_type(disc.front(), n + n_ghosts_before + n_ghosts_after);
         ddom_type pre_ghost = ddom_type(ghosted_domain.front(), n_ghosts_before);
         ddom_type main_domain = ddom_type(ghosted_domain.front() + n_ghosts_before, n);

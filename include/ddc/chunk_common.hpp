@@ -250,7 +250,8 @@ protected:
     constexpr ChunkCommon(ElementType* ptr, mdomain_type const& domain)
     {
         namespace stdex = std::experimental;
-        assert(ptr != nullptr);
+        // Handle the case where an allocation of size 0 returns a nullptr.
+        assert((domain.size() == 0) || ((ptr != nullptr) && (domain.size() != 0)));
 
         extents_type extents_r(::extents<DDims>(domain)...);
         mapping_type mapping_r(extents_r);

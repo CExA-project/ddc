@@ -8,6 +8,7 @@
 #include "ddc/aligned_allocator.hpp"
 #include "ddc/chunk.hpp"
 #include "ddc/chunk_span.hpp"
+#include "ddc/kokkos_allocator.hpp"
 
 // Discretizations
 #include "ddc/discrete_coordinate.hpp"

@@ -5,9 +5,7 @@
 #include <iosfwd>
 #include <vector>
 
-#include <ddc/ChunkSpan>
-#include <ddc/DiscreteCoordinate>
-#include <ddc/DiscreteDomain>
+#include <ddc/ddc.hpp>
 
 #include <benchmark/benchmark.h>
 
@@ -19,7 +17,7 @@ using DVectX = DiscreteVector<DDimX>;
 using DDomX = DiscreteDomain<DDimX>;
 
 template <class Datatype>
-using ChunkSpanX = ChunkSpan<Datatype, DDomX>;
+using ChunkSpanX = ChunkSpan<Datatype, DDomX, Kokkos::HostSpace>;
 
 
 struct DDimY;
@@ -29,7 +27,7 @@ using DVectXY = DiscreteVector<DDimX, DDimY>;
 using DDomXY = DiscreteDomain<DDimX, DDimY>;
 
 template <class Datatype>
-using ChunkSpanXY = ChunkSpan<Datatype, DDomXY>;
+using ChunkSpanXY = ChunkSpan<Datatype, DDomXY, Kokkos::HostSpace>;
 
 
 // Let say 1MB cache

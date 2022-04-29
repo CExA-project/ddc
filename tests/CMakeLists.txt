@@ -1,9 +1,8 @@
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.15)
 
-include(GoogleTest)
-
 add_executable(ddc_tests
+    aligned_allocator.cpp
     chunk.cpp
     discrete_domain.cpp
     non_uniform_discretization.cpp
@@ -11,6 +10,10 @@ add_executable(ddc_tests
     tagged_vector.cpp
     type_seq.cpp
     uniform_discretization.cpp
+    transform_reduce.cpp
+    rectilinear_domain.cpp
+    uniform_domain.cpp
+    for_each.cpp
 )
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
 target_link_libraries(ddc_tests

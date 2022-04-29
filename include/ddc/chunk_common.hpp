@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <cassert>
@@ -49,7 +51,7 @@ inline constexpr bool is_writable_chunk_v
         = !std::is_const_v<std::remove_pointer_t<chunk_pointer_t<T>>>;
 
 /** Access the domain (or subdomain) of a view
- * @param[in]  view      the view whose domain to iterate
+ * @param[in]  chunk the view whose domain to access
  * @return the domain of view in the queried dimensions
  */
 template <class... QueryDDims, class ChunkType>
@@ -113,7 +115,7 @@ public:
     template <class, class, class, class>
     friend class ChunkSpan;
 
-    template <class, class>
+    template <class, class, class>
     friend class Chunk;
 
     static_assert(mapping_type::is_always_strided());

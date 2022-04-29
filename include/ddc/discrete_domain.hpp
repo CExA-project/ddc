@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <cassert>
@@ -57,8 +59,10 @@ public:
 
     /** Construct a DiscreteDomain starting from (0, ..., 0) with size points.
      * @param size the number of points in each dimension
+     * 
+     * @deprecated use the version with explicit lower bound instead
      */
-    constexpr DiscreteDomain(mlength_type const& size)
+    [[deprecated]] constexpr DiscreteDomain(mlength_type const& size)
         : m_lbound((get<DDims>(size) - get<DDims>(size))...) // Hack to have expansion of zero
         , m_ubound((get<DDims>(size) - 1)...)
     {
@@ -84,7 +88,8 @@ public:
 
     DiscreteDomain& operator=(DiscreteDomain&& x) = default;
 
-    constexpr bool operator==(DiscreteDomain const& other) const
+    template <class... ODims>
+    constexpr bool operator==(DiscreteDomain<ODims...> const& other) const
     {
         return m_lbound == other.m_lbound && m_ubound == other.m_ubound;
     }

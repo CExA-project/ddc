@@ -1,8 +1,5 @@
 // SPDX-License-Identifier: MIT
-#include <ddc/Chunk>
-#include <ddc/ChunkSpan>
-#include <ddc/DiscreteCoordinate>
-#include <ddc/DiscreteDomain>
+#include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
 
@@ -16,7 +13,7 @@ using DDomX = DiscreteDomain<DDimX>;
 template <class Datatype>
 using ChunkX = Chunk<Datatype, DDomX>;
 template <class Datatype>
-using ChunkSpanX = ChunkSpan<Datatype, DDomX>;
+using ChunkSpanX = ChunkSpan<Datatype, DDomX, Kokkos::HostSpace>;
 
 
 struct DDimY;

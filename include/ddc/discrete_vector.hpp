@@ -268,16 +268,6 @@ public:
         return *this;
     }
 
-    constexpr inline DiscreteVectorElement& operator[](size_t pos)
-    {
-        return m_values[pos];
-    }
-
-    constexpr inline DiscreteVectorElement const& operator[](size_t pos) const
-    {
-        return m_values[pos];
-    }
-
     template <class... OTags>
     constexpr inline bool operator==(DiscreteVector<OTags...> const& rhs) const noexcept
     {

@@ -23,11 +23,12 @@ template <
 class ChunkSpan;
 
 template <class ElementType, class SupportType, class MemorySpace, class LayoutStridedPolicy>
-inline constexpr bool enable_chunk<ChunkSpan<ElementType, SupportType, MemorySpace, LayoutStridedPolicy>> = true;
+inline constexpr bool
+        enable_chunk<ChunkSpan<ElementType, SupportType, MemorySpace, LayoutStridedPolicy>> = true;
 
 template <class ElementType, class SupportType, class MemorySpace, class LayoutStridedPolicy>
-inline constexpr bool
-        enable_borrowed_chunk<ChunkSpan<ElementType, SupportType, MemorySpace, LayoutStridedPolicy>> = true;
+inline constexpr bool enable_borrowed_chunk<
+        ChunkSpan<ElementType, SupportType, MemorySpace, LayoutStridedPolicy>> = true;
 
 template <class ElementType, class... DDims, class MemorySpace, class LayoutStridedPolicy>
 class ChunkSpan<ElementType, DiscreteDomain<DDims...>, MemorySpace, LayoutStridedPolicy>
@@ -44,10 +45,15 @@ protected:
 
 public:
     /// type of a span of this full chunk
-    using span_type = ChunkSpan<ElementType, DiscreteDomain<DDims...>, MemorySpace, LayoutStridedPolicy>;
+    using span_type
+            = ChunkSpan<ElementType, DiscreteDomain<DDims...>, MemorySpace, LayoutStridedPolicy>;
 
     /// type of a view of this full chunk
-    using view_type = ChunkSpan<ElementType const, DiscreteDomain<DDims...>, MemorySpace, LayoutStridedPolicy>;
+    using view_type = ChunkSpan<
+            ElementType const,
+            DiscreteDomain<DDims...>,
+            MemorySpace,
+            LayoutStridedPolicy>;
 
     using mdomain_type = DiscreteDomain<DDims...>;
 
@@ -157,7 +163,8 @@ public:
      * @param other the ChunkSpan to move
      */
     template <class OElementType>
-    constexpr ChunkSpan(ChunkSpan<OElementType, mdomain_type, MemorySpace, layout_type> const& other) noexcept
+    constexpr ChunkSpan(
+            ChunkSpan<OElementType, mdomain_type, MemorySpace, layout_type> const& other) noexcept
         : base_type(other.m_internal_mdspan, other.m_domain)
     {
     }
@@ -180,7 +187,8 @@ public:
     constexpr ChunkSpan(allocation_mdspan_type allocation_mdspan, mdomain_type const& domain)
     {
         namespace stdex = std::experimental;
-        extents_type extents_s((front<DDims>(domain).value() + ::extents<DDims>(domain).value())...);
+        extents_type extents_s(
+                (front<DDims>(domain).value() + ::extents<DDims>(domain).value())...);
         std::array<std::size_t, sizeof...(DDims)> strides_s {allocation_mdspan.mapping().stride(
                 type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
         stdex::layout_stride::mapping<extents_type> mapping_s(extents_s, strides_s);

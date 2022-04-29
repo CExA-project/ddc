@@ -27,8 +27,11 @@ protected:
 
 public:
     /// type of a span of this full chunk
-    using span_type
-            = ChunkSpan<ElementType, DiscreteDomain<DDims...>, typename Allocator::memory_space, std::experimental::layout_right>;
+    using span_type = ChunkSpan<
+            ElementType,
+            DiscreteDomain<DDims...>,
+            typename Allocator::memory_space,
+            std::experimental::layout_right>;
 
     /// type of a view of this full chunk
     using view_type = ChunkSpan<

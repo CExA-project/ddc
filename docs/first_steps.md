@@ -1,4 +1,4 @@
-# Commented example: the heat equation {#first_steps}
+# Commented example: the heat equation {#examples}
 
 In \subpage heat_equation "examples/heat_equation.cpp" is a DDC example implementing a forward
 finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary
@@ -18,7 +18,7 @@ free function template named `for_each`, you should include `<ddc/for_each>`.
   Ghost points will be used for stencil computation on inner domain boundaries' points.
   ![domains_image](./images/domains.png "Domains")
 
-\snippet first_steps/heat_equation.cpp domain
+\snippet examples/heat_equation.cpp domain
 
 # Memory allocation
   We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains' points at t and t+dt.
@@ -30,11 +30,11 @@ configuration file in a more realistic code.
 
 # Subdomains
   We define ChunkSpans corresponding to the inner and ghost borders. These will be used for the periodic boundary conditions.
-\snippet first_steps/heat_equation.cpp subdomains
+\snippet examples/heat_equation.cpp subdomains
 
 # Numerical scheme
   Within a time loop, we update the ghost points, apply the numerical scheme over the inner domain and store the result in T_out.
-\snippet first_steps/heat_equation.cpp numerical scheme
+\snippet examples/heat_equation.cpp numerical scheme
 # Definition of the discretization
 
 Given the previous parameters, we will now define a 2D point discretization.

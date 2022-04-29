@@ -134,7 +134,7 @@ target_include_directories(DDC
 		"$<INSTALL_INTERFACE:include>"
 )
 target_link_libraries(DDC
-	INTERFACE std::mdspan Kokkos::kokkos)
+	INTERFACE std::mdspan OpenMP::OpenMP_CXX Kokkos::kokkos)
 add_library(DDC::DDC ALIAS DDC)
 install(
 	TARGETS DDC

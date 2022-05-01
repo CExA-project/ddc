@@ -3,12 +3,7 @@
 #include <cmath>
 #include <iostream>
 
-#include <ddc/Chunk>
-#include <ddc/DiscreteCoordinate>
-#include <ddc/DiscreteDomain>
-#include <ddc/PdiEvent>
-#include <ddc/UniformDiscretization>
-#include <ddc/for_each>
+#include <ddc/ddc.hpp>
 
 using cell = bool;
 
@@ -59,6 +54,10 @@ int main()
     DiscreteDomain<DDimX, DDimY> const domain_xy(
             DiscreteVector<DDimX, DDimY>(length, height));
 
+    DiscreteDomain<DDimX, DDimY> const inner_domain_xy(
+            DiscreteCoordinate<DDimX, DDimY>(1,1),
+            DiscreteVector<DDimX, DDimY>(length - 2, height - 2));
+
     Chunk<cell, DiscreteDomain<DDimX, DDimY>> cells_in(domain_xy);
     Chunk<cell, DiscreteDomain<DDimX, DDimY>> cells_out(domain_xy);
 
@@ -70,7 +69,7 @@ int main()
     for (; iter < nt; ++iter) {
         print_2DChunk(std::cout, cells_in.span_cview()) << "\n";
         for_each(
-                cells_in.domain(),
+                inner_domain_xy,
                 [&](DiscreteCoordinate<DDimX, DDimY> const ixy) {
                     DiscreteCoordinate<DDimX> const ix
                             = select<DDimX>(ixy);

@@ -55,7 +55,7 @@ int main()
             DiscreteVector<DDimX, DDimY>(length, height));
 
     DiscreteDomain<DDimX, DDimY> const inner_domain_xy(
-            DiscreteCoordinate<DDimX, DDimY>(1,1),
+            DiscreteCoordinate<DDimX, DDimY>(1, 1),
             DiscreteVector<DDimX, DDimY>(length - 2, height - 2));
 
     Chunk<cell, DiscreteDomain<DDimX, DDimY>> cells_in(domain_xy);

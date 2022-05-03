@@ -11,7 +11,7 @@ using DVectX = DiscreteVector<DDimX>;
 using DDomX = DiscreteDomain<DDimX>;
 
 template <class Datatype>
-using ChunkX = Chunk<Datatype, DDomX>;
+using ChunkX = Chunk<Datatype, DDomX, HostAllocator<Datatype>>;
 template <class Datatype>
 using ChunkSpanX = ChunkSpan<Datatype, DDomX, Kokkos::HostSpace>;
 
@@ -22,7 +22,7 @@ using DVectY = DiscreteVector<DDimY>;
 using DDomY = DiscreteDomain<DDimY>;
 
 template <class Datatype>
-using ChunkY = Chunk<Datatype, DDomY>;
+using ChunkY = Chunk<Datatype, DDomY, HostAllocator<Datatype>>;
 
 
 struct DDimZ;
@@ -36,7 +36,7 @@ using DVectXY = DiscreteVector<DDimX, DDimY>;
 using DDomXY = DiscreteDomain<DDimX, DDimY>;
 
 template <class Datatype>
-using ChunkXY = Chunk<Datatype, DDomXY>;
+using ChunkXY = Chunk<Datatype, DDomXY, HostAllocator<Datatype>>;
 
 
 using ElemYX = DiscreteCoordinate<DDimY, DDimX>;
@@ -44,7 +44,7 @@ using DVectYX = DiscreteVector<DDimY, DDimX>;
 using DDomYX = DiscreteDomain<DDimY, DDimX>;
 
 template <class Datatype>
-using ChunkYX = Chunk<Datatype, DDomYX>;
+using ChunkYX = Chunk<Datatype, DDomYX, HostAllocator<Datatype>>;
 
 
 static ElemX constexpr lbound_x(50);
@@ -526,7 +526,9 @@ TEST(Chunk2DTest, DeepcopyReordered)
         }
     }
     ChunkYX<double> chunk2(select<DDimY, DDimX>(chunk.domain()));
-    deepcopy(chunk2, chunk);
+    ChunkSpan<double, DDomXY, Kokkos::HostSpace, std::experimental::layout_left>
+            chunk2_view(chunk2.data(), chunk.domain());
+    deepcopy(chunk2_view, chunk);
     for (auto&& ix : chunk.domain<DDimX>()) {
         for (auto&& iy : chunk.domain<DDimY>()) {
             // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy

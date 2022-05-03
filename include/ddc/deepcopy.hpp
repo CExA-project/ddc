@@ -11,8 +11,8 @@
 #include "ddc/for_each.hpp"
 
 /** Copy the content of a view into another
- * @param[out] to    the view in which to copy
- * @param[in]  from  the view from which to copy
+ * @param[out] dst the view in which to copy
+ * @param[in]  src the view from which to copy
  * @return to
  */
 template <class ChunkDst, class ChunkSrc>

@@ -137,17 +137,6 @@ public:
     /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data
      * @param other the Chunk to view
      */
-    template <class KokkosView, class = std::enable_if_t<Kokkos::is_view<KokkosView>::value>>
-    constexpr ChunkSpan(KokkosView const& view, mdomain_type const& domain) noexcept
-        : ChunkSpan(
-                detail::build_mdspan(view, std::make_index_sequence<sizeof...(DDims)> {}),
-                domain)
-    {
-    }
-
-    /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data
-     * @param other the Chunk to view
-     */
     // Disabled by SFINAE in the case of `ElementType` is not `const` to avoid write access
     template <
             class OElementType,
@@ -196,6 +185,18 @@ public:
                 allocation_mdspan.data() - mapping_s(front<DDims>(domain)...),
                 mapping_s);
         this->m_domain = domain;
+    }
+
+    /** Constructs a new ChunkSpan from scratch
+     * @param view the Kokkos view
+     * @param domain the domain that sustains the view
+     */
+    template <class KokkosView, class = std::enable_if_t<Kokkos::is_view<KokkosView>::value>>
+    constexpr ChunkSpan(KokkosView const& view, mdomain_type const& domain) noexcept
+        : ChunkSpan(
+                detail::build_mdspan(view, std::make_index_sequence<sizeof...(DDims)> {}),
+                domain)
+    {
     }
 
     /** Copy-assigns a new value to this ChunkSpan, yields a new view to the same data

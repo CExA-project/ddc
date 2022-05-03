@@ -227,37 +227,41 @@ std::enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::rcoord_type> 
 }
 
 template <class CDim>
-Coordinate<CDim> to_real(DiscreteCoordinate<UniformDiscretization<CDim>> const& c)
+KOKKOS_INLINE_FUNCTION constexpr Coordinate<CDim> to_real(
+        DiscreteCoordinate<UniformDiscretization<CDim>> const& c)
 {
     return discretization<UniformDiscretization<CDim>>().to_real(c);
 }
 
 template <class CDim>
-Coordinate<CDim> distance_at_left(DiscreteCoordinate<UniformDiscretization<CDim>> i)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
+        DiscreteCoordinate<UniformDiscretization<CDim>> i)
 {
     return discretization<UniformDiscretization<CDim>>().step();
 }
 
 template <class CDim>
-Coordinate<CDim> distance_at_right(DiscreteCoordinate<UniformDiscretization<CDim>> i)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
+        DiscreteCoordinate<UniformDiscretization<CDim>> i)
 {
     return discretization<UniformDiscretization<CDim>>().step();
 }
 
 template <class CDim>
-Coordinate<CDim> rmin(DiscreteDomain<UniformDiscretization<CDim>> const& d)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<UniformDiscretization<CDim>> const& d)
 {
     return to_real(d.front());
 }
 
 template <class CDim>
-Coordinate<CDim> rmax(DiscreteDomain<UniformDiscretization<CDim>> const& d)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<UniformDiscretization<CDim>> const& d)
 {
     return to_real(d.back());
 }
 
 template <class CDim>
-Coordinate<CDim> rlength(DiscreteDomain<UniformDiscretization<CDim>> const& d)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> rlength(
+        DiscreteDomain<UniformDiscretization<CDim>> const& d)
 {
     return rmax(d) - rmin(d);
 }

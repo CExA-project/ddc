@@ -14,14 +14,28 @@
 
 namespace detail {
 
+template <class F, class... DDims>
+struct KokkosLambda
+{
+    KokkosLambda(F const& f) : m_f(f) {}
+
+    template <class... Args>
+    KOKKOS_FORCEINLINE_FUNCTION void operator()(Args... args) const
+    {
+        m_f(DiscreteCoordinate<DDims...>(args...));
+    }
+
+    F m_f;
+};
+
 template <class Functor, class DDim0>
-inline void for_each_kokkos(DiscreteDomain<DDim0> const& domain, Functor&& f) noexcept
+inline void for_each_kokkos(DiscreteDomain<DDim0> const& domain, Functor const& f) noexcept
 {
     Kokkos::parallel_for(
             Kokkos::RangePolicy<>(
                     select<DDim0>(domain).front().value(),
                     select<DDim0>(domain).back().value() + 1),
-            KOKKOS_LAMBDA(std::size_t i) { f(DiscreteCoordinate<DDim0>(i)); });
+            KokkosLambda<Functor, DDim0>(f));
 }
 
 template <class Functor, class DDim0, class DDim1, class... DDims>
@@ -39,9 +53,7 @@ inline void for_each_kokkos(
                  (select<DDims>(domain).back().value() + 1)...};
     Kokkos::parallel_for(
             Kokkos::MDRangePolicy<Kokkos::Rank<2 + sizeof...(DDims)>>(begin, end),
-            KOKKOS_LAMBDA(auto... args) {
-                f(DiscreteCoordinate<DDim0, DDim1, DDims...>(args...));
-            });
+            KokkosLambda<Functor, DDim0, DDim1, DDims...>(f));
 }
 
 template <class Element, class... DDims, class Functor, class... DCoords>

@@ -110,37 +110,43 @@ std::ostream& operator<<(std::ostream& out, NonUniformDiscretization<CDim> const
 }
 
 template <class CDim>
-Coordinate<CDim> to_real(DiscreteCoordinate<NonUniformDiscretization<CDim>> const& c)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> to_real(
+        DiscreteCoordinate<NonUniformDiscretization<CDim>> const& c)
 {
     return discretization<NonUniformDiscretization<CDim>>().to_real(c);
 }
 
 template <class CDim>
-Coordinate<CDim> distance_at_left(DiscreteCoordinate<NonUniformDiscretization<CDim>> i)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
+        DiscreteCoordinate<NonUniformDiscretization<CDim>> i)
 {
     return to_real(i) - to_real(i - 1);
 }
 
 template <class CDim>
-Coordinate<CDim> distance_at_right(DiscreteCoordinate<NonUniformDiscretization<CDim>> i)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
+        DiscreteCoordinate<NonUniformDiscretization<CDim>> i)
 {
     return to_real(i + 1) - to_real(i);
 }
 
 template <class CDim>
-Coordinate<CDim> rmin(DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> rmin(
+        DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
 {
     return to_real(d.front());
 }
 
 template <class CDim>
-Coordinate<CDim> rmax(DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> rmax(
+        DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
 {
     return to_real(d.back());
 }
 
 template <class CDim>
-Coordinate<CDim> rlength(DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
+KOKKOS_INLINE_FUNCTION Coordinate<CDim> rlength(
+        DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
 {
     return rmax(d) - rmin(d);
 }

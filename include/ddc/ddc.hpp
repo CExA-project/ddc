@@ -1,6 +1,7 @@
 #pragma once
 
 // Misc
+#include "ddc/detail/macros.hpp"
 #include "ddc/detail/tagged_vector.hpp"
 #include "ddc/detail/type_seq.hpp"
 

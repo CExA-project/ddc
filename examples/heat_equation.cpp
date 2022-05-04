@@ -207,7 +207,7 @@ int main(int argc, char** argv)
     // Initialize the temperature on the main domain
     for_each(
             DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
-            KOKKOS_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
+            DDC_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
                 double const x = to_real(select<DDimX>(ixy));
                 double const y = to_real(select<DDimY>(ixy));
                 ghosted_last_temp_(ixy)
@@ -258,8 +258,7 @@ int main(int argc, char** argv)
         for_each(
                 policies::kokkos,
                 next_temp.domain(),
-                KOKKOS_LAMBDA(
-                        DiscreteCoordinate<DDimX, DDimY> const ixy) {
+                DDC_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
                     DiscreteCoordinate<DDimX> const ix
                             = select<DDimX>(ixy);
                     DiscreteCoordinate<DDimY> const iy

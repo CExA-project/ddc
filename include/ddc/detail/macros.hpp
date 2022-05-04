@@ -1,0 +1,13 @@
+#pragma once
+
+#include <Kokkos_Core.hpp>
+
+#if defined(__NVCC__)
+#define DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR
+#endif
+
+#define DDC_LAMBDA KOKKOS_LAMBDA
+
+#define DDC_INLINE_FUNCTION KOKKOS_INLINE_FUNCTION
+
+#define DDC_FORCEINLINE_FUNCTION KOKKOS_FORCEINLINE_FUNCTION

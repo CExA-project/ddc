@@ -7,6 +7,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "ddc/chunk_span.hpp"
+#include "ddc/detail/macros.hpp"
 #include "ddc/detail/tagged_vector.hpp"
 #include "ddc/discrete_coordinate.hpp"
 #include "ddc/discrete_domain.hpp"
@@ -20,7 +21,7 @@ struct KokkosLambda
     KokkosLambda(F const& f) : m_f(f) {}
 
     template <class... Args>
-    KOKKOS_FORCEINLINE_FUNCTION void operator()(Args... args) const
+    DDC_FORCEINLINE_FUNCTION void operator()(Args... args) const
     {
         m_f(DiscreteCoordinate<DDims...>(args...));
     }

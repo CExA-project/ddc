@@ -6,6 +6,7 @@
 #include <type_traits>
 
 #include "ddc/coordinate.hpp"
+#include "ddc/detail/macros.hpp"
 #include "ddc/discrete_coordinate.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discretization.hpp"
@@ -227,41 +228,40 @@ std::enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::rcoord_type> 
 }
 
 template <class CDim>
-KOKKOS_INLINE_FUNCTION constexpr Coordinate<CDim> to_real(
+DDC_INLINE_FUNCTION constexpr Coordinate<CDim> to_real(
         DiscreteCoordinate<UniformDiscretization<CDim>> const& c)
 {
     return discretization<UniformDiscretization<CDim>>().to_real(c);
 }
 
 template <class CDim>
-KOKKOS_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
+DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
         DiscreteCoordinate<UniformDiscretization<CDim>> i)
 {
     return discretization<UniformDiscretization<CDim>>().step();
 }
 
 template <class CDim>
-KOKKOS_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
+DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
         DiscreteCoordinate<UniformDiscretization<CDim>> i)
 {
     return discretization<UniformDiscretization<CDim>>().step();
 }
 
 template <class CDim>
-KOKKOS_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<UniformDiscretization<CDim>> const& d)
+DDC_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<UniformDiscretization<CDim>> const& d)
 {
     return to_real(d.front());
 }
 
 template <class CDim>
-KOKKOS_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<UniformDiscretization<CDim>> const& d)
+DDC_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<UniformDiscretization<CDim>> const& d)
 {
     return to_real(d.back());
 }
 
 template <class CDim>
-KOKKOS_INLINE_FUNCTION Coordinate<CDim> rlength(
-        DiscreteDomain<UniformDiscretization<CDim>> const& d)
+DDC_INLINE_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<UniformDiscretization<CDim>> const& d)
 {
     return rmax(d) - rmin(d);
 }

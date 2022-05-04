@@ -41,7 +41,7 @@ private:
 public:
     UniformDiscretization() = default;
 
-    UniformDiscretization(UniformDiscretization const&) = default;
+    UniformDiscretization(UniformDiscretization const&) = delete;
 
     UniformDiscretization(UniformDiscretization&&) = default;
 

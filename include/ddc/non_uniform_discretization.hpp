@@ -69,13 +69,9 @@ public:
         Kokkos::deep_copy(m_points, host);
     }
 
-    NonUniformDiscretization(NonUniformDiscretization const& x) = default;
+    NonUniformDiscretization(NonUniformDiscretization const& x) = delete;
 
     NonUniformDiscretization(NonUniformDiscretization&& x) = default;
-
-    NonUniformDiscretization& operator=(NonUniformDiscretization const& x) = default;
-
-    NonUniformDiscretization& operator=(NonUniformDiscretization&& x) = default;
 
     ~NonUniformDiscretization() = default;
 

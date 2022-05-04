@@ -12,6 +12,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "ddc/detail/kokkos.hpp"
+#include "ddc/detail/macros.hpp"
 #include "ddc/discrete_domain.hpp"
 
 template <class T>
@@ -318,5 +319,8 @@ protected:
             mapping_type map(extents_s);
             return allocation_mdspan_type(data(), map);
         }
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+        return allocation_mdspan_type();
+#endif
     }
 };

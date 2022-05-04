@@ -92,23 +92,39 @@ protected:
     template <class QueryDDim, class... ODDims>
     auto get_slicer_for(DiscreteCoordinate<ODDims...> const& c) const
     {
-        if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
-            return get<QueryDDim>(c) - front<QueryDDim>(this->m_domain);
-        } else {
-            return std::experimental::full_extent;
-        }
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+#pragma diag_suppress = implicit_return_from_non_void_function
+        return [&]() {
+#endif
+            if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
+                return get<QueryDDim>(c) - front<QueryDDim>(this->m_domain);
+            } else {
+                return std::experimental::full_extent;
+            }
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+        }();
+#pragma diag_default = implicit_return_from_non_void_function
+#endif
     }
 
     template <class QueryDDim, class... ODDims>
     auto get_slicer_for(DiscreteDomain<ODDims...> const& c) const
     {
-        if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
-            return std::pair<std::size_t, std::size_t>(
-                    front<QueryDDim>(c) - front<QueryDDim>(this->m_domain),
-                    back<QueryDDim>(c) + 1 - front<QueryDDim>(this->m_domain));
-        } else {
-            return std::experimental::full_extent;
-        }
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+#pragma diag_suppress = implicit_return_from_non_void_function
+        return [&]() {
+#endif
+            if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
+                return std::pair<std::size_t, std::size_t>(
+                        front<QueryDDim>(c) - front<QueryDDim>(this->m_domain),
+                        back<QueryDDim>(c) + 1 - front<QueryDDim>(this->m_domain));
+            } else {
+                return std::experimental::full_extent;
+            }
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+        }();
+#pragma diag_default = implicit_return_from_non_void_function
+#endif
     }
 
 public:

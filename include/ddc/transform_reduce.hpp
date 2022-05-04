@@ -4,6 +4,7 @@
 
 #include <utility>
 
+#include "ddc/detail/macros.hpp"
 #include "ddc/discrete_coordinate.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/for_each.hpp"
@@ -115,11 +116,17 @@ inline T transform_reduce(
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
 {
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+#pragma diag_suppress = implicit_return_from_non_void_function
+#endif
     return detail::transform_reduce_serial(
             domain,
             neutral,
             std::forward<BinaryReductionOp>(reduce),
             std::forward<UnaryTransformOp>(transform));
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+#pragma diag_default = implicit_return_from_non_void_function
+#endif
 }
 
 /** A reduction over a nD domain using the default execution policy

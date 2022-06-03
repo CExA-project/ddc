@@ -117,7 +117,7 @@ inline T transform_reduce(
         UnaryTransformOp&& transform) noexcept
 {
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
-#pragma diag_suppress = implicit_return_from_non_void_function
+DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
 #endif
     return detail::transform_reduce_serial(
             domain,
@@ -125,7 +125,7 @@ inline T transform_reduce(
             std::forward<BinaryReductionOp>(reduce),
             std::forward<UnaryTransformOp>(transform));
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
-#pragma diag_default = implicit_return_from_non_void_function
+DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
 #endif
 }
 

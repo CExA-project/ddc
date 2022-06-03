@@ -93,7 +93,7 @@ protected:
     auto get_slicer_for(DiscreteCoordinate<ODDims...> const& c) const
     {
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
-#pragma diag_suppress = implicit_return_from_non_void_function
+DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
         return [&]() {
 #endif
             if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
@@ -103,7 +103,7 @@ protected:
             }
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
         }();
-#pragma diag_default = implicit_return_from_non_void_function
+DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
 #endif
     }
 
@@ -111,7 +111,7 @@ protected:
     auto get_slicer_for(DiscreteDomain<ODDims...> const& c) const
     {
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
-#pragma diag_suppress = implicit_return_from_non_void_function
+DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
         return [&]() {
 #endif
             if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
@@ -123,7 +123,7 @@ protected:
             }
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
         }();
-#pragma diag_default = implicit_return_from_non_void_function
+DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
 #endif
     }
 

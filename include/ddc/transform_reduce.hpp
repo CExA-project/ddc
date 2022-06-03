@@ -47,8 +47,6 @@ inline T transform_reduce_serial(
     }
 }
 
-} // namespace detail
-
 /** A reduction over a n-D domain using the OpenMP execution policy
  * @param[in] policy the execution policy to use
  * @param[in] domain the range over which to apply the algorithm
@@ -59,8 +57,7 @@ inline T transform_reduce_serial(
  *            range. The return type must be acceptable as input to reduce
  */
 template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
-inline T transform_reduce(
-        [[maybe_unused]] omp_policy policy,
+inline T transform_reduce_openmp(
         DiscreteDomain<DDims...> const& domain,
         T const neutral,
         BinaryReductionOp const& reduce,
@@ -99,7 +96,9 @@ inline T transform_reduce(
     return global_result;
 }
 
-/** A reduction over a nD domain using the default execution policy
+} // namespace detail
+
+/** A reduction over a nD domain using the Serial execution policy
  * @param[in] policy the execution policy to use
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] neutral the neutral element of the reduction operation
@@ -117,7 +116,7 @@ inline T transform_reduce(
         UnaryTransformOp&& transform) noexcept
 {
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
-DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
+    DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
 #endif
     return detail::transform_reduce_serial(
             domain,
@@ -125,7 +124,37 @@ DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
             std::forward<BinaryReductionOp>(reduce),
             std::forward<UnaryTransformOp>(transform));
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
-DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
+    DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
+#endif
+}
+
+/** A reduction over a n-D domain using the OpenMP execution policy
+ * @param[in] policy the execution policy to use
+ * @param[in] domain the range over which to apply the algorithm
+ * @param[in] neutral the neutral element of the reduction operation
+ * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
+ *            results of transform, the results of other reduce and neutral.
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be acceptable as input to reduce
+ */
+template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
+inline T transform_reduce(
+        [[maybe_unused]] omp_policy policy,
+        DiscreteDomain<DDims...> const& domain,
+        T const neutral,
+        BinaryReductionOp&& reduce,
+        UnaryTransformOp&& transform) noexcept
+{
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+    DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
+#endif
+    return detail::transform_reduce_openmp(
+            domain,
+            neutral,
+            std::forward<BinaryReductionOp>(reduce),
+            std::forward<UnaryTransformOp>(transform));
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+    DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
 #endif
 }
 

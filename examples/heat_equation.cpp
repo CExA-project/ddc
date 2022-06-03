@@ -7,6 +7,8 @@
 #include <numeric>
 
 #include <ddc/ddc.hpp>
+
+#include <Kokkos_Core.hpp>
 //! [includes]
 
 
@@ -110,7 +112,7 @@ int main(int argc, char** argv)
     // Initialization of the global domain in X with gwx ghost points on
     // each side
     auto const [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]
-            = init_discretization<DDimX>(DDimX::init_ghosted(
+            = init_discretization(DDimX::init_ghosted(
                     Coordinate<X>(x_start),
                     Coordinate<X>(x_end),
                     DiscreteVector<DDimX>(nb_x_points),
@@ -206,6 +208,7 @@ int main(int argc, char** argv)
     auto ghosted_last_temp_ = ghosted_last_temp.span_view();
     // Initialize the temperature on the main domain
     for_each(
+            policies::kokkos,
             DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             DDC_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
                 double const x = to_real(select<DDimX>(ixy));
@@ -215,10 +218,19 @@ int main(int argc, char** argv)
             });
     //! [initial-conditions]
 
+    Chunk<double,
+          DiscreteDomain<DDimX, DDimY>,
+          KokkosAllocator<double, Kokkos::HostSpace>>
+            ghosted_temp(DiscreteDomain<
+                         DDimX,
+                         DDimY>(ghosted_x_domain, ghosted_y_domain));
+
+
     //! [initial output]
     // display the initial data
+    deepcopy(ghosted_temp, ghosted_last_temp);
     display(to_real(time_domain.front()),
-            ghosted_last_temp[x_domain][y_domain]);
+            ghosted_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
     DiscreteCoordinate<DDimT> last_output = time_domain.front();
     //! [initial output]
@@ -288,7 +300,8 @@ int main(int argc, char** argv)
         //! [output]
         if (iter - last_output >= t_output_period) {
             last_output = iter;
-            display(to_real(iter), next_temp);
+            deepcopy(ghosted_temp, ghosted_last_temp);
+            display(to_real(iter), ghosted_temp[x_domain][y_domain]);
         }
         //! [output]
 
@@ -300,8 +313,9 @@ int main(int argc, char** argv)
 
     //! [final output]
     if (last_output < time_domain.back()) {
+        deepcopy(ghosted_temp, ghosted_last_temp);
         display(to_real(time_domain.back()),
-                ghosted_last_temp[x_domain][y_domain]);
+                ghosted_temp[x_domain][y_domain]);
     }
     //! [final output]
 }

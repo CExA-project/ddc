@@ -3,6 +3,7 @@
 #pragma once
 
 #include <cassert>
+#include <type_traits>
 #include <vector>
 
 #include <Kokkos_Core.hpp>
@@ -29,62 +30,72 @@ public:
         return 1;
     }
 
-private:
-    Kokkos::View<rcoord_type*> m_points;
-
-public:
-    NonUniformDiscretization() = default;
-
-    /// @brief Construct a `NonUniformDiscretization` using a brace-list, i.e. `NonUniformDiscretization mesh({0., 1.})`
-    explicit NonUniformDiscretization(std::initializer_list<rcoord_type> points)
+    template <class MemorySpace>
+    class Impl
     {
-        std::vector<rcoord_type> host_points(points.begin(), points.end());
-        Kokkos::View<rcoord_type*, Kokkos::HostSpace> host(host_points.data(), host_points.size());
-        Kokkos::resize(m_points, host.extent(0));
-        Kokkos::deep_copy(m_points, host);
-    }
+        template <class OMemorySpace>
+        friend class Impl;
 
-    /// @brief Construct a `NonUniformDiscretization` using a C++20 "common range".
-    template <class InputRange>
-    explicit inline constexpr NonUniformDiscretization(InputRange const& points)
-    {
-        if constexpr (Kokkos::is_view<InputRange>::value) {
-            Kokkos::deep_copy(m_points, points);
-        } else {
+        Kokkos::View<rcoord_type*, MemorySpace> m_points;
+
+    public:
+        using ddim_type = NonUniformDiscretization<CDim>;
+
+        Impl() = default;
+
+        /// @brief Construct a `NonUniformDiscretization` using a brace-list, i.e. `NonUniformDiscretization mesh({0., 1.})`
+        explicit Impl(std::initializer_list<rcoord_type> points)
+        {
             std::vector<rcoord_type> host_points(points.begin(), points.end());
             Kokkos::View<rcoord_type*, Kokkos::HostSpace>
                     host(host_points.data(), host_points.size());
             Kokkos::resize(m_points, host.extent(0));
             Kokkos::deep_copy(m_points, host);
         }
-    }
 
-    /// @brief Construct a `NonUniformDiscretization` using a pair of iterators.
-    template <class InputIt>
-    inline constexpr NonUniformDiscretization(InputIt points_begin, InputIt points_end)
-    {
-        std::vector<rcoord_type> host_points(points_begin, points_end);
-        Kokkos::View<rcoord_type*, Kokkos::HostSpace> host(host_points.data(), host_points.size());
-        Kokkos::resize(m_points, host.extent(0));
-        Kokkos::deep_copy(m_points, host);
-    }
+        /// @brief Construct a `NonUniformDiscretization` using a C++20 "common range".
+        template <class InputRange>
+        explicit inline constexpr Impl(InputRange const& points)
+        {
+            if constexpr (Kokkos::is_view<InputRange>::value) {
+                Kokkos::deep_copy(m_points, points);
+            } else {
+                std::vector<rcoord_type> host_points(points.begin(), points.end());
+                Kokkos::View<rcoord_type*, Kokkos::HostSpace>
+                        host(host_points.data(), host_points.size());
+                Kokkos::resize(m_points, host.extent(0));
+                Kokkos::deep_copy(m_points, host);
+            }
+        }
 
-    NonUniformDiscretization(NonUniformDiscretization const& x) = delete;
+        /// @brief Construct a `NonUniformDiscretization` using a pair of iterators.
+        template <class InputIt>
+        inline constexpr Impl(InputIt points_begin, InputIt points_end)
+        {
+            std::vector<rcoord_type> host_points(points_begin, points_end);
+            Kokkos::View<rcoord_type*, Kokkos::HostSpace>
+                    host(host_points.data(), host_points.size());
+            Kokkos::resize(m_points, host.extent(0));
+            Kokkos::deep_copy(m_points, host);
+        }
 
-    NonUniformDiscretization(NonUniformDiscretization&& x) = default;
+        Impl(Impl const& x) = delete;
 
-    ~NonUniformDiscretization() = default;
+        Impl(Impl&& x) = default;
 
-    constexpr std::size_t size() const
-    {
-        return m_points.size();
-    }
+        ~Impl() = default;
 
-    /// @brief Convert a mesh index into a position in `CDim`
-    constexpr rcoord_type to_real(mcoord_type const& icoord) const noexcept
-    {
-        return m_points[icoord.value()];
-    }
+        constexpr std::size_t size() const
+        {
+            return m_points.size();
+        }
+
+        /// @brief Convert a mesh index into a position in `CDim`
+        constexpr rcoord_type to_real(mcoord_type const& icoord) const noexcept
+        {
+            return m_points(icoord.value());
+        }
+    };
 };
 
 template <class>
@@ -100,8 +111,10 @@ struct is_non_uniform_discretization<NonUniformDiscretization<CDim>> : public st
 template <class DDim>
 constexpr bool is_non_uniform_discretization_v = is_non_uniform_discretization<DDim>::value;
 
-template <class CDim>
-std::ostream& operator<<(std::ostream& out, NonUniformDiscretization<CDim> const& mesh)
+template <
+        class DDimImpl,
+        std::enable_if_t<is_non_uniform_discretization_v<typename DDimImpl::ddim_type>, int> = 0>
+std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 {
     return out << "NonUniformDiscretization(" << mesh.size() << ")";
 }
@@ -110,7 +123,11 @@ template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> to_real(
         DiscreteCoordinate<NonUniformDiscretization<CDim>> const& c)
 {
-    return discretization<NonUniformDiscretization<CDim>>().to_real(c);
+#if defined(__CUDA_ARCH__)
+    return discretization_device<NonUniformDiscretization<CDim>>().to_real(c);
+#else
+    return discretization_host<NonUniformDiscretization<CDim>>().to_real(c);
+#endif
 }
 
 template <class CDim>

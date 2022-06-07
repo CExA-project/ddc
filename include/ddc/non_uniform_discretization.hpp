@@ -79,6 +79,12 @@ public:
             Kokkos::deep_copy(m_points, host);
         }
 
+        template <class OriginMemorySpace>
+        explicit Impl(Impl<OriginMemorySpace> const& impl)
+            : m_points(Kokkos::create_mirror_view_and_copy(MemorySpace(), impl.m_points))
+        {
+        }
+
         Impl(Impl const& x) = delete;
 
         Impl(Impl&& x) = default;

@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('pdi_8hpp_source.html',''); initResizab
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        static_assert(</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                !(access &amp; PDI_IN) || (chunk_default_access_v&lt;BorrowedChunk&gt; &amp; PDI_IN),</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                <span class="stringliteral">&quot;Invalid access for constant data&quot;</span>);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keyword">auto</span> extents = data.domain().extents().array();</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keyword">auto</span> extents = detail::array(data.domain().extents());</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">size_t</span> rank = extents.size();</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        PDI_share((name + <span class="stringliteral">&quot;_rank&quot;</span>).c_str(), &amp;rank, PDI_OUT);</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        m_names.push_back(name + <span class="stringliteral">&quot;_rank&quot;</span>);</div>

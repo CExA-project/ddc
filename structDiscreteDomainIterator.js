@@ -2,7 +2,7 @@ var structDiscreteDomainIterator =
 [
     [ "iterator_category", "structDiscreteDomainIterator.html#a8eb365aee73fbbd99d371bea21d33825", null ],
     [ "value_type", "structDiscreteDomainIterator.html#aa21da5a07729a7c1c596a91bc90934fc", null ],
-    [ "difference_type", "structDiscreteDomainIterator.html#aa06574b9fb6c0047d1ca7aa09ccbdacf", null ],
+    [ "difference_type", "structDiscreteDomainIterator.html#a0bf16f674194a9654af4aa2c955b8761", null ],
     [ "DiscreteDomainIterator", "structDiscreteDomainIterator.html#a51b0d7a559f8c70dccec546a3c8fe332", null ],
     [ "DiscreteDomainIterator", "structDiscreteDomainIterator.html#a38d0e71934165712c76873df952f6796", null ],
     [ "operator*", "structDiscreteDomainIterator.html#a902b1e134898f91e5305f6df0b236f10", null ],
@@ -12,7 +12,7 @@ var structDiscreteDomainIterator =
     [ "operator--", "structDiscreteDomainIterator.html#ac1f220bdad61d5d37dbade5812c69e3e", null ],
     [ "operator+=", "structDiscreteDomainIterator.html#aa0e0cd39d8f6ad5a70839656d29b63a5", null ],
     [ "operator-=", "structDiscreteDomainIterator.html#a57e5a0feedd2bb4a68e79aabb73b965c", null ],
-    [ "operator[]", "structDiscreteDomainIterator.html#a3c26cbb04963bce4f6c5e14486583f0d", null ],
+    [ "operator[]", "structDiscreteDomainIterator.html#a6a7c2c148dacd8eab8109b43676210f0", null ],
     [ "operator==", "structDiscreteDomainIterator.html#a632201c14cf633429cc3f9076574012f", null ],
     [ "operator!=", "structDiscreteDomainIterator.html#a0a9ba47dc275124dc0410d8f93acee31", null ],
     [ "operator<", "structDiscreteDomainIterator.html#a2cb2fa4dcd7fc9e5eafe2279471e8687", null ],

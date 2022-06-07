@@ -54,7 +54,7 @@ public:
         Impl(Impl const&) = delete;
 
         template <class OriginMemorySpace>
-        Impl(Impl<OriginMemorySpace> const& impl)
+        explicit Impl(Impl<OriginMemorySpace> const& impl)
         {
             m_origin = impl.m_origin;
             m_step = impl.m_step;

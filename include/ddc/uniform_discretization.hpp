@@ -11,6 +11,7 @@
 #include "ddc/detail/macros.hpp"
 #include "ddc/discrete_coordinate.hpp"
 #include "ddc/discrete_domain.hpp"
+#include "ddc/discrete_vector.hpp"
 #include "ddc/discretization.hpp"
 
 /** UniformDiscretization models a uniform discretization of the provided continuous dimension
@@ -126,7 +127,7 @@ public:
         /// @brief Convert a mesh index into a position in `CDim`
         constexpr rcoord_type to_real(mcoord_type const& icoord) const noexcept
         {
-            return m_origin + rcoord_type(icoord.value()) * m_step;
+            return m_origin + rcoord_type(icoord.uid()) * m_step;
         }
     };
 
@@ -172,7 +173,7 @@ public:
         assert(n > 1);
         rcoord_type discretization_step {(b - a) / (n - 1)};
         Impl<Kokkos::HostSpace>
-                disc(a - n_ghosts_before[0] * discretization_step, discretization_step);
+                disc(a - n_ghosts_before.value() * discretization_step, discretization_step);
         ddom_type ghosted_domain = ddom_type(disc.front(), n + n_ghosts_before + n_ghosts_after);
         ddom_type pre_ghost = ddom_type(ghosted_domain.front(), n_ghosts_before);
         ddom_type main_domain = ddom_type(ghosted_domain.front() + n_ghosts_before, n);

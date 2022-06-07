@@ -11,6 +11,7 @@
 #include "ddc/detail/tagged_vector.hpp"
 #include "ddc/discrete_coordinate.hpp"
 #include "ddc/discrete_domain.hpp"
+#include "ddc/discrete_vector.hpp"
 
 
 namespace detail {
@@ -34,8 +35,8 @@ inline void for_each_kokkos(DiscreteDomain<DDim0> const& domain, Functor const& 
 {
     Kokkos::parallel_for(
             Kokkos::RangePolicy<>(
-                    select<DDim0>(domain).front().value(),
-                    select<DDim0>(domain).back().value() + 1),
+                    select<DDim0>(domain).front().uid(),
+                    select<DDim0>(domain).back().uid() + 1),
             KokkosLambda<Functor, DDim0>(f));
 }
 
@@ -45,56 +46,52 @@ inline void for_each_kokkos(
         Functor&& f) noexcept
 {
     Kokkos::Array<std::size_t, 2 + sizeof...(DDims)> const
-            begin {select<DDim0>(domain).front().value(),
-                   select<DDim1>(domain).front().value(),
-                   select<DDims>(domain).front().value()...};
+            begin {select<DDim0>(domain).front().uid(),
+                   select<DDim1>(domain).front().uid(),
+                   select<DDims>(domain).front().uid()...};
     Kokkos::Array<std::size_t, 2 + sizeof...(DDims)> const
-            end {(select<DDim0>(domain).back().value() + 1),
-                 (select<DDim1>(domain).back().value() + 1),
-                 (select<DDims>(domain).back().value() + 1)...};
+            end {(select<DDim0>(domain).back().uid() + 1),
+                 (select<DDim1>(domain).back().uid() + 1),
+                 (select<DDims>(domain).back().uid() + 1)...};
     Kokkos::parallel_for(
             Kokkos::MDRangePolicy<Kokkos::Rank<2 + sizeof...(DDims)>>(begin, end),
             KokkosLambda<Functor, DDim0, DDim1, DDims...>(f));
 }
 
-template <class Element, class... DDims, class Functor, class... DCoords>
+template <class RetType, class Element, std::size_t N, class Functor, class... Is>
 inline void for_each_serial(
-        detail::TaggedVector<Element, DDims...> const& start,
-        detail::TaggedVector<Element, DDims...> const& end,
+        std::array<Element, N> const& start,
+        std::array<Element, N> const& end,
         Functor const& f,
-        DCoords const&... dcs) noexcept
+        Is const&... is) noexcept
 {
-    if constexpr (sizeof...(DCoords) == sizeof...(DDims)) {
-        f(detail::TaggedVector<Element, DDims...> {dcs...});
+    static constexpr std::size_t I = sizeof...(Is);
+    if constexpr (I == N) {
+        f(RetType(is...));
     } else {
-        using CurrentDDim = type_seq_element_t<sizeof...(DCoords), detail::TypeSeq<DDims...>>;
-        for (Element ii = select<CurrentDDim>(start); ii <= select<CurrentDDim>(end); ++ii) {
-            for_each_serial(start, end, f, dcs..., ii);
+        for (Element ii = start[I]; ii <= end[I]; ++ii) {
+            for_each_serial<RetType>(start, end, f, is..., ii);
         }
     }
 }
 
-template <class Element, class... DDims, class Functor>
+template <class RetType, class Element, std::size_t N, class Functor>
 inline void for_each_omp(
-        detail::TaggedVector<Element, DDims...> const& start,
-        detail::TaggedVector<Element, DDims...> const& end,
+        std::array<Element, N> const& start,
+        std::array<Element, N> const& end,
         Functor&& f) noexcept
 {
-    using FirstDDim = type_seq_element_t<0, detail::TypeSeq<DDims...>>;
-    Element const ib = select<FirstDDim>(start);
-    Element const ie = select<FirstDDim>(end);
+    Element const ib = start[0];
+    Element const ie = end[0];
 #pragma omp parallel for default(none) shared(ib, ie, start, end, f)
     for (Element ii = ib; ii <= ie; ++ii) {
-        if constexpr (sizeof...(DDims) == 1) {
-            f(detail::TaggedVector<Element, FirstDDim> {ii});
+        if constexpr (N == 1) {
+            f(RetType(ii));
         } else {
-            detail::for_each_serial(start, end, f, ii);
+            detail::for_each_serial<RetType>(start, end, f, ii);
         }
     }
 }
-
-template <class X, class T, T v>
-constexpr T type_constant_v = std::integral_constant<T, v>::value;
 
 } // namespace detail
 
@@ -110,7 +107,10 @@ struct serial_policy
 template <class... DDims, class Functor>
 inline void for_each(serial_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
-    detail::for_each_serial(domain.front(), domain.back(), std::forward<Functor>(f));
+    detail::for_each_serial<DiscreteCoordinate<DDims...>>(
+            detail::array(domain.front()),
+            detail::array(domain.back()),
+            std::forward<Functor>(f));
 }
 
 /** iterates over a nD extent using the serial execution policy
@@ -120,9 +120,9 @@ inline void for_each(serial_policy, DiscreteDomain<DDims...> const& domain, Func
 template <class... DDims, class Functor>
 inline void for_each_n(serial_policy, DiscreteVector<DDims...> const& extent, Functor&& f) noexcept
 {
-    detail::for_each_serial(
-            DiscreteVector<DDims...> {detail::type_constant_v<DDims, std::ptrdiff_t, 0>...},
-            DiscreteVector<DDims...> {get<DDims>(extent) - 1 ...},
+    detail::for_each_serial<DiscreteVector<DDims...>>(
+            std::array<DiscreteVectorElement, sizeof...(DDims)> {},
+            std::array<DiscreteVectorElement, sizeof...(DDims)> {get<DDims>(extent) - 1 ...},
             std::forward<Functor>(f));
 }
 
@@ -138,7 +138,10 @@ struct omp_policy
 template <class... DDims, class Functor>
 inline void for_each(omp_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
-    detail::for_each_omp(domain.front(), domain.back(), std::forward<Functor>(f));
+    detail::for_each_omp<DiscreteCoordinate<DDims...>>(
+            detail::array(domain.front()),
+            detail::array(domain.back()),
+            std::forward<Functor>(f));
 }
 
 /** iterates over a nD extent using the OpenMP execution policy
@@ -148,9 +151,9 @@ inline void for_each(omp_policy, DiscreteDomain<DDims...> const& domain, Functor
 template <class... DDims, class Functor>
 inline void for_each_n(omp_policy, DiscreteVector<DDims...> const& extent, Functor&& f) noexcept
 {
-    detail::for_each_omp(
-            DiscreteVector<DDims...> {detail::type_constant_v<DDims, std::ptrdiff_t, 0>...},
-            DiscreteVector<DDims...> {get<DDims>(extent) - 1 ...},
+    detail::for_each_omp<DiscreteVector<DDims...>>(
+            std::array<DiscreteVectorElement, sizeof...(DDims)> {},
+            std::array<DiscreteVectorElement, sizeof...(DDims)> {get<DDims>(extent) - 1 ...},
             std::forward<Functor>(f));
 }
 

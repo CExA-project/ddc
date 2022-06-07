@@ -165,18 +165,18 @@ public:
         return m_internal_mdspan.accessor();
     }
 
-    constexpr mcoord_type extents() const noexcept
+    constexpr DiscreteVector<DDims...> extents() const noexcept
     {
-        return mcoord_type(
+        return DiscreteVector<DDims...>(
                 (m_internal_mdspan.extent(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)
-                 - front<DDims>(m_domain))...);
+                 - front<DDims>(m_domain).uid())...);
     }
 
     template <class QueryDDim>
     constexpr size_type extent() const noexcept
     {
         return m_internal_mdspan.extent(type_seq_rank_v<QueryDDim, detail::TypeSeq<DDims...>>)
-               - front<QueryDDim>(m_domain);
+               - front<QueryDDim>(m_domain).uid();
     }
 
     constexpr size_type size() const noexcept
@@ -254,16 +254,16 @@ protected:
         // Handle the case where an allocation of size 0 returns a nullptr.
         assert((domain.size() == 0) || ((ptr != nullptr) && (domain.size() != 0)));
 
-        extents_type extents_r(::extents<DDims>(domain)...);
+        extents_type extents_r(::extents<DDims>(domain).value()...);
         mapping_type mapping_r(extents_r);
 
-        extents_type extents_s((front<DDims>(domain) + ::extents<DDims>(domain))...);
+        extents_type extents_s((front<DDims>(domain) + ::extents<DDims>(domain)).uid()...);
         std::array<std::size_t, sizeof...(DDims)> strides_s {
                 mapping_r.stride(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
         stdex::layout_stride::mapping<extents_type> mapping_s(extents_s, strides_s);
 
         // Pointer offset to handle non-zero indexing
-        ptr -= mapping_s(front<DDims>(domain)...);
+        ptr -= mapping_s(front<DDims>(domain).uid()...);
         m_internal_mdspan = internal_mdspan_type(ptr, mapping_s);
         m_domain = domain;
     }
@@ -295,7 +295,7 @@ protected:
      */
     constexpr ElementType* data() const
     {
-        return &m_internal_mdspan(front<DDims>(m_domain)...);
+        return &m_internal_mdspan(front<DDims>(m_domain).uid()...);
     }
 
     /** Provide a modifiable view of the data

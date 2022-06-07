@@ -53,13 +53,13 @@ inline constexpr DiscreteVectorElement const& get_or(
 
 /// Unary operators: +, -
 
-template <class... Tags, class... OTags>
+template <class... Tags>
 constexpr inline DiscreteVector<Tags...> operator+(DiscreteVector<Tags...> const& x)
 {
     return x;
 }
 
-template <class... Tags, class... OTags>
+template <class... Tags>
 constexpr inline DiscreteVector<Tags...> operator-(DiscreteVector<Tags...> const& x)
 {
     return DiscreteVector<Tags...>((-get<Tags>(x))...);

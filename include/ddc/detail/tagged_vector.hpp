@@ -56,14 +56,14 @@ inline constexpr ElementType const& get_or(
 
 /// Unary operators: +, -
 
-template <class ElementType, class... Tags, class OElementType, class... OTags>
+template <class ElementType, class... Tags>
 constexpr inline detail::TaggedVector<ElementType, Tags...> operator+(
         detail::TaggedVector<ElementType, Tags...> const& x)
 {
     return x;
 }
 
-template <class ElementType, class... Tags, class OElementType, class... OTags>
+template <class ElementType, class... Tags>
 constexpr inline detail::TaggedVector<ElementType, Tags...> operator-(
         detail::TaggedVector<ElementType, Tags...> const& x)
 {

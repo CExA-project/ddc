@@ -135,7 +135,7 @@ Then we handle the domains for the simulated time dimension.
 
 # Data allocation
 
-We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains\' points at t and t+dt.
+We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains' points at t and t+dt.
 
 \snippet heat_equation.cpp data allocation
 

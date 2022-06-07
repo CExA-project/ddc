@@ -201,11 +201,11 @@ constexpr detail::TaggedVector<ElementType, QueryTag> const& take(
 {
     return
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
-DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
+            DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
 #endif
-            take_impl<QueryTag>(tags...);
+                    take_impl<QueryTag>(tags...);
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
-DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
+    DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
 #endif
 }
 
@@ -353,7 +353,7 @@ public:
     ElementType const& get_or(ElementType const& default_value) const&
     {
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
-DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
+        DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
         return [&]() -> ElementType const& {
 #endif
             if constexpr (in_tags_v<QueryTag, tags_seq>) {
@@ -363,7 +363,7 @@ DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
             }
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
         }();
-DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
+        DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
 #endif
     }
 

@@ -12,35 +12,6 @@
 //! [includes]
 
 
-// some parameters that would typically be read from some form of
-// configuration file in a more realistic code
-
-//! [parameters]
-// Start of the domain of interest in the X dimension
-double const x_start = -1.;
-// End of the domain of interest in the X dimension
-double const x_end = 1.;
-// Number of discretization points in the X dimension
-size_t const nb_x_points = 10;
-// Thermal diffusion coefficient
-double const kx = .01;
-// Start of the domain of interest in the Y dimension
-double const y_start = -1.;
-// End of the domain of interest in the Y dimension
-double const y_end = 1.;
-// Number of discretization points in the Y dimension
-size_t const nb_y_points = 100;
-// Thermal diffusion coefficient
-double const ky = .002;
-// Simulated time at which to start simulation
-double const start_time = 0.;
-// Simulated time to reach as target of the simulation
-double const end_time = 10.;
-// Number of time-steps between outputs
-size_t const t_output_period = 10;
-//! [parameters]
-
-
 //! [X-dimension]
 /// Our first continuous dimension
 struct X;
@@ -101,6 +72,34 @@ void display(double time, ChunkType temp)
 int main(int argc, char** argv)
 {
     Kokkos::ScopeGuard scope(argc, argv);
+
+    // some parameters that would typically be read from some form of
+    // configuration file in a more realistic code
+
+    //! [parameters]
+    // Start of the domain of interest in the X dimension
+    double const x_start = -1.;
+    // End of the domain of interest in the X dimension
+    double const x_end = 1.;
+    // Number of discretization points in the X dimension
+    size_t const nb_x_points = 10;
+    // Thermal diffusion coefficient
+    double const kx = .01;
+    // Start of the domain of interest in the Y dimension
+    double const y_start = -1.;
+    // End of the domain of interest in the Y dimension
+    double const y_end = 1.;
+    // Number of discretization points in the Y dimension
+    size_t const nb_y_points = 100;
+    // Thermal diffusion coefficient
+    double const ky = .002;
+    // Simulated time at which to start simulation
+    double const start_time = 0.;
+    // Simulated time to reach as target of the simulation
+    double const end_time = 10.;
+    // Number of time-steps between outputs
+    size_t const t_output_period = 10;
+    //! [parameters]
 
     //! [main-start]
     //! [X-parameters]

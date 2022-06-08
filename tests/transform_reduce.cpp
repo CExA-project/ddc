@@ -101,16 +101,19 @@ TEST(TransformReduceKokkos, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
     Chunk<int, DDomX> storage(dom);
-    ChunkSpan chunk(storage.span_view());
-    int count = 0;
-    for_each(dom, [&](ElemX const ix) { chunk(ix) = count++; });
+    ChunkSpan const chunk(storage.span_view());
+    Kokkos::View<int> count("count");
+    Kokkos::deep_copy(count, 0);
+    for_each(
+            dom,
+            DDC_LAMBDA(ElemX const ix) { chunk(ix) = Kokkos::atomic_fetch_add(&count(), 1); });
     ASSERT_EQ(
             transform_reduce(
                     policies::kokkos,
                     dom,
                     0,
                     reducer::sum<int>(),
-                    [&](ElemX const ix) { return chunk(ix); }),
+                    DDC_LAMBDA(ElemX const ix) { return chunk(ix); }),
             dom.size() * (dom.size() - 1) / 2);
 }
 
@@ -118,15 +121,18 @@ TEST(TransformReduceKokkos, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     Chunk<int, DDomXY> storage(dom);
-    ChunkSpan chunk(storage.span_view());
-    int count = 0;
-    for_each(dom, [&](ElemXY const ixy) { chunk(ixy) = count++; });
+    ChunkSpan const chunk(storage.span_view());
+    Kokkos::View<int> count("count");
+    Kokkos::deep_copy(count, 0);
+    for_each(
+            dom,
+            DDC_LAMBDA(ElemXY const ixy) { chunk(ixy) = Kokkos::atomic_fetch_add(&count(), 1); });
     ASSERT_EQ(
             transform_reduce(
                     policies::kokkos,
                     dom,
                     0,
                     reducer::sum<int>(),
-                    [&](ElemXY const ixy) { return chunk(ixy); }),
+                    DDC_LAMBDA(ElemXY const ixy) { return chunk(ixy); }),
             dom.size() * (dom.size() - 1) / 2);
 }

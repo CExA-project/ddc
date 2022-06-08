@@ -17,17 +17,20 @@
 namespace detail {
 
 template <class F, class... DDims>
-struct ForEachKokkosLambdaAdapter
+class ForEachKokkosLambdaAdapter
 {
-    ForEachKokkosLambdaAdapter(F const& f) : m_f(f) {}
-
-    template <class... Args>
-    DDC_FORCEINLINE_FUNCTION void operator()(Args... args) const
-    {
-        m_f(DiscreteCoordinate<DDims...>(args...));
-    }
+    template <class T>
+    using index_type = std::size_t;
 
     F m_f;
+
+public:
+    ForEachKokkosLambdaAdapter(F const& f) : m_f(f) {}
+
+    DDC_FORCEINLINE_FUNCTION void operator()(index_type<DDims>... ids) const
+    {
+        m_f(DiscreteCoordinate<DDims...>(ids...));
+    }
 };
 
 template <class Functor, class DDim0>

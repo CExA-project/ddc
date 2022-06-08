@@ -170,22 +170,22 @@ class TransformReducerKokkosLambdaAdapter
     template <class T>
     using index_type = std::size_t;
 
+    Reducer reducer;
+
+    Functor functor;
+
 public:
-    KOKKOS_FORCEINLINE_FUNCTION
+    DDC_FORCEINLINE_FUNCTION
     TransformReducerKokkosLambdaAdapter(Reducer const& r, Functor const& f) : reducer(r), functor(f)
     {
     }
 
-    KOKKOS_FORCEINLINE_FUNCTION void operator()(
+    DDC_FORCEINLINE_FUNCTION void operator()(
             index_type<DDims>... ids,
             typename Reducer::value_type& a) const
     {
         a = reducer(a, functor(DiscreteCoordinate<DDims...>(ids...)));
     }
-
-private:
-    Reducer reducer;
-    Functor functor;
 };
 
 /** A parallel reduction over a nD domain using the default Kokkos execution space

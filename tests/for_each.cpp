@@ -67,15 +67,17 @@ TEST(ForEachKokkos, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
     Chunk<int, DDomX> storage(dom);
+    Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
     ChunkSpan view(storage.span_view());
     for_each(
             policies::kokkos,
             dom,
             DDC_LAMBDA(ElemX const ix) { view(ix) += 1; });
+    int const* const ptr = storage.data();
     int sum;
     Kokkos::parallel_reduce(
             dom.size(),
-            [ptr = storage.data()](std::size_t i, int& local_sum) { local_sum += ptr[i]; },
+            KOKKOS_LAMBDA(std::size_t i, int& local_sum) { local_sum += ptr[i]; },
             Kokkos::Sum<int>(sum));
     ASSERT_EQ(sum, dom.size());
 }
@@ -84,15 +86,17 @@ TEST(ForEachKokkos, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     Chunk<int, DDomXY> storage(dom);
+    Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
     ChunkSpan view(storage.span_view());
     for_each(
             policies::kokkos,
             dom,
             DDC_LAMBDA(ElemXY const ixy) { view(ixy) += 1; });
+    int const* const ptr = storage.data();
     int sum;
     Kokkos::parallel_reduce(
             dom.size(),
-            [ptr = storage.data()](std::size_t i, int& local_sum) { local_sum += ptr[i]; },
+            KOKKOS_LAMBDA(std::size_t i, int& local_sum) { local_sum += ptr[i]; },
             Kokkos::Sum<int>(sum));
     ASSERT_EQ(sum, dom.size());
 }

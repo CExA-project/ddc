@@ -17,9 +17,9 @@
 namespace detail {
 
 template <class F, class... DDims>
-struct KokkosLambda
+struct ForEachKokkosLambdaAdapter
 {
-    KokkosLambda(F const& f) : m_f(f) {}
+    ForEachKokkosLambdaAdapter(F const& f) : m_f(f) {}
 
     template <class... Args>
     DDC_FORCEINLINE_FUNCTION void operator()(Args... args) const
@@ -37,7 +37,7 @@ inline void for_each_kokkos(DiscreteDomain<DDim0> const& domain, Functor const& 
             Kokkos::RangePolicy<>(
                     select<DDim0>(domain).front().uid(),
                     select<DDim0>(domain).back().uid() + 1),
-            KokkosLambda<Functor, DDim0>(f));
+            ForEachKokkosLambdaAdapter<Functor, DDim0>(f));
 }
 
 template <class Functor, class DDim0, class DDim1, class... DDims>
@@ -55,7 +55,7 @@ inline void for_each_kokkos(
                  (select<DDims>(domain).back().uid() + 1)...};
     Kokkos::parallel_for(
             Kokkos::MDRangePolicy<Kokkos::Rank<2 + sizeof...(DDims)>>(begin, end),
-            KokkosLambda<Functor, DDim0, DDim1, DDims...>(f));
+            ForEachKokkosLambdaAdapter<Functor, DDim0, DDim1, DDims...>(f));
 }
 
 template <class RetType, class Element, std::size_t N, class Functor, class... Is>

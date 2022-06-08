@@ -62,3 +62,37 @@ TEST(ForEachOmp, TwoDimensions)
     for_each(policies::omp, dom, [=](ElemXY const ixy) { view(ixy) += 1; });
     ASSERT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
+
+TEST(ForEachKokkos, OneDimension)
+{
+    DDomX const dom(lbound_x, nelems_x);
+    Chunk<int, DDomX> storage(dom);
+    ChunkSpan view(storage.span_view());
+    for_each(
+            policies::kokkos,
+            dom,
+            DDC_LAMBDA(ElemX const ix) { view(ix) += 1; });
+    int sum;
+    Kokkos::parallel_reduce(
+            dom.size(),
+            [ptr = storage.data()](std::size_t i, int& local_sum) { local_sum += ptr[i]; },
+            Kokkos::Sum<int>(sum));
+    ASSERT_EQ(sum, dom.size());
+}
+
+TEST(ForEachKokkos, TwoDimensions)
+{
+    DDomXY const dom(lbound_x_y, nelems_x_y);
+    Chunk<int, DDomXY> storage(dom);
+    ChunkSpan view(storage.span_view());
+    for_each(
+            policies::kokkos,
+            dom,
+            DDC_LAMBDA(ElemXY const ixy) { view(ixy) += 1; });
+    int sum;
+    Kokkos::parallel_reduce(
+            dom.size(),
+            [ptr = storage.data()](std::size_t i, int& local_sum) { local_sum += ptr[i]; },
+            Kokkos::Sum<int>(sum));
+    ASSERT_EQ(sum, dom.size());
+}

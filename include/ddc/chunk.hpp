@@ -8,7 +8,7 @@
 #include "ddc/chunk_span.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
-template <class ElementType, class, class Allocator = DeviceAllocator<ElementType>>
+template <class ElementType, class, class Allocator = HostAllocator<ElementType>>
 class Chunk;
 
 template <class ElementType, class SupportType, class Allocator>

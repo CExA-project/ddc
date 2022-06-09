@@ -19,7 +19,7 @@ class Chunk;
 template <
         class ElementType,
         class SupportType,
-        class MemorySpace,
+        class MemorySpace = Kokkos::DefaultHostExecutionSpace::memory_space,
         class LayoutStridedPolicy = std::experimental::layout_right>
 class ChunkSpan;
 

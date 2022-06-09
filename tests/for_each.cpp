@@ -63,7 +63,7 @@ TEST(ForEachOmp, TwoDimensions)
     ASSERT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
-TEST(ForEachKokkos, OneDimension)
+static void TestForEachKokkosOneDimension()
 {
     DDomX const dom(lbound_x, nelems_x);
     Chunk<int, DDomX> storage(dom);
@@ -82,7 +82,12 @@ TEST(ForEachKokkos, OneDimension)
     ASSERT_EQ(sum, dom.size());
 }
 
-TEST(ForEachKokkos, TwoDimensions)
+TEST(ForEachKokkos, OneDimension)
+{
+    TestForEachKokkosOneDimension();
+}
+
+static void TestForEachKokkosTwoDimensions()
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     Chunk<int, DDomXY> storage(dom);
@@ -99,4 +104,9 @@ TEST(ForEachKokkos, TwoDimensions)
             KOKKOS_LAMBDA(std::size_t i, int& local_sum) { local_sum += ptr[i]; },
             Kokkos::Sum<int>(sum));
     ASSERT_EQ(sum, dom.size());
+}
+
+TEST(ForEachKokkos, TwoDimensions)
+{
+    TestForEachKokkosTwoDimensions();
 }

@@ -97,7 +97,7 @@ TEST(TransformReduceOmp, TwoDimensions)
             dom.size() * (dom.size() - 1) / 2);
 }
 
-TEST(TransformReduceKokkos, OneDimension)
+static void TestTransformReduceKokkosOneDimension()
 {
     DDomX const dom(lbound_x, nelems_x);
     Chunk<int, DDomX> storage(dom);
@@ -105,6 +105,7 @@ TEST(TransformReduceKokkos, OneDimension)
     Kokkos::View<int> count("count");
     Kokkos::deep_copy(count, 0);
     for_each(
+            policies::kokkos,
             dom,
             DDC_LAMBDA(ElemX const ix) { chunk(ix) = Kokkos::atomic_fetch_add(&count(), 1); });
     ASSERT_EQ(
@@ -117,7 +118,12 @@ TEST(TransformReduceKokkos, OneDimension)
             dom.size() * (dom.size() - 1) / 2);
 }
 
-TEST(TransformReduceKokkos, TwoDimensions)
+TEST(TransformReduceKokkos, OneDimension)
+{
+    TestTransformReduceKokkosOneDimension();
+}
+
+static void TestTransformReduceKokkosTwoDimensions()
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     Chunk<int, DDomXY> storage(dom);
@@ -125,6 +131,7 @@ TEST(TransformReduceKokkos, TwoDimensions)
     Kokkos::View<int> count("count");
     Kokkos::deep_copy(count, 0);
     for_each(
+            policies::kokkos,
             dom,
             DDC_LAMBDA(ElemXY const ixy) { chunk(ixy) = Kokkos::atomic_fetch_add(&count(), 1); });
     ASSERT_EQ(
@@ -135,4 +142,9 @@ TEST(TransformReduceKokkos, TwoDimensions)
                     reducer::sum<int>(),
                     DDC_LAMBDA(ElemXY const ixy) { return chunk(ixy); }),
             dom.size() * (dom.size() - 1) / 2);
+}
+
+TEST(TransformReduceKokkos, TwoDimensions)
+{
+    TestTransformReduceKokkosTwoDimensions();
 }

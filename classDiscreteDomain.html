@@ -104,6 +104,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa86d4b50cf388190d96e63420f9d6909"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a569cda957f2d1a99880d33e31b15acde"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classDiscreteDomain.html#a0bba94400eac40d15381189939c0aaab">mcoord_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a569cda957f2d1a99880d33e31b15acde">back</a> () const noexcept</td></tr>
 <tr class="separator:a569cda957f2d1a99880d33e31b15acde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb8731e38ea2afe693b6db0ba6234d7"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a6bb8731e38ea2afe693b6db0ba6234d7">take_first</a> (<a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a> n) const</td></tr>
+<tr class="separator:a6bb8731e38ea2afe693b6db0ba6234d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a9b27f1810ca6c25fa9b43094e9cda0"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a1a9b27f1810ca6c25fa9b43094e9cda0">take_last</a> (<a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a> n) const</td></tr>
+<tr class="separator:a1a9b27f1810ca6c25fa9b43094e9cda0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff3e4fe2cc70bd189b9307a1f6c57912"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#aff3e4fe2cc70bd189b9307a1f6c57912">remove_first</a> (<a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a> n) const</td></tr>
+<tr class="separator:aff3e4fe2cc70bd189b9307a1f6c57912"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad618ff359510313d84bdb31048e8b222"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#ad618ff359510313d84bdb31048e8b222">remove_last</a> (<a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a> n) const</td></tr>
+<tr class="separator:ad618ff359510313d84bdb31048e8b222"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5fd828fc34ef658b0c9ace19272e3b4"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#ac5fd828fc34ef658b0c9ace19272e3b4">remove</a> (<a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a> n1, <a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a> n2) const</td></tr>
+<tr class="separator:ac5fd828fc34ef658b0c9ace19272e3b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66ea4be74a109fd978ab829b9cf38990"><td class="memTemplParams" colspan="2">template&lt;class... ODDims&gt; </td></tr>
 <tr class="memitem:a66ea4be74a109fd978ab829b9cf38990"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a66ea4be74a109fd978ab829b9cf38990">restrict</a> (<a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; ODDims... &gt; const &amp;odomain) const</td></tr>
 <tr class="separator:a66ea4be74a109fd978ab829b9cf38990"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -704,6 +714,156 @@ template&lt;class... DDims&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6bb8731e38ea2afe693b6db0ba6234d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bb8731e38ea2afe693b6db0ba6234d7">&#9670;&nbsp;</a></span>take_first()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... DDims&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; DDims &gt;::take_first </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1a9b27f1810ca6c25fa9b43094e9cda0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a9b27f1810ca6c25fa9b43094e9cda0">&#9670;&nbsp;</a></span>take_last()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... DDims&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; DDims &gt;::take_last </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aff3e4fe2cc70bd189b9307a1f6c57912"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff3e4fe2cc70bd189b9307a1f6c57912">&#9670;&nbsp;</a></span>remove_first()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... DDims&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; DDims &gt;::remove_first </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad618ff359510313d84bdb31048e8b222"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad618ff359510313d84bdb31048e8b222">&#9670;&nbsp;</a></span>remove_last()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... DDims&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; DDims &gt;::remove_last </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac5fd828fc34ef658b0c9ace19272e3b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5fd828fc34ef658b0c9ace19272e3b4">&#9670;&nbsp;</a></span>remove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... DDims&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; DDims &gt;::remove </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

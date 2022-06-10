@@ -92,7 +92,8 @@ void init_discretization(Args&&... a)
     if (detail::discretization_host<std::remove_cv_t<std::remove_reference_t<IDimImplHost>>>) {
         throw std::runtime_error("Discretization function already initialized.");
     }
-    IDimImplHost* const tmp_host = new IDim(std::forward<Args>(a)...);
+    IDimImplHost* const tmp_host = new IDimImplHost(std::forward<Args>(a)...);
+    detail::discretization_host<IDimImplHost> = tmp_host;
 #if defined(__CUDACC__)
     using IDimImplDevice = typename IDim::template Impl<Kokkos::CudaSpace>;
     IDimImplDevice tmp_device(*tmp_host);

@@ -33,7 +33,7 @@ TEST(TransformReduceSerial, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
     std::vector<int> storage(dom.size(), 0);
-    ChunkSpan<int, DDomX, Kokkos::HostSpace> chunk(storage.data(), dom);
+    ChunkSpan<int, DDomX> chunk(storage.data(), dom);
     int count = 0;
     for_each(dom, [&](ElemX const ix) { chunk(ix) = count++; });
     ASSERT_EQ(
@@ -50,7 +50,7 @@ TEST(TransformReduceSerial, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);
-    ChunkSpan<int, DDomXY, Kokkos::HostSpace> chunk(storage.data(), dom);
+    ChunkSpan<int, DDomXY> chunk(storage.data(), dom);
     int count = 0;
     for_each(dom, [&](ElemXY const ixy) { chunk(ixy) = count++; });
     ASSERT_EQ(
@@ -67,7 +67,7 @@ TEST(TransformReduceOmp, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
     std::vector<int> storage(dom.size(), 0);
-    ChunkSpan<int, DDomX, Kokkos::HostSpace> chunk(storage.data(), dom);
+    ChunkSpan<int, DDomX> chunk(storage.data(), dom);
     int count = 0;
     for_each(dom, [&](ElemX const ix) { chunk(ix) = count++; });
     ASSERT_EQ(
@@ -84,7 +84,7 @@ TEST(TransformReduceOmp, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);
-    ChunkSpan<int, DDomXY, Kokkos::HostSpace> chunk(storage.data(), dom);
+    ChunkSpan<int, DDomXY> chunk(storage.data(), dom);
     int count = 0;
     for_each(dom, [&](ElemXY const ixy) { chunk(ixy) = count++; });
     ASSERT_EQ(

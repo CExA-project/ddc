@@ -11,9 +11,9 @@ using DVectX = DiscreteVector<DDimX>;
 using DDomX = DiscreteDomain<DDimX>;
 
 template <class Datatype>
-using ChunkX = Chunk<Datatype, DDomX, HostAllocator<Datatype>>;
+using ChunkX = Chunk<Datatype, DDomX>;
 template <class Datatype>
-using ChunkSpanX = ChunkSpan<Datatype, DDomX, Kokkos::HostSpace>;
+using ChunkSpanX = ChunkSpan<Datatype, DDomX>;
 
 
 struct DDimY;
@@ -22,7 +22,7 @@ using DVectY = DiscreteVector<DDimY>;
 using DDomY = DiscreteDomain<DDimY>;
 
 template <class Datatype>
-using ChunkY = Chunk<Datatype, DDomY, HostAllocator<Datatype>>;
+using ChunkY = Chunk<Datatype, DDomY>;
 
 
 struct DDimZ;
@@ -36,7 +36,7 @@ using DVectXY = DiscreteVector<DDimX, DDimY>;
 using DDomXY = DiscreteDomain<DDimX, DDimY>;
 
 template <class Datatype>
-using ChunkXY = Chunk<Datatype, DDomXY, HostAllocator<Datatype>>;
+using ChunkXY = Chunk<Datatype, DDomXY>;
 
 
 using ElemYX = DiscreteCoordinate<DDimY, DDimX>;
@@ -44,7 +44,7 @@ using DVectYX = DiscreteVector<DDimY, DDimX>;
 using DDomYX = DiscreteDomain<DDimY, DDimX>;
 
 template <class Datatype>
-using ChunkYX = Chunk<Datatype, DDomYX, HostAllocator<Datatype>>;
+using ChunkYX = Chunk<Datatype, DDomYX>;
 
 
 static ElemX constexpr lbound_x(50);

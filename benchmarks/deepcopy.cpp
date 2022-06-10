@@ -17,7 +17,7 @@ using DVectX = DiscreteVector<DDimX>;
 using DDomX = DiscreteDomain<DDimX>;
 
 template <class Datatype>
-using ChunkSpanX = ChunkSpan<Datatype, DDomX, Kokkos::HostSpace>;
+using ChunkSpanX = ChunkSpan<Datatype, DDomX>;
 
 
 struct DDimY;
@@ -28,7 +28,7 @@ using DVectXY = DiscreteVector<DDimX, DDimY>;
 using DDomXY = DiscreteDomain<DDimX, DDimY>;
 
 template <class Datatype>
-using ChunkSpanXY = ChunkSpan<Datatype, DDomXY, Kokkos::HostSpace>;
+using ChunkSpanXY = ChunkSpan<Datatype, DDomXY>;
 
 
 // Let say 1MB cache

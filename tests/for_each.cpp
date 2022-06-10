@@ -66,11 +66,11 @@ TEST(ForEachOmp, TwoDimensions)
 static void TestForEachKokkosOneDimension()
 {
     DDomX const dom(lbound_x, nelems_x);
-    Chunk<int, DDomX> storage(dom);
+    Chunk<int, DDomX, DeviceAllocator<int>> storage(dom);
     Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
     ChunkSpan view(storage.span_view());
     for_each(
-            policies::kokkos,
+            policies::parallel_device,
             dom,
             DDC_LAMBDA(ElemX const ix) { view(ix) += 1; });
     int const* const ptr = storage.data();
@@ -90,11 +90,11 @@ TEST(ForEachKokkos, OneDimension)
 static void TestForEachKokkosTwoDimensions()
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
-    Chunk<int, DDomXY> storage(dom);
+    Chunk<int, DDomXY, DeviceAllocator<int>> storage(dom);
     Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
     ChunkSpan view(storage.span_view());
     for_each(
-            policies::kokkos,
+            policies::parallel_device,
             dom,
             DDC_LAMBDA(ElemXY const ixy) { view(ixy) += 1; });
     int const* const ptr = storage.data();

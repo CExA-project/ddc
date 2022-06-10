@@ -100,17 +100,17 @@ TEST(TransformReduceOmp, TwoDimensions)
 static void TestTransformReduceKokkosOneDimension()
 {
     DDomX const dom(lbound_x, nelems_x);
-    Chunk<int, DDomX> storage(dom);
+    Chunk<int, DDomX, DeviceAllocator<int>> storage(dom);
     ChunkSpan const chunk(storage.span_view());
     Kokkos::View<int> count("count");
     Kokkos::deep_copy(count, 0);
     for_each(
-            policies::kokkos,
+            policies::parallel_device,
             dom,
             DDC_LAMBDA(ElemX const ix) { chunk(ix) = Kokkos::atomic_fetch_add(&count(), 1); });
     ASSERT_EQ(
             transform_reduce(
-                    policies::kokkos,
+                    policies::parallel_device,
                     dom,
                     0,
                     reducer::sum<int>(),
@@ -126,17 +126,17 @@ TEST(TransformReduceKokkos, OneDimension)
 static void TestTransformReduceKokkosTwoDimensions()
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
-    Chunk<int, DDomXY> storage(dom);
+    Chunk<int, DDomXY, DeviceAllocator<int>> storage(dom);
     ChunkSpan const chunk(storage.span_view());
     Kokkos::View<int> count("count");
     Kokkos::deep_copy(count, 0);
     for_each(
-            policies::kokkos,
+            policies::parallel_device,
             dom,
             DDC_LAMBDA(ElemXY const ixy) { chunk(ixy) = Kokkos::atomic_fetch_add(&count(), 1); });
     ASSERT_EQ(
             transform_reduce(
-                    policies::kokkos,
+                    policies::parallel_device,
                     dom,
                     0,
                     reducer::sum<int>(),

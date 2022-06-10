@@ -60,9 +60,12 @@ void display(double time, ChunkType temp)
                    + get_domain<DDimY>(temp).size() / 2];
     std::cout << "  * temperature[y:"
               << get_domain<DDimY>(temp).size() / 2 << "] = {";
-    for_each(policies::serial, get_domain<DDimX>(temp), [&](auto&& ix) {
-        std::cout << std::setw(6) << temp_slice(ix);
-    });
+    for_each(
+            policies::serial_host,
+            get_domain<DDimX>(temp),
+            [&](auto&& ix) {
+                std::cout << std::setw(6) << temp_slice(ix);
+            });
     std::cout << " }" << std::endl;
 }
 //! [display]
@@ -192,22 +195,24 @@ int main(int argc, char** argv)
     //! [data allocation]
     // Maps temperature into the full domain (including ghosts) twice:
     // - once for the last fully computed time-step
-    Chunk<double, DiscreteDomain<DDimX, DDimY>> ghosted_last_temp(
-            DiscreteDomain<
-                    DDimX,
-                    DDimY>(ghosted_x_domain, ghosted_y_domain));
+    Chunk<double, DiscreteDomain<DDimX, DDimY>, DeviceAllocator<double>>
+            ghosted_last_temp(
+                    DiscreteDomain<
+                            DDimX,
+                            DDimY>(ghosted_x_domain, ghosted_y_domain));
     // - once for time-step being computed
-    Chunk<double, DiscreteDomain<DDimX, DDimY>> ghosted_next_temp(
-            DiscreteDomain<
-                    DDimX,
-                    DDimY>(ghosted_x_domain, ghosted_y_domain));
+    Chunk<double, DiscreteDomain<DDimX, DDimY>, DeviceAllocator<double>>
+            ghosted_next_temp(
+                    DiscreteDomain<
+                            DDimX,
+                            DDimY>(ghosted_x_domain, ghosted_y_domain));
     //! [data allocation]
 
     //! [initial-conditions]
     auto ghosted_last_temp_ = ghosted_last_temp.span_view();
     // Initialize the temperature on the main domain
     for_each(
-            policies::kokkos,
+            policies::parallel_device,
             DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             DDC_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
                 double const x = to_real(select<DDimX>(ixy));
@@ -217,9 +222,7 @@ int main(int argc, char** argv)
             });
     //! [initial-conditions]
 
-    Chunk<double,
-          DiscreteDomain<DDimX, DDimY>,
-          KokkosAllocator<double, Kokkos::HostSpace>>
+    Chunk<double, DiscreteDomain<DDimX, DDimY>, HostAllocator<double>>
             ghosted_temp(DiscreteDomain<
                          DDimX,
                          DDimY>(ghosted_x_domain, ghosted_y_domain));
@@ -267,7 +270,7 @@ int main(int argc, char** argv)
         //! [numerical scheme]
         // Stencil computation on the main domain
         for_each(
-                policies::kokkos,
+                policies::parallel_device,
                 next_temp.domain(),
                 DDC_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
                     DiscreteCoordinate<DDimX> const ix

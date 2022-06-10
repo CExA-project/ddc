@@ -23,7 +23,7 @@ void blinker_init(
                 Kokkos::DefaultExecutionSpace::memory_space> cells)
 {
     for_each(
-            policies::kokkos,
+            policies::parallel_device,
             domain,
             DDC_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
                 DiscreteCoordinate<DDimX> const ix = select<DDimX>(ixy);
@@ -40,17 +40,12 @@ void blinker_init(
 template <class ElementType, class DDimX, class DDimY>
 std::ostream& print_2DChunk(
         std::ostream& os,
-        ChunkSpan<
-                ElementType,
-                DiscreteDomain<DDimX, DDimY>,
-                Kokkos::HostSpace> chunk)
+        ChunkSpan<ElementType, DiscreteDomain<DDimX, DDimY>> chunk)
 {
     for_each(
-            policies::serial,
             select<DDimY>(chunk.domain()),
             [&](DiscreteCoordinate<DDimY> const iy) {
                 for_each(
-                        policies::serial,
                         select<DDimX>(chunk.domain()),
                         [&](DiscreteCoordinate<DDimX> const ix) {
                             os << (chunk(ix, iy) ? "*" : ".");
@@ -93,7 +88,7 @@ int main()
         print_2DChunk(std::cout, cells_in_host_alloc.span_cview())
                 << "\n";
         for_each(
-                policies::kokkos,
+                policies::parallel_device,
                 inner_domain_xy,
                 DDC_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
                     DiscreteCoordinate<DDimX> const ix

@@ -33,17 +33,17 @@ public:
     }
 };
 
-template <class Functor, class DDim0>
+template <class ExecSpace, class Functor, class DDim0>
 inline void for_each_kokkos(DiscreteDomain<DDim0> const& domain, Functor const& f) noexcept
 {
     Kokkos::parallel_for(
-            Kokkos::RangePolicy<>(
+            Kokkos::RangePolicy<ExecSpace>(
                     select<DDim0>(domain).front().uid(),
                     select<DDim0>(domain).back().uid() + 1),
             ForEachKokkosLambdaAdapter<Functor, DDim0>(f));
 }
 
-template <class Functor, class DDim0, class DDim1, class... DDims>
+template <class ExecSpace, class Functor, class DDim0, class DDim1, class... DDims>
 inline void for_each_kokkos(
         DiscreteDomain<DDim0, DDim1, DDims...> const& domain,
         Functor&& f) noexcept
@@ -57,7 +57,12 @@ inline void for_each_kokkos(
                  (select<DDim1>(domain).back().uid() + 1),
                  (select<DDims>(domain).back().uid() + 1)...};
     Kokkos::parallel_for(
-            Kokkos::MDRangePolicy<Kokkos::Rank<2 + sizeof...(DDims)>>(begin, end),
+            Kokkos::MDRangePolicy<
+                    ExecSpace,
+                    Kokkos::Rank<
+                            2 + sizeof...(DDims),
+                            Kokkos::Iterate::Right,
+                            Kokkos::Iterate::Right>>(begin, end),
             ForEachKokkosLambdaAdapter<Functor, DDim0, DDim1, DDims...>(f));
 }
 
@@ -98,17 +103,20 @@ inline void for_each_omp(
 
 } // namespace detail
 
-/// Serial execution
-struct serial_policy
+/// Serial execution on the host
+struct serial_host_policy
 {
 };
+
+/// Serial execution on the host
+using serial_policy = serial_host_policy;
 
 /** iterates over a nD domain using the serial execution policy
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
 template <class... DDims, class Functor>
-inline void for_each(serial_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
+inline void for_each(serial_host_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
     detail::for_each_serial<DiscreteCoordinate<DDims...>>(
             detail::array(domain.front()),
@@ -121,7 +129,7 @@ inline void for_each(serial_policy, DiscreteDomain<DDims...> const& domain, Func
  * @param[in] f      a functor taking an index as parameter
  */
 template <class... DDims, class Functor>
-inline void for_each_n(serial_policy, DiscreteVector<DDims...> const& extent, Functor&& f) noexcept
+inline void for_each_n(serial_host_policy, DiscreteVector<DDims...> const& extent, Functor&& f) noexcept
 {
     detail::for_each_serial<DiscreteVector<DDims...>>(
             std::array<DiscreteVectorElement, sizeof...(DDims)> {},
@@ -129,10 +137,28 @@ inline void for_each_n(serial_policy, DiscreteVector<DDims...> const& extent, Fu
             std::forward<Functor>(f));
 }
 
+/// Parallel execution on the default device
+struct parallel_host_policy
+{
+};
+
 /// OpenMP parallel execution on the outer loop with default scheduling
 struct omp_policy
 {
 };
+
+/** iterates over a nD domain using the serial execution policy
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking an index as parameter
+ */
+template <class... DDims, class Functor>
+inline void for_each(
+        parallel_host_policy,
+        DiscreteDomain<DDims...> const& domain,
+        Functor&& f) noexcept
+{
+    detail::for_each_kokkos<Kokkos::DefaultHostExecutionSpace>(domain, std::forward<Functor>(f));
+}
 
 /** iterates over a nD domain using the OpenMP execution policy
  * @param[in] domain the domain over which to iterate
@@ -161,18 +187,21 @@ inline void for_each_n(omp_policy, DiscreteVector<DDims...> const& extent, Funct
 }
 
 /// Kokkos parallel execution uisng MDRange policy
-struct kokkos_policy
+struct parallel_device_policy
 {
 };
 
-/** iterates over a nD domain using the serial execution policy
+/** iterates over a nD domain using the parallel_device_policy execution policy
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
 template <class... DDims, class Functor>
-inline void for_each(kokkos_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
+inline void for_each(
+        parallel_device_policy,
+        DiscreteDomain<DDims...> const& domain,
+        Functor&& f) noexcept
 {
-    detail::for_each_kokkos(domain, std::forward<Functor>(f));
+    detail::for_each_kokkos<Kokkos::DefaultExecutionSpace>(domain, std::forward<Functor>(f));
 }
 
 using default_policy = serial_policy;
@@ -181,7 +210,9 @@ namespace policies {
 
 inline constexpr omp_policy omp;
 inline constexpr serial_policy serial;
-inline constexpr kokkos_policy kokkos;
+inline constexpr serial_host_policy serial_host;
+inline constexpr parallel_host_policy parallel_host;
+inline constexpr parallel_device_policy parallel_device;
 
 }; // namespace policies
 

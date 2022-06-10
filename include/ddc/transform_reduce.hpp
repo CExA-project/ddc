@@ -196,7 +196,7 @@ public:
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
-template <class DDim0, class T, class BinaryReductionOp, class UnaryTransformOp>
+template <class ExecSpace, class DDim0, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce_kokkos(
         DiscreteDomain<DDim0> const& domain,
         T neutral,
@@ -205,7 +205,7 @@ inline T transform_reduce_kokkos(
 {
     T result = neutral;
     Kokkos::parallel_reduce(
-            Kokkos::RangePolicy<>(
+            Kokkos::RangePolicy<ExecSpace>(
                     select<DDim0>(domain).front().uid(),
                     select<DDim0>(domain).back().uid() + 1),
             TransformReducerKokkosLambdaAdapter<
@@ -225,6 +225,7 @@ inline T transform_reduce_kokkos(
  *            range. The return type must be acceptable as input to reduce
  */
 template <
+        class ExecSpace,
         class DDim0,
         class DDim1,
         class... DDims,
@@ -247,7 +248,7 @@ inline T transform_reduce_kokkos(
                  select<DDim1>(domain).back().uid() + 1,
                  (select<DDims>(domain).back().uid() + 1)...};
     Kokkos::parallel_reduce(
-            Kokkos::MDRangePolicy<Kokkos::Rank<2 + sizeof...(DDims)>>(begin, end),
+            Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2 + sizeof...(DDims)>>(begin, end),
             TransformReducerKokkosLambdaAdapter<
                     BinaryReductionOp,
                     UnaryTransformOp,
@@ -271,7 +272,7 @@ inline T transform_reduce_kokkos(
  */
 template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce(
-        [[maybe_unused]] serial_policy policy,
+        [[maybe_unused]] serial_host_policy policy,
         DiscreteDomain<DDims...> const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
@@ -281,6 +282,36 @@ inline T transform_reduce(
     DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
 #endif
     return detail::transform_reduce_serial(
+            domain,
+            neutral,
+            std::forward<BinaryReductionOp>(reduce),
+            std::forward<UnaryTransformOp>(transform));
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+    DDC_NV_DIAG_DEFAULT(implicit_return_from_non_void_function)
+#endif
+}
+
+/** A reduction over a nD domain using the Kokkos execution policy
+ * @param[in] policy the execution policy to use
+ * @param[in] domain the range over which to apply the algorithm
+ * @param[in] neutral the neutral element of the reduction operation
+ * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
+ *            results of transform, the results of other reduce and neutral.
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be acceptable as input to reduce
+ */
+template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
+inline T transform_reduce(
+        [[maybe_unused]] parallel_host_policy policy,
+        DiscreteDomain<DDims...> const& domain,
+        T neutral,
+        BinaryReductionOp&& reduce,
+        UnaryTransformOp&& transform) noexcept
+{
+#if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
+    DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
+#endif
+    return detail::transform_reduce_kokkos<Kokkos::DefaultHostExecutionSpace>(
             domain,
             neutral,
             std::forward<BinaryReductionOp>(reduce),
@@ -331,7 +362,7 @@ inline T transform_reduce(
  */
 template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce(
-        [[maybe_unused]] kokkos_policy policy,
+        [[maybe_unused]] parallel_device_policy policy,
         DiscreteDomain<DDims...> const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
@@ -340,7 +371,7 @@ inline T transform_reduce(
 #if defined(DDC_INTERNAL_FIX_NVCC_IF_CONSTEXPR)
     DDC_NV_DIAG_SUPPRESS(implicit_return_from_non_void_function)
 #endif
-    return detail::transform_reduce_kokkos(
+    return detail::transform_reduce_kokkos<Kokkos::DefaultExecutionSpace>(
             domain,
             neutral,
             std::forward<BinaryReductionOp>(reduce),

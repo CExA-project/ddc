@@ -116,7 +116,10 @@ using serial_policy = serial_host_policy;
  * @param[in] f      a functor taking an index as parameter
  */
 template <class... DDims, class Functor>
-inline void for_each(serial_host_policy, DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
+inline void for_each(
+        serial_host_policy,
+        DiscreteDomain<DDims...> const& domain,
+        Functor&& f) noexcept
 {
     detail::for_each_serial<DiscreteCoordinate<DDims...>>(
             detail::array(domain.front()),
@@ -129,7 +132,10 @@ inline void for_each(serial_host_policy, DiscreteDomain<DDims...> const& domain,
  * @param[in] f      a functor taking an index as parameter
  */
 template <class... DDims, class Functor>
-inline void for_each_n(serial_host_policy, DiscreteVector<DDims...> const& extent, Functor&& f) noexcept
+inline void for_each_n(
+        serial_host_policy,
+        DiscreteVector<DDims...> const& extent,
+        Functor&& f) noexcept
 {
     detail::for_each_serial<DiscreteVector<DDims...>>(
             std::array<DiscreteVectorElement, sizeof...(DDims)> {},

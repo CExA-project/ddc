@@ -30,6 +30,29 @@ auto extract_after(Tuple&& t, std::index_sequence<Ids...>)
     return std::make_tuple(std::move(std::get<Ids + 1>(t))...);
 }
 
+template <class IDim>
+void init_discretization_devices()
+{
+#if defined(__CUDACC__)
+    using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
+    using IDimImplDevice = typename IDim::template Impl<Kokkos::CudaSpace>;
+    discretization_host<IDimImplDevice> = new IDimImplDevice(*discretization_host<IDimImplHost>);
+    IDimImplDevice* ptr_device;
+    cudaMalloc(&ptr_device, sizeof(IDimImplDevice));
+    cudaMemcpy(
+            (void*)ptr_device,
+            discretization_host<IDimImplDevice>,
+            sizeof(IDimImplDevice),
+            cudaMemcpyDefault);
+    cudaMemcpyToSymbol(
+            discretization_device<IDimImplDevice>,
+            &ptr_device,
+            sizeof(IDimImplDevice*),
+            0,
+            cudaMemcpyDefault);
+#endif
+}
+
 } // namespace detail
 
 template <class IDimImpl, class Arg>
@@ -40,21 +63,8 @@ Arg init_discretization(std::tuple<IDimImpl, Arg>&& a)
     if (detail::discretization_host<IDimImplHost>) {
         throw std::runtime_error("Discretization function already initialized.");
     }
-    IDimImplHost* const tmp_host = new IDimImplHost(std::move(std::get<0>(a)));
-    detail::discretization_host<IDimImplHost> = tmp_host;
-#if defined(__CUDACC__)
-    using IDimImplDevice = typename IDim::template Impl<Kokkos::CudaSpace>;
-    IDimImplDevice tmp_device(*tmp_host);
-    IDimImplDevice* ptr_device;
-    cudaMalloc(&ptr_device, sizeof(IDimImplDevice));
-    cudaMemcpy((void*)ptr_device, &tmp_device, sizeof(IDimImplDevice), cudaMemcpyDefault);
-    cudaMemcpyToSymbol(
-            detail::discretization_device<IDimImplDevice>,
-            &ptr_device,
-            sizeof(IDimImplDevice*),
-            0,
-            cudaMemcpyDefault);
-#endif
+    detail::discretization_host<IDimImplHost> = new IDimImplHost(std::move(std::get<0>(a)));
+    detail::init_discretization_devices<IDim>();
     return std::get<1>(a);
 }
 
@@ -67,21 +77,8 @@ std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_discretization(
     if (detail::discretization_host<IDimImplHost>) {
         throw std::runtime_error("Discretization function already initialized.");
     }
-    IDimImplHost* const tmp_host = new IDimImplHost(std::move(std::get<0>(a)));
-    detail::discretization_host<IDimImplHost> = tmp_host;
-#if defined(__CUDACC__)
-    using IDimImplDevice = typename IDim::template Impl<Kokkos::CudaSpace>;
-    IDimImplDevice tmp_device(*tmp_host);
-    IDimImplDevice* ptr_device;
-    cudaMalloc(&ptr_device, sizeof(IDimImplDevice));
-    cudaMemcpy((void*)ptr_device, &tmp_device, sizeof(IDimImplDevice), cudaMemcpyDefault);
-    cudaMemcpyToSymbol(
-            detail::discretization_device<IDimImplDevice>,
-            &ptr_device,
-            sizeof(IDimImplDevice*),
-            0,
-            cudaMemcpyDefault);
-#endif
+    detail::discretization_host<IDimImplHost> = new IDimImplHost(std::move(std::get<0>(a)));
+    detail::init_discretization_devices<IDim>();
     return detail::extract_after(std::move(a), std::index_sequence_for<Args...>());
 }
 
@@ -92,21 +89,8 @@ void init_discretization(Args&&... a)
     if (detail::discretization_host<std::remove_cv_t<std::remove_reference_t<IDimImplHost>>>) {
         throw std::runtime_error("Discretization function already initialized.");
     }
-    IDimImplHost* const tmp_host = new IDimImplHost(std::forward<Args>(a)...);
-    detail::discretization_host<IDimImplHost> = tmp_host;
-#if defined(__CUDACC__)
-    using IDimImplDevice = typename IDim::template Impl<Kokkos::CudaSpace>;
-    IDimImplDevice tmp_device(*tmp_host);
-    IDimImplDevice* ptr_device;
-    cudaMalloc(&ptr_device, sizeof(IDimImplDevice));
-    cudaMemcpy((void*)ptr_device, &tmp_device, sizeof(IDimImplDevice), cudaMemcpyDefault);
-    cudaMemcpyToSymbol(
-            detail::discretization_device<IDimImplDevice>,
-            &ptr_device,
-            sizeof(IDimImplDevice*),
-            0,
-            cudaMemcpyDefault);
-#endif
+    detail::discretization_host<IDimImplHost> = new IDimImplHost(std::forward<Args>(a)...);
+    detail::init_discretization_devices<IDim>();
 }
 
 template <class IDim>

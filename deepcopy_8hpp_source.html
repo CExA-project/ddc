@@ -54,22 +54,22 @@ $(document).ready(function(){initNavTree('deepcopy_8hpp_source.html',''); initRe
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;ddc/chunk_span.hpp&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;ddc/for_each.hpp&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> ChunkDst, <span class="keyword">class</span> ChunkSrc&gt;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">inline</span> ChunkDst <span class="keyword">const</span>&amp; deepcopy(ChunkDst&amp;&amp; to, ChunkSrc&amp;&amp; from) noexcept</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    static_assert(is_chunk_v&lt;ChunkDst&gt;);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    static_assert(is_chunk_v&lt;ChunkSrc&gt;);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    static_assert(</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            std::is_assignable_v&lt;decltype(*to.data()), decltype(*from.data())&gt;,</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;            <span class="stringliteral">&quot;Not assignable&quot;</span>);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    assert(to.domain().extents() == from.domain().extents());</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    for_each_n(to.domain().extents(), [&amp;to, &amp;from](<span class="keyword">auto</span>&amp;&amp; idx) {</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        to(to.domain().front() + idx) = from(from.domain().front() + idx);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    });</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> to;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;ddc/chunk_span.hpp&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;ddc/for_each.hpp&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> ChunkDst, <span class="keyword">class</span> ChunkSrc&gt;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">inline</span> ChunkDst <span class="keyword">const</span>&amp; deepcopy(ChunkDst&amp;&amp; dst, ChunkSrc&amp;&amp; src) noexcept</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    static_assert(is_chunk_v&lt;ChunkDst&gt;);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    static_assert(is_chunk_v&lt;ChunkSrc&gt;);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    static_assert(</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;            std::is_assignable_v&lt;decltype(*dst.data()), decltype(*src.data())&gt;,</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            <span class="stringliteral">&quot;Not assignable&quot;</span>);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    assert(dst.domain().extents() == src.domain().extents());</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    Kokkos::deep_copy(dst.allocation_kokkos_view(), src.allocation_kokkos_view());</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> dst;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

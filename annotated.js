@@ -19,7 +19,7 @@ var annotated =
     [ "ChunkCommon", "namespace_3globalScope_4.html#classChunkCommon", null ],
     [ "ChunkCommon< ElementType, DiscreteDomain< DDims... >, LayoutStridedPolicy >", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4" ],
     [ "ChunkSpan", "namespace_3globalScope_4.html#classChunkSpan", null ],
-    [ "ChunkSpan< ElementType, DiscreteDomain< DDims... >, LayoutStridedPolicy >", "classChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html", "classChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4" ],
+    [ "ChunkSpan< ElementType, DiscreteDomain< DDims... >, LayoutStridedPolicy, MemorySpace >", "classChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html", "classChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4" ],
     [ "ConversionOperators", "namespace_3globalScope_4.html#classConversionOperators", null ],
     [ "ConversionOperators< DiscreteVector< Tag > >", "classConversionOperators_3_01DiscreteVector_3_01Tag_01_4_01_4.html", "classConversionOperators_3_01DiscreteVector_3_01Tag_01_4_01_4" ],
     [ "DiscreteCoordinate", "classDiscreteCoordinate.html", "classDiscreteCoordinate" ],
@@ -38,9 +38,13 @@ var annotated =
     [ "IsDiscreteCoordinate< DiscreteCoordinate< Tags... > >", "structIsDiscreteCoordinate_3_01DiscreteCoordinate_3_01Tags_8_8_8_01_4_01_4.html", null ],
     [ "IsDiscreteVector", "structIsDiscreteVector.html", null ],
     [ "IsDiscreteVector< DiscreteVector< Tags... > >", "structIsDiscreteVector_3_01DiscreteVector_3_01Tags_8_8_8_01_4_01_4.html", null ],
+    [ "KokkosAllocator", "classKokkosAllocator.html", "classKokkosAllocator" ],
     [ "NonUniformDiscretization", "classNonUniformDiscretization.html", "classNonUniformDiscretization" ],
     [ "omp_policy", "namespace_3globalScope_4.html#structomp__policy", null ],
+    [ "parallel_device_policy", "namespace_3globalScope_4.html#structparallel__device__policy", null ],
+    [ "parallel_host_policy", "namespace_3globalScope_4.html#structparallel__host__policy", null ],
     [ "PdiEvent", "classPdiEvent.html", "classPdiEvent" ],
-    [ "serial_policy", "namespace_3globalScope_4.html#structserial__policy", null ],
+    [ "ScopeGuard", "classScopeGuard.html", "classScopeGuard" ],
+    [ "serial_host_policy", "namespace_3globalScope_4.html#structserial__host__policy", null ],
     [ "UniformDiscretization", "classUniformDiscretization.html", "classUniformDiscretization" ]
 ];

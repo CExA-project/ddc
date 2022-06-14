@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <optional>
 #include <stdexcept>
 
 #include <Kokkos_Core.hpp>

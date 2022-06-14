@@ -20,6 +20,7 @@ void blinker_init(
         ChunkSpan<
                 cell,
                 DiscreteDomain<DDimX, DDimY>,
+                std::experimental::layout_right,
                 Kokkos::DefaultExecutionSpace::memory_space> cells)
 {
     for_each(

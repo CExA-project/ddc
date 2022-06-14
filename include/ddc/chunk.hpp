@@ -30,15 +30,15 @@ public:
     using span_type = ChunkSpan<
             ElementType,
             DiscreteDomain<DDims...>,
-            typename Allocator::memory_space,
-            std::experimental::layout_right>;
+            std::experimental::layout_right,
+            typename Allocator::memory_space>;
 
     /// type of a view of this full chunk
     using view_type = ChunkSpan<
             ElementType const,
             DiscreteDomain<DDims...>,
-            typename Allocator::memory_space,
-            std::experimental::layout_right>;
+            std::experimental::layout_right,
+            typename Allocator::memory_space>;
 
     /// The dereferenceable part of the co-domain but with indexing starting at 0
     using allocation_mdspan_type = typename base_type::allocation_mdspan_type;

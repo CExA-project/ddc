@@ -19,20 +19,20 @@ class Chunk;
 template <
         class ElementType,
         class SupportType,
-        class MemorySpace = Kokkos::DefaultHostExecutionSpace::memory_space,
-        class LayoutStridedPolicy = std::experimental::layout_right>
+        class LayoutStridedPolicy = std::experimental::layout_right,
+        class MemorySpace = Kokkos::DefaultHostExecutionSpace::memory_space>
 class ChunkSpan;
 
-template <class ElementType, class SupportType, class MemorySpace, class LayoutStridedPolicy>
+template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
 inline constexpr bool
-        enable_chunk<ChunkSpan<ElementType, SupportType, MemorySpace, LayoutStridedPolicy>> = true;
+        enable_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>> = true;
 
-template <class ElementType, class SupportType, class MemorySpace, class LayoutStridedPolicy>
+template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
 inline constexpr bool enable_borrowed_chunk<
-        ChunkSpan<ElementType, SupportType, MemorySpace, LayoutStridedPolicy>> = true;
+        ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>> = true;
 
-template <class ElementType, class... DDims, class MemorySpace, class LayoutStridedPolicy>
-class ChunkSpan<ElementType, DiscreteDomain<DDims...>, MemorySpace, LayoutStridedPolicy>
+template <class ElementType, class... DDims, class LayoutStridedPolicy, class MemorySpace>
+class ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy, MemorySpace>
     : public ChunkCommon<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy>
 {
 protected:
@@ -47,14 +47,14 @@ protected:
 public:
     /// type of a span of this full chunk
     using span_type
-            = ChunkSpan<ElementType, DiscreteDomain<DDims...>, MemorySpace, LayoutStridedPolicy>;
+            = ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy, MemorySpace>;
 
     /// type of a view of this full chunk
     using view_type = ChunkSpan<
             ElementType const,
             DiscreteDomain<DDims...>,
-            MemorySpace,
-            LayoutStridedPolicy>;
+            LayoutStridedPolicy,
+            MemorySpace>;
 
     using mdomain_type = DiscreteDomain<DDims...>;
 
@@ -170,7 +170,7 @@ public:
      */
     template <class OElementType>
     constexpr ChunkSpan(
-            ChunkSpan<OElementType, mdomain_type, MemorySpace, layout_type> const& other) noexcept
+            ChunkSpan<OElementType, mdomain_type, layout_type, MemorySpace> const& other) noexcept
         : base_type(other.m_internal_mdspan, other.m_domain)
     {
     }
@@ -239,9 +239,8 @@ public:
         return ::ChunkSpan<
                 ElementType,
                 decltype(select_by_type_seq<selected_meshes>(this->m_domain)),
-                memory_space,
-                typename decltype(subview)::
-                        layout_type>(subview, select_by_type_seq<selected_meshes>(this->m_domain));
+                typename decltype(subview)::layout_type,
+                memory_space>(subview, select_by_type_seq<selected_meshes>(this->m_domain));
     }
 
     /** Slice out some dimensions
@@ -254,8 +253,8 @@ public:
         return ::ChunkSpan<
                 ElementType,
                 decltype(this->m_domain.restrict(odomain)),
-                memory_space,
-                typename decltype(subview)::layout_type>(subview, this->m_domain.restrict(odomain));
+                typename decltype(subview)::layout_type,
+                memory_space>(subview, this->m_domain.restrict(odomain));
     }
 
     /** Element access using a list of DiscreteCoordinate
@@ -333,12 +332,6 @@ public:
     }
 };
 
-template <class ElementType, class... DDims, class Extents, class StridedLayout>
-ChunkSpan(
-        std::experimental::mdspan<ElementType, Extents, StridedLayout> allocation_view,
-        DiscreteDomain<DDims...> domain)
-        -> ChunkSpan<ElementType, DiscreteDomain<DDims...>, StridedLayout>;
-
 template <
         class KokkosView,
         class... DDims,
@@ -346,12 +339,12 @@ template <
 ChunkSpan(KokkosView const& view, DiscreteDomain<DDims...> domain) -> ChunkSpan<
         detail::kokkos_to_mdspan_element_type_t<typename KokkosView::data_type>,
         DiscreteDomain<DDims...>,
-        typename KokkosView::memory_space,
-        detail::mdspan_layout_t<typename KokkosView::array_layout>>;
+        detail::mdspan_layout_t<typename KokkosView::array_layout>,
+        typename KokkosView::memory_space>;
 
 template <
         class ElementType,
         class SupportType,
-        class MemorySpace,
-        class LayoutStridedPolicy = std::experimental::layout_right>
-using ChunkView = ChunkSpan<ElementType const, SupportType, MemorySpace, LayoutStridedPolicy>;
+        class LayoutStridedPolicy = std::experimental::layout_right,
+        class MemorySpace = Kokkos::HostSpace>
+using ChunkView = ChunkSpan<ElementType const, SupportType, LayoutStridedPolicy, MemorySpace>;

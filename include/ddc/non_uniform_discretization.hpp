@@ -130,7 +130,7 @@ template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> to_real(
         DiscreteCoordinate<NonUniformDiscretization<CDim>> const& c)
 {
-#if defined(__CUDA_ARCH__)
+#if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discretization_device<NonUniformDiscretization<CDim>>().to_real(c);
 #else
     return discretization_host<NonUniformDiscretization<CDim>>().to_real(c);

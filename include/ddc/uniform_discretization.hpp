@@ -229,7 +229,7 @@ template <class DDim>
 DDC_INLINE_FUNCTION std::enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::rcoord_type>
 origin() noexcept
 {
-#if defined(__CUDA_ARCH__)
+#if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discretization_device<DDim>().origin();
 #else
     return discretization_host<DDim>().origin();
@@ -241,7 +241,7 @@ template <class DDim>
 DDC_INLINE_FUNCTION std::enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::mcoord_type>
 front() noexcept
 {
-#if defined(__CUDA_ARCH__)
+#if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discretization_device<DDim>().front();
 #else
     return discretization_host<DDim>().front();
@@ -253,7 +253,7 @@ template <class DDim>
 DDC_INLINE_FUNCTION std::enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::rcoord_type>
 step() noexcept
 {
-#if defined(__CUDA_ARCH__)
+#if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discretization_device<DDim>().step();
 #else
     return discretization_host<DDim>().step();
@@ -264,7 +264,7 @@ template <class CDim>
 DDC_INLINE_FUNCTION constexpr Coordinate<CDim> to_real(
         DiscreteCoordinate<UniformDiscretization<CDim>> const& c)
 {
-#if defined(__CUDA_ARCH__)
+#if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discretization_device<UniformDiscretization<CDim>>().to_real(c);
 #else
     return discretization_host<UniformDiscretization<CDim>>().to_real(c);

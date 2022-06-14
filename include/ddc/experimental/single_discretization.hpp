@@ -79,7 +79,7 @@ constexpr bool is_single_discretization_v = is_single_discretization<DDim>::valu
 template <class DDim>
 std::enable_if_t<is_single_discretization_v<DDim>, typename DDim::rcoord_type> origin() noexcept
 {
-#if defined(__CUDA_ARCH__)
+#if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discretization_device<DDim>().origin();
 #else
     return discretization_host<DDim>().origin();
@@ -89,7 +89,7 @@ std::enable_if_t<is_single_discretization_v<DDim>, typename DDim::rcoord_type> o
 template <class CDim>
 Coordinate<CDim> to_real(DiscreteCoordinate<experimental::SingleDiscretization<CDim>> const& c)
 {
-#if defined(__CUDA_ARCH__)
+#if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discretization_device<experimental::SingleDiscretization<CDim>>().to_real(c);
 #else
     return discretization_host<experimental::SingleDiscretization<CDim>>().to_real(c);

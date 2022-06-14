@@ -9,6 +9,9 @@
 #if defined(__CUDACC__)
 #include <cuda.h>
 #endif
+#if defined(__HIPCC__)
+#include <hip/hip_runtime.h>
+#endif
 
 #include "ddc/discrete_coordinate.hpp"
 #include "ddc/discrete_domain.hpp"
@@ -19,9 +22,9 @@ namespace detail {
 template <class IDimImpl>
 inline IDimImpl* discretization_host = nullptr;
 
-#if defined(__CUDACC__)
+#if defined(__CUDACC__) || defined(__HIPCC__)
 template <class IDimImpl>
-inline __device__ IDimImpl* discretization_device = nullptr;
+inline __device__ __constant__ IDimImpl* discretization_device = nullptr;
 #endif
 
 template <class Tuple, std::size_t... Ids>
@@ -33,8 +36,8 @@ auto extract_after(Tuple&& t, std::index_sequence<Ids...>)
 template <class IDim>
 void init_discretization_devices()
 {
-#if defined(__CUDACC__)
     using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
+#if defined(__CUDACC__)
     using IDimImplDevice = typename IDim::template Impl<Kokkos::CudaSpace>;
     discretization_host<IDimImplDevice> = new IDimImplDevice(*discretization_host<IDimImplHost>);
     IDimImplDevice* ptr_device;
@@ -43,13 +46,30 @@ void init_discretization_devices()
             (void*)ptr_device,
             discretization_host<IDimImplDevice>,
             sizeof(IDimImplDevice),
-            cudaMemcpyDefault);
+            cudaMemcpyHostToDevice);
     cudaMemcpyToSymbol(
             discretization_device<IDimImplDevice>,
             &ptr_device,
             sizeof(IDimImplDevice*),
             0,
-            cudaMemcpyDefault);
+            cudaMemcpyHostToDevice);
+#endif
+#if defined(__HIPCC__)
+    using IDimImplDevice = typename IDim::template Impl<Kokkos::Experimental::HIPSpace>;
+    discretization_host<IDimImplDevice> = new IDimImplDevice(*discretization_host<IDimImplHost>);
+    IDimImplDevice* ptr_device;
+    hipMalloc(&ptr_device, sizeof(IDimImplDevice));
+    hipMemcpy(
+            (void*)ptr_device,
+            discretization_host<IDimImplDevice>,
+            sizeof(IDimImplDevice),
+            hipMemcpyHostToDevice);
+    hipMemcpyToSymbol(
+            discretization_device<IDimImplDevice>,
+            &ptr_device,
+            sizeof(IDimImplDevice*),
+            0,
+            hipMemcpyHostToDevice);
 #endif
 }
 
@@ -110,5 +130,13 @@ template <class IDim>
 __device__ inline typename IDim::template Impl<Kokkos::CudaSpace> const& discretization_device()
 {
     return *detail::discretization_device<typename IDim::template Impl<Kokkos::CudaSpace>>;
+}
+#endif
+
+#if defined(__HIPCC__)
+template <class IDim>
+__device__ inline typename IDim::template Impl<Kokkos::Experimental::HIPSpace> const& discretization_device()
+{
+    return *detail::discretization_device<typename IDim::template Impl<Kokkos::Experimental::HIPSpace>>;
 }
 #endif

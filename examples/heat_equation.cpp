@@ -63,7 +63,7 @@ void display(double time, ChunkType temp)
     for_each(
             policies::serial_host,
             get_domain<DDimX>(temp),
-            [&](auto&& ix) {
+            DDC_LAMBDA(auto&& ix) {
                 std::cout << std::setw(6) << temp_slice(ix);
             });
     std::cout << " }" << std::endl;

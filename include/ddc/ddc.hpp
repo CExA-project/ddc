@@ -4,6 +4,7 @@
 #include "ddc/detail/macros.hpp"
 #include "ddc/detail/tagged_vector.hpp"
 #include "ddc/detail/type_seq.hpp"
+#include "ddc/scope_guard.hpp"
 
 // Containers
 #include "ddc/aligned_allocator.hpp"

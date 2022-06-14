@@ -58,7 +58,7 @@ std::ostream& print_2DChunk(
 
 int main()
 {
-    Kokkos::ScopeGuard scope;
+    ScopeGuard scope;
 
     DiscreteDomain<DDimX, DDimY> const domain_xy(
             DiscreteCoordinate<DDimX, DDimY>(0, 0),

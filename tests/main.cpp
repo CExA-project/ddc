@@ -1,10 +1,10 @@
-#include <gtest/gtest.h>
+#include <ddc/ddc.hpp>
 
-#include <Kokkos_Core.hpp>
+#include <gtest/gtest.h>
 
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-    ::Kokkos::ScopeGuard scope(argc, argv);
+    ::ScopeGuard scope(argc, argv);
     return RUN_ALL_TESTS();
 }

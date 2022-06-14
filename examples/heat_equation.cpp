@@ -74,7 +74,7 @@ void display(double time, ChunkType temp)
 //! [main-start]
 int main(int argc, char** argv)
 {
-    Kokkos::ScopeGuard scope(argc, argv);
+    ScopeGuard scope(argc, argv);
 
     // some parameters that would typically be read from some form of
     // configuration file in a more realistic code

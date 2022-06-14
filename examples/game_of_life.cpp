@@ -67,12 +67,9 @@ int main()
             DiscreteCoordinate<DDimX, DDimY>(1, 1),
             DiscreteVector<DDimX, DDimY>(length - 2, height - 2));
 
-    Chunk<cell, DiscreteDomain<DDimX, DDimY>, HostAllocator<cell>>
-            cells_in_host_alloc(domain_xy);
-    Chunk<cell, DiscreteDomain<DDimX, DDimY>, DeviceAllocator<cell>>
-            cells_in_dev_alloc(domain_xy);
-    Chunk<cell, DiscreteDomain<DDimX, DDimY>, DeviceAllocator<cell>>
-            cells_out_dev_alloc(domain_xy);
+    Chunk cells_in_host_alloc(domain_xy, HostAllocator<cell>());
+    Chunk cells_in_dev_alloc(domain_xy, DeviceAllocator<cell>());
+    Chunk cells_out_dev_alloc(domain_xy, DeviceAllocator<cell>());
 
     ChunkSpan cells_in = cells_in_dev_alloc.span_view();
     ChunkSpan cells_out = cells_out_dev_alloc.span_view();

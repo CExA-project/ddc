@@ -195,17 +195,18 @@ int main(int argc, char** argv)
     //! [data allocation]
     // Maps temperature into the full domain (including ghosts) twice:
     // - once for the last fully computed time-step
-    Chunk<double, DiscreteDomain<DDimX, DDimY>, DeviceAllocator<double>>
-            ghosted_last_temp(
-                    DiscreteDomain<
-                            DDimX,
-                            DDimY>(ghosted_x_domain, ghosted_y_domain));
+    Chunk ghosted_last_temp(
+            DiscreteDomain<
+                    DDimX,
+                    DDimY>(ghosted_x_domain, ghosted_y_domain),
+            DeviceAllocator<double>());
+
     // - once for time-step being computed
-    Chunk<double, DiscreteDomain<DDimX, DDimY>, DeviceAllocator<double>>
-            ghosted_next_temp(
-                    DiscreteDomain<
-                            DDimX,
-                            DDimY>(ghosted_x_domain, ghosted_y_domain));
+    Chunk ghosted_next_temp(
+            DiscreteDomain<
+                    DDimX,
+                    DDimY>(ghosted_x_domain, ghosted_y_domain),
+            DeviceAllocator<double>());
     //! [data allocation]
 
     //! [initial-conditions]
@@ -222,10 +223,11 @@ int main(int argc, char** argv)
             });
     //! [initial-conditions]
 
-    Chunk<double, DiscreteDomain<DDimX, DDimY>, HostAllocator<double>>
-            ghosted_temp(DiscreteDomain<
-                         DDimX,
-                         DDimY>(ghosted_x_domain, ghosted_y_domain));
+    Chunk ghosted_temp(
+            DiscreteDomain<
+                    DDimX,
+                    DDimY>(ghosted_x_domain, ghosted_y_domain),
+            HostAllocator<double>());
 
 
     //! [initial output]

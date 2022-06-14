@@ -295,3 +295,7 @@ public:
         return span_type(*this);
     }
 };
+
+template <class... DDims, class Allocator>
+Chunk(DiscreteDomain<DDims...> const&, Allocator)
+        -> Chunk<typename Allocator::value_type, DiscreteDomain<DDims...>, Allocator>;

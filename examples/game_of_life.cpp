@@ -78,10 +78,9 @@ int main()
     blinker_init(domain_xy, cells_in);
     blinker_init(domain_xy, cells_out);
 
-    deepcopy(cells_in_host_alloc, cells_in);
-
     std::size_t iter = 0;
     for (; iter < nt; ++iter) {
+        deepcopy(cells_in_host_alloc, cells_in);
         print_2DChunk(std::cout, cells_in_host_alloc.span_cview())
                 << "\n";
         for_each(
@@ -97,12 +96,6 @@ int main()
                     for (int i = -1; i < 2; ++i) {
                         for (int j = -1; j < 2; j++) {
                             if (cells_in(ix + i, iy + j)) {
-                                // std::printf(
-                                //         "ix : %lu\n | i : %d\n | ix %lu"
-                                //         "+ i : \n",
-                                //         ix.value(),
-                                //         i,
-                                //         (ix + i).value());
                                 alive_neighbors++;
                             }
                         }
@@ -119,8 +112,8 @@ int main()
                     }
                 });
         deepcopy(cells_in, cells_out);
-        deepcopy(cells_in_host_alloc, cells_in);
     }
+    deepcopy(cells_in_host_alloc, cells_in);
     print_2DChunk(std::cout, cells_in_host_alloc.span_cview()) << "\n";
 
     return 0;

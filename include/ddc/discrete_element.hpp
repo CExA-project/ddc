@@ -30,36 +30,36 @@ inline constexpr bool is_discrete_element_v = IsDiscreteElement<T>::value;
 
 /** A DiscreteCoordElement is a scalar that identifies an element of the discrete dimension
  */
-using DiscreteElementElement = std::size_t;
+using DiscreteElementType = std::size_t;
 
 template <class Tag>
-inline constexpr DiscreteElementElement const& uid(DiscreteElement<Tag> const& tuple) noexcept
+inline constexpr DiscreteElementType const& uid(DiscreteElement<Tag> const& tuple) noexcept
 {
     return tuple.uid();
 }
 
 template <class Tag>
-inline constexpr DiscreteElementElement& uid(DiscreteElement<Tag>& tuple) noexcept
+inline constexpr DiscreteElementType& uid(DiscreteElement<Tag>& tuple) noexcept
 {
     return tuple.uid();
 }
 
 template <class QueryTag, class... Tags>
-inline constexpr DiscreteElementElement const& uid(DiscreteElement<Tags...> const& tuple) noexcept
+inline constexpr DiscreteElementType const& uid(DiscreteElement<Tags...> const& tuple) noexcept
 {
     return tuple.template uid<QueryTag>();
 }
 
 template <class QueryTag, class... Tags>
-inline constexpr DiscreteElementElement& uid(DiscreteElement<Tags...>& tuple) noexcept
+inline constexpr DiscreteElementType& uid(DiscreteElement<Tags...>& tuple) noexcept
 {
     return tuple.template uid<QueryTag>();
 }
 
 template <class QueryTag, class... Tags>
-inline constexpr DiscreteElementElement const& uid_or(
+inline constexpr DiscreteElementType const& uid_or(
         DiscreteElement<Tags...> const& tuple,
-        DiscreteElementElement const& default_value) noexcept
+        DiscreteElementType const& default_value) noexcept
 {
     return tuple.template uid_or<QueryTag>(default_value);
 }
@@ -96,7 +96,7 @@ namespace detail {
 
 /// Returns a reference to the underlying `std::array`
 template <class... Tags>
-constexpr inline std::array<DiscreteElementElement, sizeof...(Tags)>& array(
+constexpr inline std::array<DiscreteElementType, sizeof...(Tags)>& array(
         DiscreteElement<Tags...>& v) noexcept
 {
     return v.m_values;
@@ -104,7 +104,7 @@ constexpr inline std::array<DiscreteElementElement, sizeof...(Tags)>& array(
 
 /// Returns a reference to the underlying `std::array`
 template <class... Tags>
-constexpr inline std::array<DiscreteElementElement, sizeof...(Tags)> const& array(
+constexpr inline std::array<DiscreteElementType, sizeof...(Tags)> const& array(
         DiscreteElement<Tags...> const& v) noexcept
 {
     return v.m_values;
@@ -121,17 +121,17 @@ class DiscreteElement
 {
     using tags_seq = detail::TypeSeq<Tags...>;
 
-    friend constexpr std::array<DiscreteElementElement, sizeof...(Tags)>& detail::array<Tags...>(
+    friend constexpr std::array<DiscreteElementType, sizeof...(Tags)>& detail::array<Tags...>(
             DiscreteElement<Tags...>& v) noexcept;
 
-    friend constexpr std::array<DiscreteElementElement, sizeof...(Tags)> const& detail::array<
-            Tags...>(DiscreteElement<Tags...> const& v) noexcept;
+    friend constexpr std::array<DiscreteElementType, sizeof...(Tags)> const& detail::array<Tags...>(
+            DiscreteElement<Tags...> const& v) noexcept;
 
 private:
-    std::array<DiscreteElementElement, sizeof...(Tags)> m_values;
+    std::array<DiscreteElementType, sizeof...(Tags)> m_values;
 
 public:
-    using value_type = DiscreteElementElement;
+    using value_type = DiscreteElementType;
 
     static constexpr std::size_t size() noexcept
     {

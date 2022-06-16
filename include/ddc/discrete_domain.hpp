@@ -348,18 +348,18 @@ public:
     constexpr DiscreteDomainIterator& operator+=(difference_type __n)
     {
         if (__n >= difference_type(0))
-            m_value.uid() += static_cast<DiscreteElementElement>(__n);
+            m_value.uid() += static_cast<DiscreteElementType>(__n);
         else
-            m_value.uid() -= static_cast<DiscreteElementElement>(-__n);
+            m_value.uid() -= static_cast<DiscreteElementType>(-__n);
         return *this;
     }
 
     constexpr DiscreteDomainIterator& operator-=(difference_type __n)
     {
         if (__n >= difference_type(0))
-            m_value.uid() -= static_cast<DiscreteElementElement>(__n);
+            m_value.uid() -= static_cast<DiscreteElementType>(__n);
         else
-            m_value.uid() += static_cast<DiscreteElementElement>(-__n);
+            m_value.uid() += static_cast<DiscreteElementType>(-__n);
         return *this;
     }
 

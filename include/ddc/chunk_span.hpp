@@ -10,7 +10,7 @@
 #include <experimental/mdspan>
 
 #include "ddc/chunk_common.hpp"
-#include "ddc/discrete_coordinate.hpp"
+#include "ddc/discrete_element.hpp"
 #include "ddc/discrete_domain.hpp"
 
 template <class, class, class>

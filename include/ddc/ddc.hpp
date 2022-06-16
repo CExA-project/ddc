@@ -13,10 +13,10 @@
 #include "ddc/kokkos_allocator.hpp"
 
 // Discretizations
-#include "ddc/discrete_coordinate.hpp"
+#include "ddc/discrete_element.hpp"
 #include "ddc/discrete_domain.hpp"
+#include "ddc/discrete_space.hpp"
 #include "ddc/discrete_vector.hpp"
-#include "ddc/discretization.hpp"
 #include "ddc/non_uniform_discretization.hpp"
 #include "ddc/rectilinear_domain.hpp"
 #include "ddc/uniform_discretization.hpp"

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "ddc/coordinate.hpp"
-#include "ddc/discrete_coordinate.hpp"
-#include "ddc/discretization.hpp"
+#include "ddc/discrete_element.hpp"
+#include "ddc/discrete_space.hpp"
 
 namespace experimental {
 

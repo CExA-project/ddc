@@ -9,10 +9,10 @@
 
 #include "ddc/coordinate.hpp"
 #include "ddc/detail/macros.hpp"
-#include "ddc/discrete_coordinate.hpp"
+#include "ddc/discrete_element.hpp"
 #include "ddc/discrete_domain.hpp"
+#include "ddc/discrete_space.hpp"
 #include "ddc/discrete_vector.hpp"
-#include "ddc/discretization.hpp"
 
 /** UniformDiscretization models a uniform discretization of the provided continuous dimension
  */

@@ -10,9 +10,9 @@
 
 #include "ddc/coordinate.hpp"
 #include "ddc/detail/macros.hpp"
-#include "ddc/discrete_coordinate.hpp"
+#include "ddc/discrete_element.hpp"
+#include "ddc/discrete_space.hpp"
 #include "ddc/discrete_vector.hpp"
-#include "ddc/discretization.hpp"
 
 /// `NonUniformDiscretization` models a non-uniform discretization of the `CDim` segment \f$[a, b]\f$.
 template <class CDim>

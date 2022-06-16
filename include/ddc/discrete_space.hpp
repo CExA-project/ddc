@@ -12,8 +12,8 @@
 #include <hip/hip_runtime.h>
 #endif
 
-#include "ddc/discrete_coordinate.hpp"
 #include "ddc/discrete_domain.hpp"
+#include "ddc/discrete_space.hpp"
 
 namespace detail {
 

@@ -8,7 +8,7 @@
 
 #include "ddc/coordinate.hpp"
 #include "ddc/detail/type_seq.hpp"
-#include "ddc/discrete_coordinate.hpp"
+#include "ddc/discrete_element.hpp"
 #include "ddc/discrete_vector.hpp"
 
 template <class DDim>

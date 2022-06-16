@@ -7,8 +7,8 @@
 #include <Kokkos_Core.hpp>
 
 #include "ddc/detail/macros.hpp"
-#include "ddc/discrete_coordinate.hpp"
 #include "ddc/discrete_domain.hpp"
+#include "ddc/discrete_element.hpp"
 #include "ddc/for_each.hpp"
 #include "ddc/reducer.hpp"
 

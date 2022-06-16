@@ -9,8 +9,8 @@
 #include "ddc/chunk_span.hpp"
 #include "ddc/detail/macros.hpp"
 #include "ddc/detail/tagged_vector.hpp"
-#include "ddc/discrete_element.hpp"
 #include "ddc/discrete_domain.hpp"
+#include "ddc/discrete_element.hpp"
 #include "ddc/discrete_vector.hpp"
 
 

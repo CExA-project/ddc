@@ -49,7 +49,7 @@ public:
 
     using memory_space = typename Allocator::memory_space;
 
-    using mcoord_type = typename base_type::mcoord_type;
+    using discrete_element_type = typename base_type::discrete_element_type;
 
     using extents_type = typename base_type::extents_type;
 

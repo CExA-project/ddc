@@ -20,15 +20,18 @@ template <class CDim>
 class UniformDiscretization
 {
 public:
-    using rcoord_type = Coordinate<CDim>;
+    using continuous_dimension_type = CDim;
 
-    using mcoord_type = DiscreteCoordinate<UniformDiscretization>;
+    using continuous_element_type = Coordinate<CDim>;
 
-    using dvect_type = DiscreteVector<UniformDiscretization>;
 
-    using ddom_type = DiscreteDomain<UniformDiscretization>;
+    using discrete_dimension_type = UniformDiscretization;
 
-    using rdim_type = CDim;
+    using discrete_element_type = DiscreteCoordinate<UniformDiscretization>;
+
+    using discrete_domain_type = DiscreteDomain<UniformDiscretization>;
+
+    using discrete_vector_type = DiscreteVector<UniformDiscretization>;
 
 public:
     static constexpr std::size_t rank()
@@ -43,12 +46,12 @@ public:
         friend class Impl;
 
     private:
-        rcoord_type m_origin {0.};
+        continuous_element_type m_origin {0.};
 
-        rcoord_type m_step {1.};
+        continuous_element_type m_step {1.};
 
     public:
-        using ddim_type = UniformDiscretization<CDim>;
+        using discrete_dimension_type = UniformDiscretization;
 
         Impl() = default;
 
@@ -68,7 +71,9 @@ public:
      * @param origin the real coordinate of mesh coordinate 0
      * @param step   the real distance between two points of mesh distance 1
      */
-        constexpr Impl(rcoord_type origin, rcoord_type step) : m_origin(origin), m_step(step)
+        constexpr Impl(continuous_element_type origin, continuous_element_type step)
+            : m_origin(origin)
+            , m_step(step)
         {
             assert(step > 0);
         }
@@ -81,8 +86,9 @@ public:
      * 
      * @deprecated use the version accepting a vector for n instead
      */
-        [[deprecated("Use the version accepting a vector for n "
-                     "instead.")]] constexpr Impl(rcoord_type a, rcoord_type b, std::size_t n)
+        [[deprecated(
+                "Use the version accepting a vector for n "
+                "instead.")]] constexpr Impl(continuous_element_type a, continuous_element_type b, std::size_t n)
             : m_origin(a)
             , m_step((b - a) / (n - 1))
         {
@@ -96,7 +102,7 @@ public:
      * @param b the coordinate of the second real point (will have mesh coordinate `n-1`)
      * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
      */
-        constexpr Impl(rcoord_type a, rcoord_type b, dvect_type n)
+        constexpr Impl(continuous_element_type a, continuous_element_type b, discrete_vector_type n)
             : m_origin(a)
             , m_step((b - a) / (n - 1))
         {
@@ -107,46 +113,47 @@ public:
         ~Impl() = default;
 
         /// @brief Lower bound index of the mesh
-        constexpr rcoord_type origin() const noexcept
+        constexpr continuous_element_type origin() const noexcept
         {
             return m_origin;
         }
 
         /// @brief Lower bound index of the mesh
-        constexpr mcoord_type front() const noexcept
+        constexpr discrete_element_type front() const noexcept
         {
-            return mcoord_type {0};
+            return discrete_element_type {0};
         }
 
         /// @brief Spacing step of the mesh
-        constexpr rcoord_type step() const
+        constexpr continuous_element_type step() const
         {
             return m_step;
         }
 
         /// @brief Convert a mesh index into a position in `CDim`
-        constexpr rcoord_type to_real(mcoord_type const& icoord) const noexcept
+        constexpr continuous_element_type to_real(
+                discrete_element_type const& icoord) const noexcept
         {
-            return m_origin + rcoord_type(icoord.uid()) * m_step;
+            return m_origin + continuous_element_type(icoord.uid()) * m_step;
         }
     };
 
-    /** Construct a Impl<Kokkos::HostSpace> and associated ddom_type from a segment
+    /** Construct a Impl<Kokkos::HostSpace> and associated discrete_domain_type from a segment
      *  \f$[a, b] \subset [a, +\infty[\f$ and a number of points `n`.
      *
      * @param a coordinate of the first point of the domain
      * @param b coordinate of the last point of the domain
      * @param n number of points to map on the segment \f$[a, b]\f$ including a & b
      */
-    static std::tuple<Impl<Kokkos::HostSpace>, ddom_type> init(
-            rcoord_type a,
-            rcoord_type b,
-            dvect_type n)
+    static std::tuple<Impl<Kokkos::HostSpace>, discrete_domain_type> init(
+            continuous_element_type a,
+            continuous_element_type b,
+            discrete_vector_type n)
     {
         assert(a < b);
         assert(n > 1);
-        Impl<Kokkos::HostSpace> disc(a, rcoord_type {(b - a) / (n - 1)});
-        ddom_type domain {disc.front(), n};
+        Impl<Kokkos::HostSpace> disc(a, continuous_element_type {(b - a) / (n - 1)});
+        discrete_domain_type domain {disc.front(), n};
         return std::make_tuple(std::move(disc), std::move(domain));
     }
 
@@ -159,25 +166,34 @@ public:
      * @param n_ghosts_before number of additional "ghost" points before the segment
      * @param n_ghosts_after number of additional "ghost" points after the segment
      */
-    static std::tuple<Impl<Kokkos::HostSpace>, ddom_type, ddom_type, ddom_type, ddom_type>
+    static std::tuple<
+            Impl<Kokkos::HostSpace>,
+            discrete_domain_type,
+            discrete_domain_type,
+            discrete_domain_type,
+            discrete_domain_type>
     init_ghosted(
-            rcoord_type a,
-            rcoord_type b,
-            dvect_type n,
-            dvect_type n_ghosts_before,
-            dvect_type n_ghosts_after)
+            continuous_element_type a,
+            continuous_element_type b,
+            discrete_vector_type n,
+            discrete_vector_type n_ghosts_before,
+            discrete_vector_type n_ghosts_after)
     {
-        using rcoord_type = rcoord_type;
-        using ddom_type = ddom_type;
+        using continuous_element_type = continuous_element_type;
+        using discrete_domain_type = discrete_domain_type;
         assert(a < b);
         assert(n > 1);
-        rcoord_type discretization_step {(b - a) / (n - 1)};
+        continuous_element_type discretization_step {(b - a) / (n - 1)};
         Impl<Kokkos::HostSpace>
                 disc(a - n_ghosts_before.value() * discretization_step, discretization_step);
-        ddom_type ghosted_domain = ddom_type(disc.front(), n + n_ghosts_before + n_ghosts_after);
-        ddom_type pre_ghost = ddom_type(ghosted_domain.front(), n_ghosts_before);
-        ddom_type main_domain = ddom_type(ghosted_domain.front() + n_ghosts_before, n);
-        ddom_type post_ghost = ddom_type(main_domain.back() + 1, n_ghosts_after);
+        discrete_domain_type ghosted_domain
+                = discrete_domain_type(disc.front(), n + n_ghosts_before + n_ghosts_after);
+        discrete_domain_type pre_ghost
+                = discrete_domain_type(ghosted_domain.front(), n_ghosts_before);
+        discrete_domain_type main_domain
+                = discrete_domain_type(ghosted_domain.front() + n_ghosts_before, n);
+        discrete_domain_type post_ghost
+                = discrete_domain_type(main_domain.back() + 1, n_ghosts_after);
         return std::make_tuple(
                 std::move(disc),
                 std::move(main_domain),
@@ -194,8 +210,17 @@ public:
      * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
      * @param n_ghosts number of additional "ghost" points before and after the segment
      */
-    static std::tuple<Impl<Kokkos::HostSpace>, ddom_type, ddom_type, ddom_type, ddom_type>
-    init_ghosted(rcoord_type a, rcoord_type b, dvect_type n, dvect_type n_ghosts)
+    static std::tuple<
+            Impl<Kokkos::HostSpace>,
+            discrete_domain_type,
+            discrete_domain_type,
+            discrete_domain_type,
+            discrete_domain_type>
+    init_ghosted(
+            continuous_element_type a,
+            continuous_element_type b,
+            discrete_vector_type n,
+            discrete_vector_type n_ghosts)
     {
         return init_ghosted(a, b, n, n_ghosts, n_ghosts);
     }
@@ -217,7 +242,9 @@ constexpr bool is_uniform_discretization_v = is_uniform_discretization<DDim>::va
 
 template <
         class DDimImpl,
-        std::enable_if_t<is_uniform_discretization_v<typename DDimImpl::ddim_type>, int> = 0>
+        std::enable_if_t<
+                is_uniform_discretization_v<typename DDimImpl::discrete_dimension_type>,
+                int> = 0>
 std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 {
     return out << "UniformDiscretization( origin=" << mesh.origin() << ", step=" << mesh.step()
@@ -226,8 +253,9 @@ std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 
 /// @brief Lower bound index of the mesh
 template <class DDim>
-DDC_INLINE_FUNCTION std::enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::rcoord_type>
-origin() noexcept
+DDC_INLINE_FUNCTION std::
+        enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::continuous_element_type>
+        origin() noexcept
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discretization_device<DDim>().origin();
@@ -238,8 +266,9 @@ origin() noexcept
 
 /// @brief Lower bound index of the mesh
 template <class DDim>
-DDC_INLINE_FUNCTION std::enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::mcoord_type>
-front() noexcept
+DDC_INLINE_FUNCTION std::
+        enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::discrete_element_type>
+        front() noexcept
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discretization_device<DDim>().front();
@@ -250,8 +279,9 @@ front() noexcept
 
 /// @brief Spacing step of the mesh
 template <class DDim>
-DDC_INLINE_FUNCTION std::enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::rcoord_type>
-step() noexcept
+DDC_INLINE_FUNCTION std::
+        enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::continuous_element_type>
+        step() noexcept
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discretization_device<DDim>().step();
@@ -330,12 +360,12 @@ constexpr bool is_uniform_domain_v = is_uniform_domain<T>::value;
 //  */
 // template <class D, class = std::enable_if_t<is_uniform_discretization_v<D>>>
 // constexpr DiscreteDomain<D> init_global_domain(
-//         typename D::rcoord_type a,
-//         typename D::rcoord_type b,
-//         typename D::dvect_type n)
+//         typename D::continuous_element_type a,
+//         typename D::continuous_element_type b,
+//         typename D::discrete_vector_type n)
 // {
 //     assert(a < b);
 //     assert(n > 1);
-//     init_discretization<D>(a, typename D::rcoord_type {(b - a) / (n - 1)});
+//     init_discretization<D>(a, typename D::continuous_element_type {(b - a) / (n - 1)});
 //     return DiscreteDomain<D>(n);
 // }

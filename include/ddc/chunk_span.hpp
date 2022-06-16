@@ -64,7 +64,7 @@ public:
     using allocation_mdspan_type = std::experimental::
             mdspan<ElementType, std::experimental::dextents<sizeof...(DDims)>, LayoutStridedPolicy>;
 
-    using mcoord_type = typename mdomain_type::mcoord_type;
+    using discrete_element_type = typename mdomain_type::discrete_element_type;
 
     using extents_type = typename base_type::extents_type;
 

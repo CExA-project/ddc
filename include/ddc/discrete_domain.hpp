@@ -24,7 +24,7 @@ class DiscreteDomain
     friend class DiscreteDomain;
 
 public:
-    using mcoord_type = DiscreteCoordinate<DDims...>;
+    using discrete_element_type = DiscreteCoordinate<DDims...>;
 
     using mlength_type = DiscreteVector<DDims...>;
 
@@ -73,7 +73,7 @@ public:
      * @param lbound the lower bound in each direction
      * @param size the number of points in each direction
      */
-    constexpr DiscreteDomain(mcoord_type const& lbound, mlength_type const& size)
+    constexpr DiscreteDomain(discrete_element_type const& lbound, mlength_type const& size)
         : m_lbound(lbound)
         , m_ubound((uid<DDims>(lbound) + get<DDims>(size) - 1)...)
     {
@@ -120,12 +120,12 @@ public:
         return DiscreteVector<QueryDDim>(uid<QueryDDim>(m_ubound) + 1 - uid<QueryDDim>(m_lbound));
     }
 
-    constexpr mcoord_type front() const noexcept
+    constexpr discrete_element_type front() const noexcept
     {
         return m_lbound;
     }
 
-    constexpr mcoord_type back() const noexcept
+    constexpr discrete_element_type back() const noexcept
     {
         return m_ubound;
     }

@@ -77,7 +77,7 @@ void init_discretization_devices()
 template <class IDimImpl, class Arg>
 Arg init_discretization(std::tuple<IDimImpl, Arg>&& a)
 {
-    using IDim = typename IDimImpl::ddim_type;
+    using IDim = typename IDimImpl::discrete_dimension_type;
     using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
     if (detail::discretization_host<IDimImplHost>) {
         throw std::runtime_error("Discretization function already initialized.");
@@ -91,7 +91,7 @@ template <class IDimImpl, class... Args>
 std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_discretization(
         std::tuple<IDimImpl, Args...>&& a)
 {
-    using IDim = typename IDimImpl::ddim_type;
+    using IDim = typename IDimImpl::discrete_dimension_type;
     using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
     if (detail::discretization_host<IDimImplHost>) {
         throw std::runtime_error("Discretization function already initialized.");

@@ -216,8 +216,8 @@ int main(int argc, char** argv)
             policies::parallel_device,
             DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             DDC_LAMBDA(DiscreteElement<DDimX, DDimY> const ixy) {
-                double const x = to_real(select<DDimX>(ixy));
-                double const y = to_real(select<DDimY>(ixy));
+                double const x = coordinate(select<DDimX>(ixy));
+                double const y = coordinate(select<DDimY>(ixy));
                 ghosted_initial_temp(ixy)
                         = 9.999 * ((x * x + y * y) < 0.25);
             });
@@ -233,7 +233,7 @@ int main(int argc, char** argv)
     //! [initial output]
     // display the initial data
     deepcopy(ghosted_temp, ghosted_last_temp);
-    display(to_real(time_domain.front()),
+    display(coordinate(time_domain.front()),
             ghosted_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
     DiscreteElement<DDimT> last_output = time_domain.front();
@@ -303,7 +303,7 @@ int main(int argc, char** argv)
         if (iter - last_output >= t_output_period) {
             last_output = iter;
             deepcopy(ghosted_temp, ghosted_last_temp);
-            display(to_real(iter), ghosted_temp[x_domain][y_domain]);
+            display(coordinate(iter), ghosted_temp[x_domain][y_domain]);
         }
         //! [output]
 
@@ -316,7 +316,7 @@ int main(int argc, char** argv)
     //! [final output]
     if (last_output < time_domain.back()) {
         deepcopy(ghosted_temp, ghosted_last_temp);
-        display(to_real(time_domain.back()),
+        display(coordinate(time_domain.back()),
                 ghosted_temp[x_domain][y_domain]);
     }
     //! [final output]

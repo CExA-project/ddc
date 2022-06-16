@@ -33,7 +33,7 @@ TEST_F(UniformDiscretizationTest, Constructor)
     DDimX::Impl<Kokkos::HostSpace> ddim_x(origin, step);
     EXPECT_EQ(ddim_x.origin(), origin);
     EXPECT_EQ(ddim_x.step(), step);
-    EXPECT_EQ(ddim_x.to_real(point_ix), point_rx);
+    EXPECT_EQ(ddim_x.coordinate(point_ix), point_rx);
 }
 
 TEST_F(UniformDiscretizationTest, Constructor2)
@@ -41,7 +41,7 @@ TEST_F(UniformDiscretizationTest, Constructor2)
     DDimX::Impl<Kokkos::HostSpace> ddim_x(origin, Coordinate<DimX>(1.), npoints);
     EXPECT_EQ(ddim_x.origin(), origin);
     EXPECT_EQ(ddim_x.step(), step);
-    EXPECT_EQ(ddim_x.to_real(point_ix), point_rx);
+    EXPECT_EQ(ddim_x.coordinate(point_ix), point_rx);
 }
 
 TEST(UniformDiscretization, Formatting)

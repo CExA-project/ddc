@@ -56,7 +56,7 @@ public:
             return m_point;
         }
 
-        inline constexpr continuous_element_type to_real(
+        inline constexpr continuous_element_type coordinate(
                 [[maybe_unused]] discrete_element_type icoord) const noexcept
         {
             assert(icoord == discrete_element_type(0));
@@ -100,25 +100,25 @@ origin() noexcept
 }
 
 template <class CDim>
-Coordinate<CDim> to_real(DiscreteElement<experimental::SingleDiscretization<CDim>> const& c)
+Coordinate<CDim> coordinate(DiscreteElement<experimental::SingleDiscretization<CDim>> const& c)
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discrete_space_device<experimental::SingleDiscretization<CDim>>().to_real(c);
+    return discrete_space_device<experimental::SingleDiscretization<CDim>>().coordinate(c);
 #else
-    return discrete_space_host<experimental::SingleDiscretization<CDim>>().to_real(c);
+    return discrete_space_host<experimental::SingleDiscretization<CDim>>().coordinate(c);
 #endif
 }
 
 template <class CDim>
 Coordinate<CDim> rmin(DiscreteDomain<experimental::SingleDiscretization<CDim>> const& d)
 {
-    return to_real(d.front());
+    return coordinate(d.front());
 }
 
 template <class CDim>
 Coordinate<CDim> rmax(DiscreteDomain<experimental::SingleDiscretization<CDim>> const& d)
 {
-    return to_real(d.back());
+    return coordinate(d.back());
 }
 
 template <class CDim>

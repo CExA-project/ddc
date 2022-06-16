@@ -105,7 +105,7 @@ public:
         }
 
         /// @brief Convert a mesh index into a position in `CDim`
-        constexpr continuous_element_type to_real(
+        constexpr continuous_element_type coordinate(
                 discrete_element_type const& icoord) const noexcept
         {
             return m_points(icoord.uid());
@@ -137,13 +137,13 @@ std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 }
 
 template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> to_real(
+DDC_INLINE_FUNCTION Coordinate<CDim> coordinate(
         DiscreteElement<NonUniformDiscretization<CDim>> const& c)
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discrete_space_device<NonUniformDiscretization<CDim>>().to_real(c);
+    return discrete_space_device<NonUniformDiscretization<CDim>>().coordinate(c);
 #else
-    return discrete_space_host<NonUniformDiscretization<CDim>>().to_real(c);
+    return discrete_space_host<NonUniformDiscretization<CDim>>().coordinate(c);
 #endif
 }
 
@@ -151,26 +151,26 @@ template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
         DiscreteElement<NonUniformDiscretization<CDim>> i)
 {
-    return to_real(i) - to_real(i - 1);
+    return coordinate(i) - coordinate(i - 1);
 }
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
         DiscreteElement<NonUniformDiscretization<CDim>> i)
 {
-    return to_real(i + 1) - to_real(i);
+    return coordinate(i + 1) - coordinate(i);
 }
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
 {
-    return to_real(d.front());
+    return coordinate(d.front());
 }
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
 {
-    return to_real(d.back());
+    return coordinate(d.back());
 }
 
 template <class CDim>

@@ -40,28 +40,28 @@ TEST(NonUniformDiscretizationTest, ListConstructor)
 {
     DDimX::Impl<Kokkos::HostSpace> ddim_x(VALUES);
     EXPECT_EQ(ddim_x.size(), 4);
-    EXPECT_EQ(ddim_x.to_real(point_ix), point_rx);
+    EXPECT_EQ(ddim_x.coordinate(point_ix), point_rx);
 }
 
 TEST(NonUniformDiscretizationTest, ArrayConstructor)
 {
     DDimX::Impl<Kokkos::HostSpace> ddim_x(array_points);
     EXPECT_EQ(ddim_x.size(), array_points.size());
-    EXPECT_EQ(ddim_x.to_real(point_ix), point_rx);
+    EXPECT_EQ(ddim_x.coordinate(point_ix), point_rx);
 }
 
 TEST(NonUniformDiscretizationTest, VectorConstructor)
 {
     DDimX::Impl<Kokkos::HostSpace> ddim_x(vector_points);
     EXPECT_EQ(ddim_x.size(), vector_points.size());
-    EXPECT_EQ(ddim_x.to_real(point_ix), point_rx);
+    EXPECT_EQ(ddim_x.coordinate(point_ix), point_rx);
 }
 
 TEST(NonUniformDiscretizationTest, IteratorConstructor)
 {
     DDimX::Impl<Kokkos::HostSpace> ddim_x(vector_points.begin(), vector_points.end());
     EXPECT_EQ(ddim_x.size(), vector_points.size());
-    EXPECT_EQ(ddim_x.to_real(point_ix), point_rx);
+    EXPECT_EQ(ddim_x.coordinate(point_ix), point_rx);
 }
 
 TEST(NonUniformDiscretization, Formatting)

@@ -254,12 +254,12 @@ constexpr DiscreteElement<QueryDDims...> back(DiscreteDomain<DDims...> const& do
 }
 
 template <class... QueryDDims, class... DDims>
-Coordinate<QueryDDims...> to_real(
+Coordinate<QueryDDims...> coordinate(
         DiscreteDomain<DDims...> const& domain,
         DiscreteElement<QueryDDims...> const& icoord) noexcept
 {
     return Coordinate<QueryDDims...>(
-            select<QueryDDims>(domain).to_real(select<QueryDDims>(icoord))...);
+            select<QueryDDims>(domain).coordinate(select<QueryDDims>(icoord))...);
 }
 
 template <class... QueryDDims, class... DDims>
@@ -312,9 +312,7 @@ public:
 
     DiscreteDomainIterator() = default;
 
-    constexpr explicit DiscreteDomainIterator(DiscreteElement<DDim> __value) : m_value(__value)
-    {
-    }
+    constexpr explicit DiscreteDomainIterator(DiscreteElement<DDim> __value) : m_value(__value) {}
 
     constexpr DiscreteElement<DDim> operator*() const noexcept
     {

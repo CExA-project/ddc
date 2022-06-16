@@ -9,8 +9,8 @@
 
 #include "ddc/coordinate.hpp"
 #include "ddc/detail/macros.hpp"
-#include "ddc/discrete_element.hpp"
 #include "ddc/discrete_domain.hpp"
+#include "ddc/discrete_element.hpp"
 #include "ddc/discrete_space.hpp"
 #include "ddc/discrete_vector.hpp"
 
@@ -131,7 +131,7 @@ public:
         }
 
         /// @brief Convert a mesh index into a position in `CDim`
-        constexpr continuous_element_type to_real(
+        constexpr continuous_element_type coordinate(
                 discrete_element_type const& icoord) const noexcept
         {
             return m_origin + continuous_element_type(icoord.uid()) * m_step;
@@ -291,13 +291,13 @@ DDC_INLINE_FUNCTION std::
 }
 
 template <class CDim>
-DDC_INLINE_FUNCTION constexpr Coordinate<CDim> to_real(
+DDC_INLINE_FUNCTION constexpr Coordinate<CDim> coordinate(
         DiscreteElement<UniformDiscretization<CDim>> const& c)
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discrete_space_device<UniformDiscretization<CDim>>().to_real(c);
+    return discrete_space_device<UniformDiscretization<CDim>>().coordinate(c);
 #else
-    return discrete_space_host<UniformDiscretization<CDim>>().to_real(c);
+    return discrete_space_host<UniformDiscretization<CDim>>().coordinate(c);
 #endif
 }
 
@@ -318,13 +318,13 @@ DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<UniformDiscretization<CDim>> const& d)
 {
-    return to_real(d.front());
+    return coordinate(d.front());
 }
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<UniformDiscretization<CDim>> const& d)
 {
-    return to_real(d.back());
+    return coordinate(d.back());
 }
 
 template <class CDim>

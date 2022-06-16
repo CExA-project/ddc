@@ -63,7 +63,7 @@ void display(double time, ChunkType temp)
     for_each(
             policies::serial_host,
             get_domain<DDimX>(temp),
-            [=](DiscreteCoordinate<DDimX> const ix) {
+            [=](DiscreteElement<DDimX> const ix) {
                 std::cout << std::setw(6) << temp_slice(ix);
             });
     std::cout << " }" << std::endl;
@@ -163,7 +163,7 @@ int main(int argc, char** argv)
             x_domain,
             0.,
             reducer::max<double>(),
-            [](DiscreteCoordinate<DDimX> ix) {
+            [](DiscreteElement<DDimX> ix) {
                 return 1.
                        / (distance_at_left(ix) * distance_at_right(ix));
             });
@@ -172,7 +172,7 @@ int main(int argc, char** argv)
             y_domain,
             0.,
             reducer::max<double>(),
-            [](DiscreteCoordinate<DDimY> iy) {
+            [](DiscreteElement<DDimY> iy) {
                 return 1.
                        / (distance_at_left(iy) * distance_at_right(iy));
             });
@@ -215,7 +215,7 @@ int main(int argc, char** argv)
     for_each(
             policies::parallel_device,
             DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
-            DDC_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
+            DDC_LAMBDA(DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x = to_real(select<DDimX>(ixy));
                 double const y = to_real(select<DDimY>(ixy));
                 ghosted_initial_temp(ixy)
@@ -236,7 +236,7 @@ int main(int argc, char** argv)
     display(to_real(time_domain.front()),
             ghosted_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
-    DiscreteCoordinate<DDimT> last_output = time_domain.front();
+    DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
 
     //! [time iteration]
@@ -274,11 +274,9 @@ int main(int argc, char** argv)
         for_each(
                 policies::parallel_device,
                 next_temp.domain(),
-                DDC_LAMBDA(DiscreteCoordinate<DDimX, DDimY> const ixy) {
-                    DiscreteCoordinate<DDimX> const ix
-                            = select<DDimX>(ixy);
-                    DiscreteCoordinate<DDimY> const iy
-                            = select<DDimY>(ixy);
+                DDC_LAMBDA(DiscreteElement<DDimX, DDimY> const ixy) {
+                    DiscreteElement<DDimX> const ix = select<DDimX>(ixy);
+                    DiscreteElement<DDimY> const iy = select<DDimY>(ixy);
                     double const dx_l = distance_at_left(ix);
                     double const dx_r = distance_at_right(ix);
                     double const dx_m = 0.5 * (dx_l + dx_r);

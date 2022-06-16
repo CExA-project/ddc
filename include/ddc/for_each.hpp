@@ -29,7 +29,7 @@ public:
 
     DDC_FORCEINLINE_FUNCTION void operator()(index_type<DDims>... ids) const
     {
-        m_f(DiscreteCoordinate<DDims...>(ids...));
+        m_f(DiscreteElement<DDims...>(ids...));
     }
 };
 
@@ -100,7 +100,7 @@ inline void for_each(
         DiscreteDomain<DDims...> const& domain,
         Functor&& f) noexcept
 {
-    detail::for_each_serial<DiscreteCoordinate<DDims...>>(
+    detail::for_each_serial<DiscreteElement<DDims...>>(
             detail::array(domain.front()),
             detail::array(domain.back()),
             std::forward<Functor>(f));

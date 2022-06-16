@@ -24,14 +24,14 @@ class DiscreteDomain
     friend class DiscreteDomain;
 
 public:
-    using discrete_element_type = DiscreteCoordinate<DDims...>;
+    using discrete_element_type = DiscreteElement<DDims...>;
 
     using mlength_type = DiscreteVector<DDims...>;
 
 private:
-    DiscreteCoordinate<DDims...> m_lbound;
+    DiscreteElement<DDims...> m_lbound;
 
-    DiscreteCoordinate<DDims...> m_ubound;
+    DiscreteElement<DDims...> m_ubound;
 
 public:
     static constexpr std::size_t rank()
@@ -163,7 +163,7 @@ public:
         const DiscreteVector<DDims...> myextents = extents();
         const DiscreteVector<ODDims...> oextents = odomain.extents();
         return DiscreteDomain(
-                DiscreteCoordinate<DDims...>(
+                DiscreteElement<DDims...>(
                         (uid_or<DDims>(odomain.m_lbound, uid<DDims>(m_lbound)))...),
                 DiscreteVector<DDims...>((get_or<DDims>(oextents, get<DDims>(myextents)))...));
     }
@@ -191,7 +191,7 @@ public:
             class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     auto end() const
     {
-        return DiscreteDomainIterator<DDim0>(DiscreteCoordinate<DDims...>(back() + 1));
+        return DiscreteDomainIterator<DDim0>(DiscreteElement<DDims...>(back() + 1));
     }
 
     template <
@@ -207,7 +207,7 @@ public:
             class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     auto cend() const
     {
-        return DiscreteDomainIterator<DDim0>(DiscreteCoordinate<DDims...>(back() + 1));
+        return DiscreteDomainIterator<DDim0>(DiscreteElement<DDims...>(back() + 1));
     }
 
     template <
@@ -242,21 +242,21 @@ constexpr DiscreteVector<QueryDDims...> extents(DiscreteDomain<DDims...> const& 
 }
 
 template <class... QueryDDims, class... DDims>
-constexpr DiscreteCoordinate<QueryDDims...> front(DiscreteDomain<DDims...> const& domain) noexcept
+constexpr DiscreteElement<QueryDDims...> front(DiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteCoordinate<QueryDDims...>(select<QueryDDims>(domain).front()...);
+    return DiscreteElement<QueryDDims...>(select<QueryDDims>(domain).front()...);
 }
 
 template <class... QueryDDims, class... DDims>
-constexpr DiscreteCoordinate<QueryDDims...> back(DiscreteDomain<DDims...> const& domain) noexcept
+constexpr DiscreteElement<QueryDDims...> back(DiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteCoordinate<QueryDDims...>(select<QueryDDims>(domain).back()...);
+    return DiscreteElement<QueryDDims...>(select<QueryDDims>(domain).back()...);
 }
 
 template <class... QueryDDims, class... DDims>
 Coordinate<QueryDDims...> to_real(
         DiscreteDomain<DDims...> const& domain,
-        DiscreteCoordinate<QueryDDims...> const& icoord) noexcept
+        DiscreteElement<QueryDDims...> const& icoord) noexcept
 {
     return Coordinate<QueryDDims...>(
             select<QueryDDims>(domain).to_real(select<QueryDDims>(icoord))...);
@@ -301,22 +301,22 @@ template <class DDim>
 struct DiscreteDomainIterator
 {
 private:
-    DiscreteCoordinate<DDim> m_value = DiscreteCoordinate<DDim>();
+    DiscreteElement<DDim> m_value = DiscreteElement<DDim>();
 
 public:
     using iterator_category = std::random_access_iterator_tag;
 
-    using value_type = DiscreteCoordinate<DDim>;
+    using value_type = DiscreteElement<DDim>;
 
     using difference_type = std::ptrdiff_t;
 
     DiscreteDomainIterator() = default;
 
-    constexpr explicit DiscreteDomainIterator(DiscreteCoordinate<DDim> __value) : m_value(__value)
+    constexpr explicit DiscreteDomainIterator(DiscreteElement<DDim> __value) : m_value(__value)
     {
     }
 
-    constexpr DiscreteCoordinate<DDim> operator*() const noexcept
+    constexpr DiscreteElement<DDim> operator*() const noexcept
     {
         return m_value;
     }
@@ -350,22 +350,22 @@ public:
     constexpr DiscreteDomainIterator& operator+=(difference_type __n)
     {
         if (__n >= difference_type(0))
-            m_value.uid() += static_cast<DiscreteCoordinateElement>(__n);
+            m_value.uid() += static_cast<DiscreteElementElement>(__n);
         else
-            m_value.uid() -= static_cast<DiscreteCoordinateElement>(-__n);
+            m_value.uid() -= static_cast<DiscreteElementElement>(-__n);
         return *this;
     }
 
     constexpr DiscreteDomainIterator& operator-=(difference_type __n)
     {
         if (__n >= difference_type(0))
-            m_value.uid() -= static_cast<DiscreteCoordinateElement>(__n);
+            m_value.uid() -= static_cast<DiscreteElementElement>(__n);
         else
-            m_value.uid() += static_cast<DiscreteCoordinateElement>(-__n);
+            m_value.uid() += static_cast<DiscreteElementElement>(-__n);
         return *this;
     }
 
-    constexpr DiscreteCoordinate<DDim> operator[](difference_type __n) const
+    constexpr DiscreteElement<DDim> operator[](difference_type __n) const
     {
         return m_value + __n;
     }

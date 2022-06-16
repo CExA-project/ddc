@@ -26,7 +26,7 @@ public:
 
     using discrete_domain_type = DiscreteDomain<SingleDiscretization>;
 
-    using discrete_element_type = DiscreteCoordinate<SingleDiscretization>;
+    using discrete_element_type = DiscreteElement<SingleDiscretization>;
 
     using discrete_vector_type = DiscreteVector<SingleDiscretization>;
 
@@ -93,19 +93,19 @@ std::enable_if_t<is_single_discretization_v<DDim>, typename DDim::continuous_ele
 origin() noexcept
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discretization_device<DDim>().origin();
+    return discrete_space_device<DDim>().origin();
 #else
-    return discretization_host<DDim>().origin();
+    return discrete_space_host<DDim>().origin();
 #endif
 }
 
 template <class CDim>
-Coordinate<CDim> to_real(DiscreteCoordinate<experimental::SingleDiscretization<CDim>> const& c)
+Coordinate<CDim> to_real(DiscreteElement<experimental::SingleDiscretization<CDim>> const& c)
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discretization_device<experimental::SingleDiscretization<CDim>>().to_real(c);
+    return discrete_space_device<experimental::SingleDiscretization<CDim>>().to_real(c);
 #else
-    return discretization_host<experimental::SingleDiscretization<CDim>>().to_real(c);
+    return discrete_space_host<experimental::SingleDiscretization<CDim>>().to_real(c);
 #endif
 }
 

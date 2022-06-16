@@ -27,7 +27,7 @@ public:
 
     using discrete_dimension_type = UniformDiscretization;
 
-    using discrete_element_type = DiscreteCoordinate<UniformDiscretization>;
+    using discrete_element_type = DiscreteElement<UniformDiscretization>;
 
     using discrete_domain_type = DiscreteDomain<UniformDiscretization>;
 
@@ -292,7 +292,7 @@ DDC_INLINE_FUNCTION std::
 
 template <class CDim>
 DDC_INLINE_FUNCTION constexpr Coordinate<CDim> to_real(
-        DiscreteCoordinate<UniformDiscretization<CDim>> const& c)
+        DiscreteElement<UniformDiscretization<CDim>> const& c)
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discrete_space_device<UniformDiscretization<CDim>>().to_real(c);
@@ -303,14 +303,14 @@ DDC_INLINE_FUNCTION constexpr Coordinate<CDim> to_real(
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
-        DiscreteCoordinate<UniformDiscretization<CDim>> i)
+        DiscreteElement<UniformDiscretization<CDim>> i)
 {
     return step<UniformDiscretization<CDim>>();
 }
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
-        DiscreteCoordinate<UniformDiscretization<CDim>> i)
+        DiscreteElement<UniformDiscretization<CDim>> i)
 {
     return step<UniformDiscretization<CDim>>();
 }

@@ -28,7 +28,7 @@ public:
 
     using discrete_domain_type = DiscreteDomain<NonUniformDiscretization>;
 
-    using discrete_element_type = DiscreteCoordinate<NonUniformDiscretization>;
+    using discrete_element_type = DiscreteElement<NonUniformDiscretization>;
 
     using discrete_vector_type = DiscreteVector<NonUniformDiscretization>;
 
@@ -138,7 +138,7 @@ std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> to_real(
-        DiscreteCoordinate<NonUniformDiscretization<CDim>> const& c)
+        DiscreteElement<NonUniformDiscretization<CDim>> const& c)
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
     return discrete_space_device<NonUniformDiscretization<CDim>>().to_real(c);
@@ -149,14 +149,14 @@ DDC_INLINE_FUNCTION Coordinate<CDim> to_real(
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
-        DiscreteCoordinate<NonUniformDiscretization<CDim>> i)
+        DiscreteElement<NonUniformDiscretization<CDim>> i)
 {
     return to_real(i) - to_real(i - 1);
 }
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
-        DiscreteCoordinate<NonUniformDiscretization<CDim>> i)
+        DiscreteElement<NonUniformDiscretization<CDim>> i)
 {
     return to_real(i + 1) - to_real(i);
 }

@@ -114,7 +114,7 @@ int main(int argc, char** argv)
     // Initialization of the global domain in X with gwx ghost points on
     // each side
     auto const [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]
-            = init_discretization(DDimX::init_ghosted(
+            = init_discrete_space(DDimX::init_ghosted(
                     Coordinate<X>(x_start),
                     Coordinate<X>(x_end),
                     DiscreteVector<DDimX>(nb_x_points),
@@ -140,7 +140,7 @@ int main(int argc, char** argv)
     // Initialization of the global domain in Y with gwy ghost points on
     // each side
     auto const [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]
-            = init_discretization(DDimY::init_ghosted(
+            = init_discrete_space(DDimY::init_ghosted(
                     Coordinate<Y>(y_start),
                     Coordinate<Y>(y_end),
                     DiscreteVector<DDimY>(nb_y_points),
@@ -186,7 +186,7 @@ int main(int argc, char** argv)
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
     DiscreteDomain<DDimT> const time_domain
-            = init_discretization(DDimT::
+            = init_discrete_space(DDimT::
                                           init(Coordinate<T>(start_time),
                                                Coordinate<T>(end_time),
                                                nb_time_steps + 1));

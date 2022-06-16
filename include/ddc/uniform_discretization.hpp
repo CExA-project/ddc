@@ -258,9 +258,9 @@ DDC_INLINE_FUNCTION std::
         origin() noexcept
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discretization_device<DDim>().origin();
+    return discrete_space_device<DDim>().origin();
 #else
-    return discretization_host<DDim>().origin();
+    return discrete_space_host<DDim>().origin();
 #endif
 }
 
@@ -271,9 +271,9 @@ DDC_INLINE_FUNCTION std::
         front() noexcept
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discretization_device<DDim>().front();
+    return discrete_space_device<DDim>().front();
 #else
-    return discretization_host<DDim>().front();
+    return discrete_space_host<DDim>().front();
 #endif
 }
 
@@ -284,9 +284,9 @@ DDC_INLINE_FUNCTION std::
         step() noexcept
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discretization_device<DDim>().step();
+    return discrete_space_device<DDim>().step();
 #else
-    return discretization_host<DDim>().step();
+    return discrete_space_host<DDim>().step();
 #endif
 }
 
@@ -295,9 +295,9 @@ DDC_INLINE_FUNCTION constexpr Coordinate<CDim> to_real(
         DiscreteCoordinate<UniformDiscretization<CDim>> const& c)
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discretization_device<UniformDiscretization<CDim>>().to_real(c);
+    return discrete_space_device<UniformDiscretization<CDim>>().to_real(c);
 #else
-    return discretization_host<UniformDiscretization<CDim>>().to_real(c);
+    return discrete_space_host<UniformDiscretization<CDim>>().to_real(c);
 #endif
 }
 

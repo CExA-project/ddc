@@ -14,9 +14,9 @@
 #include "ddc/discrete_space.hpp"
 #include "ddc/discrete_vector.hpp"
 
-/// `NonUniformDiscretization` models a non-uniform discretization of the `CDim` segment \f$[a, b]\f$.
+/// `NonUniformPointSampling` models a non-uniform discretization of the `CDim` segment \f$[a, b]\f$.
 template <class CDim>
-class NonUniformDiscretization
+class NonUniformPointSampling
 {
 public:
     using continuous_dimension_type = CDim;
@@ -24,13 +24,13 @@ public:
     using continuous_element_type = Coordinate<CDim>;
 
 
-    using discrete_dimension_type = NonUniformDiscretization;
+    using discrete_dimension_type = NonUniformPointSampling;
 
-    using discrete_domain_type = DiscreteDomain<NonUniformDiscretization>;
+    using discrete_domain_type = DiscreteDomain<NonUniformPointSampling>;
 
-    using discrete_element_type = DiscreteElement<NonUniformDiscretization>;
+    using discrete_element_type = DiscreteElement<NonUniformPointSampling>;
 
-    using discrete_vector_type = DiscreteVector<NonUniformDiscretization>;
+    using discrete_vector_type = DiscreteVector<NonUniformPointSampling>;
 
 public:
     static constexpr std::size_t rank()
@@ -47,11 +47,11 @@ public:
         Kokkos::View<continuous_element_type*, MemorySpace> m_points;
 
     public:
-        using discrete_dimension_type = NonUniformDiscretization<CDim>;
+        using discrete_dimension_type = NonUniformPointSampling<CDim>;
 
         Impl() = default;
 
-        /// @brief Construct a `NonUniformDiscretization` using a brace-list, i.e. `NonUniformDiscretization mesh({0., 1.})`
+        /// @brief Construct a `NonUniformPointSampling` using a brace-list, i.e. `NonUniformPointSampling mesh({0., 1.})`
         explicit Impl(std::initializer_list<continuous_element_type> points)
         {
             std::vector<continuous_element_type> host_points(points.begin(), points.end());
@@ -61,7 +61,7 @@ public:
             Kokkos::deep_copy(m_points, host);
         }
 
-        /// @brief Construct a `NonUniformDiscretization` using a C++20 "common range".
+        /// @brief Construct a `NonUniformPointSampling` using a C++20 "common range".
         template <class InputRange>
         explicit inline constexpr Impl(InputRange const& points)
         {
@@ -76,7 +76,7 @@ public:
             }
         }
 
-        /// @brief Construct a `NonUniformDiscretization` using a pair of iterators.
+        /// @brief Construct a `NonUniformPointSampling` using a pair of iterators.
         template <class InputIt>
         inline constexpr Impl(InputIt points_begin, InputIt points_end)
         {
@@ -114,68 +114,67 @@ public:
 };
 
 template <class>
-struct is_non_uniform_discretization : public std::false_type
+struct is_non_uniform_sampling : public std::false_type
 {
 };
 
 template <class CDim>
-struct is_non_uniform_discretization<NonUniformDiscretization<CDim>> : public std::true_type
+struct is_non_uniform_sampling<NonUniformPointSampling<CDim>> : public std::true_type
 {
 };
 
 template <class DDim>
-constexpr bool is_non_uniform_discretization_v = is_non_uniform_discretization<DDim>::value;
+constexpr bool is_non_uniform_sampling_v = is_non_uniform_sampling<DDim>::value;
 
 template <
         class DDimImpl,
         std::enable_if_t<
-                is_non_uniform_discretization_v<typename DDimImpl::discrete_dimension_type>,
+                is_non_uniform_sampling_v<typename DDimImpl::discrete_dimension_type>,
                 int> = 0>
 std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 {
-    return out << "NonUniformDiscretization(" << mesh.size() << ")";
+    return out << "NonUniformPointSampling(" << mesh.size() << ")";
 }
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> coordinate(
-        DiscreteElement<NonUniformDiscretization<CDim>> const& c)
+        DiscreteElement<NonUniformPointSampling<CDim>> const& c)
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discrete_space_device<NonUniformDiscretization<CDim>>().coordinate(c);
+    return discrete_space_device<NonUniformPointSampling<CDim>>().coordinate(c);
 #else
-    return discrete_space_host<NonUniformDiscretization<CDim>>().coordinate(c);
+    return discrete_space_host<NonUniformPointSampling<CDim>>().coordinate(c);
 #endif
 }
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
-        DiscreteElement<NonUniformDiscretization<CDim>> i)
+        DiscreteElement<NonUniformPointSampling<CDim>> i)
 {
     return coordinate(i) - coordinate(i - 1);
 }
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
-        DiscreteElement<NonUniformDiscretization<CDim>> i)
+        DiscreteElement<NonUniformPointSampling<CDim>> i)
 {
     return coordinate(i + 1) - coordinate(i);
 }
 
 template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
+DDC_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<NonUniformPointSampling<CDim>> const& d)
 {
     return coordinate(d.front());
 }
 
 template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
+DDC_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<NonUniformPointSampling<CDim>> const& d)
 {
     return coordinate(d.back());
 }
 
 template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rlength(
-        DiscreteDomain<NonUniformDiscretization<CDim>> const& d)
+DDC_INLINE_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<NonUniformPointSampling<CDim>> const& d)
 {
     return rmax(d) - rmin(d);
 }

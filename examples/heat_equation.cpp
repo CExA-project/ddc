@@ -19,21 +19,21 @@ struct X;
 
 //! [X-discretization]
 /// A uniform discretization of X
-using DDimX = UniformDiscretization<X>;
+using DDimX = UniformPointSampling<X>;
 //! [X-discretization]
 
 //! [Y-space]
 // Our second continuous dimension
 struct Y;
 // Its uniform discretization
-using DDimY = UniformDiscretization<Y>;
+using DDimY = UniformPointSampling<Y>;
 //! [Y-space]
 
 //! [time-space]
 // Our simulated time dimension
 struct T;
 // Its uniform discretization
-using DDimT = UniformDiscretization<T>;
+using DDimT = UniformPointSampling<T>;
 //! [time-space]
 
 

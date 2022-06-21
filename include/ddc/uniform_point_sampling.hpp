@@ -14,10 +14,10 @@
 #include "ddc/discrete_space.hpp"
 #include "ddc/discrete_vector.hpp"
 
-/** UniformDiscretization models a uniform discretization of the provided continuous dimension
+/** UniformPointSampling models a uniform discretization of the provided continuous dimension
  */
 template <class CDim>
-class UniformDiscretization
+class UniformPointSampling
 {
 public:
     using continuous_dimension_type = CDim;
@@ -25,13 +25,13 @@ public:
     using continuous_element_type = Coordinate<CDim>;
 
 
-    using discrete_dimension_type = UniformDiscretization;
+    using discrete_dimension_type = UniformPointSampling;
 
-    using discrete_element_type = DiscreteElement<UniformDiscretization>;
+    using discrete_element_type = DiscreteElement<UniformPointSampling>;
 
-    using discrete_domain_type = DiscreteDomain<UniformDiscretization>;
+    using discrete_domain_type = DiscreteDomain<UniformPointSampling>;
 
-    using discrete_vector_type = DiscreteVector<UniformDiscretization>;
+    using discrete_vector_type = DiscreteVector<UniformPointSampling>;
 
 public:
     static constexpr std::size_t rank()
@@ -51,7 +51,7 @@ public:
         continuous_element_type m_step {1.};
 
     public:
-        using discrete_dimension_type = UniformDiscretization;
+        using discrete_dimension_type = UniformPointSampling;
 
         Impl() = default;
 
@@ -227,34 +227,34 @@ public:
 };
 
 template <class>
-struct is_uniform_discretization : public std::false_type
+struct is_uniform_sampling : public std::false_type
 {
 };
 
 template <class CDim>
-struct is_uniform_discretization<UniformDiscretization<CDim>> : public std::true_type
+struct is_uniform_sampling<UniformPointSampling<CDim>> : public std::true_type
 {
 };
 
 template <class DDim>
-constexpr bool is_uniform_discretization_v = is_uniform_discretization<DDim>::value;
+constexpr bool is_uniform_sampling_v = is_uniform_sampling<DDim>::value;
 
 
 template <
         class DDimImpl,
         std::enable_if_t<
-                is_uniform_discretization_v<typename DDimImpl::discrete_dimension_type>,
+                is_uniform_sampling_v<typename DDimImpl::discrete_dimension_type>,
                 int> = 0>
 std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 {
-    return out << "UniformDiscretization( origin=" << mesh.origin() << ", step=" << mesh.step()
+    return out << "UniformPointSampling( origin=" << mesh.origin() << ", step=" << mesh.step()
                << " )";
 }
 
 /// @brief Lower bound index of the mesh
 template <class DDim>
 DDC_INLINE_FUNCTION std::
-        enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::continuous_element_type>
+        enable_if_t<is_uniform_sampling_v<DDim>, typename DDim::continuous_element_type>
         origin() noexcept
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
@@ -267,7 +267,7 @@ DDC_INLINE_FUNCTION std::
 /// @brief Lower bound index of the mesh
 template <class DDim>
 DDC_INLINE_FUNCTION std::
-        enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::discrete_element_type>
+        enable_if_t<is_uniform_sampling_v<DDim>, typename DDim::discrete_element_type>
         front() noexcept
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
@@ -280,7 +280,7 @@ DDC_INLINE_FUNCTION std::
 /// @brief Spacing step of the mesh
 template <class DDim>
 DDC_INLINE_FUNCTION std::
-        enable_if_t<is_uniform_discretization_v<DDim>, typename DDim::continuous_element_type>
+        enable_if_t<is_uniform_sampling_v<DDim>, typename DDim::continuous_element_type>
         step() noexcept
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
@@ -292,43 +292,42 @@ DDC_INLINE_FUNCTION std::
 
 template <class CDim>
 DDC_INLINE_FUNCTION constexpr Coordinate<CDim> coordinate(
-        DiscreteElement<UniformDiscretization<CDim>> const& c)
+        DiscreteElement<UniformPointSampling<CDim>> const& c)
 {
 #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
-    return discrete_space_device<UniformDiscretization<CDim>>().coordinate(c);
+    return discrete_space_device<UniformPointSampling<CDim>>().coordinate(c);
 #else
-    return discrete_space_host<UniformDiscretization<CDim>>().coordinate(c);
+    return discrete_space_host<UniformPointSampling<CDim>>().coordinate(c);
 #endif
 }
 
 template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
-        DiscreteElement<UniformDiscretization<CDim>> i)
+DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(DiscreteElement<UniformPointSampling<CDim>> i)
 {
-    return step<UniformDiscretization<CDim>>();
+    return step<UniformPointSampling<CDim>>();
 }
 
 template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
-        DiscreteElement<UniformDiscretization<CDim>> i)
+        DiscreteElement<UniformPointSampling<CDim>> i)
 {
-    return step<UniformDiscretization<CDim>>();
+    return step<UniformPointSampling<CDim>>();
 }
 
 template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<UniformDiscretization<CDim>> const& d)
+DDC_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<UniformPointSampling<CDim>> const& d)
 {
     return coordinate(d.front());
 }
 
 template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<UniformDiscretization<CDim>> const& d)
+DDC_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<UniformPointSampling<CDim>> const& d)
 {
     return coordinate(d.back());
 }
 
 template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<UniformDiscretization<CDim>> const& d)
+DDC_INLINE_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<UniformPointSampling<CDim>> const& d)
 {
     return rmax(d) - rmin(d);
 }
@@ -340,10 +339,7 @@ struct is_uniform_domain : std::false_type
 
 template <class... DDims>
 struct is_uniform_domain<DiscreteDomain<DDims...>>
-    : std::conditional_t<
-              (is_uniform_discretization_v<DDims> && ...),
-              std::true_type,
-              std::false_type>
+    : std::conditional_t<(is_uniform_sampling_v<DDims> && ...), std::true_type, std::false_type>
 {
 };
 
@@ -358,7 +354,7 @@ constexpr bool is_uniform_domain_v = is_uniform_domain<T>::value;
 //  * @param b the coordinate of the second real point (will have mesh coordinate `n-1`)
 //  * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
 //  */
-// template <class D, class = std::enable_if_t<is_uniform_discretization_v<D>>>
+// template <class D, class = std::enable_if_t<is_uniform_sampling_v<D>>>
 // constexpr DiscreteDomain<D> init_global_domain(
 //         typename D::continuous_element_type a,
 //         typename D::continuous_element_type b,

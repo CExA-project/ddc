@@ -54,8 +54,8 @@ $(document).ready(function(){initNavTree('rectilinear__domain_8hpp_source.html',
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;ddc/discrete_domain.hpp&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;ddc/non_uniform_discretization.hpp&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;ddc/uniform_discretization.hpp&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;ddc/non_uniform_point_sampling.hpp&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;ddc/uniform_point_sampling.hpp&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="structis__rectilinear__domain.html">   12</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structis__rectilinear__domain.html">is_rectilinear_domain</a> : std::false_type</div>
@@ -65,7 +65,7 @@ $(document).ready(function(){initNavTree('rectilinear__domain_8hpp_source.html',
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... DDims&gt;</div>
 <div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="structis__rectilinear__domain_3_01DiscreteDomain_3_01DDims_8_8_8_01_4_01_4.html">   17</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structis__rectilinear__domain.html">is_rectilinear_domain</a>&lt;<a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>&lt;DDims...&gt;&gt;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    : std::conditional_t&lt;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;              ((is_uniform_discretization_v&lt;DDims&gt; || is_non_uniform_discretization_v&lt;DDims&gt;)&amp;&amp;...),</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;              ((is_uniform_sampling_v&lt;DDims&gt; || is_non_uniform_sampling_v&lt;DDims&gt;)&amp;&amp;...),</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;              std::true_type,</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;              std::false_type&gt;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>

@@ -57,8 +57,8 @@ $(document).ready(function(){initNavTree('structDiscreteDomainIterator.html','')
 Public Types</h2></td></tr>
 <tr class="memitem:a8eb365aee73fbbd99d371bea21d33825"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a8eb365aee73fbbd99d371bea21d33825">iterator_category</a> = std::random_access_iterator_tag</td></tr>
 <tr class="separator:a8eb365aee73fbbd99d371bea21d33825"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa21da5a07729a7c1c596a91bc90934fc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#aa21da5a07729a7c1c596a91bc90934fc">value_type</a> = <a class="el" href="classDiscreteCoordinate.html">DiscreteCoordinate</a>&lt; DDim &gt;</td></tr>
-<tr class="separator:aa21da5a07729a7c1c596a91bc90934fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a785c6f66b677f5e056c5cc0d38b1b547"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a785c6f66b677f5e056c5cc0d38b1b547">value_type</a> = <a class="el" href="classDiscreteElement.html">DiscreteElement</a>&lt; DDim &gt;</td></tr>
+<tr class="separator:a785c6f66b677f5e056c5cc0d38b1b547"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0bf16f674194a9654af4aa2c955b8761"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a0bf16f674194a9654af4aa2c955b8761">difference_type</a> = std::ptrdiff_t</td></tr>
 <tr class="separator:a0bf16f674194a9654af4aa2c955b8761"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -66,10 +66,10 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a51b0d7a559f8c70dccec546a3c8fe332"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a51b0d7a559f8c70dccec546a3c8fe332">DiscreteDomainIterator</a> ()=default</td></tr>
 <tr class="separator:a51b0d7a559f8c70dccec546a3c8fe332"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38d0e71934165712c76873df952f6796"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a38d0e71934165712c76873df952f6796">DiscreteDomainIterator</a> (<a class="el" href="classDiscreteCoordinate.html">DiscreteCoordinate</a>&lt; DDim &gt; __value)</td></tr>
-<tr class="separator:a38d0e71934165712c76873df952f6796"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a902b1e134898f91e5305f6df0b236f10"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classDiscreteCoordinate.html">DiscreteCoordinate</a>&lt; DDim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a902b1e134898f91e5305f6df0b236f10">operator*</a> () const noexcept</td></tr>
-<tr class="separator:a902b1e134898f91e5305f6df0b236f10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d9786b1fbd7aae6f43076770aa18ce"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a76d9786b1fbd7aae6f43076770aa18ce">DiscreteDomainIterator</a> (<a class="el" href="classDiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; __value)</td></tr>
+<tr class="separator:a76d9786b1fbd7aae6f43076770aa18ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43e1b5ad3a820606d9a276506062b0f8"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classDiscreteElement.html">DiscreteElement</a>&lt; DDim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a43e1b5ad3a820606d9a276506062b0f8">operator*</a> () const noexcept</td></tr>
+<tr class="separator:a43e1b5ad3a820606d9a276506062b0f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7929bc3f4f13cc787352eae456090df"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#aa7929bc3f4f13cc787352eae456090df">operator++</a> ()</td></tr>
 <tr class="separator:aa7929bc3f4f13cc787352eae456090df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b4aee38daa1f32a360a55711af566a1"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a6b4aee38daa1f32a360a55711af566a1">operator++</a> (int)</td></tr>
@@ -82,8 +82,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa0e0cd39d8f6ad5a70839656d29b63a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57e5a0feedd2bb4a68e79aabb73b965c"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a57e5a0feedd2bb4a68e79aabb73b965c">operator-=</a> (<a class="el" href="structDiscreteDomainIterator.html#a0bf16f674194a9654af4aa2c955b8761">difference_type</a> __n)</td></tr>
 <tr class="separator:a57e5a0feedd2bb4a68e79aabb73b965c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a7c2c148dacd8eab8109b43676210f0"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classDiscreteCoordinate.html">DiscreteCoordinate</a>&lt; DDim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a6a7c2c148dacd8eab8109b43676210f0">operator[]</a> (<a class="el" href="structDiscreteDomainIterator.html#a0bf16f674194a9654af4aa2c955b8761">difference_type</a> __n) const</td></tr>
-<tr class="separator:a6a7c2c148dacd8eab8109b43676210f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35375328256f3a08789625049c7ae17e"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classDiscreteElement.html">DiscreteElement</a>&lt; DDim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDiscreteDomainIterator.html#a35375328256f3a08789625049c7ae17e">operator[]</a> (<a class="el" href="structDiscreteDomainIterator.html#a0bf16f674194a9654af4aa2c955b8761">difference_type</a> __n) const</td></tr>
+<tr class="separator:a35375328256f3a08789625049c7ae17e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -125,8 +125,8 @@ template&lt;class DDim &gt; </div>
 
 </div>
 </div>
-<a id="aa21da5a07729a7c1c596a91bc90934fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa21da5a07729a7c1c596a91bc90934fc">&#9670;&nbsp;</a></span>value_type</h2>
+<a id="a785c6f66b677f5e056c5cc0d38b1b547"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a785c6f66b677f5e056c5cc0d38b1b547">&#9670;&nbsp;</a></span>value_type</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -134,7 +134,7 @@ template&lt;class DDim &gt; </div>
 template&lt;class DDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt;::<a class="el" href="structDiscreteDomainIterator.html#aa21da5a07729a7c1c596a91bc90934fc">value_type</a> =  <a class="el" href="classDiscreteCoordinate.html">DiscreteCoordinate</a>&lt;DDim&gt;</td>
+          <td class="memname">using <a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt;::<a class="el" href="structDiscreteDomainIterator.html#a785c6f66b677f5e056c5cc0d38b1b547">value_type</a> =  <a class="el" href="classDiscreteElement.html">DiscreteElement</a>&lt;DDim&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -185,8 +185,8 @@ template&lt;class DDim &gt; </div>
 
 </div>
 </div>
-<a id="a38d0e71934165712c76873df952f6796"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38d0e71934165712c76873df952f6796">&#9670;&nbsp;</a></span>DiscreteDomainIterator() <span class="overload">[2/2]</span></h2>
+<a id="a76d9786b1fbd7aae6f43076770aa18ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76d9786b1fbd7aae6f43076770aa18ce">&#9670;&nbsp;</a></span>DiscreteDomainIterator() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -199,7 +199,7 @@ template&lt;class DDim &gt; </div>
         <tr>
           <td class="memname">constexpr <a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt;::<a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classDiscreteCoordinate.html">DiscreteCoordinate</a>&lt; DDim &gt;&#160;</td>
+          <td class="paramtype"><a class="el" href="classDiscreteElement.html">DiscreteElement</a>&lt; DDim &gt;&#160;</td>
           <td class="paramname"><em>__value</em></td><td>)</td>
           <td></td>
         </tr>
@@ -214,8 +214,8 @@ template&lt;class DDim &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a902b1e134898f91e5305f6df0b236f10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a902b1e134898f91e5305f6df0b236f10">&#9670;&nbsp;</a></span>operator*()</h2>
+<a id="a43e1b5ad3a820606d9a276506062b0f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43e1b5ad3a820606d9a276506062b0f8">&#9670;&nbsp;</a></span>operator*()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -226,7 +226,7 @@ template&lt;class DDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="classDiscreteCoordinate.html">DiscreteCoordinate</a>&lt;DDim&gt; <a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt;::operator* </td>
+          <td class="memname">constexpr <a class="el" href="classDiscreteElement.html">DiscreteElement</a>&lt;DDim&gt; <a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt;::operator* </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -407,8 +407,8 @@ template&lt;class DDim &gt; </div>
 
 </div>
 </div>
-<a id="a6a7c2c148dacd8eab8109b43676210f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a7c2c148dacd8eab8109b43676210f0">&#9670;&nbsp;</a></span>operator[]()</h2>
+<a id="a35375328256f3a08789625049c7ae17e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35375328256f3a08789625049c7ae17e">&#9670;&nbsp;</a></span>operator[]()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -419,7 +419,7 @@ template&lt;class DDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="classDiscreteCoordinate.html">DiscreteCoordinate</a>&lt;DDim&gt; <a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt;::operator[] </td>
+          <td class="memname">constexpr <a class="el" href="classDiscreteElement.html">DiscreteElement</a>&lt;DDim&gt; <a class="el" href="structDiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt;::operator[] </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structDiscreteDomainIterator.html#a0bf16f674194a9654af4aa2c955b8761">difference_type</a>&#160;</td>
           <td class="paramname"><em>__n</em></td><td>)</td>

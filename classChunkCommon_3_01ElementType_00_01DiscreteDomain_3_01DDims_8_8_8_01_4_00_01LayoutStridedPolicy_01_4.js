@@ -4,7 +4,7 @@ var classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00
     [ "mdomain_type", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a2c47c92689d4d29e73f8b50bda549e4d", null ],
     [ "allocation_mdspan_type", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a5dea9ea7766f3138f3cd08c683695b10", null ],
     [ "const_allocation_mdspan_type", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a1d61da6d0b4de7abbacedfb999dc4028", null ],
-    [ "mcoord_type", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a927cbaf53d71f4ccb364e12fcd93908e", null ],
+    [ "discrete_element_type", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a67fb3fa011f1a116f08f7fcd1d5257e4", null ],
     [ "extents_type", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a6e0ffb3c5ca8c26ac7cb355fc69e98f8", null ],
     [ "layout_type", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#aa0a59605362e98bc32bff9ac5420fde1", null ],
     [ "accessor_type", "classChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a835cdf43fe72f6edae490577e13f19de", null ],

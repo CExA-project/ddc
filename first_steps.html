@@ -142,7 +142,7 @@ Dimension X</h3>
 </div><!-- fragment --><p> We start by defining <code>gwx</code>, the number of "ghost" points in the <code>X</code> dimension, those represented in dark grey in the figure on each side of the domain.</p>
 <div class="fragment"><div class="line">    <span class="comment">// Number of ghost points to use on each side in X</span></div>
 <div class="line">    <a class="code" href="classDiscreteVector.html">DiscreteVector&lt;DDimX&gt;</a> <span class="keyword">static</span> constexpr gwx {1};</div>
-<div class="ttc" id="aclassDiscreteVector_html"><div class="ttname"><a href="classDiscreteVector.html">DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:205</div></div>
+<div class="ttc" id="aclassDiscreteVector_html"><div class="ttname"><a href="classDiscreteVector.html">DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:207</div></div>
 </div><!-- fragment --><p>This can be made <code>static constexpr</code> since here this is a compile-time constant. The type for this constant is <code><a class="el" href="classDiscreteVector.html" title="A DiscreteVector is a vector in the discrete dimension.">DiscreteVector</a>&lt;DDimX&gt;</code> that represents a number of elements in the discretization of the <code>X</code> dimension.</p>
 <p>Once done, we initialize the discretization of the <code>X</code> dimension. Its name has been specified before, but we now set its parameters with the <code>init_discretization</code> function.</p>
 <div class="fragment"><div class="line">    <span class="comment">// Initialization of the global domain in X with gwx ghost points on</span></div>
@@ -239,7 +239,7 @@ Time dimension</h3>
 <div class="line">                                          init(Coordinate&lt;T&gt;(start_time),</div>
 <div class="line">                                               Coordinate&lt;T&gt;(end_time),</div>
 <div class="line">                                               nb_time_steps + 1));</div>
-<div class="ttc" id="aclassDiscreteElement_html"><div class="ttname"><a href="classDiscreteElement.html">DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:121</div></div>
+<div class="ttc" id="aclassDiscreteElement_html"><div class="ttname"><a href="classDiscreteElement.html">DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:123</div></div>
 <div class="ttc" id="astructreducer_1_1max_html"><div class="ttname"><a href="structreducer_1_1max.html">reducer::max</a></div><div class="ttdef"><b>Definition:</b> reducer.hpp:96</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
 Data allocation</h1>

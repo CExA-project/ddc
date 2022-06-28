@@ -17,14 +17,35 @@
 
 namespace detail {
 
+template <class IDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
+struct DiscreteSpaceGetter;
+
 // For now, in the future, this should be specialized by tag
 template <class IDimImpl>
-inline IDimImpl* discrete_space_host = nullptr;
+inline IDimImpl* g_discrete_space_host = nullptr;
+
+template <class IDim>
+struct DiscreteSpaceGetter<IDim, Kokkos::HostSpace>
+{
+    static inline typename IDim::template Impl<Kokkos::HostSpace> const& get()
+    {
+        return *g_discrete_space_host<typename IDim::template Impl<Kokkos::HostSpace>>;
+    }
+};
 
 #if defined(__CUDACC__) || defined(__HIPCC__)
 // WARNING: do not put the `inline` keyword, seems to fail on MI100 rocm/4.5.0
 template <class IDimImpl>
-__device__ __constant__ IDimImpl* discrete_space_device = nullptr;
+__device__ __constant__ IDimImpl* g_discrete_space_device = nullptr;
+
+template <class IDim, MemorySpace>
+struct DiscreteSpaceGetter
+{
+    static inline typename IDim::template Impl<MemorySpace> const& get()
+    {
+        return *g_discrete_space_device<typename IDim::template Impl<MemorySpace>>;
+    }
+};
 #endif
 
 template <class Tuple, std::size_t... Ids>
@@ -39,12 +60,13 @@ void init_discrete_space_devices()
     using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
 #if defined(__CUDACC__)
     using IDimImplDevice = typename IDim::template Impl<Kokkos::CudaSpace>;
-    discrete_space_host<IDimImplDevice> = new IDimImplDevice(*discrete_space_host<IDimImplHost>);
+    g_discrete_space_host<IDimImplDevice> = new IDimImplDevice(
+            *g_discrete_space_host<IDimImplHost>);
     IDimImplDevice* ptr_device;
     cudaMalloc(&ptr_device, sizeof(IDimImplDevice));
     cudaMemcpy(
             (void*)ptr_device,
-            discrete_space_host<IDimImplDevice>,
+            g_discrete_space_host<IDimImplDevice>,
             sizeof(IDimImplDevice),
             cudaMemcpyHostToDevice);
     cudaMemcpyToSymbol(
@@ -56,12 +78,13 @@ void init_discrete_space_devices()
 #endif
 #if defined(__HIPCC__)
     using IDimImplDevice = typename IDim::template Impl<Kokkos::Experimental::HIPSpace>;
-    discrete_space_host<IDimImplDevice> = new IDimImplDevice(*discrete_space_host<IDimImplHost>);
+    g_discrete_space_host<IDimImplDevice> = new IDimImplDevice(
+            *g_discrete_space_host<IDimImplHost>);
     IDimImplDevice* ptr_device;
     hipMalloc(&ptr_device, sizeof(IDimImplDevice));
     hipMemcpy(
             (void*)ptr_device,
-            discrete_space_host<IDimImplDevice>,
+            g_discrete_space_host<IDimImplDevice>,
             sizeof(IDimImplDevice),
             hipMemcpyHostToDevice);
     hipMemcpyToSymbol(
@@ -80,10 +103,10 @@ Arg init_discrete_space(std::tuple<IDimImpl, Arg>&& a)
 {
     using IDim = typename IDimImpl::discrete_dimension_type;
     using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
-    if (detail::discrete_space_host<IDimImplHost>) {
+    if (detail::g_discrete_space_host<IDimImplHost>) {
         throw std::runtime_error("Discrete space function already initialized.");
     }
-    detail::discrete_space_host<IDimImplHost> = new IDimImplHost(std::move(std::get<0>(a)));
+    detail::g_discrete_space_host<IDimImplHost> = new IDimImplHost(std::move(std::get<0>(a)));
     detail::init_discrete_space_devices<IDim>();
     return std::get<1>(a);
 }
@@ -94,10 +117,10 @@ std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_discrete_space(
 {
     using IDim = typename IDimImpl::discrete_dimension_type;
     using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
-    if (detail::discrete_space_host<IDimImplHost>) {
+    if (detail::g_discrete_space_host<IDimImplHost>) {
         throw std::runtime_error("Discrete space function already initialized.");
     }
-    detail::discrete_space_host<IDimImplHost> = new IDimImplHost(std::move(std::get<0>(a)));
+    detail::g_discrete_space_host<IDimImplHost> = new IDimImplHost(std::move(std::get<0>(a)));
     detail::init_discrete_space_devices<IDim>();
     return detail::extract_after(std::move(a), std::index_sequence_for<Args...>());
 }
@@ -106,39 +129,15 @@ template <class IDim, class... Args>
 void init_discrete_space(Args&&... a)
 {
     using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
-    if (detail::discrete_space_host<std::remove_cv_t<std::remove_reference_t<IDimImplHost>>>) {
+    if (detail::g_discrete_space_host<std::remove_cv_t<std::remove_reference_t<IDimImplHost>>>) {
         throw std::runtime_error("Discrete space function already initialized.");
     }
-    detail::discrete_space_host<IDimImplHost> = new IDimImplHost(std::forward<Args>(a)...);
+    detail::g_discrete_space_host<IDimImplHost> = new IDimImplHost(std::forward<Args>(a)...);
     detail::init_discrete_space_devices<IDim>();
 }
 
-template <class IDim>
+template <class IDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
 inline typename IDim::template Impl<Kokkos::HostSpace> const& discrete_space()
 {
-    return *detail::discrete_space_host<typename IDim::template Impl<Kokkos::HostSpace>>;
+    return detail::DiscreteSpaceGetter<IDim, Kokkos::HostSpace>::get();
 }
-
-template <class IDim>
-inline typename IDim::template Impl<Kokkos::HostSpace> const& discrete_space_host()
-{
-    return *detail::discrete_space_host<typename IDim::template Impl<Kokkos::HostSpace>>;
-}
-
-#if defined(__CUDACC__)
-template <class IDim>
-__device__ inline typename IDim::template Impl<Kokkos::CudaSpace> const& discrete_space_device()
-{
-    return *detail::discrete_space_device<typename IDim::template Impl<Kokkos::CudaSpace>>;
-}
-#endif
-
-#if defined(__HIPCC__)
-template <class IDim>
-__device__ inline typename IDim::template Impl<Kokkos::Experimental::HIPSpace> const&
-discrete_space_device()
-{
-    return *detail::discrete_space_device<
-            typename IDim::template Impl<Kokkos::Experimental::HIPSpace>>;
-}
-#endif

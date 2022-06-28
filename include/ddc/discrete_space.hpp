@@ -98,42 +98,46 @@ void init_discrete_space_devices()
 
 } // namespace detail
 
-template <class IDimImpl, class Arg>
-Arg init_discrete_space(std::tuple<IDimImpl, Arg>&& a)
+/** Initialize (emplace) a global singleton discrete space
+ * 
+ * @param a the constructor arguments
+ */
+template <class DDim, class... Args>
+static inline void init_discrete_space(Args&&... a)
 {
-    using IDim = typename IDimImpl::discrete_dimension_type;
-    using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
-    if (detail::g_discrete_space_host<IDimImplHost>) {
+    using DDimImplHost = typename DDim::template Impl<Kokkos::HostSpace>;
+    if (detail::g_discrete_space_host<std::remove_cv_t<std::remove_reference_t<DDimImplHost>>>) {
         throw std::runtime_error("Discrete space function already initialized.");
     }
-    detail::g_discrete_space_host<IDimImplHost> = new IDimImplHost(std::move(std::get<0>(a)));
-    detail::init_discrete_space_devices<IDim>();
+    detail::g_discrete_space_host<DDimImplHost> = new DDimImplHost(std::forward<Args>(a)...);
+    detail::init_discrete_space_devices<DDim>();
+}
+
+/** Move construct a global singleton discrete space and pass through the other argument
+ * 
+ * @param a - the discrete space to move at index 0
+ *          - the arguments to pass through at index 1
+ */
+template <class IDimImpl, class Arg>
+static inline Arg init_discrete_space(std::tuple<IDimImpl, Arg>&& a)
+{
+    using DDim = typename IDimImpl::discrete_dimension_type;
+    init_discrete_space<DDim>(std::move(std::get<0>(a)));
     return std::get<1>(a);
 }
 
+/** Move construct a global singleton discrete space and pass through remaining arguments
+ * 
+ * @param a - the discrete space to move at index 0
+ *          - the (2+) arguments to pass through in other indices
+ */
 template <class IDimImpl, class... Args>
-std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_discrete_space(
+static inline std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_discrete_space(
         std::tuple<IDimImpl, Args...>&& a)
 {
-    using IDim = typename IDimImpl::discrete_dimension_type;
-    using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
-    if (detail::g_discrete_space_host<IDimImplHost>) {
-        throw std::runtime_error("Discrete space function already initialized.");
-    }
-    detail::g_discrete_space_host<IDimImplHost> = new IDimImplHost(std::move(std::get<0>(a)));
-    detail::init_discrete_space_devices<IDim>();
+    using DDim = typename IDimImpl::discrete_dimension_type;
+    init_discrete_space<DDim>(std::move(std::get<0>(a)));
     return detail::extract_after(std::move(a), std::index_sequence_for<Args...>());
-}
-
-template <class IDim, class... Args>
-void init_discrete_space(Args&&... a)
-{
-    using IDimImplHost = typename IDim::template Impl<Kokkos::HostSpace>;
-    if (detail::g_discrete_space_host<std::remove_cv_t<std::remove_reference_t<IDimImplHost>>>) {
-        throw std::runtime_error("Discrete space function already initialized.");
-    }
-    detail::g_discrete_space_host<IDimImplHost> = new IDimImplHost(std::forward<Args>(a)...);
-    detail::init_discrete_space_devices<IDim>();
 }
 
 template <class IDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>

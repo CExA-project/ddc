@@ -17,7 +17,7 @@
 
 namespace detail {
 
-template <class IDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
+template <class IDim, class MemorySpace>
 struct DiscreteSpaceGetter;
 
 // For now, in the future, this should be specialized by tag
@@ -38,10 +38,11 @@ struct DiscreteSpaceGetter<IDim, Kokkos::HostSpace>
 template <class IDimImpl>
 __device__ __constant__ IDimImpl* g_discrete_space_device = nullptr;
 
-template <class IDim, MemorySpace>
+template <class IDim, class MemorySpace>
 struct DiscreteSpaceGetter
 {
-    static inline typename IDim::template Impl<MemorySpace> const& get()
+    DDC_INLINE_FUNCTION
+    static typename IDim::template Impl<MemorySpace> const& get()
     {
         return *g_discrete_space_device<typename IDim::template Impl<MemorySpace>>;
     }
@@ -70,7 +71,7 @@ void init_discrete_space_devices()
             sizeof(IDimImplDevice),
             cudaMemcpyHostToDevice);
     cudaMemcpyToSymbol(
-            discrete_space_device<IDimImplDevice>,
+            g_discrete_space_device<IDimImplDevice>,
             &ptr_device,
             sizeof(IDimImplDevice*),
             0,
@@ -141,7 +142,7 @@ static inline std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_d
 }
 
 template <class IDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
-inline typename IDim::template Impl<Kokkos::HostSpace> const& discrete_space()
+DDC_INLINE_FUNCTION typename IDim::template Impl<MemorySpace> const& discrete_space()
 {
-    return detail::DiscreteSpaceGetter<IDim, Kokkos::HostSpace>::get();
+    return detail::DiscreteSpaceGetter<IDim, MemorySpace>::get();
 }

@@ -101,7 +101,7 @@ jobs:
           export CC=gcc-10
           export CXX=g++-10
           export FC=gfortran-10
-          cmake -DKokkos_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD=17 -DKokkos_ARCH_VOLTA70=ON -DKokkos_ENABLE_CUDA_LAMBDA=ON -DKokkos_ENABLE_CUDA_CONSTEXPR=ON -DKokkos_ENABLE_CUDA=ON -DCMAKE_CXX_FLAGS="-Wall" -DBUILD_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=Debug /src
+          cmake -DKokkos_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD=17 -DKokkos_ARCH_VOLTA70=ON -DKokkos_ENABLE_CUDA_LAMBDA=ON -DKokkos_ENABLE_CUDA_CONSTEXPR=ON -DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_LIBDL=OFF -DCMAKE_CXX_FLAGS="-Wall" -DBUILD_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=Debug /src
           make -j 2 VERBOSE=1
           ctest -j 2 --output-on-failure --timeout 5 --output-junit tests.xml
         EOF

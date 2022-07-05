@@ -85,6 +85,7 @@ struct mdspan_to_kokkos_element
 };
 
 /// Alias template to transform a mdspan element type to a Kokkos element type
+/// Only dynamic dimensions is supported for now i.e. `double[4]*` is not yet covered.
 template <class ET, std::size_t N>
 using mdspan_to_kokkos_element_t = typename mdspan_to_kokkos_element<ET, N>::type;
 
@@ -98,6 +99,7 @@ struct kokkos_to_mdspan_element
 };
 
 /// Alias template to transform a Kokkos element type to a mdspan element type
+/// Only dynamic dimensions is supported for now i.e. `double[4]*` is not yet covered.
 template <class ET>
 using kokkos_to_mdspan_element_t = typename kokkos_to_mdspan_element<ET>::type;
 

@@ -291,7 +291,7 @@ $(document).ready(function(){initNavTree('chunk__span_8hpp_source.html',''); ini
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                s.mapping(),</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;                std::make_index_sequence&lt;<span class="keyword">sizeof</span>...(DDims)&gt; {});</div>
 <div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;        <span class="keywordflow">return</span> Kokkos::View&lt;</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;                detail::mdspan_to_kokkos_element_type_t&lt;ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;                detail::mdspan_to_kokkos_element_t&lt;ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
 <div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;                decltype(kokkos_layout),</div>
 <div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;                MemorySpace&gt;(s.data(), kokkos_layout);</div>
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    }</div>
@@ -312,9 +312,9 @@ $(document).ready(function(){initNavTree('chunk__span_8hpp_source.html',''); ini
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        <span class="keyword">class</span>... DDims,</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <span class="keyword">class </span>= std::enable_if_t&lt;Kokkos::is_view&lt;KokkosView&gt;::value&gt;&gt;</div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a>(KokkosView <span class="keyword">const</span>&amp; view, <a class="code" href="classDiscreteDomain.html">DiscreteDomain&lt;DDims...&gt;</a> domain) -&gt; <a class="code" href="namespace_3globalScope_4.html#classChunkSpan">ChunkSpan</a>&lt;</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        detail::kokkos_to_mdspan_element_type_t&lt;typename KokkosView::data_type&gt;,</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        detail::kokkos_to_mdspan_element_t&lt;typename KokkosView::data_type&gt;,</div>
 <div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <a class="code" href="classDiscreteDomain.html">DiscreteDomain</a>&lt;DDims...&gt;,</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        detail::mdspan_layout_t&lt;typename KokkosView::array_layout&gt;,</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        detail::kokkos_to_mdspan_layout_t&lt;typename KokkosView::array_layout&gt;,</div>
 <div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        <span class="keyword">typename</span> KokkosView::memory_space&gt;;</div>
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
 <div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="keyword">template</span> &lt;</div>

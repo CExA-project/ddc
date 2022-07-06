@@ -257,7 +257,7 @@ $(document).ready(function(){initNavTree('chunk_8hpp_source.html',''); initResiz
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                s.mapping(),</div>
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                std::make_index_sequence&lt;<span class="keyword">sizeof</span>...(DDims)&gt; {});</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        <span class="keywordflow">return</span> Kokkos::View&lt;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                detail::mdspan_to_kokkos_element_type_t&lt;ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                detail::mdspan_to_kokkos_element_t&lt;ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                decltype(kokkos_layout),</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                <span class="keyword">typename</span> Allocator::memory_space&gt;(s.data(), kokkos_layout);</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    }</div>
@@ -270,7 +270,7 @@ $(document).ready(function(){initNavTree('chunk_8hpp_source.html',''); initResiz
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                s.mapping(),</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                std::make_index_sequence&lt;<span class="keyword">sizeof</span>...(DDims)&gt; {});</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;        <span class="keywordflow">return</span> Kokkos::View&lt;</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;                detail::mdspan_to_kokkos_element_type_t&lt;ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;                detail::mdspan_to_kokkos_element_t&lt;ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;                decltype(kokkos_layout),</div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                <span class="keyword">typename</span> Allocator::memory_space&gt;(s.data(), kokkos_layout);</div>
 <div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    }</div>

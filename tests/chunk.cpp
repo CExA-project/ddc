@@ -5,7 +5,7 @@
 
 namespace {
 
-struct DDimX;
+using DDimX = static_discrete_dim<IntrincallyDiscrete, struct DDimXTag>;
 using DElemX = DiscreteElement<DDimX>;
 using DVectX = DiscreteVector<DDimX>;
 using DDomX = DiscreteDomain<DDimX>;
@@ -16,7 +16,7 @@ template <class Datatype>
 using ChunkSpanX = ChunkSpan<Datatype, DDomX>;
 
 
-struct DDimY;
+using DDimY = static_discrete_dim<IntrincallyDiscrete, struct DDimYTag>;
 using DElemY = DiscreteElement<DDimY>;
 using DVectY = DiscreteVector<DDimY>;
 using DDomY = DiscreteDomain<DDimY>;
@@ -25,7 +25,7 @@ template <class Datatype>
 using ChunkY = Chunk<Datatype, DDomY>;
 
 
-struct DDimZ;
+using DDimZ = static_discrete_dim<IntrincallyDiscrete, struct DDimZTag>;
 using DElemZ = DiscreteElement<DDimZ>;
 using DVectZ = DiscreteVector<DDimZ>;
 using DDomZ = DiscreteDomain<DDimZ>;

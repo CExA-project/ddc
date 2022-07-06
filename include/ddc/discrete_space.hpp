@@ -24,12 +24,15 @@ struct DiscreteSpaceGetter;
 template <class IDimImpl>
 inline IDimImpl* g_discrete_space_host = nullptr;
 
-template <class IDim>
-struct DiscreteSpaceGetter<IDim, Kokkos::HostSpace>
+template <class DDim>
+struct DiscreteSpaceGetter<DDim, Kokkos::HostSpace>
 {
-    static inline typename IDim::template Impl<Kokkos::HostSpace> const& get()
+    DDC_INLINE_FUNCTION static
+            typename DDim::discretization_type::template Impl<Kokkos::HostSpace> const&
+            get()
     {
-        return *g_discrete_space_host<typename IDim::template Impl<Kokkos::HostSpace>>;
+        return *g_discrete_space_host<
+                typename DDim::discretization_type::template Impl<Kokkos::HostSpace>>;
     }
 };
 
@@ -38,13 +41,14 @@ struct DiscreteSpaceGetter<IDim, Kokkos::HostSpace>
 template <class IDimImpl>
 __device__ __constant__ IDimImpl* g_discrete_space_device = nullptr;
 
-template <class IDim, class MemorySpace>
+template <class DDim, class MemorySpace>
 struct DiscreteSpaceGetter
 {
-    DDC_INLINE_FUNCTION
-    static typename IDim::template Impl<MemorySpace> const& get()
+    DDC_INLINE_FUNCTION static typename DDim::discretization_type::template Impl<MemorySpace> const&
+    get()
     {
-        return *g_discrete_space_device<typename IDim::template Impl<MemorySpace>>;
+        return *g_discrete_space_device<
+                typename DDim::discretization_type::template Impl<MemorySpace>>;
     }
 };
 #endif
@@ -141,8 +145,64 @@ static inline std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_d
     return detail::extract_after(std::move(a), std::index_sequence_for<Args...>());
 }
 
-template <class IDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
-DDC_INLINE_FUNCTION typename IDim::template Impl<MemorySpace> const& discrete_space()
+template <class DDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
+DDC_INLINE_FUNCTION typename DDim::discretization_type::template Impl<MemorySpace> const&
+discrete_space()
 {
-    return detail::DiscreteSpaceGetter<IDim, MemorySpace>::get();
+    return detail::DiscreteSpaceGetter<DDim, MemorySpace>::get();
 }
+
+class IntrincallyDiscrete;
+
+template <class Disc, class Tag>
+struct static_discrete_dim
+{
+    using discretization_type = Disc;
+
+    using discrete_dimension_type = static_discrete_dim;
+
+    using discrete_element_type = DiscreteElement<static_discrete_dim>;
+
+    using discrete_domain_type = DiscreteDomain<static_discrete_dim>;
+
+    using discrete_vector_type = DiscreteVector<static_discrete_dim>;
+
+    template <class... Args>
+    static auto make(Args&&... args)
+    {
+        return std::make_tuple(
+                static_discrete_dim(),
+                init_discrete_space(std::forward<Args...>(args...)));
+    }
+
+    template <class... Args>
+    static DDC_INLINE_FUNCTION auto make_element(Args&&... args)
+    {
+        return discrete_element_type(std::forward<Args...>(args...));
+    }
+
+    template <class... Args>
+    static DDC_INLINE_FUNCTION auto make_domain(Args&&... args)
+    {
+        return discrete_domain_type(std::forward<Args...>(args...));
+    }
+
+    template <class... Args>
+    static DDC_INLINE_FUNCTION auto make_vector(Args&&... args)
+    {
+        return discrete_vector_type(std::forward<Args...>(args...));
+    }
+};
+
+template <class>
+struct is_discrete_dimension : public std::false_type
+{
+};
+
+template <class Disc, class Tag>
+struct is_discrete_dimension<static_discrete_dim<Disc, Tag>> : public std::true_type
+{
+};
+
+template <class DDim>
+constexpr bool is_discrete_dimension_v = is_discrete_dimension<DDim>::value;

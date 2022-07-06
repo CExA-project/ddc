@@ -8,8 +8,8 @@
 using cell = bool;
 
 // Name of the axis
-struct DDimX;
-struct DDimY;
+using DDimX = static_discrete_dim<IntrincallyDiscrete, struct DDimXTag>;
+using DDimY = static_discrete_dim<IntrincallyDiscrete, struct DDimYTag>;
 
 static unsigned nt = 10;
 static unsigned length = 5;

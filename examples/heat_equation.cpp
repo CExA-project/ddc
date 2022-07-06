@@ -19,21 +19,21 @@ struct X;
 
 //! [X-discretization]
 /// A uniform discretization of X
-using DDimX = UniformPointSampling<X>;
+using DDimX = static_discrete_dim<UniformPointSampling<X>, class DDimXTag>;
 //! [X-discretization]
 
 //! [Y-space]
 // Our second continuous dimension
 struct Y;
 // Its uniform discretization
-using DDimY = UniformPointSampling<Y>;
+using DDimY = static_discrete_dim<UniformPointSampling<Y>, class DDimYTag>;
 //! [Y-space]
 
 //! [time-space]
 // Our simulated time dimension
 struct T;
 // Its uniform discretization
-using DDimT = UniformPointSampling<T>;
+using DDimT = static_discrete_dim<UniformPointSampling<T>, class DDimTTag>;
 //! [time-space]
 
 
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
     // Initialization of the global domain in X with gwx ghost points on
     // each side
     auto const [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]
-            = init_discrete_space(DDimX::init_ghosted(
+            = init_discrete_space(init_ghosted<DDimX>(
                     Coordinate<X>(x_start),
                     Coordinate<X>(x_end),
                     DiscreteVector<DDimX>(nb_x_points),
@@ -140,7 +140,7 @@ int main(int argc, char** argv)
     // Initialization of the global domain in Y with gwy ghost points on
     // each side
     auto const [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]
-            = init_discrete_space(DDimY::init_ghosted(
+            = init_discrete_space(init_ghosted<DDimY>(
                     Coordinate<Y>(y_start),
                     Coordinate<Y>(y_end),
                     DiscreteVector<DDimY>(nb_y_points),
@@ -186,8 +186,7 @@ int main(int argc, char** argv)
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
     DiscreteDomain<DDimT> const time_domain
-            = init_discrete_space(DDimT::
-                                          init(Coordinate<T>(start_time),
+            = init_discrete_space(init<DDimT>(Coordinate<T>(start_time),
                                                Coordinate<T>(end_time),
                                                nb_time_steps + 1));
     //! [time-domains]

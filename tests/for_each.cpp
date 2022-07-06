@@ -4,12 +4,12 @@
 
 #include <gtest/gtest.h>
 
-struct DDimX;
+using DDimX = static_discrete_dim<IntrincallyDiscrete, struct DDimXTag>;
 using DElemX = DiscreteElement<DDimX>;
 using DVectX = DiscreteVector<DDimX>;
 using DDomX = DiscreteDomain<DDimX>;
 
-struct DDimY;
+using DDimY = static_discrete_dim<IntrincallyDiscrete, struct DDimYTag>;
 using DElemY = DiscreteElement<DDimY>;
 using DVectY = DiscreteVector<DDimY>;
 using DDomY = DiscreteDomain<DDimY>;

@@ -126,6 +126,21 @@ struct is_non_uniform_sampling<NonUniformPointSampling<CDim>> : public std::true
 template <class DDim>
 constexpr bool is_non_uniform_sampling_v = is_non_uniform_sampling<DDim>::value;
 
+template <class DDim, bool = is_discrete_dimension_v<DDim>>
+struct is_non_uniform_sampling_dimension
+{
+    static constexpr bool value = false;
+};
+
+template <class DDim>
+struct is_non_uniform_sampling_dimension<DDim, true>
+{
+    static constexpr bool value = is_non_uniform_sampling_v<typename DDim::discretization_type>;
+};
+
+template <class DDim>
+constexpr bool is_non_uniform_sampling_dimension_v = is_non_uniform_sampling_dimension<DDim>::value;
+
 template <
         class DDimImpl,
         std::enable_if_t<
@@ -136,41 +151,56 @@ std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
     return out << "NonUniformPointSampling(" << mesh.size() << ")";
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> coordinate(
-        DiscreteElement<NonUniformPointSampling<CDim>> const& c)
+template <class DDim>
+DDC_INLINE_FUNCTION std::enable_if_t<
+        is_non_uniform_sampling_dimension_v<DDim>,
+        typename DDim::discretization_type::continuous_element_type>
+coordinate(DiscreteElement<DDim> const& c)
 {
-    return discrete_space<NonUniformPointSampling<CDim>>().coordinate(c);
+    return discrete_space<DDim>().coordinate(c);
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
-        DiscreteElement<NonUniformPointSampling<CDim>> i)
+template <class DDim>
+DDC_INLINE_FUNCTION std::enable_if_t<
+        is_non_uniform_sampling_dimension_v<DDim>,
+        typename DDim::discretization_type::continuous_element_type>
+distance_at_left(DiscreteElement<DDim> i)
 {
     return coordinate(i) - coordinate(i - 1);
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
-        DiscreteElement<NonUniformPointSampling<CDim>> i)
+template <class DDim>
+DDC_INLINE_FUNCTION std::enable_if_t<
+        is_non_uniform_sampling_dimension_v<DDim>,
+        typename DDim::discretization_type::continuous_element_type>
+distance_at_right(DiscreteElement<DDim> i)
 {
     return coordinate(i + 1) - coordinate(i);
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<NonUniformPointSampling<CDim>> const& d)
+template <class DDim>
+DDC_INLINE_FUNCTION std::enable_if_t<
+        is_non_uniform_sampling_dimension_v<DDim>,
+        typename DDim::discretization_type::continuous_element_type>
+rmin(DiscreteDomain<DDim> const& d)
 {
     return coordinate(d.front());
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<NonUniformPointSampling<CDim>> const& d)
+template <class DDim>
+DDC_INLINE_FUNCTION std::enable_if_t<
+        is_non_uniform_sampling_dimension_v<DDim>,
+        typename DDim::discretization_type::continuous_element_type>
+rmax(DiscreteDomain<DDim> const& d)
 {
     return coordinate(d.back());
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<NonUniformPointSampling<CDim>> const& d)
+template <class DDim>
+DDC_INLINE_FUNCTION std::enable_if_t<
+        is_non_uniform_sampling_dimension_v<DDim>,
+        typename DDim::discretization_type::continuous_element_type>
+rlength(DiscreteDomain<DDim> const& d)
 {
     return rmax(d) - rmin(d);
 }

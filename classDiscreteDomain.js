@@ -6,7 +6,7 @@ var classDiscreteDomain =
     [ "DiscreteDomain", "classDiscreteDomain.html#a29e7032d149594ce3535bfce8288e4a6", null ],
     [ "DiscreteDomain", "classDiscreteDomain.html#a48bf8e3a3b0fa89033e6dfe3a8239ba6", null ],
     [ "DiscreteDomain", "classDiscreteDomain.html#a0d047a587b7dddc8bf7643980d1b5a00", null ],
-    [ "DiscreteDomain", "classDiscreteDomain.html#aa18e05c0884cfc77800102374cb2fc03", null ],
+    [ "DiscreteDomain", "classDiscreteDomain.html#ab6396149fced1490d41fce6dfcacb70e", null ],
     [ "DiscreteDomain", "classDiscreteDomain.html#a796a4457cd9cdd1e5a23eeb6b965e4aa", null ],
     [ "DiscreteDomain", "classDiscreteDomain.html#a9a4117176c48c587a470f8d7f02ff218", null ],
     [ "~DiscreteDomain", "classDiscreteDomain.html#abd4bfc474004be35df9dd30ff8413c02", null ],

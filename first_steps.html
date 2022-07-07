@@ -281,12 +281,12 @@ Initial conditions</h1>
 <div class="line">            ghosted_temp[x_domain][y_domain]);</div>
 <div class="line">    <span class="comment">// time of the iteration where the last output happened</span></div>
 <div class="line">    <a class="code" href="classDiscreteElement.html">DiscreteElement&lt;DDimT&gt;</a> last_output = time_domain.<a class="code" href="classDiscreteDomain.html#a1543deddff871aaed05c9a027fe1ee0e">front</a>();</div>
-<div class="ttc" id="aclassDiscreteDomain_html_a1543deddff871aaed05c9a027fe1ee0e"><div class="ttname"><a href="classDiscreteDomain.html#a1543deddff871aaed05c9a027fe1ee0e">DiscreteDomain::front</a></div><div class="ttdeci">constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:123</div></div>
+<div class="ttc" id="aclassDiscreteDomain_html_a1543deddff871aaed05c9a027fe1ee0e"><div class="ttname"><a href="classDiscreteDomain.html#a1543deddff871aaed05c9a027fe1ee0e">DiscreteDomain::front</a></div><div class="ttdeci">constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:125</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
 Time loop</h1>
 <div class="fragment"><div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> iter :</div>
 <div class="line">         time_domain.<a class="code" href="classDiscreteDomain.html#aff3e4fe2cc70bd189b9307a1f6c57912">remove_first</a>(<a class="code" href="classDiscreteVector.html">DiscreteVector&lt;DDimT&gt;</a>(1))) {</div>
-<div class="ttc" id="aclassDiscreteDomain_html_aff3e4fe2cc70bd189b9307a1f6c57912"><div class="ttname"><a href="classDiscreteDomain.html#aff3e4fe2cc70bd189b9307a1f6c57912">DiscreteDomain::remove_first</a></div><div class="ttdeci">constexpr DiscreteDomain remove_first(mlength_type n) const</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:143</div></div>
+<div class="ttc" id="aclassDiscreteDomain_html_aff3e4fe2cc70bd189b9307a1f6c57912"><div class="ttname"><a href="classDiscreteDomain.html#aff3e4fe2cc70bd189b9307a1f6c57912">DiscreteDomain::remove_first</a></div><div class="ttdeci">constexpr DiscreteDomain remove_first(mlength_type n) const</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:145</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
 Periodic conditions</h2>
 <div class="fragment"><div class="line">        <span class="comment">// Periodic boundary conditions</span></div>
@@ -355,7 +355,7 @@ Final output</h1>
 <div class="line">        display(coordinate(time_domain.<a class="code" href="classDiscreteDomain.html#abe765e72298e6765bc3c651249ae8bc3">back</a>()),</div>
 <div class="line">                ghosted_temp[x_domain][y_domain]);</div>
 <div class="line">    }</div>
-<div class="ttc" id="aclassDiscreteDomain_html_abe765e72298e6765bc3c651249ae8bc3"><div class="ttname"><a href="classDiscreteDomain.html#abe765e72298e6765bc3c651249ae8bc3">DiscreteDomain::back</a></div><div class="ttdeci">constexpr discrete_element_type back() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:128</div></div>
+<div class="ttc" id="aclassDiscreteDomain_html_abe765e72298e6765bc3c651249ae8bc3"><div class="ttname"><a href="classDiscreteDomain.html#abe765e72298e6765bc3c651249ae8bc3">DiscreteDomain::back</a></div><div class="ttdeci">constexpr discrete_element_type back() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:130</div></div>
 </div><!-- fragment --></div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

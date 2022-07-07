@@ -75,9 +75,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0d047a587b7dddc8bf7643980d1b5a00"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a0d047a587b7dddc8bf7643980d1b5a00">DiscreteDomain</a> (<a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a> const &amp;<a class="el" href="classDiscreteDomain.html#a805cf8f9152837a4d8916cf19363cdb7">size</a>)</td></tr>
 <tr class="memdesc:a0d047a587b7dddc8bf7643980d1b5a00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> starting from (0, ..., 0) with size points.  <a href="classDiscreteDomain.html#a0d047a587b7dddc8bf7643980d1b5a00">More...</a><br /></td></tr>
 <tr class="separator:a0d047a587b7dddc8bf7643980d1b5a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa18e05c0884cfc77800102374cb2fc03"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#aa18e05c0884cfc77800102374cb2fc03">DiscreteDomain</a> (<a class="el" href="classDiscreteDomain.html#a90d0c64d771205395d90c1958776d83c">discrete_element_type</a> const &amp;lbound, <a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a> const &amp;<a class="el" href="classDiscreteDomain.html#a805cf8f9152837a4d8916cf19363cdb7">size</a>)</td></tr>
-<tr class="memdesc:aa18e05c0884cfc77800102374cb2fc03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> starting from lbound with size points.  <a href="classDiscreteDomain.html#aa18e05c0884cfc77800102374cb2fc03">More...</a><br /></td></tr>
-<tr class="separator:aa18e05c0884cfc77800102374cb2fc03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6396149fced1490d41fce6dfcacb70e"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#ab6396149fced1490d41fce6dfcacb70e">DiscreteDomain</a> (<a class="el" href="classDiscreteDomain.html#a90d0c64d771205395d90c1958776d83c">discrete_element_type</a> const &amp;element_begin, <a class="el" href="classDiscreteDomain.html#a49fd23ffe312c5c88e65dbcac2db3425">mlength_type</a> const &amp;<a class="el" href="classDiscreteDomain.html#a805cf8f9152837a4d8916cf19363cdb7">size</a>)</td></tr>
+<tr class="memdesc:ab6396149fced1490d41fce6dfcacb70e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> starting from element_begin with size points.  <a href="classDiscreteDomain.html#ab6396149fced1490d41fce6dfcacb70e">More...</a><br /></td></tr>
+<tr class="separator:ab6396149fced1490d41fce6dfcacb70e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a796a4457cd9cdd1e5a23eeb6b965e4aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a796a4457cd9cdd1e5a23eeb6b965e4aa">DiscreteDomain</a> (<a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> const &amp;x)=default</td></tr>
 <tr class="separator:a796a4457cd9cdd1e5a23eeb6b965e4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a4117176c48c587a470f8d7f02ff218"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteDomain.html#a9a4117176c48c587a470f8d7f02ff218">DiscreteDomain</a> (<a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> &amp;&amp;x)=default</td></tr>
@@ -311,8 +311,8 @@ template&lt;class... DDims&gt; </div>
 
 </div>
 </div>
-<a id="aa18e05c0884cfc77800102374cb2fc03"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa18e05c0884cfc77800102374cb2fc03">&#9670;&nbsp;</a></span>DiscreteDomain() <span class="overload">[5/7]</span></h2>
+<a id="ab6396149fced1490d41fce6dfcacb70e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6396149fced1490d41fce6dfcacb70e">&#9670;&nbsp;</a></span>DiscreteDomain() <span class="overload">[5/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -326,7 +326,7 @@ template&lt;class... DDims&gt; </div>
           <td class="memname">constexpr <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a>&lt; DDims &gt;::<a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classDiscreteDomain.html#a90d0c64d771205395d90c1958776d83c">discrete_element_type</a> const &amp;&#160;</td>
-          <td class="paramname"><em>lbound</em>, </td>
+          <td class="paramname"><em>element_begin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -347,10 +347,10 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Construct a <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> starting from lbound with size points. </p>
+<p>Construct a <a class="el" href="classDiscreteDomain.html">DiscreteDomain</a> starting from element_begin with size points. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lbound</td><td>the lower bound in each direction </td></tr>
+    <tr><td class="paramname">element_begin</td><td>the lower bound in each direction </td></tr>
     <tr><td class="paramname">size</td><td>the number of points in each direction </td></tr>
   </table>
   </dd>

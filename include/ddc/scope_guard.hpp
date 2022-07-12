@@ -1,5 +1,8 @@
 #pragma once
 
+#include <map>
+#include <memory>
+
 #include <Kokkos_Core.hpp>
 
 #include "discrete_space.hpp"

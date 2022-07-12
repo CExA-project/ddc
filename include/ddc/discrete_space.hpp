@@ -3,6 +3,8 @@
 #pragma once
 
 #include <any>
+#include <map>
+#include <memory>
 #include <ostream>
 #include <stdexcept>
 

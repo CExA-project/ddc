@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <any>
+#include <ostream>
 #include <stdexcept>
 
 #include <Kokkos_Core.hpp>
@@ -49,6 +51,53 @@ struct DiscreteSpaceGetter
 };
 #endif
 
+inline std::unique_ptr<std::map<std::string, std::any>> g_host_discretization_store;
+#if defined(__CUDACC__)
+inline std::unique_ptr<std::map<std::string, void*>> g_cuda_discretization_store;
+#endif
+#if defined(__HIPCC__)
+inline std::unique_ptr<std::map<std::string, void*>> g_hip_discretization_store;
+#endif
+
+template <class IDimImpl>
+void register_host_discretization(std::shared_ptr<IDimImpl> ddim)
+{
+    g_discrete_space_host<IDimImpl> = ddim.get();
+    g_host_discretization_store->emplace(typeid(IDimImpl).name(), std::move(ddim));
+}
+
+inline void display_discretization_store(std::ostream& os)
+{
+    if (g_host_discretization_store) {
+        os << "The host discretization store is initialized:\n";
+        for (auto const& [key, value] : *g_host_discretization_store) {
+            os << " - " << key << "\n";
+        }
+    } else {
+        os << "The host discretization store is not initialized:\n";
+    }
+#if defined(__CUDACC__)
+    if (g_cuda_discretization_store) {
+        os << "The cuda discretization store is initialized:\n";
+        for (auto const& [key, value] : *g_cuda_discretization_store) {
+            os << " - " << key << "\n";
+        }
+    } else {
+        os << "The cuda discretization store is not initialized:\n";
+    }
+#endif
+#if defined(__HIPCC__)
+    if (g_hip_discretization_store) {
+        os << "The hip discretization store is initialized:\n";
+        for (auto const& [key, value] : *g_hip_discretization_store) {
+            os << " - " << key << "\n";
+        }
+    } else {
+        os << "The hip discretization store is not initialized:\n";
+    }
+#endif
+}
+
 template <class Tuple, std::size_t... Ids>
 auto extract_after(Tuple&& t, std::index_sequence<Ids...>)
 {
@@ -61,10 +110,13 @@ void init_discrete_space_devices()
 #if defined(__CUDACC__)
     using DDimImplHost = typename DDim::template Impl<Kokkos::HostSpace>;
     using DDimImplDevice = typename DDim::template Impl<Kokkos::CudaSpace>;
-    g_discrete_space_host<DDimImplDevice> = new DDimImplDevice(
-            *g_discrete_space_host<DDimImplHost>);
+
+    register_host_discretization(
+            std::make_shared<DDimImplDevice>(*g_discrete_space_host<DDimImplHost>));
+
     DDimImplDevice* ptr_device;
     cudaMalloc(&ptr_device, sizeof(DDimImplDevice));
+    g_cuda_discretization_store->emplace(typeid(DDimImplDevice).name(), ptr_device);
     cudaMemcpy(
             (void*)ptr_device,
             g_discrete_space_host<DDimImplDevice>,
@@ -80,10 +132,13 @@ void init_discrete_space_devices()
 #if defined(__HIPCC__)
     using DDimImplHost = typename DDim::template Impl<Kokkos::HostSpace>;
     using DDimImplDevice = typename DDim::template Impl<Kokkos::Experimental::HIPSpace>;
-    g_discrete_space_host<DDimImplDevice> = new DDimImplDevice(
-            *g_discrete_space_host<DDimImplHost>);
+
+    register_host_discretization(
+            std::make_shared<DDimImplDevice>(*g_discrete_space_host<DDimImplHost>));
+
     DDimImplDevice* ptr_device;
     hipMalloc(&ptr_device, sizeof(DDimImplDevice));
+    g_hip_discretization_store->emplace(typeid(DDimImplDevice).name(), ptr_device);
     hipMemcpy(
             (void*)ptr_device,
             g_discrete_space_host<DDimImplDevice>,
@@ -111,7 +166,7 @@ static inline void init_discrete_space(Args&&... a)
     if (detail::g_discrete_space_host<std::remove_cv_t<std::remove_reference_t<DDimImplHost>>>) {
         throw std::runtime_error("Discrete space function already initialized.");
     }
-    detail::g_discrete_space_host<DDimImplHost> = new DDimImplHost(std::forward<Args>(a)...);
+    detail::register_host_discretization(std::make_shared<DDimImplHost>(std::forward<Args>(a)...));
     detail::init_discrete_space_devices<DDim>();
 }
 

@@ -8,10 +8,7 @@ class ScopeGuard
 {
     Kokkos::ScopeGuard m_kokkos_scope_guard;
 
-public:
-    ScopeGuard() = default;
-
-    ScopeGuard(int argc, char**& argv) : m_kokkos_scope_guard(argc, argv)
+    void discretization_store_initialization() const
     {
         detail::g_host_discretization_store = std::make_unique<std::map<std::string, std::any>>();
 #if defined(__CUDACC__)
@@ -19,6 +16,17 @@ public:
 #elif defined(__HIPCC__)
         detail::g_hip_discretization_store = std::make_unique<std::map<std::string, void*>>();
 #endif
+    }
+
+public:
+    ScopeGuard()
+    {
+        discretization_store_initialization();
+    }
+
+    ScopeGuard(int argc, char**& argv) : m_kokkos_scope_guard(argc, argv)
+    {
+        discretization_store_initialization();
     }
 
     ScopeGuard(ScopeGuard const& x) = delete;

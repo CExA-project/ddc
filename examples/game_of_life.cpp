@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <ddc/ddc.hpp>
+#include <ddc/for_each_exp.hpp>
 
 using cell = bool;
 
@@ -84,7 +85,7 @@ int main()
         deepcopy(cells_in_host_alloc, cells_in);
         print_2DChunk(std::cout, cells_in_host_alloc.span_cview())
                 << "\n";
-        for_each(
+        experimental::for_each(
                 policies::parallel_device,
                 inner_domain_xy,
                 DDC_LAMBDA(DiscreteElement<DDimX, DDimY> const ixy) {

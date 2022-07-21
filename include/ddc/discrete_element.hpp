@@ -215,16 +215,16 @@ public:
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }
 
-    template <std::size_t N = sizeof...(Tags)>
-    constexpr inline std::enable_if_t<N == 1, value_type&> uid() noexcept
+    template <std::size_t I = sizeof...(Tags) - 1>
+    constexpr inline value_type& uid() noexcept
     {
-        return m_values[0];
+        return m_values[I];
     }
 
-    template <std::size_t N = sizeof...(Tags)>
-    constexpr inline std::enable_if_t<N == 1, value_type const&> uid() const noexcept
+    template <std::size_t I = sizeof...(Tags) - 1>
+    constexpr inline value_type const& uid() const noexcept
     {
-        return m_values[0];
+        return m_values[I];
     }
 
     template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>

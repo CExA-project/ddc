@@ -28,6 +28,8 @@ public:
 
     using mlength_type = DiscreteVector<DDims...>;
 
+    using value_type = discrete_element_type;
+
 private:
     DiscreteElement<DDims...> m_element_begin;
 
@@ -36,7 +38,7 @@ private:
 public:
     static constexpr std::size_t rank()
     {
-        return (0 + ... + DDims::rank());
+        return sizeof...(DDims);
     }
 
     DiscreteDomain() = default;
@@ -115,6 +117,12 @@ public:
         return mlength_type((uid<DDims>(m_element_end) - uid<DDims>(m_element_begin))...);
     }
 
+    template <std::size_t I>
+    inline constexpr std::size_t extent() const noexcept
+    {
+        return m_element_end.template uid<I>() - m_element_begin.template uid<I>();
+    }
+
     template <class QueryDDim>
     inline constexpr DiscreteVector<QueryDDim> extent() const noexcept
     {
@@ -180,36 +188,32 @@ public:
         return !empty();
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    auto begin() const
+    template <std::size_t I = sizeof...(DDims) - 1>
+    DiscreteDomainIterator<std::tuple_element_t<I, std::tuple<DDims...>>> begin() const
     {
-        return DiscreteDomainIterator<DDim0>(front());
+        return DiscreteDomainIterator<std::tuple_element_t<I, std::tuple<DDims...>>>(
+                DiscreteElement<std::tuple_element_t<I, std::tuple<DDims...>>>(
+                        m_element_begin.template uid<I>()));
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    auto end() const
+    template <std::size_t I = sizeof...(DDims) - 1>
+    DiscreteDomainIterator<std::tuple_element_t<I, std::tuple<DDims...>>> end() const
     {
-        return DiscreteDomainIterator<DDim0>(m_element_end);
+        return DiscreteDomainIterator<std::tuple_element_t<I, std::tuple<DDims...>>>(
+                DiscreteElement<std::tuple_element_t<I, std::tuple<DDims...>>>(
+                        m_element_end.template uid<I>()));
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    template <std::size_t I = sizeof...(DDims) - 1>
     auto cbegin() const
     {
-        return DiscreteDomainIterator<DDim0>(front());
+        return begin<I>;
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    template <std::size_t I = sizeof...(DDims) - 1>
     auto cend() const
     {
-        return DiscreteDomainIterator<DDim0>(m_element_end);
+        return end<I>();
     }
 
     template <

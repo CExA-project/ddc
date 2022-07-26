@@ -12,7 +12,25 @@ namespace experimental {
 namespace mdranges {
 
 template <std::size_t I, class CartRange>
-using iterator_t = decltype(std::declval<CartRange&>().template begin<I>());
+auto begin(CartRange const& mdrange)
+{
+    return mdrange.template begin<I>();
+}
+
+template <std::size_t I, class CartRange>
+auto end(CartRange const& mdrange)
+{
+    return mdrange.template begin<I>();
+}
+
+template <std::size_t I, class CartRange>
+auto extent(CartRange const& mdrange)
+{
+    return mdrange.template extent<I>();
+}
+
+template <std::size_t I, class CartRange>
+using iterator_t = decltype(begin<I>(std::declval<CartRange&>()));
 
 template <class CartRange>
 using range_value_t = typename CartRange::value_type;
@@ -54,7 +72,7 @@ inline void for_each_kokkos(
 {
     Kokkos::Array<std::size_t, mdranges::range_rank_v<CartRange>> const begin {};
     Kokkos::Array<std::size_t, mdranges::range_rank_v<CartRange>> const end {
-            mdrange.template extent<Is>()...};
+            mdranges::extent<Is>(mdrange)...};
     Kokkos::parallel_for(
             Kokkos::MDRangePolicy<
                     ExecSpace,
@@ -66,7 +84,7 @@ inline void for_each_kokkos(
                     mdranges::range_value_t<CartRange>,
                     Functor,
                     std::tuple<mdranges::iterator_t<Is, CartRange>...>,
-                    Is...>(std::make_tuple(mdrange.template begin<Is>()...), f));
+                    Is...>(std::make_tuple(mdranges::begin<Is>(mdrange)...), f));
 }
 
 // Should work with a cartesian product of forward iterators
@@ -77,8 +95,8 @@ inline void for_each_serial(CartRange const& mdrange, Functor const& f, Its cons
     if constexpr (I == mdranges::range_rank_v<CartRange>) {
         f(mdranges::range_value_t<CartRange>(*its...));
     } else {
-        mdranges::iterator_t<I, CartRange> const begin = mdrange.template begin<I>();
-        mdranges::iterator_t<I, CartRange> const end = mdrange.template end<I>();
+        mdranges::iterator_t<I, CartRange> const begin = mdranges::begin<I>(mdrange);
+        mdranges::iterator_t<I, CartRange> const end = mdranges::end<I>(mdrange);
         for (mdranges::iterator_t<I, CartRange> it = begin; it != end; ++it) {
             for_each_serial(mdrange, f, its..., it);
         }

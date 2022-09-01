@@ -35,6 +35,9 @@ public:
 
     ~ScopeGuard() noexcept
     {
+        for (auto const& f : *detail::g_discretization_store) {
+            f.second();
+        }
         detail::g_discretization_store.reset();
     }
 

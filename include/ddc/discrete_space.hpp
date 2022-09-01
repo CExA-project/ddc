@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <any>
 #include <map>
 #include <memory>
+#include <optional>
 #include <ostream>
 #include <stdexcept>
 
@@ -18,22 +18,25 @@
 
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_space.hpp"
+#include "ddc/dual_discretization.hpp"
 
 namespace detail {
 
 template <class DDim, class MemorySpace>
 struct DiscreteSpaceGetter;
 
+inline std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
+
 // For now, in the future, this should be specialized by tag
-template <class DDimImpl>
-inline DDimImpl* g_discrete_space_host = nullptr;
+template <class DDim>
+inline std::optional<DualDiscretization<DDim>> g_discrete_space_host;
 
 template <class DDim>
 struct DiscreteSpaceGetter<DDim, Kokkos::HostSpace>
 {
     static inline typename DDim::template Impl<Kokkos::HostSpace> const& get()
     {
-        return *g_discrete_space_host<typename DDim::template Impl<Kokkos::HostSpace>>;
+        return g_discrete_space_host<DDim>->template get<Kokkos::HostSpace>();
     }
 };
 
@@ -53,106 +56,22 @@ struct DiscreteSpaceGetter
 };
 #endif
 
-inline std::unique_ptr<std::map<std::string, std::any>> g_host_discretization_store;
-#if defined(__CUDACC__)
-inline std::unique_ptr<std::map<std::string, void*>> g_cuda_discretization_store;
-#endif
-#if defined(__HIPCC__)
-inline std::unique_ptr<std::map<std::string, void*>> g_hip_discretization_store;
-#endif
-
-template <class IDimImpl>
-void register_host_discretization(std::shared_ptr<IDimImpl> ddim)
-{
-    g_discrete_space_host<IDimImpl> = ddim.get();
-    g_host_discretization_store->emplace(typeid(IDimImpl).name(), std::move(ddim));
-}
-
 inline void display_discretization_store(std::ostream& os)
 {
-    if (g_host_discretization_store) {
+    if (g_discretization_store) {
         os << "The host discretization store is initialized:\n";
-        for (auto const& [key, value] : *g_host_discretization_store) {
+        for (auto const& [key, value] : *g_discretization_store) {
             os << " - " << key << "\n";
         }
     } else {
         os << "The host discretization store is not initialized:\n";
     }
-#if defined(__CUDACC__)
-    if (g_cuda_discretization_store) {
-        os << "The cuda discretization store is initialized:\n";
-        for (auto const& [key, value] : *g_cuda_discretization_store) {
-            os << " - " << key << "\n";
-        }
-    } else {
-        os << "The cuda discretization store is not initialized:\n";
-    }
-#endif
-#if defined(__HIPCC__)
-    if (g_hip_discretization_store) {
-        os << "The hip discretization store is initialized:\n";
-        for (auto const& [key, value] : *g_hip_discretization_store) {
-            os << " - " << key << "\n";
-        }
-    } else {
-        os << "The hip discretization store is not initialized:\n";
-    }
-#endif
 }
 
 template <class Tuple, std::size_t... Ids>
 auto extract_after(Tuple&& t, std::index_sequence<Ids...>)
 {
     return std::make_tuple(std::move(std::get<Ids + 1>(t))...);
-}
-
-template <class DDim>
-void init_discrete_space_devices()
-{
-#if defined(__CUDACC__)
-    using DDimImplHost = typename DDim::template Impl<Kokkos::HostSpace>;
-    using DDimImplDevice = typename DDim::template Impl<Kokkos::CudaSpace>;
-
-    register_host_discretization(
-            std::make_shared<DDimImplDevice>(*g_discrete_space_host<DDimImplHost>));
-
-    DDimImplDevice* ptr_device;
-    cudaMalloc(&ptr_device, sizeof(DDimImplDevice));
-    g_cuda_discretization_store->emplace(typeid(DDimImplDevice).name(), ptr_device);
-    cudaMemcpy(
-            (void*)ptr_device,
-            g_discrete_space_host<DDimImplDevice>,
-            sizeof(DDimImplDevice),
-            cudaMemcpyHostToDevice);
-    cudaMemcpyToSymbol(
-            g_discrete_space_device<DDimImplDevice>,
-            &ptr_device,
-            sizeof(DDimImplDevice*),
-            0,
-            cudaMemcpyHostToDevice);
-#endif
-#if defined(__HIPCC__)
-    using DDimImplHost = typename DDim::template Impl<Kokkos::HostSpace>;
-    using DDimImplDevice = typename DDim::template Impl<Kokkos::Experimental::HIPSpace>;
-
-    register_host_discretization(
-            std::make_shared<DDimImplDevice>(*g_discrete_space_host<DDimImplHost>));
-
-    DDimImplDevice* ptr_device;
-    hipMalloc(&ptr_device, sizeof(DDimImplDevice));
-    g_hip_discretization_store->emplace(typeid(DDimImplDevice).name(), ptr_device);
-    hipMemcpy(
-            (void*)ptr_device,
-            g_discrete_space_host<DDimImplDevice>,
-            sizeof(DDimImplDevice),
-            hipMemcpyHostToDevice);
-    hipMemcpyToSymbol(
-            g_discrete_space_device<DDimImplDevice>,
-            &ptr_device,
-            sizeof(DDimImplDevice*),
-            0,
-            hipMemcpyHostToDevice);
-#endif
 }
 
 } // namespace detail
@@ -162,14 +81,36 @@ void init_discrete_space_devices()
  * @param a the constructor arguments
  */
 template <class DDim, class... Args>
-static inline void init_discrete_space(Args&&... a)
+static inline void init_discrete_space(Args&&... args)
 {
     using DDimImplHost = typename DDim::template Impl<Kokkos::HostSpace>;
-    if (detail::g_discrete_space_host<std::remove_cv_t<std::remove_reference_t<DDimImplHost>>>) {
+    if (detail::g_discrete_space_host<DDim>) {
         throw std::runtime_error("Discrete space function already initialized.");
     }
-    detail::register_host_discretization(std::make_shared<DDimImplHost>(std::forward<Args>(a)...));
-    detail::init_discrete_space_devices<DDim>();
+    detail::g_discrete_space_host<DDim>.emplace(std::forward<Args>(args)...);
+    detail::g_discretization_store->emplace(typeid(DDim).name(), []() {
+        detail::g_discrete_space_host<DDim>.reset();
+    });
+#if defined(__CUDACC__)
+    using DDimImplDevice = typename DDim::template Impl<Kokkos::CudaSpace>;
+    DDimImplDevice* device_ptr = detail::g_discrete_space_host<DDim>->get_device_ptr();
+    cudaMemcpyToSymbol(
+            detail::g_discrete_space_device<DDimImplDevice>,
+            &device_ptr,
+            sizeof(DDimImplDevice*),
+            0,
+            cudaMemcpyHostToDevice);
+#endif
+#if defined(__HIPCC__)
+    using DDimImplDevice = typename DDim::template Impl<Kokkos::Experimental::HIPSpace>;
+    DDimImplDevice* device_ptr = detail::g_discrete_space_host<DDim>->get_device_ptr();
+    hipMemcpyToSymbol(
+            detail::g_discrete_space_device<DDimImplDevice>,
+            &device_ptr,
+            sizeof(DDimImplDevice*),
+            0,
+            hipMemcpyHostToDevice);
+#endif
 }
 
 /** Move construct a global singleton discrete space and pass through the other argument

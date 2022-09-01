@@ -2,6 +2,7 @@
 
 #include <map>
 #include <memory>
+#include <optional>
 
 #include <Kokkos_Core.hpp>
 
@@ -13,12 +14,8 @@ class ScopeGuard
 
     void discretization_store_initialization() const
     {
-        detail::g_host_discretization_store = std::make_unique<std::map<std::string, std::any>>();
-#if defined(__CUDACC__)
-        detail::g_cuda_discretization_store = std::make_unique<std::map<std::string, void*>>();
-#elif defined(__HIPCC__)
-        detail::g_hip_discretization_store = std::make_unique<std::map<std::string, void*>>();
-#endif
+        detail::g_discretization_store
+                = std::make_optional<std::map<std::string, std::function<void()>>>();
     }
 
 public:
@@ -38,18 +35,7 @@ public:
 
     ~ScopeGuard() noexcept
     {
-        detail::g_host_discretization_store = nullptr;
-#if defined(__CUDACC__)
-        for (auto const& [key, value] : *detail::g_cuda_discretization_store) {
-            cudaFree(value);
-        }
-        detail::g_cuda_discretization_store = nullptr;
-#elif defined(__HIPCC__)
-        for (auto const& [key, value] : *detail::g_hip_discretization_store) {
-            hipFree(value);
-        }
-        detail::g_hip_discretization_store = nullptr;
-#endif
+        detail::g_discretization_store.reset();
     }
 
     ScopeGuard& operator=(ScopeGuard const& x) = delete;

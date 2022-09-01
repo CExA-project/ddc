@@ -60,7 +60,7 @@ public:
         hipMalloc(&ptr_device, sizeof(DDimImplDevice));
         m_device = std::unique_ptr<
                 DDimImplDevice,
-                std::function<void(DDimDDimImplDevice*)>>(ptr_device, [](DDimImplDevice* ptr) {
+                std::function<void(DDimImplDevice*)>>(ptr_device, [](DDimImplDevice* ptr) {
             hipFree(ptr);
         });
         hipMemcpy(

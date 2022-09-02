@@ -38,7 +38,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classNonUniformPointSampling.html"
+"classKokkosAllocator.html#abb07391d1dc79fb0c0cd798be801f53d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

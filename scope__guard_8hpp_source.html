@@ -49,33 +49,59 @@ $(document).ready(function(){initNavTree('scope__guard_8hpp_source.html',''); in
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno"><a class="line" href="classScopeGuard.html">    5</a></span>&#160;<span class="keyword">class </span><a class="code" href="classScopeGuard.html">ScopeGuard</a></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;{</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    Kokkos::ScopeGuard m_kokkos_scope_guard;</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classScopeGuard.html#a405b19cfdfafc0c4226a90dbcf3ee57a">   10</a></span>&#160;    <a class="code" href="classScopeGuard.html#a405b19cfdfafc0c4226a90dbcf3ee57a">ScopeGuard</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classScopeGuard.html#aca312675f6aa640dc2b8586527e0b30e">   12</a></span>&#160;    <a class="code" href="classScopeGuard.html#aca312675f6aa640dc2b8586527e0b30e">ScopeGuard</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>**&amp; argv) : m_kokkos_scope_guard(argc, argv) {}</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classScopeGuard.html#a0daf1d28f3efe91acd7e8787a3a08175">   14</a></span>&#160;    <a class="code" href="classScopeGuard.html#a0daf1d28f3efe91acd7e8787a3a08175">ScopeGuard</a>(<a class="code" href="classScopeGuard.html">ScopeGuard</a> <span class="keyword">const</span>&amp; x) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classScopeGuard.html#a8fb44cf5bc6b0091b4437610c63aea08">   16</a></span>&#160;    <a class="code" href="classScopeGuard.html#a8fb44cf5bc6b0091b4437610c63aea08">ScopeGuard</a>(<a class="code" href="classScopeGuard.html">ScopeGuard</a>&amp;&amp; x) noexcept = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classScopeGuard.html#a1720e32bb92b973bf892a48239430773">   18</a></span>&#160;    <a class="code" href="classScopeGuard.html#a1720e32bb92b973bf892a48239430773">~ScopeGuard</a>() noexcept = default;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classScopeGuard.html#ab94c2cd33733fd13000d9d851d857fca">   20</a></span>&#160;    <a class="code" href="classScopeGuard.html">ScopeGuard</a>&amp; operator=(<a class="code" href="classScopeGuard.html">ScopeGuard</a> const&amp; x) = delete;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classScopeGuard.html#a2d5904130ea567c924a5c20a37aefb93">   22</a></span>&#160;    <a class="code" href="classScopeGuard.html">ScopeGuard</a>&amp; operator=(<a class="code" href="classScopeGuard.html">ScopeGuard</a>&amp;&amp; x) noexcept = delete;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;};</div>
-<div class="ttc" id="aclassScopeGuard_html"><div class="ttname"><a href="classScopeGuard.html">ScopeGuard</a></div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:6</div></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;discrete_space.hpp&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classScopeGuard.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classScopeGuard.html">ScopeGuard</a></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    Kokkos::ScopeGuard m_kokkos_scope_guard;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">void</span> discretization_store_initialization()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        detail::g_discretization_store</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;                = std::make_optional&lt;std::map&lt;std::string, std::function&lt;void()&gt;&gt;&gt;();</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    }</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classScopeGuard.html#a6b868887a2b2479f41e63520d9960f0e">   22</a></span>&#160;    <a class="code" href="classScopeGuard.html#a6b868887a2b2479f41e63520d9960f0e">ScopeGuard</a>()</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        discretization_store_initialization();</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classScopeGuard.html#aca312675f6aa640dc2b8586527e0b30e">   27</a></span>&#160;    <a class="code" href="classScopeGuard.html#aca312675f6aa640dc2b8586527e0b30e">ScopeGuard</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>**&amp; argv) : m_kokkos_scope_guard(argc, argv)</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        discretization_store_initialization();</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    }</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classScopeGuard.html#a0daf1d28f3efe91acd7e8787a3a08175">   32</a></span>&#160;    <a class="code" href="classScopeGuard.html#a0daf1d28f3efe91acd7e8787a3a08175">ScopeGuard</a>(<a class="code" href="classScopeGuard.html">ScopeGuard</a> <span class="keyword">const</span>&amp; x) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classScopeGuard.html#a8fb44cf5bc6b0091b4437610c63aea08">   34</a></span>&#160;    <a class="code" href="classScopeGuard.html#a8fb44cf5bc6b0091b4437610c63aea08">ScopeGuard</a>(<a class="code" href="classScopeGuard.html">ScopeGuard</a>&amp;&amp; x) noexcept = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classScopeGuard.html#acc023a387d0161cb7dcf3fadacc1690d">   36</a></span>&#160;    <a class="code" href="classScopeGuard.html#acc023a387d0161cb7dcf3fadacc1690d">~ScopeGuard</a>() noexcept</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; [name, fn] : *detail::g_discretization_store) {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            fn();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        detail::g_discretization_store.reset();</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classScopeGuard.html#ab94c2cd33733fd13000d9d851d857fca">   44</a></span>&#160;    <a class="code" href="classScopeGuard.html">ScopeGuard</a>&amp; <a class="code" href="classScopeGuard.html#ab94c2cd33733fd13000d9d851d857fca">operator=</a>(<a class="code" href="classScopeGuard.html">ScopeGuard</a> <span class="keyword">const</span>&amp; x) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classScopeGuard.html#a2d5904130ea567c924a5c20a37aefb93">   46</a></span>&#160;    <a class="code" href="classScopeGuard.html">ScopeGuard</a>&amp; <a class="code" href="classScopeGuard.html#a2d5904130ea567c924a5c20a37aefb93">operator=</a>(<a class="code" href="classScopeGuard.html">ScopeGuard</a>&amp;&amp; x) noexcept = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
+<div class="ttc" id="aclassScopeGuard_html"><div class="ttname"><a href="classScopeGuard.html">ScopeGuard</a></div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:12</div></div>
 <div class="ttc" id="aclassScopeGuard_html_a0daf1d28f3efe91acd7e8787a3a08175"><div class="ttname"><a href="classScopeGuard.html#a0daf1d28f3efe91acd7e8787a3a08175">ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard(ScopeGuard const &amp;x)=delete</div></div>
-<div class="ttc" id="aclassScopeGuard_html_a1720e32bb92b973bf892a48239430773"><div class="ttname"><a href="classScopeGuard.html#a1720e32bb92b973bf892a48239430773">ScopeGuard::~ScopeGuard</a></div><div class="ttdeci">~ScopeGuard() noexcept=default</div></div>
-<div class="ttc" id="aclassScopeGuard_html_a405b19cfdfafc0c4226a90dbcf3ee57a"><div class="ttname"><a href="classScopeGuard.html#a405b19cfdfafc0c4226a90dbcf3ee57a">ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard()=default</div></div>
+<div class="ttc" id="aclassScopeGuard_html_a2d5904130ea567c924a5c20a37aefb93"><div class="ttname"><a href="classScopeGuard.html#a2d5904130ea567c924a5c20a37aefb93">ScopeGuard::operator=</a></div><div class="ttdeci">ScopeGuard &amp; operator=(ScopeGuard &amp;&amp;x) noexcept=delete</div></div>
+<div class="ttc" id="aclassScopeGuard_html_a6b868887a2b2479f41e63520d9960f0e"><div class="ttname"><a href="classScopeGuard.html#a6b868887a2b2479f41e63520d9960f0e">ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard()</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:22</div></div>
 <div class="ttc" id="aclassScopeGuard_html_a8fb44cf5bc6b0091b4437610c63aea08"><div class="ttname"><a href="classScopeGuard.html#a8fb44cf5bc6b0091b4437610c63aea08">ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard(ScopeGuard &amp;&amp;x) noexcept=delete</div></div>
-<div class="ttc" id="aclassScopeGuard_html_aca312675f6aa640dc2b8586527e0b30e"><div class="ttname"><a href="classScopeGuard.html#aca312675f6aa640dc2b8586527e0b30e">ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard(int argc, char **&amp;argv)</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:12</div></div>
+<div class="ttc" id="aclassScopeGuard_html_ab94c2cd33733fd13000d9d851d857fca"><div class="ttname"><a href="classScopeGuard.html#ab94c2cd33733fd13000d9d851d857fca">ScopeGuard::operator=</a></div><div class="ttdeci">ScopeGuard &amp; operator=(ScopeGuard const &amp;x)=delete</div></div>
+<div class="ttc" id="aclassScopeGuard_html_aca312675f6aa640dc2b8586527e0b30e"><div class="ttname"><a href="classScopeGuard.html#aca312675f6aa640dc2b8586527e0b30e">ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard(int argc, char **&amp;argv)</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:27</div></div>
+<div class="ttc" id="aclassScopeGuard_html_acc023a387d0161cb7dcf3fadacc1690d"><div class="ttname"><a href="classScopeGuard.html#acc023a387d0161cb7dcf3fadacc1690d">ScopeGuard::~ScopeGuard</a></div><div class="ttdeci">~ScopeGuard() noexcept</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:36</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </body>

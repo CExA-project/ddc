@@ -26,6 +26,7 @@ var annotated =
     [ "DiscreteDomainIterator", "structDiscreteDomainIterator.html", "structDiscreteDomainIterator" ],
     [ "DiscreteElement", "classDiscreteElement.html", "classDiscreteElement" ],
     [ "DiscreteVector", "classDiscreteVector.html", "classDiscreteVector" ],
+    [ "DualDiscretization", "classDualDiscretization.html", "classDualDiscretization" ],
     [ "is_non_uniform_sampling", "structis__non__uniform__sampling.html", null ],
     [ "is_non_uniform_sampling< NonUniformPointSampling< CDim > >", "structis__non__uniform__sampling_3_01NonUniformPointSampling_3_01CDim_01_4_01_4.html", null ],
     [ "is_rectilinear_domain", "structis__rectilinear__domain.html", null ],

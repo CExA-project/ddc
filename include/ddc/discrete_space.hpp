@@ -74,30 +74,6 @@ template <class DDim>
 __constant__ gpu_proxy<ddim_impl_t<DDim, Kokkos::Experimental::HIPSpace>> g_discrete_space_device;
 #endif
 
-template <class DDim, class MemorySpace>
-struct DiscreteSpaceImpl;
-
-template <class DDim>
-struct DiscreteSpaceImpl<DDim, Kokkos::HostSpace>
-{
-    static inline ddim_impl_t<DDim, Kokkos::HostSpace> const& get()
-    {
-        return g_discrete_space_dual<DDim>->get_host();
-    }
-};
-
-#if defined(__CUDACC__) || defined(__HIPCC__)
-template <class DDim, class MemorySpace>
-struct DiscreteSpaceImpl
-{
-    DDC_INLINE_FUNCTION
-    static ddim_impl_t<DDim, MemorySpace> const& get()
-    {
-        return *g_discrete_space_device<DDim>;
-    }
-};
-#endif
-
 inline void display_discretization_store(std::ostream& os)
 {
     if (g_discretization_store) {
@@ -175,5 +151,19 @@ std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_discrete_space(
 template <class DDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
 DDC_INLINE_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
 {
-    return detail::DiscreteSpaceImpl<DDim, MemorySpace>::get();
+    if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
+        return detail::g_discrete_space_dual<DDim>->get_host();
+    }
+#if defined(__CUDACC__)
+    else if constexpr (std::is_same_v<MemorySpace, Kokkos::CudaSpace>) {
+        return *detail::g_discrete_space_device<DDim>;
+    }
+#elif defined(__HIPCC__)
+    else if constexpr (std::is_same_v<MemorySpace, Kokkos::Experimental::HIPSpace>) {
+        return *detail::g_discrete_space_device<DDim>;
+    }
+#endif
+    else {
+        static_assert(std::is_same_v<MemorySpace, MemorySpace>, "Memory space not handled");
+    }
 }

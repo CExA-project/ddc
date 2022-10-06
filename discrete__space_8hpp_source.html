@@ -126,7 +126,7 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;} <span class="comment">// namespace detail</span></div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>DDim, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> init_discrete_space(Args&amp;&amp;... args)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keywordtype">void</span> init_discrete_space(Args&amp;&amp;... args)</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;{</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span> (detail::g_discrete_space_host&lt;DDim&gt;) {</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Discrete space function already initialized.&quot;</span>);</div>
@@ -158,7 +158,7 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;}</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDimImpl, <span class="keyword">class</span> Arg&gt;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> Arg init_discrete_space(std::tuple&lt;DDimImpl, Arg&gt;&amp;&amp; a)</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;Arg init_discrete_space(std::tuple&lt;DDimImpl, Arg&gt;&amp;&amp; a)</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;{</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">using</span> DDim = <span class="keyword">typename</span> DDimImpl::discrete_dimension_type;</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    init_discrete_space&lt;DDim&gt;(std::move(std::get&lt;0&gt;(a)));</div>
@@ -166,7 +166,7 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>DDimImpl, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> std::enable_if_t&lt;2 &lt;= <span class="keyword">sizeof</span>...(Args), std::tuple&lt;Args...&gt;&gt; init_discrete_space(</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;std::enable_if_t&lt;2 &lt;= <span class="keyword">sizeof</span>...(Args), std::tuple&lt;Args...&gt;&gt; init_discrete_space(</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        std::tuple&lt;DDimImpl, Args...&gt;&amp;&amp; a)</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;{</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keyword">using</span> DDim = <span class="keyword">typename</span> DDimImpl::discrete_dimension_type;</div>

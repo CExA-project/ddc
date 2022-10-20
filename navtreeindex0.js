@@ -238,6 +238,8 @@ var NAVTREEINDEX0 =
 "classDualDiscretization.html":[3,15],
 "classDualDiscretization.html#a2bcddeb5cd0a3b5934f107baccfeae6f":[3,15,0],
 "classDualDiscretization.html#a9acd27240074f2b279cd43b22c994de9":[3,15,1],
+"classDualDiscretization.html#ab9c1f99d8b7ea4ca7e15f9209186a2e7":[3,15,3],
+"classDualDiscretization.html#adac98f63f1038289064ebf4d36298943":[3,15,2],
 "classKokkosAllocator.html":[3,28],
 "classKokkosAllocator.html#a5b9278e6a180c421f627a15fbd3384d2":[3,28,5],
 "classKokkosAllocator.html#a5cf4beb8b7e01db57227a01ad1788346":[3,28,7],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "classKokkosAllocator.html#a8289f82bcef05574f73c59f164091e37":[3,28,4],
 "classKokkosAllocator.html#a911faf615cd41ba1ddfc6fa90c7e7c8e":[3,28,2],
 "classKokkosAllocator.html#a92b8afbcc1025bb6544ff52e8dd28f48":[3,28,8],
-"classKokkosAllocator.html#aaeecaacc3bdf66a18f107356145de288":[3,28,1],
-"classKokkosAllocator.html#ab7fad95e5a416b37c0a1d410e0589621":[3,28,0,0],
-"classKokkosAllocator.html#abb07391d1dc79fb0c0cd798be801f53d":[3,28,9]
+"classKokkosAllocator.html#aaeecaacc3bdf66a18f107356145de288":[3,28,1]
 };

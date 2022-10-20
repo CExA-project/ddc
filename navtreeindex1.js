@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"classKokkosAllocator.html#ab7fad95e5a416b37c0a1d410e0589621":[3,28,0,0],
+"classKokkosAllocator.html#abb07391d1dc79fb0c0cd798be801f53d":[3,28,9],
 "classKokkosAllocator.html#ae2aff039d4939a77d60165b06feed5e9":[3,28,6],
 "classKokkosAllocator.html#af52d44f4663144f69e742bba4547484a":[3,28,12],
 "classKokkosAllocator.html#structKokkosAllocator_1_1rebind":[3,28,0],
@@ -79,8 +81,8 @@ var NAVTREEINDEX1 =
 "first_steps.html#autotoc_md8":[1,1],
 "first_steps.html#autotoc_md9":[1,2],
 "heat_equation.html":[1,5],
-"index.html":[],
 "index.html":[0],
+"index.html":[],
 "index.html#autotoc_md0":[0,0],
 "index.html#autotoc_md1":[0,1],
 "pages.html":[],

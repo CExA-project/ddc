@@ -40,7 +40,7 @@ var annotated =
     [ "IsDiscreteVector", "structIsDiscreteVector.html", null ],
     [ "IsDiscreteVector< DiscreteVector< Tags... > >", "structIsDiscreteVector_3_01DiscreteVector_3_01Tags_8_8_8_01_4_01_4.html", null ],
     [ "KokkosAllocator", "classKokkosAllocator.html", "classKokkosAllocator" ],
-    [ "NonUniformPointSampling", "classNonUniformPointSampling.html", "classNonUniformPointSampling" ],
+    [ "NonUniformPointSampling", "namespace_3globalScope_4.html#classNonUniformPointSampling", "namespace_3globalScope_4_classNonUniformPointSampling" ],
     [ "parallel_device_policy", "namespace_3globalScope_4.html#structparallel__device__policy", null ],
     [ "parallel_host_policy", "namespace_3globalScope_4.html#structparallel__host__policy", null ],
     [ "PdiEvent", "classPdiEvent.html", "classPdiEvent" ],

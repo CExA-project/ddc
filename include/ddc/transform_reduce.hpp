@@ -14,7 +14,7 @@
 
 namespace ddc {
 
-namespace detail {
+namespace ddc_detail {
 
 template <class Reducer>
 struct ddc_to_kokkos_reducer;
@@ -108,7 +108,7 @@ inline T transform_reduce_serial(
     if constexpr (sizeof...(DCoords) == sizeof...(DDims)) {
         return transform(DiscreteElement<DDims...>(dcoords...));
     } else {
-        using CurrentDDim = type_seq_element_t<sizeof...(DCoords), detail::TypeSeq<DDims...>>;
+        using CurrentDDim = type_seq_element_t<sizeof...(DCoords), ddc_detail::TypeSeq<DDims...>>;
         T result = neutral;
         for (DiscreteElement<CurrentDDim> const ii : select<CurrentDDim>(domain)) {
             result = reduce(
@@ -215,7 +215,7 @@ inline T transform_reduce_kokkos(
     return result;
 }
 
-} // namespace detail
+} // namespace ddc_detail
 
 /** A reduction over a nD domain using the Serial execution policy
  * @param[in] policy the execution policy to use
@@ -234,7 +234,7 @@ inline T transform_reduce(
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
 {
-    return detail::transform_reduce_serial(
+    return ddc_detail::transform_reduce_serial(
             domain,
             neutral,
             std::forward<BinaryReductionOp>(reduce),
@@ -258,7 +258,7 @@ inline T transform_reduce(
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
 {
-    return detail::transform_reduce_kokkos<Kokkos::DefaultHostExecutionSpace>(
+    return ddc_detail::transform_reduce_kokkos<Kokkos::DefaultHostExecutionSpace>(
             domain,
             neutral,
             std::forward<BinaryReductionOp>(reduce),
@@ -282,7 +282,7 @@ inline T transform_reduce(
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
 {
-    return detail::transform_reduce_kokkos<Kokkos::DefaultExecutionSpace>(
+    return ddc_detail::transform_reduce_kokkos<Kokkos::DefaultExecutionSpace>(
             domain,
             neutral,
             std::forward<BinaryReductionOp>(reduce),

@@ -278,27 +278,27 @@ ddc::Coordinate<QueryDDims...> rmax(DiscreteDomain<DDims...> const& domain) noex
     return ddc::Coordinate<QueryDDims...>(select<QueryDDims>(domain).rmax()...);
 }
 
-namespace detail {
+namespace ddc_detail {
 
 template <class QueryDDimSeq>
 struct Selection;
 
 template <class... QueryDDims>
-struct Selection<detail::TypeSeq<QueryDDims...>>
+struct Selection<ddc_detail::TypeSeq<QueryDDims...>>
 {
     template <class Domain>
     static constexpr auto select(Domain const& domain)
     {
-        return ::ddc::select<QueryDDims...>(domain);
+        return ddc::select<QueryDDims...>(domain);
     }
 };
 
-} // namespace detail
+} // namespace ddc_detail
 
 template <class QueryDDimSeq, class... DDims>
 constexpr auto select_by_type_seq(DiscreteDomain<DDims...> const& domain)
 {
-    return detail::Selection<QueryDDimSeq>::select(domain);
+    return ddc_detail::Selection<QueryDDimSeq>::select(domain);
 }
 
 template <class DDim>

@@ -8,6 +8,8 @@
 
 #include "discrete_space.hpp"
 
+namespace ddc {
+
 class ScopeGuard
 {
     Kokkos::ScopeGuard m_kokkos_scope_guard;
@@ -45,3 +47,5 @@ public:
 
     ScopeGuard& operator=(ScopeGuard&& x) noexcept = delete;
 };
+
+} // namespace ddc

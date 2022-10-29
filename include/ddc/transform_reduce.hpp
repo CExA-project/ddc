@@ -12,6 +12,8 @@
 #include "ddc/for_each.hpp"
 #include "ddc/reducer.hpp"
 
+namespace ddc {
+
 namespace detail {
 
 template <class Reducer>
@@ -309,3 +311,5 @@ inline T transform_reduce(
             std::forward<BinaryReductionOp>(reduce),
             std::forward<UnaryTransformOp>(transform));
 }
+
+} // namespace ddc

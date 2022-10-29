@@ -10,9 +10,9 @@
 #include "ddc/detail/macros.hpp"
 #include "ddc/detail/type_seq.hpp"
 
+namespace ddc {
 
 namespace detail {
-
 
 template <class, class...>
 class TaggedVector;
@@ -417,5 +417,6 @@ std::ostream& operator<<(std::ostream& out, TaggedVector<ElementType, Head, Tags
     return out;
 }
 
-
 } // namespace detail
+
+} // namespace ddc

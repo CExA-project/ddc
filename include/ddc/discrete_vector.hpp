@@ -9,6 +9,7 @@
 
 #include "ddc/detail/type_seq.hpp"
 
+namespace ddc {
 
 template <class...>
 class DiscreteVector;
@@ -420,3 +421,4 @@ std::ostream& operator<<(std::ostream& out, DiscreteVector<Head, Tags...> const&
     out << ")";
     return out;
 }
+} // namespace ddc

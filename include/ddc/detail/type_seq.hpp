@@ -7,6 +7,8 @@
 #include <type_traits>
 #include <utility>
 
+namespace ddc {
+
 namespace detail {
 
 template <class...>
@@ -134,3 +136,5 @@ using type_seq_remove_t = typename detail::TypeSeqRemove<TagSeqA, TagSeqB, detai
 
 template <class TagSeqA, class TagSeqB>
 using type_seq_merge_t = typename detail::TypeSeqMerge<TagSeqA, TagSeqB, TagSeqA>::type;
+
+} // namespace ddc

@@ -6,7 +6,10 @@
 
 #include "ddc/chunk_common.hpp"
 #include "ddc/chunk_span.hpp"
+#include "ddc/deepcopy.hpp"
 #include "ddc/kokkos_allocator.hpp"
+
+namespace ddc {
 
 template <class ElementType, class, class Allocator = HostAllocator<ElementType>>
 class Chunk;
@@ -299,3 +302,5 @@ public:
 template <class... DDims, class Allocator>
 Chunk(DiscreteDomain<DDims...> const&, Allocator)
         -> Chunk<typename Allocator::value_type, DiscreteDomain<DDims...>, Allocator>;
+
+} // namespace ddc

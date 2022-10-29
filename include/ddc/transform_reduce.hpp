@@ -90,6 +90,7 @@ using ddc_to_kokkos_reducer_t = typename ddc_to_kokkos_reducer<Reducer>::type;
  *            results of transform, the results of other reduce and neutral.
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
+ * @param[in] dcoords discrete elements from dimensions already in a loop
  */
 template <
         class... DDims,

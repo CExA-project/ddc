@@ -98,7 +98,7 @@ auto extract_after(Tuple&& t, std::index_sequence<Ids...>)
 
 /** Initialize (emplace) a global singleton discrete space
  * 
- * @param a the constructor arguments
+ * @param args the constructor arguments
  */
 template <class DDim, class... Args>
 void init_discrete_space(Args&&... args)

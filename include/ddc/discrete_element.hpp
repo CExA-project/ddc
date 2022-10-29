@@ -10,6 +10,7 @@
 #include "ddc/detail/type_seq.hpp"
 #include "ddc/discrete_vector.hpp"
 
+namespace ddc {
 
 template <class...>
 class DiscreteElement;
@@ -407,3 +408,5 @@ constexpr inline DiscreteVector<Tags...> operator-(
     static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
     return DiscreteVector<Tags...>((uid<Tags>(lhs) - uid<Tags>(rhs))...);
 }
+
+} // namespace ddc

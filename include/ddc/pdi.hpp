@@ -9,6 +9,8 @@
 
 #include "ddc/chunk_span.hpp"
 
+namespace ddc {
+
 template <class T>
 static constexpr PDI_inout_t default_access_v
         = (std::is_lvalue_reference_v<T> && !std::is_const_v<std::remove_reference_t<T>>)
@@ -118,3 +120,6 @@ void expose_to_pdi(std::string const& name, DataType&& data)
 {
     PdiEvent(name).with(name, std::forward<DataType>(data));
 }
+
+
+} // namespace ddc

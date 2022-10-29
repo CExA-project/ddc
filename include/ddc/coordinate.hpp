@@ -4,6 +4,8 @@
 
 #include "ddc/detail/tagged_vector.hpp"
 
+namespace ddc {
+
 /** A CoordinateElement the type of the scalar used to represent elements of coordinates in the
  * continuous space.
  */
@@ -15,3 +17,5 @@ using CoordinateElement = double;
  */
 template <class... CDims>
 using Coordinate = detail::TaggedVector<CoordinateElement, CDims...>;
+
+} // namespace ddc

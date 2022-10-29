@@ -13,6 +13,8 @@
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
 
+namespace ddc {
+
 template <class, class, class>
 class Chunk;
 
@@ -181,7 +183,7 @@ public:
     constexpr ChunkSpan(allocation_mdspan_type allocation_mdspan, mdomain_type const& domain)
     {
         namespace stdex = std::experimental;
-        extents_type extents_s((front<DDims>(domain) + ::extents<DDims>(domain)).uid()...);
+        extents_type extents_s((front<DDims>(domain) + extents<DDims>(domain)).uid()...);
         std::array<std::size_t, sizeof...(DDims)> strides_s {allocation_mdspan.mapping().stride(
                 type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
         stdex::layout_stride::mapping<extents_type> mapping_s(extents_s, strides_s);
@@ -224,7 +226,7 @@ public:
                 submdspan(allocation_mdspan(), get_slicer_for<DDims>(slice_spec)...);
         using detail::TypeSeq;
         using selected_meshes = type_seq_remove_t<TypeSeq<DDims...>, TypeSeq<QueryDDims...>>;
-        return ::ChunkSpan<
+        return ChunkSpan<
                 ElementType,
                 decltype(select_by_type_seq<selected_meshes>(this->m_domain)),
                 typename decltype(subview)::layout_type,
@@ -238,7 +240,7 @@ public:
     {
         auto subview = std::experimental::
                 submdspan(allocation_mdspan(), get_slicer_for<DDims>(odomain)...);
-        return ::ChunkSpan<
+        return ChunkSpan<
                 ElementType,
                 decltype(this->m_domain.restrict(odomain)),
                 typename decltype(subview)::layout_type,
@@ -336,3 +338,5 @@ template <
         class LayoutStridedPolicy = std::experimental::layout_right,
         class MemorySpace = Kokkos::HostSpace>
 using ChunkView = ChunkSpan<ElementType const, SupportType, LayoutStridedPolicy, MemorySpace>;
+
+} // namespace ddc

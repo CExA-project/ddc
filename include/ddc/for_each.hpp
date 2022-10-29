@@ -13,6 +13,7 @@
 #include "ddc/discrete_element.hpp"
 #include "ddc/discrete_vector.hpp"
 
+namespace ddc {
 
 namespace detail {
 
@@ -209,3 +210,5 @@ inline void for_each_elem(
 {
     for_each(chunk_span.domain(), std::forward<Functor>(f));
 }
+
+} // namespace ddc

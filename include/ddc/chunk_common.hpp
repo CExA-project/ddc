@@ -15,6 +15,8 @@
 #include "ddc/detail/macros.hpp"
 #include "ddc/discrete_domain.hpp"
 
+namespace ddc {
+
 template <class T>
 inline constexpr bool enable_borrowed_chunk = false;
 
@@ -254,10 +256,10 @@ protected:
         // Handle the case where an allocation of size 0 returns a nullptr.
         assert((domain.size() == 0) || ((ptr != nullptr) && (domain.size() != 0)));
 
-        extents_type extents_r(::extents<DDims>(domain).value()...);
+        extents_type extents_r(::ddc::extents<DDims>(domain).value()...);
         mapping_type mapping_r(extents_r);
 
-        extents_type extents_s((front<DDims>(domain) + ::extents<DDims>(domain)).uid()...);
+        extents_type extents_s((front<DDims>(domain) + ::ddc::extents<DDims>(domain)).uid()...);
         std::array<std::size_t, sizeof...(DDims)> strides_s {
                 mapping_r.stride(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
         stdex::layout_stride::mapping<extents_type> mapping_s(extents_s, strides_s);
@@ -312,7 +314,7 @@ protected:
     constexpr allocation_mdspan_type allocation_mdspan() const
     {
         DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
-        extents_type extents_s(::extents<DDims>(m_domain).value()...);
+        extents_type extents_s(::ddc::extents<DDims>(m_domain).value()...);
         if constexpr (std::is_same_v<LayoutStridedPolicy, std::experimental::layout_stride>) {
             mapping_type map(extents_s, m_internal_mdspan.mapping().strides());
             return allocation_mdspan_type(data(), map);
@@ -323,3 +325,5 @@ protected:
         DDC_IF_NVCC_THEN_POP
     }
 };
+
+} // namespace ddc

@@ -20,6 +20,8 @@
 #include "ddc/discrete_space.hpp"
 #include "ddc/dual_discretization.hpp"
 
+namespace ddc {
+
 namespace detail {
 
 template <class DDim, class MemorySpace>
@@ -172,3 +174,5 @@ DDC_INLINE_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space
         static_assert(std::is_same_v<MemorySpace, MemorySpace>, "Memory space not handled");
     }
 }
+
+} // namespace ddc

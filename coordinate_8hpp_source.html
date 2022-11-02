@@ -53,10 +53,17 @@ $(document).ready(function(){initNavTree('coordinate_8hpp_source.html',''); init
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;ddc/detail/tagged_vector.hpp&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">using</span> CoordinateElement = double;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... CDims&gt;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">using</span> Coordinate = detail::TaggedVector&lt;CoordinateElement, CDims...&gt;;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceddc.html">ddc</a> {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">   12</a></span>&#160;<span class="keyword">using</span> <a class="code" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">CoordinateElement</a> = double;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... CDims&gt;</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">   19</a></span>&#160;<span class="keyword">using</span> <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a> = ddc_detail::TaggedVector&lt;<a class="code" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">CoordinateElement</a>, CDims...&gt;;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;} <span class="comment">// namespace ddc</span></div>
+<div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:9</div></div>
+<div class="ttc" id="anamespaceddc_html_a617039bf81c01d40506687eaa0bf1ea8"><div class="ttname"><a href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">ddc::CoordinateElement</a></div><div class="ttdeci">double CoordinateElement</div><div class="ttdoc">A CoordinateElement the type of the scalar used to represent elements of coordinates in the continuou...</div><div class="ttdef"><b>Definition:</b> coordinate.hpp:12</div></div>
+<div class="ttc" id="anamespaceddc_html_ac45b6df2dca76b6324df98964c74f805"><div class="ttname"><a href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate</a></div><div class="ttdeci">ddc_detail::TaggedVector&lt; CoordinateElement, CDims... &gt; Coordinate</div><div class="ttdoc">A Coordinate represents a coordinate in the continuous space.</div><div class="ttdef"><b>Definition:</b> coordinate.hpp:19</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </body>

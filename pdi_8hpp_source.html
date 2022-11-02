@@ -58,115 +58,125 @@ $(document).ready(function(){initNavTree('pdi_8hpp_source.html',''); initResizab
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;ddc/chunk_span.hpp&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">static</span> constexpr PDI_inout_t default_access_v</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        = (std::is_lvalue_reference_v&lt;T&gt; &amp;&amp; !std::is_const_v&lt;std::remove_reference_t&lt;T&gt;&gt;)</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;                  ? PDI_INOUT</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                  : PDI_OUT;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">static</span> constexpr PDI_inout_t chunk_default_access_v = is_writable_chunk_v&lt;T&gt; ? PDI_INOUT : PDI_OUT;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classPdiEvent.html">   21</a></span>&#160;<span class="keyword">class </span><a class="code" href="classPdiEvent.html">PdiEvent</a></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::string m_event;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    std::vector&lt;std::string&gt; m_names;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceddc.html">ddc</a> {</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">static</span> constexpr PDI_inout_t default_access_v</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        = (std::is_lvalue_reference_v&lt;T&gt; &amp;&amp; !std::is_const_v&lt;std::remove_reference_t&lt;T&gt;&gt;)</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                  ? PDI_INOUT</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;                  : PDI_OUT;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">static</span> constexpr PDI_inout_t chunk_default_access_v = is_writable_chunk_v&lt;T&gt; ? PDI_INOUT : PDI_OUT;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classddc_1_1PdiEvent.html">   23</a></span>&#160;<span class="keyword">class </span><a class="code" href="classddc_1_1PdiEvent.html">PdiEvent</a></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    std::string m_event;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classPdiEvent.html#a11b03da5876b8e8e0d11268dc2863e24">   28</a></span>&#160;    <a class="code" href="classPdiEvent.html#a11b03da5876b8e8e0d11268dc2863e24">PdiEvent</a>(std::string <span class="keyword">const</span>&amp; event_name) : m_event(event_name) {}</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            PDI_inout_t access,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            <span class="keyword">class </span>BorrowedChunk,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            std::enable_if_t&lt;is_borrowed_chunk_v&lt;BorrowedChunk&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classPdiEvent.html#ab9850d319f22d470db5d395a80c315a0">   37</a></span>&#160;    <a class="code" href="classPdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classPdiEvent.html#ab9850d319f22d470db5d395a80c315a0">with</a>(std::string <span class="keyword">const</span>&amp; name, BorrowedChunk&amp;&amp; data)</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        static_assert(</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                !(access &amp; PDI_IN) || (chunk_default_access_v&lt;BorrowedChunk&gt; &amp; PDI_IN),</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                <span class="stringliteral">&quot;Invalid access for constant data&quot;</span>);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keyword">auto</span> extents = detail::array(data.domain().extents());</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">size_t</span> rank = extents.size();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        PDI_share((name + <span class="stringliteral">&quot;_rank&quot;</span>).c_str(), &amp;rank, PDI_OUT);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        m_names.push_back(name + <span class="stringliteral">&quot;_rank&quot;</span>);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        PDI_share((name + <span class="stringliteral">&quot;_extents&quot;</span>).c_str(), extents.data(), PDI_OUT);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        m_names.push_back(name + <span class="stringliteral">&quot;_extents&quot;</span>);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        PDI_share(name.c_str(), <span class="keyword">const_cast&lt;</span>chunk_value_t&lt;BorrowedChunk&gt;*<span class="keyword">&gt;</span>(data.data()), access);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        m_names.push_back(name);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            PDI_inout_t access,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            <span class="keyword">class </span>Arithmetic,</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            std::enable_if_t&lt;std::is_arithmetic_v&lt;Arithmetic&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classPdiEvent.html#adf8909a5c901d175b97f29d6244656a1">   57</a></span>&#160;    <a class="code" href="classPdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classPdiEvent.html#adf8909a5c901d175b97f29d6244656a1">with</a>(std::string <span class="keyword">const</span>&amp; name, Arithmetic&amp; data)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        static_assert(</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                !(access &amp; PDI_IN) || (default_access_v&lt;Arithmetic&gt; &amp; PDI_IN),</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                <span class="stringliteral">&quot;Invalid access for constant data&quot;</span>);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">using</span> value_type = std::remove_cv_t&lt;Arithmetic&gt;;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        PDI_share(name.c_str(), <span class="keyword">const_cast&lt;</span>value_type*<span class="keyword">&gt;</span>(&amp;data), access);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        m_names.push_back(name);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">template</span> &lt;PDI_inout_t access, <span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classPdiEvent.html#a418674b56f3229f3d2b6eed12177dd5c">   69</a></span>&#160;    <a class="code" href="classPdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classPdiEvent.html#a418674b56f3229f3d2b6eed12177dd5c">and_with</a>(std::string <span class="keyword">const</span>&amp; name, T&amp;&amp; t)</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">return</span> with&lt;access&gt;(name, std::forward&lt;T&gt;(t));</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> BorrowedChunk, std::enable_if_t&lt;is_borrowed_chunk_v&lt;BorrowedChunk&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="classPdiEvent.html#a251a7574c735708a39e73af438866bee">   80</a></span>&#160;    <a class="code" href="classPdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classPdiEvent.html#a251a7574c735708a39e73af438866bee">with</a>(std::string <span class="keyword">const</span>&amp; name, BorrowedChunk&amp;&amp; data)</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">return</span> with&lt;chunk_default_access_v&lt;BorrowedChunk&gt;&gt;(name, data);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> Arithmetic, std::enable_if_t&lt;std::is_arithmetic_v&lt;Arithmetic&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="classPdiEvent.html#ad2c540c9fbdc156a55b8466eeb9d869a">   87</a></span>&#160;    <a class="code" href="classPdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classPdiEvent.html#ad2c540c9fbdc156a55b8466eeb9d869a">with</a>(std::string <span class="keyword">const</span>&amp; name, Arithmetic&amp; data)</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    {</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordflow">return</span> with&lt;default_access_v&lt;Arithmetic&gt;&gt;(name, data);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="classPdiEvent.html#ac344b2ae069501e539f325a5a26a4f94">   94</a></span>&#160;    <a class="code" href="classPdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classPdiEvent.html#ac344b2ae069501e539f325a5a26a4f94">and_with</a>(std::string <span class="keyword">const</span>&amp; name, T&amp;&amp; t)</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classPdiEvent.html#ab9850d319f22d470db5d395a80c315a0">with</a>(name, std::forward&lt;T&gt;(t));</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    std::vector&lt;std::string&gt; m_names;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258">   30</a></span>&#160;    <a class="code" href="classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258">PdiEvent</a>(std::string <span class="keyword">const</span>&amp; event_name) : m_event(event_name) {}</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            PDI_inout_t access,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            <span class="keyword">class </span>BorrowedChunk,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            std::enable_if_t&lt;is_borrowed_chunk_v&lt;BorrowedChunk&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classddc_1_1PdiEvent.html#ad4eb0635f9b11228b77a44fd601d72a3">   39</a></span>&#160;    <a class="code" href="classddc_1_1PdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classddc_1_1PdiEvent.html#ad4eb0635f9b11228b77a44fd601d72a3">with</a>(std::string <span class="keyword">const</span>&amp; name, BorrowedChunk&amp;&amp; data)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        static_assert(</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                !(access &amp; PDI_IN) || (chunk_default_access_v&lt;BorrowedChunk&gt; &amp; PDI_IN),</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                <span class="stringliteral">&quot;Invalid access for constant data&quot;</span>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespaceddc.html#a21bffe7647c56f8e4a2e4fd5a49001c8">extents</a> = <a class="code" href="namespaceddc_1_1ddc__detail.html#ad19bca880528738fc04675ac8498bc64">ddc_detail::array</a>(data.domain().extents());</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordtype">size_t</span> rank = <a class="code" href="namespaceddc.html#a21bffe7647c56f8e4a2e4fd5a49001c8">extents</a>.size();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        PDI_share((name + <span class="stringliteral">&quot;_rank&quot;</span>).c_str(), &amp;rank, PDI_OUT);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        m_names.push_back(name + <span class="stringliteral">&quot;_rank&quot;</span>);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        PDI_share((name + <span class="stringliteral">&quot;_extents&quot;</span>).c_str(), <a class="code" href="namespaceddc.html#a21bffe7647c56f8e4a2e4fd5a49001c8">extents</a>.data(), PDI_OUT);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        m_names.push_back(name + <span class="stringliteral">&quot;_extents&quot;</span>);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        PDI_share(name.c_str(), <span class="keyword">const_cast&lt;</span><a class="code" href="namespaceddc.html#adb335346eb3412e07727f1097c76302b">chunk_value_t&lt;BorrowedChunk&gt;</a>*<span class="keyword">&gt;</span>(data.data()), access);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        m_names.push_back(name);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            PDI_inout_t access,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="keyword">class </span>Arithmetic,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            std::enable_if_t&lt;std::is_arithmetic_v&lt;Arithmetic&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classddc_1_1PdiEvent.html#ad81fa7e4c966cfc7956df7901f2473ca">   59</a></span>&#160;    <a class="code" href="classddc_1_1PdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classddc_1_1PdiEvent.html#ad81fa7e4c966cfc7956df7901f2473ca">with</a>(std::string <span class="keyword">const</span>&amp; name, Arithmetic&amp; data)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        static_assert(</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                !(access &amp; PDI_IN) || (default_access_v&lt;Arithmetic&gt; &amp; PDI_IN),</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                <span class="stringliteral">&quot;Invalid access for constant data&quot;</span>);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">using</span> value_type = std::remove_cv_t&lt;Arithmetic&gt;;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        PDI_share(name.c_str(), <span class="keyword">const_cast&lt;</span>value_type*<span class="keyword">&gt;</span>(&amp;data), access);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        m_names.push_back(name);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">template</span> &lt;PDI_inout_t access, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classddc_1_1PdiEvent.html#a57e6ee16f734ed1aee1b4d751ec34fa2">   71</a></span>&#160;    <a class="code" href="classddc_1_1PdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classddc_1_1PdiEvent.html#a57e6ee16f734ed1aee1b4d751ec34fa2">and_with</a>(std::string <span class="keyword">const</span>&amp; name, T&amp;&amp; t)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">return</span> with&lt;access&gt;(name, std::forward&lt;T&gt;(t));</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> BorrowedChunk, std::enable_if_t&lt;is_borrowed_chunk_v&lt;BorrowedChunk&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="classddc_1_1PdiEvent.html#a05266e614ca038d30272c364ba44692e">   82</a></span>&#160;    <a class="code" href="classddc_1_1PdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classddc_1_1PdiEvent.html#a05266e614ca038d30272c364ba44692e">with</a>(std::string <span class="keyword">const</span>&amp; name, BorrowedChunk&amp;&amp; data)</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">return</span> with&lt;chunk_default_access_v&lt;BorrowedChunk&gt;&gt;(name, data);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> Arithmetic, std::enable_if_t&lt;std::is_arithmetic_v&lt;Arithmetic&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classddc_1_1PdiEvent.html#a2ba0cc8a6bac3abb4d11833a3d776b8e">   89</a></span>&#160;    <a class="code" href="classddc_1_1PdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classddc_1_1PdiEvent.html#a2ba0cc8a6bac3abb4d11833a3d776b8e">with</a>(std::string <span class="keyword">const</span>&amp; name, Arithmetic&amp; data)</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">return</span> with&lt;default_access_v&lt;Arithmetic&gt;&gt;(name, data);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classddc_1_1PdiEvent.html#ab7c7306eaae97ae074a228970939efe4">   96</a></span>&#160;    <a class="code" href="classddc_1_1PdiEvent.html">PdiEvent</a>&amp; <a class="code" href="classddc_1_1PdiEvent.html#ab7c7306eaae97ae074a228970939efe4">and_with</a>(std::string <span class="keyword">const</span>&amp; name, T&amp;&amp; t)</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classddc_1_1PdiEvent.html#ad4eb0635f9b11228b77a44fd601d72a3">with</a>(name, std::forward&lt;T&gt;(t));</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="classPdiEvent.html#a529bbee3caa18fcf5ea528fe2db69333">  101</a></span>&#160;    <a class="code" href="classPdiEvent.html#a529bbee3caa18fcf5ea528fe2db69333">~PdiEvent</a>()</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        PDI_event(m_event.c_str());</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordflow">for</span> (std::string <span class="keyword">const</span>&amp; one_name : m_names) {</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            PDI_reclaim(one_name.c_str());</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        }</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;};</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keyword">template</span> &lt;PDI_inout_t access, <span class="keyword">class</span> DataType&gt;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keywordtype">void</span> expose_to_pdi(std::string <span class="keyword">const</span>&amp; name, DataType&amp;&amp; data)</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;{</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="classPdiEvent.html">PdiEvent</a>(name).<a class="code" href="classPdiEvent.html#ab9850d319f22d470db5d395a80c315a0">with</a>&lt;access&gt;(name, std::forward&lt;DataType&gt;(data));</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;}</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DataType&gt;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keywordtype">void</span> expose_to_pdi(std::string <span class="keyword">const</span>&amp; name, DataType&amp;&amp; data)</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;{</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="classPdiEvent.html">PdiEvent</a>(name).<a class="code" href="classPdiEvent.html#ab9850d319f22d470db5d395a80c315a0">with</a>(name, std::forward&lt;DataType&gt;(data));</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
-<div class="ttc" id="aclassPdiEvent_html"><div class="ttname"><a href="classPdiEvent.html">PdiEvent</a></div><div class="ttdef"><b>Definition:</b> pdi.hpp:22</div></div>
-<div class="ttc" id="aclassPdiEvent_html_a11b03da5876b8e8e0d11268dc2863e24"><div class="ttname"><a href="classPdiEvent.html#a11b03da5876b8e8e0d11268dc2863e24">PdiEvent::PdiEvent</a></div><div class="ttdeci">PdiEvent(std::string const &amp;event_name)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:28</div></div>
-<div class="ttc" id="aclassPdiEvent_html_a251a7574c735708a39e73af438866bee"><div class="ttname"><a href="classPdiEvent.html#a251a7574c735708a39e73af438866bee">PdiEvent::with</a></div><div class="ttdeci">PdiEvent &amp; with(std::string const &amp;name, BorrowedChunk &amp;&amp;data)</div><div class="ttdoc">API with access deduction.</div><div class="ttdef"><b>Definition:</b> pdi.hpp:80</div></div>
-<div class="ttc" id="aclassPdiEvent_html_a418674b56f3229f3d2b6eed12177dd5c"><div class="ttname"><a href="classPdiEvent.html#a418674b56f3229f3d2b6eed12177dd5c">PdiEvent::and_with</a></div><div class="ttdeci">PdiEvent &amp; and_with(std::string const &amp;name, T &amp;&amp;t)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:69</div></div>
-<div class="ttc" id="aclassPdiEvent_html_a529bbee3caa18fcf5ea528fe2db69333"><div class="ttname"><a href="classPdiEvent.html#a529bbee3caa18fcf5ea528fe2db69333">PdiEvent::~PdiEvent</a></div><div class="ttdeci">~PdiEvent()</div><div class="ttdef"><b>Definition:</b> pdi.hpp:101</div></div>
-<div class="ttc" id="aclassPdiEvent_html_ab9850d319f22d470db5d395a80c315a0"><div class="ttname"><a href="classPdiEvent.html#ab9850d319f22d470db5d395a80c315a0">PdiEvent::with</a></div><div class="ttdeci">PdiEvent &amp; with(std::string const &amp;name, BorrowedChunk &amp;&amp;data)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:37</div></div>
-<div class="ttc" id="aclassPdiEvent_html_ac344b2ae069501e539f325a5a26a4f94"><div class="ttname"><a href="classPdiEvent.html#ac344b2ae069501e539f325a5a26a4f94">PdiEvent::and_with</a></div><div class="ttdeci">PdiEvent &amp; and_with(std::string const &amp;name, T &amp;&amp;t)</div><div class="ttdoc">With synonym.</div><div class="ttdef"><b>Definition:</b> pdi.hpp:94</div></div>
-<div class="ttc" id="aclassPdiEvent_html_ad2c540c9fbdc156a55b8466eeb9d869a"><div class="ttname"><a href="classPdiEvent.html#ad2c540c9fbdc156a55b8466eeb9d869a">PdiEvent::with</a></div><div class="ttdeci">PdiEvent &amp; with(std::string const &amp;name, Arithmetic &amp;data)</div><div class="ttdoc">Arithmetic overload (only lvalue-ref)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:87</div></div>
-<div class="ttc" id="aclassPdiEvent_html_adf8909a5c901d175b97f29d6244656a1"><div class="ttname"><a href="classPdiEvent.html#adf8909a5c901d175b97f29d6244656a1">PdiEvent::with</a></div><div class="ttdeci">PdiEvent &amp; with(std::string const &amp;name, Arithmetic &amp;data)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:57</div></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="classddc_1_1PdiEvent.html#a7359d16983d6fe60678e3f98c9293cf7">  103</a></span>&#160;    <a class="code" href="classddc_1_1PdiEvent.html#a7359d16983d6fe60678e3f98c9293cf7">~PdiEvent</a>()</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    {</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        PDI_event(m_event.c_str());</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keywordflow">for</span> (std::string <span class="keyword">const</span>&amp; one_name : m_names) {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            PDI_reclaim(one_name.c_str());</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        }</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;};</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keyword">template</span> &lt;PDI_inout_t access, <span class="keyword">class</span> DataType&gt;</div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="namespaceddc.html#a23d4abcde702238b33c5185cd6457658">  113</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceddc.html#a23d4abcde702238b33c5185cd6457658">expose_to_pdi</a>(std::string <span class="keyword">const</span>&amp; name, DataType&amp;&amp; data)</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;{</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="classddc_1_1PdiEvent.html">PdiEvent</a>(name).<a class="code" href="classddc_1_1PdiEvent.html#ad4eb0635f9b11228b77a44fd601d72a3">with</a>&lt;access&gt;(name, std::forward&lt;DataType&gt;(data));</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;}</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DataType&gt;</div>
+<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="namespaceddc.html#ad1758d8bf1e3c6a363d0ee5ec254d517">  119</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceddc.html#a23d4abcde702238b33c5185cd6457658">expose_to_pdi</a>(std::string <span class="keyword">const</span>&amp; name, DataType&amp;&amp; data)</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;{</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="classddc_1_1PdiEvent.html">PdiEvent</a>(name).<a class="code" href="classddc_1_1PdiEvent.html#ad4eb0635f9b11228b77a44fd601d72a3">with</a>(name, std::forward&lt;DataType&gt;(data));</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;} <span class="comment">// namespace ddc</span></div>
+<div class="ttc" id="aclassddc_1_1PdiEvent_html"><div class="ttname"><a href="classddc_1_1PdiEvent.html">ddc::PdiEvent</a></div><div class="ttdef"><b>Definition:</b> pdi.hpp:24</div></div>
+<div class="ttc" id="aclassddc_1_1PdiEvent_html_a05266e614ca038d30272c364ba44692e"><div class="ttname"><a href="classddc_1_1PdiEvent.html#a05266e614ca038d30272c364ba44692e">ddc::PdiEvent::with</a></div><div class="ttdeci">PdiEvent &amp; with(std::string const &amp;name, BorrowedChunk &amp;&amp;data)</div><div class="ttdoc">API with access deduction.</div><div class="ttdef"><b>Definition:</b> pdi.hpp:82</div></div>
+<div class="ttc" id="aclassddc_1_1PdiEvent_html_a2ba0cc8a6bac3abb4d11833a3d776b8e"><div class="ttname"><a href="classddc_1_1PdiEvent.html#a2ba0cc8a6bac3abb4d11833a3d776b8e">ddc::PdiEvent::with</a></div><div class="ttdeci">PdiEvent &amp; with(std::string const &amp;name, Arithmetic &amp;data)</div><div class="ttdoc">Arithmetic overload (only lvalue-ref)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:89</div></div>
+<div class="ttc" id="aclassddc_1_1PdiEvent_html_a57e6ee16f734ed1aee1b4d751ec34fa2"><div class="ttname"><a href="classddc_1_1PdiEvent.html#a57e6ee16f734ed1aee1b4d751ec34fa2">ddc::PdiEvent::and_with</a></div><div class="ttdeci">PdiEvent &amp; and_with(std::string const &amp;name, T &amp;&amp;t)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:71</div></div>
+<div class="ttc" id="aclassddc_1_1PdiEvent_html_a7359d16983d6fe60678e3f98c9293cf7"><div class="ttname"><a href="classddc_1_1PdiEvent.html#a7359d16983d6fe60678e3f98c9293cf7">ddc::PdiEvent::~PdiEvent</a></div><div class="ttdeci">~PdiEvent()</div><div class="ttdef"><b>Definition:</b> pdi.hpp:103</div></div>
+<div class="ttc" id="aclassddc_1_1PdiEvent_html_aa694ad4ce4952cade218bfa994f98258"><div class="ttname"><a href="classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258">ddc::PdiEvent::PdiEvent</a></div><div class="ttdeci">PdiEvent(std::string const &amp;event_name)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:30</div></div>
+<div class="ttc" id="aclassddc_1_1PdiEvent_html_ab7c7306eaae97ae074a228970939efe4"><div class="ttname"><a href="classddc_1_1PdiEvent.html#ab7c7306eaae97ae074a228970939efe4">ddc::PdiEvent::and_with</a></div><div class="ttdeci">PdiEvent &amp; and_with(std::string const &amp;name, T &amp;&amp;t)</div><div class="ttdoc">With synonym.</div><div class="ttdef"><b>Definition:</b> pdi.hpp:96</div></div>
+<div class="ttc" id="aclassddc_1_1PdiEvent_html_ad4eb0635f9b11228b77a44fd601d72a3"><div class="ttname"><a href="classddc_1_1PdiEvent.html#ad4eb0635f9b11228b77a44fd601d72a3">ddc::PdiEvent::with</a></div><div class="ttdeci">PdiEvent &amp; with(std::string const &amp;name, BorrowedChunk &amp;&amp;data)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:39</div></div>
+<div class="ttc" id="aclassddc_1_1PdiEvent_html_ad81fa7e4c966cfc7956df7901f2473ca"><div class="ttname"><a href="classddc_1_1PdiEvent.html#ad81fa7e4c966cfc7956df7901f2473ca">ddc::PdiEvent::with</a></div><div class="ttdeci">PdiEvent &amp; with(std::string const &amp;name, Arithmetic &amp;data)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:59</div></div>
+<div class="ttc" id="anamespaceddc_1_1ddc__detail_html_ad19bca880528738fc04675ac8498bc64"><div class="ttname"><a href="namespaceddc_1_1ddc__detail.html#ad19bca880528738fc04675ac8498bc64">ddc::ddc_detail::array</a></div><div class="ttdeci">constexpr std::array&lt; DiscreteElementType, sizeof...(Tags)&gt; &amp; array(DiscreteElement&lt; Tags... &gt; &amp;v) noexcept</div><div class="ttdoc">Returns a reference to the underlying std::array</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:102</div></div>
+<div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:9</div></div>
+<div class="ttc" id="anamespaceddc_html_a21bffe7647c56f8e4a2e4fd5a49001c8"><div class="ttname"><a href="namespaceddc.html#a21bffe7647c56f8e4a2e4fd5a49001c8">ddc::extents</a></div><div class="ttdeci">constexpr DiscreteVector&lt; QueryDDims... &gt; extents(DiscreteDomain&lt; DDims... &gt; const &amp;domain) noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:243</div></div>
+<div class="ttc" id="anamespaceddc_html_a23d4abcde702238b33c5185cd6457658"><div class="ttname"><a href="namespaceddc.html#a23d4abcde702238b33c5185cd6457658">ddc::expose_to_pdi</a></div><div class="ttdeci">void expose_to_pdi(std::string const &amp;name, DataType &amp;&amp;data)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:113</div></div>
+<div class="ttc" id="anamespaceddc_html_adb335346eb3412e07727f1097c76302b"><div class="ttname"><a href="namespaceddc.html#adb335346eb3412e07727f1097c76302b">ddc::chunk_value_t</a></div><div class="ttdeci">typename chunk_traits&lt; T &gt;::value_type chunk_value_t</div><div class="ttdef"><b>Definition:</b> chunk_common.hpp:44</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </body>

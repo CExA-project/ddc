@@ -148,7 +148,7 @@ Dimension X</h3>
 <div class="fragment"><div class="line">    <span class="comment">// Initialization of the global domain in X with gwx ghost points on</span></div>
 <div class="line">    <span class="comment">// each side</span></div>
 <div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]</div>
-<div class="line">            = <a class="code" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>(DDimX::init_ghosted(</div>
+<div class="line">            = <a class="code" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a>(DDimX::init_ghosted(</div>
 <div class="line">                    <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;X&gt;</a>(x_start),</div>
 <div class="line">                    <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;X&gt;</a>(x_end),</div>
 <div class="line">                    <a class="code" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimX&gt;</a>(nb_x_points),</div>
@@ -191,7 +191,7 @@ Dimension Y</h3>
 <div class="line">    <span class="comment">// Initialization of the global domain in Y with gwy ghost points on</span></div>
 <div class="line">    <span class="comment">// each side</span></div>
 <div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]</div>
-<div class="line">            = <a class="code" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>(DDimY::init_ghosted(</div>
+<div class="line">            = <a class="code" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a>(DDimY::init_ghosted(</div>
 <div class="line">                    <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;Y&gt;</a>(y_start),</div>
 <div class="line">                    <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;Y&gt;</a>(y_end),</div>
 <div class="line">                    <a class="code" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimY&gt;</a>(nb_y_points),</div>
@@ -236,11 +236,12 @@ Time dimension</h3>
 <div class="line">    <span class="comment">// Initialization of the global domain in time:</span></div>
 <div class="line">    <span class="comment">// - the number of discrete time-points is equal to the number of</span></div>
 <div class="line">    <span class="comment">//   steps + 1</span></div>
-<div class="line">    <a class="code" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimT&gt;</a> <span class="keyword">const</span> time_domain = <a class="code" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>(</div>
-<div class="line">            DDimT::</div>
-<div class="line">                    init(<a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;T&gt;</a>(start_time),</div>
-<div class="line">                         <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;T&gt;</a>(end_time),</div>
-<div class="line">                         nb_time_steps + 1));</div>
+<div class="line">    <a class="code" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimT&gt;</a> <span class="keyword">const</span> time_domain</div>
+<div class="line">            = <a class="code" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a>(</div>
+<div class="line">                    DDimT::</div>
+<div class="line">                            init(<a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;T&gt;</a>(start_time),</div>
+<div class="line">                                 <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;T&gt;</a>(end_time),</div>
+<div class="line">                                 nb_time_steps + 1));</div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html"><div class="ttname"><a href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:124</div></div>
 <div class="ttc" id="anamespaceddc_html_a13d882b3cd569916070e20b6ec57eb0d"><div class="ttname"><a href="namespaceddc.html#a13d882b3cd569916070e20b6ec57eb0d">ddc::transform_reduce</a></div><div class="ttdeci">T transform_reduce([[maybe_unused]] serial_host_policy policy, DiscreteDomain&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</div><div class="ttdoc">A reduction over a nD domain using the Serial execution policy.</div><div class="ttdef"><b>Definition:</b> transform_reduce.hpp:231</div></div>
 <div class="ttc" id="anamespaceddc_html_a624f3e483792457bb62202847de7fb92"><div class="ttname"><a href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">ddc::distance_at_left</a></div><div class="ttdeci">DDC_INLINE_FUNCTION Coordinate&lt; CDim &gt; distance_at_left(DiscreteElement&lt; NonUniformPointSampling&lt; CDim &gt;&gt; i)</div><div class="ttdef"><b>Definition:</b> non_uniform_point_sampling.hpp:144</div></div>

@@ -127,9 +127,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a898b241c91c94dbf8aa9afce6a56c3c2"><td class="memTemplParams" colspan="2">template&lt;class ExecSpace , class Functor , class DDim0 , class DDim1 , class... DDims&gt; </td></tr>
 <tr class="memitem:a898b241c91c94dbf8aa9afce6a56c3c2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1ddc__detail.html#a898b241c91c94dbf8aa9afce6a56c3c2">for_each_kokkos</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim0, DDim1, DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
 <tr class="separator:a898b241c91c94dbf8aa9afce6a56c3c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39fb3b0d1321e4c0cd56970d96ca8f6b"><td class="memTemplParams" colspan="2">template&lt;class RetType , class Element , std::size_t N, class Functor , class... Is&gt; </td></tr>
-<tr class="memitem:a39fb3b0d1321e4c0cd56970d96ca8f6b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1ddc__detail.html#a39fb3b0d1321e4c0cd56970d96ca8f6b">for_each_serial</a> (std::array&lt; Element, N &gt; const &amp;start, std::array&lt; Element, N &gt; const &amp;end, Functor const &amp;f, Is const &amp;... is) noexcept</td></tr>
-<tr class="separator:a39fb3b0d1321e4c0cd56970d96ca8f6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8996cad74af46e1b9a58beb51652571"><td class="memTemplParams" colspan="2">template&lt;class RetType , class Element , std::size_t N, class Functor , class... Is&gt; </td></tr>
+<tr class="memitem:ac8996cad74af46e1b9a58beb51652571"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1ddc__detail.html#ac8996cad74af46e1b9a58beb51652571">for_each_serial</a> (std::array&lt; Element, N &gt; const &amp;begin, std::array&lt; Element, N &gt; const &amp;end, Functor const &amp;f, Is const &amp;... is) noexcept</td></tr>
+<tr class="separator:ac8996cad74af46e1b9a58beb51652571"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42feab190112c08eedea9a78ef73ded5"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTransformOp , class... DCoords&gt; </td></tr>
 <tr class="memitem:a42feab190112c08eedea9a78ef73ded5"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1ddc__detail.html#a42feab190112c08eedea9a78ef73ded5">transform_reduce_serial</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, [[maybe_unused]] T const neutral, BinaryReductionOp const &amp;reduce, UnaryTransformOp const &amp;transform, DCoords const &amp;... dcoords) noexcept</td></tr>
 <tr class="memdesc:a42feab190112c08eedea9a78ef73ded5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A serial reduction over a nD domain.  <a href="namespaceddc_1_1ddc__detail.html#a42feab190112c08eedea9a78ef73ded5">More...</a><br /></td></tr>
@@ -719,8 +719,8 @@ template&lt;class ExecSpace , class Functor , class DDim0 , class DDim1 , class.
 
 </div>
 </div>
-<a id="a39fb3b0d1321e4c0cd56970d96ca8f6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39fb3b0d1321e4c0cd56970d96ca8f6b">&#9670;&nbsp;</a></span>for_each_serial()</h2>
+<a id="ac8996cad74af46e1b9a58beb51652571"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8996cad74af46e1b9a58beb51652571">&#9670;&nbsp;</a></span>for_each_serial()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -734,7 +734,7 @@ template&lt;class RetType , class Element , std::size_t N, class Functor , class
           <td class="memname">void ddc::ddc_detail::for_each_serial </td>
           <td>(</td>
           <td class="paramtype">std::array&lt; Element, N &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>start</em>, </td>
+          <td class="paramname"><em>begin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

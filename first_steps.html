@@ -285,13 +285,13 @@ Initial conditions</h1>
 <div class="ttc" id="anamespaceddc_html_a9f0c6cc2043c2e9bd07844e5f3b78951"><div class="ttname"><a href="namespaceddc.html#a9f0c6cc2043c2e9bd07844e5f3b78951">ddc::for_each</a></div><div class="ttdeci">void for_each(serial_host_policy, DiscreteDomain&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using the serial execution policy</div><div class="ttdef"><b>Definition:</b> for_each.hpp:101</div></div>
 <div class="ttc" id="anamespaceddc_html_classddc_1_1ChunkSpan"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition:</b> chunk_span.hpp:26</div></div>
 </div><!-- fragment --> <div class="fragment"><div class="line">    <span class="comment">// display the initial data</span></div>
-<div class="line">    <a class="code" href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
+<div class="line">    <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
 <div class="line">    display(<a class="code" href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">coordinate</a>(time_domain.<a class="code" href="classddc_1_1DiscreteDomain.html#a83ec87abf1ea0f8281dec04acdc86760">front</a>()),</div>
 <div class="line">            ghosted_temp[x_domain][y_domain]);</div>
 <div class="line">    <span class="comment">// time of the iteration where the last output happened</span></div>
 <div class="line">    <a class="code" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> last_output = time_domain.<a class="code" href="classddc_1_1DiscreteDomain.html#a83ec87abf1ea0f8281dec04acdc86760">front</a>();</div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a83ec87abf1ea0f8281dec04acdc86760"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a83ec87abf1ea0f8281dec04acdc86760">ddc::DiscreteDomain::front</a></div><div class="ttdeci">constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:127</div></div>
-<div class="ttc" id="anamespaceddc_html_a9c54d168f1c45b7663dacae2a54731d3"><div class="ttname"><a href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">ddc::deepcopy</a></div><div class="ttdeci">ChunkDst const  &amp; deepcopy(ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src) noexcept</div><div class="ttdoc">Copy the content of a view into another.</div><div class="ttdef"><b>Definition:</b> deepcopy.hpp:21</div></div>
+<div class="ttc" id="anamespaceddc_html_a70ccb44ff709a5939c2d2e0c0231dd0e"><div class="ttname"><a href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a></div><div class="ttdeci">auto deepcopy(ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</div><div class="ttdoc">Copy the content of a borrowed chunk into another.</div><div class="ttdef"><b>Definition:</b> deepcopy.hpp:19</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
 Time loop</h1>
 <div class="fragment"><div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> iter :</div>
@@ -300,16 +300,16 @@ Time loop</h1>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
 Periodic conditions</h2>
 <div class="fragment"><div class="line">        <span class="comment">// Periodic boundary conditions</span></div>
-<div class="line">        <a class="code" href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">ddc::deepcopy</a>(</div>
+<div class="line">        <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(</div>
 <div class="line">                ghosted_last_temp[x_pre_ghost][y_domain],</div>
 <div class="line">                ghosted_last_temp[y_domain][x_domain_end]);</div>
-<div class="line">        <a class="code" href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">ddc::deepcopy</a>(</div>
+<div class="line">        <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(</div>
 <div class="line">                ghosted_last_temp[y_domain][x_post_ghost],</div>
 <div class="line">                ghosted_last_temp[y_domain][x_domain_begin]);</div>
-<div class="line">        <a class="code" href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">ddc::deepcopy</a>(</div>
+<div class="line">        <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(</div>
 <div class="line">                ghosted_last_temp[x_domain][y_pre_ghost],</div>
 <div class="line">                ghosted_last_temp[x_domain][y_domain_end]);</div>
-<div class="line">        <a class="code" href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">ddc::deepcopy</a>(</div>
+<div class="line">        <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(</div>
 <div class="line">                ghosted_last_temp[x_domain][y_post_ghost],</div>
 <div class="line">                ghosted_last_temp[x_domain][y_domain_begin]);</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
@@ -354,7 +354,7 @@ Numerical scheme</h2>
 Output</h2>
 <div class="fragment"><div class="line">        <span class="keywordflow">if</span> (iter - last_output &gt;= t_output_period) {</div>
 <div class="line">            last_output = iter;</div>
-<div class="line">            <a class="code" href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
+<div class="line">            <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
 <div class="line">            display(<a class="code" href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">coordinate</a>(iter), ghosted_temp[x_domain][y_domain]);</div>
 <div class="line">        }</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md14"></a>
@@ -364,7 +364,7 @@ Final swap</h2>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md15"></a>
 Final output</h1>
 <div class="fragment"><div class="line">    <span class="keywordflow">if</span> (last_output &lt; time_domain.<a class="code" href="classddc_1_1DiscreteDomain.html#a62a161736ea187bb47f77944c3978fa1">back</a>()) {</div>
-<div class="line">        <a class="code" href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
+<div class="line">        <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
 <div class="line">        display(<a class="code" href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">coordinate</a>(time_domain.<a class="code" href="classddc_1_1DiscreteDomain.html#a62a161736ea187bb47f77944c3978fa1">back</a>()),</div>
 <div class="line">                ghosted_temp[x_domain][y_domain]);</div>
 <div class="line">    }</div>

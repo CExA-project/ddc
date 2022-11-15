@@ -52,31 +52,30 @@ $(document).ready(function(){initNavTree('deepcopy_8hpp_source.html',''); initRe
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;ddc/chunk_span.hpp&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;ddc/for_each.hpp&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;ddc/chunk_span.hpp&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceddc.html">ddc</a> {</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceddc.html">ddc</a> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> ChunkDst, <span class="keyword">class</span> ChunkSrc&gt;</div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">   21</a></span>&#160;<span class="keyword">inline</span> ChunkDst <span class="keyword">const</span>&amp; <a class="code" href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">deepcopy</a>(ChunkDst&amp;&amp; dst, ChunkSrc&amp;&amp; src) noexcept</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    static_assert(is_chunk_v&lt;ChunkDst&gt;);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    static_assert(is_chunk_v&lt;ChunkSrc&gt;);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    static_assert(</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            std::is_assignable_v&lt;decltype(*dst.data()), decltype(*src.data())&gt;,</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            <span class="stringliteral">&quot;Not assignable&quot;</span>);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    assert(dst.domain().extents() == src.domain().extents());</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    Kokkos::deep_copy(dst.allocation_kokkos_view(), src.allocation_kokkos_view());</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">return</span> dst;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> ChunkDst, <span class="keyword">class</span> ChunkSrc&gt;</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">   19</a></span>&#160;<span class="keyword">auto</span> <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">deepcopy</a>(ChunkDst&amp;&amp; dst, ChunkSrc&amp;&amp; src)</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    static_assert(is_borrowed_chunk_v&lt;ChunkDst&gt;);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    static_assert(is_borrowed_chunk_v&lt;ChunkSrc&gt;);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    static_assert(</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;            std::is_assignable_v&lt;<a class="code" href="namespaceddc.html#a4f36a871e49681abe05cc39604126187">chunk_reference_t&lt;ChunkDst&gt;</a>, <a class="code" href="namespaceddc.html#a4f36a871e49681abe05cc39604126187">chunk_reference_t&lt;ChunkSrc&gt;</a>&gt;,</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            <span class="stringliteral">&quot;Not assignable&quot;</span>);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    assert(dst.domain().extents() == src.domain().extents());</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    Kokkos::deep_copy(dst.allocation_kokkos_view(), src.allocation_kokkos_view());</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> dst.span_view();</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:9</div></div>
-<div class="ttc" id="anamespaceddc_html_a9c54d168f1c45b7663dacae2a54731d3"><div class="ttname"><a href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">ddc::deepcopy</a></div><div class="ttdeci">ChunkDst const  &amp; deepcopy(ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src) noexcept</div><div class="ttdoc">Copy the content of a view into another.</div><div class="ttdef"><b>Definition:</b> deepcopy.hpp:21</div></div>
+<div class="ttc" id="anamespaceddc_html_a4f36a871e49681abe05cc39604126187"><div class="ttname"><a href="namespaceddc.html#a4f36a871e49681abe05cc39604126187">ddc::chunk_reference_t</a></div><div class="ttdeci">typename chunk_traits&lt; T &gt;::reference_type chunk_reference_t</div><div class="ttdef"><b>Definition:</b> chunk_common.hpp:50</div></div>
+<div class="ttc" id="anamespaceddc_html_a70ccb44ff709a5939c2d2e0c0231dd0e"><div class="ttname"><a href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a></div><div class="ttdeci">auto deepcopy(ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</div><div class="ttdoc">Copy the content of a borrowed chunk into another.</div><div class="ttdef"><b>Definition:</b> deepcopy.hpp:19</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </body>

@@ -197,10 +197,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a3739502a1de6615c7aa338d0814a0eea"><td class="memTemplParams" colspan="2">template&lt;class KokkosView , class... DDims, class  = std::enable_if_t&lt;Kokkos::is_view&lt;KokkosView&gt;::value&gt;&gt; </td></tr>
 <tr class="memitem:a3739502a1de6615c7aa338d0814a0eea"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a3739502a1de6615c7aa338d0814a0eea">ChunkSpan</a> (KokkosView const &amp;view, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; domain) -&gt; <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ddc_detail::kokkos_to_mdspan_element_t&lt; typename KokkosView::data_type &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, ddc_detail::kokkos_to_mdspan_layout_t&lt; typename KokkosView::array_layout &gt;, typename KokkosView::memory_space &gt;</td></tr>
 <tr class="separator:a3739502a1de6615c7aa338d0814a0eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c54d168f1c45b7663dacae2a54731d3"><td class="memTemplParams" colspan="2">template&lt;class ChunkDst , class ChunkSrc &gt; </td></tr>
-<tr class="memitem:a9c54d168f1c45b7663dacae2a54731d3"><td class="memTemplItemLeft" align="right" valign="top">ChunkDst const  &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">deepcopy</a> (ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src) noexcept</td></tr>
-<tr class="memdesc:a9c54d168f1c45b7663dacae2a54731d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the content of a view into another.  <a href="namespaceddc.html#a9c54d168f1c45b7663dacae2a54731d3">More...</a><br /></td></tr>
-<tr class="separator:a9c54d168f1c45b7663dacae2a54731d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="memTemplParams" colspan="2">template&lt;class ChunkDst , class ChunkSrc &gt; </td></tr>
+<tr class="memitem:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">deepcopy</a> (ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</td></tr>
+<tr class="memdesc:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the content of a borrowed chunk into another.  <a href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">More...</a><br /></td></tr>
+<tr class="separator:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5e4ebc24acb30e1e701d57af71150cd"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
 <tr class="memitem:ab5e4ebc24acb30e1e701d57af71150cd"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab5e4ebc24acb30e1e701d57af71150cd">select</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain)</td></tr>
 <tr class="separator:ab5e4ebc24acb30e1e701d57af71150cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1078,19 +1078,16 @@ template&lt;class KokkosView , class... DDims, class  = std::enable_if_t&lt;Kokk
 
 </div>
 </div>
-<a id="a9c54d168f1c45b7663dacae2a54731d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c54d168f1c45b7663dacae2a54731d3">&#9670;&nbsp;</a></span>deepcopy()</h2>
+<a id="a70ccb44ff709a5939c2d2e0c0231dd0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70ccb44ff709a5939c2d2e0c0231dd0e">&#9670;&nbsp;</a></span>deepcopy()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class ChunkDst , class ChunkSrc &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ChunkDst const&amp; ddc::deepcopy </td>
+          <td class="memname">auto ddc::deepcopy </td>
           <td>(</td>
           <td class="paramtype">ChunkDst &amp;&amp;&#160;</td>
           <td class="paramname"><em>dst</em>, </td>
@@ -1107,22 +1104,17 @@ template&lt;class ChunkDst , class ChunkSrc &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>Copy the content of a view into another. </p>
+<p>Copy the content of a borrowed chunk into another. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">dst</td><td>the view in which to copy </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">src</td><td>the view from which to copy </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">dst</td><td>the borrowed chunk in which to copy </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">src</td><td>the borrowed chunk from which to copy </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>to </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> </dd></dl>
 
 </div>
 </div>

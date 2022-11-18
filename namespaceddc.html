@@ -451,10 +451,10 @@ Functions</h2></td></tr>
 <tr class="memitem:aa68ccc2176ff4651b5f3fe7ede3c16d4"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, typename DDim::discrete_element_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aa68ccc2176ff4651b5f3fe7ede3c16d4">front</a> () noexcept</td></tr>
 <tr class="memdesc:aa68ccc2176ff4651b5f3fe7ede3c16d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lower bound index of the mesh.  <a href="namespaceddc.html#aa68ccc2176ff4651b5f3fe7ede3c16d4">More...</a><br /></td></tr>
 <tr class="separator:aa68ccc2176ff4651b5f3fe7ede3c16d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc2bdf27e6474da6ce625b59df59eda5"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
-<tr class="memitem:abc2bdf27e6474da6ce625b59df59eda5"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, typename DDim::continuous_element_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#abc2bdf27e6474da6ce625b59df59eda5">step</a> () noexcept</td></tr>
-<tr class="memdesc:abc2bdf27e6474da6ce625b59df59eda5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <a href="namespaceddc.html#abc2bdf27e6474da6ce625b59df59eda5">More...</a><br /></td></tr>
-<tr class="separator:abc2bdf27e6474da6ce625b59df59eda5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5b3fd6658e6ea3166ab0c0b49e75eae"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:af5b3fd6658e6ea3166ab0c0b49e75eae"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, double &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#af5b3fd6658e6ea3166ab0c0b49e75eae">step</a> () noexcept</td></tr>
+<tr class="memdesc:af5b3fd6658e6ea3166ab0c0b49e75eae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <a href="namespaceddc.html#af5b3fd6658e6ea3166ab0c0b49e75eae">More...</a><br /></td></tr>
+<tr class="separator:af5b3fd6658e6ea3166ab0c0b49e75eae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cb0cc7a92cf50b57b0b7df0fc81ec01"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
 <tr class="memitem:a9cb0cc7a92cf50b57b0b7df0fc81ec01"><td class="memTemplItemLeft" align="right" valign="top">constexpr DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9cb0cc7a92cf50b57b0b7df0fc81ec01">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;c)</td></tr>
 <tr class="separator:a9cb0cc7a92cf50b57b0b7df0fc81ec01"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3872,8 +3872,8 @@ template&lt;class DDim &gt; </div>
 
 </div>
 </div>
-<a id="abc2bdf27e6474da6ce625b59df59eda5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc2bdf27e6474da6ce625b59df59eda5">&#9670;&nbsp;</a></span>step()</h2>
+<a id="af5b3fd6658e6ea3166ab0c0b49e75eae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5b3fd6658e6ea3166ab0c0b49e75eae">&#9670;&nbsp;</a></span>step()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3884,7 +3884,7 @@ template&lt;class DDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION std:: enable_if_t&lt;<a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt;DDim&gt;, typename DDim::continuous_element_type&gt; ddc::step </td>
+          <td class="memname">DDC_INLINE_FUNCTION std::enable_if_t&lt;<a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt;DDim&gt;, double&gt; ddc::step </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>

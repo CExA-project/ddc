@@ -52,6 +52,65 @@ inline constexpr DiscreteVectorElement const& get_or(
     return tuple.template get_or<QueryTag>(default_value);
 }
 
+/// Unary operators: +, -
+
+template <class... Tags>
+constexpr inline DiscreteVector<Tags...> operator+(DiscreteVector<Tags...> const& x)
+{
+    return x;
+}
+
+template <class... Tags>
+constexpr inline DiscreteVector<Tags...> operator-(DiscreteVector<Tags...> const& x)
+{
+    return DiscreteVector<Tags...>((-get<Tags>(x))...);
+}
+
+/// Internal binary operators: +, -
+
+template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+constexpr inline DiscreteVector<Tag> operator+(
+        DiscreteVector<Tag> const& lhs,
+        IntegralType const& rhs)
+{
+    return DiscreteVector<Tag>(get<Tag>(lhs) + rhs);
+}
+
+template <class IntegralType, class Tag, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+constexpr inline DiscreteVector<Tag> operator+(
+        IntegralType const& lhs,
+        DiscreteVector<Tag> const& rhs)
+{
+    return DiscreteVector<Tag>(lhs + get<Tag>(rhs));
+}
+
+template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+constexpr inline DiscreteVector<Tag> operator-(
+        DiscreteVector<Tag> const& lhs,
+        IntegralType const& rhs)
+{
+    return DiscreteVector<Tag>(get<Tag>(lhs) - rhs);
+}
+
+template <class IntegralType, class Tag, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+constexpr inline DiscreteVector<Tag> operator-(
+        IntegralType const& lhs,
+        DiscreteVector<Tag> const& rhs)
+{
+    return DiscreteVector<Tag>(lhs - get<Tag>(rhs));
+}
+
+/// external left binary operator: *
+
+template <
+        class IntegralType,
+        class... Tags,
+        class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+constexpr inline auto operator*(IntegralType const& lhs, DiscreteVector<Tags...> const& rhs)
+{
+    return DiscreteVector<Tags...>((lhs * get<Tags>(rhs))...);
+}
+
 template <class... QueryTags, class... Tags>
 inline constexpr DiscreteVector<QueryTags...> select(DiscreteVector<Tags...> const& arr) noexcept
 {
@@ -317,22 +376,6 @@ public:
     }
 };
 
-/// Unary operators: +, -
-
-template <class... Tags>
-constexpr inline DiscreteVector<Tags...> operator+(DiscreteVector<Tags...> const& x)
-{
-    return x;
-}
-
-template <class... Tags>
-constexpr inline DiscreteVector<Tags...> operator-(DiscreteVector<Tags...> const& x)
-{
-    return DiscreteVector<Tags...>((-get<Tags>(x))...);
-}
-
-/// Internal binary operators: +, -
-
 template <
         class... Tags,
         class... OTags,
@@ -370,22 +413,6 @@ constexpr inline DiscreteVector<OTags...> operator+(
     return result;
 }
 
-template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline DiscreteVector<Tag> operator+(
-        DiscreteVector<Tag> const& lhs,
-        IntegralType const& rhs)
-{
-    return DiscreteVector<Tag>(get<Tag>(lhs) + rhs);
-}
-
-template <class IntegralType, class Tag, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline DiscreteVector<Tag> operator+(
-        IntegralType const& lhs,
-        DiscreteVector<Tag> const& rhs)
-{
-    return DiscreteVector<Tag>(lhs + get<Tag>(rhs));
-}
-
 template <
         class... Tags,
         class... OTags,
@@ -421,33 +448,6 @@ constexpr inline DiscreteVector<OTags...> operator-(
     ((ddc::ddc_detail::array(result)[type_seq_rank_v<Tags, otags_seq>] += lhs.template get<Tags>()),
      ...);
     return result;
-}
-
-template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline DiscreteVector<Tag> operator-(
-        DiscreteVector<Tag> const& lhs,
-        IntegralType const& rhs)
-{
-    return DiscreteVector<Tag>(get<Tag>(lhs) - rhs);
-}
-
-template <class IntegralType, class Tag, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline DiscreteVector<Tag> operator-(
-        IntegralType const& lhs,
-        DiscreteVector<Tag> const& rhs)
-{
-    return DiscreteVector<Tag>(lhs - get<Tag>(rhs));
-}
-
-/// external left binary operator: *
-
-template <
-        class IntegralType,
-        class... Tags,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline auto operator*(IntegralType const& lhs, DiscreteVector<Tags...> const& rhs)
-{
-    return DiscreteVector<Tags...>((lhs * get<Tags>(rhs))...);
 }
 
 template <class Tag>

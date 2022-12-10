@@ -66,8 +66,6 @@ public:
 
     using size_type = typename base_type::size_type;
 
-    using difference_type = typename base_type::difference_type;
-
     using pointer = typename base_type::pointer;
 
     using reference = typename base_type::reference;

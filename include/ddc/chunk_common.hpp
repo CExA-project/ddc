@@ -74,19 +74,21 @@ protected:
     /// the raw mdspan underlying this, with the same indexing (0 might no be dereferenceable)
     using internal_mdspan_type = std::experimental::mdspan<
             ElementType,
-            std::experimental::dextents<sizeof...(DDims)>,
+            std::experimental::dextents<std::size_t, sizeof...(DDims)>,
             std::experimental::layout_stride>;
 
 public:
     using mdomain_type = DiscreteDomain<DDims...>;
 
     /// The dereferenceable part of the co-domain but with a different domain, starting at 0
-    using allocation_mdspan_type = std::experimental::
-            mdspan<ElementType, std::experimental::dextents<sizeof...(DDims)>, LayoutStridedPolicy>;
+    using allocation_mdspan_type = std::experimental::mdspan<
+            ElementType,
+            std::experimental::dextents<std::size_t, sizeof...(DDims)>,
+            LayoutStridedPolicy>;
 
     using const_allocation_mdspan_type = std::experimental::mdspan<
             const ElementType,
-            std::experimental::dextents<sizeof...(DDims)>,
+            std::experimental::dextents<std::size_t, sizeof...(DDims)>,
             LayoutStridedPolicy>;
 
     using discrete_element_type = typename mdomain_type::discrete_element_type;
@@ -104,8 +106,6 @@ public:
     using value_type = typename allocation_mdspan_type::value_type;
 
     using size_type = typename allocation_mdspan_type::size_type;
-
-    using difference_type = typename allocation_mdspan_type::difference_type;
 
     using pointer = typename allocation_mdspan_type::pointer;
 

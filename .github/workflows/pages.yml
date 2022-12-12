@@ -18,11 +18,18 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
           docker/doxygen
-        docker push ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}
+        ls
+        #docker push ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}
     - name: Publish
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/doxygen
+    - name: Save doxygen docker
+      uses: actions/upload-artifact@v3
+      with:
+        name: doxygen-artifact
+        path: docker/doxygen/Dockerfile
+        retention-days: 1
   pages:
     runs-on: ubuntu-latest
     needs: docker-build
@@ -32,6 +39,10 @@ jobs:
       with:
         fetch-depth: 0
         submodules: true
+    - name: Collect doxygen docker
+      uses: actions/download-artifact@v3
+        with:
+          name: doxygen-artifact
     - name: Build site
       run: |
         cat<<-EOF > run.sh

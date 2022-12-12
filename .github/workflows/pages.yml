@@ -17,8 +17,6 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
           docker/doxygen
-        ls docker/doxygen
-        #docker push ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}
     - name: Publish
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       run: |

@@ -20,7 +20,7 @@ jobs:
           docker/doxygen
         docker push ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}
     - name: Publish
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/doxygen
   pages:
@@ -44,7 +44,7 @@ jobs:
         chmod a+rwx docs_out
         docker run -v ${PWD}:/src ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
     - name: Publish site
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |
         git worktree add -B gh-pages public remotes/origin/gh-pages
         find public -mindepth 1 -maxdepth 1 '!' -name .git -exec rm -rf '{}' '+'

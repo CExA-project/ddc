@@ -45,7 +45,12 @@ jobs:
         EOF
         mkdir docs_out
         chmod a+rwx docs_out
-        docker run -v ${PWD}:/src ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
+        if [ $(git diff main..HEAD docker/doxygen | wc -l) -ne 0 ]
+        then
+          docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
+        else
+          docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/doxygen bash /src/run.sh
+        fi
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |

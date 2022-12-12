@@ -86,7 +86,12 @@ jobs:
           make -j 2 VERBOSE=1
           ctest -j 2 --output-on-failure --timeout 5 --output-junit tests.xml
         EOF
-        docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7} bash /src/run.sh
+        if [ $(git diff main..HEAD docker/test_env | wc -l) -ne 0 ]
+        then
+          docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7} bash /src/run.sh
+        else
+          docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/test_env bash /src/run.sh
+        fi
   test-Release:
     runs-on: ubuntu-latest
     needs: docker-build-test_env
@@ -103,7 +108,12 @@ jobs:
           make -j 2 VERBOSE=1
           ctest -j 2 --output-on-failure --timeout 5 --output-junit tests.xml
         EOF
-        docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7} bash /src/run.sh
+        if [ $(git diff main..HEAD docker/test_env | wc -l) -ne 0 ]
+        then
+          docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7} bash /src/run.sh
+        else
+          docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/test_env bash /src/run.sh
+        fi
   test-cuda:
     runs-on: ubuntu-latest
     needs: docker-build-jammy_env
@@ -122,7 +132,12 @@ jobs:
           cmake -DCMAKE_CXX_FLAGS="-Wall" -DBUILD_BENCHMARKS=ON -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_VOLTA70=ON -DKokkos_ENABLE_LIBDL=OFF -DKokkos_ENABLE_DEPRECATED_CODE_3=OFF -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF /src
           make -j 2 VERBOSE=1
         EOF
-        docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7} bash /src/run.sh
+        if [ $(git diff main..HEAD docker/jammy_env | wc -l) -ne 0 ]
+        then
+          docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7} bash /src/run.sh
+        else
+          docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/jammy_env bash /src/run.sh
+        fi
   test-hip:
     runs-on: ubuntu-latest
     needs: docker-build-test_env
@@ -140,4 +155,9 @@ jobs:
           cmake -DCMAKE_CXX_FLAGS="-Wall" -DBUILD_BENCHMARKS=ON -DKokkos_ENABLE_HIP=ON -DKokkos_ARCH_VEGA900=ON -DCMAKE_PREFIX_PATH=/opt/rocm -DKokkos_ENABLE_DEPRECATED_CODE_3=OFF -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF /src
           make -j 2 VERBOSE=1
         EOF
-        docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7} bash /src/run.sh
+        if [ $(git diff main..HEAD docker/test_env | wc -l) -ne 0 ]
+        then
+          docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7} bash /src/run.sh
+        else
+          docker run -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/test_env bash /src/run.sh
+        fi

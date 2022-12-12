@@ -88,8 +88,8 @@ jobs:
         submodules: recursive
     - name: Collect test_env docker
       uses: actions/download-artifact@v3
-        with:
-          name: test_env-artifact
+      with:
+        name: test_env-artifact
     - name: Build
       run: |
         cat<<-EOF > run.sh
@@ -110,8 +110,8 @@ jobs:
         submodules: recursive
     - name: Collect test_env docker
       uses: actions/download-artifact@v3
-        with:
-          name: test_env-artifact
+      with:
+        name: test_env-artifact
     - name: Build
       run: |
         cat<<-EOF > run.sh
@@ -132,8 +132,8 @@ jobs:
         submodules: recursive
     - name: Collect jammy_env docker
       uses: actions/download-artifact@v3
-        with:
-          name: jammy_env-artifact
+      with:
+        name: jammy_env-artifact
     - name: Build
       run: |
         cat<<-EOF > run.sh
@@ -156,8 +156,8 @@ jobs:
         submodules: recursive
     - name: Collect test_env docker
       uses: actions/download-artifact@v3
-        with:
-          name: test_env-artifact
+      with:
+        name: test_env-artifact
     - name: Build
       run: |
         cat<<-EOF > run.sh

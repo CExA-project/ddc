@@ -30,11 +30,18 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/test_env \
           -t ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7} \
           docker/test_env
-        docker push ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7}
+        ls docker/test_env
+        #docker push ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7}
     - name: Publish
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/test_env
+    - name: Save test_env docker
+      uses: actions/upload-artifact@v3
+      with:
+        name: test_env-artifact
+        path: docker/test_env/Dockerfile
+        retention-days: 1
   docker-build-jammy_env:
     runs-on: ubuntu-latest
     steps:
@@ -49,11 +56,18 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/jammy_env \
           -t ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7} \
           docker/jammy_env
-        docker push ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7}
+        ls
+        #docker push ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7}
     - name: Publish
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/jammy_env
+    - name: Save jammy_env docker
+      uses: actions/upload-artifact@v3
+      with:
+        name: jammy_env-artifact
+        path: docker/jammy_env/Dockerfile
+        retention-days: 1
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -72,6 +86,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: recursive
+    - name: Collect test_env docker
+      uses: actions/download-artifact@v3
+        with:
+          name: test_env-artifact
     - name: Build
       run: |
         cat<<-EOF > run.sh
@@ -89,6 +107,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: recursive
+    - name: Collect test_env docker
+      uses: actions/download-artifact@v3
+        with:
+          name: test_env-artifact
     - name: Build
       run: |
         cat<<-EOF > run.sh
@@ -106,6 +128,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: recursive
+    - name: Collect jammy_env docker
+      uses: actions/download-artifact@v3
+        with:
+          name: jammy_env-artifact
     - name: Build
       run: |
         cat<<-EOF > run.sh
@@ -125,6 +151,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: recursive
+    - name: Collect test_env docker
+      uses: actions/download-artifact@v3
+        with:
+          name: test_env-artifact
     - name: Build
       run: |
         cat<<-EOF > run.sh

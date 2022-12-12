@@ -52,7 +52,7 @@ jobs:
         mkdir docs_out
         chmod a+rwx docs_out
         ls docker/doxygen
-        docker run -v ${PWD}/docker/doxygen:/src ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
+        docker run -v ${PWD}/docker/doxygen:/src bash /src/run.sh
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       run: |

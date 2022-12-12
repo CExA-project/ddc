@@ -17,7 +17,7 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
           docker/doxygen
-        ls
+        ls docker/doxygen
         #docker push ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}
     - name: Publish
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
@@ -52,7 +52,7 @@ jobs:
         EOF
         mkdir docs_out
         chmod a+rwx docs_out
-        docker run -v ${PWD}:/src ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
+        docker run -v ${PWD}:/src docker/doxygen bash /src/run.sh
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       run: |

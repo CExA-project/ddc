@@ -68,15 +68,6 @@ constexpr inline DiscreteVector<Tags...> operator-(DiscreteVector<Tags...> const
 
 /// Internal binary operators: +, -
 
-template <class... Tags, class... OTags>
-constexpr inline DiscreteVector<Tags...> operator+(
-        DiscreteVector<Tags...> const& lhs,
-        DiscreteVector<OTags...> const& rhs)
-{
-    static_assert(type_seq_same_v<ddc_detail::TypeSeq<Tags...>, ddc_detail::TypeSeq<OTags...>>);
-    return DiscreteVector<Tags...>((get<Tags>(lhs) + get<Tags>(rhs))...);
-}
-
 template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
 constexpr inline DiscreteVector<Tag> operator+(
         DiscreteVector<Tag> const& lhs,
@@ -91,15 +82,6 @@ constexpr inline DiscreteVector<Tag> operator+(
         DiscreteVector<Tag> const& rhs)
 {
     return DiscreteVector<Tag>(lhs + get<Tag>(rhs));
-}
-
-template <class... Tags, class... OTags>
-constexpr inline DiscreteVector<Tags...> operator-(
-        DiscreteVector<Tags...> const& lhs,
-        DiscreteVector<OTags...> const& rhs)
-{
-    static_assert(type_seq_same_v<ddc_detail::TypeSeq<Tags...>, ddc_detail::TypeSeq<OTags...>>);
-    return DiscreteVector<Tags...>((get<Tags>(lhs) - get<Tags>(rhs))...);
 }
 
 template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
@@ -350,8 +332,8 @@ public:
     template <class... OTags>
     constexpr inline DiscreteVector& operator+=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert(type_seq_same_v<tags_seq, ddc_detail::TypeSeq<OTags...>>);
-        ((m_values[type_seq_rank_v<Tags, tags_seq>] += rhs.template get<Tags>()), ...);
+        static_assert(((type_seq_contains_v<ddc_detail::TypeSeq<OTags>, tags_seq>)&&...));
+        ((m_values[type_seq_rank_v<OTags, tags_seq>] += rhs.template get<OTags>()), ...);
         return *this;
     }
 
@@ -369,8 +351,8 @@ public:
     template <class... OTags>
     constexpr inline DiscreteVector& operator-=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert(type_seq_same_v<tags_seq, ddc_detail::TypeSeq<OTags...>>);
-        ((m_values[type_seq_rank_v<Tags, tags_seq>] -= rhs.template get<Tags>()), ...);
+        static_assert(((type_seq_contains_v<ddc_detail::TypeSeq<OTags>, tags_seq>)&&...));
+        ((m_values[type_seq_rank_v<OTags, tags_seq>] -= rhs.template get<OTags>()), ...);
         return *this;
     }
 
@@ -388,11 +370,85 @@ public:
     template <class... OTags>
     constexpr inline DiscreteVector& operator*=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert(type_seq_same_v<tags_seq, ddc_detail::TypeSeq<OTags...>>);
-        ((m_values[type_seq_rank_v<Tags, tags_seq>] *= rhs.template get<Tags>()), ...);
+        static_assert(((type_seq_contains_v<ddc_detail::TypeSeq<OTags>, tags_seq>)&&...));
+        ((m_values[type_seq_rank_v<OTags, tags_seq>] *= rhs.template get<OTags>()), ...);
         return *this;
     }
 };
+
+template <
+        class... Tags,
+        class... OTags,
+        class = std::enable_if_t<(sizeof...(Tags) >= sizeof...(OTags))>>
+constexpr inline DiscreteVector<Tags...> operator+(
+        DiscreteVector<Tags...> const& lhs,
+        DiscreteVector<OTags...> const& rhs)
+{
+    if constexpr (type_seq_same_v<ddc_detail::TypeSeq<Tags...>, ddc_detail::TypeSeq<OTags...>>) {
+        return DiscreteVector<Tags...>((get<Tags>(lhs) + get<Tags>(rhs))...);
+    } else {
+        using tags_seq = ddc_detail::TypeSeq<Tags...>;
+        static_assert(((type_seq_contains_v<ddc_detail::TypeSeq<OTags>, tags_seq>)&&...));
+        DiscreteVector<Tags...> result(get<Tags>(lhs)...);
+        ((ddc::ddc_detail::array(result)[type_seq_rank_v<OTags, tags_seq>]
+          += rhs.template get<OTags>()),
+         ...);
+        return result;
+    }
+}
+
+template <
+        class... Tags,
+        class... OTags,
+        class = std::enable_if_t<(sizeof...(Tags) < sizeof...(OTags))>>
+constexpr inline DiscreteVector<OTags...> operator+(
+        DiscreteVector<Tags...> const& lhs,
+        DiscreteVector<OTags...> const& rhs)
+{
+    using otags_seq = ddc_detail::TypeSeq<OTags...>;
+    static_assert(((type_seq_contains_v<ddc_detail::TypeSeq<Tags>, otags_seq>)&&...));
+    DiscreteVector<OTags...> result(get<OTags>(rhs)...);
+    ((ddc::ddc_detail::array(result)[type_seq_rank_v<Tags, otags_seq>] += lhs.template get<Tags>()),
+     ...);
+    return result;
+}
+
+template <
+        class... Tags,
+        class... OTags,
+        class = std::enable_if_t<(sizeof...(Tags) >= sizeof...(OTags))>>
+constexpr inline DiscreteVector<Tags...> operator-(
+        DiscreteVector<Tags...> const& lhs,
+        DiscreteVector<OTags...> const& rhs)
+{
+    if constexpr (type_seq_same_v<ddc_detail::TypeSeq<Tags...>, ddc_detail::TypeSeq<OTags...>>) {
+        return DiscreteVector<Tags...>((get<Tags>(lhs) - get<Tags>(rhs))...);
+    } else {
+        using tags_seq = ddc_detail::TypeSeq<Tags...>;
+        static_assert(((type_seq_contains_v<ddc_detail::TypeSeq<OTags>, tags_seq>)&&...));
+        DiscreteVector<Tags...> result(get<Tags>(lhs)...);
+        ((ddc::ddc_detail::array(result)[type_seq_rank_v<OTags, tags_seq>]
+          -= rhs.template get<OTags>()),
+         ...);
+        return result;
+    }
+}
+
+template <
+        class... Tags,
+        class... OTags,
+        class = std::enable_if_t<(sizeof...(Tags) < sizeof...(OTags))>>
+constexpr inline DiscreteVector<OTags...> operator-(
+        DiscreteVector<Tags...> const& lhs,
+        DiscreteVector<OTags...> const& rhs)
+{
+    using otags_seq = ddc_detail::TypeSeq<OTags...>;
+    static_assert(((type_seq_contains_v<ddc_detail::TypeSeq<Tags>, otags_seq>)&&...));
+    DiscreteVector<OTags...> result((-get<OTags>(rhs))...);
+    ((ddc::ddc_detail::array(result)[type_seq_rank_v<Tags, otags_seq>] += lhs.template get<Tags>()),
+     ...);
+    return result;
+}
 
 template <class Tag>
 constexpr inline bool operator<(DiscreteVector<Tag> const& lhs, DiscreteVector<Tag> const& rhs)

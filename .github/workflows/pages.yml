@@ -40,8 +40,8 @@ jobs:
         submodules: true
     - name: Collect doxygen docker
       uses: actions/download-artifact@v3
-        with:
-          name: doxygen-artifact
+      with:
+        name: doxygen-artifact
     - name: Build site
       run: |
         cat<<-EOF > run.sh

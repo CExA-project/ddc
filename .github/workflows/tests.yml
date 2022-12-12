@@ -32,7 +32,7 @@ jobs:
           docker/test_env
         docker push ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7}
     - name: Publish
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/test_env
   docker-build-jammy_env:
@@ -51,7 +51,7 @@ jobs:
           docker/jammy_env
         docker push ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7}
     - name: Publish
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/jammy_env
   lint:

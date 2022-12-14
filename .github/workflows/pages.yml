@@ -17,7 +17,7 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
           docker/doxygen
-        docker images ls
+        docker images docker/doxygen
         docker save docker/doxygen > doxygen.tar
         ls
         ls docker

@@ -17,7 +17,6 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
           docker/doxygen
-        docker run -v ${PWD}:/src ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
         docker ps -a
         docker images
         docker export docker/doxygen

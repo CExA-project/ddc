@@ -17,7 +17,7 @@ jobs:
         android: true
         dotnet: true
         haskell: true
-        large-packages: false
+        large-packages: true
         swap-storage: true
     - name: Checkout built branch
       uses: actions/checkout@v3

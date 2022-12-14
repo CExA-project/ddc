@@ -16,7 +16,7 @@ jobs:
           --cache-from ghcr.io/maison-de-la-simulation/ddc/doxygen \
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
-          -t doxygen_image
+          -t doxygen_image \
           docker/doxygen
         docker save doxygen_image > doxygen.tar
     - name: Publish

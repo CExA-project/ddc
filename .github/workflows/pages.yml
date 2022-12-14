@@ -52,7 +52,8 @@ jobs:
         EOF
         mkdir docs_out
         chmod a+rwx docs_out
-        docker run ${PWD}/docker/doxygen bash /src/run.sh
+        echo ${PWD}/docker/doxygen
+        docker run ${pwd}/docker/doxygen bash /src/run.sh
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       run: |

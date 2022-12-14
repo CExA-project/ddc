@@ -17,9 +17,8 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
           docker/doxygen
-        docker ps -a
-        docker images
-        docker export docker/doxygen
+        docker images ls
+        docker save docker/doxygen > doxygen.tar
         ls
         ls docker
         ls docker/doxygen
@@ -31,7 +30,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: doxygen-artifact
-        path: docker/doxygen/Dockerfile
+        path: doxygen.tar
         retention-days: 1
   pages:
     runs-on: ubuntu-latest

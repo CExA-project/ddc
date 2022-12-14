@@ -12,22 +12,12 @@ jobs:
       run: |
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
         docker pull ghcr.io/maison-de-la-simulation/ddc/doxygen || true
-        #docker build \
-        #  --cache-from ghcr.io/maison-de-la-simulation/ddc/doxygen \
-        #  -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
-        #  -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
-        #  docker/doxygen
-        docker build --tag my_test docker/doxygen
-        docker images
-        cd docker
-        docker images
-        cd doxygen
-        docker images
-        cd ../..
+        docker build \
+          --cache-from ghcr.io/maison-de-la-simulation/ddc/doxygen \
+          -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
+          -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
+          docker/doxygen
         docker save ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} > doxygen.tar
-        ls
-        ls docker
-        ls docker/doxygen
     - name: Publish
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       run: |
@@ -53,6 +43,7 @@ jobs:
         name: doxygen-artifact
     - name: Build site
       run: |
+        docker load < doxygen.tar
         cat<<-EOF > run.sh
           set -xe 
           cmake -DBUILD_DOCUMENTATION=ON -DDDC_BUILD_PDI_WRAPPER=OFF /src
@@ -61,7 +52,6 @@ jobs:
         EOF
         mkdir docs_out
         chmod a+rwx docs_out
-        ls docker/doxygen
         docker run ${PWD}/docker/doxygen bash /src/run.sh
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}

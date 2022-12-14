@@ -12,12 +12,12 @@ jobs:
       run: |
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
         docker pull ghcr.io/maison-de-la-simulation/ddc/doxygen || true
-        docker build \
-          --cache-from ghcr.io/maison-de-la-simulation/ddc/doxygen \
-          -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
-          -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
-          docker/doxygen
-          #docker build --tag my_test docker/doxygen
+        #docker build \
+        #  --cache-from ghcr.io/maison-de-la-simulation/ddc/doxygen \
+        #  -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
+        #  -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
+        #  docker/doxygen
+        docker build --tag my_test docker/doxygen
         docker images
         cd docker
         docker images

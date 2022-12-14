@@ -17,13 +17,14 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen \
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
           docker/doxygen
+        docker build --tag my_test docker/doxygen
         docker images
         cd docker
         docker images
         cd doxygen
         docker images
         cd ../..
-        docker save docker/doxygen > doxygen.tar
+        docker save ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} > doxygen.tar
         ls
         ls docker
         ls docker/doxygen

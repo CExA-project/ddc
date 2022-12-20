@@ -36,3 +36,20 @@ TEST(UniformPointSampling, Formatting)
     oss << ddim_x;
     EXPECT_EQ(oss.str(), "UniformPointSampling( origin=(-1), step=0.5 )");
 }
+
+TEST_F(UniformPointSamplingTest, Coordinate)
+{
+    struct DimY;
+    using DDimY = ddc::UniformPointSampling<DimY>;
+    ddc::DiscreteElement<DDimY> point_iy = ddc::DiscreteElement<DDimY>(4);
+    ddc::Coordinate<DimY> point_ry = ddc::Coordinate<DimY>(-6.);
+
+    ddc::DiscreteElement<DDimX, DDimY> point_ixy(point_ix, point_iy);
+    ddc::Coordinate<DimX, DimY> point_rxy(point_rx, point_ry);
+
+    ddc::init_discrete_space<DDimX>(origin, step);
+    ddc::init_discrete_space<DDimY>(ddc::Coordinate<DimY>(-10.), 1.);
+    EXPECT_EQ(coordinate(point_ix), point_rx);
+    EXPECT_EQ(coordinate(point_iy), point_ry);
+    EXPECT_EQ(coordinate(point_ixy), point_rxy);
+}

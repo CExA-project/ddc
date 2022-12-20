@@ -180,7 +180,7 @@ DDC_INLINE_FUNCTION Coordinate<typename PointSampling::continuous_dimension_type
         DiscreteElement<PointSampling...> const& c)
 {
     return Coordinate<typename PointSampling::continuous_dimension_type...>(
-            discrete_space<PointSampling>().coordinate(c)...);
+            discrete_space<PointSampling>().coordinate(select<PointSampling>(c))...);
 }
 
 } // namespace ddc

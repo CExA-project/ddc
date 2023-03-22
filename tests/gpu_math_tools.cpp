@@ -7,6 +7,8 @@
 #include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
 
+#include <hipfft/hipfft.h>
+
 struct DDimX;
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
@@ -114,3 +116,93 @@ TEST(GPUMathToolsParallelDevice, HipHelloWorld)
     TestGPUMathToolsParallelDeviceHipHelloWorld();
 }
 
+static void TestGPUMathToolsFFT3Dz2z()
+{
+ 	std::cout << "hipfft 3D double-precision complex-to-complex transform\n";
+
+    const int Nx        = 4;
+    const int Ny        = 4;
+    const int Nz        = 4;
+    int       direction = HIPFFT_FORWARD; // forward=-1, backward=1
+
+    std::vector<std::complex<double>> cdata(Nx * Ny * Nz);
+    size_t complex_bytes = sizeof(decltype(cdata)::value_type) * cdata.size();
+
+    // Create HIP device object and copy data to device:
+    // hipfftComplex for single-precision
+    hipError_t           hip_rt;
+    hipfftDoubleComplex* x;
+    hip_rt = hipMalloc(&x, complex_bytes);
+    if(hip_rt != hipSuccess)
+        throw std::runtime_error("hipMalloc failed");
+
+    std::cout << "Input:\n";
+    for(size_t i = 0; i < Nx * Ny * Nz; i++)
+    {
+        cdata[i] = i;
+    }
+    for(int i = 0; i < Nx; i++)
+    {
+        for(int j = 0; j < Ny; j++)
+        {
+            for(int k = 0; k < Nz; k++)
+            {
+                int pos = (i * Ny + j) * Nz + k;
+                std::cout << cdata[pos] << " ";
+            }
+            std::cout << "\n";
+        }
+        std::cout << "\n";
+    }
+    std::cout << std::endl;
+    hip_rt = hipMemcpy(x, cdata.data(), complex_bytes, hipMemcpyHostToDevice);
+    if(hip_rt != hipSuccess)
+        throw std::runtime_error("hipMemcpy failed");
+
+	// Create plan
+    hipfftHandle plan      = -1;
+    hipfftResult hipfft_rt = hipfftCreate(&plan);
+    if(hipfft_rt != HIPFFT_SUCCESS)
+        throw std::runtime_error("failed to create plan");
+
+    hipfft_rt = hipfftPlan3d(&plan, // plan handle
+                             Nx, // transform length
+                             Ny, // transform length
+                             Nz, // transform length
+                             HIPFFT_Z2Z); // transform type (HIPFFT_C2C for single-precision)
+    if(hipfft_rt != HIPFFT_SUCCESS)
+        throw std::runtime_error("hipfftPlan3d failed");
+
+    // Execute plan
+    // hipfftExecZ2Z: double precision, hipfftExecC2C: for single-precision
+    hipfft_rt = hipfftExecZ2Z(plan, x, x, direction);
+    if(hipfft_rt != HIPFFT_SUCCESS)
+        throw std::runtime_error("hipfftExecZ2Z failed");
+
+    std::cout << "output:\n";
+    hip_rt = hipMemcpy(cdata.data(), x, complex_bytes, hipMemcpyDeviceToHost);
+    if(hip_rt != hipSuccess)
+        throw std::runtime_error("hipMemcpy failed");
+    for(int i = 0; i < Nx; i++)
+    {
+        for(int j = 0; j < Ny; j++)
+        {
+            for(int k = 0; k < Nz; k++)
+            {
+                int pos = (i * Ny + j) * Nz + k;
+                std::cout << cdata[pos] << " ";
+            }
+            std::cout << "\n";
+        }
+        std::cout << "\n";
+    }
+    std::cout << std::endl;
+
+    hipfftDestroy(plan);
+    hipFree(x);
+}
+
+TEST(GPUMathToolsParallelDevice, FFT3Dz2z)
+{
+	TestGPUMathToolsFFT3Dz2z();
+}

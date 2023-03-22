@@ -107,15 +107,6 @@ else()
 	message( "Environment variable HIP_DIR is not defined. Functions in the ddc::hip namespace won't be accessible." )
 endif()
 
-## HIP TOOLKIT (hipRAND, hipFFT, hipBLAS...)
-
-if( DEFINED HIP_TOOLKIT_PATH ) # Usually called ROCM_PATH in the HIP documentation. By default : /opt/rocm
-	list( APPEND CMAKE_PREFIX_PATH ${HIP_TOOLKIT_PATH}/hiprand/lib/cmake )
-	list( APPEND CMAKE_PREFIX_PATH ${HIP_TOOLKIT_PATH}/hipfft/lib/cmake )
-else()
-	message( "HIP_TOOLKIT_PATH is not defined. Functions in the ddc::hip namespace won't be accessible (math tools). To get them, add -DHIP_TOOLKIT_PATH=\"path_to_hip_toolkit\" in your cmake line" )
-endif()
-
 ## PDI
 
 if("${DDC_BUILD_PDI_WRAPPER}")
@@ -210,6 +201,8 @@ install(
 	TARGETS DDC
 	EXPORT DDCTargets)
 
+# Link library to DDC
+
 if( HIP_FOUND )
 	target_include_directories(DDC
 	SYSTEM INTERFACE
@@ -225,7 +218,22 @@ if( HIP_FOUND )
 	endif()
 	# target_link_libraries( DDC INTERFACE hip::host hip::device )
 endif()
-	
+
+## HIP TOOLKIT (hipRAND, hipFFT, hipBLAS...)
+
+if( DEFINED HIP_TOOLKIT_PATH ) # Usually called ROCM_PATH in the HIP documentation. By default : /opt/rocm
+	list( APPEND CMAKE_PREFIX_PATH ${HIP_TOOLKIT_PATH}/hipfft/lib )
+	# find_package( hipfft REQUIRED CONFIG PATHS ) # Not compatible with nvidia
+	find_library(HIPFFT_LIB hipfft)
+	target_link_libraries( DDC INTERFACE ${HIPFFT_LIB} )	
+	target_include_directories(DDC
+	SYSTEM INTERFACE
+		"$<BUILD_INTERFACE:${HIP_TOOLKIT_PATH}/include>"
+	)
+else()
+	message( "HIP_TOOLKIT_PATH is not defined. Functions in the ddc::hip namespace won't be accessible (math tools). To get them, add -DHIP_TOOLKIT_PATH=\"path_to_hip_toolkit\" in your cmake line" )
+endif()
+
 ## The PDI wrapper
 
 if("${DDC_BUILD_PDI_WRAPPER}")

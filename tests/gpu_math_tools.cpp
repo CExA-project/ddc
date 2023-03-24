@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 
+#include <experimental/mdspan>
+
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
@@ -9,6 +11,7 @@
 
 #include <hipfft/hipfft.h>
 
+struct X;
 struct DDimX;
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
@@ -22,6 +25,9 @@ using DDomY = ddc::DiscreteDomain<DDimY>;
 using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
 using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
 using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
+
+struct Kx;
+struct DDimKx;
 
 static DElemX constexpr lbound_x(0);
 static DVectX constexpr nelems_x(10);
@@ -120,21 +126,87 @@ static void TestGPUMathToolsFFT3Dz2z()
 {
  	std::cout << "hipfft 3D double-precision complex-to-complex transform\n";
 
-    const int Nx        = 4;
+	const double a		= -10*M_PI;
+	const double b		= 10*M_PI;
+    const int Nx        = 201;
     const int Ny        = 4;
     const int Nz        = 4;
     int       direction = HIPFFT_FORWARD; // forward=-1, backward=1
 
-    std::vector<std::complex<double>> cdata(Nx * Ny * Nz);
-    size_t complex_bytes = sizeof(decltype(cdata)::value_type) * cdata.size();
+    size_t complex_bytes = sizeof(std::complex<double>) * (Nx/2+1);
 
-    // Create HIP device object and copy data to device:
+   	using DDimX = ddc::UniformPointSampling<X>;
+	ddc::DiscreteDomain<DDimX> const x_mesh = ddc::init_discrete_space(
+		DDimX::init(ddc::Coordinate<X>(a), ddc::Coordinate<X>(b), ddc::DiscreteVector<DDimX>(Nx)));
+   	using DDimKx = ddc::UniformPointSampling<Kx>;
+	ddc::DiscreteDomain<DDimKx> const k_mesh = ddc::init_discrete_space(
+		DDimKx::init(ddc::Coordinate<Kx>(0), ddc::Coordinate<Kx>((Nx-1)/(b-a)*M_PI), ddc::DiscreteVector<DDimKx>(Nx/2+1)));
+	ddc::ChunkSpan const f = ddc::Chunk(x_mesh, ddc::DeviceAllocator<double>()).span_view();
+	ddc::for_each(
+		ddc::policies::parallel_device,
+		x_mesh,
+		DDC_LAMBDA(ddc::DiscreteElement<DDimX> const Ex) {
+			double const x = coordinate(ddc::select<DDimX>(Ex));
+			f(Ex) = sin(x)/(x+1e-20);
+			// f(Ex) = cos(4*x);
+		}
+	);
+    hipfftHandle ddc_plan      = -1;
+    hipfftResult hipfft_ddc_rt = hipfftCreate(&ddc_plan);
+	hipfft_ddc_rt = hipfftPlan1d(&ddc_plan, // plan handle
+                             Nx, // transform length
+                             HIPFFT_D2Z, 1); // transform type (HIPFFT_C2C for single-precision)
+	if(hipfft_ddc_rt != HIPFFT_SUCCESS)
+        throw std::runtime_error("hipfftPlan1d failed");
+
+	// Create HIP device object and copy data to device:
+    // hipfftComplex for single-precision
+    hipError_t hip_ddc_rt;
+    hipfftDoubleComplex* Ff;
+    hip_ddc_rt = hipMalloc(&Ff, complex_bytes);
+    if(hip_ddc_rt != hipSuccess)
+        throw std::runtime_error("hipMalloc failed");
+	
+	// ddc::ChunkSpan const Ff = ddc::Chunk(k_mesh, ddc::DeviceAllocator<std::complex<double>>()).span_view();
+	hipfft_ddc_rt = hipfftExecD2Z(ddc_plan, f.data(), Ff);
+    if(hipfft_ddc_rt != HIPFFT_SUCCESS)
+    	throw std::runtime_error("hipfftExecD2Z failed");
+	
+
+	std::vector<double> f_host(Nx);
+	hip_ddc_rt = hipMemcpy(f_host.data(), f.data(), sizeof(double)*Nx, hipMemcpyDeviceToHost);
+	if(hip_ddc_rt != hipSuccess)
+        throw std::runtime_error("hipMemcpy failed");
+	std::cout << "input:\n";
+    for(int i = 0; i < Nx; i++)
+    {
+       std::cout << coordinate(ddc::select<DDimX>(x_mesh[i])) << "->" << f_host[i] << " ";
+    }
+    std::cout << std::endl;
+	std::vector<std::complex<double>> Ff_host(Nx);
+    hip_ddc_rt = hipMemcpy(Ff_host.data(), Ff, complex_bytes, hipMemcpyDeviceToHost);
+    if(hip_ddc_rt != hipSuccess)
+        throw std::runtime_error("hipMemcpy failed");	
+	std::cout << "output:\n";
+    for(int i = 0; i < Nx/2+1; i++)
+    {
+    	std::cout << coordinate(ddc::select<DDimKx>(k_mesh[i])) << "->" << abs(Ff_host[i]) << " ";
+    }
+    std::cout << std::endl;
+
+    hipfftDestroy(ddc_plan);
+    hipFree(Ff);
+
+	#if 0
+	// Create HIP device object and copy data to device:
     // hipfftComplex for single-precision
     hipError_t           hip_rt;
     hipfftDoubleComplex* x;
     hip_rt = hipMalloc(&x, complex_bytes);
     if(hip_rt != hipSuccess)
         throw std::runtime_error("hipMalloc failed");
+
+    hip_rt = hipMemcpy(x, cdata.data(), complex_bytes, hipMemcpyHostToDevice);
 
     std::cout << "Input:\n";
     for(size_t i = 0; i < Nx * Ny * Nz; i++)
@@ -155,6 +227,8 @@ static void TestGPUMathToolsFFT3Dz2z()
         std::cout << "\n";
     }
     std::cout << std::endl;
+	// auto mdspan_rt = std::experimental::mdspan(cdata.data(), Nx, Ny, Nz);
+
     hip_rt = hipMemcpy(x, cdata.data(), complex_bytes, hipMemcpyHostToDevice);
     if(hip_rt != hipSuccess)
         throw std::runtime_error("hipMemcpy failed");
@@ -200,6 +274,7 @@ static void TestGPUMathToolsFFT3Dz2z()
 
     hipfftDestroy(plan);
     hipFree(x);
+#endif
 }
 
 TEST(GPUMathToolsParallelDevice, FFT3Dz2z)

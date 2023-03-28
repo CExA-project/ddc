@@ -122,13 +122,42 @@ TEST(GPUMathToolsParallelDevice, HipHelloWorld)
     TestGPUMathToolsParallelDeviceHipHelloWorld();
 }
 
+template<typename SpatialDim, typename SpectralDim>
+void FFT(ddc::ChunkSpan<std::complex<double>, ddc::DiscreteDomain<SpectralDim>, std::experimental::layout_right, Kokkos::Cuda::memory_space> Ff, ddc::ChunkSpan<double, ddc::DiscreteDomain<SpatialDim>, std::experimental::layout_right, Kokkos::Cuda::memory_space> f)
+{
+	const int Nx = ddc::get_domain<SpatialDim>(f).size();
+	const double a		=  coordinate(ddc::get_domain<SpatialDim>(f).front());
+	const double b		=  coordinate(ddc::get_domain<SpatialDim>(f).back());
+
+    size_t complex_bytes = sizeof(std::complex<double>) * (Nx/2+1);
+
+	hipfftHandle plan      = -1;
+    hipfftResult hipfft_rt = hipfftCreate(&plan);
+	hipfft_rt = hipfftPlan1d(&plan, // plan handle
+                             Nx-1, // transform length, has to be -1 because we do not want to duplicate periodic point
+                             HIPFFT_D2Z, 1); // transform type (HIPFFT_C2C for single-precision)
+	if(hipfft_rt != HIPFFT_SUCCESS)
+        throw std::runtime_error("hipfftPlan1d failed");
+
+	hipfft_rt = hipfftExecD2Z(plan, f.data(), (hipfftDoubleComplex*)Ff.data());
+    if(hipfft_rt != HIPFFT_SUCCESS)
+    	throw std::runtime_error("hipfftExecD2Z failed");
+    
+	hipfftDestroy(plan);
+}
+
+// TODO:
+// - k_mesh inside the function ?
+// - Remove input Kokkos::Cuda
+// - Variadic with higher dimension
+// - cuFFT+FFTW
 static void TestGPUMathToolsFFT3Dz2z()
 {
  	std::cout << "hipfft 3D double-precision complex-to-complex transform\n";
 
 	const double a		= -10*M_PI;
 	const double b		= 10*M_PI;
-    const int Nx        = 201;
+    const int Nx        = 401;
     const int Ny        = 4;
     const int Nz        = 4;
     int       direction = HIPFFT_FORWARD; // forward=-1, backward=1
@@ -139,64 +168,45 @@ static void TestGPUMathToolsFFT3Dz2z()
 	ddc::DiscreteDomain<DDimX> const x_mesh = ddc::init_discrete_space(
 		DDimX::init(ddc::Coordinate<X>(a), ddc::Coordinate<X>(b), ddc::DiscreteVector<DDimX>(Nx)));
    	using DDimKx = ddc::UniformPointSampling<Kx>;
-	ddc::DiscreteDomain<DDimKx> const k_mesh = ddc::init_discrete_space(
-		DDimKx::init(ddc::Coordinate<Kx>(0), ddc::Coordinate<Kx>((Nx-1)/(b-a)*M_PI), ddc::DiscreteVector<DDimKx>(Nx/2+1)));
-	ddc::ChunkSpan const f = ddc::Chunk(x_mesh, ddc::DeviceAllocator<double>()).span_view();
+	ddc::Chunk _f = ddc::Chunk(x_mesh, ddc::DeviceAllocator<double>());
+	ddc::ChunkSpan f = _f.span_view();
 	ddc::for_each(
 		ddc::policies::parallel_device,
-		x_mesh,
+		ddc::get_domain<DDimX>(f),
 		DDC_LAMBDA(ddc::DiscreteElement<DDimX> const Ex) {
-			double const x = coordinate(ddc::select<DDimX>(Ex));
-			f(Ex) = sin(x)/(x+1e-20);
+			double const x = coordinate(Ex);
+			f(Ex) = sin(x+1e-20)/(x+1e-20);
 			// f(Ex) = cos(4*x);
 		}
 	);
-    hipfftHandle ddc_plan      = -1;
-    hipfftResult hipfft_ddc_rt = hipfftCreate(&ddc_plan);
-	hipfft_ddc_rt = hipfftPlan1d(&ddc_plan, // plan handle
-                             Nx, // transform length
-                             HIPFFT_D2Z, 1); // transform type (HIPFFT_C2C for single-precision)
-	if(hipfft_ddc_rt != HIPFFT_SUCCESS)
-        throw std::runtime_error("hipfftPlan1d failed");
 
-	// Create HIP device object and copy data to device:
-    // hipfftComplex for single-precision
-    hipError_t hip_ddc_rt;
-    hipfftDoubleComplex* Ff;
-    hip_ddc_rt = hipMalloc(&Ff, complex_bytes);
-    if(hip_ddc_rt != hipSuccess)
-        throw std::runtime_error("hipMalloc failed");
-	
-	// ddc::ChunkSpan const Ff = ddc::Chunk(k_mesh, ddc::DeviceAllocator<std::complex<double>>()).span_view();
-	hipfft_ddc_rt = hipfftExecD2Z(ddc_plan, f.data(), Ff);
-    if(hipfft_ddc_rt != HIPFFT_SUCCESS)
-    	throw std::runtime_error("hipfftExecD2Z failed");
-	
+	ddc::DiscreteDomain<DDimKx> k_mesh = ddc::init_discrete_space(
+		DDimKx::init(ddc::Coordinate<Kx>(0), ddc::Coordinate<Kx>((Nx-1)/(b-a)*M_PI), ddc::DiscreteVector<DDimKx>(Nx/2+1)));
 
-	std::vector<double> f_host(Nx);
-	hip_ddc_rt = hipMemcpy(f_host.data(), f.data(), sizeof(double)*Nx, hipMemcpyDeviceToHost);
-	if(hip_ddc_rt != hipSuccess)
-        throw std::runtime_error("hipMemcpy failed");
+	ddc::Chunk _Ff = ddc::Chunk(k_mesh, ddc::DeviceAllocator<std::complex<double>>());
+	ddc::ChunkSpan Ff = _Ff.span_view();
+
+	FFT<DDimX, DDimKx>(Ff, f);
+	ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDimX>(f), ddc::HostAllocator<double>());
+    ddc::ChunkSpan f_host = _f_host.span_view();
+	ddc::deepcopy(f_host, f);
 	std::cout << "input:\n";
-    for(int i = 0; i < Nx; i++)
-    {
-       std::cout << coordinate(ddc::select<DDimX>(x_mesh[i])) << "->" << f_host[i] << " ";
-    }
-    std::cout << std::endl;
-	std::vector<std::complex<double>> Ff_host(Nx);
-    hip_ddc_rt = hipMemcpy(Ff_host.data(), Ff, complex_bytes, hipMemcpyDeviceToHost);
-    if(hip_ddc_rt != hipSuccess)
-        throw std::runtime_error("hipMemcpy failed");	
+	ddc::for_each(
+        ddc::policies::serial_host,
+        ddc::get_domain<DDimX>(f_host),
+        [=](ddc::DiscreteElement<DDimX> const Ex) {
+			std::cout << coordinate(Ex) << "->" << f_host(Ex) << " ";
+	});
+    ddc::Chunk _Ff_host = ddc::Chunk(ddc::get_domain<DDimKx>(Ff), ddc::HostAllocator<std::complex<double>>());
+    ddc::ChunkSpan Ff_host = _Ff_host.span_view();
+	ddc::deepcopy(Ff_host, Ff);
 	std::cout << "output:\n";
-    for(int i = 0; i < Nx/2+1; i++)
-    {
-    	std::cout << coordinate(ddc::select<DDimKx>(k_mesh[i])) << "->" << abs(Ff_host[i]) << " ";
-    }
-    std::cout << std::endl;
-
-    hipfftDestroy(ddc_plan);
-    hipFree(Ff);
-
+	ddc::for_each(
+        ddc::policies::serial_host,
+        ddc::get_domain<DDimKx>(Ff_host),
+        [=](ddc::DiscreteElement<DDimKx> const Ek) {
+			std::cout << coordinate(Ek) << "->" << abs(Ff_host(Ek)) << " ";
+	});
 	#if 0
 	// Create HIP device object and copy data to device:
     // hipfftComplex for single-precision

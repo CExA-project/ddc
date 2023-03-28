@@ -231,6 +231,118 @@ public:
     }
 };
 
+template <>
+class DiscreteDomain<>
+{
+    template <class...>
+    friend class DiscreteDomain;
+
+public:
+    using discrete_element_type = DiscreteElement<>;
+
+    using mlength_type = DiscreteVector<>;
+
+    static constexpr std::size_t rank()
+    {
+        return 0;
+    }
+
+    constexpr DiscreteDomain() = default;
+
+    /** Construct a DiscreteDomain starting from element_begin with size points.
+     * @param element_begin the lower bound in each direction
+     * @param size the number of points in each direction
+     */
+    constexpr DiscreteDomain(discrete_element_type const&, mlength_type const&)
+    {
+    }
+
+    constexpr DiscreteDomain(DiscreteDomain const& x) = default;
+
+    constexpr DiscreteDomain(DiscreteDomain&& x) = default;
+
+    ~DiscreteDomain() = default;
+
+    DiscreteDomain& operator=(DiscreteDomain const& x) = default;
+
+    DiscreteDomain& operator=(DiscreteDomain&& x) = default;
+
+    constexpr bool operator==(DiscreteDomain const& other) const
+    {
+        return true;
+    }
+
+#if __cplusplus <= 201703L
+    // Shall not be necessary anymore in C++20
+    // `a!=b` shall be translated by the compiler to `!(a==b)`
+    constexpr bool operator!=(DiscreteDomain const& other) const
+    {
+        return !(*this == other);
+    }
+#endif
+
+    constexpr std::size_t size() const
+    {
+        return 1;
+    }
+
+    constexpr mlength_type extents() const noexcept
+    {
+        return {};
+    }
+
+    constexpr discrete_element_type front() const noexcept
+    {
+        return {};
+    }
+
+    constexpr discrete_element_type back() const noexcept
+    {
+        return {};
+    }
+
+    constexpr DiscreteDomain take_first(mlength_type n) const
+    {
+        return *this;
+    }
+
+    constexpr DiscreteDomain take_last(mlength_type n) const
+    {
+        return *this;
+    }
+
+    constexpr DiscreteDomain remove_first(mlength_type n) const
+    {
+        return *this;
+    }
+
+    constexpr DiscreteDomain remove_last(mlength_type n) const
+    {
+        return *this;
+    }
+
+    constexpr DiscreteDomain remove(mlength_type n1, mlength_type n2) const
+    {
+        return *this;
+    }
+
+    template <class... ODims>
+    constexpr DiscreteDomain restrict(DiscreteDomain<ODims...> const&) const
+    {
+        return *this;
+    }
+
+    constexpr bool empty() const noexcept
+    {
+        return false;
+    }
+
+    constexpr explicit operator bool()
+    {
+        return true;
+    }
+};
+
 template <class... QueryDDims, class... DDims>
 constexpr DiscreteDomain<QueryDDims...> select(DiscreteDomain<DDims...> const& domain)
 {

@@ -249,7 +249,7 @@ public:
 
     constexpr DiscreteDomain() = default;
 
-	// Construct a DiscreteDomain from a reordered copy of `domain`
+    // Construct a DiscreteDomain from a reordered copy of `domain`
     template <class... ODDims>
     explicit constexpr DiscreteDomain(DiscreteDomain<ODDims...> const& domain)
     {
@@ -259,7 +259,9 @@ public:
      * @param element_begin the lower bound in each direction
      * @param size the number of points in each direction
      */
-    constexpr DiscreteDomain(discrete_element_type const&, mlength_type const&)
+    constexpr DiscreteDomain(
+            [[maybe_unused]] discrete_element_type const& element_begin,
+            [[maybe_unused]] mlength_type const& size)
     {
     }
 
@@ -356,29 +358,33 @@ constexpr DiscreteDomain<QueryDDims...> select(DiscreteDomain<DDims...> const& d
             select<QueryDDims...>(domain.front()),
             select<QueryDDims...>(domain.extents()));
 }
-namespace ddc_detail
+
+namespace ddc_detail {
+
+template <class T>
+struct ConvertTypeSeqToDiscreteDomain;
+
+template <class... DDims>
+struct ConvertTypeSeqToDiscreteDomain<ddc_detail::TypeSeq<DDims...>>
 {
-	template<class T>
-	struct ConvertTypeSeqToDiscreteDomain;
+    using type = DiscreteDomain<DDims...>;
+};
 
-	template<class... DDims>
-	struct ConvertTypeSeqToDiscreteDomain<ddc_detail::TypeSeq<DDims...>>
-	{
-		using type = DiscreteDomain<DDims...>;
-	};
+template <class T>
+using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDomain<T>::type;
 
-	template<class T>
-	using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDomain<T>::type;
-}
+} // namespace ddc_detail
 
 template <class... DDimsA, class... DDimsB>
-constexpr auto remove_dims_of(DiscreteDomain<DDimsA...> const& DDom_a, DiscreteDomain<DDimsB...> const& DDom_b) noexcept
+constexpr auto remove_dims_of(
+        DiscreteDomain<DDimsA...> const& DDom_a,
+        DiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
-	using TagSeqA = ddc_detail::TypeSeq<DDimsA...>;
-	using TagSeqB = ddc_detail::TypeSeq<DDimsB...>;
+    using TagSeqA = ddc_detail::TypeSeq<DDimsA...>;
+    using TagSeqB = ddc_detail::TypeSeq<DDimsB...>;
 
-	using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
-	return ddc_detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
+    using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
+    return ddc_detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
 }
 
 template <class... QueryDDims, class... DDims>

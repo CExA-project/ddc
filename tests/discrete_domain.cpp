@@ -116,8 +116,8 @@ TEST(ProductMDomainTest, RangeFor)
 TEST(ProductMDomainTest, DiffEmpty)
 {
     DDomX const dom_x = DDomX();
-	auto const subdomain = ddc::remove_dims_of(dom_x, dom_x);
-	EXPECT_EQ(subdomain, ddc::DiscreteDomain<>());
+    auto const subdomain = ddc::remove_dims_of(dom_x, dom_x);
+    EXPECT_EQ(subdomain, ddc::DiscreteDomain<>());
 }
 
 TEST(ProductMDomainTest, Diff)
@@ -125,6 +125,6 @@ TEST(ProductMDomainTest, Diff)
     DDomX const dom_x = DDomX();
     DDomXY const dom_x_y = DDomXY();
     DDomZY const dom_z_y = DDomZY();
-	auto const subdomain = ddc::remove_dims_of(dom_x_y, dom_z_y);
-	EXPECT_EQ(subdomain, dom_x);
+    auto const subdomain = ddc::remove_dims_of(dom_x_y, dom_z_y);
+    EXPECT_EQ(subdomain, dom_x);
 }

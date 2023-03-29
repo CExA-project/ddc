@@ -38,7 +38,7 @@ TEST(ForEachSerialHost, Empty)
     ddc::ChunkSpan<int, DDomX> view(storage.data(), dom);
     ddc::for_each(ddc::policies::serial_host, dom, [=](DElemX const ix) { view(ix) += 1; });
     ASSERT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size())
-    << std::count(storage.begin(), storage.end(), 1) << std::endl;
+            << std::count(storage.begin(), storage.end(), 1) << std::endl;
 }
 
 TEST(ForEachSerialHost, ZeroDimension)

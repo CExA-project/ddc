@@ -107,3 +107,19 @@ TEST(ProductMDomainTest, RangeFor)
         ++ii.uid<DDimX>();
     }
 }
+
+TEST(ProductMDomainTest, DiffEmpty)
+{
+    DDomX const dom_x = DDomX();
+	auto const subdomain = ddc::removeDimsOf(dom_x, dom_x);
+	EXPECT_EQ(subdomain, ddc::DiscreteDomain<>());
+}
+
+TEST(ProductMDomainTest, Diff)
+{
+    DDomX const dom_x = DDomX();
+	DDomY const dom_y = DDomY();
+    DDomXY const dom_x_y = DDomXY();
+	auto const subdomain = ddc::removeDimsOf(dom_x_y, dom_x);
+	EXPECT_EQ(subdomain, dom_y);
+}

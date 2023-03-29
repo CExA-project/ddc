@@ -249,6 +249,12 @@ public:
 
     constexpr DiscreteDomain() = default;
 
+	// Construct a DiscreteDomain from a reordered copy of `domain`
+    template <class... ODDims>
+    explicit constexpr DiscreteDomain(DiscreteDomain<ODDims...> const& domain)
+    {
+    }
+
     /** Construct a DiscreteDomain starting from element_begin with size points.
      * @param element_begin the lower bound in each direction
      * @param size the number of points in each direction
@@ -349,6 +355,28 @@ constexpr DiscreteDomain<QueryDDims...> select(DiscreteDomain<DDims...> const& d
     return DiscreteDomain<QueryDDims...>(
             select<QueryDDims...>(domain.front()),
             select<QueryDDims...>(domain.extents()));
+}
+
+template<class T>
+struct ConvertTypeSeqToDiscreteDomain;
+
+template<class... DDims>
+struct ConvertTypeSeqToDiscreteDomain<ddc_detail::TypeSeq<DDims...>>
+{
+	using type = DiscreteDomain<DDims...>;
+};
+
+template<class T>
+using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDomain<T>::type;
+
+template <class... DDimsA, class... DDimsB>
+constexpr auto removeDimsOf(DiscreteDomain<DDimsA...> const& DDom_a, DiscreteDomain<DDimsB...> const& DDom_b) noexcept
+{
+	using TagSeqA = ddc_detail::TypeSeq<DDimsA...>;
+	using TagSeqB = ddc_detail::TypeSeq<DDimsB...>;
+
+	using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
+	return convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a); 
 }
 
 template <class... QueryDDims, class... DDims>

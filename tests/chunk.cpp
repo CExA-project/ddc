@@ -55,8 +55,8 @@ template <class Datatype>
 using ChunkYX = ddc::Chunk<Datatype, DDomYX>;
 
 
-static DElem0D constexpr lbound_0d;
-static DVect0D constexpr nelems_0d;
+static DElem0D constexpr lbound_0d {};
+static DVect0D constexpr nelems_0d {};
 static DDom0D constexpr dom_0d(lbound_0d, nelems_0d);
 
 static DElemX constexpr lbound_x(50);

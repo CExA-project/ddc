@@ -80,7 +80,7 @@ $(document).ready(function(){initNavTree('first_steps.html',''); initResizable()
 <div class="line">    <span class="comment">// Simulated time to reach as target of the simulation</span></div>
 <div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> end_time = 10.;</div>
 <div class="line">    <span class="comment">// Number of time-steps between outputs</span></div>
-<div class="line">    <span class="keywordtype">size_t</span> <span class="keyword">const</span> t_output_period = 10;</div>
+<div class="line">    ptrdiff_t <span class="keyword">const</span> t_output_period = 10;</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
 Definition of the discretization</h1>
 <p>Given the previous parameters, we will now define a 2D point discretization.</p>
@@ -136,7 +136,7 @@ Dimension X</h3>
 <div class="line">    <span class="comment">// Simulated time to reach as target of the simulation</span></div>
 <div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> end_time = 10.;</div>
 <div class="line">    <span class="comment">// Number of time-steps between outputs</span></div>
-<div class="line">    <span class="keywordtype">size_t</span> <span class="keyword">const</span> t_output_period = 10;</div>
+<div class="line">    ptrdiff_t <span class="keyword">const</span> t_output_period = 10;</div>
 <div class="line"> </div>
 <div class="ttc" id="aclassddc_1_1ScopeGuard_html"><div class="ttname"><a href="classddc_1_1ScopeGuard.html">ddc::ScopeGuard</a></div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:14</div></div>
 </div><!-- fragment --><p> We start by defining <code>gwx</code>, the number of "ghost" points in the <code>X</code> dimension, those represented in dark grey in the figure on each side of the domain.</p>
@@ -281,7 +281,7 @@ Initial conditions</h1>
 <div class="line">                        = 9.999 * ((x * x + y * y) &lt; 0.25);</div>
 <div class="line">            });</div>
 <div class="ttc" id="anamespaceddc_1_1policies_html_a48db884faba3760360031c5c7657e9e1"><div class="ttname"><a href="namespaceddc_1_1policies.html#a48db884faba3760360031c5c7657e9e1">ddc::policies::parallel_device</a></div><div class="ttdeci">constexpr parallel_device_policy parallel_device</div><div class="ttdef"><b>Definition:</b> for_each.hpp:173</div></div>
-<div class="ttc" id="anamespaceddc_html_a2b5a5bffed9990912da5d2be92715f04"><div class="ttname"><a href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">ddc::coordinate</a></div><div class="ttdeci">ddc::Coordinate&lt; QueryDDims... &gt; coordinate(DiscreteDomain&lt; DDims... &gt; const &amp;domain, DiscreteElement&lt; QueryDDims... &gt; const &amp;icoord) noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:261</div></div>
+<div class="ttc" id="anamespaceddc_html_a2b5a5bffed9990912da5d2be92715f04"><div class="ttname"><a href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">ddc::coordinate</a></div><div class="ttdeci">ddc::Coordinate&lt; QueryDDims... &gt; coordinate(DiscreteDomain&lt; DDims... &gt; const &amp;domain, DiscreteElement&lt; QueryDDims... &gt; const &amp;icoord) noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:409</div></div>
 <div class="ttc" id="anamespaceddc_html_a9f0c6cc2043c2e9bd07844e5f3b78951"><div class="ttname"><a href="namespaceddc.html#a9f0c6cc2043c2e9bd07844e5f3b78951">ddc::for_each</a></div><div class="ttdeci">void for_each(serial_host_policy, DiscreteDomain&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using the serial execution policy</div><div class="ttdef"><b>Definition:</b> for_each.hpp:101</div></div>
 <div class="ttc" id="anamespaceddc_html_classddc_1_1ChunkSpan"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition:</b> chunk_span.hpp:26</div></div>
 </div><!-- fragment --> <div class="fragment"><div class="line">    <span class="comment">// display the initial data</span></div>

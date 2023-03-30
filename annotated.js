@@ -2,6 +2,8 @@ var annotated =
 [
     [ "ddc", "namespaceddc.html", [
       [ "ddc_detail", "namespaceddc_1_1ddc__detail.html", [
+        [ "ConvertTypeSeqToDiscreteDomain", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ConvertTypeSeqToDiscreteDomain", null ],
+        [ "ConvertTypeSeqToDiscreteDomain< ddc_detail::TypeSeq< DDims... > >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ConvertTypeSeqToDiscreteDomain_3_01ddc__detail_1_1TypeSeq_3_01DDims_8_8_8_01_4_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ConvertTypeSeqToDiscreteDomain_3_01ddc__detail_1_1TypeSeq_3_01DDims_8_8_8_01_4_01_4_dup" ],
         [ "Selection", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1Selection", null ],
         [ "Selection< ddc_detail::TypeSeq< QueryDDims... > >", "structddc_1_1ddc__detail_1_1Selection_3_01ddc__detail_1_1TypeSeq_3_01QueryDDims_8_8_8_01_4_01_4.html", null ],
         [ "gpu_proxy", "classddc_1_1ddc__detail_1_1gpu__proxy.html", "classddc_1_1ddc__detail_1_1gpu__proxy" ],
@@ -41,6 +43,7 @@ var annotated =
       [ "ChunkSpan< ElementType, DiscreteDomain< DDims... >, LayoutStridedPolicy, MemorySpace >", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4" ],
       [ "DiscreteDomainIterator", "structddc_1_1DiscreteDomainIterator.html", "structddc_1_1DiscreteDomainIterator" ],
       [ "DiscreteDomain", "classddc_1_1DiscreteDomain.html", "classddc_1_1DiscreteDomain" ],
+      [ "DiscreteDomain<>", "classddc_1_1DiscreteDomain_3_4.html", "classddc_1_1DiscreteDomain_3_4" ],
       [ "DiscreteElement", "classddc_1_1DiscreteElement.html", "classddc_1_1DiscreteElement" ],
       [ "IsDiscreteElement", "structddc_1_1IsDiscreteElement.html", null ],
       [ "IsDiscreteElement< DiscreteElement< Tags... > >", "structddc_1_1IsDiscreteElement_3_01DiscreteElement_3_01Tags_8_8_8_01_4_01_4.html", null ],

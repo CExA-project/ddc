@@ -11,7 +11,7 @@
 
 #include <hipfft/hipfft.h>
 
-struct X;
+struct RDimX;
 struct DDimX;
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
@@ -26,7 +26,7 @@ using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
 using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
 using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 
-struct Kx;
+struct RDimKx;
 struct DDimKx;
 
 static DElemX constexpr lbound_x(0);
@@ -147,7 +147,6 @@ void FFT(ddc::ChunkSpan<std::complex<double>, ddc::DiscreteDomain<SpectralDim>, 
 }
 
 // TODO:
-// - k_mesh inside the function ?
 // - Remove input Kokkos::Cuda
 // - Variadic with higher dimension
 // - cuFFT+FFTW
@@ -164,10 +163,10 @@ static void TestGPUMathToolsFFT3Dz2z()
 
     size_t complex_bytes = sizeof(std::complex<double>) * (Nx/2+1);
 
-   	using DDimX = ddc::UniformPointSampling<X>;
+   	using DDimX = ddc::UniformPointSampling<RDimX>;
 	ddc::DiscreteDomain<DDimX> const x_mesh = ddc::init_discrete_space(
-		DDimX::init(ddc::Coordinate<X>(a), ddc::Coordinate<X>(b), ddc::DiscreteVector<DDimX>(Nx)));
-   	using DDimKx = ddc::UniformPointSampling<Kx>;
+		DDimX::init(ddc::Coordinate<RDimX>(a), ddc::Coordinate<RDimX>(b), ddc::DiscreteVector<DDimX>(Nx)));
+   	using DDimKx = ddc::UniformPointSampling<RDimKx>;
 	ddc::Chunk _f = ddc::Chunk(x_mesh, ddc::DeviceAllocator<double>());
 	ddc::ChunkSpan f = _f.span_view();
 	ddc::for_each(
@@ -181,7 +180,7 @@ static void TestGPUMathToolsFFT3Dz2z()
 	);
 
 	ddc::DiscreteDomain<DDimKx> k_mesh = ddc::init_discrete_space(
-		DDimKx::init(ddc::Coordinate<Kx>(0), ddc::Coordinate<Kx>((Nx-1)/(b-a)*M_PI), ddc::DiscreteVector<DDimKx>(Nx/2+1)));
+		DDimKx::init(ddc::Coordinate<RDimKx>(0), ddc::Coordinate<RDimKx>((Nx-1)/(b-a)*M_PI), ddc::DiscreteVector<DDimKx>(Nx/2+1)));
 
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, ddc::DeviceAllocator<std::complex<double>>());
 	ddc::ChunkSpan Ff = _Ff.span_view();

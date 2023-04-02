@@ -17,6 +17,7 @@ using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
 using DDomX = ddc::DiscreteDomain<DDimX>;
 
+struct RDimY;
 struct DDimY;
 using DElemY = ddc::DiscreteElement<DDimY>;
 using DVectY = ddc::DiscreteVector<DDimY>;
@@ -28,6 +29,9 @@ using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 
 struct RDimKx;
 struct DDimKx;
+
+struct RDimKy;
+struct DDimKy;
 
 static DElemX constexpr lbound_x(0);
 static DVectX constexpr nelems_x(10);
@@ -122,171 +126,140 @@ TEST(GPUMathToolsParallelDevice, HipHelloWorld)
     TestGPUMathToolsParallelDeviceHipHelloWorld();
 }
 
-template<typename SpatialDim, typename SpectralDim>
-void FFT(ddc::ChunkSpan<std::complex<double>, ddc::DiscreteDomain<SpectralDim>, std::experimental::layout_right, Kokkos::Cuda::memory_space> Ff, ddc::ChunkSpan<double, ddc::DiscreteDomain<SpatialDim>, std::experimental::layout_right, Kokkos::Cuda::memory_space> f)
+template<typename SpatialDom, typename SpectralDom>
+void FFT(ddc::ChunkSpan<std::complex<double>, SpectralDom, std::experimental::layout_right, Kokkos::Cuda::memory_space> Ff, ddc::ChunkSpan<double, SpatialDom, std::experimental::layout_right, Kokkos::Cuda::memory_space> f)
 {
-	const int Nx = ddc::get_domain<SpatialDim>(f).size();
-	const double a		=  coordinate(ddc::get_domain<SpatialDim>(f).front());
-	const double b		=  coordinate(ddc::get_domain<SpatialDim>(f).back());
-
-    size_t complex_bytes = sizeof(std::complex<double>) * (Nx/2+1);
-
+	// const double a		= -16*M_PI;
+	// const double b		= 16*M_PI;
+	const int Nx = 32;
+	const int Ny = 32;
+	# if 0
+	using DDimX_res = ddc::UniformPointSampling<RDimX>;
+   	using DDimY_res = ddc::UniformPointSampling<RDimY>;
+	using DDomX_restricted = ddc::DiscreteDomain<DDimX_res,DDimY_res>;
+	DDomX_restricted const x_mesh_restricted = DDomX_restricted(
+		ddc::init_discrete_space(DDimX_res::init(ddc::Coordinate<RDimX>(a), ddc::Coordinate<RDimX>(b-(b-a)/(Nx-1)), ddc::DiscreteVector<DDimX_res>(Nx-1))),
+		ddc::init_discrete_space(DDimY_res::init(ddc::Coordinate<RDimY>(a), ddc::Coordinate<RDimY>(b-(b-a)/(Ny-1)), ddc::DiscreteVector<DDimY_res>(Ny-1)))
+	);
+	std::cout << "testztageazegazg"; 
+	ddc::Chunk _f_restricted = ddc::Chunk(x_mesh_restricted, ddc::DeviceAllocator<double>());
+	ddc::ChunkSpan f_restricted = _f_restricted.span_view();
+	ddc::for_each(
+		ddc::policies::parallel_device,
+		ddc::get_domain<DDimX_res,DDimY_res>(f_restricted),
+		DDC_LAMBDA(ddc::DiscreteElement<DDimX_res,DDimY_res> const e) {
+			double const x = coordinate(ddc::select<DDimX_res>(e));
+			double const y = coordinate(ddc::select<DDimY_res>(e));
+			// f(e) = sin(x+1e-20)*sin(y+1e-20)/(x+1e-20)/(y+1e-20);
+			// f(e) = cos(4*x)*cos(4*x);
+			f_restricted(e) = exp(-(x*x+y*y)/2); //TODO : link to f
+	});
+	#endif
 	hipfftHandle plan      = -1;
     hipfftResult hipfft_rt = hipfftCreate(&plan);
-	hipfft_rt = hipfftPlan1d(&plan, // plan handle
-                             Nx-1, // transform length, has to be -1 because we do not want to duplicate periodic point
-                             HIPFFT_D2Z, 1); // transform type (HIPFFT_C2C for single-precision)
+	hipfft_rt = hipfftPlan2d(&plan, // plan handle
+                             Nx, 
+                             Ny, 
+                             HIPFFT_D2Z); // transform type (HIPFFT_C2C for single-precision)
 	if(hipfft_rt != HIPFFT_SUCCESS)
         throw std::runtime_error("hipfftPlan1d failed");
 
 	hipfft_rt = hipfftExecD2Z(plan, f.data(), (hipfftDoubleComplex*)Ff.data());
     if(hipfft_rt != HIPFFT_SUCCESS)
     	throw std::runtime_error("hipfftExecD2Z failed");
-    
 	hipfftDestroy(plan);
 }
+
+template <typename... Dims>
+struct SpectralSpace;
 
 // TODO:
 // - Remove input Kokkos::Cuda
 // - Variadic with higher dimension
 // - cuFFT+FFTW
+template <typename... RDims>
 static void TestGPUMathToolsFFT3Dz2z()
 {
  	std::cout << "hipfft 3D double-precision complex-to-complex transform\n";
 
-	const double a		= -10*M_PI;
-	const double b		= 10*M_PI;
-    const int Nx        = 401;
-    const int Ny        = 4;
-    const int Nz        = 4;
-    int       direction = HIPFFT_FORWARD; // forward=-1, backward=1
-
-    size_t complex_bytes = sizeof(std::complex<double>) * (Nx/2+1);
+	const double a		= -2*M_PI;
+	const double b		= 2*M_PI;
+    const int Nx        = 32;
+    const int Ny        = 32;
 
    	using DDimX = ddc::UniformPointSampling<RDimX>;
-	ddc::DiscreteDomain<DDimX> const x_mesh = ddc::init_discrete_space(
-		DDimX::init(ddc::Coordinate<RDimX>(a), ddc::Coordinate<RDimX>(b), ddc::DiscreteVector<DDimX>(Nx)));
-   	using DDimKx = ddc::UniformPointSampling<RDimKx>;
+   	using DDimY = ddc::UniformPointSampling<RDimY>;
+	using DDomX = ddc::DiscreteDomain<DDimX,DDimY>;
+	DDomX const x_mesh = DDomX(
+		ddc::init_discrete_space(DDimX::init(ddc::Coordinate<RDimX>(a+(b-a)/Nx/2), ddc::Coordinate<RDimX>(b-(b-a)/Nx/2), ddc::DiscreteVector<DDimX>(Nx))),
+		ddc::init_discrete_space(DDimY::init(ddc::Coordinate<RDimY>(a+(b-a)/Nx/2), ddc::Coordinate<RDimY>(b-(b-a)/Nx/2), ddc::DiscreteVector<DDimY>(Ny)))
+	);
 	ddc::Chunk _f = ddc::Chunk(x_mesh, ddc::DeviceAllocator<double>());
 	ddc::ChunkSpan f = _f.span_view();
 	ddc::for_each(
 		ddc::policies::parallel_device,
-		ddc::get_domain<DDimX>(f),
-		DDC_LAMBDA(ddc::DiscreteElement<DDimX> const Ex) {
-			double const x = coordinate(Ex);
-			f(Ex) = sin(x+1e-20)/(x+1e-20);
-			// f(Ex) = cos(4*x);
+		ddc::get_domain<DDimX,DDimY>(f),
+		DDC_LAMBDA(ddc::DiscreteElement<DDimX,DDimY> const e) {
+			double const x = coordinate(ddc::select<DDimX>(e));
+			double const y = coordinate(ddc::select<DDimY>(e));
+			// f(e) = cos(4*x)*cos(4*y);
+			// f(e) = sin(x+1e-20)*sin(y+1e-20)/(x+1e-20)/(y+1e-20);
+			f(e) = exp(-(x*x+y*y)/2);
 		}
 	);
 
-	ddc::DiscreteDomain<DDimKx> k_mesh = ddc::init_discrete_space(
-		DDimKx::init(ddc::Coordinate<RDimKx>(0), ddc::Coordinate<RDimKx>((Nx-1)/(b-a)*M_PI), ddc::DiscreteVector<DDimKx>(Nx/2+1)));
-
+	using DDimKx = ddc::UniformPointSampling<RDimKx>;
+   	using DDimKy = ddc::UniformPointSampling<RDimKy>;
+	using DDomK = ddc::DiscreteDomain<DDimKx,DDimKy>;
+	DDomK const k_mesh = DDomK(
+		ddc::init_discrete_space(DDimKx::init(ddc::Coordinate<RDimKx>(0), ddc::Coordinate<RDimKx>((Nx-1)/(b-a)*M_PI), ddc::DiscreteVector<DDimKx>(Nx/2+1))),
+		ddc::init_discrete_space(DDimKy::init(ddc::Coordinate<RDimKy>(0), ddc::Coordinate<RDimKy>((Ny-1)/(b-a)*M_PI), ddc::DiscreteVector<DDimKy>(Ny/2+1)))
+	);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, ddc::DeviceAllocator<std::complex<double>>());
 	ddc::ChunkSpan Ff = _Ff.span_view();
+	FFT<DDomX, DDomK>(Ff, f);
 
-	FFT<DDimX, DDimKx>(Ff, f);
-	ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDimX>(f), ddc::HostAllocator<double>());
+	ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDimX,DDimY>(f), ddc::HostAllocator<double>());
     ddc::ChunkSpan f_host = _f_host.span_view();
 	ddc::deepcopy(f_host, f);
-	std::cout << "input:\n";
+	# if 1
+	std::cout << "\n input:\n";
 	ddc::for_each(
         ddc::policies::serial_host,
-        ddc::get_domain<DDimX>(f_host),
-        [=](ddc::DiscreteElement<DDimX> const Ex) {
-			std::cout << coordinate(Ex) << "->" << f_host(Ex) << " ";
+        ddc::get_domain<DDimX,DDimY>(f_host),
+        [=](ddc::DiscreteElement<DDimX,DDimY> const e) {
+			std::cout << coordinate(ddc::select<DDimX>(e)) << coordinate(ddc::select<DDimY>(e)) << "->" << f_host(e) << ", ";
 	});
-    ddc::Chunk _Ff_host = ddc::Chunk(ddc::get_domain<DDimKx>(Ff), ddc::HostAllocator<std::complex<double>>());
+    # endif
+
+	ddc::Chunk _Ff_host = ddc::Chunk(ddc::get_domain<DDimKx,DDimKy>(Ff), ddc::HostAllocator<std::complex<double>>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
 	ddc::deepcopy(Ff_host, Ff);
-	std::cout << "output:\n";
+	# if 1
+	std::cout << "\n output:\n";
 	ddc::for_each(
         ddc::policies::serial_host,
-        ddc::get_domain<DDimKx>(Ff_host),
-        [=](ddc::DiscreteElement<DDimKx> const Ek) {
-			std::cout << coordinate(Ek) << "->" << abs(Ff_host(Ek)) << " ";
+        ddc::get_domain<DDimKx,DDimKy>(Ff_host),
+        [=](ddc::DiscreteElement<DDimKx,DDimKy> const e) {
+			double const kx = coordinate(ddc::select<DDimKx>(e));
+			double const ky = coordinate(ddc::select<DDimKy>(e));
+			std::cout << "(" << kx << ", " << ky << ") ->" << abs(Ff_host(e))*1/2/M_PI*(b-a)*(b-a)/Nx/Ny << " " << exp(-(kx*kx+ky*ky)/2) << ", ";
 	});
-	#if 0
-	// Create HIP device object and copy data to device:
-    // hipfftComplex for single-precision
-    hipError_t           hip_rt;
-    hipfftDoubleComplex* x;
-    hip_rt = hipMalloc(&x, complex_bytes);
-    if(hip_rt != hipSuccess)
-        throw std::runtime_error("hipMalloc failed");
-
-    hip_rt = hipMemcpy(x, cdata.data(), complex_bytes, hipMemcpyHostToDevice);
-
-    std::cout << "Input:\n";
-    for(size_t i = 0; i < Nx * Ny * Nz; i++)
-    {
-        cdata[i] = i;
-    }
-    for(int i = 0; i < Nx; i++)
-    {
-        for(int j = 0; j < Ny; j++)
-        {
-            for(int k = 0; k < Nz; k++)
-            {
-                int pos = (i * Ny + j) * Nz + k;
-                std::cout << cdata[pos] << " ";
-            }
-            std::cout << "\n";
-        }
-        std::cout << "\n";
-    }
-    std::cout << std::endl;
-	// auto mdspan_rt = std::experimental::mdspan(cdata.data(), Nx, Ny, Nz);
-
-    hip_rt = hipMemcpy(x, cdata.data(), complex_bytes, hipMemcpyHostToDevice);
-    if(hip_rt != hipSuccess)
-        throw std::runtime_error("hipMemcpy failed");
-
-	// Create plan
-    hipfftHandle plan      = -1;
-    hipfftResult hipfft_rt = hipfftCreate(&plan);
-    if(hipfft_rt != HIPFFT_SUCCESS)
-        throw std::runtime_error("failed to create plan");
-
-    hipfft_rt = hipfftPlan3d(&plan, // plan handle
-                             Nx, // transform length
-                             Ny, // transform length
-                             Nz, // transform length
-                             HIPFFT_Z2Z); // transform type (HIPFFT_C2C for single-precision)
-    if(hipfft_rt != HIPFFT_SUCCESS)
-        throw std::runtime_error("hipfftPlan3d failed");
-
-    // Execute plan
-    // hipfftExecZ2Z: double precision, hipfftExecC2C: for single-precision
-    hipfft_rt = hipfftExecZ2Z(plan, x, x, direction);
-    if(hipfft_rt != HIPFFT_SUCCESS)
-        throw std::runtime_error("hipfftExecZ2Z failed");
-
-    std::cout << "output:\n";
-    hip_rt = hipMemcpy(cdata.data(), x, complex_bytes, hipMemcpyDeviceToHost);
-    if(hip_rt != hipSuccess)
-        throw std::runtime_error("hipMemcpy failed");
-    for(int i = 0; i < Nx; i++)
-    {
-        for(int j = 0; j < Ny; j++)
-        {
-            for(int k = 0; k < Nz; k++)
-            {
-                int pos = (i * Ny + j) * Nz + k;
-                std::cout << cdata[pos] << " ";
-            }
-            std::cout << "\n";
-        }
-        std::cout << "\n";
-    }
-    std::cout << std::endl;
-
-    hipfftDestroy(plan);
-    hipFree(x);
-#endif
+	# endif
+	double error_squared = ddc::transform_reduce(
+		ddc::get_domain<DDimKx,DDimKy>(Ff_host),
+		0.,
+		ddc::reducer::sum<double>(),
+		[=](ddc::DiscreteElement<DDimKx,DDimKy> const e) {
+			double const kx = coordinate(ddc::select<DDimKx>(e));
+			double const ky = coordinate(ddc::select<DDimKy>(e));
+			return pow((abs(Ff_host(e))*1/2/M_PI*(b-a)*(b-a)/Nx/Ny)-exp(-(kx*kx+ky*ky)/2),2)/Nx/Ny;
+	
+	});
+	ASSERT_LE(sqrt(error_squared), 1e-2);
 }
 
 TEST(GPUMathToolsParallelDevice, FFT3Dz2z)
 {
-	TestGPUMathToolsFFT3Dz2z();
+	TestGPUMathToolsFFT3Dz2z<RDimX, RDimY>();
 }

@@ -1,6 +1,10 @@
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.15)
-
+message(${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(DDC
+    INTERFACE
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+)
 add_executable(ddc_tests
     main.cpp
     aligned_allocator.cpp
@@ -19,7 +23,7 @@ add_executable(ddc_tests
     for_each.cpp
     fill.cpp
     discrete_element.cpp
-	gpu_math_tools
+	gpu_math_tools.cpp
 )
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
 target_link_libraries(ddc_tests

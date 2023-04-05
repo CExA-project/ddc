@@ -11,7 +11,7 @@
 
 #include <hipfft/hipfft.h>
 
-#include <./gpu_math_tools.hpp>
+#include <gpu_math_tools.hpp>
 
 struct RDimX;
 struct RDimY;
@@ -34,7 +34,7 @@ TEST(GPUMathToolsParallelDevice, HipHelloWorld)
     TestGPUMathToolsParallelDeviceHipHelloWorld();
 }
 
-TEST(GPUMathToolsParallelDevice, FFT3Dz2z)
+TEST(GPUMathToolsParallelDevice, FFT2D)
 {
 	TestGPUMathToolsFFT3Dz2z<RDimX, RDimY>();
 }

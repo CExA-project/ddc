@@ -15,7 +15,9 @@
 
 struct RDimX;
 struct RDimY;
+struct RDimZ;
 
+# if 0
 __global__ void run_printf() { printf("Hello World\n"); }
 
 static void TestGPUMathToolsParallelDeviceHipHelloWorld()
@@ -33,8 +35,19 @@ TEST(GPUMathToolsParallelDevice, HipHelloWorld)
 {
     TestGPUMathToolsParallelDeviceHipHelloWorld();
 }
+# endif
+
+TEST(GPUMathToolsParallelDevice, FFT1D)
+{
+	TestGPUMathToolsFFT<RDimX>();
+}
 
 TEST(GPUMathToolsParallelDevice, FFT2D)
 {
-	TestGPUMathToolsFFT3Dz2z<RDimX, RDimY>();
+	TestGPUMathToolsFFT<RDimX, RDimY>();
+}
+
+TEST(GPUMathToolsParallelDevice, FFT3D)
+{
+	TestGPUMathToolsFFT<RDimX, RDimY, RDimZ>();
 }

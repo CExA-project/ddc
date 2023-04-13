@@ -61,7 +61,7 @@ static void TestGPUMathToolsFFT()
 {
 	const double a		= -2*M_PI;
 	const double b		= 2*M_PI;
-    const int Nx        = 32;
+    const int Nx        = 32; // Optimal value is (b-a)^2/(2*pi)~25, we retain 32 which is the next power of 2
 
 	DDom<DDim<X>...> const x_mesh = DDom<DDim<X>...>(
 		ddc::init_discrete_space(DDim<X>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, X>(a+(b-a)/Nx/2), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, X>(b-(b-a)/Nx/2), DVect<DDim<X>>(Nx)))...
@@ -78,7 +78,7 @@ static void TestGPUMathToolsFFT()
 		}
 	);
 	DDom<DDim<K<X>>...> const k_mesh = DDom<DDim<K<X>>...>(
-		ddc::init_discrete_space(DDim<K<X>>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>((Nx-1)/(b-a)*M_PI), ddc::DiscreteVector<DDim<K<X>>>(Nx/2+1)))...
+		ddc::init_discrete_space(DDim<K<X>>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(Nx/(b-a)*M_PI), ddc::DiscreteVector<DDim<K<X>>>(Nx/2+1)))...
 	);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, ddc::DeviceAllocator<std::complex<double>>());
 	ddc::ChunkSpan Ff = _Ff.span_view();
@@ -114,10 +114,10 @@ static void TestGPUMathToolsFFT()
 		0.,
 		ddc::reducer::sum<double>(),
 		[=](DElem<DDim<K<X>>...> const e) {
-			return pow(real(Ff_host(e))*pow((b-a)/Nx/sqrt(2*M_PI),sizeof...(X))-exp(-(pow(coordinate(ddc::select<DDim<K<X>>>(e)),2) + ...)/2),2)/pow(Nx,sizeof...(X));
+			return pow(abs(Ff_host(e))*pow((b-a)/Nx/sqrt(2*M_PI),sizeof...(X))-exp(-(pow(coordinate(ddc::select<DDim<K<X>>>(e)),2) + ...)/2),2)/pow(Nx,sizeof...(X));
 	
 	}));
 	std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
-	ASSERT_LE(criterion, 0.5);
+	ASSERT_LE(criterion, 0.1);
 }
 

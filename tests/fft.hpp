@@ -3,11 +3,7 @@
 #include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
-
-#include <hip/hip_runtime.h>
-#include <hip/hip_runtime_api.h>
-
-#include <hipfft/hipfft.h>
+#include <kernels/fft.hpp>
 
 template <typename X>
 using DDim = ddc::UniformPointSampling<X>;
@@ -24,33 +20,15 @@ using DDom = ddc::DiscreteDomain<DDim...>;
 template <typename Dims>
 struct K;
 
-template<typename... X>
-void FFT(ddc::ChunkSpan<std::complex<double>, DDom<DDim<K<X>>...>, std::experimental::layout_right, Kokkos::Cuda::memory_space> Ff, ddc::ChunkSpan<double, DDom<DDim<X>...>, std::experimental::layout_right, Kokkos::Cuda::memory_space> f)
-{
-	DDom<DDim<X>...> x_mesh = ddc::get_domain<DDim<X>...>(f);
-   	hipfftHandle plan = -1;
-	hipfftResult hipfft_rt = hipfftCreate(&plan);
-	
-	int n[x_mesh.rank()] = {(int)ddc::get<DDim<X>>(x_mesh.extents())...};
-	hipfft_rt = hipfftPlanMany(&plan, // plan handle
-						 x_mesh.rank(),
-                         n, // Nx, Ny...
-						 NULL,
-						 1,
-						 1,
-						 NULL,
-						 1,
-						 1,
-						 HIPFFT_D2Z,
-						 1); 
+// LastSelector: returns a if Dim==Last, else b
+template <typename Dim, typename Last>
+constexpr int LastSelector(const int a, const int b) {
+	return std::is_same<Dim,Last>::value ? a : b;
+}
 
-	if(hipfft_rt != HIPFFT_SUCCESS)
-        throw std::runtime_error("hipfftPlan1d failed");
-
-	hipfft_rt = hipfftExecD2Z(plan, f.data(), (hipfftDoubleComplex*)Ff.data());
-    if(hipfft_rt != HIPFFT_SUCCESS)
-    	throw std::runtime_error("hipfftExecD2Z failed");
-	hipfftDestroy(plan);
+template <typename Dim, typename First, typename Second, typename... Tail>
+constexpr int LastSelector(const int a, const int b) {
+	return LastSelector<Dim,Second,Tail...>(a, b);
 }
 
 // TODO:
@@ -59,9 +37,9 @@ void FFT(ddc::ChunkSpan<std::complex<double>, DDom<DDim<K<X>>...>, std::experime
 template <typename... X>
 static void TestGPUMathToolsFFT()
 {
-	const double a		= -2*M_PI;
-	const double b		= 2*M_PI;
-    const int Nx        = 32; // Optimal value is (b-a)^2/(2*pi)~25, we retain 32 which is the next power of 2
+	const double a		= -5;
+	const double b		= 5;
+    const int Nx        = 16; // Optimal value is (b-a)^2/(2*pi)~25, we retain 32 which is the next power of 2
 
 	DDom<DDim<X>...> const x_mesh = DDom<DDim<X>...>(
 		ddc::init_discrete_space(DDim<X>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, X>(a+(b-a)/Nx/2), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, X>(b-(b-a)/Nx/2), DVect<DDim<X>>(Nx)))...
@@ -77,12 +55,13 @@ static void TestGPUMathToolsFFT()
 			f(e) = exp(-(pow(coordinate(ddc::select<DDim<X>>(e)),2) + ...)/2);
 		}
 	);
+
 	DDom<DDim<K<X>>...> const k_mesh = DDom<DDim<K<X>>...>(
-		ddc::init_discrete_space(DDim<K<X>>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(Nx/(b-a)*M_PI), ddc::DiscreteVector<DDim<K<X>>>(Nx/2+1)))...
+		ddc::init_discrete_space(DDim<K<X>>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(LastSelector<X,X...>(0,-Nx/(b-a)*M_PI)), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(Nx/(b-a)*M_PI), ddc::DiscreteVector<DDim<K<X>>>(LastSelector<X,X...>(Nx/2+1,Nx))))...
 	);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, ddc::DeviceAllocator<std::complex<double>>());
 	ddc::ChunkSpan Ff = _Ff.span_view();
-	FFT<X...>(Ff, f);
+	FFT<double, X...>(Ff, f);
 
 	ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<double>());
     ddc::ChunkSpan f_host = _f_host.span_view();
@@ -100,7 +79,7 @@ static void TestGPUMathToolsFFT()
 	ddc::Chunk _Ff_host = ddc::Chunk(ddc::get_domain<DDim<K<X>>...>(Ff), ddc::HostAllocator<std::complex<double>>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
 	ddc::deepcopy(Ff_host, Ff);
-	# if 0
+	# if 1
 	std::cout << "\n output:\n";
 	ddc::for_each(
         ddc::policies::serial_host,
@@ -114,10 +93,10 @@ static void TestGPUMathToolsFFT()
 		0.,
 		ddc::reducer::sum<double>(),
 		[=](DElem<DDim<K<X>>...> const e) {
-			return pow(abs(Ff_host(e))*pow((b-a)/Nx/sqrt(2*M_PI),sizeof...(X))-exp(-(pow(coordinate(ddc::select<DDim<K<X>>>(e)),2) + ...)/2),2)/pow(Nx,sizeof...(X));
+			return pow(abs(Ff_host(e))*pow((b-a)/Nx/sqrt(2*M_PI),sizeof...(X))-exp(-(pow(coordinate(ddc::select<DDim<K<X>>>(e)),2) + ...)/2),2)/pow(Nx/2+1,sizeof...(X));
 	
 	}));
 	std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
-	ASSERT_LE(criterion, 0.1);
+	ASSERT_LE(criterion, 1e-6);
 }
 

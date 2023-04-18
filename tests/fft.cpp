@@ -6,12 +6,12 @@
 
 #include <gtest/gtest.h>
 
+# if hip_AVAIL
 #include <hip/hip_runtime.h>
 #include <hip/hip_runtime_api.h>
+# endif
 
-#include <hipfft/hipfft.h>
-
-#include <gpu_math_tools.hpp>
+#include <fft.hpp>
 
 struct RDimX;
 struct RDimY;

@@ -8,9 +8,9 @@ f_np = sp.lambdify(x, f, 'numpy');
 F_np = sp.lambdify(k, F, 'numpy');
 print(F);
 
-Nx = 32;
-a = -2*np.pi;
-b = 2*np.pi;
+Nx = 16;
+a = -5;
+b = 5;
 
 lambda_N = (b-a)/Nx;
 f_s = 1/lambda_N/2;

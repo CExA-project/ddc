@@ -9,7 +9,10 @@ option(BUILD_BENCHMARKS      "Build DDC benchmarks." OFF)
 option(BUILD_DOCUMENTATION   "Build DDC documentation/website" OFF)
 option(BUILD_EXAMPLES        "Build DDC examples" ON)
 option(DDC_BUILD_PDI_WRAPPER "Build DDC PDI wrapper" ON)
-
+option(HIP_FOR_NVIDIA 		 "Use the HIP wrapper for CUDA on NVIDIA plateforms" OFF)
+if(NOT(Kokkos_ENABLE_CUDA) AND HIP_FOR_NVIDIA)
+	message(FATAL_ERROR "Kokkos_ENABLE_CUDA has to be ON to use HIP wrapper on NVIDIA plateforms")
+endif()
 
 # Dependencies
 
@@ -96,15 +99,25 @@ elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
 	find_package(Kokkos CONFIG REQUIRED)
 endif()
 
-## HIP
+## CUDA + CUDAToolkit
+if(${Kokkos_ENABLE_CUDA} AND NOT(${HIP_FOR_NVIDIA}))
+	set(CUDA_PATH $ENV{CUDA_PATH}) # Path to HIP install dir
+	if( DEFINED CUDA_PATH )
+		find_package( CUDAToolkit MODULE REQUIRED )
+	else()
+		message( "Environment variable CUDA_PATH is not defined." )
+	endif()
+endif()
 
-set(HIP_DIR $ENV{HIP_DIR}) # Path to HIP install dir
-if( DEFINED HIP_DIR ) 
-	list( APPEND CMAKE_MODULE_PATH ${HIP_DIR}/hip/cmake )
-	
-	find_package( HIP MODULE REQUIRED )
-else()
-	message( "Environment variable HIP_DIR is not defined. Functions in the ddc::hip namespace won't be accessible." )
+## HIP
+if(${Kokkos_ENABLE_HIP} OR ${HIP_FOR_NVIDIA})
+	set(HIP_DIR $ENV{HIP_DIR}) # Path to HIP install dir
+	if( DEFINED HIP_DIR ) 
+		list( APPEND CMAKE_MODULE_PATH ${HIP_DIR}/hip/cmake )	
+		find_package( HIP MODULE REQUIRED )
+	else()
+		message( "Environment variable HIP_DIR is not defined." )
+	endif()
 endif()
 
 ## PDI
@@ -203,35 +216,33 @@ install(
 
 # Link library to DDC
 
+if( CUDAToolkit_FOUND ) 
+	target_link_libraries( DDC INTERFACE CUDA::cufft )	
+	add_compile_definitions(cufft_AVAIL)
+endif()
+
 if( HIP_FOUND )
 	target_include_directories(DDC
 	SYSTEM INTERFACE
 		"$<BUILD_INTERFACE:${HIP_DIR}/hip/include>"
 	)
-	target_compile_definitions( DDC INTERFACE __HIP_PLATFORM_NVIDIA__)
-	if ( BUILD_WITH_LIB STREQUAL "CUDA" )
-		find_package(CUDA  REQUIRED)
-		include_directories("${CUDA_INCLUDE_DIRS}")
-		# target_compile_options( DDC INTERFACE -arch sm_61 -gencode=arch=compute_61,code=sm_61 )
-		target_link_libraries( DDC INTERFACE ${CUDA_LIBRARIES} )
-		# target_compile_definitions( DDC INTERFACE _CUFFT_BACKEND )
-	endif()
-	# target_link_libraries( DDC INTERFACE hip::host hip::device )
+	add_compile_definitions(hip_AVAIL)
 endif()
 
-## HIP TOOLKIT (hipRAND, hipFFT, hipBLAS...)
-
-if( DEFINED HIP_TOOLKIT_PATH ) # Usually called ROCM_PATH in the HIP documentation. By default : /opt/rocm
-	list( APPEND CMAKE_PREFIX_PATH ${HIP_TOOLKIT_PATH}/hipfft/lib )
-	# find_package( hipfft REQUIRED CONFIG PATHS ) # Not compatible with nvidia
-	find_library(HIPFFT_LIB hipfft)
-	target_link_libraries( DDC INTERFACE ${HIPFFT_LIB} )	
-	target_include_directories(DDC
-	SYSTEM INTERFACE
-		"$<BUILD_INTERFACE:${HIP_TOOLKIT_PATH}/include>"
-	)
-else()
-	message( "HIP_TOOLKIT_PATH is not defined. Functions in the ddc::hip namespace won't be accessible (math tools). To get them, add -DHIP_TOOLKIT_PATH=\"path_to_hip_toolkit\" in your cmake line" )
+if(${Kokkos_ENABLE_HIP} OR ${HIP_FOR_NVIDIA})
+	if( DEFINED HIP_TOOLKIT_PATH ) # Usually called ROCM_PATH in the HIP documentation. By default : /opt/rocm
+		list( APPEND CMAKE_PREFIX_PATH ${HIP_TOOLKIT_PATH}/hipfft/lib )
+		# find_package( hipfft REQUIRED CONFIG PATHS ) # Not compatible with nvidia
+		find_library(HIPFFT_LIB hipfft)
+		target_link_libraries( DDC INTERFACE ${HIPFFT_LIB} )	
+		target_include_directories(DDC
+		SYSTEM INTERFACE
+			"$<BUILD_INTERFACE:${HIP_TOOLKIT_PATH}/include>"
+		)
+		add_compile_definitions(hipfft_AVAIL)
+	else()
+		message( "HIP_TOOLKIT_PATH is not defined. Kernels functions may be unaccessible. To get them, add -DHIP_TOOLKIT_PATH=\"path_to_hip_toolkit\" in your cmake line" )
+	endif()
 endif()
 
 ## The PDI wrapper

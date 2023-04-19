@@ -99,6 +99,10 @@ elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
 	find_package(Kokkos CONFIG REQUIRED)
 endif()
 
+# FFTW
+list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ) # Maybe not specific to FFTW
+find_package( FFTW MODULE REQUIRED )
+
 ## CUDA + CUDAToolkit
 if(${Kokkos_ENABLE_CUDA} AND NOT(${HIP_FOR_NVIDIA}))
 	set(CUDA_PATH $ENV{CUDA_PATH}) # Path to HIP install dir
@@ -215,6 +219,12 @@ install(
 	EXPORT DDCTargets)
 
 # Link library to DDC
+
+if( FFTW_FOUND ) 
+	target_link_libraries( DDC INTERFACE FFTW::Double )
+	add_compile_definitions(fftw_AVAIL)
+endif()
+
 
 if( CUDAToolkit_FOUND ) 
 	target_link_libraries( DDC INTERFACE CUDA::cufft )	

@@ -4,6 +4,10 @@
 
 #include <ddc/ddc.hpp>
 
+# if fftw_AVAIL 
+#include <fftw3.h>
+# endif
+
 # if cufft_AVAIL 
 #include <cufft.h>
 # endif
@@ -43,6 +47,25 @@ void FFT(ddc::ChunkSpan<std::complex<T>, DDom<DDim<K<X>>...>, std::experimental:
 		odist = odist*(n[i]/2+1); //Correct this
 	}
 	if constexpr(false) {} // Trick to get only else if
+	# if fftw_AVAIL 
+	else if constexpr(std::is_same<MemorySpace, Kokkos::Serial::memory_space>::value) {
+		fftw_plan plan = fftw_plan_many_dft_r2c(x_mesh.rank(), 
+							n, 
+							1,
+							f.data(),
+							NULL,
+							1,
+							idist,
+							(fftw_complex*)Ff.data(),
+							NULL,
+							1,
+							odist,
+							0);
+		fftw_execute(plan);
+		fftw_destroy_plan(plan);
+		std::cout << "performed with fftw";
+	}
+	# endif
 	# if cufft_AVAIL 
 	else if constexpr(std::is_same<MemorySpace, Kokkos::Cuda::memory_space>::value) {
 		cufftHandle plan = -1;

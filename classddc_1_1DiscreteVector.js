@@ -25,7 +25,5 @@ var classddc_1_1DiscreteVector =
     [ "operator-=", "classddc_1_1DiscreteVector.html#aad791747e2239306acd82c51aafc35cf", null ],
     [ "operator-=", "classddc_1_1DiscreteVector.html#af6591d68755048dd3b96a1f2a6fcbdaa", null ],
     [ "operator*=", "classddc_1_1DiscreteVector.html#a24c65341ac603349422c1f8947ce6146", null ],
-    [ "ConversionOperators< DiscreteVector< Tags... > >", "classddc_1_1DiscreteVector.html#aade13e9b466e0ce5c8e91ed0fd7bafe7", null ],
-    [ "ddc_detail::array", "classddc_1_1DiscreteVector.html#a426a48916b6bc88c9676d5038b8f4fc0", null ],
-    [ "ddc_detail::array", "classddc_1_1DiscreteVector.html#ad7d92b9a68038f84cbbb4c3df890c3b8", null ]
+    [ "ConversionOperators< DiscreteVector< Tags... > >", "classddc_1_1DiscreteVector.html#aade13e9b466e0ce5c8e91ed0fd7bafe7", null ]
 ];

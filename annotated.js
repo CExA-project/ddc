@@ -1,26 +1,6 @@
 var annotated =
 [
     [ "ddc", "namespaceddc.html", [
-      [ "ddc_detail", "namespaceddc_1_1ddc__detail.html", [
-        [ "ConvertTypeSeqToDiscreteDomain", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ConvertTypeSeqToDiscreteDomain", null ],
-        [ "ConvertTypeSeqToDiscreteDomain< ddc_detail::TypeSeq< DDims... > >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ConvertTypeSeqToDiscreteDomain_3_01ddc__detail_1_1TypeSeq_3_01DDims_8_8_8_01_4_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ConvertTypeSeqToDiscreteDomain_3_01ddc__detail_1_1TypeSeq_3_01DDims_8_8_8_01_4_01_4_dup" ],
-        [ "Selection", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1Selection", null ],
-        [ "Selection< ddc_detail::TypeSeq< QueryDDims... > >", "structddc_1_1ddc__detail_1_1Selection_3_01ddc__detail_1_1TypeSeq_3_01QueryDDims_8_8_8_01_4_01_4.html", null ],
-        [ "gpu_proxy", "classddc_1_1ddc__detail_1_1gpu__proxy.html", "classddc_1_1ddc__detail_1_1gpu__proxy" ],
-        [ "ForEachKokkosLambdaAdapter", "classddc_1_1ddc__detail_1_1ForEachKokkosLambdaAdapter.html", "classddc_1_1ddc__detail_1_1ForEachKokkosLambdaAdapter" ],
-        [ "ddc_to_kokkos_reducer", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer", null ],
-        [ "ddc_to_kokkos_reducer< reducer::sum< T > >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1sum_3_01T_01_4_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1sum_3_01T_01_4_01_4_dup" ],
-        [ "ddc_to_kokkos_reducer< reducer::prod< T > >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1prod_3_01T_01_4_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1prod_3_01T_01_4_01_4_dup" ],
-        [ "ddc_to_kokkos_reducer< reducer::land >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1land_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1land_01_4_dup" ],
-        [ "ddc_to_kokkos_reducer< reducer::lor >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1lor_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1lor_01_4_dup" ],
-        [ "ddc_to_kokkos_reducer< reducer::band< T > >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1band_3_01T_01_4_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1band_3_01T_01_4_01_4_dup" ],
-        [ "ddc_to_kokkos_reducer< reducer::bor< T > >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1bor_3_01T_01_4_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1bor_3_01T_01_4_01_4_dup" ],
-        [ "ddc_to_kokkos_reducer< reducer::bxor< T > >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1bxor_3_01T_01_4_01_4", null ],
-        [ "ddc_to_kokkos_reducer< reducer::min< T > >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1min_3_01T_01_4_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1min_3_01T_01_4_01_4_dup" ],
-        [ "ddc_to_kokkos_reducer< reducer::max< T > >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1max_3_01T_01_4_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1max_3_01T_01_4_01_4_dup" ],
-        [ "ddc_to_kokkos_reducer< reducer::minmax< T > >", "namespaceddc_1_1ddc__detail.html#structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1minmax_3_01T_01_4_01_4", "namespaceddc_1_1ddc__detail_structddc_1_1ddc__detail_1_1ddc__to__kokkos__reducer_3_01reducer_1_1minmax_3_01T_01_4_01_4_dup" ],
-        [ "TransformReducerKokkosLambdaAdapter", "classddc_1_1ddc__detail_1_1TransformReducerKokkosLambdaAdapter.html", "classddc_1_1ddc__detail_1_1TransformReducerKokkosLambdaAdapter" ]
-      ] ],
       [ "reducer", "namespaceddc_1_1reducer.html", [
         [ "sum", "structddc_1_1reducer_1_1sum.html", "structddc_1_1reducer_1_1sum" ],
         [ "prod", "structddc_1_1reducer_1_1prod.html", "structddc_1_1reducer_1_1prod" ],

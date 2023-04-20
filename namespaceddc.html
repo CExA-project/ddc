@@ -56,8 +56,6 @@ $(document).ready(function(){initNavTree('namespaceddc.html',''); initResizable(
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespaceddc_1_1ddc__detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1ddc__detail.html">ddc_detail</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceddc_1_1policies"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1policies.html">policies</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceddc_1_1reducer"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1reducer.html">reducer</a></td></tr>
@@ -162,10 +160,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a617039bf81c01d40506687eaa0bf1ea8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">CoordinateElement</a> = double</td></tr>
 <tr class="memdesc:a617039bf81c01d40506687eaa0bf1ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A CoordinateElement the type of the scalar used to represent elements of coordinates in the continuous space.  <a href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">More...</a><br /></td></tr>
 <tr class="separator:a617039bf81c01d40506687eaa0bf1ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac45b6df2dca76b6324df98964c74f805"><td class="memTemplParams" colspan="2">template&lt;class... CDims&gt; </td></tr>
-<tr class="memitem:ac45b6df2dca76b6324df98964c74f805"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a> = ddc_detail::TaggedVector&lt; <a class="el" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">CoordinateElement</a>, CDims... &gt;</td></tr>
-<tr class="memdesc:ac45b6df2dca76b6324df98964c74f805"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Coordinate represents a coordinate in the continuous space.  <a href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">More...</a><br /></td></tr>
-<tr class="separator:ac45b6df2dca76b6324df98964c74f805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac18286f7d289865ee020284651f29bb1"><td class="memTemplParams" colspan="2">template&lt;class... CDims&gt; </td></tr>
+<tr class="memitem:ac18286f7d289865ee020284651f29bb1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a> = detail::TaggedVector&lt; <a class="el" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">CoordinateElement</a>, CDims... &gt;</td></tr>
+<tr class="memdesc:ac18286f7d289865ee020284651f29bb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Coordinate represents a coordinate in the continuous space.  <a href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">More...</a><br /></td></tr>
+<tr class="separator:ac18286f7d289865ee020284651f29bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c7a2930d12432d53c1fcfbb1a1ecda9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a4c7a2930d12432d53c1fcfbb1a1ecda9">DiscreteElementType</a> = std::size_t</td></tr>
 <tr class="memdesc:a4c7a2930d12432d53c1fcfbb1a1ecda9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A DiscreteCoordElement is a scalar that identifies an element of the discrete dimension.  <a href="namespaceddc.html#a4c7a2930d12432d53c1fcfbb1a1ecda9">More...</a><br /></td></tr>
 <tr class="separator:a4c7a2930d12432d53c1fcfbb1a1ecda9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,9 +194,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a25875d9d872df9fbd2503df330f1b2c1"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a25875d9d872df9fbd2503df330f1b2c1">get_domain</a> (ChunkType const &amp;chunk) noexcept</td></tr>
 <tr class="memdesc:a25875d9d872df9fbd2503df330f1b2c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the domain (or subdomain) of a view.  <a href="namespaceddc.html#a25875d9d872df9fbd2503df330f1b2c1">More...</a><br /></td></tr>
 <tr class="separator:a25875d9d872df9fbd2503df330f1b2c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3739502a1de6615c7aa338d0814a0eea"><td class="memTemplParams" colspan="2">template&lt;class KokkosView , class... DDims, class  = std::enable_if_t&lt;Kokkos::is_view&lt;KokkosView&gt;::value&gt;&gt; </td></tr>
-<tr class="memitem:a3739502a1de6615c7aa338d0814a0eea"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a3739502a1de6615c7aa338d0814a0eea">ChunkSpan</a> (KokkosView const &amp;view, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; domain) -&gt; <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ddc_detail::kokkos_to_mdspan_element_t&lt; typename KokkosView::data_type &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, ddc_detail::kokkos_to_mdspan_layout_t&lt; typename KokkosView::array_layout &gt;, typename KokkosView::memory_space &gt;</td></tr>
-<tr class="separator:a3739502a1de6615c7aa338d0814a0eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25bdb64cb80790c6e3509834f159d65d"><td class="memTemplParams" colspan="2">template&lt;class KokkosView , class... DDims, class  = std::enable_if_t&lt;Kokkos::is_view&lt;KokkosView&gt;::value&gt;&gt; </td></tr>
+<tr class="memitem:a25bdb64cb80790c6e3509834f159d65d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a25bdb64cb80790c6e3509834f159d65d">ChunkSpan</a> (KokkosView const &amp;view, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; domain) -&gt; <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; detail::kokkos_to_mdspan_element_t&lt; typename KokkosView::data_type &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, detail::kokkos_to_mdspan_layout_t&lt; typename KokkosView::array_layout &gt;, typename KokkosView::memory_space &gt;</td></tr>
+<tr class="separator:a25bdb64cb80790c6e3509834f159d65d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="memTemplParams" colspan="2">template&lt;class ChunkDst , class ChunkSrc &gt; </td></tr>
 <tr class="memitem:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">deepcopy</a> (ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</td></tr>
 <tr class="memdesc:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the content of a borrowed chunk into another.  <a href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">More...</a><br /></td></tr>
@@ -219,13 +217,13 @@ Functions</h2></td></tr>
 <tr class="memitem:a65a37f12db8b2f95f04014e977776014"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a65a37f12db8b2f95f04014e977776014">back</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain) noexcept</td></tr>
 <tr class="separator:a65a37f12db8b2f95f04014e977776014"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b5a5bffed9990912da5d2be92715f04"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
-<tr class="memitem:a2b5a5bffed9990912da5d2be92715f04"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">coordinate</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; const &amp;icoord) noexcept</td></tr>
+<tr class="memitem:a2b5a5bffed9990912da5d2be92715f04"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">coordinate</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; const &amp;icoord) noexcept</td></tr>
 <tr class="separator:a2b5a5bffed9990912da5d2be92715f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1291c9b92a3a8285b05924ae792b426e"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
-<tr class="memitem:a1291c9b92a3a8285b05924ae792b426e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1291c9b92a3a8285b05924ae792b426e">rmin</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain) noexcept</td></tr>
+<tr class="memitem:a1291c9b92a3a8285b05924ae792b426e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1291c9b92a3a8285b05924ae792b426e">rmin</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain) noexcept</td></tr>
 <tr class="separator:a1291c9b92a3a8285b05924ae792b426e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3a19e7771387d57935f13c8b141e52f"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
-<tr class="memitem:ae3a19e7771387d57935f13c8b141e52f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ae3a19e7771387d57935f13c8b141e52f">rmax</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain) noexcept</td></tr>
+<tr class="memitem:ae3a19e7771387d57935f13c8b141e52f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ae3a19e7771387d57935f13c8b141e52f">rmax</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain) noexcept</td></tr>
 <tr class="separator:ae3a19e7771387d57935f13c8b141e52f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3c6d59972f03fb57b6a7af1c7217f6d"><td class="memTemplParams" colspan="2">template&lt;class QueryDDimSeq , class... DDims&gt; </td></tr>
 <tr class="memitem:ab3c6d59972f03fb57b6a7af1c7217f6d"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab3c6d59972f03fb57b6a7af1c7217f6d">select_by_type_seq</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain)</td></tr>
@@ -302,10 +300,10 @@ Functions</h2></td></tr>
 <tr class="memitem:adfd82dc9c5a211a50f88e7d922d89274"><td class="memTemplItemLeft" align="right" valign="top">Arg&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#adfd82dc9c5a211a50f88e7d922d89274">init_discrete_space</a> (std::tuple&lt; DDimImpl, Arg &gt; &amp;&amp;a)</td></tr>
 <tr class="memdesc:adfd82dc9c5a211a50f88e7d922d89274"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move construct a global singleton discrete space and pass through the other argument.  <a href="namespaceddc.html#adfd82dc9c5a211a50f88e7d922d89274">More...</a><br /></td></tr>
 <tr class="separator:adfd82dc9c5a211a50f88e7d922d89274"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ebdfd46b04a0e2c6888e7c555456255"><td class="memTemplParams" colspan="2">template&lt;class DDimImpl , class... Args&gt; </td></tr>
-<tr class="memitem:a0ebdfd46b04a0e2c6888e7c555456255"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; 2&lt;=sizeof...(Args), std::tuple&lt; Args... &gt; &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>(std::tuple&lt; DDimImpl, Args... &gt; &amp;&amp;a){ using DDim=typename DDimImpl::discrete_dimension_type;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>&lt; DDim &gt;std::move(std::get&lt; 0 &gt;a)));return <a class="el" href="namespaceddc_1_1ddc__detail.html#ae759b895720fd669e7d61ab673d02844">ddc_detail::extract_after</a>(std::move(a), std::index_sequence_for&lt; Args... &gt;));}template&lt; class DDim, class MemorySpace=DDC_CURRENT_KOKKOS_SPACE &gt;DDC_INLINE_FUNCTION <a class="el" href="namespaceddc_1_1ddc__detail.html#ae959c7ab05ad8eba0fa3614e1dd3857b">ddc_detail::ddim_impl_t</a>&lt; DDim, MemorySpace &gt; const  &amp;discrete_space(){ if constexpr(std::is_same_v&lt; MemorySpace, Kokkos::HostSpace &gt;) { return <a class="el" href="namespaceddc_1_1ddc__detail.html#a82915eb014b12143b7c6ee6311e2bf41">ddc_detail::g_discrete_space_dual</a>&lt; DDim &gt; -&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a0ebdfd46b04a0e2c6888e7c555456255">get_host</a> ()</td></tr>
-<tr class="memdesc:a0ebdfd46b04a0e2c6888e7c555456255"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move construct a global singleton discrete space and pass through remaining arguments.  <a href="namespaceddc.html#a0ebdfd46b04a0e2c6888e7c555456255">More...</a><br /></td></tr>
-<tr class="separator:a0ebdfd46b04a0e2c6888e7c555456255"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac64d3887a43379e572d3a7e767c85987"><td class="memTemplParams" colspan="2">template&lt;class DDimImpl , class... Args&gt; </td></tr>
+<tr class="memitem:ac64d3887a43379e572d3a7e767c85987"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; 2&lt;=sizeof...(Args), std::tuple&lt; Args... &gt; &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>(std::tuple&lt; DDimImpl, Args... &gt; &amp;&amp;a){ using DDim=typename DDimImpl::discrete_dimension_type;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>&lt; DDim &gt;std::move(std::get&lt; 0 &gt;a)));return detail::extract_after(std::move(a), std::index_sequence_for&lt; Args... &gt;));}template&lt; class DDim, class MemorySpace=DDC_CURRENT_KOKKOS_SPACE &gt;DDC_INLINE_FUNCTION detail::ddim_impl_t&lt; DDim, MemorySpace &gt; const  &amp;discrete_space(){ if constexpr(std::is_same_v&lt; MemorySpace, Kokkos::HostSpace &gt;) { return detail::g_discrete_space_dual&lt; DDim &gt; -&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac64d3887a43379e572d3a7e767c85987">get_host</a> ()</td></tr>
+<tr class="memdesc:ac64d3887a43379e572d3a7e767c85987"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move construct a global singleton discrete space and pass through remaining arguments.  <a href="namespaceddc.html#ac64d3887a43379e572d3a7e767c85987">More...</a><br /></td></tr>
+<tr class="separator:ac64d3887a43379e572d3a7e767c85987"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afca8452d561a9ce10fdc28f8d7a0b2de"><td class="memTemplParams" colspan="2">template&lt;class QueryTag , class... Tags&gt; </td></tr>
 <tr class="memitem:afca8452d561a9ce10fdc28f8d7a0b2de"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">DiscreteVectorElement</a> const  &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#afca8452d561a9ce10fdc28f8d7a0b2de">get</a> (<a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; Tags... &gt; const &amp;tuple) noexcept</td></tr>
 <tr class="separator:afca8452d561a9ce10fdc28f8d7a0b2de"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -409,22 +407,22 @@ Functions</h2></td></tr>
 <tr class="memitem:a8d5b65eff91b58f4c733a6339caf325f"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8d5b65eff91b58f4c733a6339caf325f">operator&lt;&lt;</a> (std::ostream &amp;out, DDimImpl const &amp;mesh)</td></tr>
 <tr class="separator:a8d5b65eff91b58f4c733a6339caf325f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45f6329b34e22297e68a64a1b2be9b90"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:a45f6329b34e22297e68a64a1b2be9b90"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a45f6329b34e22297e68a64a1b2be9b90">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;c)</td></tr>
+<tr class="memitem:a45f6329b34e22297e68a64a1b2be9b90"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a45f6329b34e22297e68a64a1b2be9b90">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;c)</td></tr>
 <tr class="separator:a45f6329b34e22297e68a64a1b2be9b90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a624f3e483792457bb62202847de7fb92"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:a624f3e483792457bb62202847de7fb92"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">distance_at_left</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; i)</td></tr>
+<tr class="memitem:a624f3e483792457bb62202847de7fb92"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">distance_at_left</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; i)</td></tr>
 <tr class="separator:a624f3e483792457bb62202847de7fb92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9adf365b335a5689decf42f37b6dc9c0"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:a9adf365b335a5689decf42f37b6dc9c0"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">distance_at_right</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; i)</td></tr>
+<tr class="memitem:a9adf365b335a5689decf42f37b6dc9c0"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">distance_at_right</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; i)</td></tr>
 <tr class="separator:a9adf365b335a5689decf42f37b6dc9c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85f3c1f92c6edab0e352b413d7804d8f"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:a85f3c1f92c6edab0e352b413d7804d8f"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a85f3c1f92c6edab0e352b413d7804d8f">rmin</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
+<tr class="memitem:a85f3c1f92c6edab0e352b413d7804d8f"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a85f3c1f92c6edab0e352b413d7804d8f">rmin</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
 <tr class="separator:a85f3c1f92c6edab0e352b413d7804d8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad23fe896f0cd156a9f02d1dbc943ff0f"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:ad23fe896f0cd156a9f02d1dbc943ff0f"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad23fe896f0cd156a9f02d1dbc943ff0f">rmax</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
+<tr class="memitem:ad23fe896f0cd156a9f02d1dbc943ff0f"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad23fe896f0cd156a9f02d1dbc943ff0f">rmax</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
 <tr class="separator:ad23fe896f0cd156a9f02d1dbc943ff0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4d22774105b9164e5bd40b02570cbf9"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:ac4d22774105b9164e5bd40b02570cbf9"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac4d22774105b9164e5bd40b02570cbf9">rlength</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
+<tr class="memitem:ac4d22774105b9164e5bd40b02570cbf9"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac4d22774105b9164e5bd40b02570cbf9">rlength</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
 <tr class="separator:ac4d22774105b9164e5bd40b02570cbf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23d4abcde702238b33c5185cd6457658"><td class="memTemplParams" colspan="2">template&lt;PDI_inout_t access, class DataType &gt; </td></tr>
 <tr class="memitem:a23d4abcde702238b33c5185cd6457658"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a23d4abcde702238b33c5185cd6457658">expose_to_pdi</a> (std::string const &amp;name, DataType &amp;&amp;data)</td></tr>
@@ -461,22 +459,22 @@ Functions</h2></td></tr>
 <tr class="memdesc:af5b3fd6658e6ea3166ab0c0b49e75eae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <a href="namespaceddc.html#af5b3fd6658e6ea3166ab0c0b49e75eae">More...</a><br /></td></tr>
 <tr class="separator:af5b3fd6658e6ea3166ab0c0b49e75eae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cb0cc7a92cf50b57b0b7df0fc81ec01"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:a9cb0cc7a92cf50b57b0b7df0fc81ec01"><td class="memTemplItemLeft" align="right" valign="top">constexpr DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9cb0cc7a92cf50b57b0b7df0fc81ec01">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;c)</td></tr>
+<tr class="memitem:a9cb0cc7a92cf50b57b0b7df0fc81ec01"><td class="memTemplItemLeft" align="right" valign="top">constexpr DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9cb0cc7a92cf50b57b0b7df0fc81ec01">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;c)</td></tr>
 <tr class="separator:a9cb0cc7a92cf50b57b0b7df0fc81ec01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada31884696d90ea3379a5875df303308"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:ada31884696d90ea3379a5875df303308"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ada31884696d90ea3379a5875df303308">distance_at_left</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt;)</td></tr>
+<tr class="memitem:ada31884696d90ea3379a5875df303308"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ada31884696d90ea3379a5875df303308">distance_at_left</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt;)</td></tr>
 <tr class="separator:ada31884696d90ea3379a5875df303308"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7aafbfee09c57d542d76dc1cdde379a0"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:a7aafbfee09c57d542d76dc1cdde379a0"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a7aafbfee09c57d542d76dc1cdde379a0">distance_at_right</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt;)</td></tr>
+<tr class="memitem:a7aafbfee09c57d542d76dc1cdde379a0"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a7aafbfee09c57d542d76dc1cdde379a0">distance_at_right</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt;)</td></tr>
 <tr class="separator:a7aafbfee09c57d542d76dc1cdde379a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79d90b6e4737990bcb854515d094f84f"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:a79d90b6e4737990bcb854515d094f84f"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a79d90b6e4737990bcb854515d094f84f">rmin</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
+<tr class="memitem:a79d90b6e4737990bcb854515d094f84f"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a79d90b6e4737990bcb854515d094f84f">rmin</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
 <tr class="separator:a79d90b6e4737990bcb854515d094f84f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a329789d586b5a209b8b4b06d336ba7"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:a5a329789d586b5a209b8b4b06d336ba7"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a5a329789d586b5a209b8b4b06d336ba7">rmax</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
+<tr class="memitem:a5a329789d586b5a209b8b4b06d336ba7"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a5a329789d586b5a209b8b4b06d336ba7">rmax</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
 <tr class="separator:a5a329789d586b5a209b8b4b06d336ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51b9b7f4900d194eb962af931bead1d4"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
-<tr class="memitem:a51b9b7f4900d194eb962af931bead1d4"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a51b9b7f4900d194eb962af931bead1d4">rlength</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
+<tr class="memitem:a51b9b7f4900d194eb962af931bead1d4"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a51b9b7f4900d194eb962af931bead1d4">rlength</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
 <tr class="separator:a51b9b7f4900d194eb962af931bead1d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -702,7 +700,7 @@ continuous_dimension_type</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a6f8ca7023571e80f0a8fa2305cffb28c"></a>typedef <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt; CDim &gt;</td>
+<a id="a6f8ca7023571e80f0a8fa2305cffb28c"></a>typedef <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;</td>
 <td class="fieldname">
 continuous_element_type</td>
 <td class="fielddoc">
@@ -816,8 +814,8 @@ template&lt;class ElementType , class SupportType , class LayoutStridedPolicy  =
 
 </div>
 </div>
-<a id="ac45b6df2dca76b6324df98964c74f805"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac45b6df2dca76b6324df98964c74f805">&#9670;&nbsp;</a></span>Coordinate</h2>
+<a id="ac18286f7d289865ee020284651f29bb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac18286f7d289865ee020284651f29bb1">&#9670;&nbsp;</a></span>Coordinate</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -825,7 +823,7 @@ template&lt;class ElementType , class SupportType , class LayoutStridedPolicy  =
 template&lt;class... CDims&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate</a> = typedef ddc_detail::TaggedVector&lt;<a class="el" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">CoordinateElement</a>, CDims...&gt;</td>
+          <td class="memname">using <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a> = typedef detail::TaggedVector&lt;<a class="el" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">CoordinateElement</a>, CDims...&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1057,8 +1055,8 @@ template&lt;class... QueryDDims, class ChunkType &gt; </div>
 
 </div>
 </div>
-<a id="a3739502a1de6615c7aa338d0814a0eea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3739502a1de6615c7aa338d0814a0eea">&#9670;&nbsp;</a></span>ChunkSpan()</h2>
+<a id="a25bdb64cb80790c6e3509834f159d65d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25bdb64cb80790c6e3509834f159d65d">&#9670;&nbsp;</a></span>ChunkSpan()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1080,7 +1078,7 @@ template&lt;class KokkosView , class... DDims, class  = std::enable_if_t&lt;Kokk
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> -&gt;  <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ddc_detail::kokkos_to_mdspan_element_t&lt; typename KokkosView::data_type &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, ddc_detail::kokkos_to_mdspan_layout_t&lt; typename KokkosView::array_layout &gt;, typename KokkosView::memory_space &gt;</td>
+          <td></td><td> -&gt;  <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; detail::kokkos_to_mdspan_element_t&lt; typename KokkosView::data_type &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, detail::kokkos_to_mdspan_layout_t&lt; typename KokkosView::array_layout &gt;, typename KokkosView::memory_space &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1289,7 +1287,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate</a>&lt;QueryDDims...&gt; ddc::coordinate </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt;QueryDDims...&gt; ddc::coordinate </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
           <td class="paramname"><em>domain</em>, </td>
@@ -1327,7 +1325,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate</a>&lt;QueryDDims...&gt; ddc::rmin </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt;QueryDDims...&gt; ddc::rmin </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
           <td class="paramname"><em>domain</em></td><td>)</td>
@@ -1355,7 +1353,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate</a>&lt;QueryDDims...&gt; ddc::rmax </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt;QueryDDims...&gt; ddc::rmax </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
           <td class="paramname"><em>domain</em></td><td>)</td>
@@ -2190,8 +2188,8 @@ template&lt;class DDimImpl , class Arg &gt; </div>
 
 </div>
 </div>
-<a id="a0ebdfd46b04a0e2c6888e7c555456255"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ebdfd46b04a0e2c6888e7c555456255">&#9670;&nbsp;</a></span>get_host()</h2>
+<a id="ac64d3887a43379e572d3a7e767c85987"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac64d3887a43379e572d3a7e767c85987">&#9670;&nbsp;</a></span>get_host()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2199,7 +2197,7 @@ template&lt;class DDimImpl , class Arg &gt; </div>
 template&lt;class DDimImpl , class... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::enable_if_t&lt;2 &lt;= sizeof...(Args), std::tuple&lt;Args...&gt; &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>( std::tuple&lt;DDimImpl, Args...&gt;&amp;&amp; a){ using DDim = typename DDimImpl::discrete_dimension_type; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>&lt;DDim&gt;std::move(std::get&lt;0&gt;a))); return <a class="el" href="namespaceddc_1_1ddc__detail.html#ae759b895720fd669e7d61ab673d02844">ddc_detail::extract_after</a>(std::move(a), std::index_sequence_for&lt;Args...&gt;));}template &lt;class DDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE&gt;DDC_INLINE_FUNCTION <a class="el" href="namespaceddc_1_1ddc__detail.html#ae959c7ab05ad8eba0fa3614e1dd3857b">ddc_detail::ddim_impl_t</a>&lt;DDim, MemorySpace&gt; const&amp; discrete_space(){ if constexpr (std::is_same_v&lt;MemorySpace, Kokkos::HostSpace&gt;) { return <a class="el" href="namespaceddc_1_1ddc__detail.html#a82915eb014b12143b7c6ee6311e2bf41">ddc_detail::g_discrete_space_dual</a>&lt;DDim&gt;-&gt; ddc::get_host </td>
+          <td class="memname">std::enable_if_t&lt;2 &lt;= sizeof...(Args), std::tuple&lt;Args...&gt; &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>( std::tuple&lt;DDimImpl, Args...&gt;&amp;&amp; a){ using DDim = typename DDimImpl::discrete_dimension_type; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>&lt;DDim&gt;std::move(std::get&lt;0&gt;a))); return detail::extract_after(std::move(a), std::index_sequence_for&lt;Args...&gt;));}template &lt;class DDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE&gt;DDC_INLINE_FUNCTION detail::ddim_impl_t&lt;DDim, MemorySpace&gt; const&amp; discrete_space(){ if constexpr (std::is_same_v&lt;MemorySpace, Kokkos::HostSpace&gt;) { return detail::g_discrete_space_dual&lt;DDim&gt;-&gt; ddc::get_host </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -3421,7 +3419,7 @@ template&lt;class DDimImpl , std::enable_if_t&lt; is_non_uniform_sampling_v&lt; 
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::coordinate </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::coordinate </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
           <td class="paramname"><em>c</em></td><td>)</td>
@@ -3441,7 +3439,7 @@ template&lt;class CDim &gt; </div>
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::distance_at_left </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::distance_at_left </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt;&#160;</td>
           <td class="paramname"><em>i</em></td><td>)</td>
@@ -3461,7 +3459,7 @@ template&lt;class CDim &gt; </div>
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::distance_at_right </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::distance_at_right </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt;&#160;</td>
           <td class="paramname"><em>i</em></td><td>)</td>
@@ -3481,7 +3479,7 @@ template&lt;class CDim &gt; </div>
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::rmin </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::rmin </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
           <td class="paramname"><em>d</em></td><td>)</td>
@@ -3501,7 +3499,7 @@ template&lt;class CDim &gt; </div>
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::rmax </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::rmax </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
           <td class="paramname"><em>d</em></td><td>)</td>
@@ -3521,7 +3519,7 @@ template&lt;class CDim &gt; </div>
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::rlength </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::rlength </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling">NonUniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
           <td class="paramname"><em>d</em></td><td>)</td>
@@ -3956,7 +3954,7 @@ template&lt;class CDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::coordinate </td>
+          <td class="memname">constexpr DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::coordinate </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
           <td class="paramname"><em>c</em></td><td>)</td>
@@ -3981,7 +3979,7 @@ template&lt;class CDim &gt; </div>
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::distance_at_left </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::distance_at_left </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt;&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -4001,7 +3999,7 @@ template&lt;class CDim &gt; </div>
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::distance_at_right </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::distance_at_right </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt;&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -4021,7 +4019,7 @@ template&lt;class CDim &gt; </div>
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::rmin </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::rmin </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
           <td class="paramname"><em>d</em></td><td>)</td>
@@ -4041,7 +4039,7 @@ template&lt;class CDim &gt; </div>
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::rmax </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::rmax </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
           <td class="paramname"><em>d</em></td><td>)</td>
@@ -4061,7 +4059,7 @@ template&lt;class CDim &gt; </div>
 template&lt;class CDim &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">Coordinate</a>&lt;CDim&gt; ddc::rlength </td>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::rlength </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
           <td class="paramname"><em>d</em></td><td>)</td>

@@ -255,12 +255,12 @@ $(document).ready(function(){initNavTree('chunk_8hpp_source.html',''); initResiz
 <div class="line"><a name="l00257"></a><span class="lineno"><a class="line" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a26420625bfd72a3f95f5694171c749cb">  257</a></span>&#160;    constexpr <span class="keyword">auto</span> <a class="code" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a26420625bfd72a3f95f5694171c749cb">allocation_kokkos_view</a>()</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    {</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        <span class="keyword">auto</span> s = this-&gt;allocation_mdspan();</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        <span class="keyword">auto</span> kokkos_layout = ddc_detail::build_kokkos_layout(</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        <span class="keyword">auto</span> kokkos_layout = detail::build_kokkos_layout(</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                s.extents(),</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                s.mapping(),</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                std::make_index_sequence&lt;<span class="keyword">sizeof</span>...(DDims)&gt; {});</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        <span class="keywordflow">return</span> Kokkos::View&lt;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                ddc_detail::mdspan_to_kokkos_element_t&lt;ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                detail::mdspan_to_kokkos_element_t&lt;ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                decltype(kokkos_layout),</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                <span class="keyword">typename</span> Allocator::memory_space&gt;(s.data(), kokkos_layout);</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    }</div>
@@ -268,12 +268,12 @@ $(document).ready(function(){initNavTree('chunk_8hpp_source.html',''); initResiz
 <div class="line"><a name="l00273"></a><span class="lineno"><a class="line" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a5942ca99862f103575f03afe67f5be24">  273</a></span>&#160;    constexpr <span class="keyword">auto</span> <a class="code" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a5942ca99862f103575f03afe67f5be24">allocation_kokkos_view</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;        <span class="keyword">auto</span> s = this-&gt;allocation_mdspan();</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;        <span class="keyword">auto</span> kokkos_layout = ddc_detail::build_kokkos_layout(</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;        <span class="keyword">auto</span> kokkos_layout = detail::build_kokkos_layout(</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                s.extents(),</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;                s.mapping(),</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;                std::make_index_sequence&lt;<span class="keyword">sizeof</span>...(DDims)&gt; {});</div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;        <span class="keywordflow">return</span> Kokkos::View&lt;</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;                ddc_detail::mdspan_to_kokkos_element_t&lt;<span class="keyword">const</span> ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;                detail::mdspan_to_kokkos_element_t&lt;<span class="keyword">const</span> ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                decltype(kokkos_layout),</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;                <span class="keyword">typename</span> Allocator::memory_space&gt;(s.data(), kokkos_layout);</div>
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    }</div>

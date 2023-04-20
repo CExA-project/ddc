@@ -23,7 +23,5 @@ var classddc_1_1DiscreteElement =
     [ "operator+=", "classddc_1_1DiscreteElement.html#a2a12f0391407dac17b21044231053cdf", null ],
     [ "operator+=", "classddc_1_1DiscreteElement.html#ae611166d60a4d60fc776d9bbe0ab0f58", null ],
     [ "operator-=", "classddc_1_1DiscreteElement.html#a5f796510cae96e22ed46799fb8d56987", null ],
-    [ "operator-=", "classddc_1_1DiscreteElement.html#a1798a206a3e91506b1a988be92114fc3", null ],
-    [ "ddc_detail::array", "classddc_1_1DiscreteElement.html#a5cc3e335523a3267e21deaedc10c1bd5", null ],
-    [ "ddc_detail::array", "classddc_1_1DiscreteElement.html#ab80c8e49738411284108524b16755c3e", null ]
+    [ "operator-=", "classddc_1_1DiscreteElement.html#a1798a206a3e91506b1a988be92114fc3", null ]
 ];

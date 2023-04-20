@@ -71,13 +71,13 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceddc.html">ddc</a> {</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span>ddc_detail {</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span>detail {</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, <span class="keyword">class</span> MemorySpace&gt;</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="namespaceddc_1_1ddc__detail.html#ae959c7ab05ad8eba0fa3614e1dd3857b">   28</a></span>&#160;<span class="keyword">using</span> <a class="code" href="namespaceddc_1_1ddc__detail.html#ae959c7ab05ad8eba0fa3614e1dd3857b">ddim_impl_t</a> = <span class="keyword">typename</span> DDim::template Impl&lt;MemorySpace&gt;;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">using</span> ddim_impl_t = <span class="keyword">typename</span> DDim::template Impl&lt;MemorySpace&gt;;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classddc_1_1ddc__detail_1_1gpu__proxy.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classddc_1_1ddc__detail_1_1gpu__proxy.html">gpu_proxy</a></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">class </span>gpu_proxy</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="comment">// Here are some reasonable concepts that T should satisfy to avoid undefined behaviors:</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="comment">// - copy-constructible: objects may be memcopied to the device,</span></div>
@@ -94,47 +94,47 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    DDC_INLINE_FUNCTION</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classddc_1_1ddc__detail_1_1gpu__proxy.html#a50f855e91c1b6823d8e50f0ff27fa0c2">   48</a></span>&#160;    T* <a class="code" href="classddc_1_1ddc__detail_1_1gpu__proxy.html#a50f855e91c1b6823d8e50f0ff27fa0c2">operator-&gt;</a>()</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    T* operator-&gt;()</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(m_data);</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    DDC_INLINE_FUNCTION</div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classddc_1_1ddc__detail_1_1gpu__proxy.html#a130f0d7ab2102aa67b127b4a2c4f6511">   54</a></span>&#160;    T&amp; <a class="code" href="classddc_1_1ddc__detail_1_1gpu__proxy.html#a130f0d7ab2102aa67b127b4a2c4f6511">operator*</a>()</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    T&amp; <a class="code" href="namespaceddc.html#a0c726d3d22315197c58e56b7b20e54c4">operator*</a>()</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    {</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(m_data);</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    DDC_INLINE_FUNCTION</div>
-<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classddc_1_1ddc__detail_1_1gpu__proxy.html#a1d2e308c9fcb3e512958484f01941a7d">   60</a></span>&#160;    T* <a class="code" href="classddc_1_1ddc__detail_1_1gpu__proxy.html#a1d2e308c9fcb3e512958484f01941a7d">data</a>()</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    T* data()</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    {</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(m_data);</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// Global CPU variable storing resetters. Required to correctly free data.</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="namespaceddc_1_1ddc__detail.html#a0a5ce04a2b9633523b0c8ade0eff2b48">   67</a></span>&#160;<span class="keyword">inline</span> std::optional&lt;std::map&lt;std::string, std::function&lt;void()&gt;&gt;&gt; <a class="code" href="namespaceddc_1_1ddc__detail.html#a0a5ce04a2b9633523b0c8ade0eff2b48">g_discretization_store</a>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">inline</span> std::optional&lt;std::map&lt;std::string, std::function&lt;void()&gt;&gt;&gt; g_discretization_store;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">// Global CPU variable owning discrete spaces data for CPU and GPU</span></div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="namespaceddc_1_1ddc__detail.html#a82915eb014b12143b7c6ee6311e2bf41">   71</a></span>&#160;<span class="keyword">inline</span> std::optional&lt;DualDiscretization&lt;DDim&gt;&gt; <a class="code" href="namespaceddc_1_1ddc__detail.html#a82915eb014b12143b7c6ee6311e2bf41">g_discrete_space_dual</a>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">inline</span> std::optional&lt;DualDiscretization&lt;DDim&gt;&gt; g_discrete_space_dual;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#if defined(__CUDACC__)</span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">// Global GPU variable viewing data owned by the CPU</span></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;__constant__ <a class="code" href="classddc_1_1ddc__detail_1_1gpu__proxy.html">gpu_proxy&lt;ddim_impl_t&lt;DDim, Kokkos::CudaSpace&gt;</a>&gt; g_discrete_space_device;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;__constant__ gpu_proxy&lt;ddim_impl_t&lt;DDim, Kokkos::CudaSpace&gt;&gt; g_discrete_space_device;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#elif defined(__HIPCC__)</span></div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">// Global GPU variable viewing data owned by the CPU</span></div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// WARNING: do not put the `inline` keyword, seems to fail on MI100 rocm/4.5.0</span></div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;__constant__ <a class="code" href="classddc_1_1ddc__detail_1_1gpu__proxy.html">gpu_proxy&lt;ddim_impl_t&lt;DDim, Kokkos::Experimental::HIPSpace&gt;</a>&gt; g_discrete_space_device;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;__constant__ gpu_proxy&lt;ddim_impl_t&lt;DDim, Kokkos::Experimental::HIPSpace&gt;&gt; g_discrete_space_device;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="namespaceddc_1_1ddc__detail.html#ae15e317b91cf6d86ba3e60e0496a5581">   84</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="namespaceddc_1_1ddc__detail.html#ae15e317b91cf6d86ba3e60e0496a5581">display_discretization_store</a>(std::ostream&amp; os)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> display_discretization_store(std::ostream&amp; os)</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;{</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceddc_1_1ddc__detail.html#a0a5ce04a2b9633523b0c8ade0eff2b48">g_discretization_store</a>) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span> (g_discretization_store) {</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        os &lt;&lt; <span class="stringliteral">&quot;The host discretization store is initialized:\n&quot;</span>;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; [key, value] : *<a class="code" href="namespaceddc_1_1ddc__detail.html#a0a5ce04a2b9633523b0c8ade0eff2b48">g_discretization_store</a>) {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; [key, value] : *g_discretization_store) {</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            os &lt;&lt; <span class="stringliteral">&quot; - &quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        }</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    } <span class="keywordflow">else</span> {</div>
@@ -143,33 +143,33 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>Tuple, std::size_t... Ids&gt;</div>
-<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="namespaceddc_1_1ddc__detail.html#ae759b895720fd669e7d61ab673d02844">   97</a></span>&#160;<span class="keyword">auto</span> <a class="code" href="namespaceddc_1_1ddc__detail.html#ae759b895720fd669e7d61ab673d02844">extract_after</a>(Tuple&amp;&amp; t, std::index_sequence&lt;Ids...&gt;)</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">auto</span> extract_after(Tuple&amp;&amp; t, std::index_sequence&lt;Ids...&gt;)</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;{</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordflow">return</span> std::make_tuple(std::move(std::get&lt;Ids + 1&gt;(t))...);</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;} <span class="comment">// namespace ddc_detail</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;} <span class="comment">// namespace detail</span></div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>DDim, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">  109</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>(Args&amp;&amp;... args)</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;{</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">if</span> (ddc_detail::g_discrete_space_dual&lt;DDim&gt;) {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">if</span> (detail::g_discrete_space_dual&lt;DDim&gt;) {</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Discrete space function already initialized.&quot;</span>);</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    ddc_detail::g_discrete_space_dual&lt;DDim&gt;.emplace(std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="namespaceddc_1_1ddc__detail.html#a0a5ce04a2b9633523b0c8ade0eff2b48">ddc_detail::g_discretization_store</a>-&gt;emplace(<span class="keyword">typeid</span>(DDim).name(), []() {</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        ddc_detail::g_discrete_space_dual&lt;DDim&gt;.reset();</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    detail::g_discrete_space_dual&lt;DDim&gt;.emplace(std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    detail::g_discretization_store-&gt;emplace(<span class="keyword">typeid</span>(DDim).name(), []() {</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        detail::g_discrete_space_dual&lt;DDim&gt;.reset();</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    });</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#if defined(__CUDACC__)</span></div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    cudaMemcpyToSymbol(</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            ddc_detail::g_discrete_space_device&lt;DDim&gt;,</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            &amp;ddc_detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_device(),</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <span class="keyword">sizeof</span>(ddc_detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_device()));</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            detail::g_discrete_space_device&lt;DDim&gt;,</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            &amp;detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_device(),</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <span class="keyword">sizeof</span>(detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_device()));</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#elif defined(__HIPCC__)</span></div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    hipMemcpyToSymbol(</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            ddc_detail::g_discrete_space_device&lt;DDim&gt;,</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            &amp;ddc_detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_device(),</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            <span class="keyword">sizeof</span>(ddc_detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_device()));</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            detail::g_discrete_space_device&lt;DDim&gt;,</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            &amp;detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_device(),</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            <span class="keyword">sizeof</span>(detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_device()));</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;}</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
@@ -187,22 +187,22 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;{</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keyword">using</span> DDim = <span class="keyword">typename</span> DDimImpl::discrete_dimension_type;</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    init_discrete_space&lt;DDim&gt;(std::move(std::get&lt;0&gt;(a)));</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceddc_1_1ddc__detail.html#ae759b895720fd669e7d61ab673d02844">ddc_detail::extract_after</a>(std::move(a), std::index_sequence_for&lt;Args...&gt;());</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordflow">return</span> detail::extract_after(std::move(a), std::index_sequence_for&lt;Args...&gt;());</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;}</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, <span class="keyword">class</span> MemorySpace = DDC_CURRENT_KOKKOS_SPACE&gt;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;DDC_INLINE_FUNCTION ddc_detail::ddim_impl_t&lt;DDim, MemorySpace&gt; <span class="keyword">const</span>&amp; discrete_space()</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;DDC_INLINE_FUNCTION detail::ddim_impl_t&lt;DDim, MemorySpace&gt; <span class="keyword">const</span>&amp; discrete_space()</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;{</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;MemorySpace, Kokkos::HostSpace&gt;) {</div>
-<div class="line"><a name="l00162"></a><span class="lineno"><a class="line" href="namespaceddc.html#a0ebdfd46b04a0e2c6888e7c555456255">  162</a></span>&#160;        <span class="keywordflow">return</span> ddc_detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_host();</div>
+<div class="line"><a name="l00162"></a><span class="lineno"><a class="line" href="namespaceddc.html#ac64d3887a43379e572d3a7e767c85987">  162</a></span>&#160;        <span class="keywordflow">return</span> detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_host();</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    }</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="preprocessor">#if defined(__CUDACC__)</span></div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;MemorySpace, Kokkos::CudaSpace&gt;) {</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="keywordflow">return</span> *ddc_detail::g_discrete_space_device&lt;DDim&gt;;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="keywordflow">return</span> *detail::g_discrete_space_device&lt;DDim&gt;;</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    }</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="preprocessor">#elif defined(__HIPCC__)</span></div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;MemorySpace, Kokkos::Experimental::HIPSpace&gt;) {</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <span class="keywordflow">return</span> *ddc_detail::g_discrete_space_device&lt;DDim&gt;;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <span class="keywordflow">return</span> *detail::g_discrete_space_device&lt;DDim&gt;;</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    }</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00173"></a><span class="lineno"><a class="line" href="namespaceddc.html#a6e92a2f5083d4e399473ade17ddc6d14">  173</a></span>&#160;    <span class="keywordflow">else</span> {</div>
@@ -211,16 +211,8 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;}</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;} <span class="comment">// namespace ddc</span></div>
-<div class="ttc" id="aclassddc_1_1ddc__detail_1_1gpu__proxy_html"><div class="ttname"><a href="classddc_1_1ddc__detail_1_1gpu__proxy.html">ddc::ddc_detail::gpu_proxy</a></div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:32</div></div>
-<div class="ttc" id="aclassddc_1_1ddc__detail_1_1gpu__proxy_html_a130f0d7ab2102aa67b127b4a2c4f6511"><div class="ttname"><a href="classddc_1_1ddc__detail_1_1gpu__proxy.html#a130f0d7ab2102aa67b127b4a2c4f6511">ddc::ddc_detail::gpu_proxy::operator*</a></div><div class="ttdeci">DDC_INLINE_FUNCTION T &amp; operator*()</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:54</div></div>
-<div class="ttc" id="aclassddc_1_1ddc__detail_1_1gpu__proxy_html_a1d2e308c9fcb3e512958484f01941a7d"><div class="ttname"><a href="classddc_1_1ddc__detail_1_1gpu__proxy.html#a1d2e308c9fcb3e512958484f01941a7d">ddc::ddc_detail::gpu_proxy::data</a></div><div class="ttdeci">DDC_INLINE_FUNCTION T * data()</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:60</div></div>
-<div class="ttc" id="aclassddc_1_1ddc__detail_1_1gpu__proxy_html_a50f855e91c1b6823d8e50f0ff27fa0c2"><div class="ttname"><a href="classddc_1_1ddc__detail_1_1gpu__proxy.html#a50f855e91c1b6823d8e50f0ff27fa0c2">ddc::ddc_detail::gpu_proxy::operator-&gt;</a></div><div class="ttdeci">DDC_INLINE_FUNCTION T * operator-&gt;()</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:48</div></div>
-<div class="ttc" id="anamespaceddc_1_1ddc__detail_html_a0a5ce04a2b9633523b0c8ade0eff2b48"><div class="ttname"><a href="namespaceddc_1_1ddc__detail.html#a0a5ce04a2b9633523b0c8ade0eff2b48">ddc::ddc_detail::g_discretization_store</a></div><div class="ttdeci">std::optional&lt; std::map&lt; std::string, std::function&lt; void()&gt; &gt; &gt; g_discretization_store</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:67</div></div>
-<div class="ttc" id="anamespaceddc_1_1ddc__detail_html_a82915eb014b12143b7c6ee6311e2bf41"><div class="ttname"><a href="namespaceddc_1_1ddc__detail.html#a82915eb014b12143b7c6ee6311e2bf41">ddc::ddc_detail::g_discrete_space_dual</a></div><div class="ttdeci">std::optional&lt; DualDiscretization&lt; DDim &gt; &gt; g_discrete_space_dual</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:71</div></div>
-<div class="ttc" id="anamespaceddc_1_1ddc__detail_html_ae15e317b91cf6d86ba3e60e0496a5581"><div class="ttname"><a href="namespaceddc_1_1ddc__detail.html#ae15e317b91cf6d86ba3e60e0496a5581">ddc::ddc_detail::display_discretization_store</a></div><div class="ttdeci">void display_discretization_store(std::ostream &amp;os)</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:84</div></div>
-<div class="ttc" id="anamespaceddc_1_1ddc__detail_html_ae759b895720fd669e7d61ab673d02844"><div class="ttname"><a href="namespaceddc_1_1ddc__detail.html#ae759b895720fd669e7d61ab673d02844">ddc::ddc_detail::extract_after</a></div><div class="ttdeci">auto extract_after(Tuple &amp;&amp;t, std::index_sequence&lt; Ids... &gt;)</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:97</div></div>
-<div class="ttc" id="anamespaceddc_1_1ddc__detail_html_ae959c7ab05ad8eba0fa3614e1dd3857b"><div class="ttname"><a href="namespaceddc_1_1ddc__detail.html#ae959c7ab05ad8eba0fa3614e1dd3857b">ddc::ddc_detail::ddim_impl_t</a></div><div class="ttdeci">typename DDim::template Impl&lt; MemorySpace &gt; ddim_impl_t</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:28</div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:9</div></div>
+<div class="ttc" id="anamespaceddc_html_a0c726d3d22315197c58e56b7b20e54c4"><div class="ttname"><a href="namespaceddc.html#a0c726d3d22315197c58e56b7b20e54c4">ddc::operator*</a></div><div class="ttdeci">constexpr auto operator*(IntegralType const &amp;lhs, DiscreteVector&lt; Tags... &gt; const &amp;rhs)</div><div class="ttdoc">external left binary operator: *</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:127</div></div>
 <div class="ttc" id="anamespaceddc_html_a70f12a43ed0afbc092f4e974b024db3d"><div class="ttname"><a href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a></div><div class="ttdeci">void init_discrete_space(Args &amp;&amp;... args)</div><div class="ttdoc">Initialize (emplace) a global singleton discrete space.</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:109</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

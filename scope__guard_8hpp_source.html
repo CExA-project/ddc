@@ -65,7 +65,7 @@ $(document).ready(function(){initNavTree('scope__guard_8hpp_source.html',''); in
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">void</span> discretization_store_initialization()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <a class="code" href="namespaceddc_1_1ddc__detail.html#a0a5ce04a2b9633523b0c8ade0eff2b48">ddc_detail::g_discretization_store</a></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        detail::g_discretization_store</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                = std::make_optional&lt;std::map&lt;std::string, std::function&lt;void()&gt;&gt;&gt;();</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    }</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
@@ -86,10 +86,10 @@ $(document).ready(function(){initNavTree('scope__guard_8hpp_source.html',''); in
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classddc_1_1ScopeGuard.html#a22954ab7588823e92c0c236493bb2775">   38</a></span>&#160;    <a class="code" href="classddc_1_1ScopeGuard.html#a22954ab7588823e92c0c236493bb2775">~ScopeGuard</a>() noexcept</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    {</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; [name, fn] : *<a class="code" href="namespaceddc_1_1ddc__detail.html#a0a5ce04a2b9633523b0c8ade0eff2b48">ddc_detail::g_discretization_store</a>) {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; [name, fn] : *detail::g_discretization_store) {</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            fn();</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        }</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="namespaceddc_1_1ddc__detail.html#a0a5ce04a2b9633523b0c8ade0eff2b48">ddc_detail::g_discretization_store</a>.reset();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        detail::g_discretization_store.reset();</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classddc_1_1ScopeGuard.html#a1ef3e0aac7e1bc326331a37ad7f2f2d4">   46</a></span>&#160;    <a class="code" href="classddc_1_1ScopeGuard.html">ScopeGuard</a>&amp; <a class="code" href="classddc_1_1ScopeGuard.html#a1ef3e0aac7e1bc326331a37ad7f2f2d4">operator=</a>(<a class="code" href="classddc_1_1ScopeGuard.html">ScopeGuard</a> <span class="keyword">const</span>&amp; x) = <span class="keyword">delete</span>;</div>
@@ -106,7 +106,6 @@ $(document).ready(function(){initNavTree('scope__guard_8hpp_source.html',''); in
 <div class="ttc" id="aclassddc_1_1ScopeGuard_html_a54fe4cdf8ea05d86c624af28707e526a"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a54fe4cdf8ea05d86c624af28707e526a">ddc::ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard(ScopeGuard &amp;&amp;x) noexcept=delete</div></div>
 <div class="ttc" id="aclassddc_1_1ScopeGuard_html_a9a7d76fc84478af776f04591d12e47e0"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a9a7d76fc84478af776f04591d12e47e0">ddc::ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard()</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:24</div></div>
 <div class="ttc" id="aclassddc_1_1ScopeGuard_html_af3c8c95b03b92ef6606d35bed99fbbd8"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#af3c8c95b03b92ef6606d35bed99fbbd8">ddc::ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard(ScopeGuard const &amp;x)=delete</div></div>
-<div class="ttc" id="anamespaceddc_1_1ddc__detail_html_a0a5ce04a2b9633523b0c8ade0eff2b48"><div class="ttname"><a href="namespaceddc_1_1ddc__detail.html#a0a5ce04a2b9633523b0c8ade0eff2b48">ddc::ddc_detail::g_discretization_store</a></div><div class="ttdeci">std::optional&lt; std::map&lt; std::string, std::function&lt; void()&gt; &gt; &gt; g_discretization_store</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:67</div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:9</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

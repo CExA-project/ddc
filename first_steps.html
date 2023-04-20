@@ -149,12 +149,12 @@ Dimension X</h3>
 <div class="line">    <span class="comment">// each side</span></div>
 <div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]</div>
 <div class="line">            = <a class="code" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a>(DDimX::init_ghosted(</div>
-<div class="line">                    <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;X&gt;</a>(x_start),</div>
-<div class="line">                    <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;X&gt;</a>(x_end),</div>
+<div class="line">                    <a class="code" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;X&gt;</a>(x_start),</div>
+<div class="line">                    <a class="code" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;X&gt;</a>(x_end),</div>
 <div class="line">                    <a class="code" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimX&gt;</a>(nb_x_points),</div>
 <div class="line">                    gwx));</div>
 <div class="ttc" id="anamespaceddc_html_a70f12a43ed0afbc092f4e974b024db3d"><div class="ttname"><a href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a></div><div class="ttdeci">void init_discrete_space(Args &amp;&amp;... args)</div><div class="ttdoc">Initialize (emplace) a global singleton discrete space.</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:109</div></div>
-<div class="ttc" id="anamespaceddc_html_ac45b6df2dca76b6324df98964c74f805"><div class="ttname"><a href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate</a></div><div class="ttdeci">ddc_detail::TaggedVector&lt; CoordinateElement, CDims... &gt; Coordinate</div><div class="ttdoc">A Coordinate represents a coordinate in the continuous space.</div><div class="ttdef"><b>Definition:</b> coordinate.hpp:19</div></div>
+<div class="ttc" id="anamespaceddc_html_ac18286f7d289865ee020284651f29bb1"><div class="ttname"><a href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a></div><div class="ttdeci">detail::TaggedVector&lt; CoordinateElement, CDims... &gt; Coordinate</div><div class="ttdoc">A Coordinate represents a coordinate in the continuous space.</div><div class="ttdef"><b>Definition:</b> coordinate.hpp:19</div></div>
 </div><!-- fragment --><p>Depending on the way the function is called, its return type can differ. Here we use it with an inner call to <code>init_ghosted</code> and receive four 1D domains as a result. Their type is not specified because we use C++ <a href="https://en.cppreference.com/w/cpp/language/structured_binding">structured bindings</a>, but they are all of the same type: <code>DiscreteDomain&lt;DDimX&gt;</code> that represents a set of contiguous points in the discretization of <code>X</code>.</p>
 <p><a class="el" href="classddc_1_1UniformPointSampling.html#a0057c677c47524b511be63d2f62aea8c">init_ghosted</a> takes as parameters the coordinate of the first and last discretized points, the number of discretized points in the domain and the number of additional points on each side of the domain. The fours <code>DiscreteDomain</code>s returned are:</p><ul>
 <li><code>x_domain</code>: the main domain from the start (included) to end (included) but excluding "ghost" points.</li>
@@ -192,8 +192,8 @@ Dimension Y</h3>
 <div class="line">    <span class="comment">// each side</span></div>
 <div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]</div>
 <div class="line">            = <a class="code" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a>(DDimY::init_ghosted(</div>
-<div class="line">                    <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;Y&gt;</a>(y_start),</div>
-<div class="line">                    <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;Y&gt;</a>(y_end),</div>
+<div class="line">                    <a class="code" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;Y&gt;</a>(y_start),</div>
+<div class="line">                    <a class="code" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;Y&gt;</a>(y_end),</div>
 <div class="line">                    <a class="code" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimY&gt;</a>(nb_y_points),</div>
 <div class="line">                    gwy));</div>
 <div class="line"> </div>
@@ -227,7 +227,7 @@ Time dimension</h3>
 <div class="line">                <span class="keywordflow">return</span> 1.</div>
 <div class="line">                       / (<a class="code" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">distance_at_left</a>(iy) * <a class="code" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">distance_at_right</a>(iy));</div>
 <div class="line">            });</div>
-<div class="line">    <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;T&gt;</a> <span class="keyword">const</span> max_dt {</div>
+<div class="line">    <a class="code" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;T&gt;</a> <span class="keyword">const</span> max_dt {</div>
 <div class="line">            .5 / (kx * invdx2_max + ky * invdy2_max)};</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// number of time intervals required to reach the end time</span></div>
@@ -239,8 +239,8 @@ Time dimension</h3>
 <div class="line">    <a class="code" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimT&gt;</a> <span class="keyword">const</span> time_domain</div>
 <div class="line">            = <a class="code" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a>(</div>
 <div class="line">                    DDimT::</div>
-<div class="line">                            init(<a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;T&gt;</a>(start_time),</div>
-<div class="line">                                 <a class="code" href="namespaceddc.html#ac45b6df2dca76b6324df98964c74f805">ddc::Coordinate&lt;T&gt;</a>(end_time),</div>
+<div class="line">                            init(<a class="code" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;T&gt;</a>(start_time),</div>
+<div class="line">                                 <a class="code" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;T&gt;</a>(end_time),</div>
 <div class="line">                                 nb_time_steps + 1));</div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html"><div class="ttname"><a href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:124</div></div>
 <div class="ttc" id="anamespaceddc_html_a13d882b3cd569916070e20b6ec57eb0d"><div class="ttname"><a href="namespaceddc.html#a13d882b3cd569916070e20b6ec57eb0d">ddc::transform_reduce</a></div><div class="ttdeci">T transform_reduce([[maybe_unused]] serial_host_policy policy, DiscreteDomain&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</div><div class="ttdoc">A reduction over a nD domain using the Serial execution policy.</div><div class="ttdef"><b>Definition:</b> transform_reduce.hpp:231</div></div>
@@ -280,7 +280,7 @@ Initial conditions</h1>
 <div class="line">                ghosted_initial_temp(ixy)</div>
 <div class="line">                        = 9.999 * ((x * x + y * y) &lt; 0.25);</div>
 <div class="line">            });</div>
-<div class="ttc" id="anamespaceddc_1_1policies_html_a48db884faba3760360031c5c7657e9e1"><div class="ttname"><a href="namespaceddc_1_1policies.html#a48db884faba3760360031c5c7657e9e1">ddc::policies::parallel_device</a></div><div class="ttdeci">constexpr parallel_device_policy parallel_device</div><div class="ttdef"><b>Definition:</b> for_each.hpp:173</div></div>
+<div class="ttc" id="anamespaceddc_1_1policies_html_a48db884faba3760360031c5c7657e9e1"><div class="ttname"><a href="namespaceddc_1_1policies.html#a48db884faba3760360031c5c7657e9e1">ddc::policies::parallel_device</a></div><div class="ttdeci">constexpr parallel_device_policy parallel_device</div><div class="ttdef"><b>Definition:</b> for_each.hpp:172</div></div>
 <div class="ttc" id="anamespaceddc_html_a2b5a5bffed9990912da5d2be92715f04"><div class="ttname"><a href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">ddc::coordinate</a></div><div class="ttdeci">ddc::Coordinate&lt; QueryDDims... &gt; coordinate(DiscreteDomain&lt; DDims... &gt; const &amp;domain, DiscreteElement&lt; QueryDDims... &gt; const &amp;icoord) noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:409</div></div>
 <div class="ttc" id="anamespaceddc_html_a9f0c6cc2043c2e9bd07844e5f3b78951"><div class="ttname"><a href="namespaceddc.html#a9f0c6cc2043c2e9bd07844e5f3b78951">ddc::for_each</a></div><div class="ttdeci">void for_each(serial_host_policy, DiscreteDomain&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using the serial execution policy</div><div class="ttdef"><b>Definition:</b> for_each.hpp:101</div></div>
 <div class="ttc" id="anamespaceddc_html_classddc_1_1ChunkSpan"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition:</b> chunk_span.hpp:26</div></div>

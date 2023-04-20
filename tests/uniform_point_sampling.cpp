@@ -13,8 +13,8 @@ namespace {
 struct DimX;
 struct DimY;
 
-using DDimX = ddc::UniformPointSampling<DimX>;
-using DDimY = ddc::UniformPointSampling<DimY>;
+using DDimX = ddc::UniformPointSampling<DimX, struct TagDDimX>;
+using DDimY = ddc::UniformPointSampling<DimY, struct TagDDimY>;
 
 static ddc::Coordinate<DimX> constexpr origin(-1.);
 static double constexpr step = 0.5;

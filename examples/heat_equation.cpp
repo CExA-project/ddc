@@ -19,21 +19,21 @@ struct X;
 
 //! [X-discretization]
 /// A uniform discretization of X
-using DDimX = ddc::UniformPointSampling<X>;
+using DDimX = ddc::UniformPointSampling<X, struct TagDDimX>;
 //! [X-discretization]
 
 //! [Y-space]
 // Our second continuous dimension
 struct Y;
 // Its uniform discretization
-using DDimY = ddc::UniformPointSampling<Y>;
+using DDimY = ddc::UniformPointSampling<Y, struct TagDDimY>;
 //! [Y-space]
 
 //! [time-space]
 // Our simulated time dimension
 struct T;
 // Its uniform discretization
-using DDimT = ddc::UniformPointSampling<T>;
+using DDimT = ddc::UniformPointSampling<T, struct TagDDimT>;
 //! [time-space]
 
 

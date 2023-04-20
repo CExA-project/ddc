@@ -17,7 +17,7 @@
 namespace ddc {
 
 /// `NonUniformPointSampling` models a non-uniform discretization of the `CDim` segment \f$[a, b]\f$.
-template <class CDim>
+template <class CDim, class Tag>
 class NonUniformPointSampling
 {
 public:
@@ -44,7 +44,7 @@ public:
         Kokkos::View<continuous_element_type*, MemorySpace> m_points;
 
     public:
-        using discrete_dimension_type = NonUniformPointSampling<CDim>;
+        using discrete_dimension_type = NonUniformPointSampling<CDim, Tag>;
 
         Impl() = default;
 
@@ -115,8 +115,8 @@ struct is_non_uniform_sampling : public std::false_type
 {
 };
 
-template <class CDim>
-struct is_non_uniform_sampling<NonUniformPointSampling<CDim>> : public std::true_type
+template <class CDim, class Tag>
+struct is_non_uniform_sampling<NonUniformPointSampling<CDim, Tag>> : public std::true_type
 {
 };
 
@@ -125,49 +125,51 @@ constexpr bool is_non_uniform_sampling_v = is_non_uniform_sampling<DDim>::value;
 
 template <
         class DDimImpl,
-        std::enable_if_t<
-                is_non_uniform_sampling_v<typename DDimImpl::discrete_dimension_type>,
-                int> = 0>
+        std::enable_if_t<is_non_uniform_sampling_v<typename DDimImpl::discrete_dimension_type>, int>
+        = 0>
 std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 {
     return out << "NonUniformPointSampling(" << mesh.size() << ")";
 }
 
-template <class CDim>
+template <class CDim, class Tag>
 DDC_INLINE_FUNCTION Coordinate<CDim> coordinate(
-        DiscreteElement<NonUniformPointSampling<CDim>> const& c)
+        DiscreteElement<NonUniformPointSampling<CDim, Tag>> const& c)
 {
-    return discrete_space<NonUniformPointSampling<CDim>>().coordinate(c);
+    return discrete_space<NonUniformPointSampling<CDim, Tag>>().coordinate(c);
 }
 
-template <class CDim>
+template <class CDim, class Tag>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(
-        DiscreteElement<NonUniformPointSampling<CDim>> i)
+        DiscreteElement<NonUniformPointSampling<CDim, Tag>> i)
 {
     return coordinate(i) - coordinate(i - 1);
 }
 
-template <class CDim>
+template <class CDim, class Tag>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(
-        DiscreteElement<NonUniformPointSampling<CDim>> i)
+        DiscreteElement<NonUniformPointSampling<CDim, Tag>> i)
 {
     return coordinate(i + 1) - coordinate(i);
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<NonUniformPointSampling<CDim>> const& d)
+template <class CDim, class Tag>
+DDC_INLINE_FUNCTION Coordinate<CDim> rmin(
+        DiscreteDomain<NonUniformPointSampling<CDim, Tag>> const& d)
 {
     return coordinate(d.front());
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<NonUniformPointSampling<CDim>> const& d)
+template <class CDim, class Tag>
+DDC_INLINE_FUNCTION Coordinate<CDim> rmax(
+        DiscreteDomain<NonUniformPointSampling<CDim, Tag>> const& d)
 {
     return coordinate(d.back());
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<NonUniformPointSampling<CDim>> const& d)
+template <class CDim, class Tag>
+DDC_INLINE_FUNCTION Coordinate<CDim> rlength(
+        DiscreteDomain<NonUniformPointSampling<CDim, Tag>> const& d)
 {
     return rmax(d) - rmin(d);
 }

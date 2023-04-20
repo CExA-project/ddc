@@ -27,8 +27,8 @@ namespace {
 struct DimX;
 struct DimY;
 
-using DDimX = ddc::NonUniformPointSampling<DimX>;
-using DDimY = ddc::NonUniformPointSampling<DimY>;
+using DDimX = ddc::NonUniformPointSampling<DimX, struct TagDDimX>;
+using DDimY = ddc::NonUniformPointSampling<DimY, struct TagDDimY>;
 
 static std::array<double, 4> const array_points_x VALUES_X;
 static std::vector<double> const vector_points_x VALUES_X;

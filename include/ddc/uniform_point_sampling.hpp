@@ -21,7 +21,7 @@ namespace ddc {
 
 /** UniformPointSampling models a uniform discretization of the provided continuous dimension
  */
-template <class CDim>
+template <class CDim, class Tag>
 class UniformPointSampling
 {
 public:
@@ -196,8 +196,8 @@ struct is_uniform_sampling : public std::false_type
 {
 };
 
-template <class CDim>
-struct is_uniform_sampling<UniformPointSampling<CDim>> : public std::true_type
+template <class CDim, class Tag>
+struct is_uniform_sampling<UniformPointSampling<CDim, Tag>> : public std::true_type
 {
 };
 
@@ -216,10 +216,11 @@ std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
                << " )";
 }
 
-template <class CDim>
-KOKKOS_FUNCTION Coordinate<CDim> coordinate(DiscreteElement<UniformPointSampling<CDim>> const& c)
+template <class CDim, class Tag>
+KOKKOS_FUNCTION Coordinate<CDim> coordinate(
+        DiscreteElement<UniformPointSampling<CDim, Tag>> const& c)
 {
-    return discrete_space<UniformPointSampling<CDim>>().coordinate(c);
+    return discrete_space<UniformPointSampling<CDim, Tag>>().coordinate(c);
 }
 
 /// @brief Lower bound index of the mesh
@@ -246,32 +247,32 @@ KOKKOS_FUNCTION std::enable_if_t<is_uniform_sampling_v<DDim>, Real> step() noexc
     return discrete_space<DDim>().step();
 }
 
-template <class CDim>
-KOKKOS_FUNCTION Coordinate<CDim> distance_at_left(DiscreteElement<UniformPointSampling<CDim>>)
+template <class CDim, class Tag>
+KOKKOS_FUNCTION Coordinate<CDim> distance_at_left(DiscreteElement<UniformPointSampling<CDim, Tag>>)
 {
-    return Coordinate<CDim>(step<UniformPointSampling<CDim>>());
+    return Coordinate<CDim>(step<UniformPointSampling<CDim, Tag>>());
 }
 
-template <class CDim>
-KOKKOS_FUNCTION Coordinate<CDim> distance_at_right(DiscreteElement<UniformPointSampling<CDim>>)
+template <class CDim, class Tag>
+KOKKOS_FUNCTION Coordinate<CDim> distance_at_right(DiscreteElement<UniformPointSampling<CDim, Tag>>)
 {
-    return Coordinate<CDim>(step<UniformPointSampling<CDim>>());
+    return Coordinate<CDim>(step<UniformPointSampling<CDim, Tag>>());
 }
 
-template <class CDim>
-KOKKOS_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<UniformPointSampling<CDim>> const& d)
+template <class CDim, class Tag>
+KOKKOS_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<UniformPointSampling<CDim, Tag>> const& d)
 {
     return coordinate(d.front());
 }
 
-template <class CDim>
-KOKKOS_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<UniformPointSampling<CDim>> const& d)
+template <class CDim, class Tag>
+KOKKOS_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<UniformPointSampling<CDim, Tag>> const& d)
 {
     return coordinate(d.back());
 }
 
-template <class CDim>
-KOKKOS_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<UniformPointSampling<CDim>> const& d)
+template <class CDim, class Tag>
+KOKKOS_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<UniformPointSampling<CDim, Tag>> const& d)
 {
     return rmax(d) - rmin(d);
 }

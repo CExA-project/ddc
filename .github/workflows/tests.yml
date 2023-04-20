@@ -153,6 +153,7 @@ jobs:
             -DKokkos_ENABLE_DEPRECATED_CODE_3=OFF \
             -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
             -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+            -DBUILD_SPLINES_KERNEL=OFF \
             -DCMAKE_CXX_FLAGS="\
               -Wall -Wextra -Wpedantic -Wno-sign-compare \
               -Werror=vla \

@@ -7,7 +7,7 @@
 #include "discrete_space.hpp"
 
 struct DimX;
-using DDimX = ddc::UniformPointSampling<DimX>;
+using DDimX = ddc::UniformPointSampling<DimX, struct TagDDimX>;
 
 void do_not_optimize_away_discrete_space_tests() {}
 

@@ -33,10 +33,11 @@ using DDom = ddc::DiscreteDomain<DDim...>;
 template <typename Dims>
 struct K;
 
-template<typename T, typename... X, typename MemorySpace>
+template<typename ExecSpace, typename MemorySpace, typename T, typename... X>
 void FFT(ddc::ChunkSpan<std::complex<T>, DDom<DDim<K<X>>...>, std::experimental::layout_right, MemorySpace> Ff,
 	     ddc::ChunkSpan<T, DDom<DDim<X>...>, std::experimental::layout_right, MemorySpace> f)
 {
+	static_assert(std::is_same<MemorySpace,typename ExecSpace::memory_space>::value,"MemorySpace and ExecutionSpace must correspond.");
 	DDom<DDim<X>...> x_mesh = ddc::get_domain<DDim<X>...>(f);
 	
 	int n[x_mesh.rank()] = {(int)ddc::get<DDim<X>>(x_mesh.extents())...};
@@ -48,7 +49,7 @@ void FFT(ddc::ChunkSpan<std::complex<T>, DDom<DDim<K<X>>...>, std::experimental:
 	}
 	if constexpr(false) {} // Trick to get only else if
 	# if fftw_AVAIL 
-	else if constexpr(std::is_same<MemorySpace, Kokkos::Serial::memory_space>::value) {
+	else if constexpr(std::is_same<ExecSpace, Kokkos::Serial>::value) {
 		fftw_plan plan = fftw_plan_many_dft_r2c(x_mesh.rank(), 
 							n, 
 							1,
@@ -67,7 +68,7 @@ void FFT(ddc::ChunkSpan<std::complex<T>, DDom<DDim<K<X>>...>, std::experimental:
 	}
 	# endif
 	# if cufft_AVAIL 
-	else if constexpr(std::is_same<MemorySpace, Kokkos::Cuda::memory_space>::value) {
+	else if constexpr(std::is_same<ExecSpace, Kokkos::Cuda>::value) {
 		cufftHandle plan = -1;
 		cufftResult cufft_rt = cufftCreate(&plan);
 		cufft_rt = cufftPlanMany(&plan, // plan handle
@@ -93,8 +94,8 @@ void FFT(ddc::ChunkSpan<std::complex<T>, DDom<DDim<K<X>>...>, std::experimental:
 	}
 	# endif
 	# if hipfft_AVAIL 
-	else if constexpr(std::is_same<MemorySpace, Kokkos::Cuda::memory_space>::value) {
-	// else if constexpr(std::is_same<MemorySpace, Kokkos::HIP::memory_space>::value) {
+	else if constexpr(std::is_same<ExecSpace, Kokkos::Cuda>::value) {
+	// else if constexpr(std::is_same<ExecSpace, Kokkos::HIP::value) {
 		hipfftHandle plan = -1;
 		hipfftResult hipfft_rt = hipfftCreate(&plan);
 		hipfft_rt = hipfftPlanMany(&plan, // plan handle

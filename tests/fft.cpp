@@ -37,17 +37,32 @@ TEST(GPUMathToolsParallelDevice, HipHelloWorld)
 }
 # endif
 
-TEST(GPUMathToolsParallelDevice, FFT1D)
+TEST(FFTSerialHost, 1D)
 {
-	TestGPUMathToolsFFT<RDimX>();
+	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, RDimX>();
 }
 
-TEST(GPUMathToolsParallelDevice, FFT2D)
+TEST(FFTSerialHost, 2D)
 {
-	TestGPUMathToolsFFT<RDimX, RDimY>();
+	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, RDimX, RDimY>();
 }
 
-TEST(GPUMathToolsParallelDevice, FFT3D)
+TEST(FFTSerialHost, 3D)
 {
-	TestGPUMathToolsFFT<RDimX, RDimY, RDimZ>();
+	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, RDimX, RDimY, RDimZ>();
+}
+
+TEST(FFTParallelDevice, 1D)
+{
+	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, RDimX>();
+}
+
+TEST(FFTParallelDevice, 2D)
+{
+	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, RDimX, RDimY>();
+}
+
+TEST(FFTParallelDevice, 3D)
+{
+	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, RDimX, RDimY, RDimZ>();
 }

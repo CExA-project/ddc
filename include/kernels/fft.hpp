@@ -33,8 +33,11 @@ using DDom = ddc::DiscreteDomain<DDim...>;
 template <typename Dims>
 struct K;
 
+template <typename Kx>
+using DFDim = ddc::FourierSampling<Kx>;
+
 template<typename ExecSpace, typename MemorySpace, typename T, typename... X>
-void FFT(ddc::ChunkSpan<std::complex<T>, DDom<DDim<K<X>>...>, std::experimental::layout_right, MemorySpace> Ff,
+void FFT(ddc::ChunkSpan<std::complex<T>, DDom<DFDim<K<X>>...>, std::experimental::layout_right, MemorySpace> Ff,
 	     ddc::ChunkSpan<T, DDom<DDim<X>...>, std::experimental::layout_right, MemorySpace> f)
 {
 	static_assert(std::is_same<MemorySpace,typename ExecSpace::memory_space>::value,"MemorySpace and ExecutionSpace must correspond.");

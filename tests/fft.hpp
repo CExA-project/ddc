@@ -20,6 +20,9 @@ using DDom = ddc::DiscreteDomain<DDim...>;
 template <typename Dims>
 struct K;
 
+template <typename Kx>
+using DFDim = ddc::FourierSampling<Kx>;
+
 // LastSelector: returns a if Dim==Last, else b
 template <typename Dim, typename Last>
 constexpr int LastSelector(const int a, const int b) {
@@ -62,8 +65,8 @@ static void TestFFT()
 		}
 	);
 
-	DDom<DDim<K<X>>...> const k_mesh = DDom<DDim<K<X>>...>(
-		ddc::init_discrete_space(DDim<K<X>>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(LastSelector<X,X...>(0,-Nx/(b-a)*M_PI)), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(Nx/(b-a)*M_PI), ddc::DiscreteVector<DDim<K<X>>>(LastSelector<X,X...>(Nx/2+1,Nx))))...
+	DDom<DFDim<K<X>>...> const k_mesh = DDom<DFDim<K<X>>...>(
+		ddc::init_discrete_space(DFDim<K<X>>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(LastSelector<X,X...>(0,-Nx/(b-a)*M_PI)), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(Nx/(b-a)*M_PI), ddc::DiscreteVector<DFDim<K<X>>>(LastSelector<X,X...>(Nx/2+1,Nx))))...
 	);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace,std::complex<T>>());
 	ddc::ChunkSpan Ff = _Ff.span_view();
@@ -82,24 +85,24 @@ static void TestFFT()
 	});
     # endif
 
-	ddc::Chunk _Ff_host = ddc::Chunk(ddc::get_domain<DDim<K<X>>...>(Ff), ddc::HostAllocator<std::complex<T>>());
+	ddc::Chunk _Ff_host = ddc::Chunk(ddc::get_domain<DFDim<K<X>>...>(Ff), ddc::HostAllocator<std::complex<T>>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
 	ddc::deepcopy(Ff_host, Ff);
 	# if 1
 	std::cout << "\n output:\n";
 	ddc::for_each(
         ddc::policies::serial_host,
-        ddc::get_domain<DDim<K<X>>...>(Ff_host),
-        [=](DElem<DDim<K<X>>...> const e) {
-			(std::cout << ... << coordinate(ddc::select<DDim<K<X>>>(e))) << "->" << abs(Ff_host(e))*pow((b-a)/Nx/sqrt(2*M_PI),sizeof...(X)) << " " << exp(-(pow(coordinate(ddc::select<DDim<K<X>>>(e)),2) + ...)/2) << ", ";
+        ddc::get_domain<DFDim<K<X>>...>(Ff_host),
+        [=](DElem<DFDim<K<X>>...> const e) {
+			(std::cout << ... << coordinate(ddc::select<DFDim<K<X>>>(e))) << "->" << abs(Ff_host(e))*pow((b-a)/Nx/sqrt(2*M_PI),sizeof...(X)) << " " << exp(-(pow(coordinate(ddc::select<DFDim<K<X>>>(e)),2) + ...)/2) << ", ";
 	});
 	# endif
 	double criterion = sqrt(ddc::transform_reduce(
-		ddc::get_domain<DDim<K<X>>...>(Ff_host),
+		ddc::get_domain<DFDim<K<X>>...>(Ff_host),
 		0.,
 		ddc::reducer::sum<T>(),
-		[=](DElem<DDim<K<X>>...> const e) {
-			return pow(abs(Ff_host(e))*pow((b-a)/Nx/sqrt(2*M_PI),sizeof...(X))-exp(-(pow(coordinate(ddc::select<DDim<K<X>>>(e)),2) + ...)/2),2)/pow(Nx/2+1,sizeof...(X));
+		[=](DElem<DFDim<K<X>>...> const e) {
+			return pow(abs(Ff_host(e))*pow((b-a)/Nx/sqrt(2*M_PI),sizeof...(X))-exp(-(pow(coordinate(ddc::select<DFDim<K<X>>>(e)),2) + ...)/2),2)/pow(Nx/2+1,sizeof...(X));
 	
 	}));
 	std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;

@@ -6,7 +6,9 @@
 #include <ddc/kernels/fft.hpp>
 
 template <typename X>
-using DDim = ddc::UniformPointSampling<X>;
+struct DDim : ddc::UniformPointSampling<X>
+{
+};
 
 template <typename... DDim>
 using DElem = ddc::DiscreteElement<DDim...>;
@@ -18,7 +20,9 @@ template <typename... DDim>
 using DDom = ddc::DiscreteDomain<DDim...>;
 
 template <typename Kx>
-using DFDim = ddc::PeriodicSampling<Kx>;
+struct DFDim : ddc::PeriodicSampling<Kx>
+{
+};
 
 // is_complex : trait to determine if type is Kokkos::complex<something>
 template <typename T>
@@ -90,11 +94,11 @@ static void test_fft()
     const double b = 10;
     const std::size_t Nx = 64; // Optimal value is (b-a)^2/(2*pi)
 
-    DDom<DDim<X>...> const x_mesh = DDom<DDim<X>...>(
-            ddc::init_discrete_space(DDim<X>::
-                                             init(ddc::Coordinate<X>(a + (b - a) / Nx / 2),
-                                                  ddc::Coordinate<X>(b - (b - a) / Nx / 2),
-                                                  DVect<DDim<X>>(Nx)))...);
+    DDom<DDim<X>...> const x_mesh
+            = DDom<DDim<X>...>(ddc::init_discrete_space<DDim<X>>(ddc::uniform_point_sampling_init(
+                    ddc::Coordinate<X>(a + (b - a) / Nx / 2),
+                    ddc::Coordinate<X>(b - (b - a) / Nx / 2),
+                    DVect<DDim<X>>(Nx)))...);
     ddc::Chunk _f = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
     ddc::ChunkSpan f = _f.span_view();
     ddc::for_each(
@@ -107,9 +111,9 @@ static void test_fft()
                         -(Kokkos::pow(coordinate(ddc::select<DDim<X>>(e)), 2) + ...) / 2));
             });
 
-    ddc::init_fourier_space<X...>(x_mesh);
-    DDom<DFDim<ddc::Fourier<X>>...> const k_mesh
-            = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
+    ddc::init_fourier_space<DFDim<ddc::Fourier<X>>...>(x_mesh);
+    DDom<DFDim<ddc::Fourier<X>>...> const k_mesh = ddc::FourierMesh<
+            DFDim<ddc::Fourier<X>>...>(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
 
     ddc::Chunk _f_bis = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), Allocator<MemorySpace, Tin>());
     ddc::ChunkSpan f_bis = _f_bis.span_view();

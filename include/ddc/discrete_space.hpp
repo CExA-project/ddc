@@ -164,10 +164,9 @@ void init_discrete_space(Args&&... args)
  * @param a - the discrete space to move at index 0
  *          - the arguments to pass through at index 1
  */
-template <class DDimImpl, class Arg>
+template <class DDim, class DDimImpl, class Arg>
 Arg init_discrete_space(std::tuple<DDimImpl, Arg>&& a)
 {
-    using DDim = typename DDimImpl::discrete_dimension_type;
     init_discrete_space<DDim>(std::move(std::get<0>(a)));
     return std::get<1>(a);
 }
@@ -177,11 +176,10 @@ Arg init_discrete_space(std::tuple<DDimImpl, Arg>&& a)
  * @param a - the discrete space to move at index 0
  *          - the (2+) arguments to pass through in other indices
  */
-template <class DDimImpl, class... Args>
+template <class DDim, class DDimImpl, class... Args>
 std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_discrete_space(
         std::tuple<DDimImpl, Args...>&& a)
 {
-    using DDim = typename DDimImpl::discrete_dimension_type;
     init_discrete_space<DDim>(std::move(std::get<0>(a)));
     return detail::extract_after(std::move(a), std::index_sequence_for<Args...>());
 }

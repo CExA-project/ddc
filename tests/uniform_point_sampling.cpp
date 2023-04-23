@@ -18,7 +18,7 @@ using DDimY = ddc::UniformPointSampling<DimY>;
 
 static ddc::Coordinate<DimX> constexpr origin(-1.);
 static double constexpr step = 0.5;
-static ddc::DiscreteElement<DDimX> constexpr point_ix(2);
+static ddc::DiscreteElementType constexpr point_ix(2);
 static ddc::Coordinate<DimX> constexpr point_rx(0.);
 
 } // namespace
@@ -44,12 +44,12 @@ TEST(UniformPointSamplingTest, Coordinate)
     ddc::DiscreteElement<DDimY> point_iy(4);
     ddc::Coordinate<DimY> point_ry(-6.);
 
-    ddc::DiscreteElement<DDimX, DDimY> point_ixy(point_ix, point_iy);
+    ddc::DiscreteElement<DDimX, DDimY> point_ixy(ddc::DiscreteElement<DDimX>(point_ix), point_iy);
     ddc::Coordinate<DimX, DimY> point_rxy(point_rx, point_ry);
 
     ddc::init_discrete_space<DDimX>(origin, step);
     ddc::init_discrete_space<DDimY>(ddc::Coordinate<DimY>(-10.), 1.);
-    EXPECT_EQ(ddc::coordinate(point_ix), point_rx);
+    EXPECT_EQ(ddc::coordinate(ddc::DiscreteElement<DDimX>(point_ix)), point_rx);
     EXPECT_EQ(ddc::coordinate(point_iy), point_ry);
     EXPECT_EQ(ddc::coordinate(point_ixy), point_rxy);
 }

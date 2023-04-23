@@ -16,10 +16,14 @@
 
 namespace ddc {
 
+struct PeriodicSamplingBase
+{
+};
+
 /** PeriodicSampling models a periodic discretization of the provided continuous dimension
  */
 template <class CDim>
-class PeriodicSampling
+class PeriodicSampling : PeriodicSamplingBase
 {
 public:
     using continuous_dimension_type = CDim;
@@ -28,12 +32,6 @@ public:
 
 
     using discrete_dimension_type = PeriodicSampling;
-
-    using discrete_element_type = DiscreteElement<PeriodicSampling>;
-
-    using discrete_domain_type = DiscreteDomain<PeriodicSampling>;
-
-    using discrete_vector_type = DiscreteVector<PeriodicSampling>;
 
 public:
     template <class MemorySpace>
@@ -90,9 +88,9 @@ public:
         }
 
         /// @brief Lower bound index of the mesh
-        constexpr discrete_element_type front() const noexcept
+        constexpr DiscreteElementType front() const noexcept
         {
-            return discrete_element_type {0};
+            return DiscreteElementType {0};
         }
 
         /// @brief Spacing step of the mesh
@@ -109,126 +107,117 @@ public:
 
         /// @brief Convert a mesh index into a position in `CDim`
         constexpr continuous_element_type coordinate(
-                discrete_element_type const& icoord) const noexcept
+                DiscreteElementType const& icoord) const noexcept
         {
             return m_origin
                    + continuous_element_type(
-                             static_cast<int>((icoord.uid() + m_n_period / 2 - 1) % m_n_period)
+                             static_cast<int>((icoord + m_n_period / 2 - 1) % m_n_period)
                              - static_cast<int>(m_n_period / 2 - 1))
                              * m_step;
         }
     };
-
-    /** Construct a Impl<Kokkos::HostSpace> and associated discrete_domain_type from a segment
-     *  \f$[a, b] \subset [a, +\infty[\f$ and a number of points `n`.
-     *
-     * @param a coordinate of the first point of the domain
-     * @param b coordinate of the last point of the domain
-     * @param n number of points to map on the segment \f$[a, b]\f$ including a & b
-     * @param n_period   the number of steps in a period
-     */
-    static std::tuple<Impl<Kokkos::HostSpace>, discrete_domain_type> init(
-            continuous_element_type a,
-            continuous_element_type b,
-            discrete_vector_type n,
-            discrete_vector_type n_period)
-    {
-        assert(a < b);
-        assert(n > 1);
-        assert(n_period > 1);
-        Impl<Kokkos::HostSpace> disc(a, continuous_element_type {(b - a) / (n - 1)}, n_period);
-        discrete_domain_type domain {disc.front(), n};
-        return std::make_tuple(std::move(disc), std::move(domain));
-    }
-
-    /** Construct a periodic `DiscreteDomain` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a
-     *  number of points `n`.
-     *
-     * @param a coordinate of the first point of the domain
-     * @param b coordinate of the last point of the domain
-     * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
-     * @param n_period   the number of steps in a period
-     * @param n_ghosts_before number of additional "ghost" points before the segment
-     * @param n_ghosts_after number of additional "ghost" points after the segment
-     */
-    static std::tuple<
-            Impl<Kokkos::HostSpace>,
-            discrete_domain_type,
-            discrete_domain_type,
-            discrete_domain_type,
-            discrete_domain_type>
-    init_ghosted(
-            continuous_element_type a,
-            continuous_element_type b,
-            discrete_vector_type n,
-            discrete_vector_type n_period,
-            discrete_vector_type n_ghosts_before,
-            discrete_vector_type n_ghosts_after)
-    {
-        using discrete_domain_type = discrete_domain_type;
-        assert(a < b);
-        assert(n > 1);
-        assert(n_period > 1);
-        double discretization_step {(b - a) / (n - 1)};
-        Impl<Kokkos::HostSpace>
-                disc(a - n_ghosts_before.value() * discretization_step,
-                     discretization_step,
-                     n_period);
-        discrete_domain_type ghosted_domain
-                = discrete_domain_type(disc.front(), n + n_ghosts_before + n_ghosts_after);
-        discrete_domain_type pre_ghost
-                = discrete_domain_type(ghosted_domain.front(), n_ghosts_before);
-        discrete_domain_type main_domain
-                = discrete_domain_type(ghosted_domain.front() + n_ghosts_before, n);
-        discrete_domain_type post_ghost
-                = discrete_domain_type(main_domain.back() + 1, n_ghosts_after);
-        return std::make_tuple(
-                std::move(disc),
-                std::move(main_domain),
-                std::move(ghosted_domain),
-                std::move(pre_ghost),
-                std::move(post_ghost));
-    }
-
-    /** Construct a periodic `DiscreteDomain` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a
-     *  number of points `n`.
-     *
-     * @param a coordinate of the first point of the domain
-     * @param b coordinate of the last point of the domain
-     * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
-     * @param n_period   the number of steps in a period
-     * @param n_ghosts number of additional "ghost" points before and after the segment
-     */
-    static std::tuple<
-            Impl<Kokkos::HostSpace>,
-            discrete_domain_type,
-            discrete_domain_type,
-            discrete_domain_type,
-            discrete_domain_type>
-    init_ghosted(
-            continuous_element_type a,
-            continuous_element_type b,
-            discrete_vector_type n,
-            discrete_vector_type n_period,
-            discrete_vector_type n_ghosts)
-    {
-        return init_ghosted(a, b, n, n_period, n_ghosts, n_ghosts);
-    }
-};
-
-template <class>
-struct is_periodic_sampling : public std::false_type
-{
-};
-
-template <class CDim>
-struct is_periodic_sampling<PeriodicSampling<CDim>> : public std::true_type
-{
 };
 
 template <class DDim>
-constexpr bool is_periodic_sampling_v = is_periodic_sampling<DDim>::value;
+using continuous_dimension_t = typename DDim::continuous_dimension_type;
 
+/** Construct a Impl<Kokkos::HostSpace> and associated discrete_domain_type from a segment
+ *  \f$[a, b] \subset [a, +\infty[\f$ and a number of points `n`.
+ *
+ * @param a coordinate of the first point of the domain
+ * @param b coordinate of the last point of the domain
+ * @param n number of points to map on the segment \f$[a, b]\f$ including a & b
+ * @param n_period   the number of steps in a period
+ */
+template <class DDim>
+std::tuple<typename DDim::template Impl<Kokkos::HostSpace>, DiscreteDomain<DDim>>
+periodic_sampling_init(
+        Coordinate<continuous_dimension_t<DDim>> a,
+        Coordinate<continuous_dimension_t<DDim>> b,
+        DiscreteVector<DDim> n,
+        DiscreteVector<DDim> n_period)
+{
+    assert(a < b);
+    assert(n > 1);
+    assert(n_period > 1);
+    typename DDim::template Impl<Kokkos::HostSpace>
+            disc(a, Coordinate<continuous_dimension_t<DDim>> {(b - a) / (n - 1)}, n_period);
+    DiscreteDomain<DDim> domain {DiscreteElement<DDim>(disc.front()), n};
+    return std::make_tuple(std::move(disc), std::move(domain));
+}
+
+// /** Construct a periodic `DiscreteDomain` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a
+//  *  number of points `n`.
+//  *
+//  * @param a coordinate of the first point of the domain
+//  * @param b coordinate of the last point of the domain
+//  * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
+//  * @param n_period   the number of steps in a period
+//  * @param n_ghosts_before number of additional "ghost" points before the segment
+//  * @param n_ghosts_after number of additional "ghost" points after the segment
+//  */
+// std::tuple<
+//         Impl<Kokkos::HostSpace>,
+//         discrete_domain_type,
+//         discrete_domain_type,
+//         discrete_domain_type,
+//         discrete_domain_type>
+// init_ghosted(
+//         continuous_element_type a,
+//         continuous_element_type b,
+//         discrete_vector_type n,
+//         discrete_vector_type n_period,
+//         discrete_vector_type n_ghosts_before,
+//         discrete_vector_type n_ghosts_after)
+// {
+//     using discrete_domain_type = discrete_domain_type;
+//     assert(a < b);
+//     assert(n > 1);
+//     assert(n_period > 1);
+//     double discretization_step {(b - a) / (n - 1)};
+//     Impl<Kokkos::HostSpace>
+//             disc(a - n_ghosts_before.value() * discretization_step, discretization_step, n_period);
+//     discrete_domain_type ghosted_domain
+//             = discrete_domain_type(disc.front(), n + n_ghosts_before + n_ghosts_after);
+//     discrete_domain_type pre_ghost = discrete_domain_type(ghosted_domain.front(), n_ghosts_before);
+//     discrete_domain_type main_domain
+//             = discrete_domain_type(ghosted_domain.front() + n_ghosts_before, n);
+//     discrete_domain_type post_ghost = discrete_domain_type(main_domain.back() + 1, n_ghosts_after);
+//     return std::make_tuple(
+//             std::move(disc),
+//             std::move(main_domain),
+//             std::move(ghosted_domain),
+//             std::move(pre_ghost),
+//             std::move(post_ghost));
+// }
+
+// /** Construct a periodic `DiscreteDomain` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a
+//  *  number of points `n`.
+//  *
+//  * @param a coordinate of the first point of the domain
+//  * @param b coordinate of the last point of the domain
+//  * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
+//  * @param n_period   the number of steps in a period
+//  * @param n_ghosts number of additional "ghost" points before and after the segment
+//  */
+// std::tuple<
+//         Impl<Kokkos::HostSpace>,
+//         discrete_domain_type,
+//         discrete_domain_type,
+//         discrete_domain_type,
+//         discrete_domain_type>
+// init_ghosted(
+//         continuous_element_type a,
+//         continuous_element_type b,
+//         discrete_vector_type n,
+//         discrete_vector_type n_period,
+//         discrete_vector_type n_ghosts)
+// {
+//     return init_ghosted(a, b, n, n_period, n_ghosts, n_ghosts);
+// }
+
+template <class DDim>
+constexpr bool is_periodic_sampling_v = std::is_base_of_v<PeriodicSamplingBase, DDim>;
 
 template <
         class DDimImpl,
@@ -243,7 +232,7 @@ std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 /// @brief Lower bound index of the mesh
 template <class DDim>
 DDC_INLINE_FUNCTION std::
-        enable_if_t<is_periodic_sampling_v<DDim>, typename DDim::continuous_element_type>
+        enable_if_t<is_periodic_sampling_v<DDim>, Coordinate<continuous_dimension_t<DDim>>>
         origin() noexcept
 {
     return discrete_space<DDim>().origin();
@@ -251,9 +240,8 @@ DDC_INLINE_FUNCTION std::
 
 /// @brief Lower bound index of the mesh
 template <class DDim>
-DDC_INLINE_FUNCTION std::
-        enable_if_t<is_periodic_sampling_v<DDim>, typename DDim::discrete_element_type>
-        front() noexcept
+DDC_INLINE_FUNCTION std::enable_if_t<is_periodic_sampling_v<DDim>, DiscreteElement<DDim>>
+front() noexcept
 {
     return discrete_space<DDim>().front();
 }
@@ -265,39 +253,40 @@ DDC_INLINE_FUNCTION std::enable_if_t<is_periodic_sampling_v<DDim>, double> step(
     return discrete_space<DDim>().step();
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION constexpr Coordinate<CDim> coordinate(
-        DiscreteElement<PeriodicSampling<CDim>> const& c)
+template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+DDC_INLINE_FUNCTION constexpr Coordinate<continuous_dimension_t<DDim>> coordinate(
+        DiscreteElement<DDim> const& c)
 {
-    return discrete_space<PeriodicSampling<CDim>>().coordinate(c);
+    return discrete_space<DDim>().coordinate(c.uid());
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(DiscreteElement<PeriodicSampling<CDim>>)
+template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+DDC_INLINE_FUNCTION Coordinate<continuous_dimension_t<DDim>> distance_at_left(DiscreteElement<DDim>)
 {
-    return Coordinate<CDim>(step<PeriodicSampling<CDim>>());
+    return Coordinate<continuous_dimension_t<DDim>>(step<DDim>());
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(DiscreteElement<PeriodicSampling<CDim>>)
+template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+DDC_INLINE_FUNCTION Coordinate<continuous_dimension_t<DDim>> distance_at_right(
+        DiscreteElement<DDim>)
 {
-    return Coordinate<CDim>(step<PeriodicSampling<CDim>>());
+    return Coordinate<continuous_dimension_t<DDim>>(step<DDim>());
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rmin(DiscreteDomain<PeriodicSampling<CDim>> const& d)
+template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+DDC_INLINE_FUNCTION Coordinate<continuous_dimension_t<DDim>> rmin(DiscreteDomain<DDim> const& d)
 {
     return coordinate(d.front());
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rmax(DiscreteDomain<PeriodicSampling<CDim>> const& d)
+template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+DDC_INLINE_FUNCTION Coordinate<continuous_dimension_t<DDim>> rmax(DiscreteDomain<DDim> const& d)
 {
     return coordinate(d.back());
 }
 
-template <class CDim>
-DDC_INLINE_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<PeriodicSampling<CDim>> const& d)
+template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+DDC_INLINE_FUNCTION Coordinate<continuous_dimension_t<DDim>> rlength(DiscreteDomain<DDim> const& d)
 {
     return rmax(d) - rmin(d);
 }

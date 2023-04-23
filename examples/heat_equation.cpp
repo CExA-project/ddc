@@ -14,26 +14,38 @@
 
 //! [X-dimension]
 /// Our first continuous dimension
-struct X;
+struct X
+{
+};
 //! [X-dimension]
 
 //! [X-discretization]
 /// A uniform discretization of X
-using DDimX = ddc::UniformPointSampling<X>;
+struct DDimX : ddc::UniformPointSampling<X>
+{
+};
 //! [X-discretization]
 
 //! [Y-space]
 // Our second continuous dimension
-struct Y;
+struct Y
+{
+};
 // Its uniform discretization
-using DDimY = ddc::UniformPointSampling<Y>;
+struct DDimY : ddc::UniformPointSampling<Y>
+{
+};
 //! [Y-space]
 
 //! [time-space]
 // Our simulated time dimension
-struct T;
+struct T
+{
+};
 // Its uniform discretization
-using DDimT = ddc::UniformPointSampling<T>;
+struct DDimT : ddc::UniformPointSampling<T>
+{
+};
 //! [time-space]
 
 
@@ -114,11 +126,12 @@ int main(int argc, char** argv)
     // Initialization of the global domain in X with gwx ghost points on
     // each side
     auto const [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]
-            = ddc::init_discrete_space(DDimX::init_ghosted(
-                    ddc::Coordinate<X>(x_start),
-                    ddc::Coordinate<X>(x_end),
-                    ddc::DiscreteVector<DDimX>(nb_x_points),
-                    gwx));
+            = ddc::init_discrete_space<DDimX>(
+                    ddc::uniform_point_sampling_init_ghosted(
+                            ddc::Coordinate<X>(x_start),
+                            ddc::Coordinate<X>(x_end),
+                            ddc::DiscreteVector<DDimX>(nb_x_points),
+                            gwx));
     //! [X-global-domain]
 
     //! [X-domains]
@@ -140,11 +153,12 @@ int main(int argc, char** argv)
     // Initialization of the global domain in Y with gwy ghost points on
     // each side
     auto const [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]
-            = ddc::init_discrete_space(DDimY::init_ghosted(
-                    ddc::Coordinate<Y>(y_start),
-                    ddc::Coordinate<Y>(y_end),
-                    ddc::DiscreteVector<DDimY>(nb_y_points),
-                    gwy));
+            = ddc::init_discrete_space<DDimY>(
+                    ddc::uniform_point_sampling_init_ghosted(
+                            ddc::Coordinate<Y>(y_start),
+                            ddc::Coordinate<Y>(y_end),
+                            ddc::DiscreteVector<DDimY>(nb_y_points),
+                            gwy));
 
     // our zone at the start of the domain that will be mirrored to the
     // ghost
@@ -188,11 +202,11 @@ int main(int argc, char** argv)
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
     ddc::DiscreteDomain<DDimT> const time_domain
-            = ddc::init_discrete_space(
-                    DDimT::
-                            init(ddc::Coordinate<T>(start_time),
-                                 ddc::Coordinate<T>(end_time),
-                                 nb_time_steps + 1));
+            = ddc::init_discrete_space<DDimT>(
+                    ddc::uniform_point_sampling_init(
+                            ddc::Coordinate<T>(start_time),
+                            ddc::Coordinate<T>(end_time),
+                            nb_time_steps + 1));
     //! [time-domains]
 
     //! [data allocation]

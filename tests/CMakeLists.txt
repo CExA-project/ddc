@@ -20,6 +20,8 @@ add_executable(ddc_tests
     discrete_element.cpp
 	fft.cpp
     discrete_vector.cpp
+    uniform_mesh.cpp
+    non_uniform_mesh.cpp
 )
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
 target_link_libraries(ddc_tests

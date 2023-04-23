@@ -13,16 +13,28 @@
 #include "spline_boundary_conditions.hpp"
 
 namespace ddc {
+
+template <class Sampling>
+struct UniformSamplingHidden
+    : ddc::UniformPointSampling<typename Sampling::continuous_dimension_type>
+{
+};
+
+template <class Sampling>
+struct NonUniformSamplingHidden
+    : ddc::NonUniformPointSampling<typename Sampling::continuous_dimension_type>
+{
+};
+
 template <class BSplines, ddc::BoundCond BcXmin, ddc::BoundCond BcXmax>
 class GrevilleInterpolationPoints
 {
     using tag_type = typename BSplines::tag_type;
 
-    template <typename U = BSplines, class = std::enable_if_t<U::is_uniform()>>
+    template <class Sampling, typename U = BSplines, class = std::enable_if_t<U::is_uniform()>>
     static auto uniform_greville_points()
     {
-        using Sampling = ddc::UniformPointSampling<tag_type>;
-        using SamplingImpl = typename Sampling::template Impl<Kokkos::HostSpace>;
+        using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
 
         double constexpr shift = (BSplines::degree() % 2 == 0) ? 0.5 : 0.0;
         double dx
@@ -33,11 +45,10 @@ class GrevilleInterpolationPoints
                 ddc::Coordinate<tag_type>(dx));
     }
 
-    template <typename U = BSplines, class = std::enable_if_t<!U::is_uniform()>>
+    template <class Sampling, typename U = BSplines, class = std::enable_if_t<!U::is_uniform()>>
     static auto non_uniform_greville_points()
     {
-        using Sampling = ddc::NonUniformPointSampling<tag_type>;
-        using SamplingImpl = typename Sampling::template Impl<Kokkos::HostSpace>;
+        using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
 
         std::vector<double> greville_points(ddc::discrete_space<BSplines>().nbasis());
         ddc::DiscreteDomain<BSplines> bspline_domain
@@ -85,26 +96,28 @@ class GrevilleInterpolationPoints
 
 public:
     template <
+            class Sampling,
             typename U = BSplines,
             std::enable_if_t<
                     is_uniform_mesh_v<U>,
                     bool> = true> // U must be in condition for SFINAE
     static auto get_sampling()
     {
-        return uniform_greville_points();
+        return uniform_greville_points<Sampling>();
     }
 
     template <
+            class Sampling,
             typename U = BSplines,
             std::enable_if_t<
                     !is_uniform_mesh_v<U>,
                     bool> = true> // U must be in condition for SFINAE
     static auto get_sampling()
     {
-        using Sampling = ddc::NonUniformPointSampling<tag_type>;
-        using SamplingImpl = typename Sampling::template Impl<Kokkos::HostSpace>;
+        using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
         if constexpr (U::is_uniform()) {
-            auto points_wo_bcs = uniform_greville_points();
+            using HiddenSampling = UniformSamplingHidden<Sampling>;
+            auto points_wo_bcs = uniform_greville_points<HiddenSampling>();
             int const n_break_points = ddc::discrete_space<BSplines>().ncells() + 1;
             int const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE_MIN - N_BE_MAX;
             std::vector<double> points_with_bcs(npoints);
@@ -122,16 +135,16 @@ public:
                     points_with_bcs[i] /= BSplines::degree();
                 }
             } else {
-                points_with_bcs[0] = points_wo_bcs.coordinate(
-                        ddc::DiscreteElement<ddc::UniformPointSampling<tag_type>>(0));
+                points_with_bcs[0]
+                        = points_wo_bcs.coordinate(ddc::DiscreteElement<HiddenSampling>(0));
             }
 
             int const n_start
                     = (BcXmin == ddc::BoundCond::GREVILLE) ? BSplines::degree() / 2 + 1 : 1;
             int const domain_size = n_break_points - 2;
-            ddc::DiscreteDomain<ddc::UniformPointSampling<tag_type>> const
-                    domain(ddc::DiscreteElement<ddc::UniformPointSampling<tag_type>>(1),
-                           ddc::DiscreteVector<ddc::UniformPointSampling<tag_type>>(domain_size));
+            ddc::DiscreteDomain<HiddenSampling> const
+                    domain(ddc::DiscreteElement<HiddenSampling>(1),
+                           ddc::DiscreteVector<HiddenSampling>(domain_size));
 
             // Copy central points
             ddc::for_each(domain, [&](auto ip) {
@@ -153,26 +166,26 @@ public:
                     points_with_bcs[npoints - 1 - i] /= BSplines::degree();
                 }
             } else {
-                points_with_bcs[npoints - 1] = points_wo_bcs.coordinate(
-                        ddc::DiscreteElement<ddc::UniformPointSampling<tag_type>>(
+                points_with_bcs[npoints - 1]
+                        = points_wo_bcs.coordinate(ddc::DiscreteElement<HiddenSampling>(
                                 ddc::discrete_space<BSplines>().ncells() - 1
                                 + BSplines::degree() % 2));
             }
             return SamplingImpl(points_with_bcs);
         } else {
-            auto points_wo_bcs = non_uniform_greville_points();
+            using HiddenSampling = NonUniformSamplingHidden<Sampling>;
             if constexpr (N_BE_MIN == 0 && N_BE_MAX == 0) {
-                return points_wo_bcs;
+                return non_uniform_greville_points<Sampling>();
             } else {
+                auto points_wo_bcs = non_uniform_greville_points<HiddenSampling>();
                 // All points are Greville points. Extract unnecessary points near the boundary
                 std::vector<double> points_with_bcs(points_wo_bcs.size() - N_BE_MIN - N_BE_MAX);
                 int constexpr n_start = N_BE_MIN;
 
-                using length = ddc::DiscreteVector<ddc::NonUniformPointSampling<tag_type>>;
+                using length = ddc::DiscreteVector<HiddenSampling>;
 
-                ddc::DiscreteDomain<ddc::NonUniformPointSampling<tag_type>> const
-                        domain(ddc::DiscreteElement<ddc::NonUniformPointSampling<tag_type>>(
-                                       n_start),
+                ddc::DiscreteDomain<HiddenSampling> const
+                        domain(ddc::DiscreteElement<HiddenSampling>(n_start),
                                length(points_with_bcs.size()));
 
                 points_with_bcs[0] = points_wo_bcs.coordinate(domain.front());
@@ -187,14 +200,18 @@ public:
         }
     }
 
-    using interpolation_mesh_type = typename decltype(get_sampling())::discrete_dimension_type;
+    using interpolation_mesh_type = std::conditional_t<
+            is_uniform_mesh_v<BSplines>,
+            ddc::UniformPointSampling<tag_type>,
+            ddc::NonUniformPointSampling<tag_type>>;
 
-    static ddc::DiscreteDomain<interpolation_mesh_type> get_domain()
+    template <class Sampling>
+    static ddc::DiscreteDomain<Sampling> get_domain()
     {
         int const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE_MIN - N_BE_MAX;
-        return ddc::DiscreteDomain<interpolation_mesh_type>(
-                ddc::DiscreteElement<interpolation_mesh_type>(0),
-                ddc::DiscreteVector<interpolation_mesh_type>(npoints));
+        return ddc::DiscreteDomain<Sampling>(
+                ddc::DiscreteElement<Sampling>(0),
+                ddc::DiscreteVector<Sampling>(npoints));
     }
 };
 } // namespace ddc

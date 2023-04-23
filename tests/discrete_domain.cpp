@@ -8,19 +8,25 @@
 
 namespace {
 
-struct DDimX;
+struct DDimX
+{
+};
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
 using DDomX = ddc::DiscreteDomain<DDimX>;
 
 
-struct DDimY;
+struct DDimY
+{
+};
 using DElemY = ddc::DiscreteElement<DDimY>;
 using DVectY = ddc::DiscreteVector<DDimY>;
 using DDomY = ddc::DiscreteDomain<DDimY>;
 
 
-struct DDimZ;
+struct DDimZ
+{
+};
 using DElemZ = ddc::DiscreteElement<DDimZ>;
 using DVectZ = ddc::DiscreteVector<DDimZ>;
 using DDomZ = ddc::DiscreteDomain<DDimZ>;

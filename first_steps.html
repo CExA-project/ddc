@@ -216,7 +216,8 @@ Time dimension</h3>
 <div class="line">            <a class="code" href="structddc_1_1reducer_1_1max.html">ddc::reducer::max&lt;double&gt;</a>(),</div>
 <div class="line">            [](<a class="code" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> ix) {</div>
 <div class="line">                <span class="keywordflow">return</span> 1.</div>
-<div class="line">                       / (<a class="code" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">distance_at_left</a>(ix) * <a class="code" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">distance_at_right</a>(ix));</div>
+<div class="line">                       / (<a class="code" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">ddc::distance_at_left</a>(ix)</div>
+<div class="line">                          * <a class="code" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">ddc::distance_at_right</a>(ix));</div>
 <div class="line">            });</div>
 <div class="line">    <span class="comment">// max(1/dy^2)</span></div>
 <div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdy2_max = <a class="code" href="namespaceddc.html#a13d882b3cd569916070e20b6ec57eb0d">ddc::transform_reduce</a>(</div>
@@ -225,7 +226,8 @@ Time dimension</h3>
 <div class="line">            <a class="code" href="structddc_1_1reducer_1_1max.html">ddc::reducer::max&lt;double&gt;</a>(),</div>
 <div class="line">            [](<a class="code" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> iy) {</div>
 <div class="line">                <span class="keywordflow">return</span> 1.</div>
-<div class="line">                       / (<a class="code" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">distance_at_left</a>(iy) * <a class="code" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">distance_at_right</a>(iy));</div>
+<div class="line">                       / (<a class="code" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">ddc::distance_at_left</a>(iy)</div>
+<div class="line">                          * <a class="code" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">ddc::distance_at_right</a>(iy));</div>
 <div class="line">            });</div>
 <div class="line">    <a class="code" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;T&gt;</a> <span class="keyword">const</span> max_dt {</div>
 <div class="line">            .5 / (kx * invdx2_max + ky * invdy2_max)};</div>
@@ -332,11 +334,11 @@ Numerical scheme</h2>
 <div class="line">                            = ddc::select&lt;DDimX&gt;(ixy);</div>
 <div class="line">                    <a class="code" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> <span class="keyword">const</span> iy</div>
 <div class="line">                            = ddc::select&lt;DDimY&gt;(ixy);</div>
-<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dx_l = <a class="code" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">distance_at_left</a>(ix);</div>
-<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dx_r = <a class="code" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">distance_at_right</a>(ix);</div>
+<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dx_l = <a class="code" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">ddc::distance_at_left</a>(ix);</div>
+<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dx_r = <a class="code" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">ddc::distance_at_right</a>(ix);</div>
 <div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dx_m = 0.5 * (dx_l + dx_r);</div>
-<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dy_l = <a class="code" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">distance_at_left</a>(iy);</div>
-<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dy_r = <a class="code" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">distance_at_right</a>(iy);</div>
+<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dy_l = <a class="code" href="namespaceddc.html#a624f3e483792457bb62202847de7fb92">ddc::distance_at_left</a>(iy);</div>
+<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dy_r = <a class="code" href="namespaceddc.html#a9adf365b335a5689decf42f37b6dc9c0">ddc::distance_at_right</a>(iy);</div>
 <div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dy_m = 0.5 * (dy_l + dy_r);</div>
 <div class="line">                    next_temp(ix, iy) = last_temp(ix, iy);</div>
 <div class="line">                    next_temp(ix, iy)</div>

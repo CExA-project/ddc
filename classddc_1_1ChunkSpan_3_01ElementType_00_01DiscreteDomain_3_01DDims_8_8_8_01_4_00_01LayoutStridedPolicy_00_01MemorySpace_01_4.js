@@ -36,7 +36,6 @@ var classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01
     [ "operator()", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a4a8512468e57bc855cc40c6f88f8b3d9", null ],
     [ "operator()", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#afbd19ae3b0fb49b9da8fb3e3061a4dce", null ],
     [ "data", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a0f6abedc840b2292cf76ce54b40924be", null ],
-    [ "internal_mdspan", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a063ec2f279ca4ed9449ef96074ec0e59", null ],
     [ "allocation_mdspan", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a108e0cb2da82cdfc83b01825fd850677", null ],
     [ "allocation_kokkos_view", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a3b6657dc6b7a7ad981107ddb576fef15", null ],
     [ "span_cview", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#aa16b9d44e38ebe8f26dcca8221a022f1", null ],

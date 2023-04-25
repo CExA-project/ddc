@@ -30,7 +30,6 @@ var NAVTREE =
       [ "Join us!", "index.html#autotoc_md1", null ]
     ] ],
     [ "Commented example: the heat equation", "first_steps.html", "first_steps" ],
-    [ "Deprecated List", "deprecated.html", null ],
     [ "API reference", "annotated.html", "annotated" ]
   ] ]
 ];
@@ -38,7 +37,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classddc_1_1DiscreteVector.html#aad791747e2239306acd82c51aafc35cf"
+"classddc_1_1DiscreteVector.html#ab752f949cea30c75b074f685868d2d53"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

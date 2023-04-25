@@ -225,6 +225,10 @@ if( FFTW_FOUND )
 	add_compile_definitions(fftw_AVAIL)
 endif()
 
+if( FFTW_FOUND AND ${Kokkos_ENABLE_OPENMP}) 
+	target_link_libraries( DDC INTERFACE FFTW::DoubleOpenMP )
+	add_compile_definitions(fftw_omp_AVAIL)
+endif()
 
 if( CUDAToolkit_FOUND ) 
 	target_link_libraries( DDC INTERFACE CUDA::cufft )	

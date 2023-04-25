@@ -35,10 +35,10 @@ constexpr int LastSelector(const int a, const int b) {
 }
 
 template <typename MemorySpace, typename T>
-using Allocator = typename std::conditional<std::is_same<MemorySpace,Kokkos::Serial::memory_space>::value, ddc::HostAllocator<T>, ddc::DeviceAllocator<T>>::type;
+using Allocator = typename std::conditional<std::is_same_v<MemorySpace,Kokkos::Serial::memory_space> || std::is_same_v<MemorySpace,Kokkos::OpenMP::memory_space>, ddc::HostAllocator<T>, ddc::DeviceAllocator<T>>::type;
 
 template <typename ExecSpace>
-constexpr auto policy = []{ if constexpr (std::is_same<ExecSpace,Kokkos::Serial>::value) { return ddc::policies::serial_host; } else { return ddc::policies::parallel_device; } };
+constexpr auto policy = []{ if constexpr (std::is_same<ExecSpace,Kokkos::Serial>::value) { return ddc::policies::serial_host; } else if constexpr (std::is_same<ExecSpace,Kokkos::OpenMP>::value) { return ddc::policies::parallel_host; } else { return ddc::policies::parallel_device; } };
 
 // TODO:
 // - cuFFT+FFTW
@@ -70,7 +70,7 @@ static void TestFFT()
 	);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace,std::complex<T>>());
 	ddc::ChunkSpan Ff = _Ff.span_view();
-	FFT<ExecSpace, MemorySpace, T, X...>(Ff, f);
+	FFT(ExecSpace(), Ff, f);
 
 	ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<T>());
     ddc::ChunkSpan f_host = _f_host.span_view();

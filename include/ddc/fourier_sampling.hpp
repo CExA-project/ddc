@@ -47,7 +47,7 @@ public:
 
         double m_step {1.};
 
-		std::size_t m_n_period {1};
+		std::size_t m_n_period {2};
 
     public:
         using discrete_dimension_type = FourierSampling;
@@ -144,7 +144,7 @@ public:
         constexpr continuous_element_type coordinate(
                 discrete_element_type const& icoord) const noexcept
         {
-            return m_origin + continuous_element_type(icoord.uid()%m_n_period) * m_step;
+            return m_origin + continuous_element_type(static_cast<int>((icoord.uid()+m_n_period/2-1)%m_n_period)-static_cast<int>(m_n_period/2-1)) * m_step;
         }
     };
 

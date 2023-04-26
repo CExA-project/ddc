@@ -93,8 +93,11 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, DDom<DFDim<K<X>>..
 	# endif
 	# if cufft_AVAIL 
 	else if constexpr(std::is_same<ExecSpace, Kokkos::Cuda>::value) {
+		cudaStream_t stream = execSpace.cuda_stream();
+
 		cufftHandle plan = -1;
 		cufftResult cufft_rt = cufftCreate(&plan);
+		cufftSetStream(plan, stream);
 		cufft_rt = cufftPlanMany(&plan, // plan handle
 							 x_mesh.rank(),
 							 n, // Nx, Ny...
@@ -120,8 +123,12 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, DDom<DFDim<K<X>>..
 	# if hipfft_AVAIL 
 	else if constexpr(std::is_same<ExecSpace, Kokkos::Cuda>::value) {
 	// else if constexpr(std::is_same<ExecSpace, Kokkos::HIP::value) {
+		hipStream_t stream = execSpace.cuda_stream();
+		// hipStream_t stream = execSpace.hip_stream();
+
 		hipfftHandle plan = -1;
 		hipfftResult hipfft_rt = hipfftCreate(&plan);
+		hipfftSetStream(plan, stream);
 		hipfft_rt = hipfftPlanMany(&plan, // plan handle
 							 x_mesh.rank(),
 							 n, // Nx, Ny...

@@ -18,32 +18,17 @@
 #include <hipfft/hipfft.h>
 # endif
 
-template <typename X>
-using DDim = ddc::UniformPointSampling<X>;
-
-template <typename ...DDim>
-using DElem = ddc::DiscreteElement<DDim...>;
-
-template <typename ...DDim>
-using DVect = ddc::DiscreteVector<DDim...>;
-
-template <typename ...DDim>
-using DDom = ddc::DiscreteDomain<DDim...>;
-
 template <typename Dims>
 struct K;
 
-template <typename Kx>
-using DFDim = ddc::FourierSampling<Kx>;
-
 template<typename T, typename... X, typename ExecSpace, typename MemorySpace>
-void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, DDom<DFDim<K<X>>...>, std::experimental::layout_right, MemorySpace> Ff,
-	     ddc::ChunkSpan<T, DDom<DDim<X>...>, std::experimental::layout_right, MemorySpace> f)
+void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, ddc::DiscreteDomain<ddc::FourierSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> Ff,
+	     ddc::ChunkSpan<T, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> f)
 {
 	static_assert(Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,"MemorySpace has to be accessible for ExecutionSpace.");
-	DDom<DDim<X>...> x_mesh = ddc::get_domain<DDim<X>...>(f);
+	ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(f);
 	
-	int n[x_mesh.rank()] = {(int)ddc::get<DDim<X>>(x_mesh.extents())...};
+	int n[x_mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(x_mesh.extents())...};
 	int idist = 1;
 	int odist = 1;
 	for(int i=0;i<x_mesh.rank();i++) {	

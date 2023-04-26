@@ -34,12 +34,19 @@ constexpr T LastSelector(const T a, const T b) {
 	return LastSelector<T,Dim,Second,Tail...>(a, b);
 }
 
+#if fftw_omp_AVAIL
 template <typename MemorySpace, typename T>
 using Allocator = typename std::conditional<std::is_same_v<MemorySpace,Kokkos::Serial::memory_space> || std::is_same_v<MemorySpace,Kokkos::OpenMP::memory_space>, ddc::HostAllocator<T>, ddc::DeviceAllocator<T>>::type;
 
 template <typename ExecSpace>
 constexpr auto policy = []{ if constexpr (std::is_same<ExecSpace,Kokkos::Serial>::value) { return ddc::policies::serial_host; } else if constexpr (std::is_same<ExecSpace,Kokkos::OpenMP>::value) { return ddc::policies::parallel_host; } else { return ddc::policies::parallel_device; } };
+#else
+template <typename MemorySpace, typename T>
+using Allocator = typename std::conditional<std::is_same_v<MemorySpace,Kokkos::Serial::memory_space>, ddc::HostAllocator<T>, ddc::DeviceAllocator<T>>::type;
 
+template <typename ExecSpace>
+constexpr auto policy = []{ if constexpr (std::is_same<ExecSpace,Kokkos::Serial>::value) { return ddc::policies::serial_host; } else { return ddc::policies::parallel_device; } };
+#endif
 // TODO:
 // - cuFFT+FFTW
 // - FFT multidim but according to a subset of dimensions

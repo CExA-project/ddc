@@ -33,7 +33,7 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, ddc::DiscreteDomai
 	int odist = 1;
 	for(int i=0;i<x_mesh.rank();i++) {	
 		idist = idist*n[i];
-		odist = odist*(n[i]/2+1); //Correct this
+		odist = i==0 ? odist*(n[i]/2+1) : odist*n[i]; //Correct this
 	}
 	if constexpr(false) {} // Trick to get only else if
 	# if fftw_omp_AVAIL 

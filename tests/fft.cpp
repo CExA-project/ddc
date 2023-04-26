@@ -52,6 +52,7 @@ TEST(FFTSerialHost, 3D)
 	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, RDimX, RDimY, RDimZ>();
 }
 
+#if fftw_omp_AVAIL
 TEST(FFTParallelHost, 1D)
 {
 	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, RDimX>();
@@ -66,6 +67,7 @@ TEST(FFTParallelHost, 3D)
 {
 	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, RDimX, RDimY, RDimZ>();
 }
+#endif
 
 TEST(FFTParallelDevice, 1D)
 {

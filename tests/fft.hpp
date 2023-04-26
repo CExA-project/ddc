@@ -66,7 +66,7 @@ static void TestFFT()
 	);
 
 	DDom<DFDim<K<X>>...> const k_mesh = DDom<DFDim<K<X>>...>(
-		ddc::init_discrete_space(DFDim<K<X>>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(LastSelector<X,X...>(0,-Nx/(b-a)*M_PI)), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(Nx/(b-a)*M_PI), ddc::DiscreteVector<DFDim<K<X>>>(LastSelector<X,X...>(Nx/2+1,Nx))))...
+		ddc::init_discrete_space(DFDim<K<X>>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(LastSelector<X,X...>(Nx/(b-a)*M_PI,2*Nx/(b-a)*M_PI)), ddc::DiscreteVector<DFDim<K<X>>>(LastSelector<X,X...>(Nx/2+1,Nx)), ddc::DiscreteVector<DFDim<K<X>>>(Nx/2)))...
 	);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace,std::complex<T>>());
 	ddc::ChunkSpan Ff = _Ff.span_view();

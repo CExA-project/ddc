@@ -40,7 +40,7 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, ddc::DiscreteDomai
 	# if fftw_omp_AVAIL 
 	else if constexpr(std::is_same<ExecSpace, Kokkos::OpenMP>::value) {
 		fftw_init_threads();
-		fftw_plan_with_nthreads(omp_get_max_threads());
+		fftw_plan_with_nthreads(ExecSpace::concurrency());
 		fftw_plan plan = fftw_plan_many_dft_r2c(x_mesh.rank(), 
 							n, 
 							1,

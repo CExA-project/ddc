@@ -39,47 +39,47 @@ TEST(GPUMathToolsParallelDevice, HipHelloWorld)
 
 TEST(FFTSerialHost, 1D)
 {
-	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, RDimX>();
+	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, std::complex<double>, RDimX>();
 }
 
 TEST(FFTSerialHost, 2D)
 {
-	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, RDimX, RDimY>();
+	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, std::complex<double>, RDimX, RDimY>();
 }
 
 TEST(FFTSerialHost, 3D)
 {
-	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, RDimX, RDimY, RDimZ>();
+	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, std::complex<double>, RDimX, RDimY, RDimZ>();
 }
 
 #if fftw_omp_AVAIL
 TEST(FFTParallelHost, 1D)
 {
-	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, RDimX>();
+	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, std::complex<double>, RDimX>();
 }
 
 TEST(FFTParallelHost, 2D)
 {
-	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, RDimX, RDimY>();
+	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, std::complex<double>, RDimX, RDimY>();
 }
 
 TEST(FFTParallelHost, 3D)
 {
-	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, RDimX, RDimY, RDimZ>();
+	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, std::complex<double>, RDimX, RDimY, RDimZ>();
 }
 #endif
 
 TEST(FFTParallelDevice, 1D)
 {
-	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, RDimX>();
+	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, std::complex<double>, RDimX>();
 }
 
 TEST(FFTParallelDevice, 2D)
 {
-	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, RDimX, RDimY>();
+	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, std::complex<double>, RDimX, RDimY>();
 }
 
 TEST(FFTParallelDevice, 3D)
 {
-	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, RDimX, RDimY, RDimZ>();
+	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, std::complex<double>, RDimX, RDimY, RDimZ>();
 }

@@ -4,6 +4,12 @@
 
 #include <gtest/gtest.h>
 
+namespace {
+
+using DElem0D = ddc::DiscreteElement<>;
+using DVect0D = ddc::DiscreteVector<>;
+using DDom0D = ddc::DiscreteDomain<>;
+
 struct DDimX;
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
@@ -27,14 +33,25 @@ static DVectY constexpr nelems_y(12);
 static DElemXY constexpr lbound_x_y {lbound_x, lbound_y};
 static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
+} // namespace
+
 TEST(ForEachSerialHost, Empty)
 {
     DDomX const dom(lbound_x, DVectX(0));
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomX> view(storage.data(), dom);
     ddc::for_each(ddc::policies::serial_host, dom, [=](DElemX const ix) { view(ix) += 1; });
-    ASSERT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
-    std::cout << std::count(storage.begin(), storage.end(), 1) << std::endl;
+    ASSERT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size())
+            << std::count(storage.begin(), storage.end(), 1) << std::endl;
+}
+
+TEST(ForEachSerialHost, ZeroDimension)
+{
+    DDom0D const dom;
+    int storage = 0;
+    ddc::ChunkSpan<int, DDom0D> view(&storage, dom);
+    ddc::for_each(ddc::policies::serial_host, dom, [=](DElem0D const ii) { view(ii) += 1; });
+    ASSERT_EQ(storage, 1) << storage << std::endl;
 }
 
 TEST(ForEachSerialHost, OneDimension)
@@ -73,7 +90,9 @@ TEST(ForEachParallelHost, TwoDimensions)
     ASSERT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
-static void TestForEachParallelDeviceOneDimension()
+namespace {
+
+void TestForEachParallelDeviceOneDimension()
 {
     DDomX const dom(lbound_x, nelems_x);
     ddc::Chunk<int, DDomX, ddc::DeviceAllocator<int>> storage(dom);
@@ -92,12 +111,16 @@ static void TestForEachParallelDeviceOneDimension()
     ASSERT_EQ(sum, dom.size());
 }
 
+} // namespace
+
 TEST(ForEachParallelDevice, OneDimension)
 {
     TestForEachParallelDeviceOneDimension();
 }
 
-static void TestForEachParallelDeviceTwoDimensions()
+namespace {
+
+void TestForEachParallelDeviceTwoDimensions()
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     ddc::Chunk<int, DDomXY, ddc::DeviceAllocator<int>> storage(dom);
@@ -115,6 +138,8 @@ static void TestForEachParallelDeviceTwoDimensions()
             Kokkos::Sum<int>(sum));
     ASSERT_EQ(sum, dom.size());
 }
+
+} // namespace
 
 TEST(ForEachParallelDevice, TwoDimensions)
 {

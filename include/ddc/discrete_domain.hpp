@@ -38,7 +38,7 @@ private:
 public:
     static constexpr std::size_t rank()
     {
-        return (0 + ... + DDims::rank());
+        return sizeof...(DDims);
     }
 
     DiscreteDomain() = default;
@@ -57,18 +57,6 @@ public:
     explicit constexpr DiscreteDomain(DiscreteDomain<DDims> const&... domains)
         : m_element_begin(domains.front()...)
         , m_element_end((domains.front() + domains.extents())...)
-    {
-    }
-
-    /** Construct a DiscreteDomain starting from (0, ..., 0) with size points.
-     * @param size the number of points in each dimension
-     * 
-     * @deprecated use the version with explicit lower bound instead
-     */
-    [[deprecated]] constexpr DiscreteDomain(mlength_type const& size)
-        : m_element_begin(
-                (get<DDims>(size) - get<DDims>(size))...) // Hack to have expansion of zero
-        , m_element_end(get<DDims>(size)...)
     {
     }
 
@@ -231,12 +219,160 @@ public:
     }
 };
 
+template <>
+class DiscreteDomain<>
+{
+    template <class...>
+    friend class DiscreteDomain;
+
+public:
+    using discrete_element_type = DiscreteElement<>;
+
+    using mlength_type = DiscreteVector<>;
+
+    static constexpr std::size_t rank()
+    {
+        return 0;
+    }
+
+    constexpr DiscreteDomain() = default;
+
+    // Construct a DiscreteDomain from a reordered copy of `domain`
+    template <class... ODDims>
+    explicit constexpr DiscreteDomain(DiscreteDomain<ODDims...> const& domain)
+    {
+    }
+
+    /** Construct a DiscreteDomain starting from element_begin with size points.
+     * @param element_begin the lower bound in each direction
+     * @param size the number of points in each direction
+     */
+    constexpr DiscreteDomain(
+            [[maybe_unused]] discrete_element_type const& element_begin,
+            [[maybe_unused]] mlength_type const& size)
+    {
+    }
+
+    constexpr DiscreteDomain(DiscreteDomain const& x) = default;
+
+    constexpr DiscreteDomain(DiscreteDomain&& x) = default;
+
+    ~DiscreteDomain() = default;
+
+    DiscreteDomain& operator=(DiscreteDomain const& x) = default;
+
+    DiscreteDomain& operator=(DiscreteDomain&& x) = default;
+
+    constexpr bool operator==(DiscreteDomain const& other) const
+    {
+        return true;
+    }
+
+#if __cplusplus <= 201703L
+    // Shall not be necessary anymore in C++20
+    // `a!=b` shall be translated by the compiler to `!(a==b)`
+    constexpr bool operator!=(DiscreteDomain const& other) const
+    {
+        return !(*this == other);
+    }
+#endif
+
+    constexpr std::size_t size() const
+    {
+        return 1;
+    }
+
+    constexpr mlength_type extents() const noexcept
+    {
+        return {};
+    }
+
+    constexpr discrete_element_type front() const noexcept
+    {
+        return {};
+    }
+
+    constexpr discrete_element_type back() const noexcept
+    {
+        return {};
+    }
+
+    constexpr DiscreteDomain take_first(mlength_type n) const
+    {
+        return *this;
+    }
+
+    constexpr DiscreteDomain take_last(mlength_type n) const
+    {
+        return *this;
+    }
+
+    constexpr DiscreteDomain remove_first(mlength_type n) const
+    {
+        return *this;
+    }
+
+    constexpr DiscreteDomain remove_last(mlength_type n) const
+    {
+        return *this;
+    }
+
+    constexpr DiscreteDomain remove(mlength_type n1, mlength_type n2) const
+    {
+        return *this;
+    }
+
+    template <class... ODims>
+    constexpr DiscreteDomain restrict(DiscreteDomain<ODims...> const&) const
+    {
+        return *this;
+    }
+
+    constexpr bool empty() const noexcept
+    {
+        return false;
+    }
+
+    constexpr explicit operator bool()
+    {
+        return true;
+    }
+};
+
 template <class... QueryDDims, class... DDims>
 constexpr DiscreteDomain<QueryDDims...> select(DiscreteDomain<DDims...> const& domain)
 {
     return DiscreteDomain<QueryDDims...>(
             select<QueryDDims...>(domain.front()),
             select<QueryDDims...>(domain.extents()));
+}
+
+namespace detail {
+
+template <class T>
+struct ConvertTypeSeqToDiscreteDomain;
+
+template <class... DDims>
+struct ConvertTypeSeqToDiscreteDomain<detail::TypeSeq<DDims...>>
+{
+    using type = DiscreteDomain<DDims...>;
+};
+
+template <class T>
+using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDomain<T>::type;
+
+} // namespace detail
+
+template <class... DDimsA, class... DDimsB>
+constexpr auto remove_dims_of(
+        DiscreteDomain<DDimsA...> const& DDom_a,
+        DiscreteDomain<DDimsB...> const& DDom_b) noexcept
+{
+    using TagSeqA = detail::TypeSeq<DDimsA...>;
+    using TagSeqB = detail::TypeSeq<DDimsB...>;
+
+    using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
+    return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
 }
 
 template <class... QueryDDims, class... DDims>
@@ -278,13 +414,13 @@ ddc::Coordinate<QueryDDims...> rmax(DiscreteDomain<DDims...> const& domain) noex
     return ddc::Coordinate<QueryDDims...>(select<QueryDDims>(domain).rmax()...);
 }
 
-namespace ddc_detail {
+namespace detail {
 
 template <class QueryDDimSeq>
 struct Selection;
 
 template <class... QueryDDims>
-struct Selection<ddc_detail::TypeSeq<QueryDDims...>>
+struct Selection<detail::TypeSeq<QueryDDims...>>
 {
     template <class Domain>
     static constexpr auto select(Domain const& domain)
@@ -293,12 +429,12 @@ struct Selection<ddc_detail::TypeSeq<QueryDDims...>>
     }
 };
 
-} // namespace ddc_detail
+} // namespace detail
 
 template <class QueryDDimSeq, class... DDims>
 constexpr auto select_by_type_seq(DiscreteDomain<DDims...> const& domain)
 {
-    return ddc_detail::Selection<QueryDDimSeq>::select(domain);
+    return detail::Selection<QueryDDimSeq>::select(domain);
 }
 
 template <class DDim>

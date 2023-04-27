@@ -25,6 +25,7 @@ template<typename T, typename... X, typename ExecSpace, typename MemorySpace>
 void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> Ff,
 	     ddc::ChunkSpan<T, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> f)
 {
+	static_assert(std::is_same_v<T,float> || std::is_same_v<T,long> || std::is_same_v<T,double>,"Type T must be float, long or double.");
 	static_assert(Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,"MemorySpace has to be accessible for ExecutionSpace.");
 	ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(f);
 	

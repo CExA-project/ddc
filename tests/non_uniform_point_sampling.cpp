@@ -29,19 +29,19 @@ struct DimY;
 using DDimX = ddc::NonUniformPointSampling<DimX>;
 using DDimY = ddc::NonUniformPointSampling<DimY>;
 
-static std::array<double, 4> const array_points_x VALUES_X;
-static std::vector<double> const vector_points_x VALUES_X;
+std::array<double, 4> const array_points_x VALUES_X;
+std::vector<double> const vector_points_x VALUES_X;
 
-static std::vector<double> const vector_points_y VALUES_Y;
+std::vector<double> const vector_points_y VALUES_Y;
 
-ddc::DiscreteElement<DDimX> constexpr point_ix = ddc::DiscreteElement<DDimX>(2);
-ddc::Coordinate<DimX> constexpr point_rx = ddc::Coordinate<DimX>(0.3);
+ddc::DiscreteElement<DDimX> constexpr point_ix(2);
+ddc::Coordinate<DimX> constexpr point_rx(0.3);
 
-ddc::DiscreteElement<DDimY> constexpr point_iy = ddc::DiscreteElement<DDimY>(1);
-ddc::Coordinate<DimY> constexpr point_ry = ddc::Coordinate<DimY>(0.2);
+ddc::DiscreteElement<DDimY> constexpr point_iy(1);
+ddc::Coordinate<DimY> constexpr point_ry(0.2);
 
-ddc::DiscreteElement<DDimX, DDimY> constexpr point_ixy = ddc::DiscreteElement<DDimX, DDimY>(2, 1);
-ddc::Coordinate<DimX, DimY> constexpr point_rxy = ddc::Coordinate<DimX, DimY>(0.3, 0.2);
+ddc::DiscreteElement<DDimX, DDimY> constexpr point_ixy(2, 1);
+ddc::Coordinate<DimX, DimY> constexpr point_rxy(0.3, 0.2);
 
 } // namespace
 

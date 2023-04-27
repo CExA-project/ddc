@@ -37,6 +37,25 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, ddc::DiscreteDomai
 		odist = i==0 ? odist*(n[i]/2+1) : odist*n[i]; //Correct this
 	}
 	if constexpr(false) {} // Trick to get only else if
+	# if fftw_AVAIL 
+	else if constexpr(std::is_same<ExecSpace, Kokkos::Serial>::value) {
+		fftw_plan plan = fftw_plan_many_dft_r2c(x_mesh.rank(), 
+							n, 
+							1,
+							f.data(),
+							NULL,
+							1,
+							idist,
+							(fftw_complex*)Ff.data(),
+							NULL,
+							1,
+							odist,
+							FFTW_ESTIMATE);
+		fftw_execute(plan);
+		fftw_destroy_plan(plan);
+		std::cout << "performed with fftw";
+	}
+	# endif
 	# if fftw_omp_AVAIL 
 	else if constexpr(std::is_same<ExecSpace, Kokkos::OpenMP>::value) {
 		fftw_init_threads();
@@ -52,29 +71,10 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, ddc::DiscreteDomai
 							NULL,
 							1,
 							odist,
-							0);
+							FFTW_ESTIMATE);
 		fftw_execute(plan);
 		fftw_destroy_plan(plan);
 		std::cout << "performed with fftw_omp";
-	}
-	# endif
-	# if fftw_AVAIL 
-	else if constexpr(std::is_same<ExecSpace, Kokkos::Serial>::value) {
-		fftw_plan plan = fftw_plan_many_dft_r2c(x_mesh.rank(), 
-							n, 
-							1,
-							f.data(),
-							NULL,
-							1,
-							idist,
-							(fftw_complex*)Ff.data(),
-							NULL,
-							1,
-							odist,
-							0);
-		fftw_execute(plan);
-		fftw_destroy_plan(plan);
-		std::cout << "performed with fftw";
 	}
 	# endif
 	# if cufft_AVAIL 

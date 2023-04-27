@@ -95,7 +95,7 @@ static void TestFFT()
 	ddc::Chunk _Ff_host = ddc::Chunk(ddc::get_domain<DFDim<K<X>>...>(Ff), ddc::HostAllocator<std::complex<T>>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
 	ddc::deepcopy(Ff_host, Ff);
-	# if 1
+	# if 0
 	std::cout << "\n output:\n";
 	ddc::for_each(
         ddc::policies::serial_host,

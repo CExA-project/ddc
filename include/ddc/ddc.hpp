@@ -20,7 +20,7 @@
 #include "ddc/non_uniform_point_sampling.hpp"
 #include "ddc/rectilinear_domain.hpp"
 #include "ddc/uniform_point_sampling.hpp"
-#include "ddc/fourier_sampling.hpp"
+#include "ddc/periodic_sampling.hpp"
 
 // Algorithms
 #include "ddc/deepcopy.hpp"

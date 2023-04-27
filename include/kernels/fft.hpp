@@ -22,7 +22,7 @@ template <typename Dims>
 struct K;
 
 template<typename T, typename... X, typename ExecSpace, typename MemorySpace>
-void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, ddc::DiscreteDomain<ddc::FourierSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> Ff,
+void FFT(ExecSpace execSpace, ddc::ChunkSpan<std::complex<T>, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> Ff,
 	     ddc::ChunkSpan<T, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> f)
 {
 	static_assert(Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,"MemorySpace has to be accessible for ExecutionSpace.");

@@ -21,7 +21,7 @@ template <typename Dims>
 struct K;
 
 template <typename Kx>
-using DFDim = ddc::FourierSampling<Kx>;
+using DFDim = ddc::PeriodicSampling<Kx>;
 
 // LastSelector: returns a if Dim==Last, else b
 template <typename T, typename Dim, typename Last>

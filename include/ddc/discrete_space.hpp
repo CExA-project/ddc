@@ -175,12 +175,4 @@ DDC_INLINE_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space
     }
 }
 
-template <class... PointSampling>
-DDC_INLINE_FUNCTION Coordinate<typename PointSampling::continuous_dimension_type...> coordinate(
-        DiscreteElement<PointSampling...> const& c)
-{
-    return Coordinate<typename PointSampling::continuous_dimension_type...>(
-            discrete_space<PointSampling>().coordinate(select<PointSampling>(c))...);
-}
-
 } // namespace ddc

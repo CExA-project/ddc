@@ -278,19 +278,19 @@ Initial conditions</h1>
 <div class="line">            <a class="code" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain),</div>
 <div class="line">            DDC_LAMBDA(<a class="code" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> ixy) {</div>
 <div class="line">                <span class="keywordtype">double</span> <span class="keyword">const</span> x</div>
-<div class="line">                        = <a class="code" href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">ddc::coordinate</a>(ddc::select&lt;DDimX&gt;(ixy));</div>
+<div class="line">                        = <a class="code" href="namespaceddc.html#a45f6329b34e22297e68a64a1b2be9b90">ddc::coordinate</a>(ddc::select&lt;DDimX&gt;(ixy));</div>
 <div class="line">                <span class="keywordtype">double</span> <span class="keyword">const</span> y</div>
-<div class="line">                        = <a class="code" href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">ddc::coordinate</a>(ddc::select&lt;DDimY&gt;(ixy));</div>
+<div class="line">                        = <a class="code" href="namespaceddc.html#a45f6329b34e22297e68a64a1b2be9b90">ddc::coordinate</a>(ddc::select&lt;DDimY&gt;(ixy));</div>
 <div class="line">                ghosted_initial_temp(ixy)</div>
 <div class="line">                        = 9.999 * ((x * x + y * y) &lt; 0.25);</div>
 <div class="line">            });</div>
 <div class="ttc" id="anamespaceddc_1_1policies_html_a48db884faba3760360031c5c7657e9e1"><div class="ttname"><a href="namespaceddc_1_1policies.html#a48db884faba3760360031c5c7657e9e1">ddc::policies::parallel_device</a></div><div class="ttdeci">constexpr parallel_device_policy parallel_device</div><div class="ttdef"><b>Definition:</b> for_each.hpp:172</div></div>
-<div class="ttc" id="anamespaceddc_html_a2b5a5bffed9990912da5d2be92715f04"><div class="ttname"><a href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">ddc::coordinate</a></div><div class="ttdeci">ddc::Coordinate&lt; QueryDDims... &gt; coordinate(DiscreteDomain&lt; DDims... &gt; const &amp;domain, DiscreteElement&lt; QueryDDims... &gt; const &amp;icoord) noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:397</div></div>
+<div class="ttc" id="anamespaceddc_html_a45f6329b34e22297e68a64a1b2be9b90"><div class="ttname"><a href="namespaceddc.html#a45f6329b34e22297e68a64a1b2be9b90">ddc::coordinate</a></div><div class="ttdeci">DDC_INLINE_FUNCTION Coordinate&lt; CDim &gt; coordinate(DiscreteElement&lt; NonUniformPointSampling&lt; CDim &gt;&gt; const &amp;c)</div><div class="ttdef"><b>Definition:</b> non_uniform_point_sampling.hpp:137</div></div>
 <div class="ttc" id="anamespaceddc_html_a9f0c6cc2043c2e9bd07844e5f3b78951"><div class="ttname"><a href="namespaceddc.html#a9f0c6cc2043c2e9bd07844e5f3b78951">ddc::for_each</a></div><div class="ttdeci">void for_each(serial_host_policy, DiscreteDomain&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using the serial execution policy</div><div class="ttdef"><b>Definition:</b> for_each.hpp:101</div></div>
 <div class="ttc" id="anamespaceddc_html_classddc_1_1ChunkSpan"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition:</b> chunk_span.hpp:26</div></div>
 </div><!-- fragment --> <div class="fragment"><div class="line">    <span class="comment">// display the initial data</span></div>
 <div class="line">    <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
-<div class="line">    display(<a class="code" href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">ddc::coordinate</a>(time_domain.<a class="code" href="classddc_1_1DiscreteDomain.html#a83ec87abf1ea0f8281dec04acdc86760">front</a>()),</div>
+<div class="line">    display(<a class="code" href="namespaceddc.html#a45f6329b34e22297e68a64a1b2be9b90">ddc::coordinate</a>(time_domain.<a class="code" href="classddc_1_1DiscreteDomain.html#a83ec87abf1ea0f8281dec04acdc86760">front</a>()),</div>
 <div class="line">            ghosted_temp[x_domain][y_domain]);</div>
 <div class="line">    <span class="comment">// time of the iteration where the last output happened</span></div>
 <div class="line">    <a class="code" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> last_output = time_domain.<a class="code" href="classddc_1_1DiscreteDomain.html#a83ec87abf1ea0f8281dec04acdc86760">front</a>();</div>
@@ -359,7 +359,7 @@ Output</h2>
 <div class="fragment"><div class="line">        <span class="keywordflow">if</span> (iter - last_output &gt;= t_output_period) {</div>
 <div class="line">            last_output = iter;</div>
 <div class="line">            <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
-<div class="line">            display(<a class="code" href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">ddc::coordinate</a>(iter),</div>
+<div class="line">            display(<a class="code" href="namespaceddc.html#a45f6329b34e22297e68a64a1b2be9b90">ddc::coordinate</a>(iter),</div>
 <div class="line">                    ghosted_temp[x_domain][y_domain]);</div>
 <div class="line">        }</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md14"></a>
@@ -370,7 +370,7 @@ Final swap</h2>
 Final output</h1>
 <div class="fragment"><div class="line">    <span class="keywordflow">if</span> (last_output &lt; time_domain.<a class="code" href="classddc_1_1DiscreteDomain.html#a62a161736ea187bb47f77944c3978fa1">back</a>()) {</div>
 <div class="line">        <a class="code" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
-<div class="line">        display(<a class="code" href="namespaceddc.html#a2b5a5bffed9990912da5d2be92715f04">ddc::coordinate</a>(time_domain.<a class="code" href="classddc_1_1DiscreteDomain.html#a62a161736ea187bb47f77944c3978fa1">back</a>()),</div>
+<div class="line">        display(<a class="code" href="namespaceddc.html#a45f6329b34e22297e68a64a1b2be9b90">ddc::coordinate</a>(time_domain.<a class="code" href="classddc_1_1DiscreteDomain.html#a62a161736ea187bb47f77944c3978fa1">back</a>()),</div>
 <div class="line">                ghosted_temp[x_domain][y_domain]);</div>
 <div class="line">    }</div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a62a161736ea187bb47f77944c3978fa1"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a62a161736ea187bb47f77944c3978fa1">ddc::DiscreteDomain::back</a></div><div class="ttdeci">constexpr discrete_element_type back() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:120</div></div>

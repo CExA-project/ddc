@@ -302,8 +302,8 @@ $(document).ready(function(){initNavTree('discrete__element_8hpp_source.html',''
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>... OTags&gt;</div>
 <div class="line"><a name="l00262"></a><span class="lineno"><a class="line" href="classddc_1_1DiscreteElement.html#a2a12f0391407dac17b21044231053cdf">  262</a></span>&#160;    constexpr <span class="keyword">inline</span> <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&amp; <a class="code" href="classddc_1_1DiscreteElement.html#a2a12f0391407dac17b21044231053cdf">operator+=</a>(<a class="code" href="classddc_1_1DiscreteVector.html">DiscreteVector&lt;OTags...&gt;</a> <span class="keyword">const</span>&amp; rhs)</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    {</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        static_assert(type_seq_same_v&lt;tags_seq, detail::TypeSeq&lt;OTags...&gt;&gt;);</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        ((m_values[type_seq_rank_v&lt;Tags, tags_seq&gt;] += rhs.template get&lt;Tags&gt;()), ...);</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        static_assert(((type_seq_contains_v&lt;detail::TypeSeq&lt;OTags&gt;, tags_seq&gt;)&amp;&amp;...));</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        ((m_values[type_seq_rank_v&lt;OTags, tags_seq&gt;] += rhs.template get&lt;OTags&gt;()), ...);</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    }</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
@@ -321,8 +321,8 @@ $(document).ready(function(){initNavTree('discrete__element_8hpp_source.html',''
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>... OTags&gt;</div>
 <div class="line"><a name="l00281"></a><span class="lineno"><a class="line" href="classddc_1_1DiscreteElement.html#a5f796510cae96e22ed46799fb8d56987">  281</a></span>&#160;    constexpr <span class="keyword">inline</span> <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&amp; <a class="code" href="classddc_1_1DiscreteElement.html#a5f796510cae96e22ed46799fb8d56987">operator-=</a>(<a class="code" href="classddc_1_1DiscreteVector.html">DiscreteVector&lt;OTags...&gt;</a> <span class="keyword">const</span>&amp; rhs)</div>
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    {</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        static_assert(type_seq_same_v&lt;tags_seq, detail::TypeSeq&lt;OTags...&gt;&gt;);</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;        ((m_values[type_seq_rank_v&lt;Tags, tags_seq&gt;] -= rhs.template get&lt;Tags&gt;()), ...);</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        static_assert(((type_seq_contains_v&lt;detail::TypeSeq&lt;OTags&gt;, tags_seq&gt;)&amp;&amp;...));</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;        ((m_values[type_seq_rank_v&lt;OTags, tags_seq&gt;] -= rhs.template get&lt;OTags&gt;()), ...);</div>
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    }</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
@@ -401,54 +401,60 @@ $(document).ready(function(){initNavTree('discrete__element_8hpp_source.html',''
 <div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;Tags...&gt;</a> <span class="keyword">const</span>&amp; lhs,</div>
 <div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;        <a class="code" href="classddc_1_1DiscreteVector.html">DiscreteVector&lt;OTags...&gt;</a> <span class="keyword">const</span>&amp; rhs)</div>
 <div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;{</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    static_assert(type_seq_same_v&lt;detail::TypeSeq&lt;Tags...&gt;, detail::TypeSeq&lt;OTags...&gt;&gt;);</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tags...&gt;((uid&lt;Tags&gt;(lhs) + get&lt;Tags&gt;(rhs))...);</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;}</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;        <span class="keyword">class </span>Tag,</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;        <span class="keyword">class </span>IntegralType,</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;        <span class="keyword">class </span>= std::enable_if_t&lt;std::is_integral_v&lt;IntegralType&gt;&gt;,</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;        <span class="keyword">class </span>= std::enable_if_t&lt;!<a class="code" href="namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9d1">is_discrete_vector_v</a>&lt;IntegralType&gt;&gt;&gt;</div>
-<div class="line"><a name="l00373"></a><span class="lineno"><a class="line" href="namespaceddc.html#a33583feba1ff419e642485eae2caa140">  373</a></span>&#160;constexpr inline <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tag&gt; operator+(</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tag&gt; const&amp; lhs,</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;        IntegralType <span class="keyword">const</span>&amp; rhs)</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;{</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;Tag&gt;</a>(uid&lt;Tag&gt;(lhs) + rhs);</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;}</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160; </div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... Tags, <span class="keyword">class</span>... OTags&gt;</div>
-<div class="line"><a name="l00381"></a><span class="lineno"><a class="line" href="namespaceddc.html#af59fc4f9fca101f715faec7c9450ae7f">  381</a></span>&#160;constexpr <span class="keyword">inline</span> <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tags...&gt; <a class="code" href="namespaceddc.html#af59fc4f9fca101f715faec7c9450ae7f">operator-</a>(</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;Tags...&gt;</a> <span class="keyword">const</span>&amp; lhs,</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;        <a class="code" href="classddc_1_1DiscreteVector.html">DiscreteVector&lt;OTags...&gt;</a> <span class="keyword">const</span>&amp; rhs)</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;{</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    static_assert(type_seq_same_v&lt;detail::TypeSeq&lt;Tags...&gt;, detail::TypeSeq&lt;OTags...&gt;&gt;);</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tags...&gt;((uid&lt;Tags&gt;(lhs) - get&lt;Tags&gt;(rhs))...);</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;}</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;<span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;        <span class="keyword">class </span>Tag,</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;        <span class="keyword">class </span>IntegralType,</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;        <span class="keyword">class </span>= std::enable_if_t&lt;std::is_integral_v&lt;IntegralType&gt;&gt;,</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        <span class="keyword">class </span>= std::enable_if_t&lt;!<a class="code" href="namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9d1">is_discrete_vector_v</a>&lt;IntegralType&gt;&gt;&gt;</div>
-<div class="line"><a name="l00394"></a><span class="lineno"><a class="line" href="namespaceddc.html#a301096c36f0f92230e5e4764c99810a2">  394</a></span>&#160;constexpr inline <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tag&gt; operator-(</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tag&gt; const&amp; lhs,</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;        IntegralType <span class="keyword">const</span>&amp; rhs)</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;{</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;Tag&gt;</a>(uid&lt;Tag&gt;(lhs) - rhs);</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;}</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160; </div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160; </div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... Tags, <span class="keyword">class</span>... OTags&gt;</div>
-<div class="line"><a name="l00404"></a><span class="lineno"><a class="line" href="namespaceddc.html#aaceb94df01efd67a1384d002c8cd58fb">  404</a></span>&#160;constexpr <span class="keyword">inline</span> <a class="code" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;Tags...&gt; <a class="code" href="namespaceddc.html#af59fc4f9fca101f715faec7c9450ae7f">operator-</a>(</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;Tags...&gt;</a> <span class="keyword">const</span>&amp; lhs,</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;OTags...&gt;</a> <span class="keyword">const</span>&amp; rhs)</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;{</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;    static_assert(type_seq_same_v&lt;detail::TypeSeq&lt;Tags...&gt;, detail::TypeSeq&lt;OTags...&gt;&gt;);</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;Tags...&gt;((uid&lt;Tags&gt;(lhs) - uid&lt;Tags&gt;(rhs))...);</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;}</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160; </div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keyword">using</span> detail::TypeSeq;</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    static_assert(((type_seq_contains_v&lt;TypeSeq&lt;OTags&gt;, TypeSeq&lt;Tags...&gt;&gt;)&amp;&amp;...));</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tags...&gt; result(lhs);</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    result += rhs;</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;}</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160; </div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;<span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;        <span class="keyword">class </span>Tag,</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;        <span class="keyword">class </span>IntegralType,</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;        <span class="keyword">class </span>= std::enable_if_t&lt;std::is_integral_v&lt;IntegralType&gt;&gt;,</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;        <span class="keyword">class </span>= std::enable_if_t&lt;!<a class="code" href="namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9d1">is_discrete_vector_v</a>&lt;IntegralType&gt;&gt;&gt;</div>
+<div class="line"><a name="l00376"></a><span class="lineno"><a class="line" href="namespaceddc.html#a33583feba1ff419e642485eae2caa140">  376</a></span>&#160;constexpr inline <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tag&gt; operator+(</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tag&gt; const&amp; lhs,</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;        IntegralType <span class="keyword">const</span>&amp; rhs)</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;{</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;Tag&gt;</a>(uid&lt;Tag&gt;(lhs) + rhs);</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;}</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160; </div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... Tags, <span class="keyword">class</span>... OTags&gt;</div>
+<div class="line"><a name="l00384"></a><span class="lineno"><a class="line" href="namespaceddc.html#af59fc4f9fca101f715faec7c9450ae7f">  384</a></span>&#160;constexpr <span class="keyword">inline</span> <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tags...&gt; <a class="code" href="namespaceddc.html#af59fc4f9fca101f715faec7c9450ae7f">operator-</a>(</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;Tags...&gt;</a> <span class="keyword">const</span>&amp; lhs,</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        <a class="code" href="classddc_1_1DiscreteVector.html">DiscreteVector&lt;OTags...&gt;</a> <span class="keyword">const</span>&amp; rhs)</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;{</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    <span class="keyword">using</span> detail::TypeSeq;</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;    static_assert(((type_seq_contains_v&lt;TypeSeq&lt;OTags&gt;, TypeSeq&lt;Tags...&gt;&gt;)&amp;&amp;...));</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tags...&gt; result(lhs);</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    result -= rhs;</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;}</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160; </div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;<span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;        <span class="keyword">class </span>Tag,</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;        <span class="keyword">class </span>IntegralType,</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        <span class="keyword">class </span>= std::enable_if_t&lt;std::is_integral_v&lt;IntegralType&gt;&gt;,</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        <span class="keyword">class </span>= std::enable_if_t&lt;!<a class="code" href="namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9d1">is_discrete_vector_v</a>&lt;IntegralType&gt;&gt;&gt;</div>
+<div class="line"><a name="l00400"></a><span class="lineno"><a class="line" href="namespaceddc.html#a301096c36f0f92230e5e4764c99810a2">  400</a></span>&#160;constexpr inline <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tag&gt; operator-(</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;Tag&gt; const&amp; lhs,</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;        IntegralType <span class="keyword">const</span>&amp; rhs)</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;{</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;Tag&gt;</a>(uid&lt;Tag&gt;(lhs) - rhs);</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;}</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160; </div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160; </div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span>... Tags, <span class="keyword">class</span>... OTags&gt;</div>
+<div class="line"><a name="l00410"></a><span class="lineno"><a class="line" href="namespaceddc.html#aaceb94df01efd67a1384d002c8cd58fb">  410</a></span>&#160;constexpr <span class="keyword">inline</span> <a class="code" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;Tags...&gt; <a class="code" href="namespaceddc.html#af59fc4f9fca101f715faec7c9450ae7f">operator-</a>(</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;Tags...&gt;</a> <span class="keyword">const</span>&amp; lhs,</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;        <a class="code" href="classddc_1_1DiscreteElement.html">DiscreteElement&lt;OTags...&gt;</a> <span class="keyword">const</span>&amp; rhs)</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;{</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;    static_assert(type_seq_same_v&lt;detail::TypeSeq&lt;Tags...&gt;, detail::TypeSeq&lt;OTags...&gt;&gt;);</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;Tags...&gt;((uid&lt;Tags&gt;(lhs) - uid&lt;Tags&gt;(rhs))...);</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;}</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160; </div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html"><div class="ttname"><a href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:124</div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_a0a804c015b46f3b65ede7c13c1dd5d3b"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a0a804c015b46f3b65ede7c13c1dd5d3b">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">constexpr DiscreteElement(DiscreteElement const &amp;)=default</div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_a0cf027576a58528f22ee97637a0bbe5a"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a0cf027576a58528f22ee97637a0bbe5a">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">constexpr DiscreteElement(DiscreteElement&lt; OTags... &gt; const &amp;other) noexcept</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:158</div></div>
@@ -469,7 +475,7 @@ $(document).ready(function(){initNavTree('discrete__element_8hpp_source.html',''
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_ada5a46bb1667b7147de0d1dbf7f0aeff"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#ada5a46bb1667b7147de0d1dbf7f0aeff">ddc::DiscreteElement::uid</a></div><div class="ttdeci">constexpr std::enable_if_t&lt; N==1, value_type const  &amp; &gt; uid() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:226</div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_ae609019539428954c751ad3a91cf8901"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#ae609019539428954c751ad3a91cf8901">ddc::DiscreteElement::operator=</a></div><div class="ttdeci">constexpr DiscreteElement &amp; operator=(DiscreteElement&lt; OTags... &gt; &amp;&amp;other) noexcept</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:185</div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_afa014d027718fe00a0ce0551cf7894e8"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#afa014d027718fe00a0ce0551cf7894e8">ddc::DiscreteElement::uid</a></div><div class="ttdeci">constexpr std::enable_if_t&lt; N==1, value_type &amp; &gt; uid() noexcept</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:220</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteVector_html"><div class="ttname"><a href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:208</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteVector_html"><div class="ttname"><a href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:228</div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:9</div></div>
 <div class="ttc" id="anamespaceddc_html_a1e2daade1cf2aa66fd6772beb01ac888"><div class="ttname"><a href="namespaceddc.html#a1e2daade1cf2aa66fd6772beb01ac888">ddc::operator!=</a></div><div class="ttdeci">constexpr bool operator!=(AlignedAllocator&lt; T, NT &gt; const &amp;, AlignedAllocator&lt; U, NU &gt; const &amp;) noexcept</div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:63</div></div>
 <div class="ttc" id="anamespaceddc_html_a2decbcf4704083e24cf0a7e775d3602f"><div class="ttname"><a href="namespaceddc.html#a2decbcf4704083e24cf0a7e775d3602f">ddc::operator&lt;&lt;</a></div><div class="ttdeci">std::ostream &amp; operator&lt;&lt;(std::ostream &amp;out, DiscreteElement&lt;&gt; const &amp;)</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:300</div></div>
@@ -486,7 +492,7 @@ $(document).ready(function(){initNavTree('discrete__element_8hpp_source.html',''
 <div class="ttc" id="anamespaceddc_html_ab5e4ebc24acb30e1e701d57af71150cd"><div class="ttname"><a href="namespaceddc.html#ab5e4ebc24acb30e1e701d57af71150cd">ddc::select</a></div><div class="ttdeci">constexpr DiscreteDomain&lt; QueryDDims... &gt; select(DiscreteDomain&lt; DDims... &gt; const &amp;domain)</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:343</div></div>
 <div class="ttc" id="anamespaceddc_html_ab9c4c82344441d78a0d129c7fa9e3ab9"><div class="ttname"><a href="namespaceddc.html#ab9c4c82344441d78a0d129c7fa9e3ab9">ddc::operator==</a></div><div class="ttdeci">constexpr bool operator==(AlignedAllocator&lt; T, NT &gt; const &amp;, AlignedAllocator&lt; U, NU &gt; const &amp;) noexcept</div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:57</div></div>
 <div class="ttc" id="anamespaceddc_html_ade4664b57c283f038e46dfbffecbda5b"><div class="ttname"><a href="namespaceddc.html#ade4664b57c283f038e46dfbffecbda5b">ddc::operator&gt;</a></div><div class="ttdeci">constexpr bool operator&gt;(DiscreteElement&lt; Tag &gt; const &amp;lhs, DiscreteElement&lt; Tag &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:346</div></div>
-<div class="ttc" id="anamespaceddc_html_af59fc4f9fca101f715faec7c9450ae7f"><div class="ttname"><a href="namespaceddc.html#af59fc4f9fca101f715faec7c9450ae7f">ddc::operator-</a></div><div class="ttdeci">constexpr DiscreteElement&lt; Tags... &gt; operator-(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteVector&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:381</div></div>
+<div class="ttc" id="anamespaceddc_html_af59fc4f9fca101f715faec7c9450ae7f"><div class="ttname"><a href="namespaceddc.html#af59fc4f9fca101f715faec7c9450ae7f">ddc::operator-</a></div><div class="ttdeci">constexpr DiscreteElement&lt; Tags... &gt; operator-(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteVector&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:384</div></div>
 <div class="ttc" id="astructddc_1_1IsDiscreteElement_html"><div class="ttname"><a href="structddc_1_1IsDiscreteElement.html">ddc::IsDiscreteElement</a></div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

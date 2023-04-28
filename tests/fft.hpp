@@ -53,8 +53,8 @@ constexpr auto policy = []{ if constexpr (std::is_same<ExecSpace,Kokkos::Serial>
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename... X>
 static void TestFFT()
 {
-	const Tin a		= -5;
-	const Tin b		= 5;
+	const double a		= -5;
+	const double b		= 5;
     const std::size_t Nx = 16; // Optimal value is (b-a)^2/(2*pi)
 
 	DDom<DDim<X>...> const x_mesh = DDom<DDim<X>...>(

@@ -18,6 +18,26 @@
 #include <hipfft/hipfft.h>
 # endif
 
+// is_complex : trait to determine if type is std::complex<something>
+template<typename T>
+struct is_complex : std::false_type {};
+
+template<typename T>
+struct is_complex<std::complex<T>> : std::true_type {};
+
+// transform_type : trait to determine the type of transformation (R2Z, Z2R, Z2Z...)
+enum class TransformType { R2R, R2C, C2R };
+
+template<typename T1, typename T2>
+struct transform_type { static constexpr TransformType value = TransformType::R2R; };
+
+template<typename T1, typename T2>
+struct transform_type<T1,std::complex<T2>> { static constexpr TransformType value = TransformType::R2C; };
+
+template<typename T1, typename T2>
+struct transform_type<std::complex<T1>,T2> { static constexpr TransformType value = TransformType::C2R; };
+
+
 template <typename Dims>
 struct K;
 
@@ -33,9 +53,10 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::Peri
 	int idist = 1;
 	int odist = 1;
 	for(int i=0;i<x_mesh.rank();i++) {	
-		idist = idist*n[i];
-		odist = i==0 ? odist*(n[i]/2+1) : odist*n[i]; //Correct this
+		idist = transform_type<Tin,Tout>::value==TransformType::C2R&&i==0 ? idist*(n[i]/2+1) : idist*n[i];
+		odist = transform_type<Tin,Tout>::value==TransformType::R2C&&i==0 ? odist*(n[i]/2+1) : odist*n[i];
 	}
+
 	if constexpr(false) {} // Trick to get only else if
 	# if fftw_AVAIL 
 	else if constexpr(std::is_same<ExecSpace, Kokkos::Serial>::value) {

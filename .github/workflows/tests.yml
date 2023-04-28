@@ -46,21 +46,21 @@ jobs:
           -t test_env_image \
           docker/test_env
     - name: Publish test_env artifact for current SHA
-      if: ${{ needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |
         echo "test_env_image=ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7}" >> $GITHUB_ENV
         docker push ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7}
     - name: Create test_env docker artifact
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       run: |
         echo "test_env_image=test_env_image" >> $GITHUB_ENV
         docker save test_env_image > test_env.tar
     - name: Publish
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/test_env
     - name: Save test_env docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       uses: actions/upload-artifact@v3
       with:
         name: test_env-artifact
@@ -90,21 +90,21 @@ jobs:
           -t jammy_env_image \
           docker/jammy_env
     - name: Publish jammy_env artifact for current SHA
-      if: ${{ needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |
         echo "jammy_image=ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7}" >> $GITHUB_ENV
         docker push ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7}
     - name: Create jammy_env artifact
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       run: |
         echo "jammy_image=jammy_env_image" >> $GITHUB_ENV
         docker save jammy_env_image > jammy_env.tar
     - name: Publish
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/jammy_env
     - name: Save jammy_env docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       uses: actions/upload-artifact@v3
       with:
         name: jammy_env-artifact
@@ -147,12 +147,12 @@ jobs:
         large-packages: true
         swap-storage: true
     - name: Collect test_env docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       uses: actions/download-artifact@v3
       with:
         name: test_env-artifact
     - name: Load test_env docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       run: |
         docker load < test_env.tar
     - name: Build
@@ -187,12 +187,12 @@ jobs:
         large-packages: true
         swap-storage: true
     - name: Collect test_env docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       uses: actions/download-artifact@v3
       with:
         name: test_env-artifact
     - name: Load test_env docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       run: |
         docker load < test_env.tar
     - name: Build
@@ -227,12 +227,12 @@ jobs:
         large-packages: true
         swap-storage: true
     - name: Collect jammy_env docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       uses: actions/download-artifact@v3
       with:
         name: jammy_env-artifact
     - name: Load jammy_env docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       run: |
         docker load < jammy_env.tar
     - name: Build
@@ -269,12 +269,12 @@ jobs:
         large-packages: true
         swap-storage: true
     - name: Collect test_env docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       uses: actions/download-artifact@v3
       with:
         name: test_env-artifact
     - name: Load test_env docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       run: |
         docker load < test_env.tar
     - name: Build

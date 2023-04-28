@@ -6,6 +6,8 @@ on:
 jobs:
   docker-build:
     runs-on: ubuntu-latest
+    outputs:
+      doxygen_image: ${{ steps.image_output.outputs.doxygen_image }}
     steps:
     - name: Checkout built branch
       uses: actions/checkout@v3
@@ -19,17 +21,31 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
           -t doxygen_image \
           docker/doxygen
+    - name: Publish doxygen artifact for current SHA
+      if: ${{ github.repository == Maison-de-la-Simulation/ddc }}
+      run: |
+        echo "doxygen_image=ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}" >> $GITHUB_ENV
+        docker push ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}
+    - name: Create doxygen docker artifact
+      if: ${{ github.repository != Maison-de-la-Simulation/ddc }}
+      run: |
+        echo "doxygen_image=doxygen_image" >> $GITHUB_ENV
         docker save doxygen_image > doxygen.tar
     - name: Publish
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/doxygen
     - name: Save doxygen docker
+      if: ${{ github.repository != Maison-de-la-Simulation/ddc }}
       uses: actions/upload-artifact@v3
       with:
         name: doxygen-artifact
         path: doxygen.tar
         retention-days: 1
+    - name: Output image
+      id: image_output
+      run: |
+        echo "doxygen_image=${doxygen_image}" >> "$GITHUB_OUTPUT"
   pages:
     runs-on: ubuntu-latest
     needs: docker-build
@@ -40,12 +56,16 @@ jobs:
         fetch-depth: 0
         submodules: true
     - name: Collect doxygen docker
+      if: ${{ github.repository != Maison-de-la-Simulation/ddc }}
       uses: actions/download-artifact@v3
       with:
         name: doxygen-artifact
-    - name: Build site
+    - name: Load doxygen docker
+      if: ${{ github.repository != Maison-de-la-Simulation/ddc }}
       run: |
         docker load < doxygen.tar
+    - name: Build site
+      run: |
         cat<<-EOF > run.sh
           set -xe 
           cmake -DBUILD_DOCUMENTATION=ON -DDDC_BUILD_PDI_WRAPPER=OFF /src
@@ -54,7 +74,7 @@ jobs:
         EOF
         mkdir docs_out
         chmod a+rwx docs_out
-        docker run -v ${PWD}:/src doxygen_image bash /src/run.sh
+        docker run -v ${PWD}:/src ${{ needs.docker-build.outputs.doxygen_image }} bash /src/run.sh
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       run: |

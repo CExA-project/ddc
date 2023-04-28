@@ -76,7 +76,7 @@ $(document).ready(function(){initNavTree('dual__discretization_8hpp_source.html'
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#if defined(__CUDACC__)</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">using</span> DDimImplDevice = <span class="keyword">typename</span> DDim::template Impl&lt;Kokkos::CudaSpace&gt;;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#elif defined(__HIPCC__)</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">using</span> DDimImplDevice = <span class="keyword">typename</span> DDim::template Impl&lt;Kokkos::Experimental::HIPSpace&gt;;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">using</span> DDimImplDevice = <span class="keyword">typename</span> DDim::template Impl&lt;Kokkos::HIPSpace&gt;;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#else</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">using</span> DDimImplDevice = DDimImplHost;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#endif</span></div>
@@ -107,7 +107,7 @@ $(document).ready(function(){initNavTree('dual__discretization_8hpp_source.html'
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <span class="keywordflow">return</span> m_device_on_host;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        }</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#elif defined(__HIPCC__)</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;MemorySpace, Kokkos::Experimental::HIPSpace&gt;) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;MemorySpace, Kokkos::HIPSpace&gt;) {</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">return</span> m_device_on_host;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        }</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif</span></div>

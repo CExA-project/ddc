@@ -127,7 +127,7 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">// Global GPU variable viewing data owned by the CPU</span></div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// WARNING: do not put the `inline` keyword, seems to fail on MI100 rocm/4.5.0</span></div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;__constant__ gpu_proxy&lt;ddim_impl_t&lt;DDim, Kokkos::Experimental::HIPSpace&gt;&gt; g_discrete_space_device;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;__constant__ gpu_proxy&lt;ddim_impl_t&lt;DDim, Kokkos::HIPSpace&gt;&gt; g_discrete_space_device;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> display_discretization_store(std::ostream&amp; os)</div>
@@ -201,7 +201,7 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="keywordflow">return</span> *detail::g_discrete_space_device&lt;DDim&gt;;</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    }</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="preprocessor">#elif defined(__HIPCC__)</span></div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;MemorySpace, Kokkos::Experimental::HIPSpace&gt;) {</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;MemorySpace, Kokkos::HIPSpace&gt;) {</div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <span class="keywordflow">return</span> *detail::g_discrete_space_device&lt;DDim&gt;;</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    }</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="preprocessor">#endif</span></div>

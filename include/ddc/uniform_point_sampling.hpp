@@ -56,53 +56,21 @@ public:
 
         template <class OriginMemorySpace>
         explicit Impl(Impl<OriginMemorySpace> const& impl)
+            : m_origin(impl.m_origin)
+            , m_step(impl.m_step)
         {
-            m_origin = impl.m_origin;
-            m_step = impl.m_step;
         }
 
         Impl(Impl&&) = default;
 
         /** @brief Construct a `Impl` from a point and a spacing step.
-     *
-     * @param origin the real coordinate of mesh coordinate 0
-     * @param step   the real distance between two points of mesh distance 1
-     */
+         *
+         * @param origin the real coordinate of mesh coordinate 0
+         * @param step   the real distance between two points of mesh distance 1
+         */
         constexpr Impl(continuous_element_type origin, double step) : m_origin(origin), m_step(step)
         {
             assert(step > 0);
-        }
-
-        /** @brief Construct a `Impl` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a number of points `n`.
-     *
-     * @param a the coordinate of a first real point (will have mesh coordinate 0)
-     * @param b the coordinate of the second real point (will have mesh coordinate `n-1`)
-     * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
-     * 
-     * @deprecated use the version accepting a vector for n instead
-     */
-        [[deprecated(
-                "Use the version accepting a vector for n "
-                "instead.")]] constexpr Impl(continuous_element_type a, continuous_element_type b, std::size_t n)
-            : m_origin(a)
-            , m_step((b - a) / (n - 1))
-        {
-            assert(a < b);
-            assert(n > 1);
-        }
-
-        /** @brief Construct a `Impl` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a number of points `n`.
-     * 
-     * @param a the coordinate of a first real point (will have mesh coordinate 0)
-     * @param b the coordinate of the second real point (will have mesh coordinate `n-1`)
-     * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
-     */
-        constexpr Impl(continuous_element_type a, continuous_element_type b, discrete_vector_type n)
-            : m_origin(a)
-            , m_step((b - a) / (n - 1))
-        {
-            assert(a < b);
-            assert(n > 1);
         }
 
         ~Impl() = default;
@@ -245,6 +213,13 @@ std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
                << " )";
 }
 
+template <class CDim>
+DDC_INLINE_FUNCTION Coordinate<CDim> coordinate(
+        DiscreteElement<UniformPointSampling<CDim>> const& c)
+{
+    return discrete_space<UniformPointSampling<CDim>>().coordinate(c);
+}
+
 /// @brief Lower bound index of the mesh
 template <class DDim>
 DDC_INLINE_FUNCTION std::
@@ -268,13 +243,6 @@ template <class DDim>
 DDC_INLINE_FUNCTION std::enable_if_t<is_uniform_sampling_v<DDim>, double> step() noexcept
 {
     return discrete_space<DDim>().step();
-}
-
-template <class CDim>
-DDC_INLINE_FUNCTION constexpr Coordinate<CDim> coordinate(
-        DiscreteElement<UniformPointSampling<CDim>> const& c)
-{
-    return discrete_space<UniformPointSampling<CDim>>().coordinate(c);
 }
 
 template <class CDim>

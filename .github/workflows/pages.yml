@@ -32,23 +32,22 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
           -t doxygen_image \
           docker/doxygen
-        echo "${{ needs.id_repo.outputs.in_base_repo }}"
     - name: Publish doxygen artifact for current SHA
-      if: ${{ needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |
         echo "doxygen_image=ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}" >> $GITHUB_ENV
         docker push ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}
     - name: Create doxygen docker artifact
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       run: |
         echo "doxygen_image=doxygen_image" >> $GITHUB_ENV
         docker save doxygen_image > doxygen.tar
     - name: Publish
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/doxygen
     - name: Save doxygen docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       uses: actions/upload-artifact@v3
       with:
         name: doxygen-artifact
@@ -68,12 +67,12 @@ jobs:
         fetch-depth: 0
         submodules: true
     - name: Collect doxygen docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       uses: actions/download-artifact@v3
       with:
         name: doxygen-artifact
     - name: Load doxygen docker
-      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}
       run: |
         docker load < doxygen.tar
     - name: Build site
@@ -88,7 +87,7 @@ jobs:
         chmod a+rwx docs_out
         docker run -v ${PWD}:/src ${{ needs.docker-build.outputs.doxygen_image }} bash /src/run.sh
     - name: Publish site
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |
         git worktree add -B gh-pages public remotes/origin/gh-pages
         find public -mindepth 1 -maxdepth 1 '!' -name .git -exec rm -rf '{}' '+'

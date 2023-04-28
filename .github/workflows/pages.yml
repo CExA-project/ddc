@@ -22,10 +22,8 @@ jobs:
           -t doxygen_image \
           docker/doxygen
         echo "${{ github.repository }}"
-        echo "${{ github.event.repository.name }}"
-        echo "${{ github.event.organization.name }}"
-        echo "${{ github.event.sender.name }}"
-        echo "${{ github.event.pull_request.head.repo.name }}"
+        echo "${{ github.event.repository.full_name }}"
+        echo "${{ github.event.pull_request.head.repo.full_name }}"
     - name: Publish doxygen artifact for current SHA
       if: ${{ github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |

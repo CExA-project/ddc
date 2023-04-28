@@ -13,6 +13,7 @@
 #include "ddc/kokkos_allocator.hpp"
 
 // Discretizations
+#include "ddc/coordinate_md.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
 #include "ddc/discrete_space.hpp"
@@ -32,5 +33,3 @@
 #if defined(DDC_BUILD_PDI_WRAPPER)
 #include "ddc/pdi.hpp"
 #endif
-
-using namespace ddc;

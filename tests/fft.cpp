@@ -37,49 +37,96 @@ TEST(GPUMathToolsParallelDevice, HipHelloWorld)
 }
 # endif
 
-TEST(FFTSerialHost, 1D)
+TEST(FFTSerialHost, R2C_1D)
+{
+	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, float, std::complex<float>, RDimX>();
+}
+
+TEST(FFTSerialHost, R2C_2D)
+{
+	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, float, std::complex<float>, RDimX, RDimY>();
+}
+
+TEST(FFTSerialHost, R2C_3D)
+{
+	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, float, std::complex<float>, RDimX, RDimY, RDimZ>();
+}
+
+#if fftw_omp_AVAIL
+TEST(FFTParallelHost, R2C_1D)
+{
+	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, float, std::complex<float>, RDimX>();
+}
+
+TEST(FFTParallelHost, R2C_2D)
+{
+	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, float, std::complex<float>, RDimX, RDimY>();
+}
+
+TEST(FFTParallelHost, R2C_3D)
+{
+	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, float, std::complex<float>, RDimX, RDimY, RDimZ>();
+}
+#endif
+
+TEST(FFTParallelDevice, R2C_1D)
+{
+	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, float, std::complex<float>, RDimX>();
+}
+
+TEST(FFTParallelDevice, R2C_2D)
+{
+	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, float, std::complex<float>, RDimX, RDimY>();
+}
+
+TEST(FFTParallelDevice, R2C_3D)
+{
+	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, float, std::complex<float>, RDimX, RDimY, RDimZ>();
+}
+
+TEST(FFTSerialHost, D2Z_1D)
 {
 	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, std::complex<double>, RDimX>();
 }
 
-TEST(FFTSerialHost, 2D)
+TEST(FFTSerialHost, D2Z_2D)
 {
 	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, std::complex<double>, RDimX, RDimY>();
 }
 
-TEST(FFTSerialHost, 3D)
+TEST(FFTSerialHost, D2Z_3D)
 {
 	TestFFT<Kokkos::Serial, Kokkos::Serial::memory_space, double, std::complex<double>, RDimX, RDimY, RDimZ>();
 }
 
 #if fftw_omp_AVAIL
-TEST(FFTParallelHost, 1D)
+TEST(FFTParallelHost, D2Z_1D)
 {
 	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, std::complex<double>, RDimX>();
 }
 
-TEST(FFTParallelHost, 2D)
+TEST(FFTParallelHost, D2Z_2D)
 {
 	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, std::complex<double>, RDimX, RDimY>();
 }
 
-TEST(FFTParallelHost, 3D)
+TEST(FFTParallelHost, D2Z_3D)
 {
 	TestFFT<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, std::complex<double>, RDimX, RDimY, RDimZ>();
 }
 #endif
 
-TEST(FFTParallelDevice, 1D)
+TEST(FFTParallelDevice, D2Z_1D)
 {
 	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, std::complex<double>, RDimX>();
 }
 
-TEST(FFTParallelDevice, 2D)
+TEST(FFTParallelDevice, D2Z_2D)
 {
 	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, std::complex<double>, RDimX, RDimY>();
 }
 
-TEST(FFTParallelDevice, 3D)
+TEST(FFTParallelDevice, D2Z_3D)
 {
 	TestFFT<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, double, std::complex<double>, RDimX, RDimY, RDimZ>();
 }

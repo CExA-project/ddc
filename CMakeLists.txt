@@ -221,11 +221,13 @@ install(
 # Link library to DDC
 
 if( FFTW_FOUND ) 
+	target_link_libraries( DDC INTERFACE FFTW::Float )
 	target_link_libraries( DDC INTERFACE FFTW::Double )
 	add_compile_definitions(fftw_AVAIL)
 endif()
 
 if( FFTW_FOUND AND ${Kokkos_ENABLE_OPENMP}) 
+	target_link_libraries( DDC INTERFACE FFTW::FloatOpenMP )
 	target_link_libraries( DDC INTERFACE FFTW::DoubleOpenMP )
 	add_compile_definitions(fftw_omp_AVAIL)
 endif()

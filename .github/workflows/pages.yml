@@ -1,7 +1,7 @@
 name: pages
 on:
   push:
-    branches: [ Maison-de-la-Simulation/ddc/main, 106-docker-artifact ]
+    branches: [ Maison-de-la-Simulation/ddc/main ]
   pull_request:
 jobs:
   id_repo:

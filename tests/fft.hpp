@@ -79,6 +79,10 @@ static void TestFFT()
 	ddc::ChunkSpan Ff = _Ff.span_view();
 	FFT(ExecSpace(), Ff, f);
 
+	// ddc::Chunk _FFf = ddc::Chunk(x_mesh, Allocator<MemorySpace,Tin>());
+	// ddc::ChunkSpan FFf = _FFf.span_view();
+	// FFT(ExecSpace(), FFf, Ff);
+
 	ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan f_host = _f_host.span_view();
 	ddc::deepcopy(f_host, f);
@@ -104,6 +108,20 @@ static void TestFFT()
 			(std::cout << ... << coordinate(ddc::select<DFDim<K<X>>>(e))) << "->" << abs(Ff_host(e))*pow((b-a)/Nx/sqrt(2*M_PI),sizeof...(X)) << " " << exp(-(pow(coordinate(ddc::select<DFDim<K<X>>>(e)),2) + ...)/2) << ", ";
 	});
 	# endif
+
+	// ddc::Chunk _FFf_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(FFf), ddc::HostAllocator<Tin>());
+    // ddc::ChunkSpan FFf_host = _FFf_host.span_view();
+	// ddc::deepcopy(FFf_host, FFf);
+	# if 0
+	std::cout << "\n iFFT(FFT):\n";
+	ddc::for_each(
+        ddc::policies::serial_host,
+        ddc::get_domain<DDim<X>...>(FFf_host),
+        [=](DElem<DDim<X>...> const e) {
+			(std::cout << ... << coordinate(ddc::select<DDim<X>>(e))) << "->" << abs(FFf_host(e))*pow(2*M_PI,sizeof...(X)) << " " << exp(-(pow(coordinate(ddc::select<DDim<X>>(e)),2) + ...)/2) << ", ";
+	});
+	# endif
+
 	double criterion = sqrt(ddc::transform_reduce(
 		ddc::get_domain<DFDim<K<X>>...>(Ff_host),
 		0.,

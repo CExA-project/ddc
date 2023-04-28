@@ -118,7 +118,7 @@ cufftResult _cufftExec(ArgType... args) {
   else if constexpr (transformType==TransformType::C2R&&std::is_same_v<typename base_type<Tout>::type,float>)
 	return cufftExecC2R(args...);
   else if constexpr (transformType==TransformType::C2R&&std::is_same_v<typename base_type<Tout>::type,double>)
-	return cufftExeZ2D(args...);
+	return cufftExecZ2D(args...);
   // else constexpr
   //   static_assert(false, "Transform type not supported");
 }
@@ -127,19 +127,17 @@ cufftResult _cufftExec(ArgType... args) {
 template <typename Dims>
 struct K;
 
-template<typename Tin, typename Tout, typename... X, typename ExecSpace, typename MemorySpace>
-void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> Ff,
-	     ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> f)
+// FFT_core -> TODO : privatize
+template<typename Tin, typename Tout, typename ExecSpace, typename MemorySpace, typename... X>
+void FFT_core(ExecSpace execSpace, Tout* out_data, Tin* in_data, int* n)
 {
 	static_assert(std::is_same_v<typename base_type<Tin>::type,float> || std::is_same_v<typename base_type<Tin>::type,double>,"Base type of Tin (and Tout) must be float or double.");
 	static_assert(std::is_same_v<typename base_type<Tin>::type,typename base_type<Tout>::type>,"Types Tin and Tout must be based on same type (float or double)");
 	static_assert(Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,"MemorySpace has to be accessible for ExecutionSpace.");
-	ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(f);
 	
-	int n[x_mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(x_mesh.extents())...};
 	int idist = 1;
 	int odist = 1;
-	for(int i=0;i<x_mesh.rank();i++) {	
+	for(int i=0;i<sizeof...(X);i++) {	
 		idist = transform_type<Tin,Tout>::value==TransformType::C2R&&i==0 ? idist*(n[i]/2+1) : idist*n[i];
 		odist = transform_type<Tin,Tout>::value==TransformType::R2C&&i==0 ? odist*(n[i]/2+1) : odist*n[i];
 	}
@@ -147,14 +145,14 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::Peri
 	if constexpr(false) {} // Trick to get only else if
 	# if fftw_AVAIL 
 	else if constexpr(std::is_same<ExecSpace, Kokkos::Serial>::value) {
-		_fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin,Tout>((int)x_mesh.rank(), 
+		_fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin,Tout>((int)sizeof...(X), 
 							n, 
 							1,
-							f.data(),
+							reinterpret_cast<typename _fftw_type<Tin>::type*>(in_data),
 							(int*)NULL,
 							1,
 							idist,
-							reinterpret_cast<typename _fftw_type<Tout>::type*>(Ff.data()),
+							reinterpret_cast<typename _fftw_type<Tout>::type*>(out_data),
 							(int*)NULL,
 							1,
 							odist,
@@ -169,14 +167,14 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::Peri
 		execIfFloat(Tin,fftwf_init_threads(),fftw_init_threads())
 		execIfFloat(Tin,fftwf_plan_with_nthreads(ExecSpace::concurrency()),fftw_plan_with_nthreads(ExecSpace::concurrency()))
 		fftw_plan_with_nthreads(ExecSpace::concurrency());
-		_fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin,Tout>((int)x_mesh.rank(), 
+		_fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin,Tout>((int)sizeof...(X), 
 							n, 
 							1,
-							f.data(),
+							reinterpret_cast<typename _fftw_type<Tin>::type*>(in_data),
 							(int*)NULL,
 							1,
 							idist,
-							reinterpret_cast<typename _fftw_type<Tout>::type*>(Ff.data()),
+							reinterpret_cast<typename _fftw_type<Tout>::type*>(out_data),
 							(int*)NULL,
 							1,
 							odist,
@@ -194,7 +192,7 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::Peri
 		cufftResult cufft_rt = cufftCreate(&plan);
 		cufftSetStream(plan, stream);
 		cufft_rt = cufftPlanMany(&plan, // plan handle
-							 x_mesh.rank(),
+							 sizeof...(X),
 							 n, // Nx, Ny...
 							 NULL,
 							 1,
@@ -208,7 +206,7 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::Peri
 		if(cufft_rt != CUFFT_SUCCESS)
 			throw std::runtime_error("cufftPlan1d failed");
 
-		cufft_rt = _cufftExec<Tin,Tout>(plan, f.data(), reinterpret_cast<typename _cufft_type<Tout>::type*>(Ff.data()));
+		cufft_rt = _cufftExec<Tin,Tout>(plan, reinterpret_cast<typename _cufft_type<Tin>::type*>(in_data), reinterpret_cast<typename _cufft_type<Tout>::type*>(out_data));
 		if(cufft_rt != CUFFT_SUCCESS)
 			throw std::runtime_error("cufftExecD2Z failed");
 		cufftDestroy(plan);
@@ -225,7 +223,7 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::Peri
 		hipfftResult hipfft_rt = hipfftCreate(&plan);
 		hipfftSetStream(plan, stream);
 		hipfft_rt = hipfftPlanMany(&plan, // plan handle
-							 x_mesh.rank(),
+							 sizeof...(X),
 							 n, // Nx, Ny...
 							 NULL,
 							 1,
@@ -239,7 +237,7 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::Peri
 		if(hipfft_rt != HIPFFT_SUCCESS)
 			throw std::runtime_error("hipfftPlan1d failed");
 
-		hipfft_rt = hipfftExecD2Z(plan, f.data(), (hipfftDoubleComplex*)Ff.data());
+		hipfft_rt = hipfftExecD2Z(plan, in_data, (hipfftDoubleComplex*)out_data);
 		if(hipfft_rt != HIPFFT_SUCCESS)
 			throw std::runtime_error("hipfftExecD2Z failed");
 		hipfftDestroy(plan);
@@ -247,4 +245,26 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::Peri
 	}
 	# endif
 }
+
+// FFT R2C
+template<typename Tin, typename Tout, typename... X, typename ExecSpace, typename MemorySpace>
+void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> out, ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> in)
+{
+	ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> in_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(in);
+	int n[in_mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(in_mesh.extents())...};
+
+	FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), n);
+}
+
+// FFT C2R
+template<typename Tin, typename Tout, typename... X, typename ExecSpace, typename MemorySpace>
+void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> out, ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> in)
+{
+	ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...> in_mesh = ddc::get_domain<ddc::PeriodicSampling<K<X>>...>(in);
+	int n[in_mesh.rank()] = {(int)ddc::get<ddc::PeriodicSampling<K<X>>>(in_mesh.extents())...};
+
+	FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), n);
+}
+
+
 

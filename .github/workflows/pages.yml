@@ -22,12 +22,12 @@ jobs:
           -t doxygen_image \
           docker/doxygen
     - name: Publish doxygen artifact for current SHA
-      if: ${{ github.repository == Maison-de-la-Simulation/ddc }}
+      if: ${{ github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |
         echo "doxygen_image=ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}" >> $GITHUB_ENV
         docker push ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7}
     - name: Create doxygen docker artifact
-      if: ${{ github.repository != Maison-de-la-Simulation/ddc }}
+      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
       run: |
         echo "doxygen_image=doxygen_image" >> $GITHUB_ENV
         docker save doxygen_image > doxygen.tar
@@ -36,7 +36,7 @@ jobs:
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/doxygen
     - name: Save doxygen docker
-      if: ${{ github.repository != Maison-de-la-Simulation/ddc }}
+      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
       uses: actions/upload-artifact@v3
       with:
         name: doxygen-artifact
@@ -56,12 +56,12 @@ jobs:
         fetch-depth: 0
         submodules: true
     - name: Collect doxygen docker
-      if: ${{ github.repository != Maison-de-la-Simulation/ddc }}
+      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
       uses: actions/download-artifact@v3
       with:
         name: doxygen-artifact
     - name: Load doxygen docker
-      if: ${{ github.repository != Maison-de-la-Simulation/ddc }}
+      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
       run: |
         docker load < doxygen.tar
     - name: Build site

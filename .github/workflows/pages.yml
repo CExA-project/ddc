@@ -21,6 +21,10 @@ jobs:
           -t ghcr.io/maison-de-la-simulation/ddc/doxygen:${GITHUB_SHA:0:7} \
           -t doxygen_image \
           docker/doxygen
+        echo "${{ github.repository }}"
+        echo "${{ github.organization }}"
+        echo "${{ github.sender }}"
+        echo "${{ github.pull_request.head.repo }}"
     - name: Publish doxygen artifact for current SHA
       if: ${{ github.repository == 'Maison-de-la-Simulation/ddc' }}
       run: |

@@ -60,18 +60,6 @@ public:
     {
     }
 
-    /** Construct a DiscreteDomain starting from (0, ..., 0) with size points.
-     * @param size the number of points in each dimension
-     * 
-     * @deprecated use the version with explicit lower bound instead
-     */
-    [[deprecated]] constexpr DiscreteDomain(mlength_type const& size)
-        : m_element_begin(
-                (get<DDims>(size) - get<DDims>(size))...) // Hack to have expansion of zero
-        , m_element_end(get<DDims>(size)...)
-    {
-    }
-
     /** Construct a DiscreteDomain starting from element_begin with size points.
      * @param element_begin the lower bound in each direction
      * @param size the number of points in each direction
@@ -359,13 +347,13 @@ constexpr DiscreteDomain<QueryDDims...> select(DiscreteDomain<DDims...> const& d
             select<QueryDDims...>(domain.extents()));
 }
 
-namespace ddc_detail {
+namespace detail {
 
 template <class T>
 struct ConvertTypeSeqToDiscreteDomain;
 
 template <class... DDims>
-struct ConvertTypeSeqToDiscreteDomain<ddc_detail::TypeSeq<DDims...>>
+struct ConvertTypeSeqToDiscreteDomain<detail::TypeSeq<DDims...>>
 {
     using type = DiscreteDomain<DDims...>;
 };
@@ -373,18 +361,18 @@ struct ConvertTypeSeqToDiscreteDomain<ddc_detail::TypeSeq<DDims...>>
 template <class T>
 using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDomain<T>::type;
 
-} // namespace ddc_detail
+} // namespace detail
 
 template <class... DDimsA, class... DDimsB>
 constexpr auto remove_dims_of(
         DiscreteDomain<DDimsA...> const& DDom_a,
         DiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
-    using TagSeqA = ddc_detail::TypeSeq<DDimsA...>;
-    using TagSeqB = ddc_detail::TypeSeq<DDimsB...>;
+    using TagSeqA = detail::TypeSeq<DDimsA...>;
+    using TagSeqB = detail::TypeSeq<DDimsB...>;
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
-    return ddc_detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
+    return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
 }
 
 template <class... QueryDDims, class... DDims>
@@ -405,34 +393,13 @@ constexpr DiscreteElement<QueryDDims...> back(DiscreteDomain<DDims...> const& do
     return DiscreteElement<QueryDDims...>(select<QueryDDims>(domain).back()...);
 }
 
-template <class... QueryDDims, class... DDims>
-ddc::Coordinate<QueryDDims...> coordinate(
-        DiscreteDomain<DDims...> const& domain,
-        DiscreteElement<QueryDDims...> const& icoord) noexcept
-{
-    return ddc::Coordinate<QueryDDims...>(
-            select<QueryDDims>(domain).coordinate(select<QueryDDims>(icoord))...);
-}
-
-template <class... QueryDDims, class... DDims>
-ddc::Coordinate<QueryDDims...> rmin(DiscreteDomain<DDims...> const& domain) noexcept
-{
-    return ddc::Coordinate<QueryDDims...>(select<QueryDDims>(domain).rmin()...);
-}
-
-template <class... QueryDDims, class... DDims>
-ddc::Coordinate<QueryDDims...> rmax(DiscreteDomain<DDims...> const& domain) noexcept
-{
-    return ddc::Coordinate<QueryDDims...>(select<QueryDDims>(domain).rmax()...);
-}
-
-namespace ddc_detail {
+namespace detail {
 
 template <class QueryDDimSeq>
 struct Selection;
 
 template <class... QueryDDims>
-struct Selection<ddc_detail::TypeSeq<QueryDDims...>>
+struct Selection<detail::TypeSeq<QueryDDims...>>
 {
     template <class Domain>
     static constexpr auto select(Domain const& domain)
@@ -441,12 +408,12 @@ struct Selection<ddc_detail::TypeSeq<QueryDDims...>>
     }
 };
 
-} // namespace ddc_detail
+} // namespace detail
 
 template <class QueryDDimSeq, class... DDims>
 constexpr auto select_by_type_seq(DiscreteDomain<DDims...> const& domain)
 {
-    return ddc_detail::Selection<QueryDDimSeq>::select(domain);
+    return detail::Selection<QueryDDimSeq>::select(domain);
 }
 
 template <class DDim>

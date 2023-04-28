@@ -1,7 +1,7 @@
 name: pages
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 106-docker-artifact ]
   pull_request:
 jobs:
   docker-build:

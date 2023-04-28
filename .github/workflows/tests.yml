@@ -4,7 +4,19 @@ on:
     branches: [ main ]
   pull_request:
 jobs:
+  id_repo:
+    runs-on: ubuntu-latest
+    outputs:
+      in_base_repo: ${{ steps.identify_repo.outputs.in_base_repo }}
+    steps:
+    - name: Identify repository
+      id: identify_repo
+      run: |
+        echo "in_base_repo=${{ (github.event == 'push' && github.repository == 'Maison-de-la-Simulation/ddc') || github.event.pull_request.head.repo.full_name == 'Maison-de-la-Simulation/ddc' }}" >> "$GITHUB_OUTPUT"
+        echo "$GITHUB_OUTPUT"
+
   docker-build-test_env:
+    needs: id_repo
     runs-on: ubuntu-latest
     outputs:
       test_env_image: ${{ steps.image_output.outputs.test_env_image }}
@@ -34,21 +46,21 @@ jobs:
           -t test_env_image \
           docker/test_env
     - name: Publish test_env artifact for current SHA
-      if: ${{ github.repository == 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ needs.id_repo.outputs.in_base_repo }}
       run: |
         echo "test_env_image=ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7}" >> $GITHUB_ENV
         docker push ghcr.io/maison-de-la-simulation/ddc/test_env:${GITHUB_SHA:0:7}
     - name: Create test_env docker artifact
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       run: |
         echo "test_env_image=test_env_image" >> $GITHUB_ENV
         docker save test_env_image > test_env.tar
     - name: Publish
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/test_env
     - name: Save test_env docker
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       uses: actions/upload-artifact@v3
       with:
         name: test_env-artifact
@@ -60,6 +72,7 @@ jobs:
         echo "test_env_image=${test_env_image}" >> "$GITHUB_OUTPUT"
 
   docker-build-jammy_env:
+    needs: id_repo
     runs-on: ubuntu-latest
     outputs:
       jammy_image: ${{ steps.image_output.outputs.jammy_image }}
@@ -77,21 +90,21 @@ jobs:
           -t jammy_env_image \
           docker/jammy_env
     - name: Publish jammy_env artifact for current SHA
-      if: ${{ github.repository == 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ needs.id_repo.outputs.in_base_repo }}
       run: |
         echo "jammy_image=ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7}" >> $GITHUB_ENV
         docker push ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7}
     - name: Create jammy_env artifact
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       run: |
         echo "jammy_image=jammy_env_image" >> $GITHUB_ENV
         docker save jammy_env_image > jammy_env.tar
     - name: Publish
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo }}
       run: |
         docker push ghcr.io/maison-de-la-simulation/ddc/jammy_env
     - name: Save jammy_env docker
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       uses: actions/upload-artifact@v3
       with:
         name: jammy_env-artifact
@@ -112,9 +125,10 @@ jobs:
         exclude: ''
         extensions: 'hpp,cpp'
         clangFormatVersion: 12
+
   test-Debug:
     runs-on: ubuntu-latest
-    needs: docker-build-test_env
+    needs: [docker-build-test_env, id_repo]
     steps:
     - name: Checkout built branch
       uses: actions/checkout@v3
@@ -133,12 +147,12 @@ jobs:
         large-packages: true
         swap-storage: true
     - name: Collect test_env docker
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       uses: actions/download-artifact@v3
       with:
         name: test_env-artifact
     - name: Load test_env docker
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       run: |
         docker load < test_env.tar
     - name: Build
@@ -151,9 +165,10 @@ jobs:
           ctest -j 2 --output-on-failure --timeout 5 --output-junit tests.xml
         EOF
         docker run -v ${PWD}:/src:ro ${{ needs.docker-build-test_env.outputs.test_env_image }} bash /src/run.sh
+
   test-Release:
     runs-on: ubuntu-latest
-    needs: docker-build-test_env
+    needs: [docker-build-test_env, id_repo]
     steps:
     - name: Checkout built branch
       uses: actions/checkout@v3
@@ -172,12 +187,12 @@ jobs:
         large-packages: true
         swap-storage: true
     - name: Collect test_env docker
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       uses: actions/download-artifact@v3
       with:
         name: test_env-artifact
     - name: Load test_env docker
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       run: |
         docker load < test_env.tar
     - name: Build
@@ -190,9 +205,10 @@ jobs:
           ctest -j 2 --output-on-failure --timeout 5 --output-junit tests.xml
         EOF
         docker run -v ${PWD}:/src:ro ${{ needs.docker-build-test_env.outputs.test_env_image }} bash /src/run.sh
+
   test-cuda:
     runs-on: ubuntu-latest
-    needs: docker-build-jammy_env
+    needs: [docker-build-jammy_env, id_repo]
     steps:
     - name: Checkout built branch
       uses: actions/checkout@v3
@@ -211,12 +227,12 @@ jobs:
         large-packages: true
         swap-storage: true
     - name: Collect jammy_env docker
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       uses: actions/download-artifact@v3
       with:
         name: jammy_env-artifact
     - name: Load jammy_env docker
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       run: |
         docker load < jammy_env.tar
     - name: Build
@@ -231,9 +247,10 @@ jobs:
           make -j 2 VERBOSE=1
         EOF
         docker run -v ${PWD}:/src:ro ${{ needs.docker-build-jammy_env.outputs.jammy_image }} bash /src/run.sh
+
   test-hip:
     runs-on: ubuntu-latest
-    needs: docker-build-test_env
+    needs: [docker-build-test_env, id_repo]
     steps:
     - name: Checkout built branch
       uses: actions/checkout@v3
@@ -252,12 +269,12 @@ jobs:
         large-packages: true
         swap-storage: true
     - name: Collect test_env docker
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       uses: actions/download-artifact@v3
       with:
         name: test_env-artifact
     - name: Load test_env docker
-      if: ${{ github.repository != 'Maison-de-la-Simulation/ddc' }}
+      if: ${{ ! needs.id_repo.outputs.in_base_repo }}
       run: |
         docker load < test_env.tar
     - name: Build

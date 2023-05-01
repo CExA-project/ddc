@@ -58,7 +58,7 @@ static void TestFFT()
     const std::size_t Nx = 16; // Optimal value is (b-a)^2/(2*pi)
 
 	DDom<DDim<X>...> const x_mesh = DDom<DDim<X>...>(
-		ddc::init_discrete_space(DDim<X>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, X>(a+(b-a)/Nx/2), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, X>(b-(b-a)/Nx/2), DVect<DDim<X>>(Nx)))...
+		ddc::init_discrete_space(DDim<X>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, X>(a+(b-a)/Nx/2), ddc::detail::TaggedVector<ddc::CoordinateElement, X>(b-(b-a)/Nx/2), DVect<DDim<X>>(Nx)))...
 	);
 	ddc::Chunk _f = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
 	ddc::ChunkSpan f = _f.span_view();
@@ -73,7 +73,7 @@ static void TestFFT()
 	);
 
 	DDom<DFDim<K<X>>...> const k_mesh = DDom<DFDim<K<X>>...>(
-		ddc::init_discrete_space(DFDim<K<X>>::init(ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::ddc_detail::TaggedVector<ddc::CoordinateElement, K<X>>(LastSelector<double,X,X...>(Nx/(b-a)*M_PI,2*(Nx-1)/(b-a)*M_PI)), ddc::DiscreteVector<DFDim<K<X>>>(LastSelector<double,X,X...>(Nx/2+1,Nx)), ddc::DiscreteVector<DFDim<K<X>>>(Nx)))...
+		ddc::init_discrete_space(DFDim<K<X>>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(LastSelector<double,X,X...>(Nx/(b-a)*M_PI,2*(Nx-1)/(b-a)*M_PI)), ddc::DiscreteVector<DFDim<K<X>>>(LastSelector<double,X,X...>(Nx/2+1,Nx)), ddc::DiscreteVector<DFDim<K<X>>>(Nx)))...
 	);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace,Tout>());
 	ddc::ChunkSpan Ff = _Ff.span_view();

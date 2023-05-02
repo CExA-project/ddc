@@ -78,10 +78,16 @@ static void TestFFT()
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace,Tout>());
 	ddc::ChunkSpan Ff = _Ff.span_view();
 	FFT(ExecSpace(), Ff, f);
+	Kokkos::fence();
 
-	// ddc::Chunk _FFf = ddc::Chunk(x_mesh, Allocator<MemorySpace,Tin>());
-	// ddc::ChunkSpan FFf = _FFf.span_view();
-	// FFT(ExecSpace(), FFf, Ff);
+	// deepcopy of Ff because FFT C2R overwrites the input
+	ddc::Chunk _Ff_bis = ddc::Chunk(ddc::get_domain<DFDim<K<X>>...>(Ff), Allocator<MemorySpace,Tout>());
+    ddc::ChunkSpan Ff_bis = _Ff_bis.span_view();
+	ddc::deepcopy(Ff_bis, Ff);
+
+	ddc::Chunk _FFf = ddc::Chunk(x_mesh, Allocator<MemorySpace,Tin>());
+	ddc::ChunkSpan FFf = _FFf.span_view();
+	FFT(ExecSpace(), FFf, Ff_bis);
 
 	ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan f_host = _f_host.span_view();
@@ -109,16 +115,16 @@ static void TestFFT()
 	});
 	# endif
 
-	// ddc::Chunk _FFf_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(FFf), ddc::HostAllocator<Tin>());
-    // ddc::ChunkSpan FFf_host = _FFf_host.span_view();
-	// ddc::deepcopy(FFf_host, FFf);
+	ddc::Chunk _FFf_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(FFf), ddc::HostAllocator<Tin>());
+    ddc::ChunkSpan FFf_host = _FFf_host.span_view();
+	ddc::deepcopy(FFf_host, FFf);
 	# if 0
 	std::cout << "\n iFFT(FFT):\n";
 	ddc::for_each(
         ddc::policies::serial_host,
         ddc::get_domain<DDim<X>...>(FFf_host),
         [=](DElem<DDim<X>...> const e) {
-			(std::cout << ... << coordinate(ddc::select<DDim<X>>(e))) << "->" << abs(FFf_host(e))*pow(2*M_PI,sizeof...(X)) << " " << exp(-(pow(coordinate(ddc::select<DDim<X>>(e)),2) + ...)/2) << ", ";
+			(std::cout << ... << coordinate(ddc::select<DDim<X>>(e))) << "->" << FFf_host(e)*pow(1./Nx,sizeof...(X)) << " " << f_host(e) << ", ";
 	});
 	# endif
 
@@ -128,9 +134,19 @@ static void TestFFT()
 		ddc::reducer::sum<double>(),
 		[=](DElem<DFDim<K<X>>...> const e) {
 			return pow(abs(Ff_host(e))*pow((b-a)/Nx/sqrt(2*M_PI),sizeof...(X))-exp(-(pow(coordinate(ddc::select<DFDim<K<X>>>(e)),2) + ...)/2),2)/(LastSelector<std::size_t,X,X...>(Nx/2,Nx)*...);
-	
 	}));
+
+	double criterion2 = sqrt(ddc::transform_reduce(
+		ddc::get_domain<DDim<X>...>(FFf_host),
+		0.,
+		ddc::reducer::sum<double>(),
+		[=](DElem<DDim<X>...> const e) {
+			return pow(FFf_host(e)*pow(1./Nx,sizeof...(X))-f_host(e),2)/pow(Nx,sizeof...(X));
+	}));
+
 	std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
+	std::cout << "\n Distance between input and iFFT(FFT(input)) : " << criterion2;
 	ASSERT_LE(criterion, 2e-6);
+	ASSERT_LE(criterion2, 5e-8);
 }
 

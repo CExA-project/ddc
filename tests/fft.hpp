@@ -17,11 +17,15 @@ using DVect = ddc::DiscreteVector<DDim...>;
 template <typename ...DDim>
 using DDom = ddc::DiscreteDomain<DDim...>;
 
-template <typename Dims>
-struct K;
-
 template <typename Kx>
 using DFDim = ddc::PeriodicSampling<Kx>;
+
+// is_complex : trait to determine if type is std::complex<something>
+template<typename T>
+  struct is_complex : std::false_type {};
+
+template<typename T>
+  struct is_complex<std::complex<T>> : std::true_type {};
 
 // LastSelector: returns a if Dim==Last, else b
 template <typename T, typename Dim, typename Last>
@@ -47,8 +51,8 @@ using Allocator = typename std::conditional<std::is_same_v<MemorySpace,Kokkos::S
 template <typename ExecSpace>
 constexpr auto policy = []{ if constexpr (std::is_same<ExecSpace,Kokkos::Serial>::value) { return ddc::policies::serial_host; } else { return ddc::policies::parallel_device; } };
 #endif
+
 // TODO:
-// - cuFFT+FFTW
 // - FFT multidim but according to a subset of dimensions
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename... X>
 static void TestFFT()
@@ -73,7 +77,7 @@ static void TestFFT()
 	);
 
 	DDom<DFDim<K<X>>...> const k_mesh = DDom<DFDim<K<X>>...>(
-		ddc::init_discrete_space(DFDim<K<X>>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(transform_type<Tin,Tout>::value==TransformType::C2C ? 2*(Nx-1)/(b-a)*M_PI : LastSelector<double,X,X...>(Nx/(b-a)*M_PI,2*(Nx-1)/(b-a)*M_PI)), ddc::DiscreteVector<DFDim<K<X>>>(transform_type<Tin,Tout>::value==TransformType::C2C ? Nx : LastSelector<double,X,X...>(Nx/2+1,Nx)), ddc::DiscreteVector<DFDim<K<X>>>(Nx)))...
+		ddc::init_discrete_space(DFDim<K<X>>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(is_complex<Tin>::value&&is_complex<Tout>::value ? 2*(Nx-1)/(b-a)*M_PI : LastSelector<double,X,X...>(Nx/(b-a)*M_PI,2*(Nx-1)/(b-a)*M_PI)), ddc::DiscreteVector<DFDim<K<X>>>(is_complex<Tin>::value&&is_complex<Tout>::value ? Nx : LastSelector<double,X,X...>(Nx/2+1,Nx)), ddc::DiscreteVector<DFDim<K<X>>>(Nx)))...
 	);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace,Tout>());
 	ddc::ChunkSpan Ff = _Ff.span_view();

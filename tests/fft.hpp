@@ -68,12 +68,12 @@ static void TestFFT()
 		DDC_LAMBDA(DElem<DDim<X>...> const e) {
 			// f(e) = (cos(4*coordinate(ddc::select<DDim<X>>(e)))*...);
 			// f(e) = ((sin(coordinate(ddc::select<DDim<X>>(e))+1e-20)/(coordinate(ddc::select<DDim<X>>(e))+1e-20))*...);
-			f(e) = exp(-(pow(coordinate(ddc::select<DDim<X>>(e)),2) + ...)/2);
+			f(e) = static_cast<Tin>(exp(-(pow(coordinate(ddc::select<DDim<X>>(e)),2) + ...)/2));
 		}
 	);
 
 	DDom<DFDim<K<X>>...> const k_mesh = DDom<DFDim<K<X>>...>(
-		ddc::init_discrete_space(DFDim<K<X>>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(LastSelector<double,X,X...>(Nx/(b-a)*M_PI,2*(Nx-1)/(b-a)*M_PI)), ddc::DiscreteVector<DFDim<K<X>>>(LastSelector<double,X,X...>(Nx/2+1,Nx)), ddc::DiscreteVector<DFDim<K<X>>>(Nx)))...
+		ddc::init_discrete_space(DFDim<K<X>>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(transform_type<Tin,Tout>::value==TransformType::C2C ? 2*(Nx-1)/(b-a)*M_PI : LastSelector<double,X,X...>(Nx/(b-a)*M_PI,2*(Nx-1)/(b-a)*M_PI)), ddc::DiscreteVector<DFDim<K<X>>>(transform_type<Tin,Tout>::value==TransformType::C2C ? Nx : LastSelector<double,X,X...>(Nx/2+1,Nx)), ddc::DiscreteVector<DFDim<K<X>>>(Nx)))...
 	);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace,Tout>());
 	ddc::ChunkSpan Ff = _Ff.span_view();
@@ -124,7 +124,7 @@ static void TestFFT()
         ddc::policies::serial_host,
         ddc::get_domain<DDim<X>...>(FFf_host),
         [=](DElem<DDim<X>...> const e) {
-			(std::cout << ... << coordinate(ddc::select<DDim<X>>(e))) << "->" << FFf_host(e)*pow(1./Nx,sizeof...(X)) << " " << f_host(e) << ", ";
+			(std::cout << ... << coordinate(ddc::select<DDim<X>>(e))) << "->" << abs(FFf_host(e))*pow(1./Nx,sizeof...(X)) << " " << abs(f_host(e)) << ", ";
 	});
 	# endif
 
@@ -141,7 +141,7 @@ static void TestFFT()
 		0.,
 		ddc::reducer::sum<double>(),
 		[=](DElem<DDim<X>...> const e) {
-			return pow(FFf_host(e)*pow(1./Nx,sizeof...(X))-f_host(e),2)/pow(Nx,sizeof...(X));
+			return pow(abs(FFf_host(e))*pow(1./Nx,sizeof...(X))-abs(f_host(e)),2)/pow(Nx,sizeof...(X));
 	}));
 
 	std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;

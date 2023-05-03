@@ -35,7 +35,7 @@ template<typename T>
 struct is_complex<std::complex<T>> : std::true_type {};
 
 // transform_type : trait to determine the type of transformation (R2C, C2R, C2C...) <- no information about base type (float or double)
-enum class TransformType { R2R, R2C, C2R };
+enum class TransformType { R2R, R2C, C2R, C2C };
 
 template<typename T1, typename T2>
 struct transform_type { static constexpr TransformType value = TransformType::R2R; };
@@ -45,6 +45,9 @@ struct transform_type<T1,std::complex<T2>> { static constexpr TransformType valu
 
 template<typename T1, typename T2>
 struct transform_type<std::complex<T1>,T2> { static constexpr TransformType value = TransformType::C2R; };
+
+template<typename T1, typename T2>
+struct transform_type<std::complex<T1>,std::complex<T2>> { static constexpr TransformType value = TransformType::C2C; };
 
 #if fftw_AVAIL
 // _fftw_type : compatible with both single and double precision
@@ -63,20 +66,25 @@ template<typename T>
 using _fftw_plan = typename std::conditional<std::is_same_v<typename real_type<T>::type,float>,fftwf_plan,fftw_plan>::type;
 
 // _fftw_plan_many_dft : templated function working for all types of transformation
-template<typename Tin, typename Tout, typename... ArgType>
-_fftw_plan<Tin> _fftw_plan_many_dft(ArgType... args) {
-  const TransformType transformType = transform_type<Tin,Tout>::value; 
-  if constexpr (transformType==TransformType::R2C&&std::is_same_v<typename real_type<Tin>::type,float>)
-	return fftwf_plan_many_dft_r2c(args...);
-  else if constexpr (transformType==TransformType::R2C&&std::is_same_v<typename real_type<Tin>::type,double>)
-	return fftw_plan_many_dft_r2c(args...);
-  else if constexpr (transformType==TransformType::C2R&&std::is_same_v<typename real_type<Tout>::type,float>)
-	return fftwf_plan_many_dft_c2r(args...);
-  else if constexpr (transformType==TransformType::C2R&&std::is_same_v<typename real_type<Tout>::type,double>)
-	return fftw_plan_many_dft_c2r(args...);
-  // else constexpr
-  //   static_assert(false, "Transform type not supported");
+template<typename Tin, typename Tout, typename... Args, typename PenultArg, typename LastArg>
+_fftw_plan<Tin> _fftw_plan_many_dft(PenultArg penultArg, LastArg lastArg, Args... args) { // Ugly, penultArg and lastArg are passed before the rest because of a limitation of C++ (parameter packs must be last arguments)
+    const TransformType transformType = transform_type<Tin,Tout>::value;
+    if constexpr (transformType==TransformType::R2C&&std::is_same_v<Tin,float>)
+      return fftwf_plan_many_dft_r2c(args..., lastArg);
+    else if constexpr (transformType==TransformType::R2C&&std::is_same_v<Tin,double>)
+      return fftw_plan_many_dft_r2c(args..., lastArg);
+    else if constexpr (transformType==TransformType::C2R&&std::is_same_v<Tout,float>)
+      return fftwf_plan_many_dft_c2r(args..., lastArg);
+    else if constexpr (transformType==TransformType::C2R&&std::is_same_v<Tout,double>)
+      return fftw_plan_many_dft_c2r(args..., lastArg);
+    else if constexpr (transformType==TransformType::C2C&&std::is_same_v<Tin,std::complex<float>>)
+      return fftwf_plan_many_dft(args..., penultArg, lastArg);
+    else if constexpr (transformType==TransformType::C2C&&std::is_same_v<Tin,std::complex<double>>)
+      return fftw_plan_many_dft(args..., penultArg, lastArg);
+    // else constexpr
+    //   static_assert(false, "Transform type not supported");
 }
+
 #endif
 #if cufft_AVAIL
 // _cufft_type : compatible with both single and double precision
@@ -102,23 +110,31 @@ constexpr auto cufft_transform_type()  {
 	return CUFFT_C2R;
   else if constexpr (transformType==TransformType::C2R&&std::is_same_v<Tout,double>)
 	return CUFFT_Z2D;
+  else if constexpr (transformType==TransformType::C2C&&std::is_same_v<Tin,std::complex<float>>)
+	return CUFFT_C2C;
+  else if constexpr (transformType==TransformType::C2C&&std::is_same_v<Tin,std::complex<double>>)
+	return CUFFT_Z2Z;
   // else constexpr
 //	static_assert(false, "Transform type not supported");
 }
 
 // cufftExec : argument passed in the cufftMakePlan function
 // _fftw_plan_many_dft : templated function working for all types of transformation
-template<typename Tin, typename Tout, typename... ArgType>
-cufftResult _cufftExec(ArgType... args) {
+template<typename Tin, typename Tout, typename... Args, typename LastArg>
+cufftResult _cufftExec(LastArg lastArg, Args... args) { // Ugly for same reason as fftw
   const TransformType transformType = transform_type<Tin,Tout>::value; 
-  if constexpr (transformType==TransformType::R2C&&std::is_same_v<typename real_type<Tin>::type,float>)
+  if constexpr (transformType==TransformType::R2C&&std::is_same_v<Tin,float>)
 	return cufftExecR2C(args...);
-  else if constexpr (transformType==TransformType::R2C&&std::is_same_v<typename real_type<Tin>::type,double>)
+  else if constexpr (transformType==TransformType::R2C&&std::is_same_v<Tin,double>)
 	return cufftExecD2Z(args...);
-  else if constexpr (transformType==TransformType::C2R&&std::is_same_v<typename real_type<Tout>::type,float>)
+  else if constexpr (transformType==TransformType::C2R&&std::is_same_v<Tout,float>)
 	return cufftExecC2R(args...);
-  else if constexpr (transformType==TransformType::C2R&&std::is_same_v<typename real_type<Tout>::type,double>)
+  else if constexpr (transformType==TransformType::C2R&&std::is_same_v<Tout,double>)
 	return cufftExecZ2D(args...);
+  else if constexpr (transformType==TransformType::C2C&&std::is_same_v<Tin,std::complex<float>>)
+	return cufftExecC2C(args...,lastArg);
+  else if constexpr (transformType==TransformType::C2C&&std::is_same_v<Tin,std::complex<double>>)
+	return cufftExecZ2Z(args...,lastArg);
   // else constexpr
   //   static_assert(false, "Transform type not supported");
 }
@@ -147,23 +163,31 @@ constexpr auto hipfft_transform_type()  {
 	return HIPFFT_C2R;
   else if constexpr (transformType==TransformType::C2R&&std::is_same_v<Tout,double>)
 	return HIPFFT_Z2D;
+  else if constexpr (transformType==TransformType::C2C&&std::is_same_v<Tin,std::complex<float>>)
+	return HIPFFT_C2C;
+  else if constexpr (transformType==TransformType::C2C&&std::is_same_v<Tin,std::complex<double>>)
+	return HIPFFT_Z2Z;
   // else constexpr
 //	static_assert(false, "Transform type not supported");
 }
 
 // hipfftExec : argument passed in the hipfftMakePlan function
 // _fftw_plan_many_dft : templated function working for all types of transformation
-template<typename Tin, typename Tout, typename... ArgType>
-hipfftResult _hipfftExec(ArgType... args) {
+template<typename Tin, typename Tout, typename... Args, typename LastArg>
+hipfftResult _hipfftExec(LastArg lastArg, Args... args) {
   const TransformType transformType = transform_type<Tin,Tout>::value; 
-  if constexpr (transformType==TransformType::R2C&&std::is_same_v<typename real_type<Tin>::type,float>)
+  if constexpr (transformType==TransformType::R2C&&std::is_same_v<Tin,float>)
 	return hipfftExecR2C(args...);
-  else if constexpr (transformType==TransformType::R2C&&std::is_same_v<typename real_type<Tin>::type,double>)
+  else if constexpr (transformType==TransformType::R2C&&std::is_same_v<Tin,double>)
 	return hipfftExecD2Z(args...);
-  else if constexpr (transformType==TransformType::C2R&&std::is_same_v<typename real_type<Tout>::type,float>)
+  else if constexpr (transformType==TransformType::C2R&&std::is_same_v<Tout,float>)
 	return hipfftExecC2R(args...);
-  else if constexpr (transformType==TransformType::C2R&&std::is_same_v<typename real_type<Tout>::type,double>)
+  else if constexpr (transformType==TransformType::C2R&&std::is_same_v<Tout,double>)
 	return hipfftExecZ2D(args...);
+  else if constexpr (transformType==TransformType::C2C&&std::is_same_v<Tin,std::complex<float>>)
+	return hipfftExecC2C(args...,lastArg);
+  else if constexpr (transformType==TransformType::C2C&&std::is_same_v<Tin,std::complex<double>>)
+	return hipfftExecZ2Z(args...,lastArg);
   // else constexpr
   //   static_assert(false, "Transform type not supported");
 }
@@ -173,9 +197,16 @@ hipfftResult _hipfftExec(ArgType... args) {
 template <typename Dims>
 struct K;
 
+// named arguments for FFT (and their default values)
+enum class Direction { FORWARD, BACKWARD };
+
+struct kwArgs {
+  Direction direction = Direction::FORWARD; // Only effective for C2C transform
+};
+
 // FFT_core -> TODO : privatize
 template<typename Tin, typename Tout, typename ExecSpace, typename MemorySpace, typename... X>
-void FFT_core(ExecSpace execSpace, Tout* out_data, Tin* in_data, int* n)
+void FFT_core(ExecSpace execSpace, Tout* out_data, Tin* in_data, int* n, const kwArgs& kwargs=kwArgs())
 {
 	static_assert(std::is_same_v<typename real_type<Tin>::type,float> || std::is_same_v<typename real_type<Tin>::type,double>,"Base type of Tin (and Tout) must be float or double.");
 	static_assert(std::is_same_v<typename real_type<Tin>::type,typename real_type<Tout>::type>,"Types Tin and Tout must be based on same type (float or double)");
@@ -187,11 +218,14 @@ void FFT_core(ExecSpace execSpace, Tout* out_data, Tin* in_data, int* n)
 		idist = transform_type<Tin,Tout>::value==TransformType::C2R&&i==sizeof...(X)-1 ? idist*(n[i]/2+1) : idist*n[i];
 		odist = transform_type<Tin,Tout>::value==TransformType::R2C&&i==sizeof...(X)-1 ? odist*(n[i]/2+1) : odist*n[i];
 	}
+	std::cout << (kwargs.direction==Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD);
 
 	if constexpr(false) {} // Trick to get only else if
 	# if fftw_AVAIL 
 	else if constexpr(std::is_same<ExecSpace, Kokkos::Serial>::value) {
-		_fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin,Tout>((int)sizeof...(X), 
+		_fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin,Tout>(kwargs.direction==Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
+							FFTW_ESTIMATE,
+							(int)sizeof...(X), 
 							n, 
 							1,
 							reinterpret_cast<typename _fftw_type<Tin>::type*>(in_data),
@@ -201,8 +235,7 @@ void FFT_core(ExecSpace execSpace, Tout* out_data, Tin* in_data, int* n)
 							reinterpret_cast<typename _fftw_type<Tout>::type*>(out_data),
 							(int*)NULL,
 							1,
-							odist,
-							FFTW_ESTIMATE);
+							odist);
 		execIfFloat(Tin,fftwf_execute(plan),fftw_execute(plan))
 		execIfFloat(Tin,fftwf_destroy_plan(plan),fftw_destroy_plan(plan))
 		std::cout << "performed with fftw";
@@ -213,7 +246,9 @@ void FFT_core(ExecSpace execSpace, Tout* out_data, Tin* in_data, int* n)
 		execIfFloat(Tin,fftwf_init_threads(),fftw_init_threads())
 		execIfFloat(Tin,fftwf_plan_with_nthreads(ExecSpace::concurrency()),fftw_plan_with_nthreads(ExecSpace::concurrency()))
 		fftw_plan_with_nthreads(ExecSpace::concurrency());
-		_fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin,Tout>((int)sizeof...(X), 
+		_fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin,Tout>(kwargs.direction==Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
+							FFTW_ESTIMATE,
+							(int)sizeof...(X), 	
 							n, 
 							1,
 							reinterpret_cast<typename _fftw_type<Tin>::type*>(in_data),
@@ -223,8 +258,7 @@ void FFT_core(ExecSpace execSpace, Tout* out_data, Tin* in_data, int* n)
 							reinterpret_cast<typename _fftw_type<Tout>::type*>(out_data),
 							(int*)NULL,
 							1,
-							odist,
-							FFTW_ESTIMATE);
+							odist);
 		execIfFloat(Tin,fftwf_execute(plan),fftw_execute(plan))
 		execIfFloat(Tin,fftwf_destroy_plan(plan),fftw_destroy_plan(plan))
 		std::cout << "performed with fftw_omp";
@@ -252,7 +286,7 @@ void FFT_core(ExecSpace execSpace, Tout* out_data, Tin* in_data, int* n)
 		if(cufft_rt != CUFFT_SUCCESS)
 			throw std::runtime_error("cufftPlan failed");
 
-		cufft_rt = _cufftExec<Tin,Tout>(plan, reinterpret_cast<typename _cufft_type<Tin>::type*>(in_data), reinterpret_cast<typename _cufft_type<Tout>::type*>(out_data));
+		cufft_rt = _cufftExec<Tin,Tout>(kwargs.direction==Direction::FORWARD ? CUFFT_FORWARD : CUFFT_INVERSE, plan, reinterpret_cast<typename _cufft_type<Tin>::type*>(in_data), reinterpret_cast<typename _cufft_type<Tout>::type*>(out_data));
 		if(cufft_rt != CUFFT_SUCCESS)
 			throw std::runtime_error("cufftExec failed");
 		cufftDestroy(plan);
@@ -283,7 +317,7 @@ void FFT_core(ExecSpace execSpace, Tout* out_data, Tin* in_data, int* n)
 		if(hipfft_rt != HIPFFT_SUCCESS)
 			throw std::runtime_error("hipfftPlan failed");
 
-		hipfft_rt = _hipfftExec<Tin,Tout>(plan, reinterpret_cast<typename _hipfft_type<Tin>::type*>(in_data), reinterpret_cast<typename _hipfft_type<Tout>::type*>(out_data));
+		hipfft_rt = _hipfftExec<Tin,Tout>(kwargs.direction==Direction::FORWARD ? HIPFFT_FORWARD : HIPFFT_BACKWARD, plan, reinterpret_cast<typename _hipfft_type<Tin>::type*>(in_data), reinterpret_cast<typename _hipfft_type<Tout>::type*>(out_data));
 		if(hipfft_rt != HIPFFT_SUCCESS)
 			throw std::runtime_error("hipfftExec failed");
 		hipfftDestroy(plan);
@@ -299,7 +333,7 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::Peri
 	ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> in_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(in);
 	int n[in_mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(in_mesh.extents())...};
 
-	FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), n);
+	FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), n, { Direction::FORWARD });
 }
 
 // FFT C2R
@@ -309,7 +343,7 @@ void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::Unif
 	ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> out_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(out);
 	int n[out_mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(out_mesh.extents())...};
 
-	FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), n);
+	FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), n, { Direction::BACKWARD });
 }
 
 

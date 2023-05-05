@@ -39,6 +39,17 @@ namespace FFT_detail {
   template<typename T>
   struct is_complex<std::complex<T>> : std::true_type {};
 
+  // LastSelector: returns a if Dim==Last, else b
+  template <typename T, typename Dim, typename Last>
+  constexpr T LastSelector(const T a, const T b) {
+    return std::is_same<Dim,Last>::value ? a : b;
+  }
+
+  template <typename T, typename Dim, typename First, typename Second, typename... Tail>
+  constexpr T LastSelector(const T a, const T b) {
+    return LastSelector<T,Dim,Second,Tail...>(a, b);
+  }
+
   // transform_type : trait to determine the type of transformation (R2C, C2R, C2C...) <- no information about base type (float or double)
   enum class TransformType { R2R, R2C, C2R, C2C };
 
@@ -200,26 +211,38 @@ namespace FFT_detail {
 
   // named arguments for FFT (and their default values)
   enum class Direction { FORWARD, BACKWARD };
+  enum class Normalization { OFF, ORTHO, FULL };
 
   struct kwArgs {
-	Direction direction = Direction::FORWARD; // Only effective for C2C transform
+	Direction direction; // Only effective for C2C transform
+	Normalization normalization; // Only effective for C2C transform
   };
+
+  template <typename T>
+  __host__ __device__ inline T mult(const T& a, const T& b) {
+	    return a*b;
+  }
+
+  template <typename T>
+  __host__ __device__ inline std::complex<T> mult(const std::complex<T>& a, const T& b) {
+	    return std::complex<T>(a.real()*b,a.imag()*b);
+  }
 
   // FFT_core
   template<typename Tin, typename Tout, typename ExecSpace, typename MemorySpace, typename... X>
-  void FFT_core(ExecSpace execSpace, Tout* out_data, Tin* in_data, int* n, const kwArgs& kwargs=kwArgs())
+  void FFT_core(ExecSpace& execSpace, Tout* out_data, Tin* in_data, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> mesh, const kwArgs& kwargs)
   {
 	  static_assert(std::is_same_v<typename real_type<Tin>::type,float> || std::is_same_v<typename real_type<Tin>::type,double>,"Base type of Tin (and Tout) must be float or double.");
 	  static_assert(std::is_same_v<typename real_type<Tin>::type,typename real_type<Tout>::type>,"Types Tin and Tout must be based on same type (float or double)");
 	  static_assert(Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,"MemorySpace has to be accessible for ExecutionSpace.");
 	  
+	  int n[mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())...};
 	  int idist = 1;
 	  int odist = 1;
 	  for(int i=0;i<sizeof...(X);i++) {	
 		  idist = transform_type<Tin,Tout>::value==TransformType::C2R&&i==sizeof...(X)-1 ? idist*(n[i]/2+1) : idist*n[i];
 		  odist = transform_type<Tin,Tout>::value==TransformType::R2C&&i==sizeof...(X)-1 ? odist*(n[i]/2+1) : odist*n[i];
 	  }
-	  std::cout << (kwargs.direction==Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD);
 
 	  if constexpr(false) {} // Trick to get only else if
 	  # if fftw_AVAIL 
@@ -239,7 +262,7 @@ namespace FFT_detail {
 							  odist);
 		  execIfFloat(Tin,fftwf_execute(plan),fftw_execute(plan))
 		  execIfFloat(Tin,fftwf_destroy_plan(plan),fftw_destroy_plan(plan))
-		  std::cout << "performed with fftw";
+		  // std::cout << "performed with fftw";
 	  }
 	  # endif
 	  # if fftw_omp_AVAIL 
@@ -262,7 +285,7 @@ namespace FFT_detail {
 							  odist);
 		  execIfFloat(Tin,fftwf_execute(plan),fftw_execute(plan))
 		  execIfFloat(Tin,fftwf_destroy_plan(plan),fftw_destroy_plan(plan))
-		  std::cout << "performed with fftw_omp";
+		  // std::cout << "performed with fftw_omp";
 	  }
 	  # endif
 	  # if cufft_AVAIL 
@@ -291,7 +314,7 @@ namespace FFT_detail {
 		  if(cufft_rt != CUFFT_SUCCESS)
 			  throw std::runtime_error("cufftExec failed");
 		  cufftDestroy(plan);
-		  std::cout << "performed with cufft";
+		  // std::cout << "performed with cufft";
 	  }
 	  # endif
 	  # if hipfft_AVAIL 
@@ -322,28 +345,43 @@ namespace FFT_detail {
 		  if(hipfft_rt != HIPFFT_SUCCESS)
 			  throw std::runtime_error("hipfftExec failed");
 		  hipfftDestroy(plan);
-		  std::cout << "performed with hipfft";
+		  // std::cout << "performed with hipfft";
 	  }
 	  # endif
+
+	  if (kwargs.normalization!=Normalization::OFF) {
+		typename real_type<Tout>::type norm_coef;
+		switch (kwargs.normalization) {
+		  case Normalization::ORTHO:
+			norm_coef = pow(1/sqrt(2*M_PI),sizeof...(X));
+		  case Normalization::FULL:
+			norm_coef = kwargs.direction==Direction::FORWARD ?
+			  (((coordinate(ddc::select<ddc::UniformPointSampling<X>>(mesh).back())-coordinate(ddc::select<ddc::UniformPointSampling<X>>(mesh).front()))/(ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())-1)/sqrt(2*M_PI))*...)  :
+			  ((sqrt(2*M_PI)/(coordinate(ddc::select<ddc::UniformPointSampling<X>>(mesh).back())-coordinate(ddc::select<ddc::UniformPointSampling<X>>(mesh).front()))*(ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())-1)/ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()))*...);
+		}
+
+		Kokkos::parallel_for(Kokkos::RangePolicy<ExecSpace>(execSpace, 0, is_complex<Tout>::value&&transform_type<Tin,Tout>::value!=TransformType::C2C ? (LastSelector<double,X,X...>(ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())/2+1,ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()))*...) : (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())*...)), KOKKOS_LAMBDA(const int& i) {
+		  // out_data[i] = static_cast<typename std::conditional<is_complex<Tout>::value, typename Kokkos::complex<typename real_type<Tout>::type>, Tout>::type>(out_data[i])*norm_coef;
+		  out_data[i] = mult(out_data[i],norm_coef); // Why need to define mult in place of the * operator ?
+		});
+	  }
   }
 }
 
 // FFT
 template<typename Tin, typename Tout, typename... X, typename ExecSpace, typename MemorySpace>
-void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> out, ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> in)
+void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> out, ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> in, FFT_detail::kwArgs kwargs={ FFT_detail::Direction::FORWARD, FFT_detail::Normalization::OFF })
 {
 	ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> in_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(in);
-	int n[in_mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(in_mesh.extents())...};
 
-	FFT_detail::FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), n, { FFT_detail::Direction::FORWARD });
+	FFT_detail::FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), in_mesh, kwargs);
 }
 
 // iFFT (deduced from the fact that "in" is identified as a function on the Fourier space)
 template<typename Tin, typename Tout, typename... X, typename ExecSpace, typename MemorySpace>
-void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> out, ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> in)
+void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> out, ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> in, FFT_detail::kwArgs kwargs={ FFT_detail::Direction::BACKWARD, FFT_detail::Normalization::OFF })
 {
 	ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> out_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(out);
-	int n[out_mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(out_mesh.extents())...};
 
-	FFT_detail::FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), n, { FFT_detail::Direction::BACKWARD });
+	FFT_detail::FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), out_mesh, kwargs);
 }

@@ -228,6 +228,22 @@ namespace FFT_detail {
 	    return std::complex<T>(a.real()*b,a.imag()*b);
   }
 
+  // N,a,b from x_mesh
+  template <typename Dim, typename... X> 
+  int N(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh) {
+	return ddc::get<ddc::UniformPointSampling<Dim>>(x_mesh.extents());
+  }
+
+  template <typename Dim, typename... X> 
+  double a(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh) {
+	return ((2*N<Dim>(x_mesh)-1)*coordinate(ddc::select<ddc::UniformPointSampling<Dim>>(x_mesh).front())-coordinate(ddc::select<ddc::UniformPointSampling<Dim>>(x_mesh).back()))/2/(N<Dim>(x_mesh)-1);
+  }
+
+  template <typename Dim, typename... X> 
+  double b(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh) {
+	return ((2*N<Dim>(x_mesh)-1)*coordinate(ddc::select<ddc::UniformPointSampling<Dim>>(x_mesh).back())-coordinate(ddc::select<ddc::UniformPointSampling<Dim>>(x_mesh).front()))/2/(N<Dim>(x_mesh)-1);
+  }
+
   // FFT_core
   template<typename Tin, typename Tout, typename ExecSpace, typename MemorySpace, typename... X>
   void FFT_core(ExecSpace& execSpace, Tout* out_data, Tin* in_data, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> mesh, const kwArgs& kwargs)
@@ -366,6 +382,14 @@ namespace FFT_detail {
 		});
 	  }
   }
+}
+
+// FourierMesh
+template <typename... X>
+ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...> FourierMesh(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh, const bool real_input) {
+  return ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>(
+	ddc::init_discrete_space(ddc::PeriodicSampling<K<X>>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(real_input ? 2*(FFT_detail::N<X>(x_mesh)-1)/(FFT_detail::b<X>(x_mesh)-FFT_detail::a<X>(x_mesh))*M_PI : FFT_detail::LastSelector<double,X,X...>(FFT_detail::N<X>(x_mesh)/(FFT_detail::b<X>(x_mesh)-FFT_detail::a<X>(x_mesh))*M_PI,2*(FFT_detail::N<X>(x_mesh)-1)/(FFT_detail::b<X>(x_mesh)-FFT_detail::a<X>(x_mesh))*M_PI)), ddc::DiscreteVector<ddc::PeriodicSampling<K<X>>>(real_input ? FFT_detail::N<X>(x_mesh) : FFT_detail::LastSelector<double,X,X...>(FFT_detail::N<X>(x_mesh)/2+1,FFT_detail::N<X>(x_mesh))), ddc::DiscreteVector<ddc::PeriodicSampling<K<X>>>(FFT_detail::N<X>(x_mesh))))...
+  );
 }
 
 // FFT

@@ -75,10 +75,9 @@ static void TestFFT()
 			f(e) = static_cast<Tin>(exp(-(pow(coordinate(ddc::select<DDim<X>>(e)),2) + ...)/2));
 		}
 	);
+	
+	DDom<DFDim<K<X>>...> const k_mesh = FourierMesh(x_mesh,is_complex<Tin>::value&&is_complex<Tout>::value);
 
-	DDom<DFDim<K<X>>...> const k_mesh = DDom<DFDim<K<X>>...>(
-		ddc::init_discrete_space(DFDim<K<X>>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(is_complex<Tin>::value&&is_complex<Tout>::value ? 2*(Nx-1)/(b-a)*M_PI : LastSelector<double,X,X...>(Nx/(b-a)*M_PI,2*(Nx-1)/(b-a)*M_PI)), ddc::DiscreteVector<DFDim<K<X>>>(is_complex<Tin>::value&&is_complex<Tout>::value ? Nx : LastSelector<double,X,X...>(Nx/2+1,Nx)), ddc::DiscreteVector<DFDim<K<X>>>(Nx)))...
-	);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace,Tout>());
 	ddc::ChunkSpan Ff = _Ff.span_view();
 	FFT(ExecSpace(), Ff, f, { FFT_detail::Direction::FORWARD, FFT_detail::Normalization::FULL } );

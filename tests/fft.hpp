@@ -57,9 +57,9 @@ constexpr auto policy = []{ if constexpr (std::is_same<ExecSpace,Kokkos::Serial>
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename... X>
 static void TestFFT()
 {
-	const double a		= -5;
-	const double b		= 5;
-    const std::size_t Nx = 16; // Optimal value is (b-a)^2/(2*pi)
+	const double a		= -10;
+	const double b		= 10;
+    const std::size_t Nx = 64; // Optimal value is (b-a)^2/(2*pi)
 
 	DDom<DDim<X>...> const x_mesh = DDom<DDim<X>...>(
 		ddc::init_discrete_space(DDim<X>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, X>(a+(b-a)/Nx/2), ddc::detail::TaggedVector<ddc::CoordinateElement, X>(b-(b-a)/Nx/2), DVect<DDim<X>>(Nx)))...
@@ -150,7 +150,8 @@ static void TestFFT()
 
 	std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
 	std::cout << "\n Distance between input and iFFT(FFT(input)) : " << criterion2;
-	ASSERT_LE(criterion, 2e-6);
-	ASSERT_LE(criterion2, 5e-8);
+	double epsilon = std::is_same_v<typename FFT_detail::real_type<Tin>::type,double> ? 1e-16 : 1e-7;
+	ASSERT_LE(criterion, epsilon);
+	ASSERT_LE(criterion2, epsilon);
 }
 

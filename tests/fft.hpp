@@ -76,11 +76,11 @@ static void TestFFT()
 		}
 	);
 	
-	DDom<DFDim<K<X>>...> const k_mesh = FourierMesh(x_mesh,is_complex<Tin>::value&&is_complex<Tout>::value);
+	DDom<DFDim<K<X>>...> const k_mesh = ddc::FourierMesh(x_mesh,is_complex<Tin>::value&&is_complex<Tout>::value);
 
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace,Tout>());
 	ddc::ChunkSpan Ff = _Ff.span_view();
-	FFT(ExecSpace(), Ff, f, { FFT_detail::Direction::FORWARD, FFT_detail::Normalization::FULL } );
+	ddc::FFT(ExecSpace(), Ff, f, { FFT_detail::Direction::FORWARD, FFT_detail::Normalization::FULL } );
 	Kokkos::fence();
 
 	// deepcopy of Ff because FFT C2R overwrites the input
@@ -90,7 +90,7 @@ static void TestFFT()
 
 	ddc::Chunk _FFf = ddc::Chunk(x_mesh, Allocator<MemorySpace,Tin>());
 	ddc::ChunkSpan FFf = _FFf.span_view();
-	FFT(ExecSpace(), FFf, Ff_bis, { FFT_detail::Direction::BACKWARD, FFT_detail::Normalization::FULL } );
+	ddc::FFT(ExecSpace(), FFf, Ff_bis, { FFT_detail::Direction::BACKWARD, FFT_detail::Normalization::FULL } );
 
 	ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan f_host = _f_host.span_view();

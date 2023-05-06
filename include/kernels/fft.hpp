@@ -19,7 +19,7 @@
 # endif
 
 // TODO : maybe transfert this somewhere else because Fourier space is not specific to FFT
-template <typename Dims>
+template <typename Dim>
 struct K;
 
 // Macro to orient to A or B exeution code according to type of T (float or not). Trick necessary because of the old convention of fftw (need to add an "f" in all functions or types names for the float version)
@@ -384,28 +384,30 @@ namespace FFT_detail {
   }
 }
 
-// FourierMesh
-template <typename... X>
-ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...> FourierMesh(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh, const bool real_input) {
-  return ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>(
-	ddc::init_discrete_space(ddc::PeriodicSampling<K<X>>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(real_input ? 2*(FFT_detail::N<X>(x_mesh)-1)/(FFT_detail::b<X>(x_mesh)-FFT_detail::a<X>(x_mesh))*M_PI : FFT_detail::LastSelector<double,X,X...>(FFT_detail::N<X>(x_mesh)/(FFT_detail::b<X>(x_mesh)-FFT_detail::a<X>(x_mesh))*M_PI,2*(FFT_detail::N<X>(x_mesh)-1)/(FFT_detail::b<X>(x_mesh)-FFT_detail::a<X>(x_mesh))*M_PI)), ddc::DiscreteVector<ddc::PeriodicSampling<K<X>>>(real_input ? FFT_detail::N<X>(x_mesh) : FFT_detail::LastSelector<double,X,X...>(FFT_detail::N<X>(x_mesh)/2+1,FFT_detail::N<X>(x_mesh))), ddc::DiscreteVector<ddc::PeriodicSampling<K<X>>>(FFT_detail::N<X>(x_mesh))))...
-  );
-}
+namespace ddc {
+  // FourierMesh
+  template <typename... X>
+  ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...> FourierMesh(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh, const bool C2C) {
+	return ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>(
+	  ddc::init_discrete_space(ddc::PeriodicSampling<K<X>>::init(ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(0), ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(C2C ? 2*(FFT_detail::N<X>(x_mesh)-1)/(FFT_detail::b<X>(x_mesh)-FFT_detail::a<X>(x_mesh))*M_PI : FFT_detail::LastSelector<double,X,X...>(FFT_detail::N<X>(x_mesh)/(FFT_detail::b<X>(x_mesh)-FFT_detail::a<X>(x_mesh))*M_PI,2*(FFT_detail::N<X>(x_mesh)-1)/(FFT_detail::b<X>(x_mesh)-FFT_detail::a<X>(x_mesh))*M_PI)), ddc::DiscreteVector<ddc::PeriodicSampling<K<X>>>(C2C ? FFT_detail::N<X>(x_mesh) : FFT_detail::LastSelector<double,X,X...>(FFT_detail::N<X>(x_mesh)/2+1,FFT_detail::N<X>(x_mesh))), ddc::DiscreteVector<ddc::PeriodicSampling<K<X>>>(FFT_detail::N<X>(x_mesh))))...
+	);
+  }
 
-// FFT
-template<typename Tin, typename Tout, typename... X, typename ExecSpace, typename MemorySpace>
-void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> out, ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> in, FFT_detail::kwArgs kwargs={ FFT_detail::Direction::FORWARD, FFT_detail::Normalization::OFF })
-{
-	ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> in_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(in);
+  // FFT
+  template<typename Tin, typename Tout, typename... X, typename ExecSpace, typename MemorySpace, typename layout_in, typename layout_out>
+  void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, layout_out, MemorySpace> out, ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, layout_in, MemorySpace> in, FFT_detail::kwArgs kwargs={ FFT_detail::Direction::FORWARD, FFT_detail::Normalization::OFF })
+  {
+	  ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> in_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(in);
 
-	FFT_detail::FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), in_mesh, kwargs);
-}
+	  FFT_detail::FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), in_mesh, kwargs);
+  }
 
-// iFFT (deduced from the fact that "in" is identified as a function on the Fourier space)
-template<typename Tin, typename Tout, typename... X, typename ExecSpace, typename MemorySpace>
-void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, std::experimental::layout_right, MemorySpace> out, ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, std::experimental::layout_right, MemorySpace> in, FFT_detail::kwArgs kwargs={ FFT_detail::Direction::BACKWARD, FFT_detail::Normalization::OFF })
-{
-	ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> out_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(out);
+  // iFFT (deduced from the fact that "in" is identified as a function on the Fourier space)
+  template<typename Tin, typename Tout, typename... X, typename ExecSpace, typename MemorySpace, typename layout_in, typename layout_out>
+  void FFT(ExecSpace execSpace, ddc::ChunkSpan<Tout, ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>, layout_out, MemorySpace> out, ddc::ChunkSpan<Tin, ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>, layout_in, MemorySpace> in, FFT_detail::kwArgs kwargs={ FFT_detail::Direction::BACKWARD, FFT_detail::Normalization::OFF })
+  {
+	  ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> out_mesh = ddc::get_domain<ddc::UniformPointSampling<X>...>(out);
 
-	FFT_detail::FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), out_mesh, kwargs);
+	  FFT_detail::FFT_core<Tin,Tout,ExecSpace,MemorySpace,X...>(execSpace, out.data(), in.data(), out_mesh, kwargs);
+  }
 }

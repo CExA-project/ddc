@@ -7,6 +7,7 @@
 #include <numeric>
 
 #include <ddc/ddc.hpp>
+#include <kernels/fft.hpp>
 
 #include <Kokkos_Core.hpp>
 //! [includes]
@@ -35,7 +36,6 @@ struct T;
 // Its uniform discretization
 using DDimT = ddc::UniformPointSampling<T>;
 //! [time-space]
-
 
 //! [display]
 /** A function to pretty print the temperature
@@ -70,6 +70,17 @@ void display(double time, ChunkType temp)
 }
 //! [display]
 
+#if 1
+template <typename T>
+__host__ __device__ inline T mult(const T& a, const T& b) {
+      return a*b;
+}
+
+template <typename T>
+__host__ __device__ inline std::complex<T> mult(const std::complex<T>& a, const T& b) {
+      return std::complex<T>(a.real()*b,a.imag()*b);
+}
+#endif
 
 //! [main-start]
 int main(int argc, char** argv)
@@ -101,7 +112,7 @@ int main(int argc, char** argv)
     // Simulated time to reach as target of the simulation
     double const end_time = 10.;
     // Number of time-steps between outputs
-    ptrdiff_t const t_output_period = 10;
+    ptrdiff_t const t_output_period = 1;
     //! [parameters]
 
     //! [main-start]
@@ -216,9 +227,10 @@ int main(int argc, char** argv)
     ddc::ChunkSpan const ghosted_initial_temp
             = ghosted_last_temp.span_view();
     // Initialize the temperature on the main domain
+	ddc::DiscreteDomain<DDimX, DDimY> x_mesh = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::for_each(
             ddc::policies::parallel_device,
-            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
+            x_mesh,
             DDC_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
                         = ddc::coordinate(ddc::select<DDimX>(ixy));
@@ -244,6 +256,12 @@ int main(int argc, char** argv)
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
+
+	#if 1
+	ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>,ddc::PeriodicSampling<K<Y>>> const k_mesh = ddc::FourierMesh(ghosted_initial_temp.domain(),false);
+	ddc::Chunk _Ff = ddc::Chunk(k_mesh, ddc::DeviceAllocator<std::complex<double>>());
+	ddc::ChunkSpan Ff = _Ff.span_view();
+	#endif
 
     //! [time iteration]
     for (auto const iter :
@@ -271,12 +289,14 @@ int main(int argc, char** argv)
         // will build
         ddc::ChunkSpan const next_temp {
                 ghosted_next_temp[x_domain][y_domain]};
+        // ddc::ChunkSpan const next_temp {ghosted_next_temp.span_view()};
         // a read-only view of the temperature at the previous time-step
         ddc::ChunkSpan const last_temp {ghosted_last_temp.span_view()};
         //! [manipulated views]
 
         //! [numerical scheme]
         // Stencil computation on the main domain
+		#if 1 
         ddc::for_each(
                 ddc::policies::parallel_device,
                 next_temp.domain(),
@@ -306,6 +326,20 @@ int main(int argc, char** argv)
                                   + dy_r * last_temp(ix, iy - 1))
                                / (dy_l * dy_m * dy_r);
                 });
+		#endif
+		#if 0
+		ddc::FFT(Kokkos::DefaultExecutionSpace(), Ff, last_temp, { FFT_detail::Direction::FORWARD, FFT_detail::Normalization::FULL });
+        ddc::for_each(
+                ddc::policies::parallel_device,
+                k_mesh,
+                DDC_LAMBDA(ddc::DiscreteElement<ddc::PeriodicSampling<K<X>>,ddc::PeriodicSampling<K<Y>>> const ikxky) {
+				  ddc::DiscreteElement<ddc::PeriodicSampling<K<X>>> const ikx = ddc::select<ddc::PeriodicSampling<K<X>>>(ikxky);
+				  ddc::DiscreteElement<ddc::PeriodicSampling<K<Y>>> const iky = ddc::select<ddc::PeriodicSampling<K<Y>>>(ikxky);
+				  Ff(ikx,iky) = mult(Ff(ikx,iky), 1-(coordinate(ikx)*coordinate(ikx)*kx+coordinate(iky)*coordinate(iky)*ky)*max_dt); // Ff(t+dt) = (1-D*k^2)*Ff(t)
+				}
+		);
+	    ddc::FFT(Kokkos::DefaultExecutionSpace(), next_temp, Ff, { FFT_detail::Direction::BACKWARD, FFT_detail::Normalization::FULL });
+		#endif
         //! [numerical scheme]
 
         //! [output]

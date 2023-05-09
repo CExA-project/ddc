@@ -112,7 +112,7 @@ int main(int argc, char** argv)
     // Simulated time to reach as target of the simulation
     double const end_time = 10.;
     // Number of time-steps between outputs
-    ptrdiff_t const t_output_period = 1;
+    ptrdiff_t const t_output_period = 10;
     //! [parameters]
 
     //! [main-start]
@@ -190,7 +190,7 @@ int main(int argc, char** argv)
                           * ddc::distance_at_right(iy));
             });
     ddc::Coordinate<T> const max_dt {
-            .5 / (kx * invdx2_max + ky * invdy2_max)};
+            .2 / (kx * invdx2_max + ky * invdy2_max)}; // Classical stability theory gives .5 but empirically we see that for FFT method we need .2
 
     // number of time intervals required to reach the end time
     ddc::DiscreteVector<DDimT> const nb_time_steps {
@@ -287,16 +287,16 @@ int main(int argc, char** argv)
         //! [manipulated views]
         // a span excluding ghosts of the temperature at the time-step we
         // will build
-        ddc::ChunkSpan const next_temp {
-                ghosted_next_temp[x_domain][y_domain]};
-        // ddc::ChunkSpan const next_temp {ghosted_next_temp.span_view()};
+        // ddc::ChunkSpan const next_temp {
+        //         ghosted_next_temp[x_domain][y_domain]};
+        ddc::ChunkSpan const next_temp {ghosted_next_temp.span_view()};
         // a read-only view of the temperature at the previous time-step
         ddc::ChunkSpan const last_temp {ghosted_last_temp.span_view()};
         //! [manipulated views]
 
         //! [numerical scheme]
         // Stencil computation on the main domain
-		#if 1 
+		#if 0
         ddc::for_each(
                 ddc::policies::parallel_device,
                 next_temp.domain(),
@@ -327,7 +327,7 @@ int main(int argc, char** argv)
                                / (dy_l * dy_m * dy_r);
                 });
 		#endif
-		#if 0
+		#if 1
 		ddc::FFT(Kokkos::DefaultExecutionSpace(), Ff, last_temp, { FFT_detail::Direction::FORWARD, FFT_detail::Normalization::FULL });
         ddc::for_each(
                 ddc::policies::parallel_device,

@@ -12,6 +12,10 @@
 #include <Kokkos_Core.hpp>
 //! [includes]
 
+#define FINITE_DIFF 0
+#define SPECTRAL 1
+
+#define METHOD SPECTRAL // FINITE_DIFF or SPECTRAL
 
 //! [X-dimension]
 /// Our first continuous dimension
@@ -70,7 +74,7 @@ void display(double time, ChunkType temp)
 }
 //! [display]
 
-#if 1
+#if (METHOD == SPECTRAL)
 template <typename T>
 __host__ __device__ inline T mult(const T& a, const T& b) {
       return a*b;
@@ -116,9 +120,19 @@ int main(int argc, char** argv)
     //! [parameters]
 
     //! [main-start]
+	#if (METHOD == FINITE_DIFF)
+    std::cout << "Using finite differences method \n";
+    #elif (METHOD == SPECTRAL)
+    std::cout << "Using spectral method \n";
+	#endif 
+
     //! [X-parameters]
     // Number of ghost points to use on each side in X
+  	#if (METHOD == FINITE_DIFF)
     ddc::DiscreteVector<DDimX> static constexpr gwx {1};
+    #elif (METHOD == SPECTRAL)
+    ddc::DiscreteVector<DDimX> static constexpr gwx {0};
+	#endif 
     //! [X-parameters]
 
     //! [X-global-domain]
@@ -146,7 +160,11 @@ int main(int argc, char** argv)
 
     //! [Y-domains]
     // Number of ghost points to use on each side in Y
+	#if (METHOD == FINITE_DIFF)
     ddc::DiscreteVector<DDimY> static constexpr gwy {1};
+    #elif (METHOD == SPECTRAL)
+    ddc::DiscreteVector<DDimY> static constexpr gwy {0};
+	#endif 
 
     // Initialization of the global domain in Y with gwy ghost points on
     // each side
@@ -257,7 +275,7 @@ int main(int argc, char** argv)
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
 
-	#if 1
+	#if (METHOD == SPECTRAL)
 	ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>,ddc::PeriodicSampling<K<Y>>> const k_mesh = ddc::FourierMesh(ghosted_initial_temp.domain(),false);
 	ddc::Chunk _Ff = ddc::Chunk(k_mesh, ddc::DeviceAllocator<std::complex<double>>());
 	ddc::ChunkSpan Ff = _Ff.span_view();
@@ -287,16 +305,19 @@ int main(int argc, char** argv)
         //! [manipulated views]
         // a span excluding ghosts of the temperature at the time-step we
         // will build
-        // ddc::ChunkSpan const next_temp {
-        //         ghosted_next_temp[x_domain][y_domain]};
+		#if (METHOD == FINITE_DIFF)
+        ddc::ChunkSpan const next_temp {
+                ghosted_next_temp[x_domain][y_domain]};
+		#elif (METHOD == SPECTRAL)
         ddc::ChunkSpan const next_temp {ghosted_next_temp.span_view()};
+		#endif
         // a read-only view of the temperature at the previous time-step
         ddc::ChunkSpan const last_temp {ghosted_last_temp.span_view()};
         //! [manipulated views]
 
         //! [numerical scheme]
         // Stencil computation on the main domain
-		#if 0
+		#if (METHOD == FINITE_DIFF)
         ddc::for_each(
                 ddc::policies::parallel_device,
                 next_temp.domain(),
@@ -326,8 +347,7 @@ int main(int argc, char** argv)
                                   + dy_r * last_temp(ix, iy - 1))
                                / (dy_l * dy_m * dy_r);
                 });
-		#endif
-		#if 1
+		#elif (METHOD == SPECTRAL)
 		ddc::FFT(Kokkos::DefaultExecutionSpace(), Ff, last_temp, { FFT_detail::Direction::FORWARD, FFT_detail::Normalization::FULL });
         ddc::for_each(
                 ddc::policies::parallel_device,
@@ -335,7 +355,7 @@ int main(int argc, char** argv)
                 DDC_LAMBDA(ddc::DiscreteElement<ddc::PeriodicSampling<K<X>>,ddc::PeriodicSampling<K<Y>>> const ikxky) {
 				  ddc::DiscreteElement<ddc::PeriodicSampling<K<X>>> const ikx = ddc::select<ddc::PeriodicSampling<K<X>>>(ikxky);
 				  ddc::DiscreteElement<ddc::PeriodicSampling<K<Y>>> const iky = ddc::select<ddc::PeriodicSampling<K<Y>>>(ikxky);
-				  Ff(ikx,iky) = mult(Ff(ikx,iky), 1-(coordinate(ikx)*coordinate(ikx)*kx+coordinate(iky)*coordinate(iky)*ky)*max_dt); // Ff(t+dt) = (1-D*k^2)*Ff(t)
+				  Ff(ikx,iky) = mult(Ff(ikx,iky), 1-(coordinate(ikx)*coordinate(ikx)*kx+coordinate(iky)*coordinate(iky)*ky)*max_dt); // Ff(t+dt) = (1-D*k^2*dt)*Ff(t)
 				}
 		);
 	    ddc::FFT(Kokkos::DefaultExecutionSpace(), next_temp, Ff, { FFT_detail::Direction::BACKWARD, FFT_detail::Normalization::FULL });

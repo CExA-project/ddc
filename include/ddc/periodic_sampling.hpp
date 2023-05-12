@@ -47,7 +47,7 @@ public:
 
         double m_step {1.};
 
-		std::size_t m_n_period {2};
+        std::size_t m_n_period {2};
 
     public:
         using discrete_dimension_type = PeriodicSampling;
@@ -72,7 +72,10 @@ public:
      * @param step   the real distance between two points of mesh distance 1
      * @param n_period   the number of steps in a period
      */
-        constexpr Impl(continuous_element_type origin, double step, std::size_t n_period) : m_origin(origin), m_step(step), m_n_period(n_period)
+        constexpr Impl(continuous_element_type origin, double step, std::size_t n_period)
+            : m_origin(origin)
+            , m_step(step)
+            , m_n_period(n_period)
         {
             assert(step > 0);
             assert(n_period > 0);
@@ -106,7 +109,11 @@ public:
      * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
      * @param n_period   the number of steps in a period
      */
-        constexpr Impl(continuous_element_type a, continuous_element_type b, discrete_vector_type n, discrete_vector_type n_period)
+        constexpr Impl(
+                continuous_element_type a,
+                continuous_element_type b,
+                discrete_vector_type n,
+                discrete_vector_type n_period)
             : m_origin(a)
             , m_step((b - a) / (n - 1))
             , m_n_period(n_period)
@@ -136,7 +143,7 @@ public:
             return m_step;
         }
 
-		/// @brief Number of steps in a period
+        /// @brief Number of steps in a period
         constexpr std::size_t n_period() const
         {
             return m_n_period;
@@ -146,7 +153,11 @@ public:
         constexpr continuous_element_type coordinate(
                 discrete_element_type const& icoord) const noexcept
         {
-            return m_origin + continuous_element_type(static_cast<int>((icoord.uid()+m_n_period/2-1)%m_n_period)-static_cast<int>(m_n_period/2-1)) * m_step;
+            return m_origin
+                   + continuous_element_type(
+                             static_cast<int>((icoord.uid() + m_n_period / 2 - 1) % m_n_period)
+                             - static_cast<int>(m_n_period / 2 - 1))
+                             * m_step;
         }
     };
 
@@ -202,7 +213,9 @@ public:
         assert(n_period > 1);
         double discretization_step {(b - a) / (n - 1)};
         Impl<Kokkos::HostSpace>
-                disc(a - n_ghosts_before.value() * discretization_step, discretization_step, n_period);
+                disc(a - n_ghosts_before.value() * discretization_step,
+                     discretization_step,
+                     n_period);
         discrete_domain_type ghosted_domain
                 = discrete_domain_type(disc.front(), n + n_ghosts_before + n_ghosts_after);
         discrete_domain_type pre_ghost
@@ -266,8 +279,7 @@ template <
                 int> = 0>
 std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 {
-    return out << "PeriodicSampling( origin=" << mesh.origin() << ", step=" << mesh.step()
-               << " )";
+    return out << "PeriodicSampling( origin=" << mesh.origin() << ", step=" << mesh.step() << " )";
 }
 
 /// @brief Lower bound index of the mesh

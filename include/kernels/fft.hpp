@@ -332,7 +332,7 @@ void FFT_core(
     int n[mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())...};
     int idist = 1;
     int odist = 1;
-    for (int i = 0; i < sizeof...(X); i++) {
+    for (size_t i = 0; i < sizeof...(X); i++) {
         idist = transform_type<Tin, Tout>::value == TransformType::C2R && i == sizeof...(X) - 1
                         ? idist * (n[i] / 2 + 1)
                         : idist * n[i];
@@ -424,11 +424,9 @@ void FFT_core(
         // std::cout << "performed with cufft";
     }
 #endif
-#if hipfft_AVAIL
-    else if constexpr (std::is_same<ExecSpace, Kokkos::Cuda>::value) {
-        // else if constexpr(std::is_same<ExecSpace, Kokkos::HIP::value) {
-        hipStream_t stream = execSpace.cuda_stream();
-        // hipStream_t stream = execSpace.hip_stream();
+#if hipfft_AVAIL && !HIP_FOR_NVIDIA
+    else if constexpr(std::is_same<ExecSpace, Kokkos::HIP::value) {
+        hipStream_t stream = execSpace.hip_stream();
 
         hipfftHandle plan = -1;
         hipfftResult hipfft_rt = hipfftCreate(&plan);
@@ -484,6 +482,8 @@ void FFT_core(
                                   * (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) - 1)
                                   / ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()))
                                  * ...);
+        case Normalization::OFF:
+			norm_coef = 1;
         }
 
         Kokkos::parallel_for(

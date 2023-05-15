@@ -147,7 +147,7 @@ static void TestFFT()
             = ddc::Chunk(ddc::get_domain<DFDim<Fourier<X>>...>(Ff), ddc::HostAllocator<Tout>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
     ddc::deepcopy(Ff_host, Ff);
-#if 1
+#if 0
 	std::cout << "\n output:\n";
 	ddc::for_each(
         ddc::policies::serial_host,

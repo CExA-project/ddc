@@ -83,11 +83,11 @@ __host__ __device__ inline T mult(const T& a, const T& b)
 }
 
 template <typename T>
-__host__ __device__ inline std::complex<T> mult(
-        const std::complex<T>& a,
+__host__ __device__ inline Kokkos::complex<T> mult(
+        const Kokkos::complex<T>& a,
         const T& b)
 {
-    return std::complex<T>(a.real() * b, a.imag() * b);
+    return Kokkos::complex<T>(a.real() * b, a.imag() * b);
 }
 #endif
 
@@ -289,7 +289,7 @@ int main(int argc, char** argv)
             ddc::PeriodicSampling<K<Y>>> const k_mesh
             = ddc::FourierMesh(ghosted_initial_temp.domain(), false);
     ddc::Chunk _Ff = ddc::
-            Chunk(k_mesh, ddc::DeviceAllocator<std::complex<double>>());
+            Chunk(k_mesh, ddc::DeviceAllocator<Kokkos::complex<double>>());
     ddc::ChunkSpan Ff = _Ff.span_view();
 #endif
 

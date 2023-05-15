@@ -21,14 +21,14 @@ using DDom = ddc::DiscreteDomain<DDim...>;
 template <typename Kx>
 using DFDim = ddc::PeriodicSampling<Kx>;
 
-// is_complex : trait to determine if type is std::complex<something>
+// is_complex : trait to determine if type is Kokkos::complex<something>
 template <typename T>
 struct is_complex : std::false_type
 {
 };
 
 template <typename T>
-struct is_complex<std::complex<T>> : std::true_type
+struct is_complex<Kokkos::complex<T>> : std::true_type
 {
 };
 

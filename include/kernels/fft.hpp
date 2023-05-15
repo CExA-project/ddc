@@ -38,19 +38,19 @@ struct real_type
 };
 
 template <typename T>
-struct real_type<std::complex<T>>
+struct real_type<Kokkos::complex<T>>
 {
     using type = T;
 };
 
-// is_complex : trait to determine if type is std::complex<something>
+// is_complex : trait to determine if type is Kokkos::complex<something>
 template <typename T>
 struct is_complex : std::false_type
 {
 };
 
 template <typename T>
-struct is_complex<std::complex<T>> : std::true_type
+struct is_complex<Kokkos::complex<T>> : std::true_type
 {
 };
 
@@ -77,19 +77,19 @@ struct transform_type
 };
 
 template <typename T1, typename T2>
-struct transform_type<T1, std::complex<T2>>
+struct transform_type<T1, Kokkos::complex<T2>>
 {
     static constexpr TransformType value = TransformType::R2C;
 };
 
 template <typename T1, typename T2>
-struct transform_type<std::complex<T1>, T2>
+struct transform_type<Kokkos::complex<T1>, T2>
 {
     static constexpr TransformType value = TransformType::C2R;
 };
 
 template <typename T1, typename T2>
-struct transform_type<std::complex<T1>, std::complex<T2>>
+struct transform_type<Kokkos::complex<T1>, Kokkos::complex<T2>>
 {
     static constexpr TransformType value = TransformType::C2C;
 };
@@ -103,7 +103,7 @@ struct _fftw_type
 };
 
 template <typename T>
-struct _fftw_type<std::complex<T>>
+struct _fftw_type<Kokkos::complex<T>>
 {
     using type = typename std::conditional<
             std::is_same_v<typename real_type<T>::type, float>,
@@ -132,10 +132,10 @@ _fftw_plan<Tin> _fftw_plan_many_dft(PenultArg penultArg, LastArg lastArg, Args..
     else if constexpr (transformType == TransformType::C2R && std::is_same_v<Tout, double>)
         return fftw_plan_many_dft_c2r(args..., lastArg);
     else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, std::complex<float>>)
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<float>>)
         return fftwf_plan_many_dft(args..., penultArg, lastArg);
     else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, std::complex<double>>)
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<double>>)
         return fftw_plan_many_dft(args..., penultArg, lastArg);
     // else constexpr
     //   static_assert(false, "Transform type not supported");
@@ -152,7 +152,7 @@ struct _cufft_type
 };
 
 template <typename T>
-struct _cufft_type<std::complex<T>>
+struct _cufft_type<Kokkos::complex<T>>
 {
     using type = typename std::conditional<
             std::is_same_v<typename real_type<T>::type, float>,
@@ -174,10 +174,10 @@ constexpr auto cufft_transform_type()
     else if constexpr (transformType == TransformType::C2R && std::is_same_v<Tout, double>)
         return CUFFT_Z2D;
     else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, std::complex<float>>)
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<float>>)
         return CUFFT_C2C;
     else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, std::complex<double>>)
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<double>>)
         return CUFFT_Z2Z;
     // else constexpr
     //	static_assert(false, "Transform type not supported");
@@ -198,10 +198,10 @@ cufftResult _cufftExec(LastArg lastArg, Args... args)
     else if constexpr (transformType == TransformType::C2R && std::is_same_v<Tout, double>)
         return cufftExecZ2D(args...);
     else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, std::complex<float>>)
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<float>>)
         return cufftExecC2C(args..., lastArg);
     else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, std::complex<double>>)
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<double>>)
         return cufftExecZ2Z(args..., lastArg);
     // else constexpr
     //   static_assert(false, "Transform type not supported");
@@ -217,7 +217,7 @@ struct _hipfft_type
 };
 
 template <typename T>
-struct _hipfft_type<std::complex<T>>
+struct _hipfft_type<Kokkos::complex<T>>
 {
     using type = typename std::conditional<
             std::is_same_v<typename real_type<T>::type, float>,
@@ -239,10 +239,10 @@ constexpr auto hipfft_transform_type()
     else if constexpr (transformType == TransformType::C2R && std::is_same_v<Tout, double>)
         return HIPFFT_Z2D;
     else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, std::complex<float>>)
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<float>>)
         return HIPFFT_C2C;
     else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, std::complex<double>>)
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<double>>)
         return HIPFFT_Z2Z;
     // else constexpr
     //	static_assert(false, "Transform type not supported");
@@ -263,10 +263,10 @@ hipfftResult _hipfftExec(LastArg lastArg, Args... args)
     else if constexpr (transformType == TransformType::C2R && std::is_same_v<Tout, double>)
         return hipfftExecZ2D(args...);
     else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, std::complex<float>>)
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<float>>)
         return hipfftExecC2C(args..., lastArg);
     else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, std::complex<double>>)
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<double>>)
         return hipfftExecZ2Z(args..., lastArg);
     // else constexpr
     //   static_assert(false, "Transform type not supported");
@@ -290,9 +290,9 @@ __host__ __device__ inline T mult(const T& a, const T& b)
 }
 
 template <typename T>
-__host__ __device__ inline std::complex<T> mult(const std::complex<T>& a, const T& b)
+__host__ __device__ inline Kokkos::complex<T> mult(const Kokkos::complex<T>& a, const T& b)
 {
-    return std::complex<T>(a.real() * b, a.imag() * b);
+    return Kokkos::complex<T>(a.real() * b, a.imag() * b);
 }
 
 // N,a,b from x_mesh

@@ -332,7 +332,7 @@ void FFT_core(
     int n[mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())...};
     int idist = 1;
     int odist = 1;
-    for (int i = 0; i < sizeof...(X); i++) {
+    for (size_t i = 0; i < sizeof...(X); i++) {
         idist = transform_type<Tin, Tout>::value == TransformType::C2R && i == sizeof...(X) - 1
                         ? idist * (n[i] / 2 + 1)
                         : idist * n[i];
@@ -462,6 +462,8 @@ void FFT_core(
     if (kwargs.normalization != Normalization::OFF) {
         typename real_type<Tout>::type norm_coef;
         switch (kwargs.normalization) {
+        case Normalization::OFF:
+			norm_coef = 1;
         case Normalization::ORTHO:
             norm_coef = pow(1 / sqrt(2 * M_PI), sizeof...(X));
         case Normalization::FULL:
@@ -482,8 +484,6 @@ void FFT_core(
                                   * (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) - 1)
                                   / ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()))
                                  * ...);
-        case Normalization::OFF:
-			norm_coef = 1;
         }
 
         Kokkos::parallel_for(
@@ -500,7 +500,7 @@ void FFT_core(
                                    * ...)
                                 : (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)),
                 KOKKOS_LAMBDA(const int& i) {
-                    out_data[i] = static_cast<typename std::conditional<is_complex<Tout>::value, typename Kokkos::complex<typename real_type<Tout>::type>, Tout>::type>(out_data[i])*norm_coef;
+                    out_data[i] = out_data[i]*norm_coef;
                 });
     }
 }

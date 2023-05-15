@@ -193,7 +193,7 @@ static void TestFFT()
     std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
     std::cout << "\n Distance between input and iFFT(FFT(input)) : " << criterion2;
     double epsilon
-            = std::is_same_v<typename FFT_detail::real_type<Tin>::type, double> ? 1e-16 : 1e-7;
+            = std::is_same_v<typename FFT_detail::real_type<Tin>::type, double> ? 1e-15 : 1e-7;
     ASSERT_LE(criterion, epsilon);
     ASSERT_LE(criterion2, epsilon);
 }

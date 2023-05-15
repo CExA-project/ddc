@@ -108,7 +108,7 @@ static void TestFFT()
                         exp(-(pow(coordinate(ddc::select<DDim<X>>(e)), 2) + ...) / 2));
             });
 
-    DDom<DFDim<K<X>>...> const k_mesh
+    DDom<DFDim<Fourier<X>>...> const k_mesh
             = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
 
     ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
@@ -118,7 +118,7 @@ static void TestFFT()
 
     // deepcopy of Ff because FFT C2R overwrites the input
     ddc::Chunk _Ff_bis
-            = ddc::Chunk(ddc::get_domain<DFDim<K<X>>...>(Ff), Allocator<MemorySpace, Tout>());
+            = ddc::Chunk(ddc::get_domain<DFDim<Fourier<X>>...>(Ff), Allocator<MemorySpace, Tout>());
     ddc::ChunkSpan Ff_bis = _Ff_bis.span_view();
     ddc::deepcopy(Ff_bis, Ff);
 
@@ -144,16 +144,16 @@ static void TestFFT()
 #endif
 
     ddc::Chunk _Ff_host
-            = ddc::Chunk(ddc::get_domain<DFDim<K<X>>...>(Ff), ddc::HostAllocator<Tout>());
+            = ddc::Chunk(ddc::get_domain<DFDim<Fourier<X>>...>(Ff), ddc::HostAllocator<Tout>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
     ddc::deepcopy(Ff_host, Ff);
 #if 0
 	std::cout << "\n output:\n";
 	ddc::for_each(
         ddc::policies::serial_host,
-        ddc::get_domain<DFDim<K<X>>...>(Ff_host),
-        [=](DElem<DFDim<K<X>>...> const e) {
-			(std::cout << ... << coordinate(ddc::select<DFDim<K<X>>>(e))) << "->" << abs(Ff_host(e)) << " " << exp(-(pow(coordinate(ddc::select<DFDim<K<X>>>(e)),2) + ...)/2) << ", ";
+        ddc::get_domain<DFDim<Fourier<X>>...>(Ff_host),
+        [=](DElem<DFDim<Fourier<X>>...> const e) {
+			(std::cout << ... << coordinate(ddc::select<DFDim<Fourier<X>>>(e))) << "->" << abs(Ff_host(e)) << " " << exp(-(pow(coordinate(ddc::select<DFDim<Fourier<X>>>(e)),2) + ...)/2) << ", ";
 	});
 #endif
 
@@ -171,12 +171,12 @@ static void TestFFT()
 #endif
 
     double criterion = sqrt(ddc::transform_reduce(
-            ddc::get_domain<DFDim<K<X>>...>(Ff_host),
+            ddc::get_domain<DFDim<Fourier<X>>...>(Ff_host),
             0.,
             ddc::reducer::sum<double>(),
-            [=](DElem<DFDim<K<X>>...> const e) {
+            [=](DElem<DFDim<Fourier<X>>...> const e) {
                 return pow(abs(Ff_host(e))
-                                   - exp(-(pow(coordinate(ddc::select<DFDim<K<X>>>(e)), 2) + ...)
+                                   - exp(-(pow(coordinate(ddc::select<DFDim<Fourier<X>>>(e)), 2) + ...)
                                          / 2),
                            2)
                        / (LastSelector<std::size_t, X, X...>(Nx / 2, Nx) * ...);

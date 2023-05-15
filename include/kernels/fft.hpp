@@ -20,7 +20,7 @@
 
 // TODO : maybe transfert this somewhere else because Fourier space is not specific to FFT
 template <typename Dim>
-struct K;
+struct Fourier;
 
 // Macro to orient to A or B exeution code according to type of T (float or not). Trick necessary because of the old convention of fftw (need to add an "f" in all functions or types names for the float version)
 #define execIfFloat(T, A, B)                                                                       \
@@ -509,14 +509,14 @@ void FFT_core(
 namespace ddc {
 // FourierMesh
 template <typename... X>
-ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...> FourierMesh(
+ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...> FourierMesh(
         ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh,
         const bool C2C)
 {
-    return ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>(ddc::init_discrete_space(
-            ddc::PeriodicSampling<K<X>>::
-                    init(ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(0),
-                         ddc::detail::TaggedVector<ddc::CoordinateElement, K<X>>(
+    return ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>(ddc::init_discrete_space(
+            ddc::PeriodicSampling<Fourier<X>>::
+                    init(ddc::detail::TaggedVector<ddc::CoordinateElement, Fourier<X>>(0),
+                         ddc::detail::TaggedVector<ddc::CoordinateElement, Fourier<X>>(
                                  C2C ? 2 * (FFT_detail::N<X>(x_mesh) - 1)
                                                  / (FFT_detail::b<X>(x_mesh)
                                                     - FFT_detail::a<X>(x_mesh))
@@ -530,12 +530,12 @@ ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...> FourierMesh(
                                                      / (FFT_detail::b<X>(x_mesh)
                                                         - FFT_detail::a<X>(x_mesh))
                                                      * M_PI)),
-                         ddc::DiscreteVector<ddc::PeriodicSampling<K<X>>>(
+                         ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
                                  C2C ? FFT_detail::N<X>(x_mesh)
                                      : FFT_detail::LastSelector<double, X, X...>(
                                              FFT_detail::N<X>(x_mesh) / 2 + 1,
                                              FFT_detail::N<X>(x_mesh))),
-                         ddc::DiscreteVector<ddc::PeriodicSampling<K<X>>>(
+                         ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
                                  FFT_detail::N<X>(x_mesh))))...);
 }
 
@@ -552,7 +552,7 @@ void FFT(
         ExecSpace execSpace,
         ddc::ChunkSpan<
                 Tout,
-                ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>,
+                ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>,
                 layout_out,
                 MemorySpace> out,
         ddc::ChunkSpan<
@@ -592,7 +592,7 @@ void FFT(
                 MemorySpace> out,
         ddc::ChunkSpan<
                 Tin,
-                ddc::DiscreteDomain<ddc::PeriodicSampling<K<X>>...>,
+                ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>,
                 layout_in,
                 MemorySpace> in,
         FFT_detail::kwArgs kwargs

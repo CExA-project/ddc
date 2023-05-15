@@ -283,18 +283,6 @@ struct kwArgs
     Normalization normalization; // Only effective for C2C transform
 };
 
-template <typename T>
-__host__ __device__ inline T mult(const T& a, const T& b)
-{
-    return a * b;
-}
-
-template <typename T>
-__host__ __device__ inline Kokkos::complex<T> mult(const Kokkos::complex<T>& a, const T& b)
-{
-    return Kokkos::complex<T>(a.real() * b, a.imag() * b);
-}
-
 // N,a,b from x_mesh
 template <typename Dim, typename... X>
 int N(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh)
@@ -512,10 +500,7 @@ void FFT_core(
                                    * ...)
                                 : (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)),
                 KOKKOS_LAMBDA(const int& i) {
-                    // out_data[i] = static_cast<typename std::conditional<is_complex<Tout>::value, typename Kokkos::complex<typename real_type<Tout>::type>, Tout>::type>(out_data[i])*norm_coef;
-                    out_data[i] = mult(
-                            out_data[i],
-                            norm_coef); // Why need to define mult in place of the * operator ?
+                    out_data[i] = static_cast<typename std::conditional<is_complex<Tout>::value, typename Kokkos::complex<typename real_type<Tout>::type>, Tout>::type>(out_data[i])*norm_coef;
                 });
     }
 }

@@ -75,22 +75,6 @@ void display(double time, ChunkType temp)
 }
 //! [display]
 
-#if (METHOD == SPECTRAL)
-template <typename T>
-__host__ __device__ inline T mult(const T& a, const T& b)
-{
-    return a * b;
-}
-
-template <typename T>
-__host__ __device__ inline Kokkos::complex<T> mult(
-        const Kokkos::complex<T>& a,
-        const T& b)
-{
-    return Kokkos::complex<T>(a.real() * b, a.imag() * b);
-}
-#endif
-
 //! [main-start]
 int main(int argc, char** argv)
 {
@@ -380,9 +364,7 @@ int main(int argc, char** argv)
                             ddc::PeriodicSampling<K<Y>>> const iky
                             = ddc::select<ddc::PeriodicSampling<K<Y>>>(
                                     ikxky);
-                    Ff(ikx, iky) = mult(
-                            Ff(ikx, iky),
-                            1
+                    Ff(ikx, iky) = Ff(ikx, iky)*(1
                                     - (coordinate(ikx) * coordinate(ikx)
                                                * kx
                                        + coordinate(iky)

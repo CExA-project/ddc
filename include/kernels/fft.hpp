@@ -576,6 +576,10 @@ void fft(
         ddc::detail::fft::kwArgs kwargs
         = {ddc::detail::fft::Direction::FORWARD, ddc::detail::fft::Normalization::OFF})
 {
+	static_assert(
+            std::is_same_v<layout_in,std::experimental::layout_right> && std::is_same_v<layout_out,std::experimental::layout_right>,
+            "Layouts must be right-handed");
+
     ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> in_mesh
             = ddc::get_domain<ddc::UniformPointSampling<X>...>(in);
 
@@ -611,6 +615,10 @@ void fft(
         ddc::detail::fft::kwArgs kwargs
         = {ddc::detail::fft::Direction::BACKWARD, ddc::detail::fft::Normalization::OFF})
 {
+	static_assert(
+            std::is_same_v<layout_in,std::experimental::layout_right> && std::is_same_v<layout_out,std::experimental::layout_right>,
+            "Layouts must be right-handed");
+
     ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> out_mesh
             = ddc::get_domain<ddc::UniformPointSampling<X>...>(out);
 

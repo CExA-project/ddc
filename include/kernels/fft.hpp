@@ -35,6 +35,9 @@ struct real_type<Kokkos::complex<T>>
     using type = T;
 };
 
+template <typename T>
+using real_type_t = typename real_type<T>::type;
+
 // is_complex : trait to determine if type is Kokkos::complex<something>
 template <typename T>
 struct is_complex : std::false_type
@@ -46,11 +49,14 @@ struct is_complex<Kokkos::complex<T>> : std::true_type
 {
 };
 
+template <typename T>
+constexpr bool is_complex_v = is_complex<T>::value;
+
 // LastSelector: returns a if Dim==Last, else b
 template <typename T, typename Dim, typename Last>
 constexpr T LastSelector(const T a, const T b)
 {
-    return std::is_same<Dim, Last>::value ? a : b;
+    return std::is_same_v<Dim, Last> ? a : b;
 }
 
 template <typename T, typename Dim, typename First, typename Second, typename... Tail>
@@ -86,6 +92,9 @@ struct transform_type<Kokkos::complex<T1>, Kokkos::complex<T2>>
     static constexpr TransformType value = TransformType::C2C;
 };
 
+template <typename T1, typename T2>
+constexpr TransformType transform_type_v = transform_type<T1,T2>::value;
+
 #if fftw_AVAIL
 // _fftw_type : compatible with both single and double precision
 template <typename T>
@@ -98,7 +107,7 @@ template <typename T>
 struct _fftw_type<Kokkos::complex<T>>
 {
     using type = typename std::conditional<
-            std::is_same_v<typename real_type<T>::type, float>,
+            std::is_same_v<real_type_t<T>, float>,
             fftwf_complex,
             fftw_complex>::type;
 };
@@ -106,7 +115,7 @@ struct _fftw_type<Kokkos::complex<T>>
 // _fftw_plan : compatible with both single and double precision
 template <typename T>
 using _fftw_plan = typename std::conditional<
-        std::is_same_v<typename real_type<T>::type, float>,
+        std::is_same_v<real_type_t<T>, float>,
         fftwf_plan,
         fftw_plan>::type;
 
@@ -114,7 +123,7 @@ using _fftw_plan = typename std::conditional<
 template <typename Tin, typename Tout, typename... Args, typename PenultArg, typename LastArg>
 _fftw_plan<Tin> _fftw_plan_many_dft(PenultArg penultArg, LastArg lastArg, Args... args)
 { // Ugly, penultArg and lastArg are passed before the rest because of a limitation of C++ (parameter packs must be last arguments)
-    const TransformType transformType = transform_type<Tin, Tout>::value;
+    const TransformType transformType = transform_type_v<Tin, Tout>;
     if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, float>)
         return fftwf_plan_many_dft_r2c(args..., lastArg);
     else if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, double>)
@@ -147,7 +156,7 @@ template <typename T>
 struct _cufft_type<Kokkos::complex<T>>
 {
     using type = typename std::conditional<
-            std::is_same_v<typename real_type<T>::type, float>,
+            std::is_same_v<real_type_t<T>, float>,
             cufftComplex,
             cufftDoubleComplex>::type;
 };
@@ -156,7 +165,7 @@ struct _cufft_type<Kokkos::complex<T>>
 template <typename Tin, typename Tout>
 constexpr auto cufft_transform_type()
 {
-    const TransformType transformType = transform_type<Tin, Tout>::value;
+    const TransformType transformType = transform_type_v<Tin, Tout>;
     if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, float>)
         return CUFFT_R2C;
     else if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, double>)
@@ -180,7 +189,7 @@ constexpr auto cufft_transform_type()
 template <typename Tin, typename Tout, typename... Args, typename LastArg>
 cufftResult _cufftExec(LastArg lastArg, Args... args)
 { // Ugly for same reason as fftw
-    const TransformType transformType = transform_type<Tin, Tout>::value;
+    const TransformType transformType = transform_type_v<Tin, Tout>;
     if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, float>)
         return cufftExecR2C(args...);
     else if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, double>)
@@ -212,7 +221,7 @@ template <typename T>
 struct _hipfft_type<Kokkos::complex<T>>
 {
     using type = typename std::conditional<
-            std::is_same_v<typename real_type<T>::type, float>,
+            std::is_same_v<real_type_t<T>, float>,
             hipfftComplex,
             hipfftDoubleComplex>::type;
 };
@@ -221,7 +230,7 @@ struct _hipfft_type<Kokkos::complex<T>>
 template <typename Tin, typename Tout>
 constexpr auto hipfft_transform_type()
 {
-    const TransformType transformType = transform_type<Tin, Tout>::value;
+    const TransformType transformType = transform_type_v<Tin, Tout>;
     if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, float>)
         return HIPFFT_R2C;
     else if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, double>)
@@ -245,7 +254,7 @@ constexpr auto hipfft_transform_type()
 template <typename Tin, typename Tout, typename... Args, typename LastArg>
 hipfftResult _hipfftExec(LastArg lastArg, Args... args)
 {
-    const TransformType transformType = transform_type<Tin, Tout>::value;
+    const TransformType transformType = transform_type_v<Tin, Tout>;
     if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, float>)
         return hipfftExecR2C(args...);
     else if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, double>)
@@ -311,11 +320,11 @@ void core(
 {
     static_assert(
             std::is_same_v<
-                    typename real_type<Tin>::type,
-                    float> || std::is_same_v<typename real_type<Tin>::type, double>,
+                    real_type_t<Tin>,
+                    float> || std::is_same_v<real_type_t<Tin>, double>,
             "Base type of Tin (and Tout) must be float or double.");
     static_assert(
-            std::is_same_v<typename real_type<Tin>::type, typename real_type<Tout>::type>,
+            std::is_same_v<real_type_t<Tin>, real_type_t<Tout>>,
             "Types Tin and Tout must be based on same type (float or double)");
     static_assert(
             Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,
@@ -325,10 +334,10 @@ void core(
     int idist = 1;
     int odist = 1;
     for (size_t i = 0; i < sizeof...(X); i++) {
-        idist = transform_type<Tin, Tout>::value == TransformType::C2R && i == sizeof...(X) - 1
+        idist = transform_type_v<Tin, Tout> == TransformType::C2R && i == sizeof...(X) - 1
                         ? idist * (n[i] / 2 + 1)
                         : idist * n[i];
-        odist = transform_type<Tin, Tout>::value == TransformType::R2C && i == sizeof...(X) - 1
+        odist = transform_type_v<Tin, Tout> == TransformType::R2C && i == sizeof...(X) - 1
                         ? odist * (n[i] / 2 + 1)
                         : odist * n[i];
     }
@@ -336,7 +345,7 @@ void core(
     if constexpr (false) {
     } // Trick to get only else if
 #if fftw_AVAIL
-    else if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
+    else if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
         _fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin, Tout>(
                 kwargs.direction == Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
                 FFTW_ESTIMATE,
@@ -351,7 +360,7 @@ void core(
                 (int*)NULL,
                 1,
                 odist);
-		if constexpr (std::is_same_v<typename real_type<Tin>::type, float>) {
+		if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
           fftwf_execute(plan);
           fftwf_destroy_plan(plan);
         } else {
@@ -362,8 +371,8 @@ void core(
     }
 #endif
 #if fftw_omp_AVAIL
-    else if constexpr (std::is_same<ExecSpace, Kokkos::OpenMP>::value) {
-		if constexpr (std::is_same_v<typename real_type<Tin>::type, float>) {
+    else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+		if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
 		  fftwf_init_threads();
           fftwf_plan_with_nthreads(ExecSpace::concurrency());
         } else {
@@ -384,7 +393,7 @@ void core(
                 (int*)NULL,
                 1,
                 odist);
-		if constexpr (std::is_same_v<typename real_type<Tin>::type, float>) {
+		if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
           fftwf_execute(plan);
           fftwf_destroy_plan(plan);
         } else {
@@ -395,7 +404,7 @@ void core(
     }
 #endif
 #if cufft_AVAIL
-    else if constexpr (std::is_same<ExecSpace, Kokkos::Cuda>::value) {
+    else if constexpr (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
         cudaStream_t stream = execSpace.cuda_stream();
 
         cufftHandle plan = -1;
@@ -429,7 +438,7 @@ void core(
     }
 #endif
 #if hipfft_AVAIL && !HIP_FOR_NVIDIA
-    else if constexpr(std::is_same<ExecSpace, Kokkos::HIP>::value) {
+    else if constexpr(std::is_same_v<ExecSpace, Kokkos::HIP>) {
         hipStream_t stream = execSpace.hip_stream();
 
         hipfftHandle plan = -1;
@@ -464,7 +473,7 @@ void core(
 #endif
 
     if (kwargs.normalization != Normalization::OFF) {
-        typename real_type<Tout>::type norm_coef;
+        real_type_t<Tout> norm_coef;
         switch (kwargs.normalization) {
         case Normalization::OFF:
 			norm_coef = 1;
@@ -494,8 +503,8 @@ void core(
                 Kokkos::RangePolicy<ExecSpace>(
                         execSpace,
                         0,
-                        is_complex<Tout>::value
-                                        && transform_type<Tin, Tout>::value != TransformType::C2C
+                        is_complex_v<Tout>
+                                        && transform_type_v<Tin, Tout> != TransformType::C2C
                                 ? (LastSelector<double, X, X...>(
                                            ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())
                                                            / 2

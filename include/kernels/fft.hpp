@@ -552,7 +552,7 @@ template <
         typename MemorySpace,
         typename layout_in,
         typename layout_out>
-void FFT(
+void fft(
         ExecSpace execSpace,
         ddc::ChunkSpan<
                 Tout,
@@ -587,7 +587,7 @@ template <
         typename MemorySpace,
         typename layout_in,
         typename layout_out>
-void FFT(
+void fft(
         ExecSpace execSpace,
         ddc::ChunkSpan<
                 Tout,

@@ -85,7 +85,7 @@ constexpr auto policy = [] {
 // TODO:
 // - FFT multidim but according to a subset of dimensions
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename... X>
-static void TestFFT()
+static void test_fft()
 {
     const double a = -10;
     const double b = 10;
@@ -113,7 +113,7 @@ static void TestFFT()
 
     ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
     ddc::ChunkSpan Ff = _Ff.span_view();
-    ddc::FFT(ExecSpace(), Ff, f, {ddc::detail::fft::Direction::FORWARD, ddc::detail::fft::Normalization::FULL});
+    ddc::fft(ExecSpace(), Ff, f, {ddc::detail::fft::Direction::FORWARD, ddc::detail::fft::Normalization::FULL});
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input
@@ -125,7 +125,7 @@ static void TestFFT()
     ddc::Chunk _FFf = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
     ddc::ChunkSpan FFf = _FFf.span_view();
     ddc::
-            FFT(ExecSpace(),
+            fft(ExecSpace(),
                 FFf,
                 Ff_bis,
                 {ddc::detail::fft::Direction::BACKWARD, ddc::detail::fft::Normalization::FULL});

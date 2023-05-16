@@ -345,7 +345,7 @@ int main(int argc, char** argv)
                 });
 #elif (METHOD == SPECTRAL)
         ddc::
-                FFT(Kokkos::DefaultExecutionSpace(),
+                fft(Kokkos::DefaultExecutionSpace(),
                     Ff,
                     last_temp,
                     {ddc::detail::fft::Direction::FORWARD,
@@ -372,7 +372,7 @@ int main(int argc, char** argv)
                                               * max_dt); // Ff(t+dt) = (1-D*k^2*dt)*Ff(t)
                 });
         ddc::
-                FFT(Kokkos::DefaultExecutionSpace(),
+                fft(Kokkos::DefaultExecutionSpace(),
                     next_temp,
                     Ff,
                     {ddc::detail::fft::Direction::BACKWARD,

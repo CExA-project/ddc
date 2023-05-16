@@ -329,7 +329,7 @@ void FFT_core(
             Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,
             "MemorySpace has to be accessible for ExecutionSpace.");
 
-    int n[mesh.rank()] = {(int)ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())...};
+    int n[sizeof...(X)] = {(int)ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())...};
     int idist = 1;
     int odist = 1;
     for (size_t i = 0; i < sizeof...(X); i++) {
@@ -465,7 +465,7 @@ void FFT_core(
         case Normalization::OFF:
 			norm_coef = 1;
         case Normalization::ORTHO:
-            norm_coef = pow(1 / sqrt(2 * M_PI), sizeof...(X));
+            norm_coef = Kokkos::pow(1 / sqrt(2 * Kokkos::numbers::pi), sizeof...(X));
         case Normalization::FULL:
             norm_coef
                     = kwargs.direction == Direction::FORWARD
@@ -474,9 +474,9 @@ void FFT_core(
                                    - coordinate(
                                            ddc::select<ddc::UniformPointSampling<X>>(mesh).front()))
                                   / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) - 1)
-                                  / sqrt(2 * M_PI))
+                                  / sqrt(2 * Kokkos::numbers::pi))
                                  * ...)
-                              : ((sqrt(2 * M_PI)
+                              : ((sqrt(2 * Kokkos::numbers::pi)
                                   / (coordinate(
                                              ddc::select<ddc::UniformPointSampling<X>>(mesh).back())
                                      - coordinate(ddc::select<ddc::UniformPointSampling<X>>(mesh)
@@ -520,16 +520,16 @@ ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...> FourierMesh(
                                  C2C ? 2 * (FFT_detail::N<X>(x_mesh) - 1)
                                                  / (FFT_detail::b<X>(x_mesh)
                                                     - FFT_detail::a<X>(x_mesh))
-                                                 * M_PI
+                                                 * Kokkos::numbers::pi
                                      : FFT_detail::LastSelector<double, X, X...>(
                                              FFT_detail::N<X>(x_mesh)
                                                      / (FFT_detail::b<X>(x_mesh)
                                                         - FFT_detail::a<X>(x_mesh))
-                                                     * M_PI,
+                                                     * Kokkos::numbers::pi,
                                              2 * (FFT_detail::N<X>(x_mesh) - 1)
                                                      / (FFT_detail::b<X>(x_mesh)
                                                         - FFT_detail::a<X>(x_mesh))
-                                                     * M_PI)),
+                                                     * Kokkos::numbers::pi)),
                          ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
                                  C2C ? FFT_detail::N<X>(x_mesh)
                                      : FFT_detail::LastSelector<double, X, X...>(

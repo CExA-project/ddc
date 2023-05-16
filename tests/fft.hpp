@@ -102,10 +102,10 @@ static void TestFFT()
             policy<ExecSpace>(),
             ddc::get_domain<DDim<X>...>(f),
             DDC_LAMBDA(DElem<DDim<X>...> const e) {
-                // f(e) = (cos(4*coordinate(ddc::select<DDim<X>>(e)))*...);
-                // f(e) = ((sin(coordinate(ddc::select<DDim<X>>(e))+1e-20)/(coordinate(ddc::select<DDim<X>>(e))+1e-20))*...);
+                // f(e) = (Kokkos::cos(4*coordinate(ddc::select<DDim<X>>(e)))*...);
+                // f(e) = ((Kokkos::sin(coordinate(ddc::select<DDim<X>>(e))+1e-20)/(coordinate(ddc::select<DDim<X>>(e))+1e-20))*...);
                 f(e) = static_cast<Tin>(
-                        exp(-(pow(coordinate(ddc::select<DDim<X>>(e)), 2) + ...) / 2));
+                        Kokkos::exp(-(Kokkos::pow(coordinate(ddc::select<DDim<X>>(e)), 2) + ...) / 2));
             });
 
     DDom<DFDim<Fourier<X>>...> const k_mesh
@@ -153,7 +153,7 @@ static void TestFFT()
         ddc::policies::serial_host,
         ddc::get_domain<DFDim<Fourier<X>>...>(Ff_host),
         [=](DElem<DFDim<Fourier<X>>...> const e) {
-			(std::cout << ... << coordinate(ddc::select<DFDim<Fourier<X>>>(e))) << "->" << abs(Ff_host(e)) << " " << exp(-(pow(coordinate(ddc::select<DFDim<Fourier<X>>>(e)),2) + ...)/2) << ", ";
+			(std::cout << ... << coordinate(ddc::select<DFDim<Fourier<X>>>(e))) << "->" << abs(Ff_host(e)) << " " << Kokkos::exp(-(Kokkos::pow(coordinate(ddc::select<DFDim<Fourier<X>>>(e)),2) + ...)/2) << ", ";
 	});
 #endif
 
@@ -175,8 +175,8 @@ static void TestFFT()
             0.,
             ddc::reducer::sum<double>(),
             [=](DElem<DFDim<Fourier<X>>...> const e) {
-                return pow(abs(Ff_host(e))
-                                   - exp(-(pow(coordinate(ddc::select<DFDim<Fourier<X>>>(e)), 2) + ...)
+                return Kokkos::pow(abs(Ff_host(e))
+                                   - Kokkos::exp(-(Kokkos::pow(coordinate(ddc::select<DFDim<Fourier<X>>>(e)), 2) + ...)
                                          / 2),
                            2)
                        / (LastSelector<std::size_t, X, X...>(Nx / 2, Nx) * ...);
@@ -187,7 +187,7 @@ static void TestFFT()
             0.,
             ddc::reducer::sum<double>(),
             [=](DElem<DDim<X>...> const e) {
-                return pow(abs(FFf_host(e)) - abs(f_host(e)), 2) / pow(Nx, sizeof...(X));
+                return Kokkos::pow(abs(FFf_host(e)) - abs(f_host(e)), 2) / Kokkos::pow(Nx, sizeof...(X));
             }));
 
     std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;

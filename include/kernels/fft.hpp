@@ -22,14 +22,6 @@
 template <typename Dim>
 struct Fourier;
 
-// Macro to orient to A or B exeution code according to type of T (float or not). Trick necessary because of the old convention of fftw (need to add an "f" in all functions or types names for the float version)
-#define execIfFloat(T, A, B)                                                                       \
-    if constexpr (std::is_same_v<typename real_type<T>::type, float>) {                            \
-        A;                                                                                         \
-    } else {                                                                                       \
-        B;                                                                                         \
-    }
-
 namespace FFT_detail {
 template <typename T>
 struct real_type
@@ -359,18 +351,25 @@ void FFT_core(
                 (int*)NULL,
                 1,
                 odist);
-        execIfFloat(Tin, fftwf_execute(plan), fftw_execute(plan))
-                execIfFloat(Tin, fftwf_destroy_plan(plan), fftw_destroy_plan(plan))
+		if constexpr (std::is_same_v<typename real_type<Tin>::type, float>) {
+          fftwf_execute(plan);
+          fftwf_destroy_plan(plan);
+        } else {
+          fftw_execute(plan);
+          fftw_destroy_plan(plan);
+        }
         // std::cout << "performed with fftw";
     }
 #endif
 #if fftw_omp_AVAIL
     else if constexpr (std::is_same<ExecSpace, Kokkos::OpenMP>::value) {
-        execIfFloat(Tin, fftwf_init_threads(), fftw_init_threads()) execIfFloat(
-                Tin,
-                fftwf_plan_with_nthreads(ExecSpace::concurrency()),
-                fftw_plan_with_nthreads(ExecSpace::concurrency()))
-                fftw_plan_with_nthreads(ExecSpace::concurrency());
+		if constexpr (std::is_same_v<typename real_type<Tin>::type, float>) {
+		  fftwf_init_threads();
+          fftwf_plan_with_nthreads(ExecSpace::concurrency());
+        } else {
+		  fftw_init_threads();
+          fftw_plan_with_nthreads(ExecSpace::concurrency());
+        }
         _fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin, Tout>(
                 kwargs.direction == Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
                 FFTW_ESTIMATE,
@@ -385,8 +384,13 @@ void FFT_core(
                 (int*)NULL,
                 1,
                 odist);
-        execIfFloat(Tin, fftwf_execute(plan), fftw_execute(plan))
-                execIfFloat(Tin, fftwf_destroy_plan(plan), fftw_destroy_plan(plan))
+		if constexpr (std::is_same_v<typename real_type<Tin>::type, float>) {
+          fftwf_execute(plan);
+          fftwf_destroy_plan(plan);
+        } else {
+          fftw_execute(plan);
+          fftw_destroy_plan(plan);
+        }
         // std::cout << "performed with fftw_omp";
     }
 #endif

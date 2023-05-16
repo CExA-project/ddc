@@ -113,7 +113,7 @@ static void TestFFT()
 
     ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
     ddc::ChunkSpan Ff = _Ff.span_view();
-    ddc::FFT(ExecSpace(), Ff, f, {FFT_detail::Direction::FORWARD, FFT_detail::Normalization::FULL});
+    ddc::FFT(ExecSpace(), Ff, f, {ddc::detail::fft::Direction::FORWARD, ddc::detail::fft::Normalization::FULL});
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input
@@ -128,7 +128,7 @@ static void TestFFT()
             FFT(ExecSpace(),
                 FFf,
                 Ff_bis,
-                {FFT_detail::Direction::BACKWARD, FFT_detail::Normalization::FULL});
+                {ddc::detail::fft::Direction::BACKWARD, ddc::detail::fft::Normalization::FULL});
 
     ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan f_host = _f_host.span_view();
@@ -193,7 +193,7 @@ static void TestFFT()
     std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
     std::cout << "\n Distance between input and iFFT(FFT(input)) : " << criterion2;
     double epsilon
-            = std::is_same_v<typename FFT_detail::real_type<Tin>::type, double> ? 1e-15 : 1e-7;
+            = std::is_same_v<typename ddc::detail::fft::real_type<Tin>::type, double> ? 1e-15 : 1e-7;
     ASSERT_LE(criterion, epsilon);
     ASSERT_LE(criterion2, epsilon);
 }

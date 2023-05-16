@@ -22,7 +22,7 @@
 template <typename Dim>
 struct Fourier;
 
-namespace FFT_detail {
+namespace ddc::detail::fft {
 template <typename T>
 struct real_type
 {
@@ -300,9 +300,9 @@ double b(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh)
            / 2 / (N<Dim>(x_mesh) - 1);
 }
 
-// FFT_core
+// core
 template <typename Tin, typename Tout, typename ExecSpace, typename MemorySpace, typename... X>
-void FFT_core(
+void core(
         ExecSpace& execSpace,
         Tout* out_data,
         Tin* in_data,
@@ -508,7 +508,7 @@ void FFT_core(
                 });
     }
 }
-} // namespace FFT_detail
+} // namespace ddc::detail::fft
 
 namespace ddc {
 // FourierMesh
@@ -521,26 +521,26 @@ ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...> FourierMesh(
             ddc::PeriodicSampling<Fourier<X>>::
                     init(ddc::detail::TaggedVector<ddc::CoordinateElement, Fourier<X>>(0),
                          ddc::detail::TaggedVector<ddc::CoordinateElement, Fourier<X>>(
-                                 C2C ? 2 * (FFT_detail::N<X>(x_mesh) - 1)
-                                                 / (FFT_detail::b<X>(x_mesh)
-                                                    - FFT_detail::a<X>(x_mesh))
+                                 C2C ? 2 * (ddc::detail::fft::N<X>(x_mesh) - 1)
+                                                 / (ddc::detail::fft::b<X>(x_mesh)
+                                                    - ddc::detail::fft::a<X>(x_mesh))
                                                  * Kokkos::numbers::pi
-                                     : FFT_detail::LastSelector<double, X, X...>(
-                                             FFT_detail::N<X>(x_mesh)
-                                                     / (FFT_detail::b<X>(x_mesh)
-                                                        - FFT_detail::a<X>(x_mesh))
+                                     : ddc::detail::fft::LastSelector<double, X, X...>(
+                                             ddc::detail::fft::N<X>(x_mesh)
+                                                     / (ddc::detail::fft::b<X>(x_mesh)
+                                                        - ddc::detail::fft::a<X>(x_mesh))
                                                      * Kokkos::numbers::pi,
-                                             2 * (FFT_detail::N<X>(x_mesh) - 1)
-                                                     / (FFT_detail::b<X>(x_mesh)
-                                                        - FFT_detail::a<X>(x_mesh))
+                                             2 * (ddc::detail::fft::N<X>(x_mesh) - 1)
+                                                     / (ddc::detail::fft::b<X>(x_mesh)
+                                                        - ddc::detail::fft::a<X>(x_mesh))
                                                      * Kokkos::numbers::pi)),
                          ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
-                                 C2C ? FFT_detail::N<X>(x_mesh)
-                                     : FFT_detail::LastSelector<double, X, X...>(
-                                             FFT_detail::N<X>(x_mesh) / 2 + 1,
-                                             FFT_detail::N<X>(x_mesh))),
+                                 C2C ? ddc::detail::fft::N<X>(x_mesh)
+                                     : ddc::detail::fft::LastSelector<double, X, X...>(
+                                             ddc::detail::fft::N<X>(x_mesh) / 2 + 1,
+                                             ddc::detail::fft::N<X>(x_mesh))),
                          ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
-                                 FFT_detail::N<X>(x_mesh))))...);
+                                 ddc::detail::fft::N<X>(x_mesh))))...);
 }
 
 // FFT
@@ -564,13 +564,13 @@ void FFT(
                 ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>,
                 layout_in,
                 MemorySpace> in,
-        FFT_detail::kwArgs kwargs
-        = {FFT_detail::Direction::FORWARD, FFT_detail::Normalization::OFF})
+        ddc::detail::fft::kwArgs kwargs
+        = {ddc::detail::fft::Direction::FORWARD, ddc::detail::fft::Normalization::OFF})
 {
     ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> in_mesh
             = ddc::get_domain<ddc::UniformPointSampling<X>...>(in);
 
-    FFT_detail::FFT_core<
+    ddc::detail::fft::core<
             Tin,
             Tout,
             ExecSpace,
@@ -599,13 +599,13 @@ void FFT(
                 ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>,
                 layout_in,
                 MemorySpace> in,
-        FFT_detail::kwArgs kwargs
-        = {FFT_detail::Direction::BACKWARD, FFT_detail::Normalization::OFF})
+        ddc::detail::fft::kwArgs kwargs
+        = {ddc::detail::fft::Direction::BACKWARD, ddc::detail::fft::Normalization::OFF})
 {
     ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> out_mesh
             = ddc::get_domain<ddc::UniformPointSampling<X>...>(out);
 
-    FFT_detail::FFT_core<
+    ddc::detail::fft::core<
             Tin,
             Tout,
             ExecSpace,

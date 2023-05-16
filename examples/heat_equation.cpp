@@ -197,7 +197,7 @@ int main(int argc, char** argv)
                           * ddc::distance_at_right(iy));
             });
     ddc::Coordinate<T> const max_dt {
-            .2
+	  2./Kokkos::pow(Kokkos::numbers::pi,2)
             / (kx * invdx2_max
                + ky * invdy2_max)}; // Classical stability theory gives .5 but empirically we see that for FFT method we need .2
 
@@ -348,8 +348,8 @@ int main(int argc, char** argv)
                 FFT(Kokkos::DefaultExecutionSpace(),
                     Ff,
                     last_temp,
-                    {FFT_detail::Direction::FORWARD,
-                     FFT_detail::Normalization::FULL});
+                    {ddc::detail::fft::Direction::FORWARD,
+					ddc::detail::fft::Normalization::FULL});
         ddc::for_each(
                 ddc::policies::parallel_device,
                 k_mesh,
@@ -375,8 +375,8 @@ int main(int argc, char** argv)
                 FFT(Kokkos::DefaultExecutionSpace(),
                     next_temp,
                     Ff,
-                    {FFT_detail::Direction::BACKWARD,
-                     FFT_detail::Normalization::FULL});
+                    {ddc::detail::fft::Direction::BACKWARD,
+					ddc::detail::fft::Normalization::FULL});
 #endif
         //! [numerical scheme]
 

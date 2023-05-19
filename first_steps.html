@@ -342,13 +342,13 @@ Numerical scheme</h2>
 <div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dy_m = 0.5 * (dy_l + dy_r);</div>
 <div class="line">                    next_temp(ix, iy) = last_temp(ix, iy);</div>
 <div class="line">                    next_temp(ix, iy)</div>
-<div class="line">                            += kx * max_dt</div>
+<div class="line">                            += kx * ddc::step&lt;DDimT&gt;()</div>
 <div class="line">                               * (dx_l * last_temp(ix + 1, iy)</div>
 <div class="line">                                  - 2.0 * dx_m * last_temp(ix, iy)</div>
 <div class="line">                                  + dx_r * last_temp(ix - 1, iy))</div>
 <div class="line">                               / (dx_l * dx_m * dx_r);</div>
 <div class="line">                    next_temp(ix, iy)</div>
-<div class="line">                            += ky * max_dt</div>
+<div class="line">                            += ky * ddc::step&lt;DDimT&gt;()</div>
 <div class="line">                               * (dy_l * last_temp(ix, iy + 1)</div>
 <div class="line">                                  - 2.0 * dy_m * last_temp(ix, iy)</div>
 <div class="line">                                  + dy_r * last_temp(ix, iy - 1))</div>

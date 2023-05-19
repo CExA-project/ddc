@@ -299,13 +299,13 @@ $(document).ready(function(){initNavTree('heat_equation.html',''); initResizable
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;                    <span class="keywordtype">double</span> <span class="keyword">const</span> dy_m = 0.5 * (dy_l + dy_r);</div>
 <div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;                    next_temp(ix, iy) = last_temp(ix, iy);</div>
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                    next_temp(ix, iy)</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                            += kx * max_dt</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                            += kx * ddc::step&lt;DDimT&gt;()</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;                               * (dx_l * last_temp(ix + 1, iy)</div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;                                  - 2.0 * dx_m * last_temp(ix, iy)</div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                                  + dx_r * last_temp(ix - 1, iy))</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;                               / (dx_l * dx_m * dx_r);</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;                    next_temp(ix, iy)</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;                            += ky * max_dt</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;                            += ky * ddc::step&lt;DDimT&gt;()</div>
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                               * (dy_l * last_temp(ix, iy + 1)</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;                                  - 2.0 * dy_m * last_temp(ix, iy)</div>
 <div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;                                  + dy_r * last_temp(ix, iy - 1))</div>

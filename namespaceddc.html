@@ -207,9 +207,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ab5e4ebc24acb30e1e701d57af71150cd"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
 <tr class="memitem:ab5e4ebc24acb30e1e701d57af71150cd"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab5e4ebc24acb30e1e701d57af71150cd">select</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain)</td></tr>
 <tr class="separator:ab5e4ebc24acb30e1e701d57af71150cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21800f53010e8f2e3caa81a22f0256c0"><td class="memTemplParams" colspan="2">template&lt;class... DDimsA, class... DDimsB&gt; </td></tr>
-<tr class="memitem:a21800f53010e8f2e3caa81a22f0256c0"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a21800f53010e8f2e3caa81a22f0256c0">remove_dims_of</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsA... &gt; const &amp;DDom_a, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;DDom_b) noexcept</td></tr>
-<tr class="separator:a21800f53010e8f2e3caa81a22f0256c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10fe1df4f85a4a972c2ce234b60dddcb"><td class="memTemplParams" colspan="2">template&lt;class... DDimsA, class... DDimsB&gt; </td></tr>
+<tr class="memitem:a10fe1df4f85a4a972c2ce234b60dddcb"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a10fe1df4f85a4a972c2ce234b60dddcb">remove_dims_of</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsA... &gt; const &amp;DDom_a, [[maybe_unused]] <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;DDom_b) noexcept</td></tr>
+<tr class="separator:a10fe1df4f85a4a972c2ce234b60dddcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21bffe7647c56f8e4a2e4fd5a49001c8"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
 <tr class="memitem:a21bffe7647c56f8e4a2e4fd5a49001c8"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a21bffe7647c56f8e4a2e4fd5a49001c8">extents</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain) noexcept</td></tr>
 <tr class="separator:a21bffe7647c56f8e4a2e4fd5a49001c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1167,8 +1167,8 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 
 </div>
 </div>
-<a id="a21800f53010e8f2e3caa81a22f0256c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21800f53010e8f2e3caa81a22f0256c0">&#9670;&nbsp;</a></span>remove_dims_of()</h2>
+<a id="a10fe1df4f85a4a972c2ce234b60dddcb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10fe1df4f85a4a972c2ce234b60dddcb">&#9670;&nbsp;</a></span>remove_dims_of()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1187,7 +1187,7 @@ template&lt;class... DDimsA, class... DDimsB&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;&#160;</td>
+          <td class="paramtype">[[maybe_unused] ] <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;&#160;</td>
           <td class="paramname"><em>DDom_b</em>&#160;</td>
         </tr>
         <tr>

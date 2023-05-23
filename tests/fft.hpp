@@ -113,7 +113,7 @@ static void test_fft()
 
     ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
     ddc::ChunkSpan Ff = _Ff.span_view();
-    ddc::fft(ExecSpace(), Ff, f, {ddc::detail::fft::Direction::FORWARD, ddc::detail::fft::Normalization::FULL});
+    ddc::fft(ExecSpace(), Ff, f, {ddc::FFT_Direction::FORWARD, ddc::FFT_Normalization::FULL});
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input
@@ -125,15 +125,15 @@ static void test_fft()
     ddc::Chunk _FFf = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
     ddc::ChunkSpan FFf = _FFf.span_view();
     ddc::
-            fft(ExecSpace(),
+            ifft(ExecSpace(),
                 FFf,
                 Ff_bis,
-                {ddc::detail::fft::Direction::BACKWARD, ddc::detail::fft::Normalization::FULL});
+                {ddc::FFT_Direction::BACKWARD, ddc::FFT_Normalization::FULL});
 
     ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan f_host = _f_host.span_view();
     ddc::deepcopy(f_host, f);
-#if 0
+#ifndef NDEBUG
 	std::cout << "\n input:\n";
 	ddc::for_each(
         ddc::policies::serial_host,
@@ -147,47 +147,47 @@ static void test_fft()
             = ddc::Chunk(ddc::get_domain<DFDim<Fourier<X>>...>(Ff), ddc::HostAllocator<Tout>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
     ddc::deepcopy(Ff_host, Ff);
-#if 0
+#ifndef NDEBUG
 	std::cout << "\n output:\n";
 	ddc::for_each(
         ddc::policies::serial_host,
         ddc::get_domain<DFDim<Fourier<X>>...>(Ff_host),
         [=](DElem<DFDim<Fourier<X>>...> const e) {
-			(std::cout << ... << coordinate(ddc::select<DFDim<Fourier<X>>>(e))) << "->" << abs(Ff_host(e)) << " " << Kokkos::exp(-(Kokkos::pow(coordinate(ddc::select<DFDim<Fourier<X>>>(e)),2) + ...)/2) << ", ";
+			(std::cout << ... << coordinate(ddc::select<DFDim<Fourier<X>>>(e))) << "->" << Kokkos::abs(Ff_host(e)) << " " << Kokkos::exp(-(Kokkos::pow(coordinate(ddc::select<DFDim<Fourier<X>>>(e)),2) + ...)/2) << ", ";
 	});
 #endif
 
     ddc::Chunk _FFf_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(FFf), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan FFf_host = _FFf_host.span_view();
     ddc::deepcopy(FFf_host, FFf);
-#if 0
+#ifndef NDEBUG
 	std::cout << "\n iFFT(FFT):\n";
 	ddc::for_each(
         ddc::policies::serial_host,
         ddc::get_domain<DDim<X>...>(FFf_host),
         [=](DElem<DDim<X>...> const e) {
-			(std::cout << ... << coordinate(ddc::select<DDim<X>>(e))) << "->" << abs(FFf_host(e)) << " " << abs(f_host(e)) << ", ";
+			(std::cout << ... << coordinate(ddc::select<DDim<X>>(e))) << "->" << Kokkos::abs(FFf_host(e)) << " " << Kokkos::abs(f_host(e)) << ", ";
 	});
 #endif
 
-    double criterion = sqrt(ddc::transform_reduce(
+    double criterion = Kokkos::sqrt(ddc::transform_reduce(
             ddc::get_domain<DFDim<Fourier<X>>...>(Ff_host),
             0.,
             ddc::reducer::sum<double>(),
             [=](DElem<DFDim<Fourier<X>>...> const e) {
-                return Kokkos::pow(abs(Ff_host(e))
+                return Kokkos::pow(Kokkos::abs(Ff_host(e))
                                    - Kokkos::exp(-(Kokkos::pow(coordinate(ddc::select<DFDim<Fourier<X>>>(e)), 2) + ...)
                                          / 2),
                            2)
                        / (LastSelector<std::size_t, X, X...>(Nx / 2, Nx) * ...);
             }));
 
-    double criterion2 = sqrt(ddc::transform_reduce(
+    double criterion2 = Kokkos::sqrt(ddc::transform_reduce(
             ddc::get_domain<DDim<X>...>(FFf_host),
             0.,
             ddc::reducer::sum<double>(),
             [=](DElem<DDim<X>...> const e) {
-                return Kokkos::pow(abs(FFf_host(e)) - abs(f_host(e)), 2) / Kokkos::pow(Nx, sizeof...(X));
+                return Kokkos::pow(Kokkos::abs(FFf_host(e)) - Kokkos::abs(f_host(e)), 2) / Kokkos::pow(Nx, sizeof...(X));
             }));
 
     std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;

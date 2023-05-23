@@ -22,6 +22,12 @@
 template <typename Dim>
 struct Fourier;
 
+namespace ddc {
+// named arguments for FFT (and their default values)
+enum class FFT_Direction { FORWARD, BACKWARD };
+enum class FFT_Normalization { OFF, ORTHO, FULL };
+}
+
 namespace ddc::detail::fft {
 template <typename T>
 struct real_type
@@ -274,14 +280,10 @@ hipfftResult _hipfftExec(LastArg lastArg, Args... args)
 }
 #endif
 
-// named arguments for FFT (and their default values)
-enum class Direction { FORWARD, BACKWARD };
-enum class Normalization { OFF, ORTHO, FULL };
-
 struct kwArgs
 {
-    Direction direction; // Only effective for C2C transform
-    Normalization normalization; // Only effective for C2C transform
+    ddc::FFT_Direction direction; // Only effective for C2C transform
+    ddc::FFT_Normalization normalization; // Only effective for C2C transform
 };
 
 // N,a,b from x_mesh
@@ -347,7 +349,7 @@ void core(
 #if fftw_AVAIL
     else if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
         _fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin, Tout>(
-                kwargs.direction == Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
+                kwargs.direction == ddc::FFT_Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
                 FFTW_ESTIMATE,
                 (int)sizeof...(X),
                 n,
@@ -380,7 +382,7 @@ void core(
           fftw_plan_with_nthreads(ExecSpace::concurrency());
         }
         _fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin, Tout>(
-                kwargs.direction == Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
+                kwargs.direction == ddc::FFT_Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
                 FFTW_ESTIMATE,
                 (int)sizeof...(X),
                 n,
@@ -427,7 +429,7 @@ void core(
             throw std::runtime_error("cufftPlan failed");
 
         cufft_rt = _cufftExec<Tin, Tout>(
-                kwargs.direction == Direction::FORWARD ? CUFFT_FORWARD : CUFFT_INVERSE,
+                kwargs.direction == ddc::FFT_Direction::FORWARD ? CUFFT_FORWARD : CUFFT_INVERSE,
                 plan,
                 reinterpret_cast<typename _cufft_type<Tin>::type*>(in_data),
                 reinterpret_cast<typename _cufft_type<Tout>::type*>(out_data));
@@ -461,7 +463,7 @@ void core(
             throw std::runtime_error("hipfftPlan failed");
 
         hipfft_rt = _hipfftExec<Tin, Tout>(
-                kwargs.direction == Direction::FORWARD ? HIPFFT_FORWARD : HIPFFT_BACKWARD,
+                kwargs.direction == ddc::FFT_Direction::FORWARD ? HIPFFT_FORWARD : HIPFFT_BACKWARD,
                 plan,
                 reinterpret_cast<typename _hipfft_type<Tin>::type*>(in_data),
                 reinterpret_cast<typename _hipfft_type<Tout>::type*>(out_data));
@@ -472,16 +474,16 @@ void core(
     }
 #endif
 
-    if (kwargs.normalization != Normalization::OFF) {
+    if (kwargs.normalization != ddc::FFT_Normalization::OFF) {
         real_type_t<Tout> norm_coef;
         switch (kwargs.normalization) {
-        case Normalization::OFF:
+        case ddc::FFT_Normalization::OFF:
 			norm_coef = 1;
-        case Normalization::ORTHO:
+        case ddc::FFT_Normalization::ORTHO:
             norm_coef = Kokkos::pow(1 / sqrt(2 * Kokkos::numbers::pi), sizeof...(X));
-        case Normalization::FULL:
+        case ddc::FFT_Normalization::FULL:
             norm_coef
-                    = kwargs.direction == Direction::FORWARD
+                    = kwargs.direction == ddc::FFT_Direction::FORWARD
                               ? (((coordinate(
                                            ddc::select<ddc::UniformPointSampling<X>>(mesh).back())
                                    - coordinate(
@@ -574,7 +576,7 @@ void fft(
                 layout_in,
                 MemorySpace> in,
         ddc::detail::fft::kwArgs kwargs
-        = {ddc::detail::fft::Direction::FORWARD, ddc::detail::fft::Normalization::OFF})
+        = {ddc::FFT_Direction::FORWARD, ddc::FFT_Normalization::OFF})
 {
 	static_assert(
             std::is_same_v<layout_in,std::experimental::layout_right> && std::is_same_v<layout_out,std::experimental::layout_right>,
@@ -600,7 +602,7 @@ template <
         typename MemorySpace,
         typename layout_in,
         typename layout_out>
-void fft(
+void ifft(
         ExecSpace execSpace,
         ddc::ChunkSpan<
                 Tout,
@@ -613,7 +615,7 @@ void fft(
                 layout_in,
                 MemorySpace> in,
         ddc::detail::fft::kwArgs kwargs
-        = {ddc::detail::fft::Direction::BACKWARD, ddc::detail::fft::Normalization::OFF})
+        = {ddc::FFT_Direction::BACKWARD, ddc::FFT_Normalization::OFF})
 {
 	static_assert(
             std::is_same_v<layout_in,std::experimental::layout_right> && std::is_same_v<layout_out,std::experimental::layout_right>,

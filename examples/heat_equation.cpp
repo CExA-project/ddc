@@ -348,8 +348,8 @@ int main(int argc, char** argv)
                 fft(Kokkos::DefaultExecutionSpace(),
                     Ff,
                     last_temp,
-                    {ddc::detail::fft::Direction::FORWARD,
-					ddc::detail::fft::Normalization::FULL});
+                    {ddc::FFT_Direction::FORWARD,
+					ddc::FFT_Normalization::FULL});
         ddc::for_each(
                 ddc::policies::parallel_device,
                 k_mesh,
@@ -372,11 +372,11 @@ int main(int argc, char** argv)
                                               * max_dt); // Ff(t+dt) = (1-D*k^2*dt)*Ff(t)
                 });
         ddc::
-                fft(Kokkos::DefaultExecutionSpace(),
+                ifft(Kokkos::DefaultExecutionSpace(),
                     next_temp,
                     Ff,
-                    {ddc::detail::fft::Direction::BACKWARD,
-					ddc::detail::fft::Normalization::FULL});
+                    {ddc::FFT_Direction::BACKWARD,
+					ddc::FFT_Normalization::FULL});
 #endif
         //! [numerical scheme]
 

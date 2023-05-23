@@ -441,7 +441,7 @@ void core(
     else if constexpr(std::is_same_v<ExecSpace, Kokkos::HIP>) {
         hipStream_t stream = execSpace.hip_stream();
 
-        hipfftHandle plan = -1;
+        hipfftHandle plan;
         hipfftResult hipfft_rt = hipfftCreate(&plan);
         hipfftSetStream(plan, stream);
         hipfft_rt = hipfftPlanMany(
@@ -520,7 +520,7 @@ void core(
 } // namespace ddc::detail::fft
 
 namespace ddc {
-// FourierMesh
+// FourierMesh, first element corresponds to mode 0
 template <typename... X>
 ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...> FourierMesh(
         ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh,

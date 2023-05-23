@@ -11,7 +11,7 @@
 #include <hip/hip_runtime_api.h>
 #endif
 
-#include <fft.hpp>
+#include "fft.hpp"
 
 struct RDimX;
 struct RDimY;

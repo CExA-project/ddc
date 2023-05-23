@@ -344,12 +344,12 @@ int main(int argc, char** argv)
                                / (dy_l * dy_m * dy_r);
                 });
 #elif (METHOD == SPECTRAL)
+		ddc::FFT_Normalization norm = ddc::FFT_Normalization::BACKWARD;
         ddc::
                 fft(Kokkos::DefaultExecutionSpace(),
                     Ff,
                     last_temp,
-                    {ddc::FFT_Direction::FORWARD,
-					ddc::FFT_Normalization::FULL});
+                    {norm});
         ddc::for_each(
                 ddc::policies::parallel_device,
                 k_mesh,
@@ -375,8 +375,7 @@ int main(int argc, char** argv)
                 ifft(Kokkos::DefaultExecutionSpace(),
                     next_temp,
                     Ff,
-                    {ddc::FFT_Direction::BACKWARD,
-					ddc::FFT_Normalization::FULL});
+                    {norm});
 #endif
         //! [numerical scheme]
 

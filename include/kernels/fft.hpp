@@ -25,7 +25,7 @@ struct Fourier;
 namespace ddc {
 // named arguments for FFT (and their default values)
 enum class FFT_Direction { FORWARD, BACKWARD };
-enum class FFT_Normalization { OFF, ORTHO, FULL };
+enum class FFT_Normalization { OFF, FORWARD, BACKWARD, ORTHO, FULL };
 }
 
 namespace ddc::detail::fft {
@@ -280,10 +280,10 @@ hipfftResult _hipfftExec(LastArg lastArg, Args... args)
 }
 #endif
 
-struct kwArgs
+struct kwArgs_core
 {
-    ddc::FFT_Direction direction; // Only effective for C2C transform
-    ddc::FFT_Normalization normalization; // Only effective for C2C transform
+    ddc::FFT_Direction direction; // Only effective for C2C transform and for normalization BACKWARD and FORWARD
+    ddc::FFT_Normalization normalization;
 };
 
 // N,a,b from x_mesh
@@ -318,7 +318,7 @@ void core(
         Tout* out_data,
         Tin* in_data,
         ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> mesh,
-        const kwArgs& kwargs)
+        const kwArgs_core& kwargs)
 {
     static_assert(
             std::is_same_v<
@@ -479,8 +479,18 @@ void core(
         switch (kwargs.normalization) {
         case ddc::FFT_Normalization::OFF:
 			norm_coef = 1;
-        case ddc::FFT_Normalization::ORTHO:
-            norm_coef = Kokkos::pow(1 / sqrt(2 * Kokkos::numbers::pi), sizeof...(X));
+        case ddc::FFT_Normalization::FORWARD:
+			norm_coef
+					= kwargs.direction == ddc::FFT_Direction::FORWARD
+					? 1/ (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())*...)
+					: 1;
+		case ddc::FFT_Normalization::BACKWARD:
+            norm_coef
+                    = kwargs.direction == ddc::FFT_Direction::BACKWARD
+                    ? 1/ (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())*...)
+					: 1;
+		case ddc::FFT_Normalization::ORTHO:
+            norm_coef =1/ Kokkos::sqrt((ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())*...));
         case ddc::FFT_Normalization::FULL:
             norm_coef
                     = kwargs.direction == ddc::FFT_Direction::FORWARD
@@ -489,9 +499,9 @@ void core(
                                    - coordinate(
                                            ddc::select<ddc::UniformPointSampling<X>>(mesh).front()))
                                   / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) - 1)
-                                  / sqrt(2 * Kokkos::numbers::pi))
+                                  / Kokkos::sqrt(2 * Kokkos::numbers::pi))
                                  * ...)
-                              : ((sqrt(2 * Kokkos::numbers::pi)
+                              : ((Kokkos::sqrt(2 * Kokkos::numbers::pi)
                                   / (coordinate(
                                              ddc::select<ddc::UniformPointSampling<X>>(mesh).back())
                                      - coordinate(ddc::select<ddc::UniformPointSampling<X>>(mesh)
@@ -554,6 +564,11 @@ ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...> FourierMesh(
                                  ddc::detail::fft::N<X>(x_mesh))))...);
 }
 
+struct kwArgs_fft
+{
+    ddc::FFT_Normalization normalization;
+};
+
 // FFT
 template <
         typename Tin,
@@ -575,8 +590,8 @@ void fft(
                 ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>,
                 layout_in,
                 MemorySpace> in,
-        ddc::detail::fft::kwArgs kwargs
-        = {ddc::FFT_Direction::FORWARD, ddc::FFT_Normalization::OFF})
+        ddc::kwArgs_fft kwargs
+        = {ddc::FFT_Normalization::OFF})
 {
 	static_assert(
             std::is_same_v<layout_in,std::experimental::layout_right> && std::is_same_v<layout_out,std::experimental::layout_right>,
@@ -590,7 +605,7 @@ void fft(
             Tout,
             ExecSpace,
             MemorySpace,
-            X...>(execSpace, out.data(), in.data(), in_mesh, kwargs);
+            X...>(execSpace, out.data(), in.data(), in_mesh, {ddc::FFT_Direction::FORWARD, kwargs.normalization});
 }
 
 // iFFT (deduced from the fact that "in" is identified as a function on the Fourier space)
@@ -614,8 +629,8 @@ void ifft(
                 ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>,
                 layout_in,
                 MemorySpace> in,
-        ddc::detail::fft::kwArgs kwargs
-        = {ddc::FFT_Direction::BACKWARD, ddc::FFT_Normalization::OFF})
+        ddc::kwArgs_fft kwargs
+        = {ddc::FFT_Normalization::OFF})
 {
 	static_assert(
             std::is_same_v<layout_in,std::experimental::layout_right> && std::is_same_v<layout_out,std::experimental::layout_right>,
@@ -629,6 +644,6 @@ void ifft(
             Tout,
             ExecSpace,
             MemorySpace,
-            X...>(execSpace, out.data(), in.data(), out_mesh, kwargs);
+            X...>(execSpace, out.data(), in.data(), out_mesh, {ddc::FFT_Direction::BACKWARD, kwargs.normalization});
 }
 } // namespace ddc

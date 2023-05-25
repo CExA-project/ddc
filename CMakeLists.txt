@@ -105,7 +105,7 @@ endif()
 
 ## HIP
 if("${Kokkos_ENABLE_HIP}" OR "${HIP_FOR_NVIDIA}")	
-	find_package( HIP MODULE REQUIRED )
+	find_package( HIP REQUIRED )
 	if( NOT(HIP_FOUND) )
 	  message(FATAL_ERROR "HIP not found." )
 	endif()
@@ -235,20 +235,20 @@ if( HIP_FOUND )
 	target_compile_definitions(DDC INTERFACE hip_AVAIL)
 endif()
 
-if("${Kokkos_ENABLE_HIP}" OR "${HIP_FOR_NVIDIA}")
-	if( DEFINED HIP_TOOLKIT_PATH ) # Usually called ROCM_PATH in the HIP documentation. By default : /opt/rocm
-		list( APPEND CMAKE_PREFIX_PATH ${HIP_TOOLKIT_PATH}/hipfft/lib )
-		# find_package( hipfft REQUIRED CONFIG PATHS ) # Not compatible with nvidia, TODO: fix when it will be the case and remove HIP_TOOLKIT_PATH
-		find_library(HIPFFT_LIB hipfft)
-		target_link_libraries( DDC INTERFACE ${HIPFFT_LIB} )	
-		target_include_directories(DDC
-		SYSTEM INTERFACE
-			"$<BUILD_INTERFACE:${HIP_TOOLKIT_PATH}/include>"
-		)
-		target_compile_definitions(DDC INTERFACE hipfft_AVAIL)
-	else()
-		message( "HIP_TOOLKIT_PATH is not defined. Kernels functions may be unaccessible. To get them, add -DHIP_TOOLKIT_PATH=\"path_to_hip_toolkit\" in your cmake line" )
-	endif()
+if("${Kokkos_ENABLE_HIP}")
+	find_package( hipfft REQUIRED ) # Not compatible with nvidia
+	target_link_libraries( DDC INTERFACE hip::hipfft )	
+	target_compile_definitions(DDC INTERFACE hipfft_AVAIL)
+endif()
+
+if("${HIP_FOR_NVIDIA}")
+	find_library(HIPFFT_LIB hipfft)
+	target_link_libraries( DDC INTERFACE ${HIPFFT_LIB} )	
+	target_include_directories(DDC
+	SYSTEM INTERFACE
+		"$<BUILD_INTERFACE:${HIP_TOOLKIT_PATH}/include>"
+	)
+	target_compile_definitions(DDC INTERFACE hipfft_AVAIL)
 endif()
 
 

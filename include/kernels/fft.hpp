@@ -26,7 +26,7 @@ namespace ddc {
 // named arguments for FFT (and their default values)
 enum class FFT_Direction { FORWARD, BACKWARD };
 enum class FFT_Normalization { OFF, FORWARD, BACKWARD, ORTHO, FULL };
-}
+} // namespace ddc
 
 namespace ddc::detail::fft {
 template <typename T>
@@ -99,7 +99,7 @@ struct transform_type<Kokkos::complex<T1>, Kokkos::complex<T2>>
 };
 
 template <typename T1, typename T2>
-constexpr TransformType transform_type_v = transform_type<T1,T2>::value;
+constexpr TransformType transform_type_v = transform_type<T1, T2>::value;
 
 #if fftw_AVAIL
 // _fftw_type : compatible with both single and double precision
@@ -112,18 +112,14 @@ struct _fftw_type
 template <typename T>
 struct _fftw_type<Kokkos::complex<T>>
 {
-    using type = typename std::conditional<
-            std::is_same_v<real_type_t<T>, float>,
-            fftwf_complex,
-            fftw_complex>::type;
+    using type = typename std::
+            conditional<std::is_same_v<real_type_t<T>, float>, fftwf_complex, fftw_complex>::type;
 };
 
 // _fftw_plan : compatible with both single and double precision
 template <typename T>
-using _fftw_plan = typename std::conditional<
-        std::is_same_v<real_type_t<T>, float>,
-        fftwf_plan,
-        fftw_plan>::type;
+using _fftw_plan = typename std::
+        conditional<std::is_same_v<real_type_t<T>, float>, fftwf_plan, fftw_plan>::type;
 
 // _fftw_plan_many_dft : templated function working for all types of transformation
 template <typename Tin, typename Tout, typename... Args, typename PenultArg, typename LastArg>
@@ -282,7 +278,8 @@ hipfftResult _hipfftExec(LastArg lastArg, Args... args)
 
 struct kwArgs_core
 {
-    ddc::FFT_Direction direction; // Only effective for C2C transform and for normalization BACKWARD and FORWARD
+    ddc::FFT_Direction
+            direction; // Only effective for C2C transform and for normalization BACKWARD and FORWARD
     ddc::FFT_Normalization normalization;
 };
 
@@ -321,9 +318,7 @@ void core(
         const kwArgs_core& kwargs)
 {
     static_assert(
-            std::is_same_v<
-                    real_type_t<Tin>,
-                    float> || std::is_same_v<real_type_t<Tin>, double>,
+            std::is_same_v<real_type_t<Tin>, float> || std::is_same_v<real_type_t<Tin>, double>,
             "Base type of Tin (and Tout) must be float or double.");
     static_assert(
             std::is_same_v<real_type_t<Tin>, real_type_t<Tout>>,
@@ -362,24 +357,24 @@ void core(
                 (int*)NULL,
                 1,
                 odist);
-		if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
-          fftwf_execute(plan);
-          fftwf_destroy_plan(plan);
+        if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
+            fftwf_execute(plan);
+            fftwf_destroy_plan(plan);
         } else {
-          fftw_execute(plan);
-          fftw_destroy_plan(plan);
+            fftw_execute(plan);
+            fftw_destroy_plan(plan);
         }
         // std::cout << "performed with fftw";
     }
 #endif
 #if fftw_omp_AVAIL
     else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-		if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
-		  fftwf_init_threads();
-          fftwf_plan_with_nthreads(ExecSpace::concurrency());
+        if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
+            fftwf_init_threads();
+            fftwf_plan_with_nthreads(ExecSpace::concurrency());
         } else {
-		  fftw_init_threads();
-          fftw_plan_with_nthreads(ExecSpace::concurrency());
+            fftw_init_threads();
+            fftw_plan_with_nthreads(ExecSpace::concurrency());
         }
         _fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin, Tout>(
                 kwargs.direction == ddc::FFT_Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
@@ -395,12 +390,12 @@ void core(
                 (int*)NULL,
                 1,
                 odist);
-		if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
-          fftwf_execute(plan);
-          fftwf_destroy_plan(plan);
+        if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
+            fftwf_execute(plan);
+            fftwf_destroy_plan(plan);
         } else {
-          fftw_execute(plan);
-          fftw_destroy_plan(plan);
+            fftw_execute(plan);
+            fftw_destroy_plan(plan);
         }
         // std::cout << "performed with fftw_omp";
     }
@@ -440,7 +435,7 @@ void core(
     }
 #endif
 #if hipfft_AVAIL && !HIP_FOR_NVIDIA
-    else if constexpr(std::is_same_v<ExecSpace, Kokkos::HIP>) {
+    else if constexpr (std::is_same_v<ExecSpace, Kokkos::HIP>) {
         hipStream_t stream = execSpace.hip_stream();
 
         hipfftHandle plan;
@@ -478,19 +473,19 @@ void core(
         real_type_t<Tout> norm_coef;
         switch (kwargs.normalization) {
         case ddc::FFT_Normalization::OFF:
-			norm_coef = 1;
+            norm_coef = 1;
         case ddc::FFT_Normalization::FORWARD:
-			norm_coef
-					= kwargs.direction == ddc::FFT_Direction::FORWARD
-					? 1/ (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())*...)
-					: 1;
-		case ddc::FFT_Normalization::BACKWARD:
-            norm_coef
-                    = kwargs.direction == ddc::FFT_Direction::BACKWARD
-                    ? 1/ (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())*...)
-					: 1;
-		case ddc::FFT_Normalization::ORTHO:
-            norm_coef =1/ Kokkos::sqrt((ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())*...));
+            norm_coef = kwargs.direction == ddc::FFT_Direction::FORWARD
+                                ? 1 / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)
+                                : 1;
+        case ddc::FFT_Normalization::BACKWARD:
+            norm_coef = kwargs.direction == ddc::FFT_Direction::BACKWARD
+                                ? 1 / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)
+                                : 1;
+        case ddc::FFT_Normalization::ORTHO:
+            norm_coef = 1
+                        / Kokkos::sqrt(
+                                (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...));
         case ddc::FFT_Normalization::FULL:
             norm_coef
                     = kwargs.direction == ddc::FFT_Direction::FORWARD
@@ -515,8 +510,7 @@ void core(
                 Kokkos::RangePolicy<ExecSpace>(
                         execSpace,
                         0,
-                        is_complex_v<Tout>
-                                        && transform_type_v<Tin, Tout> != TransformType::C2C
+                        is_complex_v<Tout> && transform_type_v<Tin, Tout> != TransformType::C2C
                                 ? (LastSelector<double, X, X...>(
                                            ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())
                                                            / 2
@@ -524,9 +518,7 @@ void core(
                                            ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()))
                                    * ...)
                                 : (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)),
-                KOKKOS_LAMBDA(const int& i) {
-                    out_data[i] = out_data[i]*norm_coef;
-                });
+                KOKKOS_LAMBDA(const int& i) { out_data[i] = out_data[i] * norm_coef; });
     }
 }
 } // namespace ddc::detail::fft
@@ -590,22 +582,22 @@ void fft(
                 ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>,
                 layout_in,
                 MemorySpace> in,
-        ddc::kwArgs_fft kwargs
-        = {ddc::FFT_Normalization::OFF})
+        ddc::kwArgs_fft kwargs = {ddc::FFT_Normalization::OFF})
 {
-	static_assert(
-            std::is_same_v<layout_in,std::experimental::layout_right> && std::is_same_v<layout_out,std::experimental::layout_right>,
+    static_assert(
+            std::is_same_v<layout_in, std::experimental::layout_right>
+                    && std::is_same_v<layout_out, std::experimental::layout_right>,
             "Layouts must be right-handed");
 
     ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> in_mesh
             = ddc::get_domain<ddc::UniformPointSampling<X>...>(in);
 
-    ddc::detail::fft::core<
-            Tin,
-            Tout,
-            ExecSpace,
-            MemorySpace,
-            X...>(execSpace, out.data(), in.data(), in_mesh, {ddc::FFT_Direction::FORWARD, kwargs.normalization});
+    ddc::detail::fft::core<Tin, Tout, ExecSpace, MemorySpace, X...>(
+            execSpace,
+            out.data(),
+            in.data(),
+            in_mesh,
+            {ddc::FFT_Direction::FORWARD, kwargs.normalization});
 }
 
 // iFFT (deduced from the fact that "in" is identified as a function on the Fourier space)
@@ -629,21 +621,21 @@ void ifft(
                 ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>,
                 layout_in,
                 MemorySpace> in,
-        ddc::kwArgs_fft kwargs
-        = {ddc::FFT_Normalization::OFF})
+        ddc::kwArgs_fft kwargs = {ddc::FFT_Normalization::OFF})
 {
-	static_assert(
-            std::is_same_v<layout_in,std::experimental::layout_right> && std::is_same_v<layout_out,std::experimental::layout_right>,
+    static_assert(
+            std::is_same_v<layout_in, std::experimental::layout_right>
+                    && std::is_same_v<layout_out, std::experimental::layout_right>,
             "Layouts must be right-handed");
 
     ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> out_mesh
             = ddc::get_domain<ddc::UniformPointSampling<X>...>(out);
 
-    ddc::detail::fft::core<
-            Tin,
-            Tout,
-            ExecSpace,
-            MemorySpace,
-            X...>(execSpace, out.data(), in.data(), out_mesh, {ddc::FFT_Direction::BACKWARD, kwargs.normalization});
+    ddc::detail::fft::core<Tin, Tout, ExecSpace, MemorySpace, X...>(
+            execSpace,
+            out.data(),
+            in.data(),
+            out_mesh,
+            {ddc::FFT_Direction::BACKWARD, kwargs.normalization});
 }
 } // namespace ddc

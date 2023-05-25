@@ -197,7 +197,7 @@ int main(int argc, char** argv)
                           * ddc::distance_at_right(iy));
             });
     ddc::Coordinate<T> const max_dt {
-	  2./Kokkos::pow(Kokkos::numbers::pi,2)
+            2. / Kokkos::pow(Kokkos::numbers::pi, 2)
             / (kx * invdx2_max
                + ky * invdy2_max)}; // Classical stability theory gives .5 but empirically we see that for FFT method we need .2
 
@@ -273,7 +273,8 @@ int main(int argc, char** argv)
             ddc::PeriodicSampling<Fourier<Y>>> const k_mesh
             = ddc::FourierMesh(ghosted_initial_temp.domain(), false);
     ddc::Chunk _Ff = ddc::
-            Chunk(k_mesh, ddc::DeviceAllocator<Kokkos::complex<double>>());
+            Chunk(k_mesh,
+                  ddc::DeviceAllocator<Kokkos::complex<double>>());
     ddc::ChunkSpan Ff = _Ff.span_view();
 #endif
 
@@ -344,38 +345,39 @@ int main(int argc, char** argv)
                                / (dy_l * dy_m * dy_r);
                 });
 #elif (METHOD == SPECTRAL)
-		ddc::FFT_Normalization norm = ddc::FFT_Normalization::BACKWARD;
-        ddc::
-                fft(Kokkos::DefaultExecutionSpace(),
-                    Ff,
-                    last_temp,
-                    {norm});
+        ddc::FFT_Normalization norm = ddc::FFT_Normalization::BACKWARD;
+        ddc::fft(Kokkos::DefaultExecutionSpace(), Ff, last_temp, {norm});
         ddc::for_each(
                 ddc::policies::parallel_device,
                 k_mesh,
                 DDC_LAMBDA(ddc::DiscreteElement<
                            ddc::PeriodicSampling<Fourier<X>>,
-                           ddc::PeriodicSampling<Fourier<Y>>> const ikxky) {
+                           ddc::PeriodicSampling<Fourier<Y>>> const
+                                   ikxky) {
                     ddc::DiscreteElement<
                             ddc::PeriodicSampling<Fourier<X>>> const ikx
-                            = ddc::select<ddc::PeriodicSampling<Fourier<X>>>(
+                            = ddc::select<
+                                    ddc::PeriodicSampling<Fourier<X>>>(
                                     ikxky);
                     ddc::DiscreteElement<
                             ddc::PeriodicSampling<Fourier<Y>>> const iky
-                            = ddc::select<ddc::PeriodicSampling<Fourier<Y>>>(
+                            = ddc::select<
+                                    ddc::PeriodicSampling<Fourier<Y>>>(
                                     ikxky);
-                    Ff(ikx, iky) = Ff(ikx, iky)*(1
-                                    - (coordinate(ikx) * coordinate(ikx)
-                                               * kx
-                                       + coordinate(iky)
-                                                 * coordinate(iky) * ky)
-                                              * max_dt); // Ff(t+dt) = (1-D*k^2*dt)*Ff(t)
+                    Ff(ikx, iky)
+                            = Ff(ikx, iky)
+                              * (1
+                                 - (coordinate(ikx) * coordinate(ikx)
+                                            * kx
+                                    + coordinate(iky) * coordinate(iky)
+                                              * ky)
+                                           * max_dt); // Ff(t+dt) = (1-D*k^2*dt)*Ff(t)
                 });
         ddc::
                 ifft(Kokkos::DefaultExecutionSpace(),
-                    next_temp,
-                    Ff,
-                    {norm});
+                     next_temp,
+                     Ff,
+                     {norm});
 #endif
         //! [numerical scheme]
 

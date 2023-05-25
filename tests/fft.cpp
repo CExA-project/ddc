@@ -44,7 +44,8 @@ TEST(FFTSerialHost, R2C_1D)
 
 TEST(FFTSerialHost, R2C_2D)
 {
-    test_fft<Kokkos::Serial,
+    test_fft<
+            Kokkos::Serial,
             Kokkos::Serial::memory_space,
             float,
             Kokkos::complex<float>,
@@ -54,7 +55,8 @@ TEST(FFTSerialHost, R2C_2D)
 
 TEST(FFTSerialHost, R2C_3D)
 {
-    test_fft<Kokkos::Serial,
+    test_fft<
+            Kokkos::Serial,
             Kokkos::Serial::memory_space,
             float,
             Kokkos::complex<float>,
@@ -71,7 +73,8 @@ TEST(FFTParallelHost, R2C_1D)
 
 TEST(FFTParallelHost, R2C_2D)
 {
-    test_fft<Kokkos::OpenMP,
+    test_fft<
+            Kokkos::OpenMP,
             Kokkos::OpenMP::memory_space,
             float,
             Kokkos::complex<float>,
@@ -81,7 +84,8 @@ TEST(FFTParallelHost, R2C_2D)
 
 TEST(FFTParallelHost, R2C_3D)
 {
-    test_fft<Kokkos::OpenMP,
+    test_fft<
+            Kokkos::OpenMP,
             Kokkos::OpenMP::memory_space,
             float,
             Kokkos::complex<float>,
@@ -93,7 +97,8 @@ TEST(FFTParallelHost, R2C_3D)
 
 TEST(FFTParallelDevice, R2C_1D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             float,
             Kokkos::complex<float>,
@@ -102,7 +107,8 @@ TEST(FFTParallelDevice, R2C_1D)
 
 TEST(FFTParallelDevice, R2C_2D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             float,
             Kokkos::complex<float>,
@@ -112,7 +118,8 @@ TEST(FFTParallelDevice, R2C_2D)
 
 TEST(FFTParallelDevice, R2C_3D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             float,
             Kokkos::complex<float>,
@@ -123,7 +130,8 @@ TEST(FFTParallelDevice, R2C_3D)
 
 TEST(FFTSerialHost, C2C_1D)
 {
-    test_fft<Kokkos::Serial,
+    test_fft<
+            Kokkos::Serial,
             Kokkos::Serial::memory_space,
             Kokkos::complex<float>,
             Kokkos::complex<float>,
@@ -132,7 +140,8 @@ TEST(FFTSerialHost, C2C_1D)
 
 TEST(FFTSerialHost, C2C_2D)
 {
-    test_fft<Kokkos::Serial,
+    test_fft<
+            Kokkos::Serial,
             Kokkos::Serial::memory_space,
             Kokkos::complex<float>,
             Kokkos::complex<float>,
@@ -142,7 +151,8 @@ TEST(FFTSerialHost, C2C_2D)
 
 TEST(FFTSerialHost, C2C_3D)
 {
-    test_fft<Kokkos::Serial,
+    test_fft<
+            Kokkos::Serial,
             Kokkos::Serial::memory_space,
             Kokkos::complex<float>,
             Kokkos::complex<float>,
@@ -154,7 +164,8 @@ TEST(FFTSerialHost, C2C_3D)
 #if fftw_omp_AVAIL
 TEST(FFTParallelHost, C2C_1D)
 {
-    test_fft<Kokkos::OpenMP,
+    test_fft<
+            Kokkos::OpenMP,
             Kokkos::OpenMP::memory_space,
             Kokkos::complex<float>,
             Kokkos::complex<float>,
@@ -163,7 +174,8 @@ TEST(FFTParallelHost, C2C_1D)
 
 TEST(FFTParallelHost, C2C_2D)
 {
-    test_fft<Kokkos::OpenMP,
+    test_fft<
+            Kokkos::OpenMP,
             Kokkos::OpenMP::memory_space,
             Kokkos::complex<float>,
             Kokkos::complex<float>,
@@ -173,7 +185,8 @@ TEST(FFTParallelHost, C2C_2D)
 
 TEST(FFTParallelHost, C2C_3D)
 {
-    test_fft<Kokkos::OpenMP,
+    test_fft<
+            Kokkos::OpenMP,
             Kokkos::OpenMP::memory_space,
             Kokkos::complex<float>,
             Kokkos::complex<float>,
@@ -185,7 +198,8 @@ TEST(FFTParallelHost, C2C_3D)
 
 TEST(FFTParallelDevice, C2C_1D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             Kokkos::complex<float>,
             Kokkos::complex<float>,
@@ -194,7 +208,8 @@ TEST(FFTParallelDevice, C2C_1D)
 
 TEST(FFTParallelDevice, C2C_2D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             Kokkos::complex<float>,
             Kokkos::complex<float>,
@@ -204,7 +219,8 @@ TEST(FFTParallelDevice, C2C_2D)
 
 TEST(FFTParallelDevice, C2C_3D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             Kokkos::complex<float>,
             Kokkos::complex<float>,
@@ -215,12 +231,18 @@ TEST(FFTParallelDevice, C2C_3D)
 
 TEST(FFTSerialHost, D2Z_1D)
 {
-    test_fft<Kokkos::Serial, Kokkos::Serial::memory_space, double, Kokkos::complex<double>, RDimX>();
+    test_fft<
+            Kokkos::Serial,
+            Kokkos::Serial::memory_space,
+            double,
+            Kokkos::complex<double>,
+            RDimX>();
 }
 
 TEST(FFTSerialHost, D2Z_2D)
 {
-    test_fft<Kokkos::Serial,
+    test_fft<
+            Kokkos::Serial,
             Kokkos::Serial::memory_space,
             double,
             Kokkos::complex<double>,
@@ -230,7 +252,8 @@ TEST(FFTSerialHost, D2Z_2D)
 
 TEST(FFTSerialHost, D2Z_3D)
 {
-    test_fft<Kokkos::Serial,
+    test_fft<
+            Kokkos::Serial,
             Kokkos::Serial::memory_space,
             double,
             Kokkos::complex<double>,
@@ -242,12 +265,18 @@ TEST(FFTSerialHost, D2Z_3D)
 #if fftw_omp_AVAIL
 TEST(FFTParallelHost, D2Z_1D)
 {
-    test_fft<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, double, Kokkos::complex<double>, RDimX>();
+    test_fft<
+            Kokkos::OpenMP,
+            Kokkos::OpenMP::memory_space,
+            double,
+            Kokkos::complex<double>,
+            RDimX>();
 }
 
 TEST(FFTParallelHost, D2Z_2D)
 {
-    test_fft<Kokkos::OpenMP,
+    test_fft<
+            Kokkos::OpenMP,
             Kokkos::OpenMP::memory_space,
             double,
             Kokkos::complex<double>,
@@ -257,7 +286,8 @@ TEST(FFTParallelHost, D2Z_2D)
 
 TEST(FFTParallelHost, D2Z_3D)
 {
-    test_fft<Kokkos::OpenMP,
+    test_fft<
+            Kokkos::OpenMP,
             Kokkos::OpenMP::memory_space,
             double,
             Kokkos::complex<double>,
@@ -269,7 +299,8 @@ TEST(FFTParallelHost, D2Z_3D)
 
 TEST(FFTParallelDevice, D2Z_1D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             double,
             Kokkos::complex<double>,
@@ -278,7 +309,8 @@ TEST(FFTParallelDevice, D2Z_1D)
 
 TEST(FFTParallelDevice, D2Z_2D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             double,
             Kokkos::complex<double>,
@@ -288,7 +320,8 @@ TEST(FFTParallelDevice, D2Z_2D)
 
 TEST(FFTParallelDevice, D2Z_3D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             double,
             Kokkos::complex<double>,
@@ -299,7 +332,8 @@ TEST(FFTParallelDevice, D2Z_3D)
 
 TEST(FFTSerialHost, Z2Z_1D)
 {
-    test_fft<Kokkos::Serial,
+    test_fft<
+            Kokkos::Serial,
             Kokkos::Serial::memory_space,
             Kokkos::complex<double>,
             Kokkos::complex<double>,
@@ -308,7 +342,8 @@ TEST(FFTSerialHost, Z2Z_1D)
 
 TEST(FFTSerialHost, Z2Z_2D)
 {
-    test_fft<Kokkos::Serial,
+    test_fft<
+            Kokkos::Serial,
             Kokkos::Serial::memory_space,
             Kokkos::complex<double>,
             Kokkos::complex<double>,
@@ -318,7 +353,8 @@ TEST(FFTSerialHost, Z2Z_2D)
 
 TEST(FFTSerialHost, Z2Z_3D)
 {
-    test_fft<Kokkos::Serial,
+    test_fft<
+            Kokkos::Serial,
             Kokkos::Serial::memory_space,
             Kokkos::complex<double>,
             Kokkos::complex<double>,
@@ -330,7 +366,8 @@ TEST(FFTSerialHost, Z2Z_3D)
 #if fftw_omp_AVAIL
 TEST(FFTParallelHost, Z2Z_1D)
 {
-    test_fft<Kokkos::OpenMP,
+    test_fft<
+            Kokkos::OpenMP,
             Kokkos::OpenMP::memory_space,
             Kokkos::complex<double>,
             Kokkos::complex<double>,
@@ -339,7 +376,8 @@ TEST(FFTParallelHost, Z2Z_1D)
 
 TEST(FFTParallelHost, Z2Z_2D)
 {
-    test_fft<Kokkos::OpenMP,
+    test_fft<
+            Kokkos::OpenMP,
             Kokkos::OpenMP::memory_space,
             Kokkos::complex<double>,
             Kokkos::complex<double>,
@@ -349,7 +387,8 @@ TEST(FFTParallelHost, Z2Z_2D)
 
 TEST(FFTParallelHost, Z2Z_3D)
 {
-    test_fft<Kokkos::OpenMP,
+    test_fft<
+            Kokkos::OpenMP,
             Kokkos::OpenMP::memory_space,
             Kokkos::complex<double>,
             Kokkos::complex<double>,
@@ -361,7 +400,8 @@ TEST(FFTParallelHost, Z2Z_3D)
 
 TEST(FFTParallelDevice, Z2Z_1D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             Kokkos::complex<double>,
             Kokkos::complex<double>,
@@ -370,7 +410,8 @@ TEST(FFTParallelDevice, Z2Z_1D)
 
 TEST(FFTParallelDevice, Z2Z_2D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             Kokkos::complex<double>,
             Kokkos::complex<double>,
@@ -380,7 +421,8 @@ TEST(FFTParallelDevice, Z2Z_2D)
 
 TEST(FFTParallelDevice, Z2Z_3D)
 {
-    test_fft<Kokkos::DefaultExecutionSpace,
+    test_fft<
+            Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             Kokkos::complex<double>,
             Kokkos::complex<double>,

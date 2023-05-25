@@ -103,13 +103,6 @@ if("${Kokkos_ENABLE_CUDA}" AND NOT("${HIP_FOR_NVIDIA}"))
 	endif()
 endif()
 
-## HIP
-if("${Kokkos_ENABLE_HIP}" OR "${HIP_FOR_NVIDIA}")	
-	find_package( HIP REQUIRED )
-	if( NOT(HIP_FOUND) )
-	  message(FATAL_ERROR "HIP not found." )
-	endif()
-endif()
 
 ## PDI
 
@@ -204,9 +197,6 @@ add_library(DDC::DDC ALIAS DDC)
 install(
 	TARGETS DDC
 	EXPORT DDCTargets)
-if(HIP_FOR_NVIDIA)
-  target_compile_definitions(DDC INTERFACE HIP_FOR_NVIDIA)
-endif()
 
 # Link library to DDC
 
@@ -227,14 +217,6 @@ if( CUDAToolkit_FOUND )
 	target_compile_definitions(DDC INTERFACE cufft_AVAIL)
 endif()
 
-if( HIP_FOUND )
-	target_include_directories(DDC
-	SYSTEM INTERFACE
-	"$<BUILD_INTERFACE:${HIP_ROOT_DIR}/include>"
-	)
-	target_compile_definitions(DDC INTERFACE hip_AVAIL)
-endif()
-
 if("${Kokkos_ENABLE_HIP}")
 	find_package( hipfft REQUIRED ) # Not compatible with nvidia
 	target_link_libraries( DDC INTERFACE hip::hipfft )	
@@ -242,13 +224,27 @@ if("${Kokkos_ENABLE_HIP}")
 endif()
 
 if("${HIP_FOR_NVIDIA}")
-	find_library(HIPFFT_LIB hipfft)
-	target_link_libraries( DDC INTERFACE ${HIPFFT_LIB} )	
+	find_package( HIP REQUIRED )
+
 	target_include_directories(DDC
 	SYSTEM INTERFACE
-		"$<BUILD_INTERFACE:${HIP_TOOLKIT_PATH}/include>"
+	"$<BUILD_INTERFACE:${HIP_ROOT_DIR}/include>"
 	)
-	target_compile_definitions(DDC INTERFACE hipfft_AVAIL)
+	target_compile_definitions(DDC INTERFACE hip_AVAIL)
+	target_compile_definitions(DDC INTERFACE HIP_FOR_NVIDIA)
+
+	if( DEFINED HIP_TOOLKIT_PATH ) # Usually called ROCM_PATH in the HIP documentation. By default : /opt/rocm
+		list( APPEND CMAKE_PREFIX_PATH ${HIP_TOOLKIT_PATH}/hipfft/lib )
+		find_library(HIPFFT_LIB  hipfft REQUIRED)
+		target_link_libraries( DDC INTERFACE ${HIPFFT_LIB} )	
+		target_include_directories(DDC
+		SYSTEM INTERFACE
+			"$<BUILD_INTERFACE:${HIP_TOOLKIT_PATH}/include>"
+		)
+		target_compile_definitions(DDC INTERFACE hipfft_AVAIL)
+	else()
+		message( "HIP_TOOLKIT_PATH is not defined. Kernels functions may be unaccessible. To get them, add -DHIP_TOOLKIT_PATH=\"path_to_hip_toolkit\" in your cmake line" )
+	endif()
 endif()
 
 

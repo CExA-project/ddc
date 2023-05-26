@@ -268,7 +268,7 @@ int main(int argc, char** argv)
     //! [initial output]
 
 #if (METHOD == SPECTRAL)
-	ddc::init_fourier_space<X,Y>(ghosted_initial_temp.domain());
+    ddc::init_fourier_space<X, Y>(ghosted_initial_temp.domain());
     ddc::DiscreteDomain<
             ddc::PeriodicSampling<Fourier<X>>,
             ddc::PeriodicSampling<Fourier<Y>>> const k_mesh

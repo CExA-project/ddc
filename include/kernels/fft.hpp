@@ -543,8 +543,12 @@ typename ddc::PeriodicSampling<Fourier<X>>::template Impl<Kokkos::HostSpace> Fou
 namespace ddc {
 
 template <typename... X>
-void init_fourier_space(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh) {
-    return (ddc::init_discrete_space<ddc::PeriodicSampling<Fourier<X>>>(ddc::detail::fft::FourierSampling(ddc::select<ddc::UniformPointSampling<X>>(x_mesh))),...);
+void init_fourier_space(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh)
+{
+    return (ddc::init_discrete_space<ddc::PeriodicSampling<Fourier<X>>>(
+                    ddc::detail::fft::FourierSampling(
+                            ddc::select<ddc::UniformPointSampling<X>>(x_mesh))),
+            ...);
 }
 
 // FourierMesh, first element corresponds to mode 0
@@ -592,8 +596,10 @@ void fft(
         ddc::kwArgs_fft kwargs = {ddc::FFT_Normalization::OFF})
 {
     static_assert(
-            std::is_same_v<layout_in, std::experimental::layout_right>
-                    && std::is_same_v<layout_out, std::experimental::layout_right>,
+            std::is_same_v<
+                    layout_in,
+                    std::experimental::
+                            layout_right> && std::is_same_v<layout_out, std::experimental::layout_right>,
             "Layouts must be right-handed");
 
     ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> in_mesh
@@ -631,8 +637,10 @@ void ifft(
         ddc::kwArgs_fft kwargs = {ddc::FFT_Normalization::OFF})
 {
     static_assert(
-            std::is_same_v<layout_in, std::experimental::layout_right>
-                    && std::is_same_v<layout_out, std::experimental::layout_right>,
+            std::is_same_v<
+                    layout_in,
+                    std::experimental::
+                            layout_right> && std::is_same_v<layout_out, std::experimental::layout_right>,
             "Layouts must be right-handed");
 
     ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> out_mesh

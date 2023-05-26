@@ -48,8 +48,10 @@ constexpr T LastSelector(const T a, const T b)
 #if fftw_omp_AVAIL
 template <typename MemorySpace, typename T>
 using Allocator = typename std::conditional<
-        std::is_same_v<MemorySpace, Kokkos::Serial::memory_space>
-                || std::is_same_v<MemorySpace, Kokkos::OpenMP::memory_space>,
+        std::is_same_v<
+                MemorySpace,
+                Kokkos::Serial::
+                        memory_space> || std::is_same_v<MemorySpace, Kokkos::OpenMP::memory_space>,
         ddc::HostAllocator<T>,
         ddc::DeviceAllocator<T>>::type;
 
@@ -106,8 +108,9 @@ static void test_fft()
                         -(Kokkos::pow(coordinate(ddc::select<DDim<X>>(e)), 2) + ...) / 2));
             });
 
-	ddc::init_fourier_space<X...>(x_mesh);
-    DDom<DFDim<Fourier<X>>...> const k_mesh = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
+    ddc::init_fourier_space<X...>(x_mesh);
+    DDom<DFDim<Fourier<X>>...> const k_mesh
+            = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
 
     ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
     ddc::ChunkSpan Ff = _Ff.span_view();

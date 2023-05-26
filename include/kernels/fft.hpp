@@ -525,9 +525,40 @@ void core(
 
 namespace ddc {
 
+template <typename... X>
+ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...> FourierMesh(
+        ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh,
+        const bool C2C)
+{
+    return ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>(ddc::init_discrete_space(
+            ddc::PeriodicSampling<Fourier<X>>::
+                    init(ddc::detail::TaggedVector<ddc::CoordinateElement, Fourier<X>>(0),
+                         ddc::detail::TaggedVector<ddc::CoordinateElement, Fourier<X>>(
+                                 C2C ? 2 * (ddc::detail::fft::N<X>(x_mesh) - 1)
+                                                 / (ddc::detail::fft::b<X>(x_mesh)
+                                                    - ddc::detail::fft::a<X>(x_mesh))
+                                                 * Kokkos::numbers::pi
+                                     : ddc::detail::fft::LastSelector<double, X, X...>(
+                                             ddc::detail::fft::N<X>(x_mesh)
+                                                     / (ddc::detail::fft::b<X>(x_mesh)
+                                                        - ddc::detail::fft::a<X>(x_mesh))
+                                                     * Kokkos::numbers::pi,
+                                             2 * (ddc::detail::fft::N<X>(x_mesh) - 1)
+                                                     / (ddc::detail::fft::b<X>(x_mesh)
+                                                        - ddc::detail::fft::a<X>(x_mesh))
+                                                     * Kokkos::numbers::pi)),
+                         ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
+                                 C2C ? ddc::detail::fft::N<X>(x_mesh)
+                                     : ddc::detail::fft::LastSelector<double, X, X...>(
+                                             ddc::detail::fft::N<X>(x_mesh) / 2 + 1,
+                                             ddc::detail::fft::N<X>(x_mesh))),
+                         ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
+                                 ddc::detail::fft::N<X>(x_mesh))))...);
+}
+
 // FourierMesh, first element corresponds to mode 0
 template <typename X>
-typename ddc::PeriodicSampling<Fourier<X>>::template Impl<Kokkos::HostSpace> FourierMesh(
+typename ddc::PeriodicSampling<Fourier<X>>::template Impl<Kokkos::HostSpace> _FourierMesh(
         ddc::DiscreteDomain<ddc::UniformPointSampling<X>> x_mesh)
 {
     auto [impl, ddom] = ddc::PeriodicSampling<Fourier<X>>::
@@ -544,11 +575,18 @@ typename ddc::PeriodicSampling<Fourier<X>>::template Impl<Kokkos::HostSpace> Fou
 }
 
 template <typename... X>
-ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...> FourierMesh2(
+ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...> _FourierMesh2(
         ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh,
         bool C2C)
 {
-    return ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>();
+    return ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>(
+            ddc::DiscreteElement<ddc::PeriodicSampling<Fourier<X>>...>(
+                    ddc::DiscreteElement<ddc::PeriodicSampling<Fourier<X>>>(0)...),
+            ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>...>(
+                    (C2C ? ddc::detail::fft::N<X>(x_mesh)
+                         : ddc::detail::fft::LastSelector<double, X, X...>(
+                                 ddc::detail::fft::N<X>(x_mesh) / 2 + 1,
+                                 ddc::detail::fft::N<X>(x_mesh)))...));
 }
 
 struct kwArgs_fft

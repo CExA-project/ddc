@@ -130,7 +130,7 @@ static void test_fft()
     ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan f_host = _f_host.span_view();
     ddc::deepcopy(f_host, f);
-#ifndef NDEBUG
+#if 0
     std::cout << "\n input:\n";
     ddc::for_each(
             ddc::policies::serial_host,
@@ -145,7 +145,7 @@ static void test_fft()
             = ddc::Chunk(ddc::get_domain<DFDim<Fourier<X>>...>(Ff), ddc::HostAllocator<Tout>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
     ddc::deepcopy(Ff_host, Ff);
-#ifndef NDEBUG
+#if 0
     std::cout << "\n output:\n";
     ddc::for_each(
             ddc::policies::serial_host,
@@ -164,7 +164,7 @@ static void test_fft()
     ddc::Chunk _FFf_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(FFf), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan FFf_host = _FFf_host.span_view();
     ddc::deepcopy(FFf_host, FFf);
-#ifndef NDEBUG
+#if 0
     std::cout << "\n iFFT(FFT):\n";
     ddc::for_each(
             ddc::policies::serial_host,

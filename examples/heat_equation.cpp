@@ -268,16 +268,11 @@ int main(int argc, char** argv)
     //! [initial output]
 
 #if (METHOD == SPECTRAL)
-    ddc::init_discrete_space<ddc::PeriodicSampling<Fourier<X>>>(
-            ddc::_FourierMesh(
-                    ddc::select<DDimX>(ghosted_initial_temp.domain())));
-    ddc::init_discrete_space<ddc::PeriodicSampling<Fourier<Y>>>(
-            ddc::_FourierMesh(
-                    ddc::select<DDimY>(ghosted_initial_temp.domain())));
+	ddc::init_fourier_space<X,Y>(ghosted_initial_temp.domain());
     ddc::DiscreteDomain<
             ddc::PeriodicSampling<Fourier<X>>,
             ddc::PeriodicSampling<Fourier<Y>>> const k_mesh
-            = ddc::_FourierMesh2(ghosted_initial_temp.domain(), false);
+            = ddc::FourierMesh(ghosted_initial_temp.domain(), false);
     ddc::Chunk _Ff = ddc::
             Chunk(k_mesh,
                   ddc::DeviceAllocator<Kokkos::complex<double>>());

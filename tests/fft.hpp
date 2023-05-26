@@ -106,8 +106,8 @@ static void test_fft()
                         -(Kokkos::pow(coordinate(ddc::select<DDim<X>>(e)), 2) + ...) / 2));
             });
 
-    DDom<DFDim<Fourier<X>>...> const k_mesh
-            = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
+	ddc::init_fourier_space<X...>(x_mesh);
+    DDom<DFDim<Fourier<X>>...> const k_mesh = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
 
     ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
     ddc::ChunkSpan Ff = _Ff.span_view();

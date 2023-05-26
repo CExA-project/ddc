@@ -268,14 +268,16 @@ int main(int argc, char** argv)
     //! [initial output]
 
 #if (METHOD == SPECTRAL)
-    auto ddom_x = ddc::select<DDimX>(ghosted_initial_temp.domain());
-    auto ddom_y = ddc::select<DDimY>(ghosted_initial_temp.domain());
-    ddc::init_discrete_space<ddc::PeriodicSampling<Fourier<X>>>(ddc::_FourierMesh(ddom_x));
-    ddc::init_discrete_space<ddc::PeriodicSampling<Fourier<Y>>>(ddc::_FourierMesh(ddom_y));
-    ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>> const kx_mesh = ddc::_FourierMesh2(ddom_x, false);
-    ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<Y>>> const ky_mesh = ddc::_FourierMesh2(ddom_y, false);
-    ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>,
-                        ddc::PeriodicSampling<Fourier<Y>>> const k_mesh(kx_mesh, ky_mesh);
+    ddc::init_discrete_space<ddc::PeriodicSampling<Fourier<X>>>(
+            ddc::_FourierMesh(
+                    ddc::select<DDimX>(ghosted_initial_temp.domain())));
+    ddc::init_discrete_space<ddc::PeriodicSampling<Fourier<Y>>>(
+            ddc::_FourierMesh(
+                    ddc::select<DDimY>(ghosted_initial_temp.domain())));
+    ddc::DiscreteDomain<
+            ddc::PeriodicSampling<Fourier<X>>,
+            ddc::PeriodicSampling<Fourier<Y>>> const k_mesh
+            = ddc::_FourierMesh2(ghosted_initial_temp.domain(), false);
     ddc::Chunk _Ff = ddc::
             Chunk(k_mesh,
                   ddc::DeviceAllocator<Kokkos::complex<double>>());

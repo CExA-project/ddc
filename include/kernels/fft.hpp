@@ -580,13 +580,13 @@ ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...> _FourierMesh2(
         bool C2C)
 {
     return ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>(
-            ddc::DiscreteElement<ddc::PeriodicSampling<Fourier<X>>...>(
-                    ddc::DiscreteElement<ddc::PeriodicSampling<Fourier<X>>>(0)...),
-            ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>...>(
-                    (C2C ? ddc::detail::fft::N<X>(x_mesh)
-                         : ddc::detail::fft::LastSelector<double, X, X...>(
-                                 ddc::detail::fft::N<X>(x_mesh) / 2 + 1,
-                                 ddc::detail::fft::N<X>(x_mesh)))...));
+            ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>>(
+                    ddc::DiscreteElement<ddc::PeriodicSampling<Fourier<X>>>(0),
+                    ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
+                            (C2C ? ddc::detail::fft::N<X>(x_mesh)
+                                 : ddc::detail::fft::LastSelector<double, X, X...>(
+                                         ddc::detail::fft::N<X>(x_mesh) / 2 + 1,
+                                         ddc::detail::fft::N<X>(x_mesh)))))...);
 }
 
 struct kwArgs_fft

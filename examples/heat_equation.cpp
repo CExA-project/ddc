@@ -282,11 +282,11 @@ int main(int argc, char** argv)
     //! [time iteration]
     for (auto const iter :
          time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
-        //! [time iteration]
+//! [time iteration]
 
-        //! [boundary conditions]
-        // Periodic boundary conditions
-		#if (METHOD == FINITE_DIFF)
+//! [boundary conditions]
+// Periodic boundary conditions
+#if (METHOD == FINITE_DIFF)
         ddc::deepcopy(
                 ghosted_last_temp[x_pre_ghost][y_domain],
                 ghosted_last_temp[y_domain][x_domain_end]);
@@ -299,7 +299,7 @@ int main(int argc, char** argv)
         ddc::deepcopy(
                 ghosted_last_temp[x_domain][y_post_ghost],
                 ghosted_last_temp[x_domain][y_domain_begin]);
-		#endif
+#endif
 //! [boundary conditions]
 
 //! [manipulated views]

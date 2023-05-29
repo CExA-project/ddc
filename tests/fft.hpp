@@ -91,11 +91,11 @@ static void test_fft()
     const double b = 10;
     const std::size_t Nx = 64; // Optimal value is (b-a)^2/(2*pi)
 
-    DDom<DDim<X>...> const x_mesh = DDom<DDim<X>...>(ddc::init_discrete_space(
-            DDim<X>::
-                    init(ddc::Coordinate<X>(a + (b - a) / Nx / 2),
-                         ddc::Coordinate<X>(b - (b - a) / Nx / 2),
-                         DVect<DDim<X>>(Nx)))...);
+    DDom<DDim<X>...> const x_mesh = DDom<DDim<X>...>(
+            ddc::init_discrete_space(DDim<X>::
+                                             init(ddc::Coordinate<X>(a + (b - a) / Nx / 2),
+                                                  ddc::Coordinate<X>(b - (b - a) / Nx / 2),
+                                                  DVect<DDim<X>>(Nx)))...);
     ddc::Chunk _f = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
     ddc::ChunkSpan f = _f.span_view();
     ddc::for_each(

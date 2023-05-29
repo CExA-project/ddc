@@ -89,7 +89,7 @@ int main(int argc, char** argv)
     // End of the domain of interest in the X dimension
     double const x_end = 1.;
     // Number of discretization points in the X dimension
-    size_t const nb_x_points = 10;
+    size_t const nb_x_points = 100;
     // Thermal diffusion coefficient
     double const kx = .01;
     // Start of the domain of interest in the Y dimension

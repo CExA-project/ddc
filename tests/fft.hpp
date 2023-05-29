@@ -93,8 +93,8 @@ static void test_fft()
 
     DDom<DDim<X>...> const x_mesh = DDom<DDim<X>...>(ddc::init_discrete_space(
             DDim<X>::
-                    init(ddc::detail::TaggedVector<ddc::CoordinateElement, X>(a + (b - a) / Nx / 2),
-                         ddc::detail::TaggedVector<ddc::CoordinateElement, X>(b - (b - a) / Nx / 2),
+                    init(ddc::Coordinate<X>(a + (b - a) / Nx / 2),
+                         ddc::Coordinate<X>(b - (b - a) / Nx / 2),
                          DVect<DDim<X>>(Nx)))...);
     ddc::Chunk _f = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
     ddc::ChunkSpan f = _f.span_view();

@@ -527,8 +527,8 @@ typename ddc::PeriodicSampling<Fourier<X>>::template Impl<Kokkos::HostSpace> Fou
         ddc::DiscreteDomain<ddc::UniformPointSampling<X>> x_mesh)
 {
     auto [impl, ddom] = ddc::PeriodicSampling<Fourier<X>>::
-            init(ddc::detail::TaggedVector<ddc::CoordinateElement, Fourier<X>>(0),
-                 ddc::detail::TaggedVector<ddc::CoordinateElement, Fourier<X>>(
+            init(ddc::Coordinate<Fourier<X>>(0),
+                 ddc::Coordinate<Fourier<X>>(
                          2 * (ddc::detail::fft::N<X>(x_mesh) - 1)
                          / (ddc::detail::fft::b<X>(x_mesh) - ddc::detail::fft::a<X>(x_mesh))
                          * Kokkos::numbers::pi),

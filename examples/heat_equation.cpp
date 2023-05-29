@@ -16,7 +16,7 @@
 #define FINITE_DIFF 0
 #define SPECTRAL 1
 
-#define METHOD SPECTRAL // FINITE_DIFF or SPECTRAL
+#define METHOD FINITE_DIFF // FINITE_DIFF or SPECTRAL
 
 //! [X-dimension]
 /// Our first continuous dimension
@@ -286,6 +286,7 @@ int main(int argc, char** argv)
 
         //! [boundary conditions]
         // Periodic boundary conditions
+		#if (METHOD == FINITE_DIFF)
         ddc::deepcopy(
                 ghosted_last_temp[x_pre_ghost][y_domain],
                 ghosted_last_temp[y_domain][x_domain_end]);
@@ -298,6 +299,7 @@ int main(int argc, char** argv)
         ddc::deepcopy(
                 ghosted_last_temp[x_domain][y_post_ghost],
                 ghosted_last_temp[x_domain][y_domain_begin]);
+		#endif
 //! [boundary conditions]
 
 //! [manipulated views]

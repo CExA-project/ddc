@@ -112,9 +112,14 @@ static void test_fft()
     DDom<DFDim<Fourier<X>>...> const k_mesh
             = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
 
+    ddc::Chunk _f_bis
+        = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), Allocator<MemorySpace, Tin>());
+    ddc::ChunkSpan f_bis = _f_bis.span_view();
+    ddc::deepcopy(f_bis, f);
+
     ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
     ddc::ChunkSpan Ff = _Ff.span_view();
-    ddc::fft(ExecSpace(), Ff, f, {ddc::FFT_Normalization::FULL});
+    ddc::fft(ExecSpace(), Ff, f_bis, {ddc::FFT_Normalization::FULL});
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input

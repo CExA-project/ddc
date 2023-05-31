@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 
+#pragma once
+
 #include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>

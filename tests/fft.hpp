@@ -4,7 +4,7 @@
 
 #include <ddc/ddc.hpp>
 
-#include <kernels/fft.hpp>
+#include <ddc/kernels/fft.hpp>
 
 template <typename X>
 using DDim = ddc::UniformPointSampling<X>;

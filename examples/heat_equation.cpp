@@ -8,7 +8,7 @@
 
 #include <ddc/ddc.hpp>
 
-#include <kernels/fft.hpp>
+#include <ddc/kernels/fft.hpp>
 
 #include <Kokkos_Core.hpp>
 //! [includes]

@@ -612,7 +612,9 @@ void fft(
             out.data(),
             in.data(),
             in_mesh,
-            {ddc::FFT_Direction::FORWARD, kwargs.normalization});
+            (ddc::detail::fft::kwArgs_core) {
+                    .direction = ddc::FFT_Direction::FORWARD,
+                    .normalization = kwargs.normalization});
 }
 
 // iFFT (deduced from the fact that "in" is identified as a function on the Fourier space)
@@ -653,6 +655,8 @@ void ifft(
             out.data(),
             in.data(),
             out_mesh,
-            {ddc::FFT_Direction::BACKWARD, kwargs.normalization});
+            (ddc::detail::fft::kwArgs_core) {
+                    .direction = ddc::FFT_Direction::BACKWARD,
+                    .normalization = kwargs.normalization});
 }
 } // namespace ddc

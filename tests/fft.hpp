@@ -3,7 +3,6 @@
 #include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
-
 #include <ddc/kernels/fft.hpp>
 
 template <typename X>

@@ -7,7 +7,6 @@
 #include <numeric>
 
 #include <ddc/ddc.hpp>
-
 #include <ddc/kernels/fft.hpp>
 
 #include <Kokkos_Core.hpp>

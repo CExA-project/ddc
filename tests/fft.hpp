@@ -108,7 +108,7 @@ static void test_fft()
             });
 
     ddc::init_fourier_space<X...>(x_mesh);
-    DDom<DFDim<Fourier<X>>...> const k_mesh
+    DDom<DFDim<ddc::Fourier<X>>...> const k_mesh
             = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
 
     ddc::Chunk _f_bis = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), Allocator<MemorySpace, Tin>());
@@ -122,7 +122,7 @@ static void test_fft()
 
     // deepcopy of Ff because FFT C2R overwrites the input
     ddc::Chunk _Ff_bis
-            = ddc::Chunk(ddc::get_domain<DFDim<Fourier<X>>...>(Ff), Allocator<MemorySpace, Tout>());
+            = ddc::Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff), Allocator<MemorySpace, Tout>());
     ddc::ChunkSpan Ff_bis = _Ff_bis.span_view();
     ddc::deepcopy(Ff_bis, Ff);
 
@@ -145,19 +145,19 @@ static void test_fft()
 #endif
 
     ddc::Chunk _Ff_host
-            = ddc::Chunk(ddc::get_domain<DFDim<Fourier<X>>...>(Ff), ddc::HostAllocator<Tout>());
+            = ddc::Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff), ddc::HostAllocator<Tout>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
     ddc::deepcopy(Ff_host, Ff);
 #if 0
     std::cout << "\n output:\n";
     ddc::for_each(
             ddc::policies::serial_host,
-            ddc::get_domain<DFDim<Fourier<X>>...>(Ff_host),
-            [=](DElem<DFDim<Fourier<X>>...> const e) {
-                (std::cout << ... << coordinate(ddc::select<DFDim<Fourier<X>>>(e)))
+            ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff_host),
+            [=](DElem<DFDim<ddc::Fourier<X>>...> const e) {
+                (std::cout << ... << coordinate(ddc::select<DFDim<ddc::Fourier<X>>>(e)))
                         << "->" << Kokkos::abs(Ff_host(e)) << " "
                         << Kokkos::exp(
-                                   -(Kokkos::pow(coordinate(ddc::select<DFDim<Fourier<X>>>(e)), 2)
+                                   -(Kokkos::pow(coordinate(ddc::select<DFDim<ddc::Fourier<X>>>(e)), 2)
                                      + ...)
                                    / 2)
                         << ", ";
@@ -180,16 +180,16 @@ static void test_fft()
 #endif
 
     double criterion = Kokkos::sqrt(ddc::transform_reduce(
-            ddc::get_domain<DFDim<Fourier<X>>...>(Ff_host),
+            ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff_host),
             0.,
             ddc::reducer::sum<double>(),
-            [=](DElem<DFDim<Fourier<X>>...> const e) {
+            [=](DElem<DFDim<ddc::Fourier<X>>...> const e) {
                 return Kokkos::
                                pow(Kokkos::abs(Ff_host(e))
                                            - Kokkos::exp(
                                                    -(Kokkos::
                                                              pow(coordinate(ddc::select<
-                                                                            DFDim<Fourier<X>>>(e)),
+                                                                            DFDim<ddc::Fourier<X>>>(e)),
                                                                  2)
                                                      + ...)
                                                    / 2),

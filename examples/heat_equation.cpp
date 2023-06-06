@@ -269,8 +269,8 @@ int main(int argc, char** argv)
 #if (METHOD == SPECTRAL)
     ddc::init_fourier_space<X, Y>(ghosted_initial_temp.domain());
     ddc::DiscreteDomain<
-            ddc::PeriodicSampling<Fourier<X>>,
-            ddc::PeriodicSampling<Fourier<Y>>> const k_mesh
+            ddc::PeriodicSampling<ddc::Fourier<X>>,
+            ddc::PeriodicSampling<ddc::Fourier<Y>>> const k_mesh
             = ddc::FourierMesh(ghosted_initial_temp.domain(), false);
     ddc::Chunk _Ff = ddc::
             Chunk(k_mesh,
@@ -353,18 +353,18 @@ int main(int argc, char** argv)
                 ddc::policies::parallel_device,
                 k_mesh,
                 DDC_LAMBDA(ddc::DiscreteElement<
-                           ddc::PeriodicSampling<Fourier<X>>,
-                           ddc::PeriodicSampling<Fourier<Y>>> const
+                           ddc::PeriodicSampling<ddc::Fourier<X>>,
+                           ddc::PeriodicSampling<ddc::Fourier<Y>>> const
                                    ikxky) {
                     ddc::DiscreteElement<
-                            ddc::PeriodicSampling<Fourier<X>>> const ikx
+                            ddc::PeriodicSampling<ddc::Fourier<X>>> const ikx
                             = ddc::select<
-                                    ddc::PeriodicSampling<Fourier<X>>>(
+                                    ddc::PeriodicSampling<ddc::Fourier<X>>>(
                                     ikxky);
                     ddc::DiscreteElement<
-                            ddc::PeriodicSampling<Fourier<Y>>> const iky
+                            ddc::PeriodicSampling<ddc::Fourier<Y>>> const iky
                             = ddc::select<
-                                    ddc::PeriodicSampling<Fourier<Y>>>(
+                                    ddc::PeriodicSampling<ddc::Fourier<Y>>>(
                                     ikxky);
                     Ff(ikx, iky)
                             = Ff(ikx, iky)

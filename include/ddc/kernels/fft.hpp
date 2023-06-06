@@ -47,11 +47,11 @@ static_assert(sizeof(hipfftDoubleComplex) == sizeof(Kokkos::complex<double>));
 static_assert(alignof(hipfftDoubleComplex) <= alignof(Kokkos::complex<double>));
 #endif
 
+namespace ddc {
 // TODO : maybe transfert this somewhere else because Fourier space is not specific to FFT
 template <typename Dim>
 struct Fourier;
 
-namespace ddc {
 // named arguments for FFT (and their default values)
 enum class FFT_Direction { FORWARD, BACKWARD };
 enum class FFT_Normalization { OFF, FORWARD, BACKWARD, ORTHO, FULL };
@@ -552,18 +552,18 @@ void core(
 }
 
 template <typename X>
-typename ddc::PeriodicSampling<Fourier<X>>::template Impl<Kokkos::HostSpace> FourierSampling(
+typename ddc::PeriodicSampling<ddc::Fourier<X>>::template Impl<Kokkos::HostSpace> FourierSampling(
         ddc::DiscreteDomain<ddc::UniformPointSampling<X>> x_mesh)
 {
-    auto [impl, ddom] = ddc::PeriodicSampling<Fourier<X>>::
-            init(ddc::Coordinate<Fourier<X>>(0),
-                 ddc::Coordinate<Fourier<X>>(
+    auto [impl, ddom] = ddc::PeriodicSampling<ddc::Fourier<X>>::
+            init(ddc::Coordinate<ddc::Fourier<X>>(0),
+                 ddc::Coordinate<ddc::Fourier<X>>(
                          2 * (ddc::detail::fft::N<X>(x_mesh) - 1)
                          / (ddc::detail::fft::b<X>(x_mesh) - ddc::detail::fft::a<X>(x_mesh))
                          * Kokkos::numbers::pi),
-                 ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
+                 ddc::DiscreteVector<ddc::PeriodicSampling<ddc::Fourier<X>>>(
                          ddc::detail::fft::N<X>(x_mesh)),
-                 ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
+                 ddc::DiscreteVector<ddc::PeriodicSampling<ddc::Fourier<X>>>(
                          ddc::detail::fft::N<X>(x_mesh)));
     return std::move(impl);
 }
@@ -574,7 +574,7 @@ namespace ddc {
 template <typename... X>
 void init_fourier_space(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh)
 {
-    return (ddc::init_discrete_space<ddc::PeriodicSampling<Fourier<X>>>(
+    return (ddc::init_discrete_space<ddc::PeriodicSampling<ddc::Fourier<X>>>(
                     ddc::detail::fft::FourierSampling(
                             ddc::select<ddc::UniformPointSampling<X>>(x_mesh))),
             ...);
@@ -582,14 +582,14 @@ void init_fourier_space(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_m
 
 // FourierMesh, first element corresponds to mode 0
 template <typename... X>
-ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...> FourierMesh(
+ddc::DiscreteDomain<ddc::PeriodicSampling<ddc::Fourier<X>>...> FourierMesh(
         ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh,
         bool C2C)
 {
-    return ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>(
-            ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>>(
-                    ddc::DiscreteElement<ddc::PeriodicSampling<Fourier<X>>>(0),
-                    ddc::DiscreteVector<ddc::PeriodicSampling<Fourier<X>>>(
+    return ddc::DiscreteDomain<ddc::PeriodicSampling<ddc::Fourier<X>>...>(
+            ddc::DiscreteDomain<ddc::PeriodicSampling<ddc::Fourier<X>>>(
+                    ddc::DiscreteElement<ddc::PeriodicSampling<ddc::Fourier<X>>>(0),
+                    ddc::DiscreteVector<ddc::PeriodicSampling<ddc::Fourier<X>>>(
                             (C2C ? ddc::detail::fft::N<X>(x_mesh)
                                  : ddc::detail::fft::LastSelector<double, X, X...>(
                                          ddc::detail::fft::N<X>(x_mesh) / 2 + 1,
@@ -614,7 +614,7 @@ void fft(
         ExecSpace execSpace,
         ddc::ChunkSpan<
                 Tout,
-                ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>,
+                ddc::DiscreteDomain<ddc::PeriodicSampling<ddc::Fourier<X>>...>,
                 layout_out,
                 MemorySpace> out,
         ddc::ChunkSpan<
@@ -660,7 +660,7 @@ void ifft(
                 MemorySpace> out,
         ddc::ChunkSpan<
                 Tin,
-                ddc::DiscreteDomain<ddc::PeriodicSampling<Fourier<X>>...>,
+                ddc::DiscreteDomain<ddc::PeriodicSampling<ddc::Fourier<X>>...>,
                 layout_in,
                 MemorySpace> in,
         ddc::kwArgs_fft kwargs = {ddc::FFT_Normalization::OFF})

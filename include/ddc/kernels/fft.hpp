@@ -20,6 +20,33 @@
 #include <hipfft/hipfft.h>
 #endif
 
+#if fftw_AVAIL
+static_assert(sizeof(fftwf_complex) == sizeof(Kokkos::complex<float>));
+static_assert(alignof(fftwf_complex) <= alignof(Kokkos::complex<float>));
+
+static_assert(sizeof(fftw_complex) == sizeof(Kokkos::complex<double>));
+static_assert(alignof(fftw_complex) <= alignof(Kokkos::complex<double>));
+
+static_assert(sizeof(fftwl_complex) == sizeof(Kokkos::complex<long double>));
+static_assert(alignof(fftwl_complex) <= alignof(Kokkos::complex<long double>));
+#endif
+
+#if cufft_AVAIL
+static_assert(sizeof(cufftComplex) == sizeof(Kokkos::complex<float>));
+static_assert(alignof(cufftComplex) <= alignof(Kokkos::complex<float>));
+
+static_assert(sizeof(cufftDoubleComplex) == sizeof(Kokkos::complex<double>));
+static_assert(alignof(cufftDoubleComplex) <= alignof(Kokkos::complex<double>));
+#endif
+
+#if hipfft_AVAIL
+static_assert(sizeof(hipfftComplex) == sizeof(Kokkos::complex<float>));
+static_assert(alignof(hipfftComplex) <= alignof(Kokkos::complex<float>));
+
+static_assert(sizeof(hipfftDoubleComplex) == sizeof(Kokkos::complex<double>));
+static_assert(alignof(hipfftDoubleComplex) <= alignof(Kokkos::complex<double>));
+#endif
+
 // TODO : maybe transfert this somewhere else because Fourier space is not specific to FFT
 template <typename Dim>
 struct Fourier;

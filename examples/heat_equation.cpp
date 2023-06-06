@@ -357,15 +357,15 @@ int main(int argc, char** argv)
                            ddc::PeriodicSampling<ddc::Fourier<Y>>> const
                                    ikxky) {
                     ddc::DiscreteElement<
-                            ddc::PeriodicSampling<ddc::Fourier<X>>> const ikx
-                            = ddc::select<
-                                    ddc::PeriodicSampling<ddc::Fourier<X>>>(
-                                    ikxky);
+                            ddc::PeriodicSampling<ddc::Fourier<X>>> const
+                            ikx
+                            = ddc::select<ddc::PeriodicSampling<
+                                    ddc::Fourier<X>>>(ikxky);
                     ddc::DiscreteElement<
-                            ddc::PeriodicSampling<ddc::Fourier<Y>>> const iky
-                            = ddc::select<
-                                    ddc::PeriodicSampling<ddc::Fourier<Y>>>(
-                                    ikxky);
+                            ddc::PeriodicSampling<ddc::Fourier<Y>>> const
+                            iky
+                            = ddc::select<ddc::PeriodicSampling<
+                                    ddc::Fourier<Y>>>(ikxky);
                     Ff(ikx, iky)
                             = Ff(ikx, iky)
                               * (1

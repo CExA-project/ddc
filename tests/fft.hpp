@@ -121,8 +121,8 @@ static void test_fft()
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input
-    ddc::Chunk _Ff_bis
-            = ddc::Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff), Allocator<MemorySpace, Tout>());
+    ddc::Chunk _Ff_bis = ddc::
+            Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff), Allocator<MemorySpace, Tout>());
     ddc::ChunkSpan Ff_bis = _Ff_bis.span_view();
     ddc::deepcopy(Ff_bis, Ff);
 
@@ -144,8 +144,8 @@ static void test_fft()
             });
 #endif
 
-    ddc::Chunk _Ff_host
-            = ddc::Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff), ddc::HostAllocator<Tout>());
+    ddc::Chunk _Ff_host = ddc::
+            Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff), ddc::HostAllocator<Tout>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
     ddc::deepcopy(Ff_host, Ff);
 #if 0
@@ -189,7 +189,8 @@ static void test_fft()
                                            - Kokkos::exp(
                                                    -(Kokkos::
                                                              pow(coordinate(ddc::select<
-                                                                            DFDim<ddc::Fourier<X>>>(e)),
+                                                                            DFDim<ddc::Fourier<X>>>(
+                                                                         e)),
                                                                  2)
                                                      + ...)
                                                    / 2),

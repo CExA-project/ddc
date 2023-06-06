@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.15)
-message(${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(ddc_tests
     main.cpp
     aligned_allocator.cpp

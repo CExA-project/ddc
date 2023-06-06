@@ -352,7 +352,7 @@ int main(int argc, char** argv)
                 fft(Kokkos::DefaultExecutionSpace(),
                     Ff,
                     last_temp,
-                    (ddc::kwArgs_fft) {.normalization = norm});
+                    {norm});
         ddc::for_each(
                 ddc::policies::parallel_device,
                 k_mesh,
@@ -383,7 +383,7 @@ int main(int argc, char** argv)
                 ifft(Kokkos::DefaultExecutionSpace(),
                      next_temp,
                      Ff,
-                     (ddc::kwArgs_fft) {.normalization = norm});
+                     {norm});
 #endif
         //! [numerical scheme]
 

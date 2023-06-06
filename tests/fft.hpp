@@ -121,7 +121,7 @@ static void test_fft()
             fft(ExecSpace(),
                 Ff,
                 f_bis,
-                (ddc::kwArgs_fft) {.normalization = ddc::FFT_Normalization::FULL});
+				{ddc::FFT_Normalization::FULL});
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input
@@ -136,7 +136,7 @@ static void test_fft()
             ifft(ExecSpace(),
                  FFf,
                  Ff_bis,
-                 (ddc::kwArgs_fft) {.normalization = ddc::FFT_Normalization::FULL});
+				 {ddc::FFT_Normalization::FULL});
 
     ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan f_host = _f_host.span_view();

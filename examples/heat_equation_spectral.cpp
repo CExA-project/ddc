@@ -105,57 +105,23 @@ int main(int argc, char** argv)
     //! [main-start]
     std::cout << "Using spectral method \n";
 
-    //! [X-parameters]
-    // Number of ghost points to use on each side in X
-    ddc::DiscreteVector<DDimX> static constexpr gwx {0};
-    //! [X-parameters]
-
     //! [X-global-domain]
     // Initialization of the global domain in X with gwx ghost points on
     // each side
-    auto const [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]
-            = ddc::init_discrete_space(DDimX::init_ghosted(
-                    ddc::Coordinate<X>(x_start),
-                    ddc::Coordinate<X>(x_end),
-                    ddc::DiscreteVector<DDimX>(nb_x_points),
-                    gwx));
+    auto const x_domain = ddc::init_discrete_space(
+            DDimX::
+                    init(ddc::Coordinate<X>(x_start),
+                         ddc::Coordinate<X>(x_end),
+                         ddc::DiscreteVector<DDimX>(nb_x_points)));
     //! [X-global-domain]
-
-    //! [X-domains]
-    // our zone at the start of the domain that will be mirrored to the
-    // ghost
-    ddc::DiscreteDomain const
-            x_domain_begin(x_domain.front(), x_post_ghost.extents());
-    // our zone at the end of the domain that will be mirrored to the
-    // ghost
-    ddc::DiscreteDomain const x_domain_end(
-            x_domain.back() - x_pre_ghost.extents() + 1,
-            x_pre_ghost.extents());
-    //! [X-domains]
-
-    //! [Y-domains]
-    // Number of ghost points to use on each side in Y
-    ddc::DiscreteVector<DDimY> static constexpr gwy {0};
 
     // Initialization of the global domain in Y with gwy ghost points on
     // each side
-    auto const [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]
-            = ddc::init_discrete_space(DDimY::init_ghosted(
-                    ddc::Coordinate<Y>(y_start),
-                    ddc::Coordinate<Y>(y_end),
-                    ddc::DiscreteVector<DDimY>(nb_y_points),
-                    gwy));
-
-    // our zone at the start of the domain that will be mirrored to the
-    // ghost
-    ddc::DiscreteDomain const
-            y_domain_begin(y_domain.front(), y_post_ghost.extents());
-    // our zone at the end of the domain that will be mirrored to the
-    // ghost
-    ddc::DiscreteDomain const y_domain_end(
-            y_domain.back() - y_pre_ghost.extents() + 1,
-            y_pre_ghost.extents());
-    //! [Y-domains]
+    auto const y_domain = ddc::init_discrete_space(
+            DDimY::
+                    init(ddc::Coordinate<Y>(y_start),
+                         ddc::Coordinate<Y>(y_end),
+                         ddc::DiscreteVector<DDimY>(nb_y_points)));
 
     //! [time-domains]
     // max(1/dx^2)
@@ -200,23 +166,18 @@ int main(int argc, char** argv)
     //! [data allocation]
     // Maps temperature into the full domain (including ghosts) twice:
     // - once for the last fully computed time-step
-    ddc::Chunk ghosted_last_temp(
-            ddc::DiscreteDomain<
-                    DDimX,
-                    DDimY>(ghosted_x_domain, ghosted_y_domain),
+    ddc::Chunk _last_temp(
+            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
 
     // - once for time-step being computed
-    ddc::Chunk ghosted_next_temp(
-            ddc::DiscreteDomain<
-                    DDimX,
-                    DDimY>(ghosted_x_domain, ghosted_y_domain),
+    ddc::Chunk _next_temp(
+            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
     //! [data allocation]
 
     //! [initial-conditions]
-    ddc::ChunkSpan const ghosted_initial_temp
-            = ghosted_last_temp.span_view();
+    ddc::ChunkSpan const initial_temp = _last_temp.span_view();
     // Initialize the temperature on the main domain
     ddc::DiscreteDomain<DDimX, DDimY> x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
@@ -228,32 +189,29 @@ int main(int argc, char** argv)
                         = ddc::coordinate(ddc::select<DDimX>(ixy));
                 double const y
                         = ddc::coordinate(ddc::select<DDimY>(ixy));
-                ghosted_initial_temp(ixy)
-                        = 9.999 * ((x * x + y * y) < 0.25);
+                initial_temp(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
     //! [initial-conditions]
 
-    ddc::Chunk ghosted_temp(
-            ddc::DiscreteDomain<
-                    DDimX,
-                    DDimY>(ghosted_x_domain, ghosted_y_domain),
+    ddc::Chunk _host_temp(
+            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             ddc::HostAllocator<double>());
 
 
     //! [initial output]
     // display the initial data
-    ddc::deepcopy(ghosted_temp, ghosted_last_temp);
+    ddc::deepcopy(_host_temp, _last_temp);
     display(ddc::coordinate(time_domain.front()),
-            ghosted_temp[x_domain][y_domain]);
+            _host_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
 
-    ddc::init_fourier_space<X, Y>(ghosted_initial_temp.domain());
+    ddc::init_fourier_space<X, Y>(initial_temp.domain());
     ddc::DiscreteDomain<
             ddc::PeriodicSampling<ddc::Fourier<X>>,
             ddc::PeriodicSampling<ddc::Fourier<Y>>> const k_mesh
-            = ddc::FourierMesh(ghosted_initial_temp.domain(), false);
+            = ddc::FourierMesh(initial_temp.domain(), false);
     ddc::Chunk _Ff = ddc::
             Chunk(k_mesh,
                   ddc::DeviceAllocator<Kokkos::complex<double>>());
@@ -270,9 +228,9 @@ int main(int argc, char** argv)
         //! [manipulated views]
         // a span excluding ghosts of the temperature at the time-step we
         // will build
-        ddc::ChunkSpan const next_temp {ghosted_next_temp.span_view()};
+        ddc::ChunkSpan const next_temp {_next_temp.span_view()};
         // a read-only view of the temperature at the previous time-step
-        ddc::ChunkSpan const last_temp {ghosted_last_temp.span_view()};
+        ddc::ChunkSpan const last_temp {_last_temp.span_view()};
         //! [manipulated views]
 
         //! [numerical scheme]
@@ -315,23 +273,23 @@ int main(int argc, char** argv)
         //! [output]
         if (iter - last_output >= t_output_period) {
             last_output = iter;
-            ddc::deepcopy(ghosted_temp, ghosted_last_temp);
+            ddc::deepcopy(_host_temp, _last_temp);
             display(ddc::coordinate(iter),
-                    ghosted_temp[x_domain][y_domain]);
+                    _host_temp[x_domain][y_domain]);
         }
         //! [output]
 
         //! [swap]
         // Swap our two buffers
-        std::swap(ghosted_last_temp, ghosted_next_temp);
+        std::swap(_last_temp, _next_temp);
         //! [swap]
     }
 
     //! [final output]
     if (last_output < time_domain.back()) {
-        ddc::deepcopy(ghosted_temp, ghosted_last_temp);
+        ddc::deepcopy(_host_temp, _last_temp);
         display(ddc::coordinate(time_domain.back()),
-                ghosted_temp[x_domain][y_domain]);
+                _host_temp[x_domain][y_domain]);
     }
     //! [final output]
 }

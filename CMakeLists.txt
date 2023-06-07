@@ -93,7 +93,9 @@ endif()
 
 # FFTW
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ) # Maybe not specific to FFTW
-find_package( FFTW MODULE REQUIRED )
+if(NOT FFTW_FOUND)
+	find_package( FFTW MODULE REQUIRED )
+endif()
 
 ## CUDA + CUDAToolkit
 if("${Kokkos_ENABLE_CUDA}" AND NOT("${HIP_FOR_NVIDIA}"))

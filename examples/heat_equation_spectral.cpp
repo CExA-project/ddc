@@ -103,11 +103,11 @@ int main(int argc, char** argv)
     //! [parameters]
 
     //! [main-start]
-    std::cout << "Using finite differences method \n";
+    std::cout << "Using spectral method \n";
 
     //! [X-parameters]
     // Number of ghost points to use on each side in X
-    ddc::DiscreteVector<DDimX> static constexpr gwx {1};
+    ddc::DiscreteVector<DDimX> static constexpr gwx {0};
     //! [X-parameters]
 
     //! [X-global-domain]
@@ -135,7 +135,7 @@ int main(int argc, char** argv)
 
     //! [Y-domains]
     // Number of ghost points to use on each side in Y
-    ddc::DiscreteVector<DDimY> static constexpr gwy {1};
+    ddc::DiscreteVector<DDimY> static constexpr gwy {0};
 
     // Initialization of the global domain in Y with gwy ghost points on
     // each side
@@ -179,7 +179,7 @@ int main(int argc, char** argv)
                           * ddc::distance_at_right(iy));
             });
     ddc::Coordinate<T> const max_dt {
-            .5
+            2. / Kokkos::pow(Kokkos::numbers::pi, 2)
             / (kx * invdx2_max
                + ky * invdy2_max)}; // Classical stability theory gives .5 but empirically we see that for FFT method we need .2
 
@@ -249,68 +249,67 @@ int main(int argc, char** argv)
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
 
+    ddc::init_fourier_space<X, Y>(ghosted_initial_temp.domain());
+    ddc::DiscreteDomain<
+            ddc::PeriodicSampling<ddc::Fourier<X>>,
+            ddc::PeriodicSampling<ddc::Fourier<Y>>> const k_mesh
+            = ddc::FourierMesh(ghosted_initial_temp.domain(), false);
+    ddc::Chunk _Ff = ddc::
+            Chunk(k_mesh,
+                  ddc::DeviceAllocator<Kokkos::complex<double>>());
+    ddc::ChunkSpan Ff = _Ff.span_view();
+
     //! [time iteration]
     for (auto const iter :
          time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
         //! [time iteration]
 
         //! [boundary conditions]
-        // Periodic boundary conditions
-        ddc::deepcopy(
-                ghosted_last_temp[x_pre_ghost][y_domain],
-                ghosted_last_temp[y_domain][x_domain_end]);
-        ddc::deepcopy(
-                ghosted_last_temp[y_domain][x_post_ghost],
-                ghosted_last_temp[y_domain][x_domain_begin]);
-        ddc::deepcopy(
-                ghosted_last_temp[x_domain][y_pre_ghost],
-                ghosted_last_temp[x_domain][y_domain_end]);
-        ddc::deepcopy(
-                ghosted_last_temp[x_domain][y_post_ghost],
-                ghosted_last_temp[x_domain][y_domain_begin]);
-
         //! [boundary conditions]
 
         //! [manipulated views]
         // a span excluding ghosts of the temperature at the time-step we
         // will build
-        ddc::ChunkSpan const next_temp {
-                ghosted_next_temp[x_domain][y_domain]};
+        ddc::ChunkSpan const next_temp {ghosted_next_temp.span_view()};
         // a read-only view of the temperature at the previous time-step
         ddc::ChunkSpan const last_temp {ghosted_last_temp.span_view()};
         //! [manipulated views]
 
         //! [numerical scheme]
         // Stencil computation on the main domain
+        ddc::FFT_Normalization norm = ddc::FFT_Normalization::BACKWARD;
+        ddc::fft(Kokkos::DefaultExecutionSpace(), Ff, last_temp, {norm});
         ddc::for_each(
                 ddc::policies::parallel_device,
-                next_temp.domain(),
-                DDC_LAMBDA(
-                        ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                    ddc::DiscreteElement<DDimX> const ix
-                            = ddc::select<DDimX>(ixy);
-                    ddc::DiscreteElement<DDimY> const iy
-                            = ddc::select<DDimY>(ixy);
-                    double const dx_l = ddc::distance_at_left(ix);
-                    double const dx_r = ddc::distance_at_right(ix);
-                    double const dx_m = 0.5 * (dx_l + dx_r);
-                    double const dy_l = ddc::distance_at_left(iy);
-                    double const dy_r = ddc::distance_at_right(iy);
-                    double const dy_m = 0.5 * (dy_l + dy_r);
-                    next_temp(ix, iy) = last_temp(ix, iy);
-                    next_temp(ix, iy)
-                            += kx * ddc::step<DDimT>()
-                               * (dx_l * last_temp(ix + 1, iy)
-                                  - 2.0 * dx_m * last_temp(ix, iy)
-                                  + dx_r * last_temp(ix - 1, iy))
-                               / (dx_l * dx_m * dx_r);
-                    next_temp(ix, iy)
-                            += ky * ddc::step<DDimT>()
-                               * (dy_l * last_temp(ix, iy + 1)
-                                  - 2.0 * dy_m * last_temp(ix, iy)
-                                  + dy_r * last_temp(ix, iy - 1))
-                               / (dy_l * dy_m * dy_r);
+                k_mesh,
+                DDC_LAMBDA(ddc::DiscreteElement<
+                           ddc::PeriodicSampling<ddc::Fourier<X>>,
+                           ddc::PeriodicSampling<ddc::Fourier<Y>>> const
+                                   ikxky) {
+                    ddc::DiscreteElement<
+                            ddc::PeriodicSampling<ddc::Fourier<X>>> const
+                            ikx
+                            = ddc::select<ddc::PeriodicSampling<
+                                    ddc::Fourier<X>>>(ikxky);
+                    ddc::DiscreteElement<
+                            ddc::PeriodicSampling<ddc::Fourier<Y>>> const
+                            iky
+                            = ddc::select<ddc::PeriodicSampling<
+                                    ddc::Fourier<Y>>>(ikxky);
+                    Ff(ikx, iky)
+                            = Ff(ikx, iky)
+                              * (1
+                                 - (coordinate(ikx) * coordinate(ikx)
+                                            * kx
+                                    + coordinate(iky) * coordinate(iky)
+                                              * ky)
+                                           * max_dt); // Ff(t+dt) = (1-D*k^2*dt)*Ff(t)
                 });
+        ddc::
+                ifft(Kokkos::DefaultExecutionSpace(),
+                     next_temp,
+                     Ff,
+                     {norm});
         //! [numerical scheme]
 
         //! [output]

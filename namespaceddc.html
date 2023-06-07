@@ -125,6 +125,17 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classddc_1_1PeriodicSampling.html" title="PeriodicSampling models a periodic discretization of the provided continuous dimension.">PeriodicSampling</a> models a periodic discretization of the provided continuous dimension.  <a href="classddc_1_1PeriodicSampling.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__periodic__sampling.html">is_periodic_sampling</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__periodic__sampling_3_01PeriodicSampling_3_01CDim_01_4_01_4.html">is_periodic_sampling&lt; PeriodicSampling&lt; CDim &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__periodic__domain.html">is_periodic_domain</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__periodic__domain_3_01DiscreteDomain_3_01DDims_8_8_8_01_4_01_4.html">is_periodic_domain&lt; DiscreteDomain&lt; DDims... &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__rectilinear__domain.html">is_rectilinear_domain</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__rectilinear__domain_3_01DiscreteDomain_3_01DDims_8_8_8_01_4_01_4.html">is_rectilinear_domain&lt; DiscreteDomain&lt; DDims... &gt; &gt;</a></td></tr>
@@ -424,6 +435,36 @@ Functions</h2></td></tr>
 <tr class="memitem:ad1758d8bf1e3c6a363d0ee5ec254d517"><td class="memTemplParams" colspan="2">template&lt;class DataType &gt; </td></tr>
 <tr class="memitem:ad1758d8bf1e3c6a363d0ee5ec254d517"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad1758d8bf1e3c6a363d0ee5ec254d517">expose_to_pdi</a> (std::string const &amp;name, DataType &amp;&amp;data)</td></tr>
 <tr class="separator:ad1758d8bf1e3c6a363d0ee5ec254d517"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab54295db81bb6e4277fed3ec5bf9f648"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:ab54295db81bb6e4277fed3ec5bf9f648"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt; DDim &gt;, typename DDim::continuous_element_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab54295db81bb6e4277fed3ec5bf9f648">origin</a> () noexcept</td></tr>
+<tr class="memdesc:ab54295db81bb6e4277fed3ec5bf9f648"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lower bound index of the mesh.  <a href="namespaceddc.html#ab54295db81bb6e4277fed3ec5bf9f648">More...</a><br /></td></tr>
+<tr class="separator:ab54295db81bb6e4277fed3ec5bf9f648"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03f26d774f5cdec3d5deb0e34cb26034"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:a03f26d774f5cdec3d5deb0e34cb26034"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt; DDim &gt;, typename DDim::discrete_element_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a03f26d774f5cdec3d5deb0e34cb26034">front</a> () noexcept</td></tr>
+<tr class="memdesc:a03f26d774f5cdec3d5deb0e34cb26034"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lower bound index of the mesh.  <a href="namespaceddc.html#a03f26d774f5cdec3d5deb0e34cb26034">More...</a><br /></td></tr>
+<tr class="separator:a03f26d774f5cdec3d5deb0e34cb26034"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38abdbf04b99bc0f12e6e6f594d0dcf0"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:a38abdbf04b99bc0f12e6e6f594d0dcf0"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt; DDim &gt;, double &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a38abdbf04b99bc0f12e6e6f594d0dcf0">step</a> () noexcept</td></tr>
+<tr class="memdesc:a38abdbf04b99bc0f12e6e6f594d0dcf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <a href="namespaceddc.html#a38abdbf04b99bc0f12e6e6f594d0dcf0">More...</a><br /></td></tr>
+<tr class="separator:a38abdbf04b99bc0f12e6e6f594d0dcf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe7824348d96d8d874c9799cf0070aab"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
+<tr class="memitem:abe7824348d96d8d874c9799cf0070aab"><td class="memTemplItemLeft" align="right" valign="top">constexpr DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#abe7824348d96d8d874c9799cf0070aab">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt; const &amp;c)</td></tr>
+<tr class="separator:abe7824348d96d8d874c9799cf0070aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa63baa16700e9ecc90b9ca8cec0fadb8"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
+<tr class="memitem:aa63baa16700e9ecc90b9ca8cec0fadb8"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aa63baa16700e9ecc90b9ca8cec0fadb8">distance_at_left</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt;)</td></tr>
+<tr class="separator:aa63baa16700e9ecc90b9ca8cec0fadb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afba20fcc0d6f0a42d4ad529ec57f5afc"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
+<tr class="memitem:afba20fcc0d6f0a42d4ad529ec57f5afc"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#afba20fcc0d6f0a42d4ad529ec57f5afc">distance_at_right</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt;)</td></tr>
+<tr class="separator:afba20fcc0d6f0a42d4ad529ec57f5afc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8e8d70ea8d1682be852e4ef47737037"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
+<tr class="memitem:aa8e8d70ea8d1682be852e4ef47737037"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aa8e8d70ea8d1682be852e4ef47737037">rmin</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
+<tr class="separator:aa8e8d70ea8d1682be852e4ef47737037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7978ae4da772183c4354af8616e0df29"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
+<tr class="memitem:a7978ae4da772183c4354af8616e0df29"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a7978ae4da772183c4354af8616e0df29">rmax</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
+<tr class="separator:a7978ae4da772183c4354af8616e0df29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91c67828da7d00d9345e3d91a0a9ffd8"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
+<tr class="memitem:a91c67828da7d00d9345e3d91a0a9ffd8"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a91c67828da7d00d9345e3d91a0a9ffd8">rlength</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt; const &amp;d)</td></tr>
+<tr class="separator:a91c67828da7d00d9345e3d91a0a9ffd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13d882b3cd569916070e20b6ec57eb0d"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTransformOp &gt; </td></tr>
 <tr class="memitem:a13d882b3cd569916070e20b6ec57eb0d"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a13d882b3cd569916070e20b6ec57eb0d">transform_reduce</a> ([[maybe_unused]] <a class="el" href="namespaceddc.html#structddc_1_1serial__host__policy">serial_host_policy</a> policy, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</td></tr>
 <tr class="memdesc:a13d882b3cd569916070e20b6ec57eb0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reduction over a nD domain using the Serial execution policy.  <a href="namespaceddc.html#a13d882b3cd569916070e20b6ec57eb0d">More...</a><br /></td></tr>
@@ -508,6 +549,12 @@ Variables</h2></td></tr>
 <tr class="memitem:a8b1f18fdde2f11a941252f543b991d31"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
 <tr class="memitem:a8b1f18fdde2f11a941252f543b991d31"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a> = <a class="el" href="structddc_1_1is__non__uniform__sampling.html">is_non_uniform_sampling</a>&lt;DDim&gt;::value</td></tr>
 <tr class="separator:a8b1f18fdde2f11a941252f543b991d31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab228bb1534b98a4a4faceff92b4f16d0"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:ab228bb1534b98a4a4faceff92b4f16d0"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a> = <a class="el" href="structddc_1_1is__periodic__sampling.html">is_periodic_sampling</a>&lt;DDim&gt;::value</td></tr>
+<tr class="separator:ab228bb1534b98a4a4faceff92b4f16d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35382905aa5adf4fab3da4dccb78126f"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a35382905aa5adf4fab3da4dccb78126f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a35382905aa5adf4fab3da4dccb78126f">is_periodic_domain_v</a> = <a class="el" href="structddc_1_1is__periodic__domain.html">is_periodic_domain</a>&lt;T&gt;::value</td></tr>
+<tr class="separator:a35382905aa5adf4fab3da4dccb78126f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4474d347a2bcbded9e7765e961a56c7e"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a4474d347a2bcbded9e7765e961a56c7e"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a4474d347a2bcbded9e7765e961a56c7e">is_rectilinear_domain_v</a> = <a class="el" href="structddc_1_1is__rectilinear__domain.html">is_rectilinear_domain</a>&lt;T&gt;::value</td></tr>
 <tr class="separator:a4474d347a2bcbded9e7765e961a56c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1080,7 +1127,7 @@ template&lt;class KokkosView , class... DDims, class  = std::enable_if_t&lt;Kokk
 </div>
 </div>
 <a id="a5891f61d09dd7c8a85fed4a68c60a74d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5891f61d09dd7c8a85fed4a68c60a74d">&#9670;&nbsp;</a></span>coordinate() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5891f61d09dd7c8a85fed4a68c60a74d">&#9670;&nbsp;</a></span>coordinate() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1234,7 +1281,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </div>
 </div>
 <a id="a8c545b2b0aec477179bdf30681120c72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c545b2b0aec477179bdf30681120c72">&#9670;&nbsp;</a></span>front() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c545b2b0aec477179bdf30681120c72">&#9670;&nbsp;</a></span>front() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3331,7 +3378,7 @@ template&lt;class DDimImpl , std::enable_if_t&lt; is_non_uniform_sampling_v&lt; 
 </div>
 </div>
 <a id="a45f6329b34e22297e68a64a1b2be9b90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45f6329b34e22297e68a64a1b2be9b90">&#9670;&nbsp;</a></span>coordinate() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a45f6329b34e22297e68a64a1b2be9b90">&#9670;&nbsp;</a></span>coordinate() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3351,7 +3398,7 @@ template&lt;class CDim &gt; </div>
 </div>
 </div>
 <a id="a624f3e483792457bb62202847de7fb92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a624f3e483792457bb62202847de7fb92">&#9670;&nbsp;</a></span>distance_at_left() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a624f3e483792457bb62202847de7fb92">&#9670;&nbsp;</a></span>distance_at_left() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3371,7 +3418,7 @@ template&lt;class CDim &gt; </div>
 </div>
 </div>
 <a id="a9adf365b335a5689decf42f37b6dc9c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9adf365b335a5689decf42f37b6dc9c0">&#9670;&nbsp;</a></span>distance_at_right() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9adf365b335a5689decf42f37b6dc9c0">&#9670;&nbsp;</a></span>distance_at_right() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3391,7 +3438,7 @@ template&lt;class CDim &gt; </div>
 </div>
 </div>
 <a id="a85f3c1f92c6edab0e352b413d7804d8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85f3c1f92c6edab0e352b413d7804d8f">&#9670;&nbsp;</a></span>rmin() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a85f3c1f92c6edab0e352b413d7804d8f">&#9670;&nbsp;</a></span>rmin() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3411,7 +3458,7 @@ template&lt;class CDim &gt; </div>
 </div>
 </div>
 <a id="ad23fe896f0cd156a9f02d1dbc943ff0f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad23fe896f0cd156a9f02d1dbc943ff0f">&#9670;&nbsp;</a></span>rmax() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad23fe896f0cd156a9f02d1dbc943ff0f">&#9670;&nbsp;</a></span>rmax() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3431,7 +3478,7 @@ template&lt;class CDim &gt; </div>
 </div>
 </div>
 <a id="ac4d22774105b9164e5bd40b02570cbf9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4d22774105b9164e5bd40b02570cbf9">&#9670;&nbsp;</a></span>rlength() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4d22774105b9164e5bd40b02570cbf9">&#9670;&nbsp;</a></span>rlength() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3504,6 +3551,221 @@ template&lt;class DataType &gt; </div>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab54295db81bb6e4277fed3ec5bf9f648"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab54295db81bb6e4277fed3ec5bf9f648">&#9670;&nbsp;</a></span>origin() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DDC_INLINE_FUNCTION std:: enable_if_t&lt;<a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt;DDim&gt;, typename DDim::continuous_element_type&gt; ddc::origin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Lower bound index of the mesh. </p>
+
+</div>
+</div>
+<a id="a03f26d774f5cdec3d5deb0e34cb26034"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03f26d774f5cdec3d5deb0e34cb26034">&#9670;&nbsp;</a></span>front() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DDC_INLINE_FUNCTION std:: enable_if_t&lt;<a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt;DDim&gt;, typename DDim::discrete_element_type&gt; ddc::front </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Lower bound index of the mesh. </p>
+
+</div>
+</div>
+<a id="a38abdbf04b99bc0f12e6e6f594d0dcf0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38abdbf04b99bc0f12e6e6f594d0dcf0">&#9670;&nbsp;</a></span>step() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DDC_INLINE_FUNCTION std::enable_if_t&lt;<a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt;DDim&gt;, double&gt; ddc::step </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Spacing step of the mesh. </p>
+
+</div>
+</div>
+<a id="abe7824348d96d8d874c9799cf0070aab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe7824348d96d8d874c9799cf0070aab">&#9670;&nbsp;</a></span>coordinate() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class CDim &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::coordinate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa63baa16700e9ecc90b9ca8cec0fadb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa63baa16700e9ecc90b9ca8cec0fadb8">&#9670;&nbsp;</a></span>distance_at_left() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class CDim &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::distance_at_left </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afba20fcc0d6f0a42d4ad529ec57f5afc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afba20fcc0d6f0a42d4ad529ec57f5afc">&#9670;&nbsp;</a></span>distance_at_right() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class CDim &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::distance_at_right </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa8e8d70ea8d1682be852e4ef47737037"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8e8d70ea8d1682be852e4ef47737037">&#9670;&nbsp;</a></span>rmin() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class CDim &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::rmin </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
+          <td class="paramname"><em>d</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7978ae4da772183c4354af8616e0df29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7978ae4da772183c4354af8616e0df29">&#9670;&nbsp;</a></span>rmax() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class CDim &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::rmax </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
+          <td class="paramname"><em>d</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a91c67828da7d00d9345e3d91a0a9ffd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91c67828da7d00d9345e3d91a0a9ffd8">&#9670;&nbsp;</a></span>rlength() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class CDim &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt;CDim&gt; ddc::rlength </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt;&gt; const &amp;&#160;</td>
+          <td class="paramname"><em>d</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -3776,7 +4038,7 @@ template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTrans
 </div>
 </div>
 <a id="a3690aaef9c9fbe97315555b47ca7bb0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3690aaef9c9fbe97315555b47ca7bb0a">&#9670;&nbsp;</a></span>coordinate() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3690aaef9c9fbe97315555b47ca7bb0a">&#9670;&nbsp;</a></span>coordinate() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3796,7 +4058,7 @@ template&lt;class CDim &gt; </div>
 </div>
 </div>
 <a id="a6c5432e68635c621172fd879b5312484"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c5432e68635c621172fd879b5312484">&#9670;&nbsp;</a></span>origin()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c5432e68635c621172fd879b5312484">&#9670;&nbsp;</a></span>origin() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3825,7 +4087,7 @@ template&lt;class DDim &gt; </div>
 </div>
 </div>
 <a id="aa68ccc2176ff4651b5f3fe7ede3c16d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa68ccc2176ff4651b5f3fe7ede3c16d4">&#9670;&nbsp;</a></span>front() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa68ccc2176ff4651b5f3fe7ede3c16d4">&#9670;&nbsp;</a></span>front() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3854,7 +4116,7 @@ template&lt;class DDim &gt; </div>
 </div>
 </div>
 <a id="af5b3fd6658e6ea3166ab0c0b49e75eae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5b3fd6658e6ea3166ab0c0b49e75eae">&#9670;&nbsp;</a></span>step()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af5b3fd6658e6ea3166ab0c0b49e75eae">&#9670;&nbsp;</a></span>step() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3883,7 +4145,7 @@ template&lt;class DDim &gt; </div>
 </div>
 </div>
 <a id="ada31884696d90ea3379a5875df303308"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada31884696d90ea3379a5875df303308">&#9670;&nbsp;</a></span>distance_at_left() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ada31884696d90ea3379a5875df303308">&#9670;&nbsp;</a></span>distance_at_left() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3903,7 +4165,7 @@ template&lt;class CDim &gt; </div>
 </div>
 </div>
 <a id="a7aafbfee09c57d542d76dc1cdde379a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7aafbfee09c57d542d76dc1cdde379a0">&#9670;&nbsp;</a></span>distance_at_right() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7aafbfee09c57d542d76dc1cdde379a0">&#9670;&nbsp;</a></span>distance_at_right() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3923,7 +4185,7 @@ template&lt;class CDim &gt; </div>
 </div>
 </div>
 <a id="a79d90b6e4737990bcb854515d094f84f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79d90b6e4737990bcb854515d094f84f">&#9670;&nbsp;</a></span>rmin() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a79d90b6e4737990bcb854515d094f84f">&#9670;&nbsp;</a></span>rmin() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3943,7 +4205,7 @@ template&lt;class CDim &gt; </div>
 </div>
 </div>
 <a id="a5a329789d586b5a209b8b4b06d336ba7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a329789d586b5a209b8b4b06d336ba7">&#9670;&nbsp;</a></span>rmax() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a329789d586b5a209b8b4b06d336ba7">&#9670;&nbsp;</a></span>rmax() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3963,7 +4225,7 @@ template&lt;class CDim &gt; </div>
 </div>
 </div>
 <a id="a51b9b7f4900d194eb962af931bead1d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51b9b7f4900d194eb962af931bead1d4">&#9670;&nbsp;</a></span>rlength() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a51b9b7f4900d194eb962af931bead1d4">&#9670;&nbsp;</a></span>rlength() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4255,6 +4517,54 @@ template&lt;class DDim &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">constexpr bool ddc::is_non_uniform_sampling_v = <a class="el" href="structddc_1_1is__non__uniform__sampling.html">is_non_uniform_sampling</a>&lt;DDim&gt;::value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab228bb1534b98a4a4faceff92b4f16d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab228bb1534b98a4a4faceff92b4f16d0">&#9670;&nbsp;</a></span>is_periodic_sampling_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool ddc::is_periodic_sampling_v = <a class="el" href="structddc_1_1is__periodic__sampling.html">is_periodic_sampling</a>&lt;DDim&gt;::value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a35382905aa5adf4fab3da4dccb78126f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35382905aa5adf4fab3da4dccb78126f">&#9670;&nbsp;</a></span>is_periodic_domain_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool ddc::is_periodic_domain_v = <a class="el" href="structddc_1_1is__periodic__domain.html">is_periodic_domain</a>&lt;T&gt;::value</td>
         </tr>
       </table>
   </td>

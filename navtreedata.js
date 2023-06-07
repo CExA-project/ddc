@@ -30,7 +30,6 @@ var NAVTREE =
       [ "Join us!", "index.html#autotoc_md1", null ]
     ] ],
     [ "Commented example: the heat equation", "first_steps.html", "first_steps" ],
-    [ "Deprecated List", "deprecated.html", null ],
     [ "API reference", "annotated.html", "annotated" ]
   ] ]
 ];

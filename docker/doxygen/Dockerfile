@@ -1,4 +1,4 @@
-FROM ubuntu:impish
+FROM ubuntu:jammy
 # SPDX-License-Identifier: MIT
 
 COPY bash_run /bin/
@@ -20,6 +20,7 @@ RUN chmod +x /bin/bash_run \
     doxygen \
     pkg-config \
     cmake-data \
+    libfftw3-dev \
     doxygen \
     doxygen-latex \
     git \

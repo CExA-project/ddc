@@ -31,7 +31,7 @@ jobs:
         android: true
         dotnet: true
         haskell: true
-        large-packages: true
+        large-packages: false
         swap-storage: true
     - name: Checkout built branch
       uses: actions/checkout@v3
@@ -144,7 +144,7 @@ jobs:
         android: true
         dotnet: true
         haskell: true
-        large-packages: true
+        large-packages: false
         swap-storage: true
     - name: Collect test_env docker
       if: ${{ needs.id_repo.outputs.in_base_repo == 'false' }}

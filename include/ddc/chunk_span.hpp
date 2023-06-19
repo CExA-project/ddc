@@ -301,12 +301,12 @@ public:
                 MemorySpace>(s.data_handle(), kokkos_layout);
     }
 
-    constexpr view_type span_cview() const
+    constexpr inline view_type span_cview() const noexcept
     {
         return view_type(*this);
     }
 
-    constexpr span_type span_view() const
+    constexpr inline span_type span_view() const noexcept
     {
         return *this;
     }

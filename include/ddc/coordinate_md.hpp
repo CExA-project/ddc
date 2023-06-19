@@ -8,11 +8,20 @@
 
 namespace ddc {
 
-template <class... DDim, std::enable_if_t<(sizeof...(DDim) > 1), int> = 0>
-DDC_INLINE_FUNCTION Coordinate<typename DDim::continuous_dimension_type...> coordinate(
-        DiscreteElement<DDim...> const& c)
+template <class DDim0, class DDim1, class... DDims>
+DDC_INLINE_FUNCTION Coordinate<
+        typename DDim0::continuous_dimension_type,
+        typename DDim1::continuous_dimension_type,
+        typename DDims::continuous_dimension_type...>
+coordinate(DiscreteElement<DDim0, DDim1, DDims...> const& c)
 {
-    return Coordinate<typename DDim::continuous_dimension_type...>(coordinate(select<DDim>(c))...);
+    return Coordinate<
+            typename DDim0::continuous_dimension_type,
+            typename DDim1::continuous_dimension_type,
+            typename DDims::continuous_dimension_type...>(
+            coordinate(select<DDim0>(c)),
+            coordinate(select<DDim1>(c)),
+            coordinate(select<DDims>(c))...);
 }
 
 } // namespace ddc

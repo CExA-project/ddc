@@ -5,6 +5,7 @@ add_executable(ddc_tests
     aligned_allocator.cpp
     chunk.cpp
     discrete_domain.cpp
+    distributed_field.cpp
     non_uniform_point_sampling.cpp
     single_discretization.cpp
     tagged_vector.cpp
@@ -13,7 +14,6 @@ add_executable(ddc_tests
     type_seq.cpp
     uniform_point_sampling.cpp
     transform_reduce.cpp
-    rectilinear_domain.cpp
     uniform_domain.cpp
     for_each.cpp
     fill.cpp

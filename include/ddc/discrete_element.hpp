@@ -369,16 +369,13 @@ constexpr inline DiscreteElement<Tags...> operator+(
     return result;
 }
 
-template <
-        class Tag,
-        class IntegralType,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>,
-        class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
-constexpr inline DiscreteElement<Tag> operator+(
-        DiscreteElement<Tag> const& lhs,
-        IntegralType const& rhs)
+template <class... Tags, class IntegralType>
+constexpr inline std::enable_if_t<
+        std::is_integral_v<IntegralType> && !is_discrete_vector_v<IntegralType>,
+        DiscreteElement<Tags...>>
+operator+(DiscreteElement<Tags...> const& lhs, IntegralType const& rhs)
 {
-    return DiscreteElement<Tag>(uid<Tag>(lhs) + rhs);
+    return DiscreteElement<Tags...>(uid<Tags>(lhs) + rhs...);
 }
 
 template <class... Tags, class... OTags>
@@ -393,16 +390,15 @@ constexpr inline DiscreteElement<Tags...> operator-(
     return result;
 }
 
-template <
-        class Tag,
-        class IntegralType,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>,
-        class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
-constexpr inline DiscreteElement<Tag> operator-(
-        DiscreteElement<Tag> const& lhs,
+template <class... Tags, class IntegralType>
+constexpr inline std::enable_if_t<
+        std::is_integral_v<IntegralType> && !is_discrete_vector_v<IntegralType>,
+        DiscreteElement<Tags...>>
+operator-(
+        DiscreteElement<Tags...> const& lhs,
         IntegralType const& rhs)
 {
-    return DiscreteElement<Tag>(uid<Tag>(lhs) - rhs);
+    return DiscreteElement<Tags...>(uid<Tags>(lhs) - rhs...);
 }
 
 /// binary operator: -

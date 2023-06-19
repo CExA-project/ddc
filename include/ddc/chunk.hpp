@@ -7,6 +7,7 @@
 #include "ddc/chunk_common.hpp"
 #include "ddc/chunk_span.hpp"
 #include "ddc/deepcopy.hpp"
+#include "ddc/discrete_element.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
 namespace ddc {
@@ -29,6 +30,8 @@ protected:
     using internal_mdspan_type = typename base_type::internal_mdspan_type;
 
 public:
+    using allocator_type = Allocator;
+
     /// type of a span of this full chunk
     using span_type = ChunkSpan<
             ElementType,
@@ -46,29 +49,29 @@ public:
     /// The dereferenceable part of the co-domain but with indexing starting at 0
     using allocation_mdspan_type = typename base_type::allocation_mdspan_type;
 
-    using const_allocation_mdspan_type = typename base_type::const_allocation_mdspan_type;
+    using typename base_type::const_allocation_mdspan_type;
 
-    using mdomain_type = typename base_type::mdomain_type;
+    using typename base_type::mdomain_type;
 
     using memory_space = typename Allocator::memory_space;
 
-    using discrete_element_type = typename base_type::discrete_element_type;
+    using typename base_type::discrete_element_type;
 
-    using extents_type = typename base_type::extents_type;
+    using typename base_type::extents_type;
 
-    using layout_type = typename base_type::layout_type;
+    using typename base_type::layout_type;
 
-    using mapping_type = typename base_type::mapping_type;
+    using typename base_type::mapping_type;
 
-    using element_type = typename base_type::element_type;
+    using typename base_type::element_type;
 
-    using value_type = typename base_type::value_type;
+    using typename base_type::value_type;
 
-    using size_type = typename base_type::size_type;
+    using typename base_type::size_type;
 
-    using data_handle_type = typename base_type::data_handle_type;
+    using typename base_type::data_handle_type;
 
-    using reference = typename base_type::reference;
+    using typename base_type::reference;
 
     template <class, class, class>
     friend class Chunk;
@@ -285,17 +288,17 @@ public:
                 typename Allocator::memory_space>(s.data_handle(), kokkos_layout);
     }
 
-    view_type span_cview() const
+    constexpr inline view_type span_cview() const noexcept
     {
         return view_type(*this);
     }
 
-    view_type span_view() const
+    constexpr inline view_type span_view() const noexcept
     {
         return view_type(*this);
     }
 
-    span_type span_view()
+    constexpr inline span_type span_view() noexcept
     {
         return span_type(*this);
     }

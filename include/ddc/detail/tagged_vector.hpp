@@ -54,6 +54,7 @@ inline constexpr ElementType const& get_or(
 {
     return tuple.template get_or<QueryTag>(default_value);
 }
+namespace detail {
 
 /// Unary operators: +, -
 
@@ -149,21 +150,61 @@ constexpr inline auto operator-(
     return detail::TaggedVector<RElementType, Tag>(lhs - get<Tag>(rhs));
 }
 
-/// external left binary operator: *
+/// external binary operator: *, /
 
-template <
-        class ElementType,
-        class OElementType,
-        class... Tags,
-        class = std::enable_if_t<!detail::is_tagged_vector_v<OElementType>>,
-        class = std::enable_if_t<std::is_convertible_v<ElementType, OElementType>>>
-constexpr inline auto operator*(
-        ElementType const& lhs,
-        detail::TaggedVector<OElementType, Tags...> const& rhs)
+template <class ElementType, class OElementType, class... Tags>
+constexpr inline std::enable_if_t<
+        !detail::is_tagged_vector_v<
+                ElementType> && std::is_convertible_v<ElementType, OElementType>,
+        detail::TaggedVector<
+                decltype(std::declval<ElementType>() * std::declval<OElementType>()),
+                Tags...>>
+operator*(ElementType const& lhs, detail::TaggedVector<OElementType, Tags...> const& rhs)
 {
     using RElementType = decltype(std::declval<ElementType>() * std::declval<OElementType>());
     return detail::TaggedVector<RElementType, Tags...>((lhs * get<Tags>(rhs))...);
 }
+
+template <class ElementType, class OElementType, class... Tags>
+constexpr inline std::enable_if_t<
+        !detail::is_tagged_vector_v<
+                OElementType> && std::is_convertible_v<OElementType, ElementType>,
+        detail::TaggedVector<
+                decltype(std::declval<ElementType>() * std::declval<OElementType>()),
+                Tags...>>
+operator*(detail::TaggedVector<ElementType, Tags...> const& lhs, OElementType&& rhs)
+{
+    using RElementType = decltype(std::declval<ElementType>() * std::declval<OElementType>());
+    return detail::TaggedVector<RElementType, Tags...>((get<Tags>(lhs) * rhs)...);
+}
+
+template <class ElementType, class OElementType, class... Tags>
+constexpr inline std::enable_if_t<
+        !detail::is_tagged_vector_v<
+                ElementType> && std::is_convertible_v<ElementType, OElementType>,
+        detail::TaggedVector<
+                decltype(std::declval<ElementType>() / std::declval<OElementType>()),
+                Tags...>>
+operator/(ElementType const& lhs, detail::TaggedVector<OElementType, Tags...> const& rhs)
+{
+    using RElementType = decltype(std::declval<ElementType>() / std::declval<OElementType>());
+    return detail::TaggedVector<RElementType, Tags...>((lhs / get<Tags>(rhs))...);
+}
+
+template <class ElementType, class OElementType, class... Tags>
+constexpr inline std::enable_if_t<
+        !detail::is_tagged_vector_v<
+                OElementType> && std::is_convertible_v<OElementType, ElementType>,
+        detail::TaggedVector<
+                decltype(std::declval<ElementType>() / std::declval<OElementType>()),
+                Tags...>>
+operator/(detail::TaggedVector<ElementType, Tags...> const& lhs, OElementType&& rhs)
+{
+    using RElementType = decltype(std::declval<ElementType>() / std::declval<OElementType>());
+    return detail::TaggedVector<RElementType, Tags...>((get<Tags>(lhs) / rhs)...);
+}
+
+} // namespace detail
 
 template <class... QueryTags, class ElementType, class... Tags>
 inline constexpr detail::TaggedVector<ElementType, QueryTags...> select(
@@ -217,7 +258,7 @@ template <class ElementType, class Tag>
 class ConversionOperators<TaggedVector<ElementType, Tag>>
 {
 public:
-    constexpr inline operator ElementType const &() const noexcept
+    constexpr inline operator ElementType const&() const noexcept
     {
         return static_cast<TaggedVector<ElementType, Tag> const*>(this)->m_values[0];
     }
@@ -260,7 +301,7 @@ public:
     template <class OElementType, class... OTags>
     explicit inline constexpr TaggedVector(
             TaggedVector<OElementType, OTags...> const& other) noexcept
-        : m_values {(static_cast<ElementType>(other.template get<Tags>()))...}
+        : m_values {(static_cast<ElementType>(::ddc::get<Tags>(other)))...}
     {
     }
 
@@ -318,7 +359,7 @@ public:
     template <class OElementType, class... OTags>
     constexpr inline bool operator==(TaggedVector<OElementType, OTags...> const& rhs) const noexcept
     {
-        return ((m_values[type_seq_rank_v<Tags, tags_seq>] == rhs.template get<Tags>()) && ...);
+        return ((m_values[type_seq_rank_v<Tags, tags_seq>] == ::ddc::get<Tags>(rhs)) && ...);
     }
 
     template <class OElementType, class... OTags>
@@ -365,7 +406,7 @@ public:
     constexpr inline TaggedVector& operator+=(TaggedVector<OElementType, OTags...> const& rhs)
     {
         static_assert(type_seq_same_v<tags_seq, detail::TypeSeq<OTags...>>);
-        ((m_values[type_seq_rank_v<Tags, tags_seq>] += rhs.template get<Tags>()), ...);
+        ((m_values[type_seq_rank_v<Tags, tags_seq>] += ::ddc::get<Tags>(rhs)), ...);
         return *this;
     }
 
@@ -380,7 +421,7 @@ public:
     constexpr inline TaggedVector& operator-=(TaggedVector<OElementType, OTags...> const& rhs)
     {
         static_assert(type_seq_same_v<tags_seq, detail::TypeSeq<OTags...>>);
-        ((m_values[type_seq_rank_v<Tags, tags_seq>] -= rhs.template get<Tags>()), ...);
+        ((m_values[type_seq_rank_v<Tags, tags_seq>] -= ::ddc::get<Tags>(rhs)), ...);
         return *this;
     }
 
@@ -395,7 +436,7 @@ public:
     constexpr inline TaggedVector& operator*=(TaggedVector<OElementType, OTags...> const& rhs)
     {
         static_assert(type_seq_same_v<tags_seq, detail::TypeSeq<OTags...>>);
-        ((m_values[type_seq_rank_v<Tags, tags_seq>] *= rhs.template get<Tags>()), ...);
+        ((m_values[type_seq_rank_v<Tags, tags_seq>] *= ::ddc::get<Tags>(rhs)), ...);
         return *this;
     }
 };

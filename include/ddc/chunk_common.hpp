@@ -65,7 +65,7 @@ auto get_domain(ChunkType const& chunk) noexcept
     return chunk.template domain<QueryDDims...>();
 }
 
-template <class ElementType, class SupportType, class LayoutStridedPolicy>
+template <class, class, class>
 class ChunkCommon;
 
 template <class ElementType, class... DDims, class LayoutStridedPolicy>
@@ -170,16 +170,13 @@ public:
 
     constexpr DiscreteVector<DDims...> extents() const noexcept
     {
-        return DiscreteVector<DDims...>(
-                (m_internal_mdspan.extent(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)
-                 - front<DDims>(m_domain).uid())...);
+        return m_domain.extents();
     }
 
     template <class QueryDDim>
     constexpr size_type extent() const noexcept
     {
-        return m_internal_mdspan.extent(type_seq_rank_v<QueryDDim, detail::TypeSeq<DDims...>>)
-               - front<QueryDDim>(m_domain).uid();
+        return m_domain.template extent<QueryDDim>();
     }
 
     constexpr size_type size() const noexcept

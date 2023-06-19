@@ -17,9 +17,6 @@ template <class DDim>
 struct DiscreteDomainIterator;
 
 template <class... DDims>
-class DiscreteDomain;
-
-template <class... DDims>
 class DiscreteDomain
 {
     template <class...>
@@ -60,13 +57,13 @@ public:
     {
     }
 
-    /** Construct a DiscreteDomain starting from element_begin with size points.
+    /** Construct a DiscreteDomain starting from element_begin with extents points.
      * @param element_begin the lower bound in each direction
-     * @param size the number of points in each direction
+     * @param extents the number of points in each direction
      */
-    constexpr DiscreteDomain(discrete_element_type const& element_begin, mlength_type const& size)
+    constexpr DiscreteDomain(discrete_element_type const& element_begin, mlength_type const& extents)
         : m_element_begin(element_begin)
-        , m_element_end(element_begin + size)
+        , m_element_end(element_begin + extents)
     {
     }
 
@@ -129,17 +126,17 @@ public:
 
     constexpr DiscreteDomain take_last(mlength_type n) const
     {
-        return DiscreteDomain(front() + size() - n, n);
+        return DiscreteDomain(front() + extents() - n, n);
     }
 
     constexpr DiscreteDomain remove_first(mlength_type n) const
     {
-        return take_last(size() - n);
+        return take_last(extents() - n);
     }
 
     constexpr DiscreteDomain remove_last(mlength_type n) const
     {
-        return take_first(size() - n);
+        return take_first(extents() - n);
     }
 
     constexpr DiscreteDomain remove(mlength_type n1, mlength_type n2) const

@@ -252,9 +252,33 @@ DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_left(DiscreteElement<UniformPoi
 }
 
 template <class CDim>
+DDC_INLINE_FUNCTION Coordinate<CDim> distance_before(DiscreteElement<UniformPointSampling<CDim>>)
+{
+    return Coordinate<CDim>(step<UniformPointSampling<CDim>>());
+}
+
+template <class CDim, class DDim0, class DDim1, class... DDims>
+DDC_INLINE_FUNCTION Coordinate<CDim> distance_before(DiscreteElement<DDim0, DDim1, DDims...> elem)
+{
+    return distance_before<CDim>(select<UniformPointSampling<CDim>>(elem));
+}
+
+template <class CDim>
 DDC_INLINE_FUNCTION Coordinate<CDim> distance_at_right(DiscreteElement<UniformPointSampling<CDim>>)
 {
     return Coordinate<CDim>(step<UniformPointSampling<CDim>>());
+}
+
+template <class CDim>
+DDC_INLINE_FUNCTION Coordinate<CDim> distance_after(DiscreteElement<UniformPointSampling<CDim>>)
+{
+    return Coordinate<CDim>(step<UniformPointSampling<CDim>>());
+}
+
+template <class CDim, class DDim0, class DDim1, class... DDims>
+DDC_INLINE_FUNCTION Coordinate<CDim> distance_after(DiscreteElement<DDim0, DDim1, DDims...> elem)
+{
+    return distance_after<CDim>(select<UniformPointSampling<CDim>>(elem));
 }
 
 template <class CDim>

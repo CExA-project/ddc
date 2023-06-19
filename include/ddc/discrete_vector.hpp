@@ -106,47 +106,98 @@ constexpr inline auto operator-(
     }
 }
 
-template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline DiscreteVector<Tag> operator+(
-        DiscreteVector<Tag> const& lhs,
-        IntegralType const& rhs)
+template <class... Tags, class... OTags>
+constexpr inline auto operator*(
+        DiscreteVector<Tags...> const& lhs,
+        DiscreteVector<OTags...> const& rhs)
 {
-    return DiscreteVector<Tag>(get<Tag>(lhs) + rhs);
+    using detail::TypeSeq;
+    if constexpr (sizeof...(Tags) >= sizeof...(OTags)) {
+        static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>)&&...));
+        DiscreteVector<Tags...> result(lhs);
+        result *= rhs;
+        return result;
+    } else {
+        static_assert(((type_seq_contains_v<TypeSeq<Tags>, TypeSeq<OTags...>>)&&...));
+        DiscreteVector<OTags...> result(rhs);
+        result *= lhs;
+        return result;
+    }
 }
 
-template <class IntegralType, class Tag, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline DiscreteVector<Tag> operator+(
-        IntegralType const& lhs,
-        DiscreteVector<Tag> const& rhs)
+template <class... Tags, class... OTags>
+constexpr inline auto operator/(
+        DiscreteVector<Tags...> const& lhs,
+        DiscreteVector<OTags...> const& rhs)
 {
-    return DiscreteVector<Tag>(lhs + get<Tag>(rhs));
+    using detail::TypeSeq;
+    if constexpr (sizeof...(Tags) >= sizeof...(OTags)) {
+        static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>)&&...));
+        DiscreteVector<Tags...> result(lhs);
+        result /= rhs;
+        return result;
+    } else {
+        static_assert(((type_seq_contains_v<TypeSeq<Tags>, TypeSeq<OTags...>>)&&...));
+        DiscreteVector<OTags...> result(rhs);
+        result /= lhs;
+        return result;
+    }
 }
 
-template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline DiscreteVector<Tag> operator-(
-        DiscreteVector<Tag> const& lhs,
-        IntegralType const& rhs)
+template <class IntegralType, class... Tags>
+constexpr inline std::enable_if_t<std::is_integral_v<IntegralType>, DiscreteVector<Tags...>>
+operator+(DiscreteVector<Tags...> const& lhs, IntegralType const& rhs)
 {
-    return DiscreteVector<Tag>(get<Tag>(lhs) - rhs);
+    return DiscreteVector<Tags...>(get<Tags>(lhs) + rhs...);
 }
 
-template <class IntegralType, class Tag, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline DiscreteVector<Tag> operator-(
-        IntegralType const& lhs,
-        DiscreteVector<Tag> const& rhs)
+template <class IntegralType, class... Tags>
+constexpr inline std::enable_if_t<std::is_integral_v<IntegralType>, DiscreteVector<Tags...>>
+operator+(IntegralType const& lhs, DiscreteVector<Tags...> const& rhs)
 {
-    return DiscreteVector<Tag>(lhs - get<Tag>(rhs));
+    return DiscreteVector<Tags...>(lhs + get<Tags>(rhs)...);
 }
 
-/// external left binary operator: *
-
-template <
-        class IntegralType,
-        class... Tags,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-constexpr inline auto operator*(IntegralType const& lhs, DiscreteVector<Tags...> const& rhs)
+template <class IntegralType, class... Tags>
+constexpr inline std::enable_if_t<std::is_integral_v<IntegralType>, DiscreteVector<Tags...>>
+operator-(DiscreteVector<Tags...> const& lhs, IntegralType const& rhs)
 {
-    return DiscreteVector<Tags...>((lhs * get<Tags>(rhs))...);
+    return DiscreteVector<Tags...>(get<Tags>(lhs) - rhs...);
+}
+
+template <class IntegralType, class... Tags>
+constexpr inline std::enable_if_t<std::is_integral_v<IntegralType>, DiscreteVector<Tags...>>
+operator-(IntegralType const& lhs, DiscreteVector<Tags...> const& rhs)
+{
+    return DiscreteVector<Tags...>(lhs - get<Tags>(rhs)...);
+}
+
+template <class IntegralType, class... Tags>
+constexpr inline std::enable_if_t<std::is_integral_v<IntegralType>, DiscreteVector<Tags...>>
+operator*(IntegralType const& lhs, DiscreteVector<Tags...> const& rhs)
+{
+    return DiscreteVector<Tags...>(lhs * get<Tags>(rhs)...);
+}
+
+template <class IntegralType, class... Tags>
+constexpr inline std::enable_if_t<std::is_integral_v<IntegralType>, DiscreteVector<Tags...>>
+operator*(DiscreteVector<Tags...> const& lhs, IntegralType const& rhs)
+{
+    return DiscreteVector<Tags...>(get<Tags>(lhs) * rhs...);
+}
+
+template <class IntegralType, class... Tags>
+constexpr inline std::enable_if_t<std::is_integral_v<IntegralType>, DiscreteVector<Tags...>>
+operator/(DiscreteVector<Tags...> const& lhs, IntegralType const& rhs)
+{
+    return DiscreteVector<Tags...>(get<Tags>(lhs) / rhs...);
+}
+
+template <class IntegralType, class... Tags>
+constexpr inline std::enable_if_t<std::is_integral_v<IntegralType>, DiscreteVector<Tags...>>
+operator/(IntegralType const& lhs, DiscreteVector<Tags...> const& rhs)
+{
+    return DiscreteVector<Tags...>(lhs / get<Tags>(rhs)...);
 }
 
 template <class... QueryTags, class... Tags>
@@ -188,7 +239,7 @@ template <class Tag>
 class ConversionOperators<DiscreteVector<Tag>>
 {
 public:
-    constexpr inline operator DiscreteVectorElement const &() const noexcept
+    constexpr inline operator DiscreteVectorElement const&() const noexcept
     {
         return static_cast<DiscreteVector<Tag> const*>(this)->m_values[0];
     }
@@ -375,12 +426,10 @@ public:
         return *this;
     }
 
-    template <
-            class IntegralType,
-            std::size_t N = sizeof...(Tags),
-            class = std::enable_if_t<N == 1>,
-            class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-    constexpr inline DiscreteVector& operator+=(IntegralType const& rhs)
+    template <class IntegralType>
+    constexpr inline std::
+            enable_if_t<sizeof...(Tags) == 1 && std::is_integral_v<IntegralType>, DiscreteVector&>
+            operator+=(IntegralType const& rhs)
     {
         m_values[0] += rhs;
         return *this;
@@ -394,12 +443,10 @@ public:
         return *this;
     }
 
-    template <
-            class IntegralType,
-            std::size_t N = sizeof...(Tags),
-            class = std::enable_if_t<N == 1>,
-            class = std::enable_if_t<std::is_integral_v<IntegralType>>>
-    constexpr inline DiscreteVector& operator-=(IntegralType const& rhs)
+    template <class IntegralType>
+    constexpr inline std::
+            enable_if_t<std::is_integral_v<IntegralType> && sizeof...(Tags) == 1, DiscreteVector&>
+            operator-=(IntegralType const& rhs)
     {
         m_values[0] -= rhs;
         return *this;
@@ -410,6 +457,32 @@ public:
     {
         static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>)&&...));
         ((m_values[type_seq_rank_v<OTags, tags_seq>] *= rhs.template get<OTags>()), ...);
+        return *this;
+    }
+
+    template <class IntegralType>
+    constexpr inline std::
+            enable_if_t<sizeof...(Tags) == 1 && std::is_integral_v<IntegralType>, DiscreteVector&>
+            operator*=(IntegralType const& rhs)
+    {
+        m_values[0] *= rhs;
+        return *this;
+    }
+
+    template <class... OTags>
+    constexpr inline DiscreteVector& operator/=(DiscreteVector<OTags...> const& rhs)
+    {
+        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>)&&...));
+        ((m_values[type_seq_rank_v<OTags, tags_seq>] /= ::ddc::get<OTags>(rhs)), ...);
+        return *this;
+    }
+
+    template <class IntegralType>
+    constexpr inline std::
+            enable_if_t<std::is_integral_v<IntegralType> && sizeof...(Tags) == 1, DiscreteVector&>
+            operator/=(IntegralType const& rhs)
+    {
+        m_values[0] /= rhs;
         return *this;
     }
 };

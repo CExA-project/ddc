@@ -80,7 +80,7 @@ public:
 
     using size_type = typename base_type::size_type;
 
-    using pointer = typename base_type::pointer;
+    using data_handle_type = typename base_type::data_handle_type;
 
     using reference = typename base_type::reference;
 
@@ -118,7 +118,7 @@ public:
     /// Empty ChunkSpan
     constexpr ChunkSpan() = default;
 
-    /** Constructs a new ChunkSpan by copy, yields a new view to the same data
+    /** Constructs a new ChunkSpan by copy, yields a new view to the same data_handle()
      * @param other the ChunkSpan to copy
      */
     constexpr ChunkSpan(ChunkSpan const& other) = default;
@@ -128,7 +128,7 @@ public:
      */
     constexpr ChunkSpan(ChunkSpan&& other) = default;
 
-    /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data
+    /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data_handle()
      * @param other the Chunk to view
      */
     template <class OElementType, class Allocator>
@@ -137,7 +137,7 @@ public:
     {
     }
 
-    /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data
+    /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data_handle()
      * @param other the Chunk to view
      */
     // Disabled by SFINAE in the case of `ElementType` is not `const` to avoid write access
@@ -151,7 +151,7 @@ public:
     {
     }
 
-    /** Constructs a new ChunkSpan by copy of a chunk, yields a new view to the same data
+    /** Constructs a new ChunkSpan by copy of a chunk, yields a new view to the same data_handle()
      * @param other the ChunkSpan to move
      */
     template <class OElementType>
@@ -162,7 +162,7 @@ public:
     }
 
     /** Constructs a new ChunkSpan from scratch
-     * @param ptr the allocation pointer to the data
+     * @param ptr the allocation pointer to the data_handle()
      * @param domain the domain that sustains the view
      */
     template <
@@ -173,7 +173,7 @@ public:
     }
 
     /** Constructs a new ChunkSpan from scratch
-     * @param allocation_mdspan the allocation mdspan to the data
+     * @param allocation_mdspan the allocation mdspan to the data_handle()
      * @param domain the domain that sustains the view
      */
     constexpr ChunkSpan(allocation_mdspan_type allocation_mdspan, mdomain_type const& domain)
@@ -184,7 +184,7 @@ public:
                 type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
         stdex::layout_stride::mapping<extents_type> mapping_s(extents_s, strides_s);
         this->m_internal_mdspan = internal_mdspan_type(
-                allocation_mdspan.data() - mapping_s(front<DDims>(domain).uid()...),
+                allocation_mdspan.data_handle() - mapping_s(front<DDims>(domain).uid()...),
                 mapping_s);
         this->m_domain = domain;
     }
@@ -201,7 +201,7 @@ public:
     {
     }
 
-    /** Copy-assigns a new value to this ChunkSpan, yields a new view to the same data
+    /** Copy-assigns a new value to this ChunkSpan, yields a new view to the same data_handle()
      * @param other the ChunkSpan to copy
      * @return *this
      */
@@ -272,9 +272,9 @@ public:
     /** Access to the underlying allocation pointer
      * @return allocation pointer
      */
-    constexpr ElementType* data() const
+    constexpr ElementType* data_handle() const
     {
-        return base_type::data();
+        return base_type::data_handle();
     }
 
     /** Provide a mdspan on the memory allocation
@@ -298,7 +298,7 @@ public:
         return Kokkos::View<
                 detail::mdspan_to_kokkos_element_t<ElementType, sizeof...(DDims)>,
                 decltype(kokkos_layout),
-                MemorySpace>(s.data(), kokkos_layout);
+                MemorySpace>(s.data_handle(), kokkos_layout);
     }
 
     constexpr view_type span_cview() const

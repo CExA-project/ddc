@@ -325,7 +325,7 @@ TEST(Chunk1DTest, IsAlwaysUnique)
 TEST(Chunk1DTest, IsAlwaysContiguous)
 {
     ChunkX<double> chunk(dom_x);
-    EXPECT_TRUE(chunk.is_always_contiguous());
+    EXPECT_TRUE(chunk.is_always_exhaustive());
 }
 
 TEST(Chunk1DTest, is_always_strided)
@@ -345,7 +345,7 @@ TEST(Chunk1DTest, IsUnique)
 TEST(Chunk1DTest, IsContiguous)
 {
     ChunkX<double> chunk(dom_x);
-    EXPECT_TRUE(chunk.is_contiguous());
+    EXPECT_TRUE(chunk.is_exhaustive());
 }
 
 TEST(Chunk1DTest, IsStrided)
@@ -370,7 +370,7 @@ TEST(Chunk1DTest, DomainX)
     EXPECT_EQ(dom_x, chunk.domain<DDimX>());
 }
 
-// TODO: data
+// TODO: data_handle()
 
 // TODO: internal_mdspan
 
@@ -595,7 +595,7 @@ TEST(Chunk2DTest, DeepcopyReordered)
     }
     ChunkYX<double> chunk2(ddc::select<DDimY, DDimX>(chunk.domain()));
     ddc::ChunkSpan<double, DDomXY, std::experimental::layout_left>
-            chunk2_view(chunk2.data(), chunk.domain());
+            chunk2_view(chunk2.data_handle(), chunk.domain());
     ddc::deepcopy(chunk2_view, chunk);
     for (auto&& ix : chunk.domain<DDimX>()) {
         for (auto&& iy : chunk.domain<DDimY>()) {

@@ -88,25 +88,25 @@ public:
     }
 
     DDC_INLINE_FUNCTION
-    T* data()
+    T* data_handle()
     {
         return reinterpret_cast<T*>(m_data);
     }
 };
 
-// Global CPU variable storing resetters. Required to correctly free data.
+// Global CPU variable storing resetters. Required to correctly free data_handle().
 inline std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
 
-// Global CPU variable owning discrete spaces data for CPU and GPU
+// Global CPU variable owning discrete spaces data_handle()for CPU and GPU
 template <class DDim>
 inline std::optional<DualDiscretization<DDim>> g_discrete_space_dual;
 
 #if defined(__CUDACC__)
-// Global GPU variable viewing data owned by the CPU
+// Global GPU variable viewing data_handle()owned by the CPU
 template <class DDim>
 __constant__ gpu_proxy<ddim_impl_t<DDim, Kokkos::CudaSpace>> g_discrete_space_device;
 #elif defined(__HIPCC__)
-// Global GPU variable viewing data owned by the CPU
+// Global GPU variable viewing data_handle()owned by the CPU
 // WARNING: do not put the `inline` keyword, seems to fail on MI100 rocm/4.5.0
 template <class DDim>
 __constant__ gpu_proxy<ddim_impl_t<DDim, Kokkos::HIPSpace>> g_discrete_space_device;

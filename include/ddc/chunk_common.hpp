@@ -35,9 +35,10 @@ template <class T>
 struct chunk_traits
 {
     static_assert(is_chunk_v<T>);
-    using value_type = std::remove_cv_t<std::remove_pointer_t<decltype(std::declval<T>().data())>>;
-    using pointer_type = decltype(std::declval<T>().data());
-    using reference_type = decltype(*std::declval<T>().data());
+    using value_type
+            = std::remove_cv_t<std::remove_pointer_t<decltype(std::declval<T>().data_handle())>>;
+    using pointer_type = decltype(std::declval<T>().data_handle());
+    using reference_type = decltype(*std::declval<T>().data_handle());
 };
 
 template <class T>
@@ -107,7 +108,7 @@ public:
 
     using size_type = typename allocation_mdspan_type::size_type;
 
-    using pointer = typename allocation_mdspan_type::pointer;
+    using data_handle_type = typename allocation_mdspan_type::data_handle_type;
 
     using reference = typename allocation_mdspan_type::reference;
 
@@ -124,7 +125,7 @@ public:
     static_assert(mapping_type::is_always_strided());
 
 protected:
-    /// The raw view of the data
+    /// The raw view of the data_handle()
     internal_mdspan_type m_internal_mdspan;
 
     /// The mesh on which this chunk is defined
@@ -151,9 +152,9 @@ public:
         return mapping_type::is_always_unique();
     }
 
-    static constexpr bool is_always_contiguous() noexcept
+    static constexpr bool is_always_exhaustive() noexcept
     {
-        return mapping_type::is_always_contiguous();
+        return mapping_type::is_always_exhaustive();
     }
 
     static constexpr bool is_always_strided() noexcept
@@ -196,9 +197,9 @@ public:
         return allocation_mdspan().is_unique();
     }
 
-    constexpr bool is_contiguous() const noexcept
+    constexpr bool is_exhaustive() const noexcept
     {
-        return allocation_mdspan().is_contiguous();
+        return allocation_mdspan().is_exhaustive();
     }
 
     constexpr bool is_strided() const noexcept
@@ -244,7 +245,7 @@ protected:
     }
 
     /** Constructs a new ChunkCommon from scratch
-     * @param ptr the allocation pointer to the data
+     * @param ptr the allocation pointer to the data_handle()
      * @param domain the domain that sustains the view
      */
     template <
@@ -270,7 +271,7 @@ protected:
         m_domain = domain;
     }
 
-    /** Constructs a new ChunkCommon by copy, yields a new view to the same data
+    /** Constructs a new ChunkCommon by copy, yields a new view to the same data_handle()
      * @param other the ChunkCommon to copy
      */
     constexpr ChunkCommon(ChunkCommon const& other) = default;
@@ -280,7 +281,7 @@ protected:
      */
     constexpr ChunkCommon(ChunkCommon&& other) = default;
 
-    /** Copy-assigns a new value to this ChunkCommon, yields a new view to the same data
+    /** Copy-assigns a new value to this ChunkCommon, yields a new view to the same data_handle()
      * @param other the ChunkCommon to copy
      * @return *this
      */
@@ -295,21 +296,21 @@ protected:
     /** Access to the underlying allocation pointer
      * @return allocation pointer
      */
-    constexpr ElementType* data() const
+    constexpr ElementType* data_handle() const
     {
         return &m_internal_mdspan(front<DDims>(m_domain).uid()...);
     }
 
-    /** Provide a modifiable view of the data
-     * @return a modifiable view of the data
+    /** Provide a modifiable view of the data_handle()
+     * @return a modifiable view of the data_handle()
      */
     constexpr internal_mdspan_type internal_mdspan() const
     {
         return m_internal_mdspan;
     }
 
-    /** Provide a modifiable view of the data
-     * @return a modifiable view of the data
+    /** Provide a modifiable view of the data_handle()
+     * @return a modifiable view of the data_handle()
      */
     constexpr allocation_mdspan_type allocation_mdspan() const
     {
@@ -317,10 +318,10 @@ protected:
         extents_type extents_s(::ddc::extents<DDims>(m_domain).value()...);
         if constexpr (std::is_same_v<LayoutStridedPolicy, std::experimental::layout_stride>) {
             mapping_type map(extents_s, m_internal_mdspan.mapping().strides());
-            return allocation_mdspan_type(data(), map);
+            return allocation_mdspan_type(data_handle(), map);
         } else {
             mapping_type map(extents_s);
-            return allocation_mdspan_type(data(), map);
+            return allocation_mdspan_type(data_handle(), map);
         }
         DDC_IF_NVCC_THEN_POP
     }

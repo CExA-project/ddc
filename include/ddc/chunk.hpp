@@ -66,7 +66,7 @@ public:
 
     using size_type = typename base_type::size_type;
 
-    using pointer = typename base_type::pointer;
+    using data_handle_type = typename base_type::data_handle_type;
 
     using reference = typename base_type::reference;
 
@@ -112,8 +112,9 @@ public:
 
     ~Chunk()
     {
-        if (this->m_internal_mdspan.data()) {
-            std::allocator_traits<Allocator>::deallocate(m_allocator, this->data(), this->size());
+        if (this->m_internal_mdspan.data_handle()) {
+            std::allocator_traits<
+                    Allocator>::deallocate(m_allocator, this->data_handle(), this->size());
         }
     }
 
@@ -127,8 +128,9 @@ public:
     Chunk& operator=(Chunk&& other)
     {
         assert(this != &other);
-        if (this->m_internal_mdspan.data()) {
-            std::allocator_traits<Allocator>::deallocate(m_allocator, this->data(), this->size());
+        if (this->m_internal_mdspan.data_handle()) {
+            std::allocator_traits<
+                    Allocator>::deallocate(m_allocator, this->data_handle(), this->size());
         }
         static_cast<base_type&>(*this) = std::move(static_cast<base_type&>(other));
         m_allocator = std::move(other.m_allocator);
@@ -220,17 +222,17 @@ public:
     /** Access to the underlying allocation pointer
      * @return read-only allocation pointer
      */
-    ElementType const* data() const
+    ElementType const* data_handle() const
     {
-        return base_type::data();
+        return base_type::data_handle();
     }
 
     /** Access to the underlying allocation pointer
      * @return allocation pointer
      */
-    ElementType* data()
+    ElementType* data_handle()
     {
-        return base_type::data();
+        return base_type::data_handle();
     }
 
     /** Provide a mdspan on the memory allocation
@@ -262,7 +264,7 @@ public:
         return Kokkos::View<
                 detail::mdspan_to_kokkos_element_t<ElementType, sizeof...(DDims)>,
                 decltype(kokkos_layout),
-                typename Allocator::memory_space>(s.data(), kokkos_layout);
+                typename Allocator::memory_space>(s.data_handle(), kokkos_layout);
     }
 
     /** Provide a mdspan on the memory allocation
@@ -278,7 +280,7 @@ public:
         return Kokkos::View<
                 detail::mdspan_to_kokkos_element_t<const ElementType, sizeof...(DDims)>,
                 decltype(kokkos_layout),
-                typename Allocator::memory_space>(s.data(), kokkos_layout);
+                typename Allocator::memory_space>(s.data_handle(), kokkos_layout);
     }
 
     view_type span_cview() const

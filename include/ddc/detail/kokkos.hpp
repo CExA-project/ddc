@@ -149,10 +149,13 @@ auto build_mdspan(Kokkos::View<DataType, Properties...> const view, std::index_s
     using mapping_type = typename layout_type::template mapping<extents_type>;
     extents_type exts(view.extent(Is)...);
     if constexpr (std::is_same_v<layout_type, std::experimental::layout_stride>) {
-        return std::experimental::mdspan(view.data(), mapping_type(exts, {view.stride(Is)...}));
-    } else {
         return std::experimental::
-                mdspan<element_type, extents_type, layout_type>(view.data(), mapping_type(exts));
+                mdspan(view.data_handle(), mapping_type(exts, {view.stride(Is)...}));
+    } else {
+        return std::experimental::mdspan<
+                element_type,
+                extents_type,
+                layout_type>(view.data_handle(), mapping_type(exts));
     }
     DDC_IF_NVCC_THEN_POP
 }

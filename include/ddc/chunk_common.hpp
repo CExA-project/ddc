@@ -252,23 +252,8 @@ protected:
             class Mapping = mapping_type,
             std::enable_if_t<std::is_constructible_v<Mapping, extents_type>, int> = 0>
     constexpr ChunkCommon(ElementType* ptr, mdomain_type const& domain)
+        : ChunkCommon {ptr, domain, make_mapping_for(domain)}
     {
-        namespace stdex = std::experimental;
-        // Handle the case where an allocation of size 0 returns a nullptr.
-        assert((domain.size() == 0) || ((ptr != nullptr) && (domain.size() != 0)));
-
-        extents_type extents_r(::ddc::extents<DDims>(domain).value()...);
-        mapping_type mapping_r(extents_r);
-
-        extents_type extents_s((front<DDims>(domain) + ddc::extents<DDims>(domain)).uid()...);
-        std::array<std::size_t, sizeof...(DDims)> strides_s {
-                mapping_r.stride(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
-        stdex::layout_stride::mapping<extents_type> mapping_s(extents_s, strides_s);
-
-        // Pointer offset to handle non-zero indexing
-        ptr -= mapping_s(front<DDims>(domain).uid()...);
-        m_internal_mdspan = internal_mdspan_type(ptr, mapping_s);
-        m_domain = domain;
     }
 
     /** Constructs a new ChunkCommon by copy, yields a new view to the same data_handle()
@@ -325,6 +310,41 @@ protected:
         }
         DDC_IF_NVCC_THEN_POP
     }
+
+private:
+    /** builds the mapping to use in the internal mdspan
+     * @param domain the domain that sustains the view
+     */
+    template <class Mapping = mapping_type>
+    constexpr std::enable_if_t<
+            std::is_constructible_v<Mapping, extents_type>,
+            std::experimental::layout_stride::mapping<extents_type>>
+    make_mapping_for(mdomain_type const& domain)
+    {
+        extents_type extents_r(::ddc::extents<DDims>(domain).value()...);
+        mapping_type mapping_r(extents_r);
+
+        extents_type extents_s((front<DDims>(domain) + ddc::extents<DDims>(domain)).uid()...);
+        std::array<std::size_t, sizeof...(DDims)> strides_s {
+                mapping_r.stride(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
+        return std::experimental::layout_stride::mapping<extents_type>(extents_s, strides_s);
+    }
+
+    /** Constructs a new ChunkCommon from scratch
+     * @param ptr the allocation pointer to the data_handle()
+     * @param domain the domain that sustains the view
+     */
+    constexpr ChunkCommon(
+            ElementType* ptr,
+            mdomain_type const& domain,
+            std::experimental::layout_stride::mapping<extents_type>&& s_domain)
+        : m_internal_mdspan {ptr - s_domain(front<DDims>(domain).uid()...), s_domain}
+        , m_domain {domain}
+    {
+        // Handle the case where an allocation of size 0 returns a nullptr.
+        assert((domain.size() == 0) || ((ptr != nullptr) && (domain.size() != 0)));
+    }
 };
+
 
 } // namespace ddc

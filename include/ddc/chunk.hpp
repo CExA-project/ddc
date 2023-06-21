@@ -107,7 +107,7 @@ public:
         : base_type(std::move(static_cast<base_type&>(other)))
         , m_allocator(std::move(other.m_allocator))
     {
-        other.m_internal_mdspan = internal_mdspan_type();
+        other.m_internal_mdspan = internal_mdspan_type(nullptr, other.m_internal_mdspan.mapping());
     }
 
     ~Chunk()
@@ -127,15 +127,17 @@ public:
      */
     Chunk& operator=(Chunk&& other)
     {
-        assert(this != &other);
+        if (this == &other) {
+            return *this;
+        }
         if (this->m_internal_mdspan.data_handle()) {
             std::allocator_traits<
                     Allocator>::deallocate(m_allocator, this->data_handle(), this->size());
         }
         static_cast<base_type&>(*this) = std::move(static_cast<base_type&>(other));
         m_allocator = std::move(other.m_allocator);
+        other.m_internal_mdspan = internal_mdspan_type(nullptr, other.m_internal_mdspan.mapping());
 
-        other.m_internal_mdspan = internal_mdspan_type();
         return *this;
     }
 

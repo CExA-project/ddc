@@ -76,10 +76,8 @@ static DDomXY constexpr dom_x_y(lbound_x_y, nelems_x_y);
 
 TEST(Chunk0DTest, LayoutType)
 {
-    Chunk0D<double> chunk;
-
     EXPECT_TRUE((std::is_same_v<
-                 std::decay_t<decltype(chunk)>::layout_type,
+                 std::decay_t<Chunk0D<double>>::layout_type,
                  std::experimental::layout_right>));
 }
 

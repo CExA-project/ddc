@@ -70,17 +70,17 @@ jobs:
       matrix:
         cxx_version:  ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
-        kokkos_backend: ['CPU-gnu', 'CPU-clang', 'GPU-HIP', 'GPU-Cuda']
+        kokkos_backend: ['CPU-gnu', 'CPU-clang', 'GPU-HIP', 'GPU-CUDA']
         image: ['test_env', 'jammy_env']
         exclude:
         - cxx_version: '23'
           image: 'test_env'
-        - kokkos_backend: 'GPU-Cuda'
+        - kokkos_backend: 'GPU-CUDA'
           image: 'test_env'
-        - kokkos_backend: 'GPU-Cuda'
+        - kokkos_backend: 'GPU-CUDA'
           image: 'jammy_env'
           cxx_version: '20'
-        - kokkos_backend: 'GPU-Cuda'
+        - kokkos_backend: 'GPU-CUDA'
           image: 'jammy_env'
           cxx_version: '23'
     runs-on: ubuntu-latest
@@ -107,7 +107,7 @@ jobs:
           set -xe
           git config --global --add safe.directory '*'
           case "${{matrix.kokkos_backend}}" in
-          'GPU-Cuda')
+          'GPU-CUDA')
             export CC=gcc-10
             export CXX=g++-10
             export FC=gfortran-10

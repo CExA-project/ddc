@@ -500,17 +500,19 @@ void core(
             norm_coef = 1;
             break;
         case ddc::FFT_Normalization::FORWARD:
-            norm_coef = kwargs.direction == ddc::FFT_Direction::FORWARD
-                                ? 1 / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)
-                                : 1;
+            norm_coef
+                    = kwargs.direction == ddc::FFT_Direction::FORWARD
+                              ? 1. / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)
+                              : 1.;
             break;
         case ddc::FFT_Normalization::BACKWARD:
-            norm_coef = kwargs.direction == ddc::FFT_Direction::BACKWARD
-                                ? 1 / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)
-                                : 1;
+            norm_coef
+                    = kwargs.direction == ddc::FFT_Direction::BACKWARD
+                              ? 1. / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)
+                              : 1.;
             break;
         case ddc::FFT_Normalization::ORTHO:
-            norm_coef = 1
+            norm_coef = 1.
                         / Kokkos::sqrt(
                                 (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...));
             break;

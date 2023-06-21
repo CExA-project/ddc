@@ -197,6 +197,7 @@ target_include_directories(DDC
 )
 target_link_libraries(DDC
 	INTERFACE std::mdspan Kokkos::kokkos)
+target_compile_definitions(DDC INTERFACE MDSPAN_USE_PAREN_OPERATOR=1)
 add_library(DDC::DDC ALIAS DDC)
 install(
 	TARGETS DDC

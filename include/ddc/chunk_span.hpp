@@ -201,7 +201,7 @@ public:
     {
     }
 
-    /** Copy-assigns a new value to this ChunkSpan, yields a new view to the same data_handle()
+    /** Copy-assigns a new value to this ChunkSpan, yields a new view to the same data
      * @param other the ChunkSpan to copy
      * @return *this
      */

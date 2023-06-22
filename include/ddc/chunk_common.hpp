@@ -256,7 +256,7 @@ protected:
     {
     }
 
-    /** Constructs a new ChunkCommon by copy, yields a new view to the same data_handle()
+    /** Constructs a new ChunkCommon by copy, yields a new view to the same data
      * @param other the ChunkCommon to copy
      */
     constexpr ChunkCommon(ChunkCommon const& other) = default;

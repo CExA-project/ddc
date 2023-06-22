@@ -125,7 +125,7 @@ public:
     static_assert(mapping_type::is_always_strided());
 
 protected:
-    /// The raw view of the data_handle()
+    /// The raw view of the data
     internal_mdspan_type m_internal_mdspan;
 
     /// The mesh on which this chunk is defined

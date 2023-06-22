@@ -245,7 +245,7 @@ protected:
     }
 
     /** Constructs a new ChunkCommon from scratch
-     * @param ptr the allocation pointer to the data_handle()
+     * @param ptr the allocation pointer to the data
      * @param domain the domain that sustains the view
      */
     template <

@@ -137,7 +137,7 @@ public:
     {
     }
 
-    /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data_handle()
+    /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data
      * @param other the Chunk to view
      */
     // Disabled by SFINAE in the case of `ElementType` is not `const` to avoid write access

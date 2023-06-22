@@ -151,7 +151,7 @@ public:
     {
     }
 
-    /** Constructs a new ChunkSpan by copy of a chunk, yields a new view to the same data_handle()
+    /** Constructs a new ChunkSpan by copy of a chunk, yields a new view to the same data
      * @param other the ChunkSpan to move
      */
     template <class OElementType>

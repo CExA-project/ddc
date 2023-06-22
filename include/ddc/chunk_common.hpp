@@ -286,8 +286,8 @@ protected:
         return &m_internal_mdspan(front<DDims>(m_domain).uid()...);
     }
 
-    /** Provide a modifiable view of the data_handle()
-     * @return a modifiable view of the data_handle()
+    /** Provide a modifiable view of the data
+     * @return a modifiable view of the data
      */
     constexpr internal_mdspan_type internal_mdspan() const
     {

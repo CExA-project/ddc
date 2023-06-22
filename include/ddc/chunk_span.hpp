@@ -118,7 +118,7 @@ public:
     /// Empty ChunkSpan
     constexpr ChunkSpan() = default;
 
-    /** Constructs a new ChunkSpan by copy, yields a new view to the same data_handle()
+    /** Constructs a new ChunkSpan by copy, yields a new view to the same data
      * @param other the ChunkSpan to copy
      */
     constexpr ChunkSpan(ChunkSpan const& other) = default;

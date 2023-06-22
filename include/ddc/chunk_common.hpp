@@ -294,8 +294,8 @@ protected:
         return m_internal_mdspan;
     }
 
-    /** Provide a modifiable view of the data_handle()
-     * @return a modifiable view of the data_handle()
+    /** Provide a modifiable view of the data
+     * @return a modifiable view of the data
      */
     constexpr allocation_mdspan_type allocation_mdspan() const
     {

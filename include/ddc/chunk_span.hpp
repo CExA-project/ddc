@@ -173,7 +173,7 @@ public:
     }
 
     /** Constructs a new ChunkSpan from scratch
-     * @param allocation_mdspan the allocation mdspan to the data_handle()
+     * @param allocation_mdspan the allocation mdspan to the data
      * @param domain the domain that sustains the view
      */
     constexpr ChunkSpan(allocation_mdspan_type allocation_mdspan, mdomain_type const& domain)

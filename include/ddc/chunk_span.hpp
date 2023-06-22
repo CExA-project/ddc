@@ -128,7 +128,7 @@ public:
      */
     constexpr ChunkSpan(ChunkSpan&& other) = default;
 
-    /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data_handle()
+    /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data
      * @param other the Chunk to view
      */
     template <class OElementType, class Allocator>

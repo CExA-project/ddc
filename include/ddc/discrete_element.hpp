@@ -7,6 +7,7 @@
 #include <ostream>
 #include <utility>
 
+#include "ddc/coordinate.hpp"
 #include "ddc/detail/type_seq.hpp"
 #include "ddc/discrete_vector.hpp"
 
@@ -295,6 +296,12 @@ public:
         m_values[0] -= rhs;
         return *this;
     }
+};
+
+template <class... Dims>
+struct _Coordinate<ddc::DiscreteElement<Dims...>>
+{
+    using type = Coordinate<Dims...>;
 };
 
 inline std::ostream& operator<<(std::ostream& out, DiscreteElement<> const&)

@@ -110,6 +110,12 @@ public:
     };
 };
 
+template <class... CDims>
+struct _Coordinate<ddc::NonUniformPointSampling<CDims>...>
+{
+    using type = Coordinate<CDims...>;
+};
+
 template <class>
 struct is_non_uniform_sampling : public std::false_type
 {

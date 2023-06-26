@@ -593,19 +593,19 @@ class ddc::Chunk&lt; ElementType, class, Allocator &gt;</div></div>
 struct ddc::chunk_traits&lt; T &gt;</div></div><table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
-<a id="a1665fec3639644a640c50a0b32c3d3ff" name="a1665fec3639644a640c50a0b32c3d3ff"></a>typedef remove_cv_t&lt; remove_pointer_t&lt; decltype(declval&lt; T &gt;().data())&gt; &gt;</td>
+<a id="a48988abbf18f1cc701617a25b6714551" name="a48988abbf18f1cc701617a25b6714551"></a>typedef remove_cv_t&lt; remove_pointer_t&lt; decltype(declval&lt; T &gt;().data_handle())&gt; &gt;</td>
 <td class="fieldname">
 value_type</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a43c8957caf3c2bcf01dc0ffd4d03488b" name="a43c8957caf3c2bcf01dc0ffd4d03488b"></a>typedef decltype(declval&lt; T &gt;().data())</td>
+<a id="add19ae83e32eaba2f1069e730470e047" name="add19ae83e32eaba2f1069e730470e047"></a>typedef decltype(declval&lt; T &gt;().data_handle())</td>
 <td class="fieldname">
 pointer_type</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="aade1706db72d0ca76dcbd4f3c5664aef" name="aade1706db72d0ca76dcbd4f3c5664aef"></a>typedef decltype(*declval&lt; T &gt;().data())</td>
+<a id="a11519f32606bcf07d485792af84f9019" name="a11519f32606bcf07d485792af84f9019"></a>typedef decltype(*declval&lt; T &gt;().data_handle())</td>
 <td class="fieldname">
 reference_type</td>
 <td class="fielddoc">

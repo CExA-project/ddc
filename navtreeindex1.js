@@ -1,8 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"classddc_1_1DiscreteVector.html#aade13e9b466e0ce5c8e91ed0fd7bafe7":[2,0,15,25],
-"classddc_1_1DiscreteVector.html#ab041b44f5405a1809e4ad12ec508a46c":[2,0,15,6],
-"classddc_1_1DiscreteVector.html#ab30888655df88248b7d0125b87e38d21":[2,0,15,18],
 "classddc_1_1DiscreteVector.html#abfea670d10050affd056c1820e022386":[2,0,15,2],
 "classddc_1_1DiscreteVector.html#ae260a991df4442e40fe91bfb07f57098":[2,0,15,8],
 "classddc_1_1DiscreteVector.html#ae51ad0838ba2a4ff0ef499a93e272a46":[2,0,15,13],

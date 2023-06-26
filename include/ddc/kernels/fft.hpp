@@ -141,14 +141,13 @@ struct _fftw_type
 template <typename T>
 struct _fftw_type<Kokkos::complex<T>>
 {
-    using type = typename std::
-            conditional<std::is_same_v<real_type_t<T>, float>, fftwf_complex, fftw_complex>::type;
+    using type = std::
+            conditional_t<std::is_same_v<real_type_t<T>, float>, fftwf_complex, fftw_complex>;
 };
 
 // _fftw_plan : compatible with both single and double precision
 template <typename T>
-using _fftw_plan = typename std::
-        conditional<std::is_same_v<real_type_t<T>, float>, fftwf_plan, fftw_plan>::type;
+using _fftw_plan = std::conditional_t<std::is_same_v<real_type_t<T>, float>, fftwf_plan, fftw_plan>;
 
 // _fftw_plan_many_dft : templated function working for all types of transformation
 template <typename Tin, typename Tout, typename... Args, typename PenultArg, typename LastArg>
@@ -179,17 +178,14 @@ _fftw_plan<Tin> _fftw_plan_many_dft(PenultArg penultArg, LastArg lastArg, Args..
 template <typename T>
 struct _cufft_type
 {
-    using type =
-            typename std::conditional<std::is_same_v<T, float>, cufftReal, cufftDoubleReal>::type;
+    using type = std::conditional_t<std::is_same_v<T, float>, cufftReal, cufftDoubleReal>;
 };
 
 template <typename T>
 struct _cufft_type<Kokkos::complex<T>>
 {
-    using type = typename std::conditional<
-            std::is_same_v<real_type_t<T>, float>,
-            cufftComplex,
-            cufftDoubleComplex>::type;
+    using type = std::
+            conditional_t<std::is_same_v<real_type_t<T>, float>, cufftComplex, cufftDoubleComplex>;
 };
 
 // cufft_transform_type : argument passed in the cufftMakePlan function
@@ -244,17 +240,16 @@ cufftResult _cufftExec(LastArg lastArg, Args... args)
 template <typename T>
 struct _hipfft_type
 {
-    using type =
-            typename std::conditional<std::is_same_v<T, float>, hipfftReal, hipfftDoubleReal>::type;
+    using type = std::conditional_t<std::is_same_v<T, float>, hipfftReal, hipfftDoubleReal>;
 };
 
 template <typename T>
 struct _hipfft_type<Kokkos::complex<T>>
 {
-    using type = typename std::conditional<
+    using type = std::conditional_t<
             std::is_same_v<real_type_t<T>, float>,
             hipfftComplex,
-            hipfftDoubleComplex>::type;
+            hipfftDoubleComplex>;
 };
 
 // hipfft_transform_type : argument passed in the hipfftMakePlan function
@@ -499,22 +494,27 @@ void core(
 #endif
 
     if (kwargs.normalization != ddc::FFT_Normalization::OFF) {
-        real_type_t<Tout> norm_coef;
+        real_type_t<Tout> norm_coef = 1;
         switch (kwargs.normalization) {
         case ddc::FFT_Normalization::OFF:
-            norm_coef = 1;
+            break;
         case ddc::FFT_Normalization::FORWARD:
-            norm_coef = kwargs.direction == ddc::FFT_Direction::FORWARD
-                                ? 1 / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)
-                                : 1;
+            norm_coef
+                    = kwargs.direction == ddc::FFT_Direction::FORWARD
+                              ? 1. / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)
+                              : 1.;
+            break;
         case ddc::FFT_Normalization::BACKWARD:
-            norm_coef = kwargs.direction == ddc::FFT_Direction::BACKWARD
-                                ? 1 / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)
-                                : 1;
+            norm_coef
+                    = kwargs.direction == ddc::FFT_Direction::BACKWARD
+                              ? 1. / (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...)
+                              : 1.;
+            break;
         case ddc::FFT_Normalization::ORTHO:
-            norm_coef = 1
+            norm_coef = 1.
                         / Kokkos::sqrt(
                                 (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) * ...));
+            break;
         case ddc::FFT_Normalization::FULL:
             norm_coef
                     = kwargs.direction == ddc::FFT_Direction::FORWARD
@@ -533,6 +533,7 @@ void core(
                                   * (ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()) - 1)
                                   / ddc::get<ddc::UniformPointSampling<X>>(mesh.extents()))
                                  * ...);
+            break;
         }
 
         Kokkos::parallel_for(
@@ -631,14 +632,11 @@ void fft(
                             layout_right> && std::is_same_v<layout_out, std::experimental::layout_right>,
             "Layouts must be right-handed");
 
-    ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> in_mesh
-            = ddc::get_domain<ddc::UniformPointSampling<X>...>(in);
-
     ddc::detail::fft::core<Tin, Tout, ExecSpace, MemorySpace, X...>(
             execSpace,
-            out.data(),
-            in.data(),
-            in_mesh,
+            out.data_handle(),
+            in.data_handle(),
+            in.domain(),
             {ddc::FFT_Direction::FORWARD, kwargs.normalization});
 }
 
@@ -672,14 +670,11 @@ void ifft(
                             layout_right> && std::is_same_v<layout_out, std::experimental::layout_right>,
             "Layouts must be right-handed");
 
-    ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> out_mesh
-            = ddc::get_domain<ddc::UniformPointSampling<X>...>(out);
-
     ddc::detail::fft::core<Tin, Tout, ExecSpace, MemorySpace, X...>(
             execSpace,
-            out.data(),
-            in.data(),
-            out_mesh,
+            out.data_handle(),
+            in.data_handle(),
+            out.domain(),
             {ddc::FFT_Direction::BACKWARD, kwargs.normalization});
 }
 } // namespace ddc

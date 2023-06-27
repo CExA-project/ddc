@@ -17,12 +17,12 @@ using CoordinateElement = double;
  */
 
 template <class... CDims>
-struct _Coordinate
-{
-    using type = typename detail::TaggedVector<CoordinateElement, CDims...>;
-};
+using Coordinate = detail::TaggedVector<CoordinateElement, CDims...>;
 
-template <class... CDims>
-using Coordinate = typename _Coordinate<CDims...>::type;
+template <class T>
+struct CoordinateOf;
+
+template <class T>
+using coordinate_of_t = typename CoordinateOf<T>::type;
 
 } // namespace ddc

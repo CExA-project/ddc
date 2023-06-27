@@ -298,12 +298,6 @@ public:
     }
 };
 
-template <class... Dims>
-struct _Coordinate<ddc::DiscreteElement<Dims...>>
-{
-    using type = Coordinate<Dims...>;
-};
-
 inline std::ostream& operator<<(std::ostream& out, DiscreteElement<> const&)
 {
     out << "()";
@@ -421,5 +415,12 @@ constexpr inline DiscreteVector<Tags...> operator-(
     static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
     return DiscreteVector<Tags...>((uid<Tags>(lhs) - uid<Tags>(rhs))...);
 }
+
+template <class... DDims>
+struct CoordinateOf<ddc::DiscreteElement<DDims...>>
+{
+    // maybe a static_assert on DDims ?
+    using type = Coordinate<typename DDims::continuous_dimension_type...>;
+};
 
 } // namespace ddc

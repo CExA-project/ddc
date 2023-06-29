@@ -5,6 +5,8 @@
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/fft.hpp>
 
+#include "ddc/discrete_element.hpp"
+
 template <typename X>
 using DDim = ddc::UniformPointSampling<X>;
 
@@ -213,4 +215,88 @@ static void test_fft()
                                                                                              : 1e-7;
     ASSERT_LE(criterion, epsilon);
     ASSERT_LE(criterion2, epsilon);
+}
+
+template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename X>
+static void test_fft_norm(ddc::FFT_Normalization const norm)
+{
+    DDom<DDim<X>> const x_mesh
+            = DDom<DDim<X>>(ddc::init_discrete_space(DDim<X>::
+                                                             init(ddc::Coordinate<X>(-1. / 4),
+                                                                  ddc::Coordinate<X>(1. / 4),
+                                                                  DVect<DDim<X>>(2))));
+    ddc::Chunk _f = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
+    ddc::ChunkSpan f = _f.span_view();
+    ddc::for_each(
+            policy<ExecSpace>(),
+            ddc::get_domain<DDim<X>>(f),
+            DDC_LAMBDA(DElem<DDim<X>> const e) { f(e) = static_cast<Tin>(1); });
+
+    ddc::init_fourier_space<X>(x_mesh);
+    DDom<DFDim<ddc::Fourier<X>>> const k_mesh
+            = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
+
+    ddc::Chunk _f_bis = ddc::Chunk(ddc::get_domain<DDim<X>>(f), Allocator<MemorySpace, Tin>());
+    ddc::ChunkSpan f_bis = _f_bis.span_view();
+    ddc::deepcopy(f_bis, f);
+
+    ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
+    ddc::ChunkSpan Ff = _Ff.span_view();
+    ddc::fft(ExecSpace(), Ff, f_bis, {norm});
+    Kokkos::fence();
+
+    ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>>(f), ddc::HostAllocator<Tin>());
+    ddc::ChunkSpan f_host = _f_host.span_view();
+    ddc::deepcopy(f_host, f);
+#if 0
+    std::cout << "\n input:\n";
+    ddc::for_each(
+            ddc::policies::serial_host,
+            ddc::get_domain<DDim<X>>(f_host),
+            [=](DElem<DDim<X>> const e) {
+                (std::cout << coordinate(ddc::select<DDim<X>>(e)))
+                        << "->" << f_host(e) << ", ";
+            });
+#endif
+
+    ddc::Chunk _Ff_host
+            = ddc::Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>>(Ff), ddc::HostAllocator<Tout>());
+    ddc::ChunkSpan Ff_host = _Ff_host.span_view();
+    ddc::deepcopy(Ff_host, Ff);
+#if 0
+    std::cout << "\n output:\n";
+    ddc::for_each(
+            ddc::policies::serial_host,
+            ddc::get_domain<DFDim<ddc::Fourier<X>>>(Ff_host),
+            [=](DElem<DFDim<ddc::Fourier<X>>> const e) {
+                (std::cout << coordinate(ddc::select<DFDim<ddc::Fourier<X>>>(e)))
+                        << "->" << Kokkos::abs(Ff_host(e)) << " "
+                        << ", ";
+            });
+#endif
+
+    double Ff0_expected;
+    switch (norm) {
+    case ddc::FFT_Normalization::OFF:
+        Ff0_expected = 2;
+        break;
+    case ddc::FFT_Normalization::FORWARD:
+        Ff0_expected = 1;
+        break;
+    case ddc::FFT_Normalization::BACKWARD:
+        Ff0_expected = 2;
+        break;
+    case ddc::FFT_Normalization::ORTHO:
+        Ff0_expected = Kokkos::sqrt(2.);
+        break;
+    case ddc::FFT_Normalization::FULL:
+        Ff0_expected = 1 / Kokkos::sqrt(2 * Kokkos::numbers::pi);
+        break;
+    }
+
+    double criterion = Kokkos::abs(Ff(Ff.domain().front()) - Ff0_expected);
+
+    std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
+    double epsilon = 1e-15;
+    ASSERT_LE(criterion, epsilon);
 }

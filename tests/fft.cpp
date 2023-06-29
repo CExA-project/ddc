@@ -3,6 +3,7 @@
 #include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
+#include <ddc/kernels/fft.hpp>
 
 #include <gtest/gtest.h>
 
@@ -36,6 +37,56 @@ TEST(GPUMathToolsParallelDevice, HipHelloWorld)
     TestGPUMathToolsParallelDeviceHipHelloWorld();
 }
 #endif
+
+TEST(FFTNorm, OFF)
+{
+    test_fft_norm<
+            Kokkos::Serial,
+            Kokkos::Serial::memory_space,
+            float,
+            Kokkos::complex<float>,
+            RDimX>(ddc::FFT_Normalization::OFF);
+}
+
+TEST(FFTNorm, BACKWARD)
+{
+    test_fft_norm<
+            Kokkos::Serial,
+            Kokkos::Serial::memory_space,
+            float,
+            Kokkos::complex<float>,
+            RDimX>(ddc::FFT_Normalization::BACKWARD);
+}
+
+TEST(FFTNorm, FORWARD)
+{
+    test_fft_norm<
+            Kokkos::Serial,
+            Kokkos::Serial::memory_space,
+            float,
+            Kokkos::complex<float>,
+            RDimX>(ddc::FFT_Normalization::FORWARD);
+}
+
+TEST(FFTNorm, ORTHO)
+{
+    test_fft_norm<
+            Kokkos::Serial,
+            Kokkos::Serial::memory_space,
+            float,
+            Kokkos::complex<float>,
+            RDimX>(ddc::FFT_Normalization::ORTHO);
+}
+
+TEST(FFTNorm, FULL)
+{
+    test_fft_norm<
+            Kokkos::Serial,
+            Kokkos::Serial::memory_space,
+            float,
+            Kokkos::complex<float>,
+            RDimX>(ddc::FFT_Normalization::FULL);
+}
 
 TEST(FFTSerialHost, R2C_1D)
 {

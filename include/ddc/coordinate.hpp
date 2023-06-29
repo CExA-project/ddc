@@ -23,6 +23,6 @@ template <class T>
 struct CoordinateOf;
 
 template <class T>
-using coordinate_of_t = typename CoordinateOf<T>::type;
+using coordinate_of = typename CoordinateOf<T>::type;
 
 } // namespace ddc

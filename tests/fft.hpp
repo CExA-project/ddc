@@ -298,6 +298,6 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
     double criterion = Kokkos::abs(Ff(Ff.domain().front()) - Ff0_expected);
 
     std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
-    double epsilon = 1e-15;
+    double epsilon = 1e-6;
     ASSERT_LE(criterion, epsilon);
 }

@@ -9,7 +9,7 @@
 
 #include <ddc/ddc.hpp>
 
-#include "ddc/kernels/splines/view.hpp"
+#include "view.hpp"
 
 struct GaussLegendreCoefficients
 {

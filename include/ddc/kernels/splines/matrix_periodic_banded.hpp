@@ -8,11 +8,11 @@
 
 #include <experimental/mdspan>
 
-#include "sll/matrix.hpp"
-#include "sll/matrix_dense.hpp"
+#include "matrix.hpp"
+#include "matrix_dense.hpp"
 
-#include "ddc/kernels/splines/matrix_corner_block.hpp"
-#include "ddc/kernels/splines/view.hpp"
+#include "matrix_corner_block.hpp"
+#include "view.hpp"
 using std::max;
 
 class Matrix;

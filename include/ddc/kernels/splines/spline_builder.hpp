@@ -9,10 +9,10 @@
 
 #include <ddc/ddc.hpp>
 
-#include "ddc/kernels/splines/math_tools.hpp"
-#include "ddc/kernels/splines/matrix.hpp"
-#include "ddc/kernels/splines/spline_boundary_conditions.hpp"
-#include "ddc/kernels/splines/view.hpp"
+#include "math_tools.hpp"
+#include "matrix.hpp"
+#include "spline_boundary_conditions.hpp"
+#include "view.hpp"
 
 template <class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
 class SplineBuilder

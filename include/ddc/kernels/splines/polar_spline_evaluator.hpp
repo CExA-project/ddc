@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ddc/kernels/splines/polar_spline.hpp>
+#include "polar_spline.hpp"
 
 template <class PolarBSplinesType>
 class PolarSplineEvaluator

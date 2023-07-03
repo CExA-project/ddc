@@ -6,13 +6,13 @@
 #include <memory>
 #include <utility>
 
-#include "sll/matrix_banded.hpp"
-#include "sll/matrix_center_block.hpp"
-#include "sll/matrix_corner_block.hpp"
-#include "sll/matrix_dense.hpp"
-#include "sll/matrix_pds_tridiag.hpp"
-#include "sll/matrix_periodic_banded.hpp"
-#include "sll/view.hpp"
+#include "matrix_banded.hpp"
+#include "matrix_center_block.hpp"
+#include "matrix_corner_block.hpp"
+#include "matrix_dense.hpp"
+#include "matrix_pds_tridiag.hpp"
+#include "matrix_periodic_banded.hpp"
+#include "view.hpp"
 
 class Matrix
 {

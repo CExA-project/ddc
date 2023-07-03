@@ -6,9 +6,9 @@
 #include <experimental/mdspan>
 #include <string.h>
 
-#include "ddc/kernels/splines/matrix.hpp"
-#include "ddc/kernels/splines/matrix_dense.hpp"
-#include "ddc/kernels/splines/view.hpp"
+#include "matrix.hpp"
+#include "matrix_dense.hpp"
+#include "view.hpp"
 
 class Matrix_Corner_Block : public Matrix
 {

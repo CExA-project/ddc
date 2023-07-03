@@ -5,7 +5,7 @@
 #include <cassert>
 #include <cmath>
 
-#include "ddc/kernels/splines/matrix.hpp"
+#include "matrix.hpp"
 
 extern "C" int dgbtrf_(
         int const* m,

@@ -6,9 +6,9 @@
 
 #include <ddc/ddc.hpp>
 
-#include "ddc/kernels/splines/bspline.hpp"
-#include "ddc/kernels/splines/math_tools.hpp"
-#include "ddc/kernels/splines/view.hpp"
+#include "bspline.hpp"
+#include "math_tools.hpp"
+#include "view.hpp"
 
 template <class Tag, std::size_t D>
 class UniformBSplines

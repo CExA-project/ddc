@@ -4,15 +4,15 @@
 
 #include <ddc/ddc.hpp>
 
-#include <ddc/kernels/splines/bernstein.hpp>
-#include <ddc/kernels/splines/bspline.hpp>
-#include <ddc/kernels/splines/mapping/barycentric_coordinates.hpp>
-#include <ddc/kernels/splines/mapping/discrete_mapping_to_cartesian.hpp>
-#include <ddc/kernels/splines/null_boundary_value.hpp>
-#include <ddc/kernels/splines/spline_builder.hpp>
-#include <ddc/kernels/splines/spline_builder_2d.hpp>
-#include <ddc/kernels/splines/spline_evaluator_2d.hpp>
-#include <ddc/kernels/splines/view.hpp>
+#include "bernstein.hpp"
+#include "bspline.hpp"
+#include "mapping/barycentric_coordinates.hpp"
+#include "mapping/discrete_mapping_to_cartesian.hpp"
+#include "null_boundary_value.hpp"
+#include "spline_builder.hpp"
+#include "spline_builder_2d.hpp"
+#include "spline_evaluator_2d.hpp"
+#include "view.hpp"
 
 template <class BSplinesR, class BSplinesP, int C>
 class PolarBSplines

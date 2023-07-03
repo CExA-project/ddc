@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ddc/kernels/splines/spline_boundary_value.hpp>
+#include "spline_boundary_value.hpp"
 
-#include "ddc/kernels/splines/view.hpp"
+#include "view.hpp"
 
 template <class BSplines>
 class ConstantExtrapolationBoundaryValue : public SplineBoundaryValue<BSplines>

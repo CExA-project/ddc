@@ -1,5 +1,5 @@
 #pragma once
-#include <ddc/kernels/splines/spline_builder.hpp>
+#include "spline_builder.hpp"
 
 
 template <class SplineBuilder1, class SplineBuilder2>

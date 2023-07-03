@@ -7,7 +7,7 @@
 
 #include <string.h>
 
-#include "ddc/kernels/splines/matrix.hpp"
+#include "matrix.hpp"
 
 extern "C" int dpttrf_(int const* n, double* d, double* e, int* info);
 extern "C" int dpttrs_(

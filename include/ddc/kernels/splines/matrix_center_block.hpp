@@ -4,8 +4,8 @@
 #include <utility>
 #include <string.h>
 
-#include "ddc/kernels/splines/matrix_corner_block.hpp"
-#include "ddc/kernels/splines/view.hpp"
+#include "matrix_corner_block.hpp"
+#include "view.hpp"
 
 class Matrix;
 

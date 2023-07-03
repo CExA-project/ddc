@@ -14,7 +14,7 @@
 #include "matrix_corner_block.hpp"
 #include "view.hpp"
 
-using std::max;
+
 
 class Matrix;
 
@@ -26,7 +26,7 @@ public:
         int const kl,
         int const ku,
         std::unique_ptr<Matrix> q)
-    : Matrix_Corner_Block(n, max(kl, ku), std::move(q), max(kl, ku) + 1, max(kl, ku))
+    : Matrix_Corner_Block(n, std::max(kl, ku), std::move(q), std::max(kl, ku) + 1, std::max(kl, ku))
     , kl(kl)
     , ku(ku)
 {

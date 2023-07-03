@@ -327,13 +327,13 @@ void SplineBuilder<BSplines, interpolation_mesh_type, BcXmin, BcXmax>::allocate_
     }
 
     if constexpr (bsplines_type::is_periodic()) {
-        matrix = Matrix::make_new_periodic_banded(
+        matrix = MatrixMaker::make_new_periodic_banded(
                 ddc::discrete_space<BSplines>().nbasis(),
                 upper_band_width,
                 upper_band_width,
                 bsplines_type::is_uniform());
     } else {
-        matrix = Matrix::make_new_block_with_banded_region(
+        matrix = MatrixMaker::make_new_block_with_banded_region(
                 ddc::discrete_space<BSplines>().nbasis(),
                 upper_band_width,
                 upper_band_width,

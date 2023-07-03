@@ -15,7 +15,7 @@
 #endif
 #include "view.hpp"
 
-using std::max;
+
 
 class Matrix
 {

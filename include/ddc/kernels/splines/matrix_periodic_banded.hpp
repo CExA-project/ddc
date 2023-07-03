@@ -13,6 +13,7 @@
 
 #include "matrix_corner_block.hpp"
 #include "view.hpp"
+
 using std::max;
 
 class Matrix;

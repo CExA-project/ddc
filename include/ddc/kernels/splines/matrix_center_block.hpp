@@ -29,7 +29,7 @@ public:
     adjust_indexes(i, j);
     return Matrix_Corner_Block::get_element(i, j);
 }
-    void Matrix_Center_Block::set_element(int i, int j, double a_ij)
+    void set_element(int i, int j, double a_ij)
 {
     adjust_indexes(i, j);
     Matrix_Corner_Block::set_element(i, j, a_ij);
@@ -80,7 +80,7 @@ protected:
     memcpy(bx.data_handle(), swap_array.get(), q_block->get_size() * sizeof(double));
     return bx;
 }
-    DSpan2D Matrix_Center_Block(DSpan2D const bx) const
+    DSpan2D swap_array_to_corner(DSpan2D const bx) const
 {
     int const ncols = bx.extent(1);
     memcpy(swap_array.get(),

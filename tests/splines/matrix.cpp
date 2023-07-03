@@ -4,6 +4,7 @@
 
 #include <ddc/kernels/splines/math_tools.hpp>
 #include <ddc/kernels/splines/matrix.hpp>
+#include <ddc/kernels/splines/matrix_maker.hpp>
 
 #include <gtest/gtest.h>
 

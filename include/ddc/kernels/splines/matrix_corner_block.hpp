@@ -63,7 +63,7 @@ public:
         lambda(j, i - nb) = a_ij;
     }
 }
-    void Matrix_Corner_Block::factorize()
+    void factorize()
 {
     q_block->factorize();
     q_block->solve_multiple_inplace(Abm_1_gamma);

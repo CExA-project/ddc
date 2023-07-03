@@ -11,6 +11,7 @@
 
 #include "math_tools.hpp"
 #include "matrix.hpp"
+#include "matrix_maker.hpp"
 #include "spline_boundary_conditions.hpp"
 #include "view.hpp"
 

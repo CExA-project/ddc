@@ -7,8 +7,8 @@
 
 #include <ddc/ddc.hpp>
 
-#include "sll/bspline.hpp"
-#include "sll/view.hpp"
+#include "ddc/kernels/splines/bspline.hpp"
+#include "ddc/kernels/splines/view.hpp"
 
 /// NonUniformPointSampling specialization of BSplines
 template <class Tag, std::size_t D>

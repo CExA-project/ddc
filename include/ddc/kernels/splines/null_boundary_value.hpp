@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sll/spline_boundary_value.hpp"
+#include "ddc/kernels/splines/spline_boundary_value.hpp"
 
 template <class BSplines>
 class NullBoundaryValue : public SplineBoundaryValue<BSplines>

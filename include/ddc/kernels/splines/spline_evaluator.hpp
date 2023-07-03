@@ -5,8 +5,8 @@
 
 #include <ddc/ddc.hpp>
 
-#include "sll/spline_boundary_value.hpp"
-#include "sll/view.hpp"
+#include "ddc/kernels/splines/spline_boundary_value.hpp"
+#include "ddc/kernels/splines/view.hpp"
 
 template <class BSplinesType>
 class SplineEvaluator

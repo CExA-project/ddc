@@ -2,12 +2,12 @@
 #include <cmath>
 #include <memory>
 
-#include <sll/math_tools.hpp>
-#include <sll/matrix.hpp>
+#include <ddc/kernels/splines/math_tools.hpp>
+#include <ddc/kernels/splines/matrix.hpp>
 
 #include <gtest/gtest.h>
 
-#include "sll/view.hpp"
+#include "ddc/kernels/splines/view.hpp"
 
 #include "test_utils.hpp"
 

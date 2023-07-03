@@ -6,9 +6,9 @@
 
 #include <ddc/ddc.hpp>
 
-#include "sll/bspline.hpp"
-#include "sll/math_tools.hpp"
-#include "sll/view.hpp"
+#include "ddc/kernels/splines/bspline.hpp"
+#include "ddc/kernels/splines/math_tools.hpp"
+#include "ddc/kernels/splines/view.hpp"
 
 template <class Tag, std::size_t D>
 class UniformBSplines
@@ -316,7 +316,7 @@ ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::Impl<Memo
     get_icell_and_offset(jmin, offset, x);
 
     // 3. Recursively evaluate B-splines (see
-    // "sll_s_uniform_BSplines_eval_basis")
+    // "ddc/kernels/splines_s_uniform_BSplines_eval_basis")
     //    up to self%degree, and store them all in the upper-right triangle of
     //    ndu
     double xx, temp, saved;

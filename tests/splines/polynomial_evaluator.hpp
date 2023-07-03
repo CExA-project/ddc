@@ -7,7 +7,7 @@
 
 #include <ddc/ddc.hpp>
 
-#include <sll/math_tools.hpp>
+#include <ddc/kernels/splines/math_tools.hpp>
 
 struct PolynomialEvaluator
 {

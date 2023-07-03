@@ -1,9 +1,9 @@
 #pragma once
 #include <ddc/ddc.hpp>
 
-#include <sll/mapping/barycentric_coordinates.hpp>
-#include <sll/math_tools.hpp>
-#include <sll/view.hpp>
+#include <ddc/kernels/splines/mapping/barycentric_coordinates.hpp>
+#include <ddc/kernels/splines/math_tools.hpp>
+#include <ddc/kernels/splines/view.hpp>
 
 template <
         class Tag1,

@@ -4,7 +4,7 @@
 
 #include <experimental/mdspan>
 
-#include <sll/view.hpp>
+#include <ddc/kernels/splines/view.hpp>
 
 #include <gtest/gtest.h>
 

@@ -4,7 +4,7 @@
 
 #include <ddc/ddc.hpp>
 
-#include <sll/mapping/curvilinear2d_to_cartesian.hpp>
+#include <ddc/kernels/splines/mapping/curvilinear2d_to_cartesian.hpp>
 
 template <class DimX, class DimY, class DimR, class DimP>
 class CircularToCartesian : public Curvilinear2DToCartesian<DimX, DimY, DimR, DimP>

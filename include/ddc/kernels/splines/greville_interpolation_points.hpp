@@ -6,7 +6,7 @@
 
 #include <ddc/ddc.hpp>
 
-#include <sll/spline_boundary_conditions.hpp>
+#include <ddc/kernels/splines/spline_boundary_conditions.hpp>
 
 template <class BSplines, BoundCond BcXmin, BoundCond BcXmax>
 class GrevilleInterpolationPoints

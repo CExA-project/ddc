@@ -1,10 +1,10 @@
 /// Test of the metric tensor and its inverse: (singular point avoided)
-#include <sll/bsplines_non_uniform.hpp>
-#include <sll/greville_interpolation_points.hpp>
-#include <sll/polar_bsplines.hpp>
+#include <ddc/kernels/splines/bsplines_non_uniform.hpp>
+#include <ddc/kernels/splines/greville_interpolation_points.hpp>
+#include <ddc/kernels/splines/polar_bsplines.hpp>
 
-#include "sll/mapping/circular_to_cartesian.hpp"
-#include "sll/mapping/czarny_to_cartesian.hpp"
+#include "ddc/kernels/splines/mapping/circular_to_cartesian.hpp"
+#include "ddc/kernels/splines/mapping/czarny_to_cartesian.hpp"
 
 #include "test_utils.hpp"
 

@@ -2,7 +2,7 @@
 
 #include <ddc/ddc.hpp>
 
-#include <sll/bernstein.hpp>
+#include <ddc/kernels/splines/bernstein.hpp>
 
 #include <gtest/gtest.h>
 

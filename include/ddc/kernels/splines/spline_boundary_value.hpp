@@ -3,7 +3,7 @@
 
 #include <ddc/ddc.hpp>
 
-#include <sll/polar_spline.hpp>
+#include <ddc/kernels/splines/polar_spline.hpp>
 
 template <class BSplines>
 class SplineBoundaryValue

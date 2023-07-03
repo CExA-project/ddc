@@ -6,9 +6,9 @@
 
 #include <ddc/ddc.hpp>
 
-#include <sll/bsplines_uniform.hpp>
-#include <sll/deprecated/bsplines_uniform.hpp>
-#include <sll/view.hpp>
+#include <ddc/kernels/splines/bsplines_uniform.hpp>
+#include <ddc/kernels/splines/deprecated/bsplines_uniform.hpp>
+#include <ddc/kernels/splines/view.hpp>
 
 #include <gtest/gtest.h>
 

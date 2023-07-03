@@ -8,14 +8,14 @@
 
 #include <ddc/ddc.hpp>
 
-#include <sll/bsplines_non_uniform.hpp>
-#include <sll/bsplines_uniform.hpp>
-#include <sll/greville_interpolation_points.hpp>
-#include <sll/null_boundary_value.hpp>
-#include <sll/spline_boundary_conditions.hpp>
-#include <sll/spline_builder.hpp>
-#include <sll/spline_evaluator.hpp>
-#include <sll/view.hpp>
+#include <ddc/kernels/splines/bsplines_non_uniform.hpp>
+#include <ddc/kernels/splines/bsplines_uniform.hpp>
+#include <ddc/kernels/splines/greville_interpolation_points.hpp>
+#include <ddc/kernels/splines/null_boundary_value.hpp>
+#include <ddc/kernels/splines/spline_boundary_conditions.hpp>
+#include <ddc/kernels/splines/spline_builder.hpp>
+#include <ddc/kernels/splines/spline_evaluator.hpp>
+#include <ddc/kernels/splines/view.hpp>
 
 #include <gtest/gtest.h>
 

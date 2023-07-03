@@ -3,12 +3,12 @@
 
 #include <ddc/ddc.hpp>
 
-#include <sll/bsplines_non_uniform.hpp>
-#include <sll/bsplines_uniform.hpp>
-#include <sll/greville_interpolation_points.hpp>
-#include <sll/mapping/circular_to_cartesian.hpp>
-#include <sll/polar_bsplines.hpp>
-#include <sll/view.hpp>
+#include <ddc/kernels/splines/bsplines_non_uniform.hpp>
+#include <ddc/kernels/splines/bsplines_uniform.hpp>
+#include <ddc/kernels/splines/greville_interpolation_points.hpp>
+#include <ddc/kernels/splines/mapping/circular_to_cartesian.hpp>
+#include <ddc/kernels/splines/polar_bsplines.hpp>
+#include <ddc/kernels/splines/view.hpp>
 
 #include <gtest/gtest.h>
 

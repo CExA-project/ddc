@@ -4,7 +4,7 @@
 #include <limits>
 #include <map>
 
-#include <sll/gauss_legendre_integration.hpp>
+#include <ddc/kernels/splines/gauss_legendre_integration.hpp>
 
 #include <gtest/gtest.h>
 

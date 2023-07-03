@@ -3,9 +3,9 @@
 
 #include <ddc/ddc.hpp>
 
-#include <sll/bsplines_non_uniform.hpp>
-#include <sll/bsplines_uniform.hpp>
-#include <sll/view.hpp>
+#include <ddc/kernels/splines/bsplines_non_uniform.hpp>
+#include <ddc/kernels/splines/bsplines_uniform.hpp>
+#include <ddc/kernels/splines/view.hpp>
 
 #include <gtest/gtest.h>
 

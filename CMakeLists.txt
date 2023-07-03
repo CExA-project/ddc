@@ -257,6 +257,9 @@ if("${HIP_FOR_NVIDIA}")
 	endif()
 endif()
 
+## LAPACK
+find_package(LAPACK REQUIRED COMPONENTS CXX)
+target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
 
 ## The PDI wrapper
 

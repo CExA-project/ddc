@@ -29,25 +29,25 @@ public:
             a[i] = 0;
         }
     }
-    double get_element(int const i, int const j) const
+    double get_element(int const i, int const j) const override
     {
         assert(i < n);
         assert(j < n);
         return a[j * n + i];
     }
-    void set_element(int const i, int const j, double const aij)
+    void set_element(int const i, int const j, double const aij) override
     {
         a[j * n + i] = aij;
     }
 
 private:
-    int factorize_method()
+    int factorize_method() override
     {
         int info;
         dgetrf_(&n, &n, a.get(), &n, ipiv.get(), &info);
         return info;
     }
-    int solve_inplace_method(double* b, char const transpose, int const n_equations) const
+    int solve_inplace_method(double* b, char const transpose, int const n_equations) const override
     {
         int info;
         dgetrs_(&transpose, &n, &n_equations, a.get(), &n, ipiv.get(), b, &n, &info);

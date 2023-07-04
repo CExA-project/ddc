@@ -60,7 +60,7 @@ public:
         }
     }
 
-    double get_element(int const i, int const j) const
+    double get_element(int const i, int const j) const override
     {
         if (i >= std::max(0, j - ku) && i < std::min(n, j + kl + 1)) {
             return q[j * c + kl + ku + i - j];
@@ -69,7 +69,7 @@ public:
         }
     }
 
-    void set_element(int const i, int const j, double const a_ij)
+    void set_element(int const i, int const j, double const a_ij) override
     {
         if (i >= std::max(0, j - ku) && i < std::min(n, j + kl + 1)) {
             q[j * c + kl + ku + i - j] = a_ij;
@@ -79,13 +79,13 @@ public:
     }
 
 protected:
-    int factorize_method()
+    int factorize_method() override
     {
         int info;
         dgbtrf_(&n, &n, &kl, &ku, q.get(), &c, ipiv.get(), &info);
         return info;
     }
-    int solve_inplace_method(double* b, char const transpose, int const n_equations) const
+    int solve_inplace_method(double* b, char const transpose, int const n_equations) const override
     {
         int info;
         dgbtrs_(&transpose, &n, &kl, &ku, &n_equations, q.get(), &c, ipiv.get(), b, &n, &info);

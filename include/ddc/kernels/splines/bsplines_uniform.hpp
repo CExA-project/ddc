@@ -316,7 +316,7 @@ ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::Impl<Memo
     get_icell_and_offset(jmin, offset, x);
 
     // 3. Recursively evaluate B-splines (see
-    // "ddc/kernels/splines_s_uniform_BSplines_eval_basis")
+    // "sll_s_uniform_BSplines_eval_basis")
     //    up to self%degree, and store them all in the upper-right triangle of
     //    ndu
     double xx, temp, saved;

@@ -25,31 +25,31 @@ public:
         , swap_array(std::make_unique<double[]>(q_block->get_size()))
     {
     }
-    double get_element(int i, int j) const
+    double get_element(int i, int j) const override
     {
         adjust_indexes(i, j);
         return Matrix_Corner_Block::get_element(i, j);
     }
-    void set_element(int i, int j, double a_ij)
+    void set_element(int i, int j, double a_ij) override
     {
         adjust_indexes(i, j);
         Matrix_Corner_Block::set_element(i, j, a_ij);
     }
-    DSpan1D solve_inplace(DSpan1D const bx) const
+    DSpan1D solve_inplace(DSpan1D const bx) const override
     {
         swap_array_to_corner(bx);
         Matrix_Corner_Block::solve_inplace(bx);
         swap_array_to_center(bx);
         return bx;
     }
-    DSpan1D solve_transpose_inplace(DSpan1D const bx) const
+    DSpan1D solve_transpose_inplace(DSpan1D const bx) const override
     {
         swap_array_to_corner(bx);
         Matrix_Corner_Block::solve_transpose_inplace(bx);
         swap_array_to_center(bx);
         return bx;
     }
-    DSpan2D solve_multiple_inplace(DSpan2D const bx) const
+    DSpan2D solve_multiple_inplace(DSpan2D const bx) const override
     {
         swap_array_to_corner(bx);
         Matrix_Corner_Block::solve_multiple_inplace(bx);

@@ -24,7 +24,7 @@ public:
     virtual ~Matrix() = default;
     virtual double get_element(int i, int j) const = 0;
     virtual void set_element(int i, int j, double aij) = 0;
-    void factorize()
+    virtual void factorize()
     {
         int const info = factorize_method();
 
@@ -41,7 +41,7 @@ public:
             // TODO: Add LOG_FATAL_ERROR
         }
     }
-    DSpan1D solve_inplace(DSpan1D const b) const
+    virtual DSpan1D solve_inplace(DSpan1D const b) const
     {
         assert(int(b.extent(0)) == n);
         int const info = solve_inplace_method(b.data_handle(), 'N', 1);
@@ -52,7 +52,7 @@ public:
         }
         return b;
     }
-    DSpan1D solve_transpose_inplace(DSpan1D const b) const
+    virtual DSpan1D solve_transpose_inplace(DSpan1D const b) const
     {
         assert(int(b.extent(0)) == n);
         int const info = solve_inplace_method(b.data_handle(), 'T', 1);
@@ -63,7 +63,7 @@ public:
         }
         return b;
     }
-    DSpan2D solve_multiple_inplace(DSpan2D const bx) const
+    virtual DSpan2D solve_multiple_inplace(DSpan2D const bx) const
     {
         assert(int(bx.extent(1)) == n);
         int const info = solve_inplace_method(bx.data_handle(), 'N', bx.extent(0));

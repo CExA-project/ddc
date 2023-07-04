@@ -31,7 +31,7 @@ public:
         , ku(ku)
     {
     }
-    double get_element(int const i, int j) const
+    double get_element(int const i, int j) const override
     {
         assert(i >= 0);
         assert(i < n);
@@ -54,7 +54,7 @@ public:
             return Matrix_Corner_Block::get_element(i, j);
         }
     }
-    void set_element(int const i, int j, double const a_ij)
+    void set_element(int const i, int j, double const a_ij) override
     {
         assert(i >= 0);
         assert(i < n);
@@ -82,7 +82,7 @@ public:
     }
 
 protected:
-    void calculate_delta_to_factorize()
+    void calculate_delta_to_factorize() override
     {
         for (int i = 0; i < k; ++i) {
             for (int j = 0; j < k; ++j) {
@@ -100,7 +100,7 @@ protected:
             }
         }
     }
-    DSpan1D solve_lambda_section(DSpan1D const v, DView1D const u) const
+    DSpan1D solve_lambda_section(DSpan1D const v, DView1D const u) const override
     {
         for (int i = 0; i < k; ++i) {
             // Upper diagonals in lambda
@@ -114,7 +114,7 @@ protected:
         }
         return v;
     }
-    DSpan1D solve_lambda_section_transpose(DSpan1D const u, DView1D const v) const
+    DSpan1D solve_lambda_section_transpose(DSpan1D const u, DView1D const v) const override
     {
         for (int i = 0; i < k; ++i) {
             // Upper diagonals in lambda

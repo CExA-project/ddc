@@ -33,7 +33,7 @@ public:
         memset(lambda_ptr.get(), 0, sizeof(double) * k * nb);
         memset(Abm_1_gamma_ptr.get(), 0, sizeof(double) * k * nb);
     }
-    double get_element(int const i, int const j) const override
+    virtual double get_element(int const i, int const j) const override
     {
         assert(i >= 0);
         assert(i < n);
@@ -49,7 +49,7 @@ public:
             return lambda(j, i - nb);
         }
     }
-    void set_element(int const i, int const j, double const a_ij) override
+    virtual void set_element(int const i, int const j, double const a_ij) override
     {
         assert(i >= 0);
         assert(i < n);
@@ -65,7 +65,7 @@ public:
             lambda(j, i - nb) = a_ij;
         }
     }
-    void factorize()
+    virtual void factorize() override
     {
         q_block->factorize();
         q_block->solve_multiple_inplace(Abm_1_gamma);
@@ -74,7 +74,7 @@ public:
 
         delta.factorize();
     }
-    DSpan1D solve_inplace(DSpan1D const bx) const
+    virtual DSpan1D solve_inplace(DSpan1D const bx) const override
     {
         assert(int(bx.extent(0)) == n);
 
@@ -91,7 +91,7 @@ public:
 
         return bx;
     }
-    DSpan1D solve_transpose_inplace(DSpan1D const bx) const
+    virtual DSpan1D solve_transpose_inplace(DSpan1D const bx) const override
     {
         assert(int(bx.extent(0)) == n);
         DSpan1D const u(bx.data_handle(), nb);
@@ -107,7 +107,7 @@ public:
 
         return bx;
     }
-    DSpan2D solve_multiple_inplace(DSpan2D const bx) const
+    virtual DSpan2D solve_multiple_inplace(DSpan2D const bx) const override
     {
         assert(int(bx.extent(0)) == n);
         for (std::size_t i(0); i < bx.extent(0); ++i) {
@@ -141,7 +141,7 @@ protected:
         memset(lambda_ptr.get(), 0, sizeof(double) * lambda_size1 * lambda_size2);
         memset(Abm_1_gamma_ptr.get(), 0, sizeof(double) * k * nb);
     }
-    void calculate_delta_to_factorize()
+    virtual void calculate_delta_to_factorize()
     {
         for (int i = 0; i < k; ++i) {
             for (int j = 0; j < k; ++j) {
@@ -153,7 +153,7 @@ protected:
             }
         }
     }
-    DSpan1D solve_lambda_section(DSpan1D const v, DView1D const u) const
+    virtual DSpan1D solve_lambda_section(DSpan1D const v, DView1D const u) const
     {
         for (int i = 0; i < k; ++i) {
             // Upper diagonals in lambda
@@ -163,7 +163,7 @@ protected:
         }
         return v;
     }
-    DSpan1D solve_lambda_section_transpose(DSpan1D const u, DView1D const v) const
+    virtual DSpan1D solve_lambda_section_transpose(DSpan1D const u, DView1D const v) const
     {
         for (int i = 0; i < nb; ++i) {
             // Upper diagonals in lambda
@@ -173,7 +173,7 @@ protected:
         }
         return u;
     }
-    DSpan1D solve_gamma_section(DSpan1D const u, DView1D const v) const
+    virtual DSpan1D solve_gamma_section(DSpan1D const u, DView1D const v) const
     {
         for (int i = 0; i < nb; ++i) {
             double val = 0.;
@@ -184,7 +184,7 @@ protected:
         }
         return u;
     }
-    DSpan1D solve_gamma_section_transpose(DSpan1D const v, DView1D const u) const
+    virtual DSpan1D solve_gamma_section_transpose(DSpan1D const v, DView1D const u) const
     {
         for (int j = 0; j < k; ++j) {
             double val = 0.;

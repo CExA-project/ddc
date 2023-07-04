@@ -34,7 +34,7 @@ public:
         memset(d.get(), 0, n * sizeof(double));
         memset(l.get(), 0, (n - 1) * sizeof(double));
     }
-    double get_element(int i, int j) const
+    double get_element(int i, int j) const override
     {
         if (i == j) {
             return d[i];
@@ -47,7 +47,7 @@ public:
         }
         return 0.0;
     }
-    void set_element(int i, int j, double const a_ij)
+    void set_element(int i, int j, double const a_ij) override
     {
         if (i == j) {
             d[i] = a_ij;
@@ -64,13 +64,13 @@ public:
     }
 
 protected:
-    int factorize_method()
+    int factorize_method() override
     {
         int info;
         dpttrf_(&n, d.get(), l.get(), &info);
         return info;
     }
-    int solve_inplace_method(double* b, char, int const n_equations) const
+    int solve_inplace_method(double* b, char, int const n_equations) const override
     {
         int info;
         dpttrs_(&n, &n_equations, d.get(), l.get(), b, &n, &info);

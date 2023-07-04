@@ -53,7 +53,7 @@ public:
             int const ku,
             bool const pds,
             int const block1_size,
-            int const block2_size)
+            int const block2_size = 0)
     {
         int const banded_size = n - block1_size - block2_size;
         std::unique_ptr<Matrix> block_mat;

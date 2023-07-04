@@ -1,7 +1,6 @@
 #pragma once
 
 #include "spline_boundary_value.hpp"
-
 #include "view.hpp"
 
 template <class BSplines>

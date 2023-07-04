@@ -1,9 +1,9 @@
 #ifndef MATRIX_PDS_BANDED_H
 #define MATRIX_PDS_BANDED_H
 
-#include <memory>
 #include <cassert>
 #include <cmath>
+#include <memory>
 
 #include <string.h>
 
@@ -27,55 +27,55 @@ class Matrix_PDS_Tridiag : public Matrix
      * */
 public:
     Matrix_PDS_Tridiag(int const n)
-    : Matrix(n)
-    , d(std::make_unique<double[]>(n))
-    , l(std::make_unique<double[]>(n - 1))
-{
-    memset(d.get(), 0, n * sizeof(double));
-    memset(l.get(), 0, (n - 1) * sizeof(double));
-}
+        : Matrix(n)
+        , d(std::make_unique<double[]>(n))
+        , l(std::make_unique<double[]>(n - 1))
+    {
+        memset(d.get(), 0, n * sizeof(double));
+        memset(l.get(), 0, (n - 1) * sizeof(double));
+    }
     double get_element(int i, int j) const
-{
-    if (i == j) {
-        return d[i];
+    {
+        if (i == j) {
+            return d[i];
+        }
+        if (i > j) {
+            std::swap(i, j);
+        }
+        if (i + 1 == j) {
+            return l[i];
+        }
+        return 0.0;
     }
-    if (i > j) {
-        std::swap(i, j);
-    }
-    if (i + 1 == j) {
-        return l[i];
-    }
-    return 0.0;
-}
     void set_element(int i, int j, double const a_ij)
-{
-    if (i == j) {
-        d[i] = a_ij;
-        return;
+    {
+        if (i == j) {
+            d[i] = a_ij;
+            return;
+        }
+        if (i > j) {
+            std::swap(i, j);
+        }
+        if (i + 1 != j) {
+            assert(std::fabs(a_ij) < 1e-20);
+        } else {
+            l[i] = a_ij;
+        }
     }
-    if (i > j) {
-        std::swap(i, j);
-    }
-    if (i + 1 != j) {
-        assert(std::fabs(a_ij) < 1e-20);
-    } else {
-        l[i] = a_ij;
-    }
-}
 
 protected:
     int factorize_method()
-{
-    int info;
-    dpttrf_(&n, d.get(), l.get(), &info);
-    return info;
-}
+    {
+        int info;
+        dpttrf_(&n, d.get(), l.get(), &info);
+        return info;
+    }
     int solve_inplace_method(double* b, char, int const n_equations) const
-{
-    int info;
-    dpttrs_(&n, &n_equations, d.get(), l.get(), b, &n, &info);
-    return info;
-}
+    {
+        int info;
+        dpttrs_(&n, &n_equations, d.get(), l.get(), b, &n, &info);
+        return info;
+    }
     std::unique_ptr<double[]> d; // diagonal
     std::unique_ptr<double[]> l; // lower diagonal
 };

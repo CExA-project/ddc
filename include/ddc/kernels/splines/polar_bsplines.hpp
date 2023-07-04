@@ -4,10 +4,11 @@
 
 #include <ddc/ddc.hpp>
 
-#include "bernstein.hpp"
-#include "bspline.hpp"
 #include "mapping/barycentric_coordinates.hpp"
 #include "mapping/discrete_mapping_to_cartesian.hpp"
+
+#include "bernstein.hpp"
+#include "bspline.hpp"
 #include "null_boundary_value.hpp"
 #include "spline_builder.hpp"
 #include "spline_builder_2d.hpp"

@@ -2,6 +2,7 @@
 #include <ddc/ddc.hpp>
 
 #include "mapping/barycentric_coordinates.hpp"
+
 #include "math_tools.hpp"
 #include "view.hpp"
 

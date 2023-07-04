@@ -1,7 +1,7 @@
 #ifndef MATRIX_DENSE_H
 #define MATRIX_DENSE_H
-#include <memory>
 #include <cassert>
+#include <memory>
 
 #include "matrix.hpp"
 
@@ -21,38 +21,38 @@ class Matrix_Dense : public Matrix
 {
 public:
     Matrix_Dense(int const n) : Matrix(n)
-{
-    assert(n > 0);
-    ipiv = std::make_unique<int[]>(n);
-    a = std::make_unique<double[]>(n * n);
-    for (int i = 0; i < n * n; ++i) {
-        a[i] = 0;
+    {
+        assert(n > 0);
+        ipiv = std::make_unique<int[]>(n);
+        a = std::make_unique<double[]>(n * n);
+        for (int i = 0; i < n * n; ++i) {
+            a[i] = 0;
+        }
     }
-}
     double get_element(int const i, int const j) const
-{
-    assert(i < n);
-    assert(j < n);
-    return a[j * n + i];
-}
+    {
+        assert(i < n);
+        assert(j < n);
+        return a[j * n + i];
+    }
     void set_element(int const i, int const j, double const aij)
-{
-    a[j * n + i] = aij;
-}
+    {
+        a[j * n + i] = aij;
+    }
 
 private:
     int factorize_method()
-{
-    int info;
-    dgetrf_(&n, &n, a.get(), &n, ipiv.get(), &info);
-    return info;
-}
+    {
+        int info;
+        dgetrf_(&n, &n, a.get(), &n, ipiv.get(), &info);
+        return info;
+    }
     int solve_inplace_method(double* b, char const transpose, int const n_equations) const
-{
-    int info;
-    dgetrs_(&transpose, &n, &n_equations, a.get(), &n, ipiv.get(), b, &n, &info);
-    return info;
-}
+    {
+        int info;
+        dgetrs_(&transpose, &n, &n_equations, a.get(), &n, ipiv.get(), b, &n, &info);
+        return info;
+    }
     std::unique_ptr<int[]> ipiv;
     std::unique_ptr<double[]> a;
 };

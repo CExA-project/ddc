@@ -194,12 +194,12 @@ jobs:
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'
       uses: actions/download-artifact@v3
-      with: { name: '${{matrix.image}}-artifact' }
+      with: { name: 'latest_cpu-artifact' }
     - name: Load image artifact into docker
       if: needs.id_repo.outputs.in_base_repo == 'false'
       run: |
-        docker load < ${{matrix.image}}.tar
-        rm ${{matrix.image}}.tar
+        docker load < latest_cpu-artifact.tar
+        rm latest_cpu-artifact.tar
     - name: clang-tidy
       run: |
         cat<<-'EOF' > run.sh
@@ -218,8 +218,8 @@ jobs:
         -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
         -S /src
         -B build
-        find tests -name '*.cpp' -exec clang-tidy -p build -header-filter=/src/include/ddc/.* --checks="-*,bugprone-reserved-identifier,hicpp-avoid-c-arrays" --warnings-as-errors="bugprone-reserved-identifier,hicpp-avoid-c-arrays" '{}' '+'
+        find tests -name '*.cpp' -exec clang-tidy -p build -header-filter=/src/include/ddc/.* --checks="-*,bugprone-reserved-identifier,hicpp-avoid-c-arrays" --warnings-as-errors="*" '{}' '+'
         EOF
         docker run \
-          -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/jammy_env:${GITHUB_SHA:0:7} \
+          -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/latest_cpu:${GITHUB_SHA:0:7} \
           bash /src/run.sh

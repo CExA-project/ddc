@@ -13,7 +13,7 @@ jobs:
         exclude: ''
         extensions: 'hpp,cpp'
         clangFormatVersion: 12
-  
+
   id_repo:
     runs-on: ubuntu-latest
     steps:
@@ -25,7 +25,15 @@ jobs:
 
   docker-build:
     strategy:
-      matrix: { image: ['test_env', 'jammy_env'] }
+      fail-fast: false
+      matrix:
+        image: ['focal', 'jammy']
+        kokkos_backend: ['CPU', 'CUDA', 'HIP']
+        exclude:
+        - image: 'focal'
+          backend: 'CUDA'
+        - image: 'focal'
+          backend: 'HIP'
     needs: id_repo
     runs-on: ubuntu-latest
     steps:
@@ -37,53 +45,58 @@ jobs:
     - name: Build
       run: |
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin || true
-        docker pull ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}} || true
+        docker pull ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}} || true
         docker build \
-          --cache-from ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}} \
-          -t ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}} \
-          -t ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}:${GITHUB_SHA:0:7} \
-          docker/${{matrix.image}}
+          --cache-from ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}} \
+          -t ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}} \
+          -t ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}}:${GITHUB_SHA:0:7} \
+          docker/${{matrix.image}}_${{matrix.kokkos_backend}}
     - name: Publish image for current SHA
       if: needs.id_repo.outputs.in_base_repo == 'true'
       run: |
-        docker push ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}:${GITHUB_SHA:0:7}
-    - name: Publish latest (default) image 
+        docker push ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}}:${GITHUB_SHA:0:7}
+    - name: Publish latest (default) image
       if: github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true'
       run: |
-        docker push ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}
+        docker push ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}}
     - name: Create image tarball
       if: needs.id_repo.outputs.in_base_repo == 'false'
       run: |
-        docker save ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}:${GITHUB_SHA:0:7} > ${{matrix.image}}.tar
+        docker save ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}}:${GITHUB_SHA:0:7} > ${{matrix.image}}_${{matrix.kokkos_backend}}.tar
     - name: Generate docker artifact from image
       if: needs.id_repo.outputs.in_base_repo == 'false'
       uses: actions/upload-artifact@v3
       with:
-        name: ${{matrix.image}}-artifact
-        path: ${{matrix.image}}.tar
+        name: ${{matrix.image}}_${{matrix.kokkos_backend}}-artifact
+        path: ${{matrix.image}}_${{matrix.kokkos_backend}}.tar
         retention-days: 1
 
   test:
     strategy:
       fail-fast: false
       matrix:
+        image: ['focal', 'jammy']
+        kokkos_backend: ['CPU', 'CUDA', 'HIP']
         cxx_version:  ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
-        kokkos_backend: ['CPU-gnu', 'CPU-clang', 'GPU-HIP', 'GPU-CUDA']
-        image: ['test_env', 'jammy_env']
+        host_compiler: ['GCC', 'Clang']
         exclude:
         - cxx_version: '23'
-          image: 'test_env'
-        - kokkos_backend: 'CPU-clang'
-          image: 'test_env'
+          image: 'focal'
+        - host_compiler: 'Clang'
+          image: 'focal'
           cxx_version: '20'
-        - kokkos_backend: 'GPU-CUDA'
-          image: 'test_env'
-        - kokkos_backend: 'GPU-CUDA'
-          image: 'jammy_env'
+        - host_compiler: 'Clang'
+          kokkos_backend: 'CUDA'
+        - host_compiler: 'Clang'
+          kokkos_backend: 'HIP'
+        - kokkos_backend: 'CUDA'
+          image: 'focal'
+        - kokkos_backend: 'CUDA'
+          image: 'jammy'
           cxx_version: '20'
-        - kokkos_backend: 'GPU-CUDA'
-          image: 'jammy_env'
+        - kokkos_backend: 'CUDA'
+          image: 'jammy'
           cxx_version: '23'
     runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
@@ -97,12 +110,12 @@ jobs:
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'
       uses: actions/download-artifact@v3
-      with: { name: '${{matrix.image}}-artifact' }
+      with: { name: '${{matrix.image}}_${{matrix.kokkos_backend}}-artifact' }
     - name: Load image artifact into docker
       if: needs.id_repo.outputs.in_base_repo == 'false'
       run: |
-        docker load < ${{matrix.image}}.tar
-        rm ${{matrix.image}}.tar
+        docker load < ${{matrix.image}}_${{matrix.kokkos_backend}}.tar
+        rm ${{matrix.image}}_${{matrix.kokkos_backend}}.tar
     - name: Test
       id: test
       run: |
@@ -110,27 +123,31 @@ jobs:
           set -xe
           git config --global --add safe.directory '*'
           case "${{matrix.kokkos_backend}}" in
-          'GPU-CUDA')
+          'CUDA')
             export CC=gcc-10
             export CXX=g++-10
             export FC=gfortran-10
             EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_LIBDL=OFF"
           ;;
-          'GPU-HIP')
+          'HIP')
             export CC=/opt/rocm/hip/bin/hipcc
             export CXX=/opt/rocm/hip/bin/hipcc
             EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_HIP=ON -DKokkos_ARCH_VEGA90A=ON -DCMAKE_PREFIX_PATH=/opt/rocm"
             CMAKE_CXX_FLAGS="-Wno-gnu-zero-variadic-macro-arguments"
           ;;
-          'CPU-clang')
-            export CC=clang
-            export CXX=clang++
-            CMAKE_CXX_FLAGS="-Wno-gnu-zero-variadic-macro-arguments"
-          ;;
-          'CPU-gnu')
-            if [ 'Debug' = '${{matrix.cmake_build_type}}' ]
+          'CPU')
+            if [ 'Clang' = '${{matrix.host_compiler}}' ]
             then
-              CMAKE_CXX_FLAGS="-fno-omit-frame-pointer -fsanitize=address"
+              export CC=clang
+              export CXX=clang++
+              CMAKE_CXX_FLAGS="-Wno-gnu-zero-variadic-macro-arguments"
+            else
+              export CC=gcc-10
+              export CXX=g++-10
+              if [ 'Debug' = '${{matrix.cmake_build_type}}' ]
+              then
+                CMAKE_CXX_FLAGS="-fno-omit-frame-pointer -fsanitize=address"
+              fi
             fi
           ;;
           esac
@@ -151,14 +168,14 @@ jobs:
             /src
           make -j 2
           case "${{matrix.kokkos_backend}}" in
-          CPU-*)
+          CPU)
             ctest -j 2 --output-on-failure --timeout 5 --output-junit tests.xml
           ;;
           esac
         EOF
         docker run \
           --cidfile='docker.cid' \
-          -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}:${GITHUB_SHA:0:7} \
+          -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}}:${GITHUB_SHA:0:7} \
           bash /src/run.sh
         if docker cp "$(cat docker.cid)":/data/tests.xml /home/runner/work/ddc/ddc/tests.xml
         then echo "with_report=true" >> "$GITHUB_OUTPUT"

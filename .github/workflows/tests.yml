@@ -47,10 +47,11 @@ jobs:
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin || true
         docker pull ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}} || true
         docker build \
+          --build-arg BACKEND=${{matrix.kokkos_backend}} \
           --cache-from ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}} \
           -t ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}} \
           -t ghcr.io/maison-de-la-simulation/ddc/${{matrix.image}}_${{matrix.kokkos_backend}}:${GITHUB_SHA:0:7} \
-          docker/${{matrix.image}}_${{matrix.kokkos_backend}}
+          docker/${{matrix.image}}
     - name: Publish image for current SHA
       if: needs.id_repo.outputs.in_base_repo == 'true'
       run: |

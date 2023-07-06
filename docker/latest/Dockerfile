@@ -38,22 +38,17 @@ RUN chmod +x /bin/bash_run \
     git \
     libfftw3-dev \
     libpdi-dev \
-    llvm-14-tools \
-    nvidia-cuda-toolkit \
     pdidev-archive-keyring \
     pkg-config \
  && case "${BACKEND}" in \
     "cpu") \
       apt-get install -y --no-install-recommends \
       clang \
-      clang-tidy \
-      clang-format \
  ;; "cuda") \
       apt-get install -y --no-install-recommends \
       nvidia-cuda-toolkit \
       gcc-10 \
       g++-10 \
-      gfortran-10 \
  ;; "hip") \
       apt-get install -y --no-install-recommends \
       rocm-hip-sdk \
@@ -67,7 +62,12 @@ RUN chmod +x /bin/bash_run \
  && apt-get clean -y \
  && apt-get autoclean -y \
  && rm -rf /var/lib/apt/lists/* \
- && useradd -d /data -m -U ci
+ && useradd -d /data -m -U ci \
+ && if [ "xcuda" = "x${BACKEND}" ] \
+  ; then echo 'CUDA_CC=gcc-10' > /etc/profile.d/ddc-cuda.sh \
+       ; echo 'CUDA_GXX=g++-10' >> /etc/profile.d/ddc-cuda.sh \
+       ; echo 'CUDA_FC=gfortran+-10' >> /etc/profile.d/ddc-cuda.sh \
+ ;  fi
 
 USER ci:ci
 WORKDIR /data

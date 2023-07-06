@@ -49,6 +49,7 @@ RUN chmod +x /bin/bash_run \
       clang \
       clang-tidy \
       clang-format \
+      llvm-tools \
  ;; "hip") \
       apt-get install -y --no-install-recommends \
       rocm-hip-sdk \

@@ -216,9 +216,9 @@ jobs:
         -DKokkos_ENABLE_DEPRECATED_CODE_3=OFF \
         -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
         -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-        -S /src
+        -S /src \
         -B build
-        find tests -name '*.cpp' -exec clang-tidy -p build -header-filter=/src/include/ddc/.* --checks="-*,bugprone-reserved-identifier,hicpp-avoid-c-arrays" --warnings-as-errors="*" '{}' '+'
+        find /src/tests /src/examples -name '*.cpp' -exec clang-tidy -p build -header-filter=/src/include/ddc/.* --checks="-*,bugprone-reserved-identifier,hicpp-avoid-c-arrays" --warnings-as-errors="*" '{}' '+'
         EOF
         docker run \
           -v ${PWD}:/src:ro ghcr.io/maison-de-la-simulation/ddc/latest_cpu:${GITHUB_SHA:0:7} \

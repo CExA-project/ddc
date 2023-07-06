@@ -120,8 +120,8 @@ jobs:
           git config --global --add safe.directory '*'
           case "${{matrix.backend}}" in
           'cuda')
-            export CC=${CUDA_CC}
-            export CXX=${CUDA_CXX}
+            export CC=${CUDA_GCC}
+            export CXX=${CUDA_GXX}
             EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_LIBDL=OFF"
           ;;
           'hip')

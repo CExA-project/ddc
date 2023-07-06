@@ -44,6 +44,9 @@ RUN chmod +x /bin/bash_run \
     "cpu") \
       apt-get install -y --no-install-recommends \
       clang \
+      clang-tidy-14 \
+      clang-format-14 \
+      llvm-14-tools \
  ;; "cuda") \
       apt-get install -y --no-install-recommends \
       nvidia-cuda-toolkit \
@@ -64,9 +67,8 @@ RUN chmod +x /bin/bash_run \
  && rm -rf /var/lib/apt/lists/* \
  && useradd -d /data -m -U ci \
  && if [ "xcuda" = "x${BACKEND}" ] \
-  ; then echo 'CUDA_CC=gcc-10' > /etc/profile.d/ddc-cuda.sh \
+  ; then echo 'CUDA_GCC=gcc-10' > /etc/profile.d/ddc-cuda.sh \
        ; echo 'CUDA_GXX=g++-10' >> /etc/profile.d/ddc-cuda.sh \
-       ; echo 'CUDA_FC=gfortran+-10' >> /etc/profile.d/ddc-cuda.sh \
  ;  fi
 
 USER ci:ci

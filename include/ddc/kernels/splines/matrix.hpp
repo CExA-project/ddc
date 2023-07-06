@@ -79,20 +79,20 @@ public:
         return n;
     }
 
+    std::ostream& operator<<(std::ostream& os)
+    {
+        int const n = get_size();
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                os << std::fixed << std::setprecision(3) << std::setw(10) << get_element(i, j);
+            }
+            os << std::endl;
+        }
+        return os;
+    }
+
 protected:
     virtual int factorize_method() = 0;
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const = 0;
     int const n; // matrix size
 };
-
-std::ostream& operator<<(std::ostream& os, Matrix const& m)
-{
-    int const n = m.get_size();
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            os << std::fixed << std::setprecision(3) << std::setw(10) << m.get_element(i, j);
-        }
-        os << std::endl;
-    }
-    return os;
-}

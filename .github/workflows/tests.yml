@@ -27,13 +27,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ['focal', 'jammy']
-        kokkos_backend: ['CPU', 'CUDA', 'HIP']
+        image: ['oldest', 'latest']
+        kokkos_backend: ['cpu', 'cuda', 'hip']
         exclude:
-        - image: 'focal'
-          backend: 'CUDA'
-        - image: 'focal'
-          backend: 'HIP'
+        - image: 'oldest'
+          kokkos_backend: 'cuda'
+        - image: 'oldest'
+          kokkos_backend: 'hip'
     needs: id_repo
     runs-on: ubuntu-latest
     steps:
@@ -75,29 +75,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ['focal', 'jammy']
-        kokkos_backend: ['CPU', 'CUDA', 'HIP']
+        image: ['oldest', 'latest']
+        kokkos_backend: ['cpu', 'cuda', 'hip']
         cxx_version:  ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
-        host_compiler: ['GCC', 'Clang']
         exclude:
         - cxx_version: '23'
-          image: 'focal'
-        - host_compiler: 'Clang'
-          image: 'focal'
+          image: 'oldest'
+        - kokkos_backend: 'cuda'
+          image: 'oldest'
+        - kokkos_backend: 'cuda'
+          image: 'latest'
           cxx_version: '20'
-        - host_compiler: 'Clang'
-          kokkos_backend: 'CUDA'
-        - host_compiler: 'Clang'
-          kokkos_backend: 'HIP'
-        - kokkos_backend: 'CUDA'
-          image: 'focal'
-        - kokkos_backend: 'CUDA'
-          image: 'jammy'
-          cxx_version: '20'
-        - kokkos_backend: 'CUDA'
-          image: 'jammy'
+        - kokkos_backend: 'cuda'
+          image: 'latest'
           cxx_version: '23'
+        include:
+          - host_compiler: 'GCC'
+            kokkos_backend: 'cpu'
+          - host_compiler: 'Clang'
+            kokkos_backend: 'cpu'
     runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
     steps:
@@ -123,19 +120,19 @@ jobs:
           set -xe
           git config --global --add safe.directory '*'
           case "${{matrix.kokkos_backend}}" in
-          'CUDA')
+          'cuda')
             export CC=gcc-10
             export CXX=g++-10
             export FC=gfortran-10
             EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_LIBDL=OFF"
           ;;
-          'HIP')
+          'hip')
             export CC=/opt/rocm/hip/bin/hipcc
             export CXX=/opt/rocm/hip/bin/hipcc
             EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_HIP=ON -DKokkos_ARCH_VEGA90A=ON -DCMAKE_PREFIX_PATH=/opt/rocm"
             CMAKE_CXX_FLAGS="-Wno-gnu-zero-variadic-macro-arguments"
           ;;
-          'CPU')
+          'cpu')
             if [ 'Clang' = '${{matrix.host_compiler}}' ]
             then
               export CC=clang
@@ -168,7 +165,7 @@ jobs:
             /src
           make -j 2
           case "${{matrix.kokkos_backend}}" in
-          CPU)
+          cpu)
             ctest -j 2 --output-on-failure --timeout 5 --output-junit tests.xml
           ;;
           esac

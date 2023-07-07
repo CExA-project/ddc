@@ -205,17 +205,17 @@ public:
     template <
             std::size_t N = sizeof...(DDims),
             class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    constexpr decltype(auto) operator[](std::size_t __n)
+    constexpr decltype(auto) operator[](std::size_t n)
     {
-        return begin()[__n];
+        return begin()[n];
     }
 
     template <
             std::size_t N = sizeof...(DDims),
             class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    constexpr decltype(auto) operator[](std::size_t __n) const
+    constexpr decltype(auto) operator[](std::size_t n) const
     {
-        return begin()[__n];
+        return begin()[n];
     }
 };
 
@@ -433,7 +433,7 @@ public:
 
     DiscreteDomainIterator() = default;
 
-    constexpr explicit DiscreteDomainIterator(DiscreteElement<DDim> __value) : m_value(__value) {}
+    constexpr explicit DiscreteDomainIterator(DiscreteElement<DDim> value) : m_value(value) {}
 
     constexpr DiscreteElement<DDim> operator*() const noexcept
     {
@@ -448,9 +448,9 @@ public:
 
     constexpr DiscreteDomainIterator operator++(int)
     {
-        auto __tmp = *this;
+        auto tmp = *this;
         ++*this;
-        return __tmp;
+        return tmp;
     }
 
     constexpr DiscreteDomainIterator& operator--()
@@ -461,32 +461,32 @@ public:
 
     constexpr DiscreteDomainIterator operator--(int)
     {
-        auto __tmp = *this;
+        auto tmp = *this;
         --*this;
-        return __tmp;
+        return tmp;
     }
 
-    constexpr DiscreteDomainIterator& operator+=(difference_type __n)
+    constexpr DiscreteDomainIterator& operator+=(difference_type n)
     {
-        if (__n >= difference_type(0))
-            m_value.uid() += static_cast<DiscreteElementType>(__n);
+        if (n >= difference_type(0))
+            m_value.uid() += static_cast<DiscreteElementType>(n);
         else
-            m_value.uid() -= static_cast<DiscreteElementType>(-__n);
+            m_value.uid() -= static_cast<DiscreteElementType>(-n);
         return *this;
     }
 
-    constexpr DiscreteDomainIterator& operator-=(difference_type __n)
+    constexpr DiscreteDomainIterator& operator-=(difference_type n)
     {
-        if (__n >= difference_type(0))
-            m_value.uid() -= static_cast<DiscreteElementType>(__n);
+        if (n >= difference_type(0))
+            m_value.uid() -= static_cast<DiscreteElementType>(n);
         else
-            m_value.uid() += static_cast<DiscreteElementType>(-__n);
+            m_value.uid() += static_cast<DiscreteElementType>(-n);
         return *this;
     }
 
-    constexpr DiscreteElement<DDim> operator[](difference_type __n) const
+    constexpr DiscreteElement<DDim> operator[](difference_type n) const
     {
-        return m_value + __n;
+        return m_value + n;
     }
 
     friend constexpr bool operator==(
@@ -531,25 +531,19 @@ public:
         return !(xx < yy);
     }
 
-    friend constexpr DiscreteDomainIterator operator+(
-            DiscreteDomainIterator __i,
-            difference_type __n)
+    friend constexpr DiscreteDomainIterator operator+(DiscreteDomainIterator i, difference_type n)
     {
-        return __i += __n;
+        return i += n;
     }
 
-    friend constexpr DiscreteDomainIterator operator+(
-            difference_type __n,
-            DiscreteDomainIterator __i)
+    friend constexpr DiscreteDomainIterator operator+(difference_type n, DiscreteDomainIterator i)
     {
-        return __i += __n;
+        return i += n;
     }
 
-    friend constexpr DiscreteDomainIterator operator-(
-            DiscreteDomainIterator __i,
-            difference_type __n)
+    friend constexpr DiscreteDomainIterator operator-(DiscreteDomainIterator i, difference_type n)
     {
-        return __i -= __n;
+        return i -= n;
     }
 
     friend constexpr difference_type operator-(

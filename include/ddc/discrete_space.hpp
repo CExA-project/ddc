@@ -72,25 +72,25 @@ class gpu_proxy
     // Currently not trivially copy-constructible because of discrete spaces that have deleted copy-constructors and Kokkos::View (mostly reference-counting)
 
 private:
-    alignas(T) std::byte m_data[sizeof(T)];
+    alignas(T) Kokkos::Array<std::byte, sizeof(T)> m_data;
 
 public:
     DDC_INLINE_FUNCTION
     T* operator->()
     {
-        return reinterpret_cast<T*>(m_data);
+        return reinterpret_cast<T*>(m_data.data());
     }
 
     DDC_INLINE_FUNCTION
     T& operator*()
     {
-        return *reinterpret_cast<T*>(m_data);
+        return *reinterpret_cast<T*>(m_data.data());
     }
 
     DDC_INLINE_FUNCTION
     T* data()
     {
-        return reinterpret_cast<T*>(m_data);
+        return reinterpret_cast<T*>(m_data.data());
     }
 };
 

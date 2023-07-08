@@ -34,13 +34,6 @@ constexpr T LastSelector(const T a, const T b)
 }
 
 #if fftw_omp_AVAIL
-template <typename MemorySpace, typename T>
-using Allocator = std::conditional_t<
-        std::is_same_v<MemorySpace, Kokkos::Serial::memory_space>
-                || std::is_same_v<MemorySpace, Kokkos::OpenMP::memory_space>,
-        ddc::HostAllocator<T>,
-        ddc::DeviceAllocator<T>>;
-
 template <typename ExecSpace>
 constexpr auto policy = [] {
     if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
@@ -52,12 +45,6 @@ constexpr auto policy = [] {
     }
 };
 #else
-template <typename MemorySpace, typename T>
-using Allocator = std::conditional_t<
-        std::is_same_v<MemorySpace, Kokkos::Serial::memory_space>,
-        ddc::HostAllocator<T>,
-        ddc::DeviceAllocator<T>>;
-
 template <typename ExecSpace>
 constexpr auto policy = [] {
     if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
@@ -82,7 +69,7 @@ static void test_fft()
                                              init(ddc::Coordinate<X>(a + (b - a) / Nx / 2),
                                                   ddc::Coordinate<X>(b - (b - a) / Nx / 2),
                                                   DVect<DDim<X>>(Nx)))...);
-    ddc::Chunk _f = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
+    ddc::Chunk _f = ddc::Chunk(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan f = _f.span_view();
     ddc::for_each(
             policy<ExecSpace>(),
@@ -97,22 +84,24 @@ static void test_fft()
             x_mesh,
             ddc::detail::fft::is_complex_v<Tin> && ddc::detail::fft::is_complex_v<Tout>);
 
-    ddc::Chunk _f_bis = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), Allocator<MemorySpace, Tin>());
+    ddc::Chunk _f_bis
+            = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan f_bis = _f_bis.span_view();
     ddc::deepcopy(f_bis, f);
 
-    ddc::Chunk Ff_alloc = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
+    ddc::Chunk Ff_alloc = ddc::Chunk(k_mesh, ddc::KokkosAllocator<Tout, MemorySpace>());
     ddc::ChunkSpan Ff = Ff_alloc.span_view();
     ddc::fft(ExecSpace(), Ff, f_bis, {ddc::FFT_Normalization::FULL});
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input
     ddc::Chunk Ff_bis_alloc = ddc::
-            Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff), Allocator<MemorySpace, Tout>());
+            Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff),
+                  ddc::KokkosAllocator<Tout, MemorySpace>());
     ddc::ChunkSpan Ff_bis = Ff_bis_alloc.span_view();
     ddc::deepcopy(Ff_bis, Ff);
 
-    ddc::Chunk FFf_alloc = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
+    ddc::Chunk FFf_alloc = ddc::Chunk(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan FFf = FFf_alloc.span_view();
     ddc::ifft(ExecSpace(), FFf, Ff_bis, {ddc::FFT_Normalization::FULL});
 

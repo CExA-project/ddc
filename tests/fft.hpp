@@ -117,9 +117,9 @@ static void test_fft()
                 return diff * diff / Kokkos::pow(Nx, sizeof...(X));
             }));
 
-    std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
-    std::cout << "\n Distance between input and iFFT(FFT(input)) : " << criterion2;
     double epsilon = std::is_same_v<ddc::detail::fft::real_type_t<Tin>, double> ? 1e-15 : 1e-7;
-    ASSERT_LE(criterion, epsilon);
-    ASSERT_LE(criterion2, epsilon);
+    ASSERT_LE(criterion, epsilon)
+            << "Distance between analytical prediction and numerical result : " << criterion;
+    ASSERT_LE(criterion2, epsilon)
+            << "Distance between input and iFFT(FFT(input)) : " << criterion2;
 }

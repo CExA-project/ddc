@@ -55,8 +55,8 @@ static void test_fft()
             policy<ExecSpace>(),
             f.domain(),
             DDC_LAMBDA(DElem<DDim<X>...> const e) {
-                f(e) = static_cast<Tin>(Kokkos::exp(
-                        -(Kokkos::pow(coordinate(ddc::select<DDim<X>>(e)), 2) + ...) / 2));
+                double const xn2 = (Kokkos::pow(ddc::coordinate(ddc::select<DDim<X>>(e)), 2) + ...);
+                f(e) = static_cast<Tin>(Kokkos::exp(-xn2 / 2));
             });
 
     ddc::init_fourier_space<X...>(x_mesh);
@@ -99,18 +99,13 @@ static void test_fft()
             0.,
             ddc::reducer::sum<double>(),
             [=](DElem<DFDim<ddc::Fourier<X>>...> const e) {
-                return Kokkos::
-                               pow(Kokkos::abs(Ff_host(e))
-                                           - Kokkos::exp(
-                                                   -(Kokkos::
-                                                             pow(coordinate(ddc::select<
-                                                                            DFDim<ddc::Fourier<X>>>(
-                                                                         e)),
-                                                                 2)
-                                                     + ...)
-                                                   / 2),
-                                   2)
-                       / (ddc::detail::fft::LastSelector<std::size_t, X, X...>(Nx / 2, Nx) * ...);
+                double const xn2
+                        = (Kokkos::pow(ddc::coordinate(ddc::select<DFDim<ddc::Fourier<X>>>(e)), 2)
+                           + ...);
+                double const diff = Kokkos::abs(Ff_host(e)) - Kokkos::exp(-xn2 / 2);
+                std::size_t const denom
+                        = (ddc::detail::fft::LastSelector<std::size_t, X, X...>(Nx / 2, Nx) * ...);
+                return diff * diff / denom;
             }));
 
     double criterion2 = Kokkos::sqrt(ddc::transform_reduce(
@@ -118,8 +113,8 @@ static void test_fft()
             0.,
             ddc::reducer::sum<double>(),
             [=](DElem<DDim<X>...> const e) {
-                return Kokkos::pow(Kokkos::abs(FFf_host(e)) - Kokkos::abs(f_host(e)), 2)
-                       / Kokkos::pow(Nx, sizeof...(X));
+                double const diff = Kokkos::abs(FFf_host(e)) - Kokkos::abs(f_host(e));
+                return diff * diff / Kokkos::pow(Nx, sizeof...(X));
             }));
 
     std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;

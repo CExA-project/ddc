@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 
-#include <experimental/mdspan>
-
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/fft.hpp>
 

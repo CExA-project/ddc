@@ -5,6 +5,8 @@
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/fft.hpp>
 
+#include <gtest/gtest.h>
+
 template <typename X>
 using DDim = ddc::UniformPointSampling<X>;
 

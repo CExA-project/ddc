@@ -30,7 +30,7 @@ var classddc_1_1DiscreteDomain =
     [ "end", "classddc_1_1DiscreteDomain.html#ace260e4ad8799763338c184e82b9bd31", null ],
     [ "cbegin", "classddc_1_1DiscreteDomain.html#a5f9ae49808f77b202d2864e304297861", null ],
     [ "cend", "classddc_1_1DiscreteDomain.html#a99531116555d0b7651932f12c3b8fcf6", null ],
-    [ "operator[]", "classddc_1_1DiscreteDomain.html#a2c65d6afe1cb56fd21a45e5c6bb34c11", null ],
-    [ "operator[]", "classddc_1_1DiscreteDomain.html#ad9cca2d042a24bc1a98a9b890b06256f", null ],
+    [ "operator[]", "classddc_1_1DiscreteDomain.html#ac51461650d9e9c21e5640cb3d63adc13", null ],
+    [ "operator[]", "classddc_1_1DiscreteDomain.html#a3ec26e4d15cb84690809f94adb385d54", null ],
     [ "DiscreteDomain", "classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed", null ]
 ];

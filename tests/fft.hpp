@@ -40,6 +40,8 @@ constexpr auto policy = [] {
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename... X>
 static void test_fft()
 {
+    constexpr bool full_fft
+            = ddc::detail::fft::is_complex_v<Tin> && ddc::detail::fft::is_complex_v<Tout>;
     const double a = -10;
     const double b = 10;
     const std::size_t Nx = 64; // Optimal value is (b-a)^2/(2*pi)
@@ -49,6 +51,9 @@ static void test_fft()
                                              init(ddc::Coordinate<X>(a + (b - a) / Nx / 2),
                                                   ddc::Coordinate<X>(b - (b - a) / Nx / 2),
                                                   DVect<DDim<X>>(Nx)))...);
+    ddc::init_fourier_space<X...>(x_mesh);
+    DDom<DFDim<ddc::Fourier<X>>...> const k_mesh = ddc::FourierMesh(x_mesh, full_fft);
+
     ddc::Chunk _f(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan f = _f.span_view();
     ddc::for_each(
@@ -58,11 +63,6 @@ static void test_fft()
                 double const xn2 = (Kokkos::pow(ddc::coordinate(ddc::select<DDim<X>>(e)), 2) + ...);
                 f(e) = Kokkos::exp(-xn2 / 2);
             });
-
-    ddc::init_fourier_space<X...>(x_mesh);
-    DDom<DFDim<ddc::Fourier<X>>...> const k_mesh = ddc::FourierMesh(
-            x_mesh,
-            ddc::detail::fft::is_complex_v<Tin> && ddc::detail::fft::is_complex_v<Tout>);
 
     ddc::Chunk _f_bis(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan f_bis = _f_bis.span_view();

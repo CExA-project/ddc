@@ -56,7 +56,7 @@ static void test_fft()
             f.domain(),
             DDC_LAMBDA(DElem<DDim<X>...> const e) {
                 double const xn2 = (Kokkos::pow(ddc::coordinate(ddc::select<DDim<X>>(e)), 2) + ...);
-                f(e) = static_cast<Tin>(Kokkos::exp(-xn2 / 2));
+                f(e) = Kokkos::exp(-xn2 / 2);
             });
 
     ddc::init_fourier_space<X...>(x_mesh);

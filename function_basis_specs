@@ -1,0 +1,103 @@
+API ddc:FunctionsBasis
+- Aims to represent discrete functions in basis others than Dirac one (= values of the function evaluated on each point of the mesh).
+- Coefficients of the function in the basis are stored in a mdspan. For each function basis (ie. Splines or Lagrange) builders and evaluators are provided. No need to associate a DiscreteDomain (mesh) to those basis in a first place (Note : a possible improvement would be to include Fourier basis in this scope - the builder would be FFT and the evaluator would be iFFT - but it would requires to store coefficients in a ChunkSpan linked to the mesh of the spectral domain instead of a mdspan).
+- Several storage methods (Full, Band, CSR), numerical solvers (direct for Lagrange, based on gesv+gbsv or Krylov for splines) and interfaces to libraries to perform the computation (LAPACK, Slate, PETSc) are provided. Data can be stored on CPU or GPU. MPI compatibility should be next step.
+
+-----
+
+Several interface classes and their childs:
+- IFunctionDimensionTag -> Aims to identify the dimensions
+--- Spline<X>
+--- SplineUniform<X>
+--- SplineNonUniform<X>
+--- CartesianSpline<X...>
+--- PolarSpline<R,P>
+--- LagrangePolynome<X>
+--- ...
+- Builder -> Aims to fill the mdspan which contains the coefficients of the function in the basis. Tags names are enough to identify which Builder is used (1D lagrange builder, 2D spline builder etc...). Templated by a 
+- Evaluator -> Aims to fill a ChunkSpan which contains the values of the function on each point of the mesh from the coefficient in the basis.
+- ISolver (templates a builder)
+--- LagrangeDirectComputation (computes the coefficients of Lagrange polynomials directly with Kokkos)
+--- LapackLUSplines (current method in Gysela, not available on GPU)
+--- SlateLUSplines (sam but with Slate, compatible with GPU)
+--- PetscSparseSplines (consider splines linear problem as sparse and use Krylov methods)
+- Vector -> Generic class for a vector (for linear algebra purpose, no link with ddc::DiscreteVector). Contains data pointer and links internally to libraries representations (Petsc::Vec, Slate::Matrix etc.)
+- IMatrix -> Matrixes. Determines the storage method. Contains data pointer and links internally to libraries representations (Petsc::Mat, Slate::Matrix etc.).
+--- DenseMatrix
+--- SparseMatrix
+--- BandMatrix
+--- BandSparseMatrix ?
+--- PDSTridiagMatrix
+--- CenterBlocksMatrix
+--- CornerBlocksMatrix
+--- SplinesBuilderMatrix (BandMatrix in the top-left corner, DenseMatrix in the others)
+--- SplinesSparseBuilderMatrix (BandSparseMatrix in the top-left corner, SparseMatrix in the others) ?
+(those are examples, this list will evolve for sure during development according to needs and retained algorithms)
+
++ Several application usage classes :
+- Interpolator (calls Builder then Evaluator of differents DiscreteDomains).
+- FEMSolver ?
+- ...
+
+-----
+
+Examples of (prototypes of) classes. Please don't give importance to & and * symbols, I have to think more of how to manage pointers in order to never copy data:
+
+template <typename X, std::size_t D> // X is associated spatial dimension tag, D is degree
+class ******** : IFunctionDimensionTag {
+	using spatial_dimension = X;
+	using continuous_dimension_type; // ie. Spline<X>
+	using discrete_element_type;
+    using discrete_domain_type;
+    using discrete_vector_type;
+    get_knot() related functions ? Important point, to be discussed.
+}
+
+class Builder {
+	template <typename FunctionSpace>
+	Builder(ISolver<FunctionSpace> solver) {
+		// Instantiate a builder based on a solver.
+	}
+	mdspan operator(ddc::ChunkSpan data) {
+		// calls the builder and returns the coefficients in the functions basis
+	}
+}
+
+class Evaluator {
+	ddc::ChunkSpan operator(mdspan* coefs, ddc::DiscreteDomain mesh) {
+		// evaluates function on the mesh
+	}
+}
+
+class ISolver {
+	// Main algorithm + intermediate classes (note : content of factorize() or factorize_method() in current code goes there with a specialization for each supported Matrix class)
+}
+
+class Vector {
+	mdspan* data;
+	size_t n;
+	#if PETSC_AVAIL
+	PETSc::Vec petsc_vec;
+	#endif
+	Vector(double* vec, size_t n) {
+		// Build petsc_vec
+	}
+}
+
+class IMatrix {
+	mdspan* data;
+	size_t n;
+	size_t m;
+	#if SLATE_AVAIL
+	SLATE::Mat slate_mat;
+	#endif
+	#if PETSC_AVAIL
+	PETSc::Vec slate_mat;
+	#endif
+
+	IMatrix(double* vec, size_t n) {
+		// Build slate_mat. In the (seemly quite complex) case of Slate::BandMatrix, handle tiles assembly.
+		// Build petsc_mat
+	}
+}
+

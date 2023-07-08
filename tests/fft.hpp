@@ -20,17 +20,6 @@ using DDom = ddc::DiscreteDomain<DDim...>;
 template <typename Kx>
 using DFDim = ddc::PeriodicSampling<Kx>;
 
-// is_complex : trait to determine if type is Kokkos::complex<something>
-template <typename T>
-struct is_complex : std::false_type
-{
-};
-
-template <typename T>
-struct is_complex<Kokkos::complex<T>> : std::true_type
-{
-};
-
 // LastSelector: returns a if Dim==Last, else b
 template <typename T, typename Dim, typename Last>
 constexpr T LastSelector(const T a, const T b)
@@ -106,8 +95,9 @@ static void test_fft()
             });
 
     ddc::init_fourier_space<X...>(x_mesh);
-    DDom<DFDim<ddc::Fourier<X>>...> const k_mesh
-            = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
+    DDom<DFDim<ddc::Fourier<X>>...> const k_mesh = ddc::FourierMesh(
+            x_mesh,
+            ddc::detail::fft::is_complex_v<Tin> && ddc::detail::fft::is_complex_v<Tout>);
 
     ddc::Chunk _f_bis = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), Allocator<MemorySpace, Tin>());
     ddc::ChunkSpan f_bis = _f_bis.span_view();

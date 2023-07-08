@@ -35,7 +35,7 @@ struct is_complex<Kokkos::complex<T>> : std::true_type
 template <typename T, typename Dim, typename Last>
 constexpr T LastSelector(const T a, const T b)
 {
-    return std::is_same<Dim, Last>::value ? a : b;
+    return std::is_same_v<Dim, Last> ? a : b;
 }
 
 template <typename T, typename Dim, typename First, typename Second, typename... Tail>
@@ -46,19 +46,17 @@ constexpr T LastSelector(const T a, const T b)
 
 #if fftw_omp_AVAIL
 template <typename MemorySpace, typename T>
-using Allocator = typename std::conditional<
-        std::is_same_v<
-                MemorySpace,
-                Kokkos::Serial::
-                        memory_space> || std::is_same_v<MemorySpace, Kokkos::OpenMP::memory_space>,
+using Allocator = std::conditional_t<
+        std::is_same_v<MemorySpace, Kokkos::Serial::memory_space>
+                || std::is_same_v<MemorySpace, Kokkos::OpenMP::memory_space>,
         ddc::HostAllocator<T>,
-        ddc::DeviceAllocator<T>>::type;
+        ddc::DeviceAllocator<T>>;
 
 template <typename ExecSpace>
 constexpr auto policy = [] {
-    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
         return ddc::policies::serial_host;
-    } else if constexpr (std::is_same<ExecSpace, Kokkos::OpenMP>::value) {
+    } else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
         return ddc::policies::parallel_host;
     } else {
         return ddc::policies::parallel_device;
@@ -66,14 +64,14 @@ constexpr auto policy = [] {
 };
 #else
 template <typename MemorySpace, typename T>
-using Allocator = typename std::conditional<
+using Allocator = std::conditional_t<
         std::is_same_v<MemorySpace, Kokkos::Serial::memory_space>,
         ddc::HostAllocator<T>,
-        ddc::DeviceAllocator<T>>::type;
+        ddc::DeviceAllocator<T>>;
 
 template <typename ExecSpace>
 constexpr auto policy = [] {
-    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
         return ddc::policies::serial_host;
     } else {
         return ddc::policies::parallel_device;
@@ -210,8 +208,7 @@ static void test_fft()
 
     std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
     std::cout << "\n Distance between input and iFFT(FFT(input)) : " << criterion2;
-    double epsilon = std::is_same_v<typename ddc::detail::fft::real_type<Tin>::type, double> ? 1e-15
-                                                                                             : 1e-7;
+    double epsilon = std::is_same_v<ddc::detail::fft::real_type_t<Tin>, double> ? 1e-15 : 1e-7;
     ASSERT_LE(criterion, epsilon);
     ASSERT_LE(criterion2, epsilon);
 }

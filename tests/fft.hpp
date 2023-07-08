@@ -78,7 +78,7 @@ static void test_fft()
     ddc::ChunkSpan Ff_bis = Ff_bis_alloc.span_view();
     ddc::deepcopy(Ff_bis, Ff);
 
-    ddc::Chunk FFf_alloc(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
+    ddc::Chunk FFf_alloc(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan FFf = FFf_alloc.span_view();
     ddc::ifft(ExecSpace(), FFf, Ff_bis, {ddc::FFT_Normalization::FULL});
 

@@ -22,19 +22,6 @@ using DDom = ddc::DiscreteDomain<DDim...>;
 template <typename Kx>
 using DFDim = ddc::PeriodicSampling<Kx>;
 
-// LastSelector: returns a if Dim==Last, else b
-template <typename T, typename Dim, typename Last>
-constexpr T LastSelector(const T a, const T b)
-{
-    return std::is_same_v<Dim, Last> ? a : b;
-}
-
-template <typename T, typename Dim, typename First, typename Second, typename... Tail>
-constexpr T LastSelector(const T a, const T b)
-{
-    return LastSelector<T, Dim, Second, Tail...>(a, b);
-}
-
 template <typename ExecSpace>
 constexpr auto policy = [] {
     if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
@@ -130,7 +117,7 @@ static void test_fft()
                                                      + ...)
                                                    / 2),
                                    2)
-                       / (LastSelector<std::size_t, X, X...>(Nx / 2, Nx) * ...);
+                       / (ddc::detail::fft::LastSelector<std::size_t, X, X...>(Nx / 2, Nx) * ...);
             }));
 
     double criterion2 = Kokkos::sqrt(ddc::transform_reduce(

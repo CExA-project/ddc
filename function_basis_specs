@@ -14,14 +14,14 @@ Several interface classes and their childs:
 --- PolarSpline<R,P>
 --- LagrangePolynome<X>
 --- ...
-- Builder -> Aims to fill the mdspan which contains the coefficients of the function in the basis. Tags names are enough to identify which Builder is used (1D lagrange builder, 2D spline builder etc...). Templated by a 
+- Builder -> Aims to fill the mdspan which contains the coefficients of the function in the basis. Tags names are enough to identify which Builder is used (1D lagrange builder, 2D spline builder etc...). Takes a solver in the constructor.
 - Evaluator -> Aims to fill a ChunkSpan which contains the values of the function on each point of the mesh from the coefficient in the basis.
-- ISolver (templates a builder)
+- ISolver (passed to builder)
 --- LagrangeDirectComputation (computes the coefficients of Lagrange polynomials directly with Kokkos)
 --- LapackLUSplines (current method in Gysela, not available on GPU)
---- SlateLUSplines (sam but with Slate, compatible with GPU)
---- PetscSparseSplines (consider splines linear problem as sparse and use Krylov methods)
-- Vector -> Generic class for a vector (for linear algebra purpose, no link with ddc::DiscreteVector). Contains data pointer and links internally to libraries representations (Petsc::Vec, Slate::Matrix etc.)
+--- SlateLUSplines (same but with Slate, involves GPU)
+--- PetscSparseSplines (consider splines linear problem as sparse and uses Krylov methods)
+- Vector -> Generic class for a vector (for linear algebra purpose, unrelated to ddc::DiscreteVector). Contains data pointer and links internally to libraries representations (Petsc::Vec etc.)
 - IMatrix -> Matrixes. Determines the storage method. Contains data pointer and links internally to libraries representations (Petsc::Mat, Slate::Matrix etc.).
 --- DenseMatrix
 --- SparseMatrix
@@ -32,7 +32,6 @@ Several interface classes and their childs:
 --- CornerBlocksMatrix
 --- SplinesBuilderMatrix (BandMatrix in the top-left corner, DenseMatrix in the others)
 --- SplinesSparseBuilderMatrix (BandSparseMatrix in the top-left corner, SparseMatrix in the others) ?
-(those are examples, this list will evolve for sure during development according to needs and retained algorithms)
 
 + Several application usage classes :
 - Interpolator (calls Builder then Evaluator of differents DiscreteDomains).
@@ -41,36 +40,36 @@ Several interface classes and their childs:
 
 -----
 
-Examples of (prototypes of) classes. Please don't give importance to & and * symbols, I have to think more of how to manage pointers in order to never copy data:
+Examples of (prototypes of) classes. Please don't give importance to & and * symbols, I will think more on how to manage pointers in order to never copy data:
 
 template <typename X, std::size_t D> // X is associated spatial dimension tag, D is degree
-class ******** : IFunctionDimensionTag {
+class Something : IFunctionDimensionTag {
 	using spatial_dimension = X;
 	using continuous_dimension_type; // ie. Spline<X>
 	using discrete_element_type;
     using discrete_domain_type;
     using discrete_vector_type;
-    get_knot() related functions ? Important point, to be discussed.
+    get_knot() related functions ? // Important point, to be discussed -> in the end, should we link a mesh to function basis coefs to identify for example the spatial position of a spline ?
 }
 
 class Builder {
-	template <typename FunctionSpace>
-	Builder(ISolver<FunctionSpace> solver) {
+	template <typename... FunctionDimensionTag>
+	Builder(ISolver<FunctionDimensionTag...> solver) {
 		// Instantiate a builder based on a solver.
 	}
-	mdspan operator(ddc::ChunkSpan data) {
+	mdspan operator()(ddc::ChunkSpan data) {
 		// calls the builder and returns the coefficients in the functions basis
 	}
 }
 
 class Evaluator {
-	ddc::ChunkSpan operator(mdspan* coefs, ddc::DiscreteDomain mesh) {
+	ddc::ChunkSpan operator()(mdspan* coefs, ddc::DiscreteDomain mesh) {
 		// evaluates function on the mesh
 	}
 }
 
 class ISolver {
-	// Main algorithm + intermediate classes (note : content of factorize() or factorize_method() in current code goes there with a specialization for each supported Matrix class)
+	// Main algorithms + intermediate functions (note : content of factorize() or factorize_method() in current code goes there with a specialization for each supported Matrix class)
 }
 
 class Vector {

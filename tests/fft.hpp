@@ -88,8 +88,6 @@ static void test_fft()
             policy<ExecSpace>(),
             ddc::get_domain<DDim<X>...>(f),
             DDC_LAMBDA(DElem<DDim<X>...> const e) {
-                // f(e) = (Kokkos::cos(4*coordinate(ddc::select<DDim<X>>(e)))*...);
-                // f(e) = ((Kokkos::sin(coordinate(ddc::select<DDim<X>>(e))+1e-20)/(coordinate(ddc::select<DDim<X>>(e))+1e-20))*...);
                 f(e) = static_cast<Tin>(Kokkos::exp(
                         -(Kokkos::pow(coordinate(ddc::select<DDim<X>>(e)), 2) + ...) / 2));
             });
@@ -121,52 +119,16 @@ static void test_fft()
     ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan f_host = _f_host.span_view();
     ddc::deepcopy(f_host, f);
-#if 0
-    std::cout << "\n input:\n";
-    ddc::for_each(
-            ddc::policies::serial_host,
-            ddc::get_domain<DDim<X>...>(f_host),
-            [=](DElem<DDim<X>...> const e) {
-                (std::cout << ... << coordinate(ddc::select<DDim<X>>(e)))
-                        << "->" << f_host(e) << ", ";
-            });
-#endif
 
     ddc::Chunk Ff_host_alloc = ddc::
             Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff), ddc::HostAllocator<Tout>());
     ddc::ChunkSpan Ff_host = Ff_host_alloc.span_view();
     ddc::deepcopy(Ff_host, Ff);
-#if 0
-    std::cout << "\n output:\n";
-    ddc::for_each(
-            ddc::policies::serial_host,
-            ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff_host),
-            [=](DElem<DFDim<ddc::Fourier<X>>...> const e) {
-                (std::cout << ... << coordinate(ddc::select<DFDim<ddc::Fourier<X>>>(e)))
-                        << "->" << Kokkos::abs(Ff_host(e)) << " "
-                        << Kokkos::exp(
-                                   -(Kokkos::pow(coordinate(ddc::select<DFDim<ddc::Fourier<X>>>(e)), 2)
-                                     + ...)
-                                   / 2)
-                        << ", ";
-            });
-#endif
 
     ddc::Chunk FFf_host_alloc
             = ddc::Chunk(ddc::get_domain<DDim<X>...>(FFf), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan FFf_host = FFf_host_alloc.span_view();
     ddc::deepcopy(FFf_host, FFf);
-#if 0
-    std::cout << "\n iFFT(FFT):\n";
-    ddc::for_each(
-            ddc::policies::serial_host,
-            ddc::get_domain<DDim<X>...>(FFf_host),
-            [=](DElem<DDim<X>...> const e) {
-                (std::cout << ... << coordinate(ddc::select<DDim<X>>(e)))
-                        << "->" << Kokkos::abs(FFf_host(e)) << " " << Kokkos::abs(f_host(e))
-                        << ", ";
-            });
-#endif
 
     double criterion = Kokkos::sqrt(ddc::transform_reduce(
             ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff_host),

@@ -33,27 +33,20 @@ constexpr T LastSelector(const T a, const T b)
     return LastSelector<T, Dim, Second, Tail...>(a, b);
 }
 
+template <typename ExecSpace>
+constexpr auto policy = [] {
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+        return ddc::policies::serial_host;
+    }
 #if fftw_omp_AVAIL
-template <typename ExecSpace>
-constexpr auto policy = [] {
-    if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-        return ddc::policies::serial_host;
-    } else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+    else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
         return ddc::policies::parallel_host;
-    } else {
-        return ddc::policies::parallel_device;
     }
-};
-#else
-template <typename ExecSpace>
-constexpr auto policy = [] {
-    if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-        return ddc::policies::serial_host;
-    } else {
-        return ddc::policies::parallel_device;
-    }
-};
 #endif
+    else {
+        return ddc::policies::parallel_device;
+    }
+};
 
 // TODO:
 // - FFT multidim but according to a subset of dimensions

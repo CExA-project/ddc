@@ -5,23 +5,48 @@
 #include <iostream>
 #include <memory>
 #include <utility>
-#if 0
-#include "matrix_banded.hpp"
-#include "matrix_center_block.hpp"
-#include "matrix_corner_block.hpp"
-#include "matrix_dense.hpp"
-#include "matrix_pds_tridiag.hpp"
-#include "matrix_periodic_banded.hpp"
-#endif
+
+#include <petscksp.h>
+#include <petscvec.h>
+
 #include "view.hpp"
-
-
 
 class Matrix
 {
 public:
-    Matrix(int mat_size) : n(mat_size) {}
+    Matrix(int mat_size) : n(mat_size)
+    {
+        data = std::make_unique<double[]>(n * n);
+    }
     virtual ~Matrix() = default;
+    std::unique_ptr<double[]> data;
+    virtual Vec to_petsc_vec(double* vec_ptr, size_t n) const
+    {
+        Vec v;
+        VecCreate(PETSC_COMM_SELF, &v);
+        VecSetSizes(v, PETSC_DECIDE, n);
+        VecPlaceArray(v, vec_ptr);
+        return v;
+    }
+    virtual Mat to_petsc_mat(double* mat_ptr, size_t n, size_t m) const
+    {
+        PetscInt* rows = (PetscInt*)malloc(n * sizeof(PetscInt));
+        PetscInt* cols = (PetscInt*)malloc(m * sizeof(PetscInt));
+
+        // Generate row indices
+        for (PetscInt i = 0; i < n; i++) {
+            rows[i] = i;
+        }
+
+        // Generate column indices
+        for (PetscInt j = 0; j < m; j++) {
+            cols[j] = j;
+        }
+
+        Mat M;
+        MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, n, m, rows, cols, mat_ptr, &M);
+        return M;
+    }
     virtual double get_element(int i, int j) const = 0;
     virtual void set_element(int i, int j, double aij) = 0;
     virtual void factorize()
@@ -51,6 +76,22 @@ public:
             // TODO: Add LOG_FATAL_ERROR
         }
         return b;
+    }
+    virtual DSpan1D solve_inplace_krylov(DSpan1D const b) const
+    {
+        Vec b_vec = to_petsc_vec(b.data_handle(), b.size());
+        Mat data_mat = to_petsc_mat(data.get(), n, n);
+        KSP ksp;
+        KSPCreate(PETSC_COMM_WORLD, &ksp);
+        Vec x_vec;
+        VecCreate(PETSC_COMM_SELF, &x_vec);
+        VecSetSizes(x_vec, PETSC_DECIDE, n);
+        VecSetFromOptions(x_vec);
+        KSPSetOperators(ksp, data_mat, data_mat);
+        KSPSolve(ksp, b_vec, x_vec);
+        double* x;
+        VecGetArray(x_vec, &x);
+        return DSpan1D(x, n);
     }
     virtual DSpan1D solve_transpose_inplace(DSpan1D const b) const
     {

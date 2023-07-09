@@ -34,3 +34,19 @@
 #if defined(DDC_BUILD_PDI_WRAPPER)
 #include "ddc/pdi.hpp"
 #endif
+
+// PETSc
+#if petsc_AVAIL
+#include "petscsys.h"   
+#endif
+
+class DDCInitializer {
+public:
+  DDCInitializer() {
+	#if petsc_AVAIL
+	PetscInitializeNoArguments();
+	#endif
+  }
+};
+
+static DDCInitializer ddc_initializer;

@@ -17,6 +17,10 @@ public:
     Matrix(int mat_size) : n(mat_size)
     {
         data = std::make_unique<double[]>(n * n);
+        for (int i = 0; i < n * n; i++) {
+            // data.get()[i] = std::rand()%10==0 ? std::rand()%1000 : 0; // Fills randomly a sparse matrix
+            data.get()[i] = 1 + std::rand() % 1000; // Fills randomly a dense matrix
+        }
     }
     virtual ~Matrix() = default;
     std::unique_ptr<double[]> data;
@@ -25,22 +29,23 @@ public:
         Vec v;
         VecCreate(PETSC_COMM_SELF, &v);
         VecSetSizes(v, PETSC_DECIDE, n);
+        VecSetFromOptions(v);
         VecPlaceArray(v, vec_ptr);
         return v;
     }
     virtual Mat to_petsc_mat(double* mat_ptr, size_t n, size_t m) const
     {
-        PetscInt* rows = (PetscInt*)malloc(n * sizeof(PetscInt));
-        PetscInt* cols = (PetscInt*)malloc(m * sizeof(PetscInt));
+        PetscInt* rows = (PetscInt*)malloc((n + 1) * sizeof(PetscInt));
+        PetscInt* cols = (PetscInt*)malloc(n * m * sizeof(PetscInt));
 
-        // Generate row indices
-        for (PetscInt i = 0; i < n; i++) {
-            rows[i] = i;
+        // Generate rows indices
+        for (PetscInt i = 0; i < n + 1; i++) {
+            rows[i] = i * m;
         }
 
-        // Generate column indices
-        for (PetscInt j = 0; j < m; j++) {
-            cols[j] = j;
+        // Generate cols indices
+        for (PetscInt k = 0; k < n * m; k++) {
+            cols[k] = k % n;
         }
 
         Mat M;
@@ -81,14 +86,18 @@ public:
     {
         Vec b_vec = to_petsc_vec(b.data_handle(), b.size());
         Mat data_mat = to_petsc_mat(data.get(), n, n);
-        KSP ksp;
-        KSPCreate(PETSC_COMM_WORLD, &ksp);
         Vec x_vec;
         VecCreate(PETSC_COMM_SELF, &x_vec);
         VecSetSizes(x_vec, PETSC_DECIDE, n);
         VecSetFromOptions(x_vec);
+        KSP ksp;
+        KSPCreate(PETSC_COMM_SELF, &ksp);
+        KSPSetFromOptions(ksp);
         KSPSetOperators(ksp, data_mat, data_mat);
         KSPSolve(ksp, b_vec, x_vec);
+        PetscInt its;
+        KSPGetIterationNumber(ksp, &its);
+        PetscPrintf(PETSC_COMM_SELF, "Iterations %" PetscInt_FMT "\n", its);
         double* x;
         VecGetArray(x_vec, &x);
         return DSpan1D(x, n);

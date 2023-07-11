@@ -5,8 +5,6 @@
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/fft.hpp>
 
-#include "ddc/discrete_element.hpp"
-
 template <typename X>
 using DDim = ddc::UniformPointSampling<X>;
 
@@ -246,52 +244,51 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
     ddc::fft(ExecSpace(), Ff, f_bis, {norm});
     Kokkos::fence();
 
+    // deepcopy of Ff because FFT C2R overwrites the input
+    ddc::Chunk _Ff_bis = ddc::
+            Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>>(Ff), Allocator<MemorySpace, Tout>());
+    ddc::ChunkSpan Ff_bis = _Ff_bis.span_view();
+    ddc::deepcopy(Ff_bis, Ff);
+
+    ddc::Chunk _FFf = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
+    ddc::ChunkSpan FFf = _FFf.span_view();
+    ddc::ifft(ExecSpace(), FFf, Ff_bis, {norm});
+
     ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>>(f), ddc::HostAllocator<Tin>());
     ddc::ChunkSpan f_host = _f_host.span_view();
     ddc::deepcopy(f_host, f);
-#if 0
-    std::cout << "\n input:\n";
-    ddc::for_each(
-            ddc::policies::serial_host,
-            ddc::get_domain<DDim<X>>(f_host),
-            [=](DElem<DDim<X>> const e) {
-                (std::cout << coordinate(ddc::select<DDim<X>>(e)))
-                        << "->" << f_host(e) << ", ";
-            });
-#endif
 
     ddc::Chunk _Ff_host
             = ddc::Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>>(Ff), ddc::HostAllocator<Tout>());
     ddc::ChunkSpan Ff_host = _Ff_host.span_view();
     ddc::deepcopy(Ff_host, Ff);
-#if 0
-    std::cout << "\n output:\n";
-    ddc::for_each(
-            ddc::policies::serial_host,
-            ddc::get_domain<DFDim<ddc::Fourier<X>>>(Ff_host),
-            [=](DElem<DFDim<ddc::Fourier<X>>> const e) {
-                (std::cout << coordinate(ddc::select<DFDim<ddc::Fourier<X>>>(e)))
-                        << "->" << Kokkos::abs(Ff_host(e)) << " "
-                        << ", ";
-            });
-#endif
+
+    ddc::Chunk _FFf_host = ddc::Chunk(ddc::get_domain<DDim<X>>(FFf), ddc::HostAllocator<Tin>());
+    ddc::ChunkSpan FFf_host = _FFf_host.span_view();
+    ddc::deepcopy(FFf_host, FFf);
 
     double Ff0_expected;
+    double FFf_expected;
     switch (norm) {
     case ddc::FFT_Normalization::OFF:
         Ff0_expected = 2;
+        FFf_expected = 2;
         break;
     case ddc::FFT_Normalization::FORWARD:
         Ff0_expected = 1;
+        FFf_expected = 1;
         break;
     case ddc::FFT_Normalization::BACKWARD:
         Ff0_expected = 2;
+        FFf_expected = 1;
         break;
     case ddc::FFT_Normalization::ORTHO:
         Ff0_expected = Kokkos::sqrt(2.);
+        FFf_expected = 1;
         break;
     case ddc::FFT_Normalization::FULL:
         Ff0_expected = 1 / Kokkos::sqrt(2 * Kokkos::numbers::pi);
+        FFf_expected = 1;
         break;
     }
 
@@ -299,5 +296,7 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
 
     std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
     double epsilon = 1e-6;
-    ASSERT_LE(criterion, epsilon);
+    EXPECT_NEAR(Kokkos::abs(Ff(Ff.domain().front())), Ff0_expected, epsilon);
+    EXPECT_NEAR(FFf(FFf.domain().front()), FFf_expected, epsilon);
+    EXPECT_NEAR(FFf(FFf.domain().back()), FFf_expected, epsilon);
 }

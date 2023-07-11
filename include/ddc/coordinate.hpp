@@ -20,9 +20,9 @@ template <class... CDims>
 using Coordinate = detail::TaggedVector<CoordinateElement, CDims...>;
 
 template <class T>
-struct CoordinateOf;
+struct coordinate_of;
 
 template <class T>
-using coordinate_of = typename CoordinateOf<T>::type;
+using coordinate_of_t = typename coordinate_of<T>::type;
 
 } // namespace ddc

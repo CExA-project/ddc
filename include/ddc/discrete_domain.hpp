@@ -366,22 +366,29 @@ using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDom
 } // namespace detail
 
 template <typename... DDom>
-struct CartesianProd;
+struct cartesian_prod;
 
 template <typename... DDim1, typename... DDim2>
-struct CartesianProd<ddc::DiscreteDomain<DDim1...>, ddc::DiscreteDomain<DDim2...>>
+struct cartesian_prod<ddc::DiscreteDomain<DDim1...>, ddc::DiscreteDomain<DDim2...>>
 {
     using type = ddc::DiscreteDomain<DDim1..., DDim2...>;
 };
 
-template <typename DDom1, typename DDom2, typename... Tail>
-struct CartesianProd<DDom1, DDom2, Tail...>
+template <typename DDom>
+struct cartesian_prod<DDom>
 {
-    using type = typename CartesianProd<typename CartesianProd<DDom1, DDom2>::type, Tail...>::type;
+    using type = DDom;
+};
+
+template <typename DDom1, typename DDom2, typename... Tail>
+struct cartesian_prod<DDom1, DDom2, Tail...>
+{
+    using type =
+            typename cartesian_prod<typename cartesian_prod<DDom1, DDom2>::type, Tail...>::type;
 };
 
 template <typename... DDom>
-using cartesian_prod = typename CartesianProd<DDom...>::type;
+using cartesian_prod_t = typename cartesian_prod<DDom...>::type;
 
 template <class... DDimsA, class... DDimsB>
 constexpr auto remove_dims_of(

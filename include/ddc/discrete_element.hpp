@@ -417,7 +417,7 @@ constexpr inline DiscreteVector<Tags...> operator-(
 }
 
 template <class... DDims>
-struct CoordinateOf<ddc::DiscreteElement<DDims...>>
+struct coordinate_of<ddc::DiscreteElement<DDims...>>
 {
     // maybe a static_assert on DDims ?
     using type = Coordinate<typename DDims::continuous_dimension_type...>;

@@ -208,12 +208,10 @@ static void test_fft()
                        / Kokkos::pow(Nx, sizeof...(X));
             }));
 
-    std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
-    std::cout << "\n Distance between input and iFFT(FFT(input)) : " << criterion2;
     double epsilon = std::is_same_v<typename ddc::detail::fft::real_type<Tin>::type, double> ? 1e-15
                                                                                              : 1e-7;
-    ASSERT_LE(criterion, epsilon);
-    ASSERT_LE(criterion2, epsilon);
+    EXPECT_LE(criterion, epsilon);
+    EXPECT_LE(criterion2, epsilon);
 }
 
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename X>
@@ -292,9 +290,6 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
         break;
     }
 
-    double criterion = Kokkos::abs(Ff(Ff.domain().front()) - Ff0_expected);
-
-    std::cout << "\n Distance between analytical prediction and numerical result : " << criterion;
     double epsilon = 1e-6;
     EXPECT_NEAR(Kokkos::abs(Ff(Ff.domain().front())), Ff0_expected, epsilon);
     EXPECT_NEAR(FFf(FFf.domain().front()), FFf_expected, epsilon);

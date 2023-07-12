@@ -365,6 +365,8 @@ using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDom
 
 } // namespace detail
 
+// Computes the cartesian product of DiscreteDomain types
+// Example usage : "using DDom = cartesian_prod_t<DDom1,DDom2,DDom3>;"
 template <typename... DDom>
 struct cartesian_prod;
 
@@ -390,6 +392,7 @@ struct cartesian_prod<DDom1, DDom2, Tail...>
 template <typename... DDom>
 using cartesian_prod_t = typename cartesian_prod<DDom...>::type;
 
+// Computes the substraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
 template <class... DDimsA, class... DDimsB>
 constexpr auto remove_dims_of(
         DiscreteDomain<DDimsA...> const& DDom_a,

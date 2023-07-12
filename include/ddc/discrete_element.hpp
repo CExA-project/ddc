@@ -416,6 +416,8 @@ constexpr inline DiscreteVector<Tags...> operator-(
     return DiscreteVector<Tags...>((uid<Tags>(lhs) - uid<Tags>(rhs))...);
 }
 
+// Gives access to the type of the coordinates of a discrete element
+// Example usage : "using Coords = coordinate_of_t<DElem>;"
 template <class... DDims>
 struct coordinate_of<ddc::DiscreteElement<DDims...>>
 {

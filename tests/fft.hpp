@@ -94,18 +94,22 @@ static void test_fft()
     ddc::ChunkSpan FFf_host = FFf_host_alloc.span_view();
     ddc::deepcopy(FFf_host, FFf);
 
+    auto const pow2 = DDC_LAMBDA(double x)
+    {
+        return x * x;
+    };
+
     double criterion = Kokkos::sqrt(ddc::transform_reduce(
             Ff_host.domain(),
             0.,
             ddc::reducer::sum<double>(),
             [=](DElem<DFDim<ddc::Fourier<X>>...> const e) {
                 double const xn2
-                        = (Kokkos::pow(ddc::coordinate(ddc::select<DFDim<ddc::Fourier<X>>>(e)), 2)
-                           + ...);
+                        = (pow2(ddc::coordinate(ddc::select<DFDim<ddc::Fourier<X>>>(e))) + ...);
                 double const diff = Kokkos::abs(Ff_host(e)) - Kokkos::exp(-xn2 / 2);
                 std::size_t const denom
                         = (ddc::detail::fft::LastSelector<std::size_t, X, X...>(Nx / 2, Nx) * ...);
-                return diff * diff / denom;
+                return pow2(diff) / denom;
             }));
 
     double criterion2 = Kokkos::sqrt(ddc::transform_reduce(
@@ -114,7 +118,7 @@ static void test_fft()
             ddc::reducer::sum<double>(),
             [=](DElem<DDim<X>...> const e) {
                 double const diff = Kokkos::abs(FFf_host(e)) - Kokkos::abs(f_host(e));
-                return diff * diff / Kokkos::pow(Nx, sizeof...(X));
+                return pow2(diff) / Kokkos::pow(Nx, sizeof...(X));
             }));
 
     double epsilon = std::is_same_v<ddc::detail::fft::real_type_t<Tin>, double> ? 1e-15 : 1e-7;

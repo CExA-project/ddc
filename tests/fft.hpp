@@ -115,19 +115,19 @@ static void test_fft()
     ddc::ChunkSpan f_bis = _f_bis.span_view();
     ddc::deepcopy(f_bis, f);
 
-    ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
-    ddc::ChunkSpan Ff = _Ff.span_view();
+    ddc::Chunk Ff_alloc = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
+    ddc::ChunkSpan Ff = Ff_alloc.span_view();
     ddc::fft(ExecSpace(), Ff, f_bis, {ddc::FFT_Normalization::FULL});
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input
-    ddc::Chunk _Ff_bis = ddc::
+    ddc::Chunk Ff_bis_alloc = ddc::
             Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff), Allocator<MemorySpace, Tout>());
-    ddc::ChunkSpan Ff_bis = _Ff_bis.span_view();
+    ddc::ChunkSpan Ff_bis = Ff_bis_alloc.span_view();
     ddc::deepcopy(Ff_bis, Ff);
 
-    ddc::Chunk _FFf = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
-    ddc::ChunkSpan FFf = _FFf.span_view();
+    ddc::Chunk FFf_alloc = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
+    ddc::ChunkSpan FFf = FFf_alloc.span_view();
     ddc::ifft(ExecSpace(), FFf, Ff_bis, {ddc::FFT_Normalization::FULL});
 
     ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
@@ -144,9 +144,9 @@ static void test_fft()
             });
 #endif
 
-    ddc::Chunk _Ff_host = ddc::
+    ddc::Chunk Ff_host_alloc = ddc::
             Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>...>(Ff), ddc::HostAllocator<Tout>());
-    ddc::ChunkSpan Ff_host = _Ff_host.span_view();
+    ddc::ChunkSpan Ff_host = Ff_host_alloc.span_view();
     ddc::deepcopy(Ff_host, Ff);
 #if 0
     std::cout << "\n output:\n";
@@ -164,8 +164,9 @@ static void test_fft()
             });
 #endif
 
-    ddc::Chunk _FFf_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(FFf), ddc::HostAllocator<Tin>());
-    ddc::ChunkSpan FFf_host = _FFf_host.span_view();
+    ddc::Chunk FFf_host_alloc
+            = ddc::Chunk(ddc::get_domain<DDim<X>...>(FFf), ddc::HostAllocator<Tin>());
+    ddc::ChunkSpan FFf_host = FFf_host_alloc.span_view();
     ddc::deepcopy(FFf_host, FFf);
 #if 0
     std::cout << "\n iFFT(FFT):\n";

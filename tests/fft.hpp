@@ -113,8 +113,9 @@ static void test_fft()
     DDom<DFDim<ddc::Fourier<X>>...> const k_mesh
             = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
 
-    ddc::Chunk _f_bis = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), Allocator<MemorySpace, Tin>());
-    ddc::ChunkSpan f_bis = _f_bis.span_view();
+    ddc::Chunk f_bis_alloc
+            = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), Allocator<MemorySpace, Tin>());
+    ddc::ChunkSpan f_bis = f_bis_alloc.span_view();
     ddc::deepcopy(f_bis, f);
 
     ddc::Chunk Ff_alloc = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
@@ -132,8 +133,8 @@ static void test_fft()
     ddc::ChunkSpan FFf = FFf_alloc.span_view();
     ddc::ifft(ExecSpace(), FFf, Ff_bis, {ddc::FFT_Normalization::FULL});
 
-    ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
-    ddc::ChunkSpan f_host = _f_host.span_view();
+    ddc::Chunk f_host_alloc = ddc::Chunk(ddc::get_domain<DDim<X>...>(f), ddc::HostAllocator<Tin>());
+    ddc::ChunkSpan f_host = f_host_alloc.span_view();
     ddc::deepcopy(f_host, f);
 #if 0
     std::cout << "\n input:\n";
@@ -235,32 +236,32 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
     DDom<DFDim<ddc::Fourier<X>>> const k_mesh
             = ddc::FourierMesh(x_mesh, is_complex<Tin>::value && is_complex<Tout>::value);
 
-    ddc::Chunk _f_bis = ddc::Chunk(ddc::get_domain<DDim<X>>(f), Allocator<MemorySpace, Tin>());
-    ddc::ChunkSpan f_bis = _f_bis.span_view();
+    ddc::Chunk f_bis_alloc = ddc::Chunk(ddc::get_domain<DDim<X>>(f), Allocator<MemorySpace, Tin>());
+    ddc::ChunkSpan f_bis = f_bis_alloc.span_view();
     ddc::deepcopy(f_bis, f);
 
-    ddc::Chunk _Ff = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
-    ddc::ChunkSpan Ff = _Ff.span_view();
+    ddc::Chunk Ff_alloc = ddc::Chunk(k_mesh, Allocator<MemorySpace, Tout>());
+    ddc::ChunkSpan Ff = Ff_alloc.span_view();
     ddc::fft(ExecSpace(), Ff, f_bis, {norm});
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input
-    ddc::Chunk _Ff_bis = ddc::
+    ddc::Chunk Ff_bis_alloc = ddc::
             Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>>(Ff), Allocator<MemorySpace, Tout>());
-    ddc::ChunkSpan Ff_bis = _Ff_bis.span_view();
+    ddc::ChunkSpan Ff_bis = Ff_bis_alloc.span_view();
     ddc::deepcopy(Ff_bis, Ff);
 
-    ddc::Chunk _FFf = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
-    ddc::ChunkSpan FFf = _FFf.span_view();
+    ddc::Chunk FFf_alloc = ddc::Chunk(x_mesh, Allocator<MemorySpace, Tin>());
+    ddc::ChunkSpan FFf = FFf_alloc.span_view();
     ddc::ifft(ExecSpace(), FFf, Ff_bis, {norm});
 
-    ddc::Chunk _f_host = ddc::Chunk(ddc::get_domain<DDim<X>>(f), ddc::HostAllocator<Tin>());
-    ddc::ChunkSpan f_host = _f_host.span_view();
+    ddc::Chunk f_host_alloc = ddc::Chunk(ddc::get_domain<DDim<X>>(f), ddc::HostAllocator<Tin>());
+    ddc::ChunkSpan f_host = f_host_alloc.span_view();
     ddc::deepcopy(f_host, f);
 
-    ddc::Chunk _Ff_host
+    ddc::Chunk Ff_host_alloc
             = ddc::Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>>(Ff), ddc::HostAllocator<Tout>());
-    ddc::ChunkSpan Ff_host = _Ff_host.span_view();
+    ddc::ChunkSpan Ff_host = Ff_host_alloc.span_view();
     ddc::deepcopy(Ff_host, Ff);
 
     ddc::Chunk _FFf_host = ddc::Chunk(ddc::get_domain<DDim<X>>(FFf), ddc::HostAllocator<Tin>());

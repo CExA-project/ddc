@@ -5,6 +5,8 @@
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/fft.hpp>
 
+#include "ddc/transform_reduce.hpp"
+
 template <typename X>
 using DDim = ddc::UniformPointSampling<X>;
 
@@ -265,23 +267,25 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
     ddc::ChunkSpan FFf_host = _FFf_host.span_view();
     ddc::deepcopy(FFf_host, FFf);
 
+    double const f_sum = ddc::transform_reduce(f.domain(), 0., ddc::reducer::sum<double>(), f);
+
     double Ff0_expected;
     double FFf_expected;
     switch (norm) {
     case ddc::FFT_Normalization::OFF:
-        Ff0_expected = 2;
-        FFf_expected = 2;
+        Ff0_expected = f_sum;
+        FFf_expected = f_sum;
         break;
     case ddc::FFT_Normalization::FORWARD:
         Ff0_expected = 1;
         FFf_expected = 1;
         break;
     case ddc::FFT_Normalization::BACKWARD:
-        Ff0_expected = 2;
+        Ff0_expected = f_sum;
         FFf_expected = 1;
         break;
     case ddc::FFT_Normalization::ORTHO:
-        Ff0_expected = Kokkos::sqrt(2.);
+        Ff0_expected = Kokkos::sqrt(f_sum);
         FFf_expected = 1;
         break;
     case ddc::FFT_Normalization::FULL:

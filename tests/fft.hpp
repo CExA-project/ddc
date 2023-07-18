@@ -168,19 +168,6 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
     ddc::ChunkSpan FFf = FFf_alloc.span_view();
     ddc::ifft(ExecSpace(), FFf, Ff_bis, {norm});
 
-    ddc::Chunk f_host_alloc = ddc::Chunk(ddc::get_domain<DDim<X>>(f), ddc::HostAllocator<Tin>());
-    ddc::ChunkSpan f_host = f_host_alloc.span_view();
-    ddc::deepcopy(f_host, f);
-
-    ddc::Chunk Ff_host_alloc
-            = ddc::Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>>(Ff), ddc::HostAllocator<Tout>());
-    ddc::ChunkSpan Ff_host = Ff_host_alloc.span_view();
-    ddc::deepcopy(Ff_host, Ff);
-
-    ddc::Chunk _FFf_host = ddc::Chunk(ddc::get_domain<DDim<X>>(FFf), ddc::HostAllocator<Tin>());
-    ddc::ChunkSpan FFf_host = _FFf_host.span_view();
-    ddc::deepcopy(FFf_host, FFf);
-
     double const f_sum = ddc::transform_reduce(f.domain(), 0., ddc::reducer::sum<double>(), f);
 
     double Ff0_expected;

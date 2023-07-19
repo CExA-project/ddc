@@ -148,7 +148,7 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
 
 
     ddc::Chunk f_bis_alloc
-            = ddc::Chunk(ddc::get_domain<DDim<X>>(f), ddc::KokkosAllocator<Tin, MemorySpace>());
+            = ddc::Chunk(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan f_bis = f_bis_alloc.span_view();
     ddc::deepcopy(f_bis, f);
 
@@ -159,7 +159,7 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
 
     // deepcopy of Ff because FFT C2R overwrites the input
     ddc::Chunk Ff_bis_alloc = ddc::
-            Chunk(ddc::get_domain<DFDim<ddc::Fourier<X>>>(Ff),
+            Chunk(Ff.domain(),
                   ddc::KokkosAllocator<Tout, MemorySpace>());
     ddc::ChunkSpan Ff_bis = Ff_bis_alloc.span_view();
     ddc::deepcopy(Ff_bis, Ff);

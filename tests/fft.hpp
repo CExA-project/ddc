@@ -63,9 +63,8 @@ static void test_fft()
                 double const xn2 = (Kokkos::pow(ddc::coordinate(ddc::select<DDim<X>>(e)), 2) + ...);
                 f(e) = Kokkos::exp(-xn2 / 2);
             });
-
-    ddc::Chunk _f_bis(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
-    ddc::ChunkSpan f_bis = _f_bis.span_view();
+    ddc::Chunk f_bis_alloc(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
+    ddc::ChunkSpan f_bis = f_bis_alloc.span_view();
     ddc::deepcopy(f_bis, f);
 
     ddc::Chunk Ff_alloc(k_mesh, ddc::KokkosAllocator<Tout, MemorySpace>());
@@ -82,8 +81,8 @@ static void test_fft()
     ddc::ChunkSpan FFf = FFf_alloc.span_view();
     ddc::ifft(ExecSpace(), FFf, Ff_bis, {ddc::FFT_Normalization::FULL});
 
-    ddc::Chunk _f_host(f.domain(), ddc::HostAllocator<Tin>());
-    ddc::ChunkSpan f_host = _f_host.span_view();
+    ddc::Chunk f_host_alloc(f.domain(), ddc::HostAllocator<Tin>());
+    ddc::ChunkSpan f_host = f_host_alloc.span_view();
     ddc::deepcopy(f_host, f);
 
     ddc::Chunk Ff_host_alloc(Ff.domain(), ddc::HostAllocator<Tout>());
@@ -120,10 +119,81 @@ static void test_fft()
                 double const diff = Kokkos::abs(FFf_host(e)) - Kokkos::abs(f_host(e));
                 return pow2(diff) / Kokkos::pow(Nx, sizeof...(X));
             }));
-
     double epsilon = std::is_same_v<ddc::detail::fft::real_type_t<Tin>, double> ? 1e-15 : 1e-7;
     ASSERT_LE(criterion, epsilon)
             << "Distance between analytical prediction and numerical result : " << criterion;
     ASSERT_LE(criterion2, epsilon)
             << "Distance between input and iFFT(FFT(input)) : " << criterion2;
+}
+
+template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename X>
+static void test_fft_norm(ddc::FFT_Normalization const norm)
+{
+    constexpr bool full_fft
+            = ddc::detail::fft::is_complex_v<Tin> && ddc::detail::fft::is_complex_v<Tout>;
+
+    DDom<DDim<X>> const x_mesh = ddc::init_discrete_space(DDim<X>::
+                                                                  init(ddc::Coordinate<X>(-1. / 4),
+                                                                       ddc::Coordinate<X>(1. / 4),
+                                                                       DVect<DDim<X>>(2)));
+    ddc::init_fourier_space<X>(x_mesh);
+    DDom<DFDim<ddc::Fourier<X>>> const k_mesh = ddc::FourierMesh(x_mesh, full_fft);
+
+    ddc::Chunk f_alloc = ddc::Chunk(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
+    ddc::ChunkSpan f = f_alloc.span_view();
+    ddc::for_each(
+            policy<ExecSpace>(),
+            f.domain(),
+            DDC_LAMBDA(DElem<DDim<X>> const e) { f(e) = static_cast<Tin>(1); });
+
+
+    ddc::Chunk f_bis_alloc = ddc::Chunk(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
+    ddc::ChunkSpan f_bis = f_bis_alloc.span_view();
+    ddc::deepcopy(f_bis, f);
+
+    ddc::Chunk Ff_alloc = ddc::Chunk(k_mesh, ddc::KokkosAllocator<Tout, MemorySpace>());
+    ddc::ChunkSpan Ff = Ff_alloc.span_view();
+    ddc::fft(ExecSpace(), Ff, f_bis, {norm});
+    Kokkos::fence();
+
+    // deepcopy of Ff because FFT C2R overwrites the input
+    ddc::Chunk Ff_bis_alloc = ddc::Chunk(Ff.domain(), ddc::KokkosAllocator<Tout, MemorySpace>());
+    ddc::ChunkSpan Ff_bis = Ff_bis_alloc.span_view();
+    ddc::deepcopy(Ff_bis, Ff);
+
+    ddc::Chunk FFf_alloc = ddc::Chunk(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
+    ddc::ChunkSpan FFf = FFf_alloc.span_view();
+    ddc::ifft(ExecSpace(), FFf, Ff_bis, {norm});
+
+    double const f_sum = ddc::transform_reduce(f.domain(), 0., ddc::reducer::sum<double>(), f);
+
+    double Ff0_expected;
+    double FFf_expected;
+    switch (norm) {
+    case ddc::FFT_Normalization::OFF:
+        Ff0_expected = f_sum;
+        FFf_expected = f_sum;
+        break;
+    case ddc::FFT_Normalization::FORWARD:
+        Ff0_expected = 1;
+        FFf_expected = 1;
+        break;
+    case ddc::FFT_Normalization::BACKWARD:
+        Ff0_expected = f_sum;
+        FFf_expected = 1;
+        break;
+    case ddc::FFT_Normalization::ORTHO:
+        Ff0_expected = Kokkos::sqrt(f_sum);
+        FFf_expected = 1;
+        break;
+    case ddc::FFT_Normalization::FULL:
+        Ff0_expected = 1 / Kokkos::sqrt(2 * Kokkos::numbers::pi);
+        FFf_expected = 1;
+        break;
+    }
+
+    double epsilon = 1e-6;
+    EXPECT_NEAR(Kokkos::abs(Ff(Ff.domain().front())), Ff0_expected, epsilon);
+    EXPECT_NEAR(FFf(FFf.domain().front()), FFf_expected, epsilon);
+    EXPECT_NEAR(FFf(FFf.domain().back()), FFf_expected, epsilon);
 }

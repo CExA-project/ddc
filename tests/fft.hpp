@@ -147,8 +147,7 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
             DDC_LAMBDA(DElem<DDim<X>> const e) { f(e) = static_cast<Tin>(1); });
 
 
-    ddc::Chunk f_bis_alloc
-            = ddc::Chunk(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
+    ddc::Chunk f_bis_alloc = ddc::Chunk(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan f_bis = f_bis_alloc.span_view();
     ddc::deepcopy(f_bis, f);
 
@@ -158,9 +157,7 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input
-    ddc::Chunk Ff_bis_alloc = ddc::
-            Chunk(Ff.domain(),
-                  ddc::KokkosAllocator<Tout, MemorySpace>());
+    ddc::Chunk Ff_bis_alloc = ddc::Chunk(Ff.domain(), ddc::KokkosAllocator<Tout, MemorySpace>());
     ddc::ChunkSpan Ff_bis = Ff_bis_alloc.span_view();
     ddc::deepcopy(Ff_bis, Ff);
 

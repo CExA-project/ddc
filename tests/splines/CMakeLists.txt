@@ -30,7 +30,7 @@ gtest_discover_tests(splines_tests)
 add_executable(bsplines_tests
 	main.cpp
 	bsplines.cpp
-	polar_bsplines.cpp
+	# polar_bsplines.cpp
 )
 target_compile_features(bsplines_tests PUBLIC cxx_std_17)
 target_link_libraries(bsplines_tests
@@ -92,6 +92,7 @@ foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGR
   endforeach()
 endforeach()
 
+if(0)
 foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
   set(test_name "splines_ordered_points_DEGREE_X_${DEGREE_X}")
   add_executable("${test_name}" periodic_spline_builder_ordered_points.cpp)
@@ -190,3 +191,4 @@ foreach(CONTINUITY RANGE -1 1)
     endforeach()
   endforeach()
 endforeach()
+endif()

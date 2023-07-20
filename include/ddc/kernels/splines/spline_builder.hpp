@@ -212,8 +212,8 @@ void SplineBuilder<BSplines, interpolation_mesh_type, BcXmin, BcXmax>::operator(
     DSpan1D const bcoef_section(
             spline.data_handle() + m_offset,
             ddc::discrete_space<BSplines>().nbasis());
-    matrix->solve_inplace(bcoef_section);
-    // matrix->solve_inplace_krylov(bcoef_section);
+    // matrix->solve_inplace(bcoef_section);
+    matrix->solve_inplace_krylov(bcoef_section);
 
     if constexpr (bsplines_type::is_periodic()) {
         if (m_offset != 0) {

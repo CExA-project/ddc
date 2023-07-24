@@ -10,6 +10,7 @@
 #include <petscmat.h>
 #include <petscvec.h>
 
+#include "Kokkos_Core_fwd.hpp"
 #include "view.hpp"
 #include <Kokkos_Core.hpp>
 
@@ -18,13 +19,12 @@ class Matrix
 public:
     Matrix(const int mat_size) : n(mat_size)
     {
-        data = (double*)malloc((n * n)*sizeof(double));
+        data = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>((n * n)*sizeof(double));
         // Kokkos::View<double*, Kokkos::DefaultExecutionSpace> data_view("data",n*n);
 		// data = data_view.data();
         for (int i = 0; i < n * n; i++) {
             // data[i] = std::rand()%10==0 ? std::rand()%1000 : 0; // Fills randomly a sparse matrix
             data[i] = 1 + std::rand() % 10; // Fills randomly a dense matrix
-			// std::cout << data_view[i];
 			// std::cout << data[i];
 			// std::cout << "\n";
         }
@@ -33,22 +33,38 @@ public:
     double* data;
     virtual Vec to_petsc_vec(double* vec_ptr, size_t n) const
     {
+        PetscInt* indices = (PetscInt*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(n * sizeof(PetscInt));
+        // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> indices_view("indices",n);
+        // PetscInt* indices = indices_view.data();
+		// Generate cols indices
+        for (PetscInt i = 0; i < n; i++) {
+            indices[i] = i;
+        }
+
         Vec v;
         VecCreate(PETSC_COMM_SELF, &v);
         VecSetSizes(v, PETSC_DECIDE, n);
-		// VecSetType(v, VECKOKKOS);
-		VecSetFromOptions(v);
-        VecPlaceArray(v, vec_ptr);
+		VecSetType(v, VECKOKKOS);
+		// VecSetFromOptions(v);
+        // VecPlaceArray(v, vec_ptr);
+		VecSetValues(v, n, indices, vec_ptr, INSERT_VALUES);
         return v;
     }
     virtual Mat to_petsc_mat(double* mat_ptr, size_t m, size_t n) const
     {
-        PetscInt* rows = (PetscInt*)malloc((m + 1) * sizeof(PetscInt));
-        PetscInt* cols = (PetscInt*)malloc(m * n * sizeof(PetscInt));
+        // PetscInt* rows = (PetscInt*)malloc((m + 1) * sizeof(PetscInt));
+        PetscInt* rows = (PetscInt*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(m * n * sizeof(PetscInt));
+        PetscInt* cols = (PetscInt*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(m * n * sizeof(PetscInt));
+        // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> rows_view("rows",m*n);
+        // PetscInt* rows = rows_view.data();
+        // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> cols_view("cols",m*n);
+        // PetscInt* cols = cols_view.data();
 
         // Generate rows indices
-        for (PetscInt i = 0; i < m + 1; i++) {
-            rows[i] = i * n;
+        //for (PetscInt i = 0; i < m + 1; i++) {
+        for (PetscInt i = 0; i < m * n; i++) {
+            // rows[i] = i * n; //CSR
+            rows[i] = i / n; //COO
         }
 
         // Generate cols indices
@@ -58,17 +74,21 @@ public:
 
         Mat M;
 		double* data_copy = data;
-        MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, m, n, rows, cols, data_copy, &M);
-		MatSetFromOptions(M);
-        // MatCreateAIJ(PETSC_COMM_SELF, n, m, n, m, 0, NULL, 0, NULL, &M);
-		// MatSetType(M, MATAIJKOKKOS);
-		// MatSetValues(M, n, rows, m, cols, mat_ptr, INSERT_VALUES);
+        // MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, m, n, rows, cols, data_copy, &M);
+		// MatSetFromOptions(M);
+        MatCreateAIJ(PETSC_COMM_SELF, m, n, PETSC_DECIDE, PETSC_DECIDE, 0, NULL, 0, NULL, &M);
+		MatSetType(M, MATAIJKOKKOS);
+		MatSetPreallocationCOO(M, m*n, rows, cols);
+		MatSetValuesCOO(M, data_copy, INSERT_VALUES); // TODO:use mat_ptr
+		// MatSetValues(M, m, rows, n, cols, data_copy, INSERT_VALUES); // TODO:use mat_ptr
 		// MatAssemblyBegin(M, MAT_FINAL_ASSEMBLY);
 		// MatAssemblyEnd(M, MAT_FINAL_ASSEMBLY);
 
-		PetscScalar va;
-		MatGetValue(M,0,0,&va);
-		std::cout <<va;
+		// PetscScalar va;
+		// MatGetValue(M,0,0,&va);
+		// std::cout <<va;
+		// free(rows);
+		// free(cols);
         return M;
     }
     virtual double get_element(int i, int j) const = 0;
@@ -104,6 +124,7 @@ public:
     virtual DSpan1D solve_inplace_krylov(DSpan1D const b) const
     {
         Kokkos::View<double*, Kokkos::HostSpace> b_cpu(b.data_handle(), b.size());
+		# if 1
         Kokkos::View<double*, Kokkos::DefaultExecutionSpace> b_gpu("b_gpu", b.size());
 		Kokkos::deep_copy(b_gpu, b_cpu);
         Vec b_vec = to_petsc_vec(b_gpu.data(), b.size());
@@ -123,16 +144,16 @@ public:
 		Vec err;
 		VecCreate(PETSC_COMM_SELF, &err);
         VecSetSizes(err, PETSC_DECIDE, b.size());
-        // VecSetType(err, VECKOKKOS);
+        VecSetType(err, VECKOKKOS);
         VecSetFromOptions(err);
 		MatMult(data_mat,x_vec,err);
 		VecAXPY(err, -1, b_vec);
 		PetscReal norm;
 		VecNorm(err, NORM_2, &norm);
 		PetscPrintf(PETSC_COMM_WORLD, "Norm of error %g iterations %" PetscInt_FMT "\n", (double)norm, its);
-        // PetscPrintf(PETSC_COMM_SELF, "Iterations %" PetscInt_FMT "\n", its);
 		Kokkos::deep_copy(x_cpu, x_gpu);
-        return DSpan1D(x_cpu.data(), n);
+		# endif
+        return DSpan1D(b_cpu.data(), n);
     }
     virtual DSpan1D solve_transpose_inplace(DSpan1D const b) const
     {

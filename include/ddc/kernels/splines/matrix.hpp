@@ -13,43 +13,62 @@
 #include "Kokkos_Core_fwd.hpp"
 #include "view.hpp"
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Random.hpp>
 
 class Matrix
 {
 public:
-    Matrix(const int mat_size) : n(mat_size)
+	struct FillMatrixFunctor
+	{
+		double* data;
+		Kokkos::Random_XorShift64_Pool<> random_pool;
+
+		FillMatrixFunctor(double* data_ptr) : data(data_ptr) {
+			random_pool = Kokkos::Random_XorShift64_Pool<>(/*seed=*/12345);
+		}
+
+		__host__ __device__
+		void operator()(const PetscInt i) const
+		{
+			auto generator = random_pool.get_state();
+			data[i] = 1 + generator.drand(0.,9.); // Fills randomly a dense matrix
+			random_pool.free_state(generator);
+			// data[i] = 5+0.1*(i%5); // Fills randomly a dense matrix
+		}
+	};
+	Matrix(const int mat_size) : n(mat_size)
     {
         data = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>((n * n)*sizeof(double));
+		# if 1 
         // Kokkos::View<double*, Kokkos::DefaultExecutionSpace> data_view("data",n*n);
 		// data = data_view.data();
-        for (int i = 0; i < n * n; i++) {
-            // data[i] = std::rand()%10==0 ? std::rand()%1000 : 0; // Fills randomly a sparse matrix
-            data[i] = 1 + std::rand() % 10; // Fills randomly a dense matrix
-			// std::cout << data[i];
-			// std::cout << "\n";
-        }
+        // for (int i = 0; i < n * n; i++) {
+        Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,n*n), FillMatrixFunctor(data));
+		# endif
     }
-    virtual ~Matrix() = default;
+    virtual ~Matrix() {
+		Kokkos::kokkos_free(data);
+	};
     double* data;
     virtual Vec to_petsc_vec(double* vec_ptr, size_t n) const
     {
-        PetscInt* indices = (PetscInt*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(n * sizeof(PetscInt));
+        PetscInt* indices = (PetscInt*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace::memory_space>(n * sizeof(PetscInt));
         // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> indices_view("indices",n);
         // PetscInt* indices = indices_view.data();
 		// Generate cols indices
-        for (PetscInt i = 0; i < n; i++) {
+        // for (PetscInt i = 0; i < n; i++) {
+        Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,n), KOKKOS_LAMBDA (PetscInt i)  {
             indices[i] = i;
-        }
+        }); // So, not used ?
 
         Vec v;
         VecCreate(PETSC_COMM_SELF, &v);
         VecSetSizes(v, PETSC_DECIDE, n);
-		VecSetType(v, VECKOKKOS);
-		// VecSetFromOptions(v);
-        // VecPlaceArray(v, vec_ptr);
-		VecSetValues(v, n, indices, vec_ptr, INSERT_VALUES);
+		VecSetType(v, VECCUDA);
+        VecCUDAPlaceArray(v, vec_ptr);
         return v;
     }
+	#if 1
     virtual Mat to_petsc_mat(double* mat_ptr, size_t m, size_t n) const
     {
         // PetscInt* rows = (PetscInt*)malloc((m + 1) * sizeof(PetscInt));
@@ -62,24 +81,26 @@ public:
 
         // Generate rows indices
         //for (PetscInt i = 0; i < m + 1; i++) {
-        for (PetscInt i = 0; i < m * n; i++) {
+        // for (PetscInt i = 0; i < m * n; i++) {
+        Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,m*n), KOKKOS_LAMBDA (PetscInt i)  {
             // rows[i] = i * n; //CSR
             rows[i] = i / n; //COO
-        }
+        });
 
         // Generate cols indices
-        for (PetscInt k = 0; k < m * n; k++) {
+        // for (PetscInt k = 0; k < m * n; k++) {
+        Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,m*n), KOKKOS_LAMBDA (PetscInt k)  {
             cols[k] = k % n;
-        }
+        });
 
         Mat M;
-		double* data_copy = data;
         // MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, m, n, rows, cols, data_copy, &M);
 		// MatSetFromOptions(M);
         MatCreateAIJ(PETSC_COMM_SELF, m, n, PETSC_DECIDE, PETSC_DECIDE, 0, NULL, 0, NULL, &M);
-		MatSetType(M, MATAIJKOKKOS);
+		MatSetType(M, MATAIJCUSPARSE);
+		// MatCUSPARSEGetDeviceMatWrite();
 		MatSetPreallocationCOO(M, m*n, rows, cols);
-		MatSetValuesCOO(M, data_copy, INSERT_VALUES); // TODO:use mat_ptr
+		MatSetValuesCOO(M, data, INSERT_VALUES); // TODO:use mat_ptr
 		// MatSetValues(M, m, rows, n, cols, data_copy, INSERT_VALUES); // TODO:use mat_ptr
 		// MatAssemblyBegin(M, MAT_FINAL_ASSEMBLY);
 		// MatAssemblyEnd(M, MAT_FINAL_ASSEMBLY);
@@ -87,10 +108,11 @@ public:
 		// PetscScalar va;
 		// MatGetValue(M,0,0,&va);
 		// std::cout <<va;
-		// free(rows);
-		// free(cols);
+		Kokkos::kokkos_free(rows);
+		Kokkos::kokkos_free(cols);
         return M;
     }
+	# endif
     virtual double get_element(int i, int j) const = 0;
     virtual void set_element(int i, int j, double aij) = 0;
     virtual void factorize()
@@ -121,10 +143,10 @@ public:
         }
         return b;
     }
+	# if 1 
     virtual DSpan1D solve_inplace_krylov(DSpan1D const b) const
     {
         Kokkos::View<double*, Kokkos::HostSpace> b_cpu(b.data_handle(), b.size());
-		# if 1
         Kokkos::View<double*, Kokkos::DefaultExecutionSpace> b_gpu("b_gpu", b.size());
 		Kokkos::deep_copy(b_gpu, b_cpu);
         Vec b_vec = to_petsc_vec(b_gpu.data(), b.size());
@@ -135,16 +157,18 @@ public:
         Vec x_vec = to_petsc_vec(x_gpu.data(), b.size());
         KSP ksp;
         KSPCreate(PETSC_COMM_SELF, &ksp);
+		KSPSetType(ksp, KSPBCGS);
         KSPSetFromOptions(ksp);
         KSPSetOperators(ksp, data_mat, data_mat);
         KSPSolve(ksp, b_vec, x_vec);
+		# if 1 
         PetscInt its;
         KSPGetIterationNumber(ksp, &its);
 
 		Vec err;
 		VecCreate(PETSC_COMM_SELF, &err);
         VecSetSizes(err, PETSC_DECIDE, b.size());
-        VecSetType(err, VECKOKKOS);
+        VecSetType(err, VECCUDA);
         VecSetFromOptions(err);
 		MatMult(data_mat,x_vec,err);
 		VecAXPY(err, -1, b_vec);
@@ -152,9 +176,15 @@ public:
 		VecNorm(err, NORM_2, &norm);
 		PetscPrintf(PETSC_COMM_WORLD, "Norm of error %g iterations %" PetscInt_FMT "\n", (double)norm, its);
 		Kokkos::deep_copy(x_cpu, x_gpu);
+		KSPDestroy(&ksp);
+		MatDestroy(&data_mat);
+		VecDestroy(&x_vec);
+		VecDestroy(&b_vec);
+		VecDestroy(&err);
 		# endif
-        return DSpan1D(b_cpu.data(), n);
+        return DSpan1D(x_cpu.data(), n);
     }
+	# endif
     virtual DSpan1D solve_transpose_inplace(DSpan1D const b) const
     {
         assert(int(b.extent(0)) == n);

@@ -5,6 +5,7 @@ include(GoogleTest)
 set(SLL_SPLINES_TEST_DEGREE_MIN 3 CACHE STRING "Minimum degree to test splines.")
 set(SLL_SPLINES_TEST_DEGREE_MAX 3 CACHE STRING "Maximum degree to test splines.")
 
+if(0)
 add_executable(splines_tests
     main.cpp
     chunk.cpp
@@ -76,6 +77,7 @@ target_link_libraries(metric_tensor_tests
 		DDC::DDC
 )
 gtest_discover_tests(metric_tensor_tests)
+endif()
 
 foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
   foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")

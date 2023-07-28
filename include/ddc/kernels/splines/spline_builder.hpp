@@ -9,6 +9,7 @@
 
 #include <ddc/ddc.hpp>
 
+#include "Kokkos_Core_fwd.hpp"
 #include "math_tools.hpp"
 #include "matrix.hpp"
 #include "matrix_maker.hpp"
@@ -212,7 +213,10 @@ void SplineBuilder<BSplines, interpolation_mesh_type, BcXmin, BcXmax>::operator(
     DSpan1D const bcoef_section(
             spline.data_handle() + m_offset,
             ddc::discrete_space<BSplines>().nbasis());
-    matrix->solve_inplace_krylov(bcoef_section);
+	Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::OpenMP>(0,1), [=] __host__ (const int i) {  
+		
+		matrix->solve_inplace_krylov(bcoef_section);
+	});
     matrix->solve_inplace(bcoef_section);
 
     if constexpr (bsplines_type::is_periodic()) {

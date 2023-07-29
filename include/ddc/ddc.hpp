@@ -40,13 +40,33 @@
 #include "petscsys.h"   
 #endif
 
+#if ginkgo_AVAIL
+#include <ginkgo/ginkgo.hpp>
+#endif
+
+# if 0 
+
+
+static auto gkoExecutors() {
+  struct {
+	std::shared_ptr<gko::OmpExecutor> host_par;
+	std::shared_ptr<gko::CudaExecutor> device;
+  } executors;
+  executors.host_par =  gko::OmpExecutor::create();
+  executors.device = gko::CudaExecutor::create(0, executors.host_par);
+  return executors;
+};
+# endif
+
+# if 1
+static std::shared_ptr<gko::OmpExecutor> gko_host_par_exec = gko::OmpExecutor::create();
+static std::shared_ptr<gko::CudaExecutor> gko_device_exec = gko::CudaExecutor::create(0, gko_host_par_exec);
+;
+# endif
+
 class DDCInitializer {
 public:
-  DDCInitializer() {
-	#if petsc_AVAIL
-	PetscInitializeNoArguments();
-	#endif
-  }
+  DDCInitializer() { }
 };
 
 static DDCInitializer ddc_initializer;

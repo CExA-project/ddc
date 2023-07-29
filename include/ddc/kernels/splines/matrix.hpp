@@ -6,110 +6,97 @@
 #include <memory>
 #include <utility>
 
-#include <petscksp.h>
-#include <petscmat.h>
-#include <petscvec.h>
-
 #include "Kokkos_Core_fwd.hpp"
 #include "view.hpp"
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Random.hpp>
+
+#include <ginkgo/core/base/device_matrix_data.hpp>
+#include <ginkgo/ginkgo.hpp>
 
 class Matrix
 {
 public:
 	struct FillMatrixFunctor
 	{
+		int m;
+		int n;
+		int* rows;
+		int* cols;
 		double* data;
 		Kokkos::Random_XorShift64_Pool<> random_pool;
 
-		FillMatrixFunctor(double* data_ptr) : data(data_ptr) {
+		FillMatrixFunctor(int m, int n, int* rows_ptr, int* cols_ptr, double* data_ptr) : n(n), m(m), rows(rows_ptr), cols(cols_ptr), data(data_ptr) {
 			random_pool = Kokkos::Random_XorShift64_Pool<>(/*seed=*/12345);
 		}
 
 		__host__ __device__
-		void operator()(const PetscInt i) const
+		void operator()(const int i) const
 		{
+            rows[i] = i / n; //COO
+            cols[i] = i % n;
 			auto generator = random_pool.get_state();
 			data[i] = 1 + generator.drand(0.,9.); // Fills randomly a dense matrix
 			random_pool.free_state(generator);
 			// data[i] = 5+0.1*(i%5); // Fills randomly a dense matrix
 		}
 	};
-	Matrix(const int mat_size) : n(mat_size)
+	Matrix(const int mat_size) : m(mat_size), n(mat_size)
     {
-        data = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>((n * n)*sizeof(double));
+		rows = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(n * n * sizeof(int));
+        cols = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(n * n * sizeof(int));
+        data = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(n * n *sizeof(double));
+
 		# if 1 
         // Kokkos::View<double*, Kokkos::DefaultExecutionSpace> data_view("data",n*n);
 		// data = data_view.data();
         // for (int i = 0; i < n * n; i++) {
-        Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,n*n), FillMatrixFunctor(data));
+        Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,n*n), FillMatrixFunctor(m,n,rows,cols,data));
 		# endif
     }
     virtual ~Matrix() {
+		Kokkos::kokkos_free(rows);
+		Kokkos::kokkos_free(cols);
 		Kokkos::kokkos_free(data);
 	};
-    double* data;
-    virtual Vec to_petsc_vec(double* vec_ptr, size_t n) const
+	int m;
+	int n;
+	int* rows;
+	int* cols;
+    double* data; // TODO : make a struct for COO
+	virtual std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>> to_gko_vec(double* vec_ptr, size_t n) const
     {
-        PetscInt* indices = (PetscInt*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace::memory_space>(n * sizeof(PetscInt));
+		# if 0
+        int* indices = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace::memory_space>(n * sizeof(int));
+        int* zero = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace::memory_space>(sizeof(int));
         // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> indices_view("indices",n);
         // PetscInt* indices = indices_view.data();
+		
 		// Generate cols indices
-        // for (PetscInt i = 0; i < n; i++) {
-        Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,n), KOKKOS_LAMBDA (PetscInt i)  {
+        Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,n), KOKKOS_LAMBDA (int i)  {
             indices[i] = i;
-        }); // So, not used ?
+        });
+		zero[0] = 0;
+		# endif
 
-        Vec v;
-        VecCreate(PETSC_COMM_SELF, &v);
-        VecSetSizes(v, PETSC_DECIDE, n);
-		VecSetType(v, VECCUDA);
-        VecCUDAPlaceArray(v, vec_ptr);
+		// auto v = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,1});
+		// v->get_values() = vec_ptr;
+		auto v = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,1}, gko::array<double>::view(gko_device_exec, n, vec_ptr), 1);
+		// auto v = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,1});
+		// auto v = gko::matrix::Dense<>(gko_device_exec, gko::dim<2>{n,1}, gko::array<double>(gko_device_exec, n, vec_ptr), n);
+		// v->read(gko::device_matrix_data<double,int>(gko_device_exec, gko::dim<2>{n,1}, &indices, &zero, &vec_ptr));
         return v;
     }
 	#if 1
-    virtual Mat to_petsc_mat(double* mat_ptr, size_t m, size_t n) const
+    virtual std::unique_ptr<gko::matrix::Coo<>, std::default_delete<gko::matrix::Coo<>>> to_gko_mat(double* mat_ptr, size_t m, size_t n) const
     {
-        // PetscInt* rows = (PetscInt*)malloc((m + 1) * sizeof(PetscInt));
-        PetscInt* rows = (PetscInt*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(m * n * sizeof(PetscInt));
-        PetscInt* cols = (PetscInt*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(m * n * sizeof(PetscInt));
-        // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> rows_view("rows",m*n);
+                // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> rows_view("rows",m*n);
         // PetscInt* rows = rows_view.data();
         // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> cols_view("cols",m*n);
         // PetscInt* cols = cols_view.data();
+		auto M = gko::matrix::Coo<>::create(gko_device_exec, gko::dim<2>{m,n}, gko::array<double>::view(gko_device_exec, m*n, mat_ptr), gko::array<int>::view(gko_device_exec, m*n, cols), gko::array<int>::view(gko_device_exec, m*n, rows));
+		// M->read(gko::device_matrix_data<double,int>(gko_device_exec, gko::dim<2>{n,1}, &rows, &cols, &data));
 
-        // Generate rows indices
-        //for (PetscInt i = 0; i < m + 1; i++) {
-        // for (PetscInt i = 0; i < m * n; i++) {
-        Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,m*n), KOKKOS_LAMBDA (PetscInt i)  {
-            // rows[i] = i * n; //CSR
-            rows[i] = i / n; //COO
-        });
-
-        // Generate cols indices
-        // for (PetscInt k = 0; k < m * n; k++) {
-        Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,m*n), KOKKOS_LAMBDA (PetscInt k)  {
-            cols[k] = k % n;
-        });
-
-        Mat M;
-        // MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, m, n, rows, cols, data_copy, &M);
-		// MatSetFromOptions(M);
-        MatCreateAIJ(PETSC_COMM_SELF, m, n, PETSC_DECIDE, PETSC_DECIDE, 0, NULL, 0, NULL, &M);
-		MatSetType(M, MATAIJCUSPARSE);
-		// MatCUSPARSEGetDeviceMatWrite();
-		MatSetPreallocationCOO(M, m*n, rows, cols);
-		MatSetValuesCOO(M, data, INSERT_VALUES); // TODO:use mat_ptr
-		// MatSetValues(M, m, rows, n, cols, data_copy, INSERT_VALUES); // TODO:use mat_ptr
-		// MatAssemblyBegin(M, MAT_FINAL_ASSEMBLY);
-		// MatAssemblyEnd(M, MAT_FINAL_ASSEMBLY);
-
-		// PetscScalar va;
-		// MatGetValue(M,0,0,&va);
-		// std::cout <<va;
-		Kokkos::kokkos_free(rows);
-		Kokkos::kokkos_free(cols);
         return M;
     }
 	# endif
@@ -149,19 +136,53 @@ public:
         Kokkos::View<double*, Kokkos::HostSpace> b_cpu(b.data_handle(), b.size());
         Kokkos::View<double*, Kokkos::DefaultExecutionSpace> b_gpu("b_gpu", b.size());
 		Kokkos::deep_copy(b_gpu, b_cpu);
-        Vec b_vec = to_petsc_vec(b_gpu.data(), b.size());
-        Mat data_mat = to_petsc_mat(data, n, n);
+        // double* b_gpu = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>((b.size())*sizeof(double));
+        // double* b_gpu = gko_device_exec->alloc<double>(b.size());
+        auto b_vec = to_gko_vec(b_gpu.data(), b.size());
+        auto data_mat = gko::share(to_gko_mat(data, n, n));
         Kokkos::View<double*, Kokkos::HostSpace> x_cpu("x_cpu", b.size());
         Kokkos::View<double*, Kokkos::DefaultExecutionSpace> x_gpu("x_gpu", b.size());
 		Kokkos::deep_copy(x_gpu, x_cpu);
-        Vec x_vec = to_petsc_vec(x_gpu.data(), b.size());
+        auto x_vec = to_gko_vec(x_gpu.data(), b.size());
+
+		// Create the solver
+		auto solver =
+			gko::solver::Cg<>::build()
+				.with_preconditioner(gko::preconditioner::Jacobi<>::build().on(gko_device_exec))
+				.with_criteria(
+					gko::stop::Iteration::build().with_max_iters(20u).on(gko_device_exec),
+					gko::stop::ResidualNorm<>::build()
+						.with_reduction_factor(1e-15)
+						.on(gko_device_exec))
+				.on(gko_device_exec);
+		// Solve system
+		solver->generate(data_mat)->apply(b_vec, x_vec);
+
+		// Write result
+		std::cout << "-----------------------";
+		write(std::cout, data_mat);
+		std::cout << "-----------------------";
+		write(std::cout, x_vec);
+
+		// Calculate residual
+		auto err = gko::clone(gko_device_exec, b_vec);
+		auto one = gko::initialize<gko::matrix::Dense<>>({1.0}, gko_device_exec);
+		auto neg_one = gko::initialize<gko::matrix::Dense<>>({-1.0}, gko_device_exec);
+		auto res = gko::initialize<gko::matrix::Dense<>>({0.0}, gko_device_exec);
+		std::cout << "-----------------------";
+		data_mat->apply(one, x_vec, neg_one, b_vec);
+		b_vec->compute_norm2(res);
+
+		std::cout << "Residual norm sqrt(r^T r):\n";
+		write(std::cout, res);
+
+		# if 0 
         KSP ksp;
         KSPCreate(PETSC_COMM_SELF, &ksp);
 		KSPSetType(ksp, KSPBCGS);
         KSPSetFromOptions(ksp);
         KSPSetOperators(ksp, data_mat, data_mat);
         KSPSolve(ksp, b_vec, x_vec);
-		# if 1 
         PetscInt its;
         KSPGetIterationNumber(ksp, &its);
 
@@ -175,13 +196,13 @@ public:
 		PetscReal norm;
 		VecNorm(err, NORM_2, &norm);
 		PetscPrintf(PETSC_COMM_WORLD, "Norm of error %g iterations %" PetscInt_FMT "\n", (double)norm, its);
-		Kokkos::deep_copy(x_cpu, x_gpu);
 		KSPDestroy(&ksp);
 		MatDestroy(&data_mat);
 		VecDestroy(&x_vec);
 		VecDestroy(&b_vec);
 		VecDestroy(&err);
 		# endif
+		Kokkos::deep_copy(x_cpu, x_gpu);
         return DSpan1D(x_cpu.data(), n);
     }
 	# endif
@@ -227,5 +248,5 @@ public:
 protected:
     virtual int factorize_method() = 0;
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const = 0;
-    int const n; // matrix size
+    // int const n; // matrix size
 };

@@ -276,6 +276,7 @@ target_compile_definitions(DDC INTERFACE SLATE_AVAIL)
 endif()
 
 # PETSC
+if(0)
 find_package(PkgConfig REQUIRED)
 if (PKG_CONFIG_FOUND)
   pkg_search_module(PETSC REQUIRED IMPORTED_TARGET PETSc)
@@ -285,6 +286,12 @@ if (PKG_CONFIG_FOUND)
   target_link_libraries(DDC INTERFACE PkgConfig::PETSC)
   target_compile_definitions(DDC INTERFACE petsc_AVAIL)
 endif()
+endif()
+
+# Ginkgo
+find_package(Ginkgo REQUIRED)
+target_link_libraries(DDC INTERFACE Ginkgo::ginkgo)
+target_compile_definitions(DDC INTERFACE ginkgo_AVAIL)
 
 ## The PDI wrapper
 

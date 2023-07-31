@@ -26,15 +26,18 @@ public:
 		double* data;
 		Kokkos::Random_XorShift64_Pool<> random_pool;
 
-		FillMatrixFunctor(int m, int n, int* rows_ptr, int* cols_ptr, double* data_ptr) : n(n), m(m), rows(rows_ptr), cols(cols_ptr), data(data_ptr) {
+		FillMatrixFunctor(int m, int n, int* rows_ptr, int* cols_ptr, double* data_ptr) : m(m), n(n), rows(rows_ptr), cols(cols_ptr), data(data_ptr) {
 			random_pool = Kokkos::Random_XorShift64_Pool<>(/*seed=*/12345);
 		}
 
 		__host__ __device__
 		void operator()(const int i) const
 		{
-            rows[i] = i / n; //COO
-            cols[i] = i % n;
+			if (i<m+1) {
+           		rows[i] = i * n; //CSR
+			}
+			// rows[i] = i * n; //COO
+           	cols[i] = i % n;
 			auto generator = random_pool.get_state();
 			data[i] = 1 + generator.drand(0.,9.); // Fills randomly a dense matrix
 			random_pool.free_state(generator);
@@ -43,7 +46,7 @@ public:
 	};
 	Matrix(const int mat_size) : m(mat_size), n(mat_size)
     {
-		rows = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(n * n * sizeof(int));
+		rows = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>((n +1) * sizeof(int));
         cols = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(n * n * sizeof(int));
         data = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>(n * n *sizeof(double));
 
@@ -59,6 +62,7 @@ public:
 		Kokkos::kokkos_free(cols);
 		Kokkos::kokkos_free(data);
 	};
+	int n_batch = 10;
 	int m;
 	int n;
 	int* rows;
@@ -88,13 +92,13 @@ public:
         return v;
     }
 	#if 1
-    virtual std::unique_ptr<gko::matrix::Coo<>, std::default_delete<gko::matrix::Coo<>>> to_gko_mat(double* mat_ptr, size_t m, size_t n) const
+    virtual std::unique_ptr<gko::matrix::Csr<>, std::default_delete<gko::matrix::Csr<>>> to_gko_mat(double* mat_ptr, size_t m, size_t n) const
     {
                 // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> rows_view("rows",m*n);
         // PetscInt* rows = rows_view.data();
         // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> cols_view("cols",m*n);
         // PetscInt* cols = cols_view.data();
-		auto M = gko::matrix::Coo<>::create(gko_device_exec, gko::dim<2>{m,n}, gko::array<double>::view(gko_device_exec, m*n, mat_ptr), gko::array<int>::view(gko_device_exec, m*n, cols), gko::array<int>::view(gko_device_exec, m*n, rows));
+		auto M = gko::matrix::Csr<>::create(gko_device_exec, gko::dim<2>{m,n}, gko::array<double>::view(gko_device_exec, m*n, mat_ptr), gko::array<int>::view(gko_device_exec, m*n, cols), gko::array<int>::view(gko_device_exec, m+1, rows));
 		// M->read(gko::device_matrix_data<double,int>(gko_device_exec, gko::dim<2>{n,1}, &rows, &cols, &data));
 
         return M;
@@ -170,8 +174,8 @@ public:
 		auto neg_one = gko::initialize<gko::matrix::Dense<>>({-1.0}, gko_device_exec);
 		auto res = gko::initialize<gko::matrix::Dense<>>({0.0}, gko_device_exec);
 		std::cout << "-----------------------";
-		data_mat->apply(one, x_vec, neg_one, b_vec);
-		b_vec->compute_norm2(res);
+		data_mat->apply(one, x_vec, neg_one, err);
+		err->compute_norm2(res);
 
 		std::cout << "Residual norm sqrt(r^T r):\n";
 		write(std::cout, res);

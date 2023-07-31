@@ -11,3 +11,7 @@
 [submodule "vendor/kokkos"]
 	path = vendor/kokkos
 	url = https://github.com/kokkos/kokkos.git
+[submodule "vendor/ginkgo"]
+	path = vendor/ginkgo
+  url = https://github.com/ginkgo-project/ginkgo.git
+  branch = batch-develop

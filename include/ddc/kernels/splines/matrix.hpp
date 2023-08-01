@@ -62,13 +62,14 @@ public:
 		Kokkos::kokkos_free(cols);
 		Kokkos::kokkos_free(data);
 	};
-	int n_batch = 10;
+	// int n_batch = 400000000;
+	int n_batch = 1e1;
 	int m;
 	int n;
 	int* rows;
 	int* cols;
-    double* data; // TODO : make a struct for COO
-	virtual std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>> to_gko_vec(double* vec_ptr, size_t n) const
+    double* data; // TODO : make a struct for CSR
+	virtual std::unique_ptr<gko::matrix::BatchDense<>, std::default_delete<gko::matrix::BatchDense<>>> to_gko_vec(double* vec_ptr, size_t n) const
     {
 		# if 0
         int* indices = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace::memory_space>(n * sizeof(int));
@@ -85,20 +86,20 @@ public:
 
 		// auto v = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,1});
 		// v->get_values() = vec_ptr;
-		auto v = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,1}, gko::array<double>::view(gko_device_exec, n, vec_ptr), 1);
+		auto v = gko::matrix::BatchDense<>::create(gko_device_exec, gko::batch_dim<>(1,gko::dim<2>{n,1}), gko::array<double>::view(gko_device_exec, n, vec_ptr), gko::batch_stride(1, 1));
 		// auto v = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,1});
 		// auto v = gko::matrix::Dense<>(gko_device_exec, gko::dim<2>{n,1}, gko::array<double>(gko_device_exec, n, vec_ptr), n);
 		// v->read(gko::device_matrix_data<double,int>(gko_device_exec, gko::dim<2>{n,1}, &indices, &zero, &vec_ptr));
         return v;
     }
 	#if 1
-    virtual std::unique_ptr<gko::matrix::Csr<>, std::default_delete<gko::matrix::Csr<>>> to_gko_mat(double* mat_ptr, size_t m, size_t n) const
+    virtual std::unique_ptr<gko::matrix::BatchCsr<>, std::default_delete<gko::matrix::BatchCsr<>>> to_gko_mat(double* mat_ptr, size_t m, size_t n) const
     {
-                // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> rows_view("rows",m*n);
+       //  Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> rows_view("rows",m*n);
         // PetscInt* rows = rows_view.data();
         // Kokkos::View<PetscInt*, Kokkos::DefaultExecutionSpace> cols_view("cols",m*n);
         // PetscInt* cols = cols_view.data();
-		auto M = gko::matrix::Csr<>::create(gko_device_exec, gko::dim<2>{m,n}, gko::array<double>::view(gko_device_exec, m*n, mat_ptr), gko::array<int>::view(gko_device_exec, m*n, cols), gko::array<int>::view(gko_device_exec, m+1, rows));
+		auto M = gko::matrix::BatchCsr<>::create(gko_device_exec, gko::batch_dim<>(1, gko::dim<2>{m,n}), gko::array<double>::view(gko_device_exec, m*n, mat_ptr), gko::array<int>::view(gko_device_exec, m*n, cols), gko::array<int>::view(gko_device_exec, m+1, rows));
 		// M->read(gko::device_matrix_data<double,int>(gko_device_exec, gko::dim<2>{n,1}, &rows, &cols, &data));
 
         return M;
@@ -143,69 +144,59 @@ public:
         // double* b_gpu = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>((b.size())*sizeof(double));
         // double* b_gpu = gko_device_exec->alloc<double>(b.size());
         auto b_vec = to_gko_vec(b_gpu.data(), b.size());
+        auto b_vec_batch = gko::matrix::BatchDense<>::create(gko_device_exec, n_batch, b_vec.get());
         auto data_mat = gko::share(to_gko_mat(data, n, n));
+        auto data_mat_batch = gko::share(gko::matrix::BatchCsr<>::create(gko_device_exec, n_batch, data_mat.get()));
         Kokkos::View<double*, Kokkos::HostSpace> x_cpu("x_cpu", b.size());
         Kokkos::View<double*, Kokkos::DefaultExecutionSpace> x_gpu("x_gpu", b.size());
 		Kokkos::deep_copy(x_gpu, x_cpu);
         auto x_vec = to_gko_vec(x_gpu.data(), b.size());
+        auto x_vec_batch = gko::matrix::BatchDense<>::create(gko_device_exec, n_batch, x_vec.get());
 
 		// Create the solver
 		auto solver =
-			gko::solver::Cg<>::build()
+			gko::solver::BatchBicgstab<>::build()
+				.with_default_max_iterations(500)
+	            .with_default_residual_tol(1e-15)
+    	        .with_tolerance_type(gko::stop::batch::ToleranceType::relative)
+		# if 0
 				.with_preconditioner(gko::preconditioner::Jacobi<>::build().on(gko_device_exec))
 				.with_criteria(
 					gko::stop::Iteration::build().with_max_iters(20u).on(gko_device_exec),
 					gko::stop::ResidualNorm<>::build()
 						.with_reduction_factor(1e-15)
 						.on(gko_device_exec))
+		#endif
 				.on(gko_device_exec);
 		// Solve system
-		solver->generate(data_mat)->apply(b_vec, x_vec);
+		solver->generate(data_mat_batch)->apply(b_vec_batch.get(), x_vec_batch.get());
 
+		# if 0
 		// Write result
 		std::cout << "-----------------------";
 		write(std::cout, data_mat);
 		std::cout << "-----------------------";
 		write(std::cout, x_vec);
 
+		#endif
+		# if 0
 		// Calculate residual
-		auto err = gko::clone(gko_device_exec, b_vec);
-		auto one = gko::initialize<gko::matrix::Dense<>>({1.0}, gko_device_exec);
-		auto neg_one = gko::initialize<gko::matrix::Dense<>>({-1.0}, gko_device_exec);
-		auto res = gko::initialize<gko::matrix::Dense<>>({0.0}, gko_device_exec);
+		auto err = gko::clone(gko_device_exec, b_vec_batch);
+		auto one = gko::batch_initialize<gko::matrix::BatchDense<>>(n_batch, {1.0}, gko_device_exec);
+		auto neg_one = gko::batch_initialize<gko::matrix::BatchDense<>>(n_batch, {-1.0}, gko_device_exec);
+		auto err_norms = gko::matrix::BatchDense<>::create(gko_device_exec->get_master(), gko::batch_dim<>(n_batch,gko::dim<2>{1,1}));
+		data_mat_batch->apply(one.get(), x_vec_batch.get(), neg_one.get(), err.get());
+		err->compute_norm2(err_norms.get());
+		auto unb_err_norms = err_norms->unbatch();
+
 		std::cout << "-----------------------";
-		data_mat->apply(one, x_vec, neg_one, err);
-		err->compute_norm2(res);
+		std::cout << "Residual norms sqrt(r^T r):\n";
+		for (int i = 0; i < n_batch; ++i) {
+			std::cout << unb_err_norms[i]->at(0,0) << "\n";
+		}
 
-		std::cout << "Residual norm sqrt(r^T r):\n";
-		write(std::cout, res);
-
-		# if 0 
-        KSP ksp;
-        KSPCreate(PETSC_COMM_SELF, &ksp);
-		KSPSetType(ksp, KSPBCGS);
-        KSPSetFromOptions(ksp);
-        KSPSetOperators(ksp, data_mat, data_mat);
-        KSPSolve(ksp, b_vec, x_vec);
-        PetscInt its;
-        KSPGetIterationNumber(ksp, &its);
-
-		Vec err;
-		VecCreate(PETSC_COMM_SELF, &err);
-        VecSetSizes(err, PETSC_DECIDE, b.size());
-        VecSetType(err, VECCUDA);
-        VecSetFromOptions(err);
-		MatMult(data_mat,x_vec,err);
-		VecAXPY(err, -1, b_vec);
-		PetscReal norm;
-		VecNorm(err, NORM_2, &norm);
-		PetscPrintf(PETSC_COMM_WORLD, "Norm of error %g iterations %" PetscInt_FMT "\n", (double)norm, its);
-		KSPDestroy(&ksp);
-		MatDestroy(&data_mat);
-		VecDestroy(&x_vec);
-		VecDestroy(&b_vec);
-		VecDestroy(&err);
-		# endif
+		#endif
+		
 		Kokkos::deep_copy(x_cpu, x_gpu);
         return DSpan1D(x_cpu.data(), n);
     }

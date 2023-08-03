@@ -150,7 +150,7 @@ public:
 		auto b_vec_batch = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,n_batch});
 		b_vec_batch->fill(1);
         auto data_mat = gko::share(to_gko_mat(data, n, n));
-        auto data_mat_batch = gko::share(gko::matrix::BatchCsr<>::create(gko_device_exec, n_batch, data_mat.get()));
+        // auto data_mat_batch = gko::share(gko::matrix::BatchCsr<>::create(gko_device_exec, n_batch, data_mat.get()));
         Kokkos::View<double*, Kokkos::HostSpace> x_cpu("x_cpu", b.size());
         Kokkos::View<double*, Kokkos::DefaultExecutionSpace> x_gpu("x_gpu", b.size());
 		Kokkos::deep_copy(x_gpu, x_cpu);
@@ -161,7 +161,7 @@ public:
 		// Create the solver
 		# if 1 // matrix-matrix linear system
 		auto solver =
-			gko::solver::Cg<>::build()
+			gko::solver::Bicgstab<>::build()
 				.with_preconditioner(gko::preconditioner::Jacobi<>::build().on(gko_device_exec))
 				.with_criteria(
 					gko::stop::Iteration::build().with_max_iters(20u).on(gko_device_exec),

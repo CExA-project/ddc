@@ -10,6 +10,7 @@
 #include "view.hpp"
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Random.hpp>
+#include "ginkgo/core/matrix/dense.hpp"
 
 #include <ginkgo/core/base/device_matrix_data.hpp>
 #include <ginkgo/ginkgo.hpp>
@@ -63,7 +64,7 @@ public:
 		Kokkos::kokkos_free(data);
 	};
 	// int n_batch = 400000000;
-	int n_batch = 1e1;
+	int n_batch = 1e2;
 	int m;
 	int n;
 	int* rows;
@@ -154,22 +155,28 @@ public:
         auto x_vec_batch = gko::matrix::BatchDense<>::create(gko_device_exec, n_batch, x_vec.get());
 
 		// Create the solver
+		# if 1 // matrix-matrix linear system
 		auto solver =
-			gko::solver::BatchBicgstab<>::build()
-				.with_default_max_iterations(500)
-	            .with_default_residual_tol(1e-15)
-    	        .with_tolerance_type(gko::stop::batch::ToleranceType::relative)
-		# if 0
+			gko::solver::Cg<>::build()
 				.with_preconditioner(gko::preconditioner::Jacobi<>::build().on(gko_device_exec))
 				.with_criteria(
 					gko::stop::Iteration::build().with_max_iters(20u).on(gko_device_exec),
 					gko::stop::ResidualNorm<>::build()
 						.with_reduction_factor(1e-15)
 						.on(gko_device_exec))
-		#endif
 				.on(gko_device_exec);
-		// Solve system
+		solver->generate(std::move(data_mat->unbatch().at(0)))
+			  ->apply(gko::matrix::Dense<>::create_with_type_of(gko::concatenate_dense_matrices(gko_device_exec, b_vec_batch->unbatch()), gko_device_exec, gko::dim<2>{n,n_batch})
+					, gko::matrix::Dense<>::create_with_type_of(gko::concatenate_dense_matrices(gko_device_exec, x_vec_batch->unbatch()), gko_device_exec, gko::dim<2>{n,n_batch})); // NOTE : There is an implicit copy here dur to gko::copy_with_type_of, need to avoid that 
+		# else // full batched
+		auto solver =
+		gko::solver::BatchBicgstab<>::build()
+			.with_default_max_iterations(500)
+            .with_default_residual_tol(1e-15)
+	        .with_tolerance_type(gko::stop::batch::ToleranceType::relative)
+			.on(gko_device_exec);
 		solver->generate(data_mat_batch)->apply(b_vec_batch.get(), x_vec_batch.get());
+		#endif
 
 		# if 0
 		// Write result
@@ -179,7 +186,7 @@ public:
 		write(std::cout, x_vec);
 
 		#endif
-		# if 0
+		# if 1
 		// Calculate residual
 		auto err = gko::clone(gko_device_exec, b_vec_batch);
 		auto one = gko::batch_initialize<gko::matrix::BatchDense<>>(n_batch, {1.0}, gko_device_exec);

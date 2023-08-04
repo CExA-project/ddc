@@ -28,7 +28,7 @@ public:
 		Kokkos::Random_XorShift64_Pool<> random_pool;
 
 		FillMatrixFunctor(int m, int n, int* rows_ptr, int* cols_ptr, double* data_ptr) : m(m), n(n), rows(rows_ptr), cols(cols_ptr), data(data_ptr) {
-			random_pool = Kokkos::Random_XorShift64_Pool<>(/*seed=*/12345);
+			random_pool = Kokkos::Random_XorShift64_Pool<>(/*seed=*/73);
 		}
 
 		__host__ __device__
@@ -40,7 +40,10 @@ public:
 			// rows[i] = i * n; //COO
            	cols[i] = i % n;
 			auto generator = random_pool.get_state();
-			data[i] = 1 + generator.drand(0.,9.); // Fills randomly a dense matrix
+			// data[i] = generator.drand(0.,10.); // Fills randomly a dense matrix
+			data[i] = Kokkos::max(0.,generator.drand(-300.,10.)); // Fills randomly a dense matrix
+			// data[i] = i%n==i/n  ? 1 : 0; // Fills randomly a dense matrix
+			// data[i] = i%n==i/n || i%n==i/n-1  ? 1 : 0; // Fills randomly a dense matrix
 			random_pool.free_state(generator);
 			// data[i] = 5+0.1*(i%5); // Fills randomly a dense matrix
 		}
@@ -150,6 +153,10 @@ public:
 		auto b_vec_batch = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,n_batch});
 		b_vec_batch->fill(1);
         auto data_mat = gko::share(to_gko_mat(data, n, n));
+		auto data_mat_ = gko::matrix_data<>(gko::dim<2>{n,n});
+		data_mat->write(data_mat_);
+		data_mat_.remove_zeros();
+		data_mat->read(data_mat_);
         // auto data_mat_batch = gko::share(gko::matrix::BatchCsr<>::create(gko_device_exec, n_batch, data_mat.get()));
         Kokkos::View<double*, Kokkos::HostSpace> x_cpu("x_cpu", b.size());
         Kokkos::View<double*, Kokkos::DefaultExecutionSpace> x_gpu("x_gpu", b.size());
@@ -157,6 +164,7 @@ public:
         auto x_vec = to_gko_vec(x_gpu.data(), b.size());
         // auto x_vec_batch = gko::matrix::BatchDense<>::create(gko_device_exec, n_batch, x_vec.get());
 		auto x_vec_batch = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,n_batch});
+		// x_vec_batch->fill(1e3);
 
 		// Create the solver
 		# if 1 // matrix-matrix linear system
@@ -164,7 +172,7 @@ public:
 			gko::solver::Bicgstab<>::build()
 				.with_preconditioner(gko::preconditioner::Jacobi<>::build().on(gko_device_exec))
 				.with_criteria(
-					gko::stop::Iteration::build().with_max_iters(20u).on(gko_device_exec),
+					gko::stop::Iteration::build().with_max_iters(50u).on(gko_device_exec),
 					gko::stop::ResidualNorm<>::build()
 						.with_reduction_factor(1e-15)
 						.on(gko_device_exec))
@@ -181,12 +189,13 @@ public:
 		solver->generate(data_mat_batch)->apply(b_vec_batch.get(), x_vec_batch.get());
 		#endif
 
-		# if 0
+		# if 0 
 		// Write result
 		std::cout << "-----------------------";
 		write(std::cout, data_mat);
 		std::cout << "-----------------------";
-		write(std::cout, x_vec);
+		write(std::cout, x_vec_batch);
+
 
 		#endif
 		# if 0

@@ -41,7 +41,8 @@ public:
            	cols[i] = i % n;
 			auto generator = random_pool.get_state();
 			// data[i] = generator.drand(0.,10.); // Fills randomly a dense matrix
-			data[i] = Kokkos::max(0.,generator.drand(-300.,10.)); // Fills randomly a dense matrix
+			// data[i] = Kokkos::max(0.,generator.drand(-200.,10.)); // Fills randomly a dense matrix
+			data[i] = i%n>=i/n-10 && i%n<=i/n+10 ? Kokkos::max(0.,generator.drand(-10,10.)) : 0; // Fills randomly a dense matrix
 			// data[i] = i%n==i/n  ? 1 : 0; // Fills randomly a dense matrix
 			// data[i] = i%n==i/n || i%n==i/n-1  ? 1 : 0; // Fills randomly a dense matrix
 			random_pool.free_state(generator);
@@ -67,7 +68,7 @@ public:
 		Kokkos::kokkos_free(data);
 	};
 	// int n_batch = 400000000;
-	const int n_batch = 1e3;
+	const int n_batch = 1;
 	int m;
 	int n;
 	int* rows;
@@ -168,17 +169,30 @@ public:
 
 		// Create the solver
 		# if 1 // matrix-matrix linear system
+		std::shared_ptr<gko::log::Stream<>> stream_logger =
+		  gko::log::Stream<>::create(
+			  gko::log::Logger::all_events_mask ^
+				  gko::log::Logger::linop_factory_events_mask ^
+				  gko::log::Logger::polymorphic_object_events_mask,
+			  std::cout);
+		// gko_device_exec->add_logger(stream_logger);
+		std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion =
+			gko::stop::ResidualNorm<>::Factory::create()
+				.with_reduction_factor(1e-6)
+				.on(gko_device_exec);
+		residual_criterion->add_logger(stream_logger);
 		auto solver =
 			gko::solver::Bicgstab<>::build()
-				.with_preconditioner(gko::preconditioner::Jacobi<>::build().on(gko_device_exec))
+		//		.with_preconditioner(gko::preconditioner::Jacobi<>::build()
+		//			.with_max_block_size(32u)
+		//			.on(gko_device_exec))
 				.with_criteria(
-					gko::stop::Iteration::build().with_max_iters(50u).on(gko_device_exec),
-					gko::stop::ResidualNorm<>::build()
-						.with_reduction_factor(1e-15)
-						.on(gko_device_exec))
+					residual_criterion,
+					gko::stop::Iteration::build().with_max_iters(100000u).on(gko_device_exec))
 				.on(gko_device_exec);
-		solver->generate(data_mat)
-			  ->apply(b_vec_batch, x_vec_batch); // NOTE : There is an implicit copy here dur to gko::copy_with_type_of, need to avoid that 
+		auto solver_ = solver->generate(data_mat);
+	    solver_->add_logger(stream_logger);
+	    solver_->apply(b_vec_batch, x_vec_batch); // NOTE : There is an implicit copy here dur to gko::copy_with_type_of, need to avoid that 
 		# else // full batched
 		auto solver =
 		gko::solver::BatchBicgstab<>::build()
@@ -198,7 +212,7 @@ public:
 
 
 		#endif
-		# if 0
+		# if 1
 		// Calculate residual
 		auto err = gko::clone(gko_device_exec, b_vec_batch);
 		// auto one = gko::batch_initialize<gko::matrix::BatchDense<>>(n_batch, {1.0}, gko_device_exec);

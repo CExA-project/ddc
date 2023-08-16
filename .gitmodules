@@ -14,4 +14,4 @@
 [submodule "vendor/ginkgo"]
 	path = vendor/ginkgo
   url = https://github.com/ginkgo-project/ginkgo.git
-  branch = batch-develop
+  branch = develop

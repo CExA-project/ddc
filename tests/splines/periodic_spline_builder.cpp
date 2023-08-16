@@ -56,7 +56,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
 {
     CoordX constexpr x0(0.);
     CoordX constexpr xN(1.);
-    std::size_t constexpr ncells = 10;
+    std::size_t constexpr ncells = 1024; // TODO : restore 10
 
     // 1. Create BSplines
     {

@@ -15,6 +15,87 @@
 #include <ginkgo/core/base/device_matrix_data.hpp>
 #include <ginkgo/ginkgo.hpp>
 
+template <typename ValueType>
+ValueType get_first_element(const gko::matrix::Dense<ValueType>* norm)
+{
+    return norm->get_executor()->copy_val_to_host(norm->get_const_values());
+}
+
+template <typename ValueType>
+ValueType compute_norm(const gko::matrix::Dense<ValueType>* b)
+{
+    auto exec = b->get_executor();
+    auto b_norm = gko::initialize<gko::matrix::Dense<ValueType>>({0.0}, exec);
+    b->compute_norm2(b_norm);
+    return get_first_element(b_norm.get());
+}
+ 
+ 
+template <typename ValueType>
+ValueType compute_residual_norm(
+    const gko::LinOp* system_matrix, const gko::matrix::Dense<ValueType>* b,
+    const gko::matrix::Dense<ValueType>* x)
+{
+    auto exec = system_matrix->get_executor();
+    auto one = gko::initialize<gko::matrix::Dense<ValueType>>({1.0}, exec);
+    auto neg_one = gko::initialize<gko::matrix::Dense<ValueType>>({-1.0}, exec);
+    auto res = gko::clone(b);
+    system_matrix->apply(one, x, neg_one, res);
+    return compute_norm(res.get());
+}
+
+template <typename ValueType>
+struct ResidualLogger : gko::log::Logger {
+    void on_iteration_complete(const gko::LinOp*, const gko::size_type&,
+                               const gko::LinOp* residual,
+                               const gko::LinOp* solution,
+                               const gko::LinOp* residual_norm) const override
+    {
+        if (residual_norm) {
+            rec_res_norms.push_back(get_first_element(
+                gko::as<gko::matrix::Dense<ValueType>>(residual_norm)));
+        } else {
+            rec_res_norms.push_back(
+                compute_norm(gko::as<gko::matrix::Dense<ValueType>>(residual)));
+        }
+        if (solution) {
+            true_res_norms.push_back(compute_residual_norm(
+                matrix, b, gko::as<gko::matrix::Dense<ValueType>>(solution)));
+        } else {
+            true_res_norms.push_back(-1.0);
+        }
+    }
+ 
+    ResidualLogger(const gko::LinOp* matrix, const gko::matrix::Dense<ValueType>* b)
+        : gko::log::Logger(gko::log::Logger::iteration_complete_mask),
+          matrix{matrix},
+          b{b}
+    {}
+ 
+    void write_data(std::ostream& ostream)
+    {
+        ostream << "Recurrent Residual Norms: " << std::endl;
+        ostream << "[" << std::endl;
+        for (const auto& entry : rec_res_norms) {
+            ostream << " " << entry;
+        }
+        ostream << "];" << std::endl;
+ 
+        ostream << "True Residual Norms: " << std::endl;
+        ostream << "[" << std::endl;
+        for (const auto& entry : true_res_norms) {
+            ostream << " " << entry;
+        }
+        ostream << "];" << std::endl;
+    }
+ 
+private:
+    const gko::LinOp* matrix;
+    const gko::matrix::Dense<ValueType>* b;
+    mutable std::vector<ValueType> rec_res_norms;
+    mutable std::vector<ValueType> true_res_norms;
+};
+ 
 class Matrix
 {
 public:
@@ -42,7 +123,8 @@ public:
 			auto generator = random_pool.get_state();
 			// data[i] = generator.drand(0.,10.); // Fills randomly a dense matrix
 			// data[i] = Kokkos::max(0.,generator.drand(-200.,10.)); // Fills randomly a dense matrix
-			data[i] = i%n>=i/n-10 && i%n<=i/n+10 ? Kokkos::max(0.,generator.drand(-10,10.)) : 0; // Fills randomly a dense matrix
+			// data[i] = i%n>=i/n-10 && i%n<=i/n+10 ? Kokkos::max(0.,generator.drand(-10,10.)) : 0; // Fills randomly a dense matrix
+			data[i] = i%n>=i/n-10 && i%n<=i/n+10 ? 10-Kokkos::abs(i%n-i/n) : 0; // Create proper band
 			// data[i] = i%n==i/n  ? 1 : 0; // Fills randomly a dense matrix
 			// data[i] = i%n==i/n || i%n==i/n-1  ? 1 : 0; // Fills randomly a dense matrix
 			random_pool.free_state(generator);
@@ -68,7 +150,7 @@ public:
 		Kokkos::kokkos_free(data);
 	};
 	// int n_batch = 400000000;
-	const int n_batch = 1;
+	const int n_batch = 1e3;
 	int m;
 	int n;
 	int* rows;
@@ -92,8 +174,8 @@ public:
 		// auto v = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,1});
 		// v->get_values() = vec_ptr;
 		// auto v = gko::matrix::BatchDense<>::create(gko_device_exec, gko::batch_dim<>(1,gko::dim<2>{n,1}), gko::array<double>::view(gko_device_exec, n, vec_ptr), gko::batch_stride(1, 1));
-		auto v = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,1});
-		// auto v = gko::matrix::Dense<>(gko_device_exec, gko::dim<2>{n,1}, gko::array<double>(gko_device_exec, n, vec_ptr), n);
+		// auto v = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,1});
+		auto v = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,1}, gko::array<double>::view(gko_device_exec, n, vec_ptr), 1);
 		// v->read(gko::device_matrix_data<double,int>(gko_device_exec, gko::dim<2>{n,1}, &indices, &zero, &vec_ptr));
         return v;
     }
@@ -149,7 +231,7 @@ public:
 		Kokkos::deep_copy(b_gpu, b_cpu);
         // double* b_gpu = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>((b.size())*sizeof(double));
         // double* b_gpu = gko_device_exec->alloc<double>(b.size());
-        auto b_vec = to_gko_vec(b_gpu.data(), b.size());
+        // auto b_vec_batch = to_gko_vec(b_gpu.data(), b.size());
         // auto b_vec_batch = gko::matrix::BatchDense<>::create(gko_device_exec, n_batch, b_vec.get());
 		auto b_vec_batch = gko::matrix::Dense<>::create(gko_device_exec, gko::dim<2>{n,n_batch});
 		b_vec_batch->fill(1);
@@ -177,22 +259,26 @@ public:
 			  std::cout);
 		// gko_device_exec->add_logger(stream_logger);
 		std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion =
-			gko::stop::ResidualNorm<>::Factory::create()
-				.with_reduction_factor(1e-6)
+			gko::stop::ResidualNorm<>::build()
+				.with_reduction_factor(1e-15)
 				.on(gko_device_exec);
-		residual_criterion->add_logger(stream_logger);
+		std::shared_ptr<const gko::log::Convergence<>> convergence_logger = gko::log::Convergence<>::create(gko_device_exec);
+		residual_criterion->add_logger(convergence_logger);
 		auto solver =
 			gko::solver::Bicgstab<>::build()
-		//		.with_preconditioner(gko::preconditioner::Jacobi<>::build()
-		//			.with_max_block_size(32u)
-		//			.on(gko_device_exec))
+				.with_preconditioner(gko::preconditioner::Jacobi<>::build()
+					.with_max_block_size(1u)
+					.on(gko_device_exec))
 				.with_criteria(
 					residual_criterion,
 					gko::stop::Iteration::build().with_max_iters(100000u).on(gko_device_exec))
 				.on(gko_device_exec);
 		auto solver_ = solver->generate(data_mat);
 	    solver_->add_logger(stream_logger);
-	    solver_->apply(b_vec_batch, x_vec_batch); // NOTE : There is an implicit copy here dur to gko::copy_with_type_of, need to avoid that 
+		auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat.get(), b_vec_batch.get());
+		// solver_->add_logger(res_logger);
+	    solver_->apply(b_vec_batch, x_vec_batch);
+		// res_logger->write_data(std::cout);
 		# else // full batched
 		auto solver =
 		gko::solver::BatchBicgstab<>::build()
@@ -207,6 +293,8 @@ public:
 		// Write result
 		std::cout << "-----------------------";
 		write(std::cout, data_mat);
+		std::cout << "-----------------------";
+		write(std::cout, b_vec_batch);
 		std::cout << "-----------------------";
 		write(std::cout, x_vec_batch);
 

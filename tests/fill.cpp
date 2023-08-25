@@ -37,7 +37,7 @@ TEST(Fill, OneDimension)
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomX> view(storage.data(), dom);
     ddc::fill(view, 1);
-    ASSERT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
+    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
 TEST(Fill, TwoDimensions)
@@ -46,5 +46,5 @@ TEST(Fill, TwoDimensions)
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomXY> view(storage.data(), dom);
     ddc::fill(view, 1);
-    ASSERT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
+    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }

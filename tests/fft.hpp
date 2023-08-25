@@ -60,7 +60,8 @@ static void test_fft()
             policy<ExecSpace>(),
             f.domain(),
             DDC_LAMBDA(DElem<DDim<X>...> const e) {
-                double const xn2 = (Kokkos::pow(ddc::coordinate(ddc::select<DDim<X>>(e)), 2) + ...);
+                ddc::Real const xn2
+                        = (Kokkos::pow(ddc::coordinate(ddc::select<DDim<X>>(e)), 2) + ...);
                 f(e) = Kokkos::exp(-xn2 / 2);
             });
     ddc::Chunk f_bis_alloc(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());

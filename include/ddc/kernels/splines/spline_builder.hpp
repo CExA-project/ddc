@@ -11,13 +11,14 @@
 
 #include "Kokkos_Core_fwd.hpp"
 #include "math_tools.hpp"
+#include "i_builder.hpp"
 #include "matrix.hpp"
 #include "matrix_maker.hpp"
 #include "spline_boundary_conditions.hpp"
 #include "view.hpp"
 
 template <class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
-class SplineBuilder
+class SplineBuilder : IBuilder 
 {
     static_assert(
             (BSplines::is_periodic() && (BcXmin == BoundCond::PERIODIC)
@@ -213,10 +214,6 @@ void SplineBuilder<BSplines, interpolation_mesh_type, BcXmin, BcXmax>::operator(
     DSpan1D const bcoef_section(
             spline.data_handle() + m_offset,
             ddc::discrete_space<BSplines>().nbasis());
-	Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::OpenMP>(0,1), [=] __host__ (const int i) {  
-		
-		matrix->solve_inplace_krylov(bcoef_section);
-	});
     matrix->solve_inplace(bcoef_section);
 
     if constexpr (bsplines_type::is_periodic()) {
@@ -332,12 +329,17 @@ void SplineBuilder<BSplines, interpolation_mesh_type, BcXmin, BcXmax>::allocate_
     }
 
     if constexpr (bsplines_type::is_periodic()) {
+		#if 0
         matrix = MatrixMaker::make_new_periodic_banded(
                 ddc::discrete_space<BSplines>().nbasis(),
                 upper_band_width,
                 upper_band_width,
                 bsplines_type::is_uniform());
+		#else
+		matrix = MatrixMaker::make_new_sparse( ddc::discrete_space<BSplines>().nbasis());
+		#endif
     } else {
+		#if 0
         matrix = MatrixMaker::make_new_block_with_banded_region(
                 ddc::discrete_space<BSplines>().nbasis(),
                 upper_band_width,
@@ -345,6 +347,9 @@ void SplineBuilder<BSplines, interpolation_mesh_type, BcXmin, BcXmax>::allocate_
                 bsplines_type::is_uniform(),
                 upper_block_size,
                 lower_block_size);
+		#else
+		matrix = MatrixMaker::make_new_sparse( ddc::discrete_space<BSplines>().nbasis());
+		#endif
     }
 
     build_matrix_system();

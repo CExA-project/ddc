@@ -7,12 +7,18 @@
 #include "matrix_dense.hpp"
 #include "matrix_pds_tridiag.hpp"
 #include "matrix_periodic_banded.hpp"
+#include "matrix_sparse.hpp"
 
 
 
 class MatrixMaker
 {
 public:
+    static std::unique_ptr<Matrix> make_new_sparse(
+			int const n)
+	{
+		return std::make_unique<Matrix_Sparse>(n);
+	}
     static std::unique_ptr<Matrix> make_new_banded(
             int const n,
             int const kl,

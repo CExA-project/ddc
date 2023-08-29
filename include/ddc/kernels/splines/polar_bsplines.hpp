@@ -4,11 +4,10 @@
 
 #include <ddc/ddc.hpp>
 
-#include "mapping/barycentric_coordinates.hpp"
-#include "mapping/discrete_mapping_to_cartesian.hpp"
-
 #include "bernstein.hpp"
 #include "bspline.hpp"
+#include "mapping/barycentric_coordinates.hpp"
+#include "mapping/discrete_mapping_to_cartesian.hpp"
 #include "null_boundary_value.hpp"
 #include "spline_builder.hpp"
 #include "spline_builder_2d.hpp"
@@ -102,6 +101,16 @@ public:
         SplineEvaluator2D<BSplinesR, BSplinesP> m_spline_evaluator;
 
     public:
+        struct Corner1Tag
+        {
+        };
+        struct Corner2Tag
+        {
+        };
+        struct Corner3Tag
+        {
+        };
+
         using discrete_dimension_type = PolarBSplines;
 
         template <class DimX, class DimY, class SplineBuilderR, class SplineBuilderP>
@@ -141,16 +150,6 @@ public:
                         corner2(x0 - 0.5 * tau, y0 + 0.5 * tau * sqrt(3.0));
                 const ddc::Coordinate<DimX, DimY>
                         corner3(x0 - 0.5 * tau, y0 - 0.5 * tau * sqrt(3.0));
-
-                struct Corner1Tag
-                {
-                };
-                struct Corner2Tag
-                {
-                };
-                struct Corner3Tag
-                {
-                };
 
                 const CartesianToBarycentricCoordinates<
                         DimX,
@@ -221,13 +220,16 @@ public:
 
         template <class OriginMemorySpace>
         explicit Impl(Impl<OriginMemorySpace> const& impl)
-            : m_singular_basis_elements(impl.m_singular_basis_elements)
-            , m_spline_evaluator(
-                      g_null_boundary_2d<BSplinesR, BSplinesP>,
-                      g_null_boundary_2d<BSplinesR, BSplinesP>,
-                      g_null_boundary_2d<BSplinesR, BSplinesP>,
-                      g_null_boundary_2d<BSplinesR, BSplinesP>)
+            : m_spline_evaluator(
+                    g_null_boundary_2d<BSplinesR, BSplinesP>,
+                    g_null_boundary_2d<BSplinesR, BSplinesP>,
+                    g_null_boundary_2d<BSplinesR, BSplinesP>,
+                    g_null_boundary_2d<BSplinesR, BSplinesP>)
         {
+            for (std::size_t i = 0; i < m_singular_basis_elements.size(); ++i) {
+                m_singular_basis_elements[i] = Spline2D(impl.m_singular_basis_elements[i].domain());
+                ddc::deepcopy(m_singular_basis_elements[i], impl.m_singular_basis_elements[i]);
+            }
         }
 
         Impl(Impl const& x) = default;

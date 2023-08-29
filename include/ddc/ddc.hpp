@@ -45,21 +45,7 @@
 #include <ginkgo/ginkgo.hpp>
 #endif
 
-# if 0 
-
-
-static auto gkoExecutors() {
-  struct {
-	std::shared_ptr<gko::OmpExecutor> host_par;
-	std::shared_ptr<gko::CudaExecutor> device;
-  } executors;
-  executors.host_par =  gko::OmpExecutor::create();
-  executors.device = gko::CudaExecutor::create(0, executors.host_par);
-  return executors;
-};
-# endif
-
-inline std::shared_ptr<gko::Executor> create_default_host_executor()
+static std::shared_ptr<gko::Executor> create_default_host_executor()
 {
 #ifdef KOKKOS_ENABLE_SERIAL
     if constexpr (std::is_same_v<Kokkos::DefaultHostExecutionSpace,
@@ -75,9 +61,10 @@ inline std::shared_ptr<gko::Executor> create_default_host_executor()
 #endif
 } // Comes from "Basic Kokkos Extension" Ginkgo MR 
 
+# if 0
 template <typename ExecSpace,
           typename MemorySpace = typename ExecSpace::memory_space>
-inline std::shared_ptr<gko::Executor> create_executor(ExecSpace, MemorySpace = {})
+static std::shared_ptr<gko::Executor> create_executor(ExecSpace, MemorySpace = {})
 {
     static_assert(
         Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible);
@@ -97,6 +84,7 @@ inline std::shared_ptr<gko::Executor> create_executor(ExecSpace, MemorySpace = {
             return gko::CudaExecutor::create(Kokkos::device_id(),
                                         create_default_host_executor(),
                                         std::make_shared<gko::CudaAllocator>());
+
         }
         if constexpr (std::is_same_v<MemorySpace, Kokkos::CudaUVMSpace>) {
             return gko::CudaExecutor::create(
@@ -141,10 +129,32 @@ inline std::shared_ptr<gko::Executor> create_executor(ExecSpace, MemorySpace = {
 #endif
 } // Comes from "Basic Kokkos Extension" Ginkgo MR 
 
-inline std::shared_ptr<gko::Executor> create_default_executor()
+static std::shared_ptr<gko::Executor> create_default_executor()
 {
     return create_executor(Kokkos::DefaultExecutionSpace{});
 } // Comes from "Basic Kokkos Extension" Ginkgo MR
+# endif // Not working for some reason
+
+static std::shared_ptr<gko::Executor> create_default_executor() {
+#ifdef KOKKOS_ENABLE_SERIAL
+        if (std::is_same_v<Kokkos::DefaultExecutionSpace,
+                         Kokkos::Serial>) {
+            return gko::ReferenceExecutor::create();
+        }
+#endif
+#ifdef KOKKOS_ENABLE_OPENMP
+        if (std::is_same_v<Kokkos::DefaultExecutionSpace,
+                         Kokkos::OpenMP>) {
+            return gko::OmpExecutor::create();
+        }
+#endif
+#ifdef KOKKOS_ENABLE_CUDA
+        if (std::is_same_v<Kokkos::DefaultExecutionSpace, Kokkos::Cuda>) {
+            return gko::CudaExecutor::create(0,
+                                             create_default_host_executor());
+        }
+#endif
+} // Comes from kokkos_assembly example in Ginkgo develop branch
 
 static std::shared_ptr<gko::Executor> gko_default_host_exec = create_default_host_executor();
 static std::shared_ptr<gko::Executor> gko_default_exec = create_default_executor();

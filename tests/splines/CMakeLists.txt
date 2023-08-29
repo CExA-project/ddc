@@ -94,7 +94,7 @@ foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGR
   endforeach()
 endforeach()
 
-if(0)
+if(1)
 foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
   set(test_name "splines_ordered_points_DEGREE_X_${DEGREE_X}")
   add_executable("${test_name}" periodic_spline_builder_ordered_points.cpp)
@@ -132,7 +132,7 @@ foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
 endforeach()
 endif()
 
-if(0)
+if(1)
 foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
   foreach(DEGREE_Y RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
     foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
@@ -149,7 +149,9 @@ foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGR
     endforeach()
   endforeach()
 endforeach()
+endif()
 
+if(0)
 foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
   foreach(BCR "BCR_GREVILLE" "BCR_HERMITE")
     foreach(EVALUATOR "EVALUATOR_POLYNOMIAL")

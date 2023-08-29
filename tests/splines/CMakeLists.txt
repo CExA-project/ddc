@@ -31,7 +31,7 @@ gtest_discover_tests(splines_tests)
 add_executable(bsplines_tests
 	main.cpp
 	bsplines.cpp
-	# polar_bsplines.cpp
+	polar_bsplines.cpp
 )
 target_compile_features(bsplines_tests PUBLIC cxx_std_17)
 target_link_libraries(bsplines_tests
@@ -151,7 +151,7 @@ foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGR
 endforeach()
 endif()
 
-if(0)
+if(1)
 foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
   foreach(BCR "BCR_GREVILLE" "BCR_HERMITE")
     foreach(EVALUATOR "EVALUATOR_POLYNOMIAL")
@@ -174,7 +174,9 @@ foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
     endforeach()
   endforeach()
 endforeach()
+endif()
 
+if(1)
 foreach(CONTINUITY RANGE -1 1)
   math(EXPR MIN_DEGREE "${CONTINUITY}+1")
   if (${MIN_DEGREE} LESS 1)

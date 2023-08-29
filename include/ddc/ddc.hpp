@@ -1,6 +1,7 @@
 #pragma once
 
 // Misc
+#include <memory>
 #include "ddc/detail/macros.hpp"
 #include "ddc/detail/tagged_vector.hpp"
 #include "ddc/detail/type_seq.hpp"
@@ -58,15 +59,113 @@ static auto gkoExecutors() {
 };
 # endif
 
-# if 1
-static std::shared_ptr<gko::OmpExecutor> gko_host_par_exec = gko::OmpExecutor::create();
-static std::shared_ptr<gko::CudaExecutor> gko_device_exec = gko::CudaExecutor::create(0, gko_host_par_exec);
-;
-# endif
+inline std::shared_ptr<gko::Executor> create_default_host_executor()
+{
+#ifdef KOKKOS_ENABLE_SERIAL
+    if constexpr (std::is_same_v<Kokkos::DefaultHostExecutionSpace,
+                                 Kokkos::Serial>) {
+        return gko::ReferenceExecutor::create();
+    }
+#endif
+#ifdef KOKKOS_ENABLE_OPENMP
+    if constexpr (std::is_same_v<Kokkos::DefaultHostExecutionSpace,
+                                 Kokkos::OpenMP>) {
+        return gko::OmpExecutor::create();
+    }
+#endif
+} // Comes from "Basic Kokkos Extension" Ginkgo MR 
+
+template <typename ExecSpace,
+          typename MemorySpace = typename ExecSpace::memory_space>
+inline std::shared_ptr<gko::Executor> create_executor(ExecSpace, MemorySpace = {})
+{
+    static_assert(
+        Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible);
+#ifdef KOKKOS_ENABLE_SERIAL
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+        return gko::ReferenceExecutor::create();
+    }
+#endif
+#ifdef KOKKOS_ENABLE_OPENMP
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+        return gko::OmpExecutor::create();
+    }
+#endif
+#ifdef KOKKOS_ENABLE_CUDA
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+        if constexpr (std::is_same_v<MemorySpace, Kokkos::CudaSpace>) {
+            return gko::CudaExecutor::create(Kokkos::device_id(),
+                                        create_default_host_executor(),
+                                        std::make_shared<gko::CudaAllocator>());
+        }
+        if constexpr (std::is_same_v<MemorySpace, Kokkos::CudaUVMSpace>) {
+            return gko::CudaExecutor::create(
+                Kokkos::device_id(), create_default_host_executor(),
+                std::make_shared<gko::CudaUnifiedAllocator>(
+                    Kokkos::device_id()));
+        }
+        if constexpr (std::is_same_v<MemorySpace,
+                                     Kokkos::CudaHostPinnedSpace>) {
+            return gko::CudaExecutor::create(
+                Kokkos::device_id(), create_default_host_executor(),
+                std::make_shared<gko::CudaHostAllocator>(Kokkos::device_id()));
+        }
+    }
+#endif
+#ifdef KOKKOS_ENABLE_HIP
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+        if constexpr (std::is_same_v<MemorySpace, Kokkos::HIPSpace>) {
+            return gko::HipExecutor::create(Kokkos::device_id(),
+                                       create_default_host_executor(),
+                                       std::make_shared<gko::HipAllocator>());
+        }
+        if constexpr (std::is_same_v<MemorySpace, Kokkos::HIPManagedSpace>) {
+            return gko::HipExecutor::create(
+                Kokkos::device_id(), create_default_host_executor(),
+                std::make_shared<gko::HipUnifiedAllocator>(
+                    Kokkos::device_id()));
+        }
+        if constexpr (std::is_same_v<MemorySpace, Kokkos::HIPHostPinnedSpace>) {
+            return gko::HipExecutor::create(
+                Kokkos::device_id(), create_default_host_executor(),
+                std::make_shared<gko::HipHostAllocator>(Kokkos::device_id()));
+        }
+    }
+#endif
+#ifdef KOKKOS_ENABLE_SYCL
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::Experimental::SYCL>) {
+        // for now Ginkgo doesn't support different allocators for SYCL
+        return gko::DpcppExecutor::create(Kokkos::device_id(),
+                                     create_default_host_executor());
+    }
+#endif
+} // Comes from "Basic Kokkos Extension" Ginkgo MR 
+
+inline std::shared_ptr<gko::Executor> create_default_executor()
+{
+    return create_executor(Kokkos::DefaultExecutionSpace{});
+} // Comes from "Basic Kokkos Extension" Ginkgo MR
+
+static std::shared_ptr<gko::Executor> gko_default_host_exec = create_default_host_executor();
+static std::shared_ptr<gko::Executor> gko_default_exec = create_default_executor();
 
 class DDCInitializer {
 public:
-  DDCInitializer() { }
+  DDCInitializer() {
+	# if 0
+	// gko_omp_exec = gko::OmpExecutor::create();
+	gko_default_host_exec = gko::OmpExecutor::create();
+	// gko_cuda_exec = gko::CudaExecutor::create(0, gko_default_host_exec);
+	
+	if constexpr (std::is_same_v<Kokkos::DefaultExecutionSpace, Kokkos::OpenMP>) {
+	  gko_default_exec->create();
+	}
+	else if constexpr (std::is_same_v<Kokkos::DefaultExecutionSpace, Kokkos::Cuda>) {
+	  gko_default_exec->create(0, gko_default_host_exec);
+	}
+
+	# endif
+  }
 };
 
 static DDCInitializer ddc_initializer;

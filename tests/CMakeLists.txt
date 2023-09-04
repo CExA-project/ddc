@@ -29,6 +29,7 @@ add_executable(ddc_tests
     parallel_for_each.cpp
     parallel_deepcopy.cpp
     parallel_transform_reduce.cpp
+    nested_algorithms.cpp
 )
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
 target_link_libraries(ddc_tests

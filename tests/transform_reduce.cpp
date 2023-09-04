@@ -43,9 +43,9 @@ TEST(TransformReduce, ZeroDimension)
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDom0D> const chunk(storage.data(), dom);
     int count = 0;
-    ddc::for_each(dom, [&](DElem0D const i) { chunk(i) = count++; });
+    ddc::host_for_each(dom, [&](DElem0D const i) { chunk(i) = count++; });
     EXPECT_EQ(
-            ddc::transform_reduce(dom, 0, ddc::reducer::sum<int>(), chunk),
+            ddc::host_transform_reduce(dom, 0, ddc::reducer::sum<int>(), chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 
@@ -55,9 +55,9 @@ TEST(TransformReduce, OneDimension)
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomX> const chunk(storage.data(), dom);
     int count = 0;
-    ddc::for_each(dom, [&](DElemX const ix) { chunk(ix) = count++; });
+    ddc::host_for_each(dom, [&](DElemX const ix) { chunk(ix) = count++; });
     EXPECT_EQ(
-            ddc::transform_reduce(dom, 0, ddc::reducer::sum<int>(), chunk),
+            ddc::host_transform_reduce(dom, 0, ddc::reducer::sum<int>(), chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 
@@ -67,8 +67,8 @@ TEST(TransformReduce, TwoDimensions)
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomXY> const chunk(storage.data(), dom);
     int count = 0;
-    ddc::for_each(dom, [&](DElemXY const ixy) { chunk(ixy) = count++; });
+    ddc::host_for_each(dom, [&](DElemXY const ixy) { chunk(ixy) = count++; });
     EXPECT_EQ(
-            ddc::transform_reduce(dom, 0, ddc::reducer::sum<int>(), chunk),
+            ddc::host_transform_reduce(dom, 0, ddc::reducer::sum<int>(), chunk),
             dom.size() * (dom.size() - 1) / 2);
 }

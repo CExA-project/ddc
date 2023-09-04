@@ -22,7 +22,7 @@ namespace ddc {
 namespace detail {
 
 template <class RetType, class Element, std::size_t N, class Functor, class... Is>
-void for_each_serial(
+KOKKOS_FUNCTION void for_each_serial(
         std::array<Element, N> const& begin,
         std::array<Element, N> const& end,
         Functor const& f,
@@ -38,14 +38,47 @@ void for_each_serial(
     }
 }
 
+template <class RetType, class Element, std::size_t N, class Functor, class... Is>
+void host_for_each_serial(
+        std::array<Element, N> const& begin,
+        std::array<Element, N> const& end,
+        Functor const& f,
+        Is const&... is) noexcept
+{
+    static constexpr std::size_t I = sizeof...(Is);
+    if constexpr (I == N) {
+        f(RetType(is...));
+    } else {
+        for (Element ii = begin[I]; ii < end[I]; ++ii) {
+            host_for_each_serial<RetType>(begin, end, f, is..., ii);
+        }
+    }
+}
+
 } // namespace detail
 
 /** iterates over a nD domain in serial
+ * This version must only be called from a host-device function.
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
 template <class... DDims, class Functor>
-void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
+KOKKOS_FUNCTION void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
+{
+    DiscreteElement<DDims...> const ddc_begin = domain.front();
+    DiscreteElement<DDims...> const ddc_end = domain.front() + domain.extents();
+    std::array const begin = detail::array(ddc_begin);
+    std::array const end = detail::array(ddc_end);
+    detail::for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
+}
+
+/** iterates over a nD domain in serial.
+ * This version must only be called from the host.
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking an index as parameter
+ */
+template <class... DDims, class Functor>
+void host_for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
     DiscreteElement<DDims...> const ddc_begin = domain.front();
     DiscreteElement<DDims...> const ddc_end = domain.front() + domain.extents();

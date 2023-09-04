@@ -161,15 +161,13 @@ public:
 		Kokkos::kokkos_free(cols);
 		Kokkos::kokkos_free(data);
 	};
-	// int n_batch = 400000000;
-	const int n_batch = 1;
 	int m;
 	int n;
 	int* rows;
 	int* cols;
     double* data; // TODO : make a struct for CSR
 
-	virtual std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>> to_gko_vec(double* vec_ptr, size_t n) const
+	virtual std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>> to_gko_vec(double* vec_ptr, size_t n, size_t n_equations) const
     {
 		# if 0
         int* indices = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace::memory_space>(n * sizeof(int));
@@ -188,7 +186,7 @@ public:
 		// v->get_values() = vec_ptr;
 		// auto v = gko::matrix::BatchDense<>::create(gko_default_exec, gko::batch_dim<>(1,gko::dim<2>{n,1}), gko::array<double>::view(gko_default_exec, n, vec_ptr), gko::batch_stride(1, 1));
 		// auto v = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,1});
-		auto v = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,n_batch}, gko::array<double>::view(gko_default_exec, n, vec_ptr), 1);
+		auto v = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,n_equations}, gko::array<double>::view(gko_default_exec, n*n_equations, vec_ptr), n); // n or n_equation padding ?
 		// auto v = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,n_batch});
 	// v->read(gko::device_matrix_data<double,int>(gko_default_exec, gko::dim<2>{n,1}, &indices, &zero, &vec_ptr));
         return v;
@@ -208,7 +206,7 @@ public:
     }
 	# endif
     virtual double get_element(int i, int j) const override {
-	  return 0;
+	  return 0; // TODO
 	}
     virtual void set_element(int i, int j, double aij) override {
 	  data[i*n+j] = aij;
@@ -220,12 +218,13 @@ public:
 	}
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
     {
-        Kokkos::View<double*, Kokkos::HostSpace> b_cpu(b, n);
-        Kokkos::View<double*, Kokkos::DefaultExecutionSpace> b_gpu("b_gpu", n);
+        Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> b_cpu(b, n, n_equations);
+        Kokkos::View<double**, Kokkos::DefaultExecutionSpace> b_gpu("b_gpu", n, n_equations);
 		Kokkos::deep_copy(b_gpu, b_cpu);
         // double* b_gpu = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>((b.size())*sizeof(double));
         // double* b_gpu = gko_default_exec->alloc<double>(b.size());
-        auto b_vec_batch = to_gko_vec(b_gpu.data(), n);
+        auto b_vec_batch = to_gko_vec(b_gpu.data(), n, n_equations);
+		write(std::cout, b_vec_batch);
         // auto b_vec_batch = gko::matrix::BatchDense<>::create(gko_default_exec, n_batch, b_vec.get());
 		// auto b_vec_batch = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,n_batch});
 		// b_vec_batch->fill(1);
@@ -243,10 +242,9 @@ public:
 		// auto data_mat_gpu = gko::share(gko::matrix::Csr<>::create(gko_default_exec, gko::dim<2>{n,n})); 
 		// data_mat_gpu->copy_from(data_mat);
         // auto data_mat_batch = gko::share(gko::matrix::BatchCsr<>::create(gko_default_exec, n_batch, data_mat.get()));
-        Kokkos::View<double*, Kokkos::HostSpace> x_cpu("x_cpu", n);
-        Kokkos::View<double*, Kokkos::DefaultExecutionSpace> x_gpu("x_gpu", n);
-		Kokkos::deep_copy(x_gpu, x_cpu);
-        auto x_vec_batch = to_gko_vec(x_gpu.data(), n);
+        Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace> x_cpu("x_cpu", n, n_equations);
+        Kokkos::View<double**, Kokkos::DefaultExecutionSpace> x_gpu("x_gpu", n, n_equations);
+        auto x_vec_batch = to_gko_vec(x_gpu.data(), n, n_equations);
         // auto x_vec_batch = gko::matrix::BatchDense<>::create(gko_default_exec, n_batch, x_vec.get());
 		// auto x_vec_batch = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,n_batch});
 		// x_vec_batch->fill(1e3);
@@ -277,10 +275,10 @@ public:
 				.on(gko_default_exec);
 		auto solver_ = solver->generate(data_mat_gpu);
 	    // solver_->add_logger(stream_logger);
-		auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_gpu.get(), b_vec_batch.get());
-		solver_->add_logger(res_logger);
+		// auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_gpu.get(), b_vec_batch.get());
+		// solver_->add_logger(res_logger);
 	    solver_->apply(b_vec_batch, x_vec_batch);
-		res_logger->write_data(std::cout);
+		// res_logger->write_data(std::cout);
 		# else // full batched
 		auto solver =
 		gko::solver::BatchBicgstab<>::build()
@@ -291,7 +289,7 @@ public:
 		solver->generate(data_mat_batch)->apply(b_vec_batch.get(), x_vec_batch.get());
 		#endif
 
-		# if 0 
+		# if 1 
 		// Write result
 		std::cout << "-----------------------";
 		write(std::cout, data_mat_gpu);

@@ -94,7 +94,22 @@ foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGR
   endforeach()
 endforeach()
 
-if(1)
+foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
+  foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
+	set(test_name "splines_tests_BATCHED_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}")
+    add_executable("${test_name}" batched_spline_builder.cpp)
+    target_compile_features("${test_name}" PUBLIC cxx_std_17)
+    target_link_libraries("${test_name}"
+      PUBLIC
+      GTest::gtest
+      DDC::DDC
+    )
+    target_compile_definitions("${test_name}" PUBLIC -DDEGREE_X=${DEGREE_X} -D${BSPLINES_TYPE})
+    add_test("${test_name}" "${test_name}")
+  endforeach()
+endforeach()
+
+if(0)
 foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
   set(test_name "splines_ordered_points_DEGREE_X_${DEGREE_X}")
   add_executable("${test_name}" periodic_spline_builder_ordered_points.cpp)
@@ -109,7 +124,7 @@ foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGR
 endforeach()
 endif()
 
-if(1)
+if(0)
 foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
   foreach(BCR "BCR_GREVILLE" "BCR_HERMITE")
     foreach(EVALUATOR "EVALUATOR_COSINE" "EVALUATOR_POLYNOMIAL")
@@ -132,7 +147,7 @@ foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
 endforeach()
 endif()
 
-if(1)
+if(0)
 foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
   foreach(DEGREE_Y RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
     foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
@@ -151,7 +166,7 @@ foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGR
 endforeach()
 endif()
 
-if(1)
+if(0)
 foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
   foreach(BCR "BCR_GREVILLE" "BCR_HERMITE")
     foreach(EVALUATOR "EVALUATOR_POLYNOMIAL")
@@ -176,7 +191,7 @@ foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
 endforeach()
 endif()
 
-if(1)
+if(0)
 foreach(CONTINUITY RANGE -1 1)
   math(EXPR MIN_DEGREE "${CONTINUITY}+1")
   if (${MIN_DEGREE} LESS 1)

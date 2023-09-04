@@ -51,13 +51,13 @@ public:
     static constexpr BoundCond s_bc_xmin = BcXmin;
     static constexpr BoundCond s_bc_xmax = BcXmax;
 
+    // interpolator specific
+    std::unique_ptr<Matrix> matrix;
 private:
     interpolation_domain_type m_interpolation_domain;
 
     double m_dx; // average cell size for normalization of derivatives
 
-    // interpolator specific
-    std::unique_ptr<Matrix> matrix;
 
     int m_offset;
 

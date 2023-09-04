@@ -51,7 +51,7 @@ public:
         }
         return b;
     }
-	    virtual DSpan1D solve_transpose_inplace(DSpan1D const b) const
+	virtual DSpan1D solve_transpose_inplace(DSpan1D const b) const
     {
         assert(int(b.extent(0)) == n);
         int const info = solve_inplace_method(b.data_handle(), 'T', 1);
@@ -66,6 +66,18 @@ public:
     {
         assert(int(bx.extent(1)) == n);
         int const info = solve_inplace_method(bx.data_handle(), 'N', bx.extent(0));
+
+        if (info < 0) {
+            std::cerr << -info << "-th argument had an illegal value" << std::endl;
+            // TODO: Add LOG_FATAL_ERROR
+        }
+        return bx;
+    }
+	virtual Kokkos::View<double**> solve_batch_inplace(Kokkos::View<double**> const bx) const
+    {
+        assert(int(bx.extent(0)) == n);
+		std::cout << "\n" << bx.data()[18] << "- \n";
+        int const info = solve_inplace_method(bx.data(), 'N', bx.extent(1));
 
         if (info < 0) {
             std::cerr << -info << "-th argument had an illegal value" << std::endl;

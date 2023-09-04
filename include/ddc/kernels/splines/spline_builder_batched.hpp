@@ -2,147 +2,112 @@
 #include "spline_builder.hpp"
 
 
-template <class SplineBuilder1, class SplineBuilder2> // TODO : Template with SplineBuilderBatched
-class SplineBuilder2D
+template <class SplineBuilder, class... BatchTags> // TODO : Remove BatchedTags... dependency (compute it automatically)
+class SplineBuilderBatched
 {
 private:
-    using tag_type1 = typename SplineBuilder1::bsplines_type::tag_type;
-    using tag_type2 = typename SplineBuilder2::bsplines_type::tag_type;
-
+    using tag_type = typename SplineBuilder::bsplines_type::tag_type;
 public:
-    using bsplines_type1 = typename SplineBuilder1::bsplines_type;
-    using bsplines_type2 = typename SplineBuilder2::bsplines_type;
+    using bsplines_type = typename SplineBuilder::bsplines_type;
 
-    using builder_type1 = SplineBuilder1;
-    using builder_type2 = SplineBuilder2;
+    using builder_type = SplineBuilder;
 
-    using interpolation_mesh_type1 = typename SplineBuilder1::mesh_type;
-    using interpolation_mesh_type2 = typename SplineBuilder2::mesh_type;
+    using interpolation_mesh_type = typename SplineBuilder::mesh_type;
+    using batch_mesh_type = typename ddc::DiscreteElement<BatchTags...>;
 
-    using interpolation_domain_type1 = ddc::DiscreteDomain<interpolation_mesh_type1>;
-    using interpolation_domain_type2 = ddc::DiscreteDomain<interpolation_mesh_type2>;
-    using interpolation_domain_type
-            = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
+    using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
+    
+    using batch_domain_type = ddc::DiscreteDomain<BatchTags...>; // TODO : Compute
 
-    static constexpr BoundCond BcXmin1 = SplineBuilder1::s_bc_xmin;
-    static constexpr BoundCond BcXmax1 = SplineBuilder1::s_bc_xmax;
-    static constexpr BoundCond BcXmin2 = SplineBuilder2::s_bc_xmin;
-    static constexpr BoundCond BcXmax2 = SplineBuilder2::s_bc_xmax;
+    static constexpr BoundCond BcXmin = SplineBuilder::s_bc_xmin;
+    static constexpr BoundCond BcXmax = SplineBuilder::s_bc_xmax;
 
 private:
-    builder_type1 spline_builder1;
-    builder_type2 spline_builder2;
+    builder_type spline_builder;
     interpolation_domain_type m_interpolation_domain;
+	batch_domain_type m_batch_domain;
 
 public:
-    SplineBuilder2D(interpolation_domain_type const& interpolation_domain)
-        : spline_builder1(ddc::select<interpolation_mesh_type1>(interpolation_domain))
-        , spline_builder2(ddc::select<interpolation_mesh_type2>(interpolation_domain))
+    SplineBuilderBatched(interpolation_domain_type const& interpolation_domain, batch_domain_type const& batch_domain)
+        : spline_builder(ddc::select<interpolation_mesh_type>(interpolation_domain))
         , m_interpolation_domain(interpolation_domain)
+        , m_batch_domain(batch_domain)
     {
+		// auto m_batch_domain = ddc::remove_dims_of<interpolation_mesh_type(dom, ddc::DiscreteDomain<DDimSp, DDimX, DDimV>(sp_dom, x_dom, v_dom)); // TODO
     }
 
-    SplineBuilder2D(SplineBuilder2D const& x) = delete;
+    SplineBuilderBatched(SplineBuilderBatched const& x) = delete;
 
-    SplineBuilder2D(SplineBuilder2D&& x) = default;
+    SplineBuilderBatched(SplineBuilderBatched&& x) = default;
 
-    ~SplineBuilder2D() = default;
+    ~SplineBuilderBatched() = default;
 
-    SplineBuilder2D& operator=(SplineBuilder2D const& x) = delete;
+    SplineBuilderBatched& operator=(SplineBuilderBatched const& x) = delete;
 
-    SplineBuilder2D& operator=(SplineBuilder2D&& x) = default;
+    SplineBuilderBatched& operator=(SplineBuilderBatched&& x) = default;
 
     void operator()(
-            ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type1, bsplines_type2>> spline,
-            ddc::ChunkSpan<double const, interpolation_domain_type> vals,
+            ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>> spline,
+            ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>> vals,
             std::optional<CDSpan2D> const derivs_xmin = std::nullopt,
-            std::optional<CDSpan2D> const derivs_xmax = std::nullopt,
-            std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
-            std::optional<CDSpan2D> const derivs_ymax = std::nullopt,
-            std::optional<CDSpan2D> const mixed_derivs_xmin_ymin = std::nullopt,
-            std::optional<CDSpan2D> const mixed_derivs_xmax_ymin = std::nullopt,
-            std::optional<CDSpan2D> const mixed_derivs_xmin_ymax = std::nullopt,
-            std::optional<CDSpan2D> const mixed_derivs_xmax_ymax = std::nullopt) const;
+            std::optional<CDSpan2D> const derivs_xmax = std::nullopt) const;
+            // std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
+            // std::optional<CDSpan2D> const derivs_ymax = std::nullopt,
+            // std::optional<CDSpan2D> const mixed_derivs_xmin_ymin = std::nullopt,
+            // std::optional<CDSpan2D> const mixed_derivs_xmax_ymin = std::nullopt,
+            // std::optional<CDSpan2D> const mixed_derivs_xmin_ymax = std::nullopt,
+            // std::optional<CDSpan2D> const mixed_derivs_xmax_ymax = std::nullopt) const;
 
-    interpolation_domain_type1 const& interpolation_domain1() const noexcept
-    {
-        return spline_builder1.interpolation_domain();
-    }
-
-
-    interpolation_domain_type2 const& interpolation_domain2() const noexcept
-    {
-        return spline_builder2.interpolation_domain();
-    }
-
-
+	# if 1
     interpolation_domain_type const& interpolation_domain() const noexcept
     {
         return m_interpolation_domain;
     }
+	# endif
 
-    ddc::DiscreteDomain<bsplines_type1, bsplines_type2> spline_domain() const noexcept
+    ddc::DiscreteDomain<bsplines_type, BatchTags...> spline_domain() const noexcept
     {
-        return ddc::DiscreteDomain<bsplines_type1, bsplines_type2>(
-                ddc::DiscreteElement<bsplines_type1, bsplines_type2>(0, 0),
-                ddc::DiscreteVector<bsplines_type1, bsplines_type2>(
-                        ddc::discrete_space<bsplines_type1>().size(),
-                        ddc::discrete_space<bsplines_type2>().size()));
+        return ddc::DiscreteDomain<bsplines_type, BatchTags...>(
+                ddc::DiscreteElement<bsplines_type, BatchTags...>(0), // TODO : (0,0...)
+                ddc::DiscreteVector<bsplines_type>(
+                        ddc::discrete_space<bsplines_type>().size(),
+                        ddc::discrete_space<BatchTags>().size()...));
     }
 };
 
 
-template <class SplineBuilder1, class SplineBuilder2>
-void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type1, bsplines_type2>> spline,
-        ddc::ChunkSpan<double const, interpolation_domain_type> vals,
+template <class SplineBuilder, class... BatchTags>
+void SplineBuilderBatched<SplineBuilder, BatchTags...>::operator()(
+        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>> spline, // TODO: batch_dims_type
+        ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>> vals,
         std::optional<CDSpan2D> const derivs_xmin,
-        std::optional<CDSpan2D> const derivs_xmax,
-        std::optional<CDSpan2D> const derivs_ymin,
-        std::optional<CDSpan2D> const derivs_ymax,
-        std::optional<CDSpan2D> const mixed_derivs_xmin_ymin,
-        std::optional<CDSpan2D> const mixed_derivs_xmax_ymin,
-        std::optional<CDSpan2D> const mixed_derivs_xmin_ymax,
-        std::optional<CDSpan2D> const mixed_derivs_xmax_ymax) const
+        std::optional<CDSpan2D> const derivs_xmax) const
+        // std::optional<CDSpan2D> const derivs_ymin,
+        // std::optional<CDSpan2D> const derivs_ymax,
+        // std::optional<CDSpan2D> const mixed_derivs_xmin_ymin,
+        // std::optional<CDSpan2D> const mixed_derivs_xmax_ymin,
+        // std::optional<CDSpan2D> const mixed_derivs_xmin_ymax,
+        // std::optional<CDSpan2D> const mixed_derivs_xmax_ymax) const
 {
-    const std::size_t nbc_xmin = spline_builder1.s_nbc_xmin;
-    const std::size_t nbc_xmax = spline_builder1.s_nbc_xmax;
-    const std::size_t nbc_ymin = spline_builder2.s_nbc_xmin;
-    const std::size_t nbc_ymax = spline_builder2.s_nbc_xmax;
+    const std::size_t nbc_xmin = spline_builder.s_nbc_xmin;
+    const std::size_t nbc_xmax = spline_builder.s_nbc_xmax;
 
-    assert((BcXmin1 == BoundCond::HERMITE)
+    assert((BcXmin == BoundCond::HERMITE)
            != (!derivs_xmin.has_value() || derivs_xmin->extent(0) == 0));
-    assert((BcXmax1 == BoundCond::HERMITE)
+    assert((BcXmax == BoundCond::HERMITE)
            != (!derivs_xmax.has_value() || derivs_xmax->extent(0) == 0));
-    assert((BcXmin2 == BoundCond::HERMITE)
-           != (!derivs_ymin.has_value() || derivs_ymin->extent(0) == 0));
-    assert((BcXmax2 == BoundCond::HERMITE)
-           != (!derivs_ymax.has_value() || derivs_ymax->extent(0) == 0));
-    assert((BcXmin1 == BoundCond::HERMITE && BcXmin2 == BoundCond::HERMITE)
-           != (!mixed_derivs_xmin_ymin.has_value()
-               || mixed_derivs_xmin_ymin->extent(0) != nbc_xmin));
-    assert((BcXmax1 == BoundCond::HERMITE && BcXmin2 == BoundCond::HERMITE)
-           != (!mixed_derivs_xmax_ymin.has_value()
-               || mixed_derivs_xmax_ymin->extent(0) != nbc_xmax));
-    assert((BcXmin2 == BoundCond::HERMITE && BcXmax2 == BoundCond::HERMITE)
-           != (!mixed_derivs_xmin_ymax.has_value()
-               || mixed_derivs_xmin_ymax->extent(0) != nbc_xmin));
-    assert((BcXmax2 == BoundCond::HERMITE && BcXmax2 == BoundCond::HERMITE)
-           != (!mixed_derivs_xmax_ymax.has_value()
-               || mixed_derivs_xmax_ymax->extent(0) != nbc_xmax));
 
-    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1(
-            spline_builder1.spline_domain());
-    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type2>> spline2(
-            spline_builder2.spline_domain());
+    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type>> spline1(
+            spline_builder.spline_domain());
 
-    using IMesh1 = ddc::DiscreteElement<interpolation_mesh_type1>;
-    using IMesh2 = ddc::DiscreteElement<interpolation_mesh_type2>;
+    using IMesh = ddc::DiscreteElement<interpolation_mesh_type>;
+    using BatchMesh = ddc::DiscreteElement<batch_mesh_type>;
 
     /******************************************************************
     *  Cycle over x1 position (or order of x1-derivative at boundary)
     *  and interpolate f along x2 direction.
     *******************************************************************/
+	# if 0
     if constexpr (BcXmin2 == BoundCond::HERMITE) {
         assert((long int)(derivs_ymin->extent(0))
                        == spline_builder1.interpolation_domain().extents()
@@ -198,21 +163,27 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                     });
         }
     }
+	# endif
 
-    if (BcXmin1 == BoundCond::HERMITE) {
-        assert((long int)(derivs_xmin->extent(0))
-                       == spline_builder2.interpolation_domain().extents()
-               && derivs_xmin->extent(1) == nbc_xmin);
+    if (BcXmin == BoundCond::HERMITE) {
+        // assert((long int)(derivs_xmin->extent(0))
+        //               == spline_builder2.interpolation_domain().extents()
+        //       && derivs_xmin->extent(1) == nbc_xmin);
     }
-    if (BcXmax1 == BoundCond::HERMITE) {
-        assert((long int)(derivs_xmax->extent(0))
-                       == spline_builder2.interpolation_domain().extents()
-               && derivs_xmax->extent(1) == nbc_xmax);
+    if (BcXmax == BoundCond::HERMITE) {
+        // assert((long int)(derivs_xmax->extent(0))
+        //                == spline_builder2.interpolation_domain().extents()
+        //        && derivs_xmax->extent(1) == nbc_xmax);
     }
-    ddc::for_each(spline_builder2.interpolation_domain(), [&](IMesh2 const i) {
+	Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_flatten(vals.data_handle(), interpolation_domain().size(), m_batch_domain.size());
+	Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_flatten(spline.data_handle(), ddc::discrete_space<bsplines_type>().nbasis(), m_batch_domain.size());
+	Kokkos::deep_copy(spline_flatten, vals_flatten);
+	# if 0
+    
+	ddc::for_each(m_batch_domain, [&](BatchMesh const i) {
         const std::size_t ii = i.uid();
-        const ddc::DiscreteElement<bsplines_type2> spl_idx(nbc_ymin + ii);
-
+        const ddc::DiscreteElement<bsplines_type> spl_idx(nbc_ymin + ii);
+		
         // Get interpolated values
         ddc::Chunk<double, interpolation_domain_type1> vals1(
                 spline_builder1.interpolation_domain());
@@ -238,7 +209,11 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                     spline(spl_idx, j) = spline1(j);
                 });
     });
+	# endif
 
+	spline_builder.matrix->solve_batch_inplace(spline_flatten);
+    
+	# if 0
     if constexpr (BcXmax2 == BoundCond::HERMITE) {
         assert((long int)(derivs_ymax->extent(0))
                        == spline_builder1.interpolation_domain().extents()
@@ -295,7 +270,9 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                     });
         }
     }
+	# endif
 
+	# if 0
     using IMeshV2 = ddc::DiscreteVector<bsplines_type2>;
 
     /******************************************************************
@@ -351,4 +328,5 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                     });
         }
     }
+	# endif
 }

@@ -106,9 +106,9 @@ TEST(ProductMDomainTest, RangeFor)
     DDomX const dom = DDomX(lbound_x, nelems_x);
     DElemX ii = lbound_x;
     for (DElemX ix : dom) {
-        ASSERT_LE(lbound_x, ix);
+        EXPECT_LE(lbound_x, ix);
         EXPECT_EQ(ix, ii);
-        ASSERT_LE(ix, ubound_x);
+        EXPECT_LE(ix, ubound_x);
         ++ii.uid<DDimX>();
     }
 }

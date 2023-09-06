@@ -120,9 +120,9 @@ static void test_fft()
                 return pow2(diff) / Kokkos::pow(Nx, sizeof...(X));
             }));
     double epsilon = std::is_same_v<ddc::detail::fft::real_type_t<Tin>, double> ? 1e-15 : 1e-7;
-    ASSERT_LE(criterion, epsilon)
+    EXPECT_LE(criterion, epsilon)
             << "Distance between analytical prediction and numerical result : " << criterion;
-    ASSERT_LE(criterion2, epsilon)
+    EXPECT_LE(criterion2, epsilon)
             << "Distance between input and iFFT(FFT(input)) : " << criterion2;
 }
 

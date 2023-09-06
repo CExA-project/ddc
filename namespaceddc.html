@@ -179,11 +179,11 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a2b6977fe9b28adbb8b73a630ded5e7b1"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class SupportType , class LayoutStridedPolicy  = std::experimental::layout_right, class MemorySpace  = Kokkos::HostSpace&gt; </td></tr>
 <tr class="memitem:a2b6977fe9b28adbb8b73a630ded5e7b1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a2b6977fe9b28adbb8b73a630ded5e7b1">ChunkView</a> = <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType const, SupportType, LayoutStridedPolicy, MemorySpace &gt;</td></tr>
 <tr class="separator:a2b6977fe9b28adbb8b73a630ded5e7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a617039bf81c01d40506687eaa0bf1ea8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">CoordinateElement</a> = double</td></tr>
-<tr class="memdesc:a617039bf81c01d40506687eaa0bf1ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A CoordinateElement the type of the scalar used to represent elements of coordinates in the continuous space.  <a href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">More...</a><br /></td></tr>
-<tr class="separator:a617039bf81c01d40506687eaa0bf1ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a287fd69405cf97cad795bf3d70139928"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a287fd69405cf97cad795bf3d70139928">CoordinateElement</a> = <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a></td></tr>
+<tr class="memdesc:a287fd69405cf97cad795bf3d70139928"><td class="mdescLeft">&#160;</td><td class="mdescRight">A CoordinateElement the type of the scalar used to represent elements of coordinates in the continuous space.  <a href="namespaceddc.html#a287fd69405cf97cad795bf3d70139928">More...</a><br /></td></tr>
+<tr class="separator:a287fd69405cf97cad795bf3d70139928"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac18286f7d289865ee020284651f29bb1"><td class="memTemplParams" colspan="2">template&lt;class... CDims&gt; </td></tr>
-<tr class="memitem:ac18286f7d289865ee020284651f29bb1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a> = detail::TaggedVector&lt; <a class="el" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">CoordinateElement</a>, CDims... &gt;</td></tr>
+<tr class="memitem:ac18286f7d289865ee020284651f29bb1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a> = detail::TaggedVector&lt; <a class="el" href="namespaceddc.html#a287fd69405cf97cad795bf3d70139928">CoordinateElement</a>, CDims... &gt;</td></tr>
 <tr class="memdesc:ac18286f7d289865ee020284651f29bb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Coordinate represents a coordinate in the continuous space.  <a href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">More...</a><br /></td></tr>
 <tr class="separator:ac18286f7d289865ee020284651f29bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c3f382fc669c87da3d57d3113b35e74"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
@@ -206,6 +206,8 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3">HostAllocator</a> = <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; T, Kokkos::HostSpace &gt;</td></tr>
 <tr class="separator:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab25c16a5ce1c3230941216a27acb684f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> = float</td></tr>
+<tr class="separator:ab25c16a5ce1c3230941216a27acb684f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -460,10 +462,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a9536cb2bde2ab95f07c302b1706ed951"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt; DDim &gt;, typename DDim::discrete_element_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9536cb2bde2ab95f07c302b1706ed951">front</a> () noexcept</td></tr>
 <tr class="memdesc:a9536cb2bde2ab95f07c302b1706ed951"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lower bound index of the mesh.  <a href="namespaceddc.html#a9536cb2bde2ab95f07c302b1706ed951">More...</a><br /></td></tr>
 <tr class="separator:a9536cb2bde2ab95f07c302b1706ed951"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24806a7845575037620310f71ad54282"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
-<tr class="memitem:a24806a7845575037620310f71ad54282"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt; DDim &gt;, double &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a24806a7845575037620310f71ad54282">step</a> () noexcept</td></tr>
-<tr class="memdesc:a24806a7845575037620310f71ad54282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <a href="namespaceddc.html#a24806a7845575037620310f71ad54282">More...</a><br /></td></tr>
-<tr class="separator:a24806a7845575037620310f71ad54282"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd5fb635b3cff00c0c97ff24f4a4194d"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:afd5fb635b3cff00c0c97ff24f4a4194d"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#afd5fb635b3cff00c0c97ff24f4a4194d">step</a> () noexcept</td></tr>
+<tr class="memdesc:afd5fb635b3cff00c0c97ff24f4a4194d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <a href="namespaceddc.html#afd5fb635b3cff00c0c97ff24f4a4194d">More...</a><br /></td></tr>
+<tr class="separator:afd5fb635b3cff00c0c97ff24f4a4194d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0007111d2ff1b5f20acf30f46e1bfaa"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
 <tr class="memitem:ac0007111d2ff1b5f20acf30f46e1bfaa"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION constexpr <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac0007111d2ff1b5f20acf30f46e1bfaa">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a>&lt; CDim &gt; &gt; const &amp;c)</td></tr>
 <tr class="separator:ac0007111d2ff1b5f20acf30f46e1bfaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -509,10 +511,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ad7887b9d214e1828ecf7620562be3e07"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, typename DDim::discrete_element_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad7887b9d214e1828ecf7620562be3e07">front</a> () noexcept</td></tr>
 <tr class="memdesc:ad7887b9d214e1828ecf7620562be3e07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lower bound index of the mesh.  <a href="namespaceddc.html#ad7887b9d214e1828ecf7620562be3e07">More...</a><br /></td></tr>
 <tr class="separator:ad7887b9d214e1828ecf7620562be3e07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65d5b949e6dbfe1aaa14d93f8eeedc5f"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
-<tr class="memitem:a65d5b949e6dbfe1aaa14d93f8eeedc5f"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, double &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a65d5b949e6dbfe1aaa14d93f8eeedc5f">step</a> () noexcept</td></tr>
-<tr class="memdesc:a65d5b949e6dbfe1aaa14d93f8eeedc5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <a href="namespaceddc.html#a65d5b949e6dbfe1aaa14d93f8eeedc5f">More...</a><br /></td></tr>
-<tr class="separator:a65d5b949e6dbfe1aaa14d93f8eeedc5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a779e33927262178232e70f94443807c4"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:a779e33927262178232e70f94443807c4"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a779e33927262178232e70f94443807c4">step</a> () noexcept</td></tr>
+<tr class="memdesc:a779e33927262178232e70f94443807c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <a href="namespaceddc.html#a779e33927262178232e70f94443807c4">More...</a><br /></td></tr>
+<tr class="separator:a779e33927262178232e70f94443807c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c2813f2bb47c8c0ee0efc2116993112"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
 <tr class="memitem:a3c2813f2bb47c8c0ee0efc2116993112"><td class="memTemplItemLeft" align="right" valign="top">DDC_INLINE_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a3c2813f2bb47c8c0ee0efc2116993112">distance_at_left</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt; &gt;)</td></tr>
 <tr class="separator:a3c2813f2bb47c8c0ee0efc2116993112"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -968,14 +970,14 @@ template&lt;class ElementType , class SupportType , class LayoutStridedPolicy  =
 
 </div>
 </div>
-<a id="a617039bf81c01d40506687eaa0bf1ea8" name="a617039bf81c01d40506687eaa0bf1ea8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a617039bf81c01d40506687eaa0bf1ea8">&#9670;&nbsp;</a></span>CoordinateElement</h2>
+<a id="a287fd69405cf97cad795bf3d70139928" name="a287fd69405cf97cad795bf3d70139928"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a287fd69405cf97cad795bf3d70139928">&#9670;&nbsp;</a></span>CoordinateElement</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">ddc::CoordinateElement</a> = typedef double</td>
+          <td class="memname">using <a class="el" href="namespaceddc.html#a287fd69405cf97cad795bf3d70139928">ddc::CoordinateElement</a> = typedef <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -993,7 +995,7 @@ template&lt;class ElementType , class SupportType , class LayoutStridedPolicy  =
 template&lt;class... CDims&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a> = typedef detail::TaggedVector&lt;<a class="el" href="namespaceddc.html#a617039bf81c01d40506687eaa0bf1ea8">CoordinateElement</a>, CDims...&gt;</td>
+          <td class="memname">using <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a> = typedef detail::TaggedVector&lt;<a class="el" href="namespaceddc.html#a287fd69405cf97cad795bf3d70139928">CoordinateElement</a>, CDims...&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1107,6 +1109,20 @@ template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3">ddc::HostAllocator</a> = typedef <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;T, Kokkos::HostSpace&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab25c16a5ce1c3230941216a27acb684f" name="ab25c16a5ce1c3230941216a27acb684f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab25c16a5ce1c3230941216a27acb684f">&#9670;&nbsp;</a></span>Real</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">ddc::Real</a> = typedef float</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -3776,8 +3792,8 @@ template&lt;class DDim &gt; </div>
 
 </div>
 </div>
-<a id="a24806a7845575037620310f71ad54282" name="a24806a7845575037620310f71ad54282"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24806a7845575037620310f71ad54282">&#9670;&nbsp;</a></span>step() <span class="overload">[1/2]</span></h2>
+<a id="afd5fb635b3cff00c0c97ff24f4a4194d" name="afd5fb635b3cff00c0c97ff24f4a4194d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd5fb635b3cff00c0c97ff24f4a4194d">&#9670;&nbsp;</a></span>step() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3788,7 +3804,7 @@ template&lt;class DDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt; DDim &gt;, double &gt; ddc::step </td>
+          <td class="memname">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> &gt; ddc::step </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -4276,8 +4292,8 @@ template&lt;class DDim &gt; </div>
 
 </div>
 </div>
-<a id="a65d5b949e6dbfe1aaa14d93f8eeedc5f" name="a65d5b949e6dbfe1aaa14d93f8eeedc5f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65d5b949e6dbfe1aaa14d93f8eeedc5f">&#9670;&nbsp;</a></span>step() <span class="overload">[2/2]</span></h2>
+<a id="a779e33927262178232e70f94443807c4" name="a779e33927262178232e70f94443807c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a779e33927262178232e70f94443807c4">&#9670;&nbsp;</a></span>step() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4288,7 +4304,7 @@ template&lt;class DDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, double &gt; ddc::step </td>
+          <td class="memname">DDC_INLINE_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> &gt; ddc::step </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>

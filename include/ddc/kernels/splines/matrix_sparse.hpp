@@ -186,7 +186,7 @@ public:
 		// v->get_values() = vec_ptr;
 		// auto v = gko::matrix::BatchDense<>::create(gko_default_exec, gko::batch_dim<>(1,gko::dim<2>{n,1}), gko::array<double>::view(gko_default_exec, n, vec_ptr), gko::batch_stride(1, 1));
 		// auto v = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,1});
-		auto v = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,n_equations}, gko::array<double>::view(gko_default_exec, n*n_equations, vec_ptr), n); // n or n_equation padding ?
+		auto v = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,n_equations}, gko::array<double>::view(gko_default_exec, n*n_equations, vec_ptr), n_equations); // n or n_equation padding ?
 		// auto v = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,n_batch});
 	// v->read(gko::device_matrix_data<double,int>(gko_default_exec, gko::dim<2>{n,1}, &indices, &zero, &vec_ptr));
         return v;
@@ -224,7 +224,7 @@ public:
         // double* b_gpu = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>((b.size())*sizeof(double));
         // double* b_gpu = gko_default_exec->alloc<double>(b.size());
         auto b_vec_batch = to_gko_vec(b_gpu.data(), n, n_equations);
-		write(std::cout, b_vec_batch);
+		// write(std::cout, b_vec_batch);
         // auto b_vec_batch = gko::matrix::BatchDense<>::create(gko_default_exec, n_batch, b_vec.get());
 		// auto b_vec_batch = gko::matrix::Dense<>::create(gko_default_exec, gko::dim<2>{n,n_batch});
 		// b_vec_batch->fill(1);
@@ -274,7 +274,7 @@ public:
 					gko::stop::Iteration::build().with_max_iters(1000u).on(gko_default_exec))
 				.on(gko_default_exec);
 		auto solver_ = solver->generate(data_mat_gpu);
-	    // solver_->add_logger(stream_logger);
+	    solver_->add_logger(stream_logger);
 		// auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_gpu.get(), b_vec_batch.get());
 		// solver_->add_logger(res_logger);
 	    solver_->apply(b_vec_batch, x_vec_batch);
@@ -289,7 +289,7 @@ public:
 		solver->generate(data_mat_batch)->apply(b_vec_batch.get(), x_vec_batch.get());
 		#endif
 
-		# if 1 
+		# if 0 
 		// Write result
 		std::cout << "-----------------------";
 		write(std::cout, data_mat_gpu);

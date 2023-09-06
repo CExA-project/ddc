@@ -20,6 +20,7 @@
 
 #include <gtest/gtest.h>
 #include "ddc/coordinate.hpp"
+#include "ddc/detail/macros.hpp"
 #include "ddc/uniform_point_sampling.hpp"
 
 #include "cosine_evaluator.hpp"
@@ -63,6 +64,7 @@ using DVectY = ddc::DiscreteVector<IDimY>;
 using FieldY = ddc::Chunk<double, ddc::DiscreteDomain<IDimY>>;
 using CoordY = ddc::Coordinate<DimY>;
 
+using IndexXY = ddc::DiscreteElement<IDimX,IDimY>;
 using FieldXY = ddc::Chunk<double, ddc::DiscreteDomain<IDimX,IDimY>>;
 using SplineXFieldY = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX,IDimY>>;
 // Checks that when evaluating the spline at interpolation points one
@@ -100,7 +102,8 @@ TEST(BatchedSplineBuilderTest, Identity)
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
-    SplineXFieldY coef(dom_coef);
+    SplineXFieldY coef_(dom_coef);
+    ddc::ChunkSpan coef = coef_.span_view();
 
     // 3. Create the interpolation domain
     ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling());
@@ -118,61 +121,101 @@ TEST(BatchedSplineBuilderTest, Identity)
     FieldXY vals(dom_vals);
 	ddc::for_each(
               vals.domain(),
-              [&](ddc::DiscreteElement<IDimX,IDimY> const e) {
+              [&](IndexXY const e) {
 				  vals(e) = vals1(ddc::select<IDimX>(e));
               });
     // 6. Finally build the spline by filling `coef`
     spline_builder(coef, vals);
-
+	ddc::for_each(
+              coef.domain(),
+              [&](ddc::DiscreteElement<BSplinesX, IDimY> const e) {
+				  std::cout << coef(e) << " ";
+              });
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
     SplineEvaluator<BSplinesX> spline_evaluator(g_null_boundary<BSplinesX>, g_null_boundary<BSplinesX>);
 
-    ddc::Chunk<CoordX, ddc::DiscreteDomain<IDimX,IDimY>> coords_eval(dom_vals);
+	ddc::Chunk<CoordX, ddc::DiscreteDomain<IDimX>> coords_eval_(interpolation_domain);
+	ddc::ChunkSpan coords_eval = coords_eval_.span_view();
 	ddc::for_each(
             ddc::policies::serial_host,
             coords_eval.domain(),
-            DDC_LAMBDA(ddc::DiscreteElement<IDimX,IDimY> const e) {
-		IndexX ix = ddc::select<IDimX>(e);
-        coords_eval(e) = ddc::coordinate(ix);
+            DDC_LAMBDA(IndexX const e) {
+        coords_eval(e) = ddc::coordinate(e);
     });
-	#if 0
-	ddc::Chunk<ddc::Coordinate<DimX>, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);
-    for (ddc::DiscreteElement<IDimX> const ix : interpolation_domain) {
-        coords_eval(ix) = ddc::coordinate(ix);
-    }
-    FieldXY spline_eval(dom_vals);
+
+    FieldXY spline_eval_(dom_vals);
+    ddc::ChunkSpan spline_eval = spline_eval_.span_view();
+	FieldXY spline_eval_deriv_(dom_vals);
+    ddc::ChunkSpan spline_eval_deriv = spline_eval_deriv_.span_view();
+
+
+	# if 1 
+	// TODO: encapsulate in ddc function
+	Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_eval_kv(spline_eval.data_handle(), ncells, ncells);
+	Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::DefaultHostExecutionSpace> spline_eval_tr_kv("spline_eval_tr_kv", ncells, ncells);
+	Kokkos::deep_copy(spline_eval_tr_kv, spline_eval_kv);
+	ddc::ChunkSpan<double, ddc::DiscreteDomain<IDimX,IDimY>, std::experimental::layout_left, ddc::HostAllocator<double>> spline_eval_tr(spline_eval_tr_kv, spline_eval.domain());
+	std::cout << "------------" << "\n";
+	for (int i=0; i<ncells*ncells; i++) {
+		// std::cout << spline_eval.data_handle()[i] << " " << spline_eval_tr.data_handle()[i] << "\n";
+	}
+	// TODO: encapsulate in ddc function
+	Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> coef_kv(coef.data_handle(), dom_bsplines_x.extent<BSplinesX>(), ncells);
+	Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace> coef_tr_kv("coef_tr_kv", dom_bsplines_x.extent<BSplinesX>(), ncells);
+	Kokkos::deep_copy(coef_tr_kv, coef_kv);
+	ddc::ChunkSpan<const double, ddc::DiscreteDomain<BSplinesX,IDimY>, std::experimental::layout_right, ddc::HostAllocator<double>> coef_tr(coef_tr_kv, coef.domain());
+	# endif
+
 	ddc::for_each(
             ddc::policies::serial_host,
             dom_y,
             DDC_LAMBDA(ddc::DiscreteElement<IDimY> const iy) {
-	    spline_evaluator(spline_eval[iy].span_view(), coords_eval[iy].span_cview(), coef[iy].span_cview());
+		# if 0
+		for (auto ix : dom_bsplines_x) {
+			std::cout << coef(ix,iy) << " " << coef[iy](ix) << " " << coef_tr[iy](ix)<< "\n";
+		}
+		# endif
+	    spline_evaluator(
+			spline_eval[iy],
+			ddc::ChunkSpan<const CoordX, ddc::DiscreteDomain<IDimX>, std::experimental::layout_right, Kokkos::HostSpace>(coords_eval.data_handle(),coords_eval.domain()),
+			coef_tr[iy]
+	);
+		spline_evaluator
+            .deriv(
+			spline_eval_deriv[iy],
+			ddc::ChunkSpan<const CoordX, ddc::DiscreteDomain<IDimX>, std::experimental::layout_right, Kokkos::HostSpace>(coords_eval.data_handle(),coords_eval.domain()),
+			coef_tr[iy]
+	);
+});
+
+	std::cout << "---------- TEST ----------\n";
+    // 8. Checking errors
+    double max_norm_error = ddc::transform_reduce(
+            spline_eval.domain(),
+			0.,
+			ddc::reducer::max<double>(),
+            [&](IndexXY const e) {
+		std::cout << spline_eval(e) << " " << vals(e) << "\n";
+        return Kokkos::abs(spline_eval(e) - vals(e));
 	});
 
-    FieldX spline_eval_deriv(interpolation_domain);
-    spline_evaluator
-            .deriv(spline_eval_deriv.span_view(), coords_eval.span_cview(), coef.span_cview());
-
-    // 8. Checking errors
-    double max_norm_error = 0.;
-    double max_norm_error_diff = 0.;
-    for (IndexX const ix : interpolation_domain) {
-        CoordX const x = ddc::coordinate(ix);
-
-        // Compute error
-        double const error = spline_eval(ix) - yvals(ix);
-        max_norm_error = std::fmax(max_norm_error, std::fabs(error));
-
-        // Compute error
-        double const error_deriv = spline_eval_deriv(ix) - evaluator.deriv(x, 1);
-        max_norm_error_diff = std::fmax(max_norm_error_diff, std::fabs(error_deriv));
-    }
+	double max_norm_error_diff = ddc::transform_reduce(
+            spline_eval.domain(),
+			0.,
+			ddc::reducer::max<double>(),
+           	[&](IndexXY const e) {
+        	CoordX const x = ddc::coordinate(ddc::select<IDimX>(e));
+        return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x,1));
+	});
+	#if 0
     double const max_norm_error_integ = std::fabs(
             spline_evaluator.integrate(coef.span_cview()) - evaluator.deriv(xN, -1)
             + evaluator.deriv(x0, -1));
+	# endif
 
     double const max_norm = evaluator.max_norm();
     double const max_norm_diff = evaluator.max_norm(1);
-    double const max_norm_int = evaluator.max_norm(-1);
+    // double const max_norm_int = evaluator.max_norm(-1);
 
     SplineErrorBounds<evaluator_type> error_bounds(evaluator);
     const double h = (xN - x0) / ncells;
@@ -182,6 +225,7 @@ TEST(BatchedSplineBuilderTest, Identity)
     EXPECT_LE(
             max_norm_error_diff,
             std::max(error_bounds.error_bound_on_deriv(h, s_degree_x), 1e-12 * max_norm_diff));
+	#if 0
     EXPECT_LE(
             max_norm_error_integ,
             std::max(error_bounds.error_bound_on_int(h, s_degree_x), 1.0e-14 * max_norm_int));

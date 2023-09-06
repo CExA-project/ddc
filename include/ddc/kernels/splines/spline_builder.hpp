@@ -53,13 +53,12 @@ public:
 
     // interpolator specific
     std::unique_ptr<Matrix> matrix;
+    
+	int m_offset;
 private:
     interpolation_domain_type m_interpolation_domain;
 
     double m_dx; // average cell size for normalization of derivatives
-
-
-    int m_offset;
 
 public:
     SplineBuilder(interpolation_domain_type const& interpolation_domain);

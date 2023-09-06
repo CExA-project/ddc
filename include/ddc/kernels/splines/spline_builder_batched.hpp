@@ -177,13 +177,13 @@ void SplineBuilderBatched<SplineBuilder, BatchTags...>::operator()(
     }
 	Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_flatten(vals.data_handle(), interpolation_domain().size(), m_batch_domain.size());
 	Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_flatten(spline.data_handle(), ddc::discrete_space<bsplines_type>().nbasis(), m_batch_domain.size());
-	Kokkos::deep_copy(spline_flatten, vals_flatten);
+	// Kokkos::deep_copy(spline_flatten, vals_flatten);
+
 	# if 0
-    
-	ddc::for_each(m_batch_domain, [&](BatchMesh const i) {
+    ddc::for_each(spline_builder2.interpolation_domain(), [&](IMesh2 const i) {
         const std::size_t ii = i.uid();
-        const ddc::DiscreteElement<bsplines_type> spl_idx(nbc_ymin + ii);
-		
+        const ddc::DiscreteElement<bsplines_type2> spl_idx(nbc_ymin + ii);
+
         // Get interpolated values
         ddc::Chunk<double, interpolation_domain_type1> vals1(
                 spline_builder1.interpolation_domain());
@@ -209,10 +209,27 @@ void SplineBuilderBatched<SplineBuilder, BatchTags...>::operator()(
                     spline(spl_idx, j) = spline1(j);
                 });
     });
-	# endif
 
-	spline_builder.matrix->solve_batch_inplace(spline_flatten);
-    
+
+	# endif
+		ddc::for_each(
+                    ddc::get_domain<BatchTags...>(spline),
+                    [&](ddc::DiscreteElement<BatchTags...> const j) {
+	for (int i = nbc_xmin; i < nbc_xmin + spline_builder.m_offset; ++i) {
+        				spline(ddc::DiscreteElement<bsplines_type>(i),j) = 0.0;
+    }
+
+	for (int i = 0; i < m_interpolation_domain.extents(); ++i) {
+        spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin + i + spline_builder.m_offset),j)
+                  = vals(ddc::DiscreteElement<interpolation_mesh_type>(i),j);
+      }
+  
+                    });
+
+	auto bcoef_section = Kokkos::subview(spline_flatten, std::pair<int,int>(spline_builder.m_offset, spline_flatten.extent(0)), Kokkos::ALL);	
+
+	spline_builder.matrix->solve_batch_inplace(bcoef_section);
+ 
 	# if 0
     if constexpr (BcXmax2 == BoundCond::HERMITE) {
         assert((long int)(derivs_ymax->extent(0))
@@ -316,17 +333,30 @@ void SplineBuilderBatched<SplineBuilder, BatchTags...>::operator()(
                 [&](ddc::DiscreteElement<bsplines_type2> const j) { spline(i, j) = spline2(j); });
     });
 
-    if (bsplines_type1::is_periodic()) {
-        for (std::size_t i(0); i < bsplines_type1::degree(); ++i) {
-            const ddc::DiscreteElement<bsplines_type1> i_start(i);
-            const ddc::DiscreteElement<bsplines_type1> i_end(
-                    ddc::discrete_space<bsplines_type1>().nbasis() + i);
-            ddc::for_each(
-                    ddc::get_domain<bsplines_type2>(spline),
-                    [&](ddc::DiscreteElement<bsplines_type2> const j) {
-                        spline(i_end, j) = spline(i_start, j);
-                    });
-        }
-    }
 	# endif
+    if (bsplines_type::is_periodic()) {
+          ddc::for_each(
+                    ddc::get_domain<BatchTags...>(spline),
+                    [&](ddc::DiscreteElement<BatchTags...> const j) {
+          if (spline_builder.m_offset != 0) {
+              for (int i = 0; i < spline_builder.m_offset; ++i) {
+                  spline(ddc::DiscreteElement<bsplines_type>(i),j)
+                          = spline(ddc::DiscreteElement<bsplines_type>(
+                                  ddc::discrete_space<bsplines_type>().nbasis() + i),j);
+              }
+              for (std::size_t i = spline_builder.m_offset; i < bsplines_type::degree(); ++i) {
+                  spline(ddc::DiscreteElement<bsplines_type>(
+                          ddc::discrete_space<bsplines_type>().nbasis() + i),j)
+                          = spline(ddc::DiscreteElement<bsplines_type>(i),j);
+              }
+        }
+        for (std::size_t i(0); i < bsplines_type::degree(); ++i) {
+            const ddc::DiscreteElement<bsplines_type> i_start(i);
+            const ddc::DiscreteElement<bsplines_type> i_end(
+                    ddc::discrete_space<bsplines_type>().nbasis() + i);
+
+                        spline(i_end, j) = spline(i_start, j);
+        }
+        });
+    }
 }

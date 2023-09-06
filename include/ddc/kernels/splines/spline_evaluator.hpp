@@ -62,18 +62,27 @@ public:
         return eval(coord_eval, spline_coef, vals);
     }
 
-    template <class Domain>
+    template <class Domain, class Layout1, class Layout2, class ExecSpace1, class ExecSpace2>
     void operator()(
-            ddc::ChunkSpan<double, Domain> const spline_eval,
+            ddc::ChunkSpan<double, Domain, Layout1, ExecSpace1> const spline_eval,
             ddc::ChunkSpan<const ddc::Coordinate<tag_type>, Domain> const coords_eval,
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>> const spline_coef) const
+            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>, Layout2, ExecSpace2> const spline_coef) const
     {
+		std::cout << "----- DEBUG ----\n";
         std::array<double, bsplines_type::degree() + 1> values;
         DSpan1D const vals = as_span(values);
 
+		for (auto i : spline_coef.domain()) {
+			std::cout << spline_coef(i) << " ";
+        }
+		std::cout << "\n";
         for (auto i : coords_eval.domain()) {
             spline_eval(i) = eval(coords_eval(i), spline_coef, vals);
         }
+		for (auto i : spline_eval.domain()) {
+			std::cout << spline_eval(i) << " ";
+        }
+		std::cout << "\n";
     }
 
     double deriv(
@@ -86,11 +95,11 @@ public:
         return eval_no_bc(coord_eval, spline_coef, vals, eval_deriv_type());
     }
 
-    template <class Domain>
+    template <class Domain, class Layout1, class Layout2, class ExecSpace1, class ExecSpace2>
     void deriv(
-            ddc::ChunkSpan<double, Domain> const spline_eval,
+            ddc::ChunkSpan<double, Domain, Layout1, ExecSpace1> const spline_eval,
             ddc::ChunkSpan<const ddc::Coordinate<tag_type>, Domain> const coords_eval,
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>> const spline_coef) const
+            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>, Layout2 ,ExecSpace2> const spline_coef) const
     {
         std::array<double, bsplines_type::degree() + 1> values;
         DSpan1D const vals = as_span(values);
@@ -117,9 +126,10 @@ public:
     }
 
 private:
+    template <class Layout, class ExecSpace>
     double eval(
             ddc::Coordinate<tag_type> coord_eval,
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>> const spline_coef,
+            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>, Layout, ExecSpace> const spline_coef,
             DSpan1D const vals) const
     {
         if constexpr (bsplines_type::is_periodic()) {
@@ -141,10 +151,10 @@ private:
         return eval_no_bc(coord_eval, spline_coef, vals, eval_type());
     }
 
-    template <class EvalType>
+    template <class EvalType, class Layout, class ExecSpace>
     double eval_no_bc(
             ddc::Coordinate<tag_type> const& coord_eval,
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>> const spline_coef,
+            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>, Layout, ExecSpace> const spline_coef,
             DSpan1D const vals,
             EvalType const) const
     {

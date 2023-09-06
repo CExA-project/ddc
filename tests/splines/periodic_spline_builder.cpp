@@ -112,6 +112,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
             .deriv(spline_eval_deriv.span_view(), coords_eval.span_cview(), coef.span_cview());
 
     // 8. Checking errors
+	std::cout << "---------- TEST ----------\n";
     double max_norm_error = 0.;
     double max_norm_error_diff = 0.;
     for (IndexX const ix : interpolation_domain) {
@@ -120,6 +121,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
         // Compute error
         double const error = spline_eval(ix) - yvals(ix);
         max_norm_error = std::fmax(max_norm_error, std::fabs(error));
+		std::cout << spline_eval(ix) << " " << yvals(ix) << "\n";
 
         // Compute error
         double const error_deriv = spline_eval_deriv(ix) - evaluator.deriv(x, 1);

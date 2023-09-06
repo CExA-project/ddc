@@ -76,7 +76,6 @@ public:
 	virtual Kokkos::View<double**> solve_batch_inplace(Kokkos::View<double**> const bx) const
     {
         assert(int(bx.extent(0)) == n);
-		std::cout << "\n" << bx.data()[18] << "- \n";
         int const info = solve_inplace_method(bx.data(), 'N', bx.extent(1));
 
         if (info < 0) {

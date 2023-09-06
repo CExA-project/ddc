@@ -160,4 +160,21 @@ auto build_mdspan(Kokkos::View<DataType, Properties...> const view, std::index_s
     DDC_IF_NVCC_THEN_POP
 }
 
+struct use_annotated_operator
+{
+};
+
+template <class ExecSpace>
+constexpr bool need_annotated_operator() noexcept
+{
+    bool need_annotation = false;
+#ifdef KOKKOS_ENABLE_CUDA
+    need_annotation = need_annotation || std::is_same_v<ExecSpace, Kokkos::Cuda>;
+#endif
+#ifdef KOKKOS_ENABLE_HIP
+    need_annotation = need_annotation || std::is_same_v<ExecSpace, Kokkos::HIP>;
+#endif
+    return need_annotation;
+}
+
 } // namespace ddc::detail

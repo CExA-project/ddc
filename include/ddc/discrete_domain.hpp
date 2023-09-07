@@ -129,17 +129,17 @@ public:
 
     constexpr DiscreteDomain take_last(mlength_type n) const
     {
-        return DiscreteDomain(front() + size() - n, n);
+        return DiscreteDomain(front() + (extents() - n), n);
     }
 
     constexpr DiscreteDomain remove_first(mlength_type n) const
     {
-        return take_last(size() - n);
+        return take_last(extents() - n);
     }
 
     constexpr DiscreteDomain remove_last(mlength_type n) const
     {
-        return take_first(size() - n);
+        return take_first(extents() - n);
     }
 
     constexpr DiscreteDomain remove(mlength_type n1, mlength_type n2) const

@@ -128,3 +128,31 @@ TEST(ProductMDomainTest, Diff)
     auto const subdomain = ddc::remove_dims_of(dom_x_y, dom_z_y);
     EXPECT_EQ(subdomain, dom_x);
 }
+
+TEST(ProductMDomainTest, TakeFirst)
+{
+    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
+    EXPECT_EQ(dom_x_y.take_first(DVectXY(2, 4)), DDomXY(lbound_x_y, DVectXY(2, 4)));
+}
+
+TEST(ProductMDomainTest, TakeLast)
+{
+    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
+    EXPECT_EQ(
+            dom_x_y.take_last(DVectXY(2, 4)),
+            DDomXY(lbound_x_y + nelems_x_y - DVectXY(2, 4), DVectXY(2, 4)));
+}
+
+TEST(ProductMDomainTest, RemoveFirst)
+{
+    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
+    EXPECT_EQ(
+            dom_x_y.remove_first(DVectXY(2, 4)),
+            DDomXY(lbound_x_y + DVectXY(2, 4), nelems_x_y - DVectXY(2, 4)));
+}
+
+TEST(ProductMDomainTest, RemoveLast)
+{
+    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
+    EXPECT_EQ(dom_x_y.remove_last(DVectXY(2, 4)), DDomXY(lbound_x_y, nelems_x_y - DVectXY(2, 4)));
+}

@@ -26,7 +26,7 @@ static DVectX constexpr nelems_x(10);
 static DElemY constexpr lbound_y(0);
 static DVectY constexpr nelems_y(12);
 
-static DElemXY constexpr lbound_x_y {lbound_x, lbound_y};
+static DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
 TEST(TransformReduceSerialHost, OneDimension)

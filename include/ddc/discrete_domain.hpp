@@ -134,17 +134,17 @@ public:
 
     constexpr DiscreteDomain remove_first(mlength_type n) const
     {
-        return take_last(extents() - n);
+        return DiscreteDomain(front() + n, extents() - n);
     }
 
     constexpr DiscreteDomain remove_last(mlength_type n) const
     {
-        return take_first(extents() - n);
+        return DiscreteDomain(front(), extents() - n);
     }
 
     constexpr DiscreteDomain remove(mlength_type n1, mlength_type n2) const
     {
-        return remove_first(n1).remove_last(n2);
+        return DiscreteDomain(front() + n1, extents() - n1 - n2);
     }
 
     template <class... ODDims>

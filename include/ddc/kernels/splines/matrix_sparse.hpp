@@ -206,11 +206,11 @@ public:
     }
 	# endif
     virtual double get_element(int i, int j) const override {
-	  return 0; // TODO
+	  return data[i*n+j];
 	}
     virtual void set_element(int i, int j, double aij) override {
 	  data[i*n+j] = aij;
-	  std::cout << i << " " << j << " " << aij << " - ";
+	  // std::cout << i << " " << j << " " << aij << " - ";
 	}
   
 	virtual int factorize_method() override {
@@ -218,9 +218,9 @@ public:
 	}
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
     {
-        Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> b_cpu(b, n, n_equations);
+        Kokkos::View<double**, Kokkos::DefaultExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> b_view(b, n, n_equations);
         Kokkos::View<double**, Kokkos::DefaultExecutionSpace> b_gpu("b_gpu", n, n_equations);
-		Kokkos::deep_copy(b_gpu, b_cpu);
+		Kokkos::deep_copy(b_gpu, b_view);
         // double* b_gpu = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultExecutionSpace>((b.size())*sizeof(double));
         // double* b_gpu = gko_default_exec->alloc<double>(b.size());
         auto b_vec_batch = to_gko_vec(b_gpu.data(), n, n_equations);
@@ -242,7 +242,6 @@ public:
 		// auto data_mat_gpu = gko::share(gko::matrix::Csr<>::create(gko_default_exec, gko::dim<2>{n,n})); 
 		// data_mat_gpu->copy_from(data_mat);
         // auto data_mat_batch = gko::share(gko::matrix::BatchCsr<>::create(gko_default_exec, n_batch, data_mat.get()));
-        Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace> x_cpu("x_cpu", n, n_equations);
         Kokkos::View<double**, Kokkos::DefaultExecutionSpace> x_gpu("x_gpu", n, n_equations);
         auto x_vec_batch = to_gko_vec(x_gpu.data(), n, n_equations);
         // auto x_vec_batch = gko::matrix::BatchDense<>::create(gko_default_exec, n_batch, x_vec.get());
@@ -289,7 +288,7 @@ public:
 		solver->generate(data_mat_batch)->apply(b_vec_batch.get(), x_vec_batch.get());
 		#endif
 
-		# if 0 
+		# if 1 
 		// Write result
 		std::cout << "-----------------------";
 		write(std::cout, data_mat_gpu);
@@ -323,8 +322,7 @@ public:
 
 		#endif
 		
-		Kokkos::deep_copy(x_cpu, x_gpu);
-		Kokkos::deep_copy(b_cpu, x_cpu); //inplace temporary trick
+		Kokkos::deep_copy(b_view, x_gpu); //inplace temporary trick
 		return 1;
     }
 };

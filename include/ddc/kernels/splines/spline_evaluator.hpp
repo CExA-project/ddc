@@ -62,27 +62,17 @@ public:
         return eval(coord_eval, spline_coef, vals);
     }
 
-    template <class Domain, class Layout1, class Layout2, class ExecSpace1, class ExecSpace2>
+    template <class Domain, class Layout1, class Layout2, class Layout3, class ExecSpace>
     void operator()(
-            ddc::ChunkSpan<double, Domain, Layout1, ExecSpace1> const spline_eval,
-            ddc::ChunkSpan<const ddc::Coordinate<tag_type>, Domain> const coords_eval,
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>, Layout2, ExecSpace2> const spline_coef) const
+            ddc::ChunkSpan<double, Domain, Layout1, ExecSpace> const spline_eval,
+            ddc::ChunkSpan<const ddc::Coordinate<tag_type>, Domain, Layout2, ExecSpace> const coords_eval,
+            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>, Layout3, ExecSpace> const spline_coef) const
     {
-		std::cout << "----- DEBUG ----\n";
         std::array<double, bsplines_type::degree() + 1> values;
         DSpan1D const vals = as_span(values);
-
-		for (auto i : spline_coef.domain()) {
-			std::cout << spline_coef(i) << " ";
-        }
-		std::cout << "\n";
-        for (auto i : coords_eval.domain()) {
+		for (auto i : coords_eval.domain()) {
             spline_eval(i) = eval(coords_eval(i), spline_coef, vals);
         }
-		for (auto i : spline_eval.domain()) {
-			std::cout << spline_eval(i) << " ";
-        }
-		std::cout << "\n";
     }
 
     double deriv(
@@ -95,11 +85,11 @@ public:
         return eval_no_bc(coord_eval, spline_coef, vals, eval_deriv_type());
     }
 
-    template <class Domain, class Layout1, class Layout2, class ExecSpace1, class ExecSpace2>
+    template <class Domain, class Layout1, class Layout2, class Layout3, class ExecSpace>
     void deriv(
-            ddc::ChunkSpan<double, Domain, Layout1, ExecSpace1> const spline_eval,
-            ddc::ChunkSpan<const ddc::Coordinate<tag_type>, Domain> const coords_eval,
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>, Layout2 ,ExecSpace2> const spline_coef) const
+            ddc::ChunkSpan<double, Domain, Layout1, ExecSpace> const spline_eval,
+            ddc::ChunkSpan<const ddc::Coordinate<tag_type>, Domain, Layout2, ExecSpace> const coords_eval,
+            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>, Layout3, ExecSpace> const spline_coef) const
     {
         std::array<double, bsplines_type::degree() + 1> values;
         DSpan1D const vals = as_span(values);

@@ -73,7 +73,8 @@ public:
         }
         return bx;
     }
-	virtual Kokkos::View<double**> solve_batch_inplace(Kokkos::View<double**> const bx) const
+	template<class... Args>
+	Kokkos::View<double**, Args...> solve_batch_inplace(Kokkos::View<double**, Args...> const bx) const
     {
         assert(int(bx.extent(0)) == n);
         int const info = solve_inplace_method(bx.data(), 'N', bx.extent(1));

@@ -1,8 +1,10 @@
 #pragma once
+#include "ddc/kokkos_allocator.hpp"
+#include "Kokkos_Core_fwd.hpp"
 #include "spline_builder.hpp"
 
 
-template <class SplineBuilder, class... BatchTags> // TODO : Remove BatchedTags... dependency (compute it automatically)
+template <class SplineBuilder, class MemorySpace, class... BatchTags> // TODO : Remove BatchedTags... dependency (compute it automatically)
 class SplineBuilderBatched
 {
 private:
@@ -46,9 +48,10 @@ public:
 
     SplineBuilderBatched& operator=(SplineBuilderBatched&& x) = default;
 
+	template <class Layout>
     void operator()(
-            ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>> spline,
-            ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>> vals,
+        	ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>, Layout, ddc::KokkosAllocator<double, MemorySpace>> spline, // TODO: batch_dims_type
+        	ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>, Layout, ddc::KokkosAllocator<double, MemorySpace>> vals,
             std::optional<CDSpan2D> const derivs_xmin = std::nullopt,
             std::optional<CDSpan2D> const derivs_xmax = std::nullopt) const;
             // std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
@@ -58,12 +61,10 @@ public:
             // std::optional<CDSpan2D> const mixed_derivs_xmin_ymax = std::nullopt,
             // std::optional<CDSpan2D> const mixed_derivs_xmax_ymax = std::nullopt) const;
 
-	# if 1
     interpolation_domain_type const& interpolation_domain() const noexcept
     {
         return m_interpolation_domain;
     }
-	# endif
 
     ddc::DiscreteDomain<bsplines_type, BatchTags...> spline_domain() const noexcept
     {
@@ -76,10 +77,11 @@ public:
 };
 
 
-template <class SplineBuilder, class... BatchTags>
-void SplineBuilderBatched<SplineBuilder, BatchTags...>::operator()(
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>> spline, // TODO: batch_dims_type
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>> vals,
+template <class SplineBuilder, class MemorySpace, class... BatchTags>
+template <class Layout>
+void SplineBuilderBatched<SplineBuilder, MemorySpace, BatchTags...>::operator()(
+        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>, Layout, ddc::KokkosAllocator<double, MemorySpace>> spline, // TODO: batch_dims_type
+        ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>, Layout, ddc::KokkosAllocator<double, MemorySpace>> vals,
         std::optional<CDSpan2D> const derivs_xmin,
         std::optional<CDSpan2D> const derivs_xmax) const
         // std::optional<CDSpan2D> const derivs_ymin,
@@ -97,11 +99,7 @@ void SplineBuilderBatched<SplineBuilder, BatchTags...>::operator()(
     assert((BcXmax == BoundCond::HERMITE)
            != (!derivs_xmax.has_value() || derivs_xmax->extent(0) == 0));
 
-    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type>> spline1(
-            spline_builder.spline_domain());
-
     using IMesh = ddc::DiscreteElement<interpolation_mesh_type>;
-    using BatchMesh = ddc::DiscreteElement<batch_mesh_type>;
 
     /******************************************************************
     *  Cycle over x1 position (or order of x1-derivative at boundary)
@@ -175,8 +173,8 @@ void SplineBuilderBatched<SplineBuilder, BatchTags...>::operator()(
         //                == spline_builder2.interpolation_domain().extents()
         //        && derivs_xmax->extent(1) == nbc_xmax);
     }
-	Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_flatten(vals.data_handle(), interpolation_domain().size(), m_batch_domain.size());
-	Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_flatten(spline.data_handle(), ddc::discrete_space<bsplines_type>().nbasis(), m_batch_domain.size());
+	Kokkos::View<double**, Kokkos::DefaultExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_flatten(vals.data_handle(), interpolation_domain().size(), m_batch_domain.size());
+	Kokkos::View<double**, Kokkos::DefaultExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_flatten(spline.data_handle(), ddc::get_domain<bsplines_type>(spline).size(), m_batch_domain.size());
 	// Kokkos::deep_copy(spline_flatten, vals_flatten);
 
 	# if 0
@@ -212,24 +210,42 @@ void SplineBuilderBatched<SplineBuilder, BatchTags...>::operator()(
 
 
 	# endif
+	auto const& offset_proxy = spline_builder.offset();
+	auto const& interp_size_proxy = m_interpolation_domain.extents();
+	# if 1
 		ddc::for_each(
-                    ddc::get_domain<BatchTags...>(spline),
-                    [&](ddc::DiscreteElement<BatchTags...> const j) {
-	for (int i = nbc_xmin; i < nbc_xmin + spline_builder.m_offset; ++i) {
+					ddc::policies::parallel_device,
+                    ddc::get_domain<BatchTags...>(vals),
+                    DDC_LAMBDA (ddc::DiscreteElement<BatchTags...> const j) {
+	
+	for (int i = nbc_xmin; i < nbc_xmin + offset_proxy; ++i) {
         				spline(ddc::DiscreteElement<bsplines_type>(i),j) = 0.0;
     }
-
-	for (int i = 0; i < m_interpolation_domain.extents(); ++i) {
-        spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin + i + spline_builder.m_offset),j)
+	for (int i = 0; i < interp_size_proxy; ++i) {
+        spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin + i + offset_proxy),j)
                   = vals(ddc::DiscreteElement<interpolation_mesh_type>(i),j);
       }
-  
-                    });
+    });
 
-	auto bcoef_section = Kokkos::subview(spline_flatten, std::pair<int,int>(spline_builder.m_offset, spline_flatten.extent(0)), Kokkos::ALL);	
+	# endif
 
+	
+	# if 0
+	for (int i=0; i<130; i++) {
+	  auto spline_flatten_ptr = spline.data_handle();
+	  Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,1),KOKKOS_LAMBDA (int j) { printf("%f ", spline_flatten_ptr[i]); });
+	}
+	# endif
+    // auto bcoef_section = Kokkos::subview(spline_flatten, std::pair<int,int>(offset_proxy, offset_proxy + ddc::discrete_space<bsplines_type>().nbasis()), Kokkos::ALL);
+	Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> bcoef_section("bcoef_section", ddc::discrete_space<bsplines_type>().nbasis(), m_batch_domain.size());
+	Kokkos::parallel_for(Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace,Kokkos::Rank<2>>({0,0},{ddc::discrete_space<bsplines_type>().nbasis(),m_batch_domain.size()}), KOKKOS_LAMBDA (int i, int j) {
+		bcoef_section(i,j) = spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy),ddc::DiscreteElement<BatchTags...>(j));
+	});
 	spline_builder.matrix->solve_batch_inplace(bcoef_section);
- 
+	Kokkos::parallel_for(Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace,Kokkos::Rank<2>>({0,0},{ddc::discrete_space<bsplines_type>().nbasis(),m_batch_domain.size()}), KOKKOS_LAMBDA (int i, int j) {
+		spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy),ddc::DiscreteElement<BatchTags...>(j)) = bcoef_section(i,j);
+	});
+
 	# if 0
     if constexpr (BcXmax2 == BoundCond::HERMITE) {
         assert((long int)(derivs_ymax->extent(0))
@@ -334,29 +350,33 @@ void SplineBuilderBatched<SplineBuilder, BatchTags...>::operator()(
     });
 
 	# endif
-    if (bsplines_type::is_periodic()) {
-          ddc::for_each(
+	auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
+	# if 1
+	if (bsplines_type::is_periodic()) {
+		  ddc::for_each(
+					ddc::policies::parallel_device,
                     ddc::get_domain<BatchTags...>(spline),
-                    [&](ddc::DiscreteElement<BatchTags...> const j) {
-          if (spline_builder.m_offset != 0) {
-              for (int i = 0; i < spline_builder.m_offset; ++i) {
+                    DDC_LAMBDA (ddc::DiscreteElement<BatchTags...> const j) {
+          if (offset_proxy != 0) {
+              for (int i = 0; i < offset_proxy; ++i) {
                   spline(ddc::DiscreteElement<bsplines_type>(i),j)
                           = spline(ddc::DiscreteElement<bsplines_type>(
-                                  ddc::discrete_space<bsplines_type>().nbasis() + i),j);
+                                  nbasis_proxy + i),j);
               }
-              for (std::size_t i = spline_builder.m_offset; i < bsplines_type::degree(); ++i) {
+              for (std::size_t i = offset_proxy; i < bsplines_type::degree(); ++i) {
                   spline(ddc::DiscreteElement<bsplines_type>(
-                          ddc::discrete_space<bsplines_type>().nbasis() + i),j)
+                          nbasis_proxy + i),j)
                           = spline(ddc::DiscreteElement<bsplines_type>(i),j);
               }
         }
         for (std::size_t i(0); i < bsplines_type::degree(); ++i) {
             const ddc::DiscreteElement<bsplines_type> i_start(i);
             const ddc::DiscreteElement<bsplines_type> i_end(
-                    ddc::discrete_space<bsplines_type>().nbasis() + i);
+                    nbasis_proxy + i);
 
                         spline(i_end, j) = spline(i_start, j);
         }
         });
     }
+	# endif
 }

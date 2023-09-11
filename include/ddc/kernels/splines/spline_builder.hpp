@@ -54,13 +54,16 @@ public:
     // interpolator specific
     std::unique_ptr<Matrix> matrix;
     
-	int m_offset;
+	const int m_offset;
+
 private:
     interpolation_domain_type m_interpolation_domain;
 
     double m_dx; // average cell size for normalization of derivatives
 
 public:
+	int compute_offset(interpolation_domain_type const& interpolation_domain);
+
     SplineBuilder(interpolation_domain_type const& interpolation_domain);
 
     SplineBuilder(SplineBuilder const& x) = delete;
@@ -84,6 +87,11 @@ public:
         return m_interpolation_domain;
     }
 
+	int offset() const noexcept
+    {
+        return m_offset;
+    }
+
     ddc::DiscreteDomain<BSplines> spline_domain() const noexcept
     {
         return ddc::discrete_space<BSplines>().full_domain();
@@ -104,15 +112,9 @@ private:
 };
 
 template <class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
-SplineBuilder<BSplines, interpolation_mesh_type, BcXmin, BcXmax>::SplineBuilder(
-        interpolation_domain_type const& interpolation_domain)
-    : m_interpolation_domain(interpolation_domain)
-    , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
-           / ddc::discrete_space<BSplines>().ncells())
-    , matrix(nullptr)
-    , m_offset(0)
-{
-    if constexpr (bsplines_type::is_periodic()) {
+int SplineBuilder<BSplines, interpolation_mesh_type, BcXmin, BcXmax>::compute_offset(interpolation_domain_type const& interpolation_domain) {
+  int offset;
+  if constexpr (bsplines_type::is_periodic()) {
         // Calculate offset so that the matrix is diagonally dominant
         std::array<double, bsplines_type::degree() + 1> values_ptr;
         DSpan1D values(values_ptr.data(), bsplines_type::degree() + 1);
@@ -120,14 +122,28 @@ SplineBuilder<BSplines, interpolation_mesh_type, BcXmin, BcXmax>::SplineBuilder(
         auto jmin = ddc::discrete_space<BSplines>()
                             .eval_basis(values, ddc::coordinate(start + BSplines::degree()));
         if constexpr (bsplines_type::degree() % 2 == 0) {
-            m_offset = jmin.uid() - start.uid() + bsplines_type::degree() / 2 - BSplines::degree();
+            offset = jmin.uid() - start.uid() + bsplines_type::degree() / 2 - BSplines::degree();
         } else {
             int const mid = bsplines_type::degree() / 2;
-            m_offset = jmin.uid() - start.uid() + (values(mid) > values(mid + 1) ? mid : mid + 1)
+            offset = jmin.uid() - start.uid() + (values(mid) > values(mid + 1) ? mid : mid + 1)
                        - BSplines::degree();
         }
     }
+	else {
+	  offset = 0;
+	}
+	return offset;
+}
 
+template <class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
+SplineBuilder<BSplines, interpolation_mesh_type, BcXmin, BcXmax>::SplineBuilder(
+        interpolation_domain_type const& interpolation_domain)
+    : m_interpolation_domain(interpolation_domain)
+    , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
+           / ddc::discrete_space<BSplines>().ncells())
+    , matrix(nullptr)
+    , m_offset(compute_offset(interpolation_domain))
+{
     // Calculate block sizes
     int lower_block_size, upper_block_size;
     if constexpr (bsplines_type::is_uniform()) {

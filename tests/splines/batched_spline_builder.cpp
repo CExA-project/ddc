@@ -141,7 +141,7 @@ static void BatchedSplineBuilderTest()
     ddc::Chunk vals_(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
 	ddc::ChunkSpan vals = vals_.span_view();
 	ddc::for_each(
-			  policy<ExecSpace>(),
+			  ddc::policies::policy<ExecSpace>(),
               vals.domain(),
               DDC_LAMBDA (Index<IDim<X>,IDim<Y>> const e) { 
 				  vals(e) = vals1_gpu(ddc::select<IDim<X>>(e));
@@ -169,7 +169,7 @@ ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::
 	ddc::Chunk coords_eval_(interpolation_domain, ddc::KokkosAllocator<Coord<X>, Kokkos::DefaultHostExecutionSpace::memory_space>());
 	ddc::ChunkSpan coords_eval = coords_eval_.span_view();
 	ddc::for_each(
-			policy<Kokkos::DefaultHostExecutionSpace>(),
+			ddc::policies::policy<Kokkos::DefaultHostExecutionSpace>(),
             coords_eval.domain(),
             DDC_LAMBDA(Index<IDim<X>> const e) {
         coords_eval(e) = ddc::coordinate(e);
@@ -196,7 +196,7 @@ ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::
 	ddc::ChunkSpan<const double, ddc::DiscreteDomain<BSplines<X>,IDim<Y>>, std::experimental::layout_right, Kokkos::DefaultHostExecutionSpace::memory_space> coef_tr2(coef_tr2_kv, coef.domain());
 	# endif
 	ddc::for_each(
-			policy<Kokkos::DefaultHostExecutionSpace>(),
+			ddc::policies::policy<Kokkos::DefaultHostExecutionSpace>(),
             dom_y,
             DDC_LAMBDA (ddc::DiscreteElement<IDim<Y>> const iy) {
 	    spline_evaluator(
@@ -221,7 +221,7 @@ ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::
 	# endif
 	// 8. Checking errors
     double max_norm_error = ddc::transform_reduce(
-			policy<Kokkos::DefaultHostExecutionSpace>(),
+			ddc::policies::policy<Kokkos::DefaultHostExecutionSpace>(),
             spline_eval.domain(),
 			0.,
 			ddc::reducer::max<double>(),
@@ -230,7 +230,7 @@ ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::
 	});
 
 	double max_norm_error_diff = ddc::transform_reduce(
-			policy<Kokkos::DefaultHostExecutionSpace>(),
+			ddc::policies::policy<Kokkos::DefaultHostExecutionSpace>(),
             spline_eval.domain(),
 			0.,
 			ddc::reducer::max<double>(),

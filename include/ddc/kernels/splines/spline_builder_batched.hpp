@@ -3,19 +3,6 @@
 #include "Kokkos_Core_fwd.hpp"
 #include "spline_builder.hpp"
 
-template <typename ExecSpace>
-constexpr auto policy = [] {
-    if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-        return ddc::policies::serial_host;
-    }
-    else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-        return ddc::policies::parallel_host;
-    }
-    else {
-        return ddc::policies::parallel_device;
-    }
-};
-
 template <class SplineBuilder, class MemorySpace, class... BatchTags> // TODO : Remove BatchedTags... dependency (compute it automatically)
 class SplineBuilderBatched
 {
@@ -228,7 +215,7 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, BatchTags...>::operator()(
 	auto const& interp_size_proxy = m_interpolation_domain.extents();
 	# if 1
 		ddc::for_each(
-					policy<exec_space>(),
+					ddc::policies::policy<exec_space>(),
                     ddc::get_domain<BatchTags...>(vals),
                     DDC_LAMBDA (ddc::DiscreteElement<BatchTags...> const j) {
 	
@@ -368,7 +355,7 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, BatchTags...>::operator()(
 	# if 1
 	if (bsplines_type::is_periodic()) {
 		  ddc::for_each(
-					policy<exec_space>(),
+					ddc::policies::policy<exec_space>(),
                     ddc::get_domain<BatchTags...>(spline),
                     DDC_LAMBDA (ddc::DiscreteElement<BatchTags...> const j) {
           if (offset_proxy != 0) {

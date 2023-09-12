@@ -51,7 +51,7 @@ TEST(TaggedVector, AccessorSingleElement)
 
 TEST(TaggedVector, Transpose)
 {
-    ddc::detail::TaggedVector<int, int, double, float> coord {0, 1, 2};
+    ddc::detail::TaggedVector<int, int, double, float> coord(0, 1, 2);
     EXPECT_EQ(coord.get<int>(), 0);
     EXPECT_EQ(coord.get<double>(), 1);
     EXPECT_EQ(coord.get<float>(), 2);

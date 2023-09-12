@@ -77,8 +77,8 @@ TYPED_TEST(PolarBsplineFixture, PartitionOfUnity)
     using BSplinesR = typename TestFixture::BSplineR;
     using BSplinesP = typename TestFixture::BSplineP;
     using CircToCart = CircularToCartesian<DimX, DimY, DimR, DimP>;
-    using BuilderR = SplineBuilder<BSplinesR, IDimR, BoundCond::GREVILLE, BoundCond::GREVILLE>;
-    using BuilderP = SplineBuilder<BSplinesP, IDimP, BoundCond::PERIODIC, BoundCond::PERIODIC>;
+    using BuilderR = SplineBuilder<Kokkos::DefaultExecutionSpace, BSplinesR, IDimR, BoundCond::GREVILLE, BoundCond::GREVILLE>;
+    using BuilderP = SplineBuilder<Kokkos::DefaultExecutionSpace, BSplinesP, IDimP, BoundCond::PERIODIC, BoundCond::PERIODIC>;
     using BuilderRP = SplineBuilder2D<BuilderR, BuilderP>;
     using DiscreteMapping = DiscreteToCartesian<DimX, DimY, BuilderRP>;
     using BSplines = PolarBSplines<BSplinesR, BSplinesP, continuity>;

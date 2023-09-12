@@ -104,8 +104,9 @@ foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGR
       GTest::gtest
       DDC::DDC
     )
-    target_compile_definitions("${test_name}" PUBLIC -DDEGREE_X=${DEGREE_X} -D${BSPLINES_TYPE})
-    add_test("${test_name}" "${test_name}")
+	target_compile_definitions("${test_name}" PUBLIC -DDEGREE_X=${DEGREE_X} -D${BSPLINES_TYPE})
+	# add_test("${test_name}" "${test_name}")
+	gtest_discover_tests("${test_name}")
   endforeach()
 endforeach()
 

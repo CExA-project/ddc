@@ -78,8 +78,8 @@ using SplineXY = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX, BSplinesY>>;
 using FieldXY = ddc::Chunk<double, ddc::DiscreteDomain<IDimX, IDimY>>;
 using CoordXY = ddc::Coordinate<DimX, DimY>;
 
-using BuilderX = SplineBuilder<BSplinesX, IDimX, s_bcl, s_bcr>;
-using BuilderY = SplineBuilder<BSplinesY, IDimY, s_bcl, s_bcr>;
+using BuilderX = SplineBuilder<Kokkos::DefaultExecutionSpace, BSplinesX, IDimX, s_bcl, s_bcr>;
+using BuilderY = SplineBuilder<Kokkos::DefaultExecutionSpace, BSplinesY, IDimY, s_bcl, s_bcr>;
 using BuilderXY = SplineBuilder2D<BuilderX, BuilderY>;
 
 using EvaluatorType = Evaluator2D::Evaluator<

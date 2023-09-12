@@ -99,7 +99,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
-    SplineBuilder<BSplinesX, IDimX, s_bcl, s_bcr> spline_builder(interpolation_domain);
+    SplineBuilder<Kokkos::DefaultExecutionSpace, BSplinesX, IDimX, s_bcl, s_bcr> spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
     FieldX yvals(interpolation_domain);

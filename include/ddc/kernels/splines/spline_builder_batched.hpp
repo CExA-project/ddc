@@ -3,6 +3,18 @@
 #include "Kokkos_Core_fwd.hpp"
 #include "spline_builder.hpp"
 
+template <typename ExecSpace>
+constexpr auto policy = [] {
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+        return ddc::policies::serial_host;
+    }
+    else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+        return ddc::policies::parallel_host;
+    }
+    else {
+        return ddc::policies::parallel_device;
+    }
+};
 
 template <class SplineBuilder, class MemorySpace, class... BatchTags> // TODO : Remove BatchedTags... dependency (compute it automatically)
 class SplineBuilderBatched
@@ -10,6 +22,8 @@ class SplineBuilderBatched
 private:
     using tag_type = typename SplineBuilder::bsplines_type::tag_type;
 public:
+	using exec_space = typename SplineBuilder::exec_space;
+
     using bsplines_type = typename SplineBuilder::bsplines_type;
 
     using builder_type = SplineBuilder;
@@ -173,8 +187,8 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, BatchTags...>::operator()(
         //                == spline_builder2.interpolation_domain().extents()
         //        && derivs_xmax->extent(1) == nbc_xmax);
     }
-	Kokkos::View<double**, Kokkos::DefaultExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_flatten(vals.data_handle(), interpolation_domain().size(), m_batch_domain.size());
-	Kokkos::View<double**, Kokkos::DefaultExecutionSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_flatten(spline.data_handle(), ddc::get_domain<bsplines_type>(spline).size(), m_batch_domain.size());
+	Kokkos::View<double**, exec_space, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_flatten(vals.data_handle(), interpolation_domain().size(), m_batch_domain.size());
+	Kokkos::View<double**, exec_space, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_flatten(spline.data_handle(), ddc::get_domain<bsplines_type>(spline).size(), m_batch_domain.size());
 	// Kokkos::deep_copy(spline_flatten, vals_flatten);
 
 	# if 0
@@ -214,7 +228,7 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, BatchTags...>::operator()(
 	auto const& interp_size_proxy = m_interpolation_domain.extents();
 	# if 1
 		ddc::for_each(
-					ddc::policies::parallel_device,
+					policy<exec_space>(),
                     ddc::get_domain<BatchTags...>(vals),
                     DDC_LAMBDA (ddc::DiscreteElement<BatchTags...> const j) {
 	
@@ -230,22 +244,22 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, BatchTags...>::operator()(
 	# endif
 
 	
-	# if 0
-	for (int i=0; i<130; i++) {
-	  auto spline_flatten_ptr = spline.data_handle();
-	  Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0,1),KOKKOS_LAMBDA (int j) { printf("%f ", spline_flatten_ptr[i]); });
-	}
-	# endif
+	
     // auto bcoef_section = Kokkos::subview(spline_flatten, std::pair<int,int>(offset_proxy, offset_proxy + ddc::discrete_space<bsplines_type>().nbasis()), Kokkos::ALL);
-	Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> bcoef_section("bcoef_section", ddc::discrete_space<bsplines_type>().nbasis(), m_batch_domain.size());
-	Kokkos::parallel_for(Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace,Kokkos::Rank<2>>({0,0},{ddc::discrete_space<bsplines_type>().nbasis(),m_batch_domain.size()}), KOKKOS_LAMBDA (int i, int j) {
+	Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section("bcoef_section", ddc::discrete_space<bsplines_type>().nbasis(), m_batch_domain.size());
+	Kokkos::parallel_for(Kokkos::MDRangePolicy<exec_space,Kokkos::Rank<2>>({0,0},{ddc::discrete_space<bsplines_type>().nbasis(),m_batch_domain.size()}), KOKKOS_LAMBDA (int i, int j) {
 		bcoef_section(i,j) = spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy),ddc::DiscreteElement<BatchTags...>(j));
 	});
 	spline_builder.matrix->solve_batch_inplace(bcoef_section);
-	Kokkos::parallel_for(Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace,Kokkos::Rank<2>>({0,0},{ddc::discrete_space<bsplines_type>().nbasis(),m_batch_domain.size()}), KOKKOS_LAMBDA (int i, int j) {
+	Kokkos::parallel_for(Kokkos::MDRangePolicy<exec_space,Kokkos::Rank<2>>({0,0},{ddc::discrete_space<bsplines_type>().nbasis(),m_batch_domain.size()}), KOKKOS_LAMBDA (int i, int j) {
 		spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy),ddc::DiscreteElement<BatchTags...>(j)) = bcoef_section(i,j);
 	});
-
+	# if 0
+	for (int i=0; i<130; i++) {
+	  auto spline_flatten_ptr = spline.data_handle();
+	  Kokkos::parallel_for(Kokkos::RangePolicy<exec_space>(0,1),KOKKOS_LAMBDA (int j) { printf("%f ", spline_flatten_ptr[i]); });
+	}
+	# endif
 	# if 0
     if constexpr (BcXmax2 == BoundCond::HERMITE) {
         assert((long int)(derivs_ymax->extent(0))
@@ -354,7 +368,7 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, BatchTags...>::operator()(
 	# if 1
 	if (bsplines_type::is_periodic()) {
 		  ddc::for_each(
-					ddc::policies::parallel_device,
+					policy<exec_space>(),
                     ddc::get_domain<BatchTags...>(spline),
                     DDC_LAMBDA (ddc::DiscreteElement<BatchTags...> const j) {
           if (offset_proxy != 0) {

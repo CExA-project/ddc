@@ -208,8 +208,8 @@ constexpr auto policy = [] {
 #if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
     } else {
         return ddc::policies::parallel_device;
-    }
 #endif
+    }
 };
 
 } // namespace policies

@@ -20,21 +20,6 @@ using DDom = ddc::DiscreteDomain<DDim...>;
 template <typename Kx>
 using DFDim = ddc::PeriodicSampling<Kx>;
 
-template <typename ExecSpace>
-constexpr auto policy = [] {
-    if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-        return ddc::policies::serial_host;
-    }
-#if fftw_omp_AVAIL
-    else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-        return ddc::policies::parallel_host;
-    }
-#endif
-    else {
-        return ddc::policies::parallel_device;
-    }
-};
-
 // TODO:
 // - FFT multidim but according to a subset of dimensions
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename... X>
@@ -57,7 +42,7 @@ static void test_fft()
     ddc::Chunk _f(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan f = _f.span_view();
     ddc::for_each(
-            policy<ExecSpace>(),
+            ddc::policies::policy<ExecSpace>(),
             f.domain(),
             DDC_LAMBDA(DElem<DDim<X>...> const e) {
                 ddc::Real const xn2
@@ -143,7 +128,7 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
     ddc::Chunk f_alloc = ddc::Chunk(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan f = f_alloc.span_view();
     ddc::for_each(
-            policy<ExecSpace>(),
+            ddc::policies::policy<ExecSpace>(),
             f.domain(),
             DDC_LAMBDA(DElem<DDim<X>> const e) { f(e) = static_cast<Tin>(1); });
 

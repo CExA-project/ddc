@@ -233,7 +233,7 @@ public:
         auto data_mat = gko::share(to_gko_mat(data, n, n, gko_exec->get_master()));
 
 		// Remove zeros
-		# if 0
+		# if 1
 		auto data_mat_ = gko::matrix_data<>(gko::dim<2>{n,n});
 		data_mat->write(data_mat_);
 		data_mat_.remove_zeros();
@@ -265,11 +265,13 @@ public:
 				.on(gko_exec);
 		std::shared_ptr<const gko::log::Convergence<>> convergence_logger = gko::log::Convergence<>::create(gko_exec);
 		residual_criterion->add_logger(convergence_logger);
+		auto preconditionner = gko::preconditioner::Jacobi<>::build()
+					.with_max_block_size(1u)
+					.on(gko_exec);
+		auto preconditionner_ = gko::share(preconditionner->generate(data_mat_gpu));
 		auto solver =
 			gko::solver::Bicgstab<>::build()
-				.with_preconditioner(gko::preconditioner::Jacobi<>::build()
-					.with_max_block_size(1u)
-					.on(gko_exec))
+				.with_generated_preconditioner(preconditionner_)
 				.with_criteria(
 					residual_criterion,
 					gko::stop::Iteration::build().with_max_iters(1000u).on(gko_exec))
@@ -290,7 +292,7 @@ public:
 		solver->generate(data_mat_batch)->apply(b_vec_batch.get(), x_vec_batch.get());
 		#endif
 
-		# if 1 
+		# if 0
 		// Write result
 		std::cout << "-----------------------";
 		write(std::cout, data_mat_gpu);

@@ -91,7 +91,8 @@ static void BatchedSplineBuilderTest()
     Coord<Y> constexpr yN(1.);
     
 	std::size_t constexpr ncells = 10; // TODO : restore 10
-	std::size_t constexpr nbatch = 100; // TODO : restore 10
+	std::size_t constexpr nbatch = 10; // TODO : restore 10
+  	// std::size_t constexpr nbatch = 65535; // TODO : handle bigger matrices but create chunks of it
     // 1. Create BSplines
 #if defined(BSPLINES_TYPE_UNIFORM)
         ddc::init_discrete_space<BSplines<X>>(x0, xN, ncells);
@@ -213,9 +214,9 @@ ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::
 			coef_tr2[iy]
 	);
 });
-   # if 1
-   for (int i=0; i<10; i++) {
-      for (int j=0; j<10; j++) {
+   # if 0
+   for (int i=0; i<ncells; i++) {
+      for (int j=0; j<nbatch; j++) {
       	std::cout << spline_eval(ddc::DiscreteElement<IDim<X>>(i),ddc::DiscreteElement<IDim<Y>>(j)) << " - ";
 		}
       std::cout << "\n";

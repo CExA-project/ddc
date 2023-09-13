@@ -57,6 +57,9 @@ Variables</h2></td></tr>
 <tr class="separator:a5375070124c23325831d11f5a33108f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48db884faba3760360031c5c7657e9e1"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy">parallel_device_policy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1policies.html#a48db884faba3760360031c5c7657e9e1">parallel_device</a></td></tr>
 <tr class="separator:a48db884faba3760360031c5c7657e9e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86c9aa083da13761b9553d8c6308f6be"><td class="memTemplParams" colspan="2">template&lt;typename ExecSpace &gt; </td></tr>
+<tr class="memitem:a86c9aa083da13761b9553d8c6308f6be"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1policies.html#a86c9aa083da13761b9553d8c6308f6be">policy</a></td></tr>
+<tr class="separator:a86c9aa083da13761b9553d8c6308f6be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Variable Documentation</h2>
 <a id="a8d8f7482301a4fd0a04cf36be865116c" name="a8d8f7482301a4fd0a04cf36be865116c"></a>
@@ -123,6 +126,44 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+</div>
+</div>
+<a id="a86c9aa083da13761b9553d8c6308f6be" name="a86c9aa083da13761b9553d8c6308f6be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86c9aa083da13761b9553d8c6308f6be">&#9670;&nbsp;</a></span>policy</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ExecSpace &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto ddc::policies::policy</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= [] {</div>
+<div class="line">    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;ExecSpace, Kokkos::Serial&gt;) {</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceddc_1_1policies.html#a8d8f7482301a4fd0a04cf36be865116c">ddc::policies::serial_host</a>;</div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line">    }</div>
+<div class="line">}</div>
+<div class="ttc" id="anamespaceddc_1_1policies_html_a8d8f7482301a4fd0a04cf36be865116c"><div class="ttname"><a href="namespaceddc_1_1policies.html#a8d8f7482301a4fd0a04cf36be865116c">ddc::policies::serial_host</a></div><div class="ttdeci">constexpr serial_host_policy serial_host</div><div class="ttdef"><b>Definition:</b> for_each.hpp:196</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

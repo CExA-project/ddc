@@ -20,10 +20,12 @@ public:
 
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
     
-    using vals_domain_type = ddc::DiscreteDomain<X...>; // TODO : Compute
+    using vals_domain_type = ddc::DiscreteDomain<X...>;
     
 	using batch_domain_type = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>,ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 	
+	using bsplines_batched_domain_type = typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<ddc::detail::TypeSeq<X...>,ddc::detail::TypeSeq<tag_type>,ddc::detail::TypeSeq<bsplines_type>>>;
+
     static constexpr BoundCond BcXmin = SplineBuilder::s_bc_xmin;
     static constexpr BoundCond BcXmax = SplineBuilder::s_bc_xmax;
 
@@ -71,9 +73,9 @@ public:
           return spline_builder.offset();
       }
 
-    ddc::DiscreteDomain<bsplines_type, BatchTags...> spline_domain() const noexcept
+    bsplines_batched_domain_type spline_domain() const noexcept
     {
-        return ddc::DiscreteDomain<bsplines_type, BatchTags...>(
+        return bsplines_batched_domain_type(
                 ddc::DiscreteElement<bsplines_type, BatchTags...>(0), // TODO : (0,0...)
                 ddc::DiscreteVector<bsplines_type>(
                         ddc::discrete_space<bsplines_type>().size(),

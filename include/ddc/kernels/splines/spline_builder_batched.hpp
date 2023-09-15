@@ -51,8 +51,8 @@ public:
 
 	template <class Layout>
     void operator()(
-        	ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>, Layout, ddc::KokkosAllocator<double, MemorySpace>> spline, // TODO: batch_dims_type
-        	ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>, Layout, ddc::KokkosAllocator<double, MemorySpace>> vals,
+        	ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>, Layout, MemorySpace> spline, // TODO: batch_dims_type
+        	ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>, Layout, MemorySpace> vals,
             std::optional<CDSpan2D> const derivs_xmin = std::nullopt,
             std::optional<CDSpan2D> const derivs_xmax = std::nullopt) const;
             // std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
@@ -81,8 +81,8 @@ public:
 template <class SplineBuilder, class MemorySpace, class... BatchTags>
 template <class Layout>
 void SplineBuilderBatched<SplineBuilder, MemorySpace, BatchTags...>::operator()(
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>, Layout, ddc::KokkosAllocator<double, MemorySpace>> spline, // TODO: batch_dims_type
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>, Layout, ddc::KokkosAllocator<double, MemorySpace>> vals,
+        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>, Layout, MemorySpace> spline, // TODO: batch_dims_type
+        ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>, Layout, MemorySpace> vals,
         std::optional<CDSpan2D> const derivs_xmin,
         std::optional<CDSpan2D> const derivs_xmax) const
         // std::optional<CDSpan2D> const derivs_ymin,

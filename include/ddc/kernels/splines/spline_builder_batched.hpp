@@ -1,9 +1,10 @@
 #pragma once
+#include "ddc/discrete_domain.hpp"
 #include "ddc/kokkos_allocator.hpp"
 #include "Kokkos_Core_fwd.hpp"
 #include "spline_builder.hpp"
 
-template <class SplineBuilder, class MemorySpace, class... BatchTags> // TODO : Remove BatchedTags... dependency (compute it automatically)
+template <class SplineBuilder, class MemorySpace, class... X>
 class SplineBuilderBatched
 {
 private:
@@ -16,27 +17,25 @@ public:
     using builder_type = SplineBuilder;
 
     using interpolation_mesh_type = typename SplineBuilder::mesh_type;
-    using batch_mesh_type = typename ddc::DiscreteElement<BatchTags...>;
 
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
     
-    using batch_domain_type = ddc::DiscreteDomain<BatchTags...>; // TODO : Compute
-
+    using vals_domain_type = ddc::DiscreteDomain<X...>; // TODO : Compute
+    
+	using batch_domain_type = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>,ddc::detail::TypeSeq<interpolation_mesh_type>>>;
+	
     static constexpr BoundCond BcXmin = SplineBuilder::s_bc_xmin;
     static constexpr BoundCond BcXmax = SplineBuilder::s_bc_xmax;
 
 private:
     builder_type spline_builder;
-    interpolation_domain_type m_interpolation_domain;
 	batch_domain_type m_batch_domain;
 
 public:
-    SplineBuilderBatched(interpolation_domain_type const& interpolation_domain, batch_domain_type const& batch_domain)
+    SplineBuilderBatched(interpolation_domain_type const& interpolation_domain, vals_domain_type const& vals_domain)
         : spline_builder(ddc::select<interpolation_mesh_type>(interpolation_domain))
-        , m_interpolation_domain(interpolation_domain)
-        , m_batch_domain(batch_domain)
     {
-		// auto m_batch_domain = ddc::remove_dims_of<interpolation_mesh_type(dom, ddc::DiscreteDomain<DDimSp, DDimX, DDimV>(sp_dom, x_dom, v_dom)); // TODO
+		m_batch_domain = ddc::remove_dims_of(vals_domain, interpolation_domain);
     }
 
     SplineBuilderBatched(SplineBuilderBatched const& x) = delete;
@@ -64,8 +63,13 @@ public:
 
     interpolation_domain_type const& interpolation_domain() const noexcept
     {
-        return m_interpolation_domain;
+        return spline_builde.interpolation_domain();
     }
+
+	 int offset() const noexcept
+      {
+          return spline_builder.offset();
+      }
 
     ddc::DiscreteDomain<bsplines_type, BatchTags...> spline_domain() const noexcept
     {
@@ -78,9 +82,9 @@ public:
 };
 
 
-template <class SplineBuilder, class MemorySpace, class... BatchTags>
+template <class SplineBuilder, class MemorySpace, class... X>
 template <class Layout>
-void SplineBuilderBatched<SplineBuilder, MemorySpace, BatchTags...>::operator()(
+void SplineBuilderBatched<SplineBuilder, MemorySpace, X...>::operator()(
         ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type, BatchTags...>, Layout, MemorySpace> spline, // TODO: batch_dims_type
         ddc::ChunkSpan<double, ddc::DiscreteDomain<interpolation_mesh_type,BatchTags...>, Layout, MemorySpace> vals,
         std::optional<CDSpan2D> const derivs_xmin,
@@ -212,7 +216,7 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, BatchTags...>::operator()(
 
 	# endif
 	auto const& offset_proxy = spline_builder.offset();
-	auto const& interp_size_proxy = m_interpolation_domain.extents();
+	auto const& interp_size_proxy = interpolation_domain().extents();
 	# if 1
 		ddc::for_each(
 					ddc::policies::policy<exec_space>(),

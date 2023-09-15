@@ -198,7 +198,8 @@ inline constexpr parallel_host_policy parallel_host;
 inline constexpr parallel_device_policy parallel_device;
 
 template <typename ExecSpace>
-constexpr auto policy = [] {
+constexpr auto policy([[maybe_unused]] ExecSpace exec_space)
+{
     if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
         return ddc::policies::serial_host;
 #ifdef KOKKOS_ENABLE_OPENMP
@@ -210,7 +211,7 @@ constexpr auto policy = [] {
         return ddc::policies::parallel_device;
 #endif
     }
-};
+}
 
 } // namespace policies
 

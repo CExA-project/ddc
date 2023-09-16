@@ -99,18 +99,18 @@ static constexpr std::vector<Coord<X>> breaks(double ncells) {
 template <class IDimI, class T>
 struct DimsInitializer;
 
-template <class I, class... IDimX> // TODO: rename X with IDimX
-struct DimsInitializer<I, ddc::detail::TypeSeq<IDimX...>>
+template <class IDimI, class... IDimX> // TODO: rename X with IDimX
+struct DimsInitializer<IDimI, ddc::detail::TypeSeq<IDimX...>>
 {
   void operator()(std::size_t const ncells) {
   #if defined(BSPLINES_TYPE_UNIFORM)
         (ddc::init_discrete_space(IDimX::init(x0<typename IDimX::continuous_dimension_type>(), xN<typename IDimX::continuous_dimension_type>(), DVect<IDimX>(ncells))),...);
-        ddc::init_discrete_space<BSplines<I>>(x0<I>(), xN<I>(), ncells);
+        ddc::init_discrete_space<BSplines<typename IDimI::continuous_dimension_type>>(x0<typename IDimI::continuous_dimension_type>(), xN<typename IDimI::continuous_dimension_type>(), ncells);
   #elif defined(BSPLINES_TYPE_NON_UNIFORM)
         (ddc::init_discrete_space<IDimX>(breaks<typename IDimX::continuous_dimension_type>(ncells)), ...);
-        ddc::init_discrete_space<BSplines<I>>(breaks<I>(ncells));
+        ddc::init_discrete_space<BSplines<typename IDimI::continuous_dimension_type>>(breaks<typename IDimI::continuous_dimension_type>(ncells));
   #endif
-    ddc::init_discrete_space<IDim<I>>(GrevillePoints<BSplines<I>>::get_sampling());
+    ddc::init_discrete_space<IDimI>(GrevillePoints<BSplines<typename IDimI::continuous_dimension_type>>::get_sampling());
   }
 };
 
@@ -121,7 +121,7 @@ static void BatchedSplineBuilderTest()
 {
 	std::size_t constexpr ncells = 10; // TODO : restore 10
     // 1. Create BSplines
-	DimsInitializer<I,BatchDims<IDim<I>,IDim<X>...>> dims_initializer;
+	DimsInitializer<IDim<I>,BatchDims<IDim<I>,IDim<X>...>> dims_initializer;
 	dims_initializer(ncells);
 	// auto const dom_coef = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<ddc::detail::TypeSeq<IDim<X>...>,ddc::detail::TypeSeq<IDim<I>>,ddc::detail::TypeSeq<BSplines<I>>>>((std::is_same_v<X,I> ? ddc::discrete_space<BSplines<X>>().full_domain() : ddc::DiscreteDomain<IDim<X>>(Index<IDim<X>>(0), DVect<IDim<X>>(ncells)))...);
 
@@ -139,11 +139,14 @@ static void BatchedSplineBuilderTest()
 
     ddc::DiscreteDomain<IDim<I>> const interpolation_domain = spline_builder.interpolation_domain();
 	auto const dom_y = spline_builder.batch_domain();
-    ddc::DiscreteDomain<BSplines<I>> const& dom_bsplines_x = spline_builder.bsplines_domain();
+    ddc::DiscreteDomain<BSplines<I>> const dom_bsplines_x = spline_builder.bsplines_domain();
 	auto const dom_coef = spline_builder.spline_domain();
 
-    ddc::Chunk coef_alloc(dom_coef, ddc::KokkosAllocator<double, MemorySpace>());
+	// std::cout << interpolation_domain.front();
+	// std::cout << dom_y.front();
+	std::cout << dom_bsplines_x.front();
 	#if 0
+    ddc::Chunk coef_alloc(dom_coef, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan coef = coef_alloc.span_view();
 
     // 5. Allocate and fill a chunk over the interpolation domain

@@ -119,6 +119,8 @@ struct DimsInitializer<IDimI, ddc::detail::TypeSeq<IDimX...>>
 template <typename ExecSpace, typename MemorySpace, typename I, typename... X>
 static void BatchedSplineBuilderTest()
 {
+	Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
+	ExecSpace exec_space = ExecSpace();
 	std::size_t constexpr ncells = 10; // TODO : restore 10
     // 1. Create BSplines
 	DimsInitializer<IDim<I>,BatchDims<IDim<I>,IDim<X>...>> dims_initializer;
@@ -142,17 +144,13 @@ static void BatchedSplineBuilderTest()
     ddc::DiscreteDomain<BSplines<I>> const dom_bsplines_x = spline_builder.bsplines_domain();
 	auto const dom_coef = spline_builder.spline_domain();
 
-	// std::cout << interpolation_domain.front();
-	// std::cout << dom_y.front();
-	std::cout << dom_bsplines_x.front();
-	#if 0
     ddc::Chunk coef_alloc(dom_coef, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan coef = coef_alloc.span_view();
 
     // 5. Allocate and fill a chunk over the interpolation domain
     ddc::Chunk vals1_cpu_alloc(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
     ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();
-    evaluator_type<X> evaluator(interpolation_domain);
+    evaluator_type<I> evaluator(interpolation_domain);
     evaluator(vals1_cpu);
     ddc::Chunk vals1_alloc(interpolation_domain, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals1 = vals1_alloc.span_view();
@@ -161,17 +159,17 @@ static void BatchedSplineBuilderTest()
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
 	ddc::ChunkSpan vals = vals_alloc.span_view();
 	ddc::for_each(
-			  ddc::policies::policy<ExecSpace>(),
+			  ddc::policies::policy(exec_space),
               vals.domain(),
-              DDC_LAMBDA (Index<IDim<X>,IDim<Y>> const e) { 
-				  vals(e) = vals1(ddc::select<IDim<X>>(e));
+              DDC_LAMBDA (Index<IDim<X>...> const e) { 
+				  vals(e) = vals1(ddc::select<IDim<I>>(e));
               });
 
 	// 5.5 Permute Layout TODO : encapsulate
-	Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_kv(vals.data_handle(), ncells, nbatch);
-	Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> vals_tr_kv("vals_tr_kv", ncells, nbatch);
+	Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_kv(vals.data_handle(), ddc::select<IDim<X>>(dom_vals).size()...);
+	Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> vals_tr_kv("vals_tr_kv", ddc::select<IDim<X>>(dom_vals).size()...);
 	Kokkos::deep_copy(vals_tr_kv, vals_kv);
-ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::layout_right, MemorySpace> vals_tr(vals_tr_kv, vals.domain());
+	ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>...>, std::experimental::layout_right, MemorySpace> vals_tr(vals_tr_kv, vals.domain());
 
     // 6. Finally build the spline by filling `coef`
     spline_builder(coef, vals); // TODO : clarify the suffixes _tr
@@ -184,17 +182,17 @@ ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::
 	// ddc::ChunkSpan<double, ddc::DiscreteDomain<BSplines<X>,IDim<Y>>, std::experimental::layout_right, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>> coef(coef_allockv, dom_coef);
 	
 	auto vals_cpu_kv = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), vals_tr_kv);
-	ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::layout_right, Kokkos::DefaultHostExecutionSpace::memory_space> vals_cpu(vals_cpu_kv, dom_vals);
+	ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>...>, std::experimental::layout_right, Kokkos::DefaultHostExecutionSpace::memory_space> vals_cpu(vals_cpu_kv, dom_vals);
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
-    SplineEvaluator<BSplines<X>> spline_evaluator(g_null_boundary<BSplines<X>>, g_null_boundary<BSplines<X>>);
+    SplineEvaluator<BSplines<I>> spline_evaluator(g_null_boundary<BSplines<I>>, g_null_boundary<BSplines<I>>);
 
-	ddc::Chunk coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<Coord<X>, Kokkos::HostSpace>());
+	ddc::Chunk coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<Coord<I>, Kokkos::HostSpace>());
 	ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
 	ddc::for_each(
-			ddc::policies::policy<Kokkos::DefaultHostExecutionSpace>(),
+			ddc::policies::policy(host_exec_space),
             coords_eval.domain(),
-            DDC_LAMBDA(Index<IDim<X>> const e) {
+            DDC_LAMBDA(Index<IDim<I>> const e) {
         coords_eval(e) = ddc::coordinate(e);
     });
 
@@ -206,8 +204,8 @@ ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::
 
 	# if 0 
 	// TODO: encapsulate in ddc function
-	Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_eval_kv(spline_eval.data_handle(), ncells, nbatch);
-	Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> spline_eval_tr_kv("spline_eval_tr_kv", ncells, nbatch);
+	Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_eval_kv(spline_eval.data_handle(), ddc::select<IDim<X>>(dom_vals).size()...);
+	Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> spline_eval_tr_kv("spline_eval_tr_kv", ddc::select<IDim<X>>(dom_vals).size()...);
 	Kokkos::deep_copy(spline_eval_tr_kv, spline_eval_kv);
 	ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::layout_right, ExecSpace> spline_eval_tr(spline_eval_tr_kv, spline_eval.domain());
 	# endif
@@ -219,46 +217,46 @@ ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::
 	// ddc::ChunkSpan<const double, ddc::DiscreteDomain<BSplines<X>,IDim<Y>>, std::experimental::layout_right, Kokkos::DefaultHostExecutionSpace::memory_space> coef2(coef2_kv, coef.domain());
 	# endif
 	ddc::for_each(
-			ddc::policies::policy<Kokkos::DefaultHostExecutionSpace>(),
+			ddc::policies::policy(host_exec_space),
             dom_y,
-            DDC_LAMBDA (ddc::DiscreteElement<IDim<Y>> const iy) {
+            DDC_LAMBDA (typename decltype(dom_y)::discrete_element_type const iy) {
 	    spline_evaluator(
 			spline_eval[iy],
-			ddc::ChunkSpan<const Coord<X>, ddc::DiscreteDomain<IDim<X>>, std::experimental::layout_right, Kokkos::HostSpace>(coords_eval),
+			ddc::ChunkSpan<const Coord<I>, ddc::DiscreteDomain<IDim<I>>, std::experimental::layout_right, Kokkos::HostSpace>(coords_eval),
 			coef_cpu[iy].span_cview()
 	);
 		spline_evaluator
             .deriv(
 			spline_eval_deriv[iy],
-			ddc::ChunkSpan<const Coord<X>, ddc::DiscreteDomain<IDim<X>>, std::experimental::layout_right, Kokkos::HostSpace>(coords_eval),
+			ddc::ChunkSpan<const Coord<I>, ddc::DiscreteDomain<IDim<I>>, std::experimental::layout_right, Kokkos::HostSpace>(coords_eval),
 			coef_cpu[iy].span_cview()
 	);
 });
-   # if 0
+   # if 1
    for (int i=0; i<ncells; i++) {
-      for (int j=0; j<nbatch; j++) {
-      	std::cout << spline_eval(ddc::DiscreteElement<IDim<X>>(i),ddc::DiscreteElement<IDim<Y>>(j)) << " - ";
+      for (int j=0; j<ncells; j++) {
+      	std::cout << spline_eval(ddc::DiscreteElement<IDim<DimX>>(i),ddc::DiscreteElement<IDim<DimY>>(j)) << " - ";
 		}
       std::cout << "\n";
 	}
 	# endif
 	// 8. Checking errors
     double max_norm_error = ddc::transform_reduce(
-			ddc::policies::policy<Kokkos::DefaultHostExecutionSpace>(),
+			ddc::policies::policy(host_exec_space),
             spline_eval.domain(),
 			0.,
 			ddc::reducer::max<double>(),
-            DDC_LAMBDA (Index<IDim<X>,IDim<Y>> const e) {
+            DDC_LAMBDA (Index<IDim<X>...> const e) {
         return Kokkos::abs(spline_eval(e) - vals_cpu(e));
 	});
 
 	double max_norm_error_diff = ddc::transform_reduce(
-			ddc::policies::policy<Kokkos::DefaultHostExecutionSpace>(),
+			ddc::policies::policy(host_exec_space),
             spline_eval.domain(),
 			0.,
 			ddc::reducer::max<double>(),
-           	DDC_LAMBDA (Index<IDim<X>,IDim<Y>> const e) {
-        	Coord<X> const x = ddc::coordinate(ddc::select<IDim<X>>(e));
+           	DDC_LAMBDA (Index<IDim<X>...> const e) {
+        	Coord<I> const x = ddc::coordinate(ddc::select<IDim<I>>(e));
         return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x,1));
 	});
 	#if 0
@@ -271,30 +269,39 @@ ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X>,IDim<Y>>, std::experimental::
     double const max_norm_diff = evaluator.max_norm(1);
     // double const max_norm_int = evaluator.max_norm(-1);
 
-    SplineErrorBounds<evaluator_type<X>> error_bounds(evaluator);
-    const double h = (xN - x0) / ncells;
+    SplineErrorBounds<evaluator_type<I>> error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
-            std::max(error_bounds.error_bound(h, s_degree_x), 1.0e-14 * max_norm));
+            std::max(error_bounds.error_bound(dx<I>(ncells), s_degree_x), 1.0e-14 * max_norm));
     EXPECT_LE(
             max_norm_error_diff,
-            std::max(error_bounds.error_bound_on_deriv(h, s_degree_x), 1e-12 * max_norm_diff));
+            std::max(error_bounds.error_bound_on_deriv(dx<I>(ncells), s_degree_x), 1e-12 * max_norm_diff));
+	#if 0
     EXPECT_LE(
             max_norm_error_integ,
             std::max(error_bounds.error_bound_on_int(h, s_degree_x), 1.0e-14 * max_norm_int));
 	# endif
 }
 
-TEST(BatchedSplineBuilderHost, Identity)
+TEST(BatchedSplineBuilderHost, X)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimX,DimX,DimY>();
 }
 
-TEST(BatchedSplineBuilderDevice, Identity)
+TEST(BatchedSplineBuilderHost, Y)
+{
+	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimY,DimX,DimY>();
+}
+
+TEST(BatchedSplineBuilderDevice, X)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimX,DimX,DimY>();
 }
 
+TEST(BatchedSplineBuilderDevice, Y)
+{
+	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimY,DimX,DimY>();
+}
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

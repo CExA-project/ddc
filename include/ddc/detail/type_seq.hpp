@@ -112,18 +112,6 @@ struct TypeSeqReplaceSingle<TagA, TypeSeq<>, TypeSeq<>>
     using type = TagA;
 };
 
-template <class TagA, class... TagsB>
-struct TypeSeqReplaceSingle<TagA, TypeSeq<TagsB...>, TypeSeq<>>
-{
-    using type = TagA;
-};
-
-template <class TagA, class... TagsC>
-struct TypeSeqReplaceSingle<TagA, TypeSeq<>, TypeSeq<TagsC...>>
-{
-    using type = TagA;
-};
-
 template <class TagA, class HeadTagsB, class... TailTagsB, class HeadTagsC, class... TailTagsC>
 struct TypeSeqReplaceSingle<
         TagA,

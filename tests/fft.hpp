@@ -130,7 +130,7 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
     ddc::Chunk f_alloc = ddc::Chunk(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan f = f_alloc.span_view();
     ddc::for_each(
-            ddc::policies::policy<ExecSpace>(),
+            ddc::policies::policy(exec_space),
             f.domain(),
             DDC_LAMBDA(DElem<DDim<X>> const e) { f(e) = static_cast<Tin>(1); });
 

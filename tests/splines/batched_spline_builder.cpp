@@ -96,19 +96,21 @@ static constexpr std::vector<Coord<X>> breaks(double ncells) {
   return out;
 }
 
-template <class T>
-struct BatchDimsInitializer;
+template <class IDimI, class T>
+struct DimsInitializer;
 
-template <class... IDimX> // TODO: rename X with IDimX
-struct BatchDimsInitializer<ddc::detail::TypeSeq<IDimX...>>
+template <class I, class... IDimX> // TODO: rename X with IDimX
+struct DimsInitializer<I, ddc::detail::TypeSeq<IDimX...>>
 {
-  ddc::DiscreteDomain<IDimX...> operator()(std::size_t const ncells) {
+  void operator()(std::size_t const ncells) {
   #if defined(BSPLINES_TYPE_UNIFORM)
         (ddc::init_discrete_space(IDimX::init(x0<typename IDimX::continuous_dimension_type>(), xN<typename IDimX::continuous_dimension_type>(), DVect<IDimX>(ncells))),...);
+        ddc::init_discrete_space<BSplines<I>>(x0<I>(), xN<I>(), ncells);
   #elif defined(BSPLINES_TYPE_NON_UNIFORM)
         (ddc::init_discrete_space<IDimX>(breaks<typename IDimX::continuous_dimension_type>(ncells)), ...);
+        ddc::init_discrete_space<BSplines<I>>(breaks<I>(ncells));
   #endif
-  return ddc::DiscreteDomain<IDimX...>(ddc::DiscreteDomain<IDimX>(Index<IDimX>(0), DVect<IDimX>(ncells))...);
+    ddc::init_discrete_space<IDim<I>>(GrevillePoints<BSplines<I>>::get_sampling());
   }
 };
 
@@ -119,34 +121,31 @@ static void BatchedSplineBuilderTest()
 {
 	std::size_t constexpr ncells = 10; // TODO : restore 10
     // 1. Create BSplines
-	#if defined(BSPLINES_TYPE_UNIFORM)
-        ddc::init_discrete_space<BSplines<I>>(x0<I>(), xN<I>(), ncells);
-	#elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        ddc::init_discrete_space<BSplines<I>>(breaks<I>(ncells));
-	#endif
-	BatchDimsInitializer<BatchDims<IDim<I>,IDim<X>...>> batch_dims_initializer;
-    ddc::DiscreteDomain<BSplines<I>> const& dom_bsplines_x(
-            ddc::discrete_space<BSplines<I>>().full_domain());
-	ddc::detail::convert_type_seq_to_discrete_domain<BatchDims<IDim<I>,IDim<X>...>> dom_y = batch_dims_initializer(ncells);
-	ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<ddc::detail::TypeSeq<BSplines<I>>,BatchDims<IDim<I>,IDim<X>...>>> const dom_coef(dom_bsplines_x, dom_y);
+	DimsInitializer<I,BatchDims<IDim<I>,IDim<X>...>> dims_initializer;
+	dims_initializer(ncells);
+	// auto const dom_coef = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<ddc::detail::TypeSeq<IDim<X>...>,ddc::detail::TypeSeq<IDim<I>>,ddc::detail::TypeSeq<BSplines<I>>>>((std::is_same_v<X,I> ? ddc::discrete_space<BSplines<X>>().full_domain() : ddc::DiscreteDomain<IDim<X>>(Index<IDim<X>>(0), DVect<IDim<X>>(ncells)))...);
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
-    ddc::Chunk coef_alloc(dom_coef, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan coef = coef_alloc.span_view();
 	// Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> coef_kv("coef_kv", dom_bsplines_x.size(), nbatch);
 	// ddc::ChunkSpan<double, ddc::DiscreteDomain<BSplines<X>,IDim<Y>>, std::experimental::layout_right, ddc::KokkosAllocator<double, MemorySpace>> coef(coef_kv, dom_coef);
 
     // 3. Create the interpolation domain
-    ddc::init_discrete_space<IDim<I>>(GrevillePoints<BSplines<I>>::get_sampling());
-    ddc::DiscreteDomain<IDim<I>> interpolation_domain(GrevillePoints<BSplines<I>>::get_domain());
-	ddc::DiscreteDomain<IDim<X>...> const dom_vals(interpolation_domain, dom_y);
+	ddc::DiscreteDomain<IDim<X>...> const dom_vals = ddc::DiscreteDomain<IDim<X>...>((std::is_same_v<X,I> ? GrevillePoints<BSplines<X>>::get_domain() : ddc::DiscreteDomain<IDim<X>>(Index<IDim<X>>(0), DVect<IDim<X>>(ncells)))...);
+
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
-    SplineBuilderBatched<SplineBuilder<ExecSpace, BSplines<I>, IDim<I>, BoundCond::PERIODIC, BoundCond::PERIODIC>, MemorySpace, X...> spline_builder(
-           interpolation_domain, dom_y);
+    SplineBuilderBatched<SplineBuilder<ExecSpace, BSplines<I>, IDim<I>, BoundCond::PERIODIC, BoundCond::PERIODIC>, MemorySpace, IDim<X>...> spline_builder(dom_vals);
 
+    ddc::DiscreteDomain<IDim<I>> const interpolation_domain = spline_builder.interpolation_domain();
+	auto const dom_y = spline_builder.batch_domain();
+    ddc::DiscreteDomain<BSplines<I>> const& dom_bsplines_x = spline_builder.bsplines_domain();
+	auto const dom_coef = spline_builder.spline_domain();
+
+    ddc::Chunk coef_alloc(dom_coef, ddc::KokkosAllocator<double, MemorySpace>());
 	#if 0
+    ddc::ChunkSpan coef = coef_alloc.span_view();
+
     // 5. Allocate and fill a chunk over the interpolation domain
     ddc::Chunk vals1_cpu_alloc(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
     ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();

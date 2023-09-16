@@ -408,16 +408,20 @@ constexpr auto remove_dims_of(
 
 // Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be usefull in its own, it helps for replace_dim_of
 template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>
-constexpr auto replace_dim_of_1d(
+constexpr std::conditional_t<std::is_same_v<DDimA,DDim1>, ddc::DiscreteDomain<DDim2>, ddc::DiscreteDomain<DDimA>> replace_dim_of_1d(
         DiscreteDomain<DDimA> const& DDom_a,
         [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
-		  return std::is_same_v<DDimA,DDim1> ? ddc::select<DDim2>(DDom_b) : DDom_a;
+  if constexpr (std::is_same_v<DDimA,DDim1>) {
+	 return ddc::select<DDim2>(DDom_b);
+  } else {
+	  return DDom_a;
+  }
 }
 
 // Replace in DDom_a the dimension Dim1 by the dimension Dim2 of DDom_b 
 template <typename DDim1, typename DDim2, typename... DDimsA, typename... DDimsB>
-constexpr auto replace_dim_of(
+constexpr ddc::detail::convert_type_seq_to_discrete_domain<type_seq_replace_t<detail::TypeSeq<DDimsA...>,detail::TypeSeq<DDim1>,detail::TypeSeq<DDim2>>> replace_dim_of(
         DiscreteDomain<DDimsA...> const& DDom_a,
         [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {

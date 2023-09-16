@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cstdint>
 #include <tuple>
+#include <type_traits>
 
 #include "ddc/coordinate.hpp"
 #include "ddc/detail/type_seq.hpp"
@@ -403,6 +404,30 @@ constexpr auto remove_dims_of(
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
     return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
+}
+
+// Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be usefull in its own, it helps for replace_dim_of
+template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>
+constexpr auto replace_dim_of_1d(
+        DiscreteDomain<DDimA> const& DDom_a,
+        [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
+{
+		  return std::is_same_v<DDimA,DDim1> ? ddc::select<DDim2>(DDom_b) : DDom_a;
+}
+
+// Replace in DDom_a the dimension Dim1 by the dimension Dim2 of DDom_b 
+template <typename DDim1, typename DDim2, typename... DDimsA, typename... DDimsB>
+constexpr auto replace_dim_of(
+        DiscreteDomain<DDimsA...> const& DDom_a,
+        [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
+{
+	// TODO : static_asserts
+    using TagSeqA = detail::TypeSeq<DDimsA...>;
+    using TagSeqB = detail::TypeSeq<DDim1>;
+    using TagSeqC = detail::TypeSeq<DDim2>;
+
+	using type_seq_r = type_seq_replace_t<TagSeqA,TagSeqB,TagSeqC>;
+	return ddc::detail::convert_type_seq_to_discrete_domain<type_seq_r>(replace_dim_of_1d<DDim1,DDim2,DDimsA,DDimsB...>(ddc::select<DDimsA>(DDom_a),DDom_b)...);
 }
 
 template <class... QueryDDims, class... DDims>

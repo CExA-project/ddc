@@ -293,6 +293,13 @@ public:
 		#endif
 
 		# if 0
+      	for (int i=0; i<130; i++) {
+        	// auto b_data = b_vec_batch->get_values();
+        	auto b_data = b_gpu.data();
+      		Kokkos::parallel_for(Kokkos::RangePolicy<ExecSpace>(0,1),KOKKOS_LAMBDA (int j) { printf("%f ", b_data[i]); });
+		}
+		# endif
+		# if 0
 		// Write result
 		std::cout << "-----------------------";
 		write(std::cout, data_mat_gpu);

@@ -240,6 +240,7 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
 	# endif
 	auto const& offset_proxy = spline_builder.offset();
 	auto const& interp_size_proxy = interpolation_domain().extents();
+	auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
 	# if 1
 		ddc::for_each(
 					ddc::policies::policy(exec_space()),
@@ -260,20 +261,32 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
 	
 	
     // auto bcoef_section = Kokkos::subview(spline_flatten, std::pair<int,int>(offset_proxy, offset_proxy + ddc::discrete_space<bsplines_type>().nbasis()), Kokkos::ALL);
-	Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section("bcoef_section", ddc::discrete_space<bsplines_type>().nbasis(), batch_domain().size());
-	Kokkos::parallel_for(Kokkos::MDRangePolicy<exec_space,Kokkos::Rank<2>>({0,0},{ddc::discrete_space<bsplines_type>().nbasis(),batch_domain().size()}), KOKKOS_LAMBDA (int i, int j) {
-		bcoef_section(i,j) = spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), typename batch_domain_type::discrete_element_type(j));
-	});
-	spline_builder.matrix->solve_batch_inplace(bcoef_section);
-	Kokkos::parallel_for(Kokkos::MDRangePolicy<exec_space,Kokkos::Rank<2>>({0,0},{ddc::discrete_space<bsplines_type>().nbasis(),batch_domain().size()}), KOKKOS_LAMBDA (int i, int j) {
-		spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), typename batch_domain_type::discrete_element_type(j)) = bcoef_section(i,j);
-	});
 	# if 0
 	for (int i=0; i<130; i++) {
 	  auto spline_flatten_ptr = spline.data_handle();
 	  Kokkos::parallel_for(Kokkos::RangePolicy<exec_space>(0,1),KOKKOS_LAMBDA (int j) { printf("%f ", spline_flatten_ptr[i]); });
 	}
 	# endif
+	// TODO : Consider optimizing
+	Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section("bcoef_section", ddc::discrete_space<bsplines_type>().nbasis(), batch_domain().size());
+	ddc::for_each(
+					ddc::policies::policy(exec_space()),
+                    batch_domain(),
+                    DDC_LAMBDA (typename batch_domain_type::discrete_element_type const j) {
+		for (int i=0; i<nbasis_proxy; i++) {
+			bcoef_section(i,j.uid()) = spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), j);
+		}
+	});
+	spline_builder.matrix->solve_batch_inplace(bcoef_section);
+	ddc::for_each(
+					ddc::policies::policy(exec_space()),
+                    batch_domain(),
+                    DDC_LAMBDA (typename batch_domain_type::discrete_element_type const j) {
+		for (int i=0; i<nbasis_proxy; i++) {
+			spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), j) = bcoef_section(i,j.uid());
+		}
+	});
+	
 	# if 0
     if constexpr (BcXmax2 == BoundCond::HERMITE) {
         assert((long int)(derivs_ymax->extent(0))
@@ -378,7 +391,6 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
     });
 
 	# endif
-	auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
 	# if 1
 	if (bsplines_type::is_periodic()) {
 		  ddc::for_each(

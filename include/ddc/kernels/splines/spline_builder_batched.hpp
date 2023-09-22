@@ -245,10 +245,10 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
 		ddc::for_each(
 					ddc::policies::policy(exec_space()),
                     batch_domain(),
-                    DDC_LAMBDA (typename batch_domain_type::discrete_element_type const j) {
+                    DDC_LAMBDA (typename batch_domain_type::discrete_element_type j) {
 	
 	for (int i = nbc_xmin; i < nbc_xmin + offset_proxy; ++i) {
-        				spline(ddc::DiscreteElement<bsplines_type>(i),j) = 0.0;
+        				spline(ddc::DiscreteElement(ddc::DiscreteElement<bsplines_type>(i),j)) = 0.0;
     }
 	for (int i = 0; i < interp_size_proxy; ++i) {
         spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin + i + offset_proxy),j)

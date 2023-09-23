@@ -84,7 +84,7 @@ constexpr DiscreteElement<QueryTag> take(
         DETail const&... tail)
 {
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
-    /* TODO
+    /* TODO : Restore
     static_assert(
             !type_seq_contains_v<detail::TypeSeq<HeadTag>, detail::TypeSeq<TailTags...>>,
             "ERROR: tag redundant");
@@ -97,33 +97,6 @@ constexpr DiscreteElement<QueryTag> take(
     }
     DDC_IF_NVCC_THEN_POP
 }
-/*
-template <class QueryTag, class... HeadTags, class... DETail>
-inline constexpr DiscreteElement<QueryTag> take_and_select(DiscreteElement<HeadTags...> const& head, DETail const&... tail) noexcept
-{
-	  auto const tmp = select<QueryTag>(head);
-	  if constexpr (tmp!=DiscreteElement<>()) {
-		  return tmp;
-	  } else {
-		  return take_and
-      // return take_and_select<QueryTag>(tail...);
-}
-*/
-#if 0
-template <class QueryTag, class... HeadTags, class... DETail>
-constexpr DiscreteElement<QueryTag> const& take_expand(
-        DiscreteElement<HeadTags...> const& head,
-        DETail const&... tail)
-{
-	/* TODO
-    static_assert(
-            !type_seq_contains_v<detail::TypeSeq<HeadTag>, detail::TypeSeq<TailTags...>>,
-            "ERROR: tag redundant");
-	*/
-    return take_expand<QueryTag>(tags...);
-}
-#endif
-
 namespace detail {
 
 /// Returns a reference to the underlying `std::array`

@@ -6,8 +6,6 @@
 
 #include <gtest/gtest.h>
 
-#include "ddc/detail/type_seq.hpp"
-
 namespace {
 
 struct a;

@@ -243,30 +243,39 @@ public:
                 memory_space>(subview, this->m_domain.restrict(odomain));
     }
 
-    /** Element access using a list of DiscreteElement
-     * @param delems 1D discrete elements
-     * @return reference to this element
-     */
-    template <class... ODDims>
-    constexpr reference operator()(DiscreteElement<ODDims> const&... delems) const noexcept
+    /** Element access using a 0D DiscreteElement
+       * @return const-reference to this element
+       */
+    constexpr reference operator()() const noexcept
     {
-        static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
-        assert(((delems >= front<ODDims>(this->m_domain)) && ...));
-        assert(((delems <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(uid(take<DDims>(delems...))...);
+        static_assert(sizeof...(DDims) == 0, "Invalid number of dimensions");
+        return this->m_internal_mdspan();
     }
 
     /** Element access using a multi-dimensional DiscreteElement
-     * @param delems discrete elements
-     * @return reference to this element
-     */
-    template <class... ODDims, class = std::enable_if_t<sizeof...(ODDims) != 1>>
+       * @param delems discrete coordinates
+       * @return const-reference to this element
+       */
+    template <class... ODDims>
     constexpr reference operator()(DiscreteElement<ODDims...> const& delems) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((select<ODDims>(delems) >= front<ODDims>(this->m_domain)) && ...));
         assert(((select<ODDims>(delems) <= back<ODDims>(this->m_domain)) && ...));
         return this->m_internal_mdspan(uid<DDims>(delems)...);
+    }
+
+    /** Element access using a list of DiscreteElement
+       * @param delems discrete oordinates
+       * @return const-reference to this element
+       */
+    template <class... HeadODDims, class... MidODDims, class... DETail>
+    constexpr reference operator()(
+            DiscreteElement<HeadODDims...> const& head,
+            DiscreteElement<MidODDims...> const& mid,
+            DETail const&... delems) const noexcept
+    {
+        return this->operator()(DiscreteElement<HeadODDims..., MidODDims...>(head, mid), delems...);
     }
 
     /** Access to the underlying allocation pointer

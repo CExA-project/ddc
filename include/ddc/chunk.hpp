@@ -169,37 +169,29 @@ public:
         return span_view()[odomain];
     }
 
-    /** Element access using a list of DiscreteElement
-     * @param delems 1D discrete coordinates
+    /** Element access using a 0D DiscreteElement
      * @return const-reference to this element
      */
-    template <class... ODDims>
-    element_type const& operator()(DiscreteElement<ODDims> const&... delems) const noexcept
+    element_type const& operator()() const noexcept
     {
-        static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
-        assert(((delems >= front<ODDims>(this->m_domain)) && ...));
-        assert(((delems <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(take<DDims>(delems...).uid()...);
+        static_assert(sizeof...(DDims) == 0, "Invalid number of dimensions");
+        return this->m_internal_mdspan();
     }
 
-    /** Element access using a list of DiscreteElement
-     * @param delems 1D discrete coordinates
+    /** Element access using a 0D DiscreteElement
      * @return reference to this element
      */
-    template <class... ODDims>
-    element_type& operator()(DiscreteElement<ODDims> const&... delems) noexcept
+    element_type& operator()() noexcept
     {
-        static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
-        assert(((delems >= front<ODDims>(this->m_domain)) && ...));
-        assert(((delems <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(take<DDims>(delems...).uid()...);
+        static_assert(sizeof...(DDims) == 0, "Invalid number of dimensions");
+        return this->m_internal_mdspan();
     }
 
     /** Element access using a multi-dimensional DiscreteElement
      * @param delems discrete coordinates
      * @return const-reference to this element
      */
-    template <class... ODDims, class = std::enable_if_t<sizeof...(ODDims) != 1>>
+    template <class... ODDims>
     element_type const& operator()(DiscreteElement<ODDims...> const& delems) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
@@ -212,13 +204,39 @@ public:
      * @param delems discrete coordinates
      * @return reference to this element
      */
-    template <class... ODDims, class = std::enable_if_t<sizeof...(ODDims) != 1>>
+    template <class... ODDims>
     element_type& operator()(DiscreteElement<ODDims...> const& delems) noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((select<ODDims>(delems) >= front<ODDims>(this->m_domain)) && ...));
         assert(((select<ODDims>(delems) <= back<ODDims>(this->m_domain)) && ...));
         return this->m_internal_mdspan(uid<DDims>(delems)...);
+    }
+
+    /** Element access using a list of DiscreteElement
+     * @param delems discrete oordinates
+     * @return const-reference to this element
+     */
+    template <class... HeadODDims, class... MidODDims, class... DETail>
+    element_type const& operator()(
+            DiscreteElement<HeadODDims...> const& head,
+            DiscreteElement<MidODDims...> const& mid,
+            DETail const&... delems) const noexcept
+    {
+        return this->operator()(DiscreteElement<HeadODDims..., MidODDims...>(head, mid), delems...);
+    }
+
+    /** Element access using a list of DiscreteElement
+     * @param delems discrete coordinates
+     * @return reference to this element
+     */
+    template <class... HeadODDims, class... MidODDims, class... DETail>
+    element_type& operator()(
+            DiscreteElement<HeadODDims...> const& head,
+            DiscreteElement<MidODDims...> const& mid,
+            DETail const&... delems) noexcept
+    {
+        return this->operator()(DiscreteElement<HeadODDims..., MidODDims...>(head, mid), delems...);
     }
 
     /** Access to the underlying allocation pointer

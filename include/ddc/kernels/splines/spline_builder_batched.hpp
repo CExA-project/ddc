@@ -24,6 +24,9 @@ public:
     
 	using batch_domain_type = typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<ddc::detail::TypeSeq<IDimX...>,ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 	
+	template<typename Tag>
+	using spline_dim_type = std::conditional_t<std::is_same_v<Tag,interpolation_mesh_type>, bsplines_type, Tag>;
+
 	using spline_domain_type = typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<ddc::detail::TypeSeq<IDimX...>,ddc::detail::TypeSeq<interpolation_mesh_type>,ddc::detail::TypeSeq<bsplines_type>>>;
 
     static constexpr BoundCond BcXmin = SplineBuilder::s_bc_xmin;
@@ -128,6 +131,7 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
            != (!derivs_xmax.has_value() || derivs_xmax->extent(0) == 0));
 
     using IMesh = ddc::DiscreteElement<interpolation_mesh_type>;
+
 
     /******************************************************************
     *  Cycle over x1 position (or order of x1-derivative at boundary)
@@ -248,7 +252,7 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
                     DDC_LAMBDA (typename batch_domain_type::discrete_element_type j) {
 	
 	for (int i = nbc_xmin; i < nbc_xmin + offset_proxy; ++i) {
-        				spline(ddc::DiscreteElement(ddc::DiscreteElement<bsplines_type>(i),j)) = 0.0;
+        				spline(ddc::DiscreteElement<bsplines_type>(i),j) = 0.0;
     }
 	for (int i = 0; i < interp_size_proxy; ++i) {
         spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin + i + offset_proxy),j)

@@ -178,7 +178,7 @@ static void BatchedSplineBuilderTest()
 	Kokkos::View<ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(X)>, Kokkos::LayoutRight, ExecSpace> vals_tr_kv("vals_tr_kv", ddc::select<IDim<X,I>>(dom_vals.extents())...);
 	Kokkos::deep_copy(vals_tr_kv, vals_kv);
 	ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X,I>...>, std::experimental::layout_right, MemorySpace> vals_tr(vals_tr_kv, vals.domain());
-	# if 1
+	# if 0
 
     // 6. Finally build the spline by filling `coef`
     spline_builder(coef, vals); // TODO : clarify the suffixes _tr
@@ -317,7 +317,7 @@ TEST(BatchedSplineBuilderDevice, 2DY)
 
 TEST(BatchedSplineBuilderDevice, 3DX)
 {
-	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimZ,DimX,DimY,DimZ>();
+	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimX,DimX,DimY,DimZ>();
 }
 
 int main(int argc, char** argv)

@@ -2,6 +2,7 @@
 
 // Misc
 #include <memory>
+
 #include "ddc/detail/macros.hpp"
 #include "ddc/detail/tagged_vector.hpp"
 #include "ddc/detail/type_seq.hpp"
@@ -39,7 +40,7 @@
 
 // PETSc
 #if petsc_AVAIL
-#include "petscsys.h"   
+#include "petscsys.h"
 #endif
 
 #if ginkgo_AVAIL
@@ -49,20 +50,18 @@
 static std::shared_ptr<gko::Executor> create_default_host_executor()
 {
 #ifdef KOKKOS_ENABLE_SERIAL
-    if constexpr (std::is_same_v<Kokkos::DefaultHostExecutionSpace,
-                                 Kokkos::Serial>) {
+    if constexpr (std::is_same_v<Kokkos::DefaultHostExecutionSpace, Kokkos::Serial>) {
         return gko::ReferenceExecutor::create();
     }
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
-    if constexpr (std::is_same_v<Kokkos::DefaultHostExecutionSpace,
-                                 Kokkos::OpenMP>) {
+    if constexpr (std::is_same_v<Kokkos::DefaultHostExecutionSpace, Kokkos::OpenMP>) {
         return gko::OmpExecutor::create();
     }
 #endif
-} // Comes from "Basic Kokkos Extension" Ginkgo MR 
+} // Comes from "Basic Kokkos Extension" Ginkgo MR
 
-# if 0
+#if 0
 template <typename ExecSpace,
           typename MemorySpace = typename ExecSpace::memory_space>
 static std::shared_ptr<gko::Executor> create_executor(ExecSpace, MemorySpace = {})
@@ -134,9 +133,9 @@ static std::shared_ptr<gko::Executor> create_default_executor()
 {
     return create_executor(Kokkos::DefaultExecutionSpace{});
 } // Comes from "Basic Kokkos Extension" Ginkgo MR
-# endif // Not working for some reason
+#endif // Not working for some reason
 
-# if 0
+#if 0
 static std::shared_ptr<gko::Executor> create_default_executor() {
 #ifdef KOKKOS_ENABLE_SERIAL
         if (std::is_same_v<Kokkos::DefaultExecutionSpace,
@@ -159,34 +158,34 @@ static std::shared_ptr<gko::Executor> create_default_executor() {
 } // Comes from kokkos_assembly example in Ginkgo develop branch
 static std::shared_ptr<gko::Executor> gko_default_host_exec = create_default_host_executor();
 static std::shared_ptr<gko::Executor> gko_default_exec = create_default_executor();
-# endif
+#endif
 
 template <typename ExecSpace>
-static std::shared_ptr<gko::Executor> create_gko_exec() {
+static std::shared_ptr<gko::Executor> create_gko_exec()
+{
 #ifdef KOKKOS_ENABLE_SERIAL
-        if (std::is_same_v<ExecSpace,
-                         Kokkos::Serial>) {
-            return gko::ReferenceExecutor::create();
-        }
+    if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+        return gko::ReferenceExecutor::create();
+    }
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
-        if (std::is_same_v<ExecSpace,
-                         Kokkos::OpenMP>) {
-            return gko::OmpExecutor::create();
-        }
+    if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+        return gko::OmpExecutor::create();
+    }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
-        if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-            return gko::CudaExecutor::create(0,
-                                             create_default_host_executor());
-        }
+    if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+        return gko::CudaExecutor::create(0, create_default_host_executor());
+    }
 #endif
 }
 
-class DDCInitializer {
+class DDCInitializer
+{
 public:
-  DDCInitializer() {
-	# if 0
+    DDCInitializer()
+    {
+#if 0
 	// gko_omp_exec = gko::OmpExecutor::create();
 	gko_default_host_exec = gko::OmpExecutor::create();
 	// gko_cuda_exec = gko::CudaExecutor::create(0, gko_default_host_exec);
@@ -198,8 +197,8 @@ public:
 	  gko_default_exec->create(0, gko_default_host_exec);
 	}
 
-	# endif
-  }
+#endif
+    }
 };
 
 static DDCInitializer ddc_initializer;

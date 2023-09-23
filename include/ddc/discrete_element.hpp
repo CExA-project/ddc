@@ -78,23 +78,51 @@ inline constexpr DiscreteElement<QueryTags...> select(DiscreteElement<Tags...>&&
     return DiscreteElement<QueryTags...>(std::move(arr));
 }
 
-template <class QueryTag, class HeadTag, class... TailTags>
-constexpr DiscreteElement<QueryTag> const& take(
-        DiscreteElement<HeadTag> const& head,
-        DiscreteElement<TailTags> const&... tags)
+template <class QueryTag, class... HeadTag, class... DETail>
+constexpr DiscreteElement<QueryTag> take(
+        DiscreteElement<HeadTag...> const& head,
+        DETail const&... tail)
 {
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
+    /* TODO
     static_assert(
             !type_seq_contains_v<detail::TypeSeq<HeadTag>, detail::TypeSeq<TailTags...>>,
             "ERROR: tag redundant");
-    if constexpr (std::is_same_v<QueryTag, HeadTag>) {
-        return head;
+	*/
+    if constexpr ((std::is_same_v<QueryTag, HeadTag> || ...)) {
+        return DiscreteElement<QueryTag>(head);
     } else {
-        static_assert(sizeof...(TailTags) > 0, "ERROR: tag not found");
-        return take<QueryTag>(tags...);
+        static_assert(sizeof...(DETail) > 0, "ERROR: tag not found");
+        return take<QueryTag>(tail...);
     }
     DDC_IF_NVCC_THEN_POP
 }
+/*
+template <class QueryTag, class... HeadTags, class... DETail>
+inline constexpr DiscreteElement<QueryTag> take_and_select(DiscreteElement<HeadTags...> const& head, DETail const&... tail) noexcept
+{
+	  auto const tmp = select<QueryTag>(head);
+	  if constexpr (tmp!=DiscreteElement<>()) {
+		  return tmp;
+	  } else {
+		  return take_and
+      // return take_and_select<QueryTag>(tail...);
+}
+*/
+#if 0
+template <class QueryTag, class... HeadTags, class... DETail>
+constexpr DiscreteElement<QueryTag> const& take_expand(
+        DiscreteElement<HeadTags...> const& head,
+        DETail const&... tail)
+{
+	/* TODO
+    static_assert(
+            !type_seq_contains_v<detail::TypeSeq<HeadTag>, detail::TypeSeq<TailTags...>>,
+            "ERROR: tag redundant");
+	*/
+    return take_expand<QueryTag>(tags...);
+}
+#endif
 
 namespace detail {
 
@@ -150,14 +178,14 @@ public:
     inline constexpr DiscreteElement(DiscreteElement&&) = default;
 
     template <class... OTags>
-    explicit inline constexpr DiscreteElement(DiscreteElement<OTags> const&... other) noexcept
-        : m_values {take<Tags>(other...).uid()...}
+    explicit inline constexpr DiscreteElement(DiscreteElement<OTags...> const& other) noexcept
+        : m_values {other.template uid<Tags>()...}
     {
     }
 
-    template <class... OTags>
-    explicit inline constexpr DiscreteElement(DiscreteElement<OTags...> const& other) noexcept
-        : m_values {other.template uid<Tags>()...}
+    template <class... DE, class = std::enable_if_t<(is_discrete_element_v<DE> && ...)>>
+    explicit inline constexpr DiscreteElement(DE const&... other) noexcept
+        : m_values {take<Tags>(other...).uid()...}
     {
     }
 

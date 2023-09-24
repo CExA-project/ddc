@@ -50,8 +50,8 @@ public:
         , m_element_end((domains.front() + domains.extents())...)
     {
     }
-    
-	/** Construct a DiscreteDomain starting from element_begin with size points.
+
+    /** Construct a DiscreteDomain starting from element_begin with size points.
      * @param element_begin the lower bound in each direction
      * @param size the number of points in each direction
      */

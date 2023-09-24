@@ -209,7 +209,6 @@ static void BatchedSplineBuilderTest()
 	ddc::Chunk spline_eval_deriv_alloc(dom_vals, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
     ddc::ChunkSpan spline_eval_deriv = spline_eval_deriv_alloc.span_view();
 
-
 	# if 0 
 	// TODO: encapsulate in ddc function
 	Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_eval_kv(spline_eval.data_handle(), ddc::select<IDim<X,I>>(dom_vals).size()...);
@@ -224,6 +223,13 @@ static void BatchedSplineBuilderTest()
 	// Kokkos::deep_copy(coef2_kv, coef_kv);
 	// ddc::ChunkSpan<const double, ddc::DiscreteDomain<BSplines<X>,IDim<Y>>, std::experimental::layout_right, Kokkos::DefaultHostExecutionSpace::memory_space> coef2(coef2_kv, coef.domain());
 	# endif
+	if constexpr (sizeof...(X)==1) {
+      spline_evaluator(spline_eval.span_view(), coords_eval.span_cview(), coef.span_cview());
+
+      spline_evaluator
+              .deriv(spline_eval_deriv.span_view(), coords_eval.span_cview(), coef.span_cview());
+	}
+ 	else {
 	ddc::for_each(
 			ddc::policies::policy(host_exec_space),
             dom_y,
@@ -240,6 +246,7 @@ static void BatchedSplineBuilderTest()
 			coef_cpu[iy].span_cview()
 	);
 });
+	}
    # if 0
    for (int i=0; i<ncells; i++) {
       for (int j=0; j<ncells; j++) {
@@ -289,6 +296,16 @@ static void BatchedSplineBuilderTest()
             max_norm_error_integ,
             std::max(error_bounds.error_bound_on_int(h, s_degree_x), 1.0e-14 * max_norm_int));
 	#endif
+}
+
+TEST(BatchedSplineBuilderHost, 1DX)
+{
+	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimX,DimX>();
+}
+
+TEST(BatchedSplineBuilderDevice, 1DX)
+{
+	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimX,DimX>();
 }
 
 TEST(BatchedSplineBuilderHost, 2DX)

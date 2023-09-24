@@ -56,7 +56,21 @@ public:
 
     SplineBuilderBatched& operator=(SplineBuilderBatched&& x) = default;
 
-	template <class Layout>
+	template <class Layout, std::size_t N = sizeof...(IDimX), std::enable_if_t<(N<=1), bool> = true>
+    void operator()(
+        	ddc::ChunkSpan<double, spline_domain_type, Layout, MemorySpace> spline,
+        	ddc::ChunkSpan<double, vals_domain_type, Layout, MemorySpace> vals,
+            std::optional<CDSpan2D> const derivs_xmin = std::nullopt,
+            std::optional<CDSpan2D> const derivs_xmax = std::nullopt) const;
+            // std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
+            // std::optional<CDSpan2D> const derivs_ymax = std::nullopt,
+            // std::optional<CDSpan2D> const mixed_derivs_xmin_ymin = std::nullopt,
+            // std::optional<CDSpan2D> const mixed_derivs_xmax_ymin = std::nullopt,
+            // std::optional<CDSpan2D> const mixed_derivs_xmin_ymax = std::nullopt,
+            // std::optional<CDSpan2D> const mixed_derivs_xmax_ymax = std::nullopt) const;
+
+
+	template <class Layout, std::size_t N = sizeof...(IDimX), std::enable_if_t<(N>1), bool> = true>
     void operator()(
         	ddc::ChunkSpan<double, spline_domain_type, Layout, MemorySpace> spline,
         	ddc::ChunkSpan<double, vals_domain_type, Layout, MemorySpace> vals,
@@ -109,9 +123,26 @@ public:
 
 };
 
+template <class SplineBuilder, class MemorySpace, class... IDimX>
+template <class Layout, std::size_t N, std::enable_if_t<(N<=1), bool>>
+void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
+        ddc::ChunkSpan<double, spline_domain_type, Layout, MemorySpace> spline, // TODO: batch_dims_type
+        ddc::ChunkSpan<double, vals_domain_type, Layout, MemorySpace> vals,
+        std::optional<CDSpan2D> const derivs_xmin,
+        std::optional<CDSpan2D> const derivs_xmax) const
+        // std::optional<CDSpan2D> const derivs_ymin,
+        // std::optional<CDSpan2D> const derivs_ymax,
+        // std::optional<CDSpan2D> const mixed_derivs_xmin_ymin,
+        // std::optional<CDSpan2D> const mixed_derivs_xmax_ymin,
+        // std::optional<CDSpan2D> const mixed_derivs_xmin_ymax,
+        // std::optional<CDSpan2D> const mixed_derivs_xmax_ymax) const
+{
+	// TODO: derivs
+	spline_builder(spline, vals);
+}
 
 template <class SplineBuilder, class MemorySpace, class... IDimX>
-template <class Layout>
+template <class Layout, std::size_t N, std::enable_if_t<(N>1), bool>>
 void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
         ddc::ChunkSpan<double, spline_domain_type, Layout, MemorySpace> spline, // TODO: batch_dims_type
         ddc::ChunkSpan<double, vals_domain_type, Layout, MemorySpace> vals,

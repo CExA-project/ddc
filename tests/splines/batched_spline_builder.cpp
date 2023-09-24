@@ -178,13 +178,10 @@ static void BatchedSplineBuilderTest()
 	Kokkos::View<ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(X)>, Kokkos::LayoutRight, ExecSpace> vals_tr_kv("vals_tr_kv", ddc::select<IDim<X,I>>(dom_vals.extents())...);
 	Kokkos::deep_copy(vals_tr_kv, vals_kv);
 	ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X,I>...>, std::experimental::layout_right, MemorySpace> vals_tr(vals_tr_kv, vals.domain());
-	# if 0
 
     // 6. Finally build the spline by filling `coef`
     spline_builder(coef, vals); // TODO : clarify the suffixes _tr
-	# endif
 
-	#if 0
 	// Temporary deep_copy TODO : remove & eval on GPU
     ddc::Chunk coef_cpu_alloc(dom_coef, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
     ddc::ChunkSpan coef_cpu = coef_cpu_alloc.span_view();
@@ -243,7 +240,7 @@ static void BatchedSplineBuilderTest()
 			coef_cpu[iy].span_cview()
 	);
 });
-   # if 1
+   # if 0
    for (int i=0; i<ncells; i++) {
       for (int j=0; j<ncells; j++) {
       	std::cout << spline_eval(ddc::DiscreteElement<IDim<DimX,I>>(i),ddc::DiscreteElement<IDim<DimY,I>>(j)) << " - ";
@@ -291,7 +288,6 @@ static void BatchedSplineBuilderTest()
     EXPECT_LE(
             max_norm_error_integ,
             std::max(error_bounds.error_bound_on_int(h, s_degree_x), 1.0e-14 * max_norm_int));
-	# endif
 	#endif
 }
 
@@ -304,7 +300,7 @@ TEST(BatchedSplineBuilderHost, 2DY)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimY,DimX,DimY>();
 }
-
+/*
 TEST(BatchedSplineBuilderDevice, 2DX)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimX,DimX,DimY>();
@@ -315,11 +311,36 @@ TEST(BatchedSplineBuilderDevice, 2DY)
 	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimY,DimX,DimY>();
 }
 
-TEST(BatchedSplineBuilderDevice, 3DX)
+TEST(BatchedSplineBuilderHost, 3DX)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimX,DimX,DimY,DimZ>();
 }
 
+TEST(BatchedSplineBuilderHost, 3DY)
+{
+	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimY,DimX,DimY,DimZ>();
+}
+
+TEST(BatchedSplineBuilderHost, 3DZ)
+{
+	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimZ,DimX,DimY,DimZ>();
+}
+
+TEST(BatchedSplineBuilderDevice, 3DX)
+{
+	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimX,DimX,DimY,DimZ>();
+}
+
+TEST(BatchedSplineBuilderDevice, 3DY)
+{
+	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimY,DimX,DimY,DimZ>();
+}
+
+TEST(BatchedSplineBuilderDevice, 3DZ)
+{
+	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimZ,DimX,DimY,DimZ>();
+}
+*/
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

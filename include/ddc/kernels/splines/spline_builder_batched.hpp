@@ -1,4 +1,6 @@
 #pragma once
+#include "ddc/chunk_span.hpp"
+#include "ddc/deepcopy.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/kokkos_allocator.hpp"
 #include "Kokkos_Core_fwd.hpp"
@@ -272,25 +274,27 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
 	}
 	# endif
 	// TODO : Consider optimizing
-	Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section("bcoef_section", ddc::discrete_space<bsplines_type>().nbasis(), batch_domain().size());
+	ddc::Chunk spline_copy_alloc(spline_domain(), ddc::KokkosAllocator<double, MemorySpace>());
+	ddc::ChunkSpan spline_copy = spline_copy_alloc.span_view();
 	ddc::for_each(
 					ddc::policies::policy(exec_space()),
                     batch_domain(),
                     DDC_LAMBDA (typename batch_domain_type::discrete_element_type const j) {
 		for (int i=0; i<nbasis_proxy; i++) {
-			bcoef_section(i,j.uid()) = spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), j);
+			spline_copy(ddc::DiscreteElement<bsplines_type>(i), j) = spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), j);
 		}
 	});
+	Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(spline_copy.data_handle(), ddc::discrete_space<bsplines_type>().nbasis(), batch_domain().size());
 	spline_builder.matrix->solve_batch_inplace(bcoef_section);
 	ddc::for_each(
 					ddc::policies::policy(exec_space()),
                     batch_domain(),
                     DDC_LAMBDA (typename batch_domain_type::discrete_element_type const j) {
 		for (int i=0; i<nbasis_proxy; i++) {
-			spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), j) = bcoef_section(i,j.uid());
+			spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), j) = spline_copy(ddc::DiscreteElement<bsplines_type>(i), j);
 		}
 	});
-	
+
 	# if 0
     if constexpr (BcXmax2 == BoundCond::HERMITE) {
         assert((long int)(derivs_ymax->extent(0))

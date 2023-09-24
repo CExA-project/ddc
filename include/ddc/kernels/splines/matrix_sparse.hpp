@@ -299,7 +299,7 @@ public:
       		Kokkos::parallel_for(Kokkos::RangePolicy<ExecSpace>(0,1),KOKKOS_LAMBDA (int j) { printf("%f ", b_data[i]); });
 		}
 		# endif
-		# if 0
+		# if 1
 		// Write result
 		std::cout << "-----------------------";
 		write(std::cout, data_mat_gpu);

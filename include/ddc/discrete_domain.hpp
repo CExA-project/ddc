@@ -43,18 +43,9 @@ public:
 
     DiscreteDomain() = default;
 
-    /// Construct a DiscreteDomain from a reordered copy of `domain`
-    template <class... ODDims>
-    explicit constexpr DiscreteDomain(DiscreteDomain<ODDims...> const& domain)
-        : m_element_begin(domain.front())
-        , m_element_end(domain.front() + domain.extents())
-    {
-    }
-
-    // Use SFINAE to disambiguate with the copy constructor.
-    // Note that SFINAE may be redundant because a template constructor should not be selected as a copy constructor.
-    template <std::size_t N = sizeof...(DDims), class = std::enable_if_t<(N != 1)>>
-    explicit constexpr DiscreteDomain(DiscreteDomain<DDims> const&... domains)
+    /// Construct a DiscreteDomain by copies and merge of domains
+    template <class... DD>
+    explicit constexpr DiscreteDomain(DD const&... domains)
         : m_element_begin(domains.front()...)
         , m_element_end((domains.front() + domains.extents())...)
     {

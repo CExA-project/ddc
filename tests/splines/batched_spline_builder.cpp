@@ -300,7 +300,7 @@ TEST(BatchedSplineBuilderHost, 2DY)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimY,DimX,DimY>();
 }
-/*
+
 TEST(BatchedSplineBuilderDevice, 2DX)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimX,DimX,DimY>();
@@ -340,7 +340,7 @@ TEST(BatchedSplineBuilderDevice, 3DZ)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimZ,DimX,DimY,DimZ>();
 }
-*/
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

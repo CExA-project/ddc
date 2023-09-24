@@ -30,6 +30,8 @@ public:
 	using spline_dim_type = std::conditional_t<std::is_same_v<Tag,interpolation_mesh_type>, bsplines_type, Tag>;
 
 	using spline_domain_type = typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<ddc::detail::TypeSeq<IDimX...>,ddc::detail::TypeSeq<interpolation_mesh_type>,ddc::detail::TypeSeq<bsplines_type>>>;
+	
+	using spline_tr_domain_type = typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<ddc::detail::TypeSeq<bsplines_type>,ddc::type_seq_remove_t<ddc::detail::TypeSeq<IDimX...>,ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
     static constexpr BoundCond BcXmin = SplineBuilder::s_bc_xmin;
     static constexpr BoundCond BcXmax = SplineBuilder::s_bc_xmax;
@@ -91,14 +93,12 @@ public:
 	
     spline_domain_type const spline_domain() const noexcept
     {
-		/*
-        return spline_domain_type(
-                ddc::DiscreteElement<bsplines_type, BatchTags...>(0), // TODO : (0,0...)
-                ddc::DiscreteVector<bsplines_type>(
-                        ddc::discrete_space<bsplines_type>().size(),
-                        ddc::discrete_space<BatchTags>().size()...));
-		*/
-		return ddc::replace_dim_of<interpolation_mesh_type,bsplines_type>(m_vals_domain,bsplines_domain());
+		return ddc::replace_dim_of<interpolation_mesh_type,bsplines_type>(vals_domain(),bsplines_domain());
+    }
+
+	spline_tr_domain_type const spline_tr_domain() const noexcept
+    {
+		return spline_tr_domain_type(bsplines_domain(), batch_domain());
     }
 
 	 int offset() const noexcept
@@ -274,7 +274,7 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
 	}
 	# endif
 	// TODO : Consider optimizing
-	ddc::Chunk spline_copy_alloc(spline_domain(), ddc::KokkosAllocator<double, MemorySpace>());
+	ddc::Chunk spline_copy_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, MemorySpace>());
 	ddc::ChunkSpan spline_copy = spline_copy_alloc.span_view();
 	ddc::for_each(
 					ddc::policies::policy(exec_space()),

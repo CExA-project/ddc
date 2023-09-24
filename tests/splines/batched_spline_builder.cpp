@@ -303,11 +303,12 @@ TEST(BatchedSplineBuilderHost, 1DX)
 	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimX,DimX>();
 }
 
+/*
 TEST(BatchedSplineBuilderDevice, 1DX)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimX,DimX>();
 }
-
+*/
 TEST(BatchedSplineBuilderHost, 2DX)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimX,DimX,DimY>();

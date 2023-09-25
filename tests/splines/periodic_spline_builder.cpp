@@ -46,8 +46,6 @@ using evaluator_type = CosineEvaluator::Evaluator<IDimX>;
 using IndexX = ddc::DiscreteElement<IDimX>;
 using DVectX = ddc::DiscreteVector<IDimX>;
 using BsplIndexX = ddc::DiscreteElement<BSplinesX>;
-using SplineX = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX>>;
-using FieldX = ddc::Chunk<double, ddc::DiscreteDomain<IDimX>>;
 using CoordX = ddc::Coordinate<DimX>;
 
 // Checks that when evaluating the spline at interpolation points one
@@ -77,23 +75,23 @@ TEST(PeriodicSplineBuilderTest, Identity)
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
-    SplineX coef(dom_bsplines_x);
+    ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
 
     // 3. Create the interpolation domain
     ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling());
     ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
-    SplineBuilder<Kokkos::DefaultExecutionSpace, BSplinesX, IDimX, BoundCond::PERIODIC, BoundCond::PERIODIC> spline_builder(
+    SplineBuilder<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX, BoundCond::PERIODIC, BoundCond::PERIODIC> spline_builder(
             interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
-    FieldX yvals(interpolation_domain);
+    ddc::Chunk yvals(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     evaluator_type evaluator(interpolation_domain);
     evaluator(yvals);
 
     // 6. Finally build the spline by filling `coef`
-    spline_builder(coef, yvals);
+    spline_builder(coef.span_view(), yvals.span_view());
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
     SplineEvaluator<BSplinesX>
@@ -104,10 +102,10 @@ TEST(PeriodicSplineBuilderTest, Identity)
         coords_eval(ix) = ddc::coordinate(ix);
     }
 
-    FieldX spline_eval(interpolation_domain);
+    ddc::Chunk spline_eval(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     spline_evaluator(spline_eval.span_view(), coords_eval.span_cview(), coef.span_cview());
 
-    FieldX spline_eval_deriv(interpolation_domain);
+    ddc::Chunk spline_eval_deriv(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     spline_evaluator
             .deriv(spline_eval_deriv.span_view(), coords_eval.span_cview(), coef.span_cview());
 

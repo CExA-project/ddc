@@ -142,7 +142,7 @@ static void BatchedSplineBuilderTest()
 
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
-    SplineBuilderBatched<SplineBuilder<ExecSpace, BSplines<I>, IDim<I,I>, BoundCond::PERIODIC, BoundCond::PERIODIC>, MemorySpace, IDim<X,I>...> spline_builder(dom_vals);
+    SplineBuilderBatched<SplineBuilder<ExecSpace, MemorySpace, BSplines<I>, IDim<I,I>, BoundCond::PERIODIC, BoundCond::PERIODIC>, MemorySpace, IDim<X,I>...> spline_builder(dom_vals);
 
     ddc::DiscreteDomain<IDim<I,I>> const interpolation_domain = spline_builder.interpolation_domain();
 	auto const dom_y = spline_builder.batch_domain();
@@ -224,10 +224,10 @@ static void BatchedSplineBuilderTest()
 	// ddc::ChunkSpan<const double, ddc::DiscreteDomain<BSplines<X>,IDim<Y>>, std::experimental::layout_right, Kokkos::DefaultHostExecutionSpace::memory_space> coef2(coef2_kv, coef.domain());
 	# endif
 	if constexpr (sizeof...(X)==1) {
-      spline_evaluator(spline_eval.span_view(), coords_eval.span_cview(), coef.span_cview());
+      spline_evaluator(spline_eval, coords_eval.span_cview(), coef_cpu.span_cview());
 
       spline_evaluator
-              .deriv(spline_eval_deriv.span_view(), coords_eval.span_cview(), coef.span_cview());
+              .deriv(spline_eval_deriv, coords_eval.span_cview(), coef_cpu.span_cview());
 	}
  	else {
 	ddc::for_each(
@@ -303,12 +303,11 @@ TEST(BatchedSplineBuilderHost, 1DX)
 	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimX,DimX>();
 }
 
-/*
 TEST(BatchedSplineBuilderDevice, 1DX)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultExecutionSpace,Kokkos::DefaultExecutionSpace::memory_space,DimX,DimX>();
 }
-*/
+
 TEST(BatchedSplineBuilderHost, 2DX)
 {
 	BatchedSplineBuilderTest<Kokkos::DefaultHostExecutionSpace,Kokkos::DefaultHostExecutionSpace::memory_space,DimX,DimX,DimY>();

@@ -110,7 +110,7 @@ public:
 template <class SplineBuilder, class MemorySpace, class... IDimX>
 template <class Layout>
 void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
-        ddc::ChunkSpan<double, spline_domain_type, Layout, MemorySpace> spline, // TODO: batch_dims_type
+        ddc::ChunkSpan<double, spline_domain_type, Layout, MemorySpace> spline, 
         ddc::ChunkSpan<double, vals_domain_type, Layout, MemorySpace> vals,
         std::optional<CDSpan2D> const derivs_xmin,
         std::optional<CDSpan2D> const derivs_xmax) const
@@ -209,9 +209,6 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
         //                == spline_builder2.interpolation_domain().extents()
         //        && derivs_xmax->extent(1) == nbc_xmax);
     }
-	Kokkos::View<double**, exec_space, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_flatten(vals.data_handle(), interpolation_domain().size(), batch_domain().size());
-	Kokkos::View<double**, exec_space, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_flatten(spline.data_handle(), ddc::get_domain<bsplines_type>(spline).size(), batch_domain().size());
-	// Kokkos::deep_copy(spline_flatten, vals_flatten);
 
 	# if 0
     ddc::for_each(spline_builder2.interpolation_domain(), [&](IMesh2 const i) {
@@ -246,10 +243,12 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
 
 
 	# endif
+
+	// TODO : Consider optimizing
+	// Fill spline with vals (to work in spline afterward and preserve vals)
 	auto const& offset_proxy = spline_builder.offset();
 	auto const& interp_size_proxy = interpolation_domain().extents();
 	auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
-	# if 1
 		ddc::for_each(
 					ddc::policies::policy(exec_space()),
                     batch_domain(),
@@ -263,37 +262,31 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
                   = vals(ddc::DiscreteElement<interpolation_mesh_type>(i),j);
       }
     });
-
-	# endif
-
 	
-	
-    // auto bcoef_section = Kokkos::subview(spline_flatten, std::pair<int,int>(offset_proxy, offset_proxy + ddc::discrete_space<bsplines_type>().nbasis()), Kokkos::ALL);
-	# if 0
-	for (int i=0; i<130; i++) {
-	  auto spline_flatten_ptr = spline.data_handle();
-	  Kokkos::parallel_for(Kokkos::RangePolicy<exec_space>(0,1),KOKKOS_LAMBDA (int j) { printf("%f ", spline_flatten_ptr[i]); });
-	}
-	# endif
 	// TODO : Consider optimizing
-	ddc::Chunk spline_copy_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, MemorySpace>());
-	ddc::ChunkSpan spline_copy = spline_copy_alloc.span_view();
+	// TODO : Handle case of GPU saturation
+	// Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
+	ddc::Chunk spline_tr_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, MemorySpace>());
+	ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
 	ddc::for_each(
 					ddc::policies::policy(exec_space()),
                     batch_domain(),
                     DDC_LAMBDA (typename batch_domain_type::discrete_element_type const j) {
 		for (int i=0; i<nbasis_proxy; i++) {
-			spline_copy(ddc::DiscreteElement<bsplines_type>(i), j) = spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), j);
+			spline_tr(ddc::DiscreteElement<bsplines_type>(i), j) = spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), j);
 		}
 	});
-	Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(spline_copy.data_handle(), ddc::discrete_space<bsplines_type>().nbasis(), batch_domain().size());
+	// Create a 2D Kokkos::View to manage spline_tr as a matrix
+	Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(spline_tr.data_handle(), ddc::discrete_space<bsplines_type>().nbasis(), batch_domain().size());
+	// Compute spline coef
 	spline_builder.matrix->solve_batch_inplace(bcoef_section);
+	// Transpose back spline_tr in spline
 	ddc::for_each(
 					ddc::policies::policy(exec_space()),
                     batch_domain(),
                     DDC_LAMBDA (typename batch_domain_type::discrete_element_type const j) {
 		for (int i=0; i<nbasis_proxy; i++) {
-			spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), j) = spline_copy(ddc::DiscreteElement<bsplines_type>(i), j);
+			spline(ddc::DiscreteElement<bsplines_type>(i+offset_proxy), j) = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
 		}
 	});
 
@@ -401,7 +394,8 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
     });
 
 	# endif
-	# if 1
+
+	// Not sure yet of what this part do 
 	if (bsplines_type::is_periodic()) {
 		  ddc::for_each(
 					ddc::policies::policy(exec_space()),
@@ -428,6 +422,5 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
         }
         });
     }
-	# endif
 	}
 }

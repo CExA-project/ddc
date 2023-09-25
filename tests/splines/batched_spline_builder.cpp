@@ -36,11 +36,11 @@ struct DimX
 };
 
 struct DimY {
-    static constexpr bool PERIODIC = true; // TODO : remove
+    static constexpr bool PERIODIC = true;
 };
 
 struct DimZ {
-    static constexpr bool PERIODIC = true; // TODO : remove
+    static constexpr bool PERIODIC = true;
 };
 
 static constexpr std::size_t s_degree_x = DEGREE_X;
@@ -54,8 +54,7 @@ template <typename X>
 using BSplines = UniformBSplines<X, s_degree_x>;
 
 template <typename X, typename I>
-// using IDim = std::conditional_t<std::is_same_v<X,DimX>, typename GrevillePoints<BSplines<DimX>>::interpolation_mesh_type, ddc::UniformPointSampling<X>>; // TODO : Remove explicit DimX
-using IDim = std::conditional_t<std::is_same_v<X,I>, typename GrevillePoints<BSplines<X>>::interpolation_mesh_type, ddc::UniformPointSampling<X>>; // TODO : Remove explicit DimX
+using IDim = std::conditional_t<std::is_same_v<X,I>, typename GrevillePoints<BSplines<X>>::interpolation_mesh_type, ddc::UniformPointSampling<X>>; 
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
@@ -124,40 +123,33 @@ struct DimsInitializer<IDimI, ddc::detail::TypeSeq<IDimX...>>
 template <typename ExecSpace, typename MemorySpace, typename I, typename... X>
 static void BatchedSplineBuilderTest()
 {
+	// Instantiate execution spaces and initialize spaces 
 	Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
 	ExecSpace exec_space = ExecSpace();
-	std::size_t constexpr ncells = 10; // TODO : restore 10
-    // 1. Create BSplines
+	std::size_t constexpr ncells = 10; // TODO : template
+
+	// Initialize spaces 
 	DimsInitializer<IDim<I,I>,BatchDims<IDim<I,I>,IDim<X,I>...>> dims_initializer;
 	dims_initializer(ncells);
-	// auto const dom_coef = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<ddc::detail::TypeSeq<IDim<X,I>...>,ddc::detail::TypeSeq<IDim<I,I>>,ddc::detail::TypeSeq<BSplines<I>>>>((std::is_same_v<X,I> ? ddc::discrete_space<BSplines<X>>().full_domain() : ddc::DiscreteDomain<IDim<X,I>>(Index<IDim<X,I>>(0), DVect<IDim<X,I>>(ncells)))...);
-
-    // 2. Create a Spline represented by a chunk over BSplines
-    // The chunk is filled with garbage data, we need to initialize it
-	// Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> coef_kv("coef_kv", dom_bsplines_x.size(), nbatch);
-	// ddc::ChunkSpan<double, ddc::DiscreteDomain<BSplines<X>,IDim<Y>>, std::experimental::layout_right, ddc::KokkosAllocator<double, MemorySpace>> coef(coef_kv, dom_coef);
-
-    // 3. Create the interpolation domain
+    
+	// Create the values domain (mesh)
 	ddc::DiscreteDomain<IDim<X,I>...> const dom_vals = ddc::DiscreteDomain<IDim<X,I>...>((std::is_same_v<X,I> ? GrevillePoints<BSplines<X>>::get_domain() : ddc::DiscreteDomain<IDim<X,I>>(Index<IDim<X,I>>(0), DVect<IDim<X,I>>(ncells)))...);
 
-
-    // 4. Create a SplineBuilder over BSplines using some boundary conditions
+    // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
     SplineBuilderBatched<SplineBuilder<ExecSpace, MemorySpace, BSplines<I>, IDim<I,I>, BoundCond::PERIODIC, BoundCond::PERIODIC>, MemorySpace, IDim<X,I>...> spline_builder(dom_vals);
 
-    ddc::DiscreteDomain<IDim<I,I>> const interpolation_domain = spline_builder.interpolation_domain();
-	auto const dom_y = spline_builder.batch_domain();
-    ddc::DiscreteDomain<BSplines<I>> const dom_bsplines_x = spline_builder.bsplines_domain();
-	auto const dom_coef = spline_builder.spline_domain();
+    // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
+	ddc::DiscreteDomain<IDim<I,I>> const dom_interpolation = spline_builder.interpolation_domain();
+	auto const dom_batch = spline_builder.batch_domain();
+    ddc::DiscreteDomain<BSplines<I>> const dom_bsplines = spline_builder.bsplines_domain();
+	auto const dom_spline = spline_builder.spline_domain();
 
-    ddc::Chunk coef_alloc(dom_coef, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan coef = coef_alloc.span_view();
-
-    // 5. Allocate and fill a chunk over the interpolation domain
-    ddc::Chunk vals1_cpu_alloc(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
+    // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
+    ddc::Chunk vals1_cpu_alloc(dom_interpolation, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
     ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();
-    evaluator_type<IDim<I,I>> evaluator(interpolation_domain);
+    evaluator_type<IDim<I,I>> evaluator(dom_interpolation);
     evaluator(vals1_cpu);
-    ddc::Chunk vals1_alloc(interpolation_domain, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals1 = vals1_alloc.span_view();
 	ddc::deepcopy(vals1, vals1_cpu);
 
@@ -170,32 +162,27 @@ static void BatchedSplineBuilderTest()
 				  vals(e) = vals1(ddc::select<IDim<I,I>>(e));
               });
 
-    auto vals_ptr = vals.data_handle();
-    Kokkos::parallel_for(Kokkos::RangePolicy<ExecSpace>(0,1),KOKKOS_LAMBDA (int j) { printf("%f ", vals_ptr[1]); });
+	// Instantiate chunk of spline coefs to receive output of spline_builder
+    ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan coef = coef_alloc.span_view();
 
-	// 5.5 Permute Layout TODO : encapsulate
-	Kokkos::View<ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(X)>, Kokkos::LayoutRight, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_kv(vals.data_handle(), ddc::select<IDim<X,I>>(dom_vals).extents()...);
-	Kokkos::View<ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(X)>, Kokkos::LayoutRight, ExecSpace> vals_tr_kv("vals_tr_kv", ddc::select<IDim<X,I>>(dom_vals.extents())...);
-	Kokkos::deep_copy(vals_tr_kv, vals_kv);
-	ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X,I>...>, std::experimental::layout_right, MemorySpace> vals_tr(vals_tr_kv, vals.domain());
+    // Finally compute the spline by filling `coef`
+    spline_builder(coef, vals);
 
-    // 6. Finally build the spline by filling `coef`
-    spline_builder(coef, vals); // TODO : clarify the suffixes _tr
-
-	// Temporary deep_copy TODO : remove & eval on GPU
-    ddc::Chunk coef_cpu_alloc(dom_coef, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
+	// Temporary deep_copy to CPU TODO : remove & eval on GPU
+    ddc::Chunk coef_cpu_alloc(dom_spline, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
     ddc::ChunkSpan coef_cpu = coef_cpu_alloc.span_view();
 	ddc::deepcopy(coef_cpu, coef);
-	// auto coef_allockv = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), coef_kv);
-	// ddc::ChunkSpan<double, ddc::DiscreteDomain<BSplines<X>,IDim<Y>>, std::experimental::layout_right, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>> coef(coef_allockv, dom_coef);
 	
-	auto vals_cpu_kv = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), vals_tr_kv);
+	Kokkos::View<ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(X)>, Kokkos::LayoutRight, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> vals_kv(vals.data_handle(), ddc::select<IDim<X,I>>(dom_vals).extents()...);
+	auto vals_cpu_kv = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), vals_kv);
 	ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X,I>...>, std::experimental::layout_right, Kokkos::DefaultHostExecutionSpace::memory_space> vals_cpu(vals_cpu_kv, dom_vals);
 
-    // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
+    // Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines TODO: port on GPU and handle batch
     SplineEvaluator<BSplines<I>> spline_evaluator(g_null_boundary<BSplines<I>>, g_null_boundary<BSplines<I>>);
 
-	ddc::Chunk coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<Coord<I>, Kokkos::HostSpace>());
+	// Instantiate chunk of coordinates of dom_interpolation TODO: use dom_vals
+	ddc::Chunk coords_eval_alloc(dom_interpolation, ddc::KokkosAllocator<Coord<I>, Kokkos::HostSpace>());
 	ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
 	ddc::for_each(
 			ddc::policies::policy(host_exec_space),
@@ -204,36 +191,23 @@ static void BatchedSplineBuilderTest()
         coords_eval(e) = ddc::coordinate(e);
     });
 
+	// Instantiate chunk of values to receive output of spline_evaluator
     ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
     ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
 	ddc::Chunk spline_eval_deriv_alloc(dom_vals, ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
     ddc::ChunkSpan spline_eval_deriv = spline_eval_deriv_alloc.span_view();
 
-	# if 0 
-	// TODO: encapsulate in ddc function
-	Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> spline_eval_kv(spline_eval.data_handle(), ddc::select<IDim<X,I>>(dom_vals).size()...);
-	Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> spline_eval_tr_kv("spline_eval_tr_kv", ddc::select<IDim<X,I>>(dom_vals).size()...);
-	Kokkos::deep_copy(spline_eval_tr_kv, spline_eval_kv);
-	ddc::ChunkSpan<double, ddc::DiscreteDomain<IDim<X,I>,IDim<Y>>, std::experimental::layout_right, ExecSpace> spline_eval_tr(spline_eval_tr_kv, spline_eval.domain());
-	# endif
-	// TODO: encapsulate in ddc function
-	# if 1
-	// Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> coef_allockv(coef.data_handle(), dom_bsplines_x.extent<BSplines<X>>(), nbatch);
-	// Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace> coef2_kv("coef2_kv", dom_bsplines_x.size(), nbatch);
-	// Kokkos::deep_copy(coef2_kv, coef_kv);
-	// ddc::ChunkSpan<const double, ddc::DiscreteDomain<BSplines<X>,IDim<Y>>, std::experimental::layout_right, Kokkos::DefaultHostExecutionSpace::memory_space> coef2(coef2_kv, coef.domain());
-	# endif
+	// Evaluate spline on the same mesh as dom_vals TODO : make evaluator using DiscreteDomain in place of a ChunkSpan
 	if constexpr (sizeof...(X)==1) {
       spline_evaluator(spline_eval, coords_eval.span_cview(), coef_cpu.span_cview());
-
       spline_evaluator
               .deriv(spline_eval_deriv, coords_eval.span_cview(), coef_cpu.span_cview());
 	}
  	else {
 	ddc::for_each(
 			ddc::policies::policy(host_exec_space),
-            dom_y,
-            DDC_LAMBDA (typename decltype(dom_y)::discrete_element_type const iy) {
+            dom_batch,
+            DDC_LAMBDA (typename decltype(dom_batch)::discrete_element_type const iy) {
 	    spline_evaluator(
 			spline_eval[iy],
 			ddc::ChunkSpan<const Coord<I>, ddc::DiscreteDomain<IDim<I,I>>, std::experimental::layout_right, Kokkos::HostSpace>(coords_eval),
@@ -247,15 +221,8 @@ static void BatchedSplineBuilderTest()
 	);
 });
 	}
-   # if 0
-   for (int i=0; i<ncells; i++) {
-      for (int j=0; j<ncells; j++) {
-      	std::cout << spline_eval(ddc::DiscreteElement<IDim<DimX,I>>(i),ddc::DiscreteElement<IDim<DimY,I>>(j)) << " - ";
-		}
-      std::cout << "\n";
-	}
-	# endif
-	// 8. Checking errors
+   
+	// Checking errors
     double max_norm_error = ddc::transform_reduce(
 			ddc::policies::policy(host_exec_space),
             spline_eval.domain(),

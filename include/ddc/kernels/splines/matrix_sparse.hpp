@@ -17,6 +17,8 @@
 #include <ginkgo/core/base/device_matrix_data.hpp>
 #include <ginkgo/ginkgo.hpp>
 
+// TODO : support multiple-rhs case
+// Residual logger (error logged at each iteration)
 template <typename ValueType>
 ValueType get_first_element(const gko::matrix::Dense<ValueType>* norm)
 {
@@ -98,64 +100,27 @@ private:
     mutable std::vector<ValueType> true_res_norms;
 };
 
+// Matrix class for Csr storage and iterative solve
 template <class ExecSpace>
 class Matrix_Sparse : public Matrix
 {
 public:
-	# if 0
-	struct FillMatrixFunctor
-	{
-		int m;
-		int n;
-		int* rows;
-		int* cols;
-		double* data;
-		Kokkos::Random_XorShift64_Pool<> random_pool;
-
-		FillMatrixFunctor(int m, int n, int* rows_ptr, int* cols_ptr, double* data_ptr) : m(m), n(n), rows(rows_ptr), cols(cols_ptr), data(data_ptr) {
-			random_pool = Kokkos::Random_XorShift64_Pool<>(/*seed=*/73);
-		}
-
-		__host__ __device__
-		void operator()(const int i) const
-		{
-			if (i<m+1) {
-           		rows[i] = i * n; //CSR
-			}
-			// rows[i] = i * n; //COO
-           	cols[i] = i % n;
-			auto generator = random_pool.get_state();
-			data[i] = 0;
-			// data[i] = generator.drand(0.,10.); // Fills randomly a dense matrix
-			// data[i] = Kokkos::max(0.,generator.drand(-200.,10.)); // Fills randomly a dense matrix
-			// data[i] = i%n>=i/n-10 && i%n<=i/n+10 ? Kokkos::max(0.,generator.drand(-10,10.)) : 0; // Fills randomly a dense matrix
-			// data[i] = i%n>=i/n-10 && i%n<=i/n+10 ? 10-Kokkos::abs(i%n-i/n) : 0; // Create proper band
-			// data[i] = i%n==i/n  ? 1 : 0; // Fills randomly a dense matrix
-			// data[i] = i%n==i/n || i%n==i/n-1  ? 1 : 0; // Fills randomly a dense matrix
-			random_pool.free_state(generator);
-			// data[i] = 5+0.1*(i%5); // Fills randomly a dense matrix
-		}
-	};
-	# endif
-	Matrix_Sparse(const int mat_size) : Matrix(mat_size), m(mat_size), n(mat_size)
+	// Constructor
+		Matrix_Sparse(const int mat_size) : Matrix(mat_size), m(mat_size), n(mat_size)
     {
+		// TODO : use Kokkos:View
 		rows = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultHostExecutionSpace>((n +1) * sizeof(int));
         cols = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultHostExecutionSpace>(m * n * sizeof(int));
         data = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultHostExecutionSpace>(m * n *sizeof(double));
-
-		# if 1 
-        // Kokkos::View<double*, ExecSpace> data_view("data",n*n);
-		// data = data_view.data();
+		
+		// Fill the csr indexes as a dense matrix and initialize with zeros (zeros will be removed once non-zeros elements will be set)
         for (int i = 0; i < m * n; i++) {
 		  if (i<m+1) {
 			rows[i] = i * n; //CSR
 		  }
-		  // rows[i] = i * n; //COO
           cols[i] = i % n;
 		  data[i] = 0;
 		}
-        //Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0,n*n), FillMatrixFunctor(m,n,rows,cols,data));
-		# endif
     }
     virtual ~Matrix_Sparse() {
 		Kokkos::kokkos_free(rows);
@@ -170,48 +135,21 @@ public:
 
 	virtual std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>> to_gko_vec(double* vec_ptr, size_t n, size_t n_equations, std::shared_ptr<gko::Executor> gko_exec) const
     {
-		# if 0
-        int* indices = (int*)Kokkos::kokkos_malloc<ExecSpace::memory_space>(n * sizeof(int));
-        int* zero = (int*)Kokkos::kokkos_malloc<ExecSpace::memory_space>(sizeof(int));
-        // Kokkos::View<PetscInt*, ExecSpace> indices_view("indices",n);
-        // PetscInt* indices = indices_view.data();
-		
-		// Generate cols indices
-        Kokkos::parallel_for(Kokkos::RangePolicy<ExecSpace>(0,n), KOKKOS_LAMBDA (int i)  {
-            indices[i] = i;
-        });
-		zero[0] = 0;
-		# endif
-
-		// auto v = gko::matrix::Dense<>::create(gko_exec, gko::dim<2>{n,1});
-		// v->get_values() = vec_ptr;
-		// auto v = gko::matrix::BatchDense<>::create(gko_exec, gko::batch_dim<>(1,gko::dim<2>{n,1}), gko::array<double>::view(gko_exec, n, vec_ptr), gko::batch_stride(1, 1));
-		// auto v = gko::matrix::Dense<>::create(gko_exec, gko::dim<2>{n,1});
-		auto v = gko::matrix::Dense<>::create(gko_exec, gko::dim<2>{n,n_equations}, gko::array<double>::view(gko_exec, n*n_equations, vec_ptr), n_equations); // n or n_equation padding ?
-		// auto v = gko::matrix::Dense<>::create(gko_exec, gko::dim<2>{n,n_batch});
-	// v->read(gko::device_matrix_data<double,int>(gko_exec, gko::dim<2>{n,1}, &indices, &zero, &vec_ptr));
+		auto v = gko::matrix::Dense<>::create(gko_exec, gko::dim<2>{n,n_equations}, gko::array<double>::view(gko_exec, n*n_equations, vec_ptr), n_equations);
         return v;
     }
-	#if 1
+
     virtual std::unique_ptr<gko::matrix::Csr<>, std::default_delete<gko::matrix::Csr<>>> to_gko_mat(double* mat_ptr, size_t m, size_t n, std::shared_ptr<gko::Executor> gko_exec) const
     {
-       //  Kokkos::View<PetscInt*, ExecSpace> rows_view("rows",m*n);
-        // PetscInt* rows = rows_view.data();
-        // Kokkos::View<PetscInt*, ExecSpace> cols_view("cols",m*n);
-        // PetscInt* cols = cols_view.data();
-		auto M = gko::matrix::Csr<>::create(gko_exec, gko::dim<2>{m,n}, gko::array<double>::view(gko_exec, m*n, mat_ptr), gko::array<int>::view(gko_exec, m*n, cols), gko::array<int>::view(gko_exec, m+1, rows));
-		// auto M = gko::matrix::BatchCsr<>::create(gko_exec, gko::batch_dim<>(1, gko::dim<2>{m,n}), gko::array<double>::view(gko_exec, m*n, mat_ptr), gko::array<int>::view(gko_exec, m*n, cols), gko::array<int>::view(gko_exec, m+1, rows));
-		// M->read(gko::device_matrix_data<double,int>(gko_exec, gko::dim<2>{n,1}, &rows, &cols, &data));
-
+    	auto M = gko::matrix::Csr<>::create(gko_exec, gko::dim<2>{m,n}, gko::array<double>::view(gko_exec, m*n, mat_ptr), gko::array<int>::view(gko_exec, m*n, cols), gko::array<int>::view(gko_exec, m+1, rows));
         return M;
     }
-	# endif
+	
     virtual double get_element(int i, int j) const override {
 	  return data[i*n+j];
 	}
     virtual void set_element(int i, int j, double aij) override {
 	  data[i*n+j] = aij;
-	  // std::cout << i << " " << j << " " << aij << " - ";
 	}
   
 	virtual int factorize_method() override {
@@ -223,15 +161,10 @@ public:
         Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>> b_view(b, n, n_equations);
         Kokkos::View<double**, ExecSpace> b_gpu("b_gpu", n, n_equations);
 		Kokkos::deep_copy(b_gpu, b_view);
-        // double* b_gpu = (double*)Kokkos::kokkos_malloc<ExecSpace>((b.size())*sizeof(double));
-        // double* b_gpu = gko_exec->alloc<double>(b.size());
         auto b_vec_batch = to_gko_vec(b_gpu.data(), n, n_equations, gko_exec);
-		// write(std::cout, b_vec_batch);
-        // auto b_vec_batch = gko::matrix::BatchDense<>::create(gko_exec, n_batch, b_vec.get());
-		// auto b_vec_batch = gko::matrix::Dense<>::create(gko_exec, gko::dim<2>{n,n_batch});
-		// b_vec_batch->fill(1);
         auto data_mat = gko::share(to_gko_mat(data, n, n, gko_exec->get_master()));
 
+		// TODO : pass in factorize_method
 		// Remove zeros
 		# if 1
 		auto data_mat_ = gko::matrix_data<>(gko::dim<2>{n,n});
@@ -241,17 +174,10 @@ public:
 		# endif
 	
 		auto data_mat_gpu = gko::share(gko::clone(gko_exec, data_mat));
-		// auto data_mat_gpu = gko::share(gko::matrix::Csr<>::create(gko_exec, gko::dim<2>{n,n})); 
-		// data_mat_gpu->copy_from(data_mat);
-        // auto data_mat_batch = gko::share(gko::matrix::BatchCsr<>::create(gko_exec, n_batch, data_mat.get()));
         Kokkos::View<double**, ExecSpace> x_gpu("x_gpu", n, n_equations);
         auto x_vec_batch = to_gko_vec(x_gpu.data(), n, n_equations, gko_exec);
-        // auto x_vec_batch = gko::matrix::BatchDense<>::create(gko_exec, n_batch, x_vec.get());
-		// auto x_vec_batch = gko::matrix::Dense<>::create(gko_exec, gko::dim<2>{n,n_batch});
-		// x_vec_batch->fill(1e3);
 		
 		// Create the solver
-		# if 1 // matrix-matrix linear system
 		std::shared_ptr<gko::log::Stream<>> stream_logger =
 		  gko::log::Stream<>::create(
 			  gko::log::Logger::all_events_mask ^
@@ -282,16 +208,8 @@ public:
 		// solver_->add_logger(res_logger);
 	    solver_->apply(b_vec_batch, x_vec_batch);
 		// res_logger->write_data(std::cout);
-		# else // full batched
-		auto solver =
-		gko::solver::BatchBicgstab<>::build()
-			.with_default_max_iterations(500)
-            .with_default_residual_tol(1e-15)
-	        .with_tolerance_type(gko::stop::batch::ToleranceType::relative)
-			.on(gko_exec);
-		solver->generate(data_mat_batch)->apply(b_vec_batch.get(), x_vec_batch.get());
-		#endif
-
+	
+		// Debug purpose
 		# if 0
       	for (int i=0; i<130; i++) {
         	// auto b_data = b_vec_batch->get_values();
@@ -310,30 +228,8 @@ public:
 
 
 		#endif
-		# if 0
-		// Calculate residual
-		auto err = gko::clone(gko_exec, b_vec_batch);
-		// auto one = gko::batch_initialize<gko::matrix::BatchDense<>>(n_batch, {1.0}, gko_exec);
-		auto one = gko::initialize<gko::matrix::Dense<>>({1.0}, gko_exec);
-		// auto neg_one = gko::batch_initialize<gko::matrix::BatchDense<>>(n_batch, {-1.0}, gko_exec);
-		auto neg_one = gko::initialize<gko::matrix::Dense<>>({-1.0}, gko_exec);
-		// auto err_norms = gko::matrix::BatchDense<>::create(gko_exec->get_master(), gko::batch_dim<>(n_batch,gko::dim<2>{1,1}));
-		auto err_norms = gko::matrix::Dense<>::create(gko_exec->get_master(), gko::dim<2>{1,n_batch});
-		// data_mat_batch->apply(one.get(), x_vec_batch.get(), neg_one.get(), err.get());
-		data_mat_gpu->apply(one, x_vec_batch, neg_one, err);
-		err->compute_norm2(err_norms);
-		// auto unb_err_norms = err_norms->unbatch();
-
-		std::cout << "-----------------------";
-		std::cout << "Residual norms sqrt(r^T r):\n";
-		for (int i = 0; i < n_batch; ++i) {
-			// std::cout << unb_err_norms[i]->at(0,0) << "\n";
-			std::cout << err_norms->at(0,0) << "\n";
-		}
-
-		#endif
 		
-		Kokkos::deep_copy(b_view, x_gpu); //inplace temporary trick
+		Kokkos::deep_copy(b_view, x_gpu); //inplace temporary trick TODO: clarify if inplace is necessary
 		return 1;
     }
 };

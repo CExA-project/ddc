@@ -2,7 +2,6 @@
 #include <random>
 
 #include <ddc/ddc.hpp>
-
 #include <ddc/kernels/splines/bsplines_non_uniform.hpp>
 #include <ddc/kernels/splines/bsplines_uniform.hpp>
 #include <ddc/kernels/splines/greville_interpolation_points.hpp>
@@ -77,8 +76,20 @@ TYPED_TEST(PolarBsplineFixture, PartitionOfUnity)
     using BSplinesR = typename TestFixture::BSplineR;
     using BSplinesP = typename TestFixture::BSplineP;
     using CircToCart = CircularToCartesian<DimX, DimY, DimR, DimP>;
-    using BuilderR = SplineBuilder<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, BSplinesR, IDimR, BoundCond::GREVILLE, BoundCond::GREVILLE>;
-    using BuilderP = SplineBuilder<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, BSplinesP, IDimP, BoundCond::PERIODIC, BoundCond::PERIODIC>;
+    using BuilderR = SplineBuilder<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            BSplinesR,
+            IDimR,
+            BoundCond::GREVILLE,
+            BoundCond::GREVILLE>;
+    using BuilderP = SplineBuilder<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            BSplinesP,
+            IDimP,
+            BoundCond::PERIODIC,
+            BoundCond::PERIODIC>;
     using BuilderRP = SplineBuilder2D<BuilderR, BuilderP>;
     using DiscreteMapping = DiscreteToCartesian<DimX, DimY, BuilderRP>;
     using BSplines = PolarBSplines<BSplinesR, BSplinesP, continuity>;

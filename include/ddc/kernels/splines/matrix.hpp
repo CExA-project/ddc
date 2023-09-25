@@ -6,21 +6,23 @@
 #include <memory>
 #include <utility>
 
-#include "Kokkos_Core_fwd.hpp"
-#include "view.hpp"
-#include <Kokkos_Core.hpp>
-#include <Kokkos_Random.hpp>
-#include "ginkgo/core/matrix/dense.hpp"
-
 #include <ginkgo/core/base/device_matrix_data.hpp>
 #include <ginkgo/ginkgo.hpp>
+
+#include <Kokkos_Core.hpp>
+#include <Kokkos_Random.hpp>
+
+#include "ginkgo/core/matrix/dense.hpp"
+
+#include "Kokkos_Core_fwd.hpp"
+#include "view.hpp"
 
 class Matrix
 {
 public:
-	Matrix(const int mat_size) : n(mat_size) { }
+    Matrix(const int mat_size) : n(mat_size) {}
     virtual ~Matrix() = default;
-	int n;
+    int n;
     virtual double get_element(int i, int j) const = 0;
     virtual void set_element(int i, int j, double aij) = 0;
     virtual void factorize()
@@ -51,7 +53,7 @@ public:
         }
         return b;
     }
-	virtual DSpan1D solve_transpose_inplace(DSpan1D const b) const
+    virtual DSpan1D solve_transpose_inplace(DSpan1D const b) const
     {
         assert(int(b.extent(0)) == n);
         int const info = solve_inplace_method(b.data_handle(), 'T', 1);
@@ -73,8 +75,9 @@ public:
         }
         return bx;
     }
-	template<class... Args>
-	Kokkos::View<double**, Args...> solve_batch_inplace(Kokkos::View<double**, Args...> const bx) const
+    template <class... Args>
+    Kokkos::View<double**, Args...> solve_batch_inplace(
+            Kokkos::View<double**, Args...> const bx) const
     {
         assert(int(bx.extent(0)) == n);
         int const info = solve_inplace_method(bx.data(), 'N', bx.extent(1));

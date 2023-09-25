@@ -2,7 +2,6 @@
 #include <random>
 
 #include <ddc/ddc.hpp>
-
 #include <ddc/kernels/splines/bsplines_non_uniform.hpp>
 #include <ddc/kernels/splines/bsplines_uniform.hpp>
 #include <ddc/kernels/splines/greville_interpolation_points.hpp>

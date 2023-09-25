@@ -7,7 +7,6 @@
 #include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
-
 #include <ddc/kernels/splines/bsplines_non_uniform.hpp>
 #include <ddc/kernels/splines/bsplines_uniform.hpp>
 #include <ddc/kernels/splines/greville_interpolation_points.hpp>
@@ -78,8 +77,20 @@ using SplineXY = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX, BSplinesY>>;
 using FieldXY = ddc::Chunk<double, ddc::DiscreteDomain<IDimX, IDimY>>;
 using CoordXY = ddc::Coordinate<DimX, DimY>;
 
-using BuilderX = SplineBuilder<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, BSplinesX, IDimX, s_bcl, s_bcr>;
-using BuilderY = SplineBuilder<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space, BSplinesY, IDimY, s_bcl, s_bcr>;
+using BuilderX = SplineBuilder<
+        Kokkos::DefaultExecutionSpace,
+        Kokkos::DefaultExecutionSpace::memory_space,
+        BSplinesX,
+        IDimX,
+        s_bcl,
+        s_bcr>;
+using BuilderY = SplineBuilder<
+        Kokkos::DefaultExecutionSpace,
+        Kokkos::DefaultExecutionSpace::memory_space,
+        BSplinesY,
+        IDimY,
+        s_bcl,
+        s_bcr>;
 using BuilderXY = SplineBuilder2D<BuilderX, BuilderY>;
 
 using EvaluatorType = Evaluator2D::Evaluator<

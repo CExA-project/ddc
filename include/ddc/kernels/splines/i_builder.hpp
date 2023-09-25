@@ -5,9 +5,8 @@
 
 #include "spline_boundary_conditions.hpp"
 
-class IBuilder 
+class IBuilder
 {
 public:
-  virtual ~IBuilder() = default;
+    virtual ~IBuilder() = default;
 };
-

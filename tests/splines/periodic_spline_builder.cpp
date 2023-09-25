@@ -7,7 +7,6 @@
 #include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
-
 #include <ddc/kernels/splines/bsplines_non_uniform.hpp>
 #include <ddc/kernels/splines/bsplines_uniform.hpp>
 #include <ddc/kernels/splines/greville_interpolation_points.hpp>
@@ -82,8 +81,14 @@ TEST(PeriodicSplineBuilderTest, Identity)
     ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
-    SplineBuilder<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX, BoundCond::PERIODIC, BoundCond::PERIODIC> spline_builder(
-            interpolation_domain);
+    SplineBuilder<
+            Kokkos::DefaultHostExecutionSpace,
+            Kokkos::HostSpace,
+            BSplinesX,
+            IDimX,
+            BoundCond::PERIODIC,
+            BoundCond::PERIODIC>
+            spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
     ddc::Chunk yvals(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
@@ -105,12 +110,14 @@ TEST(PeriodicSplineBuilderTest, Identity)
     ddc::Chunk spline_eval(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     spline_evaluator(spline_eval.span_view(), coords_eval.span_cview(), coef.span_cview());
 
-    ddc::Chunk spline_eval_deriv(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
+    ddc::Chunk spline_eval_deriv(
+            interpolation_domain,
+            ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     spline_evaluator
             .deriv(spline_eval_deriv.span_view(), coords_eval.span_cview(), coef.span_cview());
 
     // 8. Checking errors
-	std::cout << "---------- TEST ----------\n";
+    std::cout << "---------- TEST ----------\n";
     double max_norm_error = 0.;
     double max_norm_error_diff = 0.;
     for (IndexX const ix : interpolation_domain) {
@@ -119,7 +126,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
         // Compute error
         double const error = spline_eval(ix) - yvals(ix);
         max_norm_error = std::fmax(max_norm_error, std::fabs(error));
-		std::cout << spline_eval(ix) << " " << yvals(ix) << "\n";
+        std::cout << spline_eval(ix) << " " << yvals(ix) << "\n";
 
         // Compute error
         double const error_deriv = spline_eval_deriv(ix) - evaluator.deriv(x, 1);

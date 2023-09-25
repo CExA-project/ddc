@@ -10,15 +10,21 @@
 #include <ddc/ddc.hpp>
 
 #include "Kokkos_Core_fwd.hpp"
-#include "math_tools.hpp"
 #include "i_builder.hpp"
+#include "math_tools.hpp"
 #include "matrix.hpp"
 #include "matrix_maker.hpp"
 #include "spline_boundary_conditions.hpp"
 #include "view.hpp"
 
-template <class ExecSpace, class MemorySpace, class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
-class SplineBuilder : IBuilder 
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class interpolation_mesh_type,
+        BoundCond BcXmin,
+        BoundCond BcXmax>
+class SplineBuilder : IBuilder
 {
     static_assert(
             (BSplines::is_periodic() && (BcXmin == BoundCond::PERIODIC)
@@ -31,9 +37,9 @@ private:
     using tag_type = typename interpolation_mesh_type::continuous_dimension_type;
 
 public:
-	using exec_space = ExecSpace;
+    using exec_space = ExecSpace;
 
-	using memory_space = MemorySpace;
+    using memory_space = MemorySpace;
 
     using bsplines_type = BSplines;
 
@@ -57,8 +63,8 @@ public:
 
     // interpolator specific
     std::unique_ptr<Matrix> matrix;
-    
-	const int m_offset;
+
+    const int m_offset;
 
 private:
     interpolation_domain_type m_interpolation_domain;
@@ -66,7 +72,7 @@ private:
     double m_dx; // average cell size for normalization of derivatives
 
 public:
-	int compute_offset(interpolation_domain_type const& interpolation_domain);
+    int compute_offset(interpolation_domain_type const& interpolation_domain);
 
     SplineBuilder(interpolation_domain_type const& interpolation_domain);
 
@@ -80,7 +86,7 @@ public:
 
     SplineBuilder& operator=(SplineBuilder&& x) = default;
 
-	template <class Layout>
+    template <class Layout>
     void operator()(
             ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type>, Layout, MemorySpace> spline,
             ddc::ChunkSpan<double, interpolation_domain_type, Layout, MemorySpace> vals,
@@ -92,7 +98,7 @@ public:
         return m_interpolation_domain;
     }
 
-	int offset() const noexcept
+    int offset() const noexcept
     {
         return m_offset;
     }
@@ -102,7 +108,7 @@ public:
         return ddc::discrete_space<BSplines>().full_domain();
     }
 
-	template <class Layout>
+    template <class Layout>
     void compute_interpolant_degree1( // Seems to need to be public for GPU compiling
             ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type>, Layout, MemorySpace> spline,
             ddc::ChunkSpan<double, interpolation_domain_type, Layout, MemorySpace> vals) const;
@@ -118,10 +124,18 @@ private:
     void build_matrix_system();
 };
 
-template <class ExecSpace, class MemorySpace, class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
-int SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::compute_offset(interpolation_domain_type const& interpolation_domain) {
-  int offset;
-  if constexpr (bsplines_type::is_periodic()) {
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class interpolation_mesh_type,
+        BoundCond BcXmin,
+        BoundCond BcXmax>
+int SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::
+        compute_offset(interpolation_domain_type const& interpolation_domain)
+{
+    int offset;
+    if constexpr (bsplines_type::is_periodic()) {
         // Calculate offset so that the matrix is diagonally dominant
         std::array<double, bsplines_type::degree() + 1> values_ptr;
         DSpan1D values(values_ptr.data(), bsplines_type::degree() + 1);
@@ -133,18 +147,23 @@ int SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcX
         } else {
             int const mid = bsplines_type::degree() / 2;
             offset = jmin.uid() - start.uid() + (values(mid) > values(mid + 1) ? mid : mid + 1)
-                       - BSplines::degree();
+                     - BSplines::degree();
         }
+    } else {
+        offset = 0;
     }
-	else {
-	  offset = 0;
-	}
-	return offset;
+    return offset;
 }
 
-template <class ExecSpace, class MemorySpace, class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
-SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::SplineBuilder(
-        interpolation_domain_type const& interpolation_domain)
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class interpolation_mesh_type,
+        BoundCond BcXmin,
+        BoundCond BcXmax>
+SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::
+        SplineBuilder(interpolation_domain_type const& interpolation_domain)
     : m_interpolation_domain(interpolation_domain)
     , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
            / ddc::discrete_space<BSplines>().ncells())
@@ -166,32 +185,51 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin,
  *                         Compute interpolant functions *
  ************************************************************************************/
 
-template <class ExecSpace, class MemorySpace, class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class interpolation_mesh_type,
+        BoundCond BcXmin,
+        BoundCond BcXmax>
 template <class Layout>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::compute_interpolant_degree1(
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type>, Layout, MemorySpace> spline,
-        ddc::ChunkSpan<double, interpolation_domain_type, Layout, MemorySpace> vals) const
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::
+        compute_interpolant_degree1(
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type>, Layout, MemorySpace>
+                        spline,
+                ddc::ChunkSpan<double, interpolation_domain_type, Layout, MemorySpace> vals) const
 {
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
-	Kokkos::parallel_for(Kokkos::RangePolicy<exec_space>(0,1), KOKKOS_LAMBDA(const int unused_index) {
-    for (std::size_t i = 0; i < nbasis_proxy; ++i) {
-        spline(ddc::DiscreteElement<bsplines_type>(i))
-                = vals(ddc::DiscreteElement<interpolation_mesh_type>(i));
-    }
-	});
+    Kokkos::parallel_for(
+            Kokkos::RangePolicy<exec_space>(0, 1),
+            KOKKOS_LAMBDA(const int unused_index) {
+                for (std::size_t i = 0; i < nbasis_proxy; ++i) {
+                    spline(ddc::DiscreteElement<bsplines_type>(i))
+                            = vals(ddc::DiscreteElement<interpolation_mesh_type>(i));
+                }
+            });
     if constexpr (bsplines_type::is_periodic()) {
-	Kokkos::parallel_for(Kokkos::RangePolicy<exec_space>(0,1), KOKKOS_LAMBDA(const int unused_index) {
-        spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy))
-                = spline(ddc::DiscreteElement<bsplines_type>(0));
-	});
+        Kokkos::parallel_for(
+                Kokkos::RangePolicy<exec_space>(0, 1),
+                KOKKOS_LAMBDA(const int unused_index) {
+                    spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy))
+                            = spline(ddc::DiscreteElement<bsplines_type>(0));
+                });
     }
 }
 
 //-------------------------------------------------------------------------------------------------
 
-template <class ExecSpace, class MemorySpace, class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class interpolation_mesh_type,
+        BoundCond BcXmin,
+        BoundCond BcXmax>
 template <class Layout>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::operator()(
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::
+operator()(
         ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type>, Layout, MemorySpace> spline,
         ddc::ChunkSpan<double, interpolation_domain_type, Layout, MemorySpace> vals,
         std::optional<CDSpan1D> const derivs_xmin,
@@ -219,18 +257,20 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
                     = (*derivs_xmin)(i - 1) * ipow(m_dx, i + s_odd - 1);
         }
     }
-	auto const& offset_proxy = offset();
+    auto const& offset_proxy = offset();
     auto const& interp_size_proxy = interpolation_domain().extents();
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
-	Kokkos::parallel_for(Kokkos::RangePolicy<exec_space>(0,1), KOKKOS_LAMBDA(const int unused_index) {
-      for (int i = s_nbc_xmin; i < s_nbc_xmin + offset_proxy; ++i) {
-                          spline(ddc::DiscreteElement<bsplines_type>(i)) = 0.0;
-      }
-      for (int i = 0; i < interp_size_proxy; ++i) {
-          spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + i + offset_proxy))
-                    = vals(ddc::DiscreteElement<interpolation_mesh_type>(i));
-        }
-     });
+    Kokkos::parallel_for(
+            Kokkos::RangePolicy<exec_space>(0, 1),
+            KOKKOS_LAMBDA(const int unused_index) {
+                for (int i = s_nbc_xmin; i < s_nbc_xmin + offset_proxy; ++i) {
+                    spline(ddc::DiscreteElement<bsplines_type>(i)) = 0.0;
+                }
+                for (int i = 0; i < interp_size_proxy; ++i) {
+                    spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + i + offset_proxy))
+                            = vals(ddc::DiscreteElement<interpolation_mesh_type>(i));
+                }
+            });
 
     // Hermite boundary conditions at xmax, if any
     // NOTE: For consistency with the linear system, the i-th derivative
@@ -244,24 +284,26 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
         }
     }
 
-	Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(spline.data_handle()+m_offset, ddc::discrete_space<BSplines>().nbasis());
+    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
+            spline.data_handle() + m_offset,
+            ddc::discrete_space<BSplines>().nbasis());
     matrix->solve_batch_inplace(bcoef_section);
 
     if constexpr (bsplines_type::is_periodic()) {
-		Kokkos::parallel_for(Kokkos::RangePolicy<exec_space>(0,1), KOKKOS_LAMBDA(const int unused_index) {
-		if (offset_proxy != 0) {
-                for (int i = 0; i < offset_proxy; ++i) {
-                    spline(ddc::DiscreteElement<bsplines_type>(i))
-                            = spline(ddc::DiscreteElement<bsplines_type>(
-                                    nbasis_proxy + i));
-                }
-                for (std::size_t i = offset_proxy; i < bsplines_type::degree(); ++i) {
-                    spline(ddc::DiscreteElement<bsplines_type>(
-                            nbasis_proxy + i))
-                            = spline(ddc::DiscreteElement<bsplines_type>(i));
-                }
-          }
-		});
+        Kokkos::parallel_for(
+                Kokkos::RangePolicy<exec_space>(0, 1),
+                KOKKOS_LAMBDA(const int unused_index) {
+                    if (offset_proxy != 0) {
+                        for (int i = 0; i < offset_proxy; ++i) {
+                            spline(ddc::DiscreteElement<bsplines_type>(i))
+                                    = spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy + i));
+                        }
+                        for (std::size_t i = offset_proxy; i < bsplines_type::degree(); ++i) {
+                            spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy + i))
+                                    = spline(ddc::DiscreteElement<bsplines_type>(i));
+                        }
+                    }
+                });
     }
 }
 
@@ -270,10 +312,15 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
  *                            Compute num diags functions *
  ************************************************************************************/
 
-template <class ExecSpace, class MemorySpace, class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::compute_block_sizes_uniform(
-        int& lower_block_size,
-        int& upper_block_size) const
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class interpolation_mesh_type,
+        BoundCond BcXmin,
+        BoundCond BcXmax>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::
+        compute_block_sizes_uniform(int& lower_block_size, int& upper_block_size) const
 {
     switch (BcXmin) {
     case BoundCond::PERIODIC:
@@ -307,7 +354,13 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
 
 //-------------------------------------------------------------------------------------------------
 
-template <class ExecSpace, class MemorySpace, class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class interpolation_mesh_type,
+        BoundCond BcXmin,
+        BoundCond BcXmax>
 void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::
         compute_block_sizes_non_uniform(int& lower_block_size, int& upper_block_size) const
 {
@@ -344,10 +397,15 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
  *                            Initialize matrix functions *
  ************************************************************************************/
 
-template <class ExecSpace, class MemorySpace, class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::allocate_matrix(
-        int lower_block_size,
-        int upper_block_size)
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class interpolation_mesh_type,
+        BoundCond BcXmin,
+        BoundCond BcXmax>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::
+        allocate_matrix(int lower_block_size, int upper_block_size)
 {
     // Special case: linear spline
     // No need for matrix assembly
@@ -362,17 +420,17 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
     }
 
     if constexpr (bsplines_type::is_periodic()) {
-		#if 0
+#if 0
         matrix = MatrixMaker::make_new_periodic_banded(
                 ddc::discrete_space<BSplines>().nbasis(),
                 upper_band_width,
                 upper_band_width,
                 bsplines_type::is_uniform());
-		#else
-		matrix = MatrixMaker::make_new_sparse<ExecSpace>( ddc::discrete_space<BSplines>().nbasis());
-		#endif
+#else
+        matrix = MatrixMaker::make_new_sparse<ExecSpace>(ddc::discrete_space<BSplines>().nbasis());
+#endif
     } else {
-		#if 0
+#if 0
         matrix = MatrixMaker::make_new_block_with_banded_region(
                 ddc::discrete_space<BSplines>().nbasis(),
                 upper_band_width,
@@ -380,9 +438,9 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
                 bsplines_type::is_uniform(),
                 upper_block_size,
                 lower_block_size);
-		#else
-		matrix = MatrixMaker::make_new_sparse<ExecSpace>( ddc::discrete_space<BSplines>().nbasis());
-		#endif
+#else
+        matrix = MatrixMaker::make_new_sparse<ExecSpace>(ddc::discrete_space<BSplines>().nbasis());
+#endif
     }
 
     build_matrix_system();
@@ -392,8 +450,15 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
 
 //-------------------------------------------------------------------------------------------------
 
-template <class ExecSpace, class MemorySpace, class BSplines, class interpolation_mesh_type, BoundCond BcXmin, BoundCond BcXmax>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::build_matrix_system()
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class interpolation_mesh_type,
+        BoundCond BcXmin,
+        BoundCond BcXmax>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::
+        build_matrix_system()
 {
     // Hermite boundary conditions at xmin, if any
     if constexpr (BcXmin == BoundCond::HERMITE) {

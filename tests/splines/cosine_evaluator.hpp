@@ -3,7 +3,6 @@
 #include <cmath>
 
 #include <ddc/ddc.hpp>
-
 #include <ddc/kernels/splines/math_tools.hpp>
 
 struct CosineEvaluator

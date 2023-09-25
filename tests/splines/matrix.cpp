@@ -136,7 +136,8 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
         if (s == 0)
             continue;
 
-        std::unique_ptr<Matrix> matrix = MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
+        std::unique_ptr<Matrix> matrix
+                = MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
         for (int i(0); i < N; ++i) {
             for (int j(0); j < N; ++j) {
                 int diag = modulo(j - i, int(N));
@@ -228,7 +229,8 @@ TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
         if (s == 0)
             continue;
 
-        std::unique_ptr<Matrix> matrix = MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
+        std::unique_ptr<Matrix> matrix
+                = MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
         for (int i(0); i < N; ++i) {
             for (int j(0); j < N; ++j) {
                 int diag = modulo(j - i, int(N));

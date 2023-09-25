@@ -15,12 +15,11 @@
 class MatrixMaker
 {
 public:
-	template <typename ExecSpace>
-    static std::unique_ptr<Matrix> make_new_sparse(
-			int const n)
-	{
-		return std::make_unique<Matrix_Sparse<ExecSpace>>(n);
-	}
+    template <typename ExecSpace>
+    static std::unique_ptr<Matrix> make_new_sparse(int const n)
+    {
+        return std::make_unique<Matrix_Sparse<ExecSpace>>(n);
+    }
     static std::unique_ptr<Matrix> make_new_banded(
             int const n,
             int const kl,

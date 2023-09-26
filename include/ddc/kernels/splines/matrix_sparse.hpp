@@ -131,10 +131,15 @@ public:
             data(i) = 0;
         }
 
-		Kokkos::TeamPolicy<ExecSpace> team_policy(ExecSpace(), 1, Kokkos::AUTO);
+		// Kokkos::TeamPolicy<ExecSpace> team_policy(ExecSpace(), 1, Kokkos::AUTO);
+		// cols_per_par_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda> ? 64 : INT_MAX;
+		cols_per_par_chunk = 64;
 		cols_per_par_chunk = 1;
-		// par_chunks_per_seq_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda> ? Kokkos::pow(2,16)/cols_per_par_chunk-1 : INT_MAX;
-		par_chunks_per_seq_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda> ? team_policy.team_size()/cols_per_par_chunk-1 : INT_MAX;
+		// par_chunks_per_seq_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda> ? Kokkos::pow(2,16)/cols_per_par_chunk-1 : 1;
+		par_chunks_per_seq_chunk = 65335/64;
+		par_chunks_per_seq_chunk = 65335;
+		// Debug purpose
+		// std::cout << "----- team_size = " << team_policy.team_size() << " -----\n";
 		std::cout << "----- cols_per_par_chunk = " << cols_per_par_chunk << " -----\n";
 		std::cout << "----- par_chunks_per_seq_chunk = " << par_chunks_per_seq_chunk << " -----\n";
     }
@@ -230,15 +235,18 @@ public:
                 x_view("x_view", n, n_equations);
 
         // TODO: remove unnecessary deepcopy
-		for (int i=0; i<n_equations/par_chunks_per_seq_chunk+1; i++) {
-		  int n_equations_in_league = i<n_equations/par_chunks_per_seq_chunk ? par_chunks_per_seq_chunk : n_equations%par_chunks_per_seq_chunk;
-        Kokkos::View<double**, ExecSpace> b_gpu("b_gpu", n, n_equations_in_league);
-        Kokkos::deep_copy(b_gpu, Kokkos::subview(b_view, Kokkos::ALL, std::pair<int,int>(i*par_chunks_per_seq_chunk,i*par_chunks_per_seq_chunk+n_equations_in_league)));
-        auto b_vec_batch = to_gko_vec(b_gpu.data(), n, n_equations_in_league, gko_exec);
-        Kokkos::View<double**, ExecSpace> x_gpu("x_gpu", n, n_equations_in_league);
-        auto x_vec_batch = to_gko_vec(x_gpu.data(), n, n_equations_in_league, gko_exec);
+		const int n_seq_chunks = (n_equations/cols_per_par_chunk+1)/par_chunks_per_seq_chunk+1;
+		for (int i=0; i<n_seq_chunks; i++) { 
+		  int n_par_chunks_in_seq_chunk = i<n_seq_chunks-1 ? par_chunks_per_seq_chunk : (n_equations%(cols_per_par_chunk*par_chunks_per_seq_chunk))/cols_per_par_chunk+1;
+		  Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::Serial>(0,n_par_chunks_in_seq_chunk), KOKKOS_LAMBDA (int const j) {
+		  int n_equations_in_par_chunk = (i<n_seq_chunks-1 || j<n_par_chunks_in_seq_chunk-1) ? cols_per_par_chunk : n_equations%(cols_per_par_chunk*par_chunks_per_seq_chunk*(n_seq_chunks-1))%cols_per_par_chunk;
+		  Kokkos::View<double**, ExecSpace> b_gpu("b_gpu", n, n_equations_in_par_chunk);
+        Kokkos::deep_copy(b_gpu, Kokkos::subview(b_view, Kokkos::ALL, std::pair<int,int>((i*par_chunks_per_seq_chunk+j)*cols_per_par_chunk,(i*par_chunks_per_seq_chunk+j)*cols_per_par_chunk+n_equations_in_par_chunk)));
+        auto b_vec_batch = to_gko_vec(b_gpu.data(), n, n_equations_in_par_chunk, gko_exec);
+        Kokkos::View<double**, ExecSpace> x_gpu("x_gpu", n, n_equations_in_par_chunk);
+        auto x_vec_batch = to_gko_vec(x_gpu.data(), n, n_equations_in_par_chunk, gko_exec);
 
-        // Create the solver
+        // Create the solver TODO: pass in constructor
         std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::
                 create(gko::log::Logger::all_events_mask
                                ^ gko::log::Logger::linop_factory_events_mask
@@ -264,7 +272,7 @@ public:
         solver_->add_logger(stream_logger);
         // auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_gpu.get(), b_vec_batch.get());
         // solver_->add_logger(res_logger);
-        solver_->apply(b_vec_batch, x_vec_batch);
+        // solver_->apply(b_vec_batch, x_vec_batch);
 // res_logger->write_data(std::cout);
 
 // Debug purpose
@@ -286,7 +294,8 @@ public:
 
 
 #endif
-        Kokkos::deep_copy(Kokkos::subview(x_view, Kokkos::ALL, std::pair<int,int>(i*par_chunks_per_seq_chunk,i*par_chunks_per_seq_chunk+n_equations_in_league)), x_gpu);
+        Kokkos::deep_copy(Kokkos::subview(x_view, Kokkos::ALL, std::pair<int,int>((i*par_chunks_per_seq_chunk+j)*cols_per_par_chunk,(i*par_chunks_per_seq_chunk+j)*cols_per_par_chunk+n_equations_in_par_chunk)), x_gpu);
+		});
 		}
         Kokkos::deep_copy(
                 b_view,

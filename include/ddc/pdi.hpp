@@ -58,7 +58,7 @@ public:
     template <
             PDI_inout_t access,
             class Arithmetic,
-            std::enable_if_t<std::is_arithmetic_v<Arithmetic>, int> = 0>
+            std::enable_if_t<std::is_arithmetic_v<std::remove_reference_t<Arithmetic>>, int> = 0>
     PdiEvent& with(std::string const& name, Arithmetic&& data)
     {
         static_assert(
@@ -88,7 +88,9 @@ public:
     }
 
     /// Arithmetic overload
-    template <class Arithmetic, std::enable_if_t<std::is_arithmetic_v<Arithmetic>, int> = 0>
+    template <
+            class Arithmetic,
+            std::enable_if_t<std::is_arithmetic_v<std::remove_reference_t<Arithmetic>>, int> = 0>
     PdiEvent& with(std::string const& name, Arithmetic&& data)
     {
         return with<default_access_v<Arithmetic>>(name, std::forward<Arithmetic>(data));

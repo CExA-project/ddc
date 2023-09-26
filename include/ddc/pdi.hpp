@@ -64,7 +64,7 @@ public:
         static_assert(
                 !(access & PDI_IN) || (default_access_v<Arithmetic> & PDI_IN),
                 "Invalid access for constant data");
-        using value_type = std::remove_cv_t<Arithmetic>;
+        using value_type = std::remove_cv_t<std::remove_reference_t<Arithmetic>>;
         PDI_share(name.c_str(), const_cast<value_type*>(&data), access);
         m_names.push_back(name);
         return *this;

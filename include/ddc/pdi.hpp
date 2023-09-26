@@ -59,7 +59,7 @@ public:
             PDI_inout_t access,
             class Arithmetic,
             std::enable_if_t<std::is_arithmetic_v<Arithmetic>, int> = 0>
-    PdiEvent& with(std::string const& name, Arithmetic& data)
+    PdiEvent& with(std::string const& name, Arithmetic&& data)
     {
         static_assert(
                 !(access & PDI_IN) || (default_access_v<Arithmetic> & PDI_IN),
@@ -84,14 +84,14 @@ public:
     template <class BorrowedChunk, std::enable_if_t<is_borrowed_chunk_v<BorrowedChunk>, int> = 0>
     PdiEvent& with(std::string const& name, BorrowedChunk&& data)
     {
-        return with<chunk_default_access_v<BorrowedChunk>>(name, data);
+        return with<chunk_default_access_v<BorrowedChunk>>(name, std::forward<BorrowedChunk>(data));
     }
 
-    /// Arithmetic overload (only lvalue-ref)
+    /// Arithmetic overload
     template <class Arithmetic, std::enable_if_t<std::is_arithmetic_v<Arithmetic>, int> = 0>
-    PdiEvent& with(std::string const& name, Arithmetic& data)
+    PdiEvent& with(std::string const& name, Arithmetic&& data)
     {
-        return with<default_access_v<Arithmetic>>(name, data);
+        return with<default_access_v<Arithmetic>>(name, std::forward<Arithmetic>(data));
     }
 
     /// With synonym

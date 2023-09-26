@@ -60,7 +60,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ada4058655f4cadaf359894d0a544d3b8"><td class="memTemplParams" colspan="2">template&lt;PDI_inout_t access, class BorrowedChunk , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a00ef862a4d77c604c3818f628e134a55">is_borrowed_chunk_v</a>&lt; BorrowedChunk &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:ada4058655f4cadaf359894d0a544d3b8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#ada4058655f4cadaf359894d0a544d3b8">with</a> (std::string const &amp;name, BorrowedChunk &amp;&amp;data)</td></tr>
 <tr class="separator:ada4058655f4cadaf359894d0a544d3b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac52d3155e073493a6c1d93cc3938434a"><td class="memTemplParams" colspan="2">template&lt;PDI_inout_t access, class Arithmetic , std::enable_if_t&lt; std::is_arithmetic_v&lt; Arithmetic &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:ac52d3155e073493a6c1d93cc3938434a"><td class="memTemplParams" colspan="2">template&lt;PDI_inout_t access, class Arithmetic , std::enable_if_t&lt; std::is_arithmetic_v&lt; std::remove_reference_t&lt; Arithmetic &gt; &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:ac52d3155e073493a6c1d93cc3938434a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#ac52d3155e073493a6c1d93cc3938434a">with</a> (std::string const &amp;name, Arithmetic &amp;&amp;data)</td></tr>
 <tr class="separator:ac52d3155e073493a6c1d93cc3938434a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d8e467ce0fc1b1d74795836e50775e3"><td class="memTemplParams" colspan="2">template&lt;PDI_inout_t access, class T &gt; </td></tr>
@@ -71,7 +71,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abe26c98bf242fc1140c668a830ee9a43"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#abe26c98bf242fc1140c668a830ee9a43">with</a> (std::string const &amp;name, BorrowedChunk &amp;&amp;data)</td></tr>
 <tr class="memdesc:abe26c98bf242fc1140c668a830ee9a43"><td class="mdescLeft">&#160;</td><td class="mdescRight">API with access deduction.  <a href="classddc_1_1PdiEvent.html#abe26c98bf242fc1140c668a830ee9a43">More...</a><br /></td></tr>
 <tr class="separator:abe26c98bf242fc1140c668a830ee9a43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6da8de102bba2ca52f6ce201cf2b915"><td class="memTemplParams" colspan="2">template&lt;class Arithmetic , std::enable_if_t&lt; std::is_arithmetic_v&lt; Arithmetic &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:aa6da8de102bba2ca52f6ce201cf2b915"><td class="memTemplParams" colspan="2">template&lt;class Arithmetic , std::enable_if_t&lt; std::is_arithmetic_v&lt; std::remove_reference_t&lt; Arithmetic &gt; &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:aa6da8de102bba2ca52f6ce201cf2b915"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#aa6da8de102bba2ca52f6ce201cf2b915">with</a> (std::string const &amp;name, Arithmetic &amp;&amp;data)</td></tr>
 <tr class="memdesc:aa6da8de102bba2ca52f6ce201cf2b915"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arithmetic overload.  <a href="classddc_1_1PdiEvent.html#aa6da8de102bba2ca52f6ce201cf2b915">More...</a><br /></td></tr>
 <tr class="separator:aa6da8de102bba2ca52f6ce201cf2b915"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -178,7 +178,7 @@ template&lt;PDI_inout_t access, class BorrowedChunk , std::enable_if_t&lt; <a cl
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;PDI_inout_t access, class Arithmetic , std::enable_if_t&lt; std::is_arithmetic_v&lt; Arithmetic &gt;, int &gt;  = 0&gt; </div>
+template&lt;PDI_inout_t access, class Arithmetic , std::enable_if_t&lt; std::is_arithmetic_v&lt; std::remove_reference_t&lt; Arithmetic &gt; &gt;, int &gt;  = 0&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -295,7 +295,7 @@ template&lt;class BorrowedChunk , std::enable_if_t&lt; <a class="el" href="names
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Arithmetic , std::enable_if_t&lt; std::is_arithmetic_v&lt; Arithmetic &gt;, int &gt;  = 0&gt; </div>
+template&lt;class Arithmetic , std::enable_if_t&lt; std::is_arithmetic_v&lt; std::remove_reference_t&lt; Arithmetic &gt; &gt;, int &gt;  = 0&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">

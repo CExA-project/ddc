@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
+#include <type_traits>
 #include <utility>
 
 #include <ginkgo/core/base/device_matrix_data.hpp>
@@ -129,12 +130,22 @@ public:
             cols(i) = i % n;
             data(i) = 0;
         }
+
+		Kokkos::TeamPolicy<ExecSpace> team_policy(ExecSpace(), 1, Kokkos::AUTO);
+		cols_per_par_chunk = 1;
+		// par_chunks_per_seq_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda> ? Kokkos::pow(2,16)/cols_per_par_chunk-1 : INT_MAX;
+		par_chunks_per_seq_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda> ? team_policy.team_size()/cols_per_par_chunk-1 : INT_MAX;
+		std::cout << "----- cols_per_par_chunk = " << cols_per_par_chunk << " -----\n";
+		std::cout << "----- par_chunks_per_seq_chunk = " << par_chunks_per_seq_chunk << " -----\n";
     }
     int m;
     int n;
     Kokkos::View<int*, Kokkos::HostSpace> rows;
     Kokkos::View<int*, Kokkos::HostSpace> cols;
-    Kokkos::View<double*, Kokkos::HostSpace> data; // TODO : make a struct for CSR
+    Kokkos::View<double*, Kokkos::HostSpace> data;
+
+	int cols_per_par_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
+	int par_chunks_per_seq_chunk; // Maximum number of teams to be executed in parallel
 
     virtual std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>>
     to_gko_vec(
@@ -210,18 +221,22 @@ public:
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
     {
         std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<ExecSpace>();
-        Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>
-                b_view(b, n, n_equations);
-        // TODO: remove unnecessary deepcopy
-        Kokkos::View<double**, ExecSpace> b_gpu("b_gpu", n, n_equations);
-        Kokkos::deep_copy(b_gpu, b_view);
-        auto b_vec_batch = to_gko_vec(b_gpu.data(), n, n_equations, gko_exec);
         auto data_mat = gko::share(
                 to_gko_mat(data.data(), rows.size() - 1, cols.size(), gko_exec->get_master()));
-
         auto data_mat_gpu = gko::share(gko::clone(gko_exec, data_mat));
-        Kokkos::View<double**, ExecSpace> x_gpu("x_gpu", n, n_equations);
-        auto x_vec_batch = to_gko_vec(x_gpu.data(), n, n_equations, gko_exec);
+		Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>
+                b_view(b, n, n_equations);
+		Kokkos::View<double**, ExecSpace>
+                x_view("x_view", n, n_equations);
+
+        // TODO: remove unnecessary deepcopy
+		for (int i=0; i<n_equations/par_chunks_per_seq_chunk+1; i++) {
+		  int n_equations_in_league = i<n_equations/par_chunks_per_seq_chunk ? par_chunks_per_seq_chunk : n_equations%par_chunks_per_seq_chunk;
+        Kokkos::View<double**, ExecSpace> b_gpu("b_gpu", n, n_equations_in_league);
+        Kokkos::deep_copy(b_gpu, Kokkos::subview(b_view, Kokkos::ALL, std::pair<int,int>(i*par_chunks_per_seq_chunk,i*par_chunks_per_seq_chunk+n_equations_in_league)));
+        auto b_vec_batch = to_gko_vec(b_gpu.data(), n, n_equations_in_league, gko_exec);
+        Kokkos::View<double**, ExecSpace> x_gpu("x_gpu", n, n_equations_in_league);
+        auto x_vec_batch = to_gko_vec(x_gpu.data(), n, n_equations_in_league, gko_exec);
 
         // Create the solver
         std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::
@@ -260,7 +275,7 @@ public:
       		Kokkos::parallel_for(Kokkos::RangePolicy<ExecSpace>(0,1),KOKKOS_LAMBDA (int j) { printf("%f ", b_data[i]); });
 		}
 #endif
-#if 1
+#if 0
         // Write result
         std::cout << "-----------------------";
         write(std::cout, data_mat_gpu);
@@ -271,10 +286,11 @@ public:
 
 
 #endif
-
+        Kokkos::deep_copy(Kokkos::subview(x_view, Kokkos::ALL, std::pair<int,int>(i*par_chunks_per_seq_chunk,i*par_chunks_per_seq_chunk+n_equations_in_league)), x_gpu);
+		}
         Kokkos::deep_copy(
                 b_view,
-                x_gpu); //inplace temporary trick TODO: clarify if inplace is necessary
+                x_view); //inplace temporary trick TODO: clarify if inplace is necessary
         return 1;
     }
 };

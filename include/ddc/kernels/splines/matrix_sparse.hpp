@@ -131,17 +131,9 @@ public:
             data(i) = 0;
         }
 
-		// Kokkos::TeamPolicy<ExecSpace> team_policy(ExecSpace(), 1, Kokkos::AUTO);
-		// cols_per_par_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda> ? 64 : INT_MAX;
-		cols_per_par_chunk = 64;
-		cols_per_par_chunk = 1;
-		// par_chunks_per_seq_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda> ? Kokkos::pow(2,16)/cols_per_par_chunk-1 : 1;
-		par_chunks_per_seq_chunk = 65335/64;
-		par_chunks_per_seq_chunk = 65335;
-		// Debug purpose
-		// std::cout << "----- team_size = " << team_policy.team_size() << " -----\n";
-		std::cout << "----- cols_per_par_chunk = " << cols_per_par_chunk << " -----\n";
-		std::cout << "----- par_chunks_per_seq_chunk = " << par_chunks_per_seq_chunk << " -----\n";
+        cols_per_par_chunk
+                = std::is_same_v<ExecSpace, Kokkos::Cuda> ? Kokkos::pow(2, 16) - 1 : INT_MAX;
+        par_chunks_per_seq_chunk = 1;
     }
     int m;
     int n;
@@ -149,8 +141,8 @@ public:
     Kokkos::View<int*, Kokkos::HostSpace> cols;
     Kokkos::View<double*, Kokkos::HostSpace> data;
 
-	int cols_per_par_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
-	int par_chunks_per_seq_chunk; // Maximum number of teams to be executed in parallel
+    int cols_per_par_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
+    int par_chunks_per_seq_chunk; // Maximum number of teams to be executed in parallel
 
     virtual std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>>
     to_gko_vec(
@@ -229,50 +221,90 @@ public:
         auto data_mat = gko::share(
                 to_gko_mat(data.data(), rows.size() - 1, cols.size(), gko_exec->get_master()));
         auto data_mat_gpu = gko::share(gko::clone(gko_exec, data_mat));
-		Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>
+        Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>
                 b_view(b, n, n_equations);
-		Kokkos::View<double**, ExecSpace>
-                x_view("x_view", n, n_equations);
+        Kokkos::View<double**, ExecSpace> x_view("x_view", n, n_equations);
 
         // TODO: remove unnecessary deepcopy
-		const int n_seq_chunks = (n_equations/cols_per_par_chunk+1)/par_chunks_per_seq_chunk+1;
-		for (int i=0; i<n_seq_chunks; i++) { 
-		  int n_par_chunks_in_seq_chunk = i<n_seq_chunks-1 ? par_chunks_per_seq_chunk : (n_equations%(cols_per_par_chunk*par_chunks_per_seq_chunk))/cols_per_par_chunk+1;
-		  Kokkos::parallel_for(Kokkos::RangePolicy<Kokkos::Serial>(0,n_par_chunks_in_seq_chunk), KOKKOS_LAMBDA (int const j) {
-		  int n_equations_in_par_chunk = (i<n_seq_chunks-1 || j<n_par_chunks_in_seq_chunk-1) ? cols_per_par_chunk : n_equations%(cols_per_par_chunk*par_chunks_per_seq_chunk*(n_seq_chunks-1))%cols_per_par_chunk;
-		  Kokkos::View<double**, ExecSpace> b_gpu("b_gpu", n, n_equations_in_par_chunk);
-        Kokkos::deep_copy(b_gpu, Kokkos::subview(b_view, Kokkos::ALL, std::pair<int,int>((i*par_chunks_per_seq_chunk+j)*cols_per_par_chunk,(i*par_chunks_per_seq_chunk+j)*cols_per_par_chunk+n_equations_in_par_chunk)));
-        auto b_vec_batch = to_gko_vec(b_gpu.data(), n, n_equations_in_par_chunk, gko_exec);
-        Kokkos::View<double**, ExecSpace> x_gpu("x_gpu", n, n_equations_in_par_chunk);
-        auto x_vec_batch = to_gko_vec(x_gpu.data(), n, n_equations_in_par_chunk, gko_exec);
+        // TODO: use a last incomplete per_par_chunk
+        const int n_seq_chunks = n_equations / cols_per_par_chunk / par_chunks_per_seq_chunk + 1;
+        for (int i = 0; i < n_seq_chunks; i++) {
+            int n_par_chunks_in_seq_chunk
+                    = i < n_seq_chunks - 1
+                              ? par_chunks_per_seq_chunk
+                              : (n_equations % (cols_per_par_chunk * par_chunks_per_seq_chunk))
+                                                / cols_per_par_chunk
+                                        + 1;
+            Kokkos::parallel_for(
+                    Kokkos::RangePolicy<Kokkos::Serial>(0, n_par_chunks_in_seq_chunk),
+                    KOKKOS_LAMBDA(int const j) {
+                        int n_equations_in_par_chunk
+                                = (i < n_seq_chunks - 1 || j < n_par_chunks_in_seq_chunk - 1)
+                                          ? cols_per_par_chunk
+                                          : (n_equations
+                                             % (cols_per_par_chunk * par_chunks_per_seq_chunk
+                                                * n_seq_chunks))
+                                                    % cols_per_par_chunk;
+                        if (n_equations_in_par_chunk != 0) {
+                            Kokkos::View<double**, ExecSpace>
+                                    b_gpu("b_gpu", n, n_equations_in_par_chunk);
+                            Kokkos::deep_copy(
+                                    b_gpu,
+                                    Kokkos::
+                                            subview(b_view,
+                                                    Kokkos::ALL,
+                                                    std::pair<int, int>(
+                                                            (i * par_chunks_per_seq_chunk + j)
+                                                                    * cols_per_par_chunk,
+                                                            (i * par_chunks_per_seq_chunk + j)
+                                                                            * cols_per_par_chunk
+                                                                    + n_equations_in_par_chunk)));
+                            auto b_vec_batch = to_gko_vec(
+                                    b_gpu.data(),
+                                    n,
+                                    n_equations_in_par_chunk,
+                                    gko_exec);
+                            Kokkos::View<double**, ExecSpace>
+                                    x_gpu("x_gpu", n, n_equations_in_par_chunk);
+                            auto x_vec_batch = to_gko_vec(
+                                    x_gpu.data(),
+                                    n,
+                                    n_equations_in_par_chunk,
+                                    gko_exec);
 
-        // Create the solver TODO: pass in constructor
-        std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::
-                create(gko::log::Logger::all_events_mask
-                               ^ gko::log::Logger::linop_factory_events_mask
-                               ^ gko::log::Logger::polymorphic_object_events_mask,
-                       std::cout);
-        // gko_exec->add_logger(stream_logger);
-        std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion
-                = gko::stop::ResidualNorm<>::build().with_reduction_factor(1e-20).on(gko_exec);
-        std::shared_ptr<const gko::log::Convergence<>> convergence_logger
-                = gko::log::Convergence<>::create(gko_exec);
-        residual_criterion->add_logger(convergence_logger);
-        auto preconditionner
-                = gko::preconditioner::Jacobi<>::build().with_max_block_size(1u).on(gko_exec);
-        auto preconditionner_ = gko::share(preconditionner->generate(data_mat_gpu));
-        auto solver
-                = gko::solver::Bicgstab<>::build()
-                          .with_generated_preconditioner(preconditionner_)
-                          .with_criteria(
-                                  residual_criterion,
-                                  gko::stop::Iteration::build().with_max_iters(1000u).on(gko_exec))
-                          .on(gko_exec);
-        auto solver_ = solver->generate(data_mat_gpu);
-        solver_->add_logger(stream_logger);
-        // auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_gpu.get(), b_vec_batch.get());
-        // solver_->add_logger(res_logger);
-        // solver_->apply(b_vec_batch, x_vec_batch);
+                            // Create the solver TODO: pass in constructor
+                            std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::
+                                    create(gko::log::Logger::all_events_mask
+                                                   ^ gko::log::Logger::linop_factory_events_mask
+                                                   ^ gko::log::Logger::
+                                                           polymorphic_object_events_mask,
+                                           std::cout);
+                            // gko_exec->add_logger(stream_logger);
+                            std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion
+                                    = gko::stop::ResidualNorm<>::build()
+                                              .with_reduction_factor(1e-20)
+                                              .on(gko_exec);
+                            std::shared_ptr<const gko::log::Convergence<>> convergence_logger
+                                    = gko::log::Convergence<>::create(gko_exec);
+                            residual_criterion->add_logger(convergence_logger);
+                            auto preconditionner = gko::preconditioner::Jacobi<>::build()
+                                                           .with_max_block_size(1u)
+                                                           .on(gko_exec);
+                            auto preconditionner_
+                                    = gko::share(preconditionner->generate(data_mat_gpu));
+                            auto solver = gko::solver::Bicgstab<>::build()
+                                                  .with_generated_preconditioner(preconditionner_)
+                                                  .with_criteria(
+                                                          residual_criterion,
+                                                          gko::stop::Iteration::build()
+                                                                  .with_max_iters(1000u)
+                                                                  .on(gko_exec))
+                                                  .on(gko_exec);
+                            auto solver_ = solver->generate(data_mat_gpu);
+                            solver_->add_logger(stream_logger);
+                            // auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_gpu.get(), b_vec_batch.get());
+                            // solver_->add_logger(res_logger);
+                            solver_->apply(b_vec_batch, x_vec_batch);
 // res_logger->write_data(std::cout);
 
 // Debug purpose
@@ -294,9 +326,21 @@ public:
 
 
 #endif
-        Kokkos::deep_copy(Kokkos::subview(x_view, Kokkos::ALL, std::pair<int,int>((i*par_chunks_per_seq_chunk+j)*cols_per_par_chunk,(i*par_chunks_per_seq_chunk+j)*cols_per_par_chunk+n_equations_in_par_chunk)), x_gpu);
-		});
-		}
+                            Kokkos::deep_copy(
+                                    Kokkos::
+                                            subview(x_view,
+                                                    Kokkos::ALL,
+                                                    std::pair<int, int>(
+                                                            (i * par_chunks_per_seq_chunk + j)
+                                                                    * cols_per_par_chunk,
+                                                            (i * par_chunks_per_seq_chunk + j)
+                                                                            * cols_per_par_chunk
+                                                                    + n_equations_in_par_chunk)),
+                                    x_gpu);
+                        }
+                        Kokkos::fence();
+                    });
+        }
         Kokkos::deep_copy(
                 b_view,
                 x_view); //inplace temporary trick TODO: clarify if inplace is necessary

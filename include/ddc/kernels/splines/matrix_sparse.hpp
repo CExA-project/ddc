@@ -113,35 +113,28 @@ class Matrix_Sparse : public Matrix
 {
 public:
     // Constructor
-    Matrix_Sparse(const int mat_size) : Matrix(mat_size), m(mat_size), n(mat_size)
+    Matrix_Sparse(const int mat_size)
+        : Matrix(mat_size)
+        , m(mat_size)
+        , n(mat_size)
+        , rows("rows", mat_size + 1)
+        , cols("cols", mat_size * mat_size)
+        , data("data", mat_size * mat_size)
     {
-        // TODO : use Kokkos:View
-        rows = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultHostExecutionSpace>(
-                (n + 1) * sizeof(int));
-        cols = (int*)Kokkos::kokkos_malloc<Kokkos::DefaultHostExecutionSpace>(m * n * sizeof(int));
-        data = (double*)Kokkos::kokkos_malloc<Kokkos::DefaultHostExecutionSpace>(
-                m * n * sizeof(double));
-
         // Fill the csr indexes as a dense matrix and initialize with zeros (zeros will be removed once non-zeros elements will be set)
         for (int i = 0; i < m * n; i++) {
             if (i < m + 1) {
-                rows[i] = i * n; //CSR
+                rows(i) = i * n; //CSR
             }
-            cols[i] = i % n;
-            data[i] = 0;
+            cols(i) = i % n;
+            data(i) = 0;
         }
     }
-    virtual ~Matrix_Sparse()
-    {
-        Kokkos::kokkos_free(rows);
-        Kokkos::kokkos_free(cols);
-        Kokkos::kokkos_free(data);
-    };
     int m;
     int n;
-    int* rows;
-    int* cols;
-    double* data; // TODO : make a struct for CSR
+    Kokkos::View<int*, Kokkos::HostSpace> rows;
+    Kokkos::View<int*, Kokkos::HostSpace> cols;
+    Kokkos::View<double*, Kokkos::HostSpace> data; // TODO : make a struct for CSR
 
     virtual std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>>
     to_gko_vec(
@@ -160,30 +153,58 @@ public:
 
     virtual std::unique_ptr<gko::matrix::Csr<>, std::default_delete<gko::matrix::Csr<>>> to_gko_mat(
             double* mat_ptr,
-            size_t m,
-            size_t n,
+            size_t n_nonzero_rows,
+            size_t n_nonzeros,
             std::shared_ptr<gko::Executor> gko_exec) const
     {
         auto M = gko::matrix::Csr<>::
                 create(gko_exec,
                        gko::dim<2> {m, n},
-                       gko::array<double>::view(gko_exec, m * n, mat_ptr),
-                       gko::array<int>::view(gko_exec, m * n, cols),
-                       gko::array<int>::view(gko_exec, m + 1, rows));
+                       gko::array<double>::view(gko_exec, n_nonzeros, mat_ptr),
+                       gko::array<int>::view(gko_exec, n_nonzeros, cols.data()),
+                       gko::array<int>::view(gko_exec, n_nonzero_rows + 1, rows.data()));
         return M;
     }
 
     virtual double get_element(int i, int j) const override
     {
-        return data[i * n + j];
+        // Wrong, TODO: correct
+        return data(i * n + j);
     }
     virtual void set_element(int i, int j, double aij) override
     {
-        data[i * n + j] = aij;
+        data(i * n + j) = aij;
     }
 
     virtual int factorize_method() override
     {
+        std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<ExecSpace>();
+        // Remove zeros
+        auto data_mat = gko::share(to_gko_mat(data.data(), m, m * n, gko_exec->get_master()));
+        auto data_mat_ = gko::matrix_data<>(gko::dim<2> {m, n});
+        data_mat->write(data_mat_);
+        data_mat_.remove_zeros();
+        data_mat->read(data_mat_);
+
+        // Realloc Kokkos::Views without zeros
+        Kokkos::realloc(Kokkos::WithoutInitializing, cols, data_mat_.nonzeros.size());
+        Kokkos::realloc(Kokkos::WithoutInitializing, data, data_mat_.nonzeros.size());
+        Kokkos::deep_copy(
+                rows,
+                Kokkos::View<
+                        int*,
+                        Kokkos::HostSpace,
+                        Kokkos::MemoryTraits<Kokkos::Unmanaged>>(data_mat->get_row_ptrs(), m + 1));
+        Kokkos::deep_copy(
+                cols,
+                Kokkos::View<int*, Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
+                        data_mat->get_col_idxs(),
+                        data_mat->get_num_stored_elements()));
+        Kokkos::deep_copy(
+                data,
+                Kokkos::View<double*, Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
+                        data_mat->get_values(),
+                        data_mat->get_num_stored_elements()));
         return 0;
     }
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
@@ -191,19 +212,12 @@ public:
         std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<ExecSpace>();
         Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>
                 b_view(b, n, n_equations);
+        // TODO: remove unnecessary deepcopy
         Kokkos::View<double**, ExecSpace> b_gpu("b_gpu", n, n_equations);
         Kokkos::deep_copy(b_gpu, b_view);
         auto b_vec_batch = to_gko_vec(b_gpu.data(), n, n_equations, gko_exec);
-        auto data_mat = gko::share(to_gko_mat(data, n, n, gko_exec->get_master()));
-
-// TODO : pass in factorize_method
-// Remove zeros
-#if 1
-        auto data_mat_ = gko::matrix_data<>(gko::dim<2> {n, n});
-        data_mat->write(data_mat_);
-        data_mat_.remove_zeros();
-        data_mat->read(data_mat_);
-#endif
+        auto data_mat = gko::share(
+                to_gko_mat(data.data(), rows.size() - 1, cols.size(), gko_exec->get_master()));
 
         auto data_mat_gpu = gko::share(gko::clone(gko_exec, data_mat));
         Kokkos::View<double**, ExecSpace> x_gpu("x_gpu", n, n_equations);

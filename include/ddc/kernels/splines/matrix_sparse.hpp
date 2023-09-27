@@ -131,9 +131,11 @@ public:
             data(i) = 0;
         }
 
-        cols_per_par_chunk
-                = std::is_same_v<ExecSpace, Kokkos::Cuda> ? Kokkos::pow(2, 16) - 1 : INT_MAX;
-        par_chunks_per_seq_chunk = 1;
+        // cols_per_par_chunk
+        //         = std::is_same_v<ExecSpace, Kokkos::Cuda> ? Kokkos::pow(2, 16) - 1 : INT_MAX;i // TODO: call cudaMaxGridSize ?
+
+        cols_per_par_chunk = 64;
+        par_chunks_per_seq_chunk = 64;
     }
     int m;
     int n;
@@ -221,7 +223,11 @@ public:
         auto data_mat = gko::share(
                 to_gko_mat(data.data(), rows.size() - 1, cols.size(), gko_exec->get_master()));
         auto data_mat_gpu = gko::share(gko::clone(gko_exec, data_mat));
-        Kokkos::View<double**, ExecSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>
+        Kokkos::View<
+                double**,
+                Kokkos::LayoutRight,
+                ExecSpace,
+                Kokkos::MemoryTraits<Kokkos::Unmanaged>>
                 b_view(b, n, n_equations);
         Kokkos::View<double**, ExecSpace> x_view("x_view", n, n_equations);
 
@@ -236,7 +242,8 @@ public:
                                                 / cols_per_par_chunk
                                         + 1;
             Kokkos::parallel_for(
-                    Kokkos::RangePolicy<Kokkos::Serial>(0, n_par_chunks_in_seq_chunk),
+                    Kokkos::RangePolicy<
+                            Kokkos::DefaultHostExecutionSpace>(0, n_par_chunks_in_seq_chunk),
                     KOKKOS_LAMBDA(int const j) {
                         int n_equations_in_par_chunk
                                 = (i < n_seq_chunks - 1 || j < n_par_chunks_in_seq_chunk - 1)
@@ -246,7 +253,7 @@ public:
                                                 * n_seq_chunks))
                                                     % cols_per_par_chunk;
                         if (n_equations_in_par_chunk != 0) {
-                            Kokkos::View<double**, ExecSpace>
+                            Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
                                     b_gpu("b_gpu", n, n_equations_in_par_chunk);
                             Kokkos::deep_copy(
                                     b_gpu,
@@ -264,7 +271,7 @@ public:
                                     n,
                                     n_equations_in_par_chunk,
                                     gko_exec);
-                            Kokkos::View<double**, ExecSpace>
+                            Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
                                     x_gpu("x_gpu", n, n_equations_in_par_chunk);
                             auto x_vec_batch = to_gko_vec(
                                     x_gpu.data(),
@@ -338,7 +345,6 @@ public:
                                                                     + n_equations_in_par_chunk)),
                                     x_gpu);
                         }
-                        Kokkos::fence();
                     });
         }
         Kokkos::deep_copy(

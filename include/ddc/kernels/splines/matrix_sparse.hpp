@@ -229,9 +229,7 @@ public:
                 ExecSpace,
                 Kokkos::MemoryTraits<Kokkos::Unmanaged>>
                 b_view(b, n, n_equations);
-        Kokkos::View<double**, ExecSpace> x_view("x_view", n, n_equations);
 
-        // TODO: remove unnecessary deepcopy
         // TODO: use a last incomplete per_par_chunk
         const int n_seq_chunks = n_equations / cols_per_par_chunk / par_chunks_per_seq_chunk + 1;
         for (int i = 0; i < n_seq_chunks; i++) {
@@ -254,9 +252,9 @@ public:
                                                     % cols_per_par_chunk;
                         if (n_equations_in_par_chunk != 0) {
                             Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
-                                    b_gpu("b_gpu", n, n_equations_in_par_chunk);
+                                    b_par_chunk("b_gpu", n, n_equations_in_par_chunk);
                             Kokkos::deep_copy(
-                                    b_gpu,
+                                    b_par_chunk,
                                     Kokkos::
                                             subview(b_view,
                                                     Kokkos::ALL,
@@ -267,19 +265,19 @@ public:
                                                                             * cols_per_par_chunk
                                                                     + n_equations_in_par_chunk)));
                             auto b_vec_batch = to_gko_vec(
-                                    b_gpu.data(),
+                                    b_par_chunk.data(),
                                     n,
                                     n_equations_in_par_chunk,
                                     gko_exec);
                             Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
-                                    x_gpu("x_gpu", n, n_equations_in_par_chunk);
+                                    x_par_chunk("x_gpu", n, n_equations_in_par_chunk);
                             auto x_vec_batch = to_gko_vec(
-                                    x_gpu.data(),
+                                    x_par_chunk.data(),
                                     n,
                                     n_equations_in_par_chunk,
                                     gko_exec);
 
-                            // Create the solver TODO: pass in constructor
+                            // Create the solver TODO: pass in constructor ?
                             std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::
                                     create(gko::log::Logger::all_events_mask
                                                    ^ gko::log::Logger::linop_factory_events_mask
@@ -318,7 +316,7 @@ public:
 #if 0
       	for (int i=0; i<130; i++) {
         	// auto b_data = b_vec_batch->get_values();
-        	auto b_data = b_gpu.data();
+        	auto b_data = b_par_chunk.data();
       		Kokkos::parallel_for(Kokkos::RangePolicy<ExecSpace>(0,1),KOKKOS_LAMBDA (int j) { printf("%f ", b_data[i]); });
 		}
 #endif
@@ -335,7 +333,7 @@ public:
 #endif
                             Kokkos::deep_copy(
                                     Kokkos::
-                                            subview(x_view,
+                                            subview(b_view,
                                                     Kokkos::ALL,
                                                     std::pair<int, int>(
                                                             (i * par_chunks_per_seq_chunk + j)
@@ -343,13 +341,10 @@ public:
                                                             (i * par_chunks_per_seq_chunk + j)
                                                                             * cols_per_par_chunk
                                                                     + n_equations_in_par_chunk)),
-                                    x_gpu);
+                                    x_par_chunk);
                         }
                     });
         }
-        Kokkos::deep_copy(
-                b_view,
-                x_view); //inplace temporary trick TODO: clarify if inplace is necessary
         return 1;
     }
 };

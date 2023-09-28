@@ -30,12 +30,15 @@ class ForEachKokkosLambdaAdapter
 public:
     ForEachKokkosLambdaAdapter(F const& f) : m_f(f) {}
 
-    KOKKOS_IMPL_FORCEINLINE void operator()() const
+    template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
+    KOKKOS_IMPL_FORCEINLINE void operator()(index_type<void> unused_id) const
     {
         m_f(DiscreteElement<>());
     }
 
-    KOKKOS_FORCEINLINE_FUNCTION void operator()(use_annotated_operator) const
+    template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
+    KOKKOS_FORCEINLINE_FUNCTION void operator()(use_annotated_operator, index_type<void> unused_id)
+            const
     {
         m_f(DiscreteElement<>());
     }

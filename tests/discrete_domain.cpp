@@ -35,6 +35,10 @@ using DElemYX = ddc::DiscreteElement<DDimY, DDimX>;
 using DVectYX = ddc::DiscreteVector<DDimY, DDimX>;
 using DDomYX = ddc::DiscreteDomain<DDimY, DDimX>;
 
+using DElemXZ = ddc::DiscreteElement<DDimX, DDimZ>;
+using DVectXZ = ddc::DiscreteVector<DDimX, DDimZ>;
+using DDomXZ = ddc::DiscreteDomain<DDimX, DDimZ>;
+
 using DElemZY = ddc::DiscreteElement<DDimZ, DDimY>;
 using DVectZY = ddc::DiscreteVector<DDimZ, DDimY>;
 using DDomZY = ddc::DiscreteDomain<DDimZ, DDimY>;
@@ -128,6 +132,16 @@ TEST(ProductMDomainTest, Diff)
     auto const subdomain = ddc::remove_dims_of(dom_x_y, dom_z_y);
     EXPECT_EQ(subdomain, dom_x);
 }
+
+TEST(ProductMDomainTest, Replace)
+{
+    DDomXY const dom_x_y = DDomXY();
+    DDomZ const dom_z = DDomZ();
+    DDomXZ const dom_x_z = DDomXZ();
+    auto const subdomain = ddc::replace_dim_of<DDimY,DDimZ>(dom_x_y, dom_z);
+    EXPECT_EQ(subdomain, dom_x_z);
+}
+
 
 TEST(ProductMDomainTest, TakeFirst)
 {

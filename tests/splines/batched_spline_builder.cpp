@@ -45,6 +45,11 @@ struct DimZ
     static constexpr bool PERIODIC = true;
 };
 
+struct DimT
+{
+    static constexpr bool PERIODIC = true;
+};
+
 static constexpr std::size_t s_degree_x = DEGREE_X;
 
 template <typename BSpX>
@@ -149,7 +154,7 @@ static void BatchedSplineBuilderTest()
     // Instantiate execution spaces and initialize spaces
     Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
     ExecSpace exec_space = ExecSpace();
-    std::size_t constexpr ncells = 100;
+    std::size_t constexpr ncells = 10;
 
     // Initialize spaces
     DimsInitializer<IDim<I, I>, BatchDims<IDim<I, I>, IDim<X, I>...>> dims_initializer;
@@ -451,6 +456,102 @@ TEST(BatchedSplineBuilderDevice, 3DZ)
             DimZ>();
 }
 
+
+TEST(BatchedSplineBuilderHost, 4DX)
+{
+    BatchedSplineBuilderTest<
+            Kokkos::DefaultHostExecutionSpace,
+            Kokkos::DefaultHostExecutionSpace::memory_space,
+            DimX,
+            DimX,
+            DimY,
+            DimZ,
+			DimT>();
+}
+
+TEST(BatchedSplineBuilderHost, 4DY)
+{
+    BatchedSplineBuilderTest<
+            Kokkos::DefaultHostExecutionSpace,
+            Kokkos::DefaultHostExecutionSpace::memory_space,
+            DimY,
+            DimX,
+            DimY,
+            DimZ,
+			DimT>();
+}
+
+TEST(BatchedSplineBuilderHost, 4DZ)
+{
+    BatchedSplineBuilderTest<
+            Kokkos::DefaultHostExecutionSpace,
+            Kokkos::DefaultHostExecutionSpace::memory_space,
+            DimZ,
+            DimX,
+            DimY,
+            DimZ,
+			DimT>();
+}
+
+TEST(BatchedSplineBuilderHost, 4DT)
+{
+    BatchedSplineBuilderTest<
+            Kokkos::DefaultHostExecutionSpace,
+            Kokkos::DefaultHostExecutionSpace::memory_space,
+            DimT,
+            DimX,
+            DimY,
+            DimZ,
+			DimT>();
+}
+
+TEST(BatchedSplineBuilderDevice, 4DX)
+{
+    BatchedSplineBuilderTest<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            DimX,
+            DimX,
+            DimY,
+            DimZ,
+			DimT>();
+}
+
+TEST(BatchedSplineBuilderDevice, 4DY)
+{
+    BatchedSplineBuilderTest<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            DimY,
+            DimX,
+            DimY,
+            DimZ,
+			DimT>();
+}
+
+TEST(BatchedSplineBuilderDevice, 4DZ)
+{
+    BatchedSplineBuilderTest<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            DimZ,
+            DimX,
+            DimY,
+            DimZ,
+			DimT>();
+}
+
+TEST(BatchedSplineBuilderDevice, 4DT)
+{
+    BatchedSplineBuilderTest<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            DimT,
+            DimX,
+            DimY,
+            DimZ,
+			DimT>();
+}
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

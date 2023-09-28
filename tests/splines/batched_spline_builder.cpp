@@ -176,7 +176,6 @@ static void BatchedSplineBuilderTest()
                     IDim<I, I>,
                     BoundCond::PERIODIC,
                     BoundCond::PERIODIC>,
-            MemorySpace,
             IDim<X, I>...>
             spline_builder(dom_vals);
 
@@ -466,7 +465,7 @@ TEST(BatchedSplineBuilderHost, 4DX)
             DimX,
             DimY,
             DimZ,
-			DimT>();
+            DimT>();
 }
 
 TEST(BatchedSplineBuilderHost, 4DY)
@@ -478,7 +477,7 @@ TEST(BatchedSplineBuilderHost, 4DY)
             DimX,
             DimY,
             DimZ,
-			DimT>();
+            DimT>();
 }
 
 TEST(BatchedSplineBuilderHost, 4DZ)
@@ -490,7 +489,7 @@ TEST(BatchedSplineBuilderHost, 4DZ)
             DimX,
             DimY,
             DimZ,
-			DimT>();
+            DimT>();
 }
 
 TEST(BatchedSplineBuilderHost, 4DT)
@@ -502,7 +501,7 @@ TEST(BatchedSplineBuilderHost, 4DT)
             DimX,
             DimY,
             DimZ,
-			DimT>();
+            DimT>();
 }
 
 TEST(BatchedSplineBuilderDevice, 4DX)
@@ -514,7 +513,7 @@ TEST(BatchedSplineBuilderDevice, 4DX)
             DimX,
             DimY,
             DimZ,
-			DimT>();
+            DimT>();
 }
 
 TEST(BatchedSplineBuilderDevice, 4DY)
@@ -526,7 +525,7 @@ TEST(BatchedSplineBuilderDevice, 4DY)
             DimX,
             DimY,
             DimZ,
-			DimT>();
+            DimT>();
 }
 
 TEST(BatchedSplineBuilderDevice, 4DZ)
@@ -538,7 +537,7 @@ TEST(BatchedSplineBuilderDevice, 4DZ)
             DimX,
             DimY,
             DimZ,
-			DimT>();
+            DimT>();
 }
 
 TEST(BatchedSplineBuilderDevice, 4DT)
@@ -550,7 +549,7 @@ TEST(BatchedSplineBuilderDevice, 4DT)
             DimX,
             DimY,
             DimZ,
-			DimT>();
+            DimT>();
 }
 int main(int argc, char** argv)
 {

@@ -7,7 +7,7 @@
 #include "Kokkos_Core_fwd.hpp"
 #include "spline_builder.hpp"
 
-template <class SplineBuilder, class MemorySpace, class... IDimX>
+template <class SplineBuilder, class... IDimX>
 class SplineBuilderBatched
 {
 private:
@@ -15,6 +15,8 @@ private:
 
 public:
     using exec_space = typename SplineBuilder::exec_space;
+
+    using memory_space = typename SplineBuilder::memory_space;
 
     using bsplines_type = typename SplineBuilder::bsplines_type;
 
@@ -74,8 +76,8 @@ public:
 
     template <class Layout>
     void operator()(
-            ddc::ChunkSpan<double, spline_domain_type, Layout, MemorySpace> spline,
-            ddc::ChunkSpan<double, vals_domain_type, Layout, MemorySpace> vals,
+            ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
+            ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
             std::optional<CDSpan2D> const derivs_xmin = std::nullopt,
             std::optional<CDSpan2D> const derivs_xmax = std::nullopt) const;
     // std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
@@ -123,11 +125,11 @@ public:
     }
 };
 
-template <class SplineBuilder, class MemorySpace, class... IDimX>
+template <class SplineBuilder, class... IDimX>
 template <class Layout>
-void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
-        ddc::ChunkSpan<double, spline_domain_type, Layout, MemorySpace> spline,
-        ddc::ChunkSpan<double, vals_domain_type, Layout, MemorySpace> vals,
+void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
+        ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
+        ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
         std::optional<CDSpan2D> const derivs_xmin,
         std::optional<CDSpan2D> const derivs_xmax) const
 // std::optional<CDSpan2D> const derivs_ymin,
@@ -276,7 +278,7 @@ void SplineBuilderBatched<SplineBuilder, MemorySpace, IDimX...>::operator()(
     // TODO : Consider optimizing
     // TODO : Handle case of GPU saturation
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
-    ddc::Chunk spline_tr_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk spline_tr_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
     ddc::for_each(
             ddc::policies::policy(exec_space()),

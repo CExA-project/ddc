@@ -72,6 +72,15 @@ TEST(ForEachSerialHost, TwoDimensions)
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
+TEST(ForEachParallelHost, ZeroDimension)
+{
+    DDom0D const dom;
+    std::vector<int> storage(dom.size(), 0);
+    ddc::ChunkSpan<int, DDom0D> view(storage.data(), dom);
+    ddc::for_each(ddc::policies::parallel_host, dom, [=](DElem0D const i) { view(i) += 1; });
+    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
+}
+
 TEST(ForEachParallelHost, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
@@ -110,7 +119,12 @@ void TestForEachParallelDeviceZeroDimension()
             Kokkos::Sum<int>(sum));
     EXPECT_EQ(sum, dom.size());
 }
-
+} // namespace
+TEST(ForEachParallelDevice, ZeroDimension)
+{
+    TestForEachParallelDeviceZeroDimension();
+}
+namespace {
 void TestForEachParallelDeviceOneDimension()
 {
     DDomX const dom(lbound_x, nelems_x);
@@ -131,6 +145,8 @@ void TestForEachParallelDeviceOneDimension()
 }
 
 } // namespace
+
+
 
 TEST(ForEachParallelDevice, OneDimension)
 {

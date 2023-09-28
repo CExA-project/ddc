@@ -138,7 +138,7 @@ TEST(ProductMDomainTest, Replace)
     DDomXY const dom_x_y = DDomXY();
     DDomZ const dom_z = DDomZ();
     DDomXZ const dom_x_z = DDomXZ();
-    auto const subdomain = ddc::replace_dim_of<DDimY,DDimZ>(dom_x_y, dom_z);
+    auto const subdomain = ddc::replace_dim_of<DDimY, DDimZ>(dom_x_y, dom_z);
     EXPECT_EQ(subdomain, dom_x_z);
 }
 

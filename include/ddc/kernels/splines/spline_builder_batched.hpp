@@ -74,20 +74,7 @@ public:
 
     SplineBuilderBatched& operator=(SplineBuilderBatched&& x) = default;
 
-    template <class Layout>
-    void operator()(
-            ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
-            ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
-            std::optional<CDSpan2D> const derivs_xmin = std::nullopt,
-            std::optional<CDSpan2D> const derivs_xmax = std::nullopt) const;
-    // std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
-    // std::optional<CDSpan2D> const derivs_ymax = std::nullopt,
-    // std::optional<CDSpan2D> const mixed_derivs_xmin_ymin = std::nullopt,
-    // std::optional<CDSpan2D> const mixed_derivs_xmax_ymin = std::nullopt,
-    // std::optional<CDSpan2D> const mixed_derivs_xmin_ymax = std::nullopt,
-    // std::optional<CDSpan2D> const mixed_derivs_xmax_ymax = std::nullopt) const;
-
-    vals_domain_type const vals_domain() const noexcept
+        vals_domain_type const vals_domain() const noexcept
     {
         return m_vals_domain;
     }
@@ -123,6 +110,21 @@ public:
     {
         return spline_builder.offset();
     }
+
+	template <class Layout>
+    void operator()(
+            ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
+            ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
+            std::optional<CDSpan2D> const derivs_xmin = std::nullopt,
+            std::optional<CDSpan2D> const derivs_xmax = std::nullopt) const;
+    // std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
+    // std::optional<CDSpan2D> const derivs_ymax = std::nullopt,
+    // std::optional<CDSpan2D> const mixed_derivs_xmin_ymin = std::nullopt,
+    // std::optional<CDSpan2D> const mixed_derivs_xmax_ymin = std::nullopt,
+    // std::optional<CDSpan2D> const mixed_derivs_xmin_ymax = std::nullopt,
+    // std::optional<CDSpan2D> const mixed_derivs_xmax_ymax = std::nullopt) const;
+
+
 };
 
 template <class SplineBuilder, class... IDimX>

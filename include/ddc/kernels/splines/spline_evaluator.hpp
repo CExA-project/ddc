@@ -8,7 +8,11 @@
 #include "spline_boundary_value.hpp"
 #include "view.hpp"
 
-template <class BSplinesType>
+template <
+class ExecSpace,
+class MemorySpace,
+class BSplinesType,
+class interpolation_mesh_type>
 class SplineEvaluator
 {
 private:
@@ -22,9 +26,17 @@ private:
     };
 
 public:
+	using exec_space = ExecSpace;
+
+      using memory_space = MemorySpace;
+
     using bsplines_type = BSplinesType;
 
     using tag_type = typename BSplinesType::tag_type;
+
+	using mesh_type = interpolation_mesh_type;
+
+    using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>; // Use ?
 
 private:
     SplineBoundaryValue<BSplinesType> const& m_left_bc;
@@ -52,6 +64,18 @@ public:
 
     SplineEvaluator& operator=(SplineEvaluator&& x) = default;
 
+	/*
+	SplineBoundaryValue<bsplines_type> left_bc() const noexcept
+        {
+            return m_left_bc;
+        }
+
+        SplineBoundaryValue<bsplines_type> right_bc() const noexcept
+        {
+          return m_right_bc;
+        }
+	*/
+
     double operator()(
             ddc::Coordinate<tag_type> const& coord_eval,
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>> const spline_coef) const
@@ -62,9 +86,9 @@ public:
         return eval(coord_eval, spline_coef, vals);
     }
 
-    template <class Domain, class Layout1, class Layout2, class Layout3, class MemorySpace>
+    template <class Domain, class Layout1, class Layout2, class Layout3>
     void operator()(
-            ddc::ChunkSpan<double, Domain, Layout1, MemorySpace> const spline_eval,
+            ddc::ChunkSpan<double, Domain, Layout1> const spline_eval,
             ddc::ChunkSpan<const ddc::Coordinate<tag_type>, Domain, Layout2, MemorySpace> const
                     coords_eval,
             ddc::ChunkSpan<
@@ -90,7 +114,7 @@ public:
         return eval_no_bc(coord_eval, spline_coef, vals, eval_deriv_type());
     }
 
-    template <class Domain, class Layout1, class Layout2, class Layout3, class MemorySpace>
+    template <class Domain, class Layout1, class Layout2, class Layout3>
     void deriv(
             ddc::ChunkSpan<double, Domain, Layout1, MemorySpace> const spline_eval,
             ddc::ChunkSpan<const ddc::Coordinate<tag_type>, Domain, Layout2, MemorySpace> const
@@ -126,7 +150,7 @@ public:
     }
 
 private:
-    template <class Layout, class MemorySpace>
+    template <class Layout>
     double eval(
             ddc::Coordinate<tag_type> coord_eval,
             ddc::ChunkSpan<
@@ -155,7 +179,7 @@ private:
         return eval_no_bc(coord_eval, spline_coef, vals, eval_type());
     }
 
-    template <class EvalType, class Layout, class MemorySpace>
+    template <class EvalType, class Layout>
     double eval_no_bc(
             ddc::Coordinate<tag_type> const& coord_eval,
             ddc::ChunkSpan<

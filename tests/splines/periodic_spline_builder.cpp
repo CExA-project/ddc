@@ -18,6 +18,7 @@
 
 #include <gtest/gtest.h>
 
+#include "Kokkos_Core_fwd.hpp"
 #include "cosine_evaluator.hpp"
 #include "polynomial_evaluator.hpp"
 #include "spline_error_bounds.hpp"
@@ -99,7 +100,10 @@ TEST(PeriodicSplineBuilderTest, Identity)
     spline_builder(coef.span_view(), yvals.span_view());
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
-    SplineEvaluator<BSplinesX>
+    SplineEvaluator<Kokkos::DefaultHostExecutionSpace,
+                      Kokkos::HostSpace,
+                      BSplinesX,
+                      IDimX>
             spline_evaluator(g_null_boundary<BSplinesX>, g_null_boundary<BSplinesX>);
 
     ddc::Chunk<CoordX, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);

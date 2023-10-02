@@ -248,7 +248,6 @@ static void BatchedSplineBuilderTest()
                     MemorySpace,
                     BSplines<I>,
                     IDim<I, I>>, IDim<X,I>...> spline_evaluator_batched(coef.domain(), g_null_boundary<BSplines<I>>, g_null_boundary<BSplines<I>>);
-
     // Instantiate chunk of coordinates of dom_interpolation TODO: use dom_vals
     ddc::Chunk coords_eval_alloc(
             dom_vals,
@@ -275,11 +274,7 @@ static void BatchedSplineBuilderTest()
         //spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
         // spline_evaluator.deriv(spline_eval_deriv, coords_eval.span_cview(), coef_cpu.span_cview());
     } else {
-        spline_evaluator_batched(spline_eval, ddc::ChunkSpan<
-                                    const Coord<X...>,
-                                    ddc::DiscreteDomain<IDim<X, I>...>,
-                                    std::experimental::layout_right,
-                                    MemorySpace>(coords_eval), coef.span_cview());
+        spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
 	# if 0
         ddc::for_each(
                 ddc::policies::policy(host_exec_space),

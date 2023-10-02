@@ -413,6 +413,11 @@ public:
         ((m_values[type_seq_rank_v<Tags, tags_seq>] *= rhs.template get<Tags>()), ...);
         return *this;
     }
+
+    template <class OElementType>
+    explicit operator TaggedVector<OElementType, Tags...>() {
+        return TaggedVector<OElementType, Tags...>((OElementType(this->template get<Tags>()))...);
+    }
 };
 
 template <class ElementType>

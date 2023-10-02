@@ -125,6 +125,10 @@ public:
 
         Impl& operator=(Impl&& x) = default;
 
+        discrete_element_type eval_basis(
+                std::array<double, D + 1>& values,
+                ddc::Coordinate<Tag> const& x) const;
+        // TODO:remove
         discrete_element_type eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const;
 
         discrete_element_type eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
@@ -245,6 +249,44 @@ NonUniformBSplines<Tag, D>::Impl<MemorySpace>::Impl(
         }
     }
     ddc::init_discrete_space<mesh_type>(knots);
+}
+
+template <class Tag, std::size_t D>
+template <class MemorySpace>
+ddc::DiscreteElement<NonUniformBSplines<Tag, D>> NonUniformBSplines<Tag, D>::Impl<MemorySpace>::
+        eval_basis(std::array<double, D + 1>& values, ddc::Coordinate<Tag> const& x) const
+{
+    std::array<double, degree()> left;
+    std::array<double, degree()> right;
+
+    assert(x >= rmin());
+    assert(x <= rmax());
+    assert(values.extent(0) == degree() + 1);
+
+    // 1. Compute cell index 'icell'
+    int const icell = find_cell(x);
+
+    assert(icell >= 0);
+    assert(icell <= int(ncells() - 1));
+    assert(get_knot(icell) <= x);
+    assert(get_knot(icell + 1) >= x);
+
+    // 2. Compute values of B-splines with support over cell 'icell'
+    double temp;
+    values[0] = 1.0;
+    for (std::size_t j = 0; j < degree(); ++j) {
+        left[j] = x - get_knot(icell - j);
+        right[j] = get_knot(icell + j + 1) - x;
+        double saved = 0.0;
+        for (std::size_t r = 0; r < j + 1; ++r) {
+            temp = values[r] / (right[r] + left[j - r]);
+            values[r] = saved + right[r] * temp;
+            saved = left[j - r] * temp;
+        }
+        values[j + 1] = saved;
+    }
+
+    return discrete_element_type(icell);
 }
 
 template <class Tag, std::size_t D>

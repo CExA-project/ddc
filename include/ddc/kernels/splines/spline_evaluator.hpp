@@ -8,11 +8,7 @@
 #include "spline_boundary_value.hpp"
 #include "view.hpp"
 
-template <
-class ExecSpace,
-class MemorySpace,
-class BSplinesType,
-class interpolation_mesh_type>
+template <class ExecSpace, class MemorySpace, class BSplinesType, class interpolation_mesh_type>
 class SplineEvaluator
 {
 private:
@@ -26,15 +22,15 @@ private:
     };
 
 public:
-	using exec_space = ExecSpace;
+    using exec_space = ExecSpace;
 
-      using memory_space = MemorySpace;
+    using memory_space = MemorySpace;
 
     using bsplines_type = BSplinesType;
 
     using tag_type = typename BSplinesType::tag_type;
 
-	using mesh_type = interpolation_mesh_type;
+    using mesh_type = interpolation_mesh_type;
 
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>; // Use ?
 
@@ -64,7 +60,7 @@ public:
 
     SplineEvaluator& operator=(SplineEvaluator&& x) = default;
 
-	/*
+    /*
 	SplineBoundaryValue<bsplines_type> left_bc() const noexcept
         {
             return m_left_bc;

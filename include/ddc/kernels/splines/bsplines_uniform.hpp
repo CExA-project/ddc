@@ -125,6 +125,13 @@ public:
 
         Impl& operator=(Impl&& x) = default;
 
+        discrete_element_type eval_basis(
+                std::array<double, D + 1>& values,
+                ddc::Coordinate<Tag> const& x) const
+        {
+            return eval_basis(values, x, degree());
+        }
+        // TODO:remove
         discrete_element_type eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
         {
             return eval_basis(values, x, degree());
@@ -203,6 +210,11 @@ public:
         }
 
         discrete_element_type eval_basis(
+                std::array<double, D + 1>& values,
+                ddc::Coordinate<Tag> const& x,
+                std::size_t degree) const;
+        //TODO: remove
+        discrete_element_type eval_basis(
                 DSpan1D values,
                 ddc::Coordinate<Tag> const& x,
                 std::size_t degree) const;
@@ -210,6 +222,41 @@ public:
     };
 };
 
+template <class Tag, std::size_t D>
+template <class MemorySpace>
+ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::Impl<MemorySpace>::
+        eval_basis(
+                std::array<double, D + 1>& values,
+                ddc::Coordinate<Tag> const& x,
+                std::size_t const deg) const
+{
+    assert(values.extent(0) == deg + 1);
+
+    double offset;
+    int jmin;
+    // 1. Compute cell index 'icell' and x_offset
+    // 2. Compute index range of B-splines with support over cell 'icell'
+    get_icell_and_offset(jmin, offset, x);
+
+    // 3. Compute values of aforementioned B-splines
+    double xx, temp, saved;
+    values[0] = 1.0;
+    for (std::size_t j = 1; j < deg + 1; ++j) {
+        xx = -offset;
+        saved = 0.0;
+        for (std::size_t r = 0; r < j; ++r) {
+            xx += 1;
+            temp = values[r] / j;
+            values[r] = saved + xx * temp;
+            saved = (j - xx) * temp;
+        }
+        values[j] = saved;
+    }
+
+    return discrete_element_type(jmin);
+}
+
+//TODO:remove
 template <class Tag, std::size_t D>
 template <class MemorySpace>
 ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::Impl<MemorySpace>::

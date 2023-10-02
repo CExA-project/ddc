@@ -309,9 +309,11 @@ static void BatchedSplineBuilderTest()
             0.,
             ddc::reducer::max<double>(),
             DDC_LAMBDA(Index<IDim<X, I>...> const e) {
+				printf("%f ", spline_eval(e));
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 
+#if 0
     double max_norm_error_diff = ddc::transform_reduce(
             ddc::policies::policy(exec_space),
             spline_eval.domain(),
@@ -321,7 +323,6 @@ static void BatchedSplineBuilderTest()
                 Coord<I> const x = ddc::coordinate(ddc::select<IDim<I, I>>(e));
                 return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, 1));
             });
-#if 0
     double const max_norm_error_integ = std::fabs(
             spline_evaluator.integrate(coef_cpu.span_cview()) - evaluator.deriv(xN, -1)
             + evaluator.deriv(x0, -1));

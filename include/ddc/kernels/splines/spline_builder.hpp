@@ -64,7 +64,7 @@ public:
     // interpolator specific
     std::unique_ptr<Matrix> matrix;
 
-	//TODO: privatize
+    //TODO: privatize
     const int m_offset;
 
 private:

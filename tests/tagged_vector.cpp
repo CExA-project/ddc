@@ -119,3 +119,13 @@ TEST(TaggedVector, ReorderingMoveAssignment)
     EXPECT_EQ(1, b.get<double>());
     EXPECT_EQ(2, b.get<float>());
 }
+
+TEST(TaggedVector, Conversion)
+{
+    struct Tag1;
+    struct Tag2;
+    ddc::detail::TaggedVector<int, Tag1, Tag2> a(1, 2);
+    ddc::detail::TaggedVector<double, Tag1, Tag2> b(a);
+    ASSERT_EQ(b.get<Tag1>(), 1.0);
+    ASSERT_EQ(b.get<Tag2>(), 2.0);
+}

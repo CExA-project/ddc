@@ -415,7 +415,8 @@ public:
     }
 
     template <class OElementType>
-    explicit operator TaggedVector<OElementType, Tags...>() {
+    explicit operator TaggedVector<OElementType, Tags...>()
+    {
         return TaggedVector<OElementType, Tags...>((OElementType(this->template get<Tags>()))...);
     }
 };

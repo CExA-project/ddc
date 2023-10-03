@@ -309,6 +309,7 @@ static void BatchedSplineBuilderTest()
             0.,
             ddc::reducer::max<double>(),
             DDC_LAMBDA(Index<IDim<X, I>...> const e) {
+				// printf("%f", spline_eval(e));
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 

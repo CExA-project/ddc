@@ -13,7 +13,7 @@ var classddc_1_1DiscreteDomain =
     [ "operator=", "classddc_1_1DiscreteDomain.html#a397bade2191571ff7f1d3b776482a10e", null ],
     [ "operator==", "classddc_1_1DiscreteDomain.html#ab0c96f619054d94e03ee8490b0f5b956", null ],
     [ "operator!=", "classddc_1_1DiscreteDomain.html#ab6c4fb11fd52d2913ac1f3b914a8afac", null ],
-    [ "size", "classddc_1_1DiscreteDomain.html#a6e8c196b698cd23fcafa18f349cbb449", null ],
+    [ "size", "classddc_1_1DiscreteDomain.html#a3109a1261df66717d38732a0bcec35dd", null ],
     [ "extents", "classddc_1_1DiscreteDomain.html#a87473f55d929938533595c158bd98e67", null ],
     [ "extent", "classddc_1_1DiscreteDomain.html#ad3ba54d81ed56cd803b51108e40de087", null ],
     [ "front", "classddc_1_1DiscreteDomain.html#a83ec87abf1ea0f8281dec04acdc86760", null ],

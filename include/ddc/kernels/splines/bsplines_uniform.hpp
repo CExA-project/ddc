@@ -31,7 +31,7 @@ public:
     {
         return ddc::Coordinate<KnotDim>(ddc::get<Tag>(coord));
     }
-    static inline ddc::Coordinate<Tag> coord_from_knot(ddc::Coordinate<KnotDim> const& coord)
+    static KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> coord_from_knot(ddc::Coordinate<KnotDim> const& coord)
     {
         return ddc::Coordinate<Tag>(ddc::get<KnotDim>(coord));
     }

@@ -167,17 +167,17 @@ public:
             return get_knot(ix.uid() + n - degree());
         }
 
-        ddc::Coordinate<Tag> rmin() const noexcept
+        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
         {
             return coord_from_knot(ddc::coordinate(m_domain.front()));
         }
 
-        ddc::Coordinate<Tag> rmax() const noexcept
+        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
         {
             return coord_from_knot(ddc::coordinate(m_domain.back()));
         }
 
-        double length() const noexcept
+        KOKKOS_INLINE_FUNCTION double length() const noexcept
         {
             return rmax() - rmin();
         }
@@ -188,7 +188,7 @@ public:
         }
 
         /// Returns the discrete domain including ghost bsplines
-        discrete_domain_type full_domain() const
+        KOKKOS_INLINE_FUNCTION discrete_domain_type full_domain() const
         {
             return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
         }

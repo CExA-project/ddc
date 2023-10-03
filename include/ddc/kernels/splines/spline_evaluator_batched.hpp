@@ -37,7 +37,8 @@ public:
 
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
 
-    // using vals_domain_type = ddc::DiscreteDomain<IDimX...>;
+    using vals_domain_type = ddc::DiscreteDomain<IDimX...>;
+
     using bsplines_domain_type = ddc::DiscreteDomain<bsplines_type>;
 
     using batch_domain_type =
@@ -85,18 +86,18 @@ public:
 
 
 
-    KOKKOS_INLINE_FUNCTION spline_domain_type const spline_domain() const noexcept
+    __host__ __device__ spline_domain_type const spline_domain() const noexcept
     {
         return m_spline_domain;
     }
 
-    KOKKOS_INLINE_FUNCTION bsplines_domain_type const bsplines_domain()
+    __host__ __device__ bsplines_domain_type const bsplines_domain()
             const noexcept // TODO : clarify name
     {
         return ddc::discrete_space<bsplines_type>().full_domain();
     }
 
-    KOKKOS_INLINE_FUNCTION batch_domain_type const batch_domain() const noexcept
+    __host__ __device__ batch_domain_type const batch_domain() const noexcept
     {
         return ddc::remove_dims_of(spline_domain(), bsplines_domain());
     }
@@ -126,12 +127,12 @@ public:
         return eval(coord_eval, spline_coef);
     }
 
-    template <class Domain, class Layout1, class Layout2, class Layout3, class... CoordsDims>
+    template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void operator()(
-            ddc::ChunkSpan<double, Domain, Layout1, memory_space> const spline_eval,
+            ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space>& const spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    Domain,
+                    vals_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
@@ -140,18 +141,22 @@ public:
         // std::array<double, bsplines_type::degree() + 1> values;
         // DSpan1D const vals1 = as_span(values);
 
+		interpolation_domain_type interpolation_domain = ddc::select<interpolation_mesh_type>(spline_eval.domain());
+		std::size_t interpolation_size = interpolation_domain.size();
         // TODO: Consider optimizing
+		auto spline_coef_0 = spline_coef[batch_domain().front()];
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
                 DDC_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    const auto spline_eval_1D = spline_eval[j];
-                    const auto coords_eval_1D = coords_eval[j];
-                    const auto spline_coef_1D = spline_coef[j];
-                    for (typename interpolation_domain_type::discrete_element_type i :
-                         coords_eval_1D
-                                 .domain()) { // replace with Kokkos::Team loop ? And chunk if overload of scratch memory ?
-                        spline_eval_1D(i) = eval(coords_eval_1D(i), spline_coef_1D);
+                    // const auto spline_eval_1D = spline_eval[j];
+                    // const auto coords_eval_1D = coords_eval[j];
+                    // const auto spline_coef_1D = spline_coef[j];
+                    for (int i=0; i<interpolation_size; i++
+                         ) { // replace with Kokkos::Team loop ? And chunk if overload of scratch memory ?
+					printf("interpolation_domain_size%i", interpolation_size);
+                    spline_eval(typename interpolation_domain_type::discrete_element_type(i),j) = eval(coords_eval(typename interpolation_domain_type::discrete_element_type(i),j), spline_coef[j]);
+                    // spline_eval_1D(interpolation_domain(typename interpolation_domain_type::discrete_element_type(i))) = eval(coords_eval_1D(interpolation_domain(typename interpolation_domain_type::discrete_element_type(i))), spline_coef_1D);
                     }
                 });
     }
@@ -324,11 +329,13 @@ public:
 #if 1
 private:
     template <class Layout, class... CoordsDims>
-    __host__ __device__ double eval(
+    KOKKOS_INLINE_FUNCTION double eval(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
             ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
+			printf("\n OLEEEEE");
+		# if 0
         ddc::Coordinate<typename interpolation_mesh_type::continuous_dimension_type>
                 coord_eval_interpolation
                 = ddc::select<typename interpolation_mesh_type::continuous_dimension_type>(
@@ -343,6 +350,7 @@ private:
                                             * ddc::discrete_space<bsplines_type>().length();
             }
         }
+			printf("\n iYAAASS");
         /*
 		 else {
             if (coord_eval_interpolation1 < ddc::discrete_space<bsplines_type1>().rmin()) {
@@ -377,10 +385,12 @@ private:
                 spline_coef,
                 //    eval_type(),
                 eval_type());
+		# endif
+		return 0.;
     }
 
     template <class EvalType, class Layout, class... CoordsDims>
-    __host__ __device__ double eval_no_bc(
+    KOKKOS_INLINE_FUNCTION double eval_no_bc(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
             // ddc::Coordinate<Dim2> const& coord_eval2,
             ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
@@ -401,10 +411,11 @@ private:
         } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {
             jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interpolation);
         }
-
+printf("lululululul");
         double y = 0.0;
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {
             y += spline_coef(ddc::DiscreteElement<bsplines_type>(jmin + i)) * vals[i];
+			printf("%f ",vals[i]);
         }
         return y;
     }

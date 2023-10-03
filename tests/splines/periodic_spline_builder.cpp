@@ -100,10 +100,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
     spline_builder(coef.span_view(), yvals.span_view());
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
-    SplineEvaluator<Kokkos::DefaultHostExecutionSpace,
-                      Kokkos::HostSpace,
-                      BSplinesX,
-                      IDimX>
+    SplineEvaluator<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX>
             spline_evaluator(g_null_boundary<BSplinesX>, g_null_boundary<BSplinesX>);
 
     ddc::Chunk<CoordX, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);

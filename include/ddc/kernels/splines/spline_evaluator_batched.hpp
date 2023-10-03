@@ -136,22 +136,28 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-		interpolation_domain_type interpolation_domain = ddc::select<interpolation_mesh_type>(spline_eval.domain());
-		std::size_t interpolation_size = interpolation_domain.size();
+        interpolation_domain_type interpolation_domain
+                = ddc::select<interpolation_mesh_type>(spline_eval.domain());
+        std::size_t interpolation_size = interpolation_domain.size();
         // TODO: Consider optimizing
-		auto spline_coef_0 = spline_coef[batch_domain().front()];
+        auto spline_coef_0 = spline_coef[batch_domain().front()];
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
-                KOKKOS_CLASS_LAMBDA (typename batch_domain_type::discrete_element_type const j) {
+                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                     // const auto spline_eval_1D = spline_eval[j];
                     // const auto coords_eval_1D = coords_eval[j];
                     // const auto spline_coef_1D = spline_coef[j];
-                    for (int i=0; i<interpolation_size; i++
-                         ) { // replace with Kokkos::Team loop ? And chunk if overload of scratch memory ?
-					// printf("interpolation_domain_size%i", interpolation_size);
-                    spline_eval(typename interpolation_domain_type::discrete_element_type(i),j) = eval(coords_eval(typename interpolation_domain_type::discrete_element_type(i),j), spline_coef_0);
-                    // spline_eval_1D(interpolation_domain(typename interpolation_domain_type::discrete_element_type(i))) = eval(coords_eval_1D(interpolation_domain(typename interpolation_domain_type::discrete_element_type(i))), spline_coef_1D);
+                    for (int i = 0; i < interpolation_size;
+                         i++) { // replace with Kokkos::Team loop ? And chunk if overload of scratch memory ?
+                        // printf("interpolation_domain_size%i", interpolation_size);
+                        spline_eval(typename interpolation_domain_type::discrete_element_type(i), j)
+                                = eval(coords_eval(
+                                               typename interpolation_domain_type::
+                                                       discrete_element_type(i),
+                                               j),
+                                       spline_coef_0);
+                        // spline_eval_1D(interpolation_domain(typename interpolation_domain_type::discrete_element_type(i))) = eval(coords_eval_1D(interpolation_domain(typename interpolation_domain_type::discrete_element_type(i))), spline_coef_1D);
                     }
                 });
     }
@@ -370,10 +376,7 @@ private:
             }
         }
 		*/
-        return eval_no_bc<eval_type>(
-                coord_eval,
-                spline_coef
-				);
+        return eval_no_bc<eval_type>(coord_eval, spline_coef);
     }
 
     template <class EvalType, class Layout, class... CoordsDims>

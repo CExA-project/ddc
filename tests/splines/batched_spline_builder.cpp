@@ -213,16 +213,17 @@ static void BatchedSplineBuilderTest()
     // Finally compute the spline by filling `coef`
     spline_builder(coef, vals);
 
-	// Instantiate a SplineEvaluator over I and batched along other dimensions
-	SplineEvaluatorBatched<SplineEvaluator<ExecSpace,
-                    MemorySpace,
-                    BSplines<I>,
-                    IDim<I, I>>, IDim<X,I>...> spline_evaluator_batched(coef.domain(), g_null_boundary<BSplines<I>>, g_null_boundary<BSplines<I>>);
+    // Instantiate a SplineEvaluator over I and batched along other dimensions
+    SplineEvaluatorBatched<
+            SplineEvaluator<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>>,
+            IDim<X, I>...>
+            spline_evaluator_batched(
+                    coef.domain(),
+                    g_null_boundary<BSplines<I>>,
+                    g_null_boundary<BSplines<I>>);
 
     // Instantiate chunk of coordinates of dom_interpolation TODO: use dom_vals
-    ddc::Chunk coords_eval_alloc(
-            dom_vals,
-            ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
+    ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
     ddc::for_each(
             ddc::policies::policy(exec_space),
@@ -231,17 +232,13 @@ static void BatchedSplineBuilderTest()
 
 
     // Instantiate chunk of values to receive output of spline_evaluator
-    ddc::Chunk spline_eval_alloc(
-            dom_vals,
-            ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
-    ddc::Chunk spline_eval_deriv_alloc(
-            dom_vals,
-            ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk spline_eval_deriv_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan spline_eval_deriv = spline_eval_deriv_alloc.span_view();
 
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
-	# if 0
+#if 0
         ddc::for_each(
                 ddc::policies::policy(host_exec_space),
                 dom_batch,
@@ -265,7 +262,7 @@ static void BatchedSplineBuilderTest()
                                    coef_cpu[iy].span_cview());
 					 */
                 });
-	#endif
+#endif
 
     // Checking errors
     double max_norm_error = ddc::transform_reduce(
@@ -274,7 +271,7 @@ static void BatchedSplineBuilderTest()
             0.,
             ddc::reducer::max<double>(),
             DDC_LAMBDA(Index<IDim<X, I>...> const e) {
-				printf("%f", spline_eval(e));
+                printf("%f", spline_eval(e));
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 

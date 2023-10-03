@@ -213,41 +213,12 @@ static void BatchedSplineBuilderTest()
     // Finally compute the spline by filling `coef`
     spline_builder(coef, vals);
 
-    // Temporary deep_copy to CPU TODO : remove & eval on GPU
-    ddc::Chunk coef_cpu_alloc(
-            dom_spline,
-            ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan coef_cpu = coef_cpu_alloc.span_view();
-    ddc::deepcopy(coef_cpu, coef);
-
-    Kokkos::View<
-            ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(X)>,
-            Kokkos::LayoutRight,
-            ExecSpace,
-            Kokkos::MemoryTraits<Kokkos::Unmanaged>>
-    vals_kv(vals.data_handle(), ddc::select<IDim<X, I>>(dom_vals).extents()...);
-    auto vals_cpu_kv
-            = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), vals_kv);
-    ddc::ChunkSpan<
-            double,
-            ddc::DiscreteDomain<IDim<X, I>...>,
-            std::experimental::layout_right,
-            Kokkos::DefaultHostExecutionSpace::memory_space>
-            vals_cpu(vals_cpu_kv, dom_vals);
-
-    // Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines TODO: port on GPU and handle batch
-	/*
-    SplineEvaluator<ExecSpace,
-                    MemorySpace,
-                    BSplines<I>,
-                    IDim<I, I>>
-
-            spline_evaluator(g_null_boundary<BSplines<I>>, g_null_boundary<BSplines<I>>);
-	*/
+	// Instantiate a SplineEvaluator over I and batched along other dimensions
 	SplineEvaluatorBatched<SplineEvaluator<ExecSpace,
                     MemorySpace,
                     BSplines<I>,
                     IDim<I, I>>, IDim<X,I>...> spline_evaluator_batched(coef.domain(), g_null_boundary<BSplines<I>>, g_null_boundary<BSplines<I>>);
+
     // Instantiate chunk of coordinates of dom_interpolation TODO: use dom_vals
     ddc::Chunk coords_eval_alloc(
             dom_vals,
@@ -269,12 +240,7 @@ static void BatchedSplineBuilderTest()
             ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan spline_eval_deriv = spline_eval_deriv_alloc.span_view();
 
-    // Evaluate spline on the same mesh as dom_vals TODO : make evaluator using DiscreteDomain in place of a ChunkSpan
-    if constexpr (sizeof...(X) == 1) {
-        //spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
-        // spline_evaluator.deriv(spline_eval_deriv, coords_eval.span_cview(), coef_cpu.span_cview());
-    } else {
-        spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
 	# if 0
         ddc::for_each(
                 ddc::policies::policy(host_exec_space),
@@ -300,7 +266,6 @@ static void BatchedSplineBuilderTest()
 					 */
                 });
 	#endif
-    }
 
     // Checking errors
     double max_norm_error = ddc::transform_reduce(
@@ -309,7 +274,7 @@ static void BatchedSplineBuilderTest()
             0.,
             ddc::reducer::max<double>(),
             DDC_LAMBDA(Index<IDim<X, I>...> const e) {
-				// printf("%f", spline_eval(e));
+				printf("%f", spline_eval(e));
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 

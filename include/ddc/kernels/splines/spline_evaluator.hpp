@@ -93,10 +93,8 @@ public:
                     Layout3,
                     MemorySpace> const spline_coef) const
     {
-        std::array<double, bsplines_type::degree() + 1> values;
-        DSpan1D const vals = as_span(values);
         for (auto i : coords_eval.domain()) {
-            spline_eval(i) = eval(coords_eval(i), spline_coef, vals);
+            spline_eval(i) = eval(coords_eval(i), spline_coef);
         }
     }
 
@@ -121,11 +119,8 @@ public:
                     Layout3,
                     MemorySpace> const spline_coef) const
     {
-        std::array<double, bsplines_type::degree() + 1> values;
-        DSpan1D const vals = as_span(values);
-
         for (auto i : coords_eval.domain()) {
-            spline_eval(i) = eval_no_bc(coords_eval(i), spline_coef, vals, eval_deriv_type());
+            spline_eval(i) = eval_no_bc(coords_eval(i), spline_coef, eval_deriv_type());
         }
     }
 
@@ -153,8 +148,7 @@ private:
                     double const,
                     ddc::DiscreteDomain<BSplinesType>,
                     Layout,
-                    MemorySpace> const spline_coef,
-            DSpan1D const vals) const
+                    MemorySpace> const spline_coef) const
     {
         if constexpr (bsplines_type::is_periodic()) {
             if (coord_eval < ddc::discrete_space<bsplines_type>().rmin()
@@ -172,7 +166,7 @@ private:
                 return m_right_bc(coord_eval, spline_coef);
             }
         }
-        return eval_no_bc(coord_eval, spline_coef, vals, eval_type());
+        return eval_no_bc(coord_eval, spline_coef, eval_type());
     }
 
     template <class EvalType, class Layout>
@@ -183,13 +177,13 @@ private:
                     ddc::DiscreteDomain<BSplinesType>,
                     Layout,
                     MemorySpace> const spline_coef,
-            DSpan1D const vals,
             EvalType const) const
     {
         static_assert(
                 std::is_same_v<EvalType, eval_type> || std::is_same_v<EvalType, eval_deriv_type>);
         ddc::DiscreteElement<BSplinesType> jmin;
 
+        std::array<double, bsplines_type::degree() + 1> vals;
         if constexpr (std::is_same_v<EvalType, eval_type>) {
             jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval);
         } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {
@@ -198,7 +192,7 @@ private:
 
         double y = 0.0;
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {
-            y += spline_coef(jmin + i) * vals(i);
+            y += spline_coef(jmin + i) * vals[i];
         }
         return y;
     }

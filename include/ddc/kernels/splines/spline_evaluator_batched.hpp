@@ -122,9 +122,6 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        // std::array<double, bsplines_type::degree() + 1> values;
-        // DSpan1D const vals = as_span(values);
-
         return eval(coord_eval, spline_coef);
     }
 
@@ -139,9 +136,6 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        // std::array<double, bsplines_type::degree() + 1> values;
-        // DSpan1D const vals1 = as_span(values);
-
 		interpolation_domain_type interpolation_domain = ddc::select<interpolation_mesh_type>(spline_eval.domain());
 		std::size_t interpolation_size = interpolation_domain.size();
         // TODO: Consider optimizing
@@ -327,7 +321,6 @@ public:
     }
 #endif
 
-#if 1
 private:
     template <class Layout, class... CoordsDims>
     KOKKOS_INLINE_FUNCTION double eval(
@@ -335,7 +328,6 @@ private:
             ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-			// printf("\n OLEEEEE");
         ddc::Coordinate<typename interpolation_mesh_type::continuous_dimension_type>
                 coord_eval_interpolation
                 = ddc::select<typename interpolation_mesh_type::continuous_dimension_type>(
@@ -350,7 +342,6 @@ private:
                                             * ddc::discrete_space<bsplines_type>().length();
             }
         }
-		// printf("\n iYAAASS");
         /*
 		 else {
             if (coord_eval_interpolation1 < ddc::discrete_space<bsplines_type1>().rmin()) {
@@ -381,21 +372,15 @@ private:
 		*/
         return eval_no_bc<eval_type>(
                 coord_eval,
-                // coord_eval2,
                 spline_coef
-                //    eval_type(),
-                // eval_type()
 				);
     }
 
     template <class EvalType, class Layout, class... CoordsDims>
     KOKKOS_INLINE_FUNCTION double eval_no_bc(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            // ddc::Coordinate<Dim2> const& coord_eval2,
             ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
                     spline_coef) const
-//            EvalType const) const
-    //EvalType2 const) const
     {
         static_assert(
                 std::is_same_v<EvalType, eval_type> || std::is_same_v<EvalType, eval_deriv_type>);
@@ -405,21 +390,15 @@ private:
                 coord_eval_interpolation
                 = ddc::select<typename interpolation_mesh_type::continuous_dimension_type>(
                         coord_eval);
-		// printf("%f", coord_eval_interpolation);
         if constexpr (std::is_same_v<EvalType, eval_type>) {
             jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interpolation);
-			// printf(" %f\n", vals[0]);
-		// printf("lululululul");
         } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {
             jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interpolation);
         }
         double y = 0.0;
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {
-			// printf("%i",i);
-			// printf("%f\n",spline_coef(ddc::DiscreteElement<bsplines_type>(jmin + i)));
             y += spline_coef(ddc::DiscreteElement<bsplines_type>(jmin + i)) * vals[i];
         }
         return y;
     }
-#endif
 };

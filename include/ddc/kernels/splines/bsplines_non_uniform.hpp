@@ -128,10 +128,8 @@ public:
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
                 std::array<double, D + 1>& values,
                 ddc::Coordinate<Tag> const& x) const;
-        // TODO:remove
-        discrete_element_type eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const;
 
-        KOKKOS_INLINE_FUNCTION discrete_element_type eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
+		KOKKOS_INLINE_FUNCTION discrete_element_type eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 DSpan2D derivs,
@@ -291,53 +289,15 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBSplines<Tag, D>> NonUnifo
 
 template <class Tag, std::size_t D>
 template <class MemorySpace>
-ddc::DiscreteElement<NonUniformBSplines<Tag, D>> NonUniformBSplines<Tag, D>::Impl<
-        MemorySpace>::eval_basis(DSpan1D const values, ddc::Coordinate<Tag> const& x) const
-{
-    std::array<double, degree()> left;
-    std::array<double, degree()> right;
-
-    assert(x >= rmin());
-    assert(x <= rmax());
-    assert(values.extent(0) == degree() + 1);
-
-    // 1. Compute cell index 'icell'
-    int const icell = find_cell(x);
-
-    assert(icell >= 0);
-    assert(icell <= int(ncells() - 1));
-    assert(get_knot(icell) <= x);
-    assert(get_knot(icell + 1) >= x);
-
-    // 2. Compute values of B-splines with support over cell 'icell'
-    double temp;
-    values(0) = 1.0;
-    for (std::size_t j = 0; j < degree(); ++j) {
-        left[j] = x - get_knot(icell - j);
-        right[j] = get_knot(icell + j + 1) - x;
-        double saved = 0.0;
-        for (std::size_t r = 0; r < j + 1; ++r) {
-            temp = values(r) / (right[r] + left[j - r]);
-            values(r) = saved + right[r] * temp;
-            saved = left[j - r] * temp;
-        }
-        values(j + 1) = saved;
-    }
-
-    return discrete_element_type(icell);
-}
-
-template <class Tag, std::size_t D>
-template <class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBSplines<Tag, D>> NonUniformBSplines<Tag, D>::Impl<
-        MemorySpace>::eval_deriv(DSpan1D const derivs, ddc::Coordinate<Tag> const& x) const
+        MemorySpace>::eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const
 {
     std::array<double, degree()> left;
     std::array<double, degree()> right;
 
     assert(x >= rmin());
     assert(x <= rmax());
-    assert(derivs.extent(0) == degree() + 1);
+    assert(derivs.size() == degree() + 1);
 
     // 1. Compute cell index 'icell'
     int const icell = find_cell(x);
@@ -355,32 +315,32 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBSplines<Tag, D>> NonUnifo
      * First part of Algorithm  A3.2 of NURBS book
      */
     double saved, temp;
-    derivs(0) = 1.0;
+    derivs[0] = 1.0;
     for (std::size_t j = 0; j < degree() - 1; ++j) {
         left[j] = x - get_knot(icell - j);
         right[j] = get_knot(icell + j + 1) - x;
         saved = 0.0;
         for (std::size_t r = 0; r < j + 1; ++r) {
-            temp = derivs(r) / (right[r] + left[j - r]);
-            derivs(r) = saved + right[r] * temp;
+            temp = derivs[r] / (right[r] + left[j - r]);
+            derivs[r] = saved + right[r] * temp;
             saved = left[j - r] * temp;
         }
-        derivs(j + 1) = saved;
+        derivs[j + 1] = saved;
     }
 
     /*
      * Compute derivatives at x using values stored in bsdx and formula
      * for spline derivative based on difference of splines of degree degree-1
      */
-    saved = degree() * derivs(0) / (get_knot(icell + 1) - get_knot(icell + 1 - degree()));
-    derivs(0) = -saved;
+    saved = degree() * derivs[0] / (get_knot(icell + 1) - get_knot(icell + 1 - degree()));
+    derivs[0] = -saved;
     for (std::size_t j = 1; j < degree(); ++j) {
         temp = saved;
-        saved = degree() * derivs(j)
+        saved = degree() * derivs[j]
                 / (get_knot(icell + j + 1) - get_knot(icell + j + 1 - degree()));
-        derivs(j) = temp - saved;
+        derivs[j] = temp - saved;
     }
-    derivs(degree()) = saved;
+    derivs[degree()] = saved;
 
     return discrete_element_type(icell);
 }

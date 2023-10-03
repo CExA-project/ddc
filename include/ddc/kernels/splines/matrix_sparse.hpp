@@ -134,8 +134,8 @@ public:
         // cols_per_par_chunk
         //         = std::is_same_v<ExecSpace, Kokkos::Cuda> ? Kokkos::pow(2, 16) - 1 : INT_MAX;i // TODO: call cudaMaxGridSize ?
 
-        cols_per_par_chunk = 64;
-        par_chunks_per_seq_chunk = 64;
+        cols_per_par_chunk = 65535;
+        par_chunks_per_seq_chunk = 1;
     }
     int m;
     int n;

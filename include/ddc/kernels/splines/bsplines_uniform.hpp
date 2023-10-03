@@ -131,13 +131,8 @@ public:
         {
             return eval_basis(values, x, degree());
         }
-        // TODO:remove
-        KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
-        {
-            return eval_basis(values, x, degree());
-        }
 
-        KOKKOS_INLINE_FUNCTION discrete_element_type eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
+        KOKKOS_INLINE_FUNCTION discrete_element_type eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 DSpan2D derivs,
@@ -213,11 +208,7 @@ public:
                 std::array<double, D + 1>& values,
                 ddc::Coordinate<Tag> const& x,
                 std::size_t degree) const;
-        //TODO: remove
-        KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
-                DSpan1D values,
-                ddc::Coordinate<Tag> const& x,
-                std::size_t degree) const;
+
         KOKKOS_INLINE_FUNCTION void get_icell_and_offset(int& icell, double& offset, ddc::Coordinate<Tag> const& x) const;
     };
 };
@@ -256,44 +247,12 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
     return discrete_element_type(jmin);
 }
 
-//TODO:remove
-template <class Tag, std::size_t D>
-template <class MemorySpace>
-ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::Impl<MemorySpace>::
-        eval_basis(DSpan1D const values, ddc::Coordinate<Tag> const& x, std::size_t const deg) const
-{
-    assert(values.extent(0) == deg + 1);
-
-    double offset;
-    int jmin;
-    // 1. Compute cell index 'icell' and x_offset
-    // 2. Compute index range of B-splines with support over cell 'icell'
-    get_icell_and_offset(jmin, offset, x);
-
-    // 3. Compute values of aforementioned B-splines
-    double xx, temp, saved;
-    values(0) = 1.0;
-    for (std::size_t j = 1; j < deg + 1; ++j) {
-        xx = -offset;
-        saved = 0.0;
-        for (std::size_t r = 0; r < j; ++r) {
-            xx += 1;
-            temp = values(r) / j;
-            values(r) = saved + xx * temp;
-            saved = (j - xx) * temp;
-        }
-        values(j) = saved;
-    }
-
-    return discrete_element_type(jmin);
-}
-
 template <class Tag, std::size_t D>
 template <class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::Impl<
-        MemorySpace>::eval_deriv(DSpan1D const derivs, ddc::Coordinate<Tag> const& x) const
+        MemorySpace>::eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const
 {
-    assert(derivs.extent(0) == degree() + 1);
+    assert(derivs.size() == degree() + 1);
 
     double offset;
     int jmin;
@@ -304,29 +263,29 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
     // 3. Compute derivatives of aforementioned B-splines
     //    Derivatives are normalized, hence they should be divided by dx
     double xx, temp, saved;
-    derivs(0) = 1.0 / ddc::step<mesh_type>();
+    derivs[0] = 1.0 / ddc::step<mesh_type>();
     for (std::size_t j = 1; j < degree(); ++j) {
         xx = -offset;
         saved = 0.0;
         for (std::size_t r = 0; r < j; ++r) {
             xx += 1.0;
-            temp = derivs(r) / j;
-            derivs(r) = saved + xx * temp;
+            temp = derivs[r] / j;
+            derivs[r] = saved + xx * temp;
             saved = (j - xx) * temp;
         }
-        derivs(j) = saved;
+        derivs[j] = saved;
     }
 
     // Compute derivatives
-    double bjm1 = derivs(0);
+    double bjm1 = derivs[0];
     double bj = bjm1;
-    derivs(0) = -bjm1;
+    derivs[0] = -bjm1;
     for (std::size_t j = 1; j < degree(); ++j) {
-        bj = derivs(j);
-        derivs(j) = bjm1 - bj;
+        bj = derivs[j];
+        derivs[j] = bjm1 - bj;
         bjm1 = bj;
     }
-    derivs(degree()) = bj;
+    derivs[degree()] = bj;
 
     return discrete_element_type(jmin);
 }

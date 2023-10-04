@@ -119,12 +119,16 @@ void TestForEachParallelDeviceZeroDimension()
             Kokkos::Sum<int>(sum));
     EXPECT_EQ(sum, dom.size());
 }
+
 } // namespace
+
 TEST(ForEachParallelDevice, ZeroDimension)
 {
     TestForEachParallelDeviceZeroDimension();
 }
+
 namespace {
+
 void TestForEachParallelDeviceOneDimension()
 {
     DDomX const dom(lbound_x, nelems_x);
@@ -145,8 +149,6 @@ void TestForEachParallelDeviceOneDimension()
 }
 
 } // namespace
-
-
 
 TEST(ForEachParallelDevice, OneDimension)
 {

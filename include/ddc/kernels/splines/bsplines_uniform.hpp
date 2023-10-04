@@ -10,6 +10,7 @@
 #include "math_tools.hpp"
 #include "view.hpp"
 
+namespace ddc {
 template <class Tag, std::size_t D>
 class UniformBSplines
 {
@@ -474,3 +475,4 @@ UniformBSplines<Tag, D>::Impl<MemorySpace>::integrals(
     }
     return int_vals;
 }
+} // namespace ddc

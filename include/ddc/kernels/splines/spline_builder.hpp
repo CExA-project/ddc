@@ -62,7 +62,7 @@ public:
     static constexpr BoundCond s_bc_xmax = BcXmax;
 
     // interpolator specific
-    std::unique_ptr<Matrix> matrix;
+    std::unique_ptr<ddc::detail::Matrix> matrix;
 
     //TODO: privatize
     const int m_offset;
@@ -427,7 +427,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
                 upper_band_width,
                 bsplines_type::is_uniform());
 #else
-        matrix = MatrixMaker::make_new_sparse<ExecSpace>(ddc::discrete_space<BSplines>().nbasis());
+        matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(ddc::discrete_space<BSplines>().nbasis());
 #endif
     } else {
 #if 0
@@ -439,7 +439,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
                 upper_block_size,
                 lower_block_size);
 #else
-        matrix = MatrixMaker::make_new_sparse<ExecSpace>(ddc::discrete_space<BSplines>().nbasis());
+        matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(ddc::discrete_space<BSplines>().nbasis());
 #endif
     }
 

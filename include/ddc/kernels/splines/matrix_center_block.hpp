@@ -8,6 +8,7 @@
 #include "matrix_corner_block.hpp"
 #include "view.hpp"
 
+namespace ddc::detail {
 class Matrix;
 
 class Matrix_Center_Block : public Matrix_Corner_Block
@@ -122,4 +123,5 @@ protected:
     std::unique_ptr<double[]> swap_array;
 };
 
+} // namespace ddc::detail
 #endif // MATRIX_CENTER_BLOCK_H

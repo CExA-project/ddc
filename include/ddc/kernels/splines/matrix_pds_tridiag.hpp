@@ -9,6 +9,7 @@
 
 #include "matrix.hpp"
 
+namespace ddc::detail {
 extern "C" int dpttrf_(int const* n, double* d, double* e, int* info);
 extern "C" int dpttrs_(
         int const* n,
@@ -80,4 +81,5 @@ protected:
     std::unique_ptr<double[]> l; // lower diagonal
 };
 
+} // namespace ddc::detail
 #endif // MATRIX_SYMMETRIC_BANDED_H

@@ -11,7 +11,7 @@
 #include "matrix_sparse.hpp"
 
 
-
+namespace ddc::detail {
 class MatrixMaker
 {
 public:
@@ -79,3 +79,4 @@ public:
         }
     }
 };
+}

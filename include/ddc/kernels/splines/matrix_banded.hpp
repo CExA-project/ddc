@@ -7,6 +7,7 @@
 
 #include "matrix.hpp"
 
+namespace ddc::detail {
 extern "C" int dgbtrf_(
         int const* m,
         int const* n,
@@ -98,4 +99,5 @@ protected:
     std::unique_ptr<double[]> q; // banded matrix representation
 };
 
+} // namespace ddc::detail
 #endif // MATRIX_BANDED_H

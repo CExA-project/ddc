@@ -10,6 +10,7 @@
 #include "bspline.hpp"
 #include "view.hpp"
 
+namespace ddc {
 /// NonUniformPointSampling specialization of BSplines
 template <class Tag, std::size_t D>
 class NonUniformBSplines
@@ -519,3 +520,4 @@ NonUniformBSplines<Tag, D>::Impl<MemorySpace>::integrals(
     }
     return int_vals;
 }
+} // namespace ddc

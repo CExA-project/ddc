@@ -14,7 +14,7 @@
 #include "view.hpp"
 
 
-
+namespace ddc::detail {
 class Matrix;
 
 class Matrix_Periodic_Banded : public Matrix_Corner_Block
@@ -132,4 +132,5 @@ protected:
     int const ku; // no. of superdiagonals
 };
 
+} // namespace ddc::detail
 #endif // MATRIX_PERIODIC_BANDED_H

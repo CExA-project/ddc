@@ -58,7 +58,7 @@ using GrevillePoints = GrevilleInterpolationPoints<BSpX, BoundCond::PERIODIC, Bo
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-using BSplines = UniformBSplines<X, s_degree_x>;
+using BSplines = ddc::UniformBSplines<X, s_degree_x>;
 
 template <typename X, typename I>
 using IDim = std::conditional_t<
@@ -68,7 +68,7 @@ using IDim = std::conditional_t<
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-using BSplines = NonUniformBSplines<X, s_degree_x>;
+using BSplines = ddc::NonUniformBSplines<X, s_degree_x>;
 
 template <typename X, typename I>
 using IDim = std::conditional_t<

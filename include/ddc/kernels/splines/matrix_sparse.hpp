@@ -19,6 +19,7 @@
 #include "matrix.hpp"
 #include "view.hpp"
 
+namespace ddc::detail {
 // TODO : support multiple-rhs case
 // Residual logger (error logged at each iteration)
 template <typename ValueType>
@@ -346,3 +347,4 @@ public:
         return 1;
     }
 };
+} // namespace ddc::detail

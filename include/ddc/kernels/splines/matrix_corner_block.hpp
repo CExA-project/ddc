@@ -12,6 +12,7 @@
 #include "matrix_dense.hpp"
 #include "view.hpp"
 
+namespace ddc::detail {
 class Matrix_Corner_Block : public Matrix
 {
 public:
@@ -221,4 +222,5 @@ private:
     }
 };
 
+} // namespace ddc::detail
 #endif // MATRIX_CORNER_BLOCK_H

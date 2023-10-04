@@ -5,6 +5,7 @@
 
 #include "matrix.hpp"
 
+namespace ddc::detail {
 extern "C" int dgetrf_(int const* m, int const* n, double* a, int const* lda, int* ipiv, int* info);
 extern "C" int dgetrs_(
         char const* trans,
@@ -57,4 +58,5 @@ private:
     std::unique_ptr<double[]> a;
 };
 
+} // namespace ddc::detail
 #endif // MATRIX_DENSE_H

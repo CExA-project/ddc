@@ -17,6 +17,7 @@
 #include "Kokkos_Core_fwd.hpp"
 #include "view.hpp"
 
+namespace ddc::detail {
 class Matrix
 {
 public:
@@ -109,3 +110,4 @@ protected:
     virtual int factorize_method() = 0;
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const = 0;
 };
+} // namespace ddc::detail

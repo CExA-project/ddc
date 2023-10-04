@@ -240,7 +240,7 @@ public:
             Kokkos::parallel_for(
                     Kokkos::RangePolicy<
                             Kokkos::DefaultHostExecutionSpace>(0, n_par_chunks_in_seq_chunk),
-                    KOKKOS_LAMBDA(int const j) {
+                    [&](int const j) {
                         int n_equations_in_par_chunk
                                 = (i < n_seq_chunks - 1 || j < n_par_chunks_in_seq_chunk - 1)
                                           ? cols_per_par_chunk

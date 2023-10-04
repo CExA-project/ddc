@@ -56,10 +56,17 @@ static DVectY constexpr nelems_y(12);
 static DElemY constexpr sentinel_y(lbound_y + nelems_y);
 static DElemY constexpr ubound_y(sentinel_y - 1); //TODO: correct type
 
+static DElemZ constexpr lbound_z(7);
+static DVectZ constexpr nelems_z(15);
+static DElemZ constexpr sentinel_z(lbound_z + nelems_z);
+static DElemZ constexpr ubound_z(sentinel_z - 1); //TODO: correct type
 
 static DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 static DElemXY constexpr ubound_x_y(ubound_x, ubound_y);
+
+static DElemXZ constexpr lbound_x_z(lbound_x, lbound_z);
+static DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
 
 } // namespace
 
@@ -135,9 +142,9 @@ TEST(ProductMDomainTest, Diff)
 
 TEST(ProductMDomainTest, Replace)
 {
-    DDomXY const dom_x_y = DDomXY();
-    DDomZ const dom_z = DDomZ();
-    DDomXZ const dom_x_z = DDomXZ();
+    DDomXY const dom_x_y = DDomXY(lbound_x_y, nelems_x_y);
+    DDomZ const dom_z = DDomZ(lbound_z, nelems_z);
+    DDomXZ const dom_x_z = DDomXZ(lbound_x_z, nelems_x_z);
     auto const subdomain = ddc::replace_dim_of<DDimY, DDimZ>(dom_x_y, dom_z);
     EXPECT_EQ(subdomain, dom_x_z);
 }

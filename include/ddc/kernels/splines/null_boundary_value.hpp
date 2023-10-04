@@ -2,6 +2,7 @@
 
 #include "spline_boundary_value.hpp"
 
+namespace ddc {
 template <class BSplines>
 class NullBoundaryValue : public SplineBoundaryValue<BSplines>
 {
@@ -57,3 +58,4 @@ public:
 
 template <class PolarBSplines>
 inline PolarNullBoundaryValue2D<PolarBSplines> const g_polar_null_boundary_2d;
+} // namespace ddc

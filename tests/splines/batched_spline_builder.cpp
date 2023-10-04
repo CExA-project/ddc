@@ -219,8 +219,8 @@ static void BatchedSplineBuilderTest()
             IDim<X, I>...>
             spline_evaluator_batched(
                     coef.domain(),
-                    g_null_boundary<BSplines<I>>,
-                    g_null_boundary<BSplines<I>>);
+                    ddc::g_null_boundary<BSplines<I>>,
+                    ddc::g_null_boundary<BSplines<I>>);
 
     // Instantiate chunk of coordinates of dom_interpolation TODO: use dom_vals
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());

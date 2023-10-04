@@ -253,7 +253,7 @@ operator()(
         assert(derivs_xmin->extent(0) == s_nbc_xmin);
         for (int i = s_nbc_xmin; i > 0; --i) {
             spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin - i))
-                    = (*derivs_xmin)(i - 1) * ipow(m_dx, i + s_odd - 1);
+                    = (*derivs_xmin)(i - 1) * ddc::detail::ipow(m_dx, i + s_odd - 1);
         }
     }
     auto const& offset_proxy = offset();
@@ -279,7 +279,7 @@ operator()(
         for (int i = 0; i < s_nbc_xmax; ++i) {
             spline(ddc::DiscreteElement<bsplines_type>(
                     ddc::discrete_space<BSplines>().nbasis() - s_nbc_xmax + i))
-                    = (*derivs_xmax)(i)*ipow(m_dx, i + s_odd);
+                    = (*derivs_xmax)(i)*ddc::detail::ipow(m_dx, i + s_odd);
         }
     }
 
@@ -472,7 +472,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
         // all derivatives by multiplying the i-th derivative by dx^i
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {
             for (std::size_t j = 1; j < bsplines_type::degree() / 2 + 1; ++j) {
-                derivs(i, j) *= ipow(m_dx, j);
+                derivs(i, j) *= ddc::detail::ipow(m_dx, j);
             }
         }
 
@@ -492,7 +492,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
                 values,
                 ddc::coordinate(ddc::DiscreteElement<interpolation_mesh_type>(ix)));
         for (std::size_t s = 0; s < bsplines_type::degree() + 1; ++s) {
-            int const j = modulo(
+            int const j = ddc::detail::modulo(
                     int(jmin.uid() - m_offset + s),
                     (int)ddc::discrete_space<BSplines>().nbasis());
             matrix->set_element(ix.uid() - start + s_nbc_xmin, j, values[s]);
@@ -519,7 +519,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
         // all derivatives by multiplying the i-th derivative by dx^i
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {
             for (std::size_t j = 1; j < bsplines_type::degree() / 2 + 1; ++j) {
-                derivs(i, j) *= ipow(m_dx, j);
+                derivs(i, j) *= ddc::detail::ipow(m_dx, j);
             }
         }
 

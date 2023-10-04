@@ -5,6 +5,7 @@
 
 #include <experimental/mdspan>
 
+namespace ddc::detail {
 template <typename T>
 inline T sum(T* array, int size)
 {
@@ -106,4 +107,5 @@ template <typename T>
 inline T max(T x, T y)
 {
     return x > y ? x : y;
+}
 }

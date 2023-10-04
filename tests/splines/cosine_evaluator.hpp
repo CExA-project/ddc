@@ -61,13 +61,13 @@ struct CosineEvaluator
 
         double max_norm(int diff = 0) const
         {
-            return ipow(s_2_pi * m_c0, diff);
+            return ddc::detail::ipow(s_2_pi * m_c0, diff);
         }
 
     private:
         double eval(double const x, int const derivative) const noexcept
         {
-            return ipow(s_2_pi * m_c0, derivative)
+            return ddc::detail::ipow(s_2_pi * m_c0, derivative)
                    * std::cos(M_PI_2 * derivative + s_2_pi * (m_c0 * x + m_c1));
         }
     };

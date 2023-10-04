@@ -40,7 +40,7 @@ private:
     static double tihomirov_error_bound(double cell_width, int degree, double max_norm)
     {
         degree = std::min(degree, 9);
-        return tihomirov_error_bound_array[degree] * ipow(cell_width, degree + 1) * max_norm;
+        return tihomirov_error_bound_array[degree] * ddc::detail::ipow(cell_width, degree + 1) * max_norm;
     }
 
 public:

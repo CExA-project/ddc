@@ -8,6 +8,7 @@
 #include "spline_boundary_value.hpp"
 #include "view.hpp"
 
+namespace ddc {
 template <class ExecSpace, class MemorySpace, class BSplinesType, class interpolation_mesh_type>
 class SplineEvaluator
 {
@@ -197,3 +198,4 @@ private:
         return y;
     }
 };
+} // namespace ddc

@@ -10,6 +10,7 @@
 #include "spline_boundary_value.hpp"
 #include "view.hpp"
 
+namespace ddc {
 template <class SplineEvaluator, class... IDimX>
 class SplineEvaluatorBatched
 {
@@ -405,3 +406,4 @@ private:
         return y;
     }
 };
+} // namespace ddc

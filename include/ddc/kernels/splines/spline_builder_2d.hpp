@@ -2,6 +2,7 @@
 #include "spline_builder.hpp"
 
 
+namespace ddc {
 template <class SplineBuilder1, class SplineBuilder2> // TODO : Template with SplineBuilderBatched
 class SplineBuilder2D
 {
@@ -352,3 +353,4 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
         }
     }
 }
+} // namespace ddc

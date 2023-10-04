@@ -2,6 +2,7 @@
 
 #include "polar_spline.hpp"
 
+namespace ddc {
 template <class PolarBSplinesType>
 class PolarSplineEvaluator
 {
@@ -233,3 +234,4 @@ private:
         return y;
     }
 };
+} // namespace ddc

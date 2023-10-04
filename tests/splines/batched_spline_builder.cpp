@@ -54,7 +54,8 @@ struct DimT
 static constexpr std::size_t s_degree_x = DEGREE_X;
 
 template <typename BSpX>
-using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, BoundCond::PERIODIC, BoundCond::PERIODIC>;
+using GrevillePoints = ddc::
+        GrevilleInterpolationPoints<BSpX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
@@ -169,14 +170,14 @@ static void BatchedSplineBuilderTest()
                              IDim<X, I>>(Index<IDim<X, I>>(0), DVect<IDim<X, I>>(ncells)))...);
 
     // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
-    SplineBuilderBatched<
-            SplineBuilder<
+    ddc::SplineBuilderBatched<
+            ddc::SplineBuilder<
                     ExecSpace,
                     MemorySpace,
                     BSplines<I>,
                     IDim<I, I>,
-                    BoundCond::PERIODIC,
-                    BoundCond::PERIODIC>,
+                    ddc::BoundCond::PERIODIC,
+                    ddc::BoundCond::PERIODIC>,
             IDim<X, I>...>
             spline_builder(dom_vals);
 
@@ -214,8 +215,8 @@ static void BatchedSplineBuilderTest()
     spline_builder(coef, vals);
 
     // Instantiate a SplineEvaluator over I and batched along other dimensions
-    SplineEvaluatorBatched<
-            SplineEvaluator<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>>,
+    ddc::SplineEvaluatorBatched<
+            ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>>,
             IDim<X, I>...>
             spline_evaluator_batched(
                     coef.domain(),

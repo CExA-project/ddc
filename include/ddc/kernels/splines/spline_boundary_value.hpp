@@ -5,6 +5,7 @@
 
 #include "polar_spline.hpp"
 
+namespace ddc {
 template <class BSplines>
 class SplineBoundaryValue
 {
@@ -36,3 +37,4 @@ public:
 
     virtual double operator()(double x, double y, PolarSplineView<BSplines>) const = 0;
 };
+} // namespace ddc

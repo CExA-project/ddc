@@ -112,4 +112,4 @@ void BernsteinPolynomialBasis<Tag1, Tag2, Corner1Tag, Corner2Tag, Corner3Tag, D>
         }
     }
 }
-}
+} // namespace ddc

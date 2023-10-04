@@ -15,6 +15,7 @@
 #include "spline_evaluator_2d.hpp"
 #include "view.hpp"
 
+namespace ddc {
 template <class BSplinesR, class BSplinesP, int C>
 class PolarBSplines
 {
@@ -447,3 +448,4 @@ void PolarBSplines<BSplinesR, BSplinesP, C>::Impl<MemorySpace>::integrals(
         }
     }
 }
+} // namespace ddc

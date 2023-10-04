@@ -7,6 +7,7 @@
 #include "Kokkos_Core_fwd.hpp"
 #include "spline_builder.hpp"
 
+namespace ddc {
 template <class SplineBuilder, class... IDimX>
 class SplineBuilderBatched
 {
@@ -438,3 +439,4 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                 });
     }
 }
+} // namespace ddc

@@ -79,4 +79,4 @@ public:
         }
     }
 };
-}
+} // namespace ddc::detail

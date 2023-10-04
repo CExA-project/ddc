@@ -7,6 +7,7 @@
 #include "spline_boundary_value.hpp"
 #include "view.hpp"
 
+namespace ddc {
 template <class BSplinesType1, class BSplinesType2>
 class SplineEvaluator2D
 {
@@ -336,3 +337,4 @@ private:
         return y;
     }
 };
+} // namespace ddc

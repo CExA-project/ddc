@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
+namespace ddc {
 enum class BoundCond {
     // Periodic boundary condition u(1)=u(n)
     PERIODIC,
@@ -60,3 +61,4 @@ constexpr int n_user_input(BoundCond const bc, std::size_t const degree)
         throw std::runtime_error("BoundCond not handled");
     }
 }
+} // namespace ddc

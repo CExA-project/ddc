@@ -6,7 +6,7 @@
 
 #include <experimental/mdspan>
 
-namespace detail {
+namespace ddc::detail {
 
 template <std::size_t N, class ElementType, bool CONTIGUOUS = true>
 struct ViewNDMaker;
@@ -85,9 +85,10 @@ std::ostream& stream_impl(
 //     static constexpr bool val = IsContiguous<LayoutPolicy>::val;
 // };
 
-} // namespace detail
+} // namespace ddc::detail
 
 
+namespace ddc {
 template <std::size_t N, class ElementType>
 using SpanND = std::experimental::mdspan<ElementType, std::experimental::dextents<std::size_t, N>>;
 
@@ -140,5 +141,6 @@ std::ostream& operator<<(
         std::ostream& os,
         std::experimental::mdspan<ElementType, Extents, Layout, Accessor> const& s)
 {
-    return detail::stream_impl(os, s, std::make_index_sequence<Extents::rank()>());
+    return ddc::detail::stream_impl(os, s, std::make_index_sequence<Extents::rank()>());
 }
+} // namespace ddc

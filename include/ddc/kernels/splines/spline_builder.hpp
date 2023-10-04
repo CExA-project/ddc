@@ -16,6 +16,7 @@
 #include "spline_boundary_conditions.hpp"
 #include "view.hpp"
 
+namespace ddc {
 template <
         class ExecSpace,
         class MemorySpace,
@@ -426,7 +427,8 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
                 upper_band_width,
                 bsplines_type::is_uniform());
 #else
-        matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(ddc::discrete_space<BSplines>().nbasis());
+        matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
+                ddc::discrete_space<BSplines>().nbasis());
 #endif
     } else {
 #if 0
@@ -438,7 +440,8 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
                 upper_block_size,
                 lower_block_size);
 #else
-        matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(ddc::discrete_space<BSplines>().nbasis());
+        matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
+                ddc::discrete_space<BSplines>().nbasis());
 #endif
     }
 
@@ -492,9 +495,9 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
                 values,
                 ddc::coordinate(ddc::DiscreteElement<interpolation_mesh_type>(ix)));
         for (std::size_t s = 0; s < bsplines_type::degree() + 1; ++s) {
-            int const j = ddc::detail::modulo(
-                    int(jmin.uid() - m_offset + s),
-                    (int)ddc::discrete_space<BSplines>().nbasis());
+            int const j = ddc::detail::
+                    modulo(int(jmin.uid() - m_offset + s),
+                           (int)ddc::discrete_space<BSplines>().nbasis());
             matrix->set_element(ix.uid() - start + s_nbc_xmin, j, values[s]);
         }
     });
@@ -532,3 +535,4 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
         }
     }
 }
+} // namespace ddc

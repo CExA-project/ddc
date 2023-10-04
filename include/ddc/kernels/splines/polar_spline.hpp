@@ -2,6 +2,7 @@
 
 #include <ddc/ddc.hpp>
 
+namespace ddc {
 template <class PolarBSplinesType>
 struct PolarSpline
 {
@@ -61,3 +62,4 @@ public:
     {
     }
 };
+} // namespace ddc

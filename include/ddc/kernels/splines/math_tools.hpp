@@ -108,4 +108,4 @@ inline T max(T x, T y)
 {
     return x > y ? x : y;
 }
-}
+} // namespace ddc::detail

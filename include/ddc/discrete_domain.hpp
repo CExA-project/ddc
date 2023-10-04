@@ -95,7 +95,7 @@ public:
     }
 #endif
 
-    std::size_t size() const
+    constexpr std::size_t size() const
     {
         return (1ul * ... * (uid<DDims>(m_element_end) - uid<DDims>(m_element_begin)));
     }

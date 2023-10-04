@@ -11,6 +11,7 @@
 
 #include "view.hpp"
 
+namespace ddc {
 struct GaussLegendreCoefficients
 {
     static constexpr std::size_t max_order = 10u;
@@ -278,3 +279,4 @@ public:
 private:
     std::vector<std::pair<double, ddc::Coordinate<Dim>>> m_wx;
 };
+} // namespace ddc

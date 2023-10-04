@@ -3,6 +3,7 @@
 #include "spline_boundary_value.hpp"
 #include "view.hpp"
 
+namespace ddc {
 template <class BSplines>
 class ConstantExtrapolationBoundaryValue : public SplineBoundaryValue<BSplines>
 {
@@ -36,3 +37,4 @@ public:
         return y;
     }
 };
+} // namespace ddc

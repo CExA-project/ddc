@@ -54,7 +54,7 @@ struct DimT
 static constexpr std::size_t s_degree_x = DEGREE_X;
 
 template <typename BSpX>
-using GrevillePoints = GrevilleInterpolationPoints<BSpX, BoundCond::PERIODIC, BoundCond::PERIODIC>;
+using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, BoundCond::PERIODIC, BoundCond::PERIODIC>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>

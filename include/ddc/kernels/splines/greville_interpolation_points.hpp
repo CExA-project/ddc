@@ -8,6 +8,7 @@
 
 #include "spline_boundary_conditions.hpp"
 
+namespace ddc {
 template <class BSplines, BoundCond BcXmin, BoundCond BcXmax>
 class GrevilleInterpolationPoints
 {
@@ -191,3 +192,4 @@ public:
                 ddc::DiscreteVector<interpolation_mesh_type>(npoints));
     }
 };
+} // namespace ddc

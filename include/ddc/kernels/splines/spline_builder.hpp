@@ -10,7 +10,6 @@
 #include <ddc/ddc.hpp>
 
 #include "Kokkos_Core_fwd.hpp"
-#include "i_builder.hpp"
 #include "math_tools.hpp"
 #include "matrix.hpp"
 #include "matrix_maker.hpp"
@@ -24,7 +23,7 @@ template <
         class interpolation_mesh_type,
         BoundCond BcXmin,
         BoundCond BcXmax>
-class SplineBuilder : IBuilder
+class SplineBuilder
 {
     static_assert(
             (BSplines::is_periodic() && (BcXmin == BoundCond::PERIODIC)

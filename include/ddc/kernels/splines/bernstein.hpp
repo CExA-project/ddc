@@ -6,6 +6,7 @@
 #include "math_tools.hpp"
 #include "view.hpp"
 
+namespace ddc {
 template <
         class Tag1,
         class Tag2,
@@ -110,4 +111,5 @@ void BernsteinPolynomialBasis<Tag1, Tag2, Corner1Tag, Corner2Tag, Corner3Tag, D>
             values(idx) = multinomial_coefficient * ipow(l1, i) * ipow(l2, j) * ipow(l3, k);
         }
     }
+}
 }

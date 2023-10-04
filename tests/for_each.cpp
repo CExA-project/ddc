@@ -150,8 +150,6 @@ void TestForEachParallelDeviceOneDimension()
 
 } // namespace
 
-
-
 TEST(ForEachParallelDevice, OneDimension)
 {
     TestForEachParallelDeviceOneDimension();

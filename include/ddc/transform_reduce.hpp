@@ -137,9 +137,10 @@ public:
     TransformReducerKokkosLambdaAdapter(Reducer const& r, Functor const& f) : reducer(r), functor(f)
     {
     }
+
     template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
     KOKKOS_IMPL_FORCEINLINE void operator()(
-            index_type<void> unused_id,
+            [[maybe_unused]] index_type<void> unused_id,
             typename Reducer::value_type& a) const
     {
         a = reducer(a, functor(DiscreteElement<>()));
@@ -148,7 +149,7 @@ public:
     template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
     KOKKOS_FORCEINLINE_FUNCTION void operator()(
             use_annotated_operator,
-            index_type<void> unused_id,
+            [[maybe_unused]] index_type<void> unused_id,
             typename Reducer::value_type& a) const
 
     {
@@ -184,7 +185,7 @@ public:
  */
 template <class ExecSpace, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce_kokkos(
-        DiscreteDomain<> const& domain,
+        [[maybe_unused]] DiscreteDomain<> const& domain,
         T neutral,
         BinaryReductionOp const& reduce,
         UnaryTransformOp const& transform) noexcept

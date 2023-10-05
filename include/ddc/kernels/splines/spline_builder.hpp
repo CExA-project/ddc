@@ -17,6 +17,19 @@
 #include "view.hpp"
 
 namespace ddc {
+
+constexpr bool is_spline_interpolation_mesh_uniform(
+        bool const is_uniform,
+        BoundCond const BcXmin,
+        BoundCond const BcXmax,
+        int degree)
+{
+    int N_BE_MIN = n_boundary_equations(BcXmin, degree);                                                                                                                  int N_BE_MAX = n_boundary_equations(BcXmax, degree);
+    bool is_periodic = (BcXmin == BoundCond::PERIODIC) && (BcXmax == BoundCond::PERIODIC);
+    return is_uniform && ((N_BE_MIN != 0 && N_BE_MAX != 0) || is_periodic);
+}
+
+
 template <
         class ExecSpace,
         class MemorySpace,

@@ -24,15 +24,14 @@ public:
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>> const spline_coef)
             const final
     {
-        std::array<double, BSplines::degree() + 1> values;
-        DSpan1D const vals = as_span(values);
+        std::array<double, BSplines::degree() + 1> vals;
 
         ddc::DiscreteElement<BSplines> idx
                 = ddc::discrete_space<BSplines>().eval_basis(vals, m_eval_pos);
 
         double y = 0.0;
         for (std::size_t i = 0; i < BSplines::degree() + 1; ++i) {
-            y += spline_coef(idx + i) * vals(i);
+            y += spline_coef(idx + i) * vals[i];
         }
         return y;
     }

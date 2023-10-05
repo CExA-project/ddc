@@ -240,6 +240,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a21800f53010e8f2e3caa81a22f0256c0"><td class="memTemplParams" colspan="2">template&lt;class... DDimsA, class... DDimsB&gt; </td></tr>
 <tr class="memitem:a21800f53010e8f2e3caa81a22f0256c0"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a21800f53010e8f2e3caa81a22f0256c0">remove_dims_of</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsA... &gt; const &amp;DDom_a, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;DDom_b) noexcept</td></tr>
 <tr class="separator:a21800f53010e8f2e3caa81a22f0256c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf37401405225a8b39e2c9040b255013"><td class="memTemplParams" colspan="2">template&lt;typename DDim1 , typename DDim2 , typename DDimA , typename... DDimsB&gt; </td></tr>
+<tr class="memitem:adf37401405225a8b39e2c9040b255013"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::conditional_t&lt; std::is_same_v&lt; DDimA, DDim1 &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; DDim2 &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; DDimA &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#adf37401405225a8b39e2c9040b255013">replace_dim_of_1d</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimA &gt; const &amp;DDom_a, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;DDom_b) noexcept</td></tr>
+<tr class="separator:adf37401405225a8b39e2c9040b255013"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcde7b3fea039b122ed7fd74a718ffad"><td class="memTemplParams" colspan="2">template&lt;typename DDim1 , typename DDim2 , typename... DDimsA, typename... DDimsB&gt; </td></tr>
+<tr class="memitem:afcde7b3fea039b122ed7fd74a718ffad"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#afcde7b3fea039b122ed7fd74a718ffad">replace_dim_of</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsA... &gt; const &amp;DDom_a, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;DDom_b) noexcept</td></tr>
+<tr class="separator:afcde7b3fea039b122ed7fd74a718ffad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad312545095d47ee13f591a69e418b8b2"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
 <tr class="memitem:ad312545095d47ee13f591a69e418b8b2"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad312545095d47ee13f591a69e418b8b2">extents</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain) noexcept</td></tr>
 <tr class="separator:ad312545095d47ee13f591a69e418b8b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1404,6 +1410,82 @@ template&lt;class... DDimsA, class... DDimsB&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">constexpr auto ddc::remove_dims_of </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsA... &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>DDom_a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>DDom_b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adf37401405225a8b39e2c9040b255013" name="adf37401405225a8b39e2c9040b255013"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf37401405225a8b39e2c9040b255013">&#9670;&nbsp;</a></span>replace_dim_of_1d()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DDim1 , typename DDim2 , typename DDimA , typename... DDimsB&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::conditional_t&lt; std::is_same_v&lt; DDimA, DDim1 &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; DDim2 &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; DDimA &gt; &gt; ddc::replace_dim_of_1d </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimA &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>DDom_a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>DDom_b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afcde7b3fea039b122ed7fd74a718ffad" name="afcde7b3fea039b122ed7fd74a718ffad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcde7b3fea039b122ed7fd74a718ffad">&#9670;&nbsp;</a></span>replace_dim_of()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DDim1 , typename DDim2 , typename... DDimsA, typename... DDimsB&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto ddc::replace_dim_of </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsA... &gt; const &amp;&#160;</td>
           <td class="paramname"><em>DDom_a</em>, </td>

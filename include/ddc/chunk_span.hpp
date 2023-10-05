@@ -229,7 +229,7 @@ public:
                 memory_space>(subview, select_by_type_seq<selected_meshes>(this->m_domain));
     }
 
-    /** Slice out some dimensions
+    /** Restrict to a subdomain
      */
     template <class... QueryDDims>
     constexpr auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const

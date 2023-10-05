@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 
-//! [includes]
 #include <cmath>
 #include <iomanip>
 #include <iostream>
@@ -9,85 +8,40 @@
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
-#include "ddc/for_each.hpp"
-//! [includes]
 
+struct DDimX;
+struct DDimY;
 
-//! [X-dimension]
-/// Our first continuous dimension
-struct X;
-//! [X-dimension]
-
-//! [X-discretization]
-/// A uniform discretization of X
-using DDimX = ddc::UniformPointSampling<X>;
-//! [X-discretization]
-
-//! [Y-space]
-// Our second continuous dimension
-struct Y;
-// Its uniform discretization
-using DDimY = ddc::UniformPointSampling<Y>;
-//! [Y-space]
-
-//! [main-start]
 int main(int argc, char** argv)
 {
     ddc::ScopeGuard scope(argc, argv);
 
-    // some parameters that would typically be read from some form of
-    // configuration file in a more realistic code
+    ddc::DiscreteDomain<DDimX> x_domain(
+            ddc::DiscreteElement<DDimX>(0),
+            ddc::DiscreteVector<DDimX>(10));
+    ddc::DiscreteDomain<DDimY> y_domain(
+            ddc::DiscreteElement<DDimY>(0),
+            ddc::DiscreteVector<DDimY>(100));
 
-    //! [parameters]
-    // Start of the domain of interest in the X dimension
-    double const x_start = -1.;
-    // End of the domain of interest in the X dimension
-    double const x_end = 1.;
-    // Number of discretization points in the X dimension
-    size_t const nb_x_points = 10;
-    // Start of the domain of interest in the Y dimension
-    double const y_start = -1.;
-    // End of the domain of interest in the Y dimension
-    double const y_end = 1.;
-    // Number of discretization points in the Y dimension
-    size_t const nb_y_points = 100;
-     //! [parameters]
+    ddc::Chunk
+            chunk(ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
+                  ddc::DeviceAllocator<int>());
+    ddc::ChunkSpan chunkspan = chunk.span_view();
 
-	 //! [X-global-domain]
-    // Initialization of the global domain in X with gwx ghost points on
-    // each side
-    auto const x_domain
-            = ddc::init_discrete_space(DDimX::init(
-                    ddc::Coordinate<X>(x_start),
-                    ddc::Coordinate<X>(x_end),
-                    ddc::DiscreteVector<DDimX>(nb_x_points)
-                    ));
-    //! [X-global-domain]
-	//
-    //! [Y-domains]
-        auto const y_domain
-            = ddc::init_discrete_space(DDimY::init(
-                    ddc::Coordinate<Y>(y_start),
-                    ddc::Coordinate<Y>(y_end),
-                    ddc::DiscreteVector<DDimY>(nb_y_points)
-                    ));
-    //! [data allocation]
-    // Maps temperature into the full domain (including ghosts) twice:
-    // - once for the last fully computed time-step
-    ddc::Chunk chunk(
-            ddc::DiscreteDomain<
-                    DDimX,
-                    DDimY>(x_domain, y_domain),
-            ddc::DeviceAllocator<double>());
-	ddc::ChunkSpan chunkspan = chunk.span_view();
-    // Initialize the temperature on the main domain
+    ddc::fill(chunkspan, 10);
     ddc::for_each(
-            ddc::policies::parallel_host,
+            ddc::policies::parallel_device,
             x_domain,
             DDC_LAMBDA(ddc::DiscreteElement<DDimX> const ix) {
-				printf("----- DEBUG LOG -----");
-				auto slice = chunkspan[ix];
-				printf("size = %i", slice.size());
+                printf("----- DEBUG LOG -----");
+                // auto subview = std::experimental::submdspan(
+                //         chunkspan.allocation_mdspan(),
+                //         (ix - x_domain.front()).value(),
+                //         std::experimental::full_extent);
+
+                // ddc::ChunkSpan<int, ddc::DiscreteDomain<DDimX>, std::experimental::layout_right> slice(subview, x_domain);
+
+                auto slice = chunkspan[ix];
+                printf("size = %i", int(slice.size()));
             });
-    //! [initial-conditions]
 }

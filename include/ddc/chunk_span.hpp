@@ -176,7 +176,9 @@ public:
      * @param allocation_mdspan the allocation mdspan to the data
      * @param domain the domain that sustains the view
      */
-    constexpr ChunkSpan(allocation_mdspan_type allocation_mdspan, mdomain_type const& domain)
+    KOKKOS_FUNCTION constexpr ChunkSpan(
+            allocation_mdspan_type allocation_mdspan,
+            mdomain_type const& domain)
     {
         namespace stdex = std::experimental;
         extents_type extents_s((front<DDims>(domain) + extents<DDims>(domain)).uid()...);

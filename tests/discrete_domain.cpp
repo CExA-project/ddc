@@ -48,18 +48,16 @@ using DDomZY = ddc::DiscreteDomain<DDimZ, DDimY>;
 static DElemX constexpr lbound_x(50);
 static DVectX constexpr nelems_x(3);
 static DElemX constexpr sentinel_x(lbound_x + nelems_x);
-static DElemX constexpr ubound_x(sentinel_x - 1); //TODO: correct type
+static DElemX constexpr ubound_x(sentinel_x - 1);
 
 
 static DElemY constexpr lbound_y(4);
 static DVectY constexpr nelems_y(12);
 static DElemY constexpr sentinel_y(lbound_y + nelems_y);
-static DElemY constexpr ubound_y(sentinel_y - 1); //TODO: correct type
+static DElemY constexpr ubound_y(sentinel_y - 1);
 
 static DElemZ constexpr lbound_z(7);
 static DVectZ constexpr nelems_z(15);
-static DElemZ constexpr sentinel_z(lbound_z + nelems_z);
-static DElemZ constexpr ubound_z(sentinel_z - 1); //TODO: correct type
 
 static DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);

@@ -137,6 +137,7 @@ public:
     TransformReducerKokkosLambdaAdapter(Reducer const& r, Functor const& f) : reducer(r), functor(f)
     {
     }
+
     template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
     KOKKOS_IMPL_FORCEINLINE void operator()(
             index_type<void> unused_id,

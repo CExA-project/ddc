@@ -53,9 +53,10 @@ public:
 
     SplineBuilder2D& operator=(SplineBuilder2D&& x) = default;
 
+	template <class Layout1, class Layout2, class MemorySpace>
     void operator()(
-            ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type1, bsplines_type2>> spline,
-            ddc::ChunkSpan<double const, interpolation_domain_type> vals,
+            ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type1, bsplines_type2>, Layout1, MemorySpace> spline,
+            ddc::ChunkSpan<double const, interpolation_domain_type,Layout2, MemorySpace> vals,
             std::optional<CDSpan2D> const derivs_xmin = std::nullopt,
             std::optional<CDSpan2D> const derivs_xmax = std::nullopt,
             std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
@@ -94,9 +95,10 @@ public:
 
 
 template <class SplineBuilder1, class SplineBuilder2>
+template < class Layout1, class Layout2, class MemorySpace>
 void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type1, bsplines_type2>> spline,
-        ddc::ChunkSpan<double const, interpolation_domain_type> vals,
+        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type1, bsplines_type2>, Layout1, MemorySpace> spline,
+        ddc::ChunkSpan<double const, interpolation_domain_type, Layout2, MemorySpace> vals,
         std::optional<CDSpan2D> const derivs_xmin,
         std::optional<CDSpan2D> const derivs_xmax,
         std::optional<CDSpan2D> const derivs_ymin,
@@ -132,10 +134,12 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
            != (!mixed_derivs_xmax_ymax.has_value()
                || mixed_derivs_xmax_ymax->extent(0) != nbc_xmax));
 
-    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1(
+    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1_alloc(
             spline_builder1.spline_domain());
-    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type2>> spline2(
+	ddc::ChunkSpan spline1 = spline1_alloc.span_view();
+    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type2>> spline2_alloc(
             spline_builder2.spline_domain());
+	ddc::ChunkSpan spline2 = spline2_alloc.span_view();
 
     using IMesh1 = ddc::DiscreteElement<interpolation_mesh_type1>;
     using IMesh2 = ddc::DiscreteElement<interpolation_mesh_type2>;
@@ -161,8 +165,9 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
             const ddc::DiscreteElement<bsplines_type2> spl_idx(i - 1);
 
             // Get interpolated values
-            ddc::Chunk<double, interpolation_domain_type1> vals1(
+            ddc::Chunk<double, interpolation_domain_type1> vals1_alloc(
                     spline_builder1.interpolation_domain());
+			ddc::ChunkSpan vals1 = vals1_alloc.span_view();
             ddc::for_each(spline_builder1.interpolation_domain(), [&](IMesh1 const j) {
                 vals1(j) = (*derivs_ymin)(j.uid(), i - 1);
             });
@@ -215,8 +220,9 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
         const ddc::DiscreteElement<bsplines_type2> spl_idx(nbc_ymin + ii);
 
         // Get interpolated values
-        ddc::Chunk<double, interpolation_domain_type1> vals1(
+        ddc::Chunk<double, interpolation_domain_type1> vals1_alloc(
                 spline_builder1.interpolation_domain());
+		ddc::ChunkSpan vals1 = vals1_alloc.span_view();
         ddc::deepcopy(vals1, vals[i]);
 
         // Get interpolated derivatives
@@ -258,8 +264,9 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                     i + ddc::discrete_space<bsplines_type2>().nbasis() - nbc_ymax - 1);
 
             // Get interpolated values
-            ddc::Chunk<double, interpolation_domain_type1> vals1(
+            ddc::Chunk<double, interpolation_domain_type1> vals1_alloc(
                     spline_builder1.interpolation_domain());
+			ddc::ChunkSpan vals1 = vals1_alloc.span_view();
             ddc::for_each(spline_builder1.interpolation_domain(), [&](IMesh1 const j) {
                 vals1(j) = (*derivs_ymax)(j.uid(), i - 1);
             });
@@ -328,7 +335,8 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                 BcXmax2 == BoundCond::HERMITE ? std::optional(r_derivs.allocation_mdspan())
                                               : std::nullopt);
 
-        ddc::ChunkSpan<double const, interpolation_domain_type2>
+		// TODO: const double ?
+        ddc::ChunkSpan<double, interpolation_domain_type2>
                 vals2_i(vals2.data_handle(), spline_builder2.interpolation_domain());
 
         // Interpolate coefficients

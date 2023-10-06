@@ -132,9 +132,10 @@ public:
             data(i) = 0;
         }
 
-        cols_per_par_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda>
-                                     ? Kokkos::pow(2, 16) - 1
-                                     : INT_MAX; // TODO: call cudaMaxGridSize ?
+		cols_per_par_chunk = 65535;
+        // cols_per_par_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda>
+        //                              ? Kokkos::pow(2, 16) - 1
+        //                             : INT_MAX; // TODO: call cudaMaxGridSize ?
         par_chunks_per_seq_chunk = 1;
     }
     int m;
@@ -291,7 +292,7 @@ public:
                                               .on(gko_exec);
                             std::shared_ptr<const gko::log::Convergence<>> convergence_logger
                                     = gko::log::Convergence<>::create(gko_exec);
-                            residual_criterion->add_logger(convergence_logger);
+                            // residual_criterion->add_logger(convergence_logger);
                             auto preconditionner = gko::preconditioner::Jacobi<>::build()
                                                            .with_max_block_size(1u)
                                                            .on(gko_exec);
@@ -306,7 +307,7 @@ public:
                                                                   .on(gko_exec))
                                                   .on(gko_exec);
                             auto solver_ = solver->generate(data_mat_gpu);
-                            solver_->add_logger(stream_logger);
+                            // solver_->add_logger(stream_logger);
                             // auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_gpu.get(), b_vec_batch.get());
                             // solver_->add_logger(res_logger);
                             solver_->apply(b_vec_batch, x_vec_batch);

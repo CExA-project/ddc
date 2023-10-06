@@ -17,6 +17,7 @@
 #include <ddc/kernels/splines/view.hpp>
 
 #include <gtest/gtest.h>
+#include "ddc/discrete_domain.hpp"
 
 #include "Kokkos_Core_fwd.hpp"
 #include "cosine_evaluator.hpp"
@@ -119,30 +120,59 @@ static constexpr std::vector<Coord<X>> breaks(double ncells)
     return out;
 }
 
+template <class IDimI, class T>
+struct DimsInitializer;
+
+template <class IDimI, class... IDimX>
+struct DimsInitializer<IDimI, ddc::detail::TypeSeq<IDimX...>>
+{
+    void operator()(std::size_t const ncells)
+    {
+#if defined(BSPLINES_TYPE_UNIFORM)
+        (ddc::init_discrete_space(IDimX::
+                                          init(x0<typename IDimX::continuous_dimension_type>(),
+                                               xN<typename IDimX::continuous_dimension_type>(),
+                                               DVect<IDimX>(ncells))),
+         ...);
+        ddc::init_discrete_space<BSplines<typename IDimI::continuous_dimension_type>>(
+                x0<typename IDimI::continuous_dimension_type>(),
+                xN<typename IDimI::continuous_dimension_type>(),
+                ncells);
+#elif defined(BSPLINES_TYPE_NON_UNIFORM)
+        (ddc::init_discrete_space<IDimX>(breaks<typename IDimX::continuous_dimension_type>(ncells)),
+         ...);
+        ddc::init_discrete_space<BSplines<typename IDimI::continuous_dimension_type>>(
+                breaks<typename IDimI::continuous_dimension_type>(ncells));
+#endif
+        ddc::init_discrete_space<IDimI>(
+                GrevillePoints<
+                        BSplines<typename IDimI::continuous_dimension_type>>::get_sampling());
+    }
+};
+
+
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename I, typename... X>
 static void BatchedNonPeriodicSplineTest()
 {
-	/*
-    CoordX constexpr x0(0.);
-    CoordX constexpr xN(1.);
-    std::size_t constexpr ncells = 100;
+    // Instantiate execution spaces and initialize spaces
+    Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
+    ExecSpace exec_space = ExecSpace();
+    std::size_t constexpr ncells = 10;
 
-    // 1. Create BSplines
-    {
-#if defined(BSPLINES_TYPE_UNIFORM)
-        ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
-#elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        DVectX constexpr npoints(ncells + 1);
-        std::vector<CoordX> breaks(npoints);
-        double dx = (xN - x0) / ncells;
-        for (int i(0); i < npoints; ++i) {
-            breaks[i] = CoordX(x0 + i * dx);
-        }
-        ddc::init_discrete_space<BSplinesX>(breaks);
-#endif
-    }
+    // Initialize spaces
+    DimsInitializer<IDim<I, I>, BatchDims<IDim<I, I>, IDim<X, I>...>> dims_initializer;
+    dims_initializer(ncells);
+
+    // Create the values domain (mesh)
+	ddc::DiscreteDomain<IDim<I,I>> interpolation_domain = GrevillePoints<BSplines<I>>::get_domain();
+    ddc::DiscreteDomain<IDim<X, void>...> const dom_vals_tmp = ddc::DiscreteDomain<IDim<X, void>...>(
+                     ddc::DiscreteDomain<
+                             IDim<X, void>>(Index<IDim<X, void>>(0), DVect<IDim<X, void>>(ncells))...);
+    ddc::DiscreteDomain<IDim<X, I>...> const dom_vals = ddc::replace_dim_of<IDim<I,void>,IDim<I,I>>(dom_vals_tmp,interpolation_domain);
+	/*
+    
     ddc::DiscreteDomain<BSplinesX> const dom_bsplines_x(
             ddc::discrete_space<BSplinesX>().full_domain());
 

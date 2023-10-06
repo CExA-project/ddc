@@ -242,7 +242,7 @@ private:
     std::array<ElementType, sizeof...(Tags)> m_values;
 
 public:
-    using element_type = ElementType;
+    using value_type = ElementType;
 
     static constexpr std::size_t size() noexcept
     {

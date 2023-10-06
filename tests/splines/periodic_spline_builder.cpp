@@ -31,13 +31,13 @@ struct DimX
 static constexpr std::size_t s_degree_x = DEGREE_X;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-using BSplinesX = UniformBSplines<DimX, s_degree_x>;
+using BSplinesX = ddc::UniformBSplines<DimX, s_degree_x>;
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-using BSplinesX = NonUniformBSplines<DimX, s_degree_x>;
+using BSplinesX = ddc::NonUniformBSplines<DimX, s_degree_x>;
 #endif
 
 using GrevillePoints
-        = GrevilleInterpolationPoints<BSplinesX, BoundCond::PERIODIC, BoundCond::PERIODIC>;
+        = ddc::GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 
 using IDimX = GrevillePoints::interpolation_mesh_type;
 
@@ -82,13 +82,13 @@ TEST(PeriodicSplineBuilderTest, Identity)
     ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
-    SplineBuilder<
+	ddc::SplineBuilder<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::HostSpace,
             BSplinesX,
             IDimX,
-            BoundCond::PERIODIC,
-            BoundCond::PERIODIC>
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC>
             spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
@@ -100,8 +100,8 @@ TEST(PeriodicSplineBuilderTest, Identity)
     spline_builder(coef.span_view(), yvals.span_view());
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
-    SplineEvaluator<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX>
-            spline_evaluator(g_null_boundary<BSplinesX>, g_null_boundary<BSplinesX>);
+	ddc::SplineEvaluator<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX>
+            spline_evaluator(ddc::g_null_boundary<BSplinesX>, ddc::g_null_boundary<BSplinesX>);
 
     ddc::Chunk<CoordX, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);
     for (IndexX const ix : interpolation_domain) {
@@ -127,7 +127,6 @@ TEST(PeriodicSplineBuilderTest, Identity)
         // Compute error
         double const error = spline_eval(ix) - yvals(ix);
         max_norm_error = std::fmax(max_norm_error, std::fabs(error));
-        std::cout << spline_eval(ix) << " " << yvals(ix) << "\n";
 
         // Compute error
         double const error_deriv = spline_eval_deriv(ix) - evaluator.deriv(x, 1);

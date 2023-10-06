@@ -416,11 +416,7 @@ replace_dim_of_1d(
 
 // Replace in DDom_a the dimension Dim1 by the dimension Dim2 of DDom_b
 template <typename DDim1, typename DDim2, typename... DDimsA, typename... DDimsB>
-constexpr ddc::detail::convert_type_seq_to_discrete_domain<type_seq_replace_t<
-        detail::TypeSeq<DDimsA...>,
-        detail::TypeSeq<DDim1>,
-        detail::TypeSeq<DDim2>>>
-replace_dim_of(
+constexpr auto replace_dim_of(
         DiscreteDomain<DDimsA...> const& DDom_a,
         [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {

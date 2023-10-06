@@ -266,7 +266,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBSplines<Tag, D>> NonUnifo
 
     assert(x >= rmin());
     assert(x <= rmax());
-    assert(values.extent(0) == degree() + 1);
+    assert(values.size() == degree() + 1);
 
     // 1. Compute cell index 'icell'
     int const icell = find_cell(x);

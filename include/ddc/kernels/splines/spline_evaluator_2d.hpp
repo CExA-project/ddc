@@ -90,8 +90,8 @@ public:
             spline_eval(i) = eval(coords_eval(i), spline_coef, vals1, vals2);
         });
     }
-    
-	double deriv_dim_1(
+
+    double deriv_dim_1(
             ddc::Coordinate<Dim1, Dim2> const& coord_eval,
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType1, BSplinesType2>> const
                     spline_coef) const
@@ -222,8 +222,8 @@ public:
                     eval_deriv_type());
         });
     }
-    
-	double integrate(
+
+    double integrate(
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType1, BSplinesType2>> const
                     spline_coef) const
     {
@@ -252,8 +252,8 @@ private:
             ddc::Coordinate<Dim1, Dim2> const& coord_eval,
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType1, BSplinesType2>> const
                     spline_coef,
-            std::array<double, bsplines_type1::degree()+1>& vals1,
-            std::array<double, bsplines_type2::degree()+1>& vals2) const
+            std::array<double, bsplines_type1::degree() + 1>& vals1,
+            std::array<double, bsplines_type2::degree() + 1>& vals2) const
     {
         ddc::Coordinate<Dim1> coord_eval1 = ddc::select<Dim1>(coord_eval);
         ddc::Coordinate<Dim2> coord_eval2 = ddc::select<Dim2>(coord_eval);
@@ -305,8 +305,8 @@ private:
             ddc::Coordinate<Dim2> const& coord_eval2,
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType1, BSplinesType2>> const
                     spline_coef,
-            std::array<double, bsplines_type1::degree()+1>& vals1,
-            std::array<double, bsplines_type2::degree()+1>& vals2,
+            std::array<double, bsplines_type1::degree() + 1>& vals1,
+            std::array<double, bsplines_type2::degree() + 1>& vals2,
             EvalType1 const,
             EvalType2 const) const
     {

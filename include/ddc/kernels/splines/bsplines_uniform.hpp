@@ -140,8 +140,9 @@ public:
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_basis_and_n_derivs(DSpan2D derivs, ddc::Coordinate<Tag> const& x, std::size_t n) const;
 
-		template <class Layout, class MemorySpace2>
-        KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> integrals(
+        template <class Layout, class MemorySpace2>
+        KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
+        integrals(
                 ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const;
 
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_knot(int idx) const noexcept
@@ -207,7 +208,7 @@ public:
             return 1.0 / ddc::step<mesh_type>();
         }
 
-		template <std::size_t Size>
+        template <std::size_t Size>
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
                 std::array<double, Size>& values,
                 ddc::Coordinate<Tag> const& x,
@@ -427,9 +428,14 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<Tag, D>::Impl<MemorySpace>::get_icel
 template <class Tag, std::size_t D>
 template <class MemorySpace>
 template <class Layout, class MemorySpace2>
-KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<UniformBSplines<Tag, D>>, Layout, MemorySpace2>
+KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<
+        double,
+        ddc::DiscreteDomain<UniformBSplines<Tag, D>>,
+        Layout,
+        MemorySpace2>
 UniformBSplines<Tag, D>::Impl<MemorySpace>::integrals(
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<UniformBSplines<Tag, D>>, Layout, MemorySpace2> int_vals) const
+        ddc::ChunkSpan<double, ddc::DiscreteDomain<UniformBSplines<Tag, D>>, Layout, MemorySpace2>
+                int_vals) const
 {
     if constexpr (is_periodic()) {
         assert(int_vals.size() == nbasis() || int_vals.size() == size());

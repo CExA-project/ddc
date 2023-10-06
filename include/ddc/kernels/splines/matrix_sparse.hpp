@@ -132,7 +132,7 @@ public:
             data(i) = 0;
         }
 
-		cols_per_par_chunk = 65535;
+        cols_per_par_chunk = 65535;
         // cols_per_par_chunk = std::is_same_v<ExecSpace, Kokkos::Cuda>
         //                              ? Kokkos::pow(2, 16) - 1
         //                             : INT_MAX; // TODO: call cudaMaxGridSize ?

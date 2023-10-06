@@ -23,11 +23,12 @@ enum class Spline_Solver { GINKGO, LAPACK };
 // TODO: Check if this is really the best way ?
 class kwArgs_spline_builder
 {
-	public:
+public:
     ddc::Spline_Solver solver;
-	void operator()(kwArgs_spline_builder const& kwargs){
-		solver = kwargs.solver;
-	}
+    void operator()(kwArgs_spline_builder const& kwargs)
+    {
+        solver = kwargs.solver;
+    }
 };
 
 constexpr bool is_spline_interpolation_mesh_uniform(
@@ -36,7 +37,8 @@ constexpr bool is_spline_interpolation_mesh_uniform(
         BoundCond const BcXmax,
         int degree)
 {
-    int N_BE_MIN = n_boundary_equations(BcXmin, degree);                                                                                                                  int N_BE_MAX = n_boundary_equations(BcXmax, degree);
+    int N_BE_MIN = n_boundary_equations(BcXmin, degree);
+    int N_BE_MAX = n_boundary_equations(BcXmax, degree);
     bool is_periodic = (BcXmin == BoundCond::PERIODIC) && (BcXmax == BoundCond::PERIODIC);
     return is_uniform && ((N_BE_MIN != 0 && N_BE_MAX != 0) || is_periodic);
 }
@@ -92,7 +94,8 @@ public:
     //TODO: privatize
     const int m_offset;
 
-	ddc::kwArgs_spline_builder const m_kwargs;
+    ddc::kwArgs_spline_builder const m_kwargs;
+
 private:
     interpolation_domain_type m_interpolation_domain;
 
@@ -101,7 +104,9 @@ private:
 public:
     int compute_offset(interpolation_domain_type const& interpolation_domain);
 
-    SplineBuilder(interpolation_domain_type const& interpolation_domain, kwArgs_spline_builder const& kwargs = {ddc::Spline_Solver::GINKGO});
+    SplineBuilder(
+            interpolation_domain_type const& interpolation_domain,
+            kwArgs_spline_builder const& kwargs = {ddc::Spline_Solver::GINKGO});
 
     SplineBuilder(SplineBuilder const& x) = delete;
 
@@ -189,13 +194,15 @@ template <
         BoundCond BcXmin,
         BoundCond BcXmax>
 SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::
-        SplineBuilder(interpolation_domain_type const& interpolation_domain, kwArgs_spline_builder const& kwargs)
+        SplineBuilder(
+                interpolation_domain_type const& interpolation_domain,
+                kwArgs_spline_builder const& kwargs)
     : m_interpolation_domain(interpolation_domain)
     , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
            / ddc::discrete_space<BSplines>().ncells())
     , matrix(nullptr)
     , m_offset(compute_offset(interpolation_domain))
-	, m_kwargs(kwargs)
+    , m_kwargs(kwargs)
 {
     // Calculate block sizes
     int lower_block_size, upper_block_size;
@@ -311,10 +318,17 @@ operator()(
         }
     }
 
-    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
-            spline.data_handle() + m_offset,
-            ddc::discrete_space<BSplines>().nbasis());
-    matrix->solve_batch_inplace(bcoef_section);
+    if (m_kwargs.solver == ddc::Spline_Solver::LAPACK) {
+        ddc::DSpan1D const bcoef_section(
+                spline.data_handle() + m_offset,
+                ddc::discrete_space<BSplines>().nbasis());
+        matrix->solve_inplace(bcoef_section);
+    } else if (m_kwargs.solver == ddc::Spline_Solver::GINKGO) {
+        Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
+                spline.data_handle() + m_offset,
+                ddc::discrete_space<BSplines>().nbasis());
+        matrix->solve_batch_inplace(bcoef_section);
+    }
 
     if constexpr (bsplines_type::is_periodic()) {
         Kokkos::parallel_for(
@@ -447,29 +461,30 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
     }
 
     if constexpr (bsplines_type::is_periodic()) {
-    if (m_kwargs.solver==ddc::Spline_Solver::LAPACK) {
-        matrix = ddc::detail::MatrixMaker::make_new_periodic_banded(
-                ddc::discrete_space<BSplines>().nbasis(),
-                upper_band_width,
-                upper_band_width,
-                bsplines_type::is_uniform());
-} else if (m_kwargs.solver==ddc::Spline_Solver::GINKGO) {
-        matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
-                ddc::discrete_space<BSplines>().nbasis());
-}
+        if (m_kwargs.solver == ddc::Spline_Solver::LAPACK) {
+            matrix = ddc::detail::MatrixMaker::make_new_periodic_banded(
+                    ddc::discrete_space<BSplines>().nbasis(),
+                    upper_band_width,
+                    upper_band_width,
+                    bsplines_type::is_uniform());
+        } else if (m_kwargs.solver == ddc::Spline_Solver::GINKGO) {
+            matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
+                    ddc::discrete_space<BSplines>().nbasis());
+        }
     } else {
-    if (m_kwargs.solver==ddc::Spline_Solver::LAPACK) {
-        matrix = ddc::detail::MatrixMaker::make_new_block_with_banded_region(
-                ddc::discrete_space<BSplines>().nbasis(),
-                upper_band_width,
-                upper_band_width,
-                bsplines_type::is_uniform(),
-                upper_block_size,
-                lower_block_size);
-} else if (m_kwargs.solver==ddc::Spline_Solver::GINKGO) {
-        matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
-                ddc::discrete_space<BSplines>().nbasis());
-    }}
+        if (m_kwargs.solver == ddc::Spline_Solver::LAPACK) {
+            matrix = ddc::detail::MatrixMaker::make_new_block_with_banded_region(
+                    ddc::discrete_space<BSplines>().nbasis(),
+                    upper_band_width,
+                    upper_band_width,
+                    bsplines_type::is_uniform(),
+                    upper_block_size,
+                    lower_block_size);
+        } else if (m_kwargs.solver == ddc::Spline_Solver::GINKGO) {
+            matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
+                    ddc::discrete_space<BSplines>().nbasis());
+        }
+    }
 
     build_matrix_system();
 

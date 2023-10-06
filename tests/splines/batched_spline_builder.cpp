@@ -151,7 +151,7 @@ struct DimsInitializer<IDimI, ddc::detail::TypeSeq<IDimX...>>
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename I, typename... X>
-static void BatchedSplineBuilderTest()
+static void BatchedPeriodicSplineTest()
 {
     // Instantiate execution spaces and initialize spaces
     Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
@@ -311,27 +311,27 @@ static void BatchedSplineBuilderTest()
 #endif
 }
 
-TEST(BatchedSplineBuilderHost, 1DX)
+TEST(BatchedPeriodicSplineHost, 1DX)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
             DimX>();
 }
 
-TEST(BatchedSplineBuilderDevice, 1DX)
+TEST(BatchedPeriodicSplineDevice, 1DX)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
             DimX>();
 }
 
-TEST(BatchedSplineBuilderHost, 2DX)
+TEST(BatchedPeriodicSplineHost, 2DX)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
@@ -339,9 +339,9 @@ TEST(BatchedSplineBuilderHost, 2DX)
             DimY>();
 }
 
-TEST(BatchedSplineBuilderHost, 2DY)
+TEST(BatchedPeriodicSplineHost, 2DY)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimY,
@@ -349,9 +349,9 @@ TEST(BatchedSplineBuilderHost, 2DY)
             DimY>();
 }
 
-TEST(BatchedSplineBuilderDevice, 2DX)
+TEST(BatchedPeriodicSplineDevice, 2DX)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
@@ -359,9 +359,9 @@ TEST(BatchedSplineBuilderDevice, 2DX)
             DimY>();
 }
 
-TEST(BatchedSplineBuilderDevice, 2DY)
+TEST(BatchedPeriodicSplineDevice, 2DY)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimY,
@@ -369,9 +369,9 @@ TEST(BatchedSplineBuilderDevice, 2DY)
             DimY>();
 }
 
-TEST(BatchedSplineBuilderHost, 3DX)
+TEST(BatchedPeriodicSplineHost, 3DX)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
@@ -380,9 +380,9 @@ TEST(BatchedSplineBuilderHost, 3DX)
             DimZ>();
 }
 
-TEST(BatchedSplineBuilderHost, 3DY)
+TEST(BatchedPeriodicSplineHost, 3DY)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimY,
@@ -391,9 +391,9 @@ TEST(BatchedSplineBuilderHost, 3DY)
             DimZ>();
 }
 
-TEST(BatchedSplineBuilderHost, 3DZ)
+TEST(BatchedPeriodicSplineHost, 3DZ)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimZ,
@@ -402,9 +402,9 @@ TEST(BatchedSplineBuilderHost, 3DZ)
             DimZ>();
 }
 
-TEST(BatchedSplineBuilderDevice, 3DX)
+TEST(BatchedPeriodicSplineDevice, 3DX)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
@@ -413,9 +413,9 @@ TEST(BatchedSplineBuilderDevice, 3DX)
             DimZ>();
 }
 
-TEST(BatchedSplineBuilderDevice, 3DY)
+TEST(BatchedPeriodicSplineDevice, 3DY)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimY,
@@ -424,9 +424,9 @@ TEST(BatchedSplineBuilderDevice, 3DY)
             DimZ>();
 }
 
-TEST(BatchedSplineBuilderDevice, 3DZ)
+TEST(BatchedPeriodicSplineDevice, 3DZ)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimZ,
@@ -436,9 +436,9 @@ TEST(BatchedSplineBuilderDevice, 3DZ)
 }
 
 
-TEST(BatchedSplineBuilderHost, 4DX)
+TEST(BatchedPeriodicSplineHost, 4DX)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
@@ -448,9 +448,9 @@ TEST(BatchedSplineBuilderHost, 4DX)
             DimT>();
 }
 
-TEST(BatchedSplineBuilderHost, 4DY)
+TEST(BatchedPeriodicSplineHost, 4DY)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimY,
@@ -460,9 +460,9 @@ TEST(BatchedSplineBuilderHost, 4DY)
             DimT>();
 }
 
-TEST(BatchedSplineBuilderHost, 4DZ)
+TEST(BatchedPeriodicSplineHost, 4DZ)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimZ,
@@ -472,9 +472,9 @@ TEST(BatchedSplineBuilderHost, 4DZ)
             DimT>();
 }
 
-TEST(BatchedSplineBuilderHost, 4DT)
+TEST(BatchedPeriodicSplineHost, 4DT)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimT,
@@ -484,9 +484,9 @@ TEST(BatchedSplineBuilderHost, 4DT)
             DimT>();
 }
 
-TEST(BatchedSplineBuilderDevice, 4DX)
+TEST(BatchedPeriodicSplineDevice, 4DX)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
@@ -496,9 +496,9 @@ TEST(BatchedSplineBuilderDevice, 4DX)
             DimT>();
 }
 
-TEST(BatchedSplineBuilderDevice, 4DY)
+TEST(BatchedPeriodicSplineDevice, 4DY)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimY,
@@ -508,9 +508,9 @@ TEST(BatchedSplineBuilderDevice, 4DY)
             DimT>();
 }
 
-TEST(BatchedSplineBuilderDevice, 4DZ)
+TEST(BatchedPeriodicSplineDevice, 4DZ)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimZ,
@@ -520,9 +520,9 @@ TEST(BatchedSplineBuilderDevice, 4DZ)
             DimT>();
 }
 
-TEST(BatchedSplineBuilderDevice, 4DT)
+TEST(BatchedPeriodicSplineDevice, 4DT)
 {
-    BatchedSplineBuilderTest<
+    BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimT,

@@ -144,6 +144,24 @@ foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
   endforeach()
 endforeach()
 
+foreach(BC "BC_GREVILLE" "BC_HERMITE")
+      foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
+        foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
+          set(test_name "splines_tests_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}_bc_${BC}")
+          add_executable("${test_name}" batched_non_periodic_spline_builder.cpp)
+          target_compile_features("${test_name}" PUBLIC cxx_std_17)
+          target_link_libraries("${test_name}"
+            PUBLIC
+            GTest::gtest
+            DDC::DDC
+          )
+          target_compile_definitions("${test_name}" PUBLIC -DDEGREE_X=${DEGREE_X} -D${BSPLINES_TYPE} -D${BC})
+		  # add_test("${test_name}" "${test_name}")
+		  gtest_discover_tests("${test_name}")
+        endforeach()
+      endforeach()
+endforeach()
+
 foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
   foreach(DEGREE_Y RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
     foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")

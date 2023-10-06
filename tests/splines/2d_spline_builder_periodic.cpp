@@ -18,6 +18,7 @@
 
 #include <gtest/gtest.h>
 
+#include "Kokkos_Core_fwd.hpp"
 #include "cosine_evaluator.hpp"
 #include "evaluator_2d.hpp"
 #include "polynomial_evaluator.hpp"
@@ -37,17 +38,17 @@ static constexpr std::size_t s_degree_x = DEGREE_X;
 static constexpr std::size_t s_degree_y = DEGREE_Y;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-using BSplinesX = UniformBSplines<DimX, s_degree_x>;
-using BSplinesY = UniformBSplines<DimY, s_degree_y>;
+using BSplinesX = ddc::UniformBSplines<DimX, s_degree_x>;
+using BSplinesY = ddc::UniformBSplines<DimY, s_degree_y>;
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-using BSplinesX = NonUniformBSplines<DimX, s_degree_x>;
-using BSplinesY = NonUniformBSplines<DimY, s_degree_y>;
+using BSplinesX = ddc::NonUniformBSplines<DimX, s_degree_x>;
+using BSplinesY = ddc::NonUniformBSplines<DimY, s_degree_y>;
 #endif
 
 using GrevillePointsX
-        = GrevilleInterpolationPoints<BSplinesX, BoundCond::PERIODIC, BoundCond::PERIODIC>;
+        = ddc::GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 using GrevillePointsY
-        = GrevilleInterpolationPoints<BSplinesY, BoundCond::PERIODIC, BoundCond::PERIODIC>;
+        = ddc::GrevilleInterpolationPoints<BSplinesY, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 
 using IDimX = GrevillePointsX::interpolation_mesh_type;
 using IndexX = ddc::DiscreteElement<IDimX>;
@@ -65,9 +66,9 @@ using SplineXY = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX, BSplinesY>>;
 using FieldXY = ddc::Chunk<double, ddc::DiscreteDomain<IDimX, IDimY>>;
 using CoordXY = ddc::Coordinate<DimX, DimY>;
 
-using BuilderX = SplineBuilder<BSplinesX, IDimX, BoundCond::PERIODIC, BoundCond::PERIODIC>;
-using BuilderY = SplineBuilder<BSplinesY, IDimY, BoundCond::PERIODIC, BoundCond::PERIODIC>;
-using BuilderXY = SplineBuilder2D<BuilderX, BuilderY>;
+using BuilderX = ddc::SplineBuilder<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
+using BuilderY = ddc::SplineBuilder<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesY, IDimY, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
+using BuilderXY = ddc::SplineBuilder2D<BuilderX, BuilderY>;
 
 using EvaluatorType = Evaluator2D::
         Evaluator<CosineEvaluator::Evaluator<IDimX>, CosineEvaluator::Evaluator<IDimY>>;
@@ -136,14 +137,14 @@ TEST(Periodic2DSplineBuilderTest, Identity)
     evaluator(yvals.span_view());
 
     // 6. Finally build the spline by filling `coef`
-    spline_builder(coef, yvals);
+    spline_builder(coef.span_view(), yvals.span_cview());
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
-    const SplineEvaluator2D<BSplinesX, BSplinesY> spline_evaluator(
-            g_null_boundary_2d<BSplinesX, BSplinesY>,
-            g_null_boundary_2d<BSplinesX, BSplinesY>,
-            g_null_boundary_2d<BSplinesX, BSplinesY>,
-            g_null_boundary_2d<BSplinesX, BSplinesY>);
+    const ddc::SplineEvaluator2D<BSplinesX, BSplinesY> spline_evaluator(
+            ddc::g_null_boundary_2d<BSplinesX, BSplinesY>,
+            ddc::g_null_boundary_2d<BSplinesX, BSplinesY>,
+            ddc::g_null_boundary_2d<BSplinesX, BSplinesY>,
+            ddc::g_null_boundary_2d<BSplinesX, BSplinesY>);
 
     ddc::Chunk<CoordXY, ddc::DiscreteDomain<IDimX, IDimY>> coords_eval(interpolation_domain);
     ddc::for_each(interpolation_domain, [&](IndexXY const ixy) {

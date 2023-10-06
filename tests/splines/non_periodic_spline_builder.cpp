@@ -92,7 +92,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
-	ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
+    ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
 
     // 3. Create the interpolation domain
     ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling());
@@ -109,13 +109,13 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
-	ddc::Chunk yvals(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
+    ddc::Chunk yvals(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     evaluator_type evaluator(interpolation_domain);
     evaluator(yvals.span_view());
 
     int constexpr shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     std::array<double, s_degree_x / 2> Sderiv_lhs_data;
-	ddc::DSpan1D Sderiv_lhs(Sderiv_lhs_data.data(), Sderiv_lhs_data.size());
+    ddc::DSpan1D Sderiv_lhs(Sderiv_lhs_data.data(), Sderiv_lhs_data.size());
     std::optional<ddc::DSpan1D> deriv_l;
     if (s_bcl == ddc::BoundCond::HERMITE) {
         for (std::size_t ii = 0; ii < Sderiv_lhs.extent(0); ++ii) {
@@ -125,7 +125,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     }
 
     std::array<double, s_degree_x / 2> Sderiv_rhs_data;
-	ddc::DSpan1D Sderiv_rhs(Sderiv_rhs_data.data(), Sderiv_rhs_data.size());
+    ddc::DSpan1D Sderiv_rhs(Sderiv_rhs_data.data(), Sderiv_rhs_data.size());
     std::optional<ddc::DSpan1D> deriv_r;
     if (s_bcr == ddc::BoundCond::HERMITE) {
         for (std::size_t ii = 0; ii < Sderiv_rhs.extent(0); ++ii) {
@@ -146,10 +146,12 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
         coords_eval(ix) = ddc::coordinate(ix);
     }
 
-	ddc::Chunk spline_eval(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
+    ddc::Chunk spline_eval(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     spline_evaluator(spline_eval.span_view(), coords_eval.span_cview(), coef.span_cview());
 
-	ddc::Chunk spline_eval_deriv(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
+    ddc::Chunk spline_eval_deriv(
+            interpolation_domain,
+            ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     spline_evaluator
             .deriv(spline_eval_deriv.span_view(), coords_eval.span_cview(), coef.span_cview());
 

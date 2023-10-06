@@ -26,8 +26,8 @@ static constexpr std::size_t s_degree_x = DEGREE_X;
 
 using BSplinesX = ddc::NonUniformBSplines<DimX, s_degree_x>;
 
-using GrevillePoints
-        = ddc::GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
+using GrevillePoints = ddc::
+        GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 
 using IDimX = GrevillePoints::interpolation_mesh_type;
 

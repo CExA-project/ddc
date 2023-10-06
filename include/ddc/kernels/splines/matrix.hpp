@@ -80,7 +80,6 @@ public:
     Kokkos::View<double**, Args...> solve_batch_inplace(
             Kokkos::View<double**, Args...> const bx) const
     {
-        std::cout << "extent = " << bx.extent(1);
         assert(int(bx.extent(0)) == n);
         int const info = solve_inplace_method(bx.data(), 'N', bx.extent(1));
 

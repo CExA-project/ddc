@@ -45,10 +45,10 @@ using BSplinesX = ddc::NonUniformBSplines<DimX, s_degree_x>;
 using BSplinesY = ddc::NonUniformBSplines<DimY, s_degree_y>;
 #endif
 
-using GrevillePointsX
-        = ddc::GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
-using GrevillePointsY
-        = ddc::GrevilleInterpolationPoints<BSplinesY, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
+using GrevillePointsX = ddc::
+        GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
+using GrevillePointsY = ddc::
+        GrevilleInterpolationPoints<BSplinesY, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 
 using IDimX = GrevillePointsX::interpolation_mesh_type;
 using IndexX = ddc::DiscreteElement<IDimX>;
@@ -66,8 +66,20 @@ using SplineXY = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX, BSplinesY>>;
 using FieldXY = ddc::Chunk<double, ddc::DiscreteDomain<IDimX, IDimY>>;
 using CoordXY = ddc::Coordinate<DimX, DimY>;
 
-using BuilderX = ddc::SplineBuilder<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
-using BuilderY = ddc::SplineBuilder<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesY, IDimY, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
+using BuilderX = ddc::SplineBuilder<
+        Kokkos::DefaultHostExecutionSpace,
+        Kokkos::HostSpace,
+        BSplinesX,
+        IDimX,
+        ddc::BoundCond::PERIODIC,
+        ddc::BoundCond::PERIODIC>;
+using BuilderY = ddc::SplineBuilder<
+        Kokkos::DefaultHostExecutionSpace,
+        Kokkos::HostSpace,
+        BSplinesY,
+        IDimY,
+        ddc::BoundCond::PERIODIC,
+        ddc::BoundCond::PERIODIC>;
 using BuilderXY = ddc::SplineBuilder2D<BuilderX, BuilderY>;
 
 using EvaluatorType = Evaluator2D::

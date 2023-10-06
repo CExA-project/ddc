@@ -17,6 +17,7 @@
 #include <ddc/kernels/splines/view.hpp>
 
 #include <gtest/gtest.h>
+
 #include "ddc/discrete_domain.hpp"
 
 #include "Kokkos_Core_fwd.hpp"
@@ -55,8 +56,7 @@ static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
 #endif
 
 template <typename BSpX>
-using GrevillePoints = ddc::
-        GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
+using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
@@ -166,12 +166,15 @@ static void BatchedNonPeriodicSplineTest()
     dims_initializer(ncells);
 
     // Create the values domain (mesh)
-	ddc::DiscreteDomain<IDim<I,I>> interpolation_domain = GrevillePoints<BSplines<I>>::get_domain();
-    ddc::DiscreteDomain<IDim<X, void>...> const dom_vals_tmp = ddc::DiscreteDomain<IDim<X, void>...>(
-                     ddc::DiscreteDomain<
-                             IDim<X, void>>(Index<IDim<X, void>>(0), DVect<IDim<X, void>>(ncells))...);
-    ddc::DiscreteDomain<IDim<X, I>...> const dom_vals = ddc::replace_dim_of<IDim<I,void>,IDim<I,I>>(dom_vals_tmp,interpolation_domain);
-	/*
+    ddc::DiscreteDomain<IDim<I, I>> interpolation_domain
+            = GrevillePoints<BSplines<I>>::get_domain();
+    ddc::DiscreteDomain<IDim<X, void>...> const dom_vals_tmp = ddc::DiscreteDomain<
+            IDim<X, void>...>(
+            ddc::DiscreteDomain<
+                    IDim<X, void>>(Index<IDim<X, void>>(0), DVect<IDim<X, void>>(ncells))...);
+    ddc::DiscreteDomain<IDim<X, I>...> const dom_vals
+            = ddc::replace_dim_of<IDim<I, void>, IDim<I, I>>(dom_vals_tmp, interpolation_domain);
+    /*
     
     ddc::DiscreteDomain<BSplinesX> const dom_bsplines_x(
             ddc::discrete_space<BSplinesX>().full_domain());

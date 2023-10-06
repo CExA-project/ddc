@@ -36,8 +36,8 @@ using BSplinesX = ddc::UniformBSplines<DimX, s_degree_x>;
 using BSplinesX = ddc::NonUniformBSplines<DimX, s_degree_x>;
 #endif
 
-using GrevillePoints
-        = ddc::GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
+using GrevillePoints = ddc::
+        GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 
 using IDimX = GrevillePoints::interpolation_mesh_type;
 
@@ -82,7 +82,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
     ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
-	ddc::SplineBuilder<
+    ddc::SplineBuilder<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::HostSpace,
             BSplinesX,
@@ -100,7 +100,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
     spline_builder(coef.span_view(), yvals.span_view());
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
-	ddc::SplineEvaluator<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX>
+    ddc::SplineEvaluator<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX>
             spline_evaluator(ddc::g_null_boundary<BSplinesX>, ddc::g_null_boundary<BSplinesX>);
 
     ddc::Chunk<CoordX, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);

@@ -258,7 +258,8 @@ TEST(NonPeriodic2DSplineBuilderTest, Identity)
     const std::optional<ddc::CDSpan2D> deriv_r_Y(
             s_bcr == ddc::BoundCond::HERMITE ? std::optional(c_deriv_ymax) : std::nullopt);
     const std::optional<ddc::CDSpan2D> md_xmin_ymin(
-            s_bcl == ddc::BoundCond::HERMITE ? std::optional(c_mixed_derivs_xmin_ymin) : std::nullopt);
+            s_bcl == ddc::BoundCond::HERMITE ? std::optional(c_mixed_derivs_xmin_ymin)
+                                             : std::nullopt);
     const std::optional<ddc::CDSpan2D> md_xmin_ymax(
             s_bcl == ddc::BoundCond::HERMITE && s_bcr == ddc::BoundCond::HERMITE
                     ? std::optional(c_mixed_derivs_xmin_ymax)
@@ -268,7 +269,8 @@ TEST(NonPeriodic2DSplineBuilderTest, Identity)
                     ? std::optional(c_mixed_derivs_xmax_ymin)
                     : std::nullopt);
     const std::optional<ddc::CDSpan2D> md_xmax_ymax(
-            s_bcr == ddc::BoundCond::HERMITE ? std::optional(c_mixed_derivs_xmax_ymax) : std::nullopt);
+            s_bcr == ddc::BoundCond::HERMITE ? std::optional(c_mixed_derivs_xmax_ymax)
+                                             : std::nullopt);
 
     // 5. Finally build the spline by filling `coef`
     spline_builder(

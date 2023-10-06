@@ -18,6 +18,18 @@
 
 namespace ddc {
 
+enum class Spline_Solver { GINKGO, LAPACK };
+
+// TODO: Check if this is really the best way ?
+class kwArgs_spline_builder
+{
+	public:
+    ddc::Spline_Solver solver;
+	void operator()(kwArgs_spline_builder const& kwargs){
+		solver = kwargs.solver;
+	}
+};
+
 constexpr bool is_spline_interpolation_mesh_uniform(
         bool const is_uniform,
         BoundCond const BcXmin,
@@ -80,6 +92,7 @@ public:
     //TODO: privatize
     const int m_offset;
 
+	ddc::kwArgs_spline_builder const m_kwargs;
 private:
     interpolation_domain_type m_interpolation_domain;
 
@@ -88,7 +101,7 @@ private:
 public:
     int compute_offset(interpolation_domain_type const& interpolation_domain);
 
-    SplineBuilder(interpolation_domain_type const& interpolation_domain);
+    SplineBuilder(interpolation_domain_type const& interpolation_domain, kwArgs_spline_builder const& kwargs = {ddc::Spline_Solver::GINKGO});
 
     SplineBuilder(SplineBuilder const& x) = delete;
 
@@ -176,12 +189,13 @@ template <
         BoundCond BcXmin,
         BoundCond BcXmax>
 SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, BcXmin, BcXmax>::
-        SplineBuilder(interpolation_domain_type const& interpolation_domain)
+        SplineBuilder(interpolation_domain_type const& interpolation_domain, kwArgs_spline_builder const& kwargs)
     : m_interpolation_domain(interpolation_domain)
     , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
            / ddc::discrete_space<BSplines>().ncells())
     , matrix(nullptr)
     , m_offset(compute_offset(interpolation_domain))
+	, m_kwargs(kwargs)
 {
     // Calculate block sizes
     int lower_block_size, upper_block_size;
@@ -433,30 +447,29 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
     }
 
     if constexpr (bsplines_type::is_periodic()) {
-#if 0
-        matrix = MatrixMaker::make_new_periodic_banded(
+    if (m_kwargs.solver==ddc::Spline_Solver::LAPACK) {
+        matrix = ddc::detail::MatrixMaker::make_new_periodic_banded(
                 ddc::discrete_space<BSplines>().nbasis(),
                 upper_band_width,
                 upper_band_width,
                 bsplines_type::is_uniform());
-#else
+} else if (m_kwargs.solver==ddc::Spline_Solver::GINKGO) {
         matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
                 ddc::discrete_space<BSplines>().nbasis());
-#endif
+}
     } else {
-#if 0
-        matrix = MatrixMaker::make_new_block_with_banded_region(
+    if (m_kwargs.solver==ddc::Spline_Solver::LAPACK) {
+        matrix = ddc::detail::MatrixMaker::make_new_block_with_banded_region(
                 ddc::discrete_space<BSplines>().nbasis(),
                 upper_band_width,
                 upper_band_width,
                 bsplines_type::is_uniform(),
                 upper_block_size,
                 lower_block_size);
-#else
+} else if (m_kwargs.solver==ddc::Spline_Solver::GINKGO) {
         matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
                 ddc::discrete_space<BSplines>().nbasis());
-#endif
-    }
+    }}
 
     build_matrix_system();
 

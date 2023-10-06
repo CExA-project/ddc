@@ -85,7 +85,7 @@ public:
 
     template <class Domain, class Layout1, class Layout2, class Layout3>
     void operator()(
-            ddc::ChunkSpan<double, Domain, Layout1> const spline_eval,
+            ddc::ChunkSpan<double, Domain, Layout1, MemorySpace> const spline_eval,
             ddc::ChunkSpan<const ddc::Coordinate<tag_type>, Domain, Layout2, MemorySpace> const
                     coords_eval,
             ddc::ChunkSpan<
@@ -99,9 +99,10 @@ public:
         }
     }
 
+	template <class Layout>
     double deriv(
             ddc::Coordinate<tag_type> const& coord_eval,
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>> const spline_coef) const
+            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>, Layout, MemorySpace> const spline_coef) const
     {
         std::array<double, bsplines_type::degree() + 1> values;
         DSpan1D const vals = as_span(values);
@@ -125,10 +126,11 @@ public:
         }
     }
 
+	template <class Layout>
     double integrate(
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>> const spline_coef) const
+            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType>, Layout, MemorySpace> const spline_coef) const
     {
-        ddc::Chunk<double, ddc::DiscreteDomain<BSplinesType>> values(spline_coef.domain());
+        ddc::Chunk values(spline_coef.domain(), ddc::KokkosAllocator<double, MemorySpace>());
 
         ddc::discrete_space<bsplines_type>().integrals(values);
 

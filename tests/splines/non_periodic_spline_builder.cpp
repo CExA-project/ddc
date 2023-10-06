@@ -18,6 +18,7 @@
 
 #include <gtest/gtest.h>
 
+#include "Kokkos_Core_fwd.hpp"
 #include "cosine_evaluator.hpp"
 #include "polynomial_evaluator.hpp"
 #include "spline_error_bounds.hpp"
@@ -30,24 +31,24 @@ struct DimX
 static constexpr std::size_t s_degree_x = DEGREE_X;
 
 #if defined(BCL_GREVILLE)
-static constexpr BoundCond s_bcl = BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::GREVILLE;
 #elif defined(BCL_HERMITE)
-static constexpr BoundCond s_bcl = BoundCond::HERMITE;
+static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::HERMITE;
 #endif
 
 #if defined(BCR_GREVILLE)
-static constexpr BoundCond s_bcr = BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::GREVILLE;
 #elif defined(BCR_HERMITE)
-static constexpr BoundCond s_bcr = BoundCond::HERMITE;
+static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
 #endif
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-using BSplinesX = UniformBSplines<DimX, s_degree_x>;
+using BSplinesX = ddc::UniformBSplines<DimX, s_degree_x>;
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-using BSplinesX = NonUniformBSplines<DimX, s_degree_x>;
+using BSplinesX = ddc::NonUniformBSplines<DimX, s_degree_x>;
 #endif
 
-using GrevillePoints = GrevilleInterpolationPoints<BSplinesX, s_bcl, s_bcr>;
+using GrevillePoints = ddc::GrevilleInterpolationPoints<BSplinesX, s_bcl, s_bcr>;
 
 using IDimX = GrevillePoints::interpolation_mesh_type;
 
@@ -91,16 +92,16 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
-    SplineX coef(dom_bsplines_x);
+	ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
 
     // 3. Create the interpolation domain
     ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling());
     ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
-    SplineBuilder<
-            Kokkos::DefaultExecutionSpace,
-            Kokkos::DefaultExecutionSpace::memory_space,
+    ddc::SplineBuilder<
+            Kokkos::DefaultHostExecutionSpace,
+            Kokkos::HostSpace,
             BSplinesX,
             IDimX,
             s_bcl,
@@ -108,15 +109,15 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
-    FieldX yvals(interpolation_domain);
+	ddc::Chunk yvals(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     evaluator_type evaluator(interpolation_domain);
     evaluator(yvals.span_view());
 
     int constexpr shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     std::array<double, s_degree_x / 2> Sderiv_lhs_data;
-    DSpan1D Sderiv_lhs(Sderiv_lhs_data.data(), Sderiv_lhs_data.size());
-    std::optional<DSpan1D> deriv_l;
-    if (s_bcl == BoundCond::HERMITE) {
+	ddc::DSpan1D Sderiv_lhs(Sderiv_lhs_data.data(), Sderiv_lhs_data.size());
+    std::optional<ddc::DSpan1D> deriv_l;
+    if (s_bcl == ddc::BoundCond::HERMITE) {
         for (std::size_t ii = 0; ii < Sderiv_lhs.extent(0); ++ii) {
             Sderiv_lhs(ii) = evaluator.deriv(x0, ii + shift);
         }
@@ -124,9 +125,9 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     }
 
     std::array<double, s_degree_x / 2> Sderiv_rhs_data;
-    DSpan1D Sderiv_rhs(Sderiv_rhs_data.data(), Sderiv_rhs_data.size());
-    std::optional<DSpan1D> deriv_r;
-    if (s_bcr == BoundCond::HERMITE) {
+	ddc::DSpan1D Sderiv_rhs(Sderiv_rhs_data.data(), Sderiv_rhs_data.size());
+    std::optional<ddc::DSpan1D> deriv_r;
+    if (s_bcr == ddc::BoundCond::HERMITE) {
         for (std::size_t ii = 0; ii < Sderiv_rhs.extent(0); ++ii) {
             Sderiv_rhs(ii) = evaluator.deriv(xN, ii + shift);
         }
@@ -134,21 +135,21 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     }
 
     // 6. Finally build the spline by filling `coef`
-    spline_builder(coef, yvals, deriv_l, deriv_r);
+    spline_builder(coef.span_view(), yvals.span_view(), deriv_l, deriv_r);
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
-    SplineEvaluator<BSplinesX>
-            spline_evaluator(g_null_boundary<BSplinesX>, g_null_boundary<BSplinesX>);
+    ddc::SplineEvaluator<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX>
+            spline_evaluator(ddc::g_null_boundary<BSplinesX>, ddc::g_null_boundary<BSplinesX>);
 
     ddc::Chunk<ddc::Coordinate<DimX>, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);
     for (IndexX const ix : interpolation_domain) {
         coords_eval(ix) = ddc::coordinate(ix);
     }
 
-    FieldX spline_eval(interpolation_domain);
+	ddc::Chunk spline_eval(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     spline_evaluator(spline_eval.span_view(), coords_eval.span_cview(), coef.span_cview());
 
-    FieldX spline_eval_deriv(interpolation_domain);
+	ddc::Chunk spline_eval_deriv(interpolation_domain, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
     spline_evaluator
             .deriv(spline_eval_deriv.span_view(), coords_eval.span_cview(), coef.span_cview());
 

@@ -24,10 +24,10 @@ struct DimX
 
 static constexpr std::size_t s_degree_x = DEGREE_X;
 
-using BSplinesX = NonUniformBSplines<DimX, s_degree_x>;
+using BSplinesX = ddc::NonUniformBSplines<DimX, s_degree_x>;
 
 using GrevillePoints
-        = GrevilleInterpolationPoints<BSplinesX, BoundCond::PERIODIC, BoundCond::PERIODIC>;
+        = ddc::GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 
 using IDimX = GrevillePoints::interpolation_mesh_type;
 

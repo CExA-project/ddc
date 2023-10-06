@@ -207,8 +207,9 @@ public:
             return 1.0 / ddc::step<mesh_type>();
         }
 
+		template <std::size_t Size>
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
-                std::array<double, D + 1>& values,
+                std::array<double, Size>& values,
                 ddc::Coordinate<Tag> const& x,
                 std::size_t degree) const;
 
@@ -221,9 +222,10 @@ public:
 
 template <class Tag, std::size_t D>
 template <class MemorySpace>
+template <std::size_t Size>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::
         Impl<MemorySpace>::eval_basis(
-                std::array<double, D + 1>& values,
+                std::array<double, Size>& values,
                 ddc::Coordinate<Tag> const& x,
                 std::size_t const deg) const
 {
@@ -462,12 +464,12 @@ UniformBSplines<Tag, D>::Impl<MemorySpace>::integrals(
                 mdspan<double, std::experimental::extents<std::size_t, degree() + 2>> const
                         edge_vals(edge_vals_ptr.data());
 
-        eval_basis(edge_vals, rmin(), degree() + 1);
+        eval_basis(edge_vals_ptr, rmin(), degree() + 1);
 
-        double const d_eval = sum(edge_vals);
+        double const d_eval = ddc::detail::sum(edge_vals);
 
         for (std::size_t i = 0; i < degree(); ++i) {
-            double const c_eval = sum(edge_vals, 0, degree() - i);
+            double const c_eval = ddc::detail::sum(edge_vals, 0, degree() - i);
 
             double const edge_value = ddc::step<mesh_type>() * (d_eval - c_eval);
 

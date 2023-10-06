@@ -132,7 +132,7 @@ public:
     {
         ddc::Chunk values(spline_coef.domain(), ddc::KokkosAllocator<double, MemorySpace>());
 
-        ddc::discrete_space<bsplines_type>().integrals(values);
+        ddc::discrete_space<bsplines_type>().integrals(values.span_view());
 
         return ddc::transform_reduce(
                 spline_coef.domain(),

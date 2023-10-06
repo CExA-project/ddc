@@ -249,13 +249,12 @@ public:
     }
 
 private:
-	template <class D>
     double eval(
             ddc::Coordinate<Dim1, Dim2> const& coord_eval,
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType1, BSplinesType2>> const
                     spline_coef,
-            std::array<double, bsplines_type1::degree()+1> const vals1,
-            std::array<double, bsplines_type2::degree()+1> const vals2) const
+            std::array<double, bsplines_type1::degree()+1>& vals1,
+            std::array<double, bsplines_type2::degree()+1>& vals2) const
     {
         ddc::Coordinate<Dim1> coord_eval1 = ddc::select<Dim1>(coord_eval);
         ddc::Coordinate<Dim2> coord_eval2 = ddc::select<Dim2>(coord_eval);
@@ -301,14 +300,14 @@ private:
                 eval_type());
     }
 
-    template <class D, class EvalType1, class EvalType2>
+    template <class EvalType1, class EvalType2>
     double eval_no_bc(
             ddc::Coordinate<Dim1> const& coord_eval1,
             ddc::Coordinate<Dim2> const& coord_eval2,
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType1, BSplinesType2>> const
                     spline_coef,
-            std::array<double, bsplines_type1::degree()+1> const vals1,
-            std::array<double, bsplines_type2::degree()+1> const vals2,
+            std::array<double, bsplines_type1::degree()+1>& vals1,
+            std::array<double, bsplines_type2::degree()+1>& vals2,
             EvalType1 const,
             EvalType2 const) const
     {

@@ -161,7 +161,6 @@ foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGR
   endforeach()
 endforeach()
 
-if(0)
 foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
   foreach(BCR "BCR_GREVILLE" "BCR_HERMITE")
     foreach(EVALUATOR "EVALUATOR_POLYNOMIAL")
@@ -184,7 +183,6 @@ foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
     endforeach()
   endforeach()
 endforeach()
-endif()
 
 if(0)
 foreach(CONTINUITY RANGE -1 1)

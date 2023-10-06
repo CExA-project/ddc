@@ -25,15 +25,15 @@
 
 
 #if defined(BCL_GREVILLE)
-static constexpr BoundCond s_bcl = BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::GREVILLE;
 #elif defined(BCL_HERMITE)
-static constexpr BoundCond s_bcl = BoundCond::HERMITE;
+static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::HERMITE;
 #endif
 
 #if defined(BCR_GREVILLE)
-static constexpr BoundCond s_bcr = BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::GREVILLE;
 #elif defined(BCR_HERMITE)
-static constexpr BoundCond s_bcr = BoundCond::HERMITE;
+static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
 #endif
 
 struct DimX
@@ -50,21 +50,21 @@ static constexpr std::size_t s_degree_x = DEGREE_X;
 static constexpr std::size_t s_degree_y = DEGREE_Y;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-using BSplinesX = UniformBSplines<DimX, s_degree_x>;
-using BSplinesY = UniformBSplines<DimY, s_degree_y>;
+using BSplinesX = ddc::UniformBSplines<DimX, s_degree_x>;
+using BSplinesY = ddc::UniformBSplines<DimY, s_degree_y>;
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-using BSplinesX = NonUniformBSplines<DimX, s_degree_x>;
-using BSplinesY = NonUniformBSplines<DimY, s_degree_y>;
+using BSplinesX = ddc::NonUniformBSplines<DimX, s_degree_x>;
+using BSplinesY = ddc::NonUniformBSplines<DimY, s_degree_y>;
 #endif
 
-using GrevillePointsX = GrevilleInterpolationPoints<BSplinesX, s_bcl, s_bcr>;
+using GrevillePointsX = ddc::GrevilleInterpolationPoints<BSplinesX, s_bcl, s_bcr>;
 
 using IDimX = GrevillePointsX::interpolation_mesh_type;
 using IndexX = ddc::DiscreteElement<IDimX>;
 using DVectX = ddc::DiscreteVector<IDimX>;
 using CoordX = ddc::Coordinate<DimX>;
 
-using GrevillePointsY = GrevilleInterpolationPoints<BSplinesY, s_bcl, s_bcr>;
+using GrevillePointsY = ddc::GrevilleInterpolationPoints<BSplinesY, s_bcl, s_bcr>;
 
 using IDimY = GrevillePointsY::interpolation_mesh_type;
 using IndexY = ddc::DiscreteElement<IDimY>;
@@ -77,21 +77,21 @@ using SplineXY = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX, BSplinesY>>;
 using FieldXY = ddc::Chunk<double, ddc::DiscreteDomain<IDimX, IDimY>>;
 using CoordXY = ddc::Coordinate<DimX, DimY>;
 
-using BuilderX = SplineBuilder<
-        Kokkos::DefaultExecutionSpace,
-        Kokkos::DefaultExecutionSpace::memory_space,
+using BuilderX = ddc::SplineBuilder<
+        Kokkos::DefaultHostExecutionSpace,
+        Kokkos::DefaultHostExecutionSpace::memory_space,
         BSplinesX,
         IDimX,
         s_bcl,
         s_bcr>;
-using BuilderY = SplineBuilder<
-        Kokkos::DefaultExecutionSpace,
-        Kokkos::DefaultExecutionSpace::memory_space,
+using BuilderY = ddc::SplineBuilder<
+        Kokkos::DefaultHostExecutionSpace,
+        Kokkos::DefaultHostExecutionSpace::memory_space,
         BSplinesY,
         IDimY,
         s_bcl,
         s_bcr>;
-using BuilderXY = SplineBuilder2D<BuilderX, BuilderY>;
+using BuilderXY = ddc::SplineBuilder2D<BuilderX, BuilderY>;
 
 using EvaluatorType = Evaluator2D::Evaluator<
         PolynomialEvaluator::Evaluator<IDimX, s_degree_x>,
@@ -168,10 +168,10 @@ TEST(NonPeriodic2DSplineBuilderTest, Identity)
 
     std::vector<double> deriv_xmin_data_X(n_bc_X * interpolation_domain_Y.size());
     std::vector<double> deriv_xmax_data_X(n_bc_X * interpolation_domain_Y.size());
-    DSpan2D deriv_xmin(deriv_xmin_data_X.data(), interpolation_domain_Y.size(), n_bc_X);
-    DSpan2D deriv_xmax(deriv_xmax_data_X.data(), interpolation_domain_Y.size(), n_bc_X);
-    CDSpan2D c_deriv_xmin(deriv_xmin_data_X.data(), interpolation_domain_Y.size(), n_bc_X);
-    CDSpan2D c_deriv_xmax(deriv_xmax_data_X.data(), interpolation_domain_Y.size(), n_bc_X);
+    ddc::DSpan2D deriv_xmin(deriv_xmin_data_X.data(), interpolation_domain_Y.size(), n_bc_X);
+    ddc::DSpan2D deriv_xmax(deriv_xmax_data_X.data(), interpolation_domain_Y.size(), n_bc_X);
+    ddc::CDSpan2D c_deriv_xmin(deriv_xmin_data_X.data(), interpolation_domain_Y.size(), n_bc_X);
+    ddc::CDSpan2D c_deriv_xmax(deriv_xmax_data_X.data(), interpolation_domain_Y.size(), n_bc_X);
     auto yiter = interpolation_domain_Y.begin();
     for (std::size_t ii = 0; ii < interpolation_domain_Y.size(); ++ii) {
         for (std::size_t jj = 0; jj < n_bc_X; ++jj) {
@@ -191,10 +191,10 @@ TEST(NonPeriodic2DSplineBuilderTest, Identity)
 
     std::vector<double> deriv_xmin_data_Y(n_bc_Y * interpolation_domain_X.size());
     std::vector<double> deriv_xmax_data_Y(n_bc_Y * interpolation_domain_X.size());
-    DSpan2D deriv_ymin(deriv_xmin_data_Y.data(), interpolation_domain_X.size(), n_bc_Y);
-    DSpan2D deriv_ymax(deriv_xmax_data_Y.data(), interpolation_domain_X.size(), n_bc_Y);
-    CDSpan2D c_deriv_ymin(deriv_xmin_data_Y.data(), interpolation_domain_X.size(), n_bc_Y);
-    CDSpan2D c_deriv_ymax(deriv_xmax_data_Y.data(), interpolation_domain_X.size(), n_bc_Y);
+    ddc::DSpan2D deriv_ymin(deriv_xmin_data_Y.data(), interpolation_domain_X.size(), n_bc_Y);
+    ddc::DSpan2D deriv_ymax(deriv_xmax_data_Y.data(), interpolation_domain_X.size(), n_bc_Y);
+    ddc::CDSpan2D c_deriv_ymin(deriv_xmin_data_Y.data(), interpolation_domain_X.size(), n_bc_Y);
+    ddc::CDSpan2D c_deriv_ymax(deriv_xmax_data_Y.data(), interpolation_domain_X.size(), n_bc_Y);
     auto xiter = interpolation_domain_X.begin();
     for (std::size_t ii = 0; ii < interpolation_domain_X.size(); ++ii) {
         for (std::size_t jj = 0; jj < n_bc_Y; ++jj) {
@@ -216,14 +216,14 @@ TEST(NonPeriodic2DSplineBuilderTest, Identity)
     std::vector<double> mixed_derivs_xmin_ymax_data(n_bc_X * n_bc_Y);
     std::vector<double> mixed_derivs_xmax_ymin_data(n_bc_X * n_bc_Y);
     std::vector<double> mixed_derivs_xmax_ymax_data(n_bc_X * n_bc_Y);
-    DSpan2D mixed_derivs_xmin_ymin(mixed_derivs_xmin_ymin_data.data(), n_bc_X, n_bc_Y);
-    DSpan2D mixed_derivs_xmin_ymax(mixed_derivs_xmin_ymax_data.data(), n_bc_X, n_bc_Y);
-    DSpan2D mixed_derivs_xmax_ymin(mixed_derivs_xmax_ymin_data.data(), n_bc_X, n_bc_Y);
-    DSpan2D mixed_derivs_xmax_ymax(mixed_derivs_xmax_ymax_data.data(), n_bc_X, n_bc_Y);
-    CDSpan2D c_mixed_derivs_xmin_ymin(mixed_derivs_xmin_ymin_data.data(), n_bc_X, n_bc_Y);
-    CDSpan2D c_mixed_derivs_xmin_ymax(mixed_derivs_xmin_ymax_data.data(), n_bc_X, n_bc_Y);
-    CDSpan2D c_mixed_derivs_xmax_ymin(mixed_derivs_xmax_ymin_data.data(), n_bc_X, n_bc_Y);
-    CDSpan2D c_mixed_derivs_xmax_ymax(mixed_derivs_xmax_ymax_data.data(), n_bc_X, n_bc_Y);
+    ddc::DSpan2D mixed_derivs_xmin_ymin(mixed_derivs_xmin_ymin_data.data(), n_bc_X, n_bc_Y);
+    ddc::DSpan2D mixed_derivs_xmin_ymax(mixed_derivs_xmin_ymax_data.data(), n_bc_X, n_bc_Y);
+    ddc::DSpan2D mixed_derivs_xmax_ymin(mixed_derivs_xmax_ymin_data.data(), n_bc_X, n_bc_Y);
+    ddc::DSpan2D mixed_derivs_xmax_ymax(mixed_derivs_xmax_ymax_data.data(), n_bc_X, n_bc_Y);
+    ddc::CDSpan2D c_mixed_derivs_xmin_ymin(mixed_derivs_xmin_ymin_data.data(), n_bc_X, n_bc_Y);
+    ddc::CDSpan2D c_mixed_derivs_xmin_ymax(mixed_derivs_xmin_ymax_data.data(), n_bc_X, n_bc_Y);
+    ddc::CDSpan2D c_mixed_derivs_xmax_ymin(mixed_derivs_xmax_ymin_data.data(), n_bc_X, n_bc_Y);
+    ddc::CDSpan2D c_mixed_derivs_xmax_ymax(mixed_derivs_xmax_ymax_data.data(), n_bc_X, n_bc_Y);
     for (std::size_t ii = 0; ii < n_bc_X; ++ii) {
         for (std::size_t jj = 0; jj < n_bc_Y; ++jj) {
             mixed_derivs_xmin_ymin(ii, jj) = evaluator
@@ -249,31 +249,31 @@ TEST(NonPeriodic2DSplineBuilderTest, Identity)
         }
     }
 
-    const std::optional<CDSpan2D> deriv_l_X(
-            s_bcl == BoundCond::HERMITE ? std::optional(c_deriv_xmin) : std::nullopt);
-    const std::optional<CDSpan2D> deriv_r_X(
-            s_bcr == BoundCond::HERMITE ? std::optional(c_deriv_xmax) : std::nullopt);
-    const std::optional<CDSpan2D> deriv_l_Y(
-            s_bcl == BoundCond::HERMITE ? std::optional(c_deriv_ymin) : std::nullopt);
-    const std::optional<CDSpan2D> deriv_r_Y(
-            s_bcr == BoundCond::HERMITE ? std::optional(c_deriv_ymax) : std::nullopt);
-    const std::optional<CDSpan2D> md_xmin_ymin(
-            s_bcl == BoundCond::HERMITE ? std::optional(c_mixed_derivs_xmin_ymin) : std::nullopt);
-    const std::optional<CDSpan2D> md_xmin_ymax(
-            s_bcl == BoundCond::HERMITE && s_bcr == BoundCond::HERMITE
+    const std::optional<ddc::CDSpan2D> deriv_l_X(
+            s_bcl == ddc::BoundCond::HERMITE ? std::optional(c_deriv_xmin) : std::nullopt);
+    const std::optional<ddc::CDSpan2D> deriv_r_X(
+            s_bcr == ddc::BoundCond::HERMITE ? std::optional(c_deriv_xmax) : std::nullopt);
+    const std::optional<ddc::CDSpan2D> deriv_l_Y(
+            s_bcl == ddc::BoundCond::HERMITE ? std::optional(c_deriv_ymin) : std::nullopt);
+    const std::optional<ddc::CDSpan2D> deriv_r_Y(
+            s_bcr == ddc::BoundCond::HERMITE ? std::optional(c_deriv_ymax) : std::nullopt);
+    const std::optional<ddc::CDSpan2D> md_xmin_ymin(
+            s_bcl == ddc::BoundCond::HERMITE ? std::optional(c_mixed_derivs_xmin_ymin) : std::nullopt);
+    const std::optional<ddc::CDSpan2D> md_xmin_ymax(
+            s_bcl == ddc::BoundCond::HERMITE && s_bcr == ddc::BoundCond::HERMITE
                     ? std::optional(c_mixed_derivs_xmin_ymax)
                     : std::nullopt);
-    const std::optional<CDSpan2D> md_xmax_ymin(
-            s_bcl == BoundCond::HERMITE && s_bcr == BoundCond::HERMITE
+    const std::optional<ddc::CDSpan2D> md_xmax_ymin(
+            s_bcl == ddc::BoundCond::HERMITE && s_bcr == ddc::BoundCond::HERMITE
                     ? std::optional(c_mixed_derivs_xmax_ymin)
                     : std::nullopt);
-    const std::optional<CDSpan2D> md_xmax_ymax(
-            s_bcr == BoundCond::HERMITE ? std::optional(c_mixed_derivs_xmax_ymax) : std::nullopt);
+    const std::optional<ddc::CDSpan2D> md_xmax_ymax(
+            s_bcr == ddc::BoundCond::HERMITE ? std::optional(c_mixed_derivs_xmax_ymax) : std::nullopt);
 
     // 5. Finally build the spline by filling `coef`
     spline_builder(
-            coef,
-            yvals,
+            coef.span_view(),
+            yvals.span_cview(),
             deriv_l_X,
             deriv_r_X,
             deriv_l_Y,
@@ -284,11 +284,11 @@ TEST(NonPeriodic2DSplineBuilderTest, Identity)
             md_xmax_ymax);
 
     // 6. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
-    const SplineEvaluator2D<BSplinesX, BSplinesY> spline_evaluator(
-            g_null_boundary_2d<BSplinesX, BSplinesY>,
-            g_null_boundary_2d<BSplinesX, BSplinesY>,
-            g_null_boundary_2d<BSplinesX, BSplinesY>,
-            g_null_boundary_2d<BSplinesX, BSplinesY>);
+    const ddc::SplineEvaluator2D<BSplinesX, BSplinesY> spline_evaluator(
+            ddc::g_null_boundary_2d<BSplinesX, BSplinesY>,
+            ddc::g_null_boundary_2d<BSplinesX, BSplinesY>,
+            ddc::g_null_boundary_2d<BSplinesX, BSplinesY>,
+            ddc::g_null_boundary_2d<BSplinesX, BSplinesY>);
 
     ddc::Chunk<CoordXY, ddc::DiscreteDomain<IDimX, IDimY>> coords_eval(interpolation_domain);
     ddc::for_each(interpolation_domain, [&](IndexXY const ixy) {

@@ -222,7 +222,7 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                && derivs_xmax->extent(1) == nbc_xmax);
     }
     ddc::for_each(
-            ddc::policies::parallel_host,
+            ddc::policies::policy(typename SplineBuilder1::exec_space()),
             spline_builder2.interpolation_domain(),
             [&](IMesh2 const i) {
                 const std::size_t ii = i.uid();
@@ -336,7 +336,7 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                             ddc::discrete_space<bsplines_type1>().nbasis()));
 
     ddc::for_each(
-            ddc::policies::parallel_host,
+            ddc::policies::policy(typename SplineBuilder2::exec_space()),
             spline_basis_domain,
             [=](ddc::DiscreteElement<bsplines_type1> const i) {
                 const ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type2>> line_2

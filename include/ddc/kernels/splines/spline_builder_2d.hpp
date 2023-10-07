@@ -37,10 +37,8 @@ private:
 
 public:
     SplineBuilder2D(interpolation_domain_type const& interpolation_domain)
-        : spline_builder1(
-                ddc::select<interpolation_mesh_type1>(interpolation_domain))
-        , spline_builder2(
-                  ddc::select<interpolation_mesh_type2>(interpolation_domain))
+        : spline_builder1(ddc::select<interpolation_mesh_type1>(interpolation_domain))
+        , spline_builder2(ddc::select<interpolation_mesh_type2>(interpolation_domain))
         , m_interpolation_domain(interpolation_domain)
     {
     }
@@ -147,9 +145,6 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
     ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1_alloc(
             spline_builder1.spline_domain());
     ddc::ChunkSpan spline1 = spline1_alloc.span_view();
-    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type2>> spline2_alloc(
-            spline_builder2.spline_domain());
-    ddc::ChunkSpan spline2 = spline2_alloc.span_view();
 
     using IMesh1 = ddc::DiscreteElement<interpolation_mesh_type1>;
     using IMesh2 = ddc::DiscreteElement<interpolation_mesh_type2>;
@@ -326,37 +321,48 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                     ddc::DiscreteVector<bsplines_type1>(
                             ddc::discrete_space<bsplines_type1>().nbasis()));
 
-    ddc::for_each(spline_basis_domain, [&](ddc::DiscreteElement<bsplines_type1> const i) {
-        const ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type2>> line_2 = spline[i];
-        const ddc::DiscreteDomain<bsplines_type2> whole_line_dom
-                = ddc::get_domain<bsplines_type2>(spline);
-        // Get interpolated values
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type2>> const vals2(
-                line_2[whole_line_dom.remove(IMeshV2(nbc_ymin), IMeshV2(nbc_ymax))]);
-        // Get interpolated values acting as derivatives
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type2>> const l_derivs(
-                line_2[whole_line_dom.take_first(IMeshV2(nbc_ymin))]);
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type2>> const r_derivs(
-                line_2[whole_line_dom.take_last(IMeshV2(nbc_ymax))]);
-        const std::optional<CDSpan1D> deriv_l(
-                BcXmin2 == BoundCond::HERMITE ? std::optional(l_derivs.allocation_mdspan())
-                                              : std::nullopt);
-        const std::optional<CDSpan1D> deriv_r(
-                BcXmax2 == BoundCond::HERMITE ? std::optional(r_derivs.allocation_mdspan())
-                                              : std::nullopt);
+    ddc::for_each(
+            ddc::policies::parallel_host,
+            spline_basis_domain,
+            [=](ddc::DiscreteElement<bsplines_type1> const i) {
+                const ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type2>> line_2
+                        = spline[i];
+                const ddc::DiscreteDomain<bsplines_type2> whole_line_dom
+                        = ddc::get_domain<bsplines_type2>(spline);
+                // Get interpolated values
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type2>> const vals2(
+                        line_2[whole_line_dom.remove(IMeshV2(nbc_ymin), IMeshV2(nbc_ymax))]);
+                // Get interpolated values acting as derivatives
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type2>> const l_derivs(
+                        line_2[whole_line_dom.take_first(IMeshV2(nbc_ymin))]);
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type2>> const r_derivs(
+                        line_2[whole_line_dom.take_last(IMeshV2(nbc_ymax))]);
+                const std::optional<CDSpan1D> deriv_l(
+                        BcXmin2 == BoundCond::HERMITE ? std::optional(l_derivs.allocation_mdspan())
+                                                      : std::nullopt);
+                const std::optional<CDSpan1D> deriv_r(
+                        BcXmax2 == BoundCond::HERMITE ? std::optional(r_derivs.allocation_mdspan())
+                                                      : std::nullopt);
 
-        // TODO: const double ?
-        ddc::ChunkSpan<double, interpolation_domain_type2>
-                vals2_i(vals2.data_handle(), spline_builder2.interpolation_domain());
+                // TODO: const double ?
+                ddc::ChunkSpan<double, interpolation_domain_type2>
+                        vals2_i(vals2.data_handle(), spline_builder2.interpolation_domain());
 
-        // Interpolate coefficients
-        spline_builder2(spline2, vals2_i, deriv_l, deriv_r);
+                //
+                ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type2>> spline2_alloc(
+                        spline_builder2.spline_domain());
+                ddc::ChunkSpan spline2 = spline2_alloc.span_view();
 
-        // Re-write result into 2d spline structure
-        ddc::for_each(
-                ddc::get_domain<bsplines_type2>(spline),
-                [&](ddc::DiscreteElement<bsplines_type2> const j) { spline(i, j) = spline2(j); });
-    });
+                // Interpolate coefficients
+                spline_builder2(spline2, vals2_i, deriv_l, deriv_r);
+
+                // Re-write result into 2d spline structure
+                ddc::for_each(
+                        ddc::get_domain<bsplines_type2>(spline),
+                        [&](ddc::DiscreteElement<bsplines_type2> const j) {
+                            spline(i, j) = spline2(j);
+                        });
+            });
 
     if (bsplines_type1::is_periodic()) {
         for (std::size_t i(0); i < bsplines_type1::degree(); ++i) {

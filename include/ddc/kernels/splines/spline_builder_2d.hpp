@@ -38,11 +38,9 @@ private:
 public:
     SplineBuilder2D(interpolation_domain_type const& interpolation_domain)
         : spline_builder1(
-                ddc::select<interpolation_mesh_type1>(interpolation_domain),
-                {ddc::Spline_Solver::LAPACK})
+                ddc::select<interpolation_mesh_type1>(interpolation_domain))
         , spline_builder2(
-                  ddc::select<interpolation_mesh_type2>(interpolation_domain),
-                  {ddc::Spline_Solver::LAPACK})
+                  ddc::select<interpolation_mesh_type2>(interpolation_domain))
         , m_interpolation_domain(interpolation_domain)
     {
     }

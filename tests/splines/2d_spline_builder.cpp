@@ -83,14 +83,16 @@ using BuilderX = ddc::SplineBuilder<
         BSplinesX,
         IDimX,
         s_bcl,
-        s_bcr>;
+        s_bcr,
+		ddc::SplineSolver::LAPACK>;
 using BuilderY = ddc::SplineBuilder<
         Kokkos::DefaultHostExecutionSpace,
         Kokkos::DefaultHostExecutionSpace::memory_space,
         BSplinesY,
         IDimY,
         s_bcl,
-        s_bcr>;
+        s_bcr,
+		ddc::SplineSolver::LAPACK>;
 using BuilderXY = ddc::SplineBuilder2D<BuilderX, BuilderY>;
 
 using EvaluatorType = Evaluator2D::Evaluator<

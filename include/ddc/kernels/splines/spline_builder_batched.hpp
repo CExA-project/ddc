@@ -117,13 +117,13 @@ public:
             ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
             ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
             std::optional<CDSpan2D> const derivs_xmin = std::nullopt,
-            std::optional<CDSpan2D> const derivs_xmax = std::nullopt) const;
-    // std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
-    // std::optional<CDSpan2D> const derivs_ymax = std::nullopt,
-    // std::optional<CDSpan2D> const mixed_derivs_xmin_ymin = std::nullopt,
-    // std::optional<CDSpan2D> const mixed_derivs_xmax_ymin = std::nullopt,
-    // std::optional<CDSpan2D> const mixed_derivs_xmin_ymax = std::nullopt,
-    // std::optional<CDSpan2D> const mixed_derivs_xmax_ymax = std::nullopt) const;
+            std::optional<CDSpan2D> const derivs_xmax = std::nullopt,
+     std::optional<CDSpan2D> const derivs_ymin = std::nullopt,
+     std::optional<CDSpan2D> const derivs_ymax = std::nullopt,
+     std::optional<CDSpan2D> const mixed_derivs_xmin_ymin = std::nullopt,
+     std::optional<CDSpan2D> const mixed_derivs_xmax_ymin = std::nullopt,
+     std::optional<CDSpan2D> const mixed_derivs_xmin_ymax = std::nullopt,
+     std::optional<CDSpan2D> const mixed_derivs_xmax_ymax = std::nullopt) const;
 };
 
 template <class SplineBuilder, class... IDimX>
@@ -132,13 +132,13 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
         ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
         ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
         std::optional<CDSpan2D> const derivs_xmin,
-        std::optional<CDSpan2D> const derivs_xmax) const
-// std::optional<CDSpan2D> const derivs_ymin,
-// std::optional<CDSpan2D> const derivs_ymax,
-// std::optional<CDSpan2D> const mixed_derivs_xmin_ymin,
-// std::optional<CDSpan2D> const mixed_derivs_xmax_ymin,
-// std::optional<CDSpan2D> const mixed_derivs_xmin_ymax,
-// std::optional<CDSpan2D> const mixed_derivs_xmax_ymax) const
+        std::optional<CDSpan2D> const derivs_xmax,
+ std::optional<CDSpan2D> const derivs_ymin,
+ std::optional<CDSpan2D> const derivs_ymax,
+ std::optional<CDSpan2D> const mixed_derivs_xmin_ymin,
+ std::optional<CDSpan2D> const mixed_derivs_xmax_ymin,
+ std::optional<CDSpan2D> const mixed_derivs_xmin_ymax,
+ std::optional<CDSpan2D> const mixed_derivs_xmax_ymax) const
 {
     const std::size_t nbc_xmin = spline_builder.s_nbc_xmin;
     const std::size_t nbc_xmax = spline_builder.s_nbc_xmax;
@@ -214,14 +214,14 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
 #endif
 
     if (BcXmin == BoundCond::HERMITE) {
-        // assert((long int)(derivs_xmin->extent(0))
-        //               == spline_builder2.interpolation_domain().extents()
-        //       && derivs_xmin->extent(1) == nbc_xmin);
+        assert((long int)(derivs_xmin->extent(0))
+                      == spline_builder2.interpolation_domain().extents()
+              && derivs_xmin->extent(1) == nbc_xmin);
     }
     if (BcXmax == BoundCond::HERMITE) {
-        // assert((long int)(derivs_xmax->extent(0))
-        //                == spline_builder2.interpolation_domain().extents()
-        //        && derivs_xmax->extent(1) == nbc_xmax);
+        assert((long int)(derivs_xmax->extent(0))
+                       == spline_builder2.interpolation_domain().extents()
+              && derivs_xmax->extent(1) == nbc_xmax);
     }
 
 #if 0

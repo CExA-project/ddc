@@ -50,7 +50,7 @@ template <
         class interpolation_mesh_type,
         BoundCond BcXmin,
         BoundCond BcXmax,
-		SplineSolver Solver>
+		SplineSolver Solver=ddc::SplineSolver::GINKGO>
 class SplineBuilder
 {
     static_assert(
@@ -447,7 +447,6 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, interpolation_mesh_type, Bc
 
     if constexpr (bsplines_type::is_periodic()) {
 		if constexpr (Solver==SplineSolver::LAPACK) {
-			std::cout << "----DEBUGE -----";
             matrix = ddc::detail::MatrixMaker::make_new_periodic_banded(
                     ddc::discrete_space<BSplines>().nbasis(),
                     upper_band_width,

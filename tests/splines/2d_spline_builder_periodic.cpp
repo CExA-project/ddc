@@ -72,14 +72,16 @@ using BuilderX = ddc::SplineBuilder<
         BSplinesX,
         IDimX,
         ddc::BoundCond::PERIODIC,
-        ddc::BoundCond::PERIODIC>;
+        ddc::BoundCond::PERIODIC,
+		ddc::SplineSolver::LAPACK>;
 using BuilderY = ddc::SplineBuilder<
         Kokkos::DefaultHostExecutionSpace,
         Kokkos::HostSpace,
         BSplinesY,
         IDimY,
         ddc::BoundCond::PERIODIC,
-        ddc::BoundCond::PERIODIC>;
+        ddc::BoundCond::PERIODIC,
+		ddc::SplineSolver::LAPACK>;
 using BuilderXY = ddc::SplineBuilder2D<BuilderX, BuilderY>;
 
 using EvaluatorType = Evaluator2D::

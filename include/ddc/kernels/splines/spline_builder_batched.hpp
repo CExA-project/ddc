@@ -232,7 +232,11 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
         // Get interpolated values
         ddc::Chunk<double, interpolation_domain_type1> vals1(
                 spline_builder1.interpolation_domain());
-        ddc::deepcopy(vals1, vals[i]);
+        // ddc::deepcopy(vals1, vals[i]);
+		for (auto j : spline_builder1.interpolation_domain()) {
+			vals1(j) = vals(i, j);
+		}
+
 
         // Get interpolated derivatives
         const std::optional<CDSpan1D> deriv_l(

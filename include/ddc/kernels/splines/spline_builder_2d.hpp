@@ -232,7 +232,12 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                 ddc::Chunk<double, interpolation_domain_type1> vals1_alloc(
                         spline_builder1.interpolation_domain());
                 ddc::ChunkSpan vals1 = vals1_alloc.span_view();
-                ddc::deepcopy(vals1, vals[i]);
+                // ddc::deepcopy(vals1, vals[i]);
+                for (auto j : spline_builder1.interpolation_domain()) {
+                    vals1(j) = vals(i, j);
+                }
+
+
 
                 // Get interpolated derivatives
                 const std::optional<CDSpan1D> deriv_l(

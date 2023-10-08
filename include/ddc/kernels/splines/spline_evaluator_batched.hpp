@@ -157,7 +157,7 @@ public:
                                                typename interpolation_domain_type::
                                                        discrete_element_type(i),
                                                j),
-                                       spline_coef_0);
+                                       spline_coef[j]);
                         // spline_eval_1D(interpolation_domain(typename interpolation_domain_type::discrete_element_type(i))) = eval(coords_eval_1D(interpolation_domain(typename interpolation_domain_type::discrete_element_type(i))), spline_coef_1D);
                     }
                 });

@@ -401,10 +401,10 @@ void core(
     else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
         if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
             fftwf_init_threads();
-            fftwf_plan_with_nthreads(ExecSpace::concurrency());
+            fftwf_plan_with_nthreads(execSpace.concurrency());
         } else {
             fftw_init_threads();
-            fftw_plan_with_nthreads(ExecSpace::concurrency());
+            fftw_plan_with_nthreads(execSpace.concurrency());
         }
         _fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin, Tout>(
                 kwargs.direction == ddc::FFT_Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,

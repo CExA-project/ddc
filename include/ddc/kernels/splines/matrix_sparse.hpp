@@ -147,7 +147,7 @@ public:
 #ifdef KOKKOS_ENABLE_CUDA
         if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
             cols_per_par_chunk = Kokkos::pow(2, 16) - 1; // TODO: call cudaMaxGridSize ?
-            par_chunks_per_seq_chunk = ExecSpace::concurrency();
+            par_chunks_per_seq_chunk = 1;
         }
 #endif
     }
@@ -244,19 +244,27 @@ public:
                 Kokkos::MemoryTraits<Kokkos::Unmanaged>>
                 b_view(b, n, n_equations);
 
-        Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
-                x_buffer("x_buffer", par_chunks_per_seq_chunk, n, cols_per_par_chunk);
-        Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
-                b_buffer("b_buffer", par_chunks_per_seq_chunk, n, cols_per_par_chunk);
-        // TODO: use a last incomplete per_par_chunk
         const int n_seq_chunks = n_equations / cols_per_par_chunk / par_chunks_per_seq_chunk + 1;
+        const int par_chunks_per_last_seq_chunk
+                = (n_equations % (cols_per_par_chunk * par_chunks_per_seq_chunk))
+                          / cols_per_par_chunk
+                  + 1;
+        const int cols_per_last_par_chunk
+                = (n_equations % (cols_per_par_chunk * par_chunks_per_seq_chunk * n_seq_chunks))
+                  % cols_per_par_chunk;
+
+        Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
+                x_buffer("x_buffer", par_chunks_per_seq_chunk - 1, n, cols_per_par_chunk);
+        Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
+                b_buffer("b_buffer", par_chunks_per_seq_chunk - 1, n, cols_per_par_chunk);
+        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
+                x_last_buffer("x_last_buffer", n, cols_per_last_par_chunk);
+        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
+                b_last_buffer("b_last_buffer", n, cols_per_last_par_chunk);
+
         for (int i = 0; i < n_seq_chunks; i++) {
-            int n_par_chunks_in_seq_chunk
-                    = i < n_seq_chunks - 1
-                              ? par_chunks_per_seq_chunk
-                              : (n_equations % (cols_per_par_chunk * par_chunks_per_seq_chunk))
-                                                / cols_per_par_chunk
-                                        + 1;
+            int n_par_chunks_in_seq_chunk = i < n_seq_chunks - 1 ? par_chunks_per_seq_chunk
+                                                                 : par_chunks_per_last_seq_chunk;
             Kokkos::parallel_for(
                     Kokkos::RangePolicy<
                             Kokkos::DefaultHostExecutionSpace>(0, n_par_chunks_in_seq_chunk),
@@ -264,25 +272,35 @@ public:
                         int n_equations_in_par_chunk
                                 = (i < n_seq_chunks - 1 || j < n_par_chunks_in_seq_chunk - 1)
                                           ? cols_per_par_chunk
-                                          : (n_equations
-                                             % (cols_per_par_chunk * par_chunks_per_seq_chunk
-                                                * n_seq_chunks))
-                                                    % cols_per_par_chunk;
+                                          : cols_per_last_par_chunk;
                         if (n_equations_in_par_chunk != 0) {
-                            std::pair<int, int> par_chunk_window(
+                            auto par_chunk_window = std::pair<int, int>(
                                     (i * par_chunks_per_seq_chunk + j) * cols_per_par_chunk,
                                     (i * par_chunks_per_seq_chunk + j) * cols_per_par_chunk
                                             + n_equations_in_par_chunk);
-                            auto x_par_chunk = Kokkos::
-                                    subview(x_buffer,
-                                            j,
-                                            Kokkos::ALL,
-                                            std::pair<int, int>(0, n_equations_in_par_chunk));
-                            auto b_par_chunk = Kokkos::
-                                    subview(b_buffer,
-                                            j,
-                                            Kokkos::ALL,
-                                            std::pair<int, int>(0, n_equations_in_par_chunk));
+                            Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> x_par_chunk;
+                            Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> b_par_chunk;
+                            if (i < n_seq_chunks - 1 || j < n_par_chunks_in_seq_chunk - 1) {
+                                x_par_chunk = Kokkos::
+                                        subview(x_buffer,
+                                                j,
+                                                Kokkos::ALL,
+                                                std::pair<int, int>(0, n_equations_in_par_chunk));
+                                b_par_chunk = Kokkos::
+                                        subview(b_buffer,
+                                                j,
+                                                Kokkos::ALL,
+                                                std::pair<int, int>(0, n_equations_in_par_chunk));
+                            } else {
+                                x_par_chunk = Kokkos::
+                                        subview(x_last_buffer,
+                                                Kokkos::ALL,
+                                                std::pair<int, int>(0, n_equations_in_par_chunk));
+                                b_par_chunk = Kokkos::
+                                        subview(b_last_buffer,
+                                                Kokkos::ALL,
+                                                std::pair<int, int>(0, n_equations_in_par_chunk));
+                            }
                             Kokkos::deep_copy(
                                     b_par_chunk,
                                     Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window));

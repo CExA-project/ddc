@@ -254,9 +254,10 @@ public:
                   % cols_per_par_chunk;
 
         Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
-                x_buffer("x_buffer", par_chunks_per_seq_chunk - 1, n, cols_per_par_chunk);
+                x_buffer("x_buffer", par_chunks_per_seq_chunk, n, cols_per_par_chunk);
         Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
-                b_buffer("b_buffer", par_chunks_per_seq_chunk - 1, n, cols_per_par_chunk);
+                b_buffer("b_buffer", par_chunks_per_seq_chunk, n, cols_per_par_chunk);
+        // Last par_chunk of last seq_chunk do not have same number of columns than the others. To get proper layout (because we passe the pointers to Ginkgo), we need a dedicated allocation
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
                 x_last_buffer("x_last_buffer", n, cols_per_last_par_chunk);
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>

@@ -139,7 +139,7 @@ public:
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
         if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-            cols_per_par_chunk = 1024;
+            cols_per_par_chunk = 4096;
             // TODO: Investigate OpenMP parallelism in Ginkgo
             par_chunks_per_seq_chunk = ExecSpace::concurrency();
         }
@@ -244,6 +244,10 @@ public:
                 Kokkos::MemoryTraits<Kokkos::Unmanaged>>
                 b_view(b, n, n_equations);
 
+        Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
+                x_buffer("x_buffer", par_chunks_per_seq_chunk, n, cols_per_par_chunk);
+        Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
+                b_buffer("b_buffer", par_chunks_per_seq_chunk, n, cols_per_par_chunk);
         // TODO: use a last incomplete per_par_chunk
         const int n_seq_chunks = n_equations / cols_per_par_chunk / par_chunks_per_seq_chunk + 1;
         for (int i = 0; i < n_seq_chunks; i++) {
@@ -265,26 +269,29 @@ public:
                                                 * n_seq_chunks))
                                                     % cols_per_par_chunk;
                         if (n_equations_in_par_chunk != 0) {
-                            Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
-                                    b_par_chunk("b_gpu", n, n_equations_in_par_chunk);
+                            std::pair<int, int> par_chunk_window(
+                                    (i * par_chunks_per_seq_chunk + j) * cols_per_par_chunk,
+                                    (i * par_chunks_per_seq_chunk + j) * cols_per_par_chunk
+                                            + n_equations_in_par_chunk);
+                            auto x_par_chunk = Kokkos::
+                                    subview(x_buffer,
+                                            j,
+                                            Kokkos::ALL,
+                                            std::pair<int, int>(0, n_equations_in_par_chunk));
+                            auto b_par_chunk = Kokkos::
+                                    subview(b_buffer,
+                                            j,
+                                            Kokkos::ALL,
+                                            std::pair<int, int>(0, n_equations_in_par_chunk));
                             Kokkos::deep_copy(
                                     b_par_chunk,
-                                    Kokkos::
-                                            subview(b_view,
-                                                    Kokkos::ALL,
-                                                    std::pair<int, int>(
-                                                            (i * par_chunks_per_seq_chunk + j)
-                                                                    * cols_per_par_chunk,
-                                                            (i * par_chunks_per_seq_chunk + j)
-                                                                            * cols_per_par_chunk
-                                                                    + n_equations_in_par_chunk)));
+                                    Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window));
                             auto b_vec_batch = to_gko_vec(
                                     b_par_chunk.data(),
                                     n,
                                     n_equations_in_par_chunk,
                                     gko_exec);
-                            Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
-                                    x_par_chunk("x_gpu", n, n_equations_in_par_chunk);
+
                             auto x_vec_batch = to_gko_vec(
                                     x_par_chunk.data(),
                                     n,
@@ -346,15 +353,7 @@ public:
 
 #endif
                             Kokkos::deep_copy(
-                                    Kokkos::
-                                            subview(b_view,
-                                                    Kokkos::ALL,
-                                                    std::pair<int, int>(
-                                                            (i * par_chunks_per_seq_chunk + j)
-                                                                    * cols_per_par_chunk,
-                                                            (i * par_chunks_per_seq_chunk + j)
-                                                                            * cols_per_par_chunk
-                                                                    + n_equations_in_par_chunk)),
+                                    Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window),
                                     x_par_chunk);
                         }
                     });

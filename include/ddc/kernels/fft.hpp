@@ -91,13 +91,13 @@ constexpr bool is_complex_v = is_complex<T>::value;
 
 // LastSelector: returns a if Dim==Last, else b
 template <typename T, typename Dim, typename Last>
-constexpr T LastSelector(const T a, const T b)
+KOKKOS_FUNCTION constexpr T LastSelector(const T a, const T b)
 {
     return std::is_same_v<Dim, Last> ? a : b;
 }
 
 template <typename T, typename Dim, typename First, typename Second, typename... Tail>
-constexpr T LastSelector(const T a, const T b)
+KOKKOS_FUNCTION constexpr T LastSelector(const T a, const T b)
 {
     return LastSelector<T, Dim, Second, Tail...>(a, b);
 }

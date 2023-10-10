@@ -171,6 +171,8 @@ public:
     {
     }
 
+    ~DiscreteElement() = default;
+
     constexpr inline DiscreteElement& operator=(DiscreteElement const& other) = default;
 
     constexpr inline DiscreteElement& operator=(DiscreteElement&& other) = default;

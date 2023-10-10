@@ -273,6 +273,8 @@ public:
     {
     }
 
+    ~DiscreteVector() = default;
+
     constexpr inline DiscreteVector& operator=(DiscreteVector const& other) = default;
 
     constexpr inline DiscreteVector& operator=(DiscreteVector&& other) = default;

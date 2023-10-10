@@ -266,6 +266,8 @@ protected:
      */
     constexpr ChunkCommon(ChunkCommon&& other) = default;
 
+    ~ChunkCommon() = default;
+
     /** Copy-assigns a new value to this ChunkCommon, yields a new view to the same data
      * @param other the ChunkCommon to copy
      * @return *this

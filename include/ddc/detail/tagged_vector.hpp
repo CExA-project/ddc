@@ -279,6 +279,8 @@ public:
     {
     }
 
+    ~TaggedVector() = default;
+
     constexpr inline TaggedVector& operator=(TaggedVector const& other) = default;
 
     constexpr inline TaggedVector& operator=(TaggedVector&& other) = default;

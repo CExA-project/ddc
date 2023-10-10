@@ -254,12 +254,8 @@ public:
                   % cols_per_par_chunk;
 
         Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
-                x_buffer("x_buffer", par_chunks_per_seq_chunk, n, cols_per_par_chunk);
-        Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
                 b_buffer("b_buffer", par_chunks_per_seq_chunk, n, cols_per_par_chunk);
         // Last par_chunk of last seq_chunk do not have same number of columns than the others. To get proper layout (because we passe the pointers to Ginkgo), we need a dedicated allocation
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
-                x_last_buffer("x_last_buffer", n, cols_per_last_par_chunk);
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
                 b_last_buffer("b_last_buffer", n, cols_per_last_par_chunk);
 
@@ -279,24 +275,14 @@ public:
                                     (i * par_chunks_per_seq_chunk + j) * cols_per_par_chunk,
                                     (i * par_chunks_per_seq_chunk + j) * cols_per_par_chunk
                                             + n_equations_in_par_chunk);
-                            Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> x_par_chunk;
                             Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> b_par_chunk;
                             if (i < n_seq_chunks - 1 || j < n_par_chunks_in_seq_chunk - 1) {
-                                x_par_chunk = Kokkos::
-                                        subview(x_buffer,
-                                                j,
-                                                Kokkos::ALL,
-                                                std::pair<int, int>(0, n_equations_in_par_chunk));
                                 b_par_chunk = Kokkos::
                                         subview(b_buffer,
                                                 j,
                                                 Kokkos::ALL,
                                                 std::pair<int, int>(0, n_equations_in_par_chunk));
                             } else {
-                                x_par_chunk = Kokkos::
-                                        subview(x_last_buffer,
-                                                Kokkos::ALL,
-                                                std::pair<int, int>(0, n_equations_in_par_chunk));
                                 b_par_chunk = Kokkos::
                                         subview(b_last_buffer,
                                                 Kokkos::ALL,
@@ -310,13 +296,6 @@ public:
                                     n,
                                     n_equations_in_par_chunk,
                                     gko_exec);
-
-                            auto x_vec_batch = to_gko_vec(
-                                    x_par_chunk.data(),
-                                    n,
-                                    n_equations_in_par_chunk,
-                                    gko_exec);
-
                             // Create the solver TODO: pass in constructor ?
                             std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::
                                     create(gko::log::Logger::all_events_mask
@@ -349,7 +328,7 @@ public:
                             // solver_->add_logger(stream_logger);
                             // auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_gpu.get(), b_vec_batch.get());
                             // solver_->add_logger(res_logger);
-                            solver_->apply(b_vec_batch, x_vec_batch);
+                            solver_->apply(b_vec_batch, b_vec_batch); // inplace solve
 // res_logger->write_data(std::cout);
 
 // Debug purpose
@@ -366,14 +345,11 @@ public:
         write(std::cout, data_mat_gpu);
         std::cout << "-----------------------";
         write(std::cout, b_vec_batch);
-        std::cout << "-----------------------";
-        write(std::cout, x_vec_batch);
-
 
 #endif
                             Kokkos::deep_copy(
                                     Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window),
-                                    x_par_chunk);
+                                    b_par_chunk);
                         }
                     });
         }

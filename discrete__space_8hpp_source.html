@@ -123,19 +123,19 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">alignas</span>(T) Kokkos::Array&lt;std::byte, <span class="keyword">sizeof</span>(T)&gt; m_data;</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    DDC_INLINE_FUNCTION</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    KOKKOS_FORCEINLINE_FUNCTION</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    T* operator-&gt;()</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    {</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast</span>&lt;T*&gt;(m_data.data());</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    DDC_INLINE_FUNCTION</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    KOKKOS_FORCEINLINE_FUNCTION</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    T&amp; operator*()</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    {</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast</span>&lt;T*&gt;(m_data.data());</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    }</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    DDC_INLINE_FUNCTION</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    KOKKOS_FORCEINLINE_FUNCTION</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    T* data()</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    {</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast</span>&lt;T*&gt;(m_data.data());</div>
@@ -235,7 +235,7 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>}</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, <span class="keyword">class</span> MemorySpace = DDC_CURRENT_KOKKOS_SPACE&gt;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><a class="code hl_function" href="namespaceddc.html#a560a8b1fd1461fc472553ca32322447d">DDC_INLINE_FUNCTION</a> detail::ddim_impl_t&lt;DDim, MemorySpace&gt; <span class="keyword">const</span>&amp; <a class="code hl_function" href="namespaceddc.html#a560a8b1fd1461fc472553ca32322447d">discrete_space</a>()</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><a class="code hl_function" href="namespaceddc.html#a96a67ea775e1408d99dadf36a4be08cb">KOKKOS_FORCEINLINE_FUNCTION</a> detail::ddim_impl_t&lt;DDim, MemorySpace&gt; <span class="keyword">const</span>&amp; <a class="code hl_function" href="namespaceddc.html#a96a67ea775e1408d99dadf36a4be08cb">discrete_space</a>()</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>{</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;MemorySpace, Kokkos::HostSpace&gt;) {</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        <span class="keywordflow">return</span> detail::g_discrete_space_dual&lt;DDim&gt;-&gt;get_host();</div>
@@ -256,8 +256,8 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:9</div></div>
-<div class="ttc" id="anamespaceddc_html_a560a8b1fd1461fc472553ca32322447d"><div class="ttname"><a href="namespaceddc.html#a560a8b1fd1461fc472553ca32322447d">ddc::discrete_space</a></div><div class="ttdeci">std::enable_if_t&lt; 2&lt;=sizeof...(Args), std::tuple&lt; Args... &gt; &gt; init_discrete_space(std::tuple&lt; DDimImpl, Args... &gt; &amp;&amp;a){ using DDim=typename DDimImpl::discrete_dimension_type;init_discrete_space&lt; DDim &gt;(std::move(std::get&lt; 0 &gt;(a)));return detail::extract_after(std::move(a), std::index_sequence_for&lt; Args... &gt;());}template&lt; class DDim, class MemorySpace=DDC_CURRENT_KOKKOS_SPACE &gt; DDC_INLINE_FUNCTION detail::ddim_impl_t&lt; DDim, MemorySpace &gt; const &amp; discrete_space()</div><div class="ttdoc">Move construct a global singleton discrete space and pass through remaining arguments.</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:190</div></div>
 <div class="ttc" id="anamespaceddc_html_a70f12a43ed0afbc092f4e974b024db3d"><div class="ttname"><a href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a></div><div class="ttdeci">void init_discrete_space(Args &amp;&amp;... args)</div><div class="ttdoc">Initialize (emplace) a global singleton discrete space.</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:140</div></div>
+<div class="ttc" id="anamespaceddc_html_a96a67ea775e1408d99dadf36a4be08cb"><div class="ttname"><a href="namespaceddc.html#a96a67ea775e1408d99dadf36a4be08cb">ddc::discrete_space</a></div><div class="ttdeci">std::enable_if_t&lt; 2&lt;=sizeof...(Args), std::tuple&lt; Args... &gt; &gt; init_discrete_space(std::tuple&lt; DDimImpl, Args... &gt; &amp;&amp;a){ using DDim=typename DDimImpl::discrete_dimension_type;init_discrete_space&lt; DDim &gt;(std::move(std::get&lt; 0 &gt;(a)));return detail::extract_after(std::move(a), std::index_sequence_for&lt; Args... &gt;());}template&lt; class DDim, class MemorySpace=DDC_CURRENT_KOKKOS_SPACE &gt; KOKKOS_FORCEINLINE_FUNCTION detail::ddim_impl_t&lt; DDim, MemorySpace &gt; const &amp; discrete_space()</div><div class="ttdoc">Move construct a global singleton discrete space and pass through remaining arguments.</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:190</div></div>
 <div class="ttc" id="anamespaceddc_html_adfd82dc9c5a211a50f88e7d922d89274"><div class="ttname"><a href="namespaceddc.html#adfd82dc9c5a211a50f88e7d922d89274">ddc::init_discrete_space</a></div><div class="ttdeci">Arg init_discrete_space(std::tuple&lt; DDimImpl, Arg &gt; &amp;&amp;a)</div><div class="ttdoc">Move construct a global singleton discrete space and pass through the other argument.</div><div class="ttdef"><b>Definition:</b> discrete_space.hpp:168</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

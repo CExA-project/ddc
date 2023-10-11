@@ -194,11 +194,11 @@ public:
                 });
     }
 
-	template <class Layout>
+    template <class Layout1, class Layout2>
     void integrate(
-			ddc::ChunkSpan<double, batch_domain_type, Layout, memory_space> const
+			ddc::ChunkSpan<double, batch_domain_type, Layout1, memory_space> const
                     integrals,
-			ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
+			ddc::ChunkSpan<double const, spline_domain_type, Layout2, memory_space> const
                     spline_coef) const
     {
         ddc::Chunk<double, bsplines_domain_type> values_alloc(

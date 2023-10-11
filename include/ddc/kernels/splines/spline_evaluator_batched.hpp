@@ -194,31 +194,30 @@ public:
                 });
     }
 
-#if 0
-    double integrate(
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType1, BSplinesType2>> const
+	template <class Layout>
+    void integrate(
+			ddc::ChunkSpan<double, batch_domain_type, Layout, memory_space> const
+                    integrals,
+			ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        ddc::Chunk<double, ddc::DiscreteDomain<BSplinesType1>> values1(
-                ddc::DiscreteDomain<BSplinesType1>(spline_coef.domain()));
-        DSpan1D vals1 = values1.allocation_mdspan();
-        ddc::Chunk<double, ddc::DiscreteDomain<BSplinesType2>> values2(
-                ddc::DiscreteDomain<BSplinesType2>(spline_coef.domain()));
-        DSpan1D vals2 = values2.allocation_mdspan();
+        ddc::Chunk<double, bsplines_domain_type> values_alloc(
+                ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()));
+		ddc::ChunkSpan values = values_alloc.span_view();
 
-        ddc::discrete_space<bsplines_type1>().integrals(values1.span_view());
-        ddc::discrete_space<bsplines_type2>().integrals(values2.span_view());
+        ddc::discrete_space<bsplines_type>().integrals(values);
 
-        return ddc::transform_reduce(
-                spline_coef.domain(),
-                0.0,
-                ddc::reducer::sum<double>(),
-                [&](ddc::DiscreteElement<BSplinesType1, BSplinesType2> const i) {
-                    return spline_coef(i) * values1(ddc::select<BSplinesType1>(i))
-                           * values2(ddc::select<BSplinesType2>(i));
-                });
+	    ddc::for_each(
+                ddc::policies::policy(exec_space()),
+                batch_domain(),
+                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+
+				integrals(j) = 0;
+				for (typename bsplines_domain_type::discrete_element_type const i : values.domain()) {
+                    integrals(j) += spline_coef(i,j) * values(i);
+                }
+		});
     }
-#endif
 
 private:
     template <class Layout, class... CoordsDims>

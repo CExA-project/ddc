@@ -177,50 +177,44 @@ static void BatchedNonPeriodicSplineTest()
     ddc::DiscreteDomain<IDim<X, I>...> const dom_vals
             = ddc::replace_dim_of<IDim<I, void>, IDim<I, I>>(dom_vals_tmp, interpolation_domain);
 
-	// Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
-      ddc::SplineBuilderBatched<
-            ddc::SplineBuilder<
-                      ExecSpace,
-                      MemorySpace,
-                      BSplines<I>,
-                      IDim<I, I>,
-                      s_bcl,
-                      s_bcr>,
-              IDim<X, I>...>
-              spline_builder(dom_vals);
+    // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
+    ddc::SplineBuilderBatched<
+            ddc::SplineBuilder<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>, s_bcl, s_bcr>,
+            IDim<X, I>...>
+            spline_builder(dom_vals);
 
-	// Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
-      ddc::DiscreteDomain<IDim<I, I>> const dom_interpolation = spline_builder.interpolation_domain();
-      auto const dom_batch = spline_builder.batch_domain();
-      ddc::DiscreteDomain<BSplines<I>> const dom_bsplines = spline_builder.bsplines_domain();
-      auto const dom_spline = spline_builder.spline_domain();
+    // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
+    ddc::DiscreteDomain<IDim<I, I>> const dom_interpolation = spline_builder.interpolation_domain();
+    auto const dom_batch = spline_builder.batch_domain();
+    ddc::DiscreteDomain<BSplines<I>> const dom_bsplines = spline_builder.bsplines_domain();
+    auto const dom_spline = spline_builder.spline_domain();
 
-// Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplic  ated along batch dimensions
-      ddc::Chunk vals1_cpu_alloc(
-              dom_interpolation,
-              ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-      ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();
-      evaluator_type<IDim<I, I>> evaluator(dom_interpolation);
-      evaluator(vals1_cpu);
-      ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
-      ddc::ChunkSpan vals1 = vals1_alloc.span_view();
-      ddc::deepcopy(vals1, vals1_cpu);
+    // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplic  ated along batch dimensions
+    ddc::Chunk vals1_cpu_alloc(
+            dom_interpolation,
+            ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
+    ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();
+    evaluator_type<IDim<I, I>> evaluator(dom_interpolation);
+    evaluator(vals1_cpu);
+    ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan vals1 = vals1_alloc.span_view();
+    ddc::deepcopy(vals1, vals1_cpu);
 
-	ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-      ddc::ChunkSpan vals = vals_alloc.span_view();
-      ddc::for_each(
-              ddc::policies::policy(exec_space),
-              vals.domain(),
-              DDC_LAMBDA(Index<IDim<X, I>...> const e) {
-                  vals(e) = vals1(ddc::select<IDim<I, I>>(e));
-              });
+    ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan vals = vals_alloc.span_view();
+    ddc::for_each(
+            ddc::policies::policy(exec_space),
+            vals.domain(),
+            DDC_LAMBDA(Index<IDim<X, I>...> const e) {
+                vals(e) = vals1(ddc::select<IDim<I, I>>(e));
+            });
 
-	// Instantiate chunk of spline coefs to receive output of spline_builder
-      ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
-      ddc::ChunkSpan coef = coef_alloc.span_view();
+    // Instantiate chunk of spline coefs to receive output of spline_builder
+    ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan coef = coef_alloc.span_view();
 
-	// Finally compute the spline by filling `coef`
-      spline_builder(coef, vals);
+    // Finally compute the spline by filling `coef`
+    spline_builder(coef, vals);
 
     /*
     

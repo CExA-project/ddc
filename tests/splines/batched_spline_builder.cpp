@@ -239,31 +239,7 @@ static void BatchedPeriodicSplineTest()
     ddc::ChunkSpan spline_eval_deriv = spline_eval_deriv_alloc.span_view();
 
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
-#if 0
-        ddc::for_each(
-                ddc::policies::policy(host_exec_space),
-                dom_batch,
-                DDC_LAMBDA(typename decltype(dom_batch)::discrete_element_type const iy) {
-                    spline_evaluator(
-                            spline_eval_cpu[iy],
-                            ddc::ChunkSpan<
-                                    const Coord<I>,
-                                    ddc::DiscreteDomain<IDim<I, I>>,
-                                    std::experimental::layout_right,
-                                    Kokkos::HostSpace>(coords_eval_cpu),
-                            coef_cpu[iy].span_cview());
-					/*
-                    spline_evaluator
-                            .deriv(spline_eval_cpu_deriv[iy],
-                                   ddc::ChunkSpan<
-                                           const Coord<I>,
-                                           ddc::DiscreteDomain<IDim<I, I>>,
-                                           std::experimental::layout_right,
-                                           Kokkos::HostSpace>(coords_eval_cpu),
-                                   coef_cpu[iy].span_cview());
-					 */
-                });
-#endif
+    spline_evaluator_batched.deriv(spline_eval_deriv, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors
     double max_norm_error = ddc::transform_reduce(
@@ -276,7 +252,6 @@ static void BatchedPeriodicSplineTest()
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 
-#if 0
     double max_norm_error_diff = ddc::transform_reduce(
             ddc::policies::policy(exec_space),
             spline_eval.domain(),
@@ -286,6 +261,7 @@ static void BatchedPeriodicSplineTest()
                 Coord<I> const x = ddc::coordinate(ddc::select<IDim<I, I>>(e));
                 return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, 1));
             });
+#if 0
     double const max_norm_error_integ = std::fabs(
             spline_evaluator.integrate(coef_cpu.span_cview()) - evaluator.deriv(xN, -1)
             + evaluator.deriv(x0, -1));
@@ -299,12 +275,12 @@ static void BatchedPeriodicSplineTest()
     EXPECT_LE(
             max_norm_error,
             std::max(error_bounds.error_bound(dx<I>(ncells), s_degree_x), 1.0e-14 * max_norm));
-#if 0
     EXPECT_LE(
             max_norm_error_diff,
             std::
                     max(error_bounds.error_bound_on_deriv(dx<I>(ncells), s_degree_x),
                         1e-12 * max_norm_diff));
+#if 0
     EXPECT_LE(
             max_norm_error_integ,
             std::max(error_bounds.error_bound_on_int(h, s_degree_x), 1.0e-14 * max_norm_int));

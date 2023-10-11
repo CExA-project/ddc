@@ -84,7 +84,7 @@ using BuilderX = ddc::SplineBuilder<
         IDimX,
         s_bcl,
         s_bcr,
-		ddc::SplineSolver::GINKGO>;
+        ddc::SplineSolver::GINKGO>;
 using BuilderY = ddc::SplineBuilder<
         Kokkos::DefaultHostExecutionSpace,
         Kokkos::DefaultHostExecutionSpace::memory_space,
@@ -92,7 +92,7 @@ using BuilderY = ddc::SplineBuilder<
         IDimY,
         s_bcl,
         s_bcr,
-		ddc::SplineSolver::GINKGO>;
+        ddc::SplineSolver::GINKGO>;
 using BuilderXY = ddc::SplineBuilder2D<BuilderX, BuilderY>;
 
 using EvaluatorType = Evaluator2D::Evaluator<

@@ -139,170 +139,62 @@ public:
     {
         interpolation_domain_type interpolation_domain
                 = ddc::select<interpolation_mesh_type>(spline_eval.domain());
-        std::size_t interpolation_size = interpolation_domain.size();
-        // TODO: Consider optimizing
-        auto spline_coef_0 = spline_coef[batch_domain().front()];
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
                 KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    // const auto spline_eval_1D = spline_eval[j];
-                    // const auto coords_eval_1D = coords_eval[j];
-                    // const auto spline_coef_1D = spline_coef[j];
-                    for (int i = 0; i < interpolation_size;
-                         i++) { // replace with Kokkos::Team loop ? And chunk if overload of scratch memory ?
-                        // printf("interpolation_domain_size%i", interpolation_size);
-                        spline_eval(typename interpolation_domain_type::discrete_element_type(i), j)
-                                = eval(coords_eval(
-                                               typename interpolation_domain_type::
-                                                       discrete_element_type(i),
-                                               j),
-                                       spline_coef[j]);
-                        // spline_eval_1D(interpolation_domain(typename interpolation_domain_type::discrete_element_type(i))) = eval(coords_eval_1D(interpolation_domain(typename interpolation_domain_type::discrete_element_type(i))), spline_coef_1D);
+                    const auto spline_eval_1D = spline_eval[j];
+                    const auto coords_eval_1D = coords_eval[j];
+                    const auto spline_coef_1D = spline_coef[j];
+                    for (int i = 0; i < interpolation_domain.size(); i++) {
+                        spline_eval_1D(typename interpolation_domain_type::discrete_element_type(i))
+                                = eval(coords_eval_1D(typename interpolation_domain_type::
+                                                              discrete_element_type(i)),
+                                       spline_coef_1D);
+                    }
+                });
+    }
+
+    template <class Layout, class... CoordsDims>
+    double deriv(
+            ddc::Coordinate<CoordsDims...> const& coord_eval,
+            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+                    spline_coef) const
+    {
+        return eval_no_bc<eval_deriv_type>(coord_eval, spline_coef);
+    }
+
+    template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
+    void deriv(
+            ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
+            ddc::ChunkSpan<
+                    ddc::Coordinate<CoordsDims...> const,
+                    vals_domain_type,
+                    Layout2,
+                    memory_space> const coords_eval,
+            ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
+                    spline_coef) const
+    {
+        interpolation_domain_type interpolation_domain
+                = ddc::select<interpolation_mesh_type>(spline_eval.domain());
+        ddc::for_each(
+                ddc::policies::policy(exec_space()),
+                batch_domain(),
+                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                    const auto spline_eval_1D = spline_eval[j];
+                    const auto coords_eval_1D = coords_eval[j];
+                    const auto spline_coef_1D = spline_coef[j];
+                    for (int i = 0; i < interpolation_domain.size(); i++) {
+                        spline_eval_1D(typename interpolation_domain_type::discrete_element_type(i))
+                                = eval_no_bc<eval_deriv_type>(
+                                        coords_eval_1D(typename interpolation_domain_type::
+                                                               discrete_element_type(i)),
+                                        spline_coef_1D);
                     }
                 });
     }
 
 #if 0
-    double deriv_dim_1(
-            ddc::Coordinate<IDimX...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type> const
-                    spline_coef) const
-    {
-		/*
-        std::array<double, bsplines_type1::degree() + 1> values1;
-        DSpan1D const vals1 = as_span(values1);
-        std::array<double, bsplines_type2::degree() + 1> values2;
-        DSpan1D const vals2 = as_span(values2);
-		*/
-
-        return eval_no_bc(
-                ddc::select<Dim1>(coord_eval),
-                ddc::select<Dim2>(coord_eval),
-                spline_coef,
-        //        vals1,
-        //        vals2,
-                eval_deriv_type(),
-                eval_type());
-    }
-
-    double deriv_dim_2(
-            ddc::Coordinate<IDimX...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type> const
-                    spline_coef) const
-    {
-		/*
-        std::array<double, bsplines_type1::degree() + 1> values1;
-        DSpan1D const vals1 = as_span(values1);
-        std::array<double, bsplines_type2::degree() + 1> values2;
-        DSpan1D const vals2 = as_span(values2);
-		*/
-
-        return eval_no_bc(
-                ddc::select<IDimX>(coord_eval)...,
-                spline_coef,
-        //        vals1,
-        //        vals2,
-                eval_type(),
-                eval_deriv_type());
-    }
-
-    double deriv_1_and_2(
-            ddc::Coordinate<IDimX...> const& coord_eval,
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType1, BSplinesType2>> const
-                    spline_coef) const
-    {
-		/*
-        std::array<double, bsplines_type1::degree() + 1> values1;
-        DSpan1D const vals1 = as_span(values1);
-        std::array<double, bsplines_type2::degree() + 1> values2;
-        DSpan1D const vals2 = as_span(values2);
-		*/
-
-        return eval_no_bc(
-                ddc::select<IDimX>(coord_eval)...,
-                spline_coef,
-                vals1,
-                vals2,
-                eval_deriv_type(),
-                eval_deriv_type());
-    }
-
-    template <class Domain>
-    void deriv_dim_1(
-            ddc::ChunkSpan<double, Domain> const spline_eval,
-            ddc::ChunkSpan<ddc::Coordinate<IDimX...> const, Domain> const coords_eval,
-            ddc::ChunkSpan<double const, spline_domain_type> const
-                    spline_coef) const
-    {
-		/*
-        std::array<double, bsplines_type1::degree() + 1> values1;
-        DSpan1D const vals1 = as_span(values1);
-        std::array<double, bsplines_type2::degree() + 1> values2;
-        DSpan1D const vals2 = as_span(values2);
-		*/
-
-        ddc::for_each(coords_eval.domain(), [=](auto i) {
-            spline_eval(i) = eval_no_bc(
-                    ddc::select<IDimX>(coords_eval(i))...,
-                    spline_coef,
-                    vals1,
-                    vals2,
-                    eval_deriv_type(),
-                    eval_type());
-        });
-    }
-
-    template <class Domain>
-    void deriv_dim_2(
-            ddc::ChunkSpan<double, Domain> const spline_eval,
-            ddc::ChunkSpan<ddc::Coordinate<IDimX...> const, Domain> const coords_eval,
-            ddc::ChunkSpan<double const, spline_domain_type> const
-                    spline_coef) const
-    {
-		/*
-        std::array<double, bsplines_type1::degree() + 1> values1;
-        DSpan1D const vals1 = as_span(values1);
-        std::array<double, bsplines_type2::degree() + 1> values2;
-        DSpan1D const vals2 = as_span(values2);
-		*/
-
-        ddc::for_each(coords_eval.domain(), [=](auto i) {
-            spline_eval(i) = eval_no_bc(
-                    ddc::select<DimX>(coords_eval(i))...,
-                    spline_coef,
-         //           vals1,
-         //           vals2,
-                    eval_type(),
-                    eval_deriv_type());
-        });
-    }
-
-    template <class Domain>
-    void deriv_dim_1_and_2(
-            ddc::ChunkSpan<double, Domain> const spline_eval,
-            ddc::ChunkSpan<ddc::Coordinate<IDimX...> const, Domain> const coords_eval,
-            ddc::ChunkSpan<double const, spline_domain_type> const
-                    spline_coef) const
-    {
-		/*
-        std::array<double, bsplines_type1::degree() + 1> values1;
-        DSpan1D const vals1 = as_span(values1);
-        std::array<double, bsplines_type2::degree() + 1> values2;
-        DSpan1D const vals2 = as_span(values2);
-		*/
-
-        ddc::for_each(coords_eval.domain(), [=](auto i) {
-            spline_eval(i) = eval_no_bc(
-                    ddc::select<IDimX>(coords_eval(i))...,
-                    spline_coef,
-                    //vals1,
-                    //vals2,
-                    eval_deriv_type(),
-                    eval_deriv_type());
-        });
-    }
-
     double integrate(
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplinesType1, BSplinesType2>> const
                     spline_coef) const

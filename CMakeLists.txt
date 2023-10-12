@@ -261,11 +261,6 @@ if("${HIP_FOR_NVIDIA}")
 	endif()
 endif()
 
-## LAPACK
-find_package(LAPACK REQUIRED COMPONENTS CXX)
-target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
-target_compile_definitions(DDC INTERFACE LAPACK_AVAIL)
-
 # Ginkgo
 set(DDC_Ginkgo_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `Ginkgo` package. Options: ${DDC_DEPENDENCY_POLICIES}")
 set_property(CACHE DDC_Ginkgo_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")

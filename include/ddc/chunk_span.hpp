@@ -265,7 +265,8 @@ public:
        * @return const-reference to this element
        */
     template <class... ODDims>
-    KOKKOS_FUNCTION constexpr reference operator()(DiscreteElement<ODDims...> const& delems) const noexcept
+    KOKKOS_FUNCTION constexpr reference operator()(
+            DiscreteElement<ODDims...> const& delems) const noexcept
     {
         static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
         assert(((select<ODDims>(delems) >= front<ODDims>(this->m_domain)) && ...));

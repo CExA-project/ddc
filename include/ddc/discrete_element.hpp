@@ -154,7 +154,8 @@ public:
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteElement(DiscreteElement&&) = default;
 
     template <class... OTags>
-    explicit KOKKOS_FUNCTION constexpr DiscreteElement(DiscreteElement<OTags...> const& other) noexcept
+    explicit KOKKOS_FUNCTION constexpr DiscreteElement(
+            DiscreteElement<OTags...> const& other) noexcept
         : m_values {other.template uid<Tags>()...}
     {
     }

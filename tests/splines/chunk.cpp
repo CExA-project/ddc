@@ -24,12 +24,12 @@ struct DimY
 using CoordX = ddc::Coordinate<DimX>;
 using IDimX = ddc::UniformPointSampling<DimX>;
 using IndexX = ddc::DiscreteElement<IDimX>;
-using BSplinesX = UniformBSplines<DimX, 3>;
+using BSplinesX = ddc::UniformBSplines<DimX, 3>;
 
 using RCoordY = ddc::Coordinate<DimY>;
 using MeshY = ddc::NonUniformPointSampling<DimY>;
 using MCoordY = ddc::DiscreteElement<MeshY>;
-using BSplinesY = NonUniformBSplines<DimY, 4>;
+using BSplinesY = ddc::NonUniformBSplines<DimY, 4>;
 
 constexpr std::size_t ncells = 100;
 constexpr CoordX xmin(0.);

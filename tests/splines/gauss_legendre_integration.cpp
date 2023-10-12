@@ -47,8 +47,8 @@ int test_integrate()
 
     bool test_passed = true;
 
-    for (std::size_t order = 1; order <= GaussLegendre<DimX>::max_order(); ++order) {
-        GaussLegendre<DimX> const gl(order);
+    for (std::size_t order = 1; order <= ddc::GaussLegendre<DimX>::max_order(); ++order) {
+        ddc::GaussLegendre<DimX> const gl(order);
 
         std::cout << "integration at order " << order;
         std::cout << std::endl;
@@ -112,12 +112,12 @@ int test_compute_points_and_weights()
     {
     };
 
-    for (std::size_t order = 1; order <= GaussLegendre<DimX>::max_order(); ++order) {
+    for (std::size_t order = 1; order <= ddc::GaussLegendre<DimX>::max_order(); ++order) {
         ddc::DiscreteDomain<IDimX>
                 domain(ddc::DiscreteElement<IDimX> {0}, ddc::DiscreteVector<IDimX> {order});
         ddc::Chunk<ddc::Coordinate<DimX>, ddc::DiscreteDomain<IDimX>> gl_points(domain);
         ddc::Chunk<double, ddc::DiscreteDomain<IDimX>> gl_weights(domain);
-        GaussLegendre<DimX> const gl(order);
+        ddc::GaussLegendre<DimX> const gl(order);
 
         std::cout << "integration at order " << order;
         std::cout << std::endl;

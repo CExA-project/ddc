@@ -75,7 +75,7 @@ TYPED_TEST(BernsteinFixture, PartitionOfUnity)
     using Corner2 = typename TestFixture::Corner2;
     using Corner3 = typename TestFixture::Corner3;
     using CoordXY = ddc::Coordinate<DimX, DimY>;
-    using Bernstein = BernsteinPolynomialBasis<DimX, DimY, Corner1, Corner2, Corner3, degree>;
+    using Bernstein = ddc::BernsteinPolynomialBasis<DimX, DimY, Corner1, Corner2, Corner3, degree>;
 
     const CoordXY c1(-1.0, -1.0);
     const CoordXY c2(0.0, 1.0);

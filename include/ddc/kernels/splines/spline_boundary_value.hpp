@@ -3,8 +3,6 @@
 
 #include <ddc/ddc.hpp>
 
-#include "polar_spline.hpp"
-
 namespace ddc {
 template <class BSplines>
 class SplineBoundaryValue
@@ -29,12 +27,4 @@ public:
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines1, BSplines2>>) const = 0;
 };
 
-template <class BSplines>
-class PolarSplineBoundaryValue2D
-{
-public:
-    virtual ~PolarSplineBoundaryValue2D() = default;
-
-    virtual double operator()(double x, double y, PolarSplineView<BSplines>) const = 0;
-};
 } // namespace ddc

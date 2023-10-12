@@ -5,7 +5,6 @@
 #include <optional>
 
 #include <Kokkos_Core.hpp>
-#include <signal.h>
 
 #include "discrete_space.hpp"
 
@@ -20,14 +19,6 @@ class ScopeGuard
         detail::g_discretization_store
                 = std::make_optional<std::map<std::string, std::function<void()>>>();
     }
-    static void sigintHandler(int signum)
-    {
-        if (Kokkos::is_initialized()) {
-            Kokkos::finalize();
-        }
-        signal(SIGINT, SIG_DFL);
-        raise(SIGINT);
-    }
 
 public:
     ScopeGuard()
@@ -38,7 +29,6 @@ public:
     ScopeGuard(int argc, char**& argv) : m_kokkos_scope_guard(argc, argv)
     {
         discretization_store_initialization();
-        signal(SIGINT, sigintHandler);
     }
 
     ScopeGuard(ScopeGuard const& x) = delete;

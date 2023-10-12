@@ -11,14 +11,7 @@ add_executable(splines_tests
     view.cpp
     gauss_legendre_integration.cpp
 )
-if(VOICEXX_ENABLE_DEPRECATED)
-    target_sources(splines_tests
-	PRIVATE
-        bsplines_non_uniform.cpp
-        bsplines_uniform.cpp
-        splines.cpp
-    )
-endif()
+
 target_compile_features(splines_tests PUBLIC cxx_std_17)
 target_link_libraries(splines_tests
     PUBLIC
@@ -38,22 +31,6 @@ target_link_libraries(bsplines_tests
 		DDC::DDC
 )
 
-if(0)
-gtest_discover_tests(bsplines_tests)
-
-add_executable(matrix_tests
-  main.cpp
-	matrix.cpp
-)
-target_compile_features(matrix_tests PUBLIC cxx_std_17)
-target_link_libraries(matrix_tests
-    PUBLIC
-        GTest::gtest
-		DDC::DDC
-)
-gtest_discover_tests(matrix_tests)
-endif()
-
 add_executable(bernstein_tests
   main.cpp
 	bernstein.cpp
@@ -65,20 +42,6 @@ target_link_libraries(bernstein_tests
 		DDC::DDC
 )
 gtest_discover_tests(bernstein_tests)
-
-if(0)
-add_executable(metric_tensor_tests
-  main.cpp
-	metric_tensor.cpp
-)
-target_compile_features(metric_tensor_tests PUBLIC cxx_std_17)
-target_link_libraries(metric_tensor_tests
-    PUBLIC
-        GTest::gtest
-		DDC::DDC
-)
-gtest_discover_tests(metric_tensor_tests)
-endif()
 
 foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
   foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")

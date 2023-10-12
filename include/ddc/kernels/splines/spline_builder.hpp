@@ -18,7 +18,7 @@
 
 namespace ddc {
 
-enum class SplineSolver { GINKGO, LAPACK };
+enum class SplineSolver { GINKGO }; // Only GINKGO available atm, other solvers will be implemented in the futur
 
 constexpr bool is_spline_interpolation_mesh_uniform(
         bool const is_uniform,
@@ -312,17 +312,10 @@ operator()(
         }
     }
 
-    if constexpr (Solver == SplineSolver::LAPACK) {
-        ddc::DSpan1D const bcoef_section(
-                spline.data_handle() + m_offset,
-                ddc::discrete_space<BSplines>().nbasis());
-        matrix->solve_inplace(bcoef_section);
-    } else if (Solver == SplineSolver::GINKGO) {
         Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
                 spline.data_handle() + m_offset,
                 ddc::discrete_space<BSplines>().nbasis());
         matrix->solve_batch_inplace(bcoef_section);
-    }
 
     if constexpr (bsplines_type::is_periodic()) {
         Kokkos::parallel_for(
@@ -476,26 +469,12 @@ void SplineBuilder<
     }
 
     if constexpr (bsplines_type::is_periodic()) {
-        if constexpr (Solver == SplineSolver::LAPACK) {
-            matrix = ddc::detail::MatrixMaker::make_new_periodic_banded(
-                    ddc::discrete_space<BSplines>().nbasis(),
-                    upper_band_width,
-                    upper_band_width,
-                    bsplines_type::is_uniform());
-        } else if (Solver == SplineSolver::GINKGO) {
+		if (Solver == SplineSolver::GINKGO) {
             matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
                     ddc::discrete_space<BSplines>().nbasis());
         }
     } else {
-        if constexpr (Solver == SplineSolver::LAPACK) {
-            matrix = ddc::detail::MatrixMaker::make_new_block_with_banded_region(
-                    ddc::discrete_space<BSplines>().nbasis(),
-                    upper_band_width,
-                    upper_band_width,
-                    bsplines_type::is_uniform(),
-                    upper_block_size,
-                    lower_block_size);
-        } else if (Solver == SplineSolver::GINKGO) {
+       if (Solver == SplineSolver::GINKGO) {
             matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
                     ddc::discrete_space<BSplines>().nbasis());
         }

@@ -18,7 +18,9 @@
 
 namespace ddc {
 
-enum class SplineSolver { GINKGO }; // Only GINKGO available atm, other solvers will be implemented in the futur
+enum class SplineSolver {
+    GINKGO
+}; // Only GINKGO available atm, other solvers will be implemented in the futur
 
 constexpr bool is_spline_interpolation_mesh_uniform(
         bool const is_uniform,
@@ -312,10 +314,10 @@ operator()(
         }
     }
 
-        Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
-                spline.data_handle() + m_offset,
-                ddc::discrete_space<BSplines>().nbasis());
-        matrix->solve_batch_inplace(bcoef_section);
+    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
+            spline.data_handle() + m_offset,
+            ddc::discrete_space<BSplines>().nbasis());
+    matrix->solve_batch_inplace(bcoef_section);
 
     if constexpr (bsplines_type::is_periodic()) {
         Kokkos::parallel_for(
@@ -469,12 +471,12 @@ void SplineBuilder<
     }
 
     if constexpr (bsplines_type::is_periodic()) {
-		if (Solver == SplineSolver::GINKGO) {
+        if (Solver == SplineSolver::GINKGO) {
             matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
                     ddc::discrete_space<BSplines>().nbasis());
         }
     } else {
-       if (Solver == SplineSolver::GINKGO) {
+        if (Solver == SplineSolver::GINKGO) {
             matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
                     ddc::discrete_space<BSplines>().nbasis());
         }

@@ -63,7 +63,10 @@ public:
         : spline_builder(ddc::select<interpolation_mesh_type>(vals_domain))
         , m_vals_domain(vals_domain)
     {
-		static_assert(BcXmin==BoundCond::PERIODIC && BcXmax==BoundCond::PERIODIC, "Boundary conditions other than PERIODIC are not supported yet in SpSplineBuilderBatched");
+        static_assert(
+                BcXmin == BoundCond::PERIODIC && BcXmax == BoundCond::PERIODIC,
+                "Boundary conditions other than PERIODIC are not supported yet in "
+                "SpSplineBuilderBatched");
     };
 
     SplineBuilderBatched(SplineBuilderBatched const& x) = delete;

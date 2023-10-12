@@ -19,6 +19,7 @@
 #include "matrix.hpp"
 #include "view.hpp"
 
+namespace ddc::detail {
 // Matrix class for Csr storage and iterative solve
 template <class ExecSpace>
 class Matrix_Sparse : public Matrix
@@ -169,11 +170,11 @@ public:
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
                 b_last_buffer("b_last_buffer", n, cols_per_last_par_chunk);
 
-		// Sequential loop
+        // Sequential loop
         for (int i = 0; i < n_seq_chunks; i++) {
             int n_par_chunks_in_seq_chunk = i < n_seq_chunks - 1 ? par_chunks_per_seq_chunk
                                                                  : par_chunks_per_last_seq_chunk;
-			// Parallel loop
+            // Parallel loop
             Kokkos::parallel_for(
                     Kokkos::RangePolicy<
                             Kokkos::DefaultHostExecutionSpace>(0, n_par_chunks_in_seq_chunk),
@@ -182,9 +183,9 @@ public:
                                 = (i < n_seq_chunks - 1 || j < n_par_chunks_in_seq_chunk - 1)
                                           ? cols_per_par_chunk
                                           : cols_per_last_par_chunk;
-						// Ignore last parallel chunk if empty
+                        // Ignore last parallel chunk if empty
                         if (n_equations_in_par_chunk != 0) {
-							// Select window of cols in the current parallel chunk
+                            // Select window of cols in the current parallel chunk
                             auto par_chunk_window = std::pair<int, int>(
                                     (i * par_chunks_per_seq_chunk + j) * cols_per_par_chunk,
                                     (i * par_chunks_per_seq_chunk + j) * cols_per_par_chunk
@@ -202,7 +203,7 @@ public:
                                                 Kokkos::ALL,
                                                 std::pair<int, int>(0, n_equations_in_par_chunk));
                             }
-							// Copy data window from b to the buffer
+                            // Copy data window from b to the buffer
                             Kokkos::deep_copy(
                                     b_par_chunk,
                                     Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window));
@@ -237,11 +238,11 @@ public:
                                                   .on(gko_exec);
                             auto solver_ = solver->generate(data_mat_gpu);
                             // solver_->add_logger(stream_logger);
-							
-							// Solve
+
+                            // Solve
                             solver_->apply(b_vec_batch, b_vec_batch); // inplace solve
 
-							// Copy the result from the buffer to b
+                            // Copy the result from the buffer to b
                             Kokkos::deep_copy(
                                     Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window),
                                     b_par_chunk);

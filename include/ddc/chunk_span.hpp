@@ -254,7 +254,7 @@ public:
     /** Element access using a 0D DiscreteElement
        * @return const-reference to this element
        */
-    constexpr reference operator()() const noexcept
+    KOKKOS_FUNCTION constexpr reference operator()() const noexcept
     {
         static_assert(sizeof...(DDims) == 0, "Invalid number of dimensions");
         return this->m_internal_mdspan();
@@ -279,7 +279,7 @@ public:
        * @return const-reference to this element
        */
     template <class... HeadODDims, class... MidODDims, class... DETail>
-    constexpr reference operator()(
+    KOKKOS_FUNCTION constexpr reference operator()(
             DiscreteElement<HeadODDims...> const& head,
             DiscreteElement<MidODDims...> const& mid,
             DETail const&... delems) const noexcept

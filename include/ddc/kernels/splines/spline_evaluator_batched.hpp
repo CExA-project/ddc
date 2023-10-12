@@ -200,16 +200,19 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout2, memory_space> const
                     spline_coef) const
     {
-        ddc::Chunk<double, bsplines_domain_type> values_alloc(
-                ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()));
+        ddc::Chunk values_alloc(
+                ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()), ddc::KokkosAllocator<double, memory_space>());
         ddc::ChunkSpan values = values_alloc.span_view();
-
+		Kokkos::parallel_for(
+			              Kokkos::RangePolicy<exec_space>(0, 1),
+           KOKKOS_LAMBDA(const int unused_index) {
         ddc::discrete_space<bsplines_type>().integrals(values);
+		});
 
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                DDC_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                     integrals(j) = 0;
                     for (typename bsplines_domain_type::discrete_element_type const i :
                          values.domain()) {

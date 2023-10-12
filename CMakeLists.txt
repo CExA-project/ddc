@@ -266,32 +266,6 @@ find_package(LAPACK REQUIRED COMPONENTS CXX)
 target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
 target_compile_definitions(DDC INTERFACE LAPACK_AVAIL)
 
-
-## SLATE
-if(0)
-find_package(MPI)
-target_include_directories(DDC
-  INTERFACE
-  "$<BUILD_INTERFACE:${MPI_CXX_INCLUDE_DIRS}>"
-)
-find_package(slate CONFIG REQUIRED)
-target_link_libraries(DDC INTERFACE slate)
-target_compile_definitions(DDC INTERFACE SLATE_AVAIL)
-endif()
-
-# PETSC
-if(0)
-find_package(PkgConfig REQUIRED)
-if (PKG_CONFIG_FOUND)
-  pkg_search_module(PETSC REQUIRED IMPORTED_TARGET PETSc)
-  # set(ENV{PKG_CONFIG_PATH} $ENV{CMAKE_PREFIX_PATH})
-  # execute_process ( COMMAND pkg-config PETSc --print-errors --define-variable=with-cuda)
-  include_directories(${PETSC_INCLUDE_DIRS})
-  target_link_libraries(DDC INTERFACE PkgConfig::PETSC)
-  target_compile_definitions(DDC INTERFACE petsc_AVAIL)
-endif()
-endif()
-
 # Ginkgo
 set(DDC_Ginkgo_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `Ginkgo` package. Options: ${DDC_DEPENDENCY_POLICIES}")
 set_property(CACHE DDC_Ginkgo_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")

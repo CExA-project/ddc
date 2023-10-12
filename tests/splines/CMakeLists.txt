@@ -5,7 +5,6 @@ include(GoogleTest)
 set(SLL_SPLINES_TEST_DEGREE_MIN 3 CACHE STRING "Minimum degree to test splines.")
 set(SLL_SPLINES_TEST_DEGREE_MAX 3 CACHE STRING "Maximum degree to test splines.")
 
-if(0)
 add_executable(splines_tests
     main.cpp
     chunk.cpp
@@ -31,7 +30,6 @@ gtest_discover_tests(splines_tests)
 add_executable(bsplines_tests
 	main.cpp
 	bsplines.cpp
-	polar_bsplines.cpp
 )
 target_compile_features(bsplines_tests PUBLIC cxx_std_17)
 target_link_libraries(bsplines_tests
@@ -40,6 +38,7 @@ target_link_libraries(bsplines_tests
 		DDC::DDC
 )
 
+if(0)
 gtest_discover_tests(bsplines_tests)
 
 add_executable(matrix_tests
@@ -53,6 +52,7 @@ target_link_libraries(matrix_tests
 		DDC::DDC
 )
 gtest_discover_tests(matrix_tests)
+endif()
 
 add_executable(bernstein_tests
   main.cpp
@@ -66,6 +66,7 @@ target_link_libraries(bernstein_tests
 )
 gtest_discover_tests(bernstein_tests)
 
+if(0)
 add_executable(metric_tensor_tests
   main.cpp
 	metric_tensor.cpp

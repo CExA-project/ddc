@@ -196,27 +196,26 @@ public:
 
     template <class Layout1, class Layout2>
     void integrate(
-			ddc::ChunkSpan<double, batch_domain_type, Layout1, memory_space> const
-                    integrals,
-			ddc::ChunkSpan<double const, spline_domain_type, Layout2, memory_space> const
+            ddc::ChunkSpan<double, batch_domain_type, Layout1, memory_space> const integrals,
+            ddc::ChunkSpan<double const, spline_domain_type, Layout2, memory_space> const
                     spline_coef) const
     {
         ddc::Chunk<double, bsplines_domain_type> values_alloc(
                 ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()));
-		ddc::ChunkSpan values = values_alloc.span_view();
+        ddc::ChunkSpan values = values_alloc.span_view();
 
         ddc::discrete_space<bsplines_type>().integrals(values);
 
-	    ddc::for_each(
+        ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
                 KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-
-				integrals(j) = 0;
-				for (typename bsplines_domain_type::discrete_element_type const i : values.domain()) {
-                    integrals(j) += spline_coef(i,j) * values(i);
-                }
-		});
+                    integrals(j) = 0;
+                    for (typename bsplines_domain_type::discrete_element_type const i :
+                         values.domain()) {
+                        integrals(j) += spline_coef(i, j) * values(i);
+                    }
+                });
     }
 
 private:

@@ -107,8 +107,10 @@ void BernsteinPolynomialBasis<Tag1, Tag2, Corner1Tag, Corner2Tag, Corner3Tag, D>
         for (std::size_t j(0); j < D + 1 - i; ++j, ++idx) {
             const int k = D - i - j;
             const double multinomial_coefficient
-                    = factorial(D) / (factorial(i) * factorial(j) * factorial(k));
-            values(idx) = multinomial_coefficient * ipow(l1, i) * ipow(l2, j) * ipow(l3, k);
+                    = detail::factorial(D)
+                      / (detail::factorial(i) * detail::factorial(j) * detail::factorial(k));
+            values(idx) = multinomial_coefficient * ddc::detail::ipow(l1, i)
+                          * ddc::detail::ipow(l2, j) * ddc::detail::ipow(l3, k);
         }
     }
 }

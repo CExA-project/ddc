@@ -20,17 +20,6 @@ namespace ddc {
 
 enum class SplineSolver { GINKGO, LAPACK };
 
-// TODO: Check if this is really the best way ?
-class kwArgs_spline_builder
-{
-public:
-    SplineSolver solver;
-    void operator()(kwArgs_spline_builder const& kwargs)
-    {
-        solver = kwargs.solver;
-    }
-};
-
 constexpr bool is_spline_interpolation_mesh_uniform(
         bool const is_uniform,
         BoundCond const BcXmin,
@@ -91,10 +80,9 @@ public:
     // interpolator specific
     std::unique_ptr<ddc::detail::Matrix> matrix;
 
-    //TODO: privatize
+private:
     const int m_offset;
 
-private:
     interpolation_domain_type m_interpolation_domain;
 
     double m_dx; // average cell size for normalization of derivatives
@@ -277,7 +265,7 @@ operator()(
 {
     assert(vals.template extent<interpolation_mesh_type>()
            == ddc::discrete_space<BSplines>().nbasis() - s_nbe_xmin - s_nbe_xmax);
-    // assert(spline.belongs_to_space(ddc::discrete_space<BSplines>()));
+    assert(spline.belongs_to_space(ddc::discrete_space<BSplines>()));
     // TODO: LOG Errors
     if constexpr (bsplines_type::degree() == 1)
         return compute_interpolant_degree1(spline, vals);

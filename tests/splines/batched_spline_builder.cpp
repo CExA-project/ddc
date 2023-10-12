@@ -61,6 +61,7 @@ using GrevillePoints = ddc::
 template <typename X>
 using BSplines = ddc::UniformBSplines<X, s_degree_x>;
 
+// Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <typename X, typename I>
 using IDim = std::conditional_t<
         std::is_same_v<X, I>,
@@ -87,27 +88,32 @@ using DVect = ddc::DiscreteVector<IDimX...>;
 template <typename... X>
 using Coord = ddc::Coordinate<X...>;
 
+// Extract batch dimensions from IDim (remove dimension of interest). Usefull
 template <typename I, typename... X>
 using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>, ddc::detail::TypeSeq<I>>;
 
+// Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
 static constexpr Coord<X> x0()
 {
     return Coord<X>(0.);
 }
 
+// Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
 static constexpr Coord<X> xN()
 {
     return Coord<X>(1.);
 }
 
+// Templated function giving step of the mesh in given dimension.
 template <typename X>
 static constexpr double dx(double ncells)
 {
     return (xN<X>() - x0<X>()) / ncells;
 }
 
+// Templated function giving break points of mesh in given dimension for non-uniform case.
 template <typename X>
 static constexpr std::vector<Coord<X>> breaks(double ncells)
 {
@@ -118,10 +124,11 @@ static constexpr std::vector<Coord<X>> breaks(double ncells)
     return out;
 }
 
+// Helper to initialize space
 template <class IDimI, class T>
 struct DimsInitializer;
 
-template <class IDimI, class... IDimX> // TODO: rename X with IDimX
+template <class IDimI, class... IDimX> 
 struct DimsInitializer<IDimI, ddc::detail::TypeSeq<IDimX...>>
 {
     void operator()(std::size_t const ncells)
@@ -156,9 +163,8 @@ static void BatchedPeriodicSplineTest()
     // Instantiate execution spaces and initialize spaces
     Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
     ExecSpace exec_space = ExecSpace();
-    std::size_t constexpr ncells = 10;
-
-    // Initialize spaces
+    
+	std::size_t constexpr ncells = 10;
     DimsInitializer<IDim<I, I>, BatchDims<IDim<I, I>, IDim<X, I>...>> dims_initializer;
     dims_initializer(ncells);
 
@@ -214,7 +220,7 @@ static void BatchedPeriodicSplineTest()
     // Finally compute the spline by filling `coef`
     spline_builder(coef, vals);
 
-    // Instantiate a SplineEvaluator over I and batched along other dimensions
+    // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
     ddc::SplineEvaluatorBatched<
             ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>>,
             IDim<X, I>...>
@@ -223,7 +229,7 @@ static void BatchedPeriodicSplineTest()
                     ddc::g_null_boundary<BSplines<I>>,
                     ddc::g_null_boundary<BSplines<I>>);
 
-    // Instantiate chunk of coordinates of dom_interpolation TODO: use dom_vals
+    // Instantiate chunk of coordinates of dom_interpolation 
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
     ddc::for_each(
@@ -232,7 +238,7 @@ static void BatchedPeriodicSplineTest()
             DDC_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
 
 
-    // Instantiate chunk of values to receive output of spline_evaluator
+    // Instantiate chunks to receive outputs of spline_evaluator
     ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
     ddc::Chunk spline_eval_deriv_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
@@ -240,12 +246,12 @@ static void BatchedPeriodicSplineTest()
 	ddc::Chunk spline_eval_integrals_alloc(dom_batch, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan spline_eval_integrals = spline_eval_integrals_alloc.span_view();
 
-
+	// Call spline_evaluator on the same mesh we started with
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
     spline_evaluator_batched.deriv(spline_eval_deriv, coords_eval.span_cview(), coef.span_cview());
     spline_evaluator_batched.integrate(spline_eval_integrals, coef.span_cview());
 
-    // Checking errors
+    // Checking errors (we recover the initial values)
     double max_norm_error = ddc::transform_reduce(
             ddc::policies::policy(exec_space),
             spline_eval.domain(),

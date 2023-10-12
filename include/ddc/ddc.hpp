@@ -38,11 +38,6 @@
 #include "ddc/pdi.hpp"
 #endif
 
-// PETSc
-#if petsc_AVAIL
-#include "petscsys.h"
-#endif
-
 #if ginkgo_AVAIL
 #include <ginkgo/ginkgo.hpp>
 #endif
@@ -80,13 +75,3 @@ static std::shared_ptr<gko::Executor> create_gko_exec()
     }
 #endif
 }
-
-class DDCInitializer
-{
-public:
-    DDCInitializer()
-    {
-    }
-};
-
-static DDCInitializer ddc_initializer;

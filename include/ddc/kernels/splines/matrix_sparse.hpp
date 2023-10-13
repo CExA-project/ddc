@@ -103,8 +103,8 @@ public:
 
     virtual double get_element(int i, int j) const override
     {
-        // Wrong, TODO: correct
-        return data(i * n + j);
+        throw std::runtime_error("MatrixSparse::get_element() is not implemented because no API is "
+                                 "provided by Ginkgo");
     }
     virtual void set_element(int i, int j, double aij) override
     {

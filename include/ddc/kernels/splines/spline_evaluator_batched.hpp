@@ -201,13 +201,14 @@ public:
                     spline_coef) const
     {
         ddc::Chunk values_alloc(
-                ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()), ddc::KokkosAllocator<double, memory_space>());
+                ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()),
+                ddc::KokkosAllocator<double, memory_space>());
         ddc::ChunkSpan values = values_alloc.span_view();
-		Kokkos::parallel_for(
-			              Kokkos::RangePolicy<exec_space>(0, 1),
-           KOKKOS_LAMBDA(const int unused_index) {
-        ddc::discrete_space<bsplines_type>().integrals(values);
-		});
+        Kokkos::parallel_for(
+                Kokkos::RangePolicy<exec_space>(0, 1),
+                KOKKOS_LAMBDA(const int unused_index) {
+                    ddc::discrete_space<bsplines_type>().integrals(values);
+                });
 
         ddc::for_each(
                 ddc::policies::policy(exec_space()),

@@ -5,6 +5,7 @@
 #include <array>
 #include <cstddef>
 #include <ostream>
+#include <type_traits>
 #include <utility>
 
 #include "ddc/coordinate.hpp"
@@ -81,18 +82,37 @@ KOKKOS_FUNCTION constexpr DiscreteElement<QueryTags...> select(
     return DiscreteElement<QueryTags...>(std::move(arr));
 }
 
+template <class QueryTag, class... DE>
+struct Contains;
+
+template <class QueryTag>
+struct Contains<QueryTag> : std::false_type
+{
+};
+
+template <class QueryTag, class... HeadTags, class... DETail>
+struct Contains<QueryTag, DiscreteElement<HeadTags...>, DETail...>
+    : std::conditional<
+              type_seq_contains_v<detail::TypeSeq<QueryTag>, detail::TypeSeq<HeadTags...>>,
+              std::true_type,
+              typename Contains<QueryTag, DETail...>::type>
+{
+};
+
+template <class QueryTag, class... DE>
+using contains_t = typename Contains<QueryTag, DE...>::type;
+
+template <class QueryTag, class... DE>
+inline constexpr bool contains_v = contains_t<QueryTag, DE...>::value;
+
 template <class QueryTag, class... HeadTag, class... DETail>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryTag> take(
         DiscreteElement<HeadTag...> const& head,
         DETail const&... tail)
 {
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
-    /* TODO : Restore
-    static_assert(
-            !type_seq_contains_v<detail::TypeSeq<HeadTag>, detail::TypeSeq<TailTags...>>,
-            "ERROR: tag redundant");
-	*/
     if constexpr ((std::is_same_v<QueryTag, HeadTag> || ...)) {
+        static_assert(!(contains_v<QueryTag, DETail...>), "ERROR: tag redundant");
         return DiscreteElement<QueryTag>(head);
     } else {
         static_assert(sizeof...(DETail) > 0, "ERROR: tag not found");

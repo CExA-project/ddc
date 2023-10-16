@@ -103,20 +103,6 @@ public:
     {
         return ddc::remove_dims_of(spline_domain(), bsplines_domain());
     }
-
-    /*
-      vals_domain_type const vals_domain(interpolation_domain_type interpolation_domain) const noexcept
-      {
-          return ddc::replace_dim_of<
-                  bsplines_type,
-				  interpolation_mesh_type>(spline_domain(), interpolation_domain);
-      }
-
-      spline_tr_domain_type const spline_tr_domain() const noexcept
-      {
-          return spline_tr_domain_type(bsplines_domain(), batch_domain());
-      }
-      */
     template <class Layout>
     double operator()(
             ddc::Coordinate<IDimX...> const& coord_eval,
@@ -243,34 +229,6 @@ private:
                                             * ddc::discrete_space<bsplines_type>().length();
             }
         }
-        /*
-		 else {
-            if (coord_eval_interpolation1 < ddc::discrete_space<bsplines_type1>().rmin()) {
-                return m_left_bc_1(coord_eval_interpolation1, coord_eval_interpolation2, spline_coef);
-            }
-            if (coord_eval_interpolation1 > ddc::discrete_space<bsplines_type1>().rmax()) {
-                return m_right_bc_1(coord_eval_interpolation1, coord_eval_interpolation2, spline_coef);
-            }
-        }
-		*/
-        /*
-        if constexpr (bsplines_type2::is_periodic()) {
-            if (coord_eval_interpolation2 < ddc::discrete_space<bsplines_type2>().rmin()
-                || coord_eval_interpolation2 > ddc::discrete_space<bsplines_type2>().rmax()) {
-                coord_eval_interpolation2 -= std::floor(
-                                       (coord_eval_interpolation2 - ddc::discrete_space<bsplines_type2>().rmin())
-                                       / ddc::discrete_space<bsplines_type2>().length())
-                               * ddc::discrete_space<bsplines_type2>().length();
-            }
-        } else {
-            if (coord_eval_interpolation2 < ddc::discrete_space<bsplines_type2>().rmin()) {
-                return m_left_bc_2(coord_eval_interpolation1, coord_eval_interpolation2, spline_coef);
-            }
-            if (coord_eval_interpolation2 > ddc::discrete_space<bsplines_type2>().rmax()) {
-                return m_right_bc_2(coord_eval_interpolation1, coord_eval_interpolation2, spline_coef);
-            }
-        }
-		*/
         return eval_no_bc<eval_type>(coord_eval_interpolation, spline_coef);
     }
 

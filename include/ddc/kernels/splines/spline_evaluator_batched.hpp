@@ -271,7 +271,7 @@ private:
             }
         }
 		*/
-        return eval_no_bc<eval_type>(coord_eval, spline_coef);
+        return eval_no_bc<eval_type>(coord_eval_interpolation, spline_coef);
     }
 
     template <class EvalType, class Layout, class... CoordsDims>

@@ -30,12 +30,12 @@ struct CosineEvaluator
 
         Evaluator(double c0, double c1) : m_c0(c0), m_c1(c1) {}
 
-        double operator()(double const x) const noexcept
+        KOKKOS_FUNCTION double operator()(double const x) const noexcept
         {
             return eval(x, 0);
         }
 
-        void operator()(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
+        KOKKOS_FUNCTION void operator()(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
         {
             auto const& domain = chunk.domain();
 
@@ -44,12 +44,12 @@ struct CosineEvaluator
             }
         }
 
-        double deriv(double const x, int const derivative) const noexcept
+        KOKKOS_FUNCTION double deriv(double const x, int const derivative) const noexcept
         {
             return eval(x, derivative);
         }
 
-        void deriv(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk, int const derivative)
+        KOKKOS_FUNCTION void deriv(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk, int const derivative)
                 const
         {
             auto const& domain = chunk.domain();
@@ -59,16 +59,16 @@ struct CosineEvaluator
             }
         }
 
-        double max_norm(int diff = 0) const
+        KOKKOS_FUNCTION double max_norm(int diff = 0) const
         {
             return ddc::detail::ipow(s_2_pi * m_c0, diff);
         }
 
     private:
-        double eval(double const x, int const derivative) const noexcept
+        KOKKOS_FUNCTION double eval(double const x, int const derivative) const noexcept
         {
             return ddc::detail::ipow(s_2_pi * m_c0, derivative)
-                   * std::cos(M_PI_2 * derivative + s_2_pi * (m_c0 * x + m_c1));
+                   * Kokkos::cos(M_PI_2 * derivative + s_2_pi * (m_c0 * x + m_c1));
         }
     };
 };

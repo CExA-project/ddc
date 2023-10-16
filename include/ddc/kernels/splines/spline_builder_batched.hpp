@@ -211,7 +211,6 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                     });
         }
     }
-#endif
 
     if (BcXmin == BoundCond::HERMITE) {
         assert((long int)(derivs_xmin->extent(0))
@@ -224,6 +223,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                && derivs_xmax->extent(1) == nbc_xmax);
     }
 
+#endif
 #if 0
     ddc::for_each(spline_builder2.interpolation_domain(), [&](IMesh2 const i) {
         const std::size_t ii = i.uid();

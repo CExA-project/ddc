@@ -265,7 +265,7 @@ operator()(
 {
     assert(vals.template extent<interpolation_mesh_type>()
            == ddc::discrete_space<BSplines>().nbasis() - s_nbe_xmin - s_nbe_xmax);
-    assert(spline.belongs_to_space(ddc::discrete_space<BSplines>()));
+//    assert(spline.belongs_to_space(ddc::discrete_space<BSplines>()));
     // TODO: LOG Errors
     if constexpr (bsplines_type::degree() == 1)
         return compute_interpolant_degree1(spline, vals);

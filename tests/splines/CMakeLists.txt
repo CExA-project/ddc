@@ -43,7 +43,7 @@ target_link_libraries(bernstein_tests
 )
 gtest_discover_tests(bernstein_tests)
 
-foreach(DEGREE_X RANGE "${SLL_SPLINES_TEST_DEGREE_MIN}" "${SLL_SPLINES_TEST_DEGREE_MAX}")
+foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
   foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
     set(test_name "splines_tests_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}")
     add_executable("${test_name}" periodic_spline_builder.cpp)

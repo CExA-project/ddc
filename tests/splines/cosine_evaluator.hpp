@@ -35,7 +35,8 @@ struct CosineEvaluator
             return eval(x, 0);
         }
 
-        KOKKOS_FUNCTION void operator()(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
+        KOKKOS_FUNCTION void operator()(
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
         {
             auto const& domain = chunk.domain();
 
@@ -49,8 +50,9 @@ struct CosineEvaluator
             return eval(x, derivative);
         }
 
-        KOKKOS_FUNCTION void deriv(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk, int const derivative)
-                const
+        KOKKOS_FUNCTION void deriv(
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk,
+                int const derivative) const
         {
             auto const& domain = chunk.domain();
 

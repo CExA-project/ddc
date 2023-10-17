@@ -10,6 +10,8 @@
 #include "spline_boundary_value.hpp"
 #include "view.hpp"
 
+#include "spline_evaluator.hpp"
+
 namespace ddc {
 template <class SplineEvaluator, class... IDimX>
 class SplineEvaluatorBatched

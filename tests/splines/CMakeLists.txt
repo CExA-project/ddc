@@ -38,7 +38,6 @@ target_link_libraries(bsplines_tests
 		DDC::DDC
 )
 
-if(0)
 gtest_discover_tests(bsplines_tests)
 
 add_executable(matrix_tests
@@ -52,7 +51,6 @@ target_link_libraries(matrix_tests
 		DDC::DDC
 )
 gtest_discover_tests(matrix_tests)
-endif()
 
 add_executable(bernstein_tests
   main.cpp

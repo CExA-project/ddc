@@ -2,6 +2,7 @@
 #include <cmath>
 #include <memory>
 
+#include <ddc/ddc.hpp>
 #include <ddc/kernels/splines/math_tools.hpp>
 #include <ddc/kernels/splines/matrix.hpp>
 #include <ddc/kernels/splines/matrix_maker.hpp>
@@ -14,7 +15,7 @@
 
 namespace {
 
-void fill_identity(DSpan2D mat)
+void fill_identity(ddc::DSpan2D mat)
 {
     assert(mat.extent(0) == mat.extent(1));
     for (std::size_t i(0); i < mat.extent(0); ++i) {
@@ -24,7 +25,7 @@ void fill_identity(DSpan2D mat)
     }
 }
 
-void copy_matrix(DSpan2D copy, std::unique_ptr<Matrix>& mat)
+void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
 {
     assert(mat->get_size() == int(copy.extent(0)));
     assert(mat->get_size() == int(copy.extent(1)));
@@ -36,7 +37,7 @@ void copy_matrix(DSpan2D copy, std::unique_ptr<Matrix>& mat)
     }
 }
 
-void check_inverse(DSpan2D matrix, DSpan2D inv)
+void check_inverse(ddc::DSpan2D matrix, ddc::DSpan2D inv)
 {
     double TOL = 1e-10;
     std::size_t N = matrix.extent(0);
@@ -52,7 +53,7 @@ void check_inverse(DSpan2D matrix, DSpan2D inv)
     }
 }
 
-void check_inverse_transpose(DSpan2D matrix, DSpan2D inv)
+void check_inverse_transpose(ddc::DSpan2D matrix, ddc::DSpan2D inv)
 {
     double TOL = 1e-10;
     std::size_t N = matrix.extent(0);
@@ -77,7 +78,7 @@ class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t,
 TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
 {
     auto const [N, k] = GetParam();
-    std::unique_ptr<Matrix> matrix = MatrixMaker::make_new_banded(N, k, k, true);
+    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded(N, k, k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 2.0 * k);
@@ -89,11 +90,11 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
         }
     }
     std::vector<double> val_ptr(N * N);
-    DSpan2D val(val_ptr.data(), N, N);
+    ddc::DSpan2D val(val_ptr.data(), N, N);
     copy_matrix(val, matrix);
 
     std::vector<double> inv_ptr(N * N);
-    DSpan2D inv(inv_ptr.data(), N, N);
+    ddc::DSpan2D inv(inv_ptr.data(), N, N);
     fill_identity(inv);
     matrix->factorize();
     matrix->solve_multiple_inplace(inv);
@@ -103,7 +104,7 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
 TEST_P(MatrixSizesFixture, OffsetBanded)
 {
     auto const [N, k] = GetParam();
-    std::unique_ptr<Matrix> matrix = MatrixMaker::make_new_banded(N, 0, 2 * k, true);
+    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded(N, 0, 2 * k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(i); j < std::min(N, i + k); ++j) {
@@ -117,11 +118,11 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
         }
     }
     std::vector<double> val_ptr(N * N);
-    DSpan2D val(val_ptr.data(), N, N);
+    ddc::DSpan2D val(val_ptr.data(), N, N);
     copy_matrix(val, matrix);
 
     std::vector<double> inv_ptr(N * N);
-    DSpan2D inv(inv_ptr.data(), N, N);
+    ddc::DSpan2D inv(inv_ptr.data(), N, N);
     fill_identity(inv);
     matrix->factorize();
     matrix->solve_multiple_inplace(inv);
@@ -136,11 +137,11 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
         if (s == 0)
             continue;
 
-        std::unique_ptr<Matrix> matrix
-                = MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
+        std::unique_ptr<ddc::detail::Matrix> matrix
+                = ddc::detail::MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
         for (int i(0); i < N; ++i) {
             for (int j(0); j < N; ++j) {
-                int diag = modulo(j - i, int(N));
+                int diag = ddc::detail::modulo(j - i, int(N));
                 if (diag == s || diag == N + s) {
                     matrix->set_element(i, j, 0.5);
                 } else if (diag <= s + k || diag >= N + s - k) {
@@ -149,11 +150,11 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
             }
         }
         std::vector<double> val_ptr(N * N);
-        DSpan2D val(val_ptr.data(), N, N);
+        ddc::DSpan2D val(val_ptr.data(), N, N);
         copy_matrix(val, matrix);
 
         std::vector<double> inv_ptr(N * N);
-        DSpan2D inv(inv_ptr.data(), N, N);
+        ddc::DSpan2D inv(inv_ptr.data(), N, N);
         fill_identity(inv);
         matrix->factorize();
         matrix->solve_multiple_inplace(inv);
@@ -164,7 +165,7 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
 TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetricTranspose)
 {
     auto const [N, k] = GetParam();
-    std::unique_ptr<Matrix> matrix = MatrixMaker::make_new_banded(N, k, k, true);
+    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded(N, k, k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 2.0 * k);
@@ -176,15 +177,15 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetricTranspose)
         }
     }
     std::vector<double> val_ptr(N * N);
-    DSpan2D val(val_ptr.data(), N, N);
+    ddc::DSpan2D val(val_ptr.data(), N, N);
     copy_matrix(val, matrix);
 
     std::vector<double> inv_ptr(N * N);
-    DSpan2D inv(inv_ptr.data(), N, N);
+    ddc::DSpan2D inv(inv_ptr.data(), N, N);
     fill_identity(inv);
     matrix->factorize();
     for (std::size_t i(0); i < N; ++i) {
-        DSpan1D inv_line(inv_ptr.data() + i * N, N);
+        ddc::DSpan1D inv_line(inv_ptr.data() + i * N, N);
         matrix->solve_transpose_inplace(inv_line);
     }
     check_inverse_transpose(val, inv);
@@ -193,7 +194,7 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetricTranspose)
 TEST_P(MatrixSizesFixture, OffsetBandedTranspose)
 {
     auto const [N, k] = GetParam();
-    std::unique_ptr<Matrix> matrix = MatrixMaker::make_new_banded(N, 0, 2 * k, true);
+    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded(N, 0, 2 * k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(i); j < std::min(N, i + k); ++j) {
@@ -207,15 +208,15 @@ TEST_P(MatrixSizesFixture, OffsetBandedTranspose)
         }
     }
     std::vector<double> val_ptr(N * N);
-    DSpan2D val(val_ptr.data(), N, N);
+    ddc::DSpan2D val(val_ptr.data(), N, N);
     copy_matrix(val, matrix);
 
     std::vector<double> inv_ptr(N * N);
-    DSpan2D inv(inv_ptr.data(), N, N);
+    ddc::DSpan2D inv(inv_ptr.data(), N, N);
     fill_identity(inv);
     matrix->factorize();
     for (std::size_t i(0); i < N; ++i) {
-        DSpan1D inv_line(inv_ptr.data() + i * N, N);
+        ddc::DSpan1D inv_line(inv_ptr.data() + i * N, N);
         matrix->solve_transpose_inplace(inv_line);
     }
     check_inverse_transpose(val, inv);
@@ -229,11 +230,11 @@ TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
         if (s == 0)
             continue;
 
-        std::unique_ptr<Matrix> matrix
-                = MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
+        std::unique_ptr<ddc::detail::Matrix> matrix
+                = ddc::detail::MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
         for (int i(0); i < N; ++i) {
             for (int j(0); j < N; ++j) {
-                int diag = modulo(j - i, int(N));
+                int diag = ddc::detail::modulo(j - i, int(N));
                 if (diag == s || diag == N + s) {
                     matrix->set_element(i, j, 0.5);
                 } else if (diag <= s + k || diag >= N + s - k) {
@@ -242,15 +243,15 @@ TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
             }
         }
         std::vector<double> val_ptr(N * N);
-        DSpan2D val(val_ptr.data(), N, N);
+        ddc::DSpan2D val(val_ptr.data(), N, N);
         copy_matrix(val, matrix);
 
         std::vector<double> inv_ptr(N * N);
-        DSpan2D inv(inv_ptr.data(), N, N);
+        ddc::DSpan2D inv(inv_ptr.data(), N, N);
         fill_identity(inv);
         matrix->factorize();
         for (int i(0); i < N; ++i) {
-            DSpan1D inv_line(inv_ptr.data() + i * N, N);
+            ddc::DSpan1D inv_line(inv_ptr.data() + i * N, N);
             matrix->solve_transpose_inplace(inv_line);
         }
         check_inverse_transpose(val, inv);

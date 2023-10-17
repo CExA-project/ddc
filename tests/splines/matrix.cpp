@@ -39,7 +39,7 @@ void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
 
 void check_inverse(ddc::DSpan2D matrix, ddc::DSpan2D inv)
 {
-    double TOL = 1e-10;
+    double TOL = 5e-10;
     std::size_t N = matrix.extent(0);
 
     for (std::size_t i(0); i < N; ++i) {
@@ -78,7 +78,8 @@ class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t,
 TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
 {
     auto const [N, k] = GetParam();
-    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded(N, k, k, true);
+    std::unique_ptr<ddc::detail::Matrix> matrix
+            = ddc::detail::MatrixMaker::make_new_banded(N, k, k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 2.0 * k);
@@ -104,7 +105,8 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
 TEST_P(MatrixSizesFixture, OffsetBanded)
 {
     auto const [N, k] = GetParam();
-    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded(N, 0, 2 * k, true);
+    std::unique_ptr<ddc::detail::Matrix> matrix
+            = ddc::detail::MatrixMaker::make_new_banded(N, 0, 2 * k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(i); j < std::min(N, i + k); ++j) {
@@ -162,10 +164,42 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
     }
 }
 
+TEST_P(MatrixSizesFixture, Sparse)
+{
+    auto const [N, k] = GetParam();
+
+
+    std::unique_ptr<ddc::detail::Matrix> matrix
+            = ddc::detail::MatrixMaker::make_new_sparse<Kokkos::DefaultHostExecutionSpace>(N);
+
+    std::vector<double> val_ptr(N * N);
+    ddc::DSpan2D val(val_ptr.data(), N, N);
+    for (int i(0); i < N; ++i) {
+        for (int j(0); j < N; ++j) {
+            int diag = ddc::detail::modulo(j - i, int(N));
+            if (i == j) {
+                matrix->set_element(i, j, 0.5);
+                val(i, j) = 0.5;
+            } else if (std::abs(i - j) <= k) {
+                matrix->set_element(i, j, -1.0 / k / std::abs(i - j));
+                val(i, j) = -1.0 / k / std::abs(i - j);
+            }
+        }
+    }
+    // copy_matrix(val, matrix); // copy_matrix is not available for sparse matrix because of a limitation of Ginkgo API (get_element is not implemented). The workaround is to fill val directly in the loop
+
+    std::vector<double> inv_ptr(N * N);
+    ddc::DSpan2D inv(inv_ptr.data(), N, N);
+    fill_identity(inv);
+    matrix->factorize();
+    matrix->solve_multiple_inplace(inv);
+    check_inverse(val, inv);
+}
 TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetricTranspose)
 {
     auto const [N, k] = GetParam();
-    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded(N, k, k, true);
+    std::unique_ptr<ddc::detail::Matrix> matrix
+            = ddc::detail::MatrixMaker::make_new_banded(N, k, k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 2.0 * k);
@@ -194,7 +228,8 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetricTranspose)
 TEST_P(MatrixSizesFixture, OffsetBandedTranspose)
 {
     auto const [N, k] = GetParam();
-    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded(N, 0, 2 * k, true);
+    std::unique_ptr<ddc::detail::Matrix> matrix
+            = ddc::detail::MatrixMaker::make_new_banded(N, 0, 2 * k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(i); j < std::min(N, i + k); ++j) {

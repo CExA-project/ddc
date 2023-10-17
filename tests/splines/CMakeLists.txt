@@ -31,6 +31,18 @@ target_link_libraries(bsplines_tests
 		DDC::DDC
 )
 
+add_executable(matrix_tests
+  main.cpp
+    matrix.cpp
+)
+target_compile_features(matrix_tests PUBLIC cxx_std_17)
+target_link_libraries(matrix_tests
+    PUBLIC
+        GTest::gtest
+        DDC::DDC
+)
+gtest_discover_tests(matrix_tests)
+
 add_executable(bernstein_tests
   main.cpp
 	bernstein.cpp

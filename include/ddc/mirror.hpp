@@ -18,11 +18,15 @@ template <
 		class ExecSpace,
         class ElementType,
         class SupportType,
-		class Allocator = HostAllocator<ElementType>>
-Chunk<ElementType, SupportType, KokkosAllocator<ElementType, typename ExecSpace::memory_space>> create_mirror(ExecSpace exec_space, Chunk<ElementType, SupportType, Allocator> chunk) {
+		class Allocator>
+// Chunk<ElementType, SupportType, KokkosAllocator<ElementType, typename ExecSpace::memory_space>>&& create_mirror(ExecSpace exec_space, Chunk<ElementType, SupportType, Allocator> chunk) {
+ChunkSpan<ElementType, SupportType, std::experimental::layout_right, typename ExecSpace::memory_space> create_mirror(ExecSpace exec_space, Chunk<ElementType, SupportType, Allocator>& chunk) {
 	auto kokkos_view = chunk.allocation_kokkos_view();
     auto mirror_kokkos_view = Kokkos::create_mirror(exec_space, kokkos_view);
-	return Chunk(detail::build_mdspan(mirror_kokkos_view, std::make_index_sequence<chunk.rank()> {}), chunk.domain());
+	auto mirror_chunkspan = ChunkSpan<ElementType, SupportType, std::experimental::layout_right, typename ExecSpace::memory_space>(mirror_kokkos_view,chunk.domain());
+	auto mirror_chunk = Chunk<ElementType, SupportType, KokkosAllocator<ElementType, typename ExecSpace::memory_space>>(mirror_chunkspan);
+	// return std::move(mirror_chunk);
+	return mirror_chunkspan;
 }
 
 /*

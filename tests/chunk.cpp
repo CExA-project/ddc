@@ -610,9 +610,7 @@ TEST(Chunk2DTest, Mirror)
             chunk(ix, iy) = 1.739 * ix.uid() + 1.412 * iy.uid();
         }
     }
-    auto chunk2 =
-		create_mirror(Kokkos::DefaultHostExecutionSpace(), chunk)
-		;
+    auto chunk2 = create_mirror(Kokkos::DefaultHostExecutionSpace(), chunk);
     ddc::deepcopy(chunk2, chunk);
     for (auto&& ix : chunk.domain<DDimX>()) {
         for (auto&& iy : chunk.domain<DDimY>()) {

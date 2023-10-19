@@ -31,32 +31,37 @@ using DDimY = ddc::UniformPointSampling<Y>;
 
 static std::size_t constexpr large_dim1_2D = 2000;
 static std::size_t constexpr large_dim2_2D = large_dim1_2D;
+
 } // namespace
 
-
-static void characteristics_advection(benchmark::State& state)
-{
-	// Initialization of the global domain in X
+static void DoSetup() {
+  // Initialization of the global domain in X
     ddc::init_discrete_space<BSplinesX>(
             ddc::Coordinate<X>(-1.),
             ddc::Coordinate<X>(1.),
             large_dim1_2D);
-    ddc::init_discrete_space<DDimX>(
+
+}
+
+static void characteristics_advection(benchmark::State& state)
+{
+	ddc::init_discrete_space<DDimX>(
             ddc::GrevilleInterpolationPoints<
                     BSplinesX,
                     ddc::BoundCond::PERIODIC,
                     ddc::BoundCond::PERIODIC>::get_sampling());
+	
+	ddc::DiscreteDomain<DDimY> y_domain = ddc::init_discrete_space(
+            DDimY::
+                    init(ddc::Coordinate<Y>(-1.),
+                         ddc::Coordinate<Y>(1.),
+                         ddc::DiscreteVector<DDimY>(state.range(1))));
 
 	auto const x_domain = ddc::GrevilleInterpolationPoints<
             BSplinesX,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC>::get_domain();
-	auto const y_domain = ddc::init_discrete_space(
-            DDimY::
-                    init(ddc::Coordinate<Y>(-1.),
-                         ddc::Coordinate<Y>(1.),
-                         ddc::DiscreteVector<DDimY>(large_dim2_2D)));
-	ddc::Chunk density_alloc(
+		ddc::Chunk density_alloc(
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
     ddc::ChunkSpan const density = density_alloc.span_view();
@@ -129,9 +134,14 @@ static void characteristics_advection(benchmark::State& state)
     state.SetBytesProcessed(
             int64_t(state.iterations())
             * int64_t(state.range(0) * state.range(1) * sizeof(double)));
+	ddc::detail::g_discrete_space_dual<DDimX>.reset();
+	ddc::detail::g_discrete_space_dual<DDimY>.reset();
+	ddc::detail::display_discretization_store(std::cout);
 }
 
-BENCHMARK(characteristics_advection)->Args({large_dim1_2D, large_dim2_2D});
+BENCHMARK(characteristics_advection)->Args({1000, 1000});
+BENCHMARK(characteristics_advection)->Args({1000, 10000});
+BENCHMARK(characteristics_advection)->Args({1000, 100000});
 
 int main(int argc, char** argv)
 {
@@ -141,6 +151,7 @@ int main(int argc, char** argv)
     }
     {
         ddc::ScopeGuard const guard;
+		DoSetup();
         ::benchmark::RunSpecifiedBenchmarks();
     }
     ::benchmark::Shutdown();

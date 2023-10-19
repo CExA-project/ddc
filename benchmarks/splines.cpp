@@ -136,6 +136,7 @@ static void characteristics_advection(benchmark::State& state)
     ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
 
     for (auto _ : state) {
+		Kokkos::Profiling::pushRegion("FeetCharacteristics");
         ddc::for_each(
                 ddc::policies::parallel_device,
                 feet_coords.domain(),
@@ -145,8 +146,13 @@ static void characteristics_advection(benchmark::State& state)
                                     - ddc::Coordinate<X>(0.0176429863),
                             ddc::coordinate(ddc::select<DDimY>(e)));
                 });
+		Kokkos::Profiling::popRegion();
+		Kokkos::Profiling::pushRegion("SplineBuilder");
         spline_builder(coef, density);
+		Kokkos::Profiling::popRegion();
+		Kokkos::Profiling::pushRegion("SplineEvaluator");
         spline_evaluator(density, feet_coords.span_cview(), coef.span_cview());
+		Kokkos::Profiling::popRegion();
     }
     monitorFlag = false;
     monitorThread.join();

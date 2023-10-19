@@ -6,6 +6,7 @@
 import argparse
 import matplotlib.pyplot as plt
 import json
+import numpy as np
 
 parser = argparse.ArgumentParser(description="Plot bytes_per_second from a JSON file.")
 parser.add_argument("json_file", help="Path to the JSON file")
@@ -29,15 +30,19 @@ for benchmark in data["benchmarks"]:
 plt.figure(figsize=(8, 6))
 for nx, group_data in data_groups.items():
     ny = group_data["ny"]
-    scaling = [group_data["bytes_per_second"][i] / ny[i] / (group_data["bytes_per_second"][0] / ny[0]) for i in range(len(ny))]
+    scaling = [group_data["bytes_per_second"][i] for i in range(len(ny))]
+    # scaling = [group_data["bytes_per_second"][i] / ny[i] / (group_data["bytes_per_second"][0] / ny[0]) for i in range(len(ny))]
     plt.plot(ny, scaling, marker='o', markersize=5, label=f'nx={nx}')
+
+x = np.linspace(min(ny), 20*min(ny))
+plt.plot(x, np.mean([data_groups[nx]["bytes_per_second"][0] for nx in nx_values])/min(ny)*x, linestyle='--', color='black', label='perfect scaling')
 
 # Plotting the data
 plt.grid()
 plt.xscale("log")
 plt.xlabel("ny")
-plt.ylabel("Bandwidth scaling")
-plt.title("Bandwidth scaling (bandwidth/ny, normalized to the smallest case)")
+plt.ylabel("Bandwidth [B/s]")
+plt.title("Bandwidth")
 plt.legend()
 plt.savefig("bytes_per_sec.png")
 

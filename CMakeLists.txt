@@ -267,6 +267,10 @@ set_property(CACHE DDC_Ginkgo_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDEN
 set(GINKGO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/vendor/ginkgo" CACHE PATH "Path to the ginkgo library source")
 set(GINKGO_BUILD_MPI OFF)
 set(GINKGO_BUILD_TESTS OFF)
+# workaround for Ginkgo+CUDA install
+find_package(CUDAToolkit REQUIRED)
+target_link_libraries(DDC INTERFACE CUDA::cublas)
+# end of workaround
 if("${DDC_Ginkgo_DEPENDENCY_POLICY}" STREQUAL "AUTO")
   if(NOT TARGET Ginkgo::ginkgo)
 	  find_package(Ginkgo QUIET)

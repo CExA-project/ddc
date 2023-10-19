@@ -27,15 +27,36 @@ using DDimX = GrevillePoints::interpolation_mesh_type;
 struct Y;
 using DDimY = ddc::UniformPointSampling<Y>;
 
-static std::size_t constexpr large_dim1_2D = 2000;
-static std::size_t constexpr large_dim2_2D = large_dim1_2D;
 
 } // namespace
 
-static void DoSetup() {}
+// Function to monitor GPU memory asynchronously
+void monitorMemoryAsync(std::mutex &mutex, bool& monitorFlag, size_t& maxUsedMem) {
+    size_t freeMem, totalMem;
+    while (monitorFlag) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Adjust the interval as needed
+
+        // Acquire a lock to ensure thread safety when accessing CUDA functions
+        std::lock_guard<std::mutex> lock(mutex);
+
+        cudaMemGetInfo(&freeMem, &totalMem);
+		maxUsedMem = std::max(maxUsedMem,totalMem - freeMem);
+        
+    }
+}
 
 static void characteristics_advection(benchmark::State& state)
 {
+    size_t freeMem, totalMem;
+    cudaMemGetInfo(&freeMem, &totalMem);
+	size_t initUsedMem = totalMem - freeMem; // cudaMemGetInfo gives GPU total memory occupation, we consider that other users of the GPU have constant occupancy and substract it.
+	size_t maxUsedMem = initUsedMem;
+
+	bool monitorFlag = true;
+	std::mutex mutex;
+    // Create a thread to monitor GPU memory asynchronously
+    std::thread monitorThread(monitorMemoryAsync, std::ref(mutex), std::ref(monitorFlag), std::ref(maxUsedMem));
+
     ddc::init_discrete_space<
             BSplinesX>(ddc::Coordinate<X>(-1.), ddc::Coordinate<X>(1.), state.range(0));
     ddc::init_discrete_space<DDimX>(ddc::GrevilleInterpolationPoints<
@@ -115,9 +136,12 @@ static void characteristics_advection(benchmark::State& state)
         spline_builder(coef, density);
         spline_evaluator(density, feet_coords.span_cview(), coef.span_cview());
     }
+	monitorFlag = false;
+	monitorThread.join();
     state.SetBytesProcessed(
             int64_t(state.iterations())
             * int64_t(state.range(0) * state.range(1) * sizeof(double)));
+	state.counters["gpu_mem_occupancy"] = maxUsedMem-initUsedMem;
     ////////////////////////////////////////////////////
     /// --------------- HUGE WARNING --------------- ///
     /// The following lines are forbidden in a prod- ///
@@ -130,6 +154,7 @@ static void characteristics_advection(benchmark::State& state)
     ddc::detail::g_discrete_space_dual<BSplinesX::mesh_type>.reset();
     ddc::detail::g_discrete_space_dual<DDimX>.reset();
     ddc::detail::g_discrete_space_dual<DDimY>.reset();
+	////////////////////////////////////////////////////
 }
 
 BENCHMARK(characteristics_advection)
@@ -145,7 +170,6 @@ int main(int argc, char** argv)
     }
     {
         ddc::ScopeGuard const guard;
-        DoSetup();
         ::benchmark::RunSpecifiedBenchmarks();
     }
     ::benchmark::Shutdown();

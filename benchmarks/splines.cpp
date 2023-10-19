@@ -158,9 +158,9 @@ static void characteristics_advection(benchmark::State& state)
 }
 
 BENCHMARK(characteristics_advection)
-        ->RangeMultiplier(10)
-        ->Ranges({{10, 10000}, {10, 100000}})
-        ->Iterations(10);
+        ->RangeMultiplier(2)
+        ->Ranges({{100, 1000}, {100, 100000}})
+        ->Iterations(50);
 
 int main(int argc, char** argv)
 {

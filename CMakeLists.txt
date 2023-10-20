@@ -264,11 +264,6 @@ if("${BUILD_FFT_KERNEL}" AND "${HIP_FOR_NVIDIA}")
 endif()
 
 if("${BUILD_SPLINES_KERNEL}")
-  # LAPACK
-  find_package(LAPACK REQUIRED COMPONENTS CXX)
-  target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
-  target_compile_definitions(DDC INTERFACE LAPACK_AVAIL)
-
   # Ginkgo
   find_package(Ginkgo 1.6.0 EXACT REQUIRED)
   target_link_libraries(DDC INTERFACE Ginkgo::ginkgo)

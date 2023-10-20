@@ -267,27 +267,11 @@ target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
 target_compile_definitions(DDC INTERFACE LAPACK_AVAIL)
 
 # Ginkgo
-set(DDC_Ginkgo_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `Ginkgo` package. Options: ${DDC_DEPENDENCY_POLICIES}")
-set_property(CACHE DDC_Ginkgo_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
-set(GINKGO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/vendor/ginkgo" CACHE PATH "Path to the ginkgo library source")
-set(GINKGO_BUILD_MPI OFF)
-set(GINKGO_BUILD_TESTS OFF)
 # workaround for Ginkgo+CUDA install
 find_package(CUDAToolkit REQUIRED)
 target_link_libraries(DDC INTERFACE CUDA::cublas)
 # end of workaround
-if("${DDC_Ginkgo_DEPENDENCY_POLICY}" STREQUAL "AUTO")
-  if(NOT TARGET Ginkgo::ginkgo)
-	  find_package(Ginkgo QUIET)
-	  if(NOT Ginkgo_FOUND)
-  	    add_subdirectory("${GINKGO_PATH}")
-	  endif()
-  endif()
-elseif("${DDC_Ginkgo_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
-  add_subdirectory("${GINKGO_PATH}")
-elseif("${DDC_Ginkgo_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-  find_package(Ginkgo REQUIRED)
-endif()
+find_package(Ginkgo REQUIRED)
 target_link_libraries(DDC INTERFACE Ginkgo::ginkgo)
 target_compile_definitions(DDC INTERFACE ginkgo_AVAIL)
 

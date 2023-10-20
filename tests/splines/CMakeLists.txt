@@ -7,7 +7,6 @@ set(SPLINES_TEST_DEGREE_MAX 3 CACHE STRING "Maximum degree to test splines.")
 
 add_executable(splines_tests
     main.cpp
-    chunk.cpp
     view.cpp
 )
 

@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.15)
 
+option(BUILD_FFT_KERNEL      "Build DDC kernel for FFT" ON)
+option(BUILD_SPLINES_KERNEL  "Build DDC kernel for splines" ON)
+
 add_subdirectory(discrete_space)
 
 add_executable(ddc_tests
@@ -21,10 +24,8 @@ add_executable(ddc_tests
     for_each.cpp
     fill.cpp
     discrete_element.cpp
-	fft.cpp
     discrete_vector.cpp
 )
-add_subdirectory(splines)
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
 target_link_libraries(ddc_tests
     PUBLIC
@@ -32,3 +33,17 @@ target_link_libraries(ddc_tests
         DDC::DDC
 )
 gtest_discover_tests(ddc_tests)
+if("${BUILD_FFT_KERNEL}")
+  add_executable(fft_tests main.cpp fft.cpp)
+  target_compile_features(fft_tests PUBLIC cxx_std_17)
+  target_link_libraries(fft_tests
+	  PUBLIC
+		  GTest::gtest
+		  DDC::DDC
+  )
+  gtest_discover_tests(fft_tests)
+endif()
+if("${BUILD_SPLINES_KERNEL}")
+  add_subdirectory(splines)
+endif()
+

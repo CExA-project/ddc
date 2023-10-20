@@ -6,13 +6,8 @@
 #include <memory>
 #include <utility>
 
-#include <ginkgo/core/base/device_matrix_data.hpp>
-#include <ginkgo/ginkgo.hpp>
-
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Random.hpp>
-
-#include "ginkgo/core/matrix/dense.hpp"
 
 #include "Kokkos_Core_fwd.hpp"
 #include "view.hpp"

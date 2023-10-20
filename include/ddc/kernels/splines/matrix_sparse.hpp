@@ -7,7 +7,6 @@
 #include <type_traits>
 #include <utility>
 
-#include <ginkgo/core/base/device_matrix_data.hpp>
 #include <ginkgo/ginkgo.hpp>
 
 #include <Kokkos_Core.hpp>

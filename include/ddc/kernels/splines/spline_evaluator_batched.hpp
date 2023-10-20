@@ -6,9 +6,8 @@
 
 #include "Kokkos_Macros.hpp"
 #include "spline_boundary_value.hpp"
-#include "view.hpp"
-
 #include "spline_evaluator.hpp"
+#include "view.hpp"
 
 namespace ddc {
 
@@ -89,18 +88,17 @@ public:
 
 
 
-    KOKKOS_INLINE_FUNCTION spline_domain_type const spline_domain() const noexcept
+    KOKKOS_FUNCTION spline_domain_type spline_domain() const noexcept
     {
         return m_spline_domain;
     }
 
-    KOKKOS_INLINE_FUNCTION bsplines_domain_type const bsplines_domain()
-            const noexcept // TODO : clarify name
+    KOKKOS_FUNCTION bsplines_domain_type bsplines_domain() const noexcept // TODO : clarify name
     {
         return ddc::discrete_space<bsplines_type>().full_domain();
     }
 
-    KOKKOS_INLINE_FUNCTION batch_domain_type const batch_domain() const noexcept
+    KOKKOS_FUNCTION batch_domain_type batch_domain() const noexcept
     {
         return ddc::remove_dims_of(spline_domain(), bsplines_domain());
     }
@@ -118,9 +116,9 @@ public:
           return spline_tr_domain_type(bsplines_domain(), batch_domain());
       }
       */
-    template <class Layout>
+    template <class Layout, class... CoordsDims>
     double operator()(
-            ddc::Coordinate<IDimX...> const& coord_eval,
+            ddc::Coordinate<CoordsDims...> const& coord_eval,
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
@@ -138,8 +136,7 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        interpolation_domain_type interpolation_domain
-                = ddc::select<interpolation_mesh_type>(spline_eval.domain());
+        interpolation_domain_type const interpolation_domain(spline_eval.domain());
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
@@ -147,11 +144,8 @@ public:
                     const auto spline_eval_1D = spline_eval[j];
                     const auto coords_eval_1D = coords_eval[j];
                     const auto spline_coef_1D = spline_coef[j];
-                    for (int i = 0; i < interpolation_domain.size(); i++) {
-                        spline_eval_1D(typename interpolation_domain_type::discrete_element_type(i))
-                                = eval(coords_eval_1D(typename interpolation_domain_type::
-                                                              discrete_element_type(i)),
-                                       spline_coef_1D);
+                    for (auto const i : interpolation_domain) {
+                        spline_eval_1D(i) = eval(coords_eval_1D(i), spline_coef_1D);
                     }
                 });
     }
@@ -176,8 +170,7 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        interpolation_domain_type interpolation_domain
-                = ddc::select<interpolation_mesh_type>(spline_eval.domain());
+        interpolation_domain_type const interpolation_domain(spline_eval.domain());
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
@@ -185,12 +178,9 @@ public:
                     const auto spline_eval_1D = spline_eval[j];
                     const auto coords_eval_1D = coords_eval[j];
                     const auto spline_coef_1D = spline_coef[j];
-                    for (int i = 0; i < interpolation_domain.size(); i++) {
-                        spline_eval_1D(typename interpolation_domain_type::discrete_element_type(i))
-                                = eval_no_bc<eval_deriv_type>(
-                                        coords_eval_1D(typename interpolation_domain_type::
-                                                               discrete_element_type(i)),
-                                        spline_coef_1D);
+                    for (auto const i : interpolation_domain) {
+                        spline_eval_1D(i)
+                                = eval_no_bc<eval_deriv_type>(coords_eval_1D(i), spline_coef_1D);
                     }
                 });
     }

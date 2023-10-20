@@ -43,18 +43,6 @@ target_link_libraries(matrix_tests
 )
 gtest_discover_tests(matrix_tests)
 
-add_executable(bernstein_tests
-  main.cpp
-	bernstein.cpp
-)
-target_compile_features(bernstein_tests PUBLIC cxx_std_17)
-target_link_libraries(bernstein_tests
-    PUBLIC
-        GTest::gtest
-		DDC::DDC
-)
-gtest_discover_tests(bernstein_tests)
-
 foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
   foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
     set(test_name "splines_tests_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}")

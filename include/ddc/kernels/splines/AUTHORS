@@ -1,4 +1,4 @@
-Multiple people have contributed to sll. To show our appreciation for their
+Multiple people have contributed to this splines solver. To show our appreciation for their
 public spirit, we list here in alphabetical order a condensed list of their
 contributions.
 
@@ -11,6 +11,9 @@ Emily Bourne <emily.bourne@cea.fr>
 
 Virginie Grandgirard <virginie.grandgirard@cea.fr>
 * Work on Gauss-Legendre integration
+
+Baptiste Legouix <baptiste.legouix@cea.fr>
+* GPU port (batching & call to Ginkgo backend)
 
 Thomas Padioleau <thomas.padioleau@cea.fr>
 * Redesign and reimplementation using DCC

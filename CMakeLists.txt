@@ -5,6 +5,8 @@ project(DDC VERSION 0.0.0 LANGUAGES CXX)
 
 # List of options
 
+option(BUILD_FFT_KERNEL      "Build DDC kernel for FFT" ON)
+option(BUILD_SPLINES_KERNEL  "Build DDC kernel for splines" ON)
 option(BUILD_BENCHMARKS      "Build DDC benchmarks." OFF)
 option(BUILD_DOCUMENTATION   "Build DDC documentation/website" OFF)
 option(BUILD_EXAMPLES        "Build DDC examples" ON)
@@ -94,12 +96,12 @@ endif()
 
 # FFTW
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ) # Maybe not specific to FFTW
-if(NOT FFTW_FOUND)
+if("${BUILD_FFT_KERNEL}" AND NOT FFTW_FOUND)
 	find_package( FFTW MODULE REQUIRED )
 endif()
 
 ## CUDA + CUDAToolkit
-if("${Kokkos_ENABLE_CUDA}" AND NOT("${HIP_FOR_NVIDIA}"))
+if("${BUILD_FFT_KERNEL}" AND "${Kokkos_ENABLE_CUDA}" AND NOT("${HIP_FOR_NVIDIA}"))
 	find_package( CUDAToolkit MODULE REQUIRED )
 	if( NOT(CUDAToolkit_FOUND) ) 
 	  message(FATAL_ERROR "CUDAToolkit not found." )
@@ -237,7 +239,7 @@ if("${Kokkos_ENABLE_HIP}")
 	target_compile_definitions(DDC INTERFACE hipfft_AVAIL)
 endif()
 
-if("${HIP_FOR_NVIDIA}")
+if("${BUILD_FFT_KERNEL}" AND "${HIP_FOR_NVIDIA}")
 	find_package( HIP REQUIRED )
 
 	target_include_directories(DDC
@@ -261,19 +263,17 @@ if("${HIP_FOR_NVIDIA}")
 	endif()
 endif()
 
-## LAPACK
-find_package(LAPACK REQUIRED COMPONENTS CXX)
-target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
-target_compile_definitions(DDC INTERFACE LAPACK_AVAIL)
+if("${BUILD_SPLINES_KERNEL}")
+  # LAPACK
+  find_package(LAPACK REQUIRED COMPONENTS CXX)
+  target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
+  target_compile_definitions(DDC INTERFACE LAPACK_AVAIL)
 
-# Ginkgo
-# workaround for Ginkgo+CUDA install
-find_package(CUDAToolkit REQUIRED)
-target_link_libraries(DDC INTERFACE CUDA::cublas)
-# end of workaround
-find_package(Ginkgo 1.6.0 EXACT REQUIRED)
-target_link_libraries(DDC INTERFACE Ginkgo::ginkgo)
-target_compile_definitions(DDC INTERFACE ginkgo_AVAIL)
+  # Ginkgo
+  find_package(Ginkgo 1.6.0 EXACT REQUIRED)
+  target_link_libraries(DDC INTERFACE Ginkgo::ginkgo)
+  target_compile_definitions(DDC INTERFACE ginkgo_AVAIL)
+endif()
 
 ## The PDI wrapper
 

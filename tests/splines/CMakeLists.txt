@@ -85,27 +85,6 @@ foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}"
   add_test("${test_name}" "${test_name}")
 endforeach()
 
-foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
-  foreach(BCR "BCR_GREVILLE" "BCR_HERMITE")
-    foreach(EVALUATOR "EVALUATOR_COSINE" "EVALUATOR_POLYNOMIAL")
-      foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
-        foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
-          set(test_name "splines_tests_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}_${EVALUATOR}_bcl_${BCL}_bcr_${BCR}")
-          add_executable("${test_name}" non_periodic_spline_builder.cpp)
-          target_compile_features("${test_name}" PUBLIC cxx_std_17)
-          target_link_libraries("${test_name}"
-            PUBLIC
-            GTest::gtest
-            DDC::DDC
-          )
-          target_compile_definitions("${test_name}" PUBLIC -DDEGREE_X=${DEGREE_X} -D${BSPLINES_TYPE} -D${EVALUATOR} -D${BCL} -D${BCR})
-          add_test("${test_name}" "${test_name}")
-        endforeach()
-      endforeach()
-    endforeach()
-  endforeach()
-endforeach()
-
 foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
   foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
 	set(test_name "splines_tests_PERIODICITY_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}")

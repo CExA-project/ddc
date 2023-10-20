@@ -20,6 +20,7 @@
 #include "view.hpp"
 
 namespace ddc::detail {
+
 // TODO : support multiple-rhs case
 // Residual logger (error logged at each iteration)
 template <typename ValueType>
@@ -113,55 +114,89 @@ private:
 template <class ExecSpace>
 class Matrix_Sparse : public Matrix
 {
+private:
+    const int m_m;
+    const int m_n;
+    Kokkos::View<int*, Kokkos::HostSpace> m_rows;
+    Kokkos::View<int*, Kokkos::HostSpace> m_cols;
+    Kokkos::View<double*, Kokkos::HostSpace> m_data;
+
+    int m_cols_per_par_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
+    int m_par_chunks_per_seq_chunk; // Maximum number of teams to be executed in parallel
+    int m_preconditionner_max_block_size; // Maximum size of Jacobi-block preconditionner
+
 public:
     // Constructor
-    Matrix_Sparse(const int mat_size)
+    explicit Matrix_Sparse(
+            const int mat_size,
+            std::optional<int> cols_per_par_chunk = std::nullopt,
+            std::optional<int> par_chunks_per_seq_chunk = std::nullopt,
+            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : Matrix(mat_size)
-        , m(mat_size)
-        , n(mat_size)
-        , rows("rows", mat_size + 1)
-        , cols("cols", mat_size * mat_size)
-        , data("data", mat_size * mat_size)
+        , m_m(mat_size)
+        , m_n(mat_size)
+        , m_rows("rows", mat_size + 1)
+        , m_cols("cols", mat_size * mat_size)
+        , m_data("data", mat_size * mat_size)
     {
         // Fill the csr indexes as a dense matrix and initialize with zeros (zeros will be removed once non-zeros elements will be set)
-        for (int i = 0; i < m * n; i++) {
-            if (i < m + 1) {
-                rows(i) = i * n; //CSR
+        for (int i = 0; i < m_m * m_n; i++) {
+            if (i < m_m + 1) {
+                m_rows(i) = i * m_n; //CSR
             }
-            cols(i) = i % n;
-            data(i) = 0;
+            m_cols(i) = i % m_n;
+            m_data(i) = 0;
         }
+
+        if (cols_per_par_chunk.has_value()) {
+            m_cols_per_par_chunk = cols_per_par_chunk.value();
+        } else {
 #ifdef KOKKOS_ENABLE_SERIAL
-        if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-            cols_per_par_chunk = 1;
-            par_chunks_per_seq_chunk = 1;
-        }
+            if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+                m_cols_per_par_chunk = 1;
+            }
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
-        if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-            cols_per_par_chunk = 4096;
-            // TODO: Investigate OpenMP parallelism in Ginkgo
-            par_chunks_per_seq_chunk = ExecSpace::concurrency();
-        }
+            if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+                m_cols_per_par_chunk = 4096;
+            }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
-        if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-            cols_per_par_chunk = Kokkos::pow(2, 16) - 1; // TODO: call cudaMaxGridSize ?
-            par_chunks_per_seq_chunk = 1;
-        }
+            if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+                m_cols_per_par_chunk = Kokkos::pow(2, 16) - 1; // TODO: call cudaMaxGridSize ?
+            }
 #endif
+        }
+
+        if (par_chunks_per_seq_chunk.has_value()) {
+            m_par_chunks_per_seq_chunk = par_chunks_per_seq_chunk.value();
+        } else {
+#ifdef KOKKOS_ENABLE_SERIAL
+            if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+                m_par_chunks_per_seq_chunk = 1;
+            }
+#endif
+#ifdef KOKKOS_ENABLE_OPENMP
+            if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+                // TODO: Investigate OpenMP parallelism in Ginkgo
+                m_par_chunks_per_seq_chunk = ExecSpace::concurrency();
+            }
+#endif
+#ifdef KOKKOS_ENABLE_CUDA
+            if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+                m_par_chunks_per_seq_chunk = 1;
+            }
+#endif
+        }
+
+        if (preconditionner_max_block_size.has_value()) {
+            m_preconditionner_max_block_size = preconditionner_max_block_size.value();
+        } else {
+            m_preconditionner_max_block_size = 1u;
+        }
     }
-    int m;
-    int n;
-    Kokkos::View<int*, Kokkos::HostSpace> rows;
-    Kokkos::View<int*, Kokkos::HostSpace> cols;
-    Kokkos::View<double*, Kokkos::HostSpace> data;
 
-    int cols_per_par_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
-    int par_chunks_per_seq_chunk; // Maximum number of teams to be executed in parallel
-
-    virtual std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>>
-    to_gko_vec(
+    std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>> to_gko_vec(
             double* vec_ptr,
             size_t n,
             size_t n_equations,
@@ -175,7 +210,7 @@ public:
         return v;
     }
 
-    virtual std::unique_ptr<gko::matrix::Csr<>, std::default_delete<gko::matrix::Csr<>>> to_gko_mat(
+    std::unique_ptr<gko::matrix::Csr<>, std::default_delete<gko::matrix::Csr<>>> to_gko_mat(
             double* mat_ptr,
             size_t n_nonzero_rows,
             size_t n_nonzeros,
@@ -183,10 +218,10 @@ public:
     {
         auto M = gko::matrix::Csr<>::
                 create(gko_exec,
-                       gko::dim<2> {m, n},
+                       gko::dim<2> {m_m, m_n},
                        gko::array<double>::view(gko_exec, n_nonzeros, mat_ptr),
-                       gko::array<int>::view(gko_exec, n_nonzeros, cols.data()),
-                       gko::array<int>::view(gko_exec, n_nonzero_rows + 1, rows.data()));
+                       gko::array<int>::view(gko_exec, n_nonzeros, m_cols.data()),
+                       gko::array<int>::view(gko_exec, n_nonzero_rows + 1, m_rows.data()));
         return M;
     }
 
@@ -195,72 +230,80 @@ public:
         throw std::runtime_error("MatrixSparse::get_element() is not implemented because no API is "
                                  "provided by Ginkgo");
     }
+
     virtual void set_element(int i, int j, double aij) override
     {
-        data(i * n + j) = aij;
+        m_data(i * m_n + j) = aij;
     }
 
-    virtual int factorize_method() override
+    int factorize_method() override
     {
         std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<ExecSpace>();
         // Remove zeros
-        auto data_mat = gko::share(to_gko_mat(data.data(), m, m * n, gko_exec->get_master()));
-        auto data_mat_ = gko::matrix_data<>(gko::dim<2> {m, n});
+        auto data_mat
+                = gko::share(to_gko_mat(m_data.data(), m_m, m_m * m_n, gko_exec->get_master()));
+        auto data_mat_ = gko::matrix_data<>(gko::dim<2> {m_m, m_n});
         data_mat->write(data_mat_);
         data_mat_.remove_zeros();
         data_mat->read(data_mat_);
 
         // Realloc Kokkos::Views without zeros
-        Kokkos::realloc(Kokkos::WithoutInitializing, cols, data_mat_.nonzeros.size());
-        Kokkos::realloc(Kokkos::WithoutInitializing, data, data_mat_.nonzeros.size());
+        Kokkos::realloc(Kokkos::WithoutInitializing, m_cols, data_mat_.nonzeros.size());
+        Kokkos::realloc(Kokkos::WithoutInitializing, m_data, data_mat_.nonzeros.size());
         Kokkos::deep_copy(
-                rows,
+                m_rows,
                 Kokkos::View<
                         int*,
                         Kokkos::HostSpace,
-                        Kokkos::MemoryTraits<Kokkos::Unmanaged>>(data_mat->get_row_ptrs(), m + 1));
+                        Kokkos::MemoryTraits<
+                                Kokkos::Unmanaged>>(data_mat->get_row_ptrs(), m_m + 1));
         Kokkos::deep_copy(
-                cols,
+                m_cols,
                 Kokkos::View<int*, Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
                         data_mat->get_col_idxs(),
                         data_mat->get_num_stored_elements()));
         Kokkos::deep_copy(
-                data,
+                m_data,
                 Kokkos::View<double*, Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
                         data_mat->get_values(),
                         data_mat->get_num_stored_elements()));
         return 0;
     }
+
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
     {
         std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<ExecSpace>();
-        auto data_mat = gko::share(
-                to_gko_mat(data.data(), rows.size() - 1, cols.size(), gko_exec->get_master()));
+        auto data_mat = gko::share(to_gko_mat(
+                m_data.data(),
+                m_rows.size() - 1,
+                m_cols.size(),
+                gko_exec->get_master()));
         auto data_mat_gpu = gko::share(gko::clone(gko_exec, data_mat));
         Kokkos::View<
                 double**,
                 Kokkos::LayoutRight,
                 ExecSpace,
                 Kokkos::MemoryTraits<Kokkos::Unmanaged>>
-                b_view(b, n, n_equations);
+                b_view(b, m_n, n_equations);
 
-        const int n_seq_chunks = n_equations / cols_per_par_chunk / par_chunks_per_seq_chunk + 1;
+        const int n_seq_chunks
+                = n_equations / m_cols_per_par_chunk / m_par_chunks_per_seq_chunk + 1;
         const int par_chunks_per_last_seq_chunk
-                = (n_equations % (cols_per_par_chunk * par_chunks_per_seq_chunk))
-                          / cols_per_par_chunk
+                = (n_equations % (m_cols_per_par_chunk * m_par_chunks_per_seq_chunk))
+                          / m_cols_per_par_chunk
                   + 1;
         const int cols_per_last_par_chunk
-                = (n_equations % (cols_per_par_chunk * par_chunks_per_seq_chunk * n_seq_chunks))
-                  % cols_per_par_chunk;
+                = (n_equations % (m_cols_per_par_chunk * m_par_chunks_per_seq_chunk * n_seq_chunks))
+                  % m_cols_per_par_chunk;
 
         Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace>
-                b_buffer("b_buffer", par_chunks_per_seq_chunk, n, cols_per_par_chunk);
+                b_buffer("b_buffer", m_par_chunks_per_seq_chunk, m_n, m_cols_per_par_chunk);
         // Last par_chunk of last seq_chunk do not have same number of columns than the others. To get proper layout (because we passe the pointers to Ginkgo), we need a dedicated allocation
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
-                b_last_buffer("b_last_buffer", n, cols_per_last_par_chunk);
+                b_last_buffer("b_last_buffer", m_n, cols_per_last_par_chunk);
 
         for (int i = 0; i < n_seq_chunks; i++) {
-            int n_par_chunks_in_seq_chunk = i < n_seq_chunks - 1 ? par_chunks_per_seq_chunk
+            int n_par_chunks_in_seq_chunk = i < n_seq_chunks - 1 ? m_par_chunks_per_seq_chunk
                                                                  : par_chunks_per_last_seq_chunk;
             Kokkos::parallel_for(
                     Kokkos::RangePolicy<
@@ -268,12 +311,12 @@ public:
                     [&](int const j) {
                         int n_equations_in_par_chunk
                                 = (i < n_seq_chunks - 1 || j < n_par_chunks_in_seq_chunk - 1)
-                                          ? cols_per_par_chunk
+                                          ? m_cols_per_par_chunk
                                           : cols_per_last_par_chunk;
                         if (n_equations_in_par_chunk != 0) {
                             auto par_chunk_window = std::pair<int, int>(
-                                    (i * par_chunks_per_seq_chunk + j) * cols_per_par_chunk,
-                                    (i * par_chunks_per_seq_chunk + j) * cols_per_par_chunk
+                                    (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk,
+                                    (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk
                                             + n_equations_in_par_chunk);
                             Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> b_par_chunk;
                             if (i < n_seq_chunks - 1 || j < n_par_chunks_in_seq_chunk - 1) {
@@ -293,7 +336,7 @@ public:
                                     Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window));
                             auto b_vec_batch = to_gko_vec(
                                     b_par_chunk.data(),
-                                    n,
+                                    m_n,
                                     n_equations_in_par_chunk,
                                     gko_exec);
                             // Create the solver TODO: pass in constructor ?
@@ -356,4 +399,5 @@ public:
         return 1;
     }
 };
+
 } // namespace ddc::detail

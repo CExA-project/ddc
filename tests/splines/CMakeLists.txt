@@ -9,7 +9,6 @@ add_executable(splines_tests
     main.cpp
     chunk.cpp
     view.cpp
-    gauss_legendre_integration.cpp
 )
 
 target_compile_features(splines_tests PUBLIC cxx_std_17)

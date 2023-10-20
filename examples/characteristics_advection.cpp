@@ -107,6 +107,8 @@ int main(int argc, char** argv)
     double const end_time = 10.;
     // Number of time-steps between outputs
     ptrdiff_t const t_output_period = 10;
+    // Maximum time-step 
+	ddc::Coordinate<T> const max_dt {0.1};
     //! [parameters]
 
     //! [main-start]
@@ -137,27 +139,6 @@ int main(int argc, char** argv)
                          ddc::DiscreteVector<DDimY>(nb_y_points)));
 
     //! [time-domains]
-    // max(1/dx^2)
-    double const invdx2_max = ddc::transform_reduce(
-            x_domain,
-            0.,
-            ddc::reducer::max<double>(),
-            [](ddc::DiscreteElement<DDimX> ix) {
-                return 1.
-                       / (ddc::distance_at_left(ix)
-                          * ddc::distance_at_right(ix));
-            });
-    // max(1/dy^2)
-    double const invdy2_max = ddc::transform_reduce(
-            y_domain,
-            0.,
-            ddc::reducer::max<double>(),
-            [](ddc::DiscreteElement<DDimY> iy) {
-                return 1.
-                       / (ddc::distance_at_left(iy)
-                          * ddc::distance_at_right(iy));
-            });
-    ddc::Coordinate<T> const max_dt {0.1};
 
     // number of time intervals required to reach the end time
     ddc::DiscreteVector<DDimT> const nb_time_steps {
@@ -257,7 +238,7 @@ int main(int argc, char** argv)
     ddc::Chunk feet_coords_alloc(
             spline_builder.vals_domain(),
             ddc::KokkosAllocator<
-                    ddc::Coordinate<X, Y>,
+                    ddc::Coordinate<X>,
                     Kokkos::DefaultExecutionSpace::memory_space>());
     ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
     //! [instantiate intermediate chunks]
@@ -286,14 +267,7 @@ int main(int argc, char** argv)
                 ddc::policies::parallel_device,
                 feet_coords.domain(),
                 DDC_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const e) {
-                    feet_coords(e) = ddc::Coordinate<X, Y>(
-                            ddc::coordinate(ddc::select<DDimX>(e))
-                                    - ddc::Coordinate<X>(
-                                            vx * ddc::step<DDimT>()),
-                            ddc::coordinate(ddc::select<DDimY>(e)));
-                    // Remark : feet_coords could be a chunk of ddc::Coordinate<X> and this line would be replaced by:
-                    // feet_coords(e) = ddc::coordinate(e) - ddc::Coordinate<X>(vx*ddc::step<DDimT>());
-                    // Remark 2 : it is possible to advect along both X and Y directions by performing consecutive basis changes below (requires to define BSplinesY discrete space).
+                    feet_coords(e) = ddc::coordinate(ddc::select<DDimX>(e)) - ddc::Coordinate<X>(vx*ddc::step<DDimT>());
                 });
         // Interpolate the values at feets on the grid
         spline_builder(coef, last_density);

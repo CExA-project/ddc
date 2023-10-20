@@ -40,7 +40,6 @@
 
 #if ginkgo_AVAIL
 #include <ginkgo/ginkgo.hpp>
-#endif
 
 static std::shared_ptr<gko::Executor> create_default_host_executor()
 {
@@ -75,3 +74,4 @@ static std::shared_ptr<gko::Executor> create_gko_exec()
     }
 #endif
 }
+#endif

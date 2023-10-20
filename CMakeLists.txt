@@ -266,7 +266,7 @@ endif()
 find_package(CUDAToolkit REQUIRED)
 target_link_libraries(DDC INTERFACE CUDA::cublas)
 # end of workaround
-find_package(Ginkgo REQUIRED)
+find_package(Ginkgo 1.6.0 EXACT REQUIRED)
 target_link_libraries(DDC INTERFACE Ginkgo::ginkgo)
 target_compile_definitions(DDC INTERFACE ginkgo_AVAIL)
 

@@ -180,8 +180,8 @@ int main(int argc, char** argv)
                         = ddc::coordinate(ddc::select<DDimX>(ixy));
                 double const y
                         = ddc::coordinate(ddc::select<DDimY>(ixy));
-                // initial_density(ixy) = 9.999 * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
-                initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
+                initial_density(ixy) = 9.999 * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
+                // initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
     //! [initial-conditions]
 

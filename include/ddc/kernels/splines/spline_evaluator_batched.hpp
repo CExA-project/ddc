@@ -4,8 +4,6 @@
 
 #include <ddc/ddc.hpp>
 
-#include "ddc/for_each.hpp"
-
 #include "Kokkos_Macros.hpp"
 #include "spline_boundary_value.hpp"
 #include "view.hpp"
@@ -13,6 +11,7 @@
 #include "spline_evaluator.hpp"
 
 namespace ddc {
+
 template <class SplineEvaluator, class... IDimX>
 class SplineEvaluatorBatched
 {

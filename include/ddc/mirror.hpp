@@ -33,4 +33,18 @@ create_mirror(ExecSpace exec_space, Chunk<ElementType, SupportType, Allocator>& 
                     mirror_chunkspan);
     return std::move(mirror_chunk);
 }
+
+template <class ExecSpace, class ElementType, class SupportType, class Layout, class MemorySpace>
+ChunkSpan<ElementType, SupportType, Layout, typename ExecSpace::memory_space>
+create_mirror(ExecSpace exec_space, const ChunkSpan<ElementType, SupportType, Layout, MemorySpace>& chunkspan)
+{
+    auto kokkos_view = chunkspan.allocation_kokkos_view();
+    auto mirror_kokkos_view = Kokkos::create_mirror(exec_space, kokkos_view);
+    auto mirror_chunkspan = ChunkSpan<
+            ElementType,
+            SupportType,
+            Layout,
+            typename ExecSpace::memory_space>(mirror_kokkos_view, chunkspan.domain());
+    return std::move(mirror_chunkspan);
+}
 } // namespace ddc

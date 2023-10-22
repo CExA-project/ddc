@@ -21,6 +21,7 @@ create_mirror(ExecSpace exec_space, Chunk<ElementType, SupportType, Allocator>& 
 {
     auto kokkos_view = chunk.allocation_kokkos_view();
     auto mirror_kokkos_view = Kokkos::create_mirror(exec_space, kokkos_view);
+	/*
     auto mirror_chunkspan = ChunkSpan<
             ElementType,
             SupportType,
@@ -30,7 +31,12 @@ create_mirror(ExecSpace exec_space, Chunk<ElementType, SupportType, Allocator>& 
             = Chunk<ElementType,
                     SupportType,
                     KokkosAllocator<ElementType, typename ExecSpace::memory_space>>(
-                    mirror_chunkspan);
+                    mirror_chunkspan, KokkosAllocator<ElementType, typename ExecSpace::memory_space>()); // Not ok because deepcopy
+	*/
+	auto mirror_mdspan = detail::build_mdspan(mirror_kokkos_view, std::make_index_sequence<Chunk<ElementType, SupportType, Allocator>::rank()> {});
+	Chunk<ElementType,
+                    SupportType,
+                    KokkosAllocator<ElementType, typename ExecSpace::memory_space>> mirror_chunk(mirror_mdspan, chunk.domain(), KokkosAllocator<ElementType, typename ExecSpace::memory_space>());
     return std::move(mirror_chunk);
 }
 

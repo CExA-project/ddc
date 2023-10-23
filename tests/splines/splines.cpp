@@ -9,12 +9,7 @@
 
 #include <experimental/mdspan>
 
-#include <ddc/kernels/splines/deprecated/boundary_conditions.hpp>
-#include <ddc/kernels/splines/deprecated/bsplines.hpp>
-#include <ddc/kernels/splines/deprecated/bsplines_uniform.hpp>
-#include <ddc/kernels/splines/deprecated/spline_1d.hpp>
-#include <ddc/kernels/splines/deprecated/spline_builder_1d.hpp>
-#include <ddc/kernels/splines/view.hpp>
+#include <ddc/kernels/splines.hpp>
 
 #include <gtest/gtest.h>
 

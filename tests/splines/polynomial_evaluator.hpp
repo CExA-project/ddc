@@ -6,7 +6,7 @@
 #include <random>
 
 #include <ddc/ddc.hpp>
-#include <ddc/kernels/splines/math_tools.hpp>
+#include <ddc/kernels/splines.hpp>
 
 struct PolynomialEvaluator
 {

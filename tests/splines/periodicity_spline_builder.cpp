@@ -10,13 +10,6 @@
 #include <ddc/kernels/splines.hpp>
 
 #include <gtest/gtest.h>
-
-#include "ddc/coordinate.hpp"
-#include "ddc/detail/macros.hpp"
-#include "ddc/discrete_domain.hpp"
-#include "ddc/for_each.hpp"
-#include "ddc/uniform_point_sampling.hpp"
-
 #include "cosine_evaluator.hpp"
 #include "polynomial_evaluator.hpp"
 #include "spline_error_bounds.hpp"

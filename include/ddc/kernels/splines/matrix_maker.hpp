@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 
-#include "Kokkos_Core_fwd.hpp"
 #include "matrix_sparse.hpp"
 
 

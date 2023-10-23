@@ -9,7 +9,6 @@
 
 #include <ddc/ddc.hpp>
 
-#include "Kokkos_Core_fwd.hpp"
 #include "math_tools.hpp"
 #include "matrix.hpp"
 #include "matrix_maker.hpp"

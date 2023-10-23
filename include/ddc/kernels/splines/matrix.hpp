@@ -9,7 +9,6 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Random.hpp>
 
-#include "Kokkos_Core_fwd.hpp"
 #include "view.hpp"
 
 namespace ddc::detail {

@@ -4,7 +4,6 @@
 #include "ddc/discrete_domain.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
-#include "Kokkos_Core_fwd.hpp"
 #include "spline_builder.hpp"
 
 namespace ddc {

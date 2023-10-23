@@ -7,7 +7,7 @@
 
 namespace ddc::detail {
 template <typename T>
-inline T sum(T* array, int size)
+KOKKOS_INLINE_FUNCTION T sum(T* array, int size)
 {
     T val(0.0);
     for (int i(0); i < size; ++i) {
@@ -17,7 +17,7 @@ inline T sum(T* array, int size)
 }
 
 template <class ElementType, class LayoutPolicy, class AccessorPolicy, std::size_t Ext>
-inline ElementType sum(std::experimental::mdspan<
+KOKKOS_INLINE_FUNCTION ElementType sum(std::experimental::mdspan<
                        ElementType,
                        std::experimental::extents<std::size_t, Ext>,
                        LayoutPolicy,
@@ -31,7 +31,7 @@ inline ElementType sum(std::experimental::mdspan<
 }
 
 template <class ElementType, class LayoutPolicy, class AccessorPolicy, std::size_t Ext>
-inline ElementType sum(
+KOKKOS_INLINE_FUNCTION ElementType sum(
         std::experimental::mdspan<
                 ElementType,
                 std::experimental::extents<std::size_t, Ext>,
@@ -48,12 +48,12 @@ inline ElementType sum(
 }
 
 template <typename T>
-inline T modulo(T x, T y)
+KOKKOS_INLINE_FUNCTION T modulo(T x, T y)
 {
-    return x - y * std::floor(double(x) / y);
+    return x - y * Kokkos::floor(double(x) / y);
 }
 
-inline double ipow(double a, std::size_t i)
+KOKKOS_INLINE_FUNCTION double ipow(double a, std::size_t i)
 {
     double r(1.0);
     for (std::size_t j(0); j < i; ++j) {
@@ -62,7 +62,7 @@ inline double ipow(double a, std::size_t i)
     return r;
 }
 
-inline double ipow(double a, int i)
+KOKKOS_INLINE_FUNCTION double ipow(double a, int i)
 {
     double r(1.0);
     if (i > 0) {
@@ -78,7 +78,7 @@ inline double ipow(double a, int i)
     return r;
 }
 
-inline std::size_t factorial(std::size_t f)
+KOKKOS_INLINE_FUNCTION std::size_t factorial(std::size_t f)
 {
     std::size_t r = 1;
     for (std::size_t i(2); i < f + 1; ++i) {
@@ -88,7 +88,7 @@ inline std::size_t factorial(std::size_t f)
 }
 
 template <class T, std::size_t D>
-T dot_product(std::array<T, D> const& a, std::array<T, D> const& b)
+KOKKOS_INLINE_FUNCTION T dot_product(std::array<T, D> const& a, std::array<T, D> const& b)
 {
     T result = 0;
     for (std::size_t i(0); i < D; ++i) {
@@ -98,13 +98,13 @@ T dot_product(std::array<T, D> const& a, std::array<T, D> const& b)
 }
 
 template <typename T>
-inline T min(T x, T y)
+KOKKOS_INLINE_FUNCTION T min(T x, T y)
 {
     return x < y ? x : y;
 }
 
 template <typename T>
-inline T max(T x, T y)
+KOKKOS_INLINE_FUNCTION T max(T x, T y)
 {
     return x > y ? x : y;
 }

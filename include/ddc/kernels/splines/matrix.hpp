@@ -14,7 +14,6 @@
 
 #include "ginkgo/core/matrix/dense.hpp"
 
-#include "Kokkos_Core_fwd.hpp"
 #include "view.hpp"
 
 namespace ddc::detail {

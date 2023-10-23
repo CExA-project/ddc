@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 
-#include "Kokkos_Core_fwd.hpp"
 #include "matrix_banded.hpp"
 #include "matrix_center_block.hpp"
 #include "matrix_corner_block.hpp"

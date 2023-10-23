@@ -18,7 +18,6 @@
 
 #include <gtest/gtest.h>
 
-#include "Kokkos_Core_fwd.hpp"
 #include "cosine_evaluator.hpp"
 #include "evaluator_2d.hpp"
 #include "polynomial_evaluator.hpp"

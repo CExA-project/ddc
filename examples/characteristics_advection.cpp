@@ -112,7 +112,6 @@ int main(int argc, char** argv)
     //! [parameters]
 
     //! [main-start]
-    std::cout << "Using spectral method \n";
 
     //! [X-global-domain]
     // Initialization of the global domain in X
@@ -157,18 +156,18 @@ int main(int argc, char** argv)
     //! [data allocation]
     // Maps density into the full domain twice:
     // - once for the last fully computed time-step
-    ddc::Chunk _last_density(
+    ddc::Chunk last_density_alloc(
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
 
     // - once for time-step being computed
-    ddc::Chunk _next_density(
+    ddc::Chunk next_density_alloc(
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
     //! [data allocation]
 
     //! [initial-conditions]
-    ddc::ChunkSpan const initial_density = _last_density.span_view();
+    ddc::ChunkSpan const initial_density = last_density_alloc.span_view();
     // Initialize the density on the main domain
     ddc::DiscreteDomain<DDimX, DDimY> x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
@@ -185,16 +184,16 @@ int main(int argc, char** argv)
             });
     //! [initial-conditions]
 
-    ddc::Chunk _host_density(
+    ddc::Chunk host_density_alloc(
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             ddc::HostAllocator<double>());
 
 
     //! [initial output]
     // display the initial data
-    ddc::deepcopy(_host_density, _last_density);
+    ddc::deepcopy(host_density_alloc, last_density_alloc);
     display(ddc::coordinate(time_domain.front()),
-            _host_density[x_domain][y_domain]);
+            host_density_alloc[x_domain][y_domain]);
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
@@ -229,17 +228,17 @@ int main(int argc, char** argv)
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(
             spline_builder.spline_domain(),
-            ddc::KokkosAllocator<
-                    double,
-                    Kokkos::DefaultExecutionSpace::memory_space>());
+            ddc::DeviceAllocator<
+                    double
+                    >());
     ddc::ChunkSpan coef = coef_alloc.span_view();
 
     // Instantiate chunk to receive feet coords
     ddc::Chunk feet_coords_alloc(
             spline_builder.vals_domain(),
-            ddc::KokkosAllocator<
-                    ddc::Coordinate<X>,
-                    Kokkos::DefaultExecutionSpace::memory_space>());
+            ddc::DeviceAllocator<
+                    ddc::Coordinate<X>
+                    >());
     ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
     //! [instantiate intermediate chunks]
 
@@ -249,15 +248,12 @@ int main(int argc, char** argv)
          time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
         //! [time iteration]
 
-        //! [boundary conditions]
-        //! [boundary conditions]
-
         //! [manipulated views]
         // a span of the density at the time-step we
         // will build
-        ddc::ChunkSpan const next_density {_next_density.span_view()};
+        ddc::ChunkSpan const next_density {next_density_alloc.span_view()};
         // a read-only view of the density at the previous time-step
-        ddc::ChunkSpan const last_density {_last_density.span_view()};
+        ddc::ChunkSpan const last_density {last_density_alloc.span_view()};
         //! [manipulated views]
 
         //! [numerical scheme]
@@ -280,23 +276,23 @@ int main(int argc, char** argv)
         //! [output]
         if (iter - last_output >= t_output_period) {
             last_output = iter;
-            ddc::deepcopy(_host_density, _last_density);
+            ddc::deepcopy(host_density_alloc, last_density_alloc);
             display(ddc::coordinate(iter),
-                    _host_density[x_domain][y_domain]);
+                    host_density_alloc[x_domain][y_domain]);
         }
         //! [output]
 
         //! [swap]
         // Swap our two buffers
-        std::swap(_last_density, _next_density);
+        std::swap(last_density_alloc, next_density_alloc);
         //! [swap]
     }
 
     //! [final output]
     if (last_output < time_domain.back()) {
-        ddc::deepcopy(_host_density, _last_density);
+        ddc::deepcopy(host_density_alloc, last_density_alloc);
         display(ddc::coordinate(time_domain.back()),
-                _host_density[x_domain][y_domain]);
+                host_density_alloc[x_domain][y_domain]);
     }
     //! [final output]
 }

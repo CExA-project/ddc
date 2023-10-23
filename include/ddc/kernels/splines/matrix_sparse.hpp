@@ -11,11 +11,9 @@
 #include <ginkgo/ginkgo.hpp>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_Random.hpp>
 
 #include "ginkgo/core/matrix/dense.hpp"
 
-#include "Kokkos_Core_fwd.hpp"
 #include "matrix.hpp"
 #include "view.hpp"
 
@@ -179,7 +177,7 @@ public:
 #ifdef KOKKOS_ENABLE_OPENMP
             if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
                 // TODO: Investigate OpenMP parallelism in Ginkgo
-                m_par_chunks_per_seq_chunk = ExecSpace::concurrency();
+                m_par_chunks_per_seq_chunk = ExecSpace().concurrency();
             }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
@@ -355,7 +353,7 @@ public:
                                     = gko::log::Convergence<>::create(gko_exec);
                             // residual_criterion->add_logger(convergence_logger);
                             auto preconditionner = gko::preconditioner::Jacobi<>::build()
-                                                           .with_max_block_size(1u)
+                                                           .with_max_block_size(m_preconditionner_max_block_size)
                                                            .on(gko_exec);
                             auto preconditionner_
                                     = gko::share(preconditionner->generate(data_mat_gpu));

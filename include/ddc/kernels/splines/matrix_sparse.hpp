@@ -248,19 +248,10 @@ public:
                                     n_equations_in_par_chunk,
                                     gko_exec);
                             // Create the solver TODO: pass in constructor ?
-                            std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::
-                                    create(gko::log::Logger::all_events_mask
-                                                   ^ gko::log::Logger::linop_factory_events_mask
-                                                   ^ gko::log::Logger::
-                                                           polymorphic_object_events_mask,
-                                           std::cout);
-                            // gko_exec->add_logger(stream_logger);
                             std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion
                                     = gko::stop::ResidualNorm<>::build()
                                               .with_reduction_factor(1e-20)
                                               .on(gko_exec);
-                            std::shared_ptr<const gko::log::Convergence<>> convergence_logger
-                                    = gko::log::Convergence<>::create(gko_exec);
                             auto preconditionner = gko::preconditioner::Jacobi<>::build()
                                                            .with_max_block_size(m_preconditionner_max_block_size)
                                                            .on(gko_exec);
@@ -275,7 +266,6 @@ public:
                                                                   .on(gko_exec))
                                                   .on(gko_exec);
                             auto solver_ = solver->generate(data_mat_gpu);
-                            // solver_->add_logger(stream_logger);
                             solver_->apply(b_vec_batch, b_vec_batch); // inplace solve
                             Kokkos::deep_copy(
                                     Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window),

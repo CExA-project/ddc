@@ -1,7 +1,7 @@
 #include <random>
 
 #include <ddc/ddc.hpp>
-#include <ddc/kernels/splines/bernstein.hpp>
+#include <ddc/kernels/splines.hpp>
 
 #include <gtest/gtest.h>
 

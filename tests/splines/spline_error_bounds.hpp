@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <array>
 
-#include <ddc/kernels/splines/math_tools.hpp>
+#include <ddc/kernels/splines.hpp>
 
 template <class Evaluator>
 class SplineErrorBounds

@@ -9,7 +9,6 @@ add_executable(splines_tests
     main.cpp
     chunk.cpp
     view.cpp
-    gauss_legendre_integration.cpp
 )
 if(VOICEXX_ENABLE_DEPRECATED)
     target_sources(splines_tests

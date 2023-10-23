@@ -5,9 +5,7 @@
 #include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
-#include <ddc/kernels/splines/bsplines_uniform.hpp>
-#include <ddc/kernels/splines/deprecated/bsplines_uniform.hpp>
-#include <ddc/kernels/splines/view.hpp>
+#include <ddc/kernels/splines.hpp>
 
 #include <gtest/gtest.h>
 

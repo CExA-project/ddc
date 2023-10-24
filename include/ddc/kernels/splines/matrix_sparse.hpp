@@ -352,9 +352,10 @@ public:
                             std::shared_ptr<const gko::log::Convergence<>> convergence_logger
                                     = gko::log::Convergence<>::create(gko_exec);
                             // residual_criterion->add_logger(convergence_logger);
-                            auto preconditionner = gko::preconditioner::Jacobi<>::build()
-                                                           .with_max_block_size(m_preconditionner_max_block_size)
-                                                           .on(gko_exec);
+                            auto preconditionner
+                                    = gko::preconditioner::Jacobi<>::build()
+                                              .with_max_block_size(m_preconditionner_max_block_size)
+                                              .on(gko_exec);
                             auto preconditionner_
                                     = gko::share(preconditionner->generate(data_mat_gpu));
                             auto solver = gko::solver::Bicgstab<>::build()

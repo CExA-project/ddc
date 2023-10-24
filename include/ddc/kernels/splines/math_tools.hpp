@@ -18,10 +18,10 @@ KOKKOS_INLINE_FUNCTION T sum(T* array, int size)
 
 template <class ElementType, class LayoutPolicy, class AccessorPolicy, std::size_t Ext>
 KOKKOS_INLINE_FUNCTION ElementType sum(std::experimental::mdspan<
-                       ElementType,
-                       std::experimental::extents<std::size_t, Ext>,
-                       LayoutPolicy,
-                       AccessorPolicy> const& array)
+                                       ElementType,
+                                       std::experimental::extents<std::size_t, Ext>,
+                                       LayoutPolicy,
+                                       AccessorPolicy> const& array)
 {
     ElementType val(0.0);
     for (std::size_t i(0); i < array.extent(0); ++i) {
@@ -31,14 +31,14 @@ KOKKOS_INLINE_FUNCTION ElementType sum(std::experimental::mdspan<
 }
 
 template <class ElementType, class LayoutPolicy, class AccessorPolicy, std::size_t Ext>
-KOKKOS_INLINE_FUNCTION ElementType sum(
-        std::experimental::mdspan<
-                ElementType,
-                std::experimental::extents<std::size_t, Ext>,
-                LayoutPolicy,
-                AccessorPolicy> const& array,
-        int start,
-        int end)
+KOKKOS_INLINE_FUNCTION ElementType
+sum(std::experimental::mdspan<
+            ElementType,
+            std::experimental::extents<std::size_t, Ext>,
+            LayoutPolicy,
+            AccessorPolicy> const& array,
+    int start,
+    int end)
 {
     ElementType val(0.0);
     for (int i(start); i < end; ++i) {

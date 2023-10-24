@@ -39,5 +39,5 @@
 #endif
 
 #if ginkgo_AVAIL
-#include "misc/ginkgo_executors"
+#include "misc/ginkgo_executors.hpp"
 #endif

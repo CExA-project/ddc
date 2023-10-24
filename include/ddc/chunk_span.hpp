@@ -275,9 +275,9 @@ public:
     }
 
     /** Element access using a list of DiscreteElement
-       * @param delems discrete oordinates
-       * @return const-reference to this element
-       */
+      * @param delems discrete elements
+      * @return reference to this element
+      */
     template <class... HeadODDims, class... MidODDims, class... DETail>
     KOKKOS_FUNCTION constexpr reference operator()(
             DiscreteElement<HeadODDims...> const& head,

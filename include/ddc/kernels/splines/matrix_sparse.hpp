@@ -71,7 +71,7 @@ public:
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
             if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                m_cols_per_par_chunk = MAX_INT;
+                m_cols_per_par_chunk = INT_MAX;
             }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA

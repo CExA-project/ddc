@@ -71,7 +71,7 @@ public:
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
             if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                m_cols_per_par_chunk = 4096;
+                m_cols_per_par_chunk = MAX_INT;
             }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
@@ -91,8 +91,7 @@ public:
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
             if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                // TODO: Investigate OpenMP parallelism in Ginkgo
-                m_par_chunks_per_seq_chunk = ExecSpace().concurrency();
+                m_par_chunks_per_seq_chunk = 1;
             }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA

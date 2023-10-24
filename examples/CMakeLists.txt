@@ -1,8 +1,5 @@
 # SPDX-License-Identifier: MIT
 
-option(BUILD_FFT_KERNEL      "Build DDC kernel for FFT" ON)
-option(BUILD_SPLINES_KERNEL  "Build DDC kernel for splines" ON)
-
 add_executable(heat_equation heat_equation.cpp)
 target_link_libraries(heat_equation PUBLIC DDC::DDC)
 if("${BUILD_FFT_KERNEL}")

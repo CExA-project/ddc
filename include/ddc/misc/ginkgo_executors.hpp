@@ -155,4 +155,3 @@ public:
 };
 
 static DDCInitializer ddc_initializer;
-#endif

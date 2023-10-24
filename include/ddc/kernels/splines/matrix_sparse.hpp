@@ -237,7 +237,7 @@ public:
                 "b_buffer",
                 std::min(n_equations / m_cols_per_par_chunk, m_par_chunks_per_seq_chunk),
                 m_n,
-                m_cols_per_par_chunk);
+                std::min(n_equations, m_cols_per_par_chunk));
         // Last par_chunk of last seq_chunk do not have same number of columns than the others. To get proper layout (because we passe the pointers to Ginkgo), we need a dedicated allocation
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
                 b_last_buffer("b_last_buffer", m_n, cols_per_last_par_chunk);

@@ -261,9 +261,9 @@ public:
     }
 
     /** Element access using a multi-dimensional DiscreteElement
-       * @param delems discrete coordinates
-       * @return const-reference to this element
-       */
+      * @param delems discrete elements
+      * @return reference to this element
+      */
     template <class... ODDims>
     KOKKOS_FUNCTION constexpr reference operator()(
             DiscreteElement<ODDims...> const& delems) const noexcept

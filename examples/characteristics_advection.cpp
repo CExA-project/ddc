@@ -107,8 +107,8 @@ int main(int argc, char** argv)
     double const end_time = 10.;
     // Number of time-steps between outputs
     ptrdiff_t const t_output_period = 10;
-    // Maximum time-step 
-	ddc::Coordinate<T> const max_dt {0.1};
+    // Maximum time-step
+    ddc::Coordinate<T> const max_dt {0.1};
     //! [parameters]
 
     //! [main-start]
@@ -167,7 +167,8 @@ int main(int argc, char** argv)
     //! [data allocation]
 
     //! [initial-conditions]
-    ddc::ChunkSpan const initial_density = last_density_alloc.span_view();
+    ddc::ChunkSpan const initial_density
+            = last_density_alloc.span_view();
     // Initialize the density on the main domain
     ddc::DiscreteDomain<DDimX, DDimY> x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
@@ -179,7 +180,9 @@ int main(int argc, char** argv)
                         = ddc::coordinate(ddc::select<DDimX>(ixy));
                 double const y
                         = ddc::coordinate(ddc::select<DDimY>(ixy));
-                initial_density(ixy) = 9.999 * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
+                initial_density(ixy)
+                        = 9.999
+                          * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
                 // initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
     //! [initial-conditions]
@@ -228,17 +231,13 @@ int main(int argc, char** argv)
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(
             spline_builder.spline_domain(),
-            ddc::DeviceAllocator<
-                    double
-                    >());
+            ddc::DeviceAllocator<double>());
     ddc::ChunkSpan coef = coef_alloc.span_view();
 
     // Instantiate chunk to receive feet coords
     ddc::Chunk feet_coords_alloc(
             spline_builder.vals_domain(),
-            ddc::DeviceAllocator<
-                    ddc::Coordinate<X>
-                    >());
+            ddc::DeviceAllocator<ddc::Coordinate<X>>());
     ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
     //! [instantiate intermediate chunks]
 
@@ -251,9 +250,11 @@ int main(int argc, char** argv)
         //! [manipulated views]
         // a span of the density at the time-step we
         // will build
-        ddc::ChunkSpan const next_density {next_density_alloc.span_view()};
+        ddc::ChunkSpan const next_density {
+                next_density_alloc.span_view()};
         // a read-only view of the density at the previous time-step
-        ddc::ChunkSpan const last_density {last_density_alloc.span_view()};
+        ddc::ChunkSpan const last_density {
+                last_density_alloc.span_view()};
         //! [manipulated views]
 
         //! [numerical scheme]
@@ -263,7 +264,10 @@ int main(int argc, char** argv)
                 ddc::policies::parallel_device,
                 feet_coords.domain(),
                 DDC_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const e) {
-                    feet_coords(e) = ddc::coordinate(ddc::select<DDimX>(e)) - ddc::Coordinate<X>(vx*ddc::step<DDimT>());
+                    feet_coords(e)
+                            = ddc::coordinate(ddc::select<DDimX>(e))
+                              - ddc::Coordinate<X>(
+                                      vx * ddc::step<DDimT>());
                 });
         // Interpolate the values at feets on the grid
         spline_builder(coef, last_density);

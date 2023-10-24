@@ -252,9 +252,10 @@ public:
                                     = gko::stop::ResidualNorm<>::build()
                                               .with_reduction_factor(1e-20)
                                               .on(gko_exec);
-                            auto preconditionner = gko::preconditioner::Jacobi<>::build()
-                                                           .with_max_block_size(m_preconditionner_max_block_size)
-                                                           .on(gko_exec);
+                            auto preconditionner
+                                    = gko::preconditioner::Jacobi<>::build()
+                                              .with_max_block_size(m_preconditionner_max_block_size)
+                                              .on(gko_exec);
                             auto preconditionner_
                                     = gko::share(preconditionner->generate(data_mat_gpu));
                             auto solver = gko::solver::Bicgstab<>::build()

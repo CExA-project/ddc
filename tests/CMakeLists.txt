@@ -1,9 +1,6 @@
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.15)
 
-option(BUILD_FFT_KERNEL      "Build DDC kernel for FFT" ON)
-option(BUILD_SPLINES_KERNEL  "Build DDC kernel for splines" ON)
-
 add_subdirectory(discrete_space)
 
 add_executable(ddc_tests

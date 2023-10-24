@@ -158,12 +158,12 @@ int main(int argc, char** argv)
     // - once for the last fully computed time-step
     ddc::Chunk last_density_alloc(
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
-            ddc::DeviceAllocator<double>());
+            ddc::HostAllocator<double>());
 
     // - once for time-step being computed
     ddc::Chunk next_density_alloc(
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
-            ddc::DeviceAllocator<double>());
+            ddc::HostAllocator<double>());
     //! [data allocation]
 
     //! [initial-conditions]
@@ -173,7 +173,7 @@ int main(int argc, char** argv)
     ddc::DiscreteDomain<DDimX, DDimY> x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::for_each(
-            ddc::policies::parallel_device,
+            ddc::policies::serial_host,
             x_mesh,
             DDC_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
@@ -213,8 +213,8 @@ int main(int argc, char** argv)
             spline_builder(x_domain);
     ddc::SplineEvaluatorBatched<
             ddc::SplineEvaluator<
-                    Kokkos::Serial,
-                    Kokkos::Serial::memory_space,
+                    Kokkos::DefaultHostExecutionSpace,
+                    Kokkos::DefaultHostExecutionSpace::memory_space,
                     BSplinesX,
                     DDimX>,
             DDimX,
@@ -229,13 +229,13 @@ int main(int argc, char** argv)
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(
             ddc::DiscreteDomain<BSplinesX,DDimY>(spline_builder.spline_domain(),y_domain),
-            ddc::DeviceAllocator<double>());
+            ddc::HostAllocator<double>());
     ddc::ChunkSpan coef = coef_alloc.span_view();
 
     // Instantiate chunk to receive feet coords
     ddc::Chunk feet_coords_alloc(
             x_mesh,
-            ddc::DeviceAllocator<ddc::Coordinate<X>>());
+            ddc::HostAllocator<ddc::Coordinate<X>>());
     ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
     //! [instantiate intermediate chunks]
 

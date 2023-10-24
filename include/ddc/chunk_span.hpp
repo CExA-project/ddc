@@ -252,8 +252,8 @@ public:
     }
 
     /** Element access using a 0D DiscreteElement
-       * @return const-reference to this element
-       */
+      * @return reference to this element
+      */
     KOKKOS_FUNCTION constexpr reference operator()() const noexcept
     {
         static_assert(sizeof...(DDims) == 0, "Invalid number of dimensions");

@@ -44,8 +44,8 @@ public:
     KOKKOS_DEFAULTED_FUNCTION DiscreteDomain() = default;
 
     /// Construct a DiscreteDomain by copies and merge of domains
-    template <class... DD>
-    explicit KOKKOS_FUNCTION constexpr DiscreteDomain(DD const&... domains)
+    template <class... DDoms>
+    explicit KOKKOS_FUNCTION constexpr DiscreteDomain(DDoms const&... domains)
         : m_element_begin(domains.front()...)
         , m_element_end((domains.front() + domains.extents())...)
     {

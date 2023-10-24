@@ -29,6 +29,11 @@ private:
     Kokkos::View<int*, Kokkos::HostSpace> m_cols;
     Kokkos::View<double*, Kokkos::HostSpace> m_data;
 
+    std::unique_ptr<
+            gko::solver::Bicgstab<gko::default_precision>::Factory,
+            std::default_delete<gko::solver::Bicgstab<gko::default_precision>::Factory>>
+            m_solver_factory;
+
     int m_cols_per_par_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
     int m_par_chunks_per_seq_chunk; // Maximum number of teams to be executed in parallel
     int m_preconditionner_max_block_size; // Maximum size of Jacobi-block preconditionner
@@ -102,6 +107,28 @@ public:
         } else {
             m_preconditionner_max_block_size = 1u;
         }
+
+        // Create the solver factory
+        std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<ExecSpace>();
+        std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::
+                create(gko::log::Logger::all_events_mask
+                               ^ gko::log::Logger::linop_factory_events_mask
+                               ^ gko::log::Logger::polymorphic_object_events_mask,
+                       std::cout);
+        std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion
+                = gko::stop::ResidualNorm<>::build().with_reduction_factor(1e-20).on(gko_exec);
+        std::shared_ptr<const gko::log::Convergence<>> convergence_logger
+                = gko::log::Convergence<>::create(gko_exec);
+        m_solver_factory
+                = gko::solver::Bicgstab<>::build()
+                          .with_preconditioner(
+                                  gko::preconditioner::Jacobi<>::build()
+                                          .with_max_block_size(m_preconditionner_max_block_size)
+                                          .on(gko_exec))
+                          .with_criteria(
+                                  residual_criterion,
+                                  gko::stop::Iteration::build().with_max_iters(1000u).on(gko_exec))
+                          .on(gko_exec);
     }
 
     std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>> to_gko_vec(
@@ -175,6 +202,7 @@ public:
                 Kokkos::View<double*, Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
                         data_mat->get_values(),
                         data_mat->get_num_stored_elements()));
+
         return 0;
     }
 
@@ -187,6 +215,8 @@ public:
                 m_cols.size(),
                 gko_exec->get_master()));
         auto data_mat_gpu = gko::share(gko::clone(gko_exec, data_mat));
+        auto solver = m_solver_factory->generate(data_mat_gpu);
+
         Kokkos::View<
                 double**,
                 Kokkos::LayoutRight,
@@ -247,27 +277,9 @@ public:
                                     m_n,
                                     n_equations_in_par_chunk,
                                     gko_exec);
-                            // Create the solver TODO: pass in constructor ?
-                            std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion
-                                    = gko::stop::ResidualNorm<>::build()
-                                              .with_reduction_factor(1e-20)
-                                              .on(gko_exec);
-                            auto preconditionner
-                                    = gko::preconditioner::Jacobi<>::build()
-                                              .with_max_block_size(m_preconditionner_max_block_size)
-                                              .on(gko_exec);
-                            auto preconditionner_
-                                    = gko::share(preconditionner->generate(data_mat_gpu));
-                            auto solver = gko::solver::Bicgstab<>::build()
-                                                  .with_generated_preconditioner(preconditionner_)
-                                                  .with_criteria(
-                                                          residual_criterion,
-                                                          gko::stop::Iteration::build()
-                                                                  .with_max_iters(1000u)
-                                                                  .on(gko_exec))
-                                                  .on(gko_exec);
-                            auto solver_ = solver->generate(data_mat_gpu);
-                            solver_->apply(b_vec_batch, b_vec_batch); // inplace solve
+
+                            solver->apply(b_vec_batch, b_vec_batch); // inplace solve
+
                             Kokkos::deep_copy(
                                     Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window),
                                     b_par_chunk);

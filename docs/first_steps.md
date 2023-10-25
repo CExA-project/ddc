@@ -8,10 +8,7 @@ As usual, the file starts with a few includes that will be used in the code.
 
 \snippet heat_equation.cpp includes
 
-As you can see, DDC includes all follow the same convention: `<ddc/SYMBOL>` where `SYMBOL` is a
-the name of a DDC symbol.
-So for example, in order to use a class named `Chunk`, you should include `<ddc/Chunk>` and to use a
-free function template named `for_each`, you should include `<ddc/for_each>`.
+As you can see, to use DDC, we have to include `<ddc/ddc.hpp>`
 
 Then, we define the value of some parameters that would typically be read from some form of
 configuration file in a more realistic code.

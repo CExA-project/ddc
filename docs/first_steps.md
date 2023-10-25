@@ -132,7 +132,7 @@ Then we handle the domains for the simulated time dimension.
 
 # Data allocation
 
-We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains' points at t and t+dt.
+We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains' points at t and t+dt. When constructing the Chunks one can give an optional string to label the memory allocations. This helps debugging and profiling applications using the Kokkos tools, see also [Kokkos Tools](https://github.com/kokkos/kokkos-tools).
 
 \snippet heat_equation.cpp data allocation
 

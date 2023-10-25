@@ -271,6 +271,27 @@ public:
     {
     }
 
+    template <class... OTags>
+    KOKKOS_FUNCTION constexpr TaggedVector(
+            TaggedVector<ElementType, OTags> const&... other) noexcept
+        : m_values {take<Tags>(other...).value()...}
+    {
+    }
+
+    template <class OElementType, class... OTags>
+    explicit KOKKOS_FUNCTION constexpr TaggedVector(
+            TaggedVector<OElementType, OTags...>& other) noexcept
+        : m_values {(static_cast<ElementType>(other.template get<Tags>()))...}
+    {
+    }
+
+    template <class OElementType, class... OTags>
+    explicit KOKKOS_FUNCTION constexpr TaggedVector(
+            TaggedVector<OElementType, OTags...> const& other) noexcept
+        : m_values {(static_cast<ElementType>(other.template get<Tags>()))...}
+    {
+    }
+
     template <
             class... Params,
             class = std::enable_if_t<(!is_tagged_vector_v<Params> && ...)>,
@@ -280,6 +301,9 @@ public:
         : m_values {static_cast<ElementType>(params)...}
     {
     }
+
+    template <class OElementType>
+    explicit KOKKOS_FUNCTION constexpr TaggedVector(TaggedVector<OElementType, Tags...> const&)
 
     KOKKOS_DEFAULTED_FUNCTION ~TaggedVector() = default;
 

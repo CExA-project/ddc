@@ -135,10 +135,10 @@ $(document).ready(function(){initNavTree('discrete__element_8hpp_source.html',''
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        DiscreteElement&lt;TailTags&gt; <span class="keyword">const</span>&amp;... tags)</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>{</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keyword">static_assert</span>(</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            !type_seq_contains_v&lt;detail::TypeSeq&lt;HeadTag&gt;, detail::TypeSeq&lt;TailTags...&gt;&gt;,</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            <span class="stringliteral">&quot;ERROR: tag redundant&quot;</span>);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;QueryTag, HeadTag&gt;) {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;QueryTag, HeadTag&gt;) {</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                !type_seq_contains_v&lt;detail::TypeSeq&lt;QueryTag&gt;, detail::TypeSeq&lt;TailTags...&gt;&gt;,</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                <span class="stringliteral">&quot;ERROR: tag redundant&quot;</span>);</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keywordflow">return</span> head;</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>...(TailTags) &gt; 0, <span class="stringliteral">&quot;ERROR: tag not found&quot;</span>);</div>

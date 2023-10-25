@@ -302,9 +302,6 @@ public:
     {
     }
 
-    template <class OElementType>
-    explicit KOKKOS_FUNCTION constexpr TaggedVector(TaggedVector<OElementType, Tags...> const&)
-
     KOKKOS_DEFAULTED_FUNCTION ~TaggedVector() = default;
 
     KOKKOS_DEFAULTED_FUNCTION TaggedVector& operator=(TaggedVector const& other) = default;
@@ -436,12 +433,6 @@ public:
         static_assert(type_seq_same_v<tags_seq, detail::TypeSeq<OTags...>>);
         ((m_values[type_seq_rank_v<Tags, tags_seq>] *= rhs.template get<Tags>()), ...);
         return *this;
-    }
-
-    template <class OElementType>
-    explicit operator TaggedVector<OElementType, Tags...>()
-    {
-        return TaggedVector<OElementType, Tags...>((OElementType(this->template get<Tags>()))...);
     }
 };
 

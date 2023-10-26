@@ -73,3 +73,16 @@ TEST(TaggedVector, Operators)
     ASSERT_EQ(4 + c, (ddc::detail::TaggedVector<int, double>(5)));
     ASSERT_EQ(4 * a, (ddc::detail::TaggedVector<int, double, float>(4, 8)));
 }
+
+TEST(TaggedVector, Assignment)
+{
+    ddc::detail::TaggedVector<int, double, float> a(1, 2);
+    ddc::detail::TaggedVector<int, double, float> b;
+    ddc::detail::TaggedVector<int, float, double> c;
+    b = a;
+    c = a;
+    EXPECT_EQ(a.get<double>(), b.get<double>());
+    EXPECT_EQ(a.get<double>(), c.get<double>());
+    EXPECT_EQ(a.get<float>(), b.get<float>());
+    EXPECT_EQ(a.get<float>(), c.get<float>());
+}

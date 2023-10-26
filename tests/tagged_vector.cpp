@@ -129,3 +129,13 @@ TEST(TaggedVector, Conversion)
     ASSERT_EQ(b.get<Tag1>(), 1.0);
     ASSERT_EQ(b.get<Tag2>(), 2.0);
 }
+
+TEST(TaggedVector, ConversionReorder)
+{
+    struct Tag1;
+    struct Tag2;
+    ddc::detail::TaggedVector<int, Tag1, Tag2> a(1, 2);
+    ddc::detail::TaggedVector<double, Tag2, Tag1> b(a);
+    ASSERT_EQ(b.get<Tag1>(), 1.0);
+    ASSERT_EQ(b.get<Tag2>(), 2.0);
+}

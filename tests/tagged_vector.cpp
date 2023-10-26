@@ -86,8 +86,8 @@ TEST(TaggedVector, Assignment)
 TEST(TaggedVector, ReorderingAssignment)
 {
     ddc::detail::TaggedVector<int, double, float> a(1, 2);
-    ddc::detail::TaggedVector<int, float, double> c;
-    c = a;
-    EXPECT_EQ(a.get<double>(), c.get<double>());
-    EXPECT_EQ(a.get<float>(), c.get<float>());
+    ddc::detail::TaggedVector<int, float, double> b;
+    b = a;
+    EXPECT_EQ(a.get<double>(), b.get<double>());
+    EXPECT_EQ(a.get<float>(), b.get<float>());
 }

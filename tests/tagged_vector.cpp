@@ -97,8 +97,8 @@ TEST(TaggedVector, MoveAssignment)
     ddc::detail::TaggedVector<int, double, float> a(1, 2);
     ddc::detail::TaggedVector<int, double, float> b;
     b = std::move(a);
-    EXPECT_EQ(a.get<double>(), b.get<double>());
-    EXPECT_EQ(a.get<float>(), b.get<float>());
+    EXPECT_EQ(1, b.get<double>());
+    EXPECT_EQ(2, b.get<float>());
 }
 
 TEST(TaggedVector, ReorderingMoveAssignment)
@@ -106,6 +106,6 @@ TEST(TaggedVector, ReorderingMoveAssignment)
     ddc::detail::TaggedVector<int, double, float> a(1, 2);
     ddc::detail::TaggedVector<int, float, double> b;
     b = std::move(a);
-    EXPECT_EQ(a.get<double>(), b.get<double>());
-    EXPECT_EQ(a.get<float>(), b.get<float>());
+    EXPECT_EQ(1, b.get<double>());
+    EXPECT_EQ(2, b.get<float>());
 }

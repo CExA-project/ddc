@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"classddc_1_1DiscreteVector.html#a6a46738165b3caa5156316ac69c8fb2f":[2,0,21,8],
+"classddc_1_1DiscreteVector.html#a7142f09f05f1187c681dee63b84be6bf":[2,0,21,17],
 "classddc_1_1DiscreteVector.html#a7c9712ea11ebe42eb6950913378cb383":[2,0,21,0],
 "classddc_1_1DiscreteVector.html#a9045137fe082813dfc071f9ca15b4bc8":[2,0,21,1],
 "classddc_1_1DiscreteVector.html#aade13e9b466e0ce5c8e91ed0fd7bafe7":[2,0,21,26],
@@ -18,7 +20,7 @@ var NAVTREEINDEX1 =
 "classddc_1_1DualDiscretization.html#adc5cec7f32722515f62dac7f9cd74df1":[2,0,22,2],
 "classddc_1_1KokkosAllocator.html":[2,0,39],
 "classddc_1_1KokkosAllocator.html#a1c8dc6e45deb6ba4ec9aabb72317ca6b":[2,0,39,6],
-"classddc_1_1KokkosAllocator.html#a2bdf2a47bb76872e469ab05b689ab1dc":[2,0,39,12],
+"classddc_1_1KokkosAllocator.html#a2bdf2a47bb76872e469ab05b689ab1dc":[2,0,39,13],
 "classddc_1_1KokkosAllocator.html#a2e365ed5fc56fdbc3ccc5ae3f96a5ad8":[2,0,39,11],
 "classddc_1_1KokkosAllocator.html#a33829bf34bb2118ece003658e7b7e501":[2,0,39,5],
 "classddc_1_1KokkosAllocator.html#a39d7ac94310c33713fa0c0255b0870ba":[2,0,39,8],
@@ -30,6 +32,7 @@ var NAVTREEINDEX1 =
 "classddc_1_1KokkosAllocator.html#acde554fd2191d91df3c6ab556be9d473":[2,0,39,0,0],
 "classddc_1_1KokkosAllocator.html#ace56a9af5d484fcd5e397dc5c052df7c":[2,0,39,9],
 "classddc_1_1KokkosAllocator.html#ae5bcfc826aa7ba40b2af01b9e3e76886":[2,0,39,4],
+"classddc_1_1KokkosAllocator.html#af266592d558928dff4a351f2b6a77c7a":[2,0,39,12],
 "classddc_1_1KokkosAllocator.html#structddc_1_1KokkosAllocator_1_1rebind":[2,0,39,0],
 "classddc_1_1PdiEvent.html":[2,0,43],
 "classddc_1_1PdiEvent.html#a2ccd8ca0c860ee77f9a62ce17354bbcd":[2,0,43,7],

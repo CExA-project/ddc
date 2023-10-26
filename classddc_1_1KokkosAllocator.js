@@ -14,5 +14,6 @@ var classddc_1_1KokkosAllocator =
     [ "operator=", "classddc_1_1KokkosAllocator.html#ace56a9af5d484fcd5e397dc5c052df7c", null ],
     [ "operator=", "classddc_1_1KokkosAllocator.html#a87ba6661fb045054127d6c90bd0494f6", null ],
     [ "allocate", "classddc_1_1KokkosAllocator.html#a2e365ed5fc56fdbc3ccc5ae3f96a5ad8", null ],
+    [ "allocate", "classddc_1_1KokkosAllocator.html#af266592d558928dff4a351f2b6a77c7a", null ],
     [ "deallocate", "classddc_1_1KokkosAllocator.html#a2bdf2a47bb76872e469ab05b689ab1dc", null ]
 ];

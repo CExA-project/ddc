@@ -217,6 +217,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1e2daade1cf2aa66fd6772beb01ac888"><td class="memTemplParams" colspan="2">template&lt;class T , std::size_t NT, class U , std::size_t NU&gt; </td></tr>
 <tr class="memitem:a1e2daade1cf2aa66fd6772beb01ac888"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1e2daade1cf2aa66fd6772beb01ac888">operator!=</a> (<a class="el" href="classddc_1_1AlignedAllocator.html">AlignedAllocator</a>&lt; T, NT &gt; const &amp;, <a class="el" href="classddc_1_1AlignedAllocator.html">AlignedAllocator</a>&lt; U, NU &gt; const &amp;) noexcept</td></tr>
 <tr class="separator:a1e2daade1cf2aa66fd6772beb01ac888"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54da8d37b5ff148e68c65185c0c1e44e"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Allocator &gt; </td></tr>
+<tr class="memitem:a54da8d37b5ff148e68c65185c0c1e44e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a54da8d37b5ff148e68c65185c0c1e44e">Chunk</a> (std::string const &amp;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;, Allocator) -&gt; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; typename Allocator::value_type, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, Allocator &gt;</td></tr>
+<tr class="separator:a54da8d37b5ff148e68c65185c0c1e44e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c5da21fb1248e1cf1546388504f6842"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Allocator &gt; </td></tr>
 <tr class="memitem:a7c5da21fb1248e1cf1546388504f6842"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a7c5da21fb1248e1cf1546388504f6842">Chunk</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;, Allocator) -&gt; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; typename Allocator::value_type, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, Allocator &gt;</td></tr>
 <tr class="separator:a7c5da21fb1248e1cf1546388504f6842"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1212,8 +1215,44 @@ template&lt;class T , std::size_t NT, class U , std::size_t NU&gt; </div>
 
 </div>
 </div>
+<a id="a54da8d37b5ff148e68c65185c0c1e44e" name="a54da8d37b5ff148e68c65185c0c1e44e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54da8d37b5ff148e68c65185c0c1e44e">&#9670;&nbsp;</a></span>Chunk() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... DDims, class Allocator &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Allocator&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt;  <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; typename Allocator::value_type, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, Allocator &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7c5da21fb1248e1cf1546388504f6842" name="a7c5da21fb1248e1cf1546388504f6842"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c5da21fb1248e1cf1546388504f6842">&#9670;&nbsp;</a></span>Chunk()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c5da21fb1248e1cf1546388504f6842">&#9670;&nbsp;</a></span>Chunk() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

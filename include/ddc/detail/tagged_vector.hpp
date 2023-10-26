@@ -292,7 +292,6 @@ public:
     KOKKOS_FUNCTION constexpr TaggedVector& operator=(
             TaggedVector<ElementType, OTags...>&& other) noexcept
     {
-        m_values = std::move(other.m_values);
         ((this->get<Tags>() = std::move(other.template get<Tags>())), ...);
         return *this;
     }

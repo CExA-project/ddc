@@ -430,6 +430,9 @@ public:
     }
 };
 
+template <class... Tags>
+explicit DiscreteVector(DiscreteVector<Tags> const&... other) -> DiscreteVector<Tags...>;
+
 template <class Tag>
 KOKKOS_FUNCTION constexpr bool operator<(
         DiscreteVector<Tag> const& lhs,

@@ -89,6 +89,18 @@ TEST(ProductMDomainTest, Constructor)
     EXPECT_EQ(empty_domain[0], lbound_x);
 }
 
+TEST(ProductMDomainTest, CTAD)
+{
+    DDomX const dom_x(lbound_x, nelems_x);
+    DDomY const dom_y(lbound_y, nelems_y);
+    ddc::DiscreteDomain dom_x_copy(dom_x);
+    ddc::DiscreteDomain dom_x_y(dom_x, dom_y);
+    ddc::DiscreteDomain dom_y_x(dom_y, dom_x);
+    EXPECT_TRUE((std::is_same_v<decltype(dom_x_copy), ddc::DiscreteDomain<DDimX>>));
+    EXPECT_TRUE((std::is_same_v<decltype(dom_y_x), ddc::DiscreteDomain<DDimY, DDimX>>));
+    EXPECT_TRUE((std::is_same_v<decltype(dom_x_y), ddc::DiscreteDomain<DDimX, DDimY>>));
+}
+
 TEST(ProductMDomainTest, EmptyDomain)
 {
     DDomXY const dom_x_y = DDomXY();

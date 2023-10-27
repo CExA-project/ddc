@@ -43,20 +43,22 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION DiscreteDomain() = default;
 
+    KOKKOS_DEFAULTED_FUNCTION DiscreteDomain(DiscreteDomain const& x) = default;
+
+    KOKKOS_DEFAULTED_FUNCTION DiscreteDomain(DiscreteDomain&& x) = default;
+
+    template <class... ODDims>
+    explicit KOKKOS_FUNCTION constexpr DiscreteDomain(DiscreteDomain<ODDims> const&... domains)
+        : m_element_begin(domains.front()...)
+        , m_element_end((domains.front() + domains.extents())...)
+    {
+    }
+
     /// Construct a DiscreteDomain from a reordered copy of `domain`
     template <class... ODDims>
     explicit KOKKOS_FUNCTION constexpr DiscreteDomain(DiscreteDomain<ODDims...> const& domain)
         : m_element_begin(domain.front())
         , m_element_end(domain.front() + domain.extents())
-    {
-    }
-
-    // Use SFINAE to disambiguate with the copy constructor.
-    // Note that SFINAE may be redundant because a template constructor should not be selected as a copy constructor.
-    template <std::size_t N = sizeof...(DDims), class = std::enable_if_t<(N != 1)>>
-    explicit KOKKOS_FUNCTION constexpr DiscreteDomain(DiscreteDomain<DDims> const&... domains)
-        : m_element_begin(domains.front()...)
-        , m_element_end((domains.front() + domains.extents())...)
     {
     }
 
@@ -71,10 +73,6 @@ public:
         , m_element_end(element_begin + size)
     {
     }
-
-    KOKKOS_DEFAULTED_FUNCTION DiscreteDomain(DiscreteDomain const& x) = default;
-
-    KOKKOS_DEFAULTED_FUNCTION DiscreteDomain(DiscreteDomain&& x) = default;
 
     KOKKOS_DEFAULTED_FUNCTION ~DiscreteDomain() = default;
 
@@ -343,6 +341,9 @@ public:
         return true;
     }
 };
+
+template <class... DDims>
+explicit DiscreteDomain(DiscreteDomain<DDims> const&... other) -> DiscreteDomain<DDims...>;
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> select(

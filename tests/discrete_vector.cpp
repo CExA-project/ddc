@@ -27,6 +27,18 @@ using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
 
 } // namespace
 
+TEST(DiscreteVectorTest, CTAD)
+{
+    DVectX const ix {};
+    DVectY const iy {};
+    ddc::DiscreteVector ix_copy(ix);
+    ddc::DiscreteVector ixy(ix, iy);
+    ddc::DiscreteVector iyx(iy, ix);
+    EXPECT_TRUE((std::is_same_v<decltype(ix_copy), ddc::DiscreteVector<DDimX>>));
+    EXPECT_TRUE((std::is_same_v<decltype(iyx), ddc::DiscreteVector<DDimY, DDimX>>));
+    EXPECT_TRUE((std::is_same_v<decltype(ixy), ddc::DiscreteVector<DDimX, DDimY>>));
+}
+
 TEST(DiscreteVectorTest, ExternalBinaryOperatorPlus)
 {
     std::size_t const dv_x = 7;

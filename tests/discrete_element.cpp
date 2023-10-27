@@ -72,6 +72,18 @@ TEST(DiscreteElementXYTest, ValueConstructor)
     EXPECT_EQ(ixy.uid<DDimY>(), std::size_t());
 }
 
+TEST(DiscreteElementXYTest, CTAD)
+{
+    DElemX const ix {};
+    DElemY const iy {};
+    ddc::DiscreteElement ix_copy(ix);
+    ddc::DiscreteElement ixy(ix, iy);
+    ddc::DiscreteElement iyx(iy, ix);
+    EXPECT_TRUE((std::is_same_v<decltype(ix_copy), ddc::DiscreteElement<DDimX>>));
+    EXPECT_TRUE((std::is_same_v<decltype(iyx), ddc::DiscreteElement<DDimY, DDimX>>));
+    EXPECT_TRUE((std::is_same_v<decltype(ixy), ddc::DiscreteElement<DDimX, DDimY>>));
+}
+
 TEST(DiscreteElementXYTest, UntaggedConstructor)
 {
     std::size_t const uid_x = 7;

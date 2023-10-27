@@ -408,6 +408,9 @@ public:
     }
 };
 
+template <class ElementType, class... Tags>
+TaggedVector(TaggedVector<ElementType, Tags> const&... other) -> TaggedVector<ElementType, Tags...>;
+
 template <class ElementType>
 std::ostream& operator<<(std::ostream& out, TaggedVector<ElementType> const&)
 {

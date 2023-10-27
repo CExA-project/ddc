@@ -306,6 +306,9 @@ public:
     }
 };
 
+template <class... Tags>
+explicit DiscreteElement(DiscreteElement<Tags> const&... other) -> DiscreteElement<Tags...>;
+
 inline std::ostream& operator<<(std::ostream& out, DiscreteElement<> const&)
 {
     out << "()";

@@ -10,6 +10,18 @@ TEST(TaggedVector, Constructor)
     [[maybe_unused]] ddc::detail::TaggedVector<int, double, float> map(1, 2);
 }
 
+TEST(TaggedVector, CTAD)
+{
+    ddc::detail::TaggedVector<int, double> map_v1(1);
+    ddc::detail::TaggedVector<int, float> map_v2(2);
+    ddc::detail::TaggedVector map_v1_copy(map_v1);
+    ddc::detail::TaggedVector map_v3(map_v1, map_v2);
+    ddc::detail::TaggedVector map_v4(map_v2, map_v1);
+    EXPECT_TRUE((std::is_same_v<decltype(map_v1_copy), ddc::detail::TaggedVector<int, double>>));
+    EXPECT_TRUE((std::is_same_v<decltype(map_v3), ddc::detail::TaggedVector<int, double, float>>));
+    EXPECT_TRUE((std::is_same_v<decltype(map_v4), ddc::detail::TaggedVector<int, float, double>>));
+}
+
 TEST(TaggedVector, ReorderingConstructor)
 {
     ddc::detail::TaggedVector<int, double, float> map_ref(1, 2);

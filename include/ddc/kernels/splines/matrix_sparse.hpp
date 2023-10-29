@@ -109,15 +109,8 @@ public:
 
         // Create the solver factory
         std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<ExecSpace>();
-        std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::
-                create(gko::log::Logger::all_events_mask
-                               ^ gko::log::Logger::linop_factory_events_mask
-                               ^ gko::log::Logger::polymorphic_object_events_mask,
-                       std::cout);
         std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion
                 = gko::stop::ResidualNorm<>::build().with_reduction_factor(1e-20).on(gko_exec);
-        std::shared_ptr<const gko::log::Convergence<>> convergence_logger
-                = gko::log::Convergence<>::create(gko_exec);
         m_solver_factory
                 = gko::solver::Bicgstab<>::build()
                           .with_preconditioner(

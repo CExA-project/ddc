@@ -111,7 +111,7 @@ static void characteristics_advection(benchmark::State& state)
                     ddc::BoundCond::PERIODIC>,
             DDimX,
             DDimY>
-            spline_builder(x_mesh, state.range(2), state.range(3));
+            spline_builder(x_mesh, state.range(2), state.range(3), state.range(4));
     ddc::SplineEvaluatorBatched<
             ddc::SplineEvaluator<
                     Kokkos::DefaultExecutionSpace,
@@ -175,22 +175,40 @@ static void characteristics_advection(benchmark::State& state)
     ////////////////////////////////////////////////////
 }
 
+// Tuning : 512 cols and 8 precond on CPU, 16384 cols and 1 precond on GPU
+
+
+#ifdef KOKKOS_ENABLE_OPENMP_
+int cols_per_par_chunk_ref = 512;
+unsigned int preconditionner_max_block_size_ref = 8u;
+#endif
+#ifdef KOKKOS_ENABLE_CUDA
+int cols_per_par_chunk_ref = 16384;
+unsigned int preconditionner_max_block_size_ref = 1u;
+#endif
+
+BENCHMARK(characteristics_advection)
+        ->RangeMultiplier(2)
+        ->Ranges({{100, 1000}, {400000, 400000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 1}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->MinTime(3);
 /*
 BENCHMARK(characteristics_advection)
-        ->RangeMultiplier(3)
-        ->Ranges({{100, 1000}, {100, 100000}, {16384, 16384}, {1, 1}})
+        ->RangeMultiplier(2)
+        ->Ranges({{100, 1000}, {100000, 100000}, {64,65535}, {1, 1}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3);
 */
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {100000, 100000}, {64,65535}, {1, 1}})
+        ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 64}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3);
 */
+/*
 BENCHMARK(characteristics_advection)
-        ->RangeMultiplier(3)
-        ->Ranges({{100, 1000}, {100000, 100000}, {16384, 16384}, {1, 64}})
+        ->RangeMultiplier(2)
+        ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 1}, {1, 32}})
         ->MinTime(3);
+*/
 
 int main(int argc, char** argv)
 {

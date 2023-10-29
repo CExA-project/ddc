@@ -58,10 +58,16 @@ private:
     const vals_domain_type m_vals_domain;
 
 public:
-    SplineBuilderBatched(vals_domain_type const& vals_domain,std::optional<int> cols_per_par_chunk = std::nullopt,
-		            std::optional<int> par_chunks_per_seq_chunk = std::nullopt,
-					            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
-        : spline_builder(ddc::select<interpolation_mesh_type>(vals_domain), cols_per_par_chunk, par_chunks_per_seq_chunk,preconditionner_max_block_size)
+    SplineBuilderBatched(
+            vals_domain_type const& vals_domain,
+            std::optional<int> cols_per_par_chunk = std::nullopt,
+            std::optional<int> par_chunks_per_seq_chunk = std::nullopt,
+            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
+        : spline_builder(
+                ddc::select<interpolation_mesh_type>(vals_domain),
+                cols_per_par_chunk,
+                par_chunks_per_seq_chunk,
+                preconditionner_max_block_size)
         , m_vals_domain(vals_domain)
     {
         static_assert(

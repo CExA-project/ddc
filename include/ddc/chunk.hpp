@@ -80,6 +80,19 @@ public:
     /// Empty Chunk
     Chunk() = default;
 
+	/** Constructs a new Chunk from scratch
+     * @param internal_mdspan
+     * @param domain
+     */
+    KOKKOS_FUNCTION constexpr Chunk(
+            internal_mdspan_type const internal_mdspan,
+            mdomain_type const& domain,
+			Allocator allocator) noexcept
+        : base_type(internal_mdspan, domain)
+		, m_allocator(std::move(allocator))
+    {
+    }
+
     /// Construct a Chunk on a domain with uninitialized values
     explicit Chunk(mdomain_type const& domain, Allocator allocator = Allocator())
         : base_type(std::allocator_traits<Allocator>::allocate(m_allocator, domain.size()), domain)

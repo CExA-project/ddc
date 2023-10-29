@@ -254,7 +254,7 @@ public:
                                           ? m_cols_per_par_chunk
                                           : cols_per_last_par_chunk;
                         if (n_equations_in_par_chunk != 0) {
-                            auto par_chunk_window = std::pair<int, int>(
+                            std::pair<int, int> par_chunk_window(
                                     (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk,
                                     (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk
                                             + n_equations_in_par_chunk);

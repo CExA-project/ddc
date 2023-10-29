@@ -89,7 +89,9 @@ private:
 public:
     int compute_offset(interpolation_domain_type const& interpolation_domain);
 
-    SplineBuilder(interpolation_domain_type const& interpolation_domain)
+    SplineBuilder(interpolation_domain_type const& interpolation_domain, std::optional<int> cols_per_par_chunk = std::nullopt,
+		            std::optional<int> par_chunks_per_seq_chunk = std::nullopt,
+					            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : m_interpolation_domain(interpolation_domain)
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                / ddc::discrete_space<BSplines>().ncells())
@@ -103,7 +105,9 @@ public:
         } else {
             compute_block_sizes_non_uniform(lower_block_size, upper_block_size);
         }
-        allocate_matrix(lower_block_size, upper_block_size);
+        allocate_matrix(lower_block_size, upper_block_size, cols_per_par_chunk,
+			            par_chunks_per_seq_chunk,
+						            preconditionner_max_block_size);
     }
 
     SplineBuilder(SplineBuilder const& x) = delete;
@@ -149,7 +153,9 @@ private:
 
     void compute_block_sizes_non_uniform(int& lower_block_size, int& upper_block_size) const;
 
-    void allocate_matrix(int lower_block_size, int upper_block_size);
+    void allocate_matrix(int lower_block_size, int upper_block_size, std::optional<int> cols_per_par_chunk = std::nullopt,
+		            std::optional<int> par_chunks_per_seq_chunk = std::nullopt,
+					            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt);
 
     void build_matrix_system();
 };
@@ -460,7 +466,9 @@ void SplineBuilder<
         interpolation_mesh_type,
         BcXmin,
         BcXmax,
-        Solver>::allocate_matrix(int lower_block_size, int upper_block_size)
+        Solver>::allocate_matrix(int lower_block_size, int upper_block_size, std::optional<int> cols_per_par_chunk,
+			            std::optional<int> par_chunks_per_seq_chunk,
+						            std::optional<unsigned int> preconditionner_max_block_size)
 {
     // Special case: linear spline
     // No need for matrix assembly
@@ -483,7 +491,10 @@ void SplineBuilder<
                     bsplines_type::is_uniform());
         } else if (Solver == SplineSolver::GINKGO) {
             matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
-                    ddc::discrete_space<BSplines>().nbasis());
+                    ddc::discrete_space<BSplines>().nbasis(),
+					cols_per_par_chunk,
+					            par_chunks_per_seq_chunk,
+								            preconditionner_max_block_size);
         }
     } else {
         if constexpr (Solver == SplineSolver::LAPACK) {
@@ -496,7 +507,10 @@ void SplineBuilder<
                     lower_block_size);
         } else if (Solver == SplineSolver::GINKGO) {
             matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
-                    ddc::discrete_space<BSplines>().nbasis());
+                    ddc::discrete_space<BSplines>().nbasis(),
+					cols_per_par_chunk,
+					            par_chunks_per_seq_chunk,
+								            preconditionner_max_block_size);
         }
     }
 

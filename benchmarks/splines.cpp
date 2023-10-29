@@ -189,7 +189,12 @@ unsigned int preconditionner_max_block_size_ref = 1u;
 
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {400000, 400000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 1}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->Ranges(
+                {{100, 1000},
+                 {400000, 400000},
+                 {cols_per_par_chunk_ref, cols_per_par_chunk_ref},
+                 {1, 1},
+                 {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3);
 /*
 BENCHMARK(characteristics_advection)

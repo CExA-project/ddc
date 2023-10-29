@@ -175,20 +175,22 @@ static void characteristics_advection(benchmark::State& state)
     ////////////////////////////////////////////////////
 }
 
-BENCHMARK(characteristics_advection)
-        ->RangeMultiplier(3)
-        ->Ranges({{100, 1000}, {100, 100000}, {65535, 65535}, {1, 1}})
-        ->MinTime(3);
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(3)
-        ->Ranges({{100, 1000}, {100000, 100000}, {64,65535}, {1, 1}})
-        ->MinTime(3);
-BENCHMARK(characteristics_advection)
-        ->RangeMultiplier(3)
-        ->Ranges({{100, 1000}, {100000, 100000}, {512, 512}, {1, 64}})
+        ->Ranges({{100, 1000}, {100, 100000}, {16384, 16384}, {1, 1}})
         ->MinTime(3);
 */
+/*
+BENCHMARK(characteristics_advection)
+        ->RangeMultiplier(2)
+        ->Ranges({{100, 1000}, {100000, 100000}, {64,65535}, {1, 1}})
+        ->MinTime(3);
+*/
+BENCHMARK(characteristics_advection)
+        ->RangeMultiplier(3)
+        ->Ranges({{100, 1000}, {100000, 100000}, {16384, 16384}, {1, 64}})
+        ->MinTime(3);
 
 int main(int argc, char** argv)
 {

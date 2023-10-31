@@ -33,6 +33,9 @@ for nx, group_data in data_groups.items():
     scaling = [group_data["bytes_per_second"][i] for i in range(len(par_chunks_per_seq_chunk))]
     plt.plot(par_chunks_per_seq_chunk, scaling, marker='o', markersize=5, label=f'nx={nx}')
 
+x = np.linspace(min(ny), 20*min(ny))
+plt.plot(x, np.mean([data_groups[nx]["bytes_per_second"][0] for nx in nx_values])/min(ny)*x, linestyle='--', color='black', label='perfect scaling')
+
 # Plotting the data
 plt.grid()
 plt.xscale("log")

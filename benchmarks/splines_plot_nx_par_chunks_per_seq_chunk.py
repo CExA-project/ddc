@@ -21,7 +21,7 @@ data_groups = {nx: {"par_chunks_per_seq_chunk": [], "bytes_per_second": [], "gpu
 
 for benchmark in data["benchmarks"]:
     nx = int(benchmark["name"].split("/")[1])
-    par_chunks_per_seq_chunk = int(benchmark["name"].split("/")[3])
+    par_chunks_per_seq_chunk = int(benchmark["name"].split("/")[4])
     data_groups[nx]["par_chunks_per_seq_chunk"].append(par_chunks_per_seq_chunk)
     data_groups[nx]["bytes_per_second"].append(benchmark["bytes_per_second"])
     data_groups[nx]["gpu_mem_occupancy"].append(benchmark["gpu_mem_occupancy"])

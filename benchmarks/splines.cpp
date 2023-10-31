@@ -178,7 +178,7 @@ static void characteristics_advection(benchmark::State& state)
 // Tuning : 512 cols and 8 precond on CPU, 16384 cols and 1 precond on GPU
 
 
-#ifdef KOKKOS_ENABLE_OPENMP_
+#ifdef KOKKOS_ENABLE_OPENMP
 int cols_per_par_chunk_ref = 512;
 unsigned int preconditionner_max_block_size_ref = 8u;
 #endif
@@ -191,7 +191,7 @@ BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{100, 1000},
-                 {400000, 400000},
+                 {100, 100000},
                  {cols_per_par_chunk_ref, cols_per_par_chunk_ref},
                  {1, 1},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
@@ -205,7 +205,7 @@ BENCHMARK(characteristics_advection)
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 64}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 1000}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3);
 */
 /*

@@ -17,22 +17,27 @@ with open(args.json_file, 'r') as file:
 
 # Extract the values at the end of "name" and corresponding "bytes_per_second"
 nx_values = sorted(set(int(benchmark["name"].split("/")[1]) for benchmark in data["benchmarks"]))
-data_groups = {nx: {"ny": [], "bytes_per_second": [], "gpu_mem_occupancy": []} for nx in nx_values}
+data_groups = {nx: {"ny": [], "cols_per_par_chunk": [], "par_chunks_per_seq_chunk": [], "preconditionner_max_block_size": [], "bytes_per_second": [], "gpu_mem_occupancy": []} for nx in nx_values}
 
 for benchmark in data["benchmarks"]:
     nx = int(benchmark["name"].split("/")[1])
-    ny = int(benchmark["name"].split("/")[2])
-    data_groups[nx]["ny"].append(ny)
+    data_groups[nx]["ny"].append(int(benchmark["name"].split("/")[2]))
+    data_groups[nx]["cols_per_par_chunk"].append(int(benchmark["name"].split("/")[3]))
+    data_groups[nx]["par_chunks_per_seq_chunk"].append(int(benchmark["name"].split("/")[4]))
+    data_groups[nx]["preconditionner_max_block_size"].append(int(benchmark["name"].split("/")[5]))
     data_groups[nx]["bytes_per_second"].append(benchmark["bytes_per_second"])
     data_groups[nx]["gpu_mem_occupancy"].append(benchmark["gpu_mem_occupancy"])
+
+########
+## ny ##
+########
 
 # Plotting the data for each group
 plt.figure(figsize=(8, 6))
 for nx, group_data in data_groups.items():
     ny = group_data["ny"]
-    scaling = [group_data["bytes_per_second"][i] for i in range(len(ny))]
-    # scaling = [group_data["bytes_per_second"][i] / ny[i] / (group_data["bytes_per_second"][0] / ny[0]) for i in range(len(ny))]
-    plt.plot(ny, scaling, marker='o', markersize=5, label=f'nx={nx}')
+    bandwidth = [group_data["bytes_per_second"][i] for i in range(len(ny))]
+    plt.plot(ny, bandwidth, marker='o', markersize=5, label=f'nx={nx}')
 
 x = np.linspace(min(ny), 20*min(ny))
 plt.plot(x, np.mean([data_groups[nx]["bytes_per_second"][0] for nx in nx_values])/min(ny)*x, linestyle='--', color='black', label='perfect scaling')
@@ -42,10 +47,12 @@ plt.grid()
 plt.xscale("log")
 plt.xlabel("ny")
 plt.ylabel("Bandwidth [B/s]")
-plt.title("Bandwidth")
+plt.title("Bandwidth on "+str.upper(data["context"]["chip"]));
+plt.title("Bandwidth on "+str.upper(data["context"]["chip"])+" (with ny=100000)");
 plt.legend()
-plt.savefig("bytes_per_sec.png")
+plt.savefig("bandwidth_ny.png")
 
+#gpu_mem
 plt.figure(figsize=(8, 6))
 for nx, group_data in data_groups.items():
     ny = group_data["ny"]
@@ -60,5 +67,74 @@ plt.ylabel("Memory overhead [B]")
 plt.title("Memory occupancy overhead (occupancy - size of processed data)")
 plt.legend()
 plt.savefig("gpu_mem_occupancy.png")
+
+########################
+## cols_per_par_chunk ##
+########################
+
+# Plotting the data for each group
+plt.figure(figsize=(8, 6))
+for nx, group_data in data_groups.items():
+    cols_per_par_chunk = group_data["cols_per_par_chunk"]
+    bandwidth = [group_data["bytes_per_second"][i] for i in range(len(cols_per_par_chunk))]
+    plt.plot(cols_per_par_chunk, bandwidth, marker='o', markersize=5, label=f'nx={nx}')
+
+x = [(int)(data["context"]["cols_per_par_chunk_ref"]), (int)(data["context"]["cols_per_par_chunk_ref"])*1.001];
+plt.plot(x, [0.99*min([min(group_data["bytes_per_second"]) for nx, group_data in data_groups.items()]), 1.01*max([max(group_data["bytes_per_second"]) for nx, group_data in data_groups.items()])], linestyle='dotted', color='black', label='reference config')
+
+# Plotting the data
+plt.grid()
+plt.xscale("log")
+plt.xlabel("cols_per_par_chunk")
+plt.ylabel("Bandwidth [B/s]")
+plt.title("Bandwidth on "+str.upper(data["context"]["chip"])+" (with ny=100000)");
+plt.legend()
+plt.savefig("bandwidth_cols.png")
+
+##############################
+## par_chunks_per_seq_chunk ##
+##############################
+
+# Plotting the data for each group
+plt.figure(figsize=(8, 6))
+for nx, group_data in data_groups.items():
+    par_chunks_per_seq_chunk = group_data["par_chunks_per_seq_chunk"]
+    bandwidth = [group_data["bytes_per_second"][i] for i in range(len(par_chunks_per_seq_chunk))]
+    plt.plot(par_chunks_per_seq_chunk, bandwidth, marker='o', markersize=5, label=f'nx={nx}')
+
+x = [(int)(data["context"]["par_chunks_per_seq_chunk_ref"]), (int)(data["context"]["par_chunks_per_seq_chunk_ref"])*1.001];
+plt.plot(x, [0.99*min([min(group_data["bytes_per_second"]) for nx, group_data in data_groups.items()]), 1.01*max([max(group_data["bytes_per_second"]) for nx, group_data in data_groups.items()])], linestyle='dotted', color='black', label='reference config')
+
+# Plotting the data
+plt.grid()
+plt.xscale("log")
+plt.xlabel("par_chunks_per_seq_chunk")
+plt.ylabel("Bandwidth [B/s]")
+plt.title("Bandwidth on "+str.upper(data["context"]["chip"])+" (with ny=100000)");
+plt.legend()
+plt.savefig("bandwidth_par_chunks.png")
+
+#####################
+## preconditionner ##
+#####################
+
+# Plotting the data for each group
+plt.figure(figsize=(8, 6))
+for nx, group_data in data_groups.items():
+    preconditionner_max_block_size = group_data["preconditionner_max_block_size"]
+    bandwidth = [group_data["bytes_per_second"][i] for i in range(len(preconditionner_max_block_size))]
+    plt.plot(preconditionner_max_block_size, bandwidth, marker='o', markersize=5, label=f'nx={nx}')
+
+x = [(int)(data["context"]["preconditionner_max_block_size_ref"]), (int)(data["context"]["preconditionner_max_block_size_ref"])*1.001];
+plt.plot(x, [0.99*min([min(group_data["bytes_per_second"]) for nx, group_data in data_groups.items()]), 1.01*max([max(group_data["bytes_per_second"]) for nx, group_data in data_groups.items()])], linestyle='dotted', color='black', label='reference config')
+
+# Plotting the data
+plt.grid()
+plt.xscale("log")
+plt.xlabel("preconditionner_max_block_size")
+plt.ylabel("Bandwidth [B/s]")
+plt.title("Bandwidth on "+str.upper(data["context"]["chip"])+" (with ny=100000)");
+plt.legend()
+plt.savefig("bandwidth_precond.png")
 
 plt.close();

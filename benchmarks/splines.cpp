@@ -179,11 +179,15 @@ static void characteristics_advection(benchmark::State& state)
 
 
 #ifdef KOKKOS_ENABLE_OPENMP
+std::string chip="cpu";
 int cols_per_par_chunk_ref = 512;
+int par_chunks_per_seq_chunk_ref = 128;
 unsigned int preconditionner_max_block_size_ref = 8u;
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
+std::string chip="gpu";
 int cols_per_par_chunk_ref = 16384;
+int par_chunks_per_seq_chunk_ref = 1;
 unsigned int preconditionner_max_block_size_ref = 1u;
 #endif
 
@@ -191,15 +195,15 @@ BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{100, 1000},
-                 {100, 100000},
+                 {100, 1000000},
                  {cols_per_par_chunk_ref, cols_per_par_chunk_ref},
-                 {1, 1},
+                 {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3);
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {100000, 100000}, {64,65535}, {1, 1}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->Ranges({{100, 1000}, {100000, 100000}, {64,65535}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3);
 */
 /*
@@ -211,13 +215,17 @@ BENCHMARK(characteristics_advection)
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 1}, {1, 32}})
+        ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {1, 32}})
         ->MinTime(3);
 */
 
 int main(int argc, char** argv)
 {
     ::benchmark::Initialize(&argc, argv);
+	::benchmark::AddCustomContext("chip", chip);
+	::benchmark::AddCustomContext("cols_per_par_chunk_ref", std::to_string(cols_per_par_chunk_ref));
+	::benchmark::AddCustomContext("par_chunks_per_seq_chunk_ref", std::to_string(par_chunks_per_seq_chunk_ref));
+	::benchmark::AddCustomContext("preconditionner_max_block_size_ref", std::to_string(preconditionner_max_block_size_ref));
     if (::benchmark::ReportUnrecognizedArguments(argc, argv)) {
         return 1;
     }

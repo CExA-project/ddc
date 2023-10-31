@@ -104,7 +104,21 @@ public:
         if (preconditionner_max_block_size.has_value()) {
             m_preconditionner_max_block_size = preconditionner_max_block_size.value();
         } else {
-            m_preconditionner_max_block_size = 1u;
+#ifdef KOKKOS_ENABLE_SERIAL
+            if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+                m_preconditionner_max_block_size = 8u;
+            }
+#endif
+#ifdef KOKKOS_ENABLE_OPENMP
+            if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+                m_preconditionner_max_block_size = 8u;
+            }
+#endif
+#ifdef KOKKOS_ENABLE_CUDA
+            if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+                m_preconditionner_max_block_size = 1u;
+            }
+#endif
         }
 
         // Create the solver factory
@@ -207,7 +221,6 @@ public:
                 m_cols.size(),
                 gko_exec->get_master()));
         auto data_mat_gpu = gko::share(gko::clone(gko_exec, data_mat));
-        auto solver = m_solver_factory->generate(data_mat_gpu);
 
         Kokkos::View<
                 double**,
@@ -247,6 +260,7 @@ public:
                                           ? m_cols_per_par_chunk
                                           : cols_per_last_par_chunk;
                         if (n_equations_in_par_chunk != 0) {
+                            auto solver = m_solver_factory->generate(data_mat_gpu);
                             std::pair<int, int> par_chunk_window(
                                     (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk,
                                     (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk

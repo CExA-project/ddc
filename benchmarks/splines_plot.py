@@ -39,7 +39,7 @@ for nx, group_data in data_groups.items():
     bandwidth = [group_data["bytes_per_second"][i] for i in range(len(ny))]
     plt.plot(ny, bandwidth, marker='o', markersize=5, label=f'nx={nx}')
 
-x = np.linspace(min(ny), 20*min(ny))
+x = np.linspace(min(ny), 250*min(ny))
 plt.plot(x, np.mean([data_groups[nx]["bytes_per_second"][0] for nx in nx_values])/min(ny)*x, linestyle='--', color='black', label='perfect scaling')
 
 # Plotting the data

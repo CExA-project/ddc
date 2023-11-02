@@ -68,13 +68,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6e9396f1eb1143642d65de2088ad4c76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7be21f66a058dedbbb16898529357ed"><td class="memItemLeft" align="right" valign="top">KOKKOS_DEFAULTED_FUNCTION constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteElement.html#af7be21f66a058dedbbb16898529357ed">DiscreteElement</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:af7be21f66a058dedbbb16898529357ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60b3613967e7da0373c764d35ed9af0a"><td class="memTemplParams" colspan="2">template&lt;class... OTags&gt; </td></tr>
-<tr class="memitem:a60b3613967e7da0373c764d35ed9af0a"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteElement.html#a60b3613967e7da0373c764d35ed9af0a">DiscreteElement</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; OTags &gt; const &amp;... other) noexcept</td></tr>
-<tr class="separator:a60b3613967e7da0373c764d35ed9af0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0afe1a0fb459f231b9bf0fef6eec44f4"><td class="memTemplParams" colspan="2">template&lt;class... OTags&gt; </td></tr>
-<tr class="memitem:a0afe1a0fb459f231b9bf0fef6eec44f4"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteElement.html#a0afe1a0fb459f231b9bf0fef6eec44f4">DiscreteElement</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; OTags... &gt; const &amp;other) noexcept</td></tr>
-<tr class="separator:a0afe1a0fb459f231b9bf0fef6eec44f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6776e89752caf2077e70f690502a5e5"><td class="memTemplParams" colspan="2">template&lt;class... Params, class  = std::enable_if_t&lt;(std::is_integral_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;(!is_discrete_element_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;sizeof...(Params) == sizeof...(Tags)&gt;&gt; </td></tr>
+<tr class="memitem:a89e6f84fc49cf4431e78c8ff2604ebb1"><td class="memTemplParams" colspan="2">template&lt;class... DElems, class  = std::enable_if_t&lt;(is_discrete_element_v&lt;DElems&gt; &amp;&amp; ...)&gt;&gt; </td></tr>
+<tr class="memitem:a89e6f84fc49cf4431e78c8ff2604ebb1"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteElement.html#a89e6f84fc49cf4431e78c8ff2604ebb1">DiscreteElement</a> (DElems const &amp;... delems) noexcept</td></tr>
+<tr class="separator:a89e6f84fc49cf4431e78c8ff2604ebb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6776e89752caf2077e70f690502a5e5"><td class="memTemplParams" colspan="2">template&lt;class... Params, class  = std::enable_if_t&lt;(!is_discrete_element_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;(std::is_integral_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;sizeof...(Params) == sizeof...(Tags)&gt;&gt; </td></tr>
 <tr class="memitem:af6776e89752caf2077e70f690502a5e5"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteElement.html#af6776e89752caf2077e70f690502a5e5">DiscreteElement</a> (Params const &amp;... params) noexcept</td></tr>
 <tr class="separator:af6776e89752caf2077e70f690502a5e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a293505e9414c9901ecfecd6bb8cac68b"><td class="memItemLeft" align="right" valign="top">KOKKOS_DEFAULTED_FUNCTION&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteElement.html#a293505e9414c9901ecfecd6bb8cac68b">~DiscreteElement</a> ()=default</td></tr>
@@ -157,7 +154,7 @@ template&lt;class... Tags&gt; </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aae48d441289e8e21b6584903647e9c77" name="aae48d441289e8e21b6584903647e9c77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae48d441289e8e21b6584903647e9c77">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[1/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aae48d441289e8e21b6584903647e9c77">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,7 +181,7 @@ template&lt;class... Tags&gt; </div>
 </div>
 </div>
 <a id="a6e9396f1eb1143642d65de2088ad4c76" name="a6e9396f1eb1143642d65de2088ad4c76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e9396f1eb1143642d65de2088ad4c76">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[2/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e9396f1eb1143642d65de2088ad4c76">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -212,7 +209,7 @@ template&lt;class... Tags&gt; </div>
 </div>
 </div>
 <a id="af7be21f66a058dedbbb16898529357ed" name="af7be21f66a058dedbbb16898529357ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af7be21f66a058dedbbb16898529357ed">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[3/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af7be21f66a058dedbbb16898529357ed">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -239,15 +236,15 @@ template&lt;class... Tags&gt; </div>
 
 </div>
 </div>
-<a id="a60b3613967e7da0373c764d35ed9af0a" name="a60b3613967e7da0373c764d35ed9af0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60b3613967e7da0373c764d35ed9af0a">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[4/6]</span></h2>
+<a id="a89e6f84fc49cf4431e78c8ff2604ebb1" name="a89e6f84fc49cf4431e78c8ff2604ebb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89e6f84fc49cf4431e78c8ff2604ebb1">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... Tags&gt; </div>
 <div class="memtemplate">
-template&lt;class... OTags&gt; </div>
+template&lt;class... DElems, class  = std::enable_if_t&lt;(is_discrete_element_v&lt;DElems&gt; &amp;&amp; ...)&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -255,38 +252,8 @@ template&lt;class... OTags&gt; </div>
         <tr>
           <td class="memname">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; Tags &gt;::DiscreteElement </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; OTags &gt; const &amp;...&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0afe1a0fb459f231b9bf0fef6eec44f4" name="a0afe1a0fb459f231b9bf0fef6eec44f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0afe1a0fb459f231b9bf0fef6eec44f4">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[5/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class... Tags&gt; </div>
-<div class="memtemplate">
-template&lt;class... OTags&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; Tags &gt;::DiscreteElement </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; OTags... &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
+          <td class="paramtype">DElems const &amp;...&#160;</td>
+          <td class="paramname"><em>delems</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -300,14 +267,14 @@ template&lt;class... OTags&gt; </div>
 </div>
 </div>
 <a id="af6776e89752caf2077e70f690502a5e5" name="af6776e89752caf2077e70f690502a5e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6776e89752caf2077e70f690502a5e5">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[6/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af6776e89752caf2077e70f690502a5e5">&#9670;&nbsp;</a></span>DiscreteElement() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... Tags&gt; </div>
 <div class="memtemplate">
-template&lt;class... Params, class  = std::enable_if_t&lt;(std::is_integral_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;(!is_discrete_element_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;sizeof...(Params) == sizeof...(Tags)&gt;&gt; </div>
+template&lt;class... Params, class  = std::enable_if_t&lt;(!is_discrete_element_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;(std::is_integral_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;sizeof...(Params) == sizeof...(Tags)&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">

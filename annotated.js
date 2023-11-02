@@ -47,6 +47,8 @@ var annotated =
       [ "is_uniform_domain< DiscreteDomain< DDims... > >", "structddc_1_1is__uniform__domain_3_01DiscreteDomain_3_01DDims_8_8_8_01_4_01_4.html", null ],
       [ "is_uniform_sampling", "structddc_1_1is__uniform__sampling.html", null ],
       [ "is_uniform_sampling< UniformPointSampling< CDim > >", "structddc_1_1is__uniform__sampling_3_01UniformPointSampling_3_01CDim_01_4_01_4.html", null ],
+      [ "IsDiscreteDomain", "structddc_1_1IsDiscreteDomain.html", null ],
+      [ "IsDiscreteDomain< DiscreteDomain< Tags... > >", "structddc_1_1IsDiscreteDomain_3_01DiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html", null ],
       [ "IsDiscreteElement", "structddc_1_1IsDiscreteElement.html", null ],
       [ "IsDiscreteElement< DiscreteElement< Tags... > >", "structddc_1_1IsDiscreteElement_3_01DiscreteElement_3_01Tags_8_8_8_01_4_01_4.html", null ],
       [ "IsDiscreteVector", "structddc_1_1IsDiscreteVector.html", null ],

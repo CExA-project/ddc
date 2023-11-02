@@ -132,6 +132,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__uniform__sampling_3_01UniformPointSampling_3_01CDim_01_4_01_4.html">is_uniform_sampling&lt; UniformPointSampling&lt; CDim &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1IsDiscreteDomain.html">IsDiscreteDomain</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1IsDiscreteDomain_3_01DiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html">IsDiscreteDomain&lt; DiscreteDomain&lt; Tags... &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1IsDiscreteElement.html">IsDiscreteElement</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1IsDiscreteElement_3_01DiscreteElement_3_01Tags_8_8_8_01_4_01_4.html">IsDiscreteElement&lt; DiscreteElement&lt; Tags... &gt; &gt;</a></td></tr>
@@ -282,9 +286,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a1689438d04166c36090bb438b8c0fea3"><td class="memTemplParams" colspan="2">template&lt;class... QueryTags, class... Tags&gt; </td></tr>
 <tr class="memitem:a1689438d04166c36090bb438b8c0fea3"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryTags... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1689438d04166c36090bb438b8c0fea3">select</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; Tags... &gt; &amp;&amp;arr) noexcept</td></tr>
 <tr class="separator:a1689438d04166c36090bb438b8c0fea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27d3907c604b36798dfde656617b45e0"><td class="memTemplParams" colspan="2">template&lt;class QueryTag , class HeadTag , class... TailTags&gt; </td></tr>
-<tr class="memitem:a27d3907c604b36798dfde656617b45e0"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryTag &gt; const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a27d3907c604b36798dfde656617b45e0">take</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; HeadTag &gt; const &amp;head, <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; TailTags &gt; const &amp;... tags)</td></tr>
-<tr class="separator:a27d3907c604b36798dfde656617b45e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39f234f0f9635b7c542f7f2abc5221b9"><td class="memTemplParams" colspan="2">template&lt;class QueryTag , class HeadDElem , class... TailDElems, std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a7b38d024576fa519079635817d26c2a7">is_discrete_element_v</a>&lt; HeadDElem &gt; &amp;&amp;(<a class="el" href="namespaceddc.html#a7b38d024576fa519079635817d26c2a7">is_discrete_element_v</a>&lt; TailDElems &gt; &amp;&amp;...), int &gt;  = 1&gt; </td></tr>
+<tr class="memitem:a39f234f0f9635b7c542f7f2abc5221b9"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr auto const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a39f234f0f9635b7c542f7f2abc5221b9">take</a> (HeadDElem const &amp;head, TailDElems const &amp;... tail)</td></tr>
+<tr class="memdesc:a39f234f0f9635b7c542f7f2abc5221b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference towards the <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> that contains the QueryTag.  <a href="namespaceddc.html#a39f234f0f9635b7c542f7f2abc5221b9">More...</a><br /></td></tr>
+<tr class="separator:a39f234f0f9635b7c542f7f2abc5221b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a6e1d2966fa32bdf06b79ae7b336d2a"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a7a6e1d2966fa32bdf06b79ae7b336d2a">operator&lt;&lt;</a> (std::ostream &amp;out, <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;&gt; const &amp;)</td></tr>
 <tr class="separator:a7a6e1d2966fa32bdf06b79ae7b336d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f20ba0faf7b90ba56a17bfdc2c93bb2"><td class="memTemplParams" colspan="2">template&lt;class Head , class... Tags&gt; </td></tr>
@@ -382,9 +387,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ac4e808ab08b6a4bd398b26032ea67376"><td class="memTemplParams" colspan="2">template&lt;class... QueryTags, class... Tags&gt; </td></tr>
 <tr class="memitem:ac4e808ab08b6a4bd398b26032ea67376"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; QueryTags... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac4e808ab08b6a4bd398b26032ea67376">select</a> (<a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; Tags... &gt; &amp;&amp;arr) noexcept</td></tr>
 <tr class="separator:ac4e808ab08b6a4bd398b26032ea67376"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a7954b7061f365ab94b83bbde4e0509"><td class="memTemplParams" colspan="2">template&lt;class QueryTag , class HeadTag , class... TailTags&gt; </td></tr>
-<tr class="memitem:a3a7954b7061f365ab94b83bbde4e0509"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; QueryTag &gt; const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a3a7954b7061f365ab94b83bbde4e0509">take</a> (<a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; HeadTag &gt; const &amp;head, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; TailTags &gt; const &amp;... tags)</td></tr>
-<tr class="separator:a3a7954b7061f365ab94b83bbde4e0509"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eb1602ece15c6526f2944708075157f"><td class="memTemplParams" colspan="2">template&lt;class QueryTag , class HeadDVect , class... TailDVects, std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9d1">is_discrete_vector_v</a>&lt; HeadDVect &gt; &amp;&amp;(<a class="el" href="namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9d1">is_discrete_vector_v</a>&lt; TailDVects &gt; &amp;&amp;...), int &gt;  = 1&gt; </td></tr>
+<tr class="memitem:a8eb1602ece15c6526f2944708075157f"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr auto const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8eb1602ece15c6526f2944708075157f">take</a> (HeadDVect const &amp;head, TailDVects const &amp;... tail)</td></tr>
+<tr class="memdesc:a8eb1602ece15c6526f2944708075157f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference towards the <a class="el" href="classddc_1_1DiscreteVector.html" title="A DiscreteVector is a vector in the discrete dimension.">DiscreteVector</a> that contains the QueryTag.  <a href="namespaceddc.html#a8eb1602ece15c6526f2944708075157f">More...</a><br /></td></tr>
+<tr class="separator:a8eb1602ece15c6526f2944708075157f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96a18074e95f1f37cc321ef7c15ddf77"><td class="memTemplParams" colspan="2">template&lt;class Tag &gt; </td></tr>
 <tr class="memitem:a96a18074e95f1f37cc321ef7c15ddf77"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a96a18074e95f1f37cc321ef7c15ddf77">operator&lt;</a> (<a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; Tag &gt; const &amp;lhs, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; Tag &gt; const &amp;rhs)</td></tr>
 <tr class="separator:a96a18074e95f1f37cc321ef7c15ddf77"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -566,6 +572,9 @@ Variables</h2></td></tr>
 <tr class="memitem:a1654348aeba85c8ac3c8b933ee87a4c1"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class SupportType , class LayoutStridedPolicy , class MemorySpace &gt; </td></tr>
 <tr class="memitem:a1654348aeba85c8ac3c8b933ee87a4c1"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1654348aeba85c8ac3c8b933ee87a4c1">enable_borrowed_chunk&lt; ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt;</a> = true</td></tr>
 <tr class="separator:a1654348aeba85c8ac3c8b933ee87a4c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2cf0a43efdcfdbd2d1cb64f74cb18b6"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ac2cf0a43efdcfdbd2d1cb64f74cb18b6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac2cf0a43efdcfdbd2d1cb64f74cb18b6">is_discrete_domain_v</a> = <a class="el" href="structddc_1_1IsDiscreteDomain.html">IsDiscreteDomain</a>&lt;T&gt;::value</td></tr>
+<tr class="separator:ac2cf0a43efdcfdbd2d1cb64f74cb18b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b38d024576fa519079635817d26c2a7"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a7b38d024576fa519079635817d26c2a7"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a7b38d024576fa519079635817d26c2a7">is_discrete_element_v</a> = <a class="el" href="structddc_1_1IsDiscreteElement.html">IsDiscreteElement</a>&lt;T&gt;::value</td></tr>
 <tr class="separator:a7b38d024576fa519079635817d26c2a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1868,28 +1877,28 @@ template&lt;class... QueryTags, class... Tags&gt; </div>
 
 </div>
 </div>
-<a id="a27d3907c604b36798dfde656617b45e0" name="a27d3907c604b36798dfde656617b45e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27d3907c604b36798dfde656617b45e0">&#9670;&nbsp;</a></span>take() <span class="overload">[1/2]</span></h2>
+<a id="a39f234f0f9635b7c542f7f2abc5221b9" name="a39f234f0f9635b7c542f7f2abc5221b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39f234f0f9635b7c542f7f2abc5221b9">&#9670;&nbsp;</a></span>take() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class QueryTag , class HeadTag , class... TailTags&gt; </div>
+template&lt;class QueryTag , class HeadDElem , class... TailDElems, std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a7b38d024576fa519079635817d26c2a7">is_discrete_element_v</a>&lt; HeadDElem &gt; &amp;&amp;(<a class="el" href="namespaceddc.html#a7b38d024576fa519079635817d26c2a7">is_discrete_element_v</a>&lt; TailDElems &gt; &amp;&amp;...), int &gt;  = 1&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryTag &gt; const  &amp; ddc::take </td>
+          <td class="memname">KOKKOS_FUNCTION constexpr auto const  &amp; ddc::take </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; HeadTag &gt; const &amp;&#160;</td>
+          <td class="paramtype">HeadDElem const &amp;&#160;</td>
           <td class="paramname"><em>head</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; TailTags &gt; const &amp;...&#160;</td>
-          <td class="paramname"><em>tags</em>&#160;</td>
+          <td class="paramtype">TailDElems const &amp;...&#160;</td>
+          <td class="paramname"><em>tail</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1903,6 +1912,8 @@ template&lt;class QueryTag , class HeadTag , class... TailTags&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns a reference towards the <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> that contains the QueryTag. </p>
 
 </div>
 </div>
@@ -2961,28 +2972,28 @@ template&lt;class... QueryTags, class... Tags&gt; </div>
 
 </div>
 </div>
-<a id="a3a7954b7061f365ab94b83bbde4e0509" name="a3a7954b7061f365ab94b83bbde4e0509"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a7954b7061f365ab94b83bbde4e0509">&#9670;&nbsp;</a></span>take() <span class="overload">[2/2]</span></h2>
+<a id="a8eb1602ece15c6526f2944708075157f" name="a8eb1602ece15c6526f2944708075157f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8eb1602ece15c6526f2944708075157f">&#9670;&nbsp;</a></span>take() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class QueryTag , class HeadTag , class... TailTags&gt; </div>
+template&lt;class QueryTag , class HeadDVect , class... TailDVects, std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9d1">is_discrete_vector_v</a>&lt; HeadDVect &gt; &amp;&amp;(<a class="el" href="namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9d1">is_discrete_vector_v</a>&lt; TailDVects &gt; &amp;&amp;...), int &gt;  = 1&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; QueryTag &gt; const  &amp; ddc::take </td>
+          <td class="memname">KOKKOS_FUNCTION constexpr auto const  &amp; ddc::take </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; HeadTag &gt; const &amp;&#160;</td>
+          <td class="paramtype">HeadDVect const &amp;&#160;</td>
           <td class="paramname"><em>head</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; TailTags &gt; const &amp;...&#160;</td>
-          <td class="paramname"><em>tags</em>&#160;</td>
+          <td class="paramtype">TailDVects const &amp;...&#160;</td>
+          <td class="paramname"><em>tail</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2996,6 +3007,8 @@ template&lt;class QueryTag , class HeadTag , class... TailTags&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns a reference towards the <a class="el" href="classddc_1_1DiscreteVector.html" title="A DiscreteVector is a vector in the discrete dimension.">DiscreteVector</a> that contains the QueryTag. </p>
 
 </div>
 </div>
@@ -4719,6 +4732,30 @@ template&lt;class ElementType , class SupportType , class LayoutStridedPolicy , 
       <table class="memname">
         <tr>
           <td class="memname">constexpr bool <a class="el" href="namespaceddc.html#a0c0e4de1cdacb9ca1ec06c43675d7a5b">ddc::enable_borrowed_chunk</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt; = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac2cf0a43efdcfdbd2d1cb64f74cb18b6" name="ac2cf0a43efdcfdbd2d1cb64f74cb18b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2cf0a43efdcfdbd2d1cb64f74cb18b6">&#9670;&nbsp;</a></span>is_discrete_domain_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool ddc::is_discrete_domain_v = <a class="el" href="structddc_1_1IsDiscreteDomain.html">IsDiscreteDomain</a>&lt;T&gt;::value</td>
         </tr>
       </table>
   </td>

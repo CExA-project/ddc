@@ -59,7 +59,7 @@ Inheritance diagram for ddc::DiscreteVector&lt; Tags &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classddc_1_1DiscreteVector__inherit__graph.png" border="0" usemap="#addc_1_1DiscreteVector_3_01Tags_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="addc_1_1DiscreteVector_3_01Tags_01_4_inherit__map" id="addc_1_1DiscreteVector_3_01Tags_01_4_inherit__map">
-<area shape="rect" title="A DiscreteVector is a vector in the discrete dimension." alt="" coords="38,145,191,619"/>
+<area shape="rect" title="A DiscreteVector is a vector in the discrete dimension." alt="" coords="38,145,191,604"/>
 <area shape="rect" href="namespaceddc.html" title=" " alt="" coords="5,5,224,97"/>
 </map>
 </div>
@@ -72,13 +72,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9045137fe082813dfc071f9ca15b4bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8e0b6074c1b563ede2626d7e1503248"><td class="memItemLeft" align="right" valign="top">KOKKOS_DEFAULTED_FUNCTION constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteVector.html#af8e0b6074c1b563ede2626d7e1503248">DiscreteVector</a> (<a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:af8e0b6074c1b563ede2626d7e1503248"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54ee0cfa9281f4a4397f8c53cdaaccaa"><td class="memTemplParams" colspan="2">template&lt;class... OTags&gt; </td></tr>
-<tr class="memitem:a54ee0cfa9281f4a4397f8c53cdaaccaa"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteVector.html#a54ee0cfa9281f4a4397f8c53cdaaccaa">DiscreteVector</a> (<a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; OTags &gt; const &amp;... other) noexcept</td></tr>
-<tr class="separator:a54ee0cfa9281f4a4397f8c53cdaaccaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a196fb3856a704cf5b5aac6668791cdfb"><td class="memTemplParams" colspan="2">template&lt;class... OTags&gt; </td></tr>
-<tr class="memitem:a196fb3856a704cf5b5aac6668791cdfb"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteVector.html#a196fb3856a704cf5b5aac6668791cdfb">DiscreteVector</a> (<a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; OTags... &gt; const &amp;other) noexcept</td></tr>
-<tr class="separator:a196fb3856a704cf5b5aac6668791cdfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af73b8f2c3a806e472ff21507e3e3ed5d"><td class="memTemplParams" colspan="2">template&lt;class... Params, class  = std::enable_if_t&lt;(std::is_convertible_v&lt;Params, DiscreteVectorElement&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;(!is_discrete_vector_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;sizeof...(Params) == sizeof...(Tags)&gt;&gt; </td></tr>
+<tr class="memitem:a95f40c21e2567a501e447d0588f3b374"><td class="memTemplParams" colspan="2">template&lt;class... DVects, class  = std::enable_if_t&lt;(is_discrete_vector_v&lt;DVects&gt; &amp;&amp; ...)&gt;&gt; </td></tr>
+<tr class="memitem:a95f40c21e2567a501e447d0588f3b374"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteVector.html#a95f40c21e2567a501e447d0588f3b374">DiscreteVector</a> (DVects const &amp;... delems) noexcept</td></tr>
+<tr class="separator:a95f40c21e2567a501e447d0588f3b374"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af73b8f2c3a806e472ff21507e3e3ed5d"><td class="memTemplParams" colspan="2">template&lt;class... Params, class  = std::enable_if_t&lt;(!is_discrete_vector_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;(std::is_convertible_v&lt;Params, DiscreteVectorElement&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;sizeof...(Params) == sizeof...(Tags)&gt;&gt; </td></tr>
 <tr class="memitem:af73b8f2c3a806e472ff21507e3e3ed5d"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteVector.html#af73b8f2c3a806e472ff21507e3e3ed5d">DiscreteVector</a> (Params const &amp;... params) noexcept</td></tr>
 <tr class="separator:af73b8f2c3a806e472ff21507e3e3ed5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39f496c7cb108bfd1fbea0a63765fac3"><td class="memItemLeft" align="right" valign="top">KOKKOS_DEFAULTED_FUNCTION&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteVector.html#a39f496c7cb108bfd1fbea0a63765fac3">~DiscreteVector</a> ()=default</td></tr>
@@ -155,7 +152,7 @@ class ddc::DiscreteVector&lt; Tags &gt;</div><p >A <a class="el" href="classddc_
 <p >Each is tagged by its associated dimensions. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7c9712ea11ebe42eb6950913378cb383" name="a7c9712ea11ebe42eb6950913378cb383"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c9712ea11ebe42eb6950913378cb383">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[1/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c9712ea11ebe42eb6950913378cb383">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -182,7 +179,7 @@ template&lt;class... Tags&gt; </div>
 </div>
 </div>
 <a id="a9045137fe082813dfc071f9ca15b4bc8" name="a9045137fe082813dfc071f9ca15b4bc8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9045137fe082813dfc071f9ca15b4bc8">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[2/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9045137fe082813dfc071f9ca15b4bc8">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -210,7 +207,7 @@ template&lt;class... Tags&gt; </div>
 </div>
 </div>
 <a id="af8e0b6074c1b563ede2626d7e1503248" name="af8e0b6074c1b563ede2626d7e1503248"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8e0b6074c1b563ede2626d7e1503248">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[3/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af8e0b6074c1b563ede2626d7e1503248">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,15 +234,15 @@ template&lt;class... Tags&gt; </div>
 
 </div>
 </div>
-<a id="a54ee0cfa9281f4a4397f8c53cdaaccaa" name="a54ee0cfa9281f4a4397f8c53cdaaccaa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54ee0cfa9281f4a4397f8c53cdaaccaa">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[4/6]</span></h2>
+<a id="a95f40c21e2567a501e447d0588f3b374" name="a95f40c21e2567a501e447d0588f3b374"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95f40c21e2567a501e447d0588f3b374">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... Tags&gt; </div>
 <div class="memtemplate">
-template&lt;class... OTags&gt; </div>
+template&lt;class... DVects, class  = std::enable_if_t&lt;(is_discrete_vector_v&lt;DVects&gt; &amp;&amp; ...)&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -253,38 +250,8 @@ template&lt;class... OTags&gt; </div>
         <tr>
           <td class="memname">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a>&lt; Tags &gt;::DiscreteVector </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; OTags &gt; const &amp;...&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a196fb3856a704cf5b5aac6668791cdfb" name="a196fb3856a704cf5b5aac6668791cdfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a196fb3856a704cf5b5aac6668791cdfb">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[5/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class... Tags&gt; </div>
-<div class="memtemplate">
-template&lt;class... OTags&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a>&lt; Tags &gt;::DiscreteVector </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; OTags... &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
+          <td class="paramtype">DVects const &amp;...&#160;</td>
+          <td class="paramname"><em>delems</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -298,14 +265,14 @@ template&lt;class... OTags&gt; </div>
 </div>
 </div>
 <a id="af73b8f2c3a806e472ff21507e3e3ed5d" name="af73b8f2c3a806e472ff21507e3e3ed5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af73b8f2c3a806e472ff21507e3e3ed5d">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[6/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af73b8f2c3a806e472ff21507e3e3ed5d">&#9670;&nbsp;</a></span>DiscreteVector() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... Tags&gt; </div>
 <div class="memtemplate">
-template&lt;class... Params, class  = std::enable_if_t&lt;(std::is_convertible_v&lt;Params, DiscreteVectorElement&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;(!is_discrete_vector_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;sizeof...(Params) == sizeof...(Tags)&gt;&gt; </div>
+template&lt;class... Params, class  = std::enable_if_t&lt;(!is_discrete_vector_v&lt;Params&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;(std::is_convertible_v&lt;Params, DiscreteVectorElement&gt; &amp;&amp; ...)&gt;, class  = std::enable_if_t&lt;sizeof...(Params) == sizeof...(Tags)&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">

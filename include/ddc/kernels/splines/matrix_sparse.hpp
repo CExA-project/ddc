@@ -71,12 +71,12 @@ public:
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
             if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                m_cols_per_par_chunk = Kokkos::pow(2, 9);
+                m_cols_per_par_chunk = 512;
             }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
             if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-                m_cols_per_par_chunk = Kokkos::pow(2, 14);
+                m_cols_per_par_chunk = 1024;
             }
 #endif
         }
@@ -91,12 +91,12 @@ public:
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
             if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                m_par_chunks_per_seq_chunk = 1;
+                m_par_chunks_per_seq_chunk = Kokkos::DefaultHostExecutionSpace().concurrency();
             }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
             if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-                m_par_chunks_per_seq_chunk = 1;
+                m_par_chunks_per_seq_chunk = Kokkos::DefaultHostExecutionSpace().concurrency();
             }
 #endif
         }

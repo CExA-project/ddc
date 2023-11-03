@@ -55,16 +55,16 @@ plt.savefig("bandwidth_ny.png")
 #gpu_mem
 plt.figure(figsize=(8, 6))
 for nx, group_data in data_groups.items():
-    ny = group_data["ny"]
-    gpu_mem_overhead = [group_data["gpu_mem_occupancy"][i]-nx*ny[i]*8 for i in range(len(ny))]
+    ny = [group_data["ny"][i] for i in range(len(group_data["ny"])) if group_data["ny"][i]>=8e3]
+    gpu_mem_overhead = [(group_data["gpu_mem_occupancy"][i]-nx*group_data["ny"][i]*8)/(nx*group_data["ny"][i]*8)*100 for i in range(len(group_data["ny"])) if group_data["ny"][i]>=8e3]
     plt.plot(ny, gpu_mem_overhead, marker='o', markersize=5, label=f'nx={nx}')
 
 # Plotting the data
 plt.grid()
 plt.xscale("log")
 plt.xlabel("ny")
-plt.ylabel("Memory overhead [B]")
-plt.title("Memory occupancy overhead (occupancy - size of processed data)")
+plt.ylabel("Relative memory overhead [%]")
+plt.title("Relative memory occupancy overhead")
 plt.legend()
 plt.savefig("gpu_mem_occupancy.png")
 

@@ -10,6 +10,16 @@ TEST(TaggedVector, Constructor)
     [[maybe_unused]] ddc::detail::TaggedVector<int, double, float> map(1, 2);
 }
 
+TEST(TaggedVector, ConstructorFromTaggedVectors)
+{
+    ddc::detail::TaggedVector<int, float, double> map_v1(1, 2);
+    ddc::detail::TaggedVector<int, long double> map_v2(3);
+    ddc::detail::TaggedVector<int, float, long double, double> const map_v3(map_v1, map_v2);
+    EXPECT_EQ(map_v3.get<float>(), 1);
+    EXPECT_EQ(map_v3.get<double>(), 2);
+    EXPECT_EQ(map_v3.get<long double>(), 3);
+}
+
 TEST(TaggedVector, ReorderingConstructor)
 {
     ddc::detail::TaggedVector<int, double, float> map_ref(1, 2);
@@ -72,4 +82,40 @@ TEST(TaggedVector, Operators)
     ASSERT_EQ(c + 4, (ddc::detail::TaggedVector<int, double>(5)));
     ASSERT_EQ(4 + c, (ddc::detail::TaggedVector<int, double>(5)));
     ASSERT_EQ(4 * a, (ddc::detail::TaggedVector<int, double, float>(4, 8)));
+}
+
+TEST(TaggedVector, Assignment)
+{
+    ddc::detail::TaggedVector<int, double, float> a(1, 2);
+    ddc::detail::TaggedVector<int, double, float> b;
+    b = a;
+    EXPECT_EQ(a.get<double>(), b.get<double>());
+    EXPECT_EQ(a.get<float>(), b.get<float>());
+}
+
+TEST(TaggedVector, ReorderingAssignment)
+{
+    ddc::detail::TaggedVector<int, double, float> a(1, 2);
+    ddc::detail::TaggedVector<int, float, double> b;
+    b = a;
+    EXPECT_EQ(a.get<double>(), b.get<double>());
+    EXPECT_EQ(a.get<float>(), b.get<float>());
+}
+
+TEST(TaggedVector, MoveAssignment)
+{
+    ddc::detail::TaggedVector<int, double, float> a(1, 2);
+    ddc::detail::TaggedVector<int, double, float> b;
+    b = std::move(a);
+    EXPECT_EQ(1, b.get<double>());
+    EXPECT_EQ(2, b.get<float>());
+}
+
+TEST(TaggedVector, ReorderingMoveAssignment)
+{
+    ddc::detail::TaggedVector<int, double, float> a(1, 2);
+    ddc::detail::TaggedVector<int, float, double> b;
+    b = std::move(a);
+    EXPECT_EQ(1, b.get<double>());
+    EXPECT_EQ(2, b.get<float>());
 }

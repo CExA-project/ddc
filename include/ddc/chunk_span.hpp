@@ -251,27 +251,20 @@ public:
                 memory_space>(subview, this->m_domain.restrict(odomain));
     }
 
-    /** Element access using a 0D DiscreteElement
-       * @return const-reference to this element
-       */
-    constexpr reference operator()() const noexcept
+    /** Element access using a list of DiscreteElement
+     * @param delems discrete elements
+     * @return reference to this element
+     */
+    template <class... DElems>
+    KOKKOS_FUNCTION constexpr reference operator()(DElems const&... delems) const noexcept
     {
-        static_assert(sizeof...(DDims) == 0, "Invalid number of dimensions");
-        return this->m_internal_mdspan();
-    }
-
-    /** Element access using a multi-dimensional DiscreteElement
-       * @param delems discrete coordinates
-       * @return const-reference to this element
-       */
-    template <class... ODDims>
-    KOKKOS_FUNCTION constexpr reference operator()(
-            DiscreteElement<ODDims...> const& delems) const noexcept
-    {
-        static_assert(sizeof...(ODDims) == sizeof...(DDims), "Invalid number of dimensions");
-        assert(((select<ODDims>(delems) >= front<ODDims>(this->m_domain)) && ...));
-        assert(((select<ODDims>(delems) <= back<ODDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(uid<DDims>(delems)...);
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DElems::size()),
+                "Invalid number of dimensions");
+        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
+        assert(((select<DDims>(take<DDims>(delems...)) >= front<DDims>(this->m_domain)) && ...));
+        assert(((select<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain)) && ...));
+        return this->m_internal_mdspan(uid<DDims>(take<DDims>(delems...))...);
     }
 
     /** Element access using a list of DiscreteElement

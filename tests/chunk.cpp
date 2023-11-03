@@ -1,4 +1,7 @@
 // SPDX-License-Identifier: MIT
+
+#include <string_view>
+
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
@@ -267,6 +270,12 @@ TEST(Chunk1DTest, View)
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(chunk(ix), factor * ix.uid());
     }
+}
+
+TEST(Chunk1DTest, Label)
+{
+    ChunkX<double> chunk("label-test", dom_x);
+    EXPECT_EQ(chunk.label(), std::string_view("label-test"));
 }
 
 // \}
@@ -598,6 +607,25 @@ TEST(Chunk2DTest, DeepcopyReordered)
             // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
             EXPECT_EQ(chunk2(ix, iy), chunk(ix, iy));
             EXPECT_EQ(chunk2(ix, iy), chunk(iy, ix));
+        }
+    }
+}
+
+TEST(Chunk3DTest, AccessFromDiscreteElements)
+{
+    using DDomXYZ = ddc::DiscreteDomain<DDimX, DDimY, DDimZ>;
+    DDomZ dom_z(ddc::DiscreteElement<DDimZ>(2), ddc::DiscreteVector<DDimZ>(4));
+    ddc::Chunk<double, DDomXYZ> chunk(DDomXYZ(dom_x_y, dom_z));
+    ddc::ChunkSpan const chunk_span = chunk.span_cview();
+    for (auto&& ix : chunk.domain<DDimX>()) {
+        for (auto&& iy : chunk.domain<DDimY>()) {
+            for (auto&& iz : chunk.domain<DDimZ>()) {
+                chunk(ix, iy, iz) = 1.357 * ix.uid() + 1.159 * iy.uid() + 3.2 * iz.uid();
+                ddc::DiscreteElement<DDimX, DDimZ> const izx(iz, ix);
+                // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
+                EXPECT_EQ(chunk(ix, iy, iz), chunk(iy, izx));
+                EXPECT_EQ(chunk(ix, iy, iz), chunk_span(iy, izx));
+            }
         }
     }
 }

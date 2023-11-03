@@ -7,8 +7,6 @@
 #include <numeric>
 
 #include <ddc/ddc.hpp>
-
-#include <Kokkos_Core.hpp>
 //! [includes]
 
 
@@ -124,11 +122,11 @@ int main(int argc, char** argv)
     //! [X-domains]
     // our zone at the start of the domain that will be mirrored to the
     // ghost
-    ddc::DiscreteDomain const
+    ddc::DiscreteDomain<DDimX> const
             x_domain_begin(x_domain.front(), x_post_ghost.extents());
     // our zone at the end of the domain that will be mirrored to the
     // ghost
-    ddc::DiscreteDomain const x_domain_end(
+    ddc::DiscreteDomain<DDimX> const x_domain_end(
             x_domain.back() - x_pre_ghost.extents() + 1,
             x_pre_ghost.extents());
     //! [X-domains]
@@ -148,11 +146,11 @@ int main(int argc, char** argv)
 
     // our zone at the start of the domain that will be mirrored to the
     // ghost
-    ddc::DiscreteDomain const
+    ddc::DiscreteDomain<DDimY> const
             y_domain_begin(y_domain.front(), y_post_ghost.extents());
     // our zone at the end of the domain that will be mirrored to the
     // ghost
-    ddc::DiscreteDomain const y_domain_end(
+    ddc::DiscreteDomain<DDimY> const y_domain_end(
             y_domain.back() - y_pre_ghost.extents() + 1,
             y_pre_ghost.extents());
     //! [Y-domains]
@@ -199,6 +197,7 @@ int main(int argc, char** argv)
     // Maps temperature into the full domain (including ghosts) twice:
     // - once for the last fully computed time-step
     ddc::Chunk ghosted_last_temp(
+            "ghosted_last_temp",
             ddc::DiscreteDomain<
                     DDimX,
                     DDimY>(ghosted_x_domain, ghosted_y_domain),
@@ -206,6 +205,7 @@ int main(int argc, char** argv)
 
     // - once for time-step being computed
     ddc::Chunk ghosted_next_temp(
+            "ghosted_next_temp",
             ddc::DiscreteDomain<
                     DDimX,
                     DDimY>(ghosted_x_domain, ghosted_y_domain),
@@ -230,6 +230,7 @@ int main(int argc, char** argv)
     //! [initial-conditions]
 
     ddc::Chunk ghosted_temp(
+            "ghost_temp",
             ddc::DiscreteDomain<
                     DDimX,
                     DDimY>(ghosted_x_domain, ghosted_y_domain),

@@ -221,32 +221,6 @@ public:
         return m_label.c_str();
     }
 
-    /** Element access using a list of DiscreteElement
-     * @param delems discrete oordinates
-     * @return const-reference to this element
-     */
-    template <class... HeadODDims, class... MidODDims, class... DETail>
-    element_type const& operator()(
-            DiscreteElement<HeadODDims...> const& head,
-            DiscreteElement<MidODDims...> const& mid,
-            DETail const&... delems) const noexcept
-    {
-        return this->operator()(DiscreteElement<HeadODDims..., MidODDims...>(head, mid), delems...);
-    }
-
-    /** Element access using a list of DiscreteElement
-     * @param delems discrete coordinates
-     * @return reference to this element
-     */
-    template <class... HeadODDims, class... MidODDims, class... DETail>
-    element_type& operator()(
-            DiscreteElement<HeadODDims...> const& head,
-            DiscreteElement<MidODDims...> const& mid,
-            DETail const&... delems) noexcept
-    {
-        return this->operator()(DiscreteElement<HeadODDims..., MidODDims...>(head, mid), delems...);
-    }
-
     /** Access to the underlying allocation pointer
      * @return read-only allocation pointer
      */

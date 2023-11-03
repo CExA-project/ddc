@@ -267,19 +267,6 @@ public:
         return this->m_internal_mdspan(uid<DDims>(take<DDims>(delems...))...);
     }
 
-    /** Element access using a list of DiscreteElement
-       * @param delems discrete oordinates
-       * @return const-reference to this element
-       */
-    template <class... HeadODDims, class... MidODDims, class... DETail>
-    constexpr reference operator()(
-            DiscreteElement<HeadODDims...> const& head,
-            DiscreteElement<MidODDims...> const& mid,
-            DETail const&... delems) const noexcept
-    {
-        return this->operator()(DiscreteElement<HeadODDims..., MidODDims...>(head, mid), delems...);
-    }
-
     /** Access to the underlying allocation pointer
      * @return allocation pointer
      */

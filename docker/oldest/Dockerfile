@@ -75,7 +75,6 @@ RUN chmod +x /bin/bash_run \
  && rm -rf /var/lib/apt/lists/* \
  && useradd -d /data -m -U ci
 
-
 USER ci:ci
 WORKDIR /data
 

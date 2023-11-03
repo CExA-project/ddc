@@ -187,9 +187,13 @@ std::string chip="cpu";
 int cols_per_par_chunk_ref = 512;
 int par_chunks_per_seq_chunk_ref = 160;
 unsigned int preconditionner_max_block_size_ref = 8u;
+#elif defined(KOKKOS_ENABLE_SERIAL)
+std::string chip="cpu";
+int cols_per_par_chunk_ref = 512;
+int par_chunks_per_seq_chunk_ref = 1;
+unsigned int preconditionner_max_block_size_ref = 8u;
 #endif
 
-/*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -199,7 +203,6 @@ BENCHMARK(characteristics_advection)
                  {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3);
-*/
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
@@ -212,10 +215,12 @@ BENCHMARK(characteristics_advection)
         ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 10000}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3);
 */
+/*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {1, 32}})
         ->MinTime(3);
+*/
 
 int main(int argc, char** argv)
 {

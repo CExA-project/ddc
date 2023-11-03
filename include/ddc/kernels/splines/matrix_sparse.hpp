@@ -66,7 +66,7 @@ public:
         } else {
 #ifdef KOKKOS_ENABLE_SERIAL
             if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-                m_cols_per_par_chunk = 1;
+                m_cols_per_par_chunk = 512;
             }
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP

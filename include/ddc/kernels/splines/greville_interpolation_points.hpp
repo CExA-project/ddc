@@ -9,7 +9,7 @@
 #include "spline_boundary_conditions.hpp"
 
 namespace ddc {
-template <class BSplines, BoundCond BcXmin, BoundCond BcXmax>
+template <class BSplines, ddc::BoundCond BcXmin, ddc::BoundCond BcXmax>
 class GrevilleInterpolationPoints
 {
     using tag_type = typename BSplines::tag_type;
@@ -106,7 +106,7 @@ public:
             std::vector<double> points_with_bcs(npoints);
 
             // Construct Greville-like points at the edge
-            if constexpr (BcXmin == BoundCond::GREVILLE) {
+            if constexpr (BcXmin == ddc::BoundCond::GREVILLE) {
                 for (std::size_t i(0); i < BSplines::degree() / 2 + 1; ++i) {
                     points_with_bcs[i]
                             = (BSplines::degree() - i) * ddc::discrete_space<BSplines>().rmin();
@@ -122,7 +122,8 @@ public:
                         ddc::DiscreteElement<ddc::UniformPointSampling<tag_type>>(0));
             }
 
-            int const n_start = (BcXmin == BoundCond::GREVILLE) ? BSplines::degree() / 2 + 1 : 1;
+            int const n_start
+                    = (BcXmin == ddc::BoundCond::GREVILLE) ? BSplines::degree() / 2 + 1 : 1;
             int const domain_size = n_break_points - 2;
             ddc::DiscreteDomain<ddc::UniformPointSampling<tag_type>> const
                     domain(ddc::DiscreteElement<ddc::UniformPointSampling<tag_type>>(1),
@@ -134,7 +135,7 @@ public:
             });
 
             // Construct Greville-like points at the edge
-            if constexpr (BcXmax == BoundCond::GREVILLE) {
+            if constexpr (BcXmax == ddc::BoundCond::GREVILLE) {
                 for (std::size_t i(0); i < BSplines::degree() / 2 + 1; ++i) {
                     points_with_bcs[npoints - 1 - i]
                             = (BSplines::degree() - i) * ddc::discrete_space<BSplines>().rmax();

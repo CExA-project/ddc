@@ -50,8 +50,8 @@ public:
                             ddc::detail::TypeSeq<IDimX...>,
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
-    static constexpr BoundCond BcXmin = SplineBuilder::s_bc_xmin;
-    static constexpr BoundCond BcXmax = SplineBuilder::s_bc_xmax;
+    static constexpr ddc::BoundCond BcXmin = SplineBuilder::s_bc_xmin;
+    static constexpr ddc::BoundCond BcXmax = SplineBuilder::s_bc_xmax;
 
 private:
     builder_type spline_builder;

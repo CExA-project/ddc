@@ -137,8 +137,10 @@ public:
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const;
 
-        KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis_and_n_derivs(DSpan2D derivs, ddc::Coordinate<Tag> const& x, std::size_t n) const;
+        KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
+                ddc::DSpan2D derivs,
+                ddc::Coordinate<Tag> const& x,
+                std::size_t n) const;
 
         template <class Layout, class MemorySpace2>
         KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
@@ -304,7 +306,7 @@ template <class Tag, std::size_t D>
 template <class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::
         Impl<MemorySpace>::eval_basis_and_n_derivs(
-                DSpan2D const derivs,
+                ddc::DSpan2D const derivs,
                 ddc::Coordinate<Tag> const& x,
                 std::size_t const n) const
 {

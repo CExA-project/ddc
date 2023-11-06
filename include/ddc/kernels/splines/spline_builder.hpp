@@ -23,13 +23,13 @@ enum class SplineSolver {
 
 constexpr bool is_spline_interpolation_mesh_uniform(
         bool const is_uniform,
-        BoundCond const BcXmin,
-        BoundCond const BcXmax,
+        ddc::BoundCond const BcXmin,
+        ddc::BoundCond const BcXmax,
         int degree)
 {
     int N_BE_MIN = n_boundary_equations(BcXmin, degree);
     int N_BE_MAX = n_boundary_equations(BcXmax, degree);
-    bool is_periodic = (BcXmin == BoundCond::PERIODIC) && (BcXmax == BoundCond::PERIODIC);
+    bool is_periodic = (BcXmin == ddc::BoundCond::PERIODIC) && (BcXmax == ddc::BoundCond::PERIODIC);
     return is_uniform && ((N_BE_MIN != 0 && N_BE_MAX != 0) || is_periodic);
 }
 
@@ -38,16 +38,16 @@ template <
         class MemorySpace,
         class BSplines,
         class interpolation_mesh_type,
-        BoundCond BcXmin,
-        BoundCond BcXmax,
+        ddc::BoundCond BcXmin,
+        ddc::BoundCond BcXmax,
         SplineSolver Solver = ddc::SplineSolver::GINKGO>
 class SplineBuilder
 {
     static_assert(
-            (BSplines::is_periodic() && (BcXmin == BoundCond::PERIODIC)
-             && (BcXmax == BoundCond::PERIODIC))
-            || (!BSplines::is_periodic() && (BcXmin != BoundCond::PERIODIC)
-                && (BcXmax != BoundCond::PERIODIC)));
+            (BSplines::is_periodic() && (BcXmin == ddc::BoundCond::PERIODIC)
+             && (BcXmax == ddc::BoundCond::PERIODIC))
+            || (!BSplines::is_periodic() && (BcXmin != ddc::BoundCond::PERIODIC)
+                && (BcXmax != ddc::BoundCond::PERIODIC)));
     static_assert(!BSplines::is_radial());
 
 private:
@@ -75,8 +75,8 @@ public:
 
     static constexpr int s_nbc_xmax = n_user_input(BcXmax, BSplines::degree());
 
-    static constexpr BoundCond s_bc_xmin = BcXmin;
-    static constexpr BoundCond s_bc_xmax = BcXmax;
+    static constexpr ddc::BoundCond s_bc_xmin = BcXmin;
+    static constexpr ddc::BoundCond s_bc_xmax = BcXmax;
 
     // interpolator specific
     std::unique_ptr<ddc::detail::Matrix> matrix;
@@ -131,8 +131,8 @@ public:
     void operator()(
             ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type>, Layout, MemorySpace> spline,
             ddc::ChunkSpan<double, interpolation_domain_type, Layout, MemorySpace> vals,
-            std::optional<CDSpan1D> const derivs_xmin = std::nullopt,
-            std::optional<CDSpan1D> const derivs_xmax = std::nullopt) const;
+            std::optional<ddc::CDSpan1D> const derivs_xmin = std::nullopt,
+            std::optional<ddc::CDSpan1D> const derivs_xmax = std::nullopt) const;
 
     interpolation_domain_type const& interpolation_domain() const noexcept
     {
@@ -175,8 +175,8 @@ template <
         class MemorySpace,
         class BSplines,
         class interpolation_mesh_type,
-        BoundCond BcXmin,
-        BoundCond BcXmax,
+        ddc::BoundCond BcXmin,
+        ddc::BoundCond BcXmax,
         SplineSolver Solver>
 int SplineBuilder<
         ExecSpace,
@@ -217,8 +217,8 @@ template <
         class MemorySpace,
         class BSplines,
         class interpolation_mesh_type,
-        BoundCond BcXmin,
-        BoundCond BcXmax,
+        ddc::BoundCond BcXmin,
+        ddc::BoundCond BcXmax,
         SplineSolver Solver>
 template <class Layout>
 void SplineBuilder<
@@ -260,8 +260,8 @@ template <
         class MemorySpace,
         class BSplines,
         class interpolation_mesh_type,
-        BoundCond BcXmin,
-        BoundCond BcXmax,
+        ddc::BoundCond BcXmin,
+        ddc::BoundCond BcXmax,
         SplineSolver Solver>
 template <class Layout>
 void SplineBuilder<
@@ -275,8 +275,8 @@ void SplineBuilder<
 operator()(
         ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type>, Layout, MemorySpace> spline,
         ddc::ChunkSpan<double, interpolation_domain_type, Layout, MemorySpace> vals,
-        std::optional<CDSpan1D> const derivs_xmin,
-        std::optional<CDSpan1D> const derivs_xmax) const
+        std::optional<ddc::CDSpan1D> const derivs_xmin,
+        std::optional<ddc::CDSpan1D> const derivs_xmax) const
 {
     assert(vals.template extent<interpolation_mesh_type>()
            == ddc::discrete_space<BSplines>().nbasis() - s_nbe_xmin - s_nbe_xmax);
@@ -285,15 +285,15 @@ operator()(
     if constexpr (bsplines_type::degree() == 1)
         return compute_interpolant_degree1(spline, vals);
 
-    assert((BcXmin == BoundCond::HERMITE)
+    assert((BcXmin == ddc::BoundCond::HERMITE)
            != (!derivs_xmin.has_value() || derivs_xmin->extent(0) == 0));
-    assert((BcXmax == BoundCond::HERMITE)
+    assert((BcXmax == ddc::BoundCond::HERMITE)
            != (!derivs_xmax.has_value() || derivs_xmax->extent(0) == 0));
 
     // Hermite boundary conditions at xmin, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
-    if constexpr (BcXmin == BoundCond::HERMITE) {
+    if constexpr (BcXmin == ddc::BoundCond::HERMITE) {
         assert(derivs_xmin->extent(0) == s_nbc_xmin);
         for (int i = s_nbc_xmin; i > 0; --i) {
             spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin - i))
@@ -318,7 +318,7 @@ operator()(
     // Hermite boundary conditions at xmax, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
-    if constexpr (BcXmax == BoundCond::HERMITE) {
+    if constexpr (BcXmax == ddc::BoundCond::HERMITE) {
         assert(derivs_xmax->extent(0) == s_nbc_xmax);
         for (int i = 0; i < s_nbc_xmax; ++i) {
             spline(ddc::DiscreteElement<bsplines_type>(
@@ -360,8 +360,8 @@ template <
         class MemorySpace,
         class BSplines,
         class interpolation_mesh_type,
-        BoundCond BcXmin,
-        BoundCond BcXmax,
+        ddc::BoundCond BcXmin,
+        ddc::BoundCond BcXmax,
         SplineSolver Solver>
 void SplineBuilder<
         ExecSpace,
@@ -373,32 +373,32 @@ void SplineBuilder<
         Solver>::compute_block_sizes_uniform(int& lower_block_size, int& upper_block_size) const
 {
     switch (BcXmin) {
-    case BoundCond::PERIODIC:
+    case ddc::BoundCond::PERIODIC:
         upper_block_size = (bsplines_type::degree()) / 2;
         break;
-    case BoundCond::NATURAL:
-    case BoundCond::HERMITE:
+    case ddc::BoundCond::NATURAL:
+    case ddc::BoundCond::HERMITE:
         upper_block_size = s_nbc_xmin;
         break;
-    case BoundCond::GREVILLE:
+    case ddc::BoundCond::GREVILLE:
         upper_block_size = bsplines_type::degree() - 1;
         break;
     default:
-        throw std::runtime_error("BoundCond not handled");
+        throw std::runtime_error("ddc::BoundCond not handled");
     }
     switch (BcXmax) {
-    case BoundCond::PERIODIC:
+    case ddc::BoundCond::PERIODIC:
         lower_block_size = (bsplines_type::degree()) / 2;
         break;
-    case BoundCond::NATURAL:
-    case BoundCond::HERMITE:
+    case ddc::BoundCond::NATURAL:
+    case ddc::BoundCond::HERMITE:
         lower_block_size = s_nbc_xmax;
         break;
-    case BoundCond::GREVILLE:
+    case ddc::BoundCond::GREVILLE:
         lower_block_size = bsplines_type::degree() - 1;
         break;
     default:
-        throw std::runtime_error("BoundCond not handled");
+        throw std::runtime_error("ddc::BoundCond not handled");
     }
 }
 
@@ -409,8 +409,8 @@ template <
         class MemorySpace,
         class BSplines,
         class interpolation_mesh_type,
-        BoundCond BcXmin,
-        BoundCond BcXmax,
+        ddc::BoundCond BcXmin,
+        ddc::BoundCond BcXmax,
         SplineSolver Solver>
 void SplineBuilder<
         ExecSpace,
@@ -422,30 +422,30 @@ void SplineBuilder<
         Solver>::compute_block_sizes_non_uniform(int& lower_block_size, int& upper_block_size) const
 {
     switch (BcXmin) {
-    case BoundCond::PERIODIC:
+    case ddc::BoundCond::PERIODIC:
         upper_block_size = bsplines_type::degree() - 1;
         break;
-    case BoundCond::HERMITE:
+    case ddc::BoundCond::HERMITE:
         upper_block_size = s_nbc_xmin + 1;
         break;
-    case BoundCond::GREVILLE:
+    case ddc::BoundCond::GREVILLE:
         upper_block_size = bsplines_type::degree() - 1;
         break;
     default:
-        throw std::runtime_error("BoundCond not handled");
+        throw std::runtime_error("ddc::BoundCond not handled");
     }
     switch (BcXmax) {
-    case BoundCond::PERIODIC:
+    case ddc::BoundCond::PERIODIC:
         lower_block_size = bsplines_type::degree() - 1;
         break;
-    case BoundCond::HERMITE:
+    case ddc::BoundCond::HERMITE:
         lower_block_size = s_nbc_xmax + 1;
         break;
-    case BoundCond::GREVILLE:
+    case ddc::BoundCond::GREVILLE:
         lower_block_size = bsplines_type::degree() - 1;
         break;
     default:
-        throw std::runtime_error("BoundCond not handled");
+        throw std::runtime_error("ddc::BoundCond not handled");
     }
 }
 
@@ -459,8 +459,8 @@ template <
         class MemorySpace,
         class BSplines,
         class interpolation_mesh_type,
-        BoundCond BcXmin,
-        BoundCond BcXmax,
+        ddc::BoundCond BcXmin,
+        ddc::BoundCond BcXmax,
         SplineSolver Solver>
 void SplineBuilder<
         ExecSpace,
@@ -519,8 +519,8 @@ template <
         class MemorySpace,
         class BSplines,
         class interpolation_mesh_type,
-        BoundCond BcXmin,
-        BoundCond BcXmax,
+        ddc::BoundCond BcXmin,
+        ddc::BoundCond BcXmax,
         SplineSolver Solver>
 void SplineBuilder<
         ExecSpace,
@@ -532,9 +532,10 @@ void SplineBuilder<
         Solver>::build_matrix_system()
 {
     // Hermite boundary conditions at xmin, if any
-    if constexpr (BcXmin == BoundCond::HERMITE) {
+    if constexpr (BcXmin == ddc::BoundCond::HERMITE) {
         double derivs_ptr[(bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)];
-        DSpan2D derivs(derivs_ptr, bsplines_type::degree() + 1, bsplines_type::degree() / 2 + 1);
+        ddc::DSpan2D
+                derivs(derivs_ptr, bsplines_type::degree() + 1, bsplines_type::degree() / 2 + 1);
         ddc::discrete_space<BSplines>().eval_basis_and_n_derivs(
                 derivs,
                 ddc::discrete_space<BSplines>().rmin(),
@@ -572,7 +573,7 @@ void SplineBuilder<
     });
 
     // Hermite boundary conditions at xmax, if any
-    if constexpr (BcXmax == BoundCond::HERMITE) {
+    if constexpr (BcXmax == ddc::BoundCond::HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         std::experimental::mdspan<

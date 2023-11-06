@@ -37,7 +37,7 @@ public:
             // TODO: Add LOG_FATAL_ERROR
         }
     }
-    virtual DSpan1D solve_inplace(DSpan1D const b) const
+    virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const b) const
     {
         assert(int(b.extent(0)) == n);
         int const info = solve_inplace_method(b.data_handle(), 'N', 1);
@@ -48,7 +48,7 @@ public:
         }
         return b;
     }
-    virtual DSpan1D solve_transpose_inplace(DSpan1D const b) const
+    virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const b) const
     {
         assert(int(b.extent(0)) == n);
         int const info = solve_inplace_method(b.data_handle(), 'T', 1);
@@ -59,7 +59,7 @@ public:
         }
         return b;
     }
-    virtual DSpan2D solve_multiple_inplace(DSpan2D const bx) const
+    virtual ddc::DSpan2D solve_multiple_inplace(ddc::DSpan2D const bx) const
     {
         assert(int(bx.extent(1)) == n);
         int const info = solve_inplace_method(bx.data_handle(), 'N', bx.extent(0));

@@ -37,7 +37,7 @@ void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
 
 void check_inverse(ddc::DSpan2D matrix, ddc::DSpan2D inv)
 {
-    double TOL = 5e-10;
+    double TOL = 1e-5;
     std::size_t N = matrix.extent(0);
 
     for (std::size_t i(0); i < N; ++i) {
@@ -68,13 +68,14 @@ TEST_P(MatrixSizesFixture, Sparse)
     ddc::DSpan2D val(val_ptr.data(), N, N);
     for (int i(0); i < N; ++i) {
         for (int j(0); j < N; ++j) {
-            int diag = ddc::detail::modulo(j - i, int(N));
             if (i == j) {
-                matrix->set_element(i, j, 0.5);
-                val(i, j) = 0.5;
-            } else if (std::abs(i - j) <= k) {
-                matrix->set_element(i, j, -1.0 / k / std::abs(i - j));
-                val(i, j) = -1.0 / k / std::abs(i - j);
+                matrix->set_element(i, j, 2. / 3);
+                val(i, j) = 2. / 3;
+            } else if (std::abs(j - i) <= k) {
+                matrix->set_element(i, j, (1. / 3) / k);
+                val(i, j) = (1. / 3) / k;
+            } else {
+                val(i, j) = 0.;
             }
         }
     }

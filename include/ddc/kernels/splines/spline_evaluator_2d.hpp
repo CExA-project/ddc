@@ -67,9 +67,9 @@ public:
                     spline_coef) const
     {
         std::array<double, bsplines_type1::degree() + 1> vals1;
-        // DSpan1D const vals1 = as_span(values1);
+        // ddc::DSpan1D const vals1 = as_span(values1);
         std::array<double, bsplines_type2::degree() + 1> vals2;
-        // DSpan1D const vals2 = as_span(values2);
+        // ddc::DSpan1D const vals2 = as_span(values2);
 
         return eval(coord_eval, spline_coef, vals1, vals2);
     }
@@ -82,9 +82,9 @@ public:
                     spline_coef) const
     {
         std::array<double, bsplines_type1::degree() + 1> vals1;
-        // DSpan1D const vals1 = as_span(values1);
+        // ddc::DSpan1D const vals1 = as_span(values1);
         std::array<double, bsplines_type2::degree() + 1> vals2;
-        // DSpan1D const vals2 = as_span(values2);
+        // ddc::DSpan1D const vals2 = as_span(values2);
 
         ddc::for_each(coords_eval.domain(), [&](auto i) {
             spline_eval(i) = eval(coords_eval(i), spline_coef, vals1, vals2);
@@ -97,9 +97,9 @@ public:
                     spline_coef) const
     {
         std::array<double, bsplines_type1::degree() + 1> vals1;
-        // DSpan1D const vals1 = as_span(values1);
+        // ddc::DSpan1D const vals1 = as_span(values1);
         std::array<double, bsplines_type2::degree() + 1> vals2;
-        // DSpan1D const vals2 = as_span(values2);
+        // ddc::DSpan1D const vals2 = as_span(values2);
 
         return eval_no_bc(
                 ddc::select<Dim1>(coord_eval),
@@ -117,9 +117,9 @@ public:
                     spline_coef) const
     {
         std::array<double, bsplines_type1::degree() + 1> vals1;
-        // DSpan1D const vals1 = as_span(values1);
+        // ddc::DSpan1D const vals1 = as_span(values1);
         std::array<double, bsplines_type2::degree() + 1> vals2;
-        // DSpan1D const vals2 = as_span(values2);
+        // ddc::DSpan1D const vals2 = as_span(values2);
 
         return eval_no_bc(
                 ddc::select<Dim1>(coord_eval),
@@ -137,9 +137,9 @@ public:
                     spline_coef) const
     {
         std::array<double, bsplines_type1::degree() + 1> vals1;
-        // DSpan1D const vals1 = as_span(values1);
+        // ddc::DSpan1D const vals1 = as_span(values1);
         std::array<double, bsplines_type2::degree() + 1> vals2;
-        // DSpan1D const vals2 = as_span(values2);
+        // ddc::DSpan1D const vals2 = as_span(values2);
 
         return eval_no_bc(
                 ddc::select<Dim1>(coord_eval),
@@ -159,9 +159,9 @@ public:
                     spline_coef) const
     {
         std::array<double, bsplines_type1::degree() + 1> vals1;
-        // DSpan1D const vals1 = as_span(values1);
+        // ddc::DSpan1D const vals1 = as_span(values1);
         std::array<double, bsplines_type2::degree() + 1> vals2;
-        // DSpan1D const vals2 = as_span(values2);
+        // ddc::DSpan1D const vals2 = as_span(values2);
 
         ddc::for_each(coords_eval.domain(), [&](auto i) {
             spline_eval(i) = eval_no_bc(
@@ -183,9 +183,9 @@ public:
                     spline_coef) const
     {
         std::array<double, bsplines_type1::degree() + 1> vals1;
-        // DSpan1D const vals1 = as_span(values1);
+        // ddc::DSpan1D const vals1 = as_span(values1);
         std::array<double, bsplines_type2::degree() + 1> vals2;
-        // DSpan1D const vals2 = as_span(values2);
+        // ddc::DSpan1D const vals2 = as_span(values2);
 
         ddc::for_each(coords_eval.domain(), [&](auto i) {
             spline_eval(i) = eval_no_bc(
@@ -207,9 +207,9 @@ public:
                     spline_coef) const
     {
         std::array<double, bsplines_type1::degree() + 1> vals1;
-        // DSpan1D const vals1 = as_span(values1);
+        // ddc::DSpan1D const vals1 = as_span(values1);
         std::array<double, bsplines_type2::degree() + 1> vals2;
-        // DSpan1D const vals2 = as_span(values2);
+        // ddc::DSpan1D const vals2 = as_span(values2);
 
         ddc::for_each(coords_eval.domain(), [&](auto i) {
             spline_eval(i) = eval_no_bc(
@@ -229,10 +229,10 @@ public:
     {
         ddc::Chunk<double, ddc::DiscreteDomain<BSplinesType1>> values1(
                 ddc::DiscreteDomain<BSplinesType1>(spline_coef.domain()));
-        DSpan1D vals1 = values1.allocation_mdspan();
+        ddc::DSpan1D vals1 = values1.allocation_mdspan();
         ddc::Chunk<double, ddc::DiscreteDomain<BSplinesType2>> values2(
                 ddc::DiscreteDomain<BSplinesType2>(spline_coef.domain()));
-        DSpan1D vals2 = values2.allocation_mdspan();
+        ddc::DSpan1D vals2 = values2.allocation_mdspan();
 
         ddc::discrete_space<bsplines_type1>().integrals(values1.span_view());
         ddc::discrete_space<bsplines_type2>().integrals(values2.span_view());

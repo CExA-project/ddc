@@ -36,21 +36,21 @@ public:
         adjust_indexes(i, j);
         Matrix_Corner_Block::set_element(i, j, a_ij);
     }
-    DSpan1D solve_inplace(DSpan1D const bx) const override
+    ddc::DSpan1D solve_inplace(ddc::DSpan1D const bx) const override
     {
         swap_array_to_corner(bx);
         Matrix_Corner_Block::solve_inplace(bx);
         swap_array_to_center(bx);
         return bx;
     }
-    DSpan1D solve_transpose_inplace(DSpan1D const bx) const override
+    ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const bx) const override
     {
         swap_array_to_corner(bx);
         Matrix_Corner_Block::solve_transpose_inplace(bx);
         swap_array_to_center(bx);
         return bx;
     }
-    DSpan2D solve_multiple_inplace(DSpan2D const bx) const override
+    ddc::DSpan2D solve_multiple_inplace(ddc::DSpan2D const bx) const override
     {
         swap_array_to_corner(bx);
         Matrix_Corner_Block::solve_multiple_inplace(bx);
@@ -71,7 +71,7 @@ protected:
         else if (j < bottom_block_index)
             j -= top_block_size;
     }
-    DSpan1D swap_array_to_corner(DSpan1D const bx) const
+    ddc::DSpan1D swap_array_to_corner(ddc::DSpan1D const bx) const
     {
         memcpy(swap_array.get(),
                bx.data_handle() + top_block_size,
@@ -82,7 +82,7 @@ protected:
         memcpy(bx.data_handle(), swap_array.get(), q_block->get_size() * sizeof(double));
         return bx;
     }
-    DSpan2D swap_array_to_corner(DSpan2D const bx) const
+    ddc::DSpan2D swap_array_to_corner(ddc::DSpan2D const bx) const
     {
         int const ncols = bx.extent(1);
         memcpy(swap_array.get(),
@@ -94,7 +94,7 @@ protected:
         memcpy(bx.data_handle(), swap_array.get(), q_block->get_size() * ncols * sizeof(double));
         return bx;
     }
-    DSpan1D swap_array_to_center(DSpan1D const bx) const
+    ddc::DSpan1D swap_array_to_center(ddc::DSpan1D const bx) const
     {
         memcpy(swap_array.get(), bx.data_handle(), q_block->get_size() * sizeof(double));
         memcpy(bx.data_handle(),
@@ -105,7 +105,7 @@ protected:
                q_block->get_size() * sizeof(double));
         return bx;
     }
-    DSpan2D swap_array_to_center(DSpan2D const bx) const
+    ddc::DSpan2D swap_array_to_center(ddc::DSpan2D const bx) const
     {
         int const ncols = bx.extent(1);
         memcpy(swap_array.get(), bx.data_handle(), q_block->get_size() * ncols * sizeof(double));

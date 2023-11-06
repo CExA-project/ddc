@@ -7,11 +7,11 @@
 #include "spline_boundary_conditions.hpp"
 
 namespace ddc {
-template <class BSplines, BoundCond BcXmin, BoundCond BcXmax>
+template <class BSplines, ddc::BoundCond BcXmin, ddc::BoundCond BcXmax>
 class KnotsAsInterpolationPoints
 {
-    static_assert(BcXmin != BoundCond::GREVILLE);
-    static_assert(BcXmax != BoundCond::GREVILLE);
+    static_assert(BcXmin != ddc::BoundCond::GREVILLE);
+    static_assert(BcXmax != ddc::BoundCond::GREVILLE);
 
     using tag_type = typename BSplines::tag_type;
 

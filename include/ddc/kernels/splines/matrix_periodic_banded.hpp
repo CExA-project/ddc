@@ -100,7 +100,7 @@ protected:
             }
         }
     }
-    DSpan1D solve_lambda_section(DSpan1D const v, DView1D const u) const override
+    ddc::DSpan1D solve_lambda_section(ddc::DSpan1D const v, DView1D const u) const override
     {
         for (int i = 0; i < k; ++i) {
             // Upper diagonals in lambda
@@ -114,7 +114,8 @@ protected:
         }
         return v;
     }
-    DSpan1D solve_lambda_section_transpose(DSpan1D const u, DView1D const v) const override
+    ddc::DSpan1D solve_lambda_section_transpose(ddc::DSpan1D const u, DView1D const v)
+            const override
     {
         for (int i = 0; i < k; ++i) {
             // Upper diagonals in lambda

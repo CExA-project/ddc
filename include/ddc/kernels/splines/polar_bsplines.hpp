@@ -245,22 +245,22 @@ public:
         Impl& operator=(Impl&& x) = default;
 
         ddc::DiscreteElement<BSplinesR, BSplinesP> eval_basis(
-                DSpan1D singular_values,
-                DSpan2D values,
+                ddc::DSpan1D singular_values,
+                ddc::DSpan2D values,
                 ddc::Coordinate<DimR, DimP> p) const;
         ddc::DiscreteElement<BSplinesR, BSplinesP> eval_deriv_r(
-                DSpan1D singular_derivs,
-                DSpan2D derivs,
+                ddc::DSpan1D singular_derivs,
+                ddc::DSpan2D derivs,
                 ddc::Coordinate<DimR, DimP> p) const;
         ddc::DiscreteElement<BSplinesR, BSplinesP> eval_deriv_p(
-                DSpan1D singular_derivs,
-                DSpan2D derivs,
+                ddc::DSpan1D singular_derivs,
+                ddc::DSpan2D derivs,
                 ddc::Coordinate<DimR, DimP> p) const;
         ddc::DiscreteElement<BSplinesR, BSplinesP> eval_deriv_r_and_p(
-                DSpan1D singular_derivs,
-                DSpan2D derivs,
+                ddc::DSpan1D singular_derivs,
+                ddc::DSpan2D derivs,
                 ddc::Coordinate<DimR, DimP> p) const;
-        void integrals(DSpan1D singular_int_vals, DSpan2D int_vals) const;
+        void integrals(ddc::DSpan1D singular_int_vals, ddc::DSpan2D int_vals) const;
 
         std::size_t nbasis() const noexcept
         {
@@ -282,8 +282,8 @@ public:
     private:
         template <class EvalTypeR, class EvalTypeP>
         ddc::DiscreteElement<BSplinesR, BSplinesP> eval(
-                DSpan1D singular_values,
-                DSpan2D values,
+                ddc::DSpan1D singular_values,
+                ddc::DSpan2D values,
                 ddc::Coordinate<DimR, DimP> coord_eval,
                 EvalTypeR const,
                 EvalTypeP const) const;
@@ -294,8 +294,8 @@ template <class BSplinesR, class BSplinesP, int C>
 template <class MemorySpace>
 ddc::DiscreteElement<BSplinesR, BSplinesP> PolarBSplines<BSplinesR, BSplinesP, C>::
         Impl<MemorySpace>::eval_basis(
-                DSpan1D singular_values,
-                DSpan2D values,
+                ddc::DSpan1D singular_values,
+                ddc::DSpan2D values,
                 ddc::Coordinate<DimR, DimP> p) const
 {
     return eval(singular_values, values, p, eval_type(), eval_type());
@@ -305,8 +305,8 @@ template <class BSplinesR, class BSplinesP, int C>
 template <class MemorySpace>
 ddc::DiscreteElement<BSplinesR, BSplinesP> PolarBSplines<BSplinesR, BSplinesP, C>::
         Impl<MemorySpace>::eval_deriv_r(
-                DSpan1D singular_derivs,
-                DSpan2D derivs,
+                ddc::DSpan1D singular_derivs,
+                ddc::DSpan2D derivs,
                 ddc::Coordinate<DimR, DimP> p) const
 {
     return eval(singular_derivs, derivs, p, eval_deriv_type(), eval_type());
@@ -316,8 +316,8 @@ template <class BSplinesR, class BSplinesP, int C>
 template <class MemorySpace>
 ddc::DiscreteElement<BSplinesR, BSplinesP> PolarBSplines<BSplinesR, BSplinesP, C>::
         Impl<MemorySpace>::eval_deriv_p(
-                DSpan1D singular_derivs,
-                DSpan2D derivs,
+                ddc::DSpan1D singular_derivs,
+                ddc::DSpan2D derivs,
                 ddc::Coordinate<DimR, DimP> p) const
 {
     return eval(singular_derivs, derivs, p, eval_type(), eval_deriv_type());
@@ -327,8 +327,8 @@ template <class BSplinesR, class BSplinesP, int C>
 template <class MemorySpace>
 ddc::DiscreteElement<BSplinesR, BSplinesP> PolarBSplines<BSplinesR, BSplinesP, C>::
         Impl<MemorySpace>::eval_deriv_r_and_p(
-                DSpan1D singular_derivs,
-                DSpan2D derivs,
+                ddc::DSpan1D singular_derivs,
+                ddc::DSpan2D derivs,
                 ddc::Coordinate<DimR, DimP> p) const
 {
     return eval(singular_derivs, derivs, p, eval_deriv_type(), eval_deriv_type());
@@ -339,8 +339,8 @@ template <class MemorySpace>
 template <class EvalTypeR, class EvalTypeP>
 ddc::DiscreteElement<BSplinesR, BSplinesP> PolarBSplines<BSplinesR, BSplinesP, C>::
         Impl<MemorySpace>::eval(
-                DSpan1D singular_values,
-                DSpan2D values,
+                ddc::DSpan1D singular_values,
+                ddc::DSpan2D values,
                 ddc::Coordinate<DimR, DimP> coord_eval,
                 EvalTypeR const,
                 EvalTypeP const) const
@@ -352,8 +352,8 @@ ddc::DiscreteElement<BSplinesR, BSplinesP> PolarBSplines<BSplinesR, BSplinesP, C
     ddc::DiscreteElement<BSplinesP> jmin_p;
     double vals_r_data[BSplinesR::degree() + 1];
     double vals_p_data[BSplinesP::degree() + 1];
-    DSpan1D vals_r(vals_r_data, BSplinesR::degree() + 1);
-    DSpan1D vals_p(vals_p_data, BSplinesP::degree() + 1);
+    ddc::DSpan1D vals_r(vals_r_data, BSplinesR::degree() + 1);
+    ddc::DSpan1D vals_p(vals_p_data, BSplinesP::degree() + 1);
     static_assert(
             std::is_same_v<EvalTypeR, eval_type> || std::is_same_v<EvalTypeR, eval_deriv_type>);
     static_assert(
@@ -408,8 +408,8 @@ ddc::DiscreteElement<BSplinesR, BSplinesP> PolarBSplines<BSplinesR, BSplinesP, C
 template <class BSplinesR, class BSplinesP, int C>
 template <class MemorySpace>
 void PolarBSplines<BSplinesR, BSplinesP, C>::Impl<MemorySpace>::integrals(
-        DSpan1D singular_int_vals,
-        DSpan2D int_vals) const
+        ddc::DSpan1D singular_int_vals,
+        ddc::DSpan2D int_vals) const
 {
     const int nr = ddc::discrete_space<BSplinesR>().ncells() + BSplinesR::degree() - C - 1;
     const int np = ddc::discrete_space<BSplinesP>().ncells() + BSplinesP::degree();
@@ -420,8 +420,8 @@ void PolarBSplines<BSplinesR, BSplinesP, C>::Impl<MemorySpace>::integrals(
 
     std::vector<double> r_integrals_data(nr);
     std::vector<double> p_integrals_data(ddc::discrete_space<BSplinesP>().ncells());
-    DSpan1D r_integrals(r_integrals_data.data(), nr);
-    DSpan1D p_integrals(p_integrals_data.data(), ddc::discrete_space<BSplinesP>().ncells());
+    ddc::DSpan1D r_integrals(r_integrals_data.data(), nr);
+    ddc::DSpan1D p_integrals(p_integrals_data.data(), ddc::discrete_space<BSplinesP>().ncells());
     ddc::discrete_space<BSplinesR>().integrals(r_integrals);
     ddc::discrete_space<BSplinesP>().integrals(p_integrals);
 

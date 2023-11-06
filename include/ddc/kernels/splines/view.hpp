@@ -119,13 +119,13 @@ Span1D<const ElementType> as_span(std::array<ElementType, N> const& arr) noexcep
     return Span1D<const ElementType>(arr.data(), N);
 }
 
-using DSpan1D = Span1D<double>;
+using DSpan1D = ddc::Span1D<double>;
 
-using DSpan2D = Span2D<double>;
+using DSpan2D = ddc::Span2D<double>;
 
-using CDSpan1D = Span1D<double const>;
+using CDSpan1D = ddc::Span1D<double const>;
 
-using CDSpan2D = Span2D<double const>;
+using CDSpan2D = ddc::Span2D<double const>;
 
 using DView1D = View1D<double>;
 

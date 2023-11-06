@@ -136,9 +136,9 @@ public:
         int constexpr nr = ddc::discrete_space<BSplinesR>().ncells() + BSplinesR::degree() - 2;
         int constexpr np = ddc::discrete_space<BSplinesP>().ncells() + BSplinesP::degree();
         std::array<double, PolarBSplinesType::eval_size()> singular_values;
-        DSpan1D singular_vals(singular_values.data(), PolarBSplinesType::n_singular_basis());
+        ddc::DSpan1D singular_vals(singular_values.data(), PolarBSplinesType::n_singular_basis());
         std::array<double, nr * np> values;
-        DSpan2D vals(values.data(), nr, np);
+        ddc::DSpan2D vals(values.data(), nr, np);
 
         ddc::discrete_space<PolarBSplinesType>().integrals(singular_vals, vals);
 
@@ -194,9 +194,9 @@ private:
                         eval_type> || std::is_same_v<EvalType, eval_deriv_r_type> || std::is_same_v<EvalType, eval_deriv_p_type> || std::is_same_v<EvalType, eval_deriv_r_p_type>);
 
         std::array<double, PolarBSplinesType::n_singular_basis()> singular_data;
-        DSpan1D singular_vals(singular_data.data(), PolarBSplinesType::n_singular_basis());
+        ddc::DSpan1D singular_vals(singular_data.data(), PolarBSplinesType::n_singular_basis());
         std::array<double, (BSplinesR::degree() + 1) * (BSplinesP::degree() + 1)> data;
-        DSpan2D vals(data.data(), BSplinesR::degree() + 1, BSplinesP::degree() + 1);
+        ddc::DSpan2D vals(data.data(), BSplinesR::degree() + 1, BSplinesP::degree() + 1);
 
         ddc::DiscreteElement<BSplinesR, BSplinesP> jmin;
 

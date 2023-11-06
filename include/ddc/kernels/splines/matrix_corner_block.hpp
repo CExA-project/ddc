@@ -75,12 +75,12 @@ public:
 
         delta.factorize();
     }
-    virtual DSpan1D solve_inplace(DSpan1D const bx) const override
+    virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const bx) const override
     {
         assert(int(bx.extent(0)) == n);
 
-        DSpan1D const u(bx.data_handle(), nb);
-        DSpan1D const v(bx.data_handle() + nb, k);
+        ddc::DSpan1D const u(bx.data_handle(), nb);
+        ddc::DSpan1D const v(bx.data_handle() + nb, k);
 
         q_block->solve_inplace(u);
 
@@ -92,11 +92,11 @@ public:
 
         return bx;
     }
-    virtual DSpan1D solve_transpose_inplace(DSpan1D const bx) const override
+    virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const bx) const override
     {
         assert(int(bx.extent(0)) == n);
-        DSpan1D const u(bx.data_handle(), nb);
-        DSpan1D const v(bx.data_handle() + nb, k);
+        ddc::DSpan1D const u(bx.data_handle(), nb);
+        ddc::DSpan1D const v(bx.data_handle() + nb, k);
 
         solve_gamma_section_transpose(v, u);
 
@@ -108,11 +108,11 @@ public:
 
         return bx;
     }
-    virtual DSpan2D solve_multiple_inplace(DSpan2D const bx) const override
+    virtual ddc::DSpan2D solve_multiple_inplace(ddc::DSpan2D const bx) const override
     {
         assert(int(bx.extent(0)) == n);
         for (std::size_t i(0); i < bx.extent(0); ++i) {
-            DSpan1D const b(bx.data_handle() + n * i, n);
+            ddc::DSpan1D const b(bx.data_handle() + n * i, n);
             solve_inplace(b);
         }
         return bx;
@@ -154,7 +154,7 @@ protected:
             }
         }
     }
-    virtual DSpan1D solve_lambda_section(DSpan1D const v, DView1D const u) const
+    virtual ddc::DSpan1D solve_lambda_section(ddc::DSpan1D const v, DView1D const u) const
     {
         for (int i = 0; i < k; ++i) {
             // Upper diagonals in lambda
@@ -164,7 +164,7 @@ protected:
         }
         return v;
     }
-    virtual DSpan1D solve_lambda_section_transpose(DSpan1D const u, DView1D const v) const
+    virtual ddc::DSpan1D solve_lambda_section_transpose(ddc::DSpan1D const u, DView1D const v) const
     {
         for (int i = 0; i < nb; ++i) {
             // Upper diagonals in lambda
@@ -174,7 +174,7 @@ protected:
         }
         return u;
     }
-    virtual DSpan1D solve_gamma_section(DSpan1D const u, DView1D const v) const
+    virtual ddc::DSpan1D solve_gamma_section(ddc::DSpan1D const u, DView1D const v) const
     {
         for (int i = 0; i < nb; ++i) {
             double val = 0.;
@@ -185,7 +185,7 @@ protected:
         }
         return u;
     }
-    virtual DSpan1D solve_gamma_section_transpose(DSpan1D const v, DView1D const u) const
+    virtual ddc::DSpan1D solve_gamma_section_transpose(ddc::DSpan1D const v, DView1D const u) const
     {
         for (int j = 0; j < k; ++j) {
             double val = 0.;
@@ -208,8 +208,8 @@ protected:
     //-------------------------------------
     std::unique_ptr<Matrix> q_block;
     Matrix_Dense delta;
-    DSpan2D Abm_1_gamma;
-    DSpan2D lambda;
+    ddc::DSpan2D Abm_1_gamma;
+    ddc::DSpan2D lambda;
 
 private:
     virtual int factorize_method() override

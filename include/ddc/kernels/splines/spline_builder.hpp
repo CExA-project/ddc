@@ -533,9 +533,12 @@ void SplineBuilder<
 {
     // Hermite boundary conditions at xmin, if any
     if constexpr (BcXmin == ddc::BoundCond::HERMITE) {
-        double derivs_ptr[(bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)];
+        std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
+                derivs_ptr;
         ddc::DSpan2D
-                derivs(derivs_ptr, bsplines_type::degree() + 1, bsplines_type::degree() / 2 + 1);
+                derivs(derivs_ptr.data(),
+                       bsplines_type::degree() + 1,
+                       bsplines_type::degree() / 2 + 1);
         ddc::discrete_space<BSplines>().eval_basis_and_n_derivs(
                 derivs,
                 ddc::discrete_space<BSplines>().rmin(),

@@ -220,7 +220,12 @@ public:
                 m_rows.size() - 1,
                 m_cols.size(),
                 gko_exec->get_master()));
-        auto data_mat_gpu = gko::share(gko::clone(gko_exec, data_mat));
+        auto data_mat_device = gko::share(gko::clone(gko_exec, data_mat));
+        std::shared_ptr<gko::solver::Bicgstab<double>> solver[m_par_chunks_per_seq_chunk];
+        Kokkos::parallel_for(
+                Kokkos::RangePolicy<
+                        Kokkos::DefaultHostExecutionSpace>(0, m_par_chunks_per_seq_chunk),
+                [&](int const j) { solver[j] = m_solver_factory->generate(data_mat_device); });
 
         Kokkos::View<
                 double**,
@@ -260,7 +265,6 @@ public:
                                           ? m_cols_per_par_chunk
                                           : cols_per_last_par_chunk;
                         if (n_equations_in_par_chunk != 0) {
-                            auto solver = m_solver_factory->generate(data_mat_gpu);
                             std::pair<int, int> par_chunk_window(
                                     (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk,
                                     (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk
@@ -287,8 +291,7 @@ public:
                                     n_equations_in_par_chunk,
                                     gko_exec);
 
-                            solver->apply(b_vec_batch, b_vec_batch); // inplace solve
-
+                            solver[j]->apply(b_vec_batch, b_vec_batch); // inplace solve
                             Kokkos::deep_copy(
                                     Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window),
                                     b_par_chunk);

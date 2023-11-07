@@ -217,10 +217,3 @@ TEST(PeriodicitySplineBuilderDevice, 1D)
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX>();
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    ::ddc::ScopeGuard scope(argc, argv);
-    return RUN_ALL_TESTS();
-}

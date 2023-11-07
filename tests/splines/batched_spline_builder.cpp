@@ -512,9 +512,3 @@ TEST(BatchedPeriodicSplineDevice, 4DT)
             DimZ,
             DimT>();
 }
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    ::ddc::ScopeGuard scope(argc, argv);
-    return RUN_ALL_TESTS();
-}

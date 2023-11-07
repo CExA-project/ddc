@@ -221,13 +221,12 @@ public:
                 m_cols.size(),
                 gko_exec->get_master()));
         auto data_mat_device = gko::share(gko::clone(gko_exec, data_mat));
-        std::vector<std::shared_ptr<gko::solver::Bicgstab<double>>> solver;
+        std::vector<std::shared_ptr<gko::solver::Bicgstab<double>>> solver(
+                m_par_chunks_per_seq_chunk);
         Kokkos::parallel_for(
                 Kokkos::RangePolicy<
                         Kokkos::DefaultHostExecutionSpace>(0, m_par_chunks_per_seq_chunk),
-                [&](int const j) {
-                    solver.push_back(m_solver_factory->generate(data_mat_device));
-                });
+                [&](int const j) { solver[j] = m_solver_factory->generate(data_mat_device); });
 
         Kokkos::View<
                 double**,

@@ -79,6 +79,11 @@ public:
                 m_cols_per_par_chunk = 1024;
             }
 #endif
+#ifdef KOKKOS_ENABLE_HIP
+            if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+                m_cols_per_par_chunk = 1024;
+            }
+#endif
         }
 
         if (par_chunks_per_seq_chunk.has_value()) {
@@ -99,6 +104,11 @@ public:
                 m_par_chunks_per_seq_chunk = Kokkos::DefaultHostExecutionSpace().concurrency();
             }
 #endif
+#ifdef KOKKOS_ENABLE_HIP
+            if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+                m_par_chunks_per_seq_chunk = Kokkos::DefaultHostExecutionSpace().concurrency();
+            }
+#endif
         }
 
         if (preconditionner_max_block_size.has_value()) {
@@ -116,6 +126,11 @@ public:
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
             if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+                m_preconditionner_max_block_size = 1u;
+            }
+#endif
+#ifdef KOKKOS_ENABLE_HIP
+            if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
                 m_preconditionner_max_block_size = 1u;
             }
 #endif

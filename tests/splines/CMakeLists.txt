@@ -6,7 +6,7 @@ set(SPLINES_TEST_DEGREE_MIN 3 CACHE STRING "Minimum degree to test splines.")
 set(SPLINES_TEST_DEGREE_MAX 3 CACHE STRING "Maximum degree to test splines.")
 
 add_executable(splines_tests
-    main.cpp
+    ../main.cpp
     chunk.cpp
     view.cpp
 )
@@ -27,7 +27,7 @@ target_link_libraries(splines_tests
 gtest_discover_tests(splines_tests)
 
 add_executable(bsplines_tests
-	main.cpp
+	../main.cpp
 	bsplines.cpp
 )
 target_compile_features(bsplines_tests PUBLIC cxx_std_17)
@@ -40,7 +40,7 @@ target_link_libraries(bsplines_tests
 gtest_discover_tests(bsplines_tests)
 
 add_executable(matrix_tests
-  main.cpp
+  ../main.cpp
 	matrix.cpp
 )
 target_compile_features(matrix_tests PUBLIC cxx_std_17)
@@ -52,7 +52,7 @@ target_link_libraries(matrix_tests
 gtest_discover_tests(matrix_tests)
 
 add_executable(bernstein_tests
-  main.cpp
+  ../main.cpp
 	bernstein.cpp
 )
 target_compile_features(bernstein_tests PUBLIC cxx_std_17)
@@ -65,7 +65,7 @@ gtest_discover_tests(bernstein_tests)
 
 if(0)
 add_executable(metric_tensor_tests
-  main.cpp
+  ../main.cpp
 	metric_tensor.cpp
 )
 target_compile_features(metric_tensor_tests PUBLIC cxx_std_17)
@@ -80,7 +80,7 @@ endif()
 foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
   foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
     set(test_name "splines_tests_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}")
-    add_executable("${test_name}" periodic_spline_builder.cpp)
+    add_executable("${test_name}" ../main.cpp periodic_spline_builder.cpp)
     target_compile_features("${test_name}" PUBLIC cxx_std_17)
     target_link_libraries("${test_name}"
       PUBLIC
@@ -95,7 +95,7 @@ endforeach()
 foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
   foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
 	set(test_name "splines_tests_BATCHED_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}")
-    add_executable("${test_name}" batched_spline_builder.cpp)
+    add_executable("${test_name}" ../main.cpp batched_spline_builder.cpp)
     target_compile_features("${test_name}" PUBLIC cxx_std_17)
     target_link_libraries("${test_name}"
       PUBLIC
@@ -110,7 +110,7 @@ endforeach()
 
 foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
   set(test_name "splines_ordered_points_DEGREE_X_${DEGREE_X}")
-  add_executable("${test_name}" periodic_spline_builder_ordered_points.cpp)
+  add_executable("${test_name}" ../main.cpp periodic_spline_builder_ordered_points.cpp)
   target_compile_features("${test_name}" PUBLIC cxx_std_17)
   target_link_libraries("${test_name}"
     PUBLIC
@@ -127,7 +127,7 @@ foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
       foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
         foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
           set(test_name "splines_tests_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}_${EVALUATOR}_bcl_${BCL}_bcr_${BCR}")
-          add_executable("${test_name}" non_periodic_spline_builder.cpp)
+          add_executable("${test_name}" ../main.cpp non_periodic_spline_builder.cpp)
           target_compile_features("${test_name}" PUBLIC cxx_std_17)
           target_link_libraries("${test_name}"
             PUBLIC
@@ -146,7 +146,7 @@ foreach(BC "BC_GREVILLE" "BC_HERMITE")
       foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
         foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
 		  set(test_name "splines_tests_BATCHED_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}_bc_${BC}")
-          add_executable("${test_name}" batched_non_periodic_spline_builder.cpp)
+          add_executable("${test_name}" ../main.cpp batched_non_periodic_spline_builder.cpp)
           target_compile_features("${test_name}" PUBLIC cxx_std_17)
           target_link_libraries("${test_name}"
             PUBLIC
@@ -164,7 +164,7 @@ foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}"
   foreach(DEGREE_Y RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
     foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
       set(test_name "2d_splines_tests_DEGREE_X_${DEGREE_X}_DEGREE_Y_${DEGREE_Y}_${BSPLINES_TYPE}")
-      add_executable("${test_name}" 2d_spline_builder_periodic.cpp)
+      add_executable("${test_name}" ../main.cpp 2d_spline_builder_periodic.cpp)
       target_compile_features("${test_name}" PUBLIC cxx_std_17)
       target_link_libraries("${test_name}"
         PUBLIC
@@ -184,7 +184,7 @@ foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
         foreach(DEGREE_Y RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
           foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
             set(test_name "2d_splines_tests_DEGREE_X_${DEGREE_X}_DEGREE_Y_${DEGREE_Y}_${BSPLINES_TYPE}_${EVALUATOR}_${BCL}_${BCR}")
-            add_executable("${test_name}" 2d_spline_builder.cpp)
+            add_executable("${test_name}" ../main.cpp 2d_spline_builder.cpp)
             target_compile_features("${test_name}" PUBLIC cxx_std_17)
             target_link_libraries("${test_name}"
               PUBLIC
@@ -211,7 +211,7 @@ foreach(CONTINUITY RANGE -1 1)
       foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
         foreach(MAPPING_TYPE "CIRCULAR_MAPPING" "CZARNY_MAPPING")
           set(test_name "polar_splines_tests_DEGREE_R_${DEGREE_R}_DEGREE_P_${DEGREE_P}_CONTINUITY_${CONTINUITY}_${BSPLINES_TYPE}_${MAPPING_TYPE}")
-          add_executable("${test_name}" polar_splines.cpp)
+          add_executable("${test_name}" ../main.cpp polar_splines.cpp)
           target_compile_features("${test_name}" PUBLIC cxx_std_17)
           target_link_libraries("${test_name}"
             PUBLIC
@@ -230,7 +230,7 @@ endif()
 foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
   foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
 	set(test_name "splines_tests_PERIODICITY_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}")
-    add_executable("${test_name}" periodicity_spline_builder.cpp)
+    add_executable("${test_name}" ../main.cpp periodicity_spline_builder.cpp)
     target_compile_features("${test_name}" PUBLIC cxx_std_17)
     target_link_libraries("${test_name}"
       PUBLIC

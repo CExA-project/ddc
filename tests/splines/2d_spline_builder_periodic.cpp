@@ -235,10 +235,3 @@ TEST(Periodic2DSplineBuilderTest, Identity)
                     max(error_bounds.error_bound_on_deriv_12(h1, h2, s_degree_x, s_degree_y),
                         1e-10 * max_norm_diff12));
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    ::ddc::ScopeGuard scope(argc, argv);
-    return RUN_ALL_TESTS();
-}

@@ -187,10 +187,3 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
                 std::max(error_bounds.error_bound_on_int(h, s_degree_x), 1.0e-14 * max_norm_int));
     }
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    ::ddc::ScopeGuard scope(argc, argv);
-    return RUN_ALL_TESTS();
-}

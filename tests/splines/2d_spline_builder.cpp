@@ -347,10 +347,3 @@ TEST(NonPeriodic2DSplineBuilderTest, Identity)
     EXPECT_LE(max_norm_error_diff2 / evaluator.max_norm(0, 1), 1.0e-12);
     EXPECT_LE(max_norm_error_diff12 / evaluator.max_norm(1, 1), 1.0e-10);
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    ::ddc::ScopeGuard scope(argc, argv);
-    return RUN_ALL_TESTS();
-}

@@ -37,7 +37,7 @@ void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
 
 void check_inverse(ddc::DSpan2D matrix, ddc::DSpan2D inv)
 {
-    double TOL = 1e-5;
+    double TOL = 5e-6;
     std::size_t N = matrix.extent(0);
 
     for (std::size_t i(0); i < N; ++i) {
@@ -69,11 +69,11 @@ TEST_P(MatrixSizesFixture, Sparse)
     for (int i(0); i < N; ++i) {
         for (int j(0); j < N; ++j) {
             if (i == j) {
-                matrix->set_element(i, j, 2. / 3);
-                val(i, j) = 2. / 3;
+                matrix->set_element(i, j, 3. / 4);
+                val(i, j) = 3. / 4;
             } else if (std::abs(j - i) <= k) {
-                matrix->set_element(i, j, (1. / 3) / k);
-                val(i, j) = (1. / 3) / k;
+                matrix->set_element(i, j, -(1. / 4) / k);
+                val(i, j) = -(1. / 4) / k;
             } else {
                 val(i, j) = 0.;
             }
@@ -92,4 +92,4 @@ TEST_P(MatrixSizesFixture, Sparse)
 INSTANTIATE_TEST_SUITE_P(
         MyGroup,
         MatrixSizesFixture,
-        testing::Combine(testing::Values<std::size_t>(10, 20), testing::Range<std::size_t>(2, 7)));
+        testing::Combine(testing::Values<std::size_t>(10, 20), testing::Range<std::size_t>(1, 7)));

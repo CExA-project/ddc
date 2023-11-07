@@ -23,13 +23,13 @@ constexpr double TWO_PI = 2. * M_PI;
 
 static inline double eval_cos(
         double const x,
-        Span1D<double> const& coeffs,
+        ddc::Span1D<double> const& coeffs,
         int const derivative = 0);
 
-Span1D<double>& eval_cos(
-        Span1D<double>& y,
-        Span1D<double> const& x,
-        Span1D<double> const& coeffs,
+ddc::Span1D<double>& eval_cos(
+        ddc::Span1D<double>& y,
+        ddc::Span1D<double> const& x,
+        ddc::Span1D<double> const& coeffs,
         int const derivative = 0);
 
 void cos_splines_test(
@@ -42,19 +42,22 @@ void cos_splines_test(
         double const xN,
         BoundCond const bc_xmin,
         BoundCond const bc_xmax,
-        Span1D<double> const& coeffs,
-        DSpan1D const& eval_pts_input = {});
+        ddc::Span1D<double> const& coeffs,
+        ddc::DSpan1D const& eval_pts_input = {});
 
-static inline double eval_cos(double const x, Span1D<double> const& coeffs, int const derivative)
+static inline double eval_cos(
+        double const x,
+        ddc::Span1D<double> const& coeffs,
+        int const derivative)
 {
     return pow(TWO_PI * coeffs[0], derivative)
            * cos(M_PI_2 * derivative + TWO_PI * (coeffs[0] * x + coeffs[1]));
 }
 
-Span1D<double>& eval_cos(
-        Span1D<double>& y,
-        Span1D<double> const& x,
-        Span1D<double> const& coeffs,
+ddc::Span1D<double>& eval_cos(
+        ddc::Span1D<double>& y,
+        ddc::Span1D<double> const& x,
+        ddc::Span1D<double> const& coeffs,
         int const derivative)
 {
     assert(y.extent(0) == x.extent(0));
@@ -75,8 +78,8 @@ void cos_splines_test(
         double const xN,
         BoundCond const bc_xmin,
         BoundCond const bc_xmax,
-        Span1D<double> const& coeffs,
-        DSpan1D const& eval_pts_input)
+        ddc::Span1D<double> const& coeffs,
+        ddc::DSpan1D const& eval_pts_input)
 {
     // Create B-splines (uniform or non-uniform depending on input)
     std::shared_ptr<BSplines> bspline = std::make_shared<UniformBSplines>(
@@ -92,8 +95,8 @@ void cos_splines_test(
     // Initialize 1D spline interpolator
     SplineBuilder1D spline_interpolator(*bspline, bc_xmin, bc_xmax);
 
-    DSpan1D const xgrid = spline_interpolator.get_interp_points();
-    DSpan1D eval_pts;
+    ddc::DSpan1D const xgrid = spline_interpolator.get_interp_points();
+    ddc::DSpan1D eval_pts;
     if (0 != eval_pts_input.extent(0)) {
         eval_pts = eval_pts_input;
     } else {
@@ -101,18 +104,18 @@ void cos_splines_test(
     }
 
     vector<double> yvals_data(N);
-    Span1D<double> yvals(yvals_data.data(), yvals_data.size());
+    ddc::Span1D<double> yvals(yvals_data.data(), yvals_data.size());
     eval_cos(yvals, xgrid, coeffs);
 
     // computation of rhs'(0) and rhs'(n)
     // -> deriv_rhs(0) = rhs'(n) and deriv_rhs(1) = rhs'(0)
     int const shift = (degree % 2); // shift = 0 for even order, -1 for odd order
     vector<double> Sderiv_lhs_data(degree / 2);
-    Span1D<double> Sderiv_lhs(Sderiv_lhs_data.data(), Sderiv_lhs_data.size());
+    ddc::Span1D<double> Sderiv_lhs(Sderiv_lhs_data.data(), Sderiv_lhs_data.size());
     vector<double> Sderiv_rhs_data(degree / 2);
-    Span1D<double> Sderiv_rhs(Sderiv_rhs_data.data(), Sderiv_rhs_data.size());
-    Span1D<double>* deriv_l(nullptr);
-    Span1D<double>* deriv_r(nullptr);
+    ddc::Span1D<double> Sderiv_rhs(Sderiv_rhs_data.data(), Sderiv_rhs_data.size());
+    ddc::Span1D<double>* deriv_l(nullptr);
+    ddc::Span1D<double>* deriv_r(nullptr);
     if (bc_xmin == BoundCond::HERMITE) {
         for (int ii = 0; ii < degree / 2; ++ii) {
             Sderiv_lhs(ii) = eval_cos(x0, coeffs, ii - shift);
@@ -187,7 +190,7 @@ TEST_P(SplinesTest, Test)
 
 
     array<double, 2> coeffs_data = {1., 0.};
-    Span1D<double> coeffs(coeffs_data.data(), coeffs_data.size());
+    ddc::Span1D<double> coeffs(coeffs_data.data(), coeffs_data.size());
 
     auto const [degree, bc_xmin, bc_xmax] = GetParam();
 

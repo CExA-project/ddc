@@ -1,6 +1,6 @@
 #include <ginkgo/ginkgo.hpp>
 
-static std::shared_ptr<gko::Executor> create_default_host_executor()
+inline std::shared_ptr<gko::Executor> create_default_host_executor()
 {
 #ifdef KOKKOS_ENABLE_SERIAL
     if constexpr (std::is_same_v<Kokkos::DefaultHostExecutionSpace, Kokkos::Serial>) {
@@ -15,7 +15,7 @@ static std::shared_ptr<gko::Executor> create_default_host_executor()
 } // Comes from "Basic Kokkos Extension" Ginkgo MR
 
 template <typename ExecSpace>
-static std::shared_ptr<gko::Executor> create_gko_exec()
+inline std::shared_ptr<gko::Executor> create_gko_exec()
 {
 #ifdef KOKKOS_ENABLE_SERIAL
     if (std::is_same_v<ExecSpace, Kokkos::Serial>) {

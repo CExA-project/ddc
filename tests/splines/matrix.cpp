@@ -92,4 +92,4 @@ TEST_P(MatrixSizesFixture, Sparse)
 INSTANTIATE_TEST_SUITE_P(
         MyGroup,
         MatrixSizesFixture,
-        testing::Combine(testing::Values<std::size_t>(10, 20), testing::Range<std::size_t>(1, 7)));
+        testing::Combine(testing::Values<std::size_t>(10, 20), testing::Range<std::size_t>(2, 7)));

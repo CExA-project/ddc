@@ -48,7 +48,6 @@ plt.xscale("log")
 plt.xlabel("ny")
 plt.ylabel("Bandwidth [B/s]")
 plt.title("Bandwidth on "+str.upper(data["context"]["chip"]));
-plt.title("Bandwidth on "+str.upper(data["context"]["chip"])+" (with ny=100000)");
 plt.legend()
 plt.savefig("bandwidth_ny.png")
 

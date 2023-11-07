@@ -319,7 +319,12 @@ public:
                 m_rows.size() - 1,
                 m_cols.size(),
                 gko_exec->get_master()));
-        auto data_mat_gpu = gko::share(gko::clone(gko_exec, data_mat));
+        auto data_mat_device = gko::share(gko::clone(gko_exec, data_mat));
+        std::shared_ptr<gko::solver::Bicgstab<double>> solver[m_par_chunks_per_seq_chunk];
+        Kokkos::parallel_for(
+                Kokkos::RangePolicy<
+                        Kokkos::DefaultHostExecutionSpace>(0, m_par_chunks_per_seq_chunk),
+                [&](int const j) { solver[j] = m_solver_factory->generate(data_mat_device); });
 
         Kokkos::View<
                 double**,
@@ -359,7 +364,6 @@ public:
                                           ? m_cols_per_par_chunk
                                           : cols_per_last_par_chunk;
                         if (n_equations_in_par_chunk != 0) {
-                            auto solver = m_solver_factory->generate(data_mat_gpu);
                             std::pair<int, int> par_chunk_window(
                                     (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk,
                                     (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk
@@ -387,9 +391,9 @@ public:
                                     gko_exec);
 
                             // solver_->add_logger(stream_logger);
-                            // auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_gpu.get(), b_vec_batch.get());
+                            // auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_device.get(), b_vec_batch.get());
                             // solver_->add_logger(res_logger);
-                            solver->apply(b_vec_batch, b_vec_batch); // inplace solve
+                            solver[j]->apply(b_vec_batch, b_vec_batch); // inplace solve
 // res_logger->write_data(std::cout);
 
 // Debug purpose
@@ -403,7 +407,7 @@ public:
 #if 0
         // Write result
         std::cout << "-----------------------";
-        write(std::cout, data_mat_gpu);
+        write(std::cout, data_mat_device);
         std::cout << "-----------------------";
         write(std::cout, b_vec_batch);
 

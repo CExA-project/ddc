@@ -226,8 +226,8 @@ public:
 #endif
         }
 
-        std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<ExecSpace>();
         // Create the solver factory
+        std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<Kokkos::Serial>();
         std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::
                 create(gko::log::Logger::all_events_mask
                                ^ gko::log::Logger::linop_factory_events_mask

@@ -228,9 +228,14 @@ public:
 
         // Create the solver factory
         std::shared_ptr<gko::Executor> gko_exec;
-        if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+        if (false) {
+        }
+#ifdef KOKKOS_ENABLE_OPENMP
+        else if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
             gko_exec = create_gko_exec<Kokkos::Serial>();
-        } else {
+        }
+#endif
+        else {
             gko_exec = create_gko_exec<ExecSpace>();
         }
         std::shared_ptr<gko::log::Stream<>> stream_logger = gko::log::Stream<>::

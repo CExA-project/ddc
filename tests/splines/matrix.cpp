@@ -37,7 +37,7 @@ void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
 
 void check_inverse(ddc::DSpan2D matrix, ddc::DSpan2D inv)
 {
-    double TOL = 5e-6;
+    double TOL = 1e-10;
     std::size_t N = matrix.extent(0);
 
     for (std::size_t i(0); i < N; ++i) {

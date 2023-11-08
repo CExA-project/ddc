@@ -137,7 +137,12 @@ public:
         }
 
         // Create the solver factory
-        std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<Kokkos::Serial>();
+        std::shared_ptr<gko::Executor> gko_exec;
+        if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+            gko_exec = create_gko_exec<Kokkos::Serial>();
+        } else {
+            gko_exec = create_gko_exec<ExecSpace>();
+        }
         std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion
                 = gko::stop::ResidualNorm<>::build().with_reduction_factor(1e-20).on(gko_exec);
         m_solver_factory

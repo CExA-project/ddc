@@ -214,7 +214,9 @@ int main(int argc, char** argv)
         //! [boundary conditions]
         // option #1: sync the haloed domain from the core domain, auto-detect self assignment &
         //            don't copy those //<=TODO
-        // prev_temperature = prev_temperature[core_domain]
+        prev_temperature = prev_temperature[core_domain]
+        
+        redistribute(obj2, obj1, select)
 
         // option #2: manually sync each halo //<=TODO
         // ddc::deepcopy(prev_temperature[left_halos], prev_temperature[domain_right]);

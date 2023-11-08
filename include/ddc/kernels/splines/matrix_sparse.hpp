@@ -340,13 +340,6 @@ public:
                 m_cols.size(),
                 gko_exec->get_master()));
         auto data_mat_device = gko::share(gko::clone(gko_exec, data_mat));
-        std::vector<std::shared_ptr<gko::solver::Bicgstab<double>>> solver(
-                m_par_chunks_per_seq_chunk);
-        Kokkos::parallel_for(
-                Kokkos::RangePolicy<
-                        Kokkos::DefaultHostExecutionSpace>(0, m_par_chunks_per_seq_chunk),
-                [&](int const j) { solver[j] = m_solver_factory->generate(data_mat_device); });
-
         Kokkos::View<
                 double**,
                 Kokkos::LayoutRight,
@@ -385,6 +378,7 @@ public:
                                           ? m_cols_per_par_chunk
                                           : cols_per_last_par_chunk;
                         if (n_equations_in_par_chunk != 0) {
+                            auto solver = m_solver_factory->generate(data_mat_device);
                             std::pair<int, int> par_chunk_window(
                                     (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk,
                                     (i * m_par_chunks_per_seq_chunk + j) * m_cols_per_par_chunk
@@ -414,7 +408,7 @@ public:
                             // solver_->add_logger(stream_logger);
                             // auto res_logger = std::make_shared<ResidualLogger<double>>(data_mat_device.get(), b_vec_batch.get());
                             // solver_->add_logger(res_logger);
-                            solver[j]->apply(b_vec_batch, b_vec_batch); // inplace solve
+                            solver->apply(b_vec_batch, b_vec_batch); // inplace solve
 // res_logger->write_data(std::cout);
 
 // Debug purpose

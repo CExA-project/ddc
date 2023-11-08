@@ -165,7 +165,7 @@ public:
     {
         auto v = gko::matrix::Dense<>::
                 create(gko_exec,
-                       gko::dim<2> {n, n_equations},
+                       gko::dim<2>(n, n_equations),
                        gko::array<double>::view(gko_exec, n * n_equations, vec_ptr),
                        n_equations);
         return v;
@@ -179,7 +179,7 @@ public:
     {
         auto M = gko::matrix::Csr<>::
                 create(gko_exec,
-                       gko::dim<2> {m_m, m_n},
+                       gko::dim<2>(m_m, m_n),
                        gko::array<double>::view(gko_exec, n_nonzeros, mat_ptr),
                        gko::array<int>::view(gko_exec, n_nonzeros, m_cols.data()),
                        gko::array<int>::view(gko_exec, n_nonzero_rows + 1, m_rows.data()));
@@ -203,7 +203,7 @@ public:
         // Remove zeros
         auto data_mat
                 = gko::share(to_gko_mat(m_data.data(), m_m, m_m * m_n, gko_exec->get_master()));
-        auto data_mat_ = gko::matrix_data<>(gko::dim<2> {m_m, m_n});
+        auto data_mat_ = gko::matrix_data<>(gko::dim<2>(m_m, m_n));
         data_mat->write(data_mat_);
         data_mat_.remove_zeros();
         data_mat->read(data_mat_);

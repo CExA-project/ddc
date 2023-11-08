@@ -127,7 +127,6 @@ jobs:
           'hip')
             export CC=hipcc
             export CXX=hipcc
-            export LD_LIBRARY_PATH="/opt/rocm/lib"
             EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_HIP=ON -DKokkos_ARCH_VEGA90A=ON -DCMAKE_PREFIX_PATH=/opt/rocm"
             CMAKE_CXX_FLAGS="-Wno-gnu-zero-variadic-macro-arguments"
           ;;

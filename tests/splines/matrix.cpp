@@ -23,6 +23,7 @@ void fill_identity(ddc::DSpan2D mat)
     }
 }
 
+/*
 void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
 {
     assert(mat->get_size() == int(copy.extent(0)));
@@ -34,6 +35,7 @@ void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
         }
     }
 }
+*/
 
 void check_inverse(ddc::DSpan2D matrix, ddc::DSpan2D inv)
 {

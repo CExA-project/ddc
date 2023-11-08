@@ -55,7 +55,7 @@ TEST(DiscreteElementXTest, RightExternalBinaryOperatorPlus)
     DElemX const ix(uid_x);
     std::ptrdiff_t const dv_x = -2;
     DElemX const ix2 = ix + DVectX(dv_x);
-    EXPECT_EQ(ix2.uid<DDimX>(), uid_x + dv_x);
+    EXPECT_EQ(ix2.uid<DDimX>(), static_cast<std::ptrdiff_t>(uid_x) + dv_x);
 }
 
 TEST(DiscreteElementXTest, RightExternalBinaryOperatorMinus)
@@ -64,7 +64,7 @@ TEST(DiscreteElementXTest, RightExternalBinaryOperatorMinus)
     DElemX const ix(uid_x);
     std::ptrdiff_t const dv_x = -2;
     DElemX const ixy2 = ix - dv_x;
-    EXPECT_EQ(ixy2.uid<DDimX>(), uid_x - dv_x);
+    EXPECT_EQ(ixy2.uid<DDimX>(), static_cast<std::ptrdiff_t>(uid_x) - dv_x);
 }
 
 TEST(DiscreteElementXTest, BinaryOperatorMinus)
@@ -101,8 +101,8 @@ TEST(DiscreteElementXYTest, RightExternalBinaryOperatorPlus)
     std::ptrdiff_t const dv_x = -2;
     std::ptrdiff_t const dv_y = +3;
     DElemXY const ixy2 = ixy + DVectXY(dv_x, dv_y);
-    EXPECT_EQ(ixy2.uid<DDimX>(), uid_x + dv_x);
-    EXPECT_EQ(ixy2.uid<DDimY>(), uid_y + dv_y);
+    EXPECT_EQ(ixy2.uid<DDimX>(), static_cast<std::ptrdiff_t>(uid_x) + dv_x);
+    EXPECT_EQ(ixy2.uid<DDimY>(), static_cast<std::ptrdiff_t>(uid_y) + dv_y);
 }
 
 TEST(DiscreteElementXYTest, RightExternalBinaryOperatorMinus)
@@ -113,8 +113,8 @@ TEST(DiscreteElementXYTest, RightExternalBinaryOperatorMinus)
     std::ptrdiff_t const dv_x = -2;
     std::ptrdiff_t const dv_y = +3;
     DElemXY const ixy2 = ixy - DVectXY(dv_x, dv_y);
-    EXPECT_EQ(ixy2.uid<DDimX>(), uid_x - dv_x);
-    EXPECT_EQ(ixy2.uid<DDimY>(), uid_y - dv_y);
+    EXPECT_EQ(ixy2.uid<DDimX>(), static_cast<std::ptrdiff_t>(uid_x) - dv_x);
+    EXPECT_EQ(ixy2.uid<DDimY>(), static_cast<std::ptrdiff_t>(uid_y) - dv_y);
 }
 
 TEST(DiscreteElementXYTest, BinaryOperatorMinus)
@@ -139,8 +139,8 @@ TEST(DiscreteElementXYZTest, RightExternalBinaryOperatorPlus)
     std::ptrdiff_t const dv_x = -2;
     std::ptrdiff_t const dv_y = +3;
     DElemXYZ const ixyz2 = ixyz + DVectXY(dv_x, dv_y);
-    EXPECT_EQ(ixyz2.uid<DDimX>(), uid_x + dv_x);
-    EXPECT_EQ(ixyz2.uid<DDimY>(), uid_y + dv_y);
+    EXPECT_EQ(ixyz2.uid<DDimX>(), static_cast<std::ptrdiff_t>(uid_x) + dv_x);
+    EXPECT_EQ(ixyz2.uid<DDimY>(), static_cast<std::ptrdiff_t>(uid_y) + dv_y);
     EXPECT_EQ(ixyz2.uid<DDimZ>(), uid_z);
 }
 
@@ -153,7 +153,7 @@ TEST(DiscreteElementXYZTest, RightExternalBinaryOperatorMinus)
     std::ptrdiff_t const dv_x = -2;
     std::ptrdiff_t const dv_y = +3;
     DElemXYZ const ixyz2 = ixyz - DVectXY(dv_x, dv_y);
-    EXPECT_EQ(ixyz2.uid<DDimX>(), uid_x - dv_x);
-    EXPECT_EQ(ixyz2.uid<DDimY>(), uid_y - dv_y);
+    EXPECT_EQ(ixyz2.uid<DDimX>(), static_cast<std::ptrdiff_t>(uid_x) - dv_x);
+    EXPECT_EQ(ixyz2.uid<DDimY>(), static_cast<std::ptrdiff_t>(uid_y) - dv_y);
     EXPECT_EQ(ixyz2.uid<DDimZ>(), uid_z);
 }

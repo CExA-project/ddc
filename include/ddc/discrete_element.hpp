@@ -115,6 +115,7 @@ KOKKOS_FUNCTION constexpr auto const& take(HeadDElem const& head, TailDElems con
     }
     DDC_IF_NVCC_THEN_POP
 }
+
 namespace detail {
 
 /// Returns a reference to the underlying `std::array`

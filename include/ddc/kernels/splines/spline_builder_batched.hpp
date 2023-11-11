@@ -159,6 +159,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
 
     // TODO : Consider optimizing
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
+    Kokkos::Profiling::pushRegion("Transpose");
     ddc::Chunk spline_tr_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
     ddc::for_each(
@@ -170,6 +171,8 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                             = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
                 }
             });
+    Kokkos::Profiling::popRegion();
+    Kokkos::Profiling::pushRegion("Linear solver");
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
     Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
             spline_tr.data_handle(),
@@ -177,6 +180,8 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
             batch_domain().size());
     // Compute spline coef
     spline_builder.matrix->solve_batch_inplace(bcoef_section);
+    Kokkos::Profiling::popRegion();
+    Kokkos::Profiling::pushRegion("Transpose back");
     // Transpose back spline_tr in spline
     ddc::for_each(
             ddc::policies::policy(exec_space()),
@@ -187,6 +192,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                             = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
                 }
             });
+    Kokkos::Profiling::popRegion();
 
     // Not sure yet of what this part do
     if (bsplines_type::is_periodic()) {

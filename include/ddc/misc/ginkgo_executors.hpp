@@ -34,7 +34,7 @@ inline std::shared_ptr<gko::Executor> create_gko_exec()
 #endif
 #ifdef KOKKOS_ENABLE_HIP
     if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
-        return gko::CudaExecutor::create(0, create_default_host_executor());
+        return gko::HipExecutor::create(0, create_default_host_executor());
     }
 #endif
 }

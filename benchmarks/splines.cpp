@@ -197,8 +197,8 @@ unsigned int preconditionner_max_block_size_ref = 32u;
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
-                {{100, 1000},
-                 {100, 100000},
+                {{64, 1024},
+                 {100, 500000},
                  {cols_per_par_chunk_ref, cols_per_par_chunk_ref},
                  {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
@@ -206,19 +206,19 @@ BENCHMARK(characteristics_advection)
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {100000, 100000}, {64,65535}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->Ranges({{64, 1024}, {100000, 100000}, {64,65535}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)->UseRealTime();
 */
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 10000}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->Ranges({{64, 1024}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 10000}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)->UseRealTime();
 */
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {1, 32}})
+        ->Ranges({{64, 1024}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {1, 32}})
         ->MinTime(3)->UseRealTime();
 */
 

@@ -179,13 +179,13 @@ static void characteristics_advection(benchmark::State& state)
 
 #ifdef KOKKOS_ENABLE_CUDA
 std::string chip = "gpu";
-int cols_per_par_chunk_ref = 1024;
-int par_chunks_per_seq_chunk_ref = 160;
+int cols_per_par_chunk_ref = 65535;
+int par_chunks_per_seq_chunk_ref = 1;
 unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_OPENMP)
 std::string chip = "cpu";
 int cols_per_par_chunk_ref = 512;
-int par_chunks_per_seq_chunk_ref = 160;
+int par_chunks_per_seq_chunk_ref = Kokkos::OpenMP().concurrency();
 unsigned int preconditionner_max_block_size_ref = 8u;
 #elif defined(KOKKOS_ENABLE_SERIAL)
 std::string chip = "cpu";

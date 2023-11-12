@@ -84,6 +84,9 @@ RUN chmod +x /bin/bash_run \
  && if [ "xcuda" = "x${BACKEND}" ] \
   ; then echo 'CUDA_GCC=gcc-10' > /etc/profile.d/ddc-cuda.sh \
        ; echo 'CUDA_GXX=g++-10' >> /etc/profile.d/ddc-cuda.sh \
+ ;  fi \
+ && if [ "xhip" = "x${BACKEND}" ] \
+ ;  then echo 'export LD_LIBRARY_PATH="/opt/rocm/lib"' > /etc/profile.d/10-rocm.sh \
  ;  fi
 
 USER ci:ci
@@ -91,3 +94,5 @@ WORKDIR /data
 
 ENTRYPOINT ["/bin/bash_run"]
 CMD ["/bin/bash", "-li"]
+
+

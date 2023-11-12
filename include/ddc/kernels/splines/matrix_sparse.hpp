@@ -7,12 +7,9 @@
 #include <type_traits>
 #include <utility>
 
-#include <ginkgo/core/base/device_matrix_data.hpp>
 #include <ginkgo/ginkgo.hpp>
 
 #include <Kokkos_Core.hpp>
-
-#include "ginkgo/core/matrix/dense.hpp"
 
 #include "matrix.hpp"
 #include "view.hpp"

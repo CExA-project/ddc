@@ -1,3 +1,8 @@
+#pragma once
+
+#include <memory>
+#include <type_traits>
+
 #include <ginkgo/ginkgo.hpp>
 
 inline std::shared_ptr<gko::Executor> create_default_host_executor()

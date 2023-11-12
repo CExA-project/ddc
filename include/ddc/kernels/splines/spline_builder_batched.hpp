@@ -70,7 +70,7 @@ public:
                 preconditionner_max_block_size)
         , m_vals_domain(vals_domain)
     {
-    }
+    };
 
     SplineBuilderBatched(SplineBuilderBatched const& x) = delete;
 
@@ -288,7 +288,6 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
             });
 
     // TODO : Consider optimizing
-    // TODO : Handle case of GPU saturation
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
     ddc::Chunk spline_tr_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();

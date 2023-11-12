@@ -73,7 +73,10 @@ RUN chmod +x /bin/bash_run \
  && apt-get clean -y \
  && apt-get autoclean -y \
  && rm -rf /var/lib/apt/lists/* \
- && useradd -d /data -m -U ci
+ && useradd -d /data -m -U ci \
+ && if [ "xhip" = "x${BACKEND}" ] \
+ ;  then echo 'export LD_LIBRARY_PATH="/opt/rocm/lib"' > /etc/profile.d/10-rocm.sh \
+ ;  fi
 
 USER ci:ci
 WORKDIR /data

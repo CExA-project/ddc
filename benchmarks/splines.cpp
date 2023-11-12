@@ -178,17 +178,17 @@ static void characteristics_advection(benchmark::State& state)
 // Tuning : 512 cols and 8 precond on CPU, 16384 cols and 1 precond on GPU
 
 #ifdef KOKKOS_ENABLE_CUDA
-std::string chip="gpu";
+std::string chip = "gpu";
 int cols_per_par_chunk_ref = 1024;
 int par_chunks_per_seq_chunk_ref = 160;
 unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_OPENMP)
-std::string chip="cpu";
+std::string chip = "cpu";
 int cols_per_par_chunk_ref = 512;
 int par_chunks_per_seq_chunk_ref = 160;
 unsigned int preconditionner_max_block_size_ref = 8u;
 #elif defined(KOKKOS_ENABLE_SERIAL)
-std::string chip="cpu";
+std::string chip = "cpu";
 int cols_per_par_chunk_ref = 512;
 int par_chunks_per_seq_chunk_ref = 1;
 unsigned int preconditionner_max_block_size_ref = 8u;
@@ -225,10 +225,14 @@ BENCHMARK(characteristics_advection)
 int main(int argc, char** argv)
 {
     ::benchmark::Initialize(&argc, argv);
-	::benchmark::AddCustomContext("chip", chip);
-	::benchmark::AddCustomContext("cols_per_par_chunk_ref", std::to_string(cols_per_par_chunk_ref));
-	::benchmark::AddCustomContext("par_chunks_per_seq_chunk_ref", std::to_string(par_chunks_per_seq_chunk_ref));
-	::benchmark::AddCustomContext("preconditionner_max_block_size_ref", std::to_string(preconditionner_max_block_size_ref));
+    ::benchmark::AddCustomContext("chip", chip);
+    ::benchmark::AddCustomContext("cols_per_par_chunk_ref", std::to_string(cols_per_par_chunk_ref));
+    ::benchmark::AddCustomContext(
+            "par_chunks_per_seq_chunk_ref",
+            std::to_string(par_chunks_per_seq_chunk_ref));
+    ::benchmark::AddCustomContext(
+            "preconditionner_max_block_size_ref",
+            std::to_string(preconditionner_max_block_size_ref));
     if (::benchmark::ReportUnrecognizedArguments(argc, argv)) {
         return 1;
     }

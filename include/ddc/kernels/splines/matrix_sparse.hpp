@@ -163,12 +163,12 @@ public:
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
             if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-                m_cols_per_par_chunk = 1024;
+                m_cols_per_par_chunk = 65535;
             }
 #endif
 #ifdef KOKKOS_ENABLE_HIP
             if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
-                m_cols_per_par_chunk = 1024;
+                m_cols_per_par_chunk = 65535;
             }
 #endif
         }
@@ -188,12 +188,12 @@ public:
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
             if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-                m_par_chunks_per_seq_chunk = Kokkos::DefaultHostExecutionSpace().concurrency();
+                m_par_chunks_per_seq_chunk = 1;
             }
 #endif
 #ifdef KOKKOS_ENABLE_HIP
             if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
-                m_par_chunks_per_seq_chunk = Kokkos::DefaultHostExecutionSpace().concurrency();
+                m_par_chunks_per_seq_chunk = 1;
             }
 #endif
         }

@@ -144,6 +144,15 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
 
     using IMesh1 = ddc::DiscreteElement<interpolation_mesh_type1>;
     using IMesh2 = ddc::DiscreteElement<interpolation_mesh_type2>;
+	ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1_alloc(
+                    spline_builder1.spline_domain());
+	ddc::ChunkSpan spline1 = spline1_alloc.span_view();
+	ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type2>> spline2_alloc(
+                        spline_builder2.spline_domain());
+	ddc::ChunkSpan spline2 = spline2_alloc.span_view();
+	ddc::Chunk<double, interpolation_domain_type1> vals1_alloc(
+                        spline_builder1.interpolation_domain());
+    ddc::ChunkSpan vals1 = vals1_alloc.span_view();
 
     /******************************************************************
     *  Cycle over x1 position (or order of x1-derivative at boundary)
@@ -166,9 +175,6 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
             const ddc::DiscreteElement<bsplines_type2> spl_idx(i - 1);
 
             // Get interpolated values
-            ddc::Chunk<double, interpolation_domain_type1> vals1_alloc(
-                    spline_builder1.interpolation_domain());
-            ddc::ChunkSpan vals1 = vals1_alloc.span_view();
             ddc::for_each(spline_builder1.interpolation_domain(), [&](IMesh1 const j) {
                 vals1(j) = (*derivs_ymin)(j.uid(), i - 1);
             });
@@ -193,11 +199,6 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                     BcXmax1 == ddc::BoundCond::HERMITE
                             ? std::optional(ddc::CDSpan1D(r_derivs.data(), nbc_xmax))
                             : std::nullopt);
-
-            // Temporary array to receive output of spline_builder1
-            ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1_alloc(
-                    spline_builder1.spline_domain());
-            ddc::ChunkSpan spline1 = spline1_alloc.span_view();
 
             // Interpolate derivatives
             spline_builder1(spline1, vals1, deriv_l, deriv_r);
@@ -229,15 +230,10 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                 const ddc::DiscreteElement<bsplines_type2> spl_idx(nbc_ymin + ii);
 
                 // Get interpolated values
-                ddc::Chunk<double, interpolation_domain_type1> vals1_alloc(
-                        spline_builder1.interpolation_domain());
-                ddc::ChunkSpan vals1 = vals1_alloc.span_view();
                 // ddc::deepcopy(vals1, vals[i]);
                 for (auto j : spline_builder1.interpolation_domain()) {
                     vals1(j) = vals(i, j);
                 }
-
-
 
                 // Get interpolated derivatives
                 const std::optional<ddc::CDSpan1D> deriv_l(
@@ -248,11 +244,6 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                         BcXmax1 == ddc::BoundCond::HERMITE ? std::optional(
                                 ddc::CDSpan1D(derivs_xmax->data_handle() + ii * nbc_xmax, nbc_xmax))
                                                            : std::nullopt);
-
-                // Temporary array to receive output of spline_builder1
-                ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1_alloc(
-                        spline_builder1.spline_domain());
-                ddc::ChunkSpan spline1 = spline1_alloc.span_view();
 
                 // Interpolate values
                 spline_builder1(spline1, vals1, deriv_l, deriv_r);
@@ -283,9 +274,6 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                     i + ddc::discrete_space<bsplines_type2>().nbasis() - nbc_ymax - 1);
 
             // Get interpolated values
-            ddc::Chunk<double, interpolation_domain_type1> vals1_alloc(
-                    spline_builder1.interpolation_domain());
-            ddc::ChunkSpan vals1 = vals1_alloc.span_view();
             ddc::for_each(spline_builder1.interpolation_domain(), [&](IMesh1 const j) {
                 vals1(j) = (*derivs_ymax)(j.uid(), i - 1);
             });
@@ -310,11 +298,6 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                     BcXmax1 == ddc::BoundCond::HERMITE
                             ? std::optional(ddc::CDSpan1D(r_derivs.data(), nbc_xmax))
                             : std::nullopt);
-
-            // Temporary array to receive output of spline_builder1
-            ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1_alloc(
-                    spline_builder1.spline_domain());
-            ddc::ChunkSpan spline1 = spline1_alloc.span_view();
 
             // Interpolate derivatives
             spline_builder1(spline1, vals1, deriv_l, deriv_r);
@@ -343,7 +326,7 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
     ddc::for_each(
             ddc::policies::policy(typename SplineBuilder2::exec_space()),
             spline_basis_domain,
-            [=](ddc::DiscreteElement<bsplines_type1> const i) {
+            [&](ddc::DiscreteElement<bsplines_type1> const i) {
                 const ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type2>> line_2
                         = spline[i];
                 const ddc::DiscreteDomain<bsplines_type2> whole_line_dom
@@ -364,15 +347,9 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
                         BcXmax2 == ddc::BoundCond::HERMITE
                                 ? std::optional(r_derivs.allocation_mdspan())
                                 : std::nullopt);
-
                 // TODO: const double ?
                 ddc::ChunkSpan<double, interpolation_domain_type2>
                         vals2_i(vals2.data_handle(), spline_builder2.interpolation_domain());
-
-                // Temporary array to receive output of spline_builder2
-                ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type2>> spline2_alloc(
-                        spline_builder2.spline_domain());
-                ddc::ChunkSpan spline2 = spline2_alloc.span_view();
 
                 // Interpolate coefficients
                 spline_builder2(spline2, vals2_i, deriv_l, deriv_r);

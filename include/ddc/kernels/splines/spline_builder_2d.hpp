@@ -144,14 +144,14 @@ void SplineBuilder2D<SplineBuilder1, SplineBuilder2>::operator()(
 
     using IMesh1 = ddc::DiscreteElement<interpolation_mesh_type1>;
     using IMesh2 = ddc::DiscreteElement<interpolation_mesh_type2>;
-	ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1_alloc(
-                    spline_builder1.spline_domain());
-	ddc::ChunkSpan spline1 = spline1_alloc.span_view();
-	ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type2>> spline2_alloc(
-                        spline_builder2.spline_domain());
-	ddc::ChunkSpan spline2 = spline2_alloc.span_view();
-	ddc::Chunk<double, interpolation_domain_type1> vals1_alloc(
-                        spline_builder1.interpolation_domain());
+    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1_alloc(
+            spline_builder1.spline_domain());
+    ddc::ChunkSpan spline1 = spline1_alloc.span_view();
+    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type2>> spline2_alloc(
+            spline_builder2.spline_domain());
+    ddc::ChunkSpan spline2 = spline2_alloc.span_view();
+    ddc::Chunk<double, interpolation_domain_type1> vals1_alloc(
+            spline_builder1.interpolation_domain());
     ddc::ChunkSpan vals1 = vals1_alloc.span_view();
 
     /******************************************************************

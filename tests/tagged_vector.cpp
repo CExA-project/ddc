@@ -77,11 +77,11 @@ TEST(TaggedVector, Operators)
     ddc::detail::TaggedVector<int, double, float> a(1, 2);
     ddc::detail::TaggedVector<int, float, double> b(3, 4);
     ddc::detail::TaggedVector<int, double> c = ddc::select<double>(a);
-    ASSERT_EQ(a + b, (ddc::detail::TaggedVector<int, double, float>(5, 5)));
-    ASSERT_EQ(b - a, (ddc::detail::TaggedVector<int, double, float>(3, 1)));
-    ASSERT_EQ(c + 4, (ddc::detail::TaggedVector<int, double>(5)));
-    ASSERT_EQ(4 + c, (ddc::detail::TaggedVector<int, double>(5)));
-    ASSERT_EQ(4 * a, (ddc::detail::TaggedVector<int, double, float>(4, 8)));
+    EXPECT_EQ(a + b, (ddc::detail::TaggedVector<int, double, float>(5, 5)));
+    EXPECT_EQ(b - a, (ddc::detail::TaggedVector<int, double, float>(3, 1)));
+    EXPECT_EQ(c + 4, (ddc::detail::TaggedVector<int, double>(5)));
+    EXPECT_EQ(4 + c, (ddc::detail::TaggedVector<int, double>(5)));
+    EXPECT_EQ(4 * a, (ddc::detail::TaggedVector<int, double, float>(4, 8)));
 }
 
 TEST(TaggedVector, Assignment)

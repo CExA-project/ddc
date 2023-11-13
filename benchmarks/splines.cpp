@@ -179,13 +179,13 @@ static void characteristics_advection(benchmark::State& state)
 
 #ifdef KOKKOS_ENABLE_CUDA
 std::string chip = "gpu";
-int cols_per_par_chunk_ref = 1024;
-int par_chunks_per_seq_chunk_ref = 160;
+int cols_per_par_chunk_ref = 65535;
+int par_chunks_per_seq_chunk_ref = 1;
 unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_OPENMP)
 std::string chip = "cpu";
 int cols_per_par_chunk_ref = 512;
-int par_chunks_per_seq_chunk_ref = 160;
+int par_chunks_per_seq_chunk_ref = Kokkos::OpenMP().concurrency();
 unsigned int preconditionner_max_block_size_ref = 8u;
 #elif defined(KOKKOS_ENABLE_SERIAL)
 std::string chip = "cpu";
@@ -197,29 +197,29 @@ unsigned int preconditionner_max_block_size_ref = 8u;
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
-                {{100, 1000},
+                {{64, 1024},
                  {100, 500000},
                  {cols_per_par_chunk_ref, cols_per_par_chunk_ref},
                  {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
-        ->MinTime(3);
+        ->MinTime(3)->UseRealTime();
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {100000, 100000}, {64,65535}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
-        ->MinTime(3);
+        ->Ranges({{64, 1024}, {100000, 100000}, {64,65535}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->MinTime(3)->UseRealTime();
 */
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 10000}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
-        ->MinTime(3);
+        ->Ranges({{64, 1024}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {1, 10000}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->MinTime(3)->UseRealTime();
 */
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{100, 1000}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {1, 32}})
-        ->MinTime(3);
+        ->Ranges({{64, 1024}, {100000, 100000}, {cols_per_par_chunk_ref, cols_per_par_chunk_ref}, {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref}, {1, 32}})
+        ->MinTime(3)->UseRealTime();
 */
 
 int main(int argc, char** argv)

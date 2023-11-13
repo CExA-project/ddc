@@ -119,3 +119,19 @@ TEST(TaggedVector, ReorderingMoveAssignment)
     EXPECT_EQ(1, b.get<double>());
     EXPECT_EQ(2, b.get<float>());
 }
+
+TEST(TaggedVector, Conversion)
+{
+    ddc::detail::TaggedVector<int, float, double> a(1, 2);
+    ddc::detail::TaggedVector<double, float, double> b(a);
+    EXPECT_EQ(b.get<float>(), 1.0);
+    EXPECT_EQ(b.get<double>(), 2.0);
+}
+
+TEST(TaggedVector, ConversionReorder)
+{
+    ddc::detail::TaggedVector<int, float, double> a(1, 2);
+    ddc::detail::TaggedVector<double, double, float> b(a);
+    EXPECT_EQ(b.get<float>(), 1.0);
+    EXPECT_EQ(b.get<double>(), 2.0);
+}

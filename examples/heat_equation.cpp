@@ -12,8 +12,7 @@
 
 //! [X-dimension]
 /// Our first continuous dimension
-struct X; // Alex: Is this not a different naming convention than in Emily's tutorial?
-          //       There she uses RDimR for continuous radial dimension.
+struct X; 
 //! [X-dimension]
 
 //! [X-discretization]
@@ -36,17 +35,19 @@ using DDimT = ddc::UniformPointSampling<T>;
 //! [time-space]
 
 
-// Alex: Maybe add a @tparam explaining the Chunktype class?
 //! [display]
 /** A function to pretty print the temperature
- * @param time the time at which the output is made
- * @param temp the temperature at this time-step
+ * @tparam ChunkType Refers to type of chunk span. This away the template 
+ *                   parameters are avoided
+ * @param time The time at which the output is made.
+ * @param temp The temperature at this time-step.
  */
 template <class ChunkType>
 void display(double time, ChunkType temp)
 {
-    // Alex: If I understand the docstring of transform_reduce correctly, the last parameter is 
-    //       supposed to be a unary function object. Is temp a unary function object here?
+    // For a chunk the ()-operator is used to access elements with a DiscreteElement as 
+    // input. So it is used here as a function that maps indices of the temperature domain 
+    // to the temperature value at that point
     double const mean_temp = ddc::transform_reduce(
                                      temp.domain(),
                                      0.,
@@ -195,12 +196,14 @@ int main(int argc, char** argv)
             .5 / (kx * invdx2_max + ky * invdy2_max)};
 
     // number of time intervals required to reach the end time
+    // The + .2 is used to make sure it is rounded to the correct number of steps
     ddc::DiscreteVector<DDimT> const nb_time_steps {
-            std::ceil((end_time - start_time) / max_dt) + .2}; // Alex: Why the + .2?
+            std::ceil((end_time - start_time) / max_dt) + .2};
     // Initialization of the global domain in time:
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
-    // Alex: What does init do exactly?
+    // init takes the values to make them available globally. This is needed
+    // for init_discrete_space
     ddc::DiscreteDomain<DDimT> const time_domain
             = ddc::init_discrete_space(
                     DDimT::
@@ -220,17 +223,18 @@ int main(int argc, char** argv)
             ddc::DeviceAllocator<double>());
 
     // - once for time-step being computed
+    // The DeviceAllocator is responsible for allocating memory on CPU or GPU
     ddc::Chunk ghosted_next_temp(
             "ghosted_next_temp",
             ddc::DiscreteDomain<
                     DDimX,
                     DDimY>(ghosted_x_domain, ghosted_y_domain),
-            ddc::DeviceAllocator<double>()); // Alex: What is a DeviceAllocator?
+            ddc::DeviceAllocator<double>());
     //! [data allocation]
 
     //! [initial-conditions]
-    // Alex: What does the const do here? ghosted_initial_temp is changed below in the 
-    //       for_each loop, right?
+    // The const qualifier makes it clear that ghosted_initial_temp always references
+    // the same chunk
     ddc::ChunkSpan const ghosted_initial_temp
             = ghosted_last_temp.span_view();
     // Initialize the temperature on the main domain
@@ -247,7 +251,6 @@ int main(int argc, char** argv)
             });
     //! [initial-conditions]
 
-    // Alex: Why do we need another ghosted temperature domain?
     ddc::Chunk ghosted_temp(
             "ghost_temp",
             ddc::DiscreteDomain<
@@ -262,13 +265,11 @@ int main(int argc, char** argv)
     display(ddc::coordinate(time_domain.front()),
             ghosted_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
-    // Alex: Is last_output the index here? Sometimes I get confused what is an 
-    //       index and what is an actual value.
-    ddc::DiscreteElement<DDimT> last_output = time_domain.front();
+    ddc::DiscreteElement<DDimT> index_time_last_output = time_domain.front();
     //! [initial output]
 
     //! [time iteration]
-    for (auto const iter :
+    for (auto const idxDDimT :
          time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
         //! [time iteration]
 
@@ -294,8 +295,8 @@ int main(int argc, char** argv)
         ddc::ChunkSpan const next_temp {
                 ghosted_next_temp[x_domain][y_domain]};
         // a read-only view of the temperature at the previous time-step
-        // Alex: What makes this read-only, when it is the same type as next_temp?
-        ddc::ChunkSpan const last_temp {ghosted_last_temp.span_view()};
+        // span_cview makes the ChunkSpan read-only
+        ddc::ChunkSpan const last_temp {ghosted_last_temp.span_cview()};
         //! [manipulated views]
 
         //! [numerical scheme]
@@ -332,10 +333,10 @@ int main(int argc, char** argv)
         //! [numerical scheme]
 
         //! [output]
-        if (iter - last_output >= t_output_period) {
-            last_output = iter;
+        if (idxDDimT - index_time_last_output >= t_output_period) {
+            index_time_last_output = idxDDimT;
             ddc::deepcopy(ghosted_temp, ghosted_last_temp);
-            display(ddc::coordinate(iter),
+            display(ddc::coordinate(idxDDimT),
                     ghosted_temp[x_domain][y_domain]);
         }
         //! [output]
@@ -347,7 +348,7 @@ int main(int argc, char** argv)
     }
 
     //! [final output]
-    if (last_output < time_domain.back()) {
+    if (index_time_last_output < time_domain.back()) {
         ddc::deepcopy(ghosted_temp, ghosted_last_temp);
         display(ddc::coordinate(time_domain.back()),
                 ghosted_temp[x_domain][y_domain]);

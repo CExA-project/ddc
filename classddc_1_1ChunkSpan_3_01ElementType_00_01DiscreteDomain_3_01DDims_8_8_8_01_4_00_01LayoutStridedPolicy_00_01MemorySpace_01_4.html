@@ -140,14 +140,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a390dbd69e57fe7a6df17cf1a969575cb"><td class="memItemLeft" align="right" valign="top">KOKKOS_DEFAULTED_FUNCTION constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a390dbd69e57fe7a6df17cf1a969575cb">ChunkSpan</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> &amp;&amp;other)=default</td></tr>
 <tr class="memdesc:a390dbd69e57fe7a6df17cf1a969575cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> by move.  <a href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a390dbd69e57fe7a6df17cf1a969575cb">More...</a><br /></td></tr>
 <tr class="separator:a390dbd69e57fe7a6df17cf1a969575cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ccb5ce6bcf776bce3e050ec073c3224"><td class="memTemplParams" colspan="2">template&lt;class OElementType , class Allocator &gt; </td></tr>
-<tr class="memitem:a7ccb5ce6bcf776bce3e050ec073c3224"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a7ccb5ce6bcf776bce3e050ec073c3224">ChunkSpan</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; OElementType, <a class="el" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a87f4968e87627e8042774e6b644a72aa">mdomain_type</a>, Allocator &gt; &amp;other) noexcept</td></tr>
-<tr class="memdesc:a7ccb5ce6bcf776bce3e050ec073c3224"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> from a <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>, yields a new view to the same data.  <a href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a7ccb5ce6bcf776bce3e050ec073c3224">More...</a><br /></td></tr>
-<tr class="separator:a7ccb5ce6bcf776bce3e050ec073c3224"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acfa56d56146596f59b9843f5efa7295d"><td class="memTemplParams" colspan="2">template&lt;class OElementType , class SFINAEElementType  = ElementType, class  = std::enable_if_t&lt;std::is_const_v&lt;SFINAEElementType&gt;&gt;, class Allocator &gt; </td></tr>
-<tr class="memitem:acfa56d56146596f59b9843f5efa7295d"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#acfa56d56146596f59b9843f5efa7295d">ChunkSpan</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; OElementType, <a class="el" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a87f4968e87627e8042774e6b644a72aa">mdomain_type</a>, Allocator &gt; const &amp;other) noexcept</td></tr>
-<tr class="memdesc:acfa56d56146596f59b9843f5efa7295d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> from a <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>, yields a new view to the same data.  <a href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#acfa56d56146596f59b9843f5efa7295d">More...</a><br /></td></tr>
-<tr class="separator:acfa56d56146596f59b9843f5efa7295d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa50cbc45ff7284018840d3ec2b7e9a30"><td class="memTemplParams" colspan="2">template&lt;class OElementType , class Allocator , class  = std::enable_if_t&lt;std::is_same_v&lt;typename Allocator::memory_space, MemorySpace&gt;&gt;&gt; </td></tr>
+<tr class="memitem:aa50cbc45ff7284018840d3ec2b7e9a30"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#aa50cbc45ff7284018840d3ec2b7e9a30">ChunkSpan</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; OElementType, <a class="el" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a87f4968e87627e8042774e6b644a72aa">mdomain_type</a>, Allocator &gt; &amp;other) noexcept</td></tr>
+<tr class="memdesc:aa50cbc45ff7284018840d3ec2b7e9a30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> from a <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>, yields a new view to the same data.  <a href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#aa50cbc45ff7284018840d3ec2b7e9a30">More...</a><br /></td></tr>
+<tr class="separator:aa50cbc45ff7284018840d3ec2b7e9a30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d27a79ae0b72b19950f32a6d8bdef64"><td class="memTemplParams" colspan="2">template&lt;class OElementType , class SFINAEElementType  = ElementType, class  = std::enable_if_t&lt;std::is_const_v&lt;SFINAEElementType&gt;&gt;, class Allocator , class  = std::enable_if_t&lt;std::is_same_v&lt;typename Allocator::memory_space, MemorySpace&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a8d27a79ae0b72b19950f32a6d8bdef64"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a8d27a79ae0b72b19950f32a6d8bdef64">ChunkSpan</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; OElementType, <a class="el" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a87f4968e87627e8042774e6b644a72aa">mdomain_type</a>, Allocator &gt; const &amp;other) noexcept</td></tr>
+<tr class="memdesc:a8d27a79ae0b72b19950f32a6d8bdef64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> from a <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>, yields a new view to the same data.  <a href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a8d27a79ae0b72b19950f32a6d8bdef64">More...</a><br /></td></tr>
+<tr class="separator:a8d27a79ae0b72b19950f32a6d8bdef64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e0745a48b609f4cbef90b27e2b05d78"><td class="memTemplParams" colspan="2">template&lt;class OElementType &gt; </td></tr>
 <tr class="memitem:a5e0745a48b609f4cbef90b27e2b05d78"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a5e0745a48b609f4cbef90b27e2b05d78">ChunkSpan</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; OElementType, <a class="el" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a87f4968e87627e8042774e6b644a72aa">mdomain_type</a>, <a class="el" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a9576b7f3d1dca885909c9167abf2dd24">layout_type</a>, MemorySpace &gt; const &amp;other) noexcept</td></tr>
 <tr class="memdesc:a5e0745a48b609f4cbef90b27e2b05d78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> by copy of a chunk, yields a new view to the same data.  <a href="classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a5e0745a48b609f4cbef90b27e2b05d78">More...</a><br /></td></tr>
@@ -724,15 +724,15 @@ template&lt;class ElementType , class... DDims, class LayoutStridedPolicy , clas
 
 </div>
 </div>
-<a id="a7ccb5ce6bcf776bce3e050ec073c3224" name="a7ccb5ce6bcf776bce3e050ec073c3224"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ccb5ce6bcf776bce3e050ec073c3224">&#9670;&nbsp;</a></span>ChunkSpan() <span class="overload">[4/9]</span></h2>
+<a id="aa50cbc45ff7284018840d3ec2b7e9a30" name="aa50cbc45ff7284018840d3ec2b7e9a30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa50cbc45ff7284018840d3ec2b7e9a30">&#9670;&nbsp;</a></span>ChunkSpan() <span class="overload">[4/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class ElementType , class... DDims, class LayoutStridedPolicy , class MemorySpace &gt; </div>
 <div class="memtemplate">
-template&lt;class OElementType , class Allocator &gt; </div>
+template&lt;class OElementType , class Allocator , class  = std::enable_if_t&lt;std::is_same_v&lt;typename Allocator::memory_space, MemorySpace&gt;&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -762,15 +762,15 @@ template&lt;class OElementType , class Allocator &gt; </div>
 
 </div>
 </div>
-<a id="acfa56d56146596f59b9843f5efa7295d" name="acfa56d56146596f59b9843f5efa7295d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acfa56d56146596f59b9843f5efa7295d">&#9670;&nbsp;</a></span>ChunkSpan() <span class="overload">[5/9]</span></h2>
+<a id="a8d27a79ae0b72b19950f32a6d8bdef64" name="a8d27a79ae0b72b19950f32a6d8bdef64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d27a79ae0b72b19950f32a6d8bdef64">&#9670;&nbsp;</a></span>ChunkSpan() <span class="overload">[5/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class ElementType , class... DDims, class LayoutStridedPolicy , class MemorySpace &gt; </div>
 <div class="memtemplate">
-template&lt;class OElementType , class SFINAEElementType  = ElementType, class  = std::enable_if_t&lt;std::is_const_v&lt;SFINAEElementType&gt;&gt;, class Allocator &gt; </div>
+template&lt;class OElementType , class SFINAEElementType  = ElementType, class  = std::enable_if_t&lt;std::is_const_v&lt;SFINAEElementType&gt;&gt;, class Allocator , class  = std::enable_if_t&lt;std::is_same_v&lt;typename Allocator::memory_space, MemorySpace&gt;&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">

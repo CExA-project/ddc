@@ -65,6 +65,11 @@ void display(double time, ChunkType temp)
                 std::cout << std::setw(6) << temp_slice(ix);
             });
     std::cout << " }" << std::endl;
+
+    ddc::PdiEvent("display")
+            .with("temp", temp)
+            .and_with("mean_temp", mean_temp)
+            .and_with("temp_slice", temp_slice);
 }
 //! [display]
 
@@ -72,6 +77,7 @@ void display(double time, ChunkType temp)
 //! [main-start]
 int main(int argc, char** argv)
 {
+    PDI_init(PC_parse_string(""));
     ddc::ScopeGuard scope(argc, argv);
 
     // some parameters that would typically be read from some form of
@@ -331,4 +337,6 @@ int main(int argc, char** argv)
                 ghosted_temp[x_domain][y_domain]);
     }
     //! [final output]
+
+    PDI_finalize();
 }

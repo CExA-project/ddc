@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 add_executable(heat_equation heat_equation.cpp)
-target_link_libraries(heat_equation PUBLIC DDC::DDC)
+target_link_libraries(heat_equation PUBLIC DDC::DDC DDC::PDI_Wrapper)
 if("${BUILD_FFT_KERNEL}")
   add_executable(heat_equation_spectral heat_equation_spectral.cpp)
   target_link_libraries(heat_equation_spectral PUBLIC DDC::DDC)

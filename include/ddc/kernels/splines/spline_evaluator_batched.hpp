@@ -184,7 +184,7 @@ public:
         ddc::ChunkSpan values = values_alloc.span_view();
         Kokkos::parallel_for(
                 Kokkos::RangePolicy<exec_space>(0, 1),
-                KOKKOS_LAMBDA(const int unused_index) {
+                KOKKOS_LAMBDA([[maybe_unused]] const int unused_index) {
                     ddc::discrete_space<bsplines_type>().integrals(values);
                 });
 

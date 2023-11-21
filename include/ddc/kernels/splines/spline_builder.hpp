@@ -237,7 +237,7 @@ void SplineBuilder<
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     Kokkos::parallel_for(
             Kokkos::RangePolicy<exec_space>(0, 1),
-            KOKKOS_LAMBDA([[maybe_unused]] const int unused_index) {
+            KOKKOS_LAMBDA(int) {
                 for (std::size_t i = 0; i < nbasis_proxy; ++i) {
                     spline(ddc::DiscreteElement<bsplines_type>(i))
                             = vals(ddc::DiscreteElement<interpolation_mesh_type>(i));
@@ -246,7 +246,7 @@ void SplineBuilder<
     if constexpr (bsplines_type::is_periodic()) {
         Kokkos::parallel_for(
                 Kokkos::RangePolicy<exec_space>(0, 1),
-                KOKKOS_LAMBDA([[maybe_unused]] const int unused_index) {
+                KOKKOS_LAMBDA(int) {
                     spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy))
                             = spline(ddc::DiscreteElement<bsplines_type>(0));
                 });
@@ -305,7 +305,7 @@ operator()(
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     Kokkos::parallel_for(
             Kokkos::RangePolicy<exec_space>(0, 1),
-            KOKKOS_LAMBDA([[maybe_unused]] const int unused_index) {
+            KOKKOS_LAMBDA(int) {
                 for (int i = s_nbc_xmin; i < s_nbc_xmin + offset_proxy; ++i) {
                     spline(ddc::DiscreteElement<bsplines_type>(i)) = 0.0;
                 }
@@ -335,7 +335,7 @@ operator()(
     if constexpr (bsplines_type::is_periodic()) {
         Kokkos::parallel_for(
                 Kokkos::RangePolicy<exec_space>(0, 1),
-                KOKKOS_LAMBDA([[maybe_unused]] const int unused_index) {
+                KOKKOS_LAMBDA(int) {
                     if (offset_proxy != 0) {
                         for (int i = 0; i < offset_proxy; ++i) {
                             spline(ddc::DiscreteElement<bsplines_type>(i))
@@ -481,13 +481,6 @@ void SplineBuilder<
     // No need for matrix assembly
     if constexpr (bsplines_type::degree() == 1)
         return;
-
-    int upper_band_width;
-    if (bsplines_type::is_uniform()) {
-        upper_band_width = bsplines_type::degree() / 2;
-    } else {
-        upper_band_width = bsplines_type::degree() - 1;
-    }
 
     if constexpr (bsplines_type::is_periodic()) {
         if (Solver == SplineSolver::GINKGO) {

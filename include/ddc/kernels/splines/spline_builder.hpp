@@ -275,8 +275,8 @@ void SplineBuilder<
 operator()(
         ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type>, Layout, MemorySpace> spline,
         ddc::ChunkSpan<double, interpolation_domain_type, Layout, MemorySpace> vals,
-        std::optional<ddc::CDSpan1D> const derivs_xmin,
-        std::optional<ddc::CDSpan1D> const derivs_xmax) const
+        [[maybe_unused]] std::optional<ddc::CDSpan1D> const derivs_xmin,
+        [[maybe_unused]] std::optional<ddc::CDSpan1D> const derivs_xmax) const
 {
     assert(vals.template extent<interpolation_mesh_type>()
            == ddc::discrete_space<BSplines>().nbasis() - s_nbe_xmin - s_nbe_xmax);

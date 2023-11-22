@@ -11,6 +11,9 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "ddc/misc/ginkgo_executors.hpp"
+#include "ginkgo/core/matrix/dense.hpp"
+
 #include "matrix.hpp"
 #include "view.hpp"
 

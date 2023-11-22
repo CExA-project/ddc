@@ -2,55 +2,98 @@
 
 #pragma once
 
-#include <cassert>
-#include <memory>
 #include <type_traits>
-#include <vector>
 
-#include <experimental/mdspan>
+#include <Kokkos_Core.hpp>
 
-#include "ddc/chunk.hpp"
-
-#include "kokkos_allocator.hpp"
+#include "ddc/chunk_span.hpp"
+#include "ddc/kokkos_allocator.hpp"
 
 namespace ddc {
 
-template <class ExecSpace, class ElementType, class SupportType, class Allocator>
-Chunk<ElementType, SupportType, KokkosAllocator<ElementType, typename ExecSpace::memory_space>>
-create_mirror(ExecSpace exec_space, Chunk<ElementType, SupportType, Allocator>& chunk)
+/// Returns a new `Chunk` with the same layout as `src` allocated on the memory space `Space::memory_space`.
+template <class Space, class ElementType, class Support, class Layout, class MemorySpace>
+auto create_mirror(
+        [[maybe_unused]] Space const& space,
+        ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
-    auto kokkos_view = chunk.allocation_kokkos_view();
-    auto mirror_kokkos_view = Kokkos::create_mirror(exec_space, kokkos_view);
-	/*
-    auto mirror_chunkspan = ChunkSpan<
-            ElementType,
-            SupportType,
-            std::experimental::layout_right,
-            typename ExecSpace::memory_space>(mirror_kokkos_view, chunk.domain());
-    auto mirror_chunk
-            = Chunk<ElementType,
-                    SupportType,
-                    KokkosAllocator<ElementType, typename ExecSpace::memory_space>>(
-                    mirror_chunkspan, KokkosAllocator<ElementType, typename ExecSpace::memory_space>()); // Not ok because deepcopy
-	*/
-	auto mirror_mdspan = detail::build_mdspan(mirror_kokkos_view, std::make_index_sequence<Chunk<ElementType, SupportType, Allocator>::rank()> {});
-	Chunk<ElementType,
-                    SupportType,
-                    KokkosAllocator<ElementType, typename ExecSpace::memory_space>> mirror_chunk(mirror_mdspan, chunk.domain(), KokkosAllocator<ElementType, typename ExecSpace::memory_space>());
-    return std::move(mirror_chunk);
+    return Chunk<
+            std::remove_const_t<ElementType>,
+            Support,
+            KokkosAllocator<std::remove_const_t<ElementType>, typename Space::memory_space>>(
+            src.domain());
 }
 
-template <class ExecSpace, class ElementType, class SupportType, class Layout, class MemorySpace>
-//std::pair<auto,ChunkSpan<ElementType, SupportType, Layout, typename ExecSpace::memory_space>>
-auto create_mirror(ExecSpace exec_space, const ChunkSpan<ElementType, SupportType, Layout, MemorySpace>& chunkspan)
+/// Returns a new host `Chunk` with the same layout as `src`.
+template <class ElementType, class Support, class Layout, class MemorySpace>
+auto create_mirror(ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
-    auto kokkos_view = chunkspan.allocation_kokkos_view();
-    auto mirror_kokkos_view = Kokkos::create_mirror(exec_space, kokkos_view);
-    auto mirror_chunkspan = ChunkSpan<
-            ElementType,
-            SupportType,
-            Layout,
-            typename ExecSpace::memory_space>(mirror_kokkos_view, chunkspan.domain());
-    return std::pair(std::move(mirror_kokkos_view),std::move(mirror_chunkspan));
+    return create_mirror(Kokkos::DefaultHostExecutionSpace(), src);
 }
+
+/// Returns a new `Chunk` with the same layout as `src` allocated on the memory space `Space::memory_space` and operates a deep copy between the two.
+template <class Space, class ElementType, class Support, class Layout, class MemorySpace>
+auto create_mirror_and_copy(
+        [[maybe_unused]] Space const& space,
+        ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
+{
+    Chunk<std::remove_const_t<ElementType>,
+          Support,
+          KokkosAllocator<std::remove_const_t<ElementType>, typename Space::memory_space>>
+            chunk(src.domain());
+    deepcopy(chunk, src);
+    return chunk;
+}
+
+/// Returns a new host `Chunk` with the same layout as `src` and operates a deep copy between the two.
+template <class ElementType, class Support, class Layout, class MemorySpace>
+auto create_mirror_and_copy(ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
+{
+    return create_mirror_and_copy(Kokkos::DefaultHostExecutionSpace(), src);
+}
+
+/// If `src` is accessible from `space` then returns a copy of `src`,
+/// otherwise returns a new `Chunk` with the same layout as `src` allocated on the memory space `Space::memory_space`.
+template <class Space, class ElementType, class Support, class Layout, class MemorySpace>
+auto create_mirror_view(
+        Space const& space,
+        ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
+{
+    if constexpr (Kokkos::SpaceAccessibility<Space, MemorySpace>::accessible) {
+        return src;
+    } else {
+        return create_mirror(space, src);
+    }
+}
+
+/// If `src` is host accessible then returns a copy of `src`,
+/// otherwise returns a new host `Chunk` with the same layout.
+template <class ElementType, class Support, class Layout, class MemorySpace>
+auto create_mirror_view(ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
+{
+    return create_mirror_view(Kokkos::DefaultHostExecutionSpace(), src);
+}
+
+/// If `src` is accessible from `space` then returns a copy of `src`,
+/// otherwise returns a new `Chunk` with the same layout as `src` allocated on the memory space `Space::memory_space` and operates a deep copy between the two.
+template <class Space, class ElementType, class Support, class Layout, class MemorySpace>
+auto create_mirror_view_and_copy(
+        Space const& space,
+        ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
+{
+    if constexpr (Kokkos::SpaceAccessibility<Space, MemorySpace>::accessible) {
+        return src;
+    } else {
+        return create_mirror_and_copy(space, src);
+    }
+}
+
+/// If `src` is host accessible then returns a copy of `src`,
+/// otherwise returns a new host `Chunk` with the same layout as `src` and operates a deep copy between the two.
+template <class ElementType, class Support, class Layout, class MemorySpace>
+auto create_mirror_view_and_copy(ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
+{
+    return create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), src);
+}
+
 } // namespace ddc

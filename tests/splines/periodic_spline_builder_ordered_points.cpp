@@ -53,9 +53,9 @@ TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
     double current;
     for (IndexX const ix : interpolation_domain) {
         current = ddc::coordinate(ix);
-        ASSERT_LE(current, ddc::discrete_space<BSplinesX>().rmax());
-        ASSERT_GE(current, ddc::discrete_space<BSplinesX>().rmin());
-        ASSERT_LE(last, current);
+        EXPECT_LE(current, ddc::discrete_space<BSplinesX>().rmax());
+        EXPECT_GE(current, ddc::discrete_space<BSplinesX>().rmin());
+        EXPECT_LE(last, current);
         last = current;
     }
 }

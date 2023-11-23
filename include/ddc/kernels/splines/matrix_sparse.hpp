@@ -67,12 +67,12 @@ public:
         } else {
 #ifdef KOKKOS_ENABLE_SERIAL
             if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-                m_cols_per_par_chunk = 512;
+                m_cols_per_par_chunk = 256;
             }
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
             if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                m_cols_per_par_chunk = 512;
+                m_cols_per_par_chunk = 256;
             }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
@@ -117,12 +117,12 @@ public:
         } else {
 #ifdef KOKKOS_ENABLE_SERIAL
             if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-                m_preconditionner_max_block_size = 8u;
+                m_preconditionner_max_block_size = 32u;
             }
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
             if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                m_preconditionner_max_block_size = 8u;
+                m_preconditionner_max_block_size = 32u;
             }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA

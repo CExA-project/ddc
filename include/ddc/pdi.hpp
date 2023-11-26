@@ -55,7 +55,7 @@ public:
         m_names.push_back(name + "_rank");
         PDI_share(
                 (name + "_extents").c_str(),
-                std::vector<size_t, decltype(allocator)>(extents.begin(), extents.end(), allocator)
+                std::pmr::vector<size_t>(extents.begin(), extents.end(), allocator)
                         .data(),
                 PDI_OUT);
         m_names.push_back(name + "_extents");

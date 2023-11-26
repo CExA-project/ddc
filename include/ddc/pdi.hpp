@@ -50,7 +50,7 @@ public:
         auto allocator = std::pmr::polymorphic_allocator<size_t>(&m_metadata);
         auto extents = detail::array(data.domain().extents());
         size_t& rank = *allocator.allocate(1);
-        rank = data.domain().extents().size();
+        rank = extents.size();
         PDI_share((name + "_rank").c_str(), &rank, PDI_OUT);
         m_names.push_back(name + "_rank");
         PDI_share(

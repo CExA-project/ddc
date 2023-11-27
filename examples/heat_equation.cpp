@@ -12,7 +12,7 @@
 
 //! [X-dimension]
 /// Our first continuous dimension
-struct X; 
+struct X;
 //! [X-dimension]
 
 //! [X-discretization]
@@ -45,8 +45,8 @@ using DDimT = ddc::UniformPointSampling<T>;
 template <class ChunkType>
 void display(double time, ChunkType temp)
 {
-    // For a chunk the ()-operator is used to access elements with a DiscreteElement as 
-    // input. So it is used here as a function that maps indices of the temperature domain 
+    // For a chunk, the ()-operator is used to access elements with a DiscreteElement as
+    // input. So it is used here as a function that maps indices of the temperature domain
     // to the temperature value at that point
     double const mean_temp = ddc::transform_reduce(
                                      temp.domain(),
@@ -265,7 +265,8 @@ int main(int argc, char** argv)
     display(ddc::coordinate(time_domain.front()),
             ghosted_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
-    ddc::DiscreteElement<DDimT> index_time_last_output = time_domain.front();
+    ddc::DiscreteElement<DDimT> index_time_last_output
+            = time_domain.front();
     //! [initial output]
 
     //! [time iteration]

@@ -47,16 +47,14 @@ public:
         static_assert(
                 !(access & PDI_IN) || (chunk_default_access_v<BorrowedChunk> & PDI_IN),
                 "Invalid access for constant data");
-        auto allocator = std::pmr::polymorphic_allocator<size_t>(&m_metadata);
         auto extents = detail::array(data.domain().extents());
-        size_t& rank = *allocator.allocate(1);
+        size_t& rank = *std::pmr::polymorphic_allocator<size_t>(&m_metadata).allocate(1);
         rank = extents.size();
         PDI_share((name + "_rank").c_str(), &rank, PDI_OUT);
         m_names.push_back(name + "_rank");
         PDI_share(
                 (name + "_extents").c_str(),
-                std::pmr::vector<size_t>(extents.begin(), extents.end(), allocator)
-                        .data(),
+                std::pmr::vector<size_t>(extents.begin(), extents.end(), &m_metadata).data(),
                 PDI_OUT);
         m_names.push_back(name + "_extents");
         PDI_share(

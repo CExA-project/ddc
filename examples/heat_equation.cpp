@@ -66,10 +66,12 @@ void display(double time, ChunkType temp)
             });
     std::cout << " }" << std::endl;
 
+#ifdef DDC_BUILD_PDI_WRAPPER
     ddc::PdiEvent("display")
             .with("temp", temp)
             .and_with("mean_temp", mean_temp)
             .and_with("temp_slice", temp_slice);
+#endif
 }
 //! [display]
 
@@ -77,7 +79,10 @@ void display(double time, ChunkType temp)
 //! [main-start]
 int main(int argc, char** argv)
 {
-    PDI_init(PC_parse_string(""));
+#ifdef DDC_BUILD_PDI_WRAPPER
+    auto pdi_conf = PC_parse_string("");
+    PDI_init(pdi_conf);
+#endif
     ddc::ScopeGuard scope(argc, argv);
 
     // some parameters that would typically be read from some form of
@@ -338,5 +343,8 @@ int main(int argc, char** argv)
     }
     //! [final output]
 
+#ifdef DDC_BUILD_PDI_WRAPPER
     PDI_finalize();
+    PC_tree_destroy(&pdi_conf);
+#endif
 }

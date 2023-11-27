@@ -112,6 +112,10 @@ Dimension X</h3>
 <p >Once the types are defined, we can start the <code>main</code> function where we will define our various domains.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv)</div>
 <div class="line">{</div>
+<div class="line"><span class="preprocessor">#ifdef DDC_BUILD_PDI_WRAPPER</span></div>
+<div class="line">    <span class="keyword">auto</span> pdi_conf = PC_parse_string(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line">    PDI_init(pdi_conf);</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line">    <a class="code hl_class" href="classddc_1_1ScopeGuard.html">ddc::ScopeGuard</a> scope(argc, argv);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// some parameters that would typically be read from some form of</span></div>

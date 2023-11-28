@@ -192,7 +192,7 @@ public:
         return M;
     }
 
-    virtual double get_element(int i, int j) const override
+    virtual double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
     {
         throw std::runtime_error("MatrixSparse::get_element() is not implemented because no API is "
                                  "provided by Ginkgo");
@@ -240,6 +240,10 @@ public:
 
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
     {
+        if (transpose != 'N') {
+            throw std::domain_error("transpose");
+        }
+
         std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<ExecSpace>();
         auto data_mat = gko::share(to_gko_mat(
                 m_data.data(),

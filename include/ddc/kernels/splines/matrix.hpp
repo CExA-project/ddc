@@ -1,14 +1,10 @@
 #pragma once
 
-#include <algorithm>
 #include <cassert>
 #include <iomanip>
 #include <iostream>
-#include <memory>
-#include <utility>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_Random.hpp>
 
 #include "view.hpp"
 

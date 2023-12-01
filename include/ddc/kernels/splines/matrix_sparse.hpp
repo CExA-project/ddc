@@ -1,10 +1,8 @@
 #pragma once
 
 #include <algorithm>
-#include <cassert>
-#include <iomanip>
-#include <iostream>
 #include <memory>
+#include <optional>
 #include <type_traits>
 #include <utility>
 
@@ -13,10 +11,8 @@
 #include <Kokkos_Core.hpp>
 
 #include "ddc/misc/ginkgo_executors.hpp"
-#include "ginkgo/core/matrix/dense.hpp"
 
 #include "matrix.hpp"
-#include "view.hpp"
 
 namespace ddc::detail {
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <algorithm>
 #include <cassert>
 #include <iomanip>
@@ -12,14 +13,20 @@
 #include "view.hpp"
 
 namespace ddc::detail {
+
 class Matrix
 {
 public:
     Matrix(const int mat_size) : n(mat_size) {}
+
     virtual ~Matrix() = default;
+
     int n;
+
     virtual double get_element(int i, int j) const = 0;
+
     virtual void set_element(int i, int j, double aij) = 0;
+
     virtual void factorize()
     {
         int const info = factorize_method();
@@ -37,6 +44,7 @@ public:
             // TODO: Add LOG_FATAL_ERROR
         }
     }
+
     virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const b) const
     {
         assert(int(b.extent(0)) == n);
@@ -48,6 +56,7 @@ public:
         }
         return b;
     }
+
     virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const b) const
     {
         assert(int(b.extent(0)) == n);
@@ -59,6 +68,7 @@ public:
         }
         return b;
     }
+
     virtual ddc::DSpan2D solve_multiple_inplace(ddc::DSpan2D const bx) const
     {
         assert(int(bx.extent(1)) == n);
@@ -70,6 +80,7 @@ public:
         }
         return bx;
     }
+
     template <class... Args>
     Kokkos::View<double**, Args...> solve_batch_inplace(
             Kokkos::View<double**, Args...> const bx) const
@@ -83,6 +94,7 @@ public:
         }
         return bx;
     }
+
     int get_size() const
     {
         return n;
@@ -102,6 +114,8 @@ public:
 
 protected:
     virtual int factorize_method() = 0;
+
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const = 0;
 };
+
 } // namespace ddc::detail

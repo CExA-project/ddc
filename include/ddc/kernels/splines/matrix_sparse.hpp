@@ -1,4 +1,5 @@
 #pragma once
+
 #include <algorithm>
 #include <cassert>
 #include <iomanip>
@@ -25,9 +26,13 @@ class Matrix_Sparse : public Matrix
 {
 private:
     const int m_m;
+
     const int m_n;
+
     Kokkos::View<int*, Kokkos::HostSpace> m_rows;
+
     Kokkos::View<int*, Kokkos::HostSpace> m_cols;
+
     Kokkos::View<double*, Kokkos::HostSpace> m_data;
 
     std::unique_ptr<
@@ -36,7 +41,9 @@ private:
             m_solver_factory;
 
     int m_cols_per_par_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
+
     int m_par_chunks_per_seq_chunk; // Maximum number of teams to be executed in parallel
+
     int m_preconditionner_max_block_size; // Maximum size of Jacobi-block preconditionner
 
 public:

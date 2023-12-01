@@ -31,10 +31,7 @@ private:
 
     Kokkos::View<double*, Kokkos::HostSpace> m_data;
 
-    std::unique_ptr<
-            gko::solver::Bicgstab<gko::default_precision>::Factory,
-            std::default_delete<gko::solver::Bicgstab<gko::default_precision>::Factory>>
-            m_solver_factory;
+    std::unique_ptr<gko::solver::Bicgstab<gko::default_precision>::Factory> m_solver_factory;
 
     int m_cols_per_par_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
 
@@ -166,7 +163,7 @@ public:
                           .on(gko_exec);
     }
 
-    std::unique_ptr<gko::matrix::Dense<>, std::default_delete<gko::matrix::Dense<>>> to_gko_vec(
+    std::unique_ptr<gko::matrix::Dense<>> to_gko_vec(
             double* vec_ptr,
             size_t n,
             size_t n_equations,
@@ -180,7 +177,7 @@ public:
         return v;
     }
 
-    std::unique_ptr<gko::matrix::Csr<>, std::default_delete<gko::matrix::Csr<>>> to_gko_mat(
+    std::unique_ptr<gko::matrix::Csr<>> to_gko_mat(
             double* mat_ptr,
             size_t n_nonzero_rows,
             size_t n_nonzeros,

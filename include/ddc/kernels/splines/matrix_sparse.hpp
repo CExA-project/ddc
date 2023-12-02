@@ -27,7 +27,7 @@ private:
 
     Kokkos::View<double*, Kokkos::HostSpace> m_data;
 
-    std::unique_ptr<gko::solver::Bicgstab<gko::default_precision>::Factory> m_solver_factory;
+    std::unique_ptr<gko::solver::Bicgstab<double>::Factory> m_solver_factory;
 
     int m_cols_per_par_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
 
@@ -143,12 +143,13 @@ public:
         else {
             gko_exec = create_gko_exec<ExecSpace>();
         }
-        std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion
-                = gko::stop::ResidualNorm<>::build().with_reduction_factor(1e-20).on(gko_exec);
+        std::shared_ptr<gko::stop::ResidualNorm<double>::Factory> residual_criterion
+                = gko::stop::ResidualNorm<double>::build().with_reduction_factor(1e-20).on(
+                        gko_exec);
         m_solver_factory
-                = gko::solver::Bicgstab<>::build()
+                = gko::solver::Bicgstab<double>::build()
                           .with_preconditioner(
-                                  gko::preconditioner::Jacobi<>::build()
+                                  gko::preconditioner::Jacobi<double>::build()
                                           .with_max_block_size(m_preconditionner_max_block_size)
                                           .on(gko_exec))
                           .with_criteria(
@@ -157,13 +158,13 @@ public:
                           .on(gko_exec);
     }
 
-    std::unique_ptr<gko::matrix::Dense<>> to_gko_vec(
+    std::unique_ptr<gko::matrix::Dense<double>> to_gko_vec(
             double* vec_ptr,
             size_t n,
             size_t n_equations,
             std::shared_ptr<gko::Executor> gko_exec) const
     {
-        auto v = gko::matrix::Dense<>::
+        auto v = gko::matrix::Dense<double>::
                 create(gko_exec,
                        gko::dim<2>(n, n_equations),
                        gko::array<double>::view(gko_exec, n * n_equations, vec_ptr),
@@ -171,13 +172,13 @@ public:
         return v;
     }
 
-    std::unique_ptr<gko::matrix::Csr<>> to_gko_mat(
+    std::unique_ptr<gko::matrix::Csr<double, int>> to_gko_mat(
             double* mat_ptr,
             size_t n_nonzero_rows,
             size_t n_nonzeros,
             std::shared_ptr<gko::Executor> gko_exec) const
     {
-        auto M = gko::matrix::Csr<>::
+        auto M = gko::matrix::Csr<double, int>::
                 create(gko_exec,
                        gko::dim<2>(get_size(), get_size()),
                        gko::array<double>::view(gko_exec, n_nonzeros, mat_ptr),
@@ -206,7 +207,7 @@ public:
                 get_size(),
                 get_size() * get_size(),
                 gko_exec->get_master()));
-        auto data_mat_ = gko::matrix_data<>(gko::dim<2>(get_size(), get_size()));
+        auto data_mat_ = gko::matrix_data<double>(gko::dim<2>(get_size(), get_size()));
         data_mat->write(data_mat_);
         data_mat_.remove_zeros();
         data_mat->read(data_mat_);

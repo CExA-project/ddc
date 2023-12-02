@@ -16,6 +16,84 @@
 
 namespace ddc::detail {
 
+template <class ExecSpace>
+int default_cols_per_par_chunk() noexcept
+{
+#ifdef KOKKOS_ENABLE_SERIAL
+    if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+        return 256;
+    }
+#endif
+#ifdef KOKKOS_ENABLE_OPENMP
+    if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+        return 256;
+    }
+#endif
+#ifdef KOKKOS_ENABLE_CUDA
+    if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+        return 65535;
+    }
+#endif
+#ifdef KOKKOS_ENABLE_HIP
+    if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+        return 65535;
+    }
+#endif
+    return 1;
+}
+
+template <class ExecSpace>
+int default_par_chunks_per_seq_chunk() noexcept
+{
+#ifdef KOKKOS_ENABLE_SERIAL
+    if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+        return 1;
+    }
+#endif
+#ifdef KOKKOS_ENABLE_OPENMP
+    if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+        return ExecSpace().concurrency();
+    }
+#endif
+#ifdef KOKKOS_ENABLE_CUDA
+    if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+        return 1;
+    }
+#endif
+#ifdef KOKKOS_ENABLE_HIP
+    if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+        return 1;
+    }
+#endif
+    return 1;
+}
+
+template <class ExecSpace>
+unsigned int default_preconditionner_max_block_size() noexcept
+{
+#ifdef KOKKOS_ENABLE_SERIAL
+    if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+        return 32u;
+    }
+#endif
+#ifdef KOKKOS_ENABLE_OPENMP
+    if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+        return 32u;
+    }
+#endif
+#ifdef KOKKOS_ENABLE_CUDA
+    if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+        return 1u;
+    }
+#endif
+#ifdef KOKKOS_ENABLE_HIP
+    if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+        return 1u;
+    }
+#endif
+    return 1u;
+}
+
 // Matrix class for Csr storage and iterative solve
 template <class ExecSpace>
 class Matrix_Sparse : public Matrix
@@ -33,7 +111,7 @@ private:
 
     int m_par_chunks_per_seq_chunk; // Maximum number of teams to be executed in parallel
 
-    int m_preconditionner_max_block_size; // Maximum size of Jacobi-block preconditionner
+    unsigned int m_preconditionner_max_block_size; // Maximum size of Jacobi-block preconditionner
 
 public:
     // Constructor
@@ -46,6 +124,11 @@ public:
         , m_rows("rows", mat_size + 1)
         , m_cols("cols", mat_size * mat_size)
         , m_data("data", mat_size * mat_size)
+        , m_cols_per_par_chunk(cols_per_par_chunk.value_or(default_cols_per_par_chunk<ExecSpace>()))
+        , m_par_chunks_per_seq_chunk(
+                  par_chunks_per_seq_chunk.value_or(default_par_chunks_per_seq_chunk<ExecSpace>()))
+        , m_preconditionner_max_block_size(preconditionner_max_block_size.value_or(
+                  default_preconditionner_max_block_size<ExecSpace>()))
     {
         // Fill the csr indexes as a dense matrix and initialize with zeros (zeros will be removed once non-zeros elements will be set)
         for (int i = 0; i < get_size() * get_size(); i++) {
@@ -54,81 +137,6 @@ public:
             }
             m_cols(i) = i % get_size();
             m_data(i) = 0;
-        }
-
-        if (cols_per_par_chunk.has_value()) {
-            m_cols_per_par_chunk = cols_per_par_chunk.value();
-        } else {
-#ifdef KOKKOS_ENABLE_SERIAL
-            if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-                m_cols_per_par_chunk = 256;
-            }
-#endif
-#ifdef KOKKOS_ENABLE_OPENMP
-            if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                m_cols_per_par_chunk = 256;
-            }
-#endif
-#ifdef KOKKOS_ENABLE_CUDA
-            if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-                m_cols_per_par_chunk = 65535;
-            }
-#endif
-#ifdef KOKKOS_ENABLE_HIP
-            if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
-                m_cols_per_par_chunk = 65535;
-            }
-#endif
-        }
-
-        if (par_chunks_per_seq_chunk.has_value()) {
-            m_par_chunks_per_seq_chunk = par_chunks_per_seq_chunk.value();
-        } else {
-#ifdef KOKKOS_ENABLE_SERIAL
-            if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-                m_par_chunks_per_seq_chunk = 1;
-            }
-#endif
-#ifdef KOKKOS_ENABLE_OPENMP
-            if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                m_par_chunks_per_seq_chunk = Kokkos::DefaultHostExecutionSpace().concurrency();
-            }
-#endif
-#ifdef KOKKOS_ENABLE_CUDA
-            if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-                m_par_chunks_per_seq_chunk = 1;
-            }
-#endif
-#ifdef KOKKOS_ENABLE_HIP
-            if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
-                m_par_chunks_per_seq_chunk = 1;
-            }
-#endif
-        }
-
-        if (preconditionner_max_block_size.has_value()) {
-            m_preconditionner_max_block_size = preconditionner_max_block_size.value();
-        } else {
-#ifdef KOKKOS_ENABLE_SERIAL
-            if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-                m_preconditionner_max_block_size = 32u;
-            }
-#endif
-#ifdef KOKKOS_ENABLE_OPENMP
-            if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                m_preconditionner_max_block_size = 32u;
-            }
-#endif
-#ifdef KOKKOS_ENABLE_CUDA
-            if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-                m_preconditionner_max_block_size = 1u;
-            }
-#endif
-#ifdef KOKKOS_ENABLE_HIP
-            if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
-                m_preconditionner_max_block_size = 1u;
-            }
-#endif
         }
 
         // Create the solver factory

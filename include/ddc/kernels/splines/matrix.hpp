@@ -15,7 +15,7 @@ class Matrix
     int m_n;
 
 public:
-    Matrix(const int mat_size) : m_n(mat_size) {}
+    explicit Matrix(const int mat_size) : m_n(mat_size) {}
 
     virtual ~Matrix() = default;
 

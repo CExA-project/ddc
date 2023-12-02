@@ -16,6 +16,28 @@
 
 namespace ddc::detail {
 
+/**
+ * @param gko_exec[in] A Ginkgo executor that has access to the Kokkos::View memory space
+ * @param view[in] A 2-D Kokkos::View with unit stride in the second dimension
+ * @return A Ginkgo Dense matrix view over the Kokkos::View data
+ */
+template <class KokkosViewType>
+auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosViewType const& view)
+{
+    static_assert((Kokkos::is_view_v<KokkosViewType> && KokkosViewType::rank == 2));
+    using value_type = typename KokkosViewType::traits::value_type;
+
+    if (view.stride_1() != 1) {
+        throw std::runtime_error("The view needs to be contiguous in the second dimension");
+    }
+
+    return gko::matrix::Dense<value_type>::
+            create(gko_exec,
+                   gko::dim<2>(view.extent(0), view.extent(1)),
+                   gko::array<value_type>::view(gko_exec, view.span(), view.data()),
+                   view.stride_0());
+}
+
 template <class ExecSpace>
 int default_cols_per_par_chunk() noexcept
 {
@@ -166,20 +188,6 @@ public:
                           .on(gko_exec);
     }
 
-    std::unique_ptr<gko::matrix::Dense<double>> to_gko_vec(
-            double* vec_ptr,
-            size_t n,
-            size_t n_equations,
-            std::shared_ptr<gko::Executor> gko_exec) const
-    {
-        auto v = gko::matrix::Dense<double>::
-                create(gko_exec,
-                       gko::dim<2>(n, n_equations),
-                       gko::array<double>::view(gko_exec, n * n_equations, vec_ptr),
-                       n_equations);
-        return v;
-    }
-
     std::unique_ptr<gko::matrix::Csr<double, int>> to_gko_mat(
             double* mat_ptr,
             size_t n_nonzero_rows,
@@ -316,11 +324,7 @@ public:
                             Kokkos::deep_copy(
                                     b_par_chunk,
                                     Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window));
-                            auto b_vec_batch = to_gko_vec(
-                                    b_par_chunk.data(),
-                                    get_size(),
-                                    n_equations_in_par_chunk,
-                                    gko_exec);
+                            auto b_vec_batch = to_gko_dense(gko_exec, b_par_chunk);
 
                             solver->apply(b_vec_batch, b_vec_batch); // inplace solve
                             Kokkos::deep_copy(

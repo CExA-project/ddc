@@ -21,10 +21,6 @@ template <class ExecSpace>
 class Matrix_Sparse : public Matrix
 {
 private:
-    const int m_m;
-
-    const int m_n;
-
     Kokkos::View<int*, Kokkos::HostSpace> m_rows;
 
     Kokkos::View<int*, Kokkos::HostSpace> m_cols;
@@ -47,18 +43,16 @@ public:
             std::optional<int> par_chunks_per_seq_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : Matrix(mat_size)
-        , m_m(mat_size)
-        , m_n(mat_size)
         , m_rows("rows", mat_size + 1)
         , m_cols("cols", mat_size * mat_size)
         , m_data("data", mat_size * mat_size)
     {
         // Fill the csr indexes as a dense matrix and initialize with zeros (zeros will be removed once non-zeros elements will be set)
-        for (int i = 0; i < m_m * m_n; i++) {
-            if (i < m_m + 1) {
-                m_rows(i) = i * m_n; //CSR
+        for (int i = 0; i < get_size() * get_size(); i++) {
+            if (i < get_size() + 1) {
+                m_rows(i) = i * get_size(); //CSR
             }
-            m_cols(i) = i % m_n;
+            m_cols(i) = i % get_size();
             m_data(i) = 0;
         }
 
@@ -185,7 +179,7 @@ public:
     {
         auto M = gko::matrix::Csr<>::
                 create(gko_exec,
-                       gko::dim<2>(m_m, m_n),
+                       gko::dim<2>(get_size(), get_size()),
                        gko::array<double>::view(gko_exec, n_nonzeros, mat_ptr),
                        gko::array<int>::view(gko_exec, n_nonzeros, m_cols.data()),
                        gko::array<int>::view(gko_exec, n_nonzero_rows + 1, m_rows.data()));
@@ -200,16 +194,19 @@ public:
 
     virtual void set_element(int i, int j, double aij) override
     {
-        m_data(i * m_n + j) = aij;
+        m_data(i * get_size() + j) = aij;
     }
 
     int factorize_method() override
     {
         std::shared_ptr<gko::Executor> gko_exec = create_gko_exec<ExecSpace>();
         // Remove zeros
-        auto data_mat
-                = gko::share(to_gko_mat(m_data.data(), m_m, m_m * m_n, gko_exec->get_master()));
-        auto data_mat_ = gko::matrix_data<>(gko::dim<2>(m_m, m_n));
+        auto data_mat = gko::share(to_gko_mat(
+                m_data.data(),
+                get_size(),
+                get_size() * get_size(),
+                gko_exec->get_master()));
+        auto data_mat_ = gko::matrix_data<>(gko::dim<2>(get_size(), get_size()));
         data_mat->write(data_mat_);
         data_mat_.remove_zeros();
         data_mat->read(data_mat_);
@@ -223,7 +220,7 @@ public:
                         int*,
                         Kokkos::HostSpace,
                         Kokkos::MemoryTraits<
-                                Kokkos::Unmanaged>>(data_mat->get_row_ptrs(), m_m + 1));
+                                Kokkos::Unmanaged>>(data_mat->get_row_ptrs(), get_size() + 1));
         Kokkos::deep_copy(
                 m_cols,
                 Kokkos::View<int*, Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
@@ -256,7 +253,7 @@ public:
                 Kokkos::LayoutRight,
                 ExecSpace,
                 Kokkos::MemoryTraits<Kokkos::Unmanaged>>
-                b_view(b, m_n, n_equations);
+                b_view(b, get_size(), n_equations);
 
         const int n_seq_chunks
                 = n_equations / m_cols_per_par_chunk / m_par_chunks_per_seq_chunk + 1;
@@ -271,11 +268,11 @@ public:
         Kokkos::View<double***, Kokkos::LayoutRight, ExecSpace> b_buffer(
                 "b_buffer",
                 std::min(n_equations / m_cols_per_par_chunk, m_par_chunks_per_seq_chunk),
-                m_n,
+                get_size(),
                 std::min(n_equations, m_cols_per_par_chunk));
         // Last par_chunk of last seq_chunk do not have same number of columns than the others. To get proper layout (because we passe the pointers to Ginkgo), we need a dedicated allocation
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>
-                b_last_buffer("b_last_buffer", m_n, cols_per_last_par_chunk);
+                b_last_buffer("b_last_buffer", get_size(), cols_per_last_par_chunk);
 
         for (int i = 0; i < n_seq_chunks; i++) {
             int n_par_chunks_in_seq_chunk = i < n_seq_chunks - 1 ? m_par_chunks_per_seq_chunk
@@ -312,7 +309,7 @@ public:
                                     Kokkos::subview(b_view, Kokkos::ALL, par_chunk_window));
                             auto b_vec_batch = to_gko_vec(
                                     b_par_chunk.data(),
-                                    m_n,
+                                    get_size(),
                                     n_equations_in_par_chunk,
                                     gko_exec);
 

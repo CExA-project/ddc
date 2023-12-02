@@ -12,12 +12,12 @@ namespace ddc::detail {
 
 class Matrix
 {
+    int m_n;
+
 public:
-    Matrix(const int mat_size) : n(mat_size) {}
+    Matrix(const int mat_size) : m_n(mat_size) {}
 
     virtual ~Matrix() = default;
-
-    int n;
 
     virtual double get_element(int i, int j) const = 0;
 
@@ -43,7 +43,7 @@ public:
 
     virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const b) const
     {
-        assert(int(b.extent(0)) == n);
+        assert(int(b.extent(0)) == m_n);
         int const info = solve_inplace_method(b.data_handle(), 'N', 1);
 
         if (info < 0) {
@@ -55,7 +55,7 @@ public:
 
     virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const b) const
     {
-        assert(int(b.extent(0)) == n);
+        assert(int(b.extent(0)) == m_n);
         int const info = solve_inplace_method(b.data_handle(), 'T', 1);
 
         if (info < 0) {
@@ -67,7 +67,7 @@ public:
 
     virtual ddc::DSpan2D solve_multiple_inplace(ddc::DSpan2D const bx) const
     {
-        assert(int(bx.extent(1)) == n);
+        assert(int(bx.extent(1)) == m_n);
         int const info = solve_inplace_method(bx.data_handle(), 'N', bx.extent(0));
 
         if (info < 0) {
@@ -81,7 +81,7 @@ public:
     Kokkos::View<double**, Args...> solve_batch_inplace(
             Kokkos::View<double**, Args...> const bx) const
     {
-        assert(int(bx.extent(0)) == n);
+        assert(int(bx.extent(0)) == m_n);
         int const info = solve_inplace_method(bx.data(), 'N', bx.extent(1));
 
         if (info < 0) {
@@ -93,7 +93,7 @@ public:
 
     int get_size() const
     {
-        return n;
+        return m_n;
     }
 
     std::ostream& operator<<(std::ostream& os)

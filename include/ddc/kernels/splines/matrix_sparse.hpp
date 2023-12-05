@@ -79,12 +79,12 @@ public:
         } else {
 #ifdef KOKKOS_ENABLE_SERIAL
             if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-                m_main_chunk_size = 256;
+                m_main_chunk_size = 8192;
             }
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
             if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-                m_main_chunk_size = 256;
+                m_main_chunk_size = 8192;
             }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA

@@ -184,12 +184,12 @@ int par_chunks_per_seq_chunk_ref = 1;
 unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_OPENMP)
 std::string chip = "cpu";
-int cols_per_par_chunk_ref = 256;
+int cols_per_par_chunk_ref = 8192;
 int par_chunks_per_seq_chunk_ref = Kokkos::OpenMP().concurrency();
 unsigned int preconditionner_max_block_size_ref = 32u;
 #elif defined(KOKKOS_ENABLE_SERIAL)
 std::string chip = "cpu";
-int cols_per_par_chunk_ref = 256;
+int cols_per_par_chunk_ref = 8192;
 int par_chunks_per_seq_chunk_ref = 1;
 unsigned int preconditionner_max_block_size_ref = 32u;
 #endif
@@ -198,7 +198,7 @@ BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{64, 1024},
-                 {100, 20000000},
+                 {100, 200000},
                  {cols_per_par_chunk_ref, cols_per_par_chunk_ref},
                  {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})

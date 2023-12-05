@@ -1,10 +1,12 @@
 #pragma once
+
 #include <memory>
+#include <optional>
 
 #include "matrix_sparse.hpp"
 
-
 namespace ddc::detail {
+
 class MatrixMaker
 {
 public:
@@ -22,4 +24,5 @@ public:
                 preconditionner_max_block_size);
     }
 };
+
 } // namespace ddc::detail

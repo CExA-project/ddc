@@ -202,7 +202,8 @@ BENCHMARK(characteristics_advection)
                  {cols_per_par_chunk_ref, cols_per_par_chunk_ref},
                  {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
-        ->MinTime(3)->UseRealTime();
+        ->MinTime(3)
+        ->UseRealTime();
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)

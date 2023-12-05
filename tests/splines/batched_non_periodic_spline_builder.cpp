@@ -71,6 +71,8 @@ using IDim = std::conditional_t<
         ddc::NonUniformPointSampling<X>>;
 #endif
 
+using IDimDeriv = ddc::UniformPointSampling<I>;
+
 template <typename IDimX>
 using evaluator_type = CosineEvaluator::Evaluator<IDimX>;
 
@@ -139,6 +141,10 @@ struct DimsInitializer<IDimI, ddc::detail::TypeSeq<IDimX...>>
         ddc::init_discrete_space<IDimI>(
                 GrevillePoints<
                         BSplines<typename IDimI::continuous_dimension_type>>::get_sampling());
+		ddc::init_discrete_space<IDim<Deriv<I>>>(
+                1,
+                s_degree_x,
+                s_degree_x);
     }
 };
 
@@ -166,6 +172,10 @@ static void BatchedNonPeriodicSplineTest()
                     IDim<X, void>>(Index<IDim<X, void>>(0), DVect<IDim<X, void>>(ncells))...);
     ddc::DiscreteDomain<IDim<X, I>...> const dom_vals
             = ddc::replace_dim_of<IDim<I, void>, IDim<I, I>>(dom_vals_tmp, interpolation_domain);
+
+	ddc::DiscreteDomain<IDimDeriv> derivs_domain
+            = IDimDeriv::get_domain();
+	auto const dom_derivs = ddc::replace_dim_of<IDim<I, void>, IDimDeriv>(dom_vals, derivs_domain) 
 
     // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
     ddc::SplineBuilderBatched<
@@ -203,8 +213,27 @@ static void BatchedNonPeriodicSplineTest()
     ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan coef = coef_alloc.span_view();
 
+	int constexpr shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
+    ddc::Chunk Sderiv_lhs_alloc(
+(dom_derivs, ddc::KokkosAllocator<double, ExecSpace::memory_space>());
+	ddc::ChunkSpan Sderiv_lhs;
+    if (s_bcl == ddc::BoundCond::HERMITE) {
+        for (std::size_t ii = 0; ii < Sderiv_lhs.extent<IDimDeriv>(); ++ii) {
+            Sderiv_lhs(ii) = evaluator.deriv(x0<I>(), ii + shift);
+        }
+    }
+
+	ddc::Chunk Sderiv_rhs_alloc(
+(dom_derivs, ddc::KokkosAllocator<double, ExecSpace::memory_space>());
+	ddc::ChunkSpan Sderiv_rhs;
+    if (s_bcl == ddc::BoundCond::HERMITE) {
+        for (std::size_t ii = 0; ii < Sderiv_rhs.extent<IDimDeriv>(); ++ii) {
+            Sderiv_rhs(ii) = evaluator.deriv(xN<I>(), ii + shift);
+        }
+    }
+
     // Finally compute the spline by filling `coef`
-    spline_builder(coef, vals);
+    // spline_builder(coef, vals);
 
     /*
     

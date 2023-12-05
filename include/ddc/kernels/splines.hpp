@@ -5,6 +5,7 @@
 #include "splines/bsplines_non_uniform.hpp"
 #include "splines/bsplines_uniform.hpp"
 #include "splines/constant_extrapolation_boundary_value.hpp"
+#include "splines/deriv.hpp"
 #include "splines/greville_interpolation_points.hpp"
 #include "splines/knots_as_interpolation_points.hpp"
 #include "splines/mapping/analytical_invertible_curvilinear2d_to_cartesian.hpp"

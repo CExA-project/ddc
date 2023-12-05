@@ -48,6 +48,7 @@ private:
 
     std::unique_ptr<gko::solver::Bicgstab<>::Factory> m_solver_factory;
 
+    int m_main_chunk_size; // Maximum number of columns of B to be passed to a Ginkgo solver
     int m_preconditionner_max_block_size; // Maximum size of Jacobi-block preconditionner
 
 public:
@@ -71,6 +72,31 @@ public:
             }
             m_cols(i) = i % m_n;
             m_data(i) = 0;
+        }
+
+        if (cols_per_par_chunk.has_value()) {
+            m_main_chunk_size = cols_per_par_chunk.value();
+        } else {
+#ifdef KOKKOS_ENABLE_SERIAL
+            if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+                m_main_chunk_size = 256;
+            }
+#endif
+#ifdef KOKKOS_ENABLE_OPENMP
+            if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+                m_main_chunk_size = 256;
+            }
+#endif
+#ifdef KOKKOS_ENABLE_CUDA
+            if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+                m_main_chunk_size = 65535;
+            }
+#endif
+#ifdef KOKKOS_ENABLE_HIP
+            if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+                m_main_chunk_size = 65535;
+            }
+#endif
         }
 
         if (preconditionner_max_block_size.has_value()) {
@@ -187,16 +213,14 @@ public:
         auto const data_mat_device = gko::share(gko::clone(gko_exec, data_mat));
         auto const solver = m_solver_factory->generate(data_mat_device);
 
-        int const main_chunk_size = std::min(4096, n_equations);
-
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> b_view(b, m_n, n_equations);
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> x_view("", m_n, main_chunk_size);
+        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> x_view("", m_n, m_main_chunk_size);
 
-        int const iend = (n_equations + main_chunk_size - 1) / main_chunk_size;
+        int const iend = (n_equations + m_main_chunk_size - 1) / m_main_chunk_size;
         for (int i = 0; i < iend; ++i) {
-            int const subview_begin = i * main_chunk_size;
+            int const subview_begin = i * m_main_chunk_size;
             int const subview_end
-                    = (i + 1 == iend) ? n_equations : (subview_begin + main_chunk_size);
+                    = (i + 1 == iend) ? n_equations : (subview_begin + m_main_chunk_size);
 
             auto const b_subview = Kokkos::
                     subview(b_view, Kokkos::ALL, Kokkos::pair(subview_begin, subview_end));

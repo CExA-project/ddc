@@ -198,7 +198,7 @@ BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{64, 1024},
-                 {100, 500000},
+                 {100, 20000000},
                  {cols_per_par_chunk_ref, cols_per_par_chunk_ref},
                  {par_chunks_per_seq_chunk_ref, par_chunks_per_seq_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})

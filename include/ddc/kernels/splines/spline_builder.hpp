@@ -94,7 +94,6 @@ public:
     SplineBuilder(
             interpolation_domain_type const& interpolation_domain,
             std::optional<int> cols_per_par_chunk = std::nullopt,
-            std::optional<int> par_chunks_per_seq_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : matrix(nullptr)
         , m_offset(compute_offset(interpolation_domain))
@@ -113,7 +112,6 @@ public:
                 lower_block_size,
                 upper_block_size,
                 cols_per_par_chunk,
-                par_chunks_per_seq_chunk,
                 preconditionner_max_block_size);
     }
 
@@ -164,7 +162,6 @@ private:
             int lower_block_size,
             int upper_block_size,
             std::optional<int> cols_per_par_chunk = std::nullopt,
-            std::optional<int> par_chunks_per_seq_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt);
 
     void build_matrix_system();
@@ -474,7 +471,6 @@ void SplineBuilder<
                 [[maybe_unused]] int lower_block_size,
                 [[maybe_unused]] int upper_block_size,
                 std::optional<int> cols_per_par_chunk,
-                std::optional<int> par_chunks_per_seq_chunk,
                 std::optional<unsigned int> preconditionner_max_block_size)
 {
     // Special case: linear spline
@@ -487,7 +483,6 @@ void SplineBuilder<
             matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
                     ddc::discrete_space<BSplines>().nbasis(),
                     cols_per_par_chunk,
-                    par_chunks_per_seq_chunk,
                     preconditionner_max_block_size);
         }
     } else {
@@ -495,7 +490,6 @@ void SplineBuilder<
             matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
                     ddc::discrete_space<BSplines>().nbasis(),
                     cols_per_par_chunk,
-                    par_chunks_per_seq_chunk,
                     preconditionner_max_block_size);
         }
     }

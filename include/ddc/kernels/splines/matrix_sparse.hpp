@@ -112,7 +112,6 @@ public:
     explicit Matrix_Sparse(
             const int mat_size,
             std::optional<int> cols_per_par_chunk = std::nullopt,
-            [[maybe_unused]] std::optional<int> par_chunks_per_seq_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : Matrix(mat_size)
         , m_cols_per_par_chunk(cols_per_par_chunk.value_or(default_cols_per_par_chunk<ExecSpace>()))

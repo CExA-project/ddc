@@ -7,11 +7,11 @@
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_DualView.hpp>
+
 #include "ddc/kernels/splines/view.hpp"
 
 #include "test_utils.hpp"
-
-#include <Kokkos_DualView.hpp>
 
 namespace {
 

@@ -16,10 +16,8 @@ public:
             std::optional<int> cols_per_par_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
     {
-        return std::make_unique<Matrix_Sparse<ExecSpace>>(
-                n,
-                cols_per_par_chunk,
-                preconditionner_max_block_size);
+        return std::make_unique<
+                Matrix_Sparse<ExecSpace>>(n, cols_per_par_chunk, preconditionner_max_block_size);
     }
 };
 

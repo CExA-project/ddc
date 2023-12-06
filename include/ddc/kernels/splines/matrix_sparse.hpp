@@ -198,12 +198,10 @@ public:
                     subview(x_view, Kokkos::ALL, Kokkos::pair(0, subview_end - subview_begin));
 
             Kokkos::deep_copy(x_subview, b_subview);
-            Kokkos::fence();
 
             m_solver
                     ->apply(to_gko_dense(gko_exec, b_subview),
                             to_gko_dense(gko_exec, x_subview)); // inplace solve
-            gko_exec->synchronize();
 
             Kokkos::deep_copy(b_subview, x_subview);
         }

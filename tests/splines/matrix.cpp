@@ -85,7 +85,7 @@ TEST_P(MatrixSizesFixture, Sparse)
     }
     // copy_matrix(val, matrix); // copy_matrix is not available for sparse matrix because of a limitation of Ginkgo API (get_element is not implemented). The workaround is to fill val directly in the loop
 
-    Kokkos::DualView<double*> inv_ptr("", N * N);
+    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
     ddc::DSpan2D inv(inv_ptr.h_view.data(), N, N);
     fill_identity(inv);
     inv_ptr.modify_host();

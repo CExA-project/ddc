@@ -1,5 +1,7 @@
 #pragma once
+
 #include <memory>
+#include <optional>
 
 #include "matrix_banded.hpp"
 #include "matrix_center_block.hpp"
@@ -9,8 +11,8 @@
 #include "matrix_periodic_banded.hpp"
 #include "matrix_sparse.hpp"
 
-
 namespace ddc::detail {
+
 class MatrixMaker
 {
 public:
@@ -86,4 +88,5 @@ public:
         }
     }
 };
+
 } // namespace ddc::detail

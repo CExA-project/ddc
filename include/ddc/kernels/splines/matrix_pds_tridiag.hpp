@@ -68,12 +68,14 @@ protected:
     int factorize_method() override
     {
         int info;
+        int const n = get_size();
         dpttrf_(&n, d.get(), l.get(), &info);
         return info;
     }
     int solve_inplace_method(double* b, char, int const n_equations) const override
     {
         int info;
+        int const n = get_size();
         dpttrs_(&n, &n_equations, d.get(), l.get(), b, &n, &info);
         return info;
     }

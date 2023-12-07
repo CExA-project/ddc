@@ -23,34 +23,36 @@ class Matrix_Dense : public Matrix
 public:
     Matrix_Dense(int const n) : Matrix(n)
     {
-        assert(n > 0);
-        ipiv = std::make_unique<int[]>(n);
-        a = std::make_unique<double[]>(n * n);
-        for (int i = 0; i < n * n; ++i) {
+        assert(get_size() > 0);
+        ipiv = std::make_unique<int[]>(get_size());
+        a = std::make_unique<double[]>(get_size() * get_size());
+        for (int i = 0; i < get_size() * get_size(); ++i) {
             a[i] = 0;
         }
     }
     double get_element(int const i, int const j) const override
     {
-        assert(i < n);
-        assert(j < n);
-        return a[j * n + i];
+        assert(i < get_size());
+        assert(j < get_size());
+        return a[j * get_size() + i];
     }
     void set_element(int const i, int const j, double const aij) override
     {
-        a[j * n + i] = aij;
+        a[j * get_size() + i] = aij;
     }
 
 private:
     int factorize_method() override
     {
         int info;
+        int const n = get_size();
         dgetrf_(&n, &n, a.get(), &n, ipiv.get(), &info);
         return info;
     }
     int solve_inplace_method(double* b, char const transpose, int const n_equations) const override
     {
         int info;
+        int const n = get_size();
         dgetrs_(&transpose, &n, &n_equations, a.get(), &n, ipiv.get(), b, &n, &info);
         return info;
     }

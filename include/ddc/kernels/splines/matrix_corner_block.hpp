@@ -29,7 +29,7 @@ public:
     {
         assert(n > 0);
         assert(k >= 0);
-        assert(k <= n);
+        assert(k <= get_size());
         assert(nb == q_block->get_size());
         memset(lambda_ptr.get(), 0, sizeof(double) * k * nb);
         memset(Abm_1_gamma_ptr.get(), 0, sizeof(double) * k * nb);
@@ -110,9 +110,9 @@ public:
     }
     virtual ddc::DSpan2D solve_multiple_inplace(ddc::DSpan2D const bx) const override
     {
-        assert(int(bx.extent(0)) == n);
+        assert(int(bx.extent(0)) == get_size());
         for (std::size_t i(0); i < bx.extent(0); ++i) {
-            ddc::DSpan1D const b(bx.data_handle() + n * i, n);
+            ddc::DSpan1D const b(bx.data_handle() + get_size() * i, get_size());
             solve_inplace(b);
         }
         return bx;

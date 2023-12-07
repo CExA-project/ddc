@@ -34,15 +34,15 @@ public:
     double get_element(int const i, int j) const override
     {
         assert(i >= 0);
-        assert(i < n);
+        assert(i < get_size());
         assert(j >= 0);
-        assert(i < n);
+        assert(i < get_size());
         if (i >= nb && j < nb) {
             int d = j - i;
-            if (d > n / 2)
-                d -= n;
-            if (d < -n / 2)
-                d += n;
+            if (d > get_size() / 2)
+                d -= get_size();
+            if (d < -get_size() / 2)
+                d += get_size();
 
             if (d < -kl || d > ku)
                 return 0.0;
@@ -57,15 +57,15 @@ public:
     void set_element(int const i, int j, double const a_ij) override
     {
         assert(i >= 0);
-        assert(i < n);
+        assert(i < m_n);
         assert(j >= 0);
-        assert(i < n);
+        assert(i < get_size());
         if (i >= nb && j < nb) {
             int d = j - i;
-            if (d > n / 2)
-                d -= n;
-            if (d < -n / 2)
-                d += n;
+            if (d > get_size() / 2)
+                d -= get_size();
+            if (d < -get_size() / 2)
+                d += get_size();
 
             if (d < -kl || d > ku) {
                 assert(std::fabs(a_ij) < 1e-20);

@@ -226,13 +226,17 @@ static void BatchedNonPeriodicSplineTest()
     ddc::Chunk Sderiv_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan Sderiv_lhs = Sderiv_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
-        ddc::Chunk Sderiv_lhs1_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv_lhs1 = Sderiv_lhs1_alloc.span_view();
-        for (int ii = 0; ii < Sderiv_lhs1.domain().template extent<IDimDeriv<ddc::Deriv<I>>>();
+        ddc::Chunk Sderiv_lhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
+        ddc::ChunkSpan Sderiv_lhs1_cpu = Sderiv_lhs1_cpu_alloc.span_view();
+        for (int ii = 0; ii < Sderiv_lhs1_cpu.domain().template extent<IDimDeriv<ddc::Deriv<I>>>();
              ++ii) {
-            Sderiv_lhs1(typename decltype(Sderiv_lhs1.domain())::discrete_element_type(ii))
+            Sderiv_lhs1_cpu(typename decltype(Sderiv_lhs1_cpu.domain())::discrete_element_type(ii))
                     = evaluator.deriv(x0<I>(), ii + shift);
         }
+        ddc::Chunk Sderiv_lhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
+        ddc::ChunkSpan Sderiv_lhs1 = Sderiv_lhs1_alloc.span_view();
+        ddc::deepcopy(Sderiv_lhs1, Sderiv_lhs1_cpu);
+
         ddc::for_each(
                 ddc::policies::policy(exec_space),
                 Sderiv_lhs.domain(),
@@ -244,13 +248,17 @@ static void BatchedNonPeriodicSplineTest()
     ddc::Chunk Sderiv_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan Sderiv_rhs = Sderiv_rhs_alloc.span_view();
     if (s_bcr == ddc::BoundCond::HERMITE) {
-        ddc::Chunk Sderiv_rhs1_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv_rhs1 = Sderiv_rhs1_alloc.span_view();
-        for (int ii = 0; ii < Sderiv_rhs1.domain().template extent<IDimDeriv<ddc::Deriv<I>>>();
+        ddc::Chunk Sderiv_rhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
+        ddc::ChunkSpan Sderiv_rhs1_cpu = Sderiv_rhs1_cpu_alloc.span_view();
+        for (int ii = 0; ii < Sderiv_rhs1_cpu.domain().template extent<IDimDeriv<ddc::Deriv<I>>>();
              ++ii) {
-            Sderiv_rhs1(typename decltype(Sderiv_rhs1.domain())::discrete_element_type(ii))
+            Sderiv_rhs1_cpu(typename decltype(Sderiv_rhs1_cpu.domain())::discrete_element_type(ii))
                     = evaluator.deriv(x0<I>(), ii + shift);
         }
+        ddc::Chunk Sderiv_rhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
+        ddc::ChunkSpan Sderiv_rhs1 = Sderiv_rhs1_alloc.span_view();
+        ddc::deepcopy(Sderiv_rhs1, Sderiv_rhs1_cpu);
+
         ddc::for_each(
                 ddc::policies::policy(exec_space),
                 Sderiv_rhs.domain(),

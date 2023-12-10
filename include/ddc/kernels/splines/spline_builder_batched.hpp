@@ -166,6 +166,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcXmin == BoundCond::HERMITE) {
         assert(derivs_xmin->extent(0) == nbc_xmin);
+        auto const dx_proxy = spline_builder.m_dx;
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
@@ -173,7 +174,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                     for (int i = nbc_xmin; i > 0; --i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin - i), j)
                                 = (*derivs_xmin)(ddc::DiscreteElement<deriv_type>(i - 1), j)
-                                  * Kokkos::pow(spline_builder.m_dx, i + odd - 1);
+                                  * Kokkos::pow(dx_proxy, i + odd - 1);
                     }
                 });
     }
@@ -200,6 +201,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcXmax == BoundCond::HERMITE) {
         assert(derivs_xmax->extent(0) == nbc_xmax);
+        auto const dx_proxy = spline_builder.m_dx;
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
@@ -207,7 +209,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                     for (int i = 0; i < nbc_xmax; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbc_xmax - i), j)
                                 = (*derivs_xmax)(ddc::DiscreteElement<deriv_type>(i), j)
-                                  * Kokkos::pow(spline_builder.m_dx, i + odd);
+                                  * Kokkos::pow(dx_proxy, i + odd);
                     }
                 });
     }

@@ -20,6 +20,8 @@ public:
 
     using bsplines_type = typename SplineBuilder::bsplines_type;
 
+    using deriv_type = ddc::UniformPointSampling<ddc::Deriv<tag_type>>;
+
     using builder_type = SplineBuilder;
 
     using interpolation_mesh_type = typename SplineBuilder::mesh_type;
@@ -50,6 +52,12 @@ public:
                             ddc::detail::TypeSeq<IDimX...>,
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
+    using derivs_domain_type =
+            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
+                    ddc::detail::TypeSeq<IDimX...>,
+                    ddc::detail::TypeSeq<interpolation_mesh_type>,
+                    ddc::detail::TypeSeq<deriv_type>>>;
+
     static constexpr ddc::BoundCond BcXmin = SplineBuilder::s_bc_xmin;
     static constexpr ddc::BoundCond BcXmax = SplineBuilder::s_bc_xmax;
 
@@ -68,13 +76,7 @@ public:
                 cols_per_par_chunk,
                 par_chunks_per_seq_chunk,
                 preconditionner_max_block_size)
-        , m_vals_domain(vals_domain)
-    {
-        static_assert(
-                BcXmin == BoundCond::PERIODIC && BcXmax == BoundCond::PERIODIC,
-                "Boundary conditions other than PERIODIC are not supported yet in "
-                "SpSplineBuilderBatched");
-    };
+        , m_vals_domain(vals_domain) {};
 
     SplineBuilderBatched(SplineBuilderBatched const& x) = delete;
 
@@ -126,16 +128,55 @@ public:
     template <class Layout>
     void operator()(
             ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
-            ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals) const;
+            ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
+            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+                    derivs_xmin
+            = std::nullopt,
+            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+                    derivs_xmax
+            = std::nullopt) const;
 };
 
 template <class SplineBuilder, class... IDimX>
 template <class Layout>
 void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
         ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
-        ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals) const
+        ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
+        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+                derivs_xmin,
+        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+                derivs_xmax) const
 {
+    assert(vals.template extent<interpolation_mesh_type>()
+           == ddc::discrete_space<bsplines_type>().nbasis() - spline_builder::s_nbe_xmin
+                      - spline_builder::s_nbe_xmax);
+
+    const bool odd = spline_builder.s_odd;
+
     const std::size_t nbc_xmin = spline_builder.s_nbc_xmin;
+    const std::size_t nbc_xmax = spline_builder.s_nbc_xmax;
+
+    assert((BcXmin == ddc::BoundCond::HERMITE)
+           != (!derivs_xmin.has_value() || derivs_xmin->extent(0) == 0));
+    assert((BcXmax == ddc::BoundCond::HERMITE)
+           != (!derivs_xmax.has_value() || derivs_xmax->extent(0) == 0));
+
+    // Hermite boundary conditions at xmin, if any
+    // NOTE: For consistency with the linear system, the i-th derivative
+    //       provided by the user must be multiplied by dx^i
+    if constexpr (BcXmin == BoundCond::HERMITE) {
+        assert(derivs_xmin->extent(0) == nbc_xmin);
+        ddc::for_each(
+                ddc::policies::policy(exec_space()),
+                batch_domain(),
+                DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
+                    for (int i = nbc_xmin; i > 0; --i) {
+                        spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin - i), j)
+                                = (*derivs_xmin)(ddc::DiscreteElement<deriv_type>(i - 1), j)
+                                  * Kokkos::pow(spline_builder.m_dx, i + odd - 1);
+                    }
+                });
+    }
 
     // TODO : Consider optimizing
     // Fill spline with vals (to work in spline afterward and preserve vals)
@@ -154,6 +195,22 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                             = vals(ddc::DiscreteElement<interpolation_mesh_type>(i), j);
                 }
             });
+    // Hermite boundary conditions at xmax, if any
+    // NOTE: For consistency with the linear system, the i-th derivative
+    //       provided by the user must be multiplied by dx^i
+    if constexpr (BcXmax == BoundCond::HERMITE) {
+        assert(derivs_xmax->extent(0) == nbc_xmax);
+        ddc::for_each(
+                ddc::policies::policy(exec_space()),
+                batch_domain(),
+                DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
+                    for (int i = 0; i < nbc_xmax; ++i) {
+                        spline(ddc::DiscreteElement<bsplines_type>(nbc_xmax - i), j)
+                                = (*derivs_xmax)(ddc::DiscreteElement<deriv_type>(i), j)
+                                  * Kokkos::pow(spline_builder.m_dx, i + odd);
+                    }
+                });
+    }
 
     // TODO : Consider optimizing
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)

@@ -20,6 +20,8 @@ public:
 
     using bsplines_type = typename SplineBuilder::bsplines_type;
 
+    using deriv_type = ddc::UniformPointSampling<ddc::Deriv<tag_type>>;
+
     using builder_type = SplineBuilder;
 
     using interpolation_mesh_type = typename SplineBuilder::mesh_type;
@@ -50,10 +52,11 @@ public:
                             ddc::detail::TypeSeq<IDimX...>,
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
-	using derivs_domain_type = typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
+    using derivs_domain_type =
+            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
-                    ddc::detail::TypeSeq<ddc::UniformPointSampling<ddc::Deriv<tag_type>>>>>;
+                    ddc::detail::TypeSeq<deriv_type>>>;
 
     static constexpr ddc::BoundCond BcXmin = SplineBuilder::s_bc_xmin;
     static constexpr ddc::BoundCond BcXmax = SplineBuilder::s_bc_xmax;
@@ -200,7 +203,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                 DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
                     for (int i = nbc_xmin; i > 0; --i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin - i), j)
-                                = (*derivs_xmin)(i - 1)
+                                = (*derivs_xmin)(ddc::DiscreteElement<deriv_type>(i - 1), j)
                                   * Kokkos::pow(spline_builder.m_dx, i + odd - 1);
                     }
                 });
@@ -235,7 +238,8 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                 DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
                     for (int i = 0; i < nbc_xmax; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbc_xmax - i), j)
-                                = (*derivs_xmax)(i)*Kokkos::pow(spline_builder.m_dx, i + odd);
+                                = (*derivs_xmax)(ddc::DiscreteElement<deriv_type>(i), j)
+                                  * Kokkos::pow(spline_builder.m_dx, i + odd);
                     }
                 });
     }

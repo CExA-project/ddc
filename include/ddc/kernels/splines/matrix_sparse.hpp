@@ -174,7 +174,7 @@ public:
             gko_exec = create_gko_exec<ExecSpace>();
         }
         std::shared_ptr<gko::stop::ResidualNorm<double>::Factory> residual_criterion
-                = gko::stop::ResidualNorm<double>::build().with_reduction_factor(1e-20).on(
+                = gko::stop::ResidualNorm<double>::build().with_reduction_factor(1e-17).on(
                         gko_exec);
         m_solver_factory
                 = gko::solver::Bicgstab<double>::build()

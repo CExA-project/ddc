@@ -76,7 +76,7 @@ public:
                 cols_per_par_chunk,
                 par_chunks_per_seq_chunk,
                 preconditionner_max_block_size)
-        , m_vals_domain(vals_domain) {};
+        , m_vals_domain(vals_domain) {}
 
     SplineBuilderBatched(SplineBuilderBatched const& x) = delete;
 

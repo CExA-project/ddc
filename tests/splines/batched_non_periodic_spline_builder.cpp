@@ -217,7 +217,7 @@ static void BatchedNonPeriodicSplineTest()
             DDC_LAMBDA(Index<IDim<X, I>...> const e) {
                 vals(e) = vals1(ddc::select<IDim<I, I>>(e));
             });
- 
+
     int constexpr shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk Sderiv_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan Sderiv_lhs = Sderiv_lhs_alloc.span_view();
@@ -263,14 +263,14 @@ static void BatchedNonPeriodicSplineTest()
                 });
     }
 
-	// Instantiate chunk of spline coefs to receive output of spline_builder
+    // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
     spline_builder(coef, vals, std::optional(Sderiv_lhs), std::optional(Sderiv_rhs));
 
-	// Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
+    // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
     ddc::SplineEvaluatorBatched<
             ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>>,
             IDim<X, I>...>
@@ -279,7 +279,7 @@ static void BatchedNonPeriodicSplineTest()
                     ddc::g_null_boundary<BSplines<I>>,
                     ddc::g_null_boundary<BSplines<I>>);
 
-	// Instantiate chunk of coordinates of dom_interpolation
+    // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
     ddc::for_each(
@@ -291,19 +291,19 @@ static void BatchedNonPeriodicSplineTest()
     // Instantiate chunks to receive outputs of spline_evaluator
     ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
-	/*
+    /*
     ddc::Chunk spline_eval_deriv_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan spline_eval_deriv = spline_eval_deriv_alloc.span_view();
     ddc::Chunk spline_eval_integrals_alloc(dom_batch, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan spline_eval_integrals = spline_eval_integrals_alloc.span_view();
 	*/
 
-	// Call spline_evaluator on the same mesh we started with
+    // Call spline_evaluator on the same mesh we started with
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
     // spline_evaluator_batched.deriv(spline_eval_deriv, coords_eval.span_cview(), coef.span_cview());
     // spline_evaluator_batched.integrate(spline_eval_integrals, coef.span_cview());
 
-	// Checking errors (we recover the initial values)
+    // Checking errors (we recover the initial values)
     double max_norm_error = ddc::transform_reduce(
             ddc::policies::policy(exec_space),
             spline_eval.domain(),
@@ -312,7 +312,7 @@ static void BatchedNonPeriodicSplineTest()
             DDC_LAMBDA(Index<IDim<X, I>...> const e) {
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
-	/*
+    /*
     double max_norm_error_diff = ddc::transform_reduce(
             ddc::policies::policy(exec_space),
             spline_eval_deriv.domain(),
@@ -342,7 +342,7 @@ static void BatchedNonPeriodicSplineTest()
     EXPECT_LE(
             max_norm_error,
             std::max(error_bounds.error_bound(dx<I>(ncells), s_degree_x), 1.0e-14 * max_norm));
-	/*
+    /*
     EXPECT_LE(
             max_norm_error_diff,
             std::

@@ -207,7 +207,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                 batch_domain(),
                 DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
                     for (int i = 0; i < nbc_xmax; ++i) {
-                        spline(ddc::DiscreteElement<bsplines_type>(nbc_xmax - i), j)
+                        spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - nbc_xmax - i), j)
                                 = (*derivs_xmax)(ddc::DiscreteElement<deriv_type>(i), j)
                                   * Kokkos::pow(dx_proxy, i + odd);
                     }

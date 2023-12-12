@@ -76,7 +76,9 @@ public:
                 cols_per_par_chunk,
                 par_chunks_per_seq_chunk,
                 preconditionner_max_block_size)
-        , m_vals_domain(vals_domain) {}
+        , m_vals_domain(vals_domain)
+    {
+    }
 
     SplineBuilderBatched(SplineBuilderBatched const& x) = delete;
 
@@ -176,8 +178,8 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                 derivs_xmax) const
 {
     assert(vals.template extent<interpolation_mesh_type>()
-           == ddc::discrete_space<bsplines_type>().nbasis() - spline_builder::s_nbe_xmin
-                      - spline_builder::s_nbe_xmax);
+           == ddc::discrete_space<bsplines_type>().nbasis() - spline_builder.s_nbe_xmin
+                      - spline_builder.s_nbe_xmax);
 
     // Degree 1 corresponds to A=Id, so no need to call a solver
     if constexpr (bsplines_type::degree() == 1)
@@ -188,15 +190,15 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
     const std::size_t nbc_xmax = spline_builder.s_nbc_xmax;
 
     assert((BcXmin == ddc::BoundCond::HERMITE)
-           != (!derivs_xmin.has_value() || derivs_xmin->extent(0) == 0));
+           != (!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0));
     assert((BcXmax == ddc::BoundCond::HERMITE)
-           != (!derivs_xmax.has_value() || derivs_xmax->extent(0) == 0));
+           != (!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0));
 
     // Hermite boundary conditions at xmin, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcXmin == BoundCond::HERMITE) {
-        assert(derivs_xmin->extent(0) == nbc_xmin);
+        assert(derivs_xmin->template extent<deriv_type>() == nbc_xmin);
         auto const dx_proxy = spline_builder.m_dx;
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
@@ -232,7 +234,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcXmax == BoundCond::HERMITE) {
-        assert(derivs_xmax->extent(0) == nbc_xmax);
+        assert(derivs_xmax->template extent<deriv_type>() == nbc_xmax);
         auto const dx_proxy = spline_builder.m_dx;
         ddc::for_each(
                 ddc::policies::policy(exec_space()),

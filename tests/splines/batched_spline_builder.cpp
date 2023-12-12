@@ -399,7 +399,21 @@ static void BatchedPeriodicSplineTest()
                         1.0e-14 * max_norm_int));
 }
 
-TEST(BatchedPeriodicSplineHost, 1DX)
+#if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
+#define SUFFIX(name) name##Periodic##Uniform
+#elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#define SUFFIX(name) name##Periodic##NonUniform
+#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
+#define SUFFIX(name) name##Greville##Uniform
+#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#define SUFFIX(name) name##Greville##NonUniform
+#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM)
+#define SUFFIX(name) name##Hermite##Uniform
+#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#define SUFFIX(name) name##Hermite##NonUniform
+#endif
+
+TEST(SUFFIX(BatchedPeriodicSplineHost), 1DX)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -408,7 +422,7 @@ TEST(BatchedPeriodicSplineHost, 1DX)
             DimX>();
 }
 
-TEST(BatchedPeriodicSplineDevice, 1DX)
+TEST(SUFFIX(BatchedPeriodicSplineDevice), 1DX)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -417,7 +431,7 @@ TEST(BatchedPeriodicSplineDevice, 1DX)
             DimX>();
 }
 
-TEST(BatchedPeriodicSplineHost, 2DX)
+TEST(SUFFIX(BatchedPeriodicSplineHost), 2DX)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -427,7 +441,7 @@ TEST(BatchedPeriodicSplineHost, 2DX)
             DimY>();
 }
 
-TEST(BatchedPeriodicSplineHost, 2DY)
+TEST(SUFFIX(BatchedPeriodicSplineHost), 2DY)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -437,7 +451,7 @@ TEST(BatchedPeriodicSplineHost, 2DY)
             DimY>();
 }
 
-TEST(BatchedPeriodicSplineDevice, 2DX)
+TEST(SUFFIX(BatchedPeriodicSplineDevice), 2DX)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -447,7 +461,7 @@ TEST(BatchedPeriodicSplineDevice, 2DX)
             DimY>();
 }
 
-TEST(BatchedPeriodicSplineDevice, 2DY)
+TEST(SUFFIX(BatchedPeriodicSplineDevice), 2DY)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -457,7 +471,7 @@ TEST(BatchedPeriodicSplineDevice, 2DY)
             DimY>();
 }
 
-TEST(BatchedPeriodicSplineHost, 3DX)
+TEST(SUFFIX(BatchedPeriodicSplineHost), 3DX)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -468,7 +482,7 @@ TEST(BatchedPeriodicSplineHost, 3DX)
             DimZ>();
 }
 
-TEST(BatchedPeriodicSplineHost, 3DY)
+TEST(SUFFIX(BatchedPeriodicSplineHost), 3DY)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -479,7 +493,7 @@ TEST(BatchedPeriodicSplineHost, 3DY)
             DimZ>();
 }
 
-TEST(BatchedPeriodicSplineHost, 3DZ)
+TEST(SUFFIX(BatchedPeriodicSplineHost), 3DZ)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -490,7 +504,7 @@ TEST(BatchedPeriodicSplineHost, 3DZ)
             DimZ>();
 }
 
-TEST(BatchedPeriodicSplineDevice, 3DX)
+TEST(SUFFIX(BatchedPeriodicSplineDevice), 3DX)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -501,7 +515,7 @@ TEST(BatchedPeriodicSplineDevice, 3DX)
             DimZ>();
 }
 
-TEST(BatchedPeriodicSplineDevice, 3DY)
+TEST(SUFFIX(BatchedPeriodicSplineDevice), 3DY)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -512,7 +526,7 @@ TEST(BatchedPeriodicSplineDevice, 3DY)
             DimZ>();
 }
 
-TEST(BatchedPeriodicSplineDevice, 3DZ)
+TEST(SUFFIX(BatchedPeriodicSplineDevice), 3DZ)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -524,7 +538,7 @@ TEST(BatchedPeriodicSplineDevice, 3DZ)
 }
 
 
-TEST(BatchedPeriodicSplineHost, 4DX)
+TEST(SUFFIX(BatchedPeriodicSplineHost), 4DX)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -536,7 +550,7 @@ TEST(BatchedPeriodicSplineHost, 4DX)
             DimT>();
 }
 
-TEST(BatchedPeriodicSplineHost, 4DY)
+TEST(SUFFIX(BatchedPeriodicSplineHost), 4DY)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -548,7 +562,7 @@ TEST(BatchedPeriodicSplineHost, 4DY)
             DimT>();
 }
 
-TEST(BatchedPeriodicSplineHost, 4DZ)
+TEST(SUFFIX(BatchedPeriodicSplineHost), 4DZ)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -560,7 +574,7 @@ TEST(BatchedPeriodicSplineHost, 4DZ)
             DimT>();
 }
 
-TEST(BatchedPeriodicSplineHost, 4DT)
+TEST(SUFFIX(BatchedPeriodicSplineHost), 4DT)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -572,7 +586,7 @@ TEST(BatchedPeriodicSplineHost, 4DT)
             DimT>();
 }
 
-TEST(BatchedPeriodicSplineDevice, 4DX)
+TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DX)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -584,7 +598,7 @@ TEST(BatchedPeriodicSplineDevice, 4DX)
             DimT>();
 }
 
-TEST(BatchedPeriodicSplineDevice, 4DY)
+TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DY)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -596,7 +610,7 @@ TEST(BatchedPeriodicSplineDevice, 4DY)
             DimT>();
 }
 
-TEST(BatchedPeriodicSplineDevice, 4DZ)
+TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DZ)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -608,7 +622,7 @@ TEST(BatchedPeriodicSplineDevice, 4DZ)
             DimT>();
 }
 
-TEST(BatchedPeriodicSplineDevice, 4DT)
+TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DT)
 {
     BatchedPeriodicSplineTest<
             Kokkos::DefaultExecutionSpace,

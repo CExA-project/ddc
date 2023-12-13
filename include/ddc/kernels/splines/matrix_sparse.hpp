@@ -39,7 +39,7 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
 }
 
 template <class ExecSpace>
-int default_cols_per_par_chunk() noexcept
+int default_cols_per_chunk() noexcept
 {
 #ifdef KOKKOS_ENABLE_SERIAL
     if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
@@ -103,7 +103,7 @@ private:
 
     std::shared_ptr<gko::solver::Bicgstab<double>> m_solver;
 
-    int m_cols_per_par_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
+    int m_cols_per_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
 
     unsigned int m_preconditionner_max_block_size; // Maximum size of Jacobi-block preconditionner
 
@@ -111,10 +111,10 @@ public:
     // Constructor
     explicit Matrix_Sparse(
             const int mat_size,
-            std::optional<int> cols_per_par_chunk = std::nullopt,
+            std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : Matrix(mat_size)
-        , m_cols_per_par_chunk(cols_per_par_chunk.value_or(default_cols_per_par_chunk<ExecSpace>()))
+        , m_cols_per_chunk(cols_per_chunk.value_or(default_cols_per_chunk<ExecSpace>()))
         , m_preconditionner_max_block_size(preconditionner_max_block_size.value_or(
                   default_preconditionner_max_block_size<ExecSpace>()))
     {
@@ -179,7 +179,7 @@ public:
 
         std::shared_ptr const gko_exec = m_solver->get_executor();
 
-        int const main_chunk_size = std::min(m_cols_per_par_chunk, n_equations);
+        int const main_chunk_size = std::min(m_cols_per_chunk, n_equations);
 
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
                 b_view(b, get_size(), n_equations);

@@ -186,10 +186,10 @@ struct DimsInitializer<IDimI, ddc::detail::TypeSeq<IDimX...>>
                 IDimDeriv<ddc::Deriv<typename IDimI::continuous_dimension_type>>::
                         init(Coord<ddc::Deriv<typename IDimI::continuous_dimension_type>>(1),
                              Coord<ddc::Deriv<typename IDimI::continuous_dimension_type>>(
-                                     s_degree_x),
+                                     std::max(2, (int)s_degree_x / 2)),
                              DVect<IDimDeriv<
                                      ddc::Deriv<typename IDimI::continuous_dimension_type>>>(
-                                     s_degree_x)));
+                                     std::max(2, (int)s_degree_x / 2))));
 #endif
     }
 };
@@ -197,7 +197,7 @@ struct DimsInitializer<IDimI, ddc::detail::TypeSeq<IDimX...>>
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename I, typename... X>
-static void BatchedPeriodicSplineTest()
+static void BatchedSplineTest()
 {
     // Instantiate execution spaces and initialize spaces
     Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
@@ -222,7 +222,7 @@ static void BatchedPeriodicSplineTest()
     ddc::DiscreteDomain<IDimDeriv<ddc::Deriv<I>>> const derivs_domain
             = ddc::DiscreteDomain<IDimDeriv<ddc::Deriv<I>>>(
                     Index<IDimDeriv<ddc::Deriv<I>>>(0),
-                    DVect<IDimDeriv<ddc::Deriv<I>>>(s_degree_x));
+                    DVect<IDimDeriv<ddc::Deriv<I>>>(s_degree_x / 2));
     auto const dom_derivs
             = ddc::replace_dim_of<IDim<I, I>, IDimDeriv<ddc::Deriv<I>>>(dom_vals, derivs_domain);
 #endif
@@ -413,27 +413,27 @@ static void BatchedPeriodicSplineTest()
 #define SUFFIX(name) name##Hermite##NonUniform
 #endif
 
-TEST(SUFFIX(BatchedPeriodicSplineHost), 1DX)
+TEST(SUFFIX(BatchedSplineHost), 1DX)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
             DimX>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineDevice), 1DX)
+TEST(SUFFIX(BatchedSplineDevice), 1DX)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
             DimX>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineHost), 2DX)
+TEST(SUFFIX(BatchedSplineHost), 2DX)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
@@ -441,9 +441,9 @@ TEST(SUFFIX(BatchedPeriodicSplineHost), 2DX)
             DimY>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineHost), 2DY)
+TEST(SUFFIX(BatchedSplineHost), 2DY)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimY,
@@ -451,9 +451,9 @@ TEST(SUFFIX(BatchedPeriodicSplineHost), 2DY)
             DimY>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineDevice), 2DX)
+TEST(SUFFIX(BatchedSplineDevice), 2DX)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
@@ -461,9 +461,9 @@ TEST(SUFFIX(BatchedPeriodicSplineDevice), 2DX)
             DimY>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineDevice), 2DY)
+TEST(SUFFIX(BatchedSplineDevice), 2DY)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimY,
@@ -471,9 +471,9 @@ TEST(SUFFIX(BatchedPeriodicSplineDevice), 2DY)
             DimY>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineHost), 3DX)
+TEST(SUFFIX(BatchedSplineHost), 3DX)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
@@ -482,9 +482,9 @@ TEST(SUFFIX(BatchedPeriodicSplineHost), 3DX)
             DimZ>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineHost), 3DY)
+TEST(SUFFIX(BatchedSplineHost), 3DY)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimY,
@@ -493,9 +493,9 @@ TEST(SUFFIX(BatchedPeriodicSplineHost), 3DY)
             DimZ>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineHost), 3DZ)
+TEST(SUFFIX(BatchedSplineHost), 3DZ)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimZ,
@@ -504,9 +504,9 @@ TEST(SUFFIX(BatchedPeriodicSplineHost), 3DZ)
             DimZ>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineDevice), 3DX)
+TEST(SUFFIX(BatchedSplineDevice), 3DX)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
@@ -515,9 +515,9 @@ TEST(SUFFIX(BatchedPeriodicSplineDevice), 3DX)
             DimZ>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineDevice), 3DY)
+TEST(SUFFIX(BatchedSplineDevice), 3DY)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimY,
@@ -526,9 +526,9 @@ TEST(SUFFIX(BatchedPeriodicSplineDevice), 3DY)
             DimZ>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineDevice), 3DZ)
+TEST(SUFFIX(BatchedSplineDevice), 3DZ)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimZ,
@@ -538,9 +538,9 @@ TEST(SUFFIX(BatchedPeriodicSplineDevice), 3DZ)
 }
 
 
-TEST(SUFFIX(BatchedPeriodicSplineHost), 4DX)
+TEST(SUFFIX(BatchedSplineHost), 4DX)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
@@ -550,9 +550,9 @@ TEST(SUFFIX(BatchedPeriodicSplineHost), 4DX)
             DimT>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineHost), 4DY)
+TEST(SUFFIX(BatchedSplineHost), 4DY)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimY,
@@ -562,9 +562,9 @@ TEST(SUFFIX(BatchedPeriodicSplineHost), 4DY)
             DimT>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineHost), 4DZ)
+TEST(SUFFIX(BatchedSplineHost), 4DZ)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimZ,
@@ -574,9 +574,9 @@ TEST(SUFFIX(BatchedPeriodicSplineHost), 4DZ)
             DimT>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineHost), 4DT)
+TEST(SUFFIX(BatchedSplineHost), 4DT)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimT,
@@ -586,9 +586,9 @@ TEST(SUFFIX(BatchedPeriodicSplineHost), 4DT)
             DimT>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DX)
+TEST(SUFFIX(BatchedSplineDevice), 4DX)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
@@ -598,9 +598,9 @@ TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DX)
             DimT>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DY)
+TEST(SUFFIX(BatchedSplineDevice), 4DY)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimY,
@@ -610,9 +610,9 @@ TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DY)
             DimT>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DZ)
+TEST(SUFFIX(BatchedSplineDevice), 4DZ)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimZ,
@@ -622,9 +622,9 @@ TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DZ)
             DimT>();
 }
 
-TEST(SUFFIX(BatchedPeriodicSplineDevice), 4DT)
+TEST(SUFFIX(BatchedSplineDevice), 4DT)
 {
-    BatchedPeriodicSplineTest<
+    BatchedSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimT,

@@ -57,7 +57,7 @@ public:
     void set_element(int const i, int j, double const a_ij) override
     {
         assert(i >= 0);
-        assert(i < m_n);
+        assert(i < get_size());
         assert(j >= 0);
         assert(i < get_size());
         if (i >= nb && j < nb) {

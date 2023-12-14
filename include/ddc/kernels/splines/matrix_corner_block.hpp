@@ -37,9 +37,9 @@ public:
     virtual double get_element(int const i, int const j) const override
     {
         assert(i >= 0);
-        assert(i < n);
+        assert(i < get_size());
         assert(j >= 0);
-        assert(i < n);
+        assert(i < get_size());
         if (i < nb && j < nb) {
             return q_block->get_element(i, j);
         } else if (i >= nb && j >= nb) {
@@ -53,9 +53,9 @@ public:
     virtual void set_element(int const i, int const j, double const a_ij) override
     {
         assert(i >= 0);
-        assert(i < n);
+        assert(i < get_size());
         assert(j >= 0);
-        assert(i < n);
+        assert(i < get_size());
         if (i < nb && j < nb) {
             q_block->set_element(i, j, a_ij);
         } else if (i >= nb && j >= nb) {
@@ -77,7 +77,7 @@ public:
     }
     virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const bx) const override
     {
-        assert(int(bx.extent(0)) == n);
+        assert(int(bx.extent(0)) == get_size());
 
         ddc::DSpan1D const u(bx.data_handle(), nb);
         ddc::DSpan1D const v(bx.data_handle() + nb, k);
@@ -94,7 +94,7 @@ public:
     }
     virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const bx) const override
     {
-        assert(int(bx.extent(0)) == n);
+        assert(int(bx.extent(0)) == get_size());
         ddc::DSpan1D const u(bx.data_handle(), nb);
         ddc::DSpan1D const v(bx.data_handle() + nb, k);
 

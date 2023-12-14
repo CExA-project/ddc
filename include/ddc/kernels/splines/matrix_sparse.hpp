@@ -269,7 +269,7 @@ public:
                        std::cout);
         // gko_exec->add_logger(stream_logger);
         std::shared_ptr<gko::stop::ResidualNorm<>::Factory> residual_criterion
-                = gko::stop::ResidualNorm<>::build().with_reduction_factor(1e-20).on(gko_exec);
+                = gko::stop::ResidualNorm<>::build().with_reduction_factor(1e-17).on(gko_exec);
         std::shared_ptr<const gko::log::Convergence<>> convergence_logger
                 = gko::log::Convergence<>::create(gko_exec);
         // residual_criterion->add_logger(convergence_logger);

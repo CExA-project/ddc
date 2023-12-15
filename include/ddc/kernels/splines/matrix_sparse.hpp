@@ -192,16 +192,14 @@ public:
             int const subview_end
                     = (i + 1 == iend) ? n_equations : (subview_begin + main_chunk_size);
 
-            Kokkos::View<double**, Kokkos::LayoutStride, ExecSpace> const b_subview = Kokkos::
+            auto const b_subview = Kokkos::
                     subview(b_view, Kokkos::ALL, Kokkos::pair(subview_begin, subview_end));
-            Kokkos::View<double**, Kokkos::LayoutStride, ExecSpace> const x_subview = Kokkos::
+            auto const x_subview = Kokkos::
                     subview(x_view, Kokkos::ALL, Kokkos::pair(0, subview_end - subview_begin));
 
             Kokkos::deep_copy(x_subview, b_subview);
 
-            m_solver
-                    ->apply(to_gko_dense(gko_exec, b_subview),
-                            to_gko_dense(gko_exec, x_subview)); // inplace solve
+            m_solver->apply(to_gko_dense(gko_exec, b_subview), to_gko_dense(gko_exec, x_subview));
 
             Kokkos::deep_copy(b_subview, x_subview);
         }

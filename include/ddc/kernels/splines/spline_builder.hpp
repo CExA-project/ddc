@@ -81,7 +81,7 @@ public:
     // interpolator specific
     std::unique_ptr<ddc::detail::Matrix> matrix;
 
-    double m_dx; // average cell size for normalization of derivatives
+    double const m_dx; // average cell size for normalization of derivatives
 
 private:
     const int m_offset;

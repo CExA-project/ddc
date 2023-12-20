@@ -88,7 +88,7 @@ using BSplines = ddc::UniformBSplines<X, s_degree>;
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <typename X, typename I1, typename I2>
 using IDim = std::conditional_t<
-        std::disjunction_v<std::is_same<X, I1>,std::is_same<X,I2>>,
+        std::disjunction_v<std::is_same<X, I1>, std::is_same<X, I2>>,
         typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
         ddc::UniformPointSampling<X>>;
 
@@ -98,7 +98,7 @@ using BSplines = ddc::NonUniformBSplines<X, s_degree>;
 
 template <typename X, typename I1, typename I2>
 using IDim = std::conditional_t<
-        std::disjunction_v<std::is_same<X, I1>,std::is_same<X,I2>>,
+        std::disjunction_v<std::is_same<X, I1>, std::is_same<X, I2>>,
         typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
         ddc::NonUniformPointSampling<X>>;
 #endif
@@ -122,7 +122,7 @@ using Coord = ddc::Coordinate<X...>;
 
 // Extract batch dimensions from IDim (remove dimension of interest). Usefull
 template <typename I1, typename I2, typename... X>
-using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>, ddc::detail::TypeSeq<I1,I2>>;
+using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>, ddc::detail::TypeSeq<I1, I2>>;
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
@@ -175,7 +175,7 @@ struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
                 x0<typename IDimI1::continuous_dimension_type>(),
                 xN<typename IDimI1::continuous_dimension_type>(),
                 ncells);
-		ddc::init_discrete_space<BSplines<typename IDimI2::continuous_dimension_type>>(
+        ddc::init_discrete_space<BSplines<typename IDimI2::continuous_dimension_type>>(
                 x0<typename IDimI2::continuous_dimension_type>(),
                 xN<typename IDimI2::continuous_dimension_type>(),
                 ncells);
@@ -184,13 +184,13 @@ struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
          ...);
         ddc::init_discrete_space<BSplines<typename IDimI1::continuous_dimension_type>>(
                 breaks<typename IDimI1::continuous_dimension_type>(ncells));
-		ddc::init_discrete_space<BSplines<typename IDimI2::continuous_dimension_type>>(
+        ddc::init_discrete_space<BSplines<typename IDimI2::continuous_dimension_type>>(
                 breaks<typename IDimI2::continuous_dimension_type>(ncells));
 #endif
         ddc::init_discrete_space<IDimI1>(
                 GrevillePoints<
                         BSplines<typename IDimI1::continuous_dimension_type>>::get_sampling());
-		ddc::init_discrete_space<IDimI2>(
+        ddc::init_discrete_space<IDimI2>(
                 GrevillePoints<
                         BSplines<typename IDimI2::continuous_dimension_type>>::get_sampling());
 
@@ -202,7 +202,7 @@ struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
                                      std::max(2, (int)s_degree / 2)),
                              DVect<IDimDeriv<typename IDimI1::continuous_dimension_type>>(
                                      std::max(2, (int)s_degree / 2))));
-		ddc::init_discrete_space(
+        ddc::init_discrete_space(
                 IDimDeriv<typename IDimI2::continuous_dimension_type>::
                         init(Coord<ddc::Deriv<typename IDimI2::continuous_dimension_type>>(1),
                              Coord<ddc::Deriv<typename IDimI2::continuous_dimension_type>>(
@@ -223,37 +223,63 @@ static void Batched2dSplineTest()
     Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
     ExecSpace exec_space = ExecSpace();
     std::size_t constexpr ncells = 10;
-	DimsInitializer<IDim<I1, I1, I2>, IDim<I2, I1, I2>, BatchDims<IDim<I1, I1, I2>, IDim<I2, I1, I2>, IDim<X, I1, I2>...>> dims_initializer;
+    DimsInitializer<
+            IDim<I1, I1, I2>,
+            IDim<I2, I1, I2>,
+            BatchDims<IDim<I1, I1, I2>, IDim<I2, I1, I2>, IDim<X, I1, I2>...>>
+            dims_initializer;
     dims_initializer(ncells);
 
     // Create the values domain (mesh)
-    auto interpolation_domain
-            = ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(GrevillePoints<BSplines<I1>>::get_domain(), GrevillePoints<BSplines<I2>>::get_domain());
+    auto interpolation_domain = ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(
+            GrevillePoints<BSplines<I1>>::get_domain(),
+            GrevillePoints<BSplines<I2>>::get_domain());
     ddc::DiscreteDomain<IDim<X, void, void>...> const dom_vals_tmp = ddc::DiscreteDomain<
             IDim<X, void, void>...>(
-            ddc::DiscreteDomain<
-                    IDim<X, void, void>>(Index<IDim<X, void, void>>(0), DVect<IDim<X, void, void>>(ncells))...);
+            ddc::DiscreteDomain<IDim<
+                    X,
+                    void,
+                    void>>(Index<IDim<X, void, void>>(0), DVect<IDim<X, void, void>>(ncells))...);
     ddc::DiscreteDomain<IDim<X, I1, I2>...> const dom_vals
-            = ddc::replace_dim_of<IDim<I1, void, void>, IDim<I1, I1, I2>>(ddc::replace_dim_of<IDim<I2, void, void>, IDim<I2, I1, I2>>(dom_vals_tmp, interpolation_domain), interpolation_domain);
+            = ddc::replace_dim_of<IDim<I1, void, void>, IDim<I1, I1, I2>>(
+                    ddc::replace_dim_of<
+                            IDim<I2, void, void>,
+                            IDim<I2, I1, I2>>(dom_vals_tmp, interpolation_domain),
+                    interpolation_domain);
 
 #if defined(BC_HERMITE)
     // Create the derivs domain
     ddc::DiscreteDomain<IDimDeriv<I1>> const derivs_domain1 = ddc::DiscreteDomain<
             IDimDeriv<I1>>(Index<IDimDeriv<I1>>(0), DVect<IDimDeriv<I1>>(s_degree / 2));
-	ddc::DiscreteDomain<IDimDeriv<I2>> const derivs_domain2 = ddc::DiscreteDomain<
+    ddc::DiscreteDomain<IDimDeriv<I2>> const derivs_domain2 = ddc::DiscreteDomain<
             IDimDeriv<I2>>(Index<IDimDeriv<I2>>(0), DVect<IDimDeriv<I2>>(s_degree / 2));
 
-    auto const dom_derivs1 = ddc::replace_dim_of<IDim<I1, I1, I2>, IDimDeriv<I1>>(dom_vals, derivs_domain1);
-    auto const dom_derivs2 = ddc::replace_dim_of<IDim<I2, I1, I2>, IDimDeriv<I2>>(dom_vals, derivs_domain2);
-    auto const dom_mixed_derivs = ddc::replace_dim_of<IDim<I2, I1, I2>, IDimDeriv<I2>>(dom_derivs1, derivs_domain2);
+    auto const dom_derivs1
+            = ddc::replace_dim_of<IDim<I1, I1, I2>, IDimDeriv<I1>>(dom_vals, derivs_domain1);
+    auto const dom_derivs2
+            = ddc::replace_dim_of<IDim<I2, I1, I2>, IDimDeriv<I2>>(dom_vals, derivs_domain2);
+    auto const dom_mixed_derivs
+            = ddc::replace_dim_of<IDim<I2, I1, I2>, IDimDeriv<I2>>(dom_derivs1, derivs_domain2);
 #endif
 
     // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
-    ddc::SplineBuilder2DBatched<ExecSpace, MemorySpace, BSplines<I1>, BSplines<I2>, IDim<I1, I1, I2>, IDim<I2, I1, I2>, s_bcl, s_bcr, s_bcl, s_bcr, IDim<X,I1,I2>...>
+    ddc::SplineBuilder2DBatched<
+            ExecSpace,
+            MemorySpace,
+            BSplines<I1>,
+            BSplines<I2>,
+            IDim<I1, I1, I2>,
+            IDim<I2, I1, I2>,
+            s_bcl,
+            s_bcr,
+            s_bcl,
+            s_bcr,
+            IDim<X, I1, I2>...>
             spline_builder(dom_vals);
 
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
-    ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>> const dom_interpolation = spline_builder.interpolation_domain();
+    ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>> const dom_interpolation
+            = spline_builder.interpolation_domain();
     auto const dom_batch = spline_builder.batch_domain();
     auto const dom_spline = spline_builder.spline_domain();
 
@@ -438,7 +464,7 @@ TEST(SUFFIX(Batched2dSplineHost), 2DXY)
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
-			DimY,
+            DimY,
             DimX,
             DimY>();
 }
@@ -449,7 +475,7 @@ TEST(SUFFIX(Batched2dSplineDevice), 2DXY)
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
-			DimY,
+            DimY,
             DimX,
             DimY>();
 }
@@ -460,7 +486,7 @@ TEST(SUFFIX(Batched2dSplineHost), 3DXY)
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
-			DimY,
+            DimY,
             DimX,
             DimY,
             DimZ>();
@@ -472,7 +498,7 @@ TEST(SUFFIX(Batched2dSplineHost), 3DXZ)
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
-			DimZ,
+            DimZ,
             DimX,
             DimY,
             DimZ>();
@@ -484,7 +510,7 @@ TEST(SUFFIX(Batched2dSplineHost), 3DYZ)
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimY,
-			DimZ,
+            DimZ,
             DimX,
             DimY,
             DimZ>();
@@ -496,7 +522,7 @@ TEST(SUFFIX(Batched2dSplineDevice), 3DXY)
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
-			DimY,
+            DimY,
             DimX,
             DimY,
             DimZ>();
@@ -508,7 +534,7 @@ TEST(SUFFIX(Batched2dSplineDevice), 3DXZ)
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
-			DimZ,
+            DimZ,
             DimX,
             DimY,
             DimZ>();
@@ -520,7 +546,7 @@ TEST(SUFFIX(Batched2dSplineDevice), 3DYZ)
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimY,
-			DimZ,
+            DimZ,
             DimX,
             DimY,
             DimZ>();

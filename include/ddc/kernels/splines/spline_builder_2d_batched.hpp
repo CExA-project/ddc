@@ -87,10 +87,7 @@ public:
             vals_domain_type const& vals_domain,
             std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
-        : m_spline_builder1(
-                vals_domain,
-                cols_per_chunk,
-                preconditionner_max_block_size)
+        : m_spline_builder1(vals_domain, cols_per_chunk, preconditionner_max_block_size)
         , m_spline_builder_deriv1(ddc::replace_dim_of<interpolation_mesh_type2, deriv_type2>(
                   m_spline_builder1.vals_domain(),
                   ddc::DiscreteDomain<deriv_type2>(

@@ -76,6 +76,9 @@ public:
                 preconditionner_max_block_size)
         , m_vals_domain(vals_domain)
     {
+        static_assert(
+                ((BcXmin == BoundCond::PERIODIC) == (BcXmax == BoundCond::PERIODIC)),
+                "Incompatible boundary conditions");
     }
 
     SplineBuilderBatched(SplineBuilderBatched const& x) = delete;
@@ -168,14 +171,15 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
         std::cout << derivs_xmin->template extent<deriv_type>() << "\n";
         std::cout << nbc_xmin << "\n";
         assert(derivs_xmin->template extent<deriv_type>() == nbc_xmin);
-        auto const dx_proxy = spline_builder.m_dx;
+        auto derivs_xmin_values = *derivs_xmin;
+        auto const dx_proxy = spline_builder.dx();
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
                 DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
                     for (int i = nbc_xmin; i > 0; --i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin - i), j)
-                                = (*derivs_xmin)(ddc::DiscreteElement<deriv_type>(i - 1), j)
+                                = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i - 1), j)
                                   * Kokkos::pow(dx_proxy, i + odd - 1);
                     }
                 });
@@ -203,14 +207,15 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcXmax == BoundCond::HERMITE) {
         assert(derivs_xmax->template extent<deriv_type>() == nbc_xmax);
-        auto const dx_proxy = spline_builder.m_dx;
+        auto derivs_xmax_values = *derivs_xmax;
+        auto const dx_proxy = spline_builder.dx();
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
                 DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
                     for (int i = 0; i < nbc_xmax; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - nbc_xmax - i), j)
-                                = (*derivs_xmax)(ddc::DiscreteElement<deriv_type>(i), j)
+                                = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i), j)
                                   * Kokkos::pow(dx_proxy, i + odd);
                     }
                 });

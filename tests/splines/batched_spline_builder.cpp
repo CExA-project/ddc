@@ -96,10 +96,7 @@ template <typename X>
 using BSplines = ddc::NonUniformBSplines<X, s_degree_x>;
 
 template <typename X, typename I>
-using IDim = std::conditional_t<
-        std::is_same_v<X, I>,
-        typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
-        ddc::NonUniformPointSampling<X>>;
+using IDim = ddc::NonUniformPointSampling<X>;
 #endif
 
 #if defined(BC_HERMITE)

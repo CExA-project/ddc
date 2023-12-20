@@ -81,9 +81,9 @@ public:
     // interpolator specific
     std::unique_ptr<ddc::detail::Matrix> matrix;
 
+private:
     double m_dx; // average cell size for normalization of derivatives
 
-private:
     const int m_offset;
 
     interpolation_domain_type m_interpolation_domain;
@@ -137,6 +137,12 @@ public:
     {
         return m_interpolation_domain;
     }
+
+    int dx() const noexcept
+    {
+        return m_dx;
+    }
+
 
     int offset() const noexcept
     {

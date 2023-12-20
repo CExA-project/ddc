@@ -168,8 +168,6 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcXmin == BoundCond::HERMITE) {
-        std::cout << derivs_xmin->template extent<deriv_type>() << "\n";
-        std::cout << nbc_xmin << "\n";
         assert(derivs_xmin->template extent<deriv_type>() == nbc_xmin);
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = spline_builder.dx();

@@ -96,10 +96,7 @@ template <typename X>
 using BSplines = ddc::NonUniformBSplines<X, s_degree_x>;
 
 template <typename X, typename I>
-using IDim = std::conditional_t<
-        std::is_same_v<X, I>,
-        typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
-        ddc::NonUniformPointSampling<X>>;
+using IDim = ddc::NonUniformPointSampling<X>;
 #endif
 
 #if defined(BC_HERMITE)
@@ -202,7 +199,7 @@ static void BatchedSplineTest()
     Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
     ExecSpace exec_space = ExecSpace();
 
-    std::size_t constexpr ncells = 10;
+    std::size_t constexpr ncells = 20;
     DimsInitializer<IDim<I, I>, BatchDims<IDim<I, I>, IDim<X, I>...>> dims_initializer;
     dims_initializer(ncells);
 

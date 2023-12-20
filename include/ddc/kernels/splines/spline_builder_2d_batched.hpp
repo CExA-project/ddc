@@ -85,13 +85,11 @@ private:
 public:
     SplineBuilder2DBatched(
             vals_domain_type const& vals_domain,
-            std::optional<int> cols_per_par_chunk = std::nullopt,
-            std::optional<int> par_chunks_per_seq_chunk = std::nullopt,
+            std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : m_spline_builder1(
                 vals_domain,
-                cols_per_par_chunk,
-                par_chunks_per_seq_chunk,
+                cols_per_chunk,
                 preconditionner_max_block_size)
         , m_spline_builder_deriv1(ddc::replace_dim_of<interpolation_mesh_type2, deriv_type2>(
                   m_spline_builder1.vals_domain(),
@@ -100,8 +98,7 @@ public:
                           ddc::DiscreteVector<deriv_type2>(bsplines_type2::degree() / 2))))
         , m_spline_builder2(
                   m_spline_builder1.spline_domain(),
-                  cols_per_par_chunk,
-                  par_chunks_per_seq_chunk,
+                  cols_per_chunk,
                   preconditionner_max_block_size)
     {
         //TODO: static_asserts

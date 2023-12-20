@@ -61,6 +61,9 @@ public:
     static constexpr ddc::BoundCond BcXmin = SplineBuilder::s_bc_xmin;
     static constexpr ddc::BoundCond BcXmax = SplineBuilder::s_bc_xmax;
 
+	static constexpr int s_nbc_xmin = builder_type::s_nbc_xmin;
+	static constexpr int s_nbc_xmax = builder_type::s_nbc_xmax;
+
 private:
     builder_type spline_builder;
     const vals_domain_type m_vals_domain;
@@ -121,6 +124,13 @@ public:
     {
         return spline_tr_domain_type(bsplines_domain(), batch_domain());
     }
+
+	derivs_domain_type const derivs_domain() const noexcept
+	{
+		return ddc::replace_dim_of<
+                interpolation_mesh_type,
+                deriv_type>(vals_domain(), ddc::DiscreteDomain<deriv_type>(ddc::DiscreteElement<deriv_type>(0), ddc::DiscreteVector<deriv_type>(typename bsplines_type::degree() / 2)));
+	}
 
     int offset() const noexcept
     {

@@ -59,7 +59,7 @@ public:
 
 private:
     builder_type1 m_spline_builder1;
-    builder_type1 m_spline_builder_deriv;
+    // builder_type1 m_spline_builder_deriv;
     builder_type2 m_spline_builder2;
 
 public:
@@ -160,9 +160,14 @@ void SplineBuilder2DBatched<ExecSpace, MemorySpace, BSpline1, BSpline2, IDimI1, 
     using IMesh1 = ddc::DiscreteElement<interpolation_mesh_type1>;
     using IMesh2 = ddc::DiscreteElement<interpolation_mesh_type2>;
 
+	ddc::Chunk spline1_alloc(
+            m_spline_builder1.spline_domain(), ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan spline1 = spline1_alloc.span_view();
+	m_spline_builder1(spline1, vals);
+	m_spline_builder2(spline, spline1);
+#if 0
 	builder_type1 spline_builder_derivs_min1(derivs_min1->vals_domain(), cols_per_par_chunk, par_chunks_per_seq_chunk, preconditionner_max_block_size);
 
-#if 0
     ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1_alloc(
             spline_builder1.spline_domain());
     ddc::ChunkSpan spline1 = spline1_alloc.span_view();

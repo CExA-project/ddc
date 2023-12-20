@@ -4,7 +4,7 @@
 
 
 namespace ddc {
-template <class ExecSpace, class MemorySpace, class BSpline1, class BSpline2, class IDimI1, class IDimI2, ddc::BoundCond BcMin1, ddc::BoundCond BcMax1, ddc::BoundCond BcMin2, ddc::BoundCond BcMax2, class... IDimX>
+template <class ExecSpace, class MemorySpace, class BSpline1, class BSpline2, class IDimI1, class IDimI2, ddc::BoundCond BcXmin1, ddc::BoundCond BcXmax1, ddc::BoundCond BcXmin2, ddc::BoundCond BcXmax2, class... IDimX>
 class SplineBuilder2DBatched
 {
 public:
@@ -12,8 +12,8 @@ public:
     
 	using memory_space = MemorySpace; //TODO: assert same for 1 and 2
 
-	using builder_type1 = ddc::SplineBuilderBatched<typename ddc::SplineBuilder<ExecSpace,MemorySpace,BSpline1,IDimI1,BcMin1,BcMax1>,IDimX...>;
-	using builder_type2 = typename ddc::SplineBuilderBatched<typename ddc::SplineBuilder<ExecSpace,MemorySpace,BSpline2,IDimI2,BcMin2,BcMax2>, typename std::conditional_t<std::is_same_v<IDimX,IDimI1>,BSpline1,IDimX>...>;
+	using builder_type1 = ddc::SplineBuilderBatched<typename ddc::SplineBuilder<ExecSpace,MemorySpace,BSpline1,IDimI1,BcXmin1,BcXmax1>,IDimX...>;
+	using builder_type2 = typename ddc::SplineBuilderBatched<typename ddc::SplineBuilder<ExecSpace,MemorySpace,BSpline2,IDimI2,BcXmin2,BcXmax2>, typename std::conditional_t<std::is_same_v<IDimX,IDimI1>,BSpline1,IDimX>...>;
 
 private:
     using tag_type1 = typename builder_type1::bsplines_type::tag_type;
@@ -59,6 +59,7 @@ public:
 
 private:
     builder_type1 m_spline_builder1;
+    builder_type1 m_spline_builder_deriv;
     builder_type2 m_spline_builder2;
 
 public:
@@ -133,9 +134,9 @@ public:
 };
 
 
-template <class ExecSpace, class MemorySpace, class BSpline1, class BSpline2, class IDimI1, class IDimI2, ddc::BoundCond BcMin1, ddc::BoundCond BcMax1, ddc::BoundCond BcMin2, ddc::BoundCond BcMax2, class... IDimX>
+template <class ExecSpace, class MemorySpace, class BSpline1, class BSpline2, class IDimI1, class IDimI2, ddc::BoundCond BcXmin1, ddc::BoundCond BcXmax1, ddc::BoundCond BcXmin2, ddc::BoundCond BcXmax2, class... IDimX>
 template <class Layout>
-void SplineBuilder2DBatched<ExecSpace, MemorySpace, BSpline1, BSpline2, IDimI1, IDimI2, BcMin1, BcMax1, BcMin2, BcMax2, IDimX...>::operator()(
+void SplineBuilder2DBatched<ExecSpace, MemorySpace, BSpline1, BSpline2, IDimI1, IDimI2, BcXmin1, BcXmax1, BcXmin2, BcXmax2, IDimX...>::operator()(
             ddc::ChunkSpan<
                     double,
 					spline_domain_type,
@@ -151,35 +152,17 @@ void SplineBuilder2DBatched<ExecSpace, MemorySpace, BSpline1, BSpline2, IDimI1, 
             std::optional<ddc::ChunkSpan<double, mixed_derivs_domain_type, Layout, memory_space>> const mixed_derivs_min1_max2,
             std::optional<ddc::ChunkSpan<double, mixed_derivs_domain_type, Layout, memory_space>> const mixed_derivs_max1_max2) const
 {
-#if 0
-    const std::size_t nbc_xmin = spline_builder1.s_nbc_xmin;
-    const std::size_t nbc_xmax = spline_builder1.s_nbc_xmax;
-    const std::size_t nbc_ymin = spline_builder2.s_nbc_xmin;
-    const std::size_t nbc_ymax = spline_builder2.s_nbc_xmax;
-
-    assert((BcXmin1 == ddc::BoundCond::HERMITE)
-           != (!derivs_xmin.has_value() || derivs_xmin->extent(0) == 0));
-    assert((BcXmax1 == ddc::BoundCond::HERMITE)
-           != (!derivs_xmax.has_value() || derivs_xmax->extent(0) == 0));
-    assert((BcXmin2 == ddc::BoundCond::HERMITE)
-           != (!derivs_ymin.has_value() || derivs_ymin->extent(0) == 0));
-    assert((BcXmax2 == ddc::BoundCond::HERMITE)
-           != (!derivs_ymax.has_value() || derivs_ymax->extent(0) == 0));
-    assert((BcXmin1 == ddc::BoundCond::HERMITE && BcXmin2 == ddc::BoundCond::HERMITE)
-           != (!mixed_derivs_xmin_ymin.has_value()
-               || mixed_derivs_xmin_ymin->extent(0) != nbc_xmin));
-    assert((BcXmax1 == ddc::BoundCond::HERMITE && BcXmin2 == ddc::BoundCond::HERMITE)
-           != (!mixed_derivs_xmax_ymin.has_value()
-               || mixed_derivs_xmax_ymin->extent(0) != nbc_xmax));
-    assert((BcXmin2 == ddc::BoundCond::HERMITE && BcXmax2 == ddc::BoundCond::HERMITE)
-           != (!mixed_derivs_xmin_ymax.has_value()
-               || mixed_derivs_xmin_ymax->extent(0) != nbc_xmin));
-    assert((BcXmax2 == ddc::BoundCond::HERMITE && BcXmax2 == ddc::BoundCond::HERMITE)
-           != (!mixed_derivs_xmax_ymax.has_value()
-               || mixed_derivs_xmax_ymax->extent(0) != nbc_xmax));
+    const std::size_t nbc_xmin = m_spline_builder1.s_nbc_xmin;
+    const std::size_t nbc_xmax = m_spline_builder1.s_nbc_xmax;
+    const std::size_t nbc_ymin = m_spline_builder2.s_nbc_xmin;
+    const std::size_t nbc_ymax = m_spline_builder2.s_nbc_xmax;
 
     using IMesh1 = ddc::DiscreteElement<interpolation_mesh_type1>;
     using IMesh2 = ddc::DiscreteElement<interpolation_mesh_type2>;
+
+	builder_type1 spline_builder_derivs_min1(derivs_min1->vals_domain(), cols_per_par_chunk, par_chunks_per_seq_chunk, preconditionner_max_block_size);
+
+#if 0
     ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type1>> spline1_alloc(
             spline_builder1.spline_domain());
     ddc::ChunkSpan spline1 = spline1_alloc.span_view();

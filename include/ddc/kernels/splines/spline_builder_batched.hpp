@@ -61,6 +61,9 @@ public:
     static constexpr ddc::BoundCond BcXmin = SplineBuilder::s_bc_xmin;
     static constexpr ddc::BoundCond BcXmax = SplineBuilder::s_bc_xmax;
 
+    static constexpr int s_nbc_xmin = builder_type::s_nbc_xmin;
+    static constexpr int s_nbc_xmax = builder_type::s_nbc_xmax;
+
 private:
     builder_type spline_builder;
     const vals_domain_type m_vals_domain;

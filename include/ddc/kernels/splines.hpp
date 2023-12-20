@@ -15,6 +15,7 @@
 #include "splines/spline_boundary_value.hpp"
 #include "splines/spline_builder.hpp"
 #include "splines/spline_builder_batched.hpp"
+#include "splines/spline_builder_2d_batched.hpp"
 #include "splines/spline_evaluator.hpp"
 #include "splines/spline_evaluator_batched.hpp"
 #include "splines/view.hpp"

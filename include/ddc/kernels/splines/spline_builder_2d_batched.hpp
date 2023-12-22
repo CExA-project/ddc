@@ -69,8 +69,11 @@ public:
                     ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
     using derivs_domain_type1 = typename builder_type1::derivs_domain_type;
-    using derivs_domain_type2 = typename builder_type2::derivs_domain_type;
-    using mixed_derivs_domain_type = typename builder_type2::derivs_domain_type;
+    using derivs_domain_type2 =
+            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
+                    ddc::detail::TypeSeq<IDimX...>,
+                    ddc::detail::TypeSeq<interpolation_mesh_type2>,
+                    ddc::detail::TypeSeq<deriv_type2>>>;
     using derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -161,20 +164,16 @@ public:
             std::optional<ddc::ChunkSpan<double, derivs_domain_type2, Layout, memory_space>> const
                     derivs_max2
             = std::nullopt,
-            std::optional<
-                    ddc::ChunkSpan<double, mixed_derivs_domain_type, Layout, memory_space>> const
+            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
                     mixed_derivs_min1_min2
             = std::nullopt,
-            std::optional<
-                    ddc::ChunkSpan<double, mixed_derivs_domain_type, Layout, memory_space>> const
+            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
                     mixed_derivs_max1_min2
             = std::nullopt,
-            std::optional<
-                    ddc::ChunkSpan<double, mixed_derivs_domain_type, Layout, memory_space>> const
+            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
                     mixed_derivs_min1_max2
             = std::nullopt,
-            std::optional<
-                    ddc::ChunkSpan<double, mixed_derivs_domain_type, Layout, memory_space>> const
+            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
                     mixed_derivs_max1_max2
             = std::nullopt) const;
 };
@@ -216,13 +215,13 @@ operator()(
                 derivs_min2,
         std::optional<ddc::ChunkSpan<double, derivs_domain_type2, Layout, memory_space>> const
                 derivs_max2,
-        std::optional<ddc::ChunkSpan<double, mixed_derivs_domain_type, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
                 mixed_derivs_min1_min2,
-        std::optional<ddc::ChunkSpan<double, mixed_derivs_domain_type, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
                 mixed_derivs_max1_min2,
-        std::optional<ddc::ChunkSpan<double, mixed_derivs_domain_type, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
                 mixed_derivs_min1_max2,
-        std::optional<ddc::ChunkSpan<double, mixed_derivs_domain_type, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
                 mixed_derivs_max1_max2) const
 {
     const std::size_t nbc_xmin = m_spline_builder1.s_nbc_xmin;
@@ -237,8 +236,8 @@ operator()(
     auto spline1_deriv_min = std::optional(spline1_deriv_min_alloc.span_view());
     if constexpr (BcXmin1 == ddc::BoundCond::HERMITE) {
         m_spline_builder_deriv1(
-                spline1_deriv_min,
-                derivs_min2,
+                *spline1_deriv_min,
+                *derivs_min2,
                 mixed_derivs_min1_min2,
                 mixed_derivs_max1_min2);
     } else {
@@ -260,8 +259,8 @@ operator()(
     auto spline1_deriv_max = std::optional(spline1_deriv_max_alloc.span_view());
     if constexpr (BcXmax1 == ddc::BoundCond::HERMITE) {
         m_spline_builder_deriv1(
-                spline1_deriv_max,
-                derivs_max2,
+                *spline1_deriv_max,
+                *derivs_max2,
                 mixed_derivs_min1_max2,
                 mixed_derivs_max1_max2);
     } else {

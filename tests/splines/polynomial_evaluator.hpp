@@ -32,12 +32,13 @@ struct PolynomialEvaluator
             }
         }
 
-        double operator()(double const x) const noexcept
+        KOKKOS_FUNCTION double operator()(double const x) const noexcept
         {
             return eval(x, 0);
         }
 
-        void operator()(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
+        KOKKOS_FUNCTION void operator()(
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
         {
             auto const& domain = chunk.domain();
 
@@ -46,13 +47,14 @@ struct PolynomialEvaluator
             }
         }
 
-        double deriv(double const x, int const derivative) const noexcept
+        KOKKOS_FUNCTION double deriv(double const x, int const derivative) const noexcept
         {
             return eval(x, derivative);
         }
 
-        void deriv(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk, int const derivative)
-                const
+        KOKKOS_FUNCTION void deriv(
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk,
+                int const derivative) const
         {
             auto const& domain = chunk.domain();
 
@@ -61,13 +63,13 @@ struct PolynomialEvaluator
             }
         }
 
-        double max_norm(int diff = 0) const
+        KOKKOS_FUNCTION double max_norm(int diff = 0) const
         {
             return std::abs(deriv(m_xN, diff));
         }
 
     private:
-        double eval(double const x, int const derivative) const
+        KOKKOS_FUNCTION double eval(double const x, int const derivative) const
         {
             double result(0.0);
             int start = derivative < 0 ? 0 : derivative;
@@ -78,7 +80,7 @@ struct PolynomialEvaluator
             return result;
         }
 
-        double falling_factorial(int i, int d) const
+        KOKKOS_FUNCTION double falling_factorial(int i, int d) const
         {
             double c = 1.0;
             if (d >= 0) {

@@ -147,9 +147,9 @@ public:
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i : interpolation_domain1) {
-                        for (auto const j : interpolation_domain2) {
-                            spline_eval_2D(i, j) = eval(coords_eval_2D(i, j), spline_coef_2D);
+                    for (auto const i1 : interpolation_domain1) {
+                        for (auto const i2 : interpolation_domain2) {
+                            spline_eval_2D(i1, i2) = eval(coords_eval_2D(i1, i2), spline_coef_2D);
                         }
                     }
                 });
@@ -193,7 +193,8 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        interpolation_domain_type const interpolation_domain(spline_eval.domain());
+        interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
+        interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
@@ -201,10 +202,12 @@ public:
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i : interpolation_domain) {
-                        spline_eval_2D(i) = eval_no_bc<
-                                eval_deriv_type,
-                                eval_type>(coords_eval_2D(i), spline_coef_2D);
+                    for (auto const i1 : interpolation_domain1) {
+                        for (auto const i2 : interpolation_domain2) {
+                            spline_eval_2D(i1, i2) = eval_no_bc<
+                                    eval_deriv_type,
+                                    eval_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+                        }
                     }
                 });
     }
@@ -220,7 +223,8 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        interpolation_domain_type const interpolation_domain(spline_eval.domain());
+        interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
+        interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
@@ -228,10 +232,12 @@ public:
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i : interpolation_domain) {
-                        spline_eval_2D(i) = eval_no_bc<
-                                eval_type,
-                                eval_deriv_type>(coords_eval_2D(i), spline_coef_2D);
+                    for (auto const i1 : interpolation_domain1) {
+                        for (auto const i2 : interpolation_domain2) {
+                            spline_eval_2D(i1, i2) = eval_no_bc<
+                                    eval_type,
+                                    eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+                        }
                     }
                 });
     }
@@ -247,7 +253,8 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        interpolation_domain_type const interpolation_domain(spline_eval.domain());
+        interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
+        interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
@@ -255,10 +262,12 @@ public:
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i : interpolation_domain) {
-                        spline_eval_2D(i) = eval_no_bc<
-                                eval_deriv_type,
-                                eval_deriv_type>(coords_eval_2D(i), spline_coef_2D);
+                    for (auto const i1 : interpolation_domain1) {
+                        for (auto const i2 : interpolation_domain2) {
+                            spline_eval_2D(i1, i2) = eval_no_bc<
+                                    eval_deriv_type,
+                                    eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+                        }
                     }
                 });
     }

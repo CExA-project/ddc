@@ -19,36 +19,41 @@ struct Evaluator2D
         {
         }
 
-        double operator()(double const x, double const y) const noexcept
+        KOKKOS_FUNCTION double operator()(double const x, double const y) const noexcept
         {
             return eval_func1(x) * eval_func2(y);
         }
 
         template <class DDim1, class DDim2>
-        double operator()(ddc::Coordinate<DDim1, DDim2> const x) const noexcept
+        KOKKOS_FUNCTION double operator()(ddc::Coordinate<DDim1, DDim2> const x) const noexcept
         {
             return eval_func1(ddc::get<DDim1>(x)) * eval_func2(ddc::get<DDim2>(x));
         }
 
         template <class DDim1, class DDim2>
-        void operator()(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim1, DDim2>> chunk) const
+        KOKKOS_FUNCTION void operator()(
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim1, DDim2>> chunk) const
         {
             auto const& domain = chunk.domain();
 
-            ddc::for_each(domain, [=](ddc::DiscreteElement<DDim1, DDim2> const i) {
-                chunk(i) = eval_func1(ddc::coordinate(ddc::select<DDim1>(i)))
-                           * eval_func2(ddc::coordinate(ddc::select<DDim2>(i)));
-            });
+            for (ddc::DiscreteElement<DDim1> const i : ddc::select<DDim1>(domain)) {
+                for (ddc::DiscreteElement<DDim2> const j : ddc::select<DDim2>(domain)) {
+                    chunk(i, j) = eval_func1(ddc::coordinate(i)) * eval_func2(ddc::coordinate(j));
+                }
+            }
         }
 
-        double deriv(double const x, double const y, int const derivative_x, int const derivative_y)
-                const noexcept
+        KOKKOS_FUNCTION double deriv(
+                double const x,
+                double const y,
+                int const derivative_x,
+                int const derivative_y) const noexcept
         {
             return eval_func1.deriv(x, derivative_x) * eval_func2.deriv(y, derivative_y);
         }
 
         template <class DDim1, class DDim2>
-        double deriv(
+        KOKKOS_FUNCTION double deriv(
                 ddc::Coordinate<DDim1, DDim2> const x,
                 int const derivative_x,
                 int const derivative_y) const noexcept
@@ -58,20 +63,22 @@ struct Evaluator2D
         }
 
         template <class DDim1, class DDim2>
-        void deriv(
+        KOKKOS_FUNCTION void deriv(
                 ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim1, DDim2>> chunk,
                 int const derivative_x,
                 int const derivative_y) const
         {
             auto const& domain = chunk.domain();
 
-            ddc::for_each(domain, [=](ddc::DiscreteElement<DDim1, DDim2> const i) {
-                chunk(i) = eval_func1.deriv(ddc::coordinate(ddc::select<DDim1>(i)), derivative_x)
-                           * eval_func2.deriv(ddc::coordinate(ddc::select<DDim2>(i)), derivative_y);
-            });
+            for (ddc::DiscreteElement<DDim1> const i : ddc::select<DDim1>(domain)) {
+                for (ddc::DiscreteElement<DDim2> const j : ddc::select<DDim2>(domain)) {
+                    chunk(i, j) = eval_func1.deriv(ddc::coordinate(i), derivative_x)
+                                  * eval_func2.deriv(ddc::coordinate(j), derivative_y);
+                }
+            }
         }
 
-        double max_norm(int diff1 = 0, int diff2 = 0) const
+        KOKKOS_FUNCTION double max_norm(int diff1 = 0, int diff2 = 0) const
         {
             return eval_func1.max_norm(diff1) * eval_func2.max_norm(diff2);
         }

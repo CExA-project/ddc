@@ -60,8 +60,7 @@ public:
 
 
 private:
-    SplineEvaluator spline_evaluator;
-    const spline_domain_type m_spline_domain; // Necessary ?
+    const spline_domain_type m_spline_domain;
 
 
 public:
@@ -69,10 +68,9 @@ public:
 
     explicit SplineEvaluatorBatched(
             spline_domain_type const& spline_domain,
-            SplineBoundaryValue<bsplines_type> const& left_bc,
+            SplineBoundaryValue<bsplines_type> const& left_bc, // Unused, to be restored in next MR
             SplineBoundaryValue<bsplines_type> const& right_bc)
-        : spline_evaluator(left_bc, right_bc)
-        , m_spline_domain(spline_domain) // Necessary ?
+        : m_spline_domain(spline_domain)
     {
     }
 

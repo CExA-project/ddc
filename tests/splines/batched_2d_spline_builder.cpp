@@ -540,15 +540,21 @@ static void Batched2dSplineTest()
 #else
     spline_builder(coef, vals);
 #endif
-#if 0
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::SplineEvaluatorBatched<
-            ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>>,
-            IDim<X, I>...>
+    ddc::SplineEvaluator2DBatched<
+            ExecSpace,
+            MemorySpace,
+            BSplines<I1>,
+            BSplines<I2>,
+            IDim<I1, I1, I2>,
+            IDim<I2, I1, I2>,
+            IDim<X, I1, I2>...>
             spline_evaluator_batched(
                     coef.domain(),
-                    ddc::g_null_boundary<BSplines<I>>,
-                    ddc::g_null_boundary<BSplines<I>>);
+                    ddc::g_null_boundary<BSplines<I1>>,
+                    ddc::g_null_boundary<BSplines<I1>>,
+                    ddc::g_null_boundary<BSplines<I2>>,
+                    ddc::g_null_boundary<BSplines<I2>>);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
@@ -556,7 +562,7 @@ static void Batched2dSplineTest()
     ddc::for_each(
             ddc::policies::policy(exec_space),
             coords_eval.domain(),
-            DDC_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
+            DDC_LAMBDA(Index<IDim<X, I1, I2>...> const e) { coords_eval(e) = ddc::coordinate(e); });
 
 
     // Instantiate chunks to receive outputs of spline_evaluator
@@ -569,8 +575,10 @@ static void Batched2dSplineTest()
 
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
+    /*
     spline_evaluator_batched.deriv(spline_eval_deriv, coords_eval.span_cview(), coef.span_cview());
     spline_evaluator_batched.integrate(spline_eval_integrals, coef.span_cview());
+	*/
 
     // Checking errors (we recover the initial values)
     double max_norm_error = ddc::transform_reduce(
@@ -578,10 +586,11 @@ static void Batched2dSplineTest()
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            DDC_LAMBDA(Index<IDim<X, I>...> const e) {
+            DDC_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 
+    /*
     double max_norm_error_diff = ddc::transform_reduce(
             ddc::policies::policy(exec_space),
             spline_eval_deriv.domain(),
@@ -602,15 +611,16 @@ static void Batched2dSplineTest()
                         spline_eval_integrals(e) - evaluator.deriv(xN<I>(), -1)
                         + evaluator.deriv(x0<I>(), -1));
             });
+	*/
 
     double const max_norm = evaluator.max_norm();
+    /*
     double const max_norm_diff = evaluator.max_norm(1);
     double const max_norm_int = evaluator.max_norm(-1);
+	*/
 
-    SplineErrorBounds<evaluator_type<IDim<I, I>>> error_bounds(evaluator);
-    EXPECT_LE(
-            max_norm_error,
-            std::max(error_bounds.error_bound(dx<I>(ncells), s_degree), 1.0e-14 * max_norm));
+    EXPECT_LE(max_norm_error, 1.0e-14 * max_norm);
+    /*
     EXPECT_LE(
             max_norm_error_diff,
             std::
@@ -621,7 +631,7 @@ static void Batched2dSplineTest()
             std::
                     max(error_bounds.error_bound_on_int(dx<I>(ncells), s_degree),
                         1.0e-14 * max_norm_int));
-#endif
+	*/
 }
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)

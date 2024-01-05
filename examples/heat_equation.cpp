@@ -222,7 +222,7 @@ int main(int argc, char** argv)
             ddc::DeviceAllocator<double>());
 
     // - once for time-step being computed
-    // The DeviceAllocator is responsible for allocating memory on CPU or GPU
+    // The `DeviceAllocator` is responsible for allocating memory on the default memory space.
     ddc::Chunk ghosted_next_temp(
             "ghosted_next_temp",
             ddc::DiscreteDomain<

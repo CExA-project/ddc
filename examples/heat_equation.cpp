@@ -37,8 +37,8 @@ using DDimT = ddc::UniformPointSampling<T>;
 
 //! [display]
 /** A function to pretty print the temperature
- * @tparam ChunkType Refers to type of chunk span. This way the template 
- *                   parameters are avoided
+ * @tparam ChunkType The type of chunk span. This way the template parameters are avoided,
+ *                   should be deduced by the compiler.
  * @param time The time at which the output is made.
  * @param temp The temperature at this time-step.
  */

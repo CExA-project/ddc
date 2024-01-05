@@ -45,7 +45,7 @@ using DDimT = ddc::UniformPointSampling<T>;
 template <class ChunkType>
 void display(double time, ChunkType temp)
 {
-    // For a chunk, the ()-operator is used to access elements with a DiscreteElement as
+    // For `Chunk`/`ChunkSpan`, the ()-operator is used to access stored values with a single `DiscreteElement` as
     // input. So it is used here as a function that maps indices of the temperature domain
     // to the temperature value at that point
     double const mean_temp = ddc::transform_reduce(

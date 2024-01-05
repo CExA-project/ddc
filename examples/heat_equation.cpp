@@ -202,8 +202,7 @@ int main(int argc, char** argv)
     // Initialization of the global domain in time:
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
-    // init takes the values to make them available globally. This is needed
-    // for init_discrete_space
+    // `init` takes required information to initialize the attributes of the dimension.
     ddc::DiscreteDomain<DDimT> const time_domain
             = ddc::init_discrete_space(
                     DDimT::

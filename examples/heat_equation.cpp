@@ -295,7 +295,7 @@ int main(int argc, char** argv)
         ddc::ChunkSpan const next_temp {
                 ghosted_next_temp[x_domain][y_domain]};
         // a read-only view of the temperature at the previous time-step
-        // span_cview makes the ChunkSpan read-only
+        // span_cview returns a read-only ChunkSpan
         ddc::ChunkSpan const last_temp {ghosted_last_temp.span_cview()};
         //! [manipulated views]
 

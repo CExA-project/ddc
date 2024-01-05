@@ -233,7 +233,7 @@ int main(int argc, char** argv)
 
     //! [initial-conditions]
     // The const qualifier makes it clear that ghosted_initial_temp always references
-    // the same chunk
+    // the same chunk, `ghosted_last_temp` in this case
     ddc::ChunkSpan const ghosted_initial_temp
             = ghosted_last_temp.span_view();
     // Initialize the temperature on the main domain

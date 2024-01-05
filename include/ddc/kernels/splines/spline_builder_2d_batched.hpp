@@ -229,6 +229,7 @@ operator()(
     const std::size_t nbc_ymin = m_spline_builder2.s_nbc_xmin;
     const std::size_t nbc_ymax = m_spline_builder2.s_nbc_xmax;
 
+    // TODO: perform computations along dimension 1 on different streams ?
     // Spline1-transform derivs_min2 (to spline1_deriv_min)
     ddc::Chunk spline1_deriv_min_alloc(
             m_spline_builder_deriv1.spline_domain(),

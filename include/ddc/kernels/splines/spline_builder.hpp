@@ -138,7 +138,7 @@ public:
         return m_interpolation_domain;
     }
 
-    int dx() const noexcept
+    double dx() const noexcept
     {
         return m_dx;
     }

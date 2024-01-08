@@ -20,7 +20,7 @@ public:
 
     using bsplines_type = typename SplineBuilder::bsplines_type;
 
-    using deriv_type = ddc::UniformPointSampling<ddc::Deriv<tag_type>>;
+    using deriv_type = ddc::Deriv<tag_type>;
 
     using builder_type = SplineBuilder;
 

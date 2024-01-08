@@ -178,7 +178,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                     for (int i = nbc_xmin; i > 0; --i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin - i), j)
                                 = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i - 1), j)
-                                  * Kokkos::pow(dx_proxy, i + odd - 1);
+                                  * ddc::detail::ipow(dx_proxy, i + odd - 1);
                     }
                 });
     }
@@ -214,7 +214,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                     for (int i = 0; i < nbc_xmax; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - nbc_xmax - i), j)
                                 = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i), j)
-                                  * Kokkos::pow(dx_proxy, i + odd);
+                                  * ddc::detail::ipow(dx_proxy, i + odd);
                     }
                 });
     }

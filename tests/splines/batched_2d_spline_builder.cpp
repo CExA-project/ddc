@@ -103,11 +103,6 @@ using IDim = std::conditional_t<
         ddc::NonUniformPointSampling<X>>;
 #endif
 
-#if defined(BC_HERMITE)
-template <typename I>
-using IDimDeriv = ddc::UniformPointSampling<ddc::Deriv<I>>;
-#endif
-
 #if defined(BC_PERIODIC)
 template <typename IDim1, typename IDim2>
 using evaluator_type = Evaluator2D::
@@ -199,24 +194,6 @@ struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
         ddc::init_discrete_space<IDimI2>(
                 GrevillePoints<
                         BSplines<typename IDimI2::continuous_dimension_type>>::get_sampling());
-
-#if defined(BC_HERMITE)
-        ddc::init_discrete_space(
-                IDimDeriv<typename IDimI1::continuous_dimension_type>::
-                        init(Coord<ddc::Deriv<typename IDimI1::continuous_dimension_type>>(1),
-                             Coord<ddc::Deriv<typename IDimI1::continuous_dimension_type>>(
-                                     std::max(2, (int)s_degree / 2)),
-                             DVect<IDimDeriv<typename IDimI1::continuous_dimension_type>>(
-                                     std::max(2, (int)s_degree / 2))));
-        ddc::init_discrete_space(
-                IDimDeriv<typename IDimI2::continuous_dimension_type>::
-                        init(Coord<ddc::Deriv<typename IDimI2::continuous_dimension_type>>(1),
-                             Coord<ddc::Deriv<typename IDimI2::continuous_dimension_type>>(
-                                     std::max(2, (int)s_degree / 2)),
-                             DVect<IDimDeriv<typename IDimI2::continuous_dimension_type>>(
-                                     std::max(2, (int)s_degree / 2))));
-
-#endif
     }
 };
 
@@ -259,19 +236,19 @@ static void Batched2dSplineTest()
 
 #if defined(BC_HERMITE)
     // Create the derivs domain
-    ddc::DiscreteDomain<IDimDeriv<I1>> const derivs_domain1 = ddc::DiscreteDomain<
-            IDimDeriv<I1>>(Index<IDimDeriv<I1>>(0), DVect<IDimDeriv<I1>>(s_degree / 2));
-    ddc::DiscreteDomain<IDimDeriv<I2>> const derivs_domain2 = ddc::DiscreteDomain<
-            IDimDeriv<I2>>(Index<IDimDeriv<I2>>(0), DVect<IDimDeriv<I2>>(s_degree / 2));
-    ddc::DiscreteDomain<IDimDeriv<I1>, IDimDeriv<I2>> const derivs_domain
-            = ddc::DiscreteDomain<IDimDeriv<I1>, IDimDeriv<I2>>(derivs_domain1, derivs_domain2);
+    ddc::DiscreteDomain<ddc::Deriv<I1>> const derivs_domain1 = ddc::DiscreteDomain<
+            ddc::Deriv<I1>>(Index<ddc::Deriv<I1>>(0), DVect<ddc::Deriv<I1>>(s_degree / 2));
+    ddc::DiscreteDomain<ddc::Deriv<I2>> const derivs_domain2 = ddc::DiscreteDomain<
+            ddc::Deriv<I2>>(Index<ddc::Deriv<I2>>(0), DVect<ddc::Deriv<I2>>(s_degree / 2));
+    ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>> const derivs_domain
+            = ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>>(derivs_domain1, derivs_domain2);
 
     auto const dom_derivs1
-            = ddc::replace_dim_of<IDim<I1, I1, I2>, IDimDeriv<I1>>(dom_vals, derivs_domain1);
+            = ddc::replace_dim_of<IDim<I1, I1, I2>, ddc::Deriv<I1>>(dom_vals, derivs_domain1);
     auto const dom_derivs2
-            = ddc::replace_dim_of<IDim<I2, I1, I2>, IDimDeriv<I2>>(dom_vals, derivs_domain2);
+            = ddc::replace_dim_of<IDim<I2, I1, I2>, ddc::Deriv<I2>>(dom_vals, derivs_domain2);
     auto const dom_derivs
-            = ddc::replace_dim_of<IDim<I2, I1, I2>, IDimDeriv<I2>>(dom_derivs1, derivs_domain2);
+            = ddc::replace_dim_of<IDim<I2, I1, I2>, ddc::Deriv<I2>>(dom_derivs1, derivs_domain2);
 #endif
 
     // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
@@ -323,20 +300,20 @@ static void Batched2dSplineTest()
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk Sderiv1_lhs1_cpu_alloc(
                 ddc::DiscreteDomain<
-                        IDimDeriv<I1>,
+                        ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv1_lhs1_cpu = Sderiv1_lhs1_cpu_alloc.span_view();
         ddc::for_each(
                 Sderiv1_lhs1_cpu.domain(),
-                DDC_LAMBDA(ddc::DiscreteElement<IDimDeriv<I1>, IDim<I2, I1, I2>> const e) {
-                    auto x1 = ddc::coordinate(ddc::DiscreteElement<IDimDeriv<I1>>(e));
+                DDC_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, IDim<I2, I1, I2>> const e) {
+                    auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<IDim<I2, I1, I2>>(e));
-                    Sderiv1_lhs1_cpu(e) = evaluator.deriv(x0<I1>(), x2, x1 + shift - 1, 0);
+                    Sderiv1_lhs1_cpu(e) = evaluator.deriv(x0<I1>(), x2, deriv_idx + shift, 0);
                 });
         ddc::Chunk Sderiv1_lhs1_alloc(
                 ddc::DiscreteDomain<
-                        IDimDeriv<I1>,
+                        ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv1_lhs1 = Sderiv1_lhs1_alloc.span_view();
@@ -346,7 +323,7 @@ static void Batched2dSplineTest()
                 ddc::policies::policy(exec_space),
                 Sderiv1_lhs.domain(),
                 DDC_LAMBDA(typename decltype(Sderiv1_lhs.domain())::discrete_element_type const e) {
-                    Sderiv1_lhs(e) = Sderiv1_lhs1(ddc::select<IDimDeriv<I1>, IDim<I2, I1, I2>>(e));
+                    Sderiv1_lhs(e) = Sderiv1_lhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
                 });
     }
 
@@ -355,20 +332,20 @@ static void Batched2dSplineTest()
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk Sderiv1_rhs1_cpu_alloc(
                 ddc::DiscreteDomain<
-                        IDimDeriv<I1>,
+                        ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv1_rhs1_cpu = Sderiv1_rhs1_cpu_alloc.span_view();
         ddc::for_each(
                 Sderiv1_rhs1_cpu.domain(),
-                DDC_LAMBDA(ddc::DiscreteElement<IDimDeriv<I1>, IDim<I2, I1, I2>> const e) {
-                    auto x1 = ddc::coordinate(ddc::DiscreteElement<IDimDeriv<I1>>(e));
+                DDC_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, IDim<I2, I1, I2>> const e) {
+                    auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<IDim<I2, I1, I2>>(e));
-                    Sderiv1_rhs1_cpu(e) = evaluator.deriv(xN<I1>(), x2, x1 + shift - 1, 0);
+                    Sderiv1_rhs1_cpu(e) = evaluator.deriv(xN<I1>(), x2, deriv_idx + shift, 0);
                 });
         ddc::Chunk Sderiv1_rhs1_alloc(
                 ddc::DiscreteDomain<
-                        IDimDeriv<I1>,
+                        ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv1_rhs1 = Sderiv1_rhs1_alloc.span_view();
@@ -378,7 +355,7 @@ static void Batched2dSplineTest()
                 ddc::policies::policy(exec_space),
                 Sderiv1_rhs.domain(),
                 DDC_LAMBDA(typename decltype(Sderiv1_rhs.domain())::discrete_element_type const e) {
-                    Sderiv1_rhs(e) = Sderiv1_rhs1(ddc::select<IDimDeriv<I1>, IDim<I2, I1, I2>>(e));
+                    Sderiv1_rhs(e) = Sderiv1_rhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
                 });
     }
 
@@ -388,21 +365,21 @@ static void Batched2dSplineTest()
         ddc::Chunk Sderiv2_lhs1_cpu_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
-                        IDimDeriv<I2>>(interpolation_domain1, derivs_domain2),
+                        ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv2_lhs1_cpu = Sderiv2_lhs1_cpu_alloc.span_view();
         ddc::for_each(
                 Sderiv2_lhs1_cpu.domain(),
-                DDC_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, IDimDeriv<I2>> const e) {
+                DDC_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<IDim<I1, I1, I2>>(e));
-                    auto x2 = ddc::coordinate(ddc::DiscreteElement<IDimDeriv<I2>>(e));
-                    Sderiv2_lhs1_cpu(e) = evaluator.deriv(x1, x0<I2>(), 0, x2 + shift - 1);
+                    auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
+                    Sderiv2_lhs1_cpu(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx + shift);
                 });
 
         ddc::Chunk Sderiv2_lhs1_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
-                        IDimDeriv<I2>>(interpolation_domain1, derivs_domain2),
+                        ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv2_lhs1 = Sderiv2_lhs1_alloc.span_view();
         ddc::deepcopy(Sderiv2_lhs1, Sderiv2_lhs1_cpu);
@@ -411,7 +388,7 @@ static void Batched2dSplineTest()
                 ddc::policies::policy(exec_space),
                 Sderiv2_lhs.domain(),
                 DDC_LAMBDA(typename decltype(Sderiv2_lhs.domain())::discrete_element_type const e) {
-                    Sderiv2_lhs(e) = Sderiv2_lhs1(ddc::select<IDim<I1, I1, I2>, IDimDeriv<I2>>(e));
+                    Sderiv2_lhs(e) = Sderiv2_lhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
                 });
     }
 
@@ -421,21 +398,21 @@ static void Batched2dSplineTest()
         ddc::Chunk Sderiv2_rhs1_cpu_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
-                        IDimDeriv<I2>>(interpolation_domain1, derivs_domain2),
+                        ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv2_rhs1_cpu = Sderiv2_rhs1_cpu_alloc.span_view();
         ddc::for_each(
                 Sderiv2_rhs1_cpu.domain(),
-                DDC_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, IDimDeriv<I2>> const e) {
+                DDC_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<IDim<I1, I1, I2>>(e));
-                    auto x2 = ddc::coordinate(ddc::DiscreteElement<IDimDeriv<I2>>(e));
-                    Sderiv2_rhs1_cpu(e) = evaluator.deriv(x1, xN<I2>(), 0, x2 + shift - 1);
+                    auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
+                    Sderiv2_rhs1_cpu(e) = evaluator.deriv(x1, xN<I2>(), 0, deriv_idx + shift);
                 });
 
         ddc::Chunk Sderiv2_rhs1_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
-                        IDimDeriv<I2>>(interpolation_domain1, derivs_domain2),
+                        ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv2_rhs1 = Sderiv2_rhs1_alloc.span_view();
         ddc::deepcopy(Sderiv2_rhs1, Sderiv2_rhs1_cpu);
@@ -444,7 +421,7 @@ static void Batched2dSplineTest()
                 ddc::policies::policy(exec_space),
                 Sderiv2_rhs.domain(),
                 DDC_LAMBDA(typename decltype(Sderiv2_rhs.domain())::discrete_element_type const e) {
-                    Sderiv2_rhs(e) = Sderiv2_rhs1(ddc::select<IDim<I1, I1, I2>, IDimDeriv<I2>>(e));
+                    Sderiv2_rhs(e) = Sderiv2_rhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
                 });
     }
 
@@ -467,8 +444,8 @@ static void Batched2dSplineTest()
         ddc::Chunk Sderiv_mixed_rhs_rhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv_mixed_rhs_rhs1_cpu = Sderiv_mixed_rhs_rhs1_cpu_alloc.span_view();
 
-        for (int ii = 0; ii < derivs_domain.template extent<IDimDeriv<I1>>(); ++ii) {
-            for (std::size_t jj = 0; jj < derivs_domain.template extent<IDimDeriv<I2>>(); ++jj) {
+        for (int ii = 0; ii < derivs_domain.template extent<ddc::Deriv<I1>>(); ++ii) {
+            for (std::size_t jj = 0; jj < derivs_domain.template extent<ddc::Deriv<I2>>(); ++jj) {
                 Sderiv_mixed_lhs_lhs1_cpu(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
                         = evaluator.deriv(x0<I1>(), x0<I2>(), ii + shift, jj + shift);
@@ -509,13 +486,13 @@ static void Batched2dSplineTest()
                 dom_derivs,
                 DDC_LAMBDA(typename decltype(dom_derivs)::discrete_element_type const e) {
                     Sderiv_mixed_lhs_lhs(e)
-                            = Sderiv_mixed_lhs_lhs1(ddc::select<IDimDeriv<I1>, IDimDeriv<I2>>(e));
+                            = Sderiv_mixed_lhs_lhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
                     Sderiv_mixed_rhs_lhs(e)
-                            = Sderiv_mixed_rhs_lhs1(ddc::select<IDimDeriv<I1>, IDimDeriv<I2>>(e));
+                            = Sderiv_mixed_rhs_lhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
                     Sderiv_mixed_lhs_rhs(e)
-                            = Sderiv_mixed_lhs_rhs1(ddc::select<IDimDeriv<I1>, IDimDeriv<I2>>(e));
+                            = Sderiv_mixed_lhs_rhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
                     Sderiv_mixed_rhs_rhs(e)
-                            = Sderiv_mixed_rhs_rhs1(ddc::select<IDimDeriv<I1>, IDimDeriv<I2>>(e));
+                            = Sderiv_mixed_rhs_rhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
                 });
     }
 #endif

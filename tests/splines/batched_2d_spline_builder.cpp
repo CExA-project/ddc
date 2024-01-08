@@ -110,9 +110,8 @@ using IDimDeriv = ddc::UniformPointSampling<ddc::Deriv<I>>;
 
 #if defined(BC_PERIODIC)
 template <typename IDim1, typename IDim2>
-using evaluator_type = Evaluator2D::Evaluator<
-        CosineEvaluator::Evaluator<IDim1>,
-        CosineEvaluator::Evaluator<IDim2>>;
+using evaluator_type = Evaluator2D::
+        Evaluator<CosineEvaluator::Evaluator<IDim1>, CosineEvaluator::Evaluator<IDim2>>;
 #else
 template <typename IDim1, typename IDim2>
 using evaluator_type = Evaluator2D::Evaluator<
@@ -328,15 +327,13 @@ static void Batched2dSplineTest()
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv1_lhs1_cpu = Sderiv1_lhs1_cpu_alloc.span_view();
-        for (int ii = 0; ii < Sderiv1_lhs1_cpu.domain().template extent<IDimDeriv<I1>>(); ++ii) {
-            for (std::size_t jj = 0;
-                 jj < Sderiv1_lhs1_cpu.domain().template extent<IDim<I2, I1, I2>>();
-                 ++jj) {
-                Sderiv1_lhs1_cpu(
-                        typename decltype(Sderiv1_lhs1_cpu.domain())::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>(), x0<I2>() + jj, ii + shift, 0);
-            }
-        }
+        ddc::for_each(
+                Sderiv1_lhs1_cpu.domain(),
+                DDC_LAMBDA(ddc::DiscreteElement<IDimDeriv<I1>, IDim<I2, I1, I2>> const e) {
+                    auto x1 = ddc::coordinate(ddc::DiscreteElement<IDimDeriv<I1>>(e));
+                    auto x2 = ddc::coordinate(ddc::DiscreteElement<IDim<I2, I1, I2>>(e));
+                    Sderiv1_lhs1_cpu(e) = evaluator.deriv(x0<I1>(), x2, x1 + shift - 1, 0);
+                });
         ddc::Chunk Sderiv1_lhs1_alloc(
                 ddc::DiscreteDomain<
                         IDimDeriv<I1>,
@@ -362,15 +359,13 @@ static void Batched2dSplineTest()
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv1_rhs1_cpu = Sderiv1_rhs1_cpu_alloc.span_view();
-        for (int ii = 0; ii < Sderiv1_rhs1_cpu.domain().template extent<IDimDeriv<I1>>(); ++ii) {
-            for (std::size_t jj = 0;
-                 jj < Sderiv1_rhs1_cpu.domain().template extent<IDim<I2, I1, I2>>();
-                 ++jj) {
-                Sderiv1_rhs1_cpu(
-                        typename decltype(Sderiv1_rhs1_cpu.domain())::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xN<I1>(), x0<I2>() + jj, ii + shift, 0);
-            }
-        }
+        ddc::for_each(
+                Sderiv1_rhs1_cpu.domain(),
+                DDC_LAMBDA(ddc::DiscreteElement<IDimDeriv<I1>, IDim<I2, I1, I2>> const e) {
+                    auto x1 = ddc::coordinate(ddc::DiscreteElement<IDimDeriv<I1>>(e));
+                    auto x2 = ddc::coordinate(ddc::DiscreteElement<IDim<I2, I1, I2>>(e));
+                    Sderiv1_rhs1_cpu(e) = evaluator.deriv(xN<I1>(), x2, x1 + shift - 1, 0);
+                });
         ddc::Chunk Sderiv1_rhs1_alloc(
                 ddc::DiscreteDomain<
                         IDimDeriv<I1>,
@@ -396,15 +391,14 @@ static void Batched2dSplineTest()
                         IDimDeriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv2_lhs1_cpu = Sderiv2_lhs1_cpu_alloc.span_view();
-        for (int ii = 0; ii < Sderiv2_lhs1_cpu.domain().template extent<IDim<I1, I1, I2>>(); ++ii) {
-            for (std::size_t jj = 0;
-                 jj < Sderiv2_lhs1_cpu.domain().template extent<IDimDeriv<I2>>();
-                 ++jj) {
-                Sderiv2_lhs1_cpu(
-                        typename decltype(Sderiv2_lhs1_cpu.domain())::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>() + ii, x0<I2>(), 0, jj + shift);
-            }
-        }
+        ddc::for_each(
+                Sderiv2_lhs1_cpu.domain(),
+                DDC_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, IDimDeriv<I2>> const e) {
+                    auto x1 = ddc::coordinate(ddc::DiscreteElement<IDim<I1, I1, I2>>(e));
+                    auto x2 = ddc::coordinate(ddc::DiscreteElement<IDimDeriv<I2>>(e));
+                    Sderiv2_lhs1_cpu(e) = evaluator.deriv(x1, x0<I2>(), 0, x2 + shift - 1);
+                });
+
         ddc::Chunk Sderiv2_lhs1_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
@@ -430,15 +424,14 @@ static void Batched2dSplineTest()
                         IDimDeriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv2_rhs1_cpu = Sderiv2_rhs1_cpu_alloc.span_view();
-        for (int ii = 0; ii < Sderiv2_rhs1_cpu.domain().template extent<IDim<I1, I1, I2>>(); ++ii) {
-            for (std::size_t jj = 0;
-                 jj < Sderiv2_rhs1_cpu.domain().template extent<IDimDeriv<I2>>();
-                 ++jj) {
-                Sderiv2_rhs1_cpu(
-                        typename decltype(Sderiv2_rhs1_cpu.domain())::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>() + ii, xN<I2>(), 0, jj + shift);
-            }
-        }
+        ddc::for_each(
+                Sderiv2_rhs1_cpu.domain(),
+                DDC_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, IDimDeriv<I2>> const e) {
+                    auto x1 = ddc::coordinate(ddc::DiscreteElement<IDim<I1, I1, I2>>(e));
+                    auto x2 = ddc::coordinate(ddc::DiscreteElement<IDimDeriv<I2>>(e));
+                    Sderiv2_rhs1_cpu(e) = evaluator.deriv(x1, xN<I2>(), 0, x2 + shift - 1);
+                });
+
         ddc::Chunk Sderiv2_rhs1_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,

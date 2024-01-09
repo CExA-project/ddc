@@ -602,15 +602,46 @@ static void Batched2dSplineTest()
                 return Kokkos::abs(spline_eval_deriv12(e) - evaluator.deriv(x, y, 1, 1));
             });
 
+
     double const max_norm = evaluator.max_norm();
     double const max_norm_diff1 = evaluator.max_norm(1, 0);
     double const max_norm_diff2 = evaluator.max_norm(0, 1);
     double const max_norm_diff12 = evaluator.max_norm(1, 1);
 
-    EXPECT_LE(max_norm_error, 1.0e-14 * max_norm);
-    EXPECT_LE(max_norm_error_diff1, 1e-12 * max_norm_diff1);
-    EXPECT_LE(max_norm_error_diff2, 1e-12 * max_norm_diff2);
-    EXPECT_LE(max_norm_error_diff12, 1e-12 * max_norm_diff12);
+    SplineErrorBounds<evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>>> error_bounds(evaluator);
+    EXPECT_LE(
+            max_norm_error,
+            std::
+                    max(error_bounds
+                                .error_bound(dx<I1>(ncells), dx<I2>(ncells), s_degree, s_degree),
+                        1.0e-14 * max_norm));
+    EXPECT_LE(
+            max_norm_error_diff1,
+            std::
+                    max(error_bounds.error_bound_on_deriv_1(
+                                dx<I1>(ncells),
+                                dx<I2>(ncells),
+                                s_degree,
+                                s_degree),
+                        1e-12 * max_norm_diff1));
+    EXPECT_LE(
+            max_norm_error_diff2,
+            std::
+                    max(error_bounds.error_bound_on_deriv_2(
+                                dx<I1>(ncells),
+                                dx<I2>(ncells),
+                                s_degree,
+                                s_degree),
+                        1e-12 * max_norm_diff2));
+    EXPECT_LE(
+            max_norm_error_diff12,
+            std::
+                    max(error_bounds.error_bound_on_deriv_12(
+                                dx<I1>(ncells),
+                                dx<I2>(ncells),
+                                s_degree,
+                                s_degree),
+                        1e-12 * max_norm_diff12));
 }
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)

@@ -264,7 +264,7 @@ int main(int argc, char** argv)
     display(ddc::coordinate(time_domain.front()),
             ghosted_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
-    ddc::DiscreteElement<DDimT> index_time_last_output
+    ddc::DiscreteElement<DDimT> last_output_iter
             = time_domain.front();
     //! [initial output]
 
@@ -333,8 +333,8 @@ int main(int argc, char** argv)
         //! [numerical scheme]
 
         //! [output]
-        if (iter - index_time_last_output >= t_output_period) {
-            index_time_last_output = iter;
+        if (iter - last_output_iter >= t_output_period) {
+            last_output_iter = iter;
             ddc::deepcopy(ghosted_temp, ghosted_last_temp);
             display(ddc::coordinate(iter),
                     ghosted_temp[x_domain][y_domain]);
@@ -348,7 +348,7 @@ int main(int argc, char** argv)
     }
 
     //! [final output]
-    if (index_time_last_output < time_domain.back()) {
+    if (last_output_iter < time_domain.back()) {
         ddc::deepcopy(ghosted_temp, ghosted_last_temp);
         display(ddc::coordinate(time_domain.back()),
                 ghosted_temp[x_domain][y_domain]);

@@ -202,7 +202,7 @@ static void BatchedSplineTest()
 #if defined(BC_HERMITE)
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I>> const derivs_domain = ddc::DiscreteDomain<
-            ddc::Deriv<I>>(Index<ddc::Deriv<I>>(0), DVect<ddc::Deriv<I>>(s_degree_x / 2));
+            ddc::Deriv<I>>(Index<ddc::Deriv<I>>(1), DVect<ddc::Deriv<I>>(s_degree_x / 2));
     auto const dom_derivs = ddc::replace_dim_of<IDim<I, I>, ddc::Deriv<I>>(dom_vals, derivs_domain);
 #endif
 

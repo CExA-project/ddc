@@ -143,7 +143,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
     ddc::for_each(
             ddc::policies::policy(exec_space()),
             batch_domain(),
-            DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
+            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
                 for (int i = nbc_xmin; i < nbc_xmin + offset_proxy; ++i) {
                     spline(ddc::DiscreteElement<bsplines_type>(i), j) = 0.0;
                 }
@@ -160,7 +160,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
     ddc::for_each(
             ddc::policies::policy(exec_space()),
             batch_domain(),
-            DDC_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                 for (int i = 0; i < nbasis_proxy; i++) {
                     spline_tr(ddc::DiscreteElement<bsplines_type>(i), j)
                             = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
@@ -177,7 +177,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
     ddc::for_each(
             ddc::policies::policy(exec_space()),
             batch_domain(),
-            DDC_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                 for (int i = 0; i < nbasis_proxy; i++) {
                     spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j)
                             = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
@@ -189,7 +189,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
-                DDC_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                     if (offset_proxy != 0) {
                         for (int i = 0; i < offset_proxy; ++i) {
                             spline(ddc::DiscreteElement<bsplines_type>(i), j) = spline(

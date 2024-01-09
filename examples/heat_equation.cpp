@@ -230,7 +230,7 @@ int main(int argc, char** argv)
     ddc::for_each(
             ddc::policies::parallel_device,
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
-            DDC_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
                         = ddc::coordinate(ddc::select<DDimX>(ixy));
                 double const y
@@ -292,7 +292,7 @@ int main(int argc, char** argv)
         ddc::for_each(
                 ddc::policies::parallel_device,
                 next_temp.domain(),
-                DDC_LAMBDA(
+                KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                     ddc::DiscreteElement<DDimX> const ix
                             = ddc::select<DDimX>(ixy);

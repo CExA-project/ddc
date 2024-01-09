@@ -269,7 +269,7 @@ int main(int argc, char** argv)
     //! [initial output]
 
     //! [time iteration]
-    for (auto const idxDDimT :
+    for (auto const iter :
          time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
         //! [time iteration]
 
@@ -333,10 +333,10 @@ int main(int argc, char** argv)
         //! [numerical scheme]
 
         //! [output]
-        if (idxDDimT - index_time_last_output >= t_output_period) {
-            index_time_last_output = idxDDimT;
+        if (iter - index_time_last_output >= t_output_period) {
+            index_time_last_output = iter;
             ddc::deepcopy(ghosted_temp, ghosted_last_temp);
-            display(ddc::coordinate(idxDDimT),
+            display(ddc::coordinate(iter),
                     ghosted_temp[x_domain][y_domain]);
         }
         //! [output]

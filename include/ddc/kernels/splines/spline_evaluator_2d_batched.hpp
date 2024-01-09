@@ -51,6 +51,8 @@ public:
 
     using vals_domain_type = ddc::DiscreteDomain<IDimX...>;
 
+    using bsplines_domain_type1 = ddc::DiscreteDomain<bsplines_type1>;
+    using bsplines_domain_type2 = ddc::DiscreteDomain<bsplines_type2>;
     using bsplines_domain_type = ddc::DiscreteDomain<bsplines_type1, bsplines_type2>;
 
     using batch_domain_type =
@@ -272,33 +274,41 @@ public:
                 });
     }
 
-    /*
     template <class Layout1, class Layout2>
     void integrate(
             ddc::ChunkSpan<double, batch_domain_type, Layout1, memory_space> const integrals,
             ddc::ChunkSpan<double const, spline_domain_type, Layout2, memory_space> const
                     spline_coef) const
     {
-        ddc::Chunk values_alloc(
-                ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()),
+        ddc::Chunk values1_alloc(
+                ddc::DiscreteDomain<bsplines_type1>(spline_coef.domain()),
                 ddc::KokkosAllocator<double, memory_space>());
-        ddc::ChunkSpan values = values_alloc.span_view();
+        ddc::ChunkSpan values1 = values1_alloc.span_view();
+        ddc::Chunk values2_alloc(
+                ddc::DiscreteDomain<bsplines_type2>(spline_coef.domain()),
+                ddc::KokkosAllocator<double, memory_space>());
+        ddc::ChunkSpan values2 = values2_alloc.span_view();
         Kokkos::parallel_for(
                 Kokkos::RangePolicy<exec_space>(0, 1),
-                KOKKOS_LAMBDA(int) { ddc::discrete_space<bsplines_type>().integrals(values); });
+                KOKKOS_LAMBDA(int) {
+                    ddc::discrete_space<bsplines_type1>().integrals(values1);
+                    ddc::discrete_space<bsplines_type2>().integrals(values2);
+                });
 
         ddc::for_each(
                 ddc::policies::policy(exec_space()),
                 batch_domain(),
                 DDC_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                     integrals(j) = 0;
-                    for (typename bsplines_domain_type::discrete_element_type const i :
-                         values.domain()) {
-                        integrals(j) += spline_coef(i, j) * values(i);
+                    for (typename bsplines_domain_type1::discrete_element_type const i1 :
+                         values1.domain()) {
+                        for (typename bsplines_domain_type2::discrete_element_type const i2 :
+                             values2.domain()) {
+                            integrals(j) += spline_coef(i1, i2, j) * values1(i1) * values2(i2);
+                        }
                     }
                 });
     }
-	*/
 
 private:
     template <class Layout, class... CoordsDims>

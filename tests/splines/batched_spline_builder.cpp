@@ -289,9 +289,13 @@ static void BatchedSplineTest()
 
     // Finally compute the spline by filling `coef`
 #if defined(BC_HERMITE)
-    spline_builder(coef, vals, std::optional(Sderiv_lhs), std::optional(Sderiv_rhs));
+    spline_builder(
+            coef,
+            vals.span_cview(),
+            std::optional(Sderiv_lhs.span_cview()),
+            std::optional(Sderiv_rhs.span_cview()));
 #else
-    spline_builder(coef, vals);
+    spline_builder(coef, vals.span_cview());
 #endif
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions

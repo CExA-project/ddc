@@ -153,7 +153,7 @@ static void PeriodicitySplineBuilderTest()
     ddc::ChunkSpan coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
-    spline_builder(coef, vals);
+    spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
     ddc::SplineEvaluatorBatched<

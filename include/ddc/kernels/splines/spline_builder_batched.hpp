@@ -132,11 +132,13 @@ public:
     template <class Layout>
     void operator()(
             ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
-            ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
-            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+            ddc::ChunkSpan<double const, vals_domain_type, Layout, memory_space> vals,
+            std::optional<
+                    ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                     derivs_xmin
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+            std::optional<
+                    ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                     derivs_xmax
             = std::nullopt) const;
 };
@@ -145,10 +147,10 @@ template <class SplineBuilder, class... IDimX>
 template <class Layout>
 void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
         ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
-        ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
-        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+        ddc::ChunkSpan<double const, vals_domain_type, Layout, memory_space> vals,
+        std::optional<ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                 derivs_xmin,
-        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                 derivs_xmax) const
 {
     assert(vals.template extent<interpolation_mesh_type>()

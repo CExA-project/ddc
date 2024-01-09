@@ -264,8 +264,7 @@ int main(int argc, char** argv)
     display(ddc::coordinate(time_domain.front()),
             ghosted_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
-    ddc::DiscreteElement<DDimT> last_output_iter
-            = time_domain.front();
+    ddc::DiscreteElement<DDimT> last_output_iter = time_domain.front();
     //! [initial output]
 
     //! [time iteration]

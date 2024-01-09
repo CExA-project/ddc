@@ -5,6 +5,7 @@
 #include "ddc/kokkos_allocator.hpp"
 
 #include "spline_builder.hpp"
+#include "deriv.hpp"
 
 namespace ddc {
 template <class SplineBuilder, class... IDimX>

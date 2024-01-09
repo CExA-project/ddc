@@ -237,9 +237,9 @@ static void Batched2dSplineTest()
 #if defined(BC_HERMITE)
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I1>> const derivs_domain1 = ddc::DiscreteDomain<
-            ddc::Deriv<I1>>(Index<ddc::Deriv<I1>>(0), DVect<ddc::Deriv<I1>>(s_degree / 2));
+            ddc::Deriv<I1>>(Index<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(s_degree / 2));
     ddc::DiscreteDomain<ddc::Deriv<I2>> const derivs_domain2 = ddc::DiscreteDomain<
-            ddc::Deriv<I2>>(Index<ddc::Deriv<I2>>(0), DVect<ddc::Deriv<I2>>(s_degree / 2));
+            ddc::Deriv<I2>>(Index<ddc::Deriv<I2>>(1), DVect<ddc::Deriv<I2>>(s_degree / 2));
     ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>> const derivs_domain
             = ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>>(derivs_domain1, derivs_domain2);
 
@@ -309,7 +309,7 @@ static void Batched2dSplineTest()
                 DDC_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, IDim<I2, I1, I2>> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<IDim<I2, I1, I2>>(e));
-                    Sderiv1_lhs1_cpu(e) = evaluator.deriv(x0<I1>(), x2, deriv_idx + shift, 0);
+                    Sderiv1_lhs1_cpu(e) = evaluator.deriv(x0<I1>(), x2, deriv_idx + shift - 1, 0);
                 });
         ddc::Chunk Sderiv1_lhs1_alloc(
                 ddc::DiscreteDomain<
@@ -341,7 +341,7 @@ static void Batched2dSplineTest()
                 DDC_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, IDim<I2, I1, I2>> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<IDim<I2, I1, I2>>(e));
-                    Sderiv1_rhs1_cpu(e) = evaluator.deriv(xN<I1>(), x2, deriv_idx + shift, 0);
+                    Sderiv1_rhs1_cpu(e) = evaluator.deriv(xN<I1>(), x2, deriv_idx + shift - 1, 0);
                 });
         ddc::Chunk Sderiv1_rhs1_alloc(
                 ddc::DiscreteDomain<
@@ -373,7 +373,7 @@ static void Batched2dSplineTest()
                 DDC_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<IDim<I1, I1, I2>>(e));
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
-                    Sderiv2_lhs1_cpu(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx + shift);
+                    Sderiv2_lhs1_cpu(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx + shift - 1);
                 });
 
         ddc::Chunk Sderiv2_lhs1_alloc(
@@ -406,7 +406,7 @@ static void Batched2dSplineTest()
                 DDC_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<IDim<I1, I1, I2>>(e));
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
-                    Sderiv2_rhs1_cpu(e) = evaluator.deriv(x1, xN<I2>(), 0, deriv_idx + shift);
+                    Sderiv2_rhs1_cpu(e) = evaluator.deriv(x1, xN<I2>(), 0, deriv_idx + shift - 1);
                 });
 
         ddc::Chunk Sderiv2_rhs1_alloc(
@@ -444,20 +444,21 @@ static void Batched2dSplineTest()
         ddc::Chunk Sderiv_mixed_rhs_rhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv_mixed_rhs_rhs1_cpu = Sderiv_mixed_rhs_rhs1_cpu_alloc.span_view();
 
-        for (int ii = 0; ii < derivs_domain.template extent<ddc::Deriv<I1>>(); ++ii) {
-            for (std::size_t jj = 0; jj < derivs_domain.template extent<ddc::Deriv<I2>>(); ++jj) {
+        for (int ii = 1; ii < derivs_domain.template extent<ddc::Deriv<I1>>() + 1; ++ii) {
+            for (std::size_t jj = 1; jj < derivs_domain.template extent<ddc::Deriv<I2>>() + 1;
+                 ++jj) {
                 Sderiv_mixed_lhs_lhs1_cpu(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>(), x0<I2>(), ii + shift, jj + shift);
+                        = evaluator.deriv(x0<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
                 Sderiv_mixed_rhs_lhs1_cpu(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xN<I1>(), x0<I2>(), ii + shift, jj + shift);
+                        = evaluator.deriv(xN<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
                 Sderiv_mixed_lhs_rhs1_cpu(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>(), xN<I2>(), ii + shift, jj + shift);
+                        = evaluator.deriv(x0<I1>(), xN<I2>(), ii + shift - 1, jj + shift - 1);
                 Sderiv_mixed_rhs_rhs1_cpu(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xN<I1>(), xN<I2>(), ii + shift, jj + shift);
+                        = evaluator.deriv(xN<I1>(), xN<I2>(), ii + shift - 1, jj + shift - 1);
             }
         }
         ddc::Chunk Sderiv_mixed_lhs_lhs1_alloc(

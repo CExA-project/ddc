@@ -245,9 +245,9 @@ static void BatchedSplineTest()
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk Sderiv_lhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv_lhs1_cpu = Sderiv_lhs1_cpu_alloc.span_view();
-        for (int ii = 0; ii < Sderiv_lhs1_cpu.domain().template extent<ddc::Deriv<I>>(); ++ii) {
+        for (int ii = 1; ii < Sderiv_lhs1_cpu.domain().template extent<ddc::Deriv<I>>() + 1; ++ii) {
             Sderiv_lhs1_cpu(typename decltype(Sderiv_lhs1_cpu.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(x0<I>(), ii + shift);
+                    = evaluator.deriv(x0<I>(), ii + shift - 1);
         }
         ddc::Chunk Sderiv_lhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv_lhs1 = Sderiv_lhs1_alloc.span_view();
@@ -266,9 +266,9 @@ static void BatchedSplineTest()
     if (s_bcr == ddc::BoundCond::HERMITE) {
         ddc::Chunk Sderiv_rhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv_rhs1_cpu = Sderiv_rhs1_cpu_alloc.span_view();
-        for (int ii = 0; ii < Sderiv_rhs1_cpu.domain().template extent<ddc::Deriv<I>>(); ++ii) {
+        for (int ii = 1; ii < Sderiv_rhs1_cpu.domain().template extent<ddc::Deriv<I>>() + 1; ++ii) {
             Sderiv_rhs1_cpu(typename decltype(Sderiv_rhs1_cpu.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(x0<I>(), ii + shift);
+                    = evaluator.deriv(x0<I>(), ii + shift - 1);
         }
         ddc::Chunk Sderiv_rhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv_rhs1 = Sderiv_rhs1_alloc.span_view();

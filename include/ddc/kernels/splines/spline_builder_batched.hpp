@@ -163,6 +163,12 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
            != (!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0));
     assert((BcXmax == ddc::BoundCond::HERMITE)
            != (!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0));
+	if constexpr (BcXmin == BoundCond::HERMITE) {
+	  assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == 1);
+	}
+	if constexpr (BcXmax == BoundCond::HERMITE) {
+	  assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == 1);
+	}
 
     // Hermite boundary conditions at xmin, if any
     // NOTE: For consistency with the linear system, the i-th derivative
@@ -177,7 +183,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                 DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
                     for (int i = nbc_xmin; i > 0; --i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbc_xmin - i), j)
-                                = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i - 1), j)
+                                = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i), j)
                                   * ddc::detail::ipow(dx_proxy, i + odd - 1);
                     }
                 });
@@ -213,7 +219,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::operator()(
                 DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
                     for (int i = 0; i < nbc_xmax; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - nbc_xmax - i), j)
-                                = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i), j)
+                                = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i+1), j)
                                   * ddc::detail::ipow(dx_proxy, i + odd);
                     }
                 });

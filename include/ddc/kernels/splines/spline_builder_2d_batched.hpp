@@ -94,7 +94,7 @@ public:
         , m_spline_builder_deriv1(ddc::replace_dim_of<interpolation_mesh_type2, deriv_type2>(
                   m_spline_builder1.vals_domain(),
                   ddc::DiscreteDomain<deriv_type2>(
-                          ddc::DiscreteElement<deriv_type2>(0),
+                          ddc::DiscreteElement<deriv_type2>(1),
                           ddc::DiscreteVector<deriv_type2>(bsplines_type2::degree() / 2))))
         , m_spline_builder2(
                   m_spline_builder1.spline_domain(),

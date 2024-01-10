@@ -81,12 +81,11 @@ public:
 
 
 private:
-    double m_dx; // average cell size for normalization of derivatives
-
     const int m_offset;
 
     interpolation_domain_type m_interpolation_domain;
 
+    double m_dx; // average cell size for normalization of derivatives
 
 public:
     int compute_offset(interpolation_domain_type const& interpolation_domain);
@@ -141,7 +140,6 @@ public:
     {
         return m_dx;
     }
-
 
     int offset() const noexcept
     {

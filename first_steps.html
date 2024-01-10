@@ -239,11 +239,13 @@ Time dimension</h3>
 <div class="line">            .5 / (kx * invdx2_max + ky * invdy2_max)};</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// number of time intervals required to reach the end time</span></div>
+<div class="line">    <span class="comment">// The + .2 is used to make sure it is rounded to the correct number of steps</span></div>
 <div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimT&gt;</a> <span class="keyword">const</span> nb_time_steps {</div>
 <div class="line">            std::ceil((end_time - start_time) / max_dt) + .2};</div>
 <div class="line">    <span class="comment">// Initialization of the global domain in time:</span></div>
 <div class="line">    <span class="comment">// - the number of discrete time-points is equal to the number of</span></div>
 <div class="line">    <span class="comment">//   steps + 1</span></div>
+<div class="line">    <span class="comment">// `init` takes required information to initialize the attributes of the dimension.</span></div>
 <div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimT&gt;</a> <span class="keyword">const</span> time_domain</div>
 <div class="line">            = <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a>(</div>
 <div class="line">                    DDimT::</div>
@@ -268,6 +270,7 @@ Data allocation</h1>
 <div class="line">            <a class="code hl_class" href="classddc_1_1KokkosAllocator.html">ddc::DeviceAllocator&lt;double&gt;</a>());</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// - once for time-step being computed</span></div>
+<div class="line">    <span class="comment">// The `DeviceAllocator` is responsible for allocating memory on the default memory space.</span></div>
 <div class="line">    <a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_next_temp(</div>
 <div class="line">            <span class="stringliteral">&quot;ghosted_next_temp&quot;</span>,</div>
 <div class="line">            <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
@@ -278,7 +281,9 @@ Data allocation</h1>
 <div class="ttc" id="anamespaceddc_html_classddc_1_1Chunk"><div class="ttname"><a href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a></div><div class="ttdef"><b>Definition:</b> chunk.hpp:15</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md9"></a>
 Initial conditions</h1>
-<div class="fragment"><div class="line">    <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> ghosted_initial_temp</div>
+<div class="fragment"><div class="line">    <span class="comment">// The const qualifier makes it clear that ghosted_initial_temp always references</span></div>
+<div class="line">    <span class="comment">// the same chunk, `ghosted_last_temp` in this case</span></div>
+<div class="line">    <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> ghosted_initial_temp</div>
 <div class="line">            = ghosted_last_temp.span_view();</div>
 <div class="line">    <span class="comment">// Initialize the temperature on the main domain</span></div>
 <div class="line">    <a class="code hl_function" href="namespaceddc.html#a9f0c6cc2043c2e9bd07844e5f3b78951">ddc::for_each</a>(</div>
@@ -301,7 +306,7 @@ Initial conditions</h1>
 <div class="line">    display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>()),</div>
 <div class="line">            ghosted_temp[x_domain][y_domain]);</div>
 <div class="line">    <span class="comment">// time of the iteration where the last output happened</span></div>
-<div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> last_output = time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>();</div>
+<div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> last_output_iter = time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>();</div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a75660adbd6207e6dd4eec152cae420de"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">ddc::DiscreteDomain::front</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:132</div></div>
 <div class="ttc" id="anamespaceddc_html_a70ccb44ff709a5939c2d2e0c0231dd0e"><div class="ttname"><a href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a></div><div class="ttdeci">auto deepcopy(ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</div><div class="ttdoc">Copy the content of a borrowed chunk into another.</div><div class="ttdef"><b>Definition:</b> deepcopy.hpp:19</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
@@ -331,7 +336,8 @@ Numerical scheme</h2>
 <div class="line">        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> next_temp {</div>
 <div class="line">                ghosted_next_temp[x_domain][y_domain]};</div>
 <div class="line">        <span class="comment">// a read-only view of the temperature at the previous time-step</span></div>
-<div class="line">        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> last_temp {ghosted_last_temp.span_view()};</div>
+<div class="line">        <span class="comment">// span_cview returns a read-only ChunkSpan</span></div>
+<div class="line">        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> last_temp {ghosted_last_temp.span_cview()};</div>
 </div><!-- fragment --><div class="fragment"><div class="line">        <span class="comment">// Stencil computation on the main domain</span></div>
 <div class="line">        <a class="code hl_function" href="namespaceddc.html#a9f0c6cc2043c2e9bd07844e5f3b78951">ddc::for_each</a>(</div>
 <div class="line">                <a class="code hl_variable" href="namespaceddc_1_1policies.html#a48db884faba3760360031c5c7657e9e1">ddc::policies::parallel_device</a>,</div>
@@ -364,8 +370,8 @@ Numerical scheme</h2>
 <div class="line">                });</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md13"></a>
 Output</h2>
-<div class="fragment"><div class="line">        <span class="keywordflow">if</span> (iter - last_output &gt;= t_output_period) {</div>
-<div class="line">            last_output = iter;</div>
+<div class="fragment"><div class="line">        <span class="keywordflow">if</span> (iter - last_output_iter &gt;= t_output_period) {</div>
+<div class="line">            last_output_iter = iter;</div>
 <div class="line">            <a class="code hl_function" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
 <div class="line">            display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(iter),</div>
 <div class="line">                    ghosted_temp[x_domain][y_domain]);</div>
@@ -376,7 +382,7 @@ Final swap</h2>
 <div class="line">        std::swap(ghosted_last_temp, ghosted_next_temp);</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md15"></a>
 Final output</h1>
-<div class="fragment"><div class="line">    <span class="keywordflow">if</span> (last_output &lt; time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()) {</div>
+<div class="fragment"><div class="line">    <span class="keywordflow">if</span> (last_output_iter &lt; time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()) {</div>
 <div class="line">        <a class="code hl_function" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">ddc::deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
 <div class="line">        display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()),</div>
 <div class="line">                ghosted_temp[x_domain][y_domain]);</div>

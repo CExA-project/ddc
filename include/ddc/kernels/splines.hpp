@@ -11,6 +11,7 @@
 #include "splines/matrix_maker.hpp"
 #include "splines/matrix_sparse.hpp"
 #include "splines/null_boundary_value.hpp"
+#include "splines/constant_extrapolation_boundary_value.hpp"
 #include "splines/spline_boundary_conditions.hpp"
 #include "splines/spline_boundary_value.hpp"
 #include "splines/spline_builder_2d.hpp"

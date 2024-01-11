@@ -256,7 +256,8 @@ static void BatchedSplineTest()
         ddc::for_each(
                 ddc::policies::policy(exec_space),
                 Sderiv_lhs.domain(),
-                DDC_LAMBDA(typename decltype(Sderiv_lhs.domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(
+                        typename decltype(Sderiv_lhs.domain())::discrete_element_type const e) {
                     Sderiv_lhs(e) = Sderiv_lhs1(ddc::select<ddc::Deriv<I>>(e));
                 });
     }
@@ -277,7 +278,8 @@ static void BatchedSplineTest()
         ddc::for_each(
                 ddc::policies::policy(exec_space),
                 Sderiv_rhs.domain(),
-                DDC_LAMBDA(typename decltype(Sderiv_rhs.domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(
+                        typename decltype(Sderiv_rhs.domain())::discrete_element_type const e) {
                     Sderiv_rhs(e) = Sderiv_rhs1(ddc::select<ddc::Deriv<I>>(e));
                 });
     }

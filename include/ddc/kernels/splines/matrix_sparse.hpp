@@ -237,7 +237,7 @@ public:
         std::shared_ptr const gko_exec = m_matrix_sparse->get_executor();
         // Create the solver factory
         std::shared_ptr const residual_criterion
-                = gko::stop::ResidualNorm<double>::build().with_reduction_factor(1e-20).on(
+                = gko::stop::ResidualNorm<double>::build().with_reduction_factor(1e-19).on(
                         gko_exec);
 
         std::shared_ptr const iterations_criterion
@@ -288,7 +288,10 @@ public:
 
             Kokkos::deep_copy(x_subview, b_subview);
 
+			auto res_logger = std::make_shared<ResidualLogger<double>>(m_matrix_sparse.get(), to_gko_dense(gko_exec, b_subview).get());
+            // m_solver->add_logger(res_logger);
             m_solver->apply(to_gko_dense(gko_exec, b_subview), to_gko_dense(gko_exec, x_subview));
+			// res_logger->write_data(std::cout);
             Kokkos::deep_copy(b_subview, x_subview);
 // Debug purpose
 #if 0

@@ -162,7 +162,7 @@ jobs:
           make -j 2
           case "${{matrix.backend}}" in
           'cpu-'*)
-            ctest -j 2 --output-on-failure --timeout 10 --output-junit tests.xml
+            ctest -j 2 --output-on-failure --timeout 5 --output-junit tests.xml
           ;;
           esac
         EOF

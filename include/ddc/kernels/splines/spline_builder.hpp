@@ -137,6 +137,11 @@ public:
         return m_interpolation_domain;
     }
 
+    double dx() const noexcept
+    {
+        return m_dx;
+    }
+
     int offset() const noexcept
     {
         return m_offset;

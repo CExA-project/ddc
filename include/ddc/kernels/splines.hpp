@@ -3,6 +3,7 @@
 #include "splines/bspline.hpp"
 #include "splines/bsplines_non_uniform.hpp"
 #include "splines/bsplines_uniform.hpp"
+#include "splines/deriv.hpp"
 #include "splines/greville_interpolation_points.hpp"
 #include "splines/knots_as_interpolation_points.hpp"
 #include "splines/math_tools.hpp"

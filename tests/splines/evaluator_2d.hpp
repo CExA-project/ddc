@@ -13,7 +13,7 @@ struct Evaluator2D
 
     public:
         template <class Domain>
-        Evaluator(Domain domain)
+        explicit Evaluator(Domain domain)
             : eval_func1(ddc::select<typename Eval1::Dim>(domain))
             , eval_func2(ddc::select<typename Eval2::Dim>(domain))
         {

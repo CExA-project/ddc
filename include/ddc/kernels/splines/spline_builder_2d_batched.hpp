@@ -21,7 +21,7 @@ class SplineBuilder2DBatched
 public:
     using exec_space = ExecSpace;
 
-    using memory_space = MemorySpace; //TODO: assert same for 1 and 2
+    using memory_space = MemorySpace;
 
     using builder_type1 = ddc::SplineBuilderBatched<
             typename ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline1, IDimI1, BcXmin1, BcXmax1>,
@@ -55,7 +55,7 @@ public:
     using interpolation_domain_type
             = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
 
-    using vals_domain_type = ddc::DiscreteDomain<IDimX...>; // TODO: assert same for 1 and 2
+    using vals_domain_type = ddc::DiscreteDomain<IDimX...>;
 
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
@@ -86,7 +86,7 @@ private:
     builder_type2 m_spline_builder2;
 
 public:
-    SplineBuilder2DBatched(
+    explicit SplineBuilder2DBatched(
             vals_domain_type const& vals_domain,
             std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
@@ -101,7 +101,6 @@ public:
                   cols_per_chunk,
                   preconditionner_max_block_size)
     {
-        //TODO: static_asserts
     }
 
     SplineBuilder2DBatched(SplineBuilder2DBatched const& x) = delete;
@@ -114,24 +113,24 @@ public:
 
     SplineBuilder2DBatched& operator=(SplineBuilder2DBatched&& x) = default;
 
-    vals_domain_type const vals_domain() const noexcept
+    vals_domain_type vals_domain() const noexcept
     {
         return m_spline_builder1.vals_domain();
     }
 
-    interpolation_domain_type const interpolation_domain() const noexcept
+    interpolation_domain_type interpolation_domain() const noexcept
     {
         return ddc::DiscreteDomain<interpolation_domain_type1, interpolation_domain_type2>(
                 m_spline_builder1.interpolation_domain(),
                 m_spline_builder2.interpolation_domain());
     }
 
-    batch_domain_type const batch_domain() const noexcept
+    batch_domain_type batch_domain() const noexcept
     {
         return ddc::remove_dims_of(vals_domain(), interpolation_domain());
     }
 
-    ddc::DiscreteDomain<bsplines_type1, bsplines_type2> const bsplines_domain()
+    ddc::DiscreteDomain<bsplines_type1, bsplines_type2> bsplines_domain()
             const noexcept // TODO : clarify name
     {
         return ddc::DiscreteDomain<bsplines_type1, bsplines_type2>(
@@ -139,7 +138,7 @@ public:
                 ddc::discrete_space<bsplines_type2>().full_domain());
     }
 
-    spline_domain_type const spline_domain() const noexcept
+    spline_domain_type spline_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type1, bsplines_type1>(
                 ddc::replace_dim_of<

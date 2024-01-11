@@ -70,7 +70,7 @@ private:
     const vals_domain_type m_vals_domain;
 
 public:
-    SplineBuilderBatched(
+    explicit SplineBuilderBatched(
             vals_domain_type const& vals_domain,
             std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
@@ -95,34 +95,34 @@ public:
 
     SplineBuilderBatched& operator=(SplineBuilderBatched&& x) = default;
 
-    vals_domain_type const vals_domain() const noexcept
+    vals_domain_type vals_domain() const noexcept
     {
         return m_vals_domain;
     }
 
-    interpolation_domain_type const interpolation_domain() const noexcept
+    interpolation_domain_type interpolation_domain() const noexcept
     {
         return spline_builder.interpolation_domain();
     }
 
-    batch_domain_type const batch_domain() const noexcept
+    batch_domain_type batch_domain() const noexcept
     {
         return ddc::remove_dims_of(vals_domain(), interpolation_domain());
     }
 
-    ddc::DiscreteDomain<bsplines_type> const bsplines_domain() const noexcept // TODO : clarify name
+    ddc::DiscreteDomain<bsplines_type> bsplines_domain() const noexcept // TODO : clarify name
     {
         return ddc::discrete_space<bsplines_type>().full_domain();
     }
 
-    spline_domain_type const spline_domain() const noexcept
+    spline_domain_type spline_domain() const noexcept
     {
         return ddc::replace_dim_of<
                 interpolation_mesh_type,
                 bsplines_type>(vals_domain(), bsplines_domain());
     }
 
-    spline_tr_domain_type const spline_tr_domain() const noexcept
+    spline_tr_domain_type spline_tr_domain() const noexcept
     {
         return spline_tr_domain_type(bsplines_domain(), batch_domain());
     }

@@ -233,7 +233,7 @@ static void BatchedSplineTest()
     ddc::for_each(
             ddc::policies::policy(exec_space),
             vals.domain(),
-            DDC_LAMBDA(Index<IDim<X, I>...> const e) {
+            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
                 vals(e) = vals1(ddc::select<IDim<I, I>>(e));
             });
 
@@ -313,7 +313,7 @@ static void BatchedSplineTest()
     ddc::for_each(
             ddc::policies::policy(exec_space),
             coords_eval.domain(),
-            DDC_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
+            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
 
 
     // Instantiate chunks to receive outputs of spline_evaluator
@@ -335,7 +335,7 @@ static void BatchedSplineTest()
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            DDC_LAMBDA(Index<IDim<X, I>...> const e) {
+            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 
@@ -344,7 +344,7 @@ static void BatchedSplineTest()
             spline_eval_deriv.domain(),
             0.,
             ddc::reducer::max<double>(),
-            DDC_LAMBDA(Index<IDim<X, I>...> const e) {
+            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
                 Coord<I> const x = ddc::coordinate(ddc::select<IDim<I, I>>(e));
                 return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, 1));
             });
@@ -353,8 +353,8 @@ static void BatchedSplineTest()
             spline_eval_integrals.domain(),
             0.,
             ddc::reducer::max<double>(),
-            DDC_LAMBDA(typename decltype(spline_builder)::batch_domain_type::
-                               discrete_element_type const e) {
+            KOKKOS_LAMBDA(typename decltype(spline_builder)::batch_domain_type::
+                                  discrete_element_type const e) {
                 return Kokkos::abs(
                         spline_eval_integrals(e) - evaluator.deriv(xN<I>(), -1)
                         + evaluator.deriv(x0<I>(), -1));

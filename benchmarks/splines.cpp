@@ -95,7 +95,7 @@ static void characteristics_advection(benchmark::State& state)
     ddc::for_each(
             ddc::policies::parallel_device,
             x_mesh,
-            DDC_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x = ddc::coordinate(ddc::select<DDimX>(ixy));
                 double const y = ddc::coordinate(ddc::select<DDimY>(ixy));
                 density(ixy) = 9.999 * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
@@ -140,7 +140,7 @@ static void characteristics_advection(benchmark::State& state)
         ddc::for_each(
                 ddc::policies::parallel_device,
                 feet_coords.domain(),
-                DDC_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const e) {
+                KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const e) {
                     feet_coords(e) = ddc::Coordinate<X, Y>(
                             ddc::coordinate(ddc::select<DDimX>(e))
                                     - ddc::Coordinate<X>(0.0176429863),

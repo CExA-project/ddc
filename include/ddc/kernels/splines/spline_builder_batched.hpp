@@ -169,7 +169,7 @@ void SplineBuilderBatched<SplineBuilder, IDimX...>::compute_interpolant_degree1(
     ddc::for_each(
             ddc::policies::policy(exec_space()),
             batch_domain(),
-            DDC_LAMBDA(typename batch_domain_type::discrete_element_type j) {
+            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
                 for (std::size_t i = 0; i < ddc::discrete_space<bsplines_type>().nbasis(); ++i) {
                     spline(ddc::DiscreteElement<bsplines_type>(i), j)
                             = vals(ddc::DiscreteElement<interpolation_mesh_type>(i), j);

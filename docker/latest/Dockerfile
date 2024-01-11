@@ -24,7 +24,7 @@ RUN chmod +x /bin/bash_run \
     wget \
  && if [ "xhip" = "x${BACKEND}" ] \
   ; then echo 'deb [arch=amd64] https://repo.radeon.com/amdgpu/latest/ubuntu jammy main' > /etc/apt/sources.list.d/amdgpu.list \
-      && echo 'deb [arch=amd64] https://repo.radeon.com/rocm/apt/5.7.3 jammy main' > /etc/apt/sources.list.d/rocm.list \
+      && echo 'deb [arch=amd64] https://repo.radeon.com/rocm/apt/latest jammy main' > /etc/apt/sources.list.d/rocm.list \
       && wget -q -O /etc/apt/trusted.gpg.d/rocm.asc https://repo.radeon.com/rocm/rocm.gpg.key \
       && echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' > /etc/apt/preferences.d/rocm-pin-600 \
  ;  fi \
@@ -65,7 +65,7 @@ RUN chmod +x /bin/bash_run \
  ;; "cuda") \
       cmake -S . -B build -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10 -DCMAKE_CUDA_HOST_COMPILER=g++-10 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGINKGO_CUDA_ARCHITECTURES=70 -DGINKGO_BUILD_CUDA=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF \
  ;; "hip") \
-      cmake -S . -B build -DCMAKE_PREFIX_PATH=/opt/rocm -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_HIP_ARCHITECTURES=gfx90a -DGINKGO_BUILD_HIP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF \
+      cmake -S . -B build -DCMAKE_MODULE_PATH=/opt/rocm/lib/cmake/hip -DCMAKE_PREFIX_PATH=/opt/rocm -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_HIP_ARCHITECTURES=gfx90a -DGINKGO_BUILD_HIP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF \
  ;; esac \
  && cmake --build build \
  && cmake --install build \

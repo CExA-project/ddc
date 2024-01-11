@@ -19,10 +19,11 @@ public:
 
     ~ConstantExtrapolationBoundaryValue() override = default;
 
-    double operator()(
+    template <class Layout, class MemorySpace>
+    KOKKOS_FUNCTION double operator()(
             coord_type,
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>> const spline_coef)
-            const final
+            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
+                    spline_coef) const final
     {
         std::array<double, BSplines::degree() + 1> vals;
 

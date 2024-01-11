@@ -70,16 +70,26 @@ public:
 private:
     spline_domain_type m_spline_domain;
 
+    SplineBoundaryValue<bsplines_type1> const& m_left1_bc;
+
+    SplineBoundaryValue<bsplines_type1> const& m_right1_bc;
+
+    SplineBoundaryValue<bsplines_type2> const& m_left2_bc;
+
+    SplineBoundaryValue<bsplines_type2> const& m_right2_bc;
 
 public:
     explicit SplineEvaluator2DBatched(
             spline_domain_type const& spline_domain,
-            SplineBoundaryValue<bsplines_type1> const&
-                    left1_bc, // Unused, to be restored in next MR
+            SplineBoundaryValue<bsplines_type1> const& left1_bc,
             SplineBoundaryValue<bsplines_type1> const& right1_bc,
             SplineBoundaryValue<bsplines_type2> const& left2_bc,
             SplineBoundaryValue<bsplines_type2> const& right2_bc)
         : m_spline_domain(spline_domain)
+        , m_left1_bc(left1_bc)
+        , m_right1_bc(right1_bc)
+        , m_left2_bc(left2_bc)
+        , m_right2_bc(right2_bc)
     {
     }
 
@@ -421,6 +431,13 @@ private:
                                    / ddc::discrete_space<bsplines_type1>().length())
                            * ddc::discrete_space<bsplines_type1>().length();
             }
+        } else {
+            if (coord_eval_interpolation1 < ddc::discrete_space<bsplines_type1>().rmin()) {
+                return m_left1_bc(coord_eval_interpolation1, spline_coef);
+            }
+            if (coord_eval_interpolation1 > ddc::discrete_space<bsplines_type1>().rmax()) {
+                return m_right1_bc(coord_eval_interpolation1, spline_coef);
+            }
         }
         if constexpr (bsplines_type2::is_periodic()) {
             if (coord_eval_interpolation2 < ddc::discrete_space<bsplines_type2>().rmin()
@@ -431,6 +448,13 @@ private:
                                     - ddc::discrete_space<bsplines_type2>().rmin())
                                    / ddc::discrete_space<bsplines_type2>().length())
                            * ddc::discrete_space<bsplines_type2>().length();
+            }
+        } else {
+            if (coord_eval_interpolation2 < ddc::discrete_space<bsplines_type2>().rmin()) {
+                return m_left2_bc(coord_eval_interpolation2, spline_coef);
+            }
+            if (coord_eval_interpolation2 > ddc::discrete_space<bsplines_type2>().rmax()) {
+                return m_right2_bc(coord_eval_interpolation2, spline_coef);
             }
         }
         return eval_no_bc<eval_type, eval_type>(

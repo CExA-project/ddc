@@ -11,9 +11,11 @@ public:
 
     ~NullBoundaryValue() override = default;
 
-    double operator()(
+    template <class Layout, class MemorySpace>
+    KOKKOS_FUNCTION double operator()(
             ddc::Coordinate<typename BSplines::tag_type>,
-            ddc::ChunkSpan<const double, ddc::DiscreteDomain<BSplines>>) const final
+            ddc::ChunkSpan<const double, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace>)
+            const final
     {
         return 0.0;
     }

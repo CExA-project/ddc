@@ -64,6 +64,9 @@ public:
 private:
     const spline_domain_type m_spline_domain;
 
+    SplineBoundaryValue<bsplines_type> const& m_left_bc;
+
+    SplineBoundaryValue<bsplines_type> const& m_right_bc;
 
 public:
     explicit SplineEvaluator(
@@ -71,6 +74,8 @@ public:
             SplineBoundaryValue<bsplines_type> const& left_bc, // Unused, to be restored in next MR
             SplineBoundaryValue<bsplines_type> const& right_bc)
         : m_spline_domain(spline_domain)
+        , m_left_bc(left_bc)
+        , m_right_bc(right_bc)
     {
     }
 
@@ -215,6 +220,13 @@ private:
                                                      - ddc::discrete_space<bsplines_type>().rmin())
                                                     / ddc::discrete_space<bsplines_type>().length())
                                             * ddc::discrete_space<bsplines_type>().length();
+            }
+        } else {
+            if (coord_eval_interpolation < ddc::discrete_space<bsplines_type>().rmin()) {
+                return m_left_bc(coord_eval_interpolation, spline_coef);
+            }
+            if (coord_eval_interpolation > ddc::discrete_space<bsplines_type>().rmax()) {
+                return m_right_bc(coord_eval_interpolation, spline_coef);
             }
         }
         return eval_no_bc<eval_type>(coord_eval_interpolation, spline_coef);

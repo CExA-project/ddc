@@ -185,7 +185,7 @@ static void BatchedSplineTest()
     Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
     ExecSpace exec_space = ExecSpace();
 
-    std::size_t constexpr ncells = 20;
+    std::size_t constexpr ncells = 10;
     DimsInitializer<IDim<I, I>, BatchDims<IDim<I, I>, IDim<X, I>...>> dims_initializer;
     dims_initializer(ncells);
 

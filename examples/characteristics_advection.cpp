@@ -175,7 +175,7 @@ int main(int argc, char** argv)
     ddc::for_each(
             ddc::policies::parallel_device,
             x_mesh,
-            DDC_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
                         = ddc::coordinate(ddc::select<DDimX>(ixy));
                 double const y
@@ -263,14 +263,15 @@ int main(int argc, char** argv)
         ddc::for_each(
                 ddc::policies::parallel_device,
                 feet_coords.domain(),
-                DDC_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const e) {
+                KOKKOS_LAMBDA(
+                        ddc::DiscreteElement<DDimX, DDimY> const e) {
                     feet_coords(e)
                             = ddc::coordinate(ddc::select<DDimX>(e))
                               - ddc::Coordinate<X>(
                                       vx * ddc::step<DDimT>());
                 });
         // Interpolate the values at feets on the grid
-        spline_builder(coef, last_density);
+        spline_builder(coef, last_density.span_cview());
         spline_evaluator(
                 next_density,
                 feet_coords.span_cview(),

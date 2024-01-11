@@ -151,29 +151,37 @@ public:
     template <class Layout>
     void operator()(
             ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
-            ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
-            std::optional<ddc::ChunkSpan<double, derivs_domain_type1, Layout, memory_space>> const
+            ddc::ChunkSpan<double const, vals_domain_type, Layout, memory_space> vals,
+            std::optional<
+                    ddc::ChunkSpan<double const, derivs_domain_type1, Layout, memory_space>> const
                     derivs_min1
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<double, derivs_domain_type1, Layout, memory_space>> const
+            std::optional<
+                    ddc::ChunkSpan<double const, derivs_domain_type1, Layout, memory_space>> const
                     derivs_max1
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<double, derivs_domain_type2, Layout, memory_space>> const
+            std::optional<
+                    ddc::ChunkSpan<double const, derivs_domain_type2, Layout, memory_space>> const
                     derivs_min2
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<double, derivs_domain_type2, Layout, memory_space>> const
+            std::optional<
+                    ddc::ChunkSpan<double const, derivs_domain_type2, Layout, memory_space>> const
                     derivs_max2
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+            std::optional<
+                    ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                     mixed_derivs_min1_min2
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+            std::optional<
+                    ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                     mixed_derivs_max1_min2
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+            std::optional<
+                    ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                     mixed_derivs_min1_max2
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+            std::optional<
+                    ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                     mixed_derivs_max1_max2
             = std::nullopt) const;
 };
@@ -206,22 +214,22 @@ void SplineBuilder2DBatched<
         IDimX...>::
 operator()(
         ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
-        ddc::ChunkSpan<double, vals_domain_type, Layout, memory_space> vals,
-        std::optional<ddc::ChunkSpan<double, derivs_domain_type1, Layout, memory_space>> const
+        ddc::ChunkSpan<double const, vals_domain_type, Layout, memory_space> vals,
+        std::optional<ddc::ChunkSpan<double const, derivs_domain_type1, Layout, memory_space>> const
                 derivs_min1,
-        std::optional<ddc::ChunkSpan<double, derivs_domain_type1, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double const, derivs_domain_type1, Layout, memory_space>> const
                 derivs_max1,
-        std::optional<ddc::ChunkSpan<double, derivs_domain_type2, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double const, derivs_domain_type2, Layout, memory_space>> const
                 derivs_min2,
-        std::optional<ddc::ChunkSpan<double, derivs_domain_type2, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double const, derivs_domain_type2, Layout, memory_space>> const
                 derivs_max2,
-        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                 mixed_derivs_min1_min2,
-        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                 mixed_derivs_max1_min2,
-        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                 mixed_derivs_min1_max2,
-        std::optional<ddc::ChunkSpan<double, derivs_domain_type, Layout, memory_space>> const
+        std::optional<ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                 mixed_derivs_max1_max2) const
 {
     const std::size_t nbc_xmin = m_spline_builder1.s_nbc_xmin;
@@ -234,15 +242,16 @@ operator()(
     ddc::Chunk spline1_deriv_min_alloc(
             m_spline_builder_deriv1.spline_domain(),
             ddc::KokkosAllocator<double, MemorySpace>());
-    auto spline1_deriv_min = std::optional(spline1_deriv_min_alloc.span_view());
+    auto spline1_deriv_min = spline1_deriv_min_alloc.span_view();
+    auto spline1_deriv_min_opt = std::optional(spline1_deriv_min.span_cview());
     if constexpr (BcXmin1 == ddc::BoundCond::HERMITE) {
         m_spline_builder_deriv1(
-                *spline1_deriv_min,
+                spline1_deriv_min,
                 *derivs_min2,
                 mixed_derivs_min1_min2,
                 mixed_derivs_max1_min2);
     } else {
-        spline1_deriv_min = std::nullopt;
+        spline1_deriv_min_opt = std::nullopt;
     }
 
     // Spline1-transform vals (to spline1)
@@ -257,18 +266,23 @@ operator()(
     ddc::Chunk spline1_deriv_max_alloc(
             m_spline_builder_deriv1.spline_domain(),
             ddc::KokkosAllocator<double, MemorySpace>());
-    auto spline1_deriv_max = std::optional(spline1_deriv_max_alloc.span_view());
+    auto spline1_deriv_max = spline1_deriv_max_alloc.span_view();
+    auto spline1_deriv_max_opt = std::optional(spline1_deriv_max.span_cview());
     if constexpr (BcXmax1 == ddc::BoundCond::HERMITE) {
         m_spline_builder_deriv1(
-                *spline1_deriv_max,
+                spline1_deriv_max,
                 *derivs_max2,
                 mixed_derivs_min1_max2,
                 mixed_derivs_max1_max2);
     } else {
-        spline1_deriv_max = std::nullopt;
+        spline1_deriv_max_opt = std::nullopt;
     }
 
     // Spline2-transform spline1
-    m_spline_builder2(spline, spline1, spline1_deriv_min, spline1_deriv_max);
+    m_spline_builder2(
+            spline,
+            spline1.span_cview(),
+            std::optional(spline1_deriv_min_opt),
+            std::optional(spline1_deriv_max_opt));
 }
 } // namespace ddc

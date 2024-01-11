@@ -233,7 +233,7 @@ static void BatchedSplineTest()
     ddc::for_each(
             ddc::policies::policy(exec_space),
             vals.domain(),
-            DDC_LAMBDA(Index<IDim<X, I>...> const e) {
+            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
                 vals(e) = vals1(ddc::select<IDim<I, I>>(e));
             });
 
@@ -256,7 +256,8 @@ static void BatchedSplineTest()
         ddc::for_each(
                 ddc::policies::policy(exec_space),
                 Sderiv_lhs.domain(),
-                DDC_LAMBDA(typename decltype(Sderiv_lhs.domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(
+                        typename decltype(Sderiv_lhs.domain())::discrete_element_type const e) {
                     Sderiv_lhs(e) = Sderiv_lhs1(ddc::select<ddc::Deriv<I>>(e));
                 });
     }
@@ -277,7 +278,8 @@ static void BatchedSplineTest()
         ddc::for_each(
                 ddc::policies::policy(exec_space),
                 Sderiv_rhs.domain(),
-                DDC_LAMBDA(typename decltype(Sderiv_rhs.domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(
+                        typename decltype(Sderiv_rhs.domain())::discrete_element_type const e) {
                     Sderiv_rhs(e) = Sderiv_rhs1(ddc::select<ddc::Deriv<I>>(e));
                 });
     }
@@ -289,9 +291,13 @@ static void BatchedSplineTest()
 
     // Finally compute the spline by filling `coef`
 #if defined(BC_HERMITE)
-    spline_builder(coef, vals, std::optional(Sderiv_lhs), std::optional(Sderiv_rhs));
+    spline_builder(
+            coef,
+            vals.span_cview(),
+            std::optional(Sderiv_lhs.span_cview()),
+            std::optional(Sderiv_rhs.span_cview()));
 #else
-    spline_builder(coef, vals);
+    spline_builder(coef, vals.span_cview());
 #endif
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
@@ -309,7 +315,7 @@ static void BatchedSplineTest()
     ddc::for_each(
             ddc::policies::policy(exec_space),
             coords_eval.domain(),
-            DDC_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
+            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
 
 
     // Instantiate chunks to receive outputs of spline_evaluator
@@ -331,7 +337,7 @@ static void BatchedSplineTest()
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            DDC_LAMBDA(Index<IDim<X, I>...> const e) {
+            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 
@@ -340,7 +346,7 @@ static void BatchedSplineTest()
             spline_eval_deriv.domain(),
             0.,
             ddc::reducer::max<double>(),
-            DDC_LAMBDA(Index<IDim<X, I>...> const e) {
+            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
                 Coord<I> const x = ddc::coordinate(ddc::select<IDim<I, I>>(e));
                 return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, 1));
             });
@@ -349,8 +355,8 @@ static void BatchedSplineTest()
             spline_eval_integrals.domain(),
             0.,
             ddc::reducer::max<double>(),
-            DDC_LAMBDA(typename decltype(spline_builder)::batch_domain_type::
-                               discrete_element_type const e) {
+            KOKKOS_LAMBDA(typename decltype(spline_builder)::batch_domain_type::
+                                  discrete_element_type const e) {
                 return Kokkos::abs(
                         spline_eval_integrals(e) - evaluator.deriv(xN<I>(), -1)
                         + evaluator.deriv(x0<I>(), -1));

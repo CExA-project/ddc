@@ -78,8 +78,6 @@ private:
 
 
 public:
-    SplineEvaluator2DBatched() = delete;
-
     explicit SplineEvaluator2DBatched(
             spline_domain_type const& spline_domain,
             SplineBoundaryValue<bsplines_type1> const&

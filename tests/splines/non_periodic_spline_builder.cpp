@@ -127,7 +127,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     }
 
     // 6. Finally build the spline by filling `coef`
-    spline_builder(coef.span_view(), yvals.span_view(), deriv_l, deriv_r);
+    spline_builder(coef.span_view(), yvals.span_cview(), deriv_l, deriv_r);
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
     ddc::SplineEvaluator<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX>

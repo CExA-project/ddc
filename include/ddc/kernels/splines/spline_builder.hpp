@@ -128,7 +128,7 @@ public:
     template <class Layout>
     void operator()(
             ddc::ChunkSpan<double, ddc::DiscreteDomain<bsplines_type>, Layout, MemorySpace> spline,
-            ddc::ChunkSpan<double const, interpolation_domain_type, Layout, MemorySpace> vals,
+            ddc::ChunkSpan<double, interpolation_domain_type, Layout, MemorySpace> vals,
             std::optional<ddc::CDSpan1D> const derivs_xmin = std::nullopt,
             std::optional<ddc::CDSpan1D> const derivs_xmax = std::nullopt) const;
 

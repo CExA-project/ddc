@@ -64,8 +64,6 @@ private:
 
 
 public:
-    SplineEvaluatorBatched() = delete;
-
     explicit SplineEvaluatorBatched(
             spline_domain_type const& spline_domain,
             SplineBoundaryValue<bsplines_type> const& left_bc, // Unused, to be restored in next MR

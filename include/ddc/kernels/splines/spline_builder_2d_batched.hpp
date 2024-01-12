@@ -232,11 +232,6 @@ operator()(
         std::optional<ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
                 mixed_derivs_max1_max2) const
 {
-    const std::size_t nbc_xmin = m_spline_builder1.s_nbc_xmin;
-    const std::size_t nbc_xmax = m_spline_builder1.s_nbc_xmax;
-    const std::size_t nbc_ymin = m_spline_builder2.s_nbc_xmin;
-    const std::size_t nbc_ymax = m_spline_builder2.s_nbc_xmax;
-
     // TODO: perform computations along dimension 1 on different streams ?
     // Spline1-transform derivs_min2 (to spline1_deriv_min)
     ddc::Chunk spline1_deriv_min_alloc(

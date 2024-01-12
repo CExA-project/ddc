@@ -274,10 +274,6 @@ operator()(
     }
 
     // Spline2-transform spline1
-    m_spline_builder2(
-            spline,
-            spline1.span_cview(),
-            spline1_deriv_min_opt,
-            spline1_deriv_max_opt);
+    m_spline_builder2(spline, spline1.span_cview(), spline1_deriv_min_opt, spline1_deriv_max_opt);
 }
 } // namespace ddc

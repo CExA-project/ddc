@@ -31,8 +31,7 @@ struct Evaluator2D
         }
 
         template <class DDim1, class DDim2>
-        void operator()(
-                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim1, DDim2>> chunk) const
+        void operator()(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim1, DDim2>> chunk) const
         {
             auto const& domain = chunk.domain();
 

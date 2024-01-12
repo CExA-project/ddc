@@ -72,7 +72,8 @@ struct PolynomialEvaluator
             double result(0.0);
             int start = derivative < 0 ? 0 : derivative;
             for (int i(start); i < m_degree + 1; ++i) {
-                double v = double(falling_factorial(i, derivative)) * std::pow(x, i - derivative);
+                double v
+                        = double(falling_factorial(i, derivative)) * Kokkos::pow(x, i - derivative);
                 result += m_coeffs[i] * v;
             }
             return result;

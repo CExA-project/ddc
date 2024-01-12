@@ -59,24 +59,24 @@ public:
     using vals_domain_type = ddc::DiscreteDomain<IDimX...>;
 
     using batch_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
+            ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>>>;
 
     using spline_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
+            ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>,
                     ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
     using derivs_domain_type1 = typename builder_type1::derivs_domain_type;
     using derivs_domain_type2 =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
+            ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type2>,
                     ddc::detail::TypeSeq<deriv_type2>>>;
     using derivs_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
+            ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>,
                     ddc::detail::TypeSeq<deriv_type1, deriv_type2>>>;

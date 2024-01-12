@@ -37,8 +37,7 @@ struct PolynomialEvaluator
             return eval(x, 0);
         }
 
-        KOKKOS_FUNCTION void operator()(
-                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
+        void operator()(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
         {
             auto const& domain = chunk.domain();
 

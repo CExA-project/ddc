@@ -184,6 +184,47 @@ public:
         return eval_no_bc<eval_deriv_type, eval_deriv_type>(coord_eval, spline_coef);
     }
 
+    template <class InterestDim, class Layout, class... CoordsDims>
+    double deriv(
+            ddc::Coordinate<CoordsDims...> const& coord_eval,
+            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+                    spline_coef) const
+    {
+        static_assert(
+                std::is_same_v<
+                        InterestDim,
+                        typename interpolation_mesh_type1::
+                                continuous_dimension_type> || std::is_same_v<InterestDim, typename interpolation_mesh_type2::continuous_dimension_type>);
+        if constexpr (std::is_same_v<
+                              InterestDim,
+                              typename interpolation_mesh_type1::continuous_dimension_type>) {
+            return deriv_dim_1(coord_eval, spline_coef);
+        } else if constexpr (std::is_same_v<
+                                     InterestDim,
+                                     typename interpolation_mesh_type2::
+                                             continuous_dimension_type>) {
+            return deriv_dim_2(coord_eval, spline_coef);
+        }
+    }
+
+    template <class InterestDim1, class InterestDim2, class Layout, class... CoordsDims>
+    double deriv2(
+            ddc::Coordinate<CoordsDims...> const& coord_eval,
+            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+                    spline_coef) const
+    {
+        static_assert(
+                (std::is_same_v<
+                         InterestDim1,
+                         typename interpolation_mesh_type1::
+                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename interpolation_mesh_type2::continuous_dimension_type>)
+                || (std::is_same_v<
+                            InterestDim2,
+                            typename interpolation_mesh_type1::
+                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename interpolation_mesh_type2::continuous_dimension_type>));
+        return deriv_1_and_2(coord_eval, spline_coef);
+    }
+
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_dim_1(
             ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
@@ -272,6 +313,63 @@ public:
                         }
                     }
                 });
+    }
+
+    template <class InterestDim, class Layout1, class Layout2, class Layout3, class... CoordsDims>
+    void deriv(
+            ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
+            ddc::ChunkSpan<
+                    ddc::Coordinate<CoordsDims...> const,
+                    vals_domain_type,
+                    Layout2,
+                    memory_space> const coords_eval,
+            ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
+                    spline_coef) const
+    {
+        static_assert(
+                std::is_same_v<
+                        InterestDim,
+                        typename interpolation_mesh_type1::
+                                continuous_dimension_type> || std::is_same_v<InterestDim, typename interpolation_mesh_type2::continuous_dimension_type>);
+        if constexpr (std::is_same_v<
+                              InterestDim,
+                              typename interpolation_mesh_type1::continuous_dimension_type>) {
+            return deriv_dim_1(spline_eval, coords_eval, spline_coef);
+        } else if constexpr (std::is_same_v<
+                                     InterestDim,
+                                     typename interpolation_mesh_type2::
+                                             continuous_dimension_type>) {
+            return deriv_dim_2(spline_eval, coords_eval, spline_coef);
+        }
+    }
+
+    template <
+            class InterestDim1,
+            class InterestDim2,
+            class Layout1,
+            class Layout2,
+            class Layout3,
+            class... CoordsDims>
+    void deriv2(
+            ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
+            ddc::ChunkSpan<
+                    ddc::Coordinate<CoordsDims...> const,
+                    vals_domain_type,
+                    Layout2,
+                    memory_space> const coords_eval,
+            ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
+                    spline_coef) const
+    {
+        static_assert(
+                (std::is_same_v<
+                         InterestDim1,
+                         typename interpolation_mesh_type1::
+                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename interpolation_mesh_type2::continuous_dimension_type>)
+                || (std::is_same_v<
+                            InterestDim2,
+                            typename interpolation_mesh_type1::
+                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename interpolation_mesh_type2::continuous_dimension_type>));
+        return deriv_1_and_2(spline_eval, coords_eval, spline_coef);
     }
 
     template <class Layout1, class Layout2>

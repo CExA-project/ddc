@@ -25,14 +25,14 @@ public:
     using memory_space = MemorySpace;
 
     using builder_type1 = ddc::SplineBuilderBatched<
-            typename ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline1, IDimI1, BcXmin1, BcXmax1>,
+            ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline1, IDimI1, BcXmin1, BcXmax1>,
             IDimX...>;
     using builder_type2 = typename ddc::SplineBuilderBatched<
-            typename ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline2, IDimI2, BcXmin2, BcXmax2>,
-            typename std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
-    using builder_deriv_type1 = typename ddc::SplineBuilderBatched<
-            typename ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline1, IDimI1, BcXmin1, BcXmax1>,
-            typename std::conditional_t<
+            ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline2, IDimI2, BcXmin2, BcXmax2>,
+            std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
+    using builder_deriv_type1 = ddc::SplineBuilderBatched<
+            ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline1, IDimI1, BcXmin1, BcXmax1>,
+            std::conditional_t<
                     std::is_same_v<IDimX, IDimI2>,
                     typename builder_type2::deriv_type,
                     IDimX>...>;

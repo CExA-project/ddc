@@ -51,9 +51,8 @@ struct PolynomialEvaluator
             return eval(x, derivative);
         }
 
-        KOKKOS_FUNCTION void deriv(
-                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk,
-                int const derivative) const
+        void deriv(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk, int const derivative)
+                const
         {
             auto const& domain = chunk.domain();
 

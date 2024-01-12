@@ -63,7 +63,7 @@ struct PolynomialEvaluator
 
         KOKKOS_FUNCTION double max_norm(int diff = 0) const
         {
-            return std::abs(deriv(m_xN, diff));
+            return Kokkos::abs(deriv(m_xN, diff));
         }
 
     private:

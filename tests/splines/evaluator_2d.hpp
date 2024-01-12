@@ -63,7 +63,7 @@ struct Evaluator2D
         }
 
         template <class DDim1, class DDim2>
-        KOKKOS_FUNCTION void deriv(
+        void deriv(
                 ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim1, DDim2>> chunk,
                 int const derivative_x,
                 int const derivative_y) const

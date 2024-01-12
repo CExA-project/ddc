@@ -74,7 +74,7 @@ public:
 
 
 private:
-    const spline_domain_type m_spline_domain;
+    spline_domain_type m_spline_domain;
 
 
 public:

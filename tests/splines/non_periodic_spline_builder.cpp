@@ -130,12 +130,20 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
         }
     }
 
-    // 6. Finally build the spline by filling `coef`
-    spline_builder(
-            coef.span_view(),
-            yvals.span_cview(),
-            std::optional(Sderiv_lhs.span_cview()),
-            std::optional(Sderiv_rhs.span_cview()));
+// 6. Finally build the spline by filling `coef`
+#if defined(BCL_HERMITE)
+    auto deriv_l = std::optional(Sderiv_lhs.span_cview());
+#else
+    decltype(std::optional(Sderiv_lhs.span_cview())) deriv_l = std::nullopt;
+#endif
+
+#if defined(BCR_HERMITE)
+    auto deriv_r = std::optional(Sderiv_rhs.span_cview());
+#else
+    decltype(std::optional(Sderiv_rhs.span_cview())) deriv_r = std::nullopt;
+#endif
+
+    spline_builder(coef.span_view(), yvals.span_cview(), deriv_l, deriv_r);
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
     ddc::SplineEvaluator<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX>

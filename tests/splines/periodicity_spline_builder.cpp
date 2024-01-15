@@ -156,7 +156,7 @@ static void PeriodicitySplineBuilderTest()
     spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::SplineEvaluatorBatched<ExecSpace, MemorySpace, BSplines<X>, IDim<X>, IDim<X>>
+    ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<X>, IDim<X>, IDim<X>>
             spline_evaluator_batched(
                     coef.domain(),
                     ddc::g_null_boundary<BSplines<X>>,

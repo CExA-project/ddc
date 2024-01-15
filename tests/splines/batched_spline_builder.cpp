@@ -307,7 +307,7 @@ static void BatchedSplineTest()
 #endif
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::SplineEvaluatorBatched<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>, IDim<X, I>...>
+    ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>, IDim<X, I>...>
             spline_evaluator_batched(
                     coef.domain(),
                     ddc::g_null_boundary<BSplines<I>>,

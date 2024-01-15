@@ -16,7 +16,7 @@ template <
         class BSplinesType,
         class InterpolationMesh,
         class... IDimX>
-class SplineEvaluatorBatched
+class SplineEvaluator
 {
 private:
     // Tags to determine what to evaluate
@@ -66,7 +66,7 @@ private:
 
 
 public:
-    explicit SplineEvaluatorBatched(
+    explicit SplineEvaluator(
             spline_domain_type const& spline_domain,
             SplineBoundaryValue<bsplines_type> const& left_bc, // Unused, to be restored in next MR
             SplineBoundaryValue<bsplines_type> const& right_bc)
@@ -74,15 +74,15 @@ public:
     {
     }
 
-    SplineEvaluatorBatched(SplineEvaluatorBatched const& x) = default;
+    SplineEvaluator(SplineEvaluator const& x) = default;
 
-    SplineEvaluatorBatched(SplineEvaluatorBatched&& x) = default;
+    SplineEvaluator(SplineEvaluator&& x) = default;
 
-    ~SplineEvaluatorBatched() = default;
+    ~SplineEvaluator() = default;
 
-    SplineEvaluatorBatched& operator=(SplineEvaluatorBatched const& x) = default;
+    SplineEvaluator& operator=(SplineEvaluator const& x) = default;
 
-    SplineEvaluatorBatched& operator=(SplineEvaluatorBatched&& x) = default;
+    SplineEvaluator& operator=(SplineEvaluator&& x) = default;
 
 
 

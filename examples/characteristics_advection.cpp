@@ -213,7 +213,7 @@ int main(int argc, char** argv)
             DDimX,
             DDimY>
             spline_builder(x_mesh);
-    ddc::SplineEvaluatorBatched<
+    ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             BSplinesX,

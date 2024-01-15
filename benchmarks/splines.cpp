@@ -112,7 +112,7 @@ static void characteristics_advection(benchmark::State& state)
             DDimX,
             DDimY>
             spline_builder(x_mesh, state.range(2), state.range(3));
-    ddc::SplineEvaluatorBatched<
+    ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             BSplinesX,

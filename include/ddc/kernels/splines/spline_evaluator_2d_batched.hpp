@@ -414,13 +414,9 @@ private:
                     spline_coef) const
     {
         ddc::Coordinate<typename interpolation_mesh_type1::continuous_dimension_type>
-                coord_eval_interpolation1
-                = ddc::select<typename interpolation_mesh_type1::continuous_dimension_type>(
-                        coord_eval);
+                coord_eval_interpolation1(coord_eval);
         ddc::Coordinate<typename interpolation_mesh_type2::continuous_dimension_type>
-                coord_eval_interpolation2
-                = ddc::select<typename interpolation_mesh_type2::continuous_dimension_type>(
-                        coord_eval);
+                coord_eval_interpolation2(coord_eval);
         if constexpr (bsplines_type1::is_periodic()) {
             if (coord_eval_interpolation1 < ddc::discrete_space<bsplines_type1>().rmin()
                 || coord_eval_interpolation1 > ddc::discrete_space<bsplines_type1>().rmax()) {

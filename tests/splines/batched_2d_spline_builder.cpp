@@ -251,8 +251,8 @@ static void Batched2dSplineTest()
             = ddc::replace_dim_of<IDim<I2, I1, I2>, ddc::Deriv<I2>>(dom_derivs1, derivs_domain2);
 #endif
 
-    // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
-    ddc::SplineBuilder2DBatched<
+    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
+    ddc::SplineBuilder2D<
             ExecSpace,
             MemorySpace,
             BSplines<I1>,

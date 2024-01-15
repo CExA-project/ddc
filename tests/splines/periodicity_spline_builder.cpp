@@ -122,8 +122,8 @@ static void PeriodicitySplineBuilderTest()
     ddc::DiscreteDomain<IDim<X>> const dom_vals
             = ddc::DiscreteDomain<IDim<X>>(GrevillePoints<BSplines<X>>::get_domain());
 
-    // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
-    ddc::SplineBuilderBatched<
+    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
+    ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
             BSplines<X>,

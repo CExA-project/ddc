@@ -1,6 +1,6 @@
 #pragma once
 
-#include "spline_builder_batched.hpp"
+#include "spline_builder.hpp"
 
 namespace ddc {
 
@@ -16,14 +16,14 @@ template <
         ddc::BoundCond BcXmin2,
         ddc::BoundCond BcXmax2,
         class... IDimX>
-class SplineBuilder2DBatched
+class SplineBuilder2D
 {
 public:
     using exec_space = ExecSpace;
 
     using memory_space = MemorySpace;
 
-    using builder_type1 = ddc::SplineBuilderBatched<
+    using builder_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
             BSpline1,
@@ -32,7 +32,7 @@ public:
             BcXmax1,
             ddc::SplineSolver::GINKGO,
             IDimX...>;
-    using builder_type2 = ddc::SplineBuilderBatched<
+    using builder_type2 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
             BSpline2,
@@ -41,7 +41,7 @@ public:
             BcXmax2,
             ddc::SplineSolver::GINKGO,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
-    using builder_deriv_type1 = ddc::SplineBuilderBatched<
+    using builder_deriv_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
             BSpline1,
@@ -104,7 +104,7 @@ private:
     builder_type2 m_spline_builder2;
 
 public:
-    explicit SplineBuilder2DBatched(
+    explicit SplineBuilder2D(
             vals_domain_type const& vals_domain,
             std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
@@ -121,15 +121,15 @@ public:
     {
     }
 
-    SplineBuilder2DBatched(SplineBuilder2DBatched const& x) = delete;
+    SplineBuilder2D(SplineBuilder2D const& x) = delete;
 
-    SplineBuilder2DBatched(SplineBuilder2DBatched&& x) = default;
+    SplineBuilder2D(SplineBuilder2D&& x) = default;
 
-    ~SplineBuilder2DBatched() = default;
+    ~SplineBuilder2D() = default;
 
-    SplineBuilder2DBatched& operator=(SplineBuilder2DBatched const& x) = delete;
+    SplineBuilder2D& operator=(SplineBuilder2D const& x) = delete;
 
-    SplineBuilder2DBatched& operator=(SplineBuilder2DBatched&& x) = default;
+    SplineBuilder2D& operator=(SplineBuilder2D&& x) = default;
 
     vals_domain_type vals_domain() const noexcept
     {
@@ -217,7 +217,7 @@ template <
         ddc::BoundCond BcXmax2,
         class... IDimX>
 template <class Layout>
-void SplineBuilder2DBatched<
+void SplineBuilder2D<
         ExecSpace,
         MemorySpace,
         BSpline1,

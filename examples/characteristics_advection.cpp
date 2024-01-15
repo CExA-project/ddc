@@ -202,7 +202,7 @@ int main(int argc, char** argv)
     //! [initial output]
 
     //! [instantiate solver]
-    ddc::SplineBuilderBatched<
+    ddc::SplineBuilder<
                     Kokkos::DefaultExecutionSpace,
                     Kokkos::DefaultExecutionSpace::memory_space,
                     BSplinesX,

@@ -20,7 +20,7 @@ template <
         ddc::BoundCond BcXmax,
         SplineSolver Solver = ddc::SplineSolver::GINKGO,
         class... IDimX>
-class SplineBuilderBatched
+class SplineBuilder
 {
     static_assert(
             (BSplines::is_periodic() && (BcXmin == ddc::BoundCond::PERIODIC)
@@ -98,7 +98,7 @@ private:
 public:
     int compute_offset(interpolation_domain_type const& interpolation_domain);
 
-    explicit SplineBuilderBatched(
+    explicit SplineBuilder(
             vals_domain_type const& vals_domain,
             std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
@@ -127,15 +127,15 @@ public:
                 preconditionner_max_block_size);
     }
 
-    SplineBuilderBatched(SplineBuilderBatched const& x) = delete;
+    SplineBuilder(SplineBuilder const& x) = delete;
 
-    SplineBuilderBatched(SplineBuilderBatched&& x) = default;
+    SplineBuilder(SplineBuilder&& x) = default;
 
-    ~SplineBuilderBatched() = default;
+    ~SplineBuilder() = default;
 
-    SplineBuilderBatched& operator=(SplineBuilderBatched const& x) = delete;
+    SplineBuilder& operator=(SplineBuilder const& x) = delete;
 
-    SplineBuilderBatched& operator=(SplineBuilderBatched&& x) = default;
+    SplineBuilder& operator=(SplineBuilder&& x) = default;
 
     vals_domain_type vals_domain() const noexcept
     {
@@ -210,7 +210,7 @@ template <
         ddc::BoundCond BcXmax,
         SplineSolver Solver,
         class... IDimX>
-int SplineBuilderBatched<
+int SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
@@ -249,7 +249,7 @@ template <
         ddc::BoundCond BcXmax,
         SplineSolver Solver,
         class... IDimX>
-void SplineBuilderBatched<
+void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
@@ -298,7 +298,7 @@ template <
         ddc::BoundCond BcXmax,
         SplineSolver Solver,
         class... IDimX>
-void SplineBuilderBatched<
+void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
@@ -346,7 +346,7 @@ template <
         ddc::BoundCond BcXmax,
         SplineSolver Solver,
         class... IDimX>
-void SplineBuilderBatched<
+void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
@@ -399,7 +399,7 @@ template <
         ddc::BoundCond BcXmax,
         SplineSolver Solver,
         class... IDimX>
-void SplineBuilderBatched<
+void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
@@ -497,7 +497,7 @@ template <
         SplineSolver Solver,
         class... IDimX>
 template <class Layout>
-void SplineBuilderBatched<
+void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,

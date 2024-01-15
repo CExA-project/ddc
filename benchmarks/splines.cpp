@@ -101,7 +101,7 @@ static void characteristics_advection(benchmark::State& state)
                 density(ixy) = 9.999 * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
                 // initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
-    ddc::SplineBuilderBatched<
+    ddc::SplineBuilder<
                     Kokkos::DefaultExecutionSpace,
                     Kokkos::DefaultExecutionSpace::memory_space,
                     BSplinesX,

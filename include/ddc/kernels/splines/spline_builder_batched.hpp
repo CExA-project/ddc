@@ -11,6 +11,18 @@ enum class SplineSolver {
     GINKGO
 }; // Only GINKGO available atm, other solvers will be implemented in the futur
 
+constexpr bool is_spline_interpolation_mesh_uniform(
+        bool const is_uniform,
+        ddc::BoundCond const BcXmin,
+        ddc::BoundCond const BcXmax,
+        int degree)
+{
+    int N_BE_MIN = n_boundary_equations(BcXmin, degree);
+    int N_BE_MAX = n_boundary_equations(BcXmax, degree);
+    bool is_periodic = (BcXmin == ddc::BoundCond::PERIODIC) && (BcXmax == ddc::BoundCond::PERIODIC);
+    return is_uniform && ((N_BE_MIN != 0 && N_BE_MAX != 0) || is_periodic);
+}
+
 template <
         class ExecSpace,
         class MemorySpace,

@@ -74,13 +74,15 @@ TEST(PeriodicSplineBuilderTest, Identity)
     ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
-    ddc::SplineBuilder<
+    ddc::SplineBuilderBatched<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::HostSpace,
             BSplinesX,
             IDimX,
             ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC>
+            ddc::BoundCond::PERIODIC,
+            ddc::SplineSolver::GINKGO,
+            IDimX>
             spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain

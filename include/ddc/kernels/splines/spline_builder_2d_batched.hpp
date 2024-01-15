@@ -1,6 +1,5 @@
 #pragma once
 
-#include "spline_builder.hpp"
 #include "spline_builder_batched.hpp"
 
 namespace ddc {
@@ -25,13 +24,31 @@ public:
     using memory_space = MemorySpace;
 
     using builder_type1 = ddc::SplineBuilderBatched<
-            ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline1, IDimI1, BcXmin1, BcXmax1>,
+            ExecSpace,
+            MemorySpace,
+            BSpline1,
+            IDimI1,
+            BcXmin1,
+            BcXmax1,
+            ddc::SplineSolver::GINKGO,
             IDimX...>;
-    using builder_type2 = typename ddc::SplineBuilderBatched<
-            ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline2, IDimI2, BcXmin2, BcXmax2>,
+    using builder_type2 = ddc::SplineBuilderBatched<
+            ExecSpace,
+            MemorySpace,
+            BSpline2,
+            IDimI2,
+            BcXmin2,
+            BcXmax2,
+            ddc::SplineSolver::GINKGO,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
     using builder_deriv_type1 = ddc::SplineBuilderBatched<
-            ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline1, IDimI1, BcXmin1, BcXmax1>,
+            ExecSpace,
+            MemorySpace,
+            BSpline1,
+            IDimI1,
+            BcXmin1,
+            BcXmax1,
+            ddc::SplineSolver::GINKGO,
             std::conditional_t<
                     std::is_same_v<IDimX, IDimI2>,
                     typename builder_type2::deriv_type,

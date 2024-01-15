@@ -81,6 +81,10 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     }
     ddc::DiscreteDomain<BSplinesX> const dom_bsplines_x(
             ddc::discrete_space<BSplinesX>().full_domain());
+    ddc::DiscreteDomain<ddc::Deriv<DimX>> const derivs_domain
+            = ddc::DiscreteDomain<ddc::Deriv<DimX>>(
+                    ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
+                    ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree_x / 2));
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
@@ -91,13 +95,15 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
-    ddc::SplineBuilder<
+    ddc::SplineBuilderBatched<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::HostSpace,
             BSplinesX,
             IDimX,
             s_bcl,
-            s_bcr>
+            s_bcr,
+            ddc::SplineSolver::GINKGO,
+            IDimX>
             spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
@@ -106,28 +112,30 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     evaluator(yvals.span_view());
 
     int constexpr shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
-    std::array<double, s_degree_x / 2> Sderiv_lhs_data;
-    ddc::DSpan1D Sderiv_lhs(Sderiv_lhs_data.data(), Sderiv_lhs_data.size());
-    std::optional<ddc::DSpan1D> deriv_l;
+    ddc::Chunk Sderiv_lhs_alloc(derivs_domain, ddc::HostAllocator<double>());
+    ddc::ChunkSpan Sderiv_lhs = Sderiv_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
-        for (std::size_t ii = 0; ii < Sderiv_lhs.extent(0); ++ii) {
-            Sderiv_lhs(ii) = evaluator.deriv(x0, ii + shift);
+        for (int ii = 1; ii < Sderiv_lhs.domain().template extent<ddc::Deriv<DimX>>() + 1; ++ii) {
+            Sderiv_lhs(typename decltype(Sderiv_lhs.domain())::discrete_element_type(ii))
+                    = evaluator.deriv(x0, ii + shift - 1);
         }
-        deriv_l = Sderiv_lhs;
     }
 
-    std::array<double, s_degree_x / 2> Sderiv_rhs_data;
-    ddc::DSpan1D Sderiv_rhs(Sderiv_rhs_data.data(), Sderiv_rhs_data.size());
-    std::optional<ddc::DSpan1D> deriv_r;
-    if (s_bcr == ddc::BoundCond::HERMITE) {
-        for (std::size_t ii = 0; ii < Sderiv_rhs.extent(0); ++ii) {
-            Sderiv_rhs(ii) = evaluator.deriv(xN, ii + shift);
+    ddc::Chunk Sderiv_rhs_alloc(derivs_domain, ddc::HostAllocator<double>());
+    ddc::ChunkSpan Sderiv_rhs = Sderiv_rhs_alloc.span_view();
+    if (s_bcl == ddc::BoundCond::HERMITE) {
+        for (int ii = 1; ii < Sderiv_rhs.domain().template extent<ddc::Deriv<DimX>>() + 1; ++ii) {
+            Sderiv_rhs(typename decltype(Sderiv_rhs.domain())::discrete_element_type(ii))
+                    = evaluator.deriv(xN, ii + shift - 1);
         }
-        deriv_r = Sderiv_rhs;
     }
 
     // 6. Finally build the spline by filling `coef`
-    spline_builder(coef.span_view(), yvals.span_cview(), deriv_l, deriv_r);
+    spline_builder(
+            coef.span_view(),
+            yvals.span_cview(),
+            std::optional(Sderiv_lhs.span_cview()),
+            std::optional(Sderiv_rhs.span_cview()));
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
     ddc::SplineEvaluator<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX>

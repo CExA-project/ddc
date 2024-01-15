@@ -203,13 +203,13 @@ int main(int argc, char** argv)
 
     //! [instantiate solver]
     ddc::SplineBuilderBatched<
-            ddc::SplineBuilder<
                     Kokkos::DefaultExecutionSpace,
                     Kokkos::DefaultExecutionSpace::memory_space,
                     BSplinesX,
                     DDimX,
                     ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC>,
+                    ddc::BoundCond::PERIODIC,
+					ddc::SplineSolver::GINKGO,
             DDimX,
             DDimY>
             spline_builder(x_mesh);

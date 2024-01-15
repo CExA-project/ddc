@@ -124,13 +124,13 @@ static void PeriodicitySplineBuilderTest()
 
     // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
     ddc::SplineBuilderBatched<
-            ddc::SplineBuilder<
-                    ExecSpace,
-                    MemorySpace,
-                    BSplines<X>,
-                    IDim<X>,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC>,
+            ExecSpace,
+            MemorySpace,
+            BSplines<X>,
+            IDim<X>,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::SplineSolver::GINKGO,
             IDim<X>>
             spline_builder(dom_vals);
 

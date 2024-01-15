@@ -208,7 +208,13 @@ static void BatchedSplineTest()
 
     // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
     ddc::SplineBuilderBatched<
-            ddc::SplineBuilder<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>, s_bcl, s_bcr>,
+            ExecSpace,
+            MemorySpace,
+            BSplines<I>,
+            IDim<I, I>,
+            s_bcl,
+            s_bcr,
+            ddc::SplineSolver::GINKGO,
             IDim<X, I>...>
             spline_builder(dom_vals);
 

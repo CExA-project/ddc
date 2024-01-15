@@ -146,8 +146,16 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     spline_builder(coef.span_view(), yvals.span_cview(), deriv_l, deriv_r);
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
-    ddc::SplineEvaluator<Kokkos::DefaultHostExecutionSpace, Kokkos::HostSpace, BSplinesX, IDimX>
-            spline_evaluator(ddc::g_null_boundary<BSplinesX>, ddc::g_null_boundary<BSplinesX>);
+    ddc::SplineEvaluatorBatched<
+            Kokkos::DefaultHostExecutionSpace,
+            Kokkos::HostSpace,
+            BSplinesX,
+            IDimX,
+            IDimX>
+            spline_evaluator(
+                    coef.domain(),
+                    ddc::g_null_boundary<BSplinesX>,
+                    ddc::g_null_boundary<BSplinesX>);
 
     ddc::Chunk<ddc::Coordinate<DimX>, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);
     for (IndexX const ix : interpolation_domain) {
@@ -177,8 +185,11 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
         double const error_deriv = spline_eval_deriv(ix) - evaluator.deriv(x, 1);
         max_norm_error_diff = std::fmax(max_norm_error_diff, std::fabs(error_deriv));
     }
+    ddc::Chunk integral(spline_builder.batch_domain(), ddc::HostAllocator<double>());
+    spline_evaluator.integrate(integral.span_view(), coef.span_cview());
+
     double const max_norm_error_integ = std::fabs(
-            spline_evaluator.integrate(coef.span_cview()) - evaluator.deriv(xN, -1)
+            integral(ddc::DiscreteDomain<>().front()) - evaluator.deriv(xN, -1)
             + evaluator.deriv(x0, -1));
     double const max_norm = evaluator.max_norm();
     double const max_norm_diff = evaluator.max_norm(1);

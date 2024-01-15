@@ -6,12 +6,16 @@
 
 #include "Kokkos_Macros.hpp"
 #include "spline_boundary_value.hpp"
-#include "spline_evaluator.hpp"
 #include "view.hpp"
 
 namespace ddc {
 
-template <class SplineEvaluator, class... IDimX>
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplinesType,
+        class InterpolationMesh,
+        class... IDimX>
 class SplineEvaluatorBatched
 {
 private:
@@ -24,18 +28,16 @@ private:
     {
     };
 
-    using tag_type = typename SplineEvaluator::tag_type;
+    using tag_type = typename BSplinesType::tag_type;
 
 public:
-    using exec_space = typename SplineEvaluator::exec_space;
+    using exec_space = ExecSpace;
 
-    using memory_space = typename SplineEvaluator::memory_space;
+    using memory_space = MemorySpace;
 
-    using bsplines_type = typename SplineEvaluator::bsplines_type;
+    using bsplines_type = BSplinesType;
 
-    using evaluator_type = SplineEvaluator;
-
-    using interpolation_mesh_type = typename SplineEvaluator::mesh_type;
+    using interpolation_mesh_type = InterpolationMesh;
 
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
 

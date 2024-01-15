@@ -102,22 +102,21 @@ static void characteristics_advection(benchmark::State& state)
                 // initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
     ddc::SplineBuilder<
-                    Kokkos::DefaultExecutionSpace,
-                    Kokkos::DefaultExecutionSpace::memory_space,
-                    BSplinesX,
-                    DDimX,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
-					ddc::SplineSolver::GINKGO,
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            BSplinesX,
+            DDimX,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::SplineSolver::GINKGO,
             DDimX,
             DDimY>
             spline_builder(x_mesh, state.range(2), state.range(3));
     ddc::SplineEvaluatorBatched<
-            ddc::SplineEvaluator<
-                    Kokkos::DefaultExecutionSpace,
-                    Kokkos::DefaultExecutionSpace::memory_space,
-                    BSplinesX,
-                    DDimX>,
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            BSplinesX,
+            DDimX,
             DDimX,
             DDimY>
             spline_evaluator(

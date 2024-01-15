@@ -6,7 +6,7 @@
 
 #include "Kokkos_Macros.hpp"
 #include "spline_boundary_value.hpp"
-#include "spline_evaluator.hpp"
+#include "spline_evaluator_batched.hpp"
 #include "view.hpp"
 
 namespace ddc {
@@ -36,13 +36,8 @@ public:
 
     using memory_space = MemorySpace;
 
-    using evaluator_type1
-            = ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplinesType1, interpolation_mesh_type1>;
-    using evaluator_type2
-            = ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplinesType2, interpolation_mesh_type2>;
-
-    using bsplines_type1 = typename evaluator_type1::bsplines_type;
-    using bsplines_type2 = typename evaluator_type2::bsplines_type;
+    using bsplines_type1 = BSplinesType1;
+    using bsplines_type2 = BSplinesType2;
 
     using interpolation_domain_type1 = ddc::DiscreteDomain<interpolation_mesh_type1>;
     using interpolation_domain_type2 = ddc::DiscreteDomain<interpolation_mesh_type2>;

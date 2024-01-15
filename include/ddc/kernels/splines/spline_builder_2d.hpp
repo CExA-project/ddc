@@ -1,6 +1,6 @@
 #pragma once
 
-#include "spline_builder.hpp"
+#include "spline_builder_batched.hpp"
 
 namespace ddc {
 

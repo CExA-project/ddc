@@ -169,11 +169,6 @@ public:
         return spline_tr_domain_type(bsplines_domain(), batch_domain());
     }
 
-    int offset() const noexcept
-    {
-        return m_offset;
-    }
-
     template <class Layout>
     void operator()(
             ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,

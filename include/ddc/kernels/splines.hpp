@@ -16,6 +16,5 @@
 #include "splines/spline_builder.hpp"
 #include "splines/spline_builder_2d.hpp"
 #include "splines/spline_evaluator.hpp"
-#include "splines/spline_evaluator_2d_batched.hpp"
-#include "splines/spline_evaluator_batched.hpp"
+#include "splines/spline_evaluator_2d.hpp"
 #include "splines/view.hpp"

@@ -6,7 +6,6 @@
 
 #include "Kokkos_Macros.hpp"
 #include "spline_boundary_value.hpp"
-#include "spline_evaluator_batched.hpp"
 #include "view.hpp"
 
 namespace ddc {

@@ -123,7 +123,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
 
     ddc::Chunk Sderiv_rhs_alloc(derivs_domain, ddc::HostAllocator<double>());
     ddc::ChunkSpan Sderiv_rhs = Sderiv_rhs_alloc.span_view();
-    if (s_bcl == ddc::BoundCond::HERMITE) {
+    if (s_bcr == ddc::BoundCond::HERMITE) {
         for (int ii = 1; ii < Sderiv_rhs.domain().template extent<ddc::Deriv<DimX>>() + 1; ++ii) {
             Sderiv_rhs(typename decltype(Sderiv_rhs.domain())::discrete_element_type(ii))
                     = evaluator.deriv(xN, ii + shift - 1);

@@ -27,7 +27,7 @@ public:
     using builder_type1 = ddc::SplineBuilderBatched<
             ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline1, IDimI1, BcXmin1, BcXmax1>,
             IDimX...>;
-    using builder_type2 = typename ddc::SplineBuilderBatched<
+    using builder_type2 = ddc::SplineBuilderBatched<
             ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline2, IDimI2, BcXmin2, BcXmax2>,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
     using builder_deriv_type1 = ddc::SplineBuilderBatched<

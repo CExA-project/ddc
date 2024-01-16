@@ -189,7 +189,7 @@ public:
      *
      * @return A reference to the interpolation matrix.
      */
-    const Matrix& get_interpolation_matrix() const noexcept
+    const ddc::detail::Matrix& get_interpolation_matrix() const noexcept
     {
         return *matrix;
     }

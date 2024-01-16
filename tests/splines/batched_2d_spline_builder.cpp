@@ -214,10 +214,12 @@ static void Batched2dSplineTest()
     dims_initializer(ncells);
 
     // Create the values domain (mesh)
+#if defined(BC_HERMITE)
     auto interpolation_domain1
             = ddc::DiscreteDomain<IDim<I1, I1, I2>>(GrevillePoints<BSplines<I1>>::get_domain());
     auto interpolation_domain2
             = ddc::DiscreteDomain<IDim<I2, I1, I2>>(GrevillePoints<BSplines<I2>>::get_domain());
+#endif
     auto interpolation_domain = ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(
             GrevillePoints<BSplines<I1>>::get_domain(),
             GrevillePoints<BSplines<I2>>::get_domain());

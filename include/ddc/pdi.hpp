@@ -76,6 +76,7 @@ public:
                 "Invalid access for constant data");
         using value_type = std::remove_cv_t<std::remove_reference_t<Arithmetic>>;
         value_type* data_ptr = const_cast<value_type*>(&data);
+        // for read-only data, we share a copy instead of the data itself in case we received a ref on a temporary,
         if constexpr (!(access & PDI_IN)) {
             data_ptr = std::pmr::polymorphic_allocator<value_type>(&m_metadata).allocate(1);
             *data_ptr = data;

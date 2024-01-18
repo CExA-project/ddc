@@ -127,7 +127,7 @@ public:
         return spline_tr_domain_type(bsplines_domain(), batch_domain());
     }
 
-    derivs_domain_type const derivs_xmin_domain() const noexcept
+    derivs_domain_type derivs_xmin_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
                 vals_domain(),

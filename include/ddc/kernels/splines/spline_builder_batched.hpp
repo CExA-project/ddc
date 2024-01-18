@@ -136,7 +136,7 @@ public:
                         ddc::DiscreteVector<deriv_type>(std::max(1, s_nbc_xmin))));
     }
 
-    derivs_domain_type const derivs_xmax_domain() const noexcept
+    derivs_domain_type derivs_xmax_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
                 vals_domain(),

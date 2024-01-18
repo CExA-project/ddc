@@ -227,10 +227,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a7c5da21fb1248e1cf1546388504f6842"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Allocator &gt; </td></tr>
 <tr class="memitem:a7c5da21fb1248e1cf1546388504f6842"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a7c5da21fb1248e1cf1546388504f6842">Chunk</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;, Allocator) -&gt; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; typename Allocator::value_type, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, Allocator &gt;</td></tr>
 <tr class="separator:a7c5da21fb1248e1cf1546388504f6842"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25875d9d872df9fbd2503df330f1b2c1"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class ChunkType &gt; </td></tr>
-<tr class="memitem:a25875d9d872df9fbd2503df330f1b2c1"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a25875d9d872df9fbd2503df330f1b2c1">get_domain</a> (ChunkType const &amp;chunk) noexcept</td></tr>
-<tr class="memdesc:a25875d9d872df9fbd2503df330f1b2c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the domain (or subdomain) of a view.  <a href="namespaceddc.html#a25875d9d872df9fbd2503df330f1b2c1">More...</a><br /></td></tr>
-<tr class="separator:a25875d9d872df9fbd2503df330f1b2c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03facdf8e4260396b89b134273fc4677"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class ChunkType &gt; </td></tr>
+<tr class="memitem:a03facdf8e4260396b89b134273fc4677"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a03facdf8e4260396b89b134273fc4677">get_domain</a> (ChunkType const &amp;chunk) noexcept</td></tr>
+<tr class="memdesc:a03facdf8e4260396b89b134273fc4677"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the domain (or subdomain) of a view.  <a href="namespaceddc.html#a03facdf8e4260396b89b134273fc4677">More...</a><br /></td></tr>
+<tr class="separator:a03facdf8e4260396b89b134273fc4677"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25bdb64cb80790c6e3509834f159d65d"><td class="memTemplParams" colspan="2">template&lt;class KokkosView , class... DDims, class  = std::enable_if_t&lt;Kokkos::is_view&lt;KokkosView&gt;::value&gt;&gt; </td></tr>
 <tr class="memitem:a25bdb64cb80790c6e3509834f159d65d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a25bdb64cb80790c6e3509834f159d65d">ChunkSpan</a> (KokkosView const &amp;view, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; domain) -&gt; <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; detail::kokkos_to_mdspan_element_t&lt; typename KokkosView::data_type &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, detail::kokkos_to_mdspan_layout_t&lt; typename KokkosView::array_layout &gt;, typename KokkosView::memory_space &gt;</td></tr>
 <tr class="separator:a25bdb64cb80790c6e3509834f159d65d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1325,8 +1325,8 @@ template&lt;class... DDims, class Allocator &gt; </div>
 
 </div>
 </div>
-<a id="a25875d9d872df9fbd2503df330f1b2c1" name="a25875d9d872df9fbd2503df330f1b2c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25875d9d872df9fbd2503df330f1b2c1">&#9670;&nbsp;</a></span>get_domain()</h2>
+<a id="a03facdf8e4260396b89b134273fc4677" name="a03facdf8e4260396b89b134273fc4677"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03facdf8e4260396b89b134273fc4677">&#9670;&nbsp;</a></span>get_domain()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1337,7 +1337,7 @@ template&lt;class... QueryDDims, class ChunkType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto ddc::get_domain </td>
+          <td class="memname">KOKKOS_FUNCTION auto ddc::get_domain </td>
           <td>(</td>
           <td class="paramtype">ChunkType const &amp;&#160;</td>
           <td class="paramname"><em>chunk</em></td><td>)</td>

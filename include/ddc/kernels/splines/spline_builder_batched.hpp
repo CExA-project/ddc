@@ -99,7 +99,7 @@ public:
 private:
     const vals_domain_type m_vals_domain;
 
-    const int m_offset;
+    int m_offset;
 
     double m_dx; // average cell size for normalization of derivatives
 

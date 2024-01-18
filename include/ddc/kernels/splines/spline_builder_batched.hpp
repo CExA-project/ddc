@@ -127,9 +127,22 @@ public:
         return spline_tr_domain_type(bsplines_domain(), batch_domain());
     }
 
-    int offset() const noexcept
+    derivs_domain_type const derivs_xmin_domain() const noexcept
     {
-        return spline_builder.offset();
+        return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
+                vals_domain(),
+                ddc::DiscreteDomain<deriv_type>(
+                        ddc::DiscreteElement<deriv_type>(1),
+                        ddc::DiscreteVector<deriv_type>(s_nbc_xmin)));
+    }
+
+    derivs_domain_type const derivs_xmax_domain() const noexcept
+    {
+        return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
+                vals_domain(),
+                ddc::DiscreteDomain<deriv_type>(
+                        ddc::DiscreteElement<deriv_type>(1),
+                        ddc::DiscreteVector<deriv_type>(s_nbc_xmax)));
     }
 
     template <class Layout>

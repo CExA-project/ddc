@@ -117,8 +117,6 @@ public:
         , m_offset(compute_offset(interpolation_domain()))
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                / ddc::discrete_space<BSplines>().ncells())
-        , matrix(nullptr)
-
     {
         static_assert(
                 ((BcXmin == BoundCond::PERIODIC) == (BcXmax == BoundCond::PERIODIC)),

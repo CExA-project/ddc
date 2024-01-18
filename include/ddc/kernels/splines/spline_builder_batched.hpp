@@ -145,6 +145,11 @@ public:
                         ddc::DiscreteVector<deriv_type>(std::max(1, s_nbc_xmax))));
     }
 
+    int offset() const noexcept
+    {
+        return spline_builder.offset();
+    }
+
     template <class Layout>
     void operator()(
             ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,

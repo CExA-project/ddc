@@ -1,27 +1,22 @@
 #pragma once
 
-#include "spline_boundary_value.hpp"
 #include "view.hpp"
 
 namespace ddc {
-template <class BSplines>
-class ConstantExtrapolationBoundaryValue : public SplineBoundaryValue<BSplines>
+template <class DDim>
+struct ConstantExtrapolationRule
 {
-public:
-    using tag_type = typename BSplines::tag_type;
-    using coord_type = ddc::Coordinate<tag_type>;
-
 private:
-    coord_type m_eval_pos;
+    ddc::DiscreteElement<DDim> m_eval_pos;
 
 public:
-    explicit ConstantExtrapolationBoundaryValue(coord_type eval_pos) : m_eval_pos(eval_pos) {}
+    explicit ConstantExtrapolationRule(ddc::DiscreteElement<DDim> eval_pos) : m_eval_pos(eval_pos)
+    {
+    }
 
-    ~ConstantExtrapolationBoundaryValue() override = default;
-
-    template <class Layout, class MemorySpace>
-    KOKKOS_FUNCTION double operator()(
-            coord_type,
+    template <class CoordType, class BSplines, class Layout, class MemorySpace>
+    KOKKOS_INLINE_FUNCTION double operator()(
+            CoordType,
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
                     spline_coef) const final
     {

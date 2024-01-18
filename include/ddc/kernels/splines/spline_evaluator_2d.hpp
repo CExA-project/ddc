@@ -5,7 +5,6 @@
 #include <ddc/ddc.hpp>
 
 #include "Kokkos_Macros.hpp"
-#include "spline_boundary_value.hpp"
 #include "view.hpp"
 
 namespace ddc {
@@ -17,6 +16,10 @@ template <
         class BSplinesType2,
         class interpolation_mesh_type1,
         class interpolation_mesh_type2,
+        class LeftExtrapolationRule1,
+        class RightExtrapolationRule1,
+        class LeftExtrapolationRule2,
+        class RightExtrapolationRule2,
         class... IDimX>
 class SplineEvaluator2DBatched
 {
@@ -70,26 +73,26 @@ public:
 private:
     spline_domain_type m_spline_domain;
 
-    SplineBoundaryValue<bsplines_type1> const& m_left1_bc;
+    LeftExtrapolationRule1 const& m_left1_bc;
 
-    SplineBoundaryValue<bsplines_type1> const& m_right1_bc;
+    RightExtrapolationRule1 const& m_right1_bc;
 
-    SplineBoundaryValue<bsplines_type2> const& m_left2_bc;
+    LeftExtrapolationRule2 const& m_left2_bc;
 
-    SplineBoundaryValue<bsplines_type2> const& m_right2_bc;
+    RightExtrapolationRule2 const& m_right2_bc;
 
 public:
     explicit SplineEvaluator2DBatched(
             spline_domain_type const& spline_domain,
-            SplineBoundaryValue<bsplines_type1> const& left1_bc,
-            SplineBoundaryValue<bsplines_type1> const& right1_bc,
-            SplineBoundaryValue<bsplines_type2> const& left2_bc,
-            SplineBoundaryValue<bsplines_type2> const& right2_bc)
+            LeftExtrapolationRule1 const& left_extrap_rule1,
+            RightExtrapolationRule1 const& right_extrap_rule1,
+            LeftExtrapolationRule2 const& left_extrap_rule2,
+            RightExtrapolationRule2 const& right_extrap_rule2)
         : m_spline_domain(spline_domain)
-        , m_left1_bc(left1_bc)
-        , m_right1_bc(right1_bc)
-        , m_left2_bc(left2_bc)
-        , m_right2_bc(right2_bc)
+        , m_left1_bc(left_extrap_rule1)
+        , m_right1_bc(right_extrap_rule1)
+        , m_left2_bc(left_extrap_rule2)
+        , m_right2_bc(right_extrap_rule2)
     {
     }
 

@@ -5,7 +5,6 @@
 #include <ddc/ddc.hpp>
 
 #include "Kokkos_Macros.hpp"
-#include "spline_boundary_value.hpp"
 #include "view.hpp"
 
 namespace ddc {
@@ -15,6 +14,8 @@ template <
         class MemorySpace,
         class BSplinesType,
         class InterpolationMesh,
+        class LeftExtrapolationRule,
+        class RightExtrapolationRule,
         class... IDimX>
 class SplineEvaluator
 {
@@ -64,18 +65,19 @@ public:
 private:
     const spline_domain_type m_spline_domain;
 
-    SplineBoundaryValue<bsplines_type> const& m_left_bc;
+    LeftExtrapolationRule const& m_left_bc;
 
-    SplineBoundaryValue<bsplines_type> const& m_right_bc;
+    RightExtrapolationRule const& m_right_bc;
 
 public:
     explicit SplineEvaluator(
             spline_domain_type const& spline_domain,
-            SplineBoundaryValue<bsplines_type> const& left_bc, // Unused, to be restored in next MR
-            SplineBoundaryValue<bsplines_type> const& right_bc)
+            LeftExtrapolationRule const& left_extrap_rule,
+            RightExtrapolationRule const& right_extrap_rule)
+
         : m_spline_domain(spline_domain)
-        , m_left_bc(left_bc)
-        , m_right_bc(right_bc)
+        , m_left_bc(left_extrap_rule)
+        , m_right_bc(right_extrap_rule)
     {
     }
 

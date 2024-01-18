@@ -97,7 +97,7 @@ public:
     static constexpr ddc::BoundCond s_bc_xmax = BcXmax;
 
 private:
-    const vals_domain_type m_vals_domain;
+    vals_domain_type m_vals_domain;
 
     int m_offset;
 

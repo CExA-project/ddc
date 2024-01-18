@@ -214,10 +214,12 @@ static void Batched2dSplineTest()
     dims_initializer(ncells);
 
     // Create the values domain (mesh)
+#if defined(BC_HERMITE)
     auto interpolation_domain1
             = ddc::DiscreteDomain<IDim<I1, I1, I2>>(GrevillePoints<BSplines<I1>>::get_domain());
     auto interpolation_domain2
             = ddc::DiscreteDomain<IDim<I2, I1, I2>>(GrevillePoints<BSplines<I2>>::get_domain());
+#endif
     auto interpolation_domain = ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(
             GrevillePoints<BSplines<I1>>::get_domain(),
             GrevillePoints<BSplines<I2>>::get_domain());
@@ -269,7 +271,6 @@ static void Batched2dSplineTest()
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>> const dom_interpolation
             = spline_builder.interpolation_domain();
-    auto const dom_batch = spline_builder.batch_domain();
     auto const dom_spline = spline_builder.spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions

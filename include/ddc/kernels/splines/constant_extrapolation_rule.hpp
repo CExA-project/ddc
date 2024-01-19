@@ -18,7 +18,7 @@ public:
     KOKKOS_INLINE_FUNCTION double operator()(
             CoordType,
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
-                    spline_coef) const final
+                    spline_coef) const
     {
         std::array<double, BSplines::degree() + 1> vals;
 

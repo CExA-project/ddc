@@ -65,9 +65,9 @@ public:
 private:
     const spline_domain_type m_spline_domain;
 
-    LeftExtrapolationRule const& m_left_bc;
+    LeftExtrapolationRule m_left_bc;
 
-    RightExtrapolationRule const& m_right_bc;
+    RightExtrapolationRule m_right_bc;
 
 public:
     explicit SplineEvaluator(

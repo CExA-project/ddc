@@ -3,6 +3,7 @@
 #include "view.hpp"
 
 namespace ddc {
+
 template <class DDim>
 struct ConstantExtrapolationRule
 {

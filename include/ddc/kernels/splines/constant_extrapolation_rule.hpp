@@ -16,7 +16,7 @@ public:
     }
 
     template <class CoordType, class BSplines, class Layout, class MemorySpace>
-    KOKKOS_INLINE_FUNCTION double operator()(
+    KOKKOS_FUNCTION double operator()(
             CoordType,
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
                     spline_coef) const

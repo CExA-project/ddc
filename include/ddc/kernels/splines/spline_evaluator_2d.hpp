@@ -73,13 +73,13 @@ public:
 private:
     spline_domain_type m_spline_domain;
 
-    LeftExtrapolationRule1 const& m_left1_bc;
+    LeftExtrapolationRule1 m_left1_bc;
 
-    RightExtrapolationRule1 const& m_right1_bc;
+    RightExtrapolationRule1 m_right1_bc;
 
-    LeftExtrapolationRule2 const& m_left2_bc;
+    LeftExtrapolationRule2 m_left2_bc;
 
-    RightExtrapolationRule2 const& m_right2_bc;
+    RightExtrapolationRule2 m_right2_bc;
 
 public:
     explicit SplineEvaluator2DBatched(

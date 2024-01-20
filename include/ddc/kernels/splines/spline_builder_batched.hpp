@@ -133,7 +133,7 @@ public:
                 vals_domain(),
                 ddc::DiscreteDomain<deriv_type>(
                         ddc::DiscreteElement<deriv_type>(1),
-                        ddc::DiscreteVector<deriv_type>(std::max(1, s_nbc_xmin))));
+                        ddc::DiscreteVector<deriv_type>(1)));
     }
 
     derivs_domain_type derivs_xmax_domain() const noexcept
@@ -142,7 +142,7 @@ public:
                 vals_domain(),
                 ddc::DiscreteDomain<deriv_type>(
                         ddc::DiscreteElement<deriv_type>(1),
-                        ddc::DiscreteVector<deriv_type>(std::max(1, s_nbc_xmax))));
+                        ddc::DiscreteVector<deriv_type>(1)));
     }
 
     int offset() const noexcept

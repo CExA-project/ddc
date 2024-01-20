@@ -40,8 +40,8 @@ static void test_fft()
     ddc::init_fourier_space<X...>(x_mesh);
     DDom<DFDim<ddc::Fourier<X>>...> const k_mesh = ddc::FourierMesh(x_mesh, full_fft);
 
-    ddc::Chunk _f(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
-    ddc::ChunkSpan f = _f.span_view();
+    ddc::Chunk f_alloc(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
+    ddc::ChunkSpan f = f_alloc.span_view();
     ddc::for_each(
             ddc::policies::policy(exec_space),
             f.domain(),

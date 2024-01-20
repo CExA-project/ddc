@@ -69,7 +69,7 @@ static DDomX constexpr dom_x(lbound_x, nelems_x);
 static DElemY constexpr lbound_y(4);
 static DVectY constexpr nelems_y(12);
 
-static DElemXY constexpr lbound_x_y {lbound_x, lbound_y};
+static DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 static DDomXY constexpr dom_x_y(lbound_x_y, nelems_x_y);
 

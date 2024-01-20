@@ -46,7 +46,7 @@ TEST(TransformReduceSerialHost, ZeroDimension)
                     dom,
                     0,
                     ddc::reducer::sum<int>(),
-                    [&](DElem0D const i) { return chunk(i); }),
+                    chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 
@@ -63,7 +63,7 @@ TEST(TransformReduceSerialHost, OneDimension)
                     dom,
                     0,
                     ddc::reducer::sum<int>(),
-                    [&](DElemX const ix) { return chunk(ix); }),
+                    chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 
@@ -80,7 +80,7 @@ TEST(TransformReduceSerialHost, TwoDimensions)
                     dom,
                     0,
                     ddc::reducer::sum<int>(),
-                    [&](DElemXY const ixy) { return chunk(ixy); }),
+                    chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 TEST(TransformReduceParallelHost, ZeroDimension)
@@ -96,7 +96,7 @@ TEST(TransformReduceParallelHost, ZeroDimension)
                     dom,
                     0,
                     ddc::reducer::sum<int>(),
-                    [&](DElem0D const i) { return chunk(i); }),
+                    chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 TEST(TransformReduceParallelHost, OneDimension)
@@ -112,7 +112,7 @@ TEST(TransformReduceParallelHost, OneDimension)
                     dom,
                     0,
                     ddc::reducer::sum<int>(),
-                    [&](DElemX const ix) { return chunk(ix); }),
+                    chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 
@@ -129,7 +129,7 @@ TEST(TransformReduceParallelHost, TwoDimensions)
                     dom,
                     0,
                     ddc::reducer::sum<int>(),
-                    [&](DElemXY const ixy) { return chunk(ixy); }),
+                    chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 
@@ -150,7 +150,7 @@ static void TestTransformReduceParallelDeviceZeroDimension()
                     dom,
                     0,
                     ddc::reducer::sum<int>(),
-                    KOKKOS_LAMBDA(DElem0D const i) { return chunk(i); }),
+                    chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 
@@ -176,7 +176,7 @@ static void TestTransformReduceParallelDeviceOneDimension()
                     dom,
                     0,
                     ddc::reducer::sum<int>(),
-                    KOKKOS_LAMBDA(DElemX const ix) { return chunk(ix); }),
+                    chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 
@@ -204,7 +204,7 @@ static void TestTransformReduceParallelDeviceTwoDimensions()
                     dom,
                     0,
                     ddc::reducer::sum<int>(),
-                    KOKKOS_LAMBDA(DElemXY const ixy) { return chunk(ixy); }),
+                    chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
 

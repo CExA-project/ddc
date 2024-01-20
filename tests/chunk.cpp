@@ -449,7 +449,7 @@ TEST(Chunk2DTest, Cview)
 
 TEST(Chunk2DTest, SliceCoordX)
 {
-    DElemX constexpr slice_x_val = DElemX(lbound_x + 1);
+    DElemX constexpr slice_x_val(lbound_x + 1);
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
@@ -472,7 +472,7 @@ TEST(Chunk2DTest, SliceCoordX)
 
 TEST(Chunk2DTest, SliceCoordY)
 {
-    DElemY constexpr slice_y_val = DElemY(lbound_y + 1);
+    DElemY constexpr slice_y_val(lbound_y + 1);
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
@@ -495,7 +495,7 @@ TEST(Chunk2DTest, SliceCoordY)
 
 TEST(Chunk2DTest, SliceDomainX)
 {
-    DDomX constexpr subdomain_x = DDomX(DElemX(lbound_x + 1), DVectX(nelems_x - 2));
+    DDomX constexpr subdomain_x(lbound_x + 1, nelems_x - 2);
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
@@ -522,7 +522,7 @@ TEST(Chunk2DTest, SliceDomainX)
 
 TEST(Chunk2DTest, SliceDomainXTooearly)
 {
-    [[maybe_unused]] DDomX constexpr subdomain_x = DDomX(DElemX(lbound_x - 1), nelems_x);
+    [[maybe_unused]] DDomX constexpr subdomain_x(lbound_x - 1, nelems_x);
 
     ChunkXY<double> chunk(dom_x_y);
 #ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
@@ -535,7 +535,7 @@ TEST(Chunk2DTest, SliceDomainXTooearly)
 
 TEST(Chunk2DTest, SliceDomainXToolate)
 {
-    [[maybe_unused]] DDomX constexpr subdomain_x = DDomX(lbound_x, DVectX(nelems_x + 1));
+    [[maybe_unused]] DDomX constexpr subdomain_x(lbound_x, nelems_x + 1);
 
     ChunkXY<double> chunk(dom_x_y);
 #ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
@@ -548,7 +548,7 @@ TEST(Chunk2DTest, SliceDomainXToolate)
 
 TEST(Chunk2DTest, SliceDomainY)
 {
-    DDomY constexpr subdomain_y = DDomY(DElemY(lbound_y + 1), DVectY(nelems_y - 2));
+    DDomY constexpr subdomain_y(lbound_y + 1, nelems_y - 2);
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;

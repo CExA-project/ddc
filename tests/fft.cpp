@@ -25,7 +25,7 @@ using DFDim = ddc::PeriodicSampling<Kx>;
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename... X>
 static void test_fft()
 {
-    const ExecSpace exec_space = ExecSpace();
+    const ExecSpace exec_space;
     constexpr bool full_fft
             = ddc::detail::fft::is_complex_v<Tin> && ddc::detail::fft::is_complex_v<Tout>;
     const double a = -10;
@@ -116,7 +116,7 @@ static void test_fft()
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename X>
 static void test_fft_norm(ddc::FFT_Normalization const norm)
 {
-    const ExecSpace exec_space = ExecSpace();
+    const ExecSpace exec_space;
     constexpr bool full_fft
             = ddc::detail::fft::is_complex_v<Tin> && ddc::detail::fft::is_complex_v<Tout>;
 
@@ -135,21 +135,21 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
             KOKKOS_LAMBDA(DElem<DDim<X>> const e) { f(e) = static_cast<Tin>(1); });
 
 
-    ddc::Chunk f_bis_alloc = ddc::Chunk(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
+    ddc::Chunk f_bis_alloc(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan f_bis = f_bis_alloc.span_view();
     ddc::deepcopy(f_bis, f);
 
-    ddc::Chunk Ff_alloc = ddc::Chunk(k_mesh, ddc::KokkosAllocator<Tout, MemorySpace>());
+    ddc::Chunk Ff_alloc(k_mesh, ddc::KokkosAllocator<Tout, MemorySpace>());
     ddc::ChunkSpan Ff = Ff_alloc.span_view();
     ddc::fft(exec_space, Ff, f_bis, {norm});
     Kokkos::fence();
 
     // deepcopy of Ff because FFT C2R overwrites the input
-    ddc::Chunk Ff_bis_alloc = ddc::Chunk(Ff.domain(), ddc::KokkosAllocator<Tout, MemorySpace>());
+    ddc::Chunk Ff_bis_alloc(Ff.domain(), ddc::KokkosAllocator<Tout, MemorySpace>());
     ddc::ChunkSpan Ff_bis = Ff_bis_alloc.span_view();
     ddc::deepcopy(Ff_bis, Ff);
 
-    ddc::Chunk FFf_alloc = ddc::Chunk(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
+    ddc::Chunk FFf_alloc(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan FFf = FFf_alloc.span_view();
     ddc::ifft(exec_space, FFf, Ff_bis, {norm});
 

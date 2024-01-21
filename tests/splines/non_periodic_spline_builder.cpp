@@ -151,11 +151,13 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             Kokkos::HostSpace,
             BSplinesX,
             IDimX,
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
             IDimX>
             spline_evaluator(
                     coef.domain(),
-                    ddc::g_null_boundary<BSplinesX>,
-                    ddc::g_null_boundary<BSplinesX>);
+                    ddc::NullExtrapolationRule(),
+                    ddc::NullExtrapolationRule());
 
     ddc::Chunk<ddc::Coordinate<DimX>, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);
     for (IndexX const ix : interpolation_domain) {

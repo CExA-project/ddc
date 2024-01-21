@@ -307,11 +307,18 @@ static void BatchedSplineTest()
 #endif
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>, IDim<X, I>...>
+    ddc::SplineEvaluator<
+            ExecSpace,
+            MemorySpace,
+            BSplines<I>,
+            IDim<I, I>,
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
+            IDim<X, I>...>
             spline_evaluator_batched(
                     coef.domain(),
-                    ddc::g_null_boundary<BSplines<I>>,
-                    ddc::g_null_boundary<BSplines<I>>);
+                    ddc::NullExtrapolationRule(),
+                    ddc::NullExtrapolationRule());
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());

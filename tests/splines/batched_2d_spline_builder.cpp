@@ -531,13 +531,17 @@ static void Batched2dSplineTest()
             BSplines<I2>,
             IDim<I1, I1, I2>,
             IDim<I2, I1, I2>,
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
             IDim<X, I1, I2>...>
             spline_evaluator_batched(
                     coef.domain(),
-                    ddc::g_null_boundary<BSplines<I1>>,
-                    ddc::g_null_boundary<BSplines<I1>>,
-                    ddc::g_null_boundary<BSplines<I2>>,
-                    ddc::g_null_boundary<BSplines<I2>>);
+                    ddc::NullExtrapolationRule(),
+                    ddc::NullExtrapolationRule(),
+                    ddc::NullExtrapolationRule(),
+                    ddc::NullExtrapolationRule());
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());

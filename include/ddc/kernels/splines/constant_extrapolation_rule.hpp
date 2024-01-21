@@ -36,14 +36,14 @@ KOKKOS_FUNCTION void ConstantExtrapolationRuleNestedLooper(
 
 } // namespace detail
 
-template <class... DDim>
+template <class... Dim>
 struct ConstantExtrapolationRule
 {
 private:
-    ddc::DiscreteElement<DDim...> m_eval_pos;
+    ddc::Coordinate<Dim...> m_eval_pos;
 
 public:
-    explicit ConstantExtrapolationRule(ddc::DiscreteElement<DDim...> eval_pos)
+    explicit ConstantExtrapolationRule(ddc::Coordinate<Dim...> eval_pos)
         : m_eval_pos(eval_pos)
     {
     }
@@ -69,7 +69,7 @@ public:
 
         double y = 0.0;
         ddc::detail::
-                ConstantExtrapolationRuleHelper(vals, spline_coef, idx, sizes, iterator, index, y);
+                ConstantExtrapolationRuleNestedLooper(vals, spline_coef, idx, sizes, iterator, index, y);
 
         return y;
     }

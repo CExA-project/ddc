@@ -24,28 +24,28 @@
 
 struct DimX
 {
-    static constexpr bool PERIODIC = true;
+    static constexpr bool PERIODIC = false;
 };
 
 struct DimY
 {
-    static constexpr bool PERIODIC = true;
+    static constexpr bool PERIODIC = false;
 };
 
 struct DimZ
 {
-    static constexpr bool PERIODIC = true;
+    static constexpr bool PERIODIC = false;
 };
 
 struct DimT
 {
-    static constexpr bool PERIODIC = true;
+    static constexpr bool PERIODIC = false;
 };
 
 static constexpr std::size_t s_degree = DEGREE;
 
-static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;
-static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::PERIODIC;
+static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::GREVILLE;
 
 template <typename BSpX>
 using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
@@ -162,7 +162,7 @@ struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename I1, typename I2, typename... X>
-static void Batched2dSplineTest()
+static void ExtrapolationRuleSplineTest()
 {
     // Instantiate execution spaces and initialize spaces
     Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
@@ -247,17 +247,29 @@ static void Batched2dSplineTest()
             BSplines<I2>,
             IDim<I1, I1, I2>,
             IDim<I2, I1, I2>,
+			/*
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
+			*/
+			ddc::ConstantExtrapolationRule<I1>,
+			ddc::ConstantExtrapolationRule<I1>,
+			ddc::ConstantExtrapolationRule<I2>,
+			ddc::ConstantExtrapolationRule<I2>,
             IDim<X, I1, I2>...>
             spline_evaluator_batched(
                     coef.domain(),
+					/*
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule());
+					*/
+					ddc::ConstantExtrapolationRule(x0<I1>()),
+					ddc::ConstantExtrapolationRule(xN<I1>()),
+					ddc::ConstantExtrapolationRule(x0<I2>()),
+					ddc::ConstantExtrapolationRule(xN<I2>()));
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
@@ -285,7 +297,10 @@ static void Batched2dSplineTest()
             0.,
             ddc::reducer::max<double>(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                return Kokkos::abs(spline_eval(e) - vals(e));
+				auto e_tmp = e;
+				ddc::select<IDim<I1, I1, I2>>(e_tmp) = ddc::select<IDim<I1, I1, I2>>(vals.domain().back());
+                return Kokkos::abs(spline_eval(e));
+                // return Kokkos::abs(spline_eval(e) - vals(e_tmp));
             });
 
     double const max_norm = evaluator.max_norm();
@@ -301,9 +316,9 @@ static void Batched2dSplineTest()
 #define SUFFIX(name) name##Periodic##NonUniform
 #endif
 
-TEST(SUFFIX(Batched2dSplineHost), 2DXY)
+TEST(SUFFIX(ExtrapolationRuleSplineHost), 2DXY)
 {
-    Batched2dSplineTest<
+    ExtrapolationRuleSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
@@ -312,9 +327,9 @@ TEST(SUFFIX(Batched2dSplineHost), 2DXY)
             DimY>();
 }
 
-TEST(SUFFIX(Batched2dSplineDevice), 2DXY)
+TEST(SUFFIX(ExtrapolationRuleSplineDevice), 2DXY)
 {
-    Batched2dSplineTest<
+    ExtrapolationRuleSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
@@ -323,9 +338,9 @@ TEST(SUFFIX(Batched2dSplineDevice), 2DXY)
             DimY>();
 }
 
-TEST(SUFFIX(Batched2dSplineHost), 3DXY)
+TEST(SUFFIX(ExtrapolationRuleSplineHost), 3DXY)
 {
-    Batched2dSplineTest<
+    ExtrapolationRuleSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
@@ -335,9 +350,9 @@ TEST(SUFFIX(Batched2dSplineHost), 3DXY)
             DimZ>();
 }
 
-TEST(SUFFIX(Batched2dSplineHost), 3DXZ)
+TEST(SUFFIX(ExtrapolationRuleSplineHost), 3DXZ)
 {
-    Batched2dSplineTest<
+    ExtrapolationRuleSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX,
@@ -347,9 +362,9 @@ TEST(SUFFIX(Batched2dSplineHost), 3DXZ)
             DimZ>();
 }
 
-TEST(SUFFIX(Batched2dSplineHost), 3DYZ)
+TEST(SUFFIX(ExtrapolationRuleSplineHost), 3DYZ)
 {
-    Batched2dSplineTest<
+    ExtrapolationRuleSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimY,
@@ -359,9 +374,9 @@ TEST(SUFFIX(Batched2dSplineHost), 3DYZ)
             DimZ>();
 }
 
-TEST(SUFFIX(Batched2dSplineDevice), 3DXY)
+TEST(SUFFIX(ExtrapolationRuleSplineDevice), 3DXY)
 {
-    Batched2dSplineTest<
+    ExtrapolationRuleSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
@@ -371,9 +386,9 @@ TEST(SUFFIX(Batched2dSplineDevice), 3DXY)
             DimZ>();
 }
 
-TEST(SUFFIX(Batched2dSplineDevice), 3DXZ)
+TEST(SUFFIX(ExtrapolationRuleSplineDevice), 3DXZ)
 {
-    Batched2dSplineTest<
+    ExtrapolationRuleSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX,
@@ -383,9 +398,9 @@ TEST(SUFFIX(Batched2dSplineDevice), 3DXZ)
             DimZ>();
 }
 
-TEST(SUFFIX(Batched2dSplineDevice), 3DYZ)
+TEST(SUFFIX(ExtrapolationRuleSplineDevice), 3DYZ)
 {
-    Batched2dSplineTest<
+    ExtrapolationRuleSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimY,

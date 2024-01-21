@@ -77,6 +77,22 @@ foreach(BCL "BCL_GREVILLE" "BCL_HERMITE")
   endforeach()
 endforeach()
 
+      foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
+        foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
+		  set(test_name "splines_tests_DEGREE_X_${DEGREE_X}_${BSPLINES_TYPE}_${EVALUATOR}_erl_${ERL}_er_${ERR}")
+          add_executable("${test_name}" ../main.cpp extrapolation_rule.cpp)
+          target_compile_features("${test_name}" PUBLIC cxx_std_17)
+          target_link_libraries("${test_name}"
+            PUBLIC
+            GTest::gtest
+            DDC::DDC
+          )
+		  target_compile_definitions("${test_name}" PUBLIC -DDEGREE=${DEGREE_X} -D${BSPLINES_TYPE} -D${EVALUATOR} -D${ERL} -D${ERR})
+		  # add_test("${test_name}" "${test_name}")
+		  gtest_discover_tests("${test_name}")
+        endforeach()
+      endforeach()
+
 foreach(BC "BC_PERIODIC" "BC_GREVILLE" "BC_HERMITE")
   foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
     foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")

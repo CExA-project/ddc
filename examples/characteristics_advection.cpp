@@ -224,8 +224,8 @@ int main(int argc, char** argv)
             DDimY>
             spline_evaluator(
                     spline_builder.spline_domain(),
-                    ddc::NullExtrapolationRule,
-                    ddc::NullExtrapolationRule);
+                    ddc::NullExtrapolationRule(),
+                    ddc::NullExtrapolationRule());
     //! [instantiate solver]
 
     //! [instantiate intermediate chunks]

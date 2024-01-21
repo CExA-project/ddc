@@ -3,6 +3,8 @@
 namespace ddc {
 struct NullExtrapolationRule
 {
+    explicit NullExtrapolationRule() {}
+
     template <class BSplines, class Layout, class MemorySpace>
     KOKKOS_FUNCTION double operator()(
             ddc::Coordinate<typename BSplines::tag_type>,

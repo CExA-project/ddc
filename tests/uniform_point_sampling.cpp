@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-#include <memory>
+
 #include <sstream>
 
 #include <ddc/ddc.hpp>

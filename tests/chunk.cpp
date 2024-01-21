@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 
 #include <string_view>
+#include <type_traits>
+#include <utility>
 
 #include <ddc/ddc.hpp>
 

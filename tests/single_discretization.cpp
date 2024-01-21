@@ -1,6 +1,4 @@
 // SPDX-License-Identifier: MIT
-#include <memory>
-#include <utility>
 
 #include <ddc/experimental/single_discretization.hpp>
 

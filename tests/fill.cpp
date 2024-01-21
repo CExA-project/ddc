@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: MIT
 
+#include <algorithm>
+#include <vector>
+
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>

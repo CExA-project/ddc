@@ -73,16 +73,16 @@ TEST(AlignedAllocatorTest, RebindMoveAssignment)
 
 TEST(AlignedAllocatorTest, Comparison)
 {
-    constexpr A a1;
-    constexpr A a2;
+    A const a1;
+    A const a2;
     EXPECT_TRUE(a1 == a2);
     EXPECT_FALSE((a1 != a2));
 }
 
 TEST(AlignedAllocatorTest, RebindComparison)
 {
-    constexpr B b;
-    constexpr A a(b);
+    B const b;
+    A const a(b);
     EXPECT_EQ(b, B(a));
     EXPECT_EQ(a, A(b));
 }

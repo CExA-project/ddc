@@ -29,9 +29,9 @@ TEST(SingleDiscretization, ClassSize)
 
 TEST(SingleDiscretization, Constructor)
 {
-    constexpr CoordX x(1.);
+    CoordX const x(1.);
 
-    SingleDiscretization<DimX>::Impl<Kokkos::HostSpace> ddim_x(x);
+    SingleDiscretization<DimX>::Impl<Kokkos::HostSpace> const ddim_x(x);
 
     EXPECT_EQ(ddim_x.coordinate(DElemX(0)), x);
 }

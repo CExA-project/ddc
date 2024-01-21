@@ -37,7 +37,7 @@ TEST(TransformReduceSerialHost, ZeroDimension)
 {
     DDom0D const dom;
     std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDom0D> chunk(storage.data(), dom);
+    ddc::ChunkSpan<int, DDom0D> const chunk(storage.data(), dom);
     int count = 0;
     ddc::for_each(dom, [&](DElem0D const i) { chunk(i) = count++; });
     EXPECT_EQ(
@@ -54,7 +54,7 @@ TEST(TransformReduceSerialHost, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
     std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomX> chunk(storage.data(), dom);
+    ddc::ChunkSpan<int, DDomX> const chunk(storage.data(), dom);
     int count = 0;
     ddc::for_each(dom, [&](DElemX const ix) { chunk(ix) = count++; });
     EXPECT_EQ(
@@ -71,7 +71,7 @@ TEST(TransformReduceSerialHost, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomXY> chunk(storage.data(), dom);
+    ddc::ChunkSpan<int, DDomXY> const chunk(storage.data(), dom);
     int count = 0;
     ddc::for_each(dom, [&](DElemXY const ixy) { chunk(ixy) = count++; });
     EXPECT_EQ(
@@ -87,7 +87,7 @@ TEST(TransformReduceParallelHost, ZeroDimension)
 {
     DDom0D const dom;
     std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDom0D> chunk(storage.data(), dom);
+    ddc::ChunkSpan<int, DDom0D> const chunk(storage.data(), dom);
     int count = 0;
     ddc::for_each(dom, [&](DElem0D const i) { chunk(i) = count++; });
     EXPECT_EQ(
@@ -103,7 +103,7 @@ TEST(TransformReduceParallelHost, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
     std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomX> chunk(storage.data(), dom);
+    ddc::ChunkSpan<int, DDomX> const chunk(storage.data(), dom);
     int count = 0;
     ddc::for_each(dom, [&](DElemX const ix) { chunk(ix) = count++; });
     EXPECT_EQ(
@@ -120,7 +120,7 @@ TEST(TransformReduceParallelHost, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomXY> chunk(storage.data(), dom);
+    ddc::ChunkSpan<int, DDomXY> const chunk(storage.data(), dom);
     int count = 0;
     ddc::for_each(dom, [&](DElemXY const ixy) { chunk(ixy) = count++; });
     EXPECT_EQ(
@@ -138,7 +138,7 @@ static void TestTransformReduceParallelDeviceZeroDimension()
     DDom0D const dom;
     ddc::Chunk<int, DDom0D, ddc::DeviceAllocator<int>> storage(dom);
     ddc::ChunkSpan const chunk(storage.span_view());
-    Kokkos::View<int> count("count");
+    Kokkos::View<int> const count("count");
     Kokkos::deep_copy(count, 0);
     ddc::for_each(
             ddc::policies::parallel_device,
@@ -164,7 +164,7 @@ static void TestTransformReduceParallelDeviceOneDimension()
     DDomX const dom(lbound_x, nelems_x);
     ddc::Chunk<int, DDomX, ddc::DeviceAllocator<int>> storage(dom);
     ddc::ChunkSpan const chunk(storage.span_view());
-    Kokkos::View<int> count("count");
+    Kokkos::View<int> const count("count");
     Kokkos::deep_copy(count, 0);
     ddc::for_each(
             ddc::policies::parallel_device,
@@ -190,7 +190,7 @@ static void TestTransformReduceParallelDeviceTwoDimensions()
     DDomXY const dom(lbound_x_y, nelems_x_y);
     ddc::Chunk<int, DDomXY, ddc::DeviceAllocator<int>> storage(dom);
     ddc::ChunkSpan const chunk(storage.span_view());
-    Kokkos::View<int> count("count");
+    Kokkos::View<int> const count("count");
     Kokkos::deep_copy(count, 0);
     ddc::for_each(
             ddc::policies::parallel_device,

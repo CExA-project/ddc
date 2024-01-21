@@ -84,7 +84,7 @@ TEST(Chunk0DTest, LayoutType)
 
 TEST(Chunk1DTest, LayoutType)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
 
     EXPECT_TRUE((std::is_same_v<
                  std::decay_t<decltype(chunk)>::layout_type,
@@ -98,7 +98,7 @@ TEST(Chunk1DTest, LayoutType)
 
 TEST(Chunk0DTest, ChunkSpanConversionConstructor)
 {
-    double constexpr factor = 1.391;
+    double const factor = 1.391;
     Chunk0D<double> chunk(dom_0d);
     chunk() = factor;
 
@@ -109,13 +109,13 @@ TEST(Chunk0DTest, ChunkSpanConversionConstructor)
 
 TEST(Chunk1DTest, ChunkSpanConversionConstructor)
 {
-    double constexpr factor = 1.391;
+    double const factor = 1.391;
     ChunkX<double> chunk(dom_x);
     for (auto&& ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
     }
 
-    ChunkX<double> chunk2(chunk.span_view());
+    ChunkX<double> const chunk2(chunk.span_view());
     EXPECT_EQ(chunk2.domain(), dom_x);
     for (auto&& ix : chunk2.domain()) {
         EXPECT_DOUBLE_EQ(factor * ix.uid(), chunk2(ix));
@@ -124,24 +124,24 @@ TEST(Chunk1DTest, ChunkSpanConversionConstructor)
 
 TEST(Chunk0DTest, MoveConstructor)
 {
-    double constexpr factor = 1.391;
+    double const factor = 1.391;
     Chunk0D<double> chunk(dom_0d);
     chunk() = factor;
 
-    Chunk0D<double> chunk2(std::move(chunk));
+    Chunk0D<double> const chunk2(std::move(chunk));
     EXPECT_EQ(chunk2.domain(), dom_0d);
     EXPECT_DOUBLE_EQ(factor, chunk2());
 }
 
 TEST(Chunk1DTest, MoveConstructor)
 {
-    double constexpr factor = 1.391;
+    double const factor = 1.391;
     ChunkX<double> chunk(dom_x);
     for (auto&& ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
     }
 
-    ChunkX<double> chunk2(std::move(chunk));
+    ChunkX<double> const chunk2(std::move(chunk));
     EXPECT_EQ(chunk2.domain(), dom_x);
     for (auto&& ix : chunk2.domain()) {
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
@@ -151,7 +151,7 @@ TEST(Chunk1DTest, MoveConstructor)
 
 TEST(Chunk0DTest, MoveAssignment)
 {
-    double constexpr factor = 1.976;
+    double const factor = 1.976;
     Chunk0D<double> chunk(dom_0d);
     chunk() = factor;
 
@@ -163,7 +163,7 @@ TEST(Chunk0DTest, MoveAssignment)
 
 TEST(Chunk1DTest, MoveAssignment)
 {
-    double constexpr factor = 1.976;
+    double const factor = 1.976;
     ChunkX<double> chunk(dom_x);
     for (auto&& ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
@@ -180,11 +180,11 @@ TEST(Chunk1DTest, MoveAssignment)
 
 TEST(Chunk0DTest, Swap)
 {
-    double constexpr factor = 1.976;
+    double const factor = 1.976;
     Chunk0D<double> chunk(dom_0d);
     chunk() = factor;
 
-    DDom0D empty_domain(lbound_0d, DVect0D());
+    DDom0D const empty_domain(lbound_0d, DVect0D());
     Chunk0D<double> chunk2(empty_domain);
 
     std::swap(chunk2, chunk);
@@ -195,13 +195,13 @@ TEST(Chunk0DTest, Swap)
 
 TEST(Chunk1DTest, Swap)
 {
-    double constexpr factor = 1.976;
+    double const factor = 1.976;
     ChunkX<double> chunk(dom_x);
     for (auto&& ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
     }
 
-    DDomX empty_domain(lbound_x, DVectX(0));
+    DDomX const empty_domain(lbound_x, DVectX(0));
     ChunkX<double> chunk2(empty_domain);
 
     std::swap(chunk2, chunk);
@@ -217,7 +217,7 @@ TEST(Chunk1DTest, Swap)
 
 TEST(Chunk1DTest, AccessConst)
 {
-    double constexpr factor = 1.012;
+    double const factor = 1.012;
     ChunkX<double> chunk(dom_x);
     ChunkX<double> const& chunk_cref = chunk;
     for (auto&& ix : chunk.domain()) {
@@ -229,7 +229,7 @@ TEST(Chunk1DTest, AccessConst)
 
 TEST(Chunk1DTest, Access)
 {
-    double constexpr factor = 1.012;
+    double const factor = 1.012;
     ChunkX<double> chunk(dom_x);
     for (auto&& ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
@@ -240,7 +240,7 @@ TEST(Chunk1DTest, Access)
 
 TEST(Chunk1DTest, SpanCview)
 {
-    double constexpr factor = 1.567;
+    double const factor = 1.567;
     ChunkX<double> chunk(dom_x);
     for (auto&& ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
@@ -251,7 +251,7 @@ TEST(Chunk1DTest, SpanCview)
 
 TEST(Chunk1DTest, ViewConst)
 {
-    double constexpr factor = 1.802;
+    double const factor = 1.802;
     ChunkX<double> chunk(dom_x);
     ChunkX<double> const& chunk_cref = chunk;
     for (auto&& ix : chunk.domain()) {
@@ -263,7 +263,7 @@ TEST(Chunk1DTest, ViewConst)
 
 TEST(Chunk1DTest, View)
 {
-    double constexpr factor = 1.259;
+    double const factor = 1.259;
     ChunkX<double> chunk(dom_x);
     for (auto&& ix : chunk.domain()) {
         chunk.span_view()(ix) = factor * ix.uid();
@@ -293,49 +293,49 @@ TEST(Chunk1DTest, Label)
 
 TEST(Chunk1DTest, Rank)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_EQ(ChunkX<double>::rank(), 1);
 }
 
 TEST(Chunk1DTest, RankDynamic)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_EQ(ChunkX<double>::rank_dynamic(), 1);
 }
 
 TEST(Chunk1DTest, Extents)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_EQ(chunk.extents(), nelems_x);
 }
 
 TEST(Chunk1DTest, Extent)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_EQ(chunk.extent<DDimX>(), nelems_x.value());
 }
 
 TEST(Chunk1DTest, Size)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_EQ(chunk.size(), nelems_x.value());
 }
 
 TEST(Chunk1DTest, IsAlwaysUnique)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_TRUE(chunk.is_always_unique());
 }
 
 TEST(Chunk1DTest, IsAlwaysContiguous)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_TRUE(chunk.is_always_exhaustive());
 }
 
 TEST(Chunk1DTest, is_always_strided)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_TRUE(chunk.is_always_strided());
 }
 
@@ -343,19 +343,19 @@ TEST(Chunk1DTest, is_always_strided)
 
 TEST(Chunk1DTest, IsUnique)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_TRUE(chunk.is_unique());
 }
 
 TEST(Chunk1DTest, IsContiguous)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_TRUE(chunk.is_exhaustive());
 }
 
 TEST(Chunk1DTest, IsStrided)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_TRUE(chunk.is_strided());
 }
 
@@ -365,13 +365,13 @@ TEST(Chunk1DTest, IsStrided)
 
 TEST(Chunk1DTest, Domain)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_EQ(dom_x, chunk.domain());
 }
 
 TEST(Chunk1DTest, DomainX)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_EQ(dom_x, chunk.domain<DDimX>());
 }
 
@@ -383,7 +383,7 @@ TEST(Chunk1DTest, DomainX)
 
 TEST(Chunk1DTest, GetDomainX)
 {
-    ChunkX<double> chunk(dom_x);
+    ChunkX<double> const chunk(dom_x);
     EXPECT_EQ(dom_x, ddc::get_domain<DDimX>(chunk));
 }
 
@@ -438,7 +438,7 @@ TEST(Chunk2DTest, Cview)
             chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
         }
     }
-    auto cview = chunk.span_cview();
+    auto const cview = chunk.span_cview();
     for (auto&& ix : chunk.domain<DDimX>()) {
         for (auto&& iy : chunk.domain<DDimY>()) {
             // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
@@ -449,7 +449,7 @@ TEST(Chunk2DTest, Cview)
 
 TEST(Chunk2DTest, SliceCoordX)
 {
-    DElemX constexpr slice_x_val(lbound_x + 1);
+    DElemX const slice_x_val(lbound_x + 1);
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
@@ -472,7 +472,7 @@ TEST(Chunk2DTest, SliceCoordX)
 
 TEST(Chunk2DTest, SliceCoordY)
 {
-    DElemY constexpr slice_y_val(lbound_y + 1);
+    DElemY const slice_y_val(lbound_y + 1);
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
@@ -495,7 +495,7 @@ TEST(Chunk2DTest, SliceCoordY)
 
 TEST(Chunk2DTest, SliceDomainX)
 {
-    DDomX constexpr subdomain_x(lbound_x + 1, nelems_x - 2);
+    DDomX const subdomain_x(lbound_x + 1, nelems_x - 2);
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
@@ -522,9 +522,9 @@ TEST(Chunk2DTest, SliceDomainX)
 
 TEST(Chunk2DTest, SliceDomainXTooearly)
 {
-    [[maybe_unused]] DDomX constexpr subdomain_x(lbound_x - 1, nelems_x);
+    [[maybe_unused]] DDomX const subdomain_x(lbound_x - 1, nelems_x);
 
-    ChunkXY<double> chunk(dom_x_y);
+    ChunkXY<double> const chunk(dom_x_y);
 #ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
     // the error message is checked with clang & gcc only
     EXPECT_DEATH(
@@ -535,9 +535,9 @@ TEST(Chunk2DTest, SliceDomainXTooearly)
 
 TEST(Chunk2DTest, SliceDomainXToolate)
 {
-    [[maybe_unused]] DDomX constexpr subdomain_x(lbound_x, nelems_x + 1);
+    [[maybe_unused]] DDomX const subdomain_x(lbound_x, nelems_x + 1);
 
-    ChunkXY<double> chunk(dom_x_y);
+    ChunkXY<double> const chunk(dom_x_y);
 #ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
     // the error message is checked with clang & gcc only
     EXPECT_DEATH(
@@ -548,7 +548,7 @@ TEST(Chunk2DTest, SliceDomainXToolate)
 
 TEST(Chunk2DTest, SliceDomainY)
 {
-    DDomY constexpr subdomain_y(lbound_y + 1, nelems_y - 2);
+    DDomY const subdomain_y(lbound_y + 1, nelems_y - 2);
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
@@ -599,7 +599,7 @@ TEST(Chunk2DTest, DeepcopyReordered)
         }
     }
     ChunkYX<double> chunk2(ddc::select<DDimY, DDimX>(chunk.domain()));
-    ddc::ChunkSpan<double, DDomXY, std::experimental::layout_left>
+    ddc::ChunkSpan<double, DDomXY, std::experimental::layout_left> const
             chunk2_view(chunk2.data_handle(), chunk.domain());
     ddc::deepcopy(chunk2_view, chunk);
     for (auto&& ix : chunk.domain<DDimX>()) {

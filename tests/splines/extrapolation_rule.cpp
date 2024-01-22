@@ -302,9 +302,12 @@ static void ExtrapolationRuleSplineTest()
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);
-                ddc::get<I1>(coords_eval(e)) = x0<I1>() + 2 * (xN<I1>() - x0<I1>());
+                // Set coords_eval outside of the domain
+                ddc::get<I1>(coords_eval(e))
+                        = xN<I1>() + (ddc::select<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
 #if defined(BC_GREVILLE)
-                ddc::get<I2>(coords_eval(e)) = x0<I2>() + 2 * (xN<I2>() - x0<I2>());
+                ddc::get<I2>(coords_eval(e))
+                        = xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>()) + 1;
 #endif
             });
 
@@ -335,17 +338,14 @@ static void ExtrapolationRuleSplineTest()
                         vals.template domain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>()))::
                         discrete_element_type e_batch(e);
                 double tmp;
-                if (ddc::select<I2>(coords_eval(e)) < x0<I2>()) {
+                if (ddc::select<I2>(coords_eval(e)) > xN<I2>()) {
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
-                            ddc::select<IDim<I1, I1, I2>>(vals.domain().back()),
-                            ddc::select<IDim<I2, I1, I2>>(vals.domain().front())));
-                } else if (ddc::select<I2>(coords_eval(e)) > xN<I2>()) {
-                    tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
-                            ddc::select<IDim<I1, I1, I2>>(vals.domain().back()),
-                            ddc::select<IDim<I2, I1, I2>>(vals.domain().back())));
+                            vals.template domain<IDim<I1, I1, I2>>().back(),
+                            vals.template domain<IDim<I2, I1, I2>>().back(),
+                            e_batch));
                 } else {
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
-                            ddc::select<IDim<I1, I1, I2>>(vals.domain().back()),
+                            vals.template domain<IDim<I1, I1, I2>>().back(),
                             e_without_interest));
                 }
                 return Kokkos::abs(spline_eval(e) - tmp);

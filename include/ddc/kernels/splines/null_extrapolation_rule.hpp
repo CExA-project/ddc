@@ -1,14 +1,15 @@
 #pragma once
 
 namespace ddc {
+
 struct NullExtrapolationRule
 {
     explicit NullExtrapolationRule() {}
 
-    template <class BSplines, class Layout, class MemorySpace>
+    template <class CoordType, class ChunkSpan>
     KOKKOS_FUNCTION double operator()(
-            ddc::Coordinate<typename BSplines::tag_type>,
-            ddc::ChunkSpan<const double, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace>) const
+            CoordType,
+            ChunkSpan) const
     {
         return 0.0;
     }

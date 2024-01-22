@@ -436,10 +436,10 @@ private:
             }
         } else {
             if (coord_eval_interpolation1 < ddc::discrete_space<bsplines_type1>().rmin()) {
-                return m_left1_bc(coord_eval_interpolation1, spline_coef);
+                return m_left1_bc(coord_eval, spline_coef);
             }
             if (coord_eval_interpolation1 > ddc::discrete_space<bsplines_type1>().rmax()) {
-                return m_right1_bc(coord_eval_interpolation1, spline_coef);
+                return m_right1_bc(coord_eval, spline_coef);
             }
         }
         if constexpr (bsplines_type2::is_periodic()) {
@@ -454,10 +454,10 @@ private:
             }
         } else {
             if (coord_eval_interpolation2 < ddc::discrete_space<bsplines_type2>().rmin()) {
-                return m_left2_bc(coord_eval_interpolation2, spline_coef);
+                return m_left2_bc(coord_eval, spline_coef);
             }
             if (coord_eval_interpolation2 > ddc::discrete_space<bsplines_type2>().rmax()) {
-                return m_right2_bc(coord_eval_interpolation2, spline_coef);
+                return m_right2_bc(coord_eval, spline_coef);
             }
         }
         return eval_no_bc<eval_type, eval_type>(

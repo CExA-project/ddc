@@ -247,29 +247,29 @@ static void ExtrapolationRuleSplineTest()
             BSplines<I2>,
             IDim<I1, I1, I2>,
             IDim<I2, I1, I2>,
-			/*
+            /*
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
 			*/
-			ddc::ConstantExtrapolationRule<I1>,
-			ddc::ConstantExtrapolationRule<I1>,
-			ddc::ConstantExtrapolationRule<I2>,
-			ddc::ConstantExtrapolationRule<I2>,
+            ddc::ConstantExtrapolationRule<I1,I1,I2>,
+            ddc::ConstantExtrapolationRule<I1,I1,I2>,
+            ddc::ConstantExtrapolationRule<I2,I1,I2>,
+            ddc::ConstantExtrapolationRule<I2,I1,I2>,
             IDim<X, I1, I2>...>
             spline_evaluator_batched(
                     coef.domain(),
-					/*
+                    /*
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule());
 					*/
-					ddc::ConstantExtrapolationRule(x0<I1>()),
-					ddc::ConstantExtrapolationRule(xN<I1>()),
-					ddc::ConstantExtrapolationRule(x0<I2>()),
-					ddc::ConstantExtrapolationRule(xN<I2>()));
+                    ddc::ConstantExtrapolationRule<I1,I1,I2>(x0<I1>()),
+                    ddc::ConstantExtrapolationRule<I1,I1,I2>(xN<I1>()),
+                    ddc::ConstantExtrapolationRule<I2,I1,I2>(x0<I2>()),
+                    ddc::ConstantExtrapolationRule<I2,I1,I2>(xN<I2>()));
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
@@ -279,17 +279,17 @@ static void ExtrapolationRuleSplineTest()
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);
-				ddc::get<I1>(coords_eval(e)) = 2*xN<I1>();
+                ddc::get<I1>(coords_eval(e)) = x0<I1>() + 2 * (xN<I1>()-x0<I1>());
             });
 
 
     // Instantiate chunks to receive outputs of spline_evaluator
     ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
-	
+
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
-    
+
     // Checking errors (we recover the initial values)
     double max_norm_error = ddc::transform_reduce(
             ddc::policies::policy(exec_space),
@@ -297,18 +297,16 @@ static void ExtrapolationRuleSplineTest()
             0.,
             ddc::reducer::max<double>(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-				auto e_tmp = e;
-				ddc::select<IDim<I1, I1, I2>>(e_tmp) = ddc::select<IDim<I1, I1, I2>>(vals.domain().back());
-                return Kokkos::abs(spline_eval(e));
-                // return Kokkos::abs(spline_eval(e) - vals(e_tmp));
+				typename decltype(ddc::remove_dims_of(vals.domain(), vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type e_batch(e);
+
+                // return Kokkos::abs(spline_eval(e));
+                return Kokkos::abs(spline_eval(e) - vals(ddc::DiscreteElement<IDim<X,I1,I2>...>(ddc::select<IDim<I1, I1, I2>>(vals.domain().back()), e_batch)));
             });
 
     double const max_norm = evaluator.max_norm();
 
-    EXPECT_LE(
-            max_norm_error,
-                        1.0e-14 * max_norm);
-    }
+    EXPECT_LE(max_norm_error, 1.0e-14 * max_norm);
+}
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 #define SUFFIX(name) name##Periodic##Uniform

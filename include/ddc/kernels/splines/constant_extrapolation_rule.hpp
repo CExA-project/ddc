@@ -52,7 +52,6 @@ private:
     ddc::Coordinate<DimNI> m_eval_pos_not_interest_max;
 
 public:
-    /*
     explicit ConstantExtrapolationRule(
             ddc::Coordinate<DimI> eval_pos,
             ddc::Coordinate<DimNI> eval_pos_not_interest_min,
@@ -62,14 +61,16 @@ public:
         , m_eval_pos_not_interest_max(eval_pos_not_interest_max)
     {
     }
-*/
 
     explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos)
         : m_eval_pos(eval_pos)
         , m_eval_pos_not_interest_min(0.)
         , m_eval_pos_not_interest_max(0.)
     {
-        // static_assert periodic on DimNI
+        static_assert(
+                DimNI::PERIODIC,
+                "Single-argument constructor of ConstantExtrapolationRule is available only for "
+                "periodic non-interest dimension");
     }
 
     template <class CoordType, class BSplines1, class BSplines2, class Layout, class MemorySpace>
@@ -82,7 +83,7 @@ public:
                     MemorySpace> const spline_coef) const
     {
         ddc::Coordinate<Dim1, Dim2> eval_pos;
-        if constexpr (true) {
+        if constexpr (DimNI::PERIODIC) {
             eval_pos = ddc::Coordinate<Dim1, Dim2>(m_eval_pos, ddc::select<DimNI>(coord_extrap));
         } else {
             eval_pos = ddc::Coordinate<Dim1, Dim2>(

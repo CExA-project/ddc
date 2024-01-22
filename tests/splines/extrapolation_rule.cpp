@@ -25,14 +25,14 @@
 #if defined(BC_PERIODIC)
 struct DimX
 {
-    static constexpr bool PERIODIC = true;
+    static constexpr bool PERIODIC = false;
 };
 
 struct DimY
 {
     static constexpr bool PERIODIC = true;
 };
-#else
+#elif defined(BC_GREVILLE)
 
 struct DimX
 {
@@ -48,15 +48,20 @@ struct DimY
 static constexpr std::size_t s_degree = DEGREE;
 
 #if defined(BC_PERIODIC)
-static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;
-static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::PERIODIC;
+static constexpr ddc::BoundCond s_bcl1 = ddc::BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcr1 = ddc::BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcl2 = ddc::BoundCond::PERIODIC;
+static constexpr ddc::BoundCond s_bcr2 = ddc::BoundCond::PERIODIC;
 #elif defined(BC_GREVILLE)
-static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::GREVILLE;
-static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcl1 = ddc::BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcr1 = ddc::BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcl2 = ddc::BoundCond::GREVILLE;
+static constexpr ddc::BoundCond s_bcr2 = ddc::BoundCond::GREVILLE;
 #endif
 
 template <typename BSpX>
-using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
+using GrevillePoints = ddc::
+        GrevilleInterpolationPoints<BSpX, ddc::BoundCond::GREVILLE, ddc::BoundCond::GREVILLE>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
@@ -88,7 +93,7 @@ using evaluator_type = Evaluator2D::
 template <typename IDim1, typename IDim2>
 using evaluator_type = Evaluator2D::Evaluator<
         PolynomialEvaluator::Evaluator<IDim1, s_degree>,
-        PolynomialEvaluator::Evaluator<IDim2, s_degree>>;
+        CosineEvaluator::Evaluator<IDim2>>;
 #endif
 
 template <typename... IDimX>
@@ -215,10 +220,10 @@ static void ExtrapolationRuleSplineTest()
             BSplines<I2>,
             IDim<I1, I1, I2>,
             IDim<I2, I1, I2>,
-            s_bcl,
-            s_bcr,
-            s_bcl,
-            s_bcr,
+            s_bcl1,
+            s_bcr1,
+            s_bcl2,
+            s_bcr2,
             IDim<X, I1, I2>...>
             spline_builder(dom_vals);
 
@@ -282,10 +287,10 @@ static void ExtrapolationRuleSplineTest()
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule()
 #elif defined(ER_CONSTANT)
-                    ddc::ConstantExtrapolationRule<I1, I1, I2>(x0<I1>()),
-                    ddc::ConstantExtrapolationRule<I1, I1, I2>(xN<I1>()),
-                    ddc::ConstantExtrapolationRule<I2, I1, I2>(x0<I2>()),
-                    ddc::ConstantExtrapolationRule<I2, I1, I2>(xN<I2>())
+                    ddc::ConstantExtrapolationRule<I1, I1, I2>(x0<I1>(), x0<I2>(), xN<I2>()),
+                    ddc::ConstantExtrapolationRule<I1, I1, I2>(xN<I1>(), x0<I2>(), xN<I2>()),
+                    ddc::ConstantExtrapolationRule<I2, I1, I2>(x0<I2>(), x0<I1>(), xN<I1>()),
+                    ddc::ConstantExtrapolationRule<I2, I1, I2>(xN<I2>(), x0<I1>(), xN<I1>())
 #endif
             );
 
@@ -298,6 +303,10 @@ static void ExtrapolationRuleSplineTest()
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);
                 ddc::get<I1>(coords_eval(e)) = x0<I1>() + 2 * (xN<I1>() - x0<I1>());
+#if defined(BC_GREVILLE)
+                ddc::get<I2>(coords_eval(e))
+                        = x0<I2>() + 1 * (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>());
+#endif
             });
 
 
@@ -351,7 +360,6 @@ static void ExtrapolationRuleSplineTest()
 #define SUFFIX(name) name##Constant##Greville##Uniform
 #elif defined(ER_CONSTANT) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
 #define SUFFIX(name) name##Constant##Greville##NonUniform
-
 #endif
 
 TEST(SUFFIX(ExtrapolationRuleSplineHost), 2DXY)

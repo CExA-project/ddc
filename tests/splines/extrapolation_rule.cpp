@@ -304,8 +304,7 @@ static void ExtrapolationRuleSplineTest()
                 coords_eval(e) = ddc::coordinate(e);
                 ddc::get<I1>(coords_eval(e)) = x0<I1>() + 2 * (xN<I1>() - x0<I1>());
 #if defined(BC_GREVILLE)
-                ddc::get<I2>(coords_eval(e))
-                        = x0<I2>() + 1 * (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>());
+                ddc::get<I2>(coords_eval(e)) = x0<I2>() + 2 * (xN<I2>() - x0<I2>());
 #endif
             });
 
@@ -330,12 +329,26 @@ static void ExtrapolationRuleSplineTest()
                 typename decltype(ddc::remove_dims_of(
                         vals.domain(),
                         vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type
-                        e_batch(e);
-                return Kokkos::abs(
-                        spline_eval(e)
-                        - vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
-                                ddc::select<IDim<I1, I1, I2>>(vals.domain().back()),
-                                e_batch)));
+                        e_without_interest(e);
+                typename decltype(ddc::remove_dims_of(
+                        vals.domain(),
+                        vals.template domain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>()))::
+                        discrete_element_type e_batch(e);
+                double tmp;
+                if (ddc::select<I2>(coords_eval(e)) < x0<I2>()) {
+                    tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
+                            ddc::select<IDim<I1, I1, I2>>(vals.domain().back()),
+                            ddc::select<IDim<I2, I1, I2>>(vals.domain().front())));
+                } else if (ddc::select<I2>(coords_eval(e)) > xN<I2>()) {
+                    tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
+                            ddc::select<IDim<I1, I1, I2>>(vals.domain().back()),
+                            ddc::select<IDim<I2, I1, I2>>(vals.domain().back())));
+                } else {
+                    tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
+                            ddc::select<IDim<I1, I1, I2>>(vals.domain().back()),
+                            e_without_interest));
+                }
+                return Kokkos::abs(spline_eval(e) - tmp);
 #endif
             });
 

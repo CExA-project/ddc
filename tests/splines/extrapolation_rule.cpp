@@ -22,6 +22,18 @@
 #include "polynomial_evaluator.hpp"
 #include "spline_error_bounds.hpp"
 
+#if defined(BC_PERIODIC)
+struct DimX
+{
+    static constexpr bool PERIODIC = true;
+};
+
+struct DimY
+{
+    static constexpr bool PERIODIC = true;
+};
+#else
+
 struct DimX
 {
     static constexpr bool PERIODIC = false;
@@ -31,21 +43,17 @@ struct DimY
 {
     static constexpr bool PERIODIC = false;
 };
-
-struct DimZ
-{
-    static constexpr bool PERIODIC = false;
-};
-
-struct DimT
-{
-    static constexpr bool PERIODIC = false;
-};
+#endif
 
 static constexpr std::size_t s_degree = DEGREE;
 
+#if defined(BC_PERIODIC)
+static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;
+static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::PERIODIC;
+#elif defined(BC_GREVILLE)
 static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::GREVILLE;
 static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::GREVILLE;
+#endif
 
 template <typename BSpX>
 using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
@@ -72,9 +80,16 @@ using IDim = std::conditional_t<
         ddc::NonUniformPointSampling<X>>;
 #endif
 
+#if defined(BC_PERIODIC)
 template <typename IDim1, typename IDim2>
 using evaluator_type = Evaluator2D::
         Evaluator<CosineEvaluator::Evaluator<IDim1>, CosineEvaluator::Evaluator<IDim2>>;
+#else
+template <typename IDim1, typename IDim2>
+using evaluator_type = Evaluator2D::Evaluator<
+        PolynomialEvaluator::Evaluator<IDim1, s_degree>,
+        PolynomialEvaluator::Evaluator<IDim2, s_degree>>;
+#endif
 
 template <typename... IDimX>
 using Index = ddc::DiscreteElement<IDimX...>;
@@ -247,29 +262,32 @@ static void ExtrapolationRuleSplineTest()
             BSplines<I2>,
             IDim<I1, I1, I2>,
             IDim<I2, I1, I2>,
-            /*
+#if defined(ER_NULL)
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
-			*/
-            ddc::ConstantExtrapolationRule<I1,I1,I2>,
-            ddc::ConstantExtrapolationRule<I1,I1,I2>,
-            ddc::ConstantExtrapolationRule<I2,I1,I2>,
-            ddc::ConstantExtrapolationRule<I2,I1,I2>,
+#elif defined(ER_CONSTANT)
+            ddc::ConstantExtrapolationRule<I1, I1, I2>,
+            ddc::ConstantExtrapolationRule<I1, I1, I2>,
+            ddc::ConstantExtrapolationRule<I2, I1, I2>,
+            ddc::ConstantExtrapolationRule<I2, I1, I2>,
+#endif
             IDim<X, I1, I2>...>
             spline_evaluator_batched(
                     coef.domain(),
-                    /*
+#if defined(ER_NULL)
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule(),
-                    ddc::NullExtrapolationRule());
-					*/
-                    ddc::ConstantExtrapolationRule<I1,I1,I2>(x0<I1>()),
-                    ddc::ConstantExtrapolationRule<I1,I1,I2>(xN<I1>()),
-                    ddc::ConstantExtrapolationRule<I2,I1,I2>(x0<I2>()),
-                    ddc::ConstantExtrapolationRule<I2,I1,I2>(xN<I2>()));
+                    ddc::NullExtrapolationRule()
+#elif defined(ER_CONSTANT)
+                    ddc::ConstantExtrapolationRule<I1, I1, I2>(x0<I1>()),
+                    ddc::ConstantExtrapolationRule<I1, I1, I2>(xN<I1>()),
+                    ddc::ConstantExtrapolationRule<I2, I1, I2>(x0<I2>()),
+                    ddc::ConstantExtrapolationRule<I2, I1, I2>(xN<I2>())
+#endif
+            );
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
@@ -279,7 +297,7 @@ static void ExtrapolationRuleSplineTest()
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);
-                ddc::get<I1>(coords_eval(e)) = x0<I1>() + 2 * (xN<I1>()-x0<I1>());
+                ddc::get<I1>(coords_eval(e)) = x0<I1>() + 2 * (xN<I1>() - x0<I1>());
             });
 
 
@@ -297,10 +315,19 @@ static void ExtrapolationRuleSplineTest()
             0.,
             ddc::reducer::max<double>(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-				typename decltype(ddc::remove_dims_of(vals.domain(), vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type e_batch(e);
-
-                // return Kokkos::abs(spline_eval(e));
-                return Kokkos::abs(spline_eval(e) - vals(ddc::DiscreteElement<IDim<X,I1,I2>...>(ddc::select<IDim<I1, I1, I2>>(vals.domain().back()), e_batch)));
+#if defined(ER_NULL)
+                return Kokkos::abs(spline_eval(e));
+#elif defined(ER_CONSTANT)
+                typename decltype(ddc::remove_dims_of(
+                        vals.domain(),
+                        vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type
+                        e_batch(e);
+                return Kokkos::abs(
+                        spline_eval(e)
+                        - vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
+                                ddc::select<IDim<I1, I1, I2>>(vals.domain().back()),
+                                e_batch)));
+#endif
             });
 
     double const max_norm = evaluator.max_norm();
@@ -308,10 +335,23 @@ static void ExtrapolationRuleSplineTest()
     EXPECT_LE(max_norm_error, 1.0e-14 * max_norm);
 }
 
-#if defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Periodic##Uniform
-#elif defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Periodic##NonUniform
+#if defined(ER_NULL) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
+#define SUFFIX(name) name##Null##Periodic##Uniform
+#elif defined(ER_NULL) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#define SUFFIX(name) name##Null##Periodic##NonUniform
+#elif defined(ER_NULL) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
+#define SUFFIX(name) name##Null##Greville##Uniform
+#elif defined(ER_NULL) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#define SUFFIX(name) name##Null##Greville##NonUniform
+#elif defined(ER_CONSTANT) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
+#define SUFFIX(name) name##Constant##Periodic##Uniform
+#elif defined(ER_CONSTANT) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#define SUFFIX(name) name##Constant##Periodic##NonUniform
+#elif defined(ER_CONSTANT) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
+#define SUFFIX(name) name##Constant##Greville##Uniform
+#elif defined(ER_CONSTANT) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#define SUFFIX(name) name##Constant##Greville##NonUniform
+
 #endif
 
 TEST(SUFFIX(ExtrapolationRuleSplineHost), 2DXY)
@@ -334,76 +374,4 @@ TEST(SUFFIX(ExtrapolationRuleSplineDevice), 2DXY)
             DimY,
             DimX,
             DimY>();
-}
-
-TEST(SUFFIX(ExtrapolationRuleSplineHost), 3DXY)
-{
-    ExtrapolationRuleSplineTest<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DimX,
-            DimY,
-            DimX,
-            DimY,
-            DimZ>();
-}
-
-TEST(SUFFIX(ExtrapolationRuleSplineHost), 3DXZ)
-{
-    ExtrapolationRuleSplineTest<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DimX,
-            DimZ,
-            DimX,
-            DimY,
-            DimZ>();
-}
-
-TEST(SUFFIX(ExtrapolationRuleSplineHost), 3DYZ)
-{
-    ExtrapolationRuleSplineTest<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DimY,
-            DimZ,
-            DimX,
-            DimY,
-            DimZ>();
-}
-
-TEST(SUFFIX(ExtrapolationRuleSplineDevice), 3DXY)
-{
-    ExtrapolationRuleSplineTest<
-            Kokkos::DefaultExecutionSpace,
-            Kokkos::DefaultExecutionSpace::memory_space,
-            DimX,
-            DimY,
-            DimX,
-            DimY,
-            DimZ>();
-}
-
-TEST(SUFFIX(ExtrapolationRuleSplineDevice), 3DXZ)
-{
-    ExtrapolationRuleSplineTest<
-            Kokkos::DefaultExecutionSpace,
-            Kokkos::DefaultExecutionSpace::memory_space,
-            DimX,
-            DimZ,
-            DimX,
-            DimY,
-            DimZ>();
-}
-
-TEST(SUFFIX(ExtrapolationRuleSplineDevice), 3DYZ)
-{
-    ExtrapolationRuleSplineTest<
-            Kokkos::DefaultExecutionSpace,
-            Kokkos::DefaultExecutionSpace::memory_space,
-            DimY,
-            DimZ,
-            DimX,
-            DimY,
-            DimZ>();
 }

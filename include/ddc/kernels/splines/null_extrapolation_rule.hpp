@@ -7,9 +7,7 @@ struct NullExtrapolationRule
     explicit NullExtrapolationRule() {}
 
     template <class CoordType, class ChunkSpan>
-    KOKKOS_FUNCTION double operator()(
-            CoordType,
-            ChunkSpan) const
+    KOKKOS_FUNCTION double operator()(CoordType, ChunkSpan) const
     {
         return 0.0;
     }

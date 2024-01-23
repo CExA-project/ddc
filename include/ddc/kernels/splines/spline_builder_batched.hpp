@@ -404,21 +404,10 @@ void SplineBuilder<
         return;
 	*/
 
-    if constexpr (bsplines_type::is_periodic()) {
-        if (Solver == SplineSolver::GINKGO) {
-            matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
-                    ddc::discrete_space<BSplines>().nbasis(),
-                    cols_per_chunk,
-                    preconditionner_max_block_size);
-        }
-    } else {
-        if (Solver == SplineSolver::GINKGO) {
-            matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
-                    ddc::discrete_space<BSplines>().nbasis(),
-                    cols_per_chunk,
-                    preconditionner_max_block_size);
-        }
-    }
+    matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
+            ddc::discrete_space<BSplines>().nbasis(),
+            cols_per_chunk,
+            preconditionner_max_block_size);
 
     build_matrix_system();
 

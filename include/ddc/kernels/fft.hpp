@@ -2,22 +2,33 @@
 
 #pragma once
 
-#include <memory>
+#include <type_traits>
+#include <utility>
 
 #include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
+
+#include <Kokkos_Core.hpp>
 
 #if fftw_AVAIL
 #include <fftw3.h>
 #endif
 
 #if cufft_AVAIL
+#include <functional>
+#include <memory>
+#include <stdexcept>
+
+#include <cuda_runtime_api.h>
 #include <cufft.h>
 #endif
 
 #if hipfft_AVAIL
-#include <hip/hip_runtime.h>
+#include <functional>
+#include <memory>
+#include <stdexcept>
+
 #include <hip/hip_runtime_api.h>
 #include <hipfft/hipfft.h>
 #endif
@@ -394,7 +405,6 @@ void core(
             fftw_execute(plan);
             fftw_destroy_plan(plan);
         }
-        // std::cout << "performed with fftw";
     }
 #endif
 #if fftw_omp_AVAIL
@@ -427,7 +437,6 @@ void core(
             fftw_execute(plan);
             fftw_destroy_plan(plan);
         }
-        // std::cout << "performed with fftw_omp";
     }
 #endif
 #if cufft_AVAIL
@@ -467,7 +476,6 @@ void core(
                 reinterpret_cast<typename _cufft_type<Tout>::type*>(out_data));
         if (cufft_rt != CUFFT_SUCCESS)
             throw std::runtime_error("cufftExec failed");
-        // std::cout << "performed with cufft";
     }
 #endif
 #if hipfft_AVAIL
@@ -507,7 +515,6 @@ void core(
                 reinterpret_cast<typename _hipfft_type<Tout>::type*>(out_data));
         if (hipfft_rt != HIPFFT_SUCCESS)
             throw std::runtime_error("hipfftExec failed");
-        // std::cout << "performed with hipfft";
     }
 #endif
 

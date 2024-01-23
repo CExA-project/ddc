@@ -2,23 +2,31 @@
 
 #pragma once
 
+#include <cstddef>
+#include <functional>
 #include <map>
-#include <memory>
 #include <optional>
 #include <ostream>
-#include <sstream>
 #include <stdexcept>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
 
 #include <Kokkos_Core.hpp>
+
+#include "ddc/detail/macros.hpp"
 #if defined(__CUDACC__)
+#include <sstream>
+
 #include <cuda.h>
 #endif
 #if defined(__HIPCC__)
+#include <sstream>
+
 #include <hip/hip_runtime.h>
 #endif
 
-#include "ddc/discrete_domain.hpp"
-#include "ddc/discrete_space.hpp"
 #include "ddc/dual_discretization.hpp"
 
 namespace ddc {
@@ -204,6 +212,12 @@ KOKKOS_FORCEINLINE_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discre
     else {
         static_assert(std::is_same_v<MemorySpace, MemorySpace>, "Memory space not handled");
     }
+}
+
+template <class DDim>
+bool is_discrete_space_initialized() noexcept
+{
+    return detail::g_discrete_space_dual<DDim>.has_value();
 }
 
 template <class DDim>

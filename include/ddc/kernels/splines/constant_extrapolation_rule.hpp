@@ -9,16 +9,14 @@ struct ConstantExtrapolationRule
 {
 };
 
-template <class DimI, class Dim1>
-struct ConstantExtrapolationRule<DimI, Dim1>
+template <class DimI>
+struct ConstantExtrapolationRule<DimI>
 {
-    static_assert(std::is_same_v<DimI, Dim1>);
-
 private:
-    ddc::Coordinate<Dim1> m_eval_pos;
+    ddc::Coordinate<DimI> m_eval_pos;
 
 public:
-    explicit ConstantExtrapolationRule(ddc::Coordinate<Dim1> eval_pos) : m_eval_pos(eval_pos) {}
+    explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos) : m_eval_pos(eval_pos) {}
 
     template <class CoordType, class BSplines, class Layout, class MemorySpace>
     KOKKOS_FUNCTION double operator()(
@@ -39,13 +37,9 @@ public:
     }
 };
 
-template <class DimI, class Dim1, class Dim2>
-struct ConstantExtrapolationRule<DimI, Dim1, Dim2>
+template <class DimI, class DimNI>
+struct ConstantExtrapolationRule<DimI, DimNI>
 {
-    static_assert(std::is_same_v<DimI, Dim1> || std::is_same_v<DimI, Dim2>);
-
-    using DimNI = typename std::conditional_t<std::is_same_v<Dim1, DimI>, Dim2, Dim1>;
-
 private:
     ddc::Coordinate<DimI> m_eval_pos;
     ddc::Coordinate<DimNI> m_eval_pos_not_interest_min;
@@ -82,11 +76,11 @@ public:
                     Layout,
                     MemorySpace> const spline_coef) const
     {
-        ddc::Coordinate<Dim1, Dim2> eval_pos;
+        ddc::Coordinate<DimI, DimNI> eval_pos;
         if constexpr (DimNI::PERIODIC) {
-            eval_pos = ddc::Coordinate<Dim1, Dim2>(m_eval_pos, ddc::select<DimNI>(coord_extrap));
+            eval_pos = ddc::Coordinate<DimI, DimNI>(m_eval_pos, ddc::select<DimNI>(coord_extrap));
         } else {
-            eval_pos = ddc::Coordinate<Dim1, Dim2>(
+            eval_pos = ddc::Coordinate<DimI, DimNI>(
                     m_eval_pos,
                     Kokkos::
                             max(Kokkos::
@@ -99,9 +93,11 @@ public:
         std::array<double, BSplines2::degree() + 1> vals2;
 
         ddc::DiscreteElement<BSplines1> idx1
-                = ddc::discrete_space<BSplines1>().eval_basis(vals1, ddc::select<Dim1>(eval_pos));
+                = ddc::discrete_space<BSplines1>()
+                          .eval_basis(vals1, ddc::select<typename BSplines1::tag_type>(eval_pos));
         ddc::DiscreteElement<BSplines2> idx2
-                = ddc::discrete_space<BSplines2>().eval_basis(vals2, ddc::select<Dim2>(eval_pos));
+                = ddc::discrete_space<BSplines2>()
+                          .eval_basis(vals2, ddc::select<typename BSplines2::tag_type>(eval_pos));
 
         double y = 0.0;
         for (std::size_t i = 0; i < BSplines1::degree() + 1; ++i) {

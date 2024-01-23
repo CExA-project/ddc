@@ -178,6 +178,24 @@ public:
         return spline_tr_domain_type(bsplines_domain(), batch_domain());
     }
 
+    derivs_domain_type derivs_xmin_domain() const noexcept
+    {
+        return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
+                vals_domain(),
+                ddc::DiscreteDomain<deriv_type>(
+                        ddc::DiscreteElement<deriv_type>(1),
+                        ddc::DiscreteVector<deriv_type>(s_nbc_xmin)));
+    }
+
+    derivs_domain_type derivs_xmax_domain() const noexcept
+    {
+        return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
+                vals_domain(),
+                ddc::DiscreteDomain<deriv_type>(
+                        ddc::DiscreteElement<deriv_type>(1),
+                        ddc::DiscreteVector<deriv_type>(s_nbc_xmax)));
+    }
+
     /**
      * @brief Get the interpolation matrix.
      *
@@ -386,21 +404,10 @@ void SplineBuilder<
         return;
 	*/
 
-    if constexpr (bsplines_type::is_periodic()) {
-        if (Solver == SplineSolver::GINKGO) {
-            matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
-                    ddc::discrete_space<BSplines>().nbasis(),
-                    cols_per_chunk,
-                    preconditionner_max_block_size);
-        }
-    } else {
-        if (Solver == SplineSolver::GINKGO) {
-            matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
-                    ddc::discrete_space<BSplines>().nbasis(),
-                    cols_per_chunk,
-                    preconditionner_max_block_size);
-        }
-    }
+    matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
+            ddc::discrete_space<BSplines>().nbasis(),
+            cols_per_chunk,
+            preconditionner_max_block_size);
 
     build_matrix_system();
 

@@ -61,7 +61,7 @@ public:
     /**
      * Get the domain which can be used to access the interpolation points in the sampling.
      *
-     * @return domain The DDC discrete domain which maps to the sampling of interpolation points.
+     * @return domain The discrete domain which maps to the sampling of interpolation points.
      */
     static ddc::DiscreteDomain<interpolation_mesh_type> get_domain()
     {

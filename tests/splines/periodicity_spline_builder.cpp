@@ -111,7 +111,7 @@ template <typename ExecSpace, typename MemorySpace, typename X>
 static void PeriodicitySplineBuilderTest()
 {
     // Instantiate execution spaces and initialize spaces
-    Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
+    Kokkos::DefaultHostExecutionSpace const host_exec_space;
     ExecSpace exec_space = ExecSpace();
 
     std::size_t constexpr ncells = 10;

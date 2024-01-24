@@ -139,8 +139,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
     ddc::Chunk integral(spline_builder.batch_domain(), ddc::HostAllocator<double>());
     spline_evaluator.integrate(integral.span_view(), coef.span_cview());
     double const max_norm_error_integ = std::fabs(
-            integral(ddc::DiscreteElement<>()) - evaluator.deriv(xN, -1)
-            + evaluator.deriv(x0, -1));
+            integral(ddc::DiscreteElement<>()) - evaluator.deriv(xN, -1) + evaluator.deriv(x0, -1));
 
     double const max_norm = evaluator.max_norm();
     double const max_norm_diff = evaluator.max_norm(1);

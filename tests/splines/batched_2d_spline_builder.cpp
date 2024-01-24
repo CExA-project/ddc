@@ -148,7 +148,7 @@ static constexpr double dx(std::size_t ncells)
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
 template <typename X>
-static constexpr std::vector<Coord<X>> breaks(std::size_t ncells)
+static std::vector<Coord<X>> breaks(std::size_t ncells)
 {
     std::vector<Coord<X>> out(ncells + 1);
     for (int i(0); i < ncells + 1; ++i) {
@@ -203,7 +203,7 @@ template <typename ExecSpace, typename MemorySpace, typename I1, typename I2, ty
 static void Batched2dSplineTest()
 {
     // Instantiate execution spaces and initialize spaces
-    Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
+    Kokkos::DefaultHostExecutionSpace const host_exec_space;
     ExecSpace exec_space = ExecSpace();
     std::size_t constexpr ncells = 10;
     DimsInitializer<

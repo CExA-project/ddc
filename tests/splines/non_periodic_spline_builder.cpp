@@ -132,15 +132,15 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
 
 // 6. Finally build the spline by filling `coef`
 #if defined(BCL_HERMITE)
-    auto deriv_l = std::optional(Sderiv_lhs.span_cview());
+    ddc::ChunkSpan const deriv_l = Sderiv_lhs.span_cview();
 #else
-    decltype(std::optional(Sderiv_lhs.span_cview())) deriv_l = std::nullopt;
+    std::nullopt_t const deriv_l;
 #endif
 
 #if defined(BCR_HERMITE)
-    auto deriv_r = std::optional(Sderiv_rhs.span_cview());
+    ddc::ChunkSpan const deriv_r = Sderiv_rhs.span_cview();
 #else
-    decltype(std::optional(Sderiv_rhs.span_cview())) deriv_r = std::nullopt;
+    std::nullopt_t const deriv_r;
 #endif
 
     spline_builder(coef.span_view(), yvals.span_cview(), deriv_l, deriv_r);

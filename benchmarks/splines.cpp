@@ -117,14 +117,14 @@ static void characteristics_advection(benchmark::State& state)
             Kokkos::DefaultExecutionSpace::memory_space,
             BSplinesX,
             DDimX,
-			ddc::NullExtrapolationRule,
-			ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
             DDimX,
             DDimY>
             spline_evaluator(
                     spline_builder.spline_domain(),
-					ddc::NullExtrapolationRule(),
-					ddc::NullExtrapolationRule());
+                    ddc::NullExtrapolationRule(),
+                    ddc::NullExtrapolationRule());
     ddc::Chunk coef_alloc(
             spline_builder.spline_domain(),
             ddc::KokkosAllocator<double, Kokkos::DefaultExecutionSpace::memory_space>());

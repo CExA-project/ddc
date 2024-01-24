@@ -4,8 +4,6 @@ namespace ddc {
 
 struct NullExtrapolationRule
 {
-    explicit NullExtrapolationRule() {}
-
     template <class CoordType, class ChunkSpan>
     KOKKOS_FUNCTION double operator()(CoordType, ChunkSpan) const
     {

@@ -21,7 +21,7 @@ template <
         class LeftExtrapolationRule2,
         class RightExtrapolationRule2,
         class... IDimX>
-class SplineEvaluator2DBatched
+class SplineEvaluator2D
 {
 private:
     // Tags to determine what to evaluate
@@ -82,7 +82,7 @@ private:
     RightExtrapolationRule2 m_right2_bc;
 
 public:
-    explicit SplineEvaluator2DBatched(
+    explicit SplineEvaluator2D(
             spline_domain_type const& spline_domain,
             LeftExtrapolationRule1 const& left_extrap_rule1,
             RightExtrapolationRule1 const& right_extrap_rule1,
@@ -96,15 +96,15 @@ public:
     {
     }
 
-    SplineEvaluator2DBatched(SplineEvaluator2DBatched const& x) = default;
+    SplineEvaluator2D(SplineEvaluator2D const& x) = default;
 
-    SplineEvaluator2DBatched(SplineEvaluator2DBatched&& x) = default;
+    SplineEvaluator2D(SplineEvaluator2D&& x) = default;
 
-    ~SplineEvaluator2DBatched() = default;
+    ~SplineEvaluator2D() = default;
 
-    SplineEvaluator2DBatched& operator=(SplineEvaluator2DBatched const& x) = default;
+    SplineEvaluator2D& operator=(SplineEvaluator2D const& x) = default;
 
-    SplineEvaluator2DBatched& operator=(SplineEvaluator2DBatched&& x) = default;
+    SplineEvaluator2D& operator=(SplineEvaluator2D&& x) = default;
 
 
 

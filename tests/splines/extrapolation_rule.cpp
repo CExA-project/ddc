@@ -186,7 +186,7 @@ static void ExtrapolationRuleSplineTest()
 {
     // Instantiate execution spaces and initialize spaces
     Kokkos::DefaultHostExecutionSpace const host_exec_space;
-    ExecSpace exec_space = ExecSpace();
+    ExecSpace const exec_space;
     std::size_t constexpr ncells = 10;
     DimsInitializer<
             IDim<I1, I1, I2>,

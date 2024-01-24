@@ -117,8 +117,8 @@ static void characteristics_advection(benchmark::State& state)
             Kokkos::DefaultExecutionSpace::memory_space,
             BSplinesX,
             DDimX,
-			ddc::NullExtrapolationRule,
-			ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
             DDimX,
             DDimY>
             spline_evaluator(

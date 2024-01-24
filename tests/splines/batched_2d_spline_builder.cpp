@@ -524,7 +524,7 @@ static void Batched2dSplineTest()
     spline_builder(coef, vals.span_cview());
 #endif
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::SplineEvaluator2DBatched<
+    ddc::SplineEvaluator2D<
             ExecSpace,
             MemorySpace,
             BSplines<I1>,

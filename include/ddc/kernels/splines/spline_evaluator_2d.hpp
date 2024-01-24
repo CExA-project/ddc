@@ -18,7 +18,7 @@ template <
         class interpolation_mesh_type1,
         class interpolation_mesh_type2,
         class... IDimX>
-class SplineEvaluator2DBatched
+class SplineEvaluator2D
 {
 private:
     // Tags to determine what to evaluate
@@ -72,26 +72,26 @@ private:
 
 
 public:
-    explicit SplineEvaluator2DBatched(
+    explicit SplineEvaluator2D(
             spline_domain_type const& spline_domain,
-            SplineBoundaryValue<bsplines_type1> const&
+            [[maybe_unused]] SplineBoundaryValue<bsplines_type1> const&
                     left1_bc, // Unused, to be restored in next MR
-            SplineBoundaryValue<bsplines_type1> const& right1_bc,
-            SplineBoundaryValue<bsplines_type2> const& left2_bc,
-            SplineBoundaryValue<bsplines_type2> const& right2_bc)
+            [[maybe_unused]] SplineBoundaryValue<bsplines_type1> const& right1_bc,
+            [[maybe_unused]] SplineBoundaryValue<bsplines_type2> const& left2_bc,
+            [[maybe_unused]] SplineBoundaryValue<bsplines_type2> const& right2_bc)
         : m_spline_domain(spline_domain)
     {
     }
 
-    SplineEvaluator2DBatched(SplineEvaluator2DBatched const& x) = default;
+    SplineEvaluator2D(SplineEvaluator2D const& x) = default;
 
-    SplineEvaluator2DBatched(SplineEvaluator2DBatched&& x) = default;
+    SplineEvaluator2D(SplineEvaluator2D&& x) = default;
 
-    ~SplineEvaluator2DBatched() = default;
+    ~SplineEvaluator2D() = default;
 
-    SplineEvaluator2DBatched& operator=(SplineEvaluator2DBatched const& x) = default;
+    SplineEvaluator2D& operator=(SplineEvaluator2D const& x) = default;
 
-    SplineEvaluator2DBatched& operator=(SplineEvaluator2DBatched&& x) = default;
+    SplineEvaluator2D& operator=(SplineEvaluator2D&& x) = default;
 
 
 

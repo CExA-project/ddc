@@ -90,10 +90,9 @@ public:
             eval_pos = ddc::Coordinate<DimI, DimNI>(
                     m_eval_pos,
                     Kokkos::
-                            max(Kokkos::
-                                        min(ddc::select<DimNI>(coord_extrap),
-                                            m_eval_pos_not_interest_max),
-                                m_eval_pos_not_interest_min));
+                            clamp(ddc::select<DimNI>(coord_extrap),
+                                  m_eval_pos_not_interest_min,
+                                  m_eval_pos_not_interest_max));
         }
 
         std::array<double, BSplines1::degree() + 1> vals1;

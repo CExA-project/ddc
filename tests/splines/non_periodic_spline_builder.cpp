@@ -115,18 +115,16 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     ddc::Chunk Sderiv_lhs_alloc(derivs_domain, ddc::HostAllocator<double>());
     ddc::ChunkSpan Sderiv_lhs = Sderiv_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
-        for (int ii = 1; ii < Sderiv_lhs.domain().template extent<ddc::Deriv<DimX>>() + 1; ++ii) {
-            Sderiv_lhs(typename decltype(Sderiv_lhs.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(x0, ii + shift - 1);
+        for (ddc::DiscreteElement<ddc::Deriv<DimX>> const ii : derivs_domain) {
+            Sderiv_lhs(ii) = evaluator.deriv(x0, ii - derivs_domain.front() + shift);
         }
     }
 
     ddc::Chunk Sderiv_rhs_alloc(derivs_domain, ddc::HostAllocator<double>());
     ddc::ChunkSpan Sderiv_rhs = Sderiv_rhs_alloc.span_view();
     if (s_bcr == ddc::BoundCond::HERMITE) {
-        for (int ii = 1; ii < Sderiv_rhs.domain().template extent<ddc::Deriv<DimX>>() + 1; ++ii) {
-            Sderiv_rhs(typename decltype(Sderiv_rhs.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(xN, ii + shift - 1);
+        for (ddc::DiscreteElement<ddc::Deriv<DimX>> const ii : derivs_domain) {
+            Sderiv_rhs(ii) = evaluator.deriv(xN, ii - derivs_domain.front() + shift);
         }
     }
 

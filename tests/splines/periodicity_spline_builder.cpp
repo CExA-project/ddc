@@ -156,11 +156,10 @@ static void PeriodicitySplineBuilderTest()
     spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<X>, IDim<X>, IDim<X>>
-            spline_evaluator_batched(
-                    coef.domain(),
-                    ddc::g_null_boundary<BSplines<X>>,
-                    ddc::g_null_boundary<BSplines<X>>);
+    ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<X>, IDim<X>, IDim<X>> spline_evaluator(
+            coef.domain(),
+            ddc::g_null_boundary<BSplines<X>>,
+            ddc::g_null_boundary<BSplines<X>>);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());
@@ -178,7 +177,7 @@ static void PeriodicitySplineBuilderTest()
     ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
-    spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors (we recover the initial values)
     double max_norm_error = ddc::transform_reduce(

@@ -6,7 +6,6 @@
 
 #include "Kokkos_Macros.hpp"
 #include "spline_boundary_value.hpp"
-#include "spline_evaluator.hpp"
 #include "view.hpp"
 
 namespace ddc {
@@ -19,7 +18,7 @@ template <
         class interpolation_mesh_type1,
         class interpolation_mesh_type2,
         class... IDimX>
-class SplineEvaluator2DBatched
+class SplineEvaluator2D
 {
 private:
     // Tags to determine what to evaluate
@@ -36,13 +35,8 @@ public:
 
     using memory_space = MemorySpace;
 
-    using evaluator_type1
-            = ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplinesType1, interpolation_mesh_type1>;
-    using evaluator_type2
-            = ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplinesType2, interpolation_mesh_type2>;
-
-    using bsplines_type1 = typename evaluator_type1::bsplines_type;
-    using bsplines_type2 = typename evaluator_type2::bsplines_type;
+    using bsplines_type1 = BSplinesType1;
+    using bsplines_type2 = BSplinesType2;
 
     using interpolation_domain_type1 = ddc::DiscreteDomain<interpolation_mesh_type1>;
     using interpolation_domain_type2 = ddc::DiscreteDomain<interpolation_mesh_type2>;
@@ -78,7 +72,7 @@ private:
 
 
 public:
-    explicit SplineEvaluator2DBatched(
+    explicit SplineEvaluator2D(
             spline_domain_type const& spline_domain,
             [[maybe_unused]] SplineBoundaryValue<bsplines_type1> const&
                     left1_bc, // Unused, to be restored in next MR
@@ -89,15 +83,15 @@ public:
     {
     }
 
-    SplineEvaluator2DBatched(SplineEvaluator2DBatched const& x) = default;
+    SplineEvaluator2D(SplineEvaluator2D const& x) = default;
 
-    SplineEvaluator2DBatched(SplineEvaluator2DBatched&& x) = default;
+    SplineEvaluator2D(SplineEvaluator2D&& x) = default;
 
-    ~SplineEvaluator2DBatched() = default;
+    ~SplineEvaluator2D() = default;
 
-    SplineEvaluator2DBatched& operator=(SplineEvaluator2DBatched const& x) = default;
+    SplineEvaluator2D& operator=(SplineEvaluator2D const& x) = default;
 
-    SplineEvaluator2DBatched& operator=(SplineEvaluator2DBatched&& x) = default;
+    SplineEvaluator2D& operator=(SplineEvaluator2D&& x) = default;
 
 
 

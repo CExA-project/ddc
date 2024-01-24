@@ -6,13 +6,17 @@
 
 #include "Kokkos_Macros.hpp"
 #include "spline_boundary_value.hpp"
-#include "spline_evaluator.hpp"
 #include "view.hpp"
 
 namespace ddc {
 
-template <class SplineEvaluator, class... IDimX>
-class SplineEvaluatorBatched
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplinesType,
+        class InterpolationMesh,
+        class... IDimX>
+class SplineEvaluator
 {
 private:
     // Tags to determine what to evaluate
@@ -24,18 +28,16 @@ private:
     {
     };
 
-    using tag_type = typename SplineEvaluator::tag_type;
+    using tag_type = typename BSplinesType::tag_type;
 
 public:
-    using exec_space = typename SplineEvaluator::exec_space;
+    using exec_space = ExecSpace;
 
-    using memory_space = typename SplineEvaluator::memory_space;
+    using memory_space = MemorySpace;
 
-    using bsplines_type = typename SplineEvaluator::bsplines_type;
+    using bsplines_type = BSplinesType;
 
-    using evaluator_type = SplineEvaluator;
-
-    using interpolation_mesh_type = typename SplineEvaluator::mesh_type;
+    using interpolation_mesh_type = InterpolationMesh;
 
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
 
@@ -64,7 +66,7 @@ private:
 
 
 public:
-    explicit SplineEvaluatorBatched(
+    explicit SplineEvaluator(
             spline_domain_type const& spline_domain,
             SplineBoundaryValue<bsplines_type> const& left_bc, // Unused, to be restored in next MR
             SplineBoundaryValue<bsplines_type> const& right_bc)
@@ -72,15 +74,15 @@ public:
     {
     }
 
-    SplineEvaluatorBatched(SplineEvaluatorBatched const& x) = default;
+    SplineEvaluator(SplineEvaluator const& x) = default;
 
-    SplineEvaluatorBatched(SplineEvaluatorBatched&& x) = default;
+    SplineEvaluator(SplineEvaluator&& x) = default;
 
-    ~SplineEvaluatorBatched() = default;
+    ~SplineEvaluator() = default;
 
-    SplineEvaluatorBatched& operator=(SplineEvaluatorBatched const& x) = default;
+    SplineEvaluator& operator=(SplineEvaluator const& x) = default;
 
-    SplineEvaluatorBatched& operator=(SplineEvaluatorBatched&& x) = default;
+    SplineEvaluator& operator=(SplineEvaluator&& x) = default;
 
 
 

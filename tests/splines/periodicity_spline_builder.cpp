@@ -122,15 +122,15 @@ static void PeriodicitySplineBuilderTest()
     ddc::DiscreteDomain<IDim<X>> const dom_vals
             = ddc::DiscreteDomain<IDim<X>>(GrevillePoints<BSplines<X>>::get_domain());
 
-    // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
-    ddc::SplineBuilderBatched<
-            ddc::SplineBuilder<
-                    ExecSpace,
-                    MemorySpace,
-                    BSplines<X>,
-                    IDim<X>,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC>,
+    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
+    ddc::SplineBuilder<
+            ExecSpace,
+            MemorySpace,
+            BSplines<X>,
+            IDim<X>,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::SplineSolver::GINKGO,
             IDim<X>>
             spline_builder(dom_vals);
 
@@ -156,9 +156,7 @@ static void PeriodicitySplineBuilderTest()
     spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::SplineEvaluatorBatched<
-            ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<X>, IDim<X>>,
-            IDim<X>>
+    ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<X>, IDim<X>, IDim<X>>
             spline_evaluator_batched(
                     coef.domain(),
                     ddc::g_null_boundary<BSplines<X>>,

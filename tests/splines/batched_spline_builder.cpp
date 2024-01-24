@@ -206,9 +206,15 @@ static void BatchedSplineTest()
     auto const dom_derivs = ddc::replace_dim_of<IDim<I, I>, ddc::Deriv<I>>(dom_vals, derivs_domain);
 #endif
 
-    // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
-    ddc::SplineBuilderBatched<
-            ddc::SplineBuilder<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>, s_bcl, s_bcr>,
+    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
+    ddc::SplineBuilder<
+            ExecSpace,
+            MemorySpace,
+            BSplines<I>,
+            IDim<I, I>,
+            s_bcl,
+            s_bcr,
+            ddc::SplineSolver::GINKGO,
             IDim<X, I>...>
             spline_builder(dom_vals);
 
@@ -301,9 +307,7 @@ static void BatchedSplineTest()
 #endif
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::SplineEvaluatorBatched<
-            ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>>,
-            IDim<X, I>...>
+    ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<I>, IDim<I, I>, IDim<X, I>...>
             spline_evaluator_batched(
                     coef.domain(),
                     ddc::g_null_boundary<BSplines<I>>,

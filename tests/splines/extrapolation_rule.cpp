@@ -287,8 +287,13 @@ static void ExtrapolationRuleSplineTest()
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule()
 #elif defined(ER_CONSTANT)
+#if defined(BC_PERIODIC)
+                    ddc::ConstantExtrapolationRule<I1, I2>(x0<I1>()),
+                    ddc::ConstantExtrapolationRule<I1, I2>(xN<I1>()),
+#else
                     ddc::ConstantExtrapolationRule<I1, I2>(x0<I1>(), x0<I2>(), xN<I2>()),
                     ddc::ConstantExtrapolationRule<I1, I2>(xN<I1>(), x0<I2>(), xN<I2>()),
+#endif
                     ddc::ConstantExtrapolationRule<I2, I1>(x0<I2>(), x0<I1>(), xN<I1>()),
                     ddc::ConstantExtrapolationRule<I2, I1>(xN<I2>(), x0<I1>(), xN<I1>())
 #endif

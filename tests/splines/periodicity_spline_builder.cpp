@@ -164,7 +164,7 @@ static void PeriodicitySplineBuilderTest()
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             IDim<X>>
-            spline_evaluator_batched(
+            spline_evaluator(
                     coef.domain(),
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule());
@@ -185,7 +185,7 @@ static void PeriodicitySplineBuilderTest()
     ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
-    spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors (we recover the initial values)
     double max_norm_error = ddc::transform_reduce(

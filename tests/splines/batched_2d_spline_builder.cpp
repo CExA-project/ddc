@@ -536,7 +536,7 @@ static void Batched2dSplineTest()
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             IDim<X, I1, I2>...>
-            spline_evaluator_batched(
+            spline_evaluator(
                     coef.domain(),
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule(),
@@ -565,12 +565,12 @@ static void Batched2dSplineTest()
     ddc::ChunkSpan spline_eval_deriv12 = spline_eval_deriv12_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
-    spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator_batched
+    spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator
             .template deriv<I1>(spline_eval_deriv1, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator_batched
+    spline_evaluator
             .template deriv<I2>(spline_eval_deriv2, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator_batched.template deriv2<
+    spline_evaluator.template deriv2<
             I1,
             I2>(spline_eval_deriv12, coords_eval.span_cview(), coef.span_cview());
 

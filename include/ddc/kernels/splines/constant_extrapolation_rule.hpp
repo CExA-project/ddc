@@ -24,6 +24,8 @@ public:
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
                     spline_coef) const
     {
+        static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
+
         std::array<double, BSplines::degree() + 1> vals;
 
         ddc::DiscreteElement<BSplines> idx
@@ -76,6 +78,11 @@ public:
                     Layout,
                     MemorySpace> const spline_coef) const
     {
+        static_assert(
+                in_tags_v<
+                        DimI,
+                        to_type_seq_t<CoordType>> && in_tags_v<DimNI, to_type_seq_t<CoordType>>);
+
         ddc::Coordinate<DimI, DimNI> eval_pos;
         if constexpr (DimNI::PERIODIC) {
             eval_pos = ddc::Coordinate<DimI, DimNI>(m_eval_pos, ddc::select<DimNI>(coord_extrap));

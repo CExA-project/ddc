@@ -253,8 +253,8 @@ static void Batched2dSplineTest()
             = ddc::replace_dim_of<IDim<I2, I1, I2>, ddc::Deriv<I2>>(dom_derivs1, derivs_domain2);
 #endif
 
-    // Create a SplineBuilderBatched over BSplines<I> and batched along other dimensions using some boundary conditions
-    ddc::SplineBuilder2DBatched<
+    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
+    ddc::SplineBuilder2D<
             ExecSpace,
             MemorySpace,
             BSplines<I1>,
@@ -524,7 +524,7 @@ static void Batched2dSplineTest()
     spline_builder(coef, vals.span_cview());
 #endif
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::SplineEvaluator2DBatched<
+    ddc::SplineEvaluator2D<
             ExecSpace,
             MemorySpace,
             BSplines<I1>,
@@ -532,7 +532,7 @@ static void Batched2dSplineTest()
             IDim<I1, I1, I2>,
             IDim<I2, I1, I2>,
             IDim<X, I1, I2>...>
-            spline_evaluator_batched(
+            spline_evaluator(
                     coef.domain(),
                     ddc::g_null_boundary<BSplines<I1>>,
                     ddc::g_null_boundary<BSplines<I1>>,
@@ -561,12 +561,12 @@ static void Batched2dSplineTest()
     ddc::ChunkSpan spline_eval_deriv12 = spline_eval_deriv12_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
-    spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator_batched
+    spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator
             .template deriv<I1>(spline_eval_deriv1, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator_batched
+    spline_evaluator
             .template deriv<I2>(spline_eval_deriv2, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator_batched.template deriv2<
+    spline_evaluator.template deriv2<
             I1,
             I2>(spline_eval_deriv12, coords_eval.span_cview(), coef.span_cview());
 

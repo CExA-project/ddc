@@ -109,7 +109,7 @@ public:
                     ddc::Coordinate<tag_type1>,
                     ddc::ChunkSpan<
                             double const,
-                            spline_domain_type,
+                            bsplines_domain_type,
                             std::experimental::layout_right,
                             memory_space>>,
             "LeftExtrapolationRule1::operator() has to be callable "
@@ -121,7 +121,7 @@ public:
                     ddc::Coordinate<tag_type1>,
                     ddc::ChunkSpan<
                             double const,
-                            spline_domain_type,
+                            bsplines_domain_type,
                             std::experimental::layout_right,
                             memory_space>>,
             "RightExtrapolationRule1::operator() has to be callable "
@@ -133,7 +133,7 @@ public:
                     ddc::Coordinate<tag_type2>,
                     ddc::ChunkSpan<
                             double const,
-                            spline_domain_type,
+                            bsplines_domain_type,
                             std::experimental::layout_right,
                             memory_space>>,
             "LeftExtrapolationRule2::operator() has to be callable "
@@ -145,7 +145,7 @@ public:
                     ddc::Coordinate<tag_type2>,
                     ddc::ChunkSpan<
                             double const,
-                            spline_domain_type,
+                            bsplines_domain_type,
                             std::experimental::layout_right,
                             memory_space>>,
             "RightExtrapolationRule2::operator() has to be callable "

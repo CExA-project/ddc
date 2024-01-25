@@ -88,9 +88,19 @@ public:
                             double const,
                             spline_domain_type,
                             std::experimental::layout_right,
-                            memory_space>> && std::is_invocable_r_v<double, RightExtrapolationRule, ddc::Coordinate<tag_type>, ddc::ChunkSpan<double const, spline_domain_type, std::experimental::layout_right, memory_space>>,
-            "Extrapolation rules operator() have to be callable with usual arguments for them.");
-
+                            memory_space>>,
+            "LeftExtrapolationRule::operator() has to be callable with usual arguments.");
+    static_assert(
+            std::is_invocable_r_v<
+                    double,
+                    RightExtrapolationRule,
+                    ddc::Coordinate<tag_type>,
+                    ddc::ChunkSpan<
+                            double const,
+                            spline_domain_type,
+                            std::experimental::layout_right,
+                            memory_space>>,
+            "RightExtrapolationRule::operator() has to be callable with usual arguments.");
 
     explicit SplineEvaluator(
             spline_domain_type const& spline_domain,

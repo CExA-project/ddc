@@ -71,17 +71,26 @@ private:
 
 public:
     static_assert(
-            std::is_same_v<
-                    LeftExtrapolationRule,
-                    typename ddc::PeriodicExtrapolationRule<
-                            tag_type>> == bsplines_type::is_periodic(),
+            std::is_same_v<LeftExtrapolationRule,
+                            typename ddc::PeriodicExtrapolationRule<
+                                    tag_type>> == bsplines_type::is_periodic()
+                    && std::is_same_v<
+                               RightExtrapolationRule,
+                               typename ddc::PeriodicExtrapolationRule<
+                                       tag_type>> == bsplines_type::is_periodic(),
             "PeriodicExtrapolationRule has to be used if and only if dimension is periodic");
     static_assert(
-            std::is_same_v<
-                    RightExtrapolationRule,
-                    typename ddc::PeriodicExtrapolationRule<
-                            tag_type>> == bsplines_type::is_periodic(),
-            "PeriodicExtrapolationRule has to be used if and only if dimension is periodic");
+            std::is_invocable_r_v<
+                    double,
+                    LeftExtrapolationRule,
+                    ddc::Coordinate<tag_type>,
+                    ddc::ChunkSpan<
+                            double const,
+                            spline_domain_type,
+                            std::experimental::layout_right,
+                            memory_space>> && std::is_invocable_r_v<double, RightExtrapolationRule, ddc::Coordinate<tag_type>, ddc::ChunkSpan<double const, spline_domain_type, std::experimental::layout_right, memory_space>>,
+            "Extrapolation rules operator() have to be callable with usual arguments for them.");
+
 
     explicit SplineEvaluator(
             spline_domain_type const& spline_domain,

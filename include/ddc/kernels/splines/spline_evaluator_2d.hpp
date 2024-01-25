@@ -33,6 +33,9 @@ private:
     {
     };
 
+    using tag_type1 = typename BSplinesType1::tag_type;
+    using tag_type2 = typename BSplinesType2::tag_type;
+
 public:
     using exec_space = ExecSpace;
 
@@ -82,6 +85,24 @@ private:
     RightExtrapolationRule2 m_right2_bc;
 
 public:
+    static_assert(
+            std::is_same_v<LeftExtrapolationRule1,
+                            typename ddc::PeriodicExtrapolationRule<
+                                    tag_type1>> == bsplines_type1::is_periodic()
+                    && std::is_same_v<
+                               RightExtrapolationRule1,
+                               typename ddc::PeriodicExtrapolationRule<
+                                       tag_type1>> == bsplines_type1::is_periodic()
+                    && std::is_same_v<
+                               LeftExtrapolationRule2,
+                               typename ddc::PeriodicExtrapolationRule<
+                                       tag_type2>> == bsplines_type2::is_periodic()
+                    && std::is_same_v<
+                               RightExtrapolationRule2,
+                               typename ddc::PeriodicExtrapolationRule<
+                                       tag_type2>> == bsplines_type2::is_periodic(),
+            "PeriodicExtrapolationRule has to be used if and only if dimension is periodic");
+
     explicit SplineEvaluator2D(
             spline_domain_type const& spline_domain,
             LeftExtrapolationRule1 const& left_extrap_rule1,

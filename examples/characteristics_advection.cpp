@@ -218,14 +218,14 @@ int main(int argc, char** argv)
             Kokkos::DefaultExecutionSpace::memory_space,
             BSplinesX,
             DDimX,
-            ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
+            ddc::PeriodicExtrapolationRule<X>,
+            ddc::PeriodicExtrapolationRule<X>,
             DDimX,
             DDimY>
             spline_evaluator(
                     spline_builder.spline_domain(),
-                    ddc::NullExtrapolationRule(),
-                    ddc::NullExtrapolationRule());
+                    ddc::PeriodicExtrapolationRule<X>(),
+                    ddc::PeriodicExtrapolationRule<X>());
     //! [instantiate solver]
 
     //! [instantiate intermediate chunks]

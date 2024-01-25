@@ -531,17 +531,32 @@ static void Batched2dSplineTest()
             BSplines<I2>,
             IDim<I1, I1, I2>,
             IDim<I2, I1, I2>,
+#if defined(BC_PERIODIC)
+            ddc::PeriodicExtrapolationRule<I1>,
+            ddc::PeriodicExtrapolationRule<I1>,
+            ddc::PeriodicExtrapolationRule<I2>,
+            ddc::PeriodicExtrapolationRule<I2>,
+#else
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
+#endif
             IDim<X, I1, I2>...>
             spline_evaluator(
                     coef.domain(),
+#if defined(BC_PERIODIC)
+                    ddc::PeriodicExtrapolationRule<I1>(),
+                    ddc::PeriodicExtrapolationRule<I1>(),
+                    ddc::PeriodicExtrapolationRule<I2>(),
+                    ddc::PeriodicExtrapolationRule<I2>()
+#else
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule(),
-                    ddc::NullExtrapolationRule());
+                    ddc::NullExtrapolationRule()
+#endif
+            );
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());

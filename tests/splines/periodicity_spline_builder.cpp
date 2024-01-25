@@ -161,13 +161,13 @@ static void PeriodicitySplineBuilderTest()
             MemorySpace,
             BSplines<X>,
             IDim<X>,
-            ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
+            ddc::PeriodicExtrapolationRule<X>,
+            ddc::PeriodicExtrapolationRule<X>,
             IDim<X>>
             spline_evaluator(
                     coef.domain(),
-                    ddc::NullExtrapolationRule(),
-                    ddc::NullExtrapolationRule());
+                    ddc::PeriodicExtrapolationRule<X>(),
+                    ddc::PeriodicExtrapolationRule<X>());
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());

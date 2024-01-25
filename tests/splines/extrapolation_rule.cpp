@@ -270,32 +270,48 @@ static void ExtrapolationRuleSplineTest()
 #if defined(ER_NULL)
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
 #elif defined(ER_CONSTANT)
             ddc::ConstantExtrapolationRule<I1, I2>,
             ddc::ConstantExtrapolationRule<I1, I2>,
+#endif
+#if defined(BC_PERIODIC)
+            ddc::PeriodicExtrapolationRule<I2>,
+            ddc::PeriodicExtrapolationRule<I2>,
+#else
+#if defined(ER_NULL)
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
+#elif defined(ER_CONSTANT)
             ddc::ConstantExtrapolationRule<I2, I1>,
             ddc::ConstantExtrapolationRule<I2, I1>,
 #endif
+#endif
+
             IDim<X, I1, I2>...>
             spline_evaluator_batched(
                     coef.domain(),
 #if defined(ER_NULL)
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule(),
+#if defined(BC_PERIODIC)
+                    ddc::PeriodicExtrapolationRule<I2>(),
+                    ddc::PeriodicExtrapolationRule<I2>()
+#else
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule()
+#endif
 #elif defined(ER_CONSTANT)
 #if defined(BC_PERIODIC)
                     ddc::ConstantExtrapolationRule<I1, I2>(x0<I1>()),
                     ddc::ConstantExtrapolationRule<I1, I2>(xN<I1>()),
+                    ddc::PeriodicExtrapolationRule<I2>(),
+                    ddc::PeriodicExtrapolationRule<I2>()
 #else
                     ddc::ConstantExtrapolationRule<I1, I2>(x0<I1>(), x0<I2>(), xN<I2>()),
                     ddc::ConstantExtrapolationRule<I1, I2>(xN<I1>(), x0<I2>(), xN<I2>()),
-#endif
                     ddc::ConstantExtrapolationRule<I2, I1>(x0<I2>(), x0<I1>(), xN<I1>()),
                     ddc::ConstantExtrapolationRule<I2, I1>(xN<I2>(), x0<I1>(), xN<I1>())
+#endif
 #endif
             );
 

@@ -65,18 +65,30 @@ public:
 private:
     const spline_domain_type m_spline_domain;
 
-    LeftExtrapolationRule m_left_bc;
+    LeftExtrapolationRule m_left_extrap_rule;
 
     RightExtrapolationRule m_right_bc;
 
 public:
+    static_assert(
+            std::is_same_v<
+                    LeftExtrapolationRule,
+                    typename ddc::PeriodicExtrapolationRule<
+                            tag_type>> == bsplines_type::is_periodic(),
+            "PeriodicExtrapolationRule has to be used if and only if dimension is periodic");
+    static_assert(
+            std::is_same_v<
+                    RightExtrapolationRule,
+                    typename ddc::PeriodicExtrapolationRule<
+                            tag_type>> == bsplines_type::is_periodic(),
+            "PeriodicExtrapolationRule has to be used if and only if dimension is periodic");
+
     explicit SplineEvaluator(
             spline_domain_type const& spline_domain,
             LeftExtrapolationRule const& left_extrap_rule,
             RightExtrapolationRule const& right_extrap_rule)
-
         : m_spline_domain(spline_domain)
-        , m_left_bc(left_extrap_rule)
+        , m_left_extrap_rule(left_extrap_rule)
         , m_right_bc(right_extrap_rule)
     {
     }
@@ -225,7 +237,7 @@ private:
             }
         } else {
             if (coord_eval_interpolation < ddc::discrete_space<bsplines_type>().rmin()) {
-                return m_left_bc(coord_eval_interpolation, spline_coef);
+                return m_left_extrap_rule(coord_eval_interpolation, spline_coef);
             }
             if (coord_eval_interpolation > ddc::discrete_space<bsplines_type>().rmax()) {
                 return m_right_bc(coord_eval_interpolation, spline_coef);

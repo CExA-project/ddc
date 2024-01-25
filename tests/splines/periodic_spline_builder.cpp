@@ -99,13 +99,13 @@ TEST(PeriodicSplineBuilderTest, Identity)
             Kokkos::HostSpace,
             BSplinesX,
             IDimX,
-            ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
+            ddc::PeriodicExtrapolationRule<DimX>,
+            ddc::PeriodicExtrapolationRule<DimX>,
             IDimX>
             spline_evaluator(
                     coef.domain(),
-                    ddc::NullExtrapolationRule(),
-                    ddc::NullExtrapolationRule());
+                    ddc::PeriodicExtrapolationRule<DimX>(),
+                    ddc::PeriodicExtrapolationRule<DimX>());
 
     ddc::Chunk<CoordX, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);
     for (IndexX const ix : interpolation_domain) {

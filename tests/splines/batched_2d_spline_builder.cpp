@@ -88,7 +88,7 @@ using BSplines = ddc::UniformBSplines<X, s_degree>;
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <typename X, typename I1, typename I2>
 using IDim = std::conditional_t<
-        std::disjunction_v<std::is_same<X, I1>, std::is_same<X, I2>>,
+        std::is_same_v<X, I1> || std::is_same_v<X, I2>,
         typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
         ddc::UniformPointSampling<X>>;
 
@@ -98,7 +98,7 @@ using BSplines = ddc::NonUniformBSplines<X, s_degree>;
 
 template <typename X, typename I1, typename I2>
 using IDim = std::conditional_t<
-        std::disjunction_v<std::is_same<X, I1>, std::is_same<X, I2>>,
+        std::is_same_v<X, I1> || std::is_same_v<X, I2>,
         typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
         ddc::NonUniformPointSampling<X>>;
 #endif

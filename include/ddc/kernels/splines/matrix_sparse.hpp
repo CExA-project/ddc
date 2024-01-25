@@ -148,7 +148,7 @@ public:
         matrix_data.remove_zeros();
         m_matrix_sparse->read(matrix_data);
         std::shared_ptr const gko_exec = m_matrix_sparse->get_executor();
-        m_matrix_sparse_tr->move_from(m_matrix_sparse->clone()->transpose());
+        m_matrix_sparse_tr->move_from(m_matrix_sparse->transpose());
 
         // Create the solver factory
         std::shared_ptr const residual_criterion

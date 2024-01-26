@@ -192,8 +192,7 @@ static void BatchedSplineTest()
     // Create the values domain (mesh)
     ddc::DiscreteDomain<IDim<I, I>> interpolation_domain
             = GrevillePoints<BSplines<I>>::get_domain();
-    ddc::DiscreteDomain<IDim<X, void>...> const dom_vals_tmp = ddc::DiscreteDomain<
-            IDim<X, void>...>(
+    auto const dom_vals_tmp = ddc::DiscreteDomain<IDim<X, void>...>(
             ddc::DiscreteDomain<
                     IDim<X, void>>(Index<IDim<X, void>>(0), DVect<IDim<X, void>>(ncells))...);
     ddc::DiscreteDomain<IDim<X, I>...> const dom_vals

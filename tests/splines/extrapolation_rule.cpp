@@ -199,8 +199,7 @@ static void ExtrapolationRuleSplineTest()
     auto interpolation_domain = ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(
             GrevillePoints<BSplines<I1>>::get_domain(),
             GrevillePoints<BSplines<I2>>::get_domain());
-    ddc::DiscreteDomain<IDim<X, void, void>...> const dom_vals_tmp = ddc::DiscreteDomain<
-            IDim<X, void, void>...>(
+    auto const dom_vals_tmp = ddc::DiscreteDomain<IDim<X, void, void>...>(
             ddc::DiscreteDomain<IDim<
                     X,
                     void,

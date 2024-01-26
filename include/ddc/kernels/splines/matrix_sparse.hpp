@@ -100,7 +100,6 @@ private:
     std::unique_ptr<gko::matrix::Dense<double>> m_matrix_dense;
 
     std::shared_ptr<matrix_sparse_type> m_matrix_sparse;
-    std::shared_ptr<matrix_sparse_type> m_matrix_sparse_tr;
 
     std::shared_ptr<gko::solver::Bicgstab<double>> m_solver;
     std::shared_ptr<gko::solver::Bicgstab<double>> m_solver_tr;
@@ -125,7 +124,6 @@ public:
                 double>::create(gko_exec->get_master(), gko::dim<2>(mat_size, mat_size));
         m_matrix_dense->fill(0);
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
-        m_matrix_sparse_tr = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
     }
 
     virtual double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
@@ -148,7 +146,6 @@ public:
         matrix_data.remove_zeros();
         m_matrix_sparse->read(matrix_data);
         std::shared_ptr const gko_exec = m_matrix_sparse->get_executor();
-        m_matrix_sparse_tr->move_from(m_matrix_sparse->transpose());
 
         // Create the solver factory
         std::shared_ptr const residual_criterion
@@ -170,7 +167,7 @@ public:
                           .on(gko_exec);
 
         m_solver = solver_factory->generate(m_matrix_sparse);
-        m_solver_tr = solver_factory->generate(m_matrix_sparse_tr);
+        m_solver_tr = solver_factory->generate(m_matrix_sparse->transpose());
         gko_exec->synchronize();
 
         return 0;

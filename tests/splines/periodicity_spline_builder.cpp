@@ -111,8 +111,8 @@ template <typename ExecSpace, typename MemorySpace, typename X>
 static void PeriodicitySplineBuilderTest()
 {
     // Instantiate execution spaces and initialize spaces
-    Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
-    ExecSpace exec_space = ExecSpace();
+    Kokkos::DefaultHostExecutionSpace const host_exec_space;
+    ExecSpace const exec_space;
 
     std::size_t constexpr ncells = 10;
     DimsInitializer<IDim<X>> dims_initializer;
@@ -156,10 +156,18 @@ static void PeriodicitySplineBuilderTest()
     spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::SplineEvaluator<ExecSpace, MemorySpace, BSplines<X>, IDim<X>, IDim<X>> spline_evaluator(
-            coef.domain(),
-            ddc::g_null_boundary<BSplines<X>>,
-            ddc::g_null_boundary<BSplines<X>>);
+    ddc::SplineEvaluator<
+            ExecSpace,
+            MemorySpace,
+            BSplines<X>,
+            IDim<X>,
+            ddc::PeriodicExtrapolationRule<X>,
+            ddc::PeriodicExtrapolationRule<X>,
+            IDim<X>>
+            spline_evaluator(
+                    coef.domain(),
+                    ddc::PeriodicExtrapolationRule<X>(),
+                    ddc::PeriodicExtrapolationRule<X>());
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());

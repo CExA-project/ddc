@@ -88,7 +88,7 @@ using BSplines = ddc::UniformBSplines<X, s_degree>;
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <typename X, typename I1, typename I2>
 using IDim = std::conditional_t<
-        std::disjunction_v<std::is_same<X, I1>, std::is_same<X, I2>>,
+        std::is_same_v<X, I1> || std::is_same_v<X, I2>,
         typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
         ddc::UniformPointSampling<X>>;
 
@@ -98,7 +98,7 @@ using BSplines = ddc::NonUniformBSplines<X, s_degree>;
 
 template <typename X, typename I1, typename I2>
 using IDim = std::conditional_t<
-        std::disjunction_v<std::is_same<X, I1>, std::is_same<X, I2>>,
+        std::is_same_v<X, I1> || std::is_same_v<X, I2>,
         typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
         ddc::NonUniformPointSampling<X>>;
 #endif
@@ -148,7 +148,7 @@ static constexpr double dx(std::size_t ncells)
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
 template <typename X>
-static constexpr std::vector<Coord<X>> breaks(std::size_t ncells)
+static std::vector<Coord<X>> breaks(std::size_t ncells)
 {
     std::vector<Coord<X>> out(ncells + 1);
     for (int i(0); i < ncells + 1; ++i) {
@@ -203,8 +203,8 @@ template <typename ExecSpace, typename MemorySpace, typename I1, typename I2, ty
 static void Batched2dSplineTest()
 {
     // Instantiate execution spaces and initialize spaces
-    Kokkos::DefaultHostExecutionSpace host_exec_space = Kokkos::DefaultHostExecutionSpace();
-    ExecSpace exec_space = ExecSpace();
+    Kokkos::DefaultHostExecutionSpace const host_exec_space;
+    ExecSpace const exec_space;
     std::size_t constexpr ncells = 10;
     DimsInitializer<
             IDim<I1, I1, I2>,
@@ -223,8 +223,7 @@ static void Batched2dSplineTest()
     auto interpolation_domain = ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(
             GrevillePoints<BSplines<I1>>::get_domain(),
             GrevillePoints<BSplines<I2>>::get_domain());
-    ddc::DiscreteDomain<IDim<X, void, void>...> const dom_vals_tmp = ddc::DiscreteDomain<
-            IDim<X, void, void>...>(
+    auto const dom_vals_tmp = ddc::DiscreteDomain<IDim<X, void, void>...>(
             ddc::DiscreteDomain<IDim<
                     X,
                     void,
@@ -531,13 +530,32 @@ static void Batched2dSplineTest()
             BSplines<I2>,
             IDim<I1, I1, I2>,
             IDim<I2, I1, I2>,
+#if defined(BC_PERIODIC)
+            ddc::PeriodicExtrapolationRule<I1>,
+            ddc::PeriodicExtrapolationRule<I1>,
+            ddc::PeriodicExtrapolationRule<I2>,
+            ddc::PeriodicExtrapolationRule<I2>,
+#else
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
+            ddc::NullExtrapolationRule,
+#endif
             IDim<X, I1, I2>...>
             spline_evaluator(
                     coef.domain(),
-                    ddc::g_null_boundary<BSplines<I1>>,
-                    ddc::g_null_boundary<BSplines<I1>>,
-                    ddc::g_null_boundary<BSplines<I2>>,
-                    ddc::g_null_boundary<BSplines<I2>>);
+#if defined(BC_PERIODIC)
+                    ddc::PeriodicExtrapolationRule<I1>(),
+                    ddc::PeriodicExtrapolationRule<I1>(),
+                    ddc::PeriodicExtrapolationRule<I2>(),
+                    ddc::PeriodicExtrapolationRule<I2>()
+#else
+                    ddc::NullExtrapolationRule(),
+                    ddc::NullExtrapolationRule(),
+                    ddc::NullExtrapolationRule(),
+                    ddc::NullExtrapolationRule()
+#endif
+            );
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());

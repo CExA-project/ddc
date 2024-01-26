@@ -58,15 +58,12 @@ public:
     {
     }
 
+    template <class DimNI_sfinae = DimNI, std::enable_if_t<DimNI_sfinae::PERIODIC, int> = 0>
     explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos)
         : m_eval_pos(eval_pos)
         , m_eval_pos_not_interest_min(0.)
         , m_eval_pos_not_interest_max(0.)
     {
-        static_assert(
-                DimNI::PERIODIC,
-                "Single-argument constructor of ConstantExtrapolationRule is available only for "
-                "periodic non-interest dimension");
     }
 
     template <class CoordType, class BSplines1, class BSplines2, class Layout, class MemorySpace>

@@ -102,7 +102,7 @@ private:
     std::shared_ptr<matrix_sparse_type> m_matrix_sparse;
 
     std::shared_ptr<gko::solver::Bicgstab<double>> m_solver;
-    std::shared_ptr<gko::solver::Bicgstab<double>> m_solver_tr;
+    std::shared_ptr<gko::LinOp> m_solver_tr;
 
     int m_cols_per_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
 
@@ -167,7 +167,7 @@ public:
                           .on(gko_exec);
 
         m_solver = solver_factory->generate(m_matrix_sparse);
-        m_solver_tr = solver_factory->generate(m_matrix_sparse->transpose());
+        m_solver_tr = m_solver->transpose();
         gko_exec->synchronize();
 
         return 0;

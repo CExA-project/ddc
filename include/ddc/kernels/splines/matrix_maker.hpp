@@ -3,6 +3,11 @@
 #include <memory>
 #include <optional>
 
+#include "matrix_banded.hpp"
+#include "matrix_center_block.hpp"
+#include "matrix_corner_block.hpp"
+#include "matrix_dense.hpp"
+#include "matrix_periodic_banded.hpp"
 #include "matrix_sparse.hpp"
 
 namespace ddc::detail {

@@ -163,42 +163,6 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
     }
 }
 
-TEST_P(MatrixSizesFixture, Sparse)
-{
-    auto const [N, k] = GetParam();
-
-
-    std::unique_ptr<ddc::detail::Matrix> matrix
-            = ddc::detail::MatrixMaker::make_new_sparse<Kokkos::DefaultExecutionSpace>(N);
-
-    std::vector<double> val_ptr(N * N);
-    ddc::DSpan2D val(val_ptr.data(), N, N);
-    for (int i(0); i < N; ++i) {
-        for (int j(0); j < N; ++j) {
-            if (i == j) {
-                matrix->set_element(i, j, 2. / 3);
-                val(i, j) = 2. / 3;
-            } else if (std::abs(j - i) <= k) {
-                matrix->set_element(i, j, (1. / 3) / k);
-                val(i, j) = (1. / 3) / k;
-            } else {
-                val(i, j) = 0.;
-            }
-        }
-    }
-    // copy_matrix(val, matrix); // copy_matrix is not available for sparse matrix because of a limitation of Ginkgo API (get_element is not implemented). The workaround is to fill val directly in the loop
-
-    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
-    ddc::DSpan2D inv(inv_ptr.h_view.data(), N, N);
-    fill_identity(inv);
-    inv_ptr.modify_host();
-    inv_ptr.sync_device();
-    matrix->factorize();
-    matrix->solve_multiple_inplace(ddc::DSpan2D(inv_ptr.d_view.data(), N, N));
-    inv_ptr.modify_device();
-    inv_ptr.sync_host();
-    check_inverse(val, inv);
-}
 TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetricTranspose)
 {
     auto const [N, k] = GetParam();

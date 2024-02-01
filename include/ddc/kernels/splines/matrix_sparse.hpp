@@ -128,7 +128,7 @@ public:
     void reset() const override
     {
         m_matrix_dense->fill(0);
-        m_matrix_sparse.reset();
+        m_matrix_sparse->clear();
     }
 
     virtual double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override

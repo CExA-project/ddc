@@ -19,7 +19,7 @@ public:
     template <typename ExecSpace>
     static std::unique_ptr<Matrix> make_new_dense(int const n)
     {
-        return std::make_unique<typename Matrix_Dense<ExecSpace>>(n);
+        return std::make_unique<Matrix_Dense<ExecSpace>>(n);
     }
 
     template <typename ExecSpace>
@@ -32,7 +32,7 @@ public:
         if (kl == ku && kl == 1 && pds) {
             return std::make_unique<Matrix_PDS_Tridiag>(n);
         } else if (2 * kl + 1 + ku >= n) {
-            return std::make_unique<typename Matrix_Dense<ExecSpace>>(n);
+            return std::make_unique<Matrix_Dense<ExecSpace>>(n);
         } else {
             return std::make_unique<Matrix_Banded>(n, kl, ku);
         }
@@ -53,7 +53,7 @@ public:
         } else if (
                 border_size * n + border_size * (border_size + 1) + (2 * kl + 1 + ku) * banded_size
                 >= n * n) {
-            return std::make_unique<typename Matrix_Dense<ExecSpace>>(n);
+            return std::make_unique<Matrix_Dense<ExecSpace>>(n);
         } else {
             block_mat = std::make_unique<Matrix_Banded>(banded_size, kl, ku);
         }
@@ -74,7 +74,7 @@ public:
         if (pds && kl == ku && kl == 1) {
             block_mat = std::make_unique<Matrix_PDS_Tridiag>(banded_size);
         } else if (2 * kl + 1 + ku >= banded_size) {
-            return std::make_unique<typename Matrix_Dense<ExecSpace>>(n);
+            return std::make_unique<Matrix_Dense<ExecSpace>>(n);
         } else {
             block_mat = std::make_unique<Matrix_Banded>(banded_size, kl, ku);
         }

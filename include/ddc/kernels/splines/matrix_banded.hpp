@@ -47,7 +47,7 @@ public:
         , m_ku(ku)
         , m_c(2 * kl + ku + 1)
         , m_ipiv("ipiv", mat_size)
-        , m_q("q", m_c*mat_size)
+        , m_q("q", m_c * mat_size)
     {
         assert(mat_size > 0);
         assert(m_kl >= 0);
@@ -66,7 +66,7 @@ public:
      */
     }
 
-	void reset() const override
+    void reset() const override
     {
         Kokkos::parallel_for(
                 "fill_q",
@@ -77,20 +77,21 @@ public:
     double get_element(int const i, int const j) const override
     {
         if (i >= std::max(0, j - m_ku) && i < std::min(get_size(), j + m_kl + 1)) {
-		  KOKKOS_IF_ON_HOST(
-                if constexpr (Kokkos::SpaceAccessibility<
-                                      Kokkos::DefaultHostExecutionSpace,
-                                      typename ExecSpace::memory_space>::accessible) {
-                    return m_q(j * m_c + m_kl + m_ku + i - j);
-                } else {
-					// Inefficient, usage is strongly discouraged
-                    double aij;
-                    Kokkos::deep_copy(
-                            &aij,
-                            Kokkos::View<double*, typename ExecSpace::memory_space>(&m_q(j * m_c + m_kl + m_ku + i - j)));
-                    return aij;
-                })
-        KOKKOS_IF_ON_DEVICE(return m_q(j * m_c + m_kl + m_ku + i - j);)
+            KOKKOS_IF_ON_HOST(
+                    if constexpr (Kokkos::SpaceAccessibility<
+                                          Kokkos::DefaultHostExecutionSpace,
+                                          typename ExecSpace::memory_space>::accessible) {
+                        return m_q(j * m_c + m_kl + m_ku + i - j);
+                    } else {
+                        // Inefficient, usage is strongly discouraged
+                        double aij;
+                        Kokkos::deep_copy(
+                                &aij,
+                                Kokkos::View<double*, typename ExecSpace::memory_space>(
+                                        &m_q(j * m_c + m_kl + m_ku + i - j)));
+                        return aij;
+                    })
+            KOKKOS_IF_ON_DEVICE(return m_q(j * m_c + m_kl + m_ku + i - j);)
 
         } else {
             return 0.0;
@@ -100,18 +101,19 @@ public:
     void set_element(int const i, int const j, double const aij) override
     {
         if (i >= std::max(0, j - m_ku) && i < std::min(get_size(), j + m_kl + 1)) {
-			KOKKOS_IF_ON_HOST(
-                if constexpr (Kokkos::SpaceAccessibility<
-                                      Kokkos::DefaultHostExecutionSpace,
-                                      typename ExecSpace::memory_space>::accessible) {
-                    m_q(j * m_c + m_kl + m_ku + i - j) = aij;
-                } else {
-					// Inefficient, usage is strongly discouraged
-                    Kokkos::deep_copy(
-                            Kokkos::View<double*, typename ExecSpace::memory_space>(&m_q(j * m_c + m_kl + m_ku + i - j)),
-                            &aij);
-                })
-        KOKKOS_IF_ON_DEVICE(m_q(j * m_c + m_kl + m_ku + i - j) = aij;)
+            KOKKOS_IF_ON_HOST(
+                    if constexpr (Kokkos::SpaceAccessibility<
+                                          Kokkos::DefaultHostExecutionSpace,
+                                          typename ExecSpace::memory_space>::accessible) {
+                        m_q(j * m_c + m_kl + m_ku + i - j) = aij;
+                    } else {
+                        // Inefficient, usage is strongly discouraged
+                        Kokkos::deep_copy(
+                                Kokkos::View<double*, typename ExecSpace::memory_space>(
+                                        &m_q(j * m_c + m_kl + m_ku + i - j)),
+                                &aij);
+                    })
+            KOKKOS_IF_ON_DEVICE(m_q(j * m_c + m_kl + m_ku + i - j) = aij;)
 
         } else {
             assert(std::fabs(aij) < 1e-20);
@@ -121,24 +123,35 @@ public:
 protected:
     int factorize_method() override
     {
-		auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
+        auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
         auto ipiv_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         int info;
         int const n = get_size();
         dgbtrf_(&n, &n, &m_kl, &m_ku, q_host.data(), &m_c, ipiv_host.data(), &info);
-		Kokkos::deep_copy(m_q, q_host);
+        Kokkos::deep_copy(m_q, q_host);
         Kokkos::deep_copy(m_ipiv, ipiv_host);
         return info;
     }
     int solve_inplace_method(double* b, char const transpose, int const n_equations) const override
     {
-		auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
+        auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
         auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
-        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> b_view(b, get_size(), n_equations);
+        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                b_view(b, get_size(), n_equations);
         auto b_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), b_view);
         int info;
         int const n = get_size();
-        dgbtrs_(&transpose, &n, &m_kl, &m_ku, &n_equations, q_host.data(), &m_c, ipiv_host.data(), b_host.data(), &n, &info);
+        dgbtrs_(&transpose,
+                &n,
+                &m_kl,
+                &m_ku,
+                &n_equations,
+                q_host.data(),
+                &m_c,
+                ipiv_host.data(),
+                b_host.data(),
+                &n,
+                &info);
         Kokkos::deep_copy(b_view, b_host);
         return info;
     }

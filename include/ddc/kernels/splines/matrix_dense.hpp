@@ -52,7 +52,7 @@ public:
                                       typename ExecSpace::memory_space>::accessible) {
                     return m_a(i, j);
                 } else {
-					// Inefficient, usage is strongly discouraged
+                    // Inefficient, usage is strongly discouraged
                     double aij;
                     Kokkos::deep_copy(
                             &aij,
@@ -70,7 +70,7 @@ public:
                                       typename ExecSpace::memory_space>::accessible) {
                     m_a(i, j) = aij;
                 } else {
-					// Inefficient, usage is strongly discouraged
+                    // Inefficient, usage is strongly discouraged
                     Kokkos::deep_copy(
                             Kokkos::View<double*, typename ExecSpace::memory_space>(&m_a(i, j)),
                             &aij);

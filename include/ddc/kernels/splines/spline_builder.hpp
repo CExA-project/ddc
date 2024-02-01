@@ -30,7 +30,7 @@ template <
         class InterpolationMesh,
         ddc::BoundCond BcXmin,
         ddc::BoundCond BcXmax,
-        SplineSolver Solver = ddc::SplineSolver::GINKGO,
+        SplineSolver Solver,
         class... IDimX>
 class SplineBuilder
 {
@@ -616,7 +616,7 @@ operator()(
             ddc::policies::policy(exec_space()),
             batch_domain(),
             KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                for (int i = 0; i < nbasis_proxy; i++) {
+                for (std::size_t i = 0; i < nbasis_proxy; i++) {
                     spline_tr(ddc::DiscreteElement<bsplines_type>(i), j)
                             = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
                 }
@@ -633,7 +633,7 @@ operator()(
             ddc::policies::policy(exec_space()),
             batch_domain(),
             KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                for (int i = 0; i < nbasis_proxy; i++) {
+                for (std::size_t i = 0; i < nbasis_proxy; i++) {
                     spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j)
                             = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
                 }

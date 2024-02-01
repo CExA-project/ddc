@@ -35,6 +35,8 @@ public:
         memset(d.get(), 0, n * sizeof(double));
         memset(l.get(), 0, (n - 1) * sizeof(double));
     }
+    void reset() const override {}
+
     double get_element(int i, int j) const override
     {
         if (i == j) {

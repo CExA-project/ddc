@@ -34,6 +34,8 @@ public:
         memset(lambda_ptr.get(), 0, sizeof(double) * k * nb);
         memset(Abm_1_gamma_ptr.get(), 0, sizeof(double) * k * nb);
     }
+    void reset() const override {}
+
     virtual double get_element(int const i, int const j) const override
     {
         assert(i >= 0);

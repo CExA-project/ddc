@@ -61,6 +61,8 @@ public:
         }
     }
 
+    void reset() const override {}
+
     double get_element(int const i, int const j) const override
     {
         if (i >= std::max(0, j - ku) && i < std::min(get_size(), j + kl + 1)) {

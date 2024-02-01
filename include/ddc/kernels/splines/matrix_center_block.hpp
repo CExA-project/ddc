@@ -26,6 +26,10 @@ public:
         , swap_array(std::make_unique<double[]>(q_block->get_size()))
     {
     }
+
+    void reset() const override {}
+
+
     double get_element(int i, int j) const override
     {
         adjust_indexes(i, j);

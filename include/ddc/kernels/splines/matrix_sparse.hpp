@@ -122,8 +122,13 @@ public:
         std::shared_ptr const gko_exec = create_gko_exec<ExecSpace>();
         m_matrix_dense = gko::matrix::Dense<
                 double>::create(gko_exec->get_master(), gko::dim<2>(mat_size, mat_size));
-        m_matrix_dense->fill(0);
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
+    }
+
+    void reset() const override
+    {
+        m_matrix_dense->fill(0);
+        m_matrix_sparse.reset();
     }
 
     virtual double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override

@@ -16,12 +16,10 @@ namespace ddc::detail {
 class MatrixMaker
 {
 public:
-	template <typename ExecSpace>
-    static std::unique_ptr<Matrix> make_new_dense(
-            int const n)
+    template <typename ExecSpace>
+    static std::unique_ptr<Matrix> make_new_dense(int const n)
     {
-        return std::make_unique<typename 
-                Matrix_Dense<ExecSpace>>(n);
+        return std::make_unique<typename Matrix_Dense<ExecSpace>>(n);
     }
 
     template <typename ExecSpace>
@@ -87,8 +85,8 @@ public:
                     Matrix_Center_Block>(n, block1_size, block2_size, std::move(block_mat));
         }
     }
-  
-	template <typename ExecSpace>
+
+    template <typename ExecSpace>
     static std::unique_ptr<Matrix> make_new_sparse(
             int const n,
             std::optional<int> cols_per_chunk = std::nullopt,

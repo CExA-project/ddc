@@ -133,7 +133,7 @@ template <typename X>
 static std::vector<Coord<X>> breaks(std::size_t ncells)
 {
     std::vector<Coord<X>> out(ncells + 1);
-    for (int i(0); i < ncells + 1; ++i) {
+    for (std::size_t i(0); i < ncells + 1; ++i) {
         out[i] = x0<X>() + i * dx<X>(ncells);
     }
     return out;
@@ -223,6 +223,7 @@ static void ExtrapolationRuleSplineTest()
             s_bcr1,
             s_bcl2,
             s_bcr2,
+            ddc::SplineSolver::GINKGO,
             IDim<X, I1, I2>...>
             spline_builder(dom_vals);
 

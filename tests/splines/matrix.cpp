@@ -271,12 +271,12 @@ TEST_P(MatrixSizesFixture, Sparse)
 
     std::vector<double> val_ptr(N * N);
     ddc::DSpan2D val(val_ptr.data(), N, N);
-    for (int i(0); i < N; ++i) {
-        for (int j(0); j < N; ++j) {
+    for (std::size_t i(0); i < N; ++i) {
+        for (std::size_t j(0); j < N; ++j) {
             if (i == j) {
                 matrix->set_element(i, j, 3. / 4);
                 val(i, j) = 3. / 4;
-            } else if (std::abs(j - i) <= k) {
+            } else if (std::abs((std::ptrdiff_t)(j - i)) <= (std::ptrdiff_t)k) {
                 matrix->set_element(i, j, -(1. / 4) / k);
                 val(i, j) = -(1. / 4) / k;
             } else {

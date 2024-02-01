@@ -71,7 +71,7 @@ public:
                     m_a(i, j) = aij;
                 } else {
                     // Inefficient, usage is strongly discouraged
-                    Kokkos::deep_copy( 
+                    Kokkos::deep_copy(
                             Kokkos::View<double*, typename ExecSpace::memory_space>(&m_a(i, j)),
                             Kokkos::View<const double*, Kokkos::HostSpace>(&aij));
                 })

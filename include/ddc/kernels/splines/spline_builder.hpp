@@ -8,7 +8,8 @@
 
 namespace ddc {
 enum class SplineSolver {
-    GINKGO
+    GINKGO,
+    LAPACK
 }; // Only GINKGO available atm, other solvers will be implemented in the futur
 
 constexpr bool is_spline_interpolation_mesh_uniform(
@@ -404,10 +405,34 @@ void SplineBuilder<
         return;
 	*/
 
-    matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
-            ddc::discrete_space<BSplines>().nbasis(),
-            cols_per_chunk,
-            preconditionner_max_block_size);
+    if constexpr (Solver == SplineSolver::LAPACK) {
+        int upper_band_width;
+        if (bsplines_type::is_uniform()) {
+            upper_band_width = bsplines_type::degree() / 2;
+        } else {
+            upper_band_width = bsplines_type::degree() - 1;
+        }
+        if constexpr (bsplines_type::is_periodic()) {
+            matrix = ddc::detail::MatrixMaker::make_new_periodic_banded<ExecSpace>(
+                    ddc::discrete_space<BSplines>().nbasis(),
+                    upper_band_width,
+                    upper_band_width,
+                    bsplines_type::is_uniform());
+        } else {
+            matrix = ddc::detail::MatrixMaker::make_new_block_with_banded_region<ExecSpace>(
+                    ddc::discrete_space<BSplines>().nbasis(),
+                    upper_band_width,
+                    upper_band_width,
+                    bsplines_type::is_uniform(),
+                    upper_block_size,
+                    lower_block_size);
+        }
+    } else if (Solver == SplineSolver::GINKGO) {
+        matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
+                ddc::discrete_space<BSplines>().nbasis(),
+                cols_per_chunk,
+                preconditionner_max_block_size);
+    }
     matrix->reset();
 
     build_matrix_system();

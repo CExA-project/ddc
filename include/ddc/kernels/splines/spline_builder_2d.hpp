@@ -15,7 +15,7 @@ template <
         ddc::BoundCond BcXmax1,
         ddc::BoundCond BcXmin2,
         ddc::BoundCond BcXmax2,
-		ddc::SplineSolver Solver,
+        ddc::SplineSolver Solver,
         class... IDimX>
 class SplineBuilder2D
 {
@@ -40,7 +40,7 @@ public:
             IDimI2,
             BcXmin2,
             BcXmax2,
-			Solver,
+            Solver,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
     using builder_deriv_type1 = ddc::SplineBuilder<
             ExecSpace,
@@ -49,7 +49,7 @@ public:
             IDimI1,
             BcXmin1,
             BcXmax1,
-			Solver,
+            Solver,
             std::conditional_t<
                     std::is_same_v<IDimX, IDimI2>,
                     typename builder_type2::deriv_type,
@@ -216,7 +216,7 @@ template <
         ddc::BoundCond BcXmax1,
         ddc::BoundCond BcXmin2,
         ddc::BoundCond BcXmax2,
-		ddc::SplineSolver Solver,
+        ddc::SplineSolver Solver,
         class... IDimX>
 template <class Layout>
 void SplineBuilder2D<
@@ -230,7 +230,7 @@ void SplineBuilder2D<
         BcXmax1,
         BcXmin2,
         BcXmax2,
-		Solver,
+        Solver,
         IDimX...>::
 operator()(
         ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,

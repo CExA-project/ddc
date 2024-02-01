@@ -223,7 +223,7 @@ static void ExtrapolationRuleSplineTest()
             s_bcr1,
             s_bcl2,
             s_bcr2,
-			ddc::SplineSolver::GINKGO,
+            ddc::SplineSolver::GINKGO,
             IDim<X, I1, I2>...>
             spline_builder(dom_vals);
 

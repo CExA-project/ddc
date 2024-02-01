@@ -31,7 +31,6 @@ public:
         , ku(ku)
     {
     }
-    void reset() const override {}
 
     double get_element(int const i, int j) const override
     {

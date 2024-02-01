@@ -34,7 +34,11 @@ public:
         memset(lambda_ptr.get(), 0, sizeof(double) * k * nb);
         memset(Abm_1_gamma_ptr.get(), 0, sizeof(double) * k * nb);
     }
-    void reset() const override {}
+    virtual void reset() const override
+    {
+        q_block->reset();
+        // TODO reset lambda and abm
+    }
 
     virtual double get_element(int const i, int const j) const override
     {

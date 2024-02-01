@@ -75,7 +75,7 @@ public:
         std::unique_ptr<Matrix> block_mat;
         if (pds && kl == ku && kl == 1) {
             //block_mat = std::make_unique<Matrix_PDS_Tridiag>(banded_size);
-            block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size,1,1);
+            block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, 1, 1);
         } else if (2 * kl + 1 + ku >= banded_size) {
             return std::make_unique<Matrix_Dense<ExecSpace>>(n);
         } else {

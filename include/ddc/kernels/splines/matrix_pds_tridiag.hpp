@@ -32,10 +32,12 @@ public:
         , d(std::make_unique<double[]>(n))
         , l(std::make_unique<double[]>(n - 1))
     {
-        memset(d.get(), 0, n * sizeof(double));
-        memset(l.get(), 0, (n - 1) * sizeof(double));
     }
-    void reset() const override {}
+    void reset() const override
+    {
+        memset(d.get(), 0, get_size() * sizeof(double));
+        memset(l.get(), 0, (get_size() - 1) * sizeof(double));
+    }
 
     double get_element(int i, int j) const override
     {

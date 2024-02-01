@@ -27,9 +27,6 @@ public:
     {
     }
 
-    void reset() const override {}
-
-
     double get_element(int i, int j) const override
     {
         adjust_indexes(i, j);

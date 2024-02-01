@@ -31,7 +31,6 @@ public:
         , m_a("a", mat_size, mat_size)
         , m_ipiv("ipiv", mat_size)
     {
-        std::cout << "DENSE";
         assert(mat_size > 0);
     }
 
@@ -43,35 +42,37 @@ public:
                 KOKKOS_CLASS_LAMBDA(const int i, const int j) { m_a(i, j) = 0; });
     }
 
-    double KOKKOS_FUNCTION get_element(int const i, int const j) const override
+    double get_element(int const i, int const j) const override
     {
         assert(i < get_size());
         assert(j < get_size());
-        // std::cout << create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), Kokkos::subview(m_a, i, j))();
         KOKKOS_IF_ON_HOST(
-                if (Kokkos::SpaceAccessibility<
-                            Kokkos::DefaultHostExecutionSpace,
-                            typename ExecSpace::memory_space>::accessible) {
+                if constexpr (Kokkos::SpaceAccessibility<
+                                      Kokkos::DefaultHostExecutionSpace,
+                                      typename ExecSpace::memory_space>::accessible) {
                     return m_a(i, j);
                 } else {
-					#pragma warning "this is deprecated"
-                    // Kokkos::deep_copy(m_a(i,j), aij);
-                    // TODO
-                    return 0.;
+                    double aij;
+                    Kokkos::deep_copy(
+                            &aij,
+                            Kokkos::View<double*, typename ExecSpace::memory_space>(&m_a(i, j)));
+                    return aij;
                 })
         KOKKOS_IF_ON_DEVICE(return m_a(i, j);)
     }
 
-    void KOKKOS_FUNCTION set_element(int const i, int const j, double const aij) override
+    void set_element(int const i, int const j, double const aij) override
     {
-        KOKKOS_IF_ON_HOST(if (Kokkos::SpaceAccessibility<
+        KOKKOS_IF_ON_HOST(
+                if constexpr (Kokkos::SpaceAccessibility<
                                       Kokkos::DefaultHostExecutionSpace,
                                       typename ExecSpace::memory_space>::accessible) {
-            m_a(i, j) = aij;
-        } else {
-                // Kokkos::deep_copy(m_a(i,j), aij);
-                // TODO
-        })
+                    m_a(i, j) = aij;
+                } else {
+                    Kokkos::deep_copy(
+                            Kokkos::View<double*, typename ExecSpace::memory_space>(&m_a(i, j)),
+                            &aij);
+                })
         KOKKOS_IF_ON_DEVICE(m_a(i, j) = aij;)
     }
 

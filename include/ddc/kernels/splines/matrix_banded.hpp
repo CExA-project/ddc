@@ -86,7 +86,7 @@ public:
                         // Inefficient, usage is strongly discouraged
                         double aij;
                         Kokkos::deep_copy(
-                                &aij,
+                                Kokkos::View<double*, Kokkos::HostSpace>(&aij),
                                 Kokkos::View<double*, typename ExecSpace::memory_space>(
                                         &m_q(j * m_c + m_kl + m_ku + i - j)));
                         return aij;
@@ -111,7 +111,7 @@ public:
                         Kokkos::deep_copy(
                                 Kokkos::View<double*, typename ExecSpace::memory_space>(
                                         &m_q(j * m_c + m_kl + m_ku + i - j)),
-                                &aij);
+                                Kokkos::View<const double*, Kokkos::HostSpace>(&aij));
                     })
             KOKKOS_IF_ON_DEVICE(m_q(j * m_c + m_kl + m_ku + i - j) = aij;)
 

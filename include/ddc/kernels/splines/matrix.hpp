@@ -91,12 +91,15 @@ public:
         return bx;
     }
 
-    template <class... Args>
-    Kokkos::View<double**, Args...> solve_batch_inplace(
-            Kokkos::View<double**, Args...> const bx) const
+    template <class Layout, class... Args>
+    Kokkos::View<double**, Layout, Args...> solve_multiple_rhs_inplace(
+            Kokkos::View<double**, Layout, Args...> const bx) const
     {
-        assert(int(bx.extent(0)) == m_n);
-        int const info = solve_inplace_method(bx.data(), 'N', bx.extent(1));
+        // assert(int(bx.extent(0)) == m_n);
+        int const info = solve_inplace_method(
+                bx.data(),
+                'N',
+                std::is_same_v<Layout, Kokkos::LayoutRight> ? bx.extent(1) : bx.extent(0));
 
         if (info < 0) {
             std::cerr << -info << "-th argument had an illegal value" << std::endl;

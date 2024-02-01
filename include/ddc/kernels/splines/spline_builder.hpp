@@ -405,7 +405,7 @@ void SplineBuilder<
         return;
 	*/
 
-    if constexpr (Solver == SplineSolver::LAPACK) {
+    if constexpr (Solver == ddc::SplineSolver::LAPACK) {
         int upper_band_width;
         if (bsplines_type::is_uniform()) {
             upper_band_width = bsplines_type::degree() / 2;
@@ -652,8 +652,15 @@ operator()(
             spline_tr.data_handle(),
             ddc::discrete_space<bsplines_type>().nbasis(),
             batch_domain().size());
-    // Compute spline coef
-    matrix->solve_batch_inplace(bcoef_section);
+    if constexpr (Solver==ddc::SplineSolver::GINKGO) {
+        matrix->solve_multiple_rhs_inplace(bcoef_section);
+    } else if (Solver==ddc::SplineSolver::LAPACK) {
+        Kokkos::View<double**, Kokkos::LayoutLeft, exec_space> bcoef_section_tr("bcoef_section_tr",batch_domain().size(), ddc::discrete_space<bsplines_type>().nbasis());
+        Kokkos::deep_copy(bcoef_section_tr, bcoef_section);
+        // Compute spline coef
+        matrix->solve_multiple_rhs_inplace(bcoef_section_tr);
+        Kokkos::deep_copy(bcoef_section, bcoef_section_tr);
+    }
     // Transpose back spline_tr in spline
     ddc::for_each(
             ddc::policies::policy(exec_space()),

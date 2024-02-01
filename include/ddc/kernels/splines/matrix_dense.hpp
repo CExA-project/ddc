@@ -26,7 +26,7 @@ private:
     Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv;
 
 public:
-    explicit Matrix_Dense(const int mat_size)
+    explicit Matrix_Dense(int const mat_size)
         : Matrix(mat_size)
         , m_a("a", mat_size, mat_size)
         , m_ipiv("ipiv", mat_size)
@@ -52,6 +52,7 @@ public:
                                       typename ExecSpace::memory_space>::accessible) {
                     return m_a(i, j);
                 } else {
+					// Inefficient, usage is strongly discouraged
                     double aij;
                     Kokkos::deep_copy(
                             &aij,
@@ -69,6 +70,7 @@ public:
                                       typename ExecSpace::memory_space>::accessible) {
                     m_a(i, j) = aij;
                 } else {
+					// Inefficient, usage is strongly discouraged
                     Kokkos::deep_copy(
                             Kokkos::View<double*, typename ExecSpace::memory_space>(&m_a(i, j)),
                             &aij);

@@ -34,7 +34,7 @@ public:
         } else if (2 * kl + 1 + ku >= n) {
             return std::make_unique<Matrix_Dense<ExecSpace>>(n);
         } else {
-            return std::make_unique<Matrix_Banded>(n, kl, ku);
+            return std::make_unique<Matrix_Banded<ExecSpace>>(n, kl, ku);
         }
     }
 
@@ -55,7 +55,7 @@ public:
                 >= n * n) {
             return std::make_unique<Matrix_Dense<ExecSpace>>(n);
         } else {
-            block_mat = std::make_unique<Matrix_Banded>(banded_size, kl, ku);
+            block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, kl, ku);
         }
         return std::make_unique<Matrix_Periodic_Banded>(n, kl, ku, std::move(block_mat));
     }
@@ -76,7 +76,7 @@ public:
         } else if (2 * kl + 1 + ku >= banded_size) {
             return std::make_unique<Matrix_Dense<ExecSpace>>(n);
         } else {
-            block_mat = std::make_unique<Matrix_Banded>(banded_size, kl, ku);
+            block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, kl, ku);
         }
         if (block2_size == 0) {
             return std::make_unique<Matrix_Corner_Block>(n, block1_size, std::move(block_mat));

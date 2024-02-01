@@ -22,8 +22,8 @@ template <class ExecSpace>
 class Matrix_Dense : public Matrix
 {
 private:
-    Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_a;
-    Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_ipiv;
+    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_a;
+    Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv;
 
 public:
     explicit Matrix_Dense(const int mat_size)
@@ -54,7 +54,7 @@ public:
                             typename ExecSpace::memory_space>::accessible) {
                     return m_a(i, j);
                 } else {
-#pragma warning "this is deprecated"
+					#pragma warning "this is deprecated"
                     // Kokkos::deep_copy(m_a(i,j), aij);
                     // TODO
                     return 0.;

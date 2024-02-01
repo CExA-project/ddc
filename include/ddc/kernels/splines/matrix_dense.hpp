@@ -31,6 +31,7 @@ public:
         , m_a("a", mat_size, mat_size)
         , m_ipiv("ipiv", mat_size)
     {
+        std::cout << "DENSE";
         assert(mat_size > 0);
     }
 
@@ -42,41 +43,58 @@ public:
                 KOKKOS_CLASS_LAMBDA(const int i, const int j) { m_a(i, j) = 0; });
     }
 
-    double get_element(int const i, int const j) const override
+    double KOKKOS_FUNCTION get_element(int const i, int const j) const override
     {
         assert(i < get_size());
         assert(j < get_size());
-        return Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), Kokkos::subview(m_a, i, j))();
+        // std::cout << create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), Kokkos::subview(m_a, i, j))();
+        KOKKOS_IF_ON_HOST(
+                if (Kokkos::SpaceAccessibility<
+                            Kokkos::DefaultHostExecutionSpace,
+                            typename ExecSpace::memory_space>::accessible) {
+                    return m_a(i, j);
+                } else {
+#pragma warning "this is deprecated"
+                    // Kokkos::deep_copy(m_a(i,j), aij);
+                    // TODO
+                    return 0.;
+                })
+        KOKKOS_IF_ON_DEVICE(return m_a(i, j);)
     }
 
-    void set_element(int const i, int const j, double const aij) override
+    void KOKKOS_FUNCTION set_element(int const i, int const j, double const aij) override
     {
-        Kokkos::parallel_for(
-                "set_element",
-                Kokkos::RangePolicy<ExecSpace>(0, 1),
-                KOKKOS_CLASS_LAMBDA(const int) { m_a(i, j) = aij; });
+        KOKKOS_IF_ON_HOST(if (Kokkos::SpaceAccessibility<
+                                      Kokkos::DefaultHostExecutionSpace,
+                                      typename ExecSpace::memory_space>::accessible) {
+            m_a(i, j) = aij;
+        } else {
+                // Kokkos::deep_copy(m_a(i,j), aij);
+                // TODO
+        })
+        KOKKOS_IF_ON_DEVICE(m_a(i, j) = aij;)
     }
 
 private:
     int factorize_method() override
     {
-	    auto a_host = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
-        auto ipiv_host = Kokkos::create_mirror_view(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
+        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
+        auto ipiv_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         int info;
         int const n = get_size();
         dgetrf_(&n, &n, a_host.data(), &n, ipiv_host.data(), &info);
         Kokkos::deep_copy(m_a, a_host);
         Kokkos::deep_copy(m_ipiv, ipiv_host);
-		std::cout << info;
         return info;
     }
 
     int solve_inplace_method(double* b, char const transpose, int const n_equations) const override
     {
-	    auto a_host = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
-        auto ipiv_host = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
-        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> b_view(b, get_size(), n_equations);
-        auto b_host = Kokkos::create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b_view);
+        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
+        auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
+        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                b_view(b, get_size(), n_equations);
+        auto b_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), b_view);
         int info;
         int const n = get_size();
         dgetrs_(&transpose,

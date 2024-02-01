@@ -134,18 +134,20 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
 {
     auto const [N, k] = GetParam();
 
-    for (int s(-k); s < k + 1; ++s) {
+    for (std::ptrdiff_t s(-k); s < (std::ptrdiff_t)k + 1; ++s) {
         if (s == 0)
             continue;
 
         std::unique_ptr<ddc::detail::Matrix> matrix
                 = ddc::detail::MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
-        for (int i(0); i < N; ++i) {
-            for (int j(0); j < N; ++j) {
-                int diag = ddc::detail::modulo(j - i, int(N));
-                if (diag == s || diag == N + s) {
+        for (std::size_t i(0); i < N; ++i) {
+            for (std::size_t j(0); j < N; ++j) {
+                std::ptrdiff_t diag = ddc::detail::modulo((int)(j - i), (int)N);
+                if (diag == s || diag == (std::ptrdiff_t)N + s) {
                     matrix->set_element(i, j, 0.5);
-                } else if (diag <= s + k || diag >= N + s - k) {
+                } else if (
+                        diag <= s + (std::ptrdiff_t)k
+                        || diag >= (std::ptrdiff_t)N + s - (std::ptrdiff_t)k) {
                     matrix->set_element(i, j, -1.0 / k);
                 }
             }
@@ -229,18 +231,20 @@ TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
 {
     auto const [N, k] = GetParam();
 
-    for (int s(-k); s < k + 1; ++s) {
+    for (std::ptrdiff_t s(-k); s < (std::ptrdiff_t)k + 1; ++s) {
         if (s == 0)
             continue;
 
         std::unique_ptr<ddc::detail::Matrix> matrix
                 = ddc::detail::MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
-        for (int i(0); i < N; ++i) {
-            for (int j(0); j < N; ++j) {
-                int diag = ddc::detail::modulo(j - i, int(N));
-                if (diag == s || diag == N + s) {
+        for (std::size_t i(0); i < N; ++i) {
+            for (std::size_t j(0); j < N; ++j) {
+                int diag = ddc::detail::modulo((int)(j - i), (int)N);
+                if (diag == s || diag == (std::ptrdiff_t)N + s) {
                     matrix->set_element(i, j, 0.5);
-                } else if (diag <= s + k || diag >= N + s - k) {
+                } else if (
+                        diag <= s + (std::ptrdiff_t)k
+                        || diag >= (std::ptrdiff_t)N + s - (std::ptrdiff_t)k) {
                     matrix->set_element(i, j, -1.0 / k);
                 }
             }
@@ -253,7 +257,7 @@ TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
         ddc::DSpan2D inv(inv_ptr.data(), N, N);
         fill_identity(inv);
         matrix->factorize();
-        for (int i(0); i < N; ++i) {
+        for (std::size_t i(0); i < N; ++i) {
             ddc::DSpan1D inv_line(inv_ptr.data() + i * N, N);
             matrix->solve_transpose_inplace(inv_line);
         }

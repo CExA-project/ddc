@@ -151,7 +151,7 @@ template <typename X>
 static std::vector<Coord<X>> breaks(std::size_t ncells)
 {
     std::vector<Coord<X>> out(ncells + 1);
-    for (int i(0); i < ncells + 1; ++i) {
+    for (std::size_t i(0); i < ncells + 1; ++i) {
         out[i] = x0<X>() + i * dx<X>(ncells);
     }
     return out;
@@ -264,6 +264,7 @@ static void Batched2dSplineTest()
             s_bcr,
             s_bcl,
             s_bcr,
+			ddc::SplineSolver::GINKGO,
             IDim<X, I1, I2>...>
             spline_builder(dom_vals);
 

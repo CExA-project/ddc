@@ -18,46 +18,64 @@ extern "C" int dgetrs_(
         int const* ldb,
         int* info);
 
+template <class ExecSpace>
 class Matrix_Dense : public Matrix
 {
+private:
+	Kokkos::View<double**, typename ExecSpace::memory_space> m_a;
+    Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv;
+
 public:
-    Matrix_Dense(int const n) : Matrix(n)
+    explicit Matrix_Dense(const int mat_size) : Matrix(mat_size), m_a("a", mat_size, mat_size), m_ipiv("ipiv", mat_size)
     {
         assert(get_size() > 0);
-        ipiv = std::make_unique<int[]>(get_size());
-        a = std::make_unique<double[]>(get_size() * get_size());
-        for (int i = 0; i < get_size() * get_size(); ++i) {
-            a[i] = 0;
-        }
+        Kokkos::parallel_for(
+                "fill_a",
+                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {m_n, m_n}),
+                KOKKOS_CLASS_LAMBDA(const int i, const int j) { m_a(i, j) = 0; });
     }
+
     double get_element(int const i, int const j) const override
     {
         assert(i < get_size());
         assert(j < get_size());
-        return a[j * get_size() + i];
+        auto tmp_view = Kokkos::subview(m_a,i,j); // TODO: consider optimizing
+		return create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), tmp_view());
     }
+
     void set_element(int const i, int const j, double const aij) override
     {
-        a[j * get_size() + i] = aij;
+		Kokkos::parallel_for(
+                "set_element",
+                Kokkos::RangePolicy<ExecSpace>(0, 1),
+                KOKKOS_CLASS_LAMBDA(const int) { m_a(i, j) = aij; });
     }
 
 private:
     int factorize_method() override
     {
+		a_host = create_mirror_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
+		ipiv_host = create_mirror(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         int info;
         int const n = get_size();
-        dgetrf_(&n, &n, a.get(), &n, ipiv.get(), &info);
+        dgetrf_(&n, &n, a_host.data(), &n, ipiv_host.data(), &info);
+		Kokkos::deep_copy(m_a, a_host);
+		Kokkos::deep_copy(m_ipiv, ipiv_host);
         return info;
     }
+
     int solve_inplace_method(double* b, char const transpose, int const n_equations) const override
     {
+		a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
+		ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
+		Kokkos::View<double**, ExecSpace::memory_space> b_view("b_view", get_size(), n_equations);
+		b_host = create_mirror_and_copy(Kokkos::DefaultHostExecutionSpace(), b_view);
         int info;
         int const n = get_size();
-        dgetrs_(&transpose, &n, &n_equations, a.get(), &n, ipiv.get(), b, &n, &info);
+        dgetrs_(&transpose, &n, &n_equations, a_host.data(), &n, ipiv_host.data(), b_host.data(), &n, &info);
+		Kokkos::deep_copy(b_view, b_host);
         return info;
-    }
-    std::unique_ptr<int[]> ipiv;
-    std::unique_ptr<double[]> a;
+    }	
 };
 
 } // namespace ddc::detail

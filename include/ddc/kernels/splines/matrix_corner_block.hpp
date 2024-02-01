@@ -207,7 +207,7 @@ protected:
     //
     //-------------------------------------
     std::unique_ptr<Matrix> q_block;
-    Matrix_Dense delta;
+    Matrix_Dense<Kokkos::DefaultHostExecutionSpace> delta;
     ddc::DSpan2D Abm_1_gamma;
     ddc::DSpan2D lambda;
 

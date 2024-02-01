@@ -16,16 +16,15 @@ namespace ddc::detail {
 class MatrixMaker
 {
 public:
-    template <typename ExecSpace>
-    static std::unique_ptr<Matrix> make_new_sparse(
-            int const n,
-            std::optional<int> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
+	template <typename ExecSpace>
+    static std::unique_ptr<Matrix> make_new_dense(
+            int const n)
     {
-        return std::make_unique<
-                Matrix_Sparse<ExecSpace>>(n, cols_per_chunk, preconditionner_max_block_size);
+        return std::make_unique<typename 
+                Matrix_Dense<ExecSpace>>(n);
     }
 
+    template <typename ExecSpace>
     static std::unique_ptr<Matrix> make_new_banded(
             int const n,
             int const kl,
@@ -35,11 +34,13 @@ public:
         if (kl == ku && kl == 1 && pds) {
             return std::make_unique<Matrix_PDS_Tridiag>(n);
         } else if (2 * kl + 1 + ku >= n) {
-            return std::make_unique<Matrix_Dense>(n);
+            return std::make_unique<typename Matrix_Dense<ExecSpace>>(n);
         } else {
             return std::make_unique<Matrix_Banded>(n, kl, ku);
         }
     }
+
+    template <typename ExecSpace>
     static std::unique_ptr<Matrix> make_new_periodic_banded(
             int const n,
             int const kl,
@@ -54,12 +55,14 @@ public:
         } else if (
                 border_size * n + border_size * (border_size + 1) + (2 * kl + 1 + ku) * banded_size
                 >= n * n) {
-            return std::make_unique<Matrix_Dense>(n);
+            return std::make_unique<typename Matrix_Dense<ExecSpace>>(n);
         } else {
             block_mat = std::make_unique<Matrix_Banded>(banded_size, kl, ku);
         }
         return std::make_unique<Matrix_Periodic_Banded>(n, kl, ku, std::move(block_mat));
     }
+
+    template <typename ExecSpace>
     static std::unique_ptr<Matrix> make_new_block_with_banded_region(
             int const n,
             int const kl,
@@ -73,7 +76,7 @@ public:
         if (pds && kl == ku && kl == 1) {
             block_mat = std::make_unique<Matrix_PDS_Tridiag>(banded_size);
         } else if (2 * kl + 1 + ku >= banded_size) {
-            return std::make_unique<Matrix_Dense>(n);
+            return std::make_unique<typename Matrix_Dense<ExecSpace>>(n);
         } else {
             block_mat = std::make_unique<Matrix_Banded>(banded_size, kl, ku);
         }
@@ -83,6 +86,16 @@ public:
             return std::make_unique<
                     Matrix_Center_Block>(n, block1_size, block2_size, std::move(block_mat));
         }
+    }
+  
+	template <typename ExecSpace>
+    static std::unique_ptr<Matrix> make_new_sparse(
+            int const n,
+            std::optional<int> cols_per_chunk = std::nullopt,
+            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
+    {
+        return std::make_unique<
+                Matrix_Sparse<ExecSpace>>(n, cols_per_chunk, preconditionner_max_block_size);
     }
 };
 

@@ -78,7 +78,7 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
 {
     auto const [N, k] = GetParam();
     std::unique_ptr<ddc::detail::Matrix> matrix
-            = ddc::detail::MatrixMaker::make_new_banded(N, k, k, true);
+            = ddc::detail::MatrixMaker::make_new_banded<Kokkos::DefaultHostExecutionSpace>(N, k, k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 2.0 * k);
@@ -105,7 +105,7 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
 {
     auto const [N, k] = GetParam();
     std::unique_ptr<ddc::detail::Matrix> matrix
-            = ddc::detail::MatrixMaker::make_new_banded(N, 0, 2 * k, true);
+            = ddc::detail::MatrixMaker::make_new_banded<Kokkos::DefaultHostExecutionSpace>(N, 0, 2 * k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(i); j < std::min(N, i + k); ++j) {
@@ -139,7 +139,7 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
             continue;
 
         std::unique_ptr<ddc::detail::Matrix> matrix
-                = ddc::detail::MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
+                = ddc::detail::MatrixMaker::make_new_periodic_banded<Kokkos::DefaultHostExecutionSpace>(N, k - s, k + s, false);
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
                 std::ptrdiff_t diag = ddc::detail::modulo((int)(j - i), (int)N);
@@ -169,7 +169,7 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetricTranspose)
 {
     auto const [N, k] = GetParam();
     std::unique_ptr<ddc::detail::Matrix> matrix
-            = ddc::detail::MatrixMaker::make_new_banded(N, k, k, true);
+            = ddc::detail::MatrixMaker::make_new_banded<Kokkos::DefaultHostExecutionSpace>(N, k, k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 2.0 * k);
@@ -199,7 +199,7 @@ TEST_P(MatrixSizesFixture, OffsetBandedTranspose)
 {
     auto const [N, k] = GetParam();
     std::unique_ptr<ddc::detail::Matrix> matrix
-            = ddc::detail::MatrixMaker::make_new_banded(N, 0, 2 * k, true);
+            = ddc::detail::MatrixMaker::make_new_banded<Kokkos::DefaultHostExecutionSpace>(N, 0, 2 * k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(i); j < std::min(N, i + k); ++j) {
@@ -236,7 +236,7 @@ TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
             continue;
 
         std::unique_ptr<ddc::detail::Matrix> matrix
-                = ddc::detail::MatrixMaker::make_new_periodic_banded(N, k - s, k + s, false);
+                = ddc::detail::MatrixMaker::make_new_periodic_banded<Kokkos::DefaultHostExecutionSpace>(N, k - s, k + s, false);
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
                 int diag = ddc::detail::modulo((int)(j - i), (int)N);

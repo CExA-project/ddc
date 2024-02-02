@@ -125,7 +125,11 @@ public:
 protected:
     virtual int factorize_method() = 0;
 
-    virtual int solve_inplace_method(double* b, char transpose, int n_equations) const = 0;
+    virtual int solve_inplace_method(double* const b, char const transpose, int const n_equations, int const stride) const = 0;
+    
+	int solve_inplace_method(double* const b, char const transpose, int const n_equations) const {
+		return solve_inplace_method(b, transpose, n_equations, get_size());
+	};
 };
 
 } // namespace ddc::detail

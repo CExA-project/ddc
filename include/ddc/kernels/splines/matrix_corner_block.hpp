@@ -222,7 +222,7 @@ private:
     {
         return 0;
     }
-    virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
+    virtual int solve_inplace_method(double* const b, char const transpose, int const n_equations, int const stride) const override
     {
         for (std::size_t i(0); i < n_equations; ++i) {
             ddc::DSpan1D const u(b + i * get_size(), nb);

@@ -131,13 +131,13 @@ public:
         m_matrix_sparse->clear();
     }
 
-    virtual double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
+    double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
     {
         throw std::runtime_error("MatrixSparse::get_element() is not implemented because no API is "
                                  "provided by Ginkgo");
     }
 
-    virtual void set_element(int i, int j, double aij) override
+    void set_element(int i, int j, double aij) override
     {
         m_matrix_dense->at(i, j) = aij;
     }
@@ -178,7 +178,7 @@ public:
         return 0;
     }
 
-    virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
+    int solve_inplace_method(double* const b, char const transpose, int const n_equations, int const stride) const override
     {
         std::shared_ptr const gko_exec = m_solver->get_executor();
 

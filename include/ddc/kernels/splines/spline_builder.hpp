@@ -75,12 +75,18 @@ public:
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
-    using spline_tr_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
+    using spline_tr_domain_type = typename std::conditional_t<
+            Solver == ddc::SplineSolver::LAPACK,
+            ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
+                    ddc::type_seq_remove_t<
+                            ddc::detail::TypeSeq<IDimX...>,
+                            ddc::detail::TypeSeq<interpolation_mesh_type>>,
+                    ddc::detail::TypeSeq<bsplines_type>>>,
+            ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
                     ddc::type_seq_remove_t<
                             ddc::detail::TypeSeq<IDimX...>,
-                            ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
+                            ddc::detail::TypeSeq<interpolation_mesh_type>>>>>;
 
     using derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
@@ -648,19 +654,20 @@ operator()(
                 }
             });
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
-    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
-            spline_tr.data_handle(),
-            ddc::discrete_space<bsplines_type>().nbasis(),
-            batch_domain().size());
-    if constexpr (Solver==ddc::SplineSolver::GINKGO) {
-        matrix->solve_multiple_rhs_inplace(bcoef_section);
-    } else if (Solver==ddc::SplineSolver::LAPACK) {
-        Kokkos::View<double**, Kokkos::LayoutLeft, exec_space> bcoef_section_tr("bcoef_section_tr",batch_domain().size(), ddc::discrete_space<bsplines_type>().nbasis());
-        Kokkos::deep_copy(bcoef_section_tr, bcoef_section);
-        // Compute spline coef
-        matrix->solve_multiple_rhs_inplace(bcoef_section_tr);
-        Kokkos::deep_copy(bcoef_section, bcoef_section_tr);
-    }
+    Kokkos::View<
+            double**,
+            std::conditional_t<
+                    Solver == ddc::SplineSolver::LAPACK,
+                    Kokkos::LayoutLeft,
+                    Kokkos::LayoutRight>,
+            exec_space>
+            bcoef_section(
+                    spline_tr.data_handle(),
+                    ddc::discrete_space<bsplines_type>().nbasis(),
+                    batch_domain().size());
+    // Compute spline coef
+    matrix->solve_multiple_rhs_inplace(bcoef_section);
+
     // Transpose back spline_tr in spline
     ddc::for_each(
             ddc::policies::policy(exec_space()),

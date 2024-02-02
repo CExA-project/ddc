@@ -30,8 +30,7 @@ public:
             bool const pds)
     {
         if (kl == ku && kl == 1 && pds) {
-            // return std::make_unique<Matrix_PDS_Tridiag>(n);
-            return std::make_unique<Matrix_Banded<ExecSpace>>(n, 1, 1);
+            return std::make_unique<Matrix_PDS_Tridiag>(n);
         } else if (2 * kl + 1 + ku >= n) {
             return std::make_unique<Matrix_Dense<ExecSpace>>(n);
         } else {
@@ -50,8 +49,7 @@ public:
         int const banded_size = n - border_size;
         std::unique_ptr<Matrix> block_mat;
         if (pds && kl == ku && kl == 1) {
-            //block_mat = std::make_unique<Matrix_PDS_Tridiag>(banded_size);
-            block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, 1, 1);
+            block_mat = std::make_unique<Matrix_PDS_Tridiag>(banded_size);
         } else if (
                 border_size * n + border_size * (border_size + 1) + (2 * kl + 1 + ku) * banded_size
                 >= n * n) {
@@ -74,8 +72,7 @@ public:
         int const banded_size = n - block1_size - block2_size;
         std::unique_ptr<Matrix> block_mat;
         if (pds && kl == ku && kl == 1) {
-            //block_mat = std::make_unique<Matrix_PDS_Tridiag>(banded_size);
-            block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, 1, 1);
+            block_mat = std::make_unique<Matrix_PDS_Tridiag>(banded_size);
         } else if (2 * kl + 1 + ku >= banded_size) {
             return std::make_unique<Matrix_Dense<ExecSpace>>(n);
         } else {

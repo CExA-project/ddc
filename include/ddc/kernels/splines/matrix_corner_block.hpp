@@ -222,8 +222,32 @@ private:
     {
         return 0;
     }
-    virtual int solve_inplace_method(double*, char, int) const override
+    virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
     {
+        for (std::size_t i(0); i < n_equations; ++i) {
+            ddc::DSpan1D const u(b + i * get_size(), nb);
+            ddc::DSpan1D const v(b + i * get_size() + nb, k);
+
+            if (transpose == 'N') {
+                q_block->solve_inplace(u);
+
+                solve_lambda_section(v, u);
+
+                delta.solve_inplace(v);
+
+                solve_gamma_section(u, v);
+            } else if (transpose == 'T') {
+                solve_gamma_section_transpose(v, u);
+
+                delta.solve_transpose_inplace(v);
+
+                solve_lambda_section_transpose(u, v);
+
+                q_block->solve_transpose_inplace(u);
+            } else {
+                return -1;
+            }
+        }
         return 0;
     }
 };

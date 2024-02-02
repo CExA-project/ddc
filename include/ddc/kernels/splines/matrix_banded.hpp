@@ -136,7 +136,7 @@ protected:
     {
         auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
         auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
-        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+        Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                 b_view(b, get_size(), n_equations);
         auto b_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), b_view);
         int info;

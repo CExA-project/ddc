@@ -93,6 +93,12 @@ template <std::size_t N, class ElementType>
 using SpanND = std::experimental::mdspan<ElementType, std::experimental::dextents<std::size_t, N>>;
 
 template <std::size_t N, class ElementType>
+using SpanND_stride = std::experimental::mdspan<
+        ElementType,
+        std::experimental::dextents<std::size_t, N>,
+        std::experimental::layout_stride>;
+
+template <std::size_t N, class ElementType>
 using ViewND = SpanND<N, ElementType const>;
 
 template <class ElementType>
@@ -100,6 +106,9 @@ using Span1D = SpanND<1, ElementType>;
 
 template <class ElementType>
 using Span2D = SpanND<2, ElementType>;
+
+template <class ElementType>
+using Span2D_stride = SpanND_stride<2, ElementType>;
 
 template <class ElementType>
 using View1D = ViewND<1, ElementType>;
@@ -122,6 +131,8 @@ Span1D<const ElementType> as_span(std::array<ElementType, N> const& arr) noexcep
 using DSpan1D = ddc::Span1D<double>;
 
 using DSpan2D = ddc::Span2D<double>;
+
+using DSpan2D_stride = ddc::Span2D_stride<double>;
 
 using CDSpan1D = ddc::Span1D<double const>;
 

@@ -79,8 +79,7 @@ public:
         return bx;
     }
 
-    template <class MdspanType>
-    MdspanType solve_multiple_inplace2(MdspanType const bx) const
+    virtual ddc::DSpan2D_stride solve_multiple_inplace2(ddc::DSpan2D_stride const bx) const
     {
         assert(int(bx.extent(0)) == m_n);
         int const info = solve_inplace_method(

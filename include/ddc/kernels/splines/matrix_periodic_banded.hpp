@@ -17,6 +17,7 @@
 namespace ddc::detail {
 class Matrix;
 
+template <class ExecSpace>
 class Matrix_Periodic_Banded : public Matrix_Corner_Block
 {
 public:
@@ -48,9 +49,9 @@ public:
             if (d < -kl || d > ku)
                 return 0.0;
             if (d > 0)
-                return lambda(j, i - nb);
+                return m_lambda(j, i - nb);
             else
-                return lambda(j - nb + k + 1, i - nb);
+                return m_lambda(j - nb + k + 1, i - nb);
         } else {
             return Matrix_Corner_Block::get_element(i, j);
         }
@@ -74,9 +75,9 @@ public:
             }
 
             if (d > 0)
-                lambda(j, i - nb) = a_ij;
+                m_lambda(j, i - nb) = a_ij;
             else
-                lambda(j - nb + k + 1, i - nb) = a_ij;
+                m_lambda(j - nb + k + 1, i - nb) = a_ij;
         } else {
             Matrix_Corner_Block::set_element(i, j, a_ij);
         }
@@ -90,12 +91,12 @@ protected:
                 double val = 0.0;
                 // Upper diagonals in lambda, lower diagonals in Abm_1_gamma
                 for (int l = 0; l < i + 1; ++l) {
-                    val += lambda(l, i) * Abm_1_gamma(j, l);
+                    val += m_lambda(l, i) * m_Abm_1_gamma(j, l);
                 }
                 // Lower diagonals in lambda, upper diagonals in Abm_1_gamma
                 for (int l = i + 1; l < k + 1; ++l) {
                     int l_full = nb - 1 - k + l;
-                    val += lambda(l, i) * Abm_1_gamma(j, l_full);
+                    val += m_lambda(l, i) * m_Abm_1_gamma(j, l_full);
                 }
                 delta.set_element(i, j, delta.get_element(i, j) - val);
             }
@@ -106,11 +107,11 @@ protected:
         for (int i = 0; i < k; ++i) {
             // Upper diagonals in lambda
             for (int j = 0; j <= i; ++j) {
-                v(i) -= lambda(j, i) * u(j);
+                v(i) -= m_lambda(j, i) * u(j);
             }
             // Lower diagonals in lambda
             for (int j = i + 1; j < k + 1; ++j) {
-                v(i) -= lambda(j, i) * u(nb - 1 - k + j);
+                v(i) -= m_lambda(j, i) * u(nb - 1 - k + j);
             }
         }
         return v;
@@ -121,11 +122,11 @@ protected:
         for (int i = 0; i < k; ++i) {
             // Upper diagonals in lambda
             for (int j = 0; j <= i; ++j) {
-                u(j) -= lambda(j, i) * v(i);
+                u(j) -= m_lambda(j, i) * v(i);
             }
             // Lower diagonals in lambda
             for (int j = i + 1; j < k + 1; ++j) {
-                u(nb - 1 - k + j) -= lambda(j, i) * v(i);
+                u(nb - 1 - k + j) -= m_lambda(j, i) * v(i);
             }
         }
         return u;

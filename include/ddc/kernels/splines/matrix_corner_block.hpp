@@ -13,31 +13,49 @@
 #include "view.hpp"
 
 namespace ddc::detail {
+
+template <class ExecSpace>
 class Matrix_Corner_Block : public Matrix
 {
+private:
+    int const k; // small block size
+    int const nb; // main block matrix size
+    //-------------------------------------
+    //
+    //    q = | q_block | gamma |
+    //        |  lambda | delta |
+    //
+    //-------------------------------------
+    std::unique_ptr<Matrix> m_q_block;
+    Matrix_Dense<ExecSpace> m_delta;
+    Kokkos::View<double**, typename ExecSpace::memory_space> m_Abm_1_gamma;
+    Kokkos::View<double**, typename ExecSpace::memory_space> m_lambda;
+
 public:
     Matrix_Corner_Block(int const n, int const k, std::unique_ptr<Matrix> q)
         : Matrix(n)
         , k(k)
         , nb(n - k)
-        , Abm_1_gamma_ptr(std::make_unique<double[]>(k * nb))
-        , lambda_ptr(std::make_unique<double[]>(k * nb))
-        , q_block(std::move(q))
-        , delta(k)
-        , Abm_1_gamma(Abm_1_gamma_ptr.get(), k, nb)
-        , lambda(lambda_ptr.get(), nb, k)
+        , m_q_block(std::move(q))
+        , m_delta(k)
+        , m_Abm_1_gamma("Abm_1_gamma", k, nb)
+        , m_lambda("lambda", nb, k)
     {
         assert(n > 0);
         assert(k >= 0);
         assert(k <= get_size());
-        assert(nb == q_block->get_size());
-        memset(lambda_ptr.get(), 0, sizeof(double) * k * nb);
-        memset(Abm_1_gamma_ptr.get(), 0, sizeof(double) * k * nb);
+        assert(nb == m_q_block->get_size());
     }
     virtual void reset() const override
     {
-        q_block->reset();
-        // TODO reset lambda and abm
+        m_q_block->reset();
+        Kokkos::parallel_for(
+                "fill_lambda_adm",
+                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, nb}),
+                KOKKOS_CLASS_LAMBDA(const int i, const int j) {
+                    m_Abm_1_gamma(i, j) = 0;
+                    m_lambda(j, i) = 0;
+                });
     }
 
     virtual double get_element(int const i, int const j) const override
@@ -47,13 +65,41 @@ public:
         assert(j >= 0);
         assert(i < get_size());
         if (i < nb && j < nb) {
-            return q_block->get_element(i, j);
+            return m_q_block->get_element(i, j);
         } else if (i >= nb && j >= nb) {
-            return delta.get_element(i - nb, j - nb);
+            return m_delta.get_element(i - nb, j - nb);
         } else if (j >= nb) {
-            return Abm_1_gamma(j - nb, i);
+            KOKKOS_IF_ON_HOST(
+                    if constexpr (Kokkos::SpaceAccessibility<
+                                          Kokkos::DefaultHostExecutionSpace,
+                                          typename ExecSpace::memory_space>::accessible) {
+                        return m_Abm_1_gamma(j - nb, i);
+                    } else {
+                        // Inefficient, usage is strongly discouraged
+                        double aij;
+                        Kokkos::deep_copy(
+                                Kokkos::View<double*, Kokkos::HostSpace>(&aij),
+                                Kokkos::View<double*, typename ExecSpace::memory_space>(
+                                        &m_Abm_1_gamma(j - nb, i)));
+                        return aij;
+                    })
+            KOKKOS_IF_ON_DEVICE(return m_Abm_1_gamma(j - nb, i);)
         } else {
-            return lambda(j, i - nb);
+            KOKKOS_IF_ON_HOST(
+                    if constexpr (Kokkos::SpaceAccessibility<
+                                          Kokkos::DefaultHostExecutionSpace,
+                                          typename ExecSpace::memory_space>::accessible) {
+                        return m_lambda(j, i - nb);
+                    } else {
+                        // Inefficient, usage is strongly discouraged
+                        double aij;
+                        Kokkos::deep_copy(
+                                Kokkos::View<double*, Kokkos::HostSpace>(&aij),
+                                Kokkos::View<double*, typename ExecSpace::memory_space>(
+                                        &m_lambda(j, i - nb)));
+                        return aij;
+                    })
+            KOKKOS_IF_ON_DEVICE(return m_lambda(j, i - nb);)
         }
     }
     virtual void set_element(int const i, int const j, double const a_ij) override
@@ -63,23 +109,47 @@ public:
         assert(j >= 0);
         assert(i < get_size());
         if (i < nb && j < nb) {
-            q_block->set_element(i, j, a_ij);
+            m_q_block->set_element(i, j, a_ij);
         } else if (i >= nb && j >= nb) {
-            delta.set_element(i - nb, j - nb, a_ij);
+            m_delta.set_element(i - nb, j - nb, a_ij);
         } else if (j >= nb) {
-            Abm_1_gamma(j - nb, i) = a_ij;
+            KOKKOS_IF_ON_HOST(
+                    if constexpr (Kokkos::SpaceAccessibility<
+                                          Kokkos::DefaultHostExecutionSpace,
+                                          typename ExecSpace::memory_space>::accessible) {
+                        m_Abm_1_gamma(j - nb, i) = aij;
+                    } else {
+                        // Inefficient, usage is strongly discouraged
+                        Kokkos::deep_copy(
+                                Kokkos::View<double*, typename ExecSpace::memory_space>(
+                                        &m_Abm_1_gamma(j - nb, i)),
+                                Kokkos::View<const double*, Kokkos::HostSpace>(&aij));
+                    })
+            KOKKOS_IF_ON_DEVICE(m_Abm_1_gamma(j - nb, i) = aij;)
         } else {
-            lambda(j, i - nb) = a_ij;
+            KOKKOS_IF_ON_HOST(
+                    if constexpr (Kokkos::SpaceAccessibility<
+                                          Kokkos::DefaultHostExecutionSpace,
+                                          typename ExecSpace::memory_space>::accessible) {
+                        m_lambda(j, i - nb) = aij;
+                    } else {
+                        // Inefficient, usage is strongly discouraged
+                        Kokkos::deep_copy(
+                                Kokkos::View<double*, typename ExecSpace::memory_space>(
+                                        &m_lambda(j, i - nb)),
+                                Kokkos::View<const double*, Kokkos::HostSpace>(&aij));
+                    })
+            KOKKOS_IF_ON_DEVICE(m_lambda(j, i - nb) = aij;)
         }
     }
     virtual void factorize() override
     {
-        q_block->factorize();
-        q_block->solve_multiple_inplace(Abm_1_gamma);
+        m_q_block->factorize();
+        m_q_block->solve_multiple_inplace(m_Abm_1_gamma.data());
 
         calculate_delta_to_factorize();
 
-        delta.factorize();
+        m_delta.factorize();
     }
     virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const bx) const override
     {
@@ -88,11 +158,11 @@ public:
         ddc::DSpan1D const u(bx.data_handle(), nb);
         ddc::DSpan1D const v(bx.data_handle() + nb, k);
 
-        q_block->solve_inplace(u);
+        m_q_block->solve_inplace(u);
 
         solve_lambda_section(v, u);
 
-        delta.solve_inplace(v);
+        m_delta.solve_inplace(v);
 
         solve_gamma_section(u, v);
 
@@ -106,11 +176,11 @@ public:
 
         solve_gamma_section_transpose(v, u);
 
-        delta.solve_transpose_inplace(v);
+        m_delta.solve_transpose_inplace(v);
 
         solve_lambda_section_transpose(u, v);
 
-        q_block->solve_transpose_inplace(u);
+        m_q_block->solve_transpose_inplace(u);
 
         return bx;
     }
@@ -134,19 +204,15 @@ protected:
         : Matrix(n)
         , k(k)
         , nb(n - k)
-        , Abm_1_gamma_ptr(std::make_unique<double[]>(k * nb))
-        , lambda_ptr(std::make_unique<double[]>(lambda_size1 * lambda_size2))
-        , q_block(std::move(q))
-        , delta(k)
-        , Abm_1_gamma(Abm_1_gamma_ptr.get(), k, nb)
-        , lambda(lambda_ptr.get(), lambda_size1, lambda_size2)
+        , m_q_block(std::move(q))
+        , m_delta(k)
+        , m_Abm_1_gamma("Abm_1_gamma", k, nb)
+        , m_lambda("lambda", lambda_size1, lambda_size2)
     {
         assert(n > 0);
         assert(k >= 0);
         assert(k <= n);
-        assert(nb == q_block->get_size());
-        memset(lambda_ptr.get(), 0, sizeof(double) * lambda_size1 * lambda_size2);
-        memset(Abm_1_gamma_ptr.get(), 0, sizeof(double) * k * nb);
+        assert(nb == m_q_block->get_size());
     }
     virtual void calculate_delta_to_factorize()
     {
@@ -154,9 +220,9 @@ protected:
             for (int j = 0; j < k; ++j) {
                 double val = 0.0;
                 for (int l = 0; l < nb; ++l) {
-                    val += lambda(l, i) * Abm_1_gamma(j, l);
+                    val += m_lambda(l, i) * m_Abm_1_gamma(j, l);
                 }
-                delta.set_element(i, j, delta.get_element(i, j) - val);
+                m_delta.set_element(i, j, m_delta.get_element(i, j) - val);
             }
         }
     }
@@ -165,7 +231,7 @@ protected:
         for (int i = 0; i < k; ++i) {
             // Upper diagonals in lambda
             for (int j = 0; j < nb; ++j) {
-                v(i) -= lambda(j, i) * u(j);
+                v(i) -= m_lambda(j, i) * u(j);
             }
         }
         return v;
@@ -175,7 +241,7 @@ protected:
         for (int i = 0; i < nb; ++i) {
             // Upper diagonals in lambda
             for (int j = 0; j < k; ++j) {
-                u(i) -= lambda(i, j) * v(j);
+                u(i) -= m_lambda(i, j) * v(j);
             }
         }
         return u;
@@ -185,7 +251,7 @@ protected:
         for (int i = 0; i < nb; ++i) {
             double val = 0.;
             for (int j = 0; j < k; ++j) {
-                val += Abm_1_gamma(j, i) * v(j);
+                val += m_Abm_1_gamma(j, i) * v(j);
             }
             u(i) -= val;
         }
@@ -196,26 +262,12 @@ protected:
         for (int j = 0; j < k; ++j) {
             double val = 0.;
             for (int i = 0; i < nb; ++i) {
-                val += Abm_1_gamma(j, i) * u(i);
+                val += m_Abm_1_gamma(j, i) * u(i);
             }
             v(j) -= val;
         }
         return v;
     }
-    int const k; // small block size
-    int const nb; // main block matrix size
-    std::unique_ptr<double[]> Abm_1_gamma_ptr;
-    std::unique_ptr<double[]> lambda_ptr;
-    //-------------------------------------
-    //
-    //    q = | q_block | gamma |
-    //        |  lambda | delta |
-    //
-    //-------------------------------------
-    std::unique_ptr<Matrix> q_block;
-    Matrix_Dense<Kokkos::DefaultHostExecutionSpace> delta;
-    ddc::DSpan2D Abm_1_gamma;
-    ddc::DSpan2D lambda;
 
 private:
     virtual int factorize_method() override
@@ -228,26 +280,26 @@ private:
             int const n_equations,
             int const stride) const override
     {
-        for (std::size_t i(0); i < n_equations; ++i) {
+        for (std::size_t i(0); i < (std::size_t)n_equations; ++i) {
             ddc::DSpan1D const u(b + i * stride, nb);
             ddc::DSpan1D const v(b + i * stride + nb, k);
 
             if (transpose == 'N') {
-                q_block->solve_inplace(u);
+                m_q_block->solve_inplace(u);
 
                 solve_lambda_section(v, u);
 
-                delta.solve_inplace(v);
+                m_delta.solve_inplace(v);
 
                 solve_gamma_section(u, v);
             } else if (transpose == 'T') {
                 solve_gamma_section_transpose(v, u);
 
-                delta.solve_transpose_inplace(v);
+                m_delta.solve_transpose_inplace(v);
 
                 solve_lambda_section_transpose(u, v);
 
-                q_block->solve_transpose_inplace(u);
+                m_q_block->solve_transpose_inplace(u);
             } else {
                 return -1;
             }

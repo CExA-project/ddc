@@ -178,7 +178,11 @@ public:
         return 0;
     }
 
-    int solve_inplace_method(double* const b, char const transpose, int const n_equations, int const stride) const override
+    int solve_inplace_method(
+            double* const b,
+            char const transpose,
+            int const n_equations,
+            int const stride) const override
     {
         std::shared_ptr const gko_exec = m_solver->get_executor();
 

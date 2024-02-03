@@ -91,7 +91,11 @@ private:
         return info;
     }
 
-    int solve_inplace_method(double* const b, char const transpose, int const n_equations, int const stride) const override
+    int solve_inplace_method(
+            double* const b,
+            char const transpose,
+            int const n_equations,
+            int const stride) const override
     {
         auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
         auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);

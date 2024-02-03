@@ -654,17 +654,24 @@ operator()(
                 }
             });
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
-    Kokkos::View<
-            double**,
-            std::conditional_t<
-                    Solver == ddc::SplineSolver::LAPACK,
-                    Kokkos::LayoutLeft,
-                    Kokkos::LayoutRight>,
-            exec_space>
-            bcoef_section(
-                    spline_tr.data_handle(),
-                    ddc::discrete_space<bsplines_type>().nbasis(),
-                    batch_domain().size());
+    Kokkos::LayoutStride layout;
+    if (Solver == ddc::SplineSolver::GINKGO) {
+        layout = Kokkos::LayoutStride(
+                ddc::discrete_space<bsplines_type>().nbasis(),
+                batch_domain().size(),
+                batch_domain().size(),
+                1);
+    } else if (Solver == ddc::SplineSolver::LAPACK) {
+        layout = Kokkos::LayoutStride(
+                ddc::discrete_space<bsplines_type>().nbasis(),
+                1,
+                batch_domain().size(),
+                ddc::discrete_space<bsplines_type>().size());
+    } else {
+        assert("Unrecognized solver");
+    }
+    Kokkos::View<double**, Kokkos::LayoutStride, exec_space>
+            bcoef_section(spline_tr.data_handle(), layout);
     // Compute spline coef
     matrix->solve_multiple_rhs_inplace(bcoef_section);
 

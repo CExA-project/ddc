@@ -76,7 +76,8 @@ protected:
         dpttrf_(&n, d.get(), l.get(), &info);
         return info;
     }
-    int solve_inplace_method(double* const b, char const, int const n_equations, int const stride) const override
+    int solve_inplace_method(double* const b, char const, int const n_equations, int const stride)
+            const override
     {
         int info;
         int const n = get_size();

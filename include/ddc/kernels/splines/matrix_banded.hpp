@@ -132,7 +132,11 @@ protected:
         Kokkos::deep_copy(m_ipiv, ipiv_host);
         return info;
     }
-    int solve_inplace_method(double* b, char const transpose, int const n_equations, int const stride) const override
+    int solve_inplace_method(
+            double* b,
+            char const transpose,
+            int const n_equations,
+            int const stride) const override
     {
         auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
         auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);

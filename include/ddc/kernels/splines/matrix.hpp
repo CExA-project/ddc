@@ -96,7 +96,11 @@ public:
             Kokkos::View<double**, Layout, Args...> const bx) const
     {
         assert(int(bx.extent(0)) == m_n);
-        int const info = solve_inplace_method(bx.data(), 'N', bx.extent(1));
+        int const info = solve_inplace_method(
+                bx.data(),
+                'N',
+                bx.extent(1),
+                std::max(bx.stride_0(), bx.stride_1()));
 
         if (info < 0) {
             std::cerr << -info << "-th argument had an illegal value" << std::endl;
@@ -125,11 +129,16 @@ public:
 protected:
     virtual int factorize_method() = 0;
 
-    virtual int solve_inplace_method(double* const b, char const transpose, int const n_equations, int const stride) const = 0;
-    
-	int solve_inplace_method(double* const b, char const transpose, int const n_equations) const {
-		return solve_inplace_method(b, transpose, n_equations, get_size());
-	};
+    virtual int solve_inplace_method(
+            double* const b,
+            char const transpose,
+            int const n_equations,
+            int const stride) const = 0;
+
+    int solve_inplace_method(double* const b, char const transpose, int const n_equations) const
+    {
+        return solve_inplace_method(b, transpose, n_equations, get_size());
+    };
 };
 
 } // namespace ddc::detail

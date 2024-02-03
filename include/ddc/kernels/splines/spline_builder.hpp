@@ -653,27 +653,36 @@ operator()(
                             = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
                 }
             });
-    // Create a 2D Kokkos::View to manage spline_tr as a matrix
-    Kokkos::LayoutStride layout;
+    // Create a 2D mdspan to manage spline_tr as a matrix
+    std::experimental::layout_stride::mapping<std::experimental::extents<
+            size_t,
+            std::experimental::dynamic_extent,
+            std::experimental::dynamic_extent>>
+            layout_mapping {};
     if (Solver == ddc::SplineSolver::GINKGO) {
-        layout = Kokkos::LayoutStride(
-                ddc::discrete_space<bsplines_type>().nbasis(),
-                batch_domain().size(),
-                batch_domain().size(),
-                1);
+        layout_mapping = std::experimental::layout_stride::mapping<std::experimental::extents<
+                size_t,
+                std::experimental::dynamic_extent,
+                std::experimental::dynamic_extent>> {
+                std::experimental::dextents<
+                        std::size_t,
+                        2> {ddc::discrete_space<bsplines_type>().nbasis(), batch_domain().size()},
+                std::array<std::size_t, 2> {batch_domain().size(), 1}};
     } else if (Solver == ddc::SplineSolver::LAPACK) {
-        layout = Kokkos::LayoutStride(
-                ddc::discrete_space<bsplines_type>().nbasis(),
-                1,
-                batch_domain().size(),
-                ddc::discrete_space<bsplines_type>().size());
+        layout_mapping = std::experimental::layout_stride::mapping<std::experimental::extents<
+                size_t,
+                std::experimental::dynamic_extent,
+                std::experimental::dynamic_extent>> {
+                std::experimental::dextents<
+                        std::size_t,
+                        2> {ddc::discrete_space<bsplines_type>().nbasis(), batch_domain().size()},
+                std::array<std::size_t, 2> {1, ddc::discrete_space<bsplines_type>().size()}};
     } else {
         assert("Unrecognized solver");
     }
-    Kokkos::View<double**, Kokkos::LayoutStride, exec_space>
-            bcoef_section(spline_tr.data_handle(), layout);
+    std::experimental::mdspan bcoef_section_mdspan(spline_tr.data_handle(), layout_mapping);
     // Compute spline coef
-    matrix->solve_multiple_rhs_inplace(bcoef_section);
+    matrix->solve_multiple_inplace2(bcoef_section_mdspan);
 
     // Transpose back spline_tr in spline
     ddc::for_each(

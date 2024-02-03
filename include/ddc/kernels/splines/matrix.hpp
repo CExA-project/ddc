@@ -79,6 +79,23 @@ public:
         return bx;
     }
 
+    template <class MdspanType>
+    MdspanType solve_multiple_inplace2(MdspanType const bx) const
+    {
+        assert(int(bx.extent(0)) == m_n);
+        int const info = solve_inplace_method(
+                bx.data_handle(),
+                'N',
+                bx.extent(1),
+                std::max(bx.stride(0), bx.stride(1)));
+
+        if (info < 0) {
+            std::cerr << -info << "-th argument had an illegal value" << std::endl;
+            // TODO: Add LOG_FATAL_ERROR
+        }
+        return bx;
+    }
+
     virtual ddc::DSpan2D solve_multiple_transpose_inplace(ddc::DSpan2D const bx) const
     {
         assert(int(bx.extent(1)) == m_n);

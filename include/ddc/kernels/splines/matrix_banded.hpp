@@ -33,7 +33,7 @@ extern "C" int dgbtrs_(
 template <class ExecSpace>
 class Matrix_Banded : public Matrix
 {
-private:
+protected:
     int const m_kl; // no. of subdiagonals
     int const m_ku; // no. of superdiagonals
     int const m_c; // no. of columns in q

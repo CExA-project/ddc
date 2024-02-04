@@ -21,7 +21,7 @@ extern "C" int dgetrs_(
 template <class ExecSpace>
 class Matrix_Dense : public Matrix
 {
-private:
+protected:
     Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_a;
     Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv;
 

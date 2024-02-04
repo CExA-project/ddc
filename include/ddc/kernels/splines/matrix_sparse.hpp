@@ -96,7 +96,7 @@ class Matrix_Sparse : public Matrix
 {
     using matrix_sparse_type = gko::matrix::Csr<double, int>;
 
-private:
+protected:
     std::unique_ptr<gko::matrix::Dense<double>> m_matrix_dense;
 
     std::shared_ptr<matrix_sparse_type> m_matrix_sparse;

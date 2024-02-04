@@ -80,10 +80,10 @@ public:
             block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, kl, ku);
         }
         if (block2_size == 0) {
-            return std::make_unique<Matrix_Corner_Block>(n, block1_size, std::move(block_mat));
+            return std::make_unique<Matrix_Corner_Block<ExecSpace>>(n, block1_size, std::move(block_mat));
         } else {
             return std::make_unique<
-                    Matrix_Center_Block>(n, block1_size, block2_size, std::move(block_mat));
+                    Matrix_Center_Block<ExecSpace>>(n, block1_size, block2_size, std::move(block_mat));
         }
     }
 

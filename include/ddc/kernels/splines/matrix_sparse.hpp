@@ -137,7 +137,7 @@ public:
                                  "provided by Ginkgo");
     }
 
-    void set_element(int i, int j, double aij) override
+    void set_element(int i, int j, double aij) const override
     {
         m_matrix_dense->at(i, j) = aij;
     }

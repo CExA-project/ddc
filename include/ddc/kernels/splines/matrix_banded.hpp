@@ -98,7 +98,7 @@ public:
         }
     }
 
-    void set_element(int const i, int const j, double const aij) override
+    void set_element(int const i, int const j, double const aij) const override
     {
         if (i >= std::max(0, j - m_ku) && i < std::min(get_size(), j + m_kl + 1)) {
             KOKKOS_IF_ON_HOST(

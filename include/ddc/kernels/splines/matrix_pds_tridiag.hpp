@@ -52,7 +52,7 @@ public:
         }
         return 0.0;
     }
-    void set_element(int i, int j, double const a_ij) override
+    void set_element(int i, int j, double const a_ij) const override
     {
         if (i == j) {
             d[i] = a_ij;

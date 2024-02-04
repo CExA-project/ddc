@@ -62,7 +62,7 @@ public:
         KOKKOS_IF_ON_DEVICE(return m_a(i, j);)
     }
 
-    void set_element(int const i, int const j, double const aij) override
+    void set_element(int const i, int const j, double const aij) const override
     {
         KOKKOS_IF_ON_HOST(
                 if constexpr (Kokkos::SpaceAccessibility<

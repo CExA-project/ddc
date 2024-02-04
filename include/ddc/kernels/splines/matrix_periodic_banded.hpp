@@ -43,7 +43,6 @@ public:
         , kl(kl)
         , ku(ku)
     {
-        std::cout << this->nb;
     }
 
     double get_element(int const i, int j) const override

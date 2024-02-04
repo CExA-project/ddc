@@ -46,13 +46,23 @@ public:
         assert(k <= get_size());
         assert(nb == m_q_block->get_size());
     }
+
+	Matrix_Corner_Block(const Matrix_Corner_Block<ExecSpace>& m) 
+		: Matrix(m.get_size())
+        , k(m.k)
+        , nb(m.get_size() - m.k)
+        , m_delta(m.k)
+        , m_Abm_1_gamma("Abm_1_gamma", m.k, m.nb)
+        , m_lambda("lambda", m.nb, m.k)
+	{}
+
     virtual void reset() const override
     {
         m_q_block->reset();
         Kokkos::parallel_for(
                 "fill_abm_lambda",
                 Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, nb}),
-                KOKKOS_LAMBDA(const int i, const int j) {
+                KOKKOS_CLASS_LAMBDA(const int i, const int j) {
                     m_Abm_1_gamma(i, j) = 0;
                     m_lambda(j, i) = 0;
                 });

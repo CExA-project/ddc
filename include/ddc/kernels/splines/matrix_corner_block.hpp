@@ -278,7 +278,7 @@ protected:
         return v;
     }
 
-private:
+protected:
     virtual int factorize_method() override
     {
         return 0;

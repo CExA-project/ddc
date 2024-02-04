@@ -15,7 +15,6 @@ template <class ExecSpace>
 class Matrix_Center_Block : public Matrix_Corner_Block<ExecSpace>
 {
 protected:
-	std::unique_ptr<Matrix> m_q_block;
 	int const top_block_size;
     int const bottom_block_size;
     int const bottom_block_index;

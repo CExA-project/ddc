@@ -50,9 +50,9 @@ public:
     {
         m_q_block->reset();
         Kokkos::parallel_for(
-                "fill_lambda_adm",
+                "fill_abm_lambda",
                 Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, nb}),
-                KOKKOS_CLASS_LAMBDA(const int i, const int j) {
+                KOKKOS_LAMBDA(const int i, const int j) {
                     m_Abm_1_gamma(i, j) = 0;
                     m_lambda(j, i) = 0;
                 });
@@ -145,7 +145,8 @@ public:
     virtual void factorize() override
     {
         m_q_block->factorize();
-        m_q_block->solve_multiple_inplace(m_Abm_1_gamma.data());
+        m_q_block->solve_multiple_inplace(
+                detail::build_mdspan(m_Abm_1_gamma, std::make_index_sequence<2> {}));
 
         calculate_delta_to_factorize();
 
@@ -219,7 +220,7 @@ protected:
         Kokkos::parallel_for(
                 "calculate_delta_to_factorize",
                 Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, k}),
-                KOKKOS_CLASS_LAMBDA(const int i, const int j) {
+                KOKKOS_LAMBDA(const int i, const int j) {
                     double val = 0.0;
                     for (int l = 0; l < nb; ++l) {
                         val += m_lambda(l, i) * m_Abm_1_gamma(j, l);
@@ -232,7 +233,7 @@ protected:
         Kokkos::parallel_for(
                 "solve_lambda_section",
                 Kokkos::RangePolicy<ExecSpace>(0, k),
-                KOKKOS_CLASS_LAMBDA(const int i) {
+                KOKKOS_LAMBDA(const int i) {
                     // Upper diagonals in lambda
                     for (int j = 0; j < nb; ++j) {
                         Kokkos::atomic_sub(&v(i), m_lambda(j, i) * u(j));
@@ -245,12 +246,12 @@ protected:
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
                 Kokkos::RangePolicy<ExecSpace>(0, nb),
-                KOKKOS_CLASS_LAMBDA(const int i) {
-            // Upper diagonals in lambda
-            for (int j = 0; j < k; ++j) {
-                Kokkos::atomic_sub(&u(i), m_lambda(i, j) * v(j));
-            }
-        });
+                KOKKOS_LAMBDA(const int i) {
+                    // Upper diagonals in lambda
+                    for (int j = 0; j < k; ++j) {
+                        Kokkos::atomic_sub(&u(i), m_lambda(i, j) * v(j));
+                    }
+                });
         return u;
     }
     virtual ddc::DSpan1D solve_gamma_section(ddc::DSpan1D const u, DView1D const v) const
@@ -258,11 +259,11 @@ protected:
         Kokkos::parallel_for(
                 "solve_gamma_section",
                 Kokkos::RangePolicy<ExecSpace>(0, nb),
-                KOKKOS_CLASS_LAMBDA(const int i) {
-            for (int j = 0; j < k; ++j) {
-                Kokkos::atomic_add(&u(i), m_Abm_1_gamma(j, i) * v(j));
-            }
-        });
+                KOKKOS_LAMBDA(const int i) {
+                    for (int j = 0; j < k; ++j) {
+                        Kokkos::atomic_add(&u(i), m_Abm_1_gamma(j, i) * v(j));
+                    }
+                });
         return u;
     }
     virtual ddc::DSpan1D solve_gamma_section_transpose(ddc::DSpan1D const v, DView1D const u) const
@@ -270,11 +271,11 @@ protected:
         Kokkos::parallel_for(
                 "solve_gamma_section_transpose",
                 Kokkos::RangePolicy<ExecSpace>(0, k),
-                KOKKOS_CLASS_LAMBDA(const int j) {
-            for (int i = 0; i < nb; ++i) {
-                Kokkos::atomic_add(&v(j), m_Abm_1_gamma(j, i) * u(i));
-            }
-        });
+                KOKKOS_LAMBDA(const int j) {
+                    for (int i = 0; i < nb; ++i) {
+                        Kokkos::atomic_add(&v(j), m_Abm_1_gamma(j, i) * u(i));
+                    }
+                });
         return v;
     }
 

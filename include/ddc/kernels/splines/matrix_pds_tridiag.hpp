@@ -39,7 +39,7 @@ public:
         memset(l.get(), 0, (get_size() - 1) * sizeof(double));
     }
 
-    double get_element(int i, int j) const override
+    double KOKKOS_FUNCTION get_element(int i, int j) const override
     {
         if (i == j) {
             return d[i];
@@ -52,7 +52,7 @@ public:
         }
         return 0.0;
     }
-    void set_element(int i, int j, double const a_ij) const override
+    void KOKKOS_FUNCTION set_element(int i, int j, double const a_ij) const override
     {
         if (i == j) {
             d[i] = a_ij;

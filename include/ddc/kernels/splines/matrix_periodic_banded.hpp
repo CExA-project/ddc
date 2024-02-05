@@ -61,7 +61,7 @@ public:
 */
 
 
-    double get_element(int const i, int j) const override
+    double KOKKOS_FUNCTION get_element(int const i, int j) const override
     {
         assert(i >= 0);
         assert(i < get_size());
@@ -87,8 +87,7 @@ public:
                             double aij;
                             Kokkos::deep_copy(
                                     Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                    Kokkos::subview(
-                                            m_lambda, j, i - nb));
+                                    Kokkos::subview(m_lambda, j, i - nb));
                             return aij;
                         })
                 KOKKOS_IF_ON_DEVICE(return m_lambda(j, i - nb);)
@@ -103,8 +102,7 @@ public:
                             double aij;
                             Kokkos::deep_copy(
                                     Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                    Kokkos::subview(
-                                            m_lambda, j - nb + k + 1, i - nb));
+                                    Kokkos::subview(m_lambda, j - nb + k + 1, i - nb));
                             return aij;
                         })
                 KOKKOS_IF_ON_DEVICE(return m_lambda(j - nb + k + 1, i - nb);)
@@ -113,7 +111,7 @@ public:
             return Matrix_Corner_Block<ExecSpace>::get_element(i, j);
         }
     }
-    void set_element(int const i, int j, double const aij) const override
+    void KOKKOS_FUNCTION set_element(int const i, int j, double const aij) const override
     {
         assert(i >= 0);
         assert(i < get_size());
@@ -166,6 +164,7 @@ public:
 public:
     void calculate_delta_to_factorize() override
     {
+        auto delta_proxy = *m_delta;
         Kokkos::parallel_for(
                 "calculate_delta_to_factorize",
                 Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, k}),
@@ -180,9 +179,9 @@ public:
                         int l_full = nb - 1 - k + l;
                         val += m_lambda(l, i) * m_Abm_1_gamma(j, l_full);
                     }
-					auto tmp = m_delta->get_element(i, j);
-					printf("%f \n", tmp);
-                    m_delta->set_element(i, j, tmp - val);
+                    auto tmp = delta_proxy.get_element(i, j);
+                    printf("%f \n", tmp);
+                    delta_proxy.set_element(i, j, tmp - val);
                 });
     }
     ddc::DSpan1D solve_lambda_section(ddc::DSpan1D const v, DView1D const u) const override

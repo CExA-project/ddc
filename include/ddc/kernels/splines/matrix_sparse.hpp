@@ -131,15 +131,18 @@ public:
         m_matrix_sparse->clear();
     }
 
-    double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
+    double KOKKOS_FUNCTION
+    get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
     {
-        throw std::runtime_error("MatrixSparse::get_element() is not implemented because no API is "
-                                 "provided by Ginkgo");
+        assert(0); // MatrixSparse::get_element() is not implemented because no API is provided by Ginkgo
     }
 
-    void set_element(int i, int j, double aij) const override
+    void KOKKOS_FUNCTION set_element(int i, int j, double aij) const override
     {
-        m_matrix_dense->at(i, j) = aij;
+        KOKKOS_IF_ON_HOST(m_matrix_dense->at(i, j) = aij;)
+        KOKKOS_IF_ON_DEVICE(
+                assert(0); // MatrixSparse::set_element() is not callable from device because of limitation of Ginkgo API
+        );
     }
 
     int factorize_method() override

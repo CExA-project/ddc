@@ -22,9 +22,9 @@ public:
 
     virtual void reset() const = 0;
 
-    virtual double get_element(int i, int j) const = 0;
+    virtual KOKKOS_FUNCTION double get_element(int i, int j) const = 0;
 
-    virtual void set_element(int i, int j, double aij) const = 0;
+    virtual KOKKOS_FUNCTION void set_element(int i, int j, double aij) const = 0;
 
     virtual void factorize()
     {
@@ -80,7 +80,7 @@ public:
         return bx;
     }
 
-	virtual ddc::DSpan2D_left solve_multiple_inplace(ddc::DSpan2D_left const bx) const
+    virtual ddc::DSpan2D_left solve_multiple_inplace(ddc::DSpan2D_left const bx) const
     {
         assert(int(bx.extent(1)) == m_n);
         int const info = solve_inplace_method(bx.data_handle(), 'N', bx.extent(0));
@@ -120,7 +120,7 @@ public:
         return bx;
     }
 
-	virtual ddc::DSpan2D_left solve_multiple_transpose_inplace(ddc::DSpan2D_left const bx) const
+    virtual ddc::DSpan2D_left solve_multiple_transpose_inplace(ddc::DSpan2D_left const bx) const
     {
         assert(int(bx.extent(1)) == m_n);
         int const info = solve_inplace_method(bx.data_handle(), 'T', bx.extent(0));
@@ -150,7 +150,7 @@ public:
         return bx;
     }
 
-    int get_size() const
+    int KOKKOS_INLINE_FUNCTION get_size() const
     {
         return m_n;
     }

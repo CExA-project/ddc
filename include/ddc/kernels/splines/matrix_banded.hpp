@@ -74,7 +74,7 @@ public:
                 KOKKOS_CLASS_LAMBDA(const int i) { m_q(i) = 0; });
     }
 
-    double get_element(int const i, int const j) const override
+    KOKKOS_FUNCTION double get_element(int const i, int const j) const override
     {
         if (i >= std::max(0, j - m_ku) && i < std::min(get_size(), j + m_kl + 1)) {
             KOKKOS_IF_ON_HOST(
@@ -87,8 +87,7 @@ public:
                         double aij;
                         Kokkos::deep_copy(
                                 Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                Kokkos::subview(
-                                        m_q, j * m_c + m_kl + m_ku + i - j));
+                                Kokkos::subview(m_q, j * m_c + m_kl + m_ku + i - j));
                         return aij;
                     })
             KOKKOS_IF_ON_DEVICE(return m_q(j * m_c + m_kl + m_ku + i - j);)
@@ -98,7 +97,7 @@ public:
         }
     }
 
-    void set_element(int const i, int const j, double const aij) const override
+    KOKKOS_FUNCTION void set_element(int const i, int const j, double const aij) const override
     {
         if (i >= std::max(0, j - m_ku) && i < std::min(get_size(), j + m_kl + 1)) {
             KOKKOS_IF_ON_HOST(
@@ -109,8 +108,7 @@ public:
                     } else {
                         // Inefficient, usage is strongly discouraged
                         Kokkos::deep_copy(
-                                Kokkos::subview(
-                                        m_q, j * m_c + m_kl + m_ku + i - j),
+                                Kokkos::subview(m_q, j * m_c + m_kl + m_ku + i - j),
                                 Kokkos::View<const double, Kokkos::HostSpace>(&aij));
                     })
             KOKKOS_IF_ON_DEVICE(m_q(j * m_c + m_kl + m_ku + i - j) = aij;)

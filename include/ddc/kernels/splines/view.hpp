@@ -93,7 +93,10 @@ template <std::size_t N, class ElementType>
 using SpanND = std::experimental::mdspan<ElementType, std::experimental::dextents<std::size_t, N>>;
 
 template <std::size_t N, class ElementType>
-using SpanND_left = std::experimental::mdspan<ElementType, std::experimental::dextents<std::size_t, N>, std::experimental::layout_left>;
+using SpanND_left = std::experimental::mdspan<
+        ElementType,
+        std::experimental::dextents<std::size_t, N>,
+        std::experimental::layout_left>;
 
 template <std::size_t N, class ElementType>
 using SpanND_stride = std::experimental::mdspan<

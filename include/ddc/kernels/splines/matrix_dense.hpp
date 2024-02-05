@@ -42,7 +42,7 @@ public:
                 KOKKOS_CLASS_LAMBDA(const int i, const int j) { m_a(i, j) = 0; });
     }
 
-    double get_element(int const i, int const j) const override
+    double KOKKOS_FUNCTION get_element(int const i, int const j) const override
     {
         assert(i < get_size());
         assert(j < get_size());
@@ -62,7 +62,7 @@ public:
         KOKKOS_IF_ON_DEVICE(return m_a(i, j);)
     }
 
-    void set_element(int const i, int const j, double const aij) const override
+    void KOKKOS_FUNCTION set_element(int const i, int const j, double const aij) const override
     {
         KOKKOS_IF_ON_HOST(
                 if constexpr (Kokkos::SpaceAccessibility<

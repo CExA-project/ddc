@@ -63,7 +63,7 @@ public:
 				*/
     }
 
-    virtual double get_element(int const i, int const j) const override
+    virtual KOKKOS_FUNCTION double get_element(int const i, int const j) const override
     {
         assert(i >= 0);
         assert(i < get_size());
@@ -84,8 +84,7 @@ public:
                         double aij;
                         Kokkos::deep_copy(
                                 Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                Kokkos::subview(
-                                        m_Abm_1_gamma, j - nb, i));
+                                Kokkos::subview(m_Abm_1_gamma, j - nb, i));
                         return aij;
                     })
             KOKKOS_IF_ON_DEVICE(return m_Abm_1_gamma(j - nb, i);)
@@ -100,14 +99,14 @@ public:
                         double aij;
                         Kokkos::deep_copy(
                                 Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                Kokkos::subview(
-                                        m_lambda, j, i - nb));
+                                Kokkos::subview(m_lambda, j, i - nb));
                         return aij;
                     })
             KOKKOS_IF_ON_DEVICE(return m_lambda(j, i - nb);)
         }
     }
-    virtual void set_element(int const i, int const j, double const aij) const override
+    virtual KOKKOS_FUNCTION void set_element(int const i, int const j, double const aij)
+            const override
     {
         assert(i >= 0);
         assert(i < get_size());
@@ -126,8 +125,7 @@ public:
                     } else {
                         // Inefficient, usage is strongly discouraged
                         Kokkos::deep_copy(
-                                Kokkos::subview(
-                                        m_Abm_1_gamma, j - nb, i),
+                                Kokkos::subview(m_Abm_1_gamma, j - nb, i),
                                 Kokkos::View<const double, Kokkos::HostSpace>(&aij));
                     })
             KOKKOS_IF_ON_DEVICE(m_Abm_1_gamma(j - nb, i) = aij;)
@@ -140,8 +138,7 @@ public:
                     } else {
                         // Inefficient, usage is strongly discouraged
                         Kokkos::deep_copy(
-                                Kokkos::subview(
-                                        m_lambda, j, i - nb),
+                                Kokkos::subview(m_lambda, j, i - nb),
                                 Kokkos::View<const double, Kokkos::HostSpace>(&aij));
                     })
             KOKKOS_IF_ON_DEVICE(m_lambda(j, i - nb) = aij;)
@@ -220,6 +217,7 @@ protected:
         assert(k <= n);
         assert(nb == m_q_block->get_size());
     }
+
 public:
     virtual void calculate_delta_to_factorize()
     {

@@ -143,9 +143,7 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
         std::unique_ptr<ddc::detail::Matrix> matrix
                 = ddc::detail::MatrixMaker::make_new_periodic_banded<
                         Kokkos::DefaultHostExecutionSpace>(N, k - s, k + s, false);
-		std::cout << matrix->get_element(0,1) << " ";
         matrix->reset();
-		std::cout << matrix->get_element(0,1) << " ";
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
                 std::ptrdiff_t diag = ddc::detail::modulo((int)(j - i), (int)N);
@@ -165,11 +163,8 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
         std::vector<double> inv_ptr(N * N);
         ddc::DSpan2D inv(inv_ptr.data(), N, N);
         fill_identity(inv);
-		std::cout << matrix->get_element(0,1) << " ";
         matrix->factorize();
-		std::cout << matrix->get_element(0,1) << " ";
         matrix->solve_multiple_inplace(inv);
-		std::cout << matrix->get_element(0,1) << " ";
         check_inverse(val, inv);
     }
 }

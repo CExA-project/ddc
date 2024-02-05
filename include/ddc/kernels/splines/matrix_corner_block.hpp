@@ -61,6 +61,7 @@ public:
     virtual void reset() const override
     {
         m_q_block->reset();
+        m_delta.reset();
         Kokkos::parallel_for(
                 "fill_abm_lambda",
                 Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, nb}),
@@ -273,7 +274,7 @@ protected:
                 Kokkos::RangePolicy<ExecSpace>(0, nb),
                 KOKKOS_CLASS_LAMBDA(const int i) {
                     for (int j = 0; j < k; ++j) {
-                        Kokkos::atomic_add(&u(i), m_Abm_1_gamma(j, i) * v(j));
+                        Kokkos::atomic_sub(&u(i), m_Abm_1_gamma(j, i) * v(j));
                     }
                 });
         return u;
@@ -285,7 +286,7 @@ protected:
                 Kokkos::RangePolicy<ExecSpace>(0, k),
                 KOKKOS_CLASS_LAMBDA(const int j) {
                     for (int i = 0; i < nb; ++i) {
-                        Kokkos::atomic_add(&v(j), m_Abm_1_gamma(j, i) * u(i));
+                        Kokkos::atomic_sub(&v(j), m_Abm_1_gamma(j, i) * u(i));
                     }
                 });
         return v;

@@ -86,9 +86,9 @@ public:
                             // Inefficient, usage is strongly discouraged
                             double aij;
                             Kokkos::deep_copy(
-                                    Kokkos::View<double*, Kokkos::HostSpace>(&aij),
-                                    Kokkos::View<double*, typename ExecSpace::memory_space>(
-                                            &m_lambda(j, i - nb)));
+                                    Kokkos::View<double, Kokkos::HostSpace>(&aij),
+                                    Kokkos::subview(
+                                            m_lambda, j, i - nb));
                             return aij;
                         })
                 KOKKOS_IF_ON_DEVICE(return m_lambda(j, i - nb);)
@@ -102,9 +102,9 @@ public:
                             // Inefficient, usage is strongly discouraged
                             double aij;
                             Kokkos::deep_copy(
-                                    Kokkos::View<double*, Kokkos::HostSpace>(&aij),
-                                    Kokkos::View<double*, typename ExecSpace::memory_space>(
-                                            &m_lambda(j - nb + k + 1, i - nb)));
+                                    Kokkos::View<double, Kokkos::HostSpace>(&aij),
+                                    Kokkos::subview(
+                                            m_lambda, j - nb + k + 1, i - nb));
                             return aij;
                         })
                 KOKKOS_IF_ON_DEVICE(return m_lambda(j - nb + k + 1, i - nb);)
@@ -140,9 +140,8 @@ public:
                         } else {
                             // Inefficient, usage is strongly discouraged
                             Kokkos::deep_copy(
-                                    Kokkos::View<double*, typename ExecSpace::memory_space>(
-                                            &m_lambda(j, i - nb)),
-                                    Kokkos::View<const double*, Kokkos::HostSpace>(&aij));
+                                    Kokkos::subview(m_lambda, j, i - nb),
+                                    Kokkos::View<const double, Kokkos::HostSpace>(&aij));
                         })
                 KOKKOS_IF_ON_DEVICE(m_lambda(j, i - nb) = aij;)
             } else {
@@ -154,9 +153,8 @@ public:
                         } else {
                             // Inefficient, usage is strongly discouraged
                             Kokkos::deep_copy(
-                                    Kokkos::View<double*, typename ExecSpace::memory_space>(
-                                            &m_lambda(j - nb + k + 1, i - nb)),
-                                    Kokkos::View<const double*, Kokkos::HostSpace>(&aij));
+                                    Kokkos::subview(m_lambda, j - nb + k + 1, i - nb),
+                                    Kokkos::View<const double, Kokkos::HostSpace>(&aij));
                         })
                 KOKKOS_IF_ON_DEVICE(m_lambda(j - nb + k + 1, i - nb) = aij;)
             }
@@ -165,7 +163,7 @@ public:
         }
     }
 
-protected:
+public:
     void calculate_delta_to_factorize() override
     {
         Kokkos::parallel_for(
@@ -182,7 +180,9 @@ protected:
                         int l_full = nb - 1 - k + l;
                         val += m_lambda(l, i) * m_Abm_1_gamma(j, l_full);
                     }
-                    m_delta->set_element(i, j, m_delta->get_element(i, j) - val);
+					auto tmp = m_delta->get_element(i, j);
+					printf("%f \n", tmp);
+                    m_delta->set_element(i, j, tmp - val);
                 });
     }
     ddc::DSpan1D solve_lambda_section(ddc::DSpan1D const v, DView1D const u) const override

@@ -444,6 +444,12 @@ void SplineBuilder<
     build_matrix_system();
 
     matrix->factorize();
+for (std::size_t i=0; i<10;i++) {
+	for (std::size_t j=0; j<10;j++) {
+std::cout << matrix->get_element(i,j) << " ";
+	}
+	std::cout << "\n";
+	}
 }
 
 template <

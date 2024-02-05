@@ -55,8 +55,8 @@ public:
                     // Inefficient, usage is strongly discouraged
                     double aij;
                     Kokkos::deep_copy(
-                            Kokkos::View<double*, Kokkos::HostSpace>(&aij),
-                            Kokkos::View<double*, typename ExecSpace::memory_space>(&m_a(i, j)));
+                            Kokkos::View<double, Kokkos::HostSpace>(&aij),
+                            Kokkos::subview(m_a, i, j));
                     return aij;
                 })
         KOKKOS_IF_ON_DEVICE(return m_a(i, j);)
@@ -72,8 +72,8 @@ public:
                 } else {
                     // Inefficient, usage is strongly discouraged
                     Kokkos::deep_copy(
-                            Kokkos::View<double*, typename ExecSpace::memory_space>(&m_a(i, j)),
-                            Kokkos::View<const double*, Kokkos::HostSpace>(&aij));
+                            Kokkos::subview(m_a, i, j),
+                            Kokkos::View<const double, Kokkos::HostSpace>(&aij));
                 })
         KOKKOS_IF_ON_DEVICE(m_a(i, j) = aij;)
     }

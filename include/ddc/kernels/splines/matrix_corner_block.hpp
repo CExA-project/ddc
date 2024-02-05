@@ -27,7 +27,7 @@ protected:
     //
     //-------------------------------------
     std::shared_ptr<Matrix> m_q_block;
-	std::shared_ptr<Matrix_Dense<ExecSpace>> m_delta;
+    std::shared_ptr<Matrix_Dense<ExecSpace>> m_delta;
     Kokkos::View<double**, typename ExecSpace::memory_space> m_Abm_1_gamma;
     Kokkos::View<double**, typename ExecSpace::memory_space> m_lambda;
 
@@ -47,23 +47,12 @@ public:
         assert(nb == m_q_block->get_size());
     }
 
-	/*
-    Matrix_Corner_Block(const Matrix_Corner_Block<ExecSpace>& m)
-        : Matrix(m.get_size())
-        , k(m.k)
-        , nb(m.get_size() - m.k)
-        , m_q_block(m.m_q_block)
-        , m_delta(m.m_delta)
-        , m_Abm_1_gamma(m.m_Abm_1_gamma)
-        , m_lambda(m.m_lambda)
-    {
-    }
-	*/
-
     virtual void reset() const override
     {
         m_q_block->reset();
         m_delta->reset();
+        // TODO: restore
+        /*
         Kokkos::parallel_for(
                 "fill_abm_lambda",
                 Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, nb}),
@@ -71,6 +60,7 @@ public:
                     m_Abm_1_gamma(i, j) = 0;
                     m_lambda(j, i) = 0;
                 });
+				*/
     }
 
     virtual double get_element(int const i, int const j) const override

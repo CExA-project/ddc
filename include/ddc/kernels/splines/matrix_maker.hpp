@@ -58,7 +58,6 @@ public:
         } else {
             block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, kl, ku);
         }
-		std::cout << "PERIODIC";
         return std::make_unique<Matrix_Periodic_Banded<ExecSpace>>(n, kl, ku, std::move(block_mat));
     }
 

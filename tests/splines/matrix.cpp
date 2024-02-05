@@ -143,7 +143,7 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
         std::unique_ptr<ddc::detail::Matrix> matrix
                 = ddc::detail::MatrixMaker::make_new_periodic_banded<
                         Kokkos::DefaultHostExecutionSpace>(N, k - s, k + s, false);
-        //matrix->reset();
+        matrix->reset();
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
                 std::ptrdiff_t diag = ddc::detail::modulo((int)(j - i), (int)N);
@@ -244,7 +244,7 @@ TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
         std::unique_ptr<ddc::detail::Matrix> matrix
                 = ddc::detail::MatrixMaker::make_new_periodic_banded<
                         Kokkos::DefaultHostExecutionSpace>(N, k - s, k + s, false);
-        // matrix->reset();
+        matrix->reset();
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
                 int diag = ddc::detail::modulo((int)(j - i), (int)N);

@@ -27,7 +27,7 @@ protected:
     //
     //-------------------------------------
     std::shared_ptr<Matrix> m_q_block;
-    Matrix_Dense<ExecSpace> m_delta;
+	std::shared_ptr<Matrix_Dense<ExecSpace>> m_delta;
     Kokkos::View<double**, typename ExecSpace::memory_space> m_Abm_1_gamma;
     Kokkos::View<double**, typename ExecSpace::memory_space> m_lambda;
 
@@ -37,7 +37,7 @@ public:
         , k(k)
         , nb(n - k)
         , m_q_block(std::move(q))
-        , m_delta(k)
+        , m_delta(new Matrix_Dense<ExecSpace>(k))
         , m_Abm_1_gamma("Abm_1_gamma", k, nb)
         , m_lambda("lambda", nb, k)
     {
@@ -47,21 +47,23 @@ public:
         assert(nb == m_q_block->get_size());
     }
 
+	/*
     Matrix_Corner_Block(const Matrix_Corner_Block<ExecSpace>& m)
         : Matrix(m.get_size())
         , k(m.k)
         , nb(m.get_size() - m.k)
         , m_q_block(m.m_q_block)
-        , m_delta(m.k)
-        , m_Abm_1_gamma("Abm_1_gamma", m.k, m.nb)
-        , m_lambda("lambda", m.nb, m.k)
+        , m_delta(m.m_delta)
+        , m_Abm_1_gamma(m.m_Abm_1_gamma)
+        , m_lambda(m.m_lambda)
     {
     }
+	*/
 
     virtual void reset() const override
     {
         m_q_block->reset();
-        m_delta.reset();
+        m_delta->reset();
         Kokkos::parallel_for(
                 "fill_abm_lambda",
                 Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, nb}),
@@ -80,7 +82,7 @@ public:
         if (i < nb && j < nb) {
             return m_q_block->get_element(i, j);
         } else if (i >= nb && j >= nb) {
-            return m_delta.get_element(i - nb, j - nb);
+            return m_delta->get_element(i - nb, j - nb);
         } else if (j >= nb) {
             KOKKOS_IF_ON_HOST(
                     if constexpr (Kokkos::SpaceAccessibility<
@@ -124,7 +126,7 @@ public:
         if (i < nb && j < nb) {
             m_q_block->set_element(i, j, aij);
         } else if (i >= nb && j >= nb) {
-            m_delta.set_element(i - nb, j - nb, aij);
+            m_delta->set_element(i - nb, j - nb, aij);
         } else if (j >= nb) {
             KOKKOS_IF_ON_HOST(
                     if constexpr (Kokkos::SpaceAccessibility<
@@ -163,7 +165,7 @@ public:
 
         calculate_delta_to_factorize();
 
-        m_delta.factorize();
+        m_delta->factorize();
     }
     virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const bx) const override
     {
@@ -176,7 +178,7 @@ public:
 
         solve_lambda_section(v, u);
 
-        m_delta.solve_inplace(v);
+        m_delta->solve_inplace(v);
 
         solve_gamma_section(u, v);
 
@@ -190,7 +192,7 @@ public:
 
         solve_gamma_section_transpose(v, u);
 
-        m_delta.solve_transpose_inplace(v);
+        m_delta->solve_transpose_inplace(v);
 
         solve_lambda_section_transpose(u, v);
 
@@ -219,7 +221,7 @@ protected:
         , k(k)
         , nb(n - k)
         , m_q_block(std::move(q))
-        , m_delta(k)
+        , m_delta(new Matrix_Dense<ExecSpace>(k))
         , m_Abm_1_gamma("Abm_1_gamma", k, nb)
         , m_lambda("lambda", lambda_size1, lambda_size2)
     {
@@ -238,7 +240,7 @@ protected:
                     for (int l = 0; l < nb; ++l) {
                         val += m_lambda(l, i) * m_Abm_1_gamma(j, l);
                     }
-                    m_delta.set_element(i, j, m_delta.get_element(i, j) - val);
+                    m_delta->set_element(i, j, m_delta->get_element(i, j) - val);
                 });
     }
     virtual ddc::DSpan1D solve_lambda_section(ddc::DSpan1D const v, DView1D const u) const
@@ -312,13 +314,13 @@ protected:
 
                 solve_lambda_section(v, u);
 
-                m_delta.solve_inplace(v);
+                m_delta->solve_inplace(v);
 
                 solve_gamma_section(u, v);
             } else if (transpose == 'T') {
                 solve_gamma_section_transpose(v, u);
 
-                m_delta.solve_transpose_inplace(v);
+                m_delta->solve_transpose_inplace(v);
 
                 solve_lambda_section_transpose(u, v);
 

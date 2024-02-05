@@ -166,7 +166,8 @@ protected:
                         int l_full = nb - 1 - k + l;
                         val += m_lambda(l, i) * m_Abm_1_gamma(j, l_full);
                     }
-                    m_delta.set_element(i, j, m_delta.get_element(i, j) - val);
+                    m_delta->set_element(i, j, m_delta->get_element(i, j) - val);
+					                    std::cout << m_delta->get_element(i, j) << " ";
                 });
     }
     ddc::DSpan1D solve_lambda_section(ddc::DSpan1D const v, DView1D const u) const override

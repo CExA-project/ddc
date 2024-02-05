@@ -85,7 +85,7 @@ public:
 
 
 protected:
-    void adjust_indexes(int& i, int& j) const
+    void KOKKOS_FUNCTION adjust_indexes(int& i, int& j) const
     {
         if (i < top_block_size)
             i += m_q_block->get_size();
@@ -148,24 +148,24 @@ protected:
         Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, 2>,
                 Kokkos::LayoutStride,
-                Kokkos::HostSpace>
+                typename ExecSpace::memory_space>
                 bx_top_view(bx_top.data_handle(), bx_top_kokkos_layout);
         Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, 2>,
                 Kokkos::LayoutStride,
-                Kokkos::HostSpace>
+                typename ExecSpace::memory_space>
                 bx_q_view(bx_q.data_handle(), bx_q_kokkos_layout);
         Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, 2>,
                 Kokkos::LayoutStride,
-                Kokkos::HostSpace>
+                typename ExecSpace::memory_space>
                 bx_top_dest_view(bx_top_dest.data_handle(), bx_top_kokkos_layout);
         Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, 2>,
                 Kokkos::LayoutStride,
-                Kokkos::HostSpace>
+                typename ExecSpace::memory_space>
                 bx_q_dest_view(bx_q_dest.data_handle(), bx_q_kokkos_layout);
-        auto bx_q_buffer = Kokkos::create_mirror(Kokkos::DefaultHostExecutionSpace(), bx_q_view);
+        auto bx_q_buffer = Kokkos::create_mirror(ExecSpace(), bx_q_view);
 
         Kokkos::deep_copy(bx_q_buffer, bx_q_view);
         Kokkos::deep_copy(bx_top_dest_view, bx_top_view);
@@ -223,25 +223,24 @@ protected:
         Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, 2>,
                 Kokkos::LayoutStride,
-                Kokkos::HostSpace>
+                typename ExecSpace::memory_space>
                 bx_top_view(bx_top.data_handle(), bx_top_kokkos_layout);
         Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, 2>,
                 Kokkos::LayoutStride,
-                Kokkos::HostSpace>
+                typename ExecSpace::memory_space>
                 bx_q_view(bx_q.data_handle(), bx_q_kokkos_layout);
         Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, 2>,
                 Kokkos::LayoutStride,
-                Kokkos::HostSpace>
+                typename ExecSpace::memory_space>
                 bx_top_src_view(bx_top_src.data_handle(), bx_top_kokkos_layout);
         Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, 2>,
                 Kokkos::LayoutStride,
-                Kokkos::HostSpace>
+                typename ExecSpace::memory_space>
                 bx_q_src_view(bx_q_src.data_handle(), bx_q_kokkos_layout);
-        auto bx_q_buffer
-                = Kokkos::create_mirror(Kokkos::DefaultHostExecutionSpace(), bx_q_src_view);
+        auto bx_q_buffer = Kokkos::create_mirror(ExecSpace(), bx_q_src_view);
 
         Kokkos::deep_copy(bx_q_buffer, bx_q_src_view);
         Kokkos::deep_copy(bx_top_view, bx_top_src_view);

@@ -28,8 +28,8 @@ protected:
     //-------------------------------------
     std::shared_ptr<Matrix> m_q_block;
     std::shared_ptr<Matrix_Dense<ExecSpace>> m_delta;
-    Kokkos::View<double**, typename ExecSpace::memory_space> m_Abm_1_gamma;
-    Kokkos::View<double**, typename ExecSpace::memory_space> m_lambda;
+    Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_Abm_1_gamma;
+    Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_lambda;
 
 public:
     Matrix_Corner_Block(int const n, int const k, std::unique_ptr<Matrix> q)
@@ -221,6 +221,7 @@ protected:
 public:
     virtual void calculate_delta_to_factorize()
     {
+        auto delta_proxy = *m_delta;
         Kokkos::parallel_for(
                 "calculate_delta_to_factorize",
                 Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, k}),
@@ -229,7 +230,7 @@ public:
                     for (int l = 0; l < nb; ++l) {
                         val += m_lambda(l, i) * m_Abm_1_gamma(j, l);
                     }
-                    m_delta->set_element(i, j, m_delta->get_element(i, j) - val);
+                    delta_proxy.set_element(i, j, delta_proxy.get_element(i, j) - val);
                 });
     }
     virtual ddc::DSpan1D solve_lambda_section(ddc::DSpan1D const v, DView1D const u) const

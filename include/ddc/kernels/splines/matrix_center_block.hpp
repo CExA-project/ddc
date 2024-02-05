@@ -39,7 +39,8 @@ public:
         , top_block_size(top_block_size)
         , bottom_block_size(bottom_block_size)
         , bottom_block_index(n - bottom_block_size)
-        , swap_array(std::make_unique<double[]>(q->get_size()))
+        // , swap_array(std::make_unique<double[]>(q->get_size()))
+        , swap_array(std::make_unique<double[]>(1))
     {
     }
 

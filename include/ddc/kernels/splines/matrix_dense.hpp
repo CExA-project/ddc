@@ -7,32 +7,16 @@
 
 #include "matrix.hpp"
 
-
 namespace ddc::detail {
-extern "C" int dgetrf_(int const* m, int const* n, double* a, int const* lda, int* ipiv, int* info);
-extern "C" int dgetrs_(
-        char const* trans,
-        int const* n,
-        int const* nrhs,
-        double* a,
-        int const* lda,
-        int* ipiv,
-        double* b,
-        int const* ldb,
-        int* info);
 
 template <class ExecSpace>
 class Matrix_Dense : public Matrix
 {
 protected:
     Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_a;
-    Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv;
 
 public:
-    explicit Matrix_Dense(int const mat_size)
-        : Matrix(mat_size)
-        , m_a("a", mat_size, mat_size)
-        , m_ipiv("ipiv", mat_size)
+    explicit Matrix_Dense(int const mat_size) : Matrix(mat_size), m_a("a", mat_size, mat_size)
     {
         assert(mat_size > 0);
     }
@@ -81,40 +65,26 @@ public:
         KOKKOS_IF_ON_DEVICE(m_a(i, j) = aij;)
     }
 
-private:
     int factorize_method() override
     {
-        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
-        auto ipiv_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
-        int info;
-        int const n = get_size();
-        dgetrf_(&n, &n, a_host.data(), &n, ipiv_host.data(), &info);
-        Kokkos::deep_copy(m_a, a_host);
-        Kokkos::deep_copy(m_ipiv, ipiv_host);
-        return info;
+        Kokkos::parallel_for(
+                "gertf",
+                Kokkos::RangePolicy<ExecSpace>(0, 1),
+                KOKKOS_CLASS_LAMBDA(const int i) {
+                    int info = KokkosBatched::SerialLU<
+                            KokkosBatched::Algo::Level3::Unblocked>::invoke(m_a);
+                });
+        return 0;
     }
 
-public:
     int solve_inplace_method(
             double* const b,
             char const transpose,
             int const n_equations,
             int const stride) const override
     {
-        double info;
         Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                 b_view(b, get_size(), n_equations);
-        Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> a;
-        //TODO : if transpose change order of operations, dont actually transpose
-        if (transpose == 'N') {
-            a = m_a;
-        } else if (transpose == 'T') {
-            Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                    a_tr(m_a.data(), get_size(), get_size());
-            Kokkos::deep_copy(a, a_tr);
-        } else {
-            return -1;
-        }
 
         Kokkos::parallel_for(
                 "gerts",
@@ -122,19 +92,36 @@ public:
                 KOKKOS_CLASS_LAMBDA(const int i) {
                     Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                             b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
-
-                    int info = KokkosBatched::SerialTrsm<
-                            KokkosBatched::Side::Left,
-                            KokkosBatched::Uplo::Lower,
-                            KokkosBatched::Trans::NoTranspose,
-                            KokkosBatched::Diag::Unit,
-                            KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, a, b_slice);
-                    info = KokkosBatched::SerialTrsm<
-                            KokkosBatched::Side::Left,
-                            KokkosBatched::Uplo::Upper,
-                            KokkosBatched::Trans::NoTranspose,
-                            KokkosBatched::Diag::NonUnit,
-                            KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, a, b_slice);
+                    int info;
+                    if (transpose == 'N') {
+                        info = KokkosBatched::SerialTrsm<
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Uplo::Lower,
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Diag::Unit,
+                                KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, m_a, b_slice);
+                        info = KokkosBatched::SerialTrsm<
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Uplo::Upper,
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Diag::NonUnit,
+                                KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, m_a, b_slice);
+                    } else if (transpose == 'T') {
+                        info = KokkosBatched::SerialTrsm<
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Uplo::Lower,
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Diag::Unit,
+                                KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, m_a, b_slice);
+                        info = KokkosBatched::SerialTrsm<
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Uplo::Upper,
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Diag::NonUnit,
+                                KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, m_a, b_slice);
+                    } else {
+                        info = -1;
+                    }
                 });
         return 0;
     }

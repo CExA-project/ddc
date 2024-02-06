@@ -93,6 +93,7 @@ private:
         Kokkos::deep_copy(m_ipiv, ipiv_host);
         return info;
     }
+
 public:
     int solve_inplace_method(
             double* const b,
@@ -103,40 +104,38 @@ public:
         double info;
         Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                 b_view(b, get_size(), n_equations);
-		Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                x_view("x_view", get_size(), n_equations);
-		Kokkos::View<double***, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            tmp("tmp", get_size(), get_size() + 4, n_equations);
-		Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-							a;
-		if (transpose == 'N') {
-			a = m_a;
-		}
-		else if (transpose == 'T') {
-		  Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-				a_tr(m_a.data(), get_size(), get_size());
-		  Kokkos::deep_copy(a, a_tr);
-		}
-		else {
-		  return -1;
-		}
+        Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> a;
+        //TODO : if transpose change order of operations, dont actually transpose
+        if (transpose == 'N') {
+            a = m_a;
+        } else if (transpose == 'T') {
+            Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                    a_tr(m_a.data(), get_size(), get_size());
+            Kokkos::deep_copy(a, a_tr);
+        } else {
+            return -1;
+        }
+
         Kokkos::parallel_for(
-                "gesv",
+                "gerts",
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),
                 KOKKOS_CLASS_LAMBDA(const int i) {
-                                        Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
                     Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            x_slice = Kokkos::subview(x_view, Kokkos::ALL, i);
-					Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            tmp_slice = Kokkos::subview(tmp, Kokkos::ALL, Kokkos::ALL, i);
+                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
-
-                    int info = KokkosBatched::SerialGesv<KokkosBatched::Gesv::StaticPivoting>::
-                            invoke(a, x_slice, b_slice, tmp_slice);
-					printf("%i", info);
+                    int info = KokkosBatched::SerialTrsm<
+                            KokkosBatched::Side::Left,
+                            KokkosBatched::Uplo::Lower,
+                            KokkosBatched::Trans::NoTranspose,
+                            KokkosBatched::Diag::Unit,
+                            KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, a, b_slice);
+                    info = KokkosBatched::SerialTrsm<
+                            KokkosBatched::Side::Left,
+                            KokkosBatched::Uplo::Upper,
+                            KokkosBatched::Trans::NoTranspose,
+                            KokkosBatched::Diag::NonUnit,
+                            KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, a, b_slice);
                 });
-        Kokkos::deep_copy(b_view, x_view);
         return 0;
     }
 };

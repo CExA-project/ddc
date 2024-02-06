@@ -3,9 +3,10 @@
 #include <cassert>
 #include <memory>
 
+#include <KokkosBatched_Gesv.hpp>
+
 #include "matrix.hpp"
 
-#include <KokkosLapack_gesv.hpp>
 
 namespace ddc::detail {
 extern "C" int dgetrf_(int const* m, int const* n, double* a, int const* lda, int* ipiv, int* info);
@@ -25,7 +26,7 @@ class Matrix_Dense : public Matrix
 {
 protected:
     Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_a;
-    Kokkos::View<int**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_ipiv;
+    Kokkos::View<int*, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_ipiv;
 
 public:
     explicit Matrix_Dense(int const mat_size)
@@ -99,30 +100,26 @@ private:
             int const n_equations,
             int const stride) const override
     {
-		/*
-        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
-        auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
+        double info;
         Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                 b_view(b, get_size(), n_equations);
-        auto b_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), b_view);
-        int info;
-        int const n = get_size();
-        dgetrs_(&transpose,
-                &n,
-                &n_equations,
-                a_host.data(),
-                &n,
-                ipiv_host.data(),
-                b_host.data(),
-                &n,
-                &info);
-        Kokkos::deep_copy(b_view, b_host);
+        Kokkos::parallel_reduce(
+                "gesv",
+                Kokkos::RangePolicy<ExecSpace>(0, n_equations),
+                KOKKOS_CLASS_LAMBDA(const int i, double& lsum) {
+                    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                            tmp("tmp", get_size(), get_size() + 4);
+                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                            x_slice = create_mirror(ExecSpace(), b_slice);
+
+                    lsum += KokkosBatched::SerialGesv<KokkosBatched::Gesv::StaticPivoting>::
+                            invoke(m_a, x_slice, b_slice, tmp);
+                    Kokkos::deep_copy(b_slice, x_slice);
+                },
+                info);
         return info;
-		*/
-        Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                b_view(b, get_size(), n_equations);
-		KokkosLapack::gesv(m_a,b_view,m_ipiv);
-        return 0;
     }
 };
 

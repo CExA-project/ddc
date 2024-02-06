@@ -5,6 +5,8 @@
 
 #include "matrix.hpp"
 
+#include <KokkosLapack_gesv.hpp>
+
 namespace ddc::detail {
 extern "C" int dgetrf_(int const* m, int const* n, double* a, int const* lda, int* ipiv, int* info);
 extern "C" int dgetrs_(
@@ -23,7 +25,7 @@ class Matrix_Dense : public Matrix
 {
 protected:
     Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_a;
-    Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv;
+    Kokkos::View<int**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_ipiv;
 
 public:
     explicit Matrix_Dense(int const mat_size)
@@ -97,6 +99,7 @@ private:
             int const n_equations,
             int const stride) const override
     {
+		/*
         auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
         auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
@@ -115,6 +118,11 @@ private:
                 &info);
         Kokkos::deep_copy(b_view, b_host);
         return info;
+		*/
+        Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                b_view(b, get_size(), n_equations);
+		KokkosLapack::gesv(m_a,b_view,m_ipiv);
+        return 0;
     }
 };
 

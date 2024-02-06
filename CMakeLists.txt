@@ -244,6 +244,16 @@ if("${BUILD_SPLINES_KERNEL}")
   # Lapack
   find_package(LAPACK REQUIRED COMPONENTS CXX)
   target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
+
+  #	Kokkos-kernels 
+  set(KokkosKernels_ENABLE_ALL_COMPONENTS OFF)
+  set(KokkosKernels_ENABLE_COMPONENT_BLAS ON)
+  set(KokkosKernels_ENABLE_COMPONENT_BATCHED ON)
+  set(KokkosKernels_ENABLE_COMPONENT_LAPACK ON)
+  set(KokkosKernels_ENABLE_TPL_BLAS ON)
+  set(KokkosKernels_ENABLE_TPL_LAPACK ON)
+  add_subdirectory(vendor/kokkos-kernels/)
+  target_link_libraries(DDC INTERFACE Kokkos::kokkoskernels)
 endif()
 
 ## The PDI wrapper

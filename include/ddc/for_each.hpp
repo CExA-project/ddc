@@ -127,7 +127,40 @@ inline void for_each_kokkos(
     }
 }
 
+template <class RetType, class Element, std::size_t N, class Functor, class... Is>
+inline void for_each_serial(
+        std::array<Element, N> const& begin,
+        std::array<Element, N> const& end,
+        Functor const& f,
+        Is const&... is) noexcept
+{
+    static constexpr std::size_t I = sizeof...(Is);
+    if constexpr (I == N) {
+        f(RetType(is...));
+    } else {
+        for (Element ii = begin[I]; ii < end[I]; ++ii) {
+            for_each_serial<RetType>(begin, end, f, is..., ii);
+        }
+    }
+}
+
 } // namespace detail
+
+/** iterates over a nD domain using the serial execution policy
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking an index as parameter
+ */
+template <class... DDims, class Functor>
+inline void for_each(
+        DiscreteDomain<DDims...> const& domain,
+        Functor&& f) noexcept
+{
+    DiscreteElement<DDims...> const ddc_begin = domain.front();
+    DiscreteElement<DDims...> const ddc_end = domain.front() + domain.extents();
+    std::array const begin = detail::array(ddc_begin);
+    std::array const end = detail::array(ddc_end);
+    detail::for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
+}
 
 /** iterates over a nD extent using the serial execution 
  * @param[in] extent the extent over which to iterate
@@ -142,7 +175,7 @@ inline void for_each_n(
     DiscreteVector<DDims...> const ddc_end = extent;
     std::array const begin = detail::array(ddc_begin);
     std::array const end = detail::array(ddc_end);
-    detail::for_each_kokkos<Kokkos::Serial, DiscreteVector<DDims...>>(begin, end, std::forward<Functor>(f));
+    detail::for_each_serial<DiscreteVector<DDims...>>(begin, end, std::forward<Functor>(f));
 }
 
 /** iterates over a nD domain 
@@ -150,11 +183,11 @@ inline void for_each_n(
  * @param[in] f      a functor taking an index as parameter
  */
 template <class ExecSpace, class... DDims, class Functor>
-inline void for_each(
+inline void parallel_each(
         DiscreteDomain<DDims...> const& domain,
         Functor&& f) noexcept
 {
-    detail::for_each_kokkos<ExecSpace>(domain, std::forward<Functor>(f));
+        detail::for_each_kokkos<ExecSpace>(domain, std::forward<Functor>(f));
 }
 
 template <
@@ -163,12 +196,11 @@ template <
         class... DDims,
         class LayoutPolicy,
         class Functor>
-inline void for_each_elem(
-        ExecSpace&& kokkos_execution_space,
+inline void parallel_each_elem(
         ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutPolicy> chunk_span,
         Functor&& f) noexcept
 {
-    for_each(std::forward<ExecSpace>(kokkos_execution_space), chunk_span.domain(), std::forward<Functor>(f));
+    parallel_each<ExecSpace>(chunk_span.domain(), std::forward<Functor>(f));
 }
 
 template <class ElementType, class... DDims, class LayoutPolicy, class Functor>

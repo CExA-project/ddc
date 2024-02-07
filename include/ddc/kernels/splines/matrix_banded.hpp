@@ -121,6 +121,7 @@ public:
 protected:
     int factorize_method() override
     {
+		// TODO : Rewrite using Kokkos-kernels
         auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
         auto ipiv_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         int info;
@@ -136,6 +137,7 @@ protected:
             int const n_equations,
             int const stride) const override
     {
+		// TODO : Rewrite using Kokkos-kernels
         auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
         auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>

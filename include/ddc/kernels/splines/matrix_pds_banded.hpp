@@ -159,22 +159,20 @@ protected:
         if (trans == 'N') {
             for (int j = 0; j < n; ++j) {
                 if (x(j) != 0) {
-                    int l = 1 - j;
                     x(j) /= a(0, j);
-                    for (int i = j ; i < Kokkos::min(n, j + k); ++i) {
-                        x(i) -= x(j) * a(l + i, j);
+                    for (int i = j + 1; i <= Kokkos::min(n, j + k); ++i) {
+                        x(i) -= a(i - j, j) * x(j);
                     }
                 }
             }
         } else if (trans == 'T') {
-		  for (int j = n-1; j > 1; --j) {
-                    int l = 1 - j;
-                    for (int i = Kokkos::min(n, j + k)-1; i >= j ; --i) {
-                        x(j) -= a(l + i, j) * x(i);
-                    }
-                    x(j) /= a(0, j);
+            for (int j = n - 1; j >= 0; --j) {
+                for (int i = Kokkos::min(n, j + k); i >= j + 1; --i) {
+                    x(j) -= a(i - j, j) * x(i);
+                }
+                x(j) /= a(0, j);
             }
-		}
+        }
     }
     int factorize_method() override
     {
@@ -215,15 +213,9 @@ public:
                             b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
                     int info;
-                    info = tbsv('L', 'N', 'N', get_size(), m_kd, m_q, m_kd + 1, b_slice, 1);
-                    info = tbsv('L', 'T', 'N', get_size(), m_kd, m_q, m_kd + 1, b_slice, 1);
+                    info = tbsv('L', 'N', 'N', get_size(), m_kd, m_q, m_kd, b_slice, 1);
+                    info = tbsv('L', 'T', 'N', get_size(), m_kd, m_q, m_kd, b_slice, 1);
                 });
-		for (std::size_t i = 0; i < get_size(); i++) {
-			for (std::size_t j = 0; j < n_equations; j++) {
-				std::cout << b_view(i, j) << " ";
-			}
-			std::cout << "\n";
-		}
         return 0;
     }
 };

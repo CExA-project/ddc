@@ -73,22 +73,28 @@ IncludeCategories:
 #       SortPriority:    -100                  # !!!requires clang 10
   # std (extensionless, directoryless) headers
   - Regex:           '^<[^./]*>$'
-    Priority:        -160
+    Priority:        -200
   # std::experimental (extensionless) headers
   - Regex:           '^<experimental/[^./]*>$'
+    Priority:        -180
+  # other library headers (with subdirectory)
+  - Regex:           '^<.*/.*>$'
+    Priority:        -160
+  # library headers (with extension)
+  - Regex:           '^<.*\.h[^.]*>$'
     Priority:        -140
+  # ddc detail headers
+  - Regex:           '^<ddc/detail/.*>$'
+    Priority:        -100
   # ddc headers
   - Regex:           '^<ddc/.*>$'
     Priority:        -120
-  # sll headers
-  - Regex:           '^<sll/.*>$'
-    Priority:        -100
-  # other library headers (with subdirectory)
-  - Regex:           '^<.*/.*>$'
-    Priority:        -80
-  # library headers (with extension)
-  - Regex:           '^<.*\.h[^.]*>$'
+  # local ddc detail headers
+  - Regex:           '^"ddc/detail/.*"$'
     Priority:        -60
+  # local ddc headers
+  - Regex:           '^"ddc/.*"$'
+    Priority:        -80
   # local headers (with subdirectory)
   - Regex:           '^".*/.*"$'
     Priority:        -40

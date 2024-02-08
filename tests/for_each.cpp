@@ -45,7 +45,7 @@ TEST(ForEachSerialHost, Empty)
     DDomX const dom(lbound_x, DVectX(0));
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
-    ddc::for_each(ddc::policies::serial_host, dom, [=](DElemX const ix) { view(ix) += 1; });
+    ddc::for_each(dom, [=](DElemX const ix) { view(ix) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size())
             << std::count(storage.begin(), storage.end(), 1) << std::endl;
 }
@@ -55,7 +55,7 @@ TEST(ForEachSerialHost, ZeroDimension)
     DDom0D const dom;
     int storage = 0;
     ddc::ChunkSpan<int, DDom0D> const view(&storage, dom);
-    ddc::for_each(ddc::policies::serial_host, dom, [=](DElem0D const ii) { view(ii) += 1; });
+    ddc::for_each(dom, [=](DElem0D const ii) { view(ii) += 1; });
     EXPECT_EQ(storage, 1) << storage << std::endl;
 }
 
@@ -64,7 +64,7 @@ TEST(ForEachSerialHost, OneDimension)
     DDomX const dom(lbound_x, nelems_x);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
-    ddc::for_each(ddc::policies::serial_host, dom, [=](DElemX const ix) { view(ix) += 1; });
+    ddc::for_each(dom, [=](DElemX const ix) { view(ix) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
@@ -73,7 +73,7 @@ TEST(ForEachSerialHost, TwoDimensions)
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomXY> const view(storage.data(), dom);
-    ddc::for_each(ddc::policies::serial_host, dom, [=](DElemXY const ixy) { view(ixy) += 1; });
+    ddc::for_each(dom, [=](DElemXY const ixy) { view(ixy) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
@@ -82,7 +82,7 @@ TEST(ForEachParallelHost, ZeroDimension)
     DDom0D const dom;
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDom0D> const view(storage.data(), dom);
-    ddc::for_each(ddc::policies::parallel_host, dom, [=](DElem0D const i) { view(i) += 1; });
+    ddc::parallel_each(dom, [=](DElem0D const i) { view(i) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
@@ -91,7 +91,7 @@ TEST(ForEachParallelHost, OneDimension)
     DDomX const dom(lbound_x, nelems_x);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
-    ddc::for_each(ddc::policies::parallel_host, dom, [=](DElemX const ix) { view(ix) += 1; });
+    ddc::parallel_each(dom, [=](DElemX const ix) { view(ix) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
@@ -100,7 +100,7 @@ TEST(ForEachParallelHost, TwoDimensions)
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomXY> const view(storage.data(), dom);
-    ddc::for_each(ddc::policies::parallel_host, dom, [=](DElemXY const ixy) { view(ixy) += 1; });
+    ddc::parallel_each(dom, [=](DElemXY const ixy) { view(ixy) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
@@ -112,8 +112,7 @@ void TestForEachParallelDeviceZeroDimension()
     ddc::Chunk<int, DDom0D, ddc::DeviceAllocator<int>> storage(dom);
     Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
     ddc::ChunkSpan const view(storage.span_view());
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_each(
             dom,
             KOKKOS_LAMBDA(DElem0D const i) { view(i) += 1; });
     int const* const ptr = storage.data_handle();
@@ -140,8 +139,7 @@ void TestForEachParallelDeviceOneDimension()
     ddc::Chunk<int, DDomX, ddc::DeviceAllocator<int>> storage(dom);
     Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
     ddc::ChunkSpan const view(storage.span_view());
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_each(
             dom,
             KOKKOS_LAMBDA(DElemX const ix) { view(ix) += 1; });
     int const* const ptr = storage.data_handle();
@@ -168,8 +166,7 @@ void TestForEachParallelDeviceTwoDimensions()
     ddc::Chunk<int, DDomXY, ddc::DeviceAllocator<int>> storage(dom);
     Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
     ddc::ChunkSpan const view(storage.span_view());
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_each(
             dom,
             KOKKOS_LAMBDA(DElemXY const ixy) { view(ixy) += 1; });
     int const* const ptr = storage.data_handle();

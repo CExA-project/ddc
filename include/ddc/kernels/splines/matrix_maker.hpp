@@ -7,6 +7,7 @@
 #include "matrix_center_block.hpp"
 #include "matrix_corner_block.hpp"
 #include "matrix_dense.hpp"
+#include "matrix_pds_banded.hpp"
 #include "matrix_pds_tridiag.hpp"
 #include "matrix_periodic_banded.hpp"
 #include "matrix_sparse.hpp"
@@ -33,6 +34,8 @@ public:
             return std::make_unique<Matrix_PDS_Tridiag<ExecSpace>>(n);
         } else if (2 * kl + 1 + ku >= n) {
             return std::make_unique<Matrix_Dense<ExecSpace>>(n);
+        } else if (kl == ku && pds) {
+            return std::make_unique<Matrix_PDS_Banded<ExecSpace>>(n, kl);
         } else {
             return std::make_unique<Matrix_Banded<ExecSpace>>(n, kl, ku);
         }
@@ -54,6 +57,8 @@ public:
                 border_size * n + border_size * (border_size + 1) + (2 * kl + 1 + ku) * banded_size
                 >= n * n) {
             return std::make_unique<Matrix_Dense<ExecSpace>>(n);
+        } else if (kl == ku && pds) {
+            block_mat = std::make_unique<Matrix_PDS_Banded<ExecSpace>>(banded_size, kl);
         } else {
             block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, kl, ku);
         }
@@ -75,6 +80,8 @@ public:
             block_mat = std::make_unique<Matrix_PDS_Tridiag<ExecSpace>>(banded_size);
         } else if (2 * kl + 1 + ku >= banded_size) {
             return std::make_unique<Matrix_Dense<ExecSpace>>(n);
+        } else if (kl == ku && pds) {
+            block_mat = std::make_unique<Matrix_PDS_Banded<ExecSpace>>(banded_size, kl);
         } else {
             block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, kl, ku);
         }

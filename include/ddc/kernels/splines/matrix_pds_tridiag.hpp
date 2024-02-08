@@ -1,5 +1,5 @@
-#ifndef MATRIX_PDS_BANDED_H
-#define MATRIX_PDS_BANDED_H
+#ifndef MATRIX_PDS_TRIDIAG_H
+#define MATRIX_PDS_TRIDIAG_H
 
 #include <cassert>
 #include <cmath>
@@ -165,4 +165,4 @@ protected:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_SYMMETRIC_BANDED_H
+#endif // MATRIX_PDS_TRIDIAG_H

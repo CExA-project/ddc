@@ -142,7 +142,7 @@ public:
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double operator()(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
+            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
         return eval(coord_eval, spline_coef);

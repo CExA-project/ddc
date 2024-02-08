@@ -151,7 +151,7 @@ template <typename X>
 static std::vector<Coord<X>> breaks(std::size_t ncells)
 {
     std::vector<Coord<X>> out(ncells + 1);
-    for (int i(0); i < ncells + 1; ++i) {
+    for (std::size_t i(0); i < ncells + 1; ++i) {
         out[i] = x0<X>() + i * dx<X>(ncells);
     }
     return out;
@@ -264,6 +264,7 @@ static void Batched2dSplineTest()
             s_bcr,
             s_bcl,
             s_bcr,
+            ddc::SplineSolver::GINKGO,
             IDim<X, I1, I2>...>
             spline_builder(dom_vals);
 
@@ -448,8 +449,11 @@ static void Batched2dSplineTest()
         ddc::Chunk Sderiv_mixed_rhs_rhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan Sderiv_mixed_rhs_rhs1_cpu = Sderiv_mixed_rhs_rhs1_cpu_alloc.span_view();
 
-        for (int ii = 1; ii < derivs_domain.template extent<ddc::Deriv<I1>>() + 1; ++ii) {
-            for (std::size_t jj = 1; jj < derivs_domain.template extent<ddc::Deriv<I2>>() + 1;
+        for (std::size_t ii = 1;
+             ii < (std::size_t)derivs_domain.template extent<ddc::Deriv<I1>>() + 1;
+             ++ii) {
+            for (std::size_t jj = 1;
+                 jj < (std::size_t)derivs_domain.template extent<ddc::Deriv<I2>>() + 1;
                  ++jj) {
                 Sderiv_mixed_lhs_lhs1_cpu(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))

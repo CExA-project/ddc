@@ -14,6 +14,7 @@
 #include "splines/matrix_corner_block.hpp"
 #include "splines/matrix_dense.hpp"
 #include "splines/matrix_maker.hpp"
+#include "splines/matrix_pds_banded.hpp"
 #include "splines/matrix_pds_tridiag.hpp"
 #include "splines/matrix_periodic_banded.hpp"
 #include "splines/matrix_sparse.hpp"

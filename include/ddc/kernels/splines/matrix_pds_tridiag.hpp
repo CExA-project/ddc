@@ -148,19 +148,30 @@ protected:
         return info;
     }
 
+public:
     int solve_inplace_method(double* const b, char const, int const n_equations, int const stride)
             const override
     {
-        auto d_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_d);
-        auto l_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_l);
         Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                 b_view(b, get_size(), n_equations);
-        auto b_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), b_view);
-        int info;
-        int const n = get_size();
-        dpttrs_(&n, &n_equations, d_host.data(), l_host.data(), b_host.data(), &n, &info);
-        Kokkos::deep_copy(b_view, b_host);
-        return info;
+
+        Kokkos::parallel_for(
+                "pbtrs",
+                Kokkos::RangePolicy<ExecSpace>(0, n_equations),
+                KOKKOS_CLASS_LAMBDA(const int i) {
+                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+
+                    for (int j = 1; j < get_size(); ++j) {
+                        b_slice(j) -= b_slice(j - 1) * m_l(j - 1);
+                    }
+                    b_slice(get_size() - 1) /= m_d(get_size() - 1);
+                    for (int j = get_size() - 2; j >= 0; --j) {
+                        b_slice(j) = b_slice(j) / m_d(j) - b_slice(j + 1) * m_l(j);
+                    }
+                    int info;
+                });
+        return 0;
     }
 };
 

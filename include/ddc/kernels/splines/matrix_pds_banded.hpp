@@ -161,14 +161,22 @@ protected:
             const override
     {
         auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
-        Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                b_view(b, get_size(), n_equations);
+        Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
+                b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
         auto b_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), b_view);
         int info;
         char const uplo = 'L';
         int const n = get_size();
         int const ldab = m_kd + 1;
-        dpbtrs_(&uplo, &n, &m_kd, &n_equations, q_host.data(), &ldab, b_host.data(), &n, &info);
+        dpbtrs_(&uplo,
+                &n,
+                &m_kd,
+                &n_equations,
+                q_host.data(),
+                &ldab,
+                b_host.data(),
+                &stride,
+                &info);
         Kokkos::deep_copy(b_view, b_host);
         return info;
     }

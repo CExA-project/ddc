@@ -295,29 +295,63 @@ protected:
             int const n_equations,
             int const stride) const override
     {
-        for (std::size_t i(0); i < (std::size_t)n_equations; ++i) {
-            ddc::DSpan1D const u(b + i * stride, nb);
-            ddc::DSpan1D const v(b + i * stride + nb, k);
+        std::experimental::layout_stride::mapping<std::experimental::extents<
+                size_t,
+                std::experimental::dynamic_extent,
+                std::experimental::dynamic_extent>>
+                layout_mapping_u {
+                        std::experimental::dextents<std::size_t, 2> {nb, n_equations},
+                        std::array<std::size_t, 2> {1, stride}};
+        std::experimental::layout_stride::mapping<std::experimental::extents<
+                size_t,
+                std::experimental::dynamic_extent,
+                std::experimental::dynamic_extent>>
+                layout_mapping_v {
+                        std::experimental::dextents<std::size_t, 2> {k, n_equations},
+                        std::array<std::size_t, 2> {1, stride}};
 
-            if (transpose == 'N') {
-                m_q_block->solve_inplace(u);
 
-                solve_lambda_section(v, (DView1D)u);
+        ddc::DSpan2D_stride const u(b, layout_mapping_u);
+        ddc::DSpan2D_stride const v(b + nb, layout_mapping_v);
 
-                m_delta->solve_inplace(v);
+        if (transpose == 'N') {
+            m_q_block->solve_multiple_inplace2(u);
 
-                solve_gamma_section(u, (DView1D)v);
-            } else if (transpose == 'T') {
-                solve_gamma_section_transpose(v, (DView1D)u);
-
-                m_delta->solve_transpose_inplace(v);
-
-                solve_lambda_section_transpose(u, (DView1D)v);
-
-                m_q_block->solve_transpose_inplace(u);
-            } else {
-                return -1;
+            for (std::size_t i(0); i < (std::size_t)n_equations; ++i) {
+                solve_lambda_section(
+                        std::experimental::submdspan(v, std::experimental::full_extent, i),
+                        (DView1D)(std::experimental::
+                                          submdspan(u, std::experimental::full_extent, i)));
             }
+
+            m_delta->solve_multiple_inplace2(v);
+
+            for (std::size_t i(0); i < (std::size_t)n_equations; ++i) {
+                solve_gamma_section(
+                        std::experimental::submdspan(u, std::experimental::full_extent, i),
+                        (DView1D)(std::experimental::
+                                          submdspan(v, std::experimental::full_extent, i)));
+            }
+        } else if (transpose == 'T') {
+            for (std::size_t i(0); i < (std::size_t)n_equations; ++i) {
+                solve_gamma_section_transpose(
+                        std::experimental::submdspan(v, std::experimental::full_extent, i),
+                        (DView1D)(std::experimental::
+                                          submdspan(u, std::experimental::full_extent, i)));
+
+                m_delta->solve_transpose_inplace(
+                        std::experimental::submdspan(v, std::experimental::full_extent, i));
+
+                solve_lambda_section_transpose(
+                        std::experimental::submdspan(u, std::experimental::full_extent, i),
+                        (DView1D)(std::experimental::
+                                          submdspan(v, std::experimental::full_extent, i)));
+
+                m_q_block->solve_transpose_inplace(
+                        std::experimental::submdspan(u, std::experimental::full_extent, i));
+            }
+        } else {
+            return -1;
         }
         return 0;
     }

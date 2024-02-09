@@ -154,7 +154,6 @@ public:
     {
         Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
                 b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
-
         Kokkos::parallel_for(
                 "pbtrs",
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),

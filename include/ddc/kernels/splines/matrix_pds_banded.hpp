@@ -203,6 +203,7 @@ public:
 
                     int info;
                     info = tbsv('L', 'N', 'N', get_size(), m_kd, m_q, m_kd, b_slice, 1);
+                    Kokkos::fence();
                     info = tbsv('L', 'T', 'N', get_size(), m_kd, m_q, m_kd, b_slice, 1);
                 });
         return 0;

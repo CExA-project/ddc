@@ -180,7 +180,6 @@ public:
                         val += m_lambda(l, i) * m_Abm_1_gamma(j, l_full);
                     }
                     auto tmp = delta_proxy.get_element(i, j);
-                    printf("%f \n", tmp);
                     delta_proxy.set_element(i, j, tmp - val);
                 });
     }

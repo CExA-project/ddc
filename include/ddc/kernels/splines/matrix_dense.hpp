@@ -92,6 +92,11 @@ public:
                 KOKKOS_CLASS_LAMBDA(const int i) {
                     Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                             b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+							/*
+					auto buffer = create_mirror_view_and_copy(ExecSpace(), b_slice);
+                    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> tmp("tmp", get_size(),get_size()+4);
+					KokkosBatched::SerialGesv<KokkosBatched::Gesv::StaticPivoting>::invoke(m_a,b_slice,buffer,tmp);
+					*/
                     int info;
                     if (transpose == 'N') {
                         info = KokkosBatched::SerialTrsm<

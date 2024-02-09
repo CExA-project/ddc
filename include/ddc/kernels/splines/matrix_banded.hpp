@@ -141,7 +141,12 @@ protected:
         auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
                 b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
-        auto b_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), b_view);
+        auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b_view);
+        for (int i = 0; i < n_equations; ++i) {
+            Kokkos::deep_copy(
+                    Kokkos::subview(b_host, Kokkos::ALL, i),
+                    Kokkos::subview(b_view, Kokkos::ALL, i));
+        }
         int info;
         int const n = get_size();
         dgbtrs_(&transpose,
@@ -155,7 +160,11 @@ protected:
                 b_host.data(),
                 &stride,
                 &info);
-        Kokkos::deep_copy(b_view, b_host);
+        for (int i = 0; i < n_equations; ++i) {
+            Kokkos::deep_copy(
+                    Kokkos::subview(b_view, Kokkos::ALL, i),
+                    Kokkos::subview(b_host, Kokkos::ALL, i));
+        }
         return info;
     }
 };

@@ -141,8 +141,8 @@ protected:
         // TODO : Rewrite using Kokkos-kernels
         auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
         auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
-        Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                b_view(b, get_size(), n_equations);
+        Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
+                b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
         auto b_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), b_view);
         int info;
         int const n = get_size();
@@ -155,7 +155,7 @@ protected:
                 &m_c,
                 ipiv_host.data(),
                 b_host.data(),
-                &n,
+                &stride,
                 &info);
         Kokkos::deep_copy(b_view, b_host);
         return info;

@@ -83,8 +83,8 @@ public:
             int const n_equations,
             int const stride) const override
     {
-        Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                b_view(b, get_size(), n_equations);
+        Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
+                b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
 
         Kokkos::parallel_for(
                 "gerts",

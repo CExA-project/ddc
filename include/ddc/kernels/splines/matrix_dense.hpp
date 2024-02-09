@@ -28,7 +28,9 @@ protected:
     Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv;
 
 public:
-    explicit Matrix_Dense(int const mat_size) : Matrix(mat_size), m_a("a", mat_size, mat_size)
+    explicit Matrix_Dense(int const mat_size)
+        : Matrix(mat_size)
+        , m_a("a", mat_size, mat_size)
         , m_ipiv("ipiv", mat_size)
     {
         assert(mat_size > 0);
@@ -80,14 +82,14 @@ public:
 
     int factorize_method() override
     {
-		auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
+        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
         auto ipiv_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         int info;
         int const n = get_size();
         dgetrf_(&n, &n, a_host.data(), &n, ipiv_host.data(), &info);
         Kokkos::deep_copy(m_a, a_host);
         Kokkos::deep_copy(m_ipiv, ipiv_host);
-		/*
+        /*
         Kokkos::parallel_for(
                 "gertf",
                 Kokkos::RangePolicy<ExecSpace>(0, 1),
@@ -105,7 +107,7 @@ public:
             int const n_equations,
             int const stride) const override
     {
-		auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
+        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
         auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
                 b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
@@ -131,8 +133,8 @@ public:
                     Kokkos::subview(b_view, Kokkos::ALL, i),
                     Kokkos::subview(b_host, Kokkos::ALL, i));
         }
-		return info;
-# if 0
+        return info;
+#if 0
         Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
                 b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
 
@@ -179,7 +181,7 @@ public:
                     }
                 });
         return 0;
-# endif
+#endif
     }
 };
 

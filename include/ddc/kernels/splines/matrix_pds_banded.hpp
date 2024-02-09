@@ -173,6 +173,7 @@ protected:
                 x(j) /= a(0, j);
             }
         }
+        return 0;
     }
     int factorize_method() override
     {

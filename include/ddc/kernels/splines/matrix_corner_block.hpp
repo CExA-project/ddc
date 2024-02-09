@@ -310,7 +310,7 @@ public:
                             Kokkos::TeamThreadRange(teamMember, u.extent(0)),
                             [&](const int i) {
                                 // Upper diagonals in lambda
-                                for (int l = 0; l < nb; ++l) {
+                                for (int l = 0; l < k; ++l) {
                                     Kokkos::atomic_sub(&u(i, j), m_Abm_1_gamma(l, i) * v(l, j));
                                 }
                             });

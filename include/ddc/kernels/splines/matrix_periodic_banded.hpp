@@ -184,6 +184,7 @@ public:
                     delta_proxy.set_element(i, j, tmp - val);
                 });
     }
+
     ddc::DSpan1D solve_lambda_section(ddc::DSpan1D const v, DView1D const u) const override
     {
         Kokkos::parallel_for(
@@ -198,6 +199,35 @@ public:
                     for (int j = i + 1; j < k + 1; ++j) {
                         Kokkos::atomic_sub(&v(i), m_lambda(j, i) * u(nb - 1 - k + j));
                     }
+                });
+        return v;
+    }
+    ddc::DSpan2D_stride solve_lambda_section2(
+            ddc::DSpan2D_stride const v,
+            ddc::DSpan2D_stride const u) const override
+    {
+        Kokkos::parallel_for(
+                "solve_lambda_section",
+                Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
+                KOKKOS_CLASS_LAMBDA(
+                        const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+                    const int j = teamMember.league_rank();
+
+
+                    Kokkos::parallel_for(
+                            Kokkos::TeamThreadRange(teamMember, v.extent(0)),
+                            [&](const int i) {
+                                /// Upper diagonals in lambda
+                                for (int l = 0; l <= i; ++l) {
+                                    Kokkos::atomic_sub(&v(i, j), m_lambda(l, i) * u(l, j));
+                                }
+                                // Lower diagonals in lambda
+                                for (int l = i + 1; l < k + 1; ++l) {
+                                    Kokkos::atomic_sub(
+                                            &v(i, j),
+                                            m_lambda(l, i) * u(nb - 1 - k + l, j));
+                                }
+                            });
                 });
         return v;
     }

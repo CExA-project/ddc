@@ -90,8 +90,11 @@ public:
 
         Kokkos::parallel_for(
                 "gerts",
-                Kokkos::RangePolicy<ExecSpace>(0, n_equations),
-                KOKKOS_CLASS_LAMBDA(const int i) {
+                Kokkos::TeamPolicy<ExecSpace>(n_equations, Kokkos::AUTO),
+                KOKKOS_CLASS_LAMBDA(
+                        const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+                    const int i = teamMember.league_rank();
+
                     int info;
                     auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
                     Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
@@ -112,10 +115,21 @@ public:
                     Kokkos::deep_copy(buffer, b_slice);
                     Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                             tmp("tmp", get_size(), get_size() + 4);
-                    Kokkos::fence();
-                    info = KokkosBatched::SerialGesv<KokkosBatched::Gesv::StaticPivoting>::
-                            invoke(a_buffer, b_slice, b_slice, tmp);
-                    Kokkos::fence();
+                    teamMember.team_barrier();
+                    info = KokkosBatched::TeamGesv<
+                            typename Kokkos::TeamPolicy<ExecSpace>::member_type,
+                            KokkosBatched::Gesv::StaticPivoting>::
+                            invoke(teamMember,
+                                   a_buffer,
+                                   (Kokkos::View<
+                                           double*,
+                                           Kokkos::LayoutLeft,
+                                           typename ExecSpace::memory_space>)b_slice,
+                                   (Kokkos::View<
+                                           double*,
+                                           Kokkos::LayoutLeft,
+                                           typename ExecSpace::memory_space>)buffer);
+                    teamMember.team_barrier();
                     /*
                     int info;
                     if (transpose == 'N') {

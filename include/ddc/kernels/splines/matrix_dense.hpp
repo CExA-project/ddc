@@ -3,20 +3,26 @@
 #include <cassert>
 #include <memory>
 
+#include <KokkosBatched_ApplyPivot_Decl.hpp>
 #include <KokkosBatched_Gesv.hpp>
 
 #include "matrix.hpp"
 
 namespace ddc::detail {
+extern "C" int dgetrf_(int const* m, int const* n, double* a, int const* lda, int* ipiv, int* info);
 
 template <class ExecSpace>
 class Matrix_Dense : public Matrix
 {
 protected:
     Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_a;
+    Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv;
 
 public:
-    explicit Matrix_Dense(int const mat_size) : Matrix(mat_size), m_a("a", mat_size, mat_size)
+    explicit Matrix_Dense(int const mat_size)
+        : Matrix(mat_size)
+        , m_a("a", mat_size, mat_size)
+        , m_ipiv("ipiv", mat_size)
     {
         assert(mat_size > 0);
     }
@@ -67,6 +73,18 @@ public:
 
     int factorize_method() override
     {
+        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
+        auto ipiv_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
+        int info;
+        int const n = get_size();
+        dgetrf_(&n, &n, a_host.data(), &n, ipiv_host.data(), &info);
+        // ipiv follows lapack convention, switch to kokkos-kernels one
+        for (int i = 0; i < n; ++i) {
+            ipiv_host(i) -= i + 1;
+        }
+        Kokkos::deep_copy(m_a, a_host);
+        Kokkos::deep_copy(m_ipiv, ipiv_host);
+        return info;
         /*
         Kokkos::parallel_for(
                 "gertf",
@@ -76,7 +94,7 @@ public:
                             KokkosBatched::Algo::Level3::Unblocked>::invoke(m_a);
                 });
 */
-        return 0;
+        //return 0;
     }
 
     int solve_inplace_method(
@@ -97,71 +115,62 @@ public:
 
                     int info;
                     auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
-                    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            a_buffer = create_mirror(ExecSpace(), m_a);
+
                     if (transpose == 'N') {
-                        Kokkos::deep_copy(a_buffer, m_a);
-                    } else if (transpose == 'T') {
-                        Kokkos::View<
-                                double**,
-                                Kokkos::LayoutRight,
-                                typename ExecSpace::memory_space>
-                                a_buffer2(m_a.data(), get_size(), get_size());
-                        Kokkos::deep_copy(a_buffer, a_buffer2);
-                    } else {
-                        info = -1;
-                    }
-                    auto buffer = create_mirror(ExecSpace(), b_slice);
-                    Kokkos::deep_copy(buffer, b_slice);
-                    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            tmp("tmp", get_size(), get_size() + 4);
-                    teamMember.team_barrier();
-                    info = KokkosBatched::TeamGesv<
-                            typename Kokkos::TeamPolicy<ExecSpace>::member_type,
-                            KokkosBatched::Gesv::StaticPivoting>::
-                            invoke(teamMember,
-                                   a_buffer,
-                                   (Kokkos::View<
-                                           double*,
-                                           Kokkos::LayoutLeft,
-                                           typename ExecSpace::memory_space>)b_slice,
-                                   (Kokkos::View<
-                                           double*,
-                                           Kokkos::LayoutLeft,
-                                           typename ExecSpace::memory_space>)buffer);
-                    teamMember.team_barrier();
-                    /*
-                    int info;
-                    if (transpose == 'N') {
-                        info = KokkosBatched::SerialTrsm<
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorApplyPivot<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Direct::Forward>::
+                                invoke(teamMember, m_ipiv, b_slice);
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorTrsm<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
                                 KokkosBatched::Side::Left,
                                 KokkosBatched::Uplo::Lower,
                                 KokkosBatched::Trans::NoTranspose,
                                 KokkosBatched::Diag::Unit,
-                                KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, m_a, b_slice);
-                        info = KokkosBatched::SerialTrsm<
+                                KokkosBatched::Algo::Level3::Unblocked>::
+                                invoke(teamMember, 1.0, m_a, b_slice);
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorTrsm<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
                                 KokkosBatched::Side::Left,
                                 KokkosBatched::Uplo::Upper,
                                 KokkosBatched::Trans::NoTranspose,
                                 KokkosBatched::Diag::NonUnit,
-                                KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, m_a, b_slice);
+                                KokkosBatched::Algo::Level3::Unblocked>::
+                                invoke(teamMember, 1.0, m_a, b_slice);
+                        teamMember.team_barrier();
                     } else if (transpose == 'T') {
-                        info = KokkosBatched::SerialTrsm<
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorTrsm<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
                                 KokkosBatched::Side::Left,
                                 KokkosBatched::Uplo::Upper,
                                 KokkosBatched::Trans::Transpose,
                                 KokkosBatched::Diag::NonUnit,
-                                KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, m_a, b_slice);
-                        info = KokkosBatched::SerialTrsm<
+                                KokkosBatched::Algo::Level3::Unblocked>::
+                                invoke(teamMember, 1.0, m_a, b_slice);
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorTrsm<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
                                 KokkosBatched::Side::Left,
                                 KokkosBatched::Uplo::Lower,
                                 KokkosBatched::Trans::Transpose,
                                 KokkosBatched::Diag::Unit,
-                                KokkosBatched::Algo::Level3::Unblocked>::invoke(1.0, m_a, b_slice);
+                                KokkosBatched::Algo::Level3::Unblocked>::
+                                invoke(teamMember, 1.0, m_a, b_slice);
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorApplyPivot<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Direct::Backward>::
+                                invoke(teamMember, m_ipiv, b_slice);
+                        teamMember.team_barrier();
                     } else {
                         info = -1;
                     }
-					*/
                 });
         return 0;
     }

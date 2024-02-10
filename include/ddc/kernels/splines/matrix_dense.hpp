@@ -93,8 +93,7 @@ public:
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),
                 KOKKOS_CLASS_LAMBDA(const int i) {
                     int info;
-                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                    auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
                     Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                             a_buffer = create_mirror(ExecSpace(), m_a);
                     if (transpose == 'N') {
@@ -109,8 +108,7 @@ public:
                     } else {
                         info = -1;
                     }
-                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            buffer = create_mirror(ExecSpace(), b_slice);
+                    auto buffer = create_mirror(ExecSpace(), b_slice);
                     Kokkos::deep_copy(buffer, b_slice);
                     Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                             tmp("tmp", get_size(), get_size() + 4);

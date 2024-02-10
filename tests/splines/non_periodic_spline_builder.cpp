@@ -102,7 +102,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             IDimX,
             s_bcl,
             s_bcr,
-            ddc::SplineSolver::GINKGO,
+            ddc::SplineSolver::LAPACK,
             IDimX>
             spline_builder(interpolation_domain);
 

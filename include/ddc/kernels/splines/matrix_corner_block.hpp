@@ -282,6 +282,29 @@ public:
                 });
         return u;
     }
+    virtual ddc::DSpan2D_stride solve_lambda_section_transpose2(
+            ddc::DSpan2D_stride const u,
+            ddc::DSpan2D_stride const v) const
+    {
+        Kokkos::parallel_for(
+                "solve_lambda_section_transpose",
+                Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
+                KOKKOS_CLASS_LAMBDA(
+                        const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+                    const int j = teamMember.league_rank();
+
+
+                    Kokkos::parallel_for(
+                            Kokkos::TeamThreadRange(teamMember, u.extent(0)),
+                            [&](const int i) {
+                                // Upper diagonals in lambda
+                                for (int l = 0; l < k; ++l) {
+                                    Kokkos::atomic_sub(&u(i, j), m_lambda(l, i) * v(l, j));
+                                }
+                            });
+                });
+        return u;
+    }
     virtual ddc::DSpan1D solve_gamma_section(ddc::DSpan1D const u, DView1D const v) const
     {
         Kokkos::parallel_for(
@@ -329,6 +352,29 @@ public:
                 });
         return v;
     }
+    virtual ddc::DSpan2D_stride solve_gamma_section_transpose2(
+            ddc::DSpan2D_stride const v,
+            ddc::DSpan2D_stride const u) const
+    {
+        Kokkos::parallel_for(
+                "solve_gamma_section_tranpose",
+                Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
+                KOKKOS_CLASS_LAMBDA(
+                        const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+                    const int j = teamMember.league_rank();
+
+
+                    Kokkos::parallel_for(
+                            Kokkos::TeamThreadRange(teamMember, v.extent(0)),
+                            [&](const int i) {
+                                // Upper diagonals in lambda
+                                for (int l = 0; l < nb; ++l) {
+                                    Kokkos::atomic_sub(&v(i, j), m_Abm_1_gamma(l, i) * u(l, j));
+                                }
+                            });
+                });
+        return v;
+    }
 
 protected:
     virtual int factorize_method() override
@@ -369,23 +415,13 @@ protected:
 
             solve_gamma_section2(u, v);
         } else if (transpose == 'T') {
-            for (std::size_t i(0); i < (std::size_t)n_equations; ++i) {
-                solve_gamma_section_transpose(
-                        std::experimental::submdspan(v, std::experimental::full_extent, i),
-                        (DView1D)(std::experimental::
-                                          submdspan(u, std::experimental::full_extent, i)));
+            solve_gamma_section_transpose2(v, u);
 
-                m_delta->solve_transpose_inplace(
-                        std::experimental::submdspan(v, std::experimental::full_extent, i));
+            m_delta->solve_multiple_transpose_inplace2(v);
 
-                solve_lambda_section_transpose(
-                        std::experimental::submdspan(u, std::experimental::full_extent, i),
-                        (DView1D)(std::experimental::
-                                          submdspan(v, std::experimental::full_extent, i)));
+            solve_lambda_section_transpose2(u, v);
 
-                m_q_block->solve_transpose_inplace(
-                        std::experimental::submdspan(u, std::experimental::full_extent, i));
-            }
+            m_q_block->solve_multiple_transpose_inplace2(u);
         } else {
             return -1;
         }

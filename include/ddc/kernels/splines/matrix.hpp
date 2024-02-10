@@ -131,6 +131,22 @@ public:
         }
         return bx;
     }
+    virtual ddc::DSpan2D_stride solve_multiple_transpose_inplace2(
+            ddc::DSpan2D_stride const bx) const
+    {
+        assert(int(bx.extent(0)) == m_n);
+        int const info = solve_inplace_method(
+                bx.data_handle(),
+                'T',
+                bx.extent(1),
+                std::max(bx.stride(0), bx.stride(1)));
+
+        if (info < 0) {
+            std::cerr << -info << "-th argument had an illegal value" << std::endl;
+            // TODO: Add LOG_FATAL_ERROR
+        }
+        return bx;
+    }
 
     template <class Layout, class... Args>
     Kokkos::View<double**, Layout, Args...> solve_multiple_rhs_inplace(

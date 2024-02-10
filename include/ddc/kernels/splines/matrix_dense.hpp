@@ -67,7 +67,7 @@ public:
 
     int factorize_method() override
     {
-/*
+        /*
         Kokkos::parallel_for(
                 "gertf",
                 Kokkos::RangePolicy<ExecSpace>(0, 1),
@@ -88,26 +88,36 @@ public:
         Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
                 b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
 
-		for (int i = 0; i < get_size(); i++) {
-            for (int j = 0; j < get_size(); j++) {
-                std::cout << m_a(i, j) << " ";
-            }
-            std::cout << "\n";
-        }
         Kokkos::parallel_for(
                 "gerts",
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),
                 KOKKOS_CLASS_LAMBDA(const int i) {
+                    int info;
                     Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
                             b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
-					Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> a_buffer = create_mirror(ExecSpace(), m_a);
-					Kokkos::deep_copy(a_buffer,m_a);
-					Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space> buffer = create_mirror(ExecSpace(), b_slice);
-					Kokkos::deep_copy(buffer,b_slice);
-                    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> tmp("tmp", get_size(),get_size()+4);
-					Kokkos::fence();
-					KokkosBatched::SerialGesv<KokkosBatched::Gesv::StaticPivoting>::invoke(a_buffer,b_slice,b_slice,tmp);
-					Kokkos::fence();
+                    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                            a_buffer = create_mirror(ExecSpace(), m_a);
+                    if (transpose == 'N') {
+                        Kokkos::deep_copy(a_buffer, m_a);
+                    } else if (transpose == 'T') {
+                        Kokkos::View<
+                                double**,
+                                Kokkos::LayoutRight,
+                                typename ExecSpace::memory_space>
+                                a_buffer2(m_a.data(), get_size(), get_size());
+                        Kokkos::deep_copy(a_buffer, a_buffer2);
+                    } else {
+                        info = -1;
+                    }
+                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                            buffer = create_mirror(ExecSpace(), b_slice);
+                    Kokkos::deep_copy(buffer, b_slice);
+                    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                            tmp("tmp", get_size(), get_size() + 4);
+                    Kokkos::fence();
+                    info = KokkosBatched::SerialGesv<KokkosBatched::Gesv::StaticPivoting>::
+                            invoke(a_buffer, b_slice, b_slice, tmp);
+                    Kokkos::fence();
                     /*
                     int info;
                     if (transpose == 'N') {

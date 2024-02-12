@@ -16,8 +16,6 @@ class Matrix_Center_Block : public Matrix_Corner_Block<ExecSpace>
 {
     // Necessary because we inherit from a template class, otherwise we should use this-> everywhere
     using Matrix_Corner_Block<ExecSpace>::get_size;
-    using Matrix_Corner_Block<ExecSpace>::k;
-    using Matrix_Corner_Block<ExecSpace>::nb;
     using Matrix_Corner_Block<ExecSpace>::m_q_block;
     using Matrix_Corner_Block<ExecSpace>::m_delta;
     using Matrix_Corner_Block<ExecSpace>::m_Abm_1_gamma;

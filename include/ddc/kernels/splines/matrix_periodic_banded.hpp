@@ -21,8 +21,8 @@ class Matrix_Periodic_Banded : public Matrix_Corner_Block<ExecSpace>
 {
     // Necessary because we inherit from a template class, otherwise we should use this-> everywhere
     using Matrix_Corner_Block<ExecSpace>::get_size;
-    using Matrix_Corner_Block<ExecSpace>::k;
-    using Matrix_Corner_Block<ExecSpace>::nb;
+    using Matrix_Corner_Block<ExecSpace>::m_k;
+    using Matrix_Corner_Block<ExecSpace>::m_nb;
     using Matrix_Corner_Block<ExecSpace>::m_q_block;
     using Matrix_Corner_Block<ExecSpace>::m_delta;
     using Matrix_Corner_Block<ExecSpace>::m_Abm_1_gamma;
@@ -52,7 +52,7 @@ public:
         m_delta->reset();
         Kokkos::parallel_for(
                 "fill_abm_lambda",
-                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, nb}),
+                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {m_k, m_nb}),
                 KOKKOS_CLASS_LAMBDA(const int i, const int j) {
                     m_Abm_1_gamma(i, j) = 0;
                     m_lambda(j, i) = 0;
@@ -67,7 +67,7 @@ public:
         assert(i < get_size());
         assert(j >= 0);
         assert(i < get_size());
-        if (i >= nb && j < nb) {
+        if (i >= m_nb && j < m_nb) {
             int d = j - i;
             if (d > get_size() / 2)
                 d -= get_size();
@@ -81,31 +81,31 @@ public:
                         if constexpr (Kokkos::SpaceAccessibility<
                                               Kokkos::DefaultHostExecutionSpace,
                                               typename ExecSpace::memory_space>::accessible) {
-                            return m_lambda(j, i - nb);
+                            return m_lambda(j, i - m_nb);
                         } else {
                             // Inefficient, usage is strongly discouraged
                             double aij;
                             Kokkos::deep_copy(
                                     Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                    Kokkos::subview(m_lambda, j, i - nb));
+                                    Kokkos::subview(m_lambda, j, i - m_nb));
                             return aij;
                         })
-                KOKKOS_IF_ON_DEVICE(return m_lambda(j, i - nb);)
+                KOKKOS_IF_ON_DEVICE(return m_lambda(j, i - m_nb);)
             } else {
                 KOKKOS_IF_ON_HOST(
                         if constexpr (Kokkos::SpaceAccessibility<
                                               Kokkos::DefaultHostExecutionSpace,
                                               typename ExecSpace::memory_space>::accessible) {
-                            return m_lambda(j - nb + k + 1, i - nb);
+                            return m_lambda(j - m_nb + m_k + 1, i - m_nb);
                         } else {
                             // Inefficient, usage is strongly discouraged
                             double aij;
                             Kokkos::deep_copy(
                                     Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                    Kokkos::subview(m_lambda, j - nb + k + 1, i - nb));
+                                    Kokkos::subview(m_lambda, j - m_nb + m_k + 1, i - m_nb));
                             return aij;
                         })
-                KOKKOS_IF_ON_DEVICE(return m_lambda(j - nb + k + 1, i - nb);)
+                KOKKOS_IF_ON_DEVICE(return m_lambda(j - m_nb + m_k + 1, i - m_nb);)
             }
         } else {
             return Matrix_Corner_Block<ExecSpace>::get_element(i, j);
@@ -117,7 +117,7 @@ public:
         assert(i < get_size());
         assert(j >= 0);
         assert(i < get_size());
-        if (i >= nb && j < nb) {
+        if (i >= m_nb && j < m_nb) {
             int d = j - i;
             if (d > get_size() / 2)
                 d -= get_size();
@@ -134,27 +134,27 @@ public:
                         if constexpr (Kokkos::SpaceAccessibility<
                                               Kokkos::DefaultHostExecutionSpace,
                                               typename ExecSpace::memory_space>::accessible) {
-                            m_lambda(j, i - nb) = aij;
+                            m_lambda(j, i - m_nb) = aij;
                         } else {
                             // Inefficient, usage is strongly discouraged
                             Kokkos::deep_copy(
-                                    Kokkos::subview(m_lambda, j, i - nb),
+                                    Kokkos::subview(m_lambda, j, i - m_nb),
                                     Kokkos::View<const double, Kokkos::HostSpace>(&aij));
                         })
-                KOKKOS_IF_ON_DEVICE(m_lambda(j, i - nb) = aij;)
+                KOKKOS_IF_ON_DEVICE(m_lambda(j, i - m_nb) = aij;)
             } else {
                 KOKKOS_IF_ON_HOST(
                         if constexpr (Kokkos::SpaceAccessibility<
                                               Kokkos::DefaultHostExecutionSpace,
                                               typename ExecSpace::memory_space>::accessible) {
-                            m_lambda(j - nb + k + 1, i - nb) = aij;
+                            m_lambda(j - m_nb + m_k + 1, i - m_nb) = aij;
                         } else {
                             // Inefficient, usage is strongly discouraged
                             Kokkos::deep_copy(
-                                    Kokkos::subview(m_lambda, j - nb + k + 1, i - nb),
+                                    Kokkos::subview(m_lambda, j - m_nb + m_k + 1, i - m_nb),
                                     Kokkos::View<const double, Kokkos::HostSpace>(&aij));
                         })
-                KOKKOS_IF_ON_DEVICE(m_lambda(j - nb + k + 1, i - nb) = aij;)
+                KOKKOS_IF_ON_DEVICE(m_lambda(j - m_nb + m_k + 1, i - m_nb) = aij;)
             }
         } else {
             Matrix_Corner_Block<ExecSpace>::set_element(i, j, aij);
@@ -167,7 +167,7 @@ public:
         auto delta_proxy = *m_delta;
         Kokkos::parallel_for(
                 "calculate_delta_to_factorize",
-                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {k, k}),
+                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {m_k, m_k}),
                 KOKKOS_CLASS_LAMBDA(const int i, const int j) {
                     double val = 0.0;
                     // Upper diagonals in lambda, lower diagonals in Abm_1_gamma
@@ -175,8 +175,8 @@ public:
                         val += m_lambda(l, i) * m_Abm_1_gamma(j, l);
                     }
                     // Lower diagonals in lambda, upper diagonals in Abm_1_gamma
-                    for (int l = i + 1; l < k + 1; ++l) {
-                        int l_full = nb - 1 - k + l;
+                    for (int l = i + 1; l < m_k + 1; ++l) {
+                        int l_full = m_nb - 1 - m_k + l;
                         val += m_lambda(l, i) * m_Abm_1_gamma(j, l_full);
                     }
                     auto tmp = delta_proxy.get_element(i, j);
@@ -188,15 +188,15 @@ public:
     {
         Kokkos::parallel_for(
                 "solve_lambda_section",
-                Kokkos::RangePolicy<ExecSpace>(0, k),
+                Kokkos::RangePolicy<ExecSpace>(0, m_k),
                 KOKKOS_CLASS_LAMBDA(const int i) {
                     // Upper diagonals in lambda
                     for (int j = 0; j <= i; ++j) {
                         Kokkos::atomic_sub(&v(i), m_lambda(j, i) * u(j));
                     }
                     // Lower diagonals in lambda
-                    for (int j = i + 1; j < k + 1; ++j) {
-                        Kokkos::atomic_sub(&v(i), m_lambda(j, i) * u(nb - 1 - k + j));
+                    for (int j = i + 1; j < m_k + 1; ++j) {
+                        Kokkos::atomic_sub(&v(i), m_lambda(j, i) * u(m_nb - 1 - m_k + j));
                     }
                 });
         return v;
@@ -221,10 +221,10 @@ public:
                                     Kokkos::atomic_sub(&v(i, j), m_lambda(l, i) * u(l, j));
                                 }
                                 // Lower diagonals in lambda
-                                for (int l = i + 1; l < k + 1; ++l) {
+                                for (int l = i + 1; l < m_k + 1; ++l) {
                                     Kokkos::atomic_sub(
                                             &v(i, j),
-                                            m_lambda(l, i) * u(nb - 1 - k + l, j));
+                                            m_lambda(l, i) * u(m_nb - 1 - m_k + l, j));
                                 }
                             });
                 });
@@ -235,15 +235,15 @@ public:
     {
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
-                Kokkos::RangePolicy<ExecSpace>(0, k),
+                Kokkos::RangePolicy<ExecSpace>(0, m_k),
                 KOKKOS_CLASS_LAMBDA(const int i) {
                     // Upper diagonals in lambda
                     for (int j = 0; j <= i; ++j) {
                         Kokkos::atomic_sub(&u(j), m_lambda(j, i) * v(i));
                     }
                     // Lower diagonals in lambda
-                    for (int j = i + 1; j < k + 1; ++j) {
-                        Kokkos::atomic_sub(&u(nb - 1 - k + j), m_lambda(j, i) * v(i));
+                    for (int j = i + 1; j < m_k + 1; ++j) {
+                        Kokkos::atomic_sub(&u(m_nb - 1 - m_k + j), m_lambda(j, i) * v(i));
                     }
                 });
         return u;
@@ -268,9 +268,9 @@ public:
                                     Kokkos::atomic_sub(&u(i, j), m_lambda(l, i) * v(l, j));
                                 }
                                 // Lower diagonals in lambda
-                                for (int l = i + 1; l < k + 1; ++l) {
+                                for (int l = i + 1; l < m_k + 1; ++l) {
                                     Kokkos::atomic_sub(
-                                            &u(nb - 1 - k - l, j),
+                                            &u(m_nb - 1 - m_k - l, j),
                                             m_lambda(l, i) * v(i, j));
                                 }
                             });

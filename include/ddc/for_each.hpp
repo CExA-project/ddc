@@ -168,23 +168,6 @@ inline void for_each(
     detail::for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
 }
 
-/** iterates over a nD extent using the serial execution policy
- * @param[in] extent the extent over which to iterate
- * @param[in] f      a functor taking an index as parameter
- */
-template <class... DDims, class Functor>
-inline void for_each_n(
-        serial_host_policy,
-        DiscreteVector<DDims...> const& extent,
-        Functor&& f) noexcept
-{
-    DiscreteVector<DDims...> const ddc_begin {};
-    DiscreteVector<DDims...> const ddc_end = extent;
-    std::array const begin = detail::array(ddc_begin);
-    std::array const end = detail::array(ddc_end);
-    detail::for_each_serial<DiscreteVector<DDims...>>(begin, end, std::forward<Functor>(f));
-}
-
 /// Parallel execution on the default device
 struct parallel_host_policy
 {

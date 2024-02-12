@@ -154,48 +154,6 @@ public:
 
         m_delta->factorize();
     }
-    virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const bx) const override
-    {
-        assert(int(bx.extent(0)) == get_size());
-
-        ddc::DSpan1D const u(bx.data_handle(), m_nb);
-        ddc::DSpan1D const v(bx.data_handle() + m_nb, m_k);
-
-        m_q_block->solve_inplace(u);
-
-        solve_lambda_section(v, u);
-
-        m_delta->solve_inplace(v);
-
-        solve_gamma_section(u, v);
-
-        return bx;
-    }
-    virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const bx) const override
-    {
-        assert(int(bx.extent(0)) == get_size());
-        ddc::DSpan1D const u(bx.data_handle(), m_nb);
-        ddc::DSpan1D const v(bx.data_handle() + m_nb, m_k);
-
-        solve_gamma_section_transpose(v, u);
-
-        m_delta->solve_transpose_inplace(v);
-
-        solve_lambda_section_transpose(u, v);
-
-        m_q_block->solve_transpose_inplace(u);
-
-        return bx;
-    }
-    virtual ddc::DSpan2D solve_multiple_inplace(ddc::DSpan2D const bx) const override
-    {
-        assert(int(bx.extent(0)) == get_size());
-        for (std::size_t i(0); i < bx.extent(0); ++i) {
-            ddc::DSpan1D const b(bx.data_handle() + get_size() * i, get_size());
-            solve_inplace(b);
-        }
-        return bx;
-    }
 
 protected:
     Matrix_Corner_Block(
@@ -233,20 +191,7 @@ public:
                     delta_proxy.set_element(i, j, delta_proxy.get_element(i, j) - val);
                 });
     }
-    virtual ddc::DSpan1D solve_lambda_section(ddc::DSpan1D const v, DView1D const u) const
-    {
-        Kokkos::parallel_for(
-                "solve_lambda_section",
-                Kokkos::RangePolicy<ExecSpace>(0, m_k),
-                KOKKOS_CLASS_LAMBDA(const int i) {
-                    // Upper diagonals in lambda
-                    for (int j = 0; j < m_nb; ++j) {
-                        Kokkos::atomic_sub(&v(i), m_lambda(j, i) * u(j));
-                    }
-                });
-        return v;
-    }
-    virtual ddc::DSpan2D_stride solve_lambda_section2(
+    virtual ddc::DSpan2D_stride solve_lambda_section(
             ddc::DSpan2D_stride const v,
             ddc::DSpan2D_stride const u) const
     {
@@ -269,20 +214,7 @@ public:
                 });
         return v;
     }
-    virtual ddc::DSpan1D solve_lambda_section_transpose(ddc::DSpan1D const u, DView1D const v) const
-    {
-        Kokkos::parallel_for(
-                "solve_lambda_section_transpose",
-                Kokkos::RangePolicy<ExecSpace>(0, m_nb),
-                KOKKOS_CLASS_LAMBDA(const int i) {
-                    // Upper diagonals in lambda
-                    for (int j = 0; j < m_k; ++j) {
-                        Kokkos::atomic_sub(&u(i), m_lambda(i, j) * v(j));
-                    }
-                });
-        return u;
-    }
-    virtual ddc::DSpan2D_stride solve_lambda_section_transpose2(
+    virtual ddc::DSpan2D_stride solve_lambda_section_transpose(
             ddc::DSpan2D_stride const u,
             ddc::DSpan2D_stride const v) const
     {
@@ -305,19 +237,7 @@ public:
                 });
         return u;
     }
-    virtual ddc::DSpan1D solve_gamma_section(ddc::DSpan1D const u, DView1D const v) const
-    {
-        Kokkos::parallel_for(
-                "solve_gamma_section",
-                Kokkos::RangePolicy<ExecSpace>(0, m_nb),
-                KOKKOS_CLASS_LAMBDA(const int i) {
-                    for (int j = 0; j < m_k; ++j) {
-                        Kokkos::atomic_sub(&u(i), m_Abm_1_gamma(j, i) * v(j));
-                    }
-                });
-        return u;
-    }
-    virtual ddc::DSpan2D_stride solve_gamma_section2(
+    virtual ddc::DSpan2D_stride solve_gamma_section(
             ddc::DSpan2D_stride const u,
             ddc::DSpan2D_stride const v) const
     {
@@ -340,19 +260,7 @@ public:
                 });
         return u;
     }
-    virtual ddc::DSpan1D solve_gamma_section_transpose(ddc::DSpan1D const v, DView1D const u) const
-    {
-        Kokkos::parallel_for(
-                "solve_gamma_section_transpose",
-                Kokkos::RangePolicy<ExecSpace>(0, m_k),
-                KOKKOS_CLASS_LAMBDA(const int j) {
-                    for (int i = 0; i < m_nb; ++i) {
-                        Kokkos::atomic_sub(&v(j), m_Abm_1_gamma(j, i) * u(i));
-                    }
-                });
-        return v;
-    }
-    virtual ddc::DSpan2D_stride solve_gamma_section_transpose2(
+    virtual ddc::DSpan2D_stride solve_gamma_section_transpose(
             ddc::DSpan2D_stride const v,
             ddc::DSpan2D_stride const u) const
     {
@@ -411,21 +319,21 @@ protected:
         ddc::DSpan2D_stride const v(b + m_nb, layout_mapping_v);
 
         if (transpose == 'N') {
-            m_q_block->solve_multiple_inplace2(u);
+            m_q_block->solve_multiple_inplace(u);
 
-            solve_lambda_section2(v, u);
+            solve_lambda_section(v, u);
 
-            m_delta->solve_multiple_inplace2(v);
+            m_delta->solve_multiple_inplace(v);
 
-            solve_gamma_section2(u, v);
+            solve_gamma_section(u, v);
         } else if (transpose == 'T') {
-            solve_gamma_section_transpose2(v, u);
+            solve_gamma_section_transpose(v, u);
 
-            m_delta->solve_multiple_transpose_inplace2(v);
+            m_delta->solve_multiple_transpose_inplace(v);
 
-            solve_lambda_section_transpose2(u, v);
+            solve_lambda_section_transpose(u, v);
 
-            m_q_block->solve_multiple_transpose_inplace2(u);
+            m_q_block->solve_multiple_transpose_inplace(u);
         } else {
             return -1;
         }

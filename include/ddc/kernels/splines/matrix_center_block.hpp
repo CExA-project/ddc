@@ -37,7 +37,6 @@ public:
         , top_block_size(top_block_size)
         , bottom_block_size(bottom_block_size)
         , bottom_block_index(n - bottom_block_size)
-        // , swap_array(std::make_unique<double[]>(q->get_size()))
         , swap_array(std::make_unique<double[]>(1))
     {
     }
@@ -73,11 +72,20 @@ public:
         swap_array_to_center(bx);
         return bx;
     }
-    ddc::DSpan2D_stride solve_multiple_inplace2(ddc::DSpan2D_stride const bx) const override
+	/*
+	ddc::DSpan2D_left solve_multiple_inplace(ddc::DSpan2D_left const bx) const override
     {
-        swap_array_to_corner2(bx);
-        Matrix_Corner_Block<ExecSpace>::solve_multiple_inplace2(bx);
-        swap_array_to_center2(bx);
+        swap_array_to_corner(bx);
+        Matrix_Corner_Block<ExecSpace>::solve_multiple_inplace(bx);
+        swap_array_to_center(bx);
+        return bx;
+    }
+	*/
+    ddc::DSpan2D_stride solve_multiple_inplace(ddc::DSpan2D_stride const bx) const override
+    {
+        swap_array_to_corner(bx);
+        Matrix_Corner_Block<ExecSpace>::solve_multiple_inplace(bx);
+        swap_array_to_center(bx);
         return bx;
     }
 
@@ -118,7 +126,7 @@ protected:
         memcpy(bx.data_handle(), swap_array.get(), m_q_block->get_size() * ncols * sizeof(double));
         return bx;
     }
-    ddc::DSpan2D_stride swap_array_to_corner2(ddc::DSpan2D_stride const bx) const
+    ddc::DSpan2D_stride swap_array_to_corner(ddc::DSpan2D_stride const bx) const
     {
         auto bx_top = std::experimental::submdspan(
                 bx,
@@ -193,7 +201,7 @@ protected:
                m_q_block->get_size() * ncols * sizeof(double));
         return bx;
     }
-    ddc::DSpan2D_stride swap_array_to_center2(ddc::DSpan2D_stride const bx) const
+    ddc::DSpan2D_stride swap_array_to_center(ddc::DSpan2D_stride const bx) const
     {
         auto bx_top = std::experimental::submdspan(
                 bx,

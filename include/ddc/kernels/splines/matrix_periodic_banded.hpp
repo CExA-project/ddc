@@ -184,24 +184,7 @@ public:
                 });
     }
 
-    ddc::DSpan1D solve_lambda_section(ddc::DSpan1D const v, DView1D const u) const override
-    {
-        Kokkos::parallel_for(
-                "solve_lambda_section",
-                Kokkos::RangePolicy<ExecSpace>(0, m_k),
-                KOKKOS_CLASS_LAMBDA(const int i) {
-                    // Upper diagonals in lambda
-                    for (int j = 0; j <= i; ++j) {
-                        Kokkos::atomic_sub(&v(i), m_lambda(j, i) * u(j));
-                    }
-                    // Lower diagonals in lambda
-                    for (int j = i + 1; j < m_k + 1; ++j) {
-                        Kokkos::atomic_sub(&v(i), m_lambda(j, i) * u(m_nb - 1 - m_k + j));
-                    }
-                });
-        return v;
-    }
-    ddc::DSpan2D_stride solve_lambda_section2(
+    ddc::DSpan2D_stride solve_lambda_section(
             ddc::DSpan2D_stride const v,
             ddc::DSpan2D_stride const u) const override
     {
@@ -230,25 +213,8 @@ public:
                 });
         return v;
     }
-    ddc::DSpan1D solve_lambda_section_transpose(ddc::DSpan1D const u, DView1D const v)
-            const override
-    {
-        Kokkos::parallel_for(
-                "solve_lambda_section_transpose",
-                Kokkos::RangePolicy<ExecSpace>(0, m_k),
-                KOKKOS_CLASS_LAMBDA(const int i) {
-                    // Upper diagonals in lambda
-                    for (int j = 0; j <= i; ++j) {
-                        Kokkos::atomic_sub(&u(j), m_lambda(j, i) * v(i));
-                    }
-                    // Lower diagonals in lambda
-                    for (int j = i + 1; j < m_k + 1; ++j) {
-                        Kokkos::atomic_sub(&u(m_nb - 1 - m_k + j), m_lambda(j, i) * v(i));
-                    }
-                });
-        return u;
-    }
-    ddc::DSpan2D_stride solve_lambda_section_transpose2(
+
+    ddc::DSpan2D_stride solve_lambda_section_transpose(
             ddc::DSpan2D_stride const u,
             ddc::DSpan2D_stride const v) const override
     {

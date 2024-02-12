@@ -45,8 +45,8 @@ plt.plot(x, np.mean([data_groups[nx]["bytes_per_second"][0] for nx in nx_values]
 plt.grid()
 plt.xscale("log")
 plt.xlabel("ny")
-plt.ylabel("Bandwidth [B/s]")
-plt.title("Bandwidth on "+str.upper(data["context"]["chip"]));
+plt.ylabel("Throughput [B/s]")
+plt.title("Throughput on "+str.upper(data["context"]["chip"]));
 plt.legend()
 plt.savefig("bandwidth_ny.png")
 
@@ -84,8 +84,8 @@ plt.plot(x, [0.99*min([min(group_data["bytes_per_second"]) for nx, group_data in
 plt.grid()
 plt.xscale("log")
 plt.xlabel("cols_per_chunk")
-plt.ylabel("Bandwidth [B/s]")
-plt.title("Bandwidth on "+str.upper(data["context"]["chip"])+" (with ny=100000)");
+plt.ylabel("Throughput [B/s]")
+plt.title("Throughput on "+str.upper(data["context"]["chip"])+" (with ny=100000)");
 plt.legend()
 plt.savefig("bandwidth_cols.png")
 
@@ -107,8 +107,8 @@ plt.plot(x, [0.99*min([min(group_data["bytes_per_second"]) for nx, group_data in
 plt.grid()
 plt.xscale("log")
 plt.xlabel("preconditionner_max_block_size")
-plt.ylabel("Bandwidth [B/s]")
-plt.title("Bandwidth on "+str.upper(data["context"]["chip"])+" (with ny=100000)");
+plt.ylabel("Throughput [B/s]")
+plt.title("Throughput on "+str.upper(data["context"]["chip"])+" (with ny=100000)");
 plt.legend()
 plt.savefig("bandwidth_precond.png")
 

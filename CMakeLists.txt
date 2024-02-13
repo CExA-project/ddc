@@ -30,7 +30,7 @@ set(DDC_mdspan_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `mdspan
 set_property(CACHE DDC_mdspan_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
 if("${DDC_mdspan_DEPENDENCY_POLICY}" STREQUAL "AUTO")
 	if(NOT TARGET std::mdspan)
-		find_package(mdspan 0.6...<0.7 CONFIG QUIET)
+		find_package(mdspan 0.6.0 EXACT CONFIG QUIET)
 		if(NOT mdspan_FOUND)
 			add_subdirectory(vendor/mdspan)
 		endif()
@@ -38,7 +38,7 @@ if("${DDC_mdspan_DEPENDENCY_POLICY}" STREQUAL "AUTO")
 elseif("${DDC_mdspan_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
 	add_subdirectory(vendor/mdspan)
 elseif("${DDC_mdspan_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-	find_package(mdspan 0.6...<0.7 CONFIG REQUIRED)
+	find_package(mdspan 0.6.0 EXACT CONFIG REQUIRED)
 endif()
 
 ## kokkos

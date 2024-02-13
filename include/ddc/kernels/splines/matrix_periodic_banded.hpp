@@ -197,7 +197,7 @@ public:
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, v.extent(0)),
+                            Kokkos::TeamThreadRange(teamMember, m_k),
                             [&](const int i) {
                                 /// Upper diagonals in lambda
                                 for (int l = 0; l <= i; ++l) {
@@ -219,24 +219,24 @@ public:
             ddc::DSpan2D_stride const v) const override
     {
         Kokkos::parallel_for(
-                "solve_lambda_section",
-                Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
+                "solve_lambda_section_transpose",
+                Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
                 KOKKOS_CLASS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, u.extent(0)),
+                            Kokkos::TeamThreadRange(teamMember, m_k),
                             [&](const int i) {
                                 /// Upper diagonals in lambda
                                 for (int l = 0; l <= i; ++l) {
-                                    Kokkos::atomic_sub(&u(i, j), m_lambda(i, l) * v(l, j));
+                                    Kokkos::atomic_sub(&u(l, j), m_lambda(i, l) * v(i, j));
                                 }
                                 // Lower diagonals in lambda
                                 for (int l = i + 1; l < m_k + 1; ++l) {
                                     Kokkos::atomic_sub(
-                                            &u(m_nb - 1 - m_k - l, j),
+                                            &u(m_nb - 1 - m_k + l, j),
                                             m_lambda(i, l) * v(i, j));
                                 }
                             });

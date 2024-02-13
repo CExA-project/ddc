@@ -147,7 +147,7 @@ public:
     virtual void factorize() override
     {
         m_q_block->factorize();
-        m_q_block->solve_multiple_inplace(
+        m_q_block->solve_inplace(
                 detail::build_mdspan(m_Abm_1_gamma, std::make_index_sequence<2> {}));
 
         calculate_delta_to_factorize();
@@ -319,11 +319,11 @@ protected:
         ddc::DSpan2D_stride const v(b + m_nb, layout_mapping_v);
 
         if (transpose == 'N') {
-            m_q_block->solve_multiple_inplace(u);
+            m_q_block->solve_inplace(u);
 
             solve_lambda_section(v, u);
 
-            m_delta->solve_multiple_inplace(v);
+            m_delta->solve_inplace(v);
 
             solve_gamma_section(u, v);
         } else if (transpose == 'T') {

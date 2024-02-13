@@ -66,25 +66,25 @@ public:
         return bx;
     }
     /*
-    ddc::DSpan2D solve_multiple_inplace(ddc::DSpan2D const bx) const override
+    ddc::DSpan2D solve_inplace(ddc::DSpan2D const bx) const override
     {
         swap_array_to_corner(bx);
-        Matrix_Corner_Block<ExecSpace>::solve_multiple_inplace(bx);
+        Matrix_Corner_Block<ExecSpace>::solve_inplace(bx);
         swap_array_to_center(bx);
         return bx;
     }
-	ddc::DSpan2D_left solve_multiple_inplace(ddc::DSpan2D_left const bx) const override
+	ddc::DSpan2D_left solve_inplace(ddc::DSpan2D_left const bx) const override
     {
         swap_array_to_corner(bx);
-        Matrix_Corner_Block<ExecSpace>::solve_multiple_inplace(bx);
+        Matrix_Corner_Block<ExecSpace>::solve_inplace(bx);
         swap_array_to_center(bx);
         return bx;
     }
 	*/
-    ddc::DSpan2D_stride solve_multiple_inplace(ddc::DSpan2D_stride const bx) const override
+    ddc::DSpan2D_stride solve_inplace(ddc::DSpan2D_stride const bx) const override
     {
         swap_array_to_corner(bx);
-        Matrix_Corner_Block<ExecSpace>::solve_multiple_inplace(bx);
+        Matrix_Corner_Block<ExecSpace>::solve_inplace(bx);
         swap_array_to_center(bx);
         return bx;
     }

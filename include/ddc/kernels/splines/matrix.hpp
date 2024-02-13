@@ -90,24 +90,6 @@ public:
         return bx;
     }
 
-    template <class Layout, class... Args>
-    Kokkos::View<double**, Layout, Args...> solve_multiple_rhs_inplace(
-            Kokkos::View<double**, Layout, Args...> const bx) const
-    {
-        assert(int(bx.extent(0)) == m_n);
-        int const info = solve_inplace_method(
-                bx.data(),
-                'N',
-                bx.extent(1),
-                std::max(bx.stride_0(), bx.stride_1()));
-
-        if (info < 0) {
-            std::cerr << -info << "-th argument had an illegal value" << std::endl;
-            // TODO: Add LOG_FATAL_ERROR
-        }
-        return bx;
-    }
-
     int KOKKOS_INLINE_FUNCTION get_size() const
     {
         return m_n;

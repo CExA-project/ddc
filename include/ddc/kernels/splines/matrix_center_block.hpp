@@ -25,7 +25,6 @@ protected:
     int const top_block_size;
     int const bottom_block_size;
     int const bottom_block_index;
-    std::unique_ptr<double[]> swap_array;
 
 public:
     Matrix_Center_Block(
@@ -37,7 +36,6 @@ public:
         , top_block_size(top_block_size)
         , bottom_block_size(bottom_block_size)
         , bottom_block_index(n - bottom_block_size)
-        , swap_array(std::make_unique<double[]>(1))
     {
     }
 
@@ -51,36 +49,6 @@ public:
         adjust_indexes(i, j);
         Matrix_Corner_Block<ExecSpace>::set_element(i, j, aij);
     }
-    ddc::DSpan1D solve_inplace(ddc::DSpan1D const bx) const override
-    {
-        swap_array_to_corner(bx);
-        Matrix_Corner_Block<ExecSpace>::solve_inplace(bx);
-        swap_array_to_center(bx);
-        return bx;
-    }
-    ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const bx) const override
-    {
-        swap_array_to_corner(bx);
-        Matrix_Corner_Block<ExecSpace>::solve_transpose_inplace(bx);
-        swap_array_to_center(bx);
-        return bx;
-    }
-    /*
-    ddc::DSpan2D solve_inplace(ddc::DSpan2D const bx) const override
-    {
-        swap_array_to_corner(bx);
-        Matrix_Corner_Block<ExecSpace>::solve_inplace(bx);
-        swap_array_to_center(bx);
-        return bx;
-    }
-	ddc::DSpan2D_left solve_inplace(ddc::DSpan2D_left const bx) const override
-    {
-        swap_array_to_corner(bx);
-        Matrix_Corner_Block<ExecSpace>::solve_inplace(bx);
-        swap_array_to_center(bx);
-        return bx;
-    }
-	*/
     ddc::DSpan2D_stride solve_inplace(ddc::DSpan2D_stride const bx) const override
     {
         swap_array_to_corner(bx);
@@ -102,29 +70,6 @@ protected:
             j += m_q_block->get_size();
         else if (j < bottom_block_index)
             j -= top_block_size;
-    }
-    ddc::DSpan1D swap_array_to_corner(ddc::DSpan1D const bx) const
-    {
-        memcpy(swap_array.get(),
-               bx.data_handle() + top_block_size,
-               m_q_block->get_size() * sizeof(double));
-        memcpy(bx.data_handle() + m_q_block->get_size(),
-               bx.data_handle(),
-               top_block_size * sizeof(double));
-        memcpy(bx.data_handle(), swap_array.get(), m_q_block->get_size() * sizeof(double));
-        return bx;
-    }
-    ddc::DSpan2D swap_array_to_corner(ddc::DSpan2D const bx) const
-    {
-        int const ncols = bx.extent(1);
-        memcpy(swap_array.get(),
-               bx.data_handle() + top_block_size * ncols,
-               m_q_block->get_size() * ncols * sizeof(double));
-        memcpy(bx.data_handle() + m_q_block->get_size() * ncols,
-               bx.data_handle(),
-               top_block_size * ncols * sizeof(double));
-        memcpy(bx.data_handle(), swap_array.get(), m_q_block->get_size() * ncols * sizeof(double));
-        return bx;
     }
     ddc::DSpan2D_stride swap_array_to_corner(ddc::DSpan2D_stride const bx) const
     {
@@ -176,29 +121,6 @@ protected:
         Kokkos::deep_copy(bx_q_buffer, bx_q_view);
         Kokkos::deep_copy(bx_top_dest_view, bx_top_view);
         Kokkos::deep_copy(bx_q_dest_view, bx_q_buffer);
-        return bx;
-    }
-    ddc::DSpan1D swap_array_to_center(ddc::DSpan1D const bx) const
-    {
-        memcpy(swap_array.get(), bx.data_handle(), m_q_block->get_size() * sizeof(double));
-        memcpy(bx.data_handle(),
-               bx.data_handle() + m_q_block->get_size(),
-               top_block_size * sizeof(double));
-        memcpy(bx.data_handle() + top_block_size,
-               swap_array.get(),
-               m_q_block->get_size() * sizeof(double));
-        return bx;
-    }
-    ddc::DSpan2D swap_array_to_center(ddc::DSpan2D const bx) const
-    {
-        int const ncols = bx.extent(1);
-        memcpy(swap_array.get(), bx.data_handle(), m_q_block->get_size() * ncols * sizeof(double));
-        memcpy(bx.data_handle(),
-               bx.data_handle() + m_q_block->get_size() * ncols,
-               top_block_size * ncols * sizeof(double));
-        memcpy(bx.data_handle() + top_block_size * ncols,
-               swap_array.get(),
-               m_q_block->get_size() * ncols * sizeof(double));
         return bx;
     }
     ddc::DSpan2D_stride swap_array_to_center(ddc::DSpan2D_stride const bx) const

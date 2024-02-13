@@ -240,11 +240,6 @@ inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexce
     for_each(default_policy(), domain, std::forward<Functor>(f));
 }
 
-/** iterates over a nD extent using the default execution policy
- * @param[in] extent the extent over which to iterate
- * @param[in] f      a functor taking an index as parameter
- */
-
 template <
         class ExecutionPolicy,
         class ElementType,

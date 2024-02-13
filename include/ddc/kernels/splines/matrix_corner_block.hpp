@@ -201,7 +201,7 @@ protected:
         , m_q_block(std::move(q))
         , m_delta(new Matrix_Dense<ExecSpace>(k))
         , m_Abm_1_gamma("Abm_1_gamma", m_nb, m_k)
-        , m_lambda("lambda", lambda_size2, lambda_size1)
+        , m_lambda("lambda", lambda_size1, lambda_size2)
     {
         assert(n > 0);
         assert(m_k >= 0);

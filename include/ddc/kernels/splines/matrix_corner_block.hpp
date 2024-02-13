@@ -28,8 +28,8 @@ protected:
     //-------------------------------------
     std::shared_ptr<Matrix> m_q_block;
     std::shared_ptr<Matrix_Dense<ExecSpace>> m_delta;
-    Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_Abm_1_gamma;
-    Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_lambda;
+    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_Abm_1_gamma;
+    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_lambda;
 
 public:
     Matrix_Corner_Block(int const n, int const k, std::unique_ptr<Matrix> q)
@@ -38,8 +38,8 @@ public:
         , m_nb(n - k)
         , m_q_block(std::move(q))
         , m_delta(new Matrix_Dense<ExecSpace>(k))
-        , m_Abm_1_gamma("Abm_1_gamma", m_k, m_nb)
-        , m_lambda("lambda", m_nb, m_k)
+        , m_Abm_1_gamma("Abm_1_gamma", m_nb, m_k)
+        , m_lambda("lambda", m_k, m_nb)
     {
         assert(n > 0);
         assert(m_k >= 0);
@@ -78,31 +78,31 @@ public:
                     if constexpr (Kokkos::SpaceAccessibility<
                                           Kokkos::DefaultHostExecutionSpace,
                                           typename ExecSpace::memory_space>::accessible) {
-                        return m_Abm_1_gamma(j - m_nb, i);
+                        return m_Abm_1_gamma(i, j - m_nb);
                     } else {
                         // Inefficient, usage is strongly discouraged
                         double aij;
                         Kokkos::deep_copy(
                                 Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                Kokkos::subview(m_Abm_1_gamma, j - m_nb, i));
+                                Kokkos::subview(m_Abm_1_gamma, i, j - m_nb));
                         return aij;
                     })
-            KOKKOS_IF_ON_DEVICE(return m_Abm_1_gamma(j - m_nb, i);)
+            KOKKOS_IF_ON_DEVICE(return m_Abm_1_gamma(i, j - m_nb);)
         } else {
             KOKKOS_IF_ON_HOST(
                     if constexpr (Kokkos::SpaceAccessibility<
                                           Kokkos::DefaultHostExecutionSpace,
                                           typename ExecSpace::memory_space>::accessible) {
-                        return m_lambda(j, i - m_nb);
+                        return m_lambda(i - m_nb, j);
                     } else {
                         // Inefficient, usage is strongly discouraged
                         double aij;
                         Kokkos::deep_copy(
                                 Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                Kokkos::subview(m_lambda, j, i - m_nb));
+                                Kokkos::subview(m_lambda, i - m_nb, j));
                         return aij;
                     })
-            KOKKOS_IF_ON_DEVICE(return m_lambda(j, i - m_nb);)
+            KOKKOS_IF_ON_DEVICE(return m_lambda(i - m_nb, j);)
         }
     }
     virtual KOKKOS_FUNCTION void set_element(int const i, int const j, double const aij)
@@ -121,27 +121,27 @@ public:
                     if constexpr (Kokkos::SpaceAccessibility<
                                           Kokkos::DefaultHostExecutionSpace,
                                           typename ExecSpace::memory_space>::accessible) {
-                        m_Abm_1_gamma(j - m_nb, i) = aij;
+                        m_Abm_1_gamma(i, j - m_nb) = aij;
                     } else {
                         // Inefficient, usage is strongly discouraged
                         Kokkos::deep_copy(
-                                Kokkos::subview(m_Abm_1_gamma, j - m_nb, i),
+                                Kokkos::subview(m_Abm_1_gamma, i, j - m_nb),
                                 Kokkos::View<const double, Kokkos::HostSpace>(&aij));
                     })
-            KOKKOS_IF_ON_DEVICE(m_Abm_1_gamma(j - m_nb, i) = aij;)
+            KOKKOS_IF_ON_DEVICE(m_Abm_1_gamma(i, j - m_nb) = aij;)
         } else {
             KOKKOS_IF_ON_HOST(
                     if constexpr (Kokkos::SpaceAccessibility<
                                           Kokkos::DefaultHostExecutionSpace,
                                           typename ExecSpace::memory_space>::accessible) {
-                        m_lambda(j, i - m_nb) = aij;
+                        m_lambda(i - m_nb, j) = aij;
                     } else {
                         // Inefficient, usage is strongly discouraged
                         Kokkos::deep_copy(
-                                Kokkos::subview(m_lambda, j, i - m_nb),
+                                Kokkos::subview(m_lambda, i - m_nb, j),
                                 Kokkos::View<const double, Kokkos::HostSpace>(&aij));
                     })
-            KOKKOS_IF_ON_DEVICE(m_lambda(j, i - m_nb) = aij;)
+            KOKKOS_IF_ON_DEVICE(m_lambda(i - m_nb, j) = aij;)
         }
     }
     virtual void factorize() override
@@ -153,6 +153,39 @@ public:
         calculate_delta_to_factorize();
 
         m_delta->factorize();
+    }
+    virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const bx) const override
+    {
+        assert(int(bx.extent(0)) == get_size());
+
+        ddc::DSpan2D const u(bx.data_handle(), m_nb, 1);
+        ddc::DSpan2D const v(bx.data_handle() + m_nb, m_k, 1);
+
+        m_q_block->solve_multiple_inplace(u);
+
+        solve_lambda_section(v, u);
+
+        m_delta->solve_multiple_inplace(v);
+
+        solve_gamma_section(u, v);
+
+        return bx;
+    }
+    virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const bx) const override
+    {
+        assert(int(bx.extent(0)) == get_size());
+        ddc::DSpan2D const u(bx.data_handle(), m_nb, 1);
+        ddc::DSpan2D const v(bx.data_handle() + m_nb, m_k, 1);
+
+        solve_gamma_section_transpose(v, u);
+
+        m_delta->solve_multiple_transpose_inplace(v);
+
+        solve_lambda_section_transpose(u, v);
+
+        m_q_block->solve_multiple_transpose_inplace(u);
+
+        return bx;
     }
 
 protected:
@@ -167,8 +200,8 @@ protected:
         , m_nb(n - k)
         , m_q_block(std::move(q))
         , m_delta(new Matrix_Dense<ExecSpace>(k))
-        , m_Abm_1_gamma("Abm_1_gamma", m_k, m_nb)
-        , m_lambda("lambda", lambda_size1, lambda_size2)
+        , m_Abm_1_gamma("Abm_1_gamma", m_nb, m_k)
+        , m_lambda("lambda", lambda_size2, lambda_size1)
     {
         assert(n > 0);
         assert(m_k >= 0);
@@ -186,7 +219,7 @@ public:
                 KOKKOS_CLASS_LAMBDA(const int i, const int j) {
                     double val = 0.0;
                     for (int l = 0; l < m_nb; ++l) {
-                        val += m_lambda(l, i) * m_Abm_1_gamma(j, l);
+                        val += m_lambda(i, l) * m_Abm_1_gamma(l, j);
                     }
                     delta_proxy.set_element(i, j, delta_proxy.get_element(i, j) - val);
                 });
@@ -208,7 +241,7 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < m_nb; ++l) {
-                                    Kokkos::atomic_sub(&v(i, j), m_lambda(l, i) * u(l, j));
+                                    Kokkos::atomic_sub(&v(i, j), m_lambda(i, l) * u(l, j));
                                 }
                             });
                 });
@@ -231,7 +264,7 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < m_k; ++l) {
-                                    Kokkos::atomic_sub(&u(i, j), m_lambda(l, i) * v(l, j));
+                                    Kokkos::atomic_sub(&u(i, j), m_lambda(i, l) * v(l, j));
                                 }
                             });
                 });
@@ -254,7 +287,7 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < m_k; ++l) {
-                                    Kokkos::atomic_sub(&u(i, j), m_Abm_1_gamma(l, i) * v(l, j));
+                                    Kokkos::atomic_sub(&u(i, j), m_Abm_1_gamma(i, l) * v(l, j));
                                 }
                             });
                 });
@@ -277,7 +310,7 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < m_nb; ++l) {
-                                    Kokkos::atomic_sub(&v(i, j), m_Abm_1_gamma(l, i) * u(l, j));
+                                    Kokkos::atomic_sub(&v(i, j), m_Abm_1_gamma(i, l) * u(l, j));
                                 }
                             });
                 });

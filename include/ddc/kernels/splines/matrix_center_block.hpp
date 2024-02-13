@@ -65,6 +65,7 @@ public:
         swap_array_to_center(bx);
         return bx;
     }
+    /*
     ddc::DSpan2D solve_multiple_inplace(ddc::DSpan2D const bx) const override
     {
         swap_array_to_corner(bx);
@@ -72,7 +73,6 @@ public:
         swap_array_to_center(bx);
         return bx;
     }
-	/*
 	ddc::DSpan2D_left solve_multiple_inplace(ddc::DSpan2D_left const bx) const override
     {
         swap_array_to_corner(bx);

@@ -172,12 +172,12 @@ public:
                     double val = 0.0;
                     // Upper diagonals in lambda, lower diagonals in Abm_1_gamma
                     for (int l = 0; l < i + 1; ++l) {
-                        val += m_lambda(l, i) * m_Abm_1_gamma(j, l);
+                        val += m_lambda(i, l) * m_Abm_1_gamma(l, j);
                     }
                     // Lower diagonals in lambda, upper diagonals in Abm_1_gamma
                     for (int l = i + 1; l < m_k + 1; ++l) {
                         int l_full = m_nb - 1 - m_k + l;
-                        val += m_lambda(l, i) * m_Abm_1_gamma(j, l_full);
+                        val += m_lambda(i, l) * m_Abm_1_gamma(l_full, j);
                     }
                     auto tmp = delta_proxy.get_element(i, j);
                     delta_proxy.set_element(i, j, tmp - val);
@@ -201,13 +201,13 @@ public:
                             [&](const int i) {
                                 /// Upper diagonals in lambda
                                 for (int l = 0; l <= i; ++l) {
-                                    Kokkos::atomic_sub(&v(i, j), m_lambda(l, i) * u(l, j));
+                                    Kokkos::atomic_sub(&v(i, j), m_lambda(i, l) * u(l, j));
                                 }
                                 // Lower diagonals in lambda
                                 for (int l = i + 1; l < m_k + 1; ++l) {
                                     Kokkos::atomic_sub(
                                             &v(i, j),
-                                            m_lambda(l, i) * u(m_nb - 1 - m_k + l, j));
+                                            m_lambda(i, l) * u(m_nb - 1 - m_k + l, j));
                                 }
                             });
                 });
@@ -231,13 +231,13 @@ public:
                             [&](const int i) {
                                 /// Upper diagonals in lambda
                                 for (int l = 0; l <= i; ++l) {
-                                    Kokkos::atomic_sub(&u(i, j), m_lambda(l, i) * v(l, j));
+                                    Kokkos::atomic_sub(&u(i, j), m_lambda(i, l) * v(l, j));
                                 }
                                 // Lower diagonals in lambda
                                 for (int l = i + 1; l < m_k + 1; ++l) {
                                     Kokkos::atomic_sub(
                                             &u(m_nb - 1 - m_k - l, j),
-                                            m_lambda(l, i) * v(i, j));
+                                            m_lambda(i, l) * v(i, j));
                                 }
                             });
                 });

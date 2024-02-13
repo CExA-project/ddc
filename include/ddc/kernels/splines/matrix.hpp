@@ -46,25 +46,15 @@ public:
 
     virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const b) const
     {
-        assert(int(b.extent(0)) == m_n);
-        int const info = solve_inplace_method(b.data_handle(), 'N', 1);
-
-        if (info < 0) {
-            std::cerr << -info << "-th argument had an illegal value" << std::endl;
-            // TODO: Add LOG_FATAL_ERROR
-        }
+        ddc::DSpan2D_left b_left(b.data_handle(), b.extent(0), 1);
+        solve_multiple_inplace(b_left);
         return b;
     }
 
     virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const b) const
     {
-        assert(int(b.extent(0)) == m_n);
-        int const info = solve_inplace_method(b.data_handle(), 'T', 1);
-
-        if (info < 0) {
-            std::cerr << -info << "-th argument had an illegal value" << std::endl;
-            // TODO: Add LOG_FATAL_ERROR
-        }
+        ddc::DSpan2D_left b_left(b.data_handle(), b.extent(0), 1);
+        solve_multiple_transpose_inplace(b_left);
         return b;
     }
 

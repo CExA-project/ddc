@@ -154,39 +154,6 @@ public:
 
         m_delta->factorize();
     }
-    virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const bx) const override
-    {
-        assert(int(bx.extent(0)) == get_size());
-
-        ddc::DSpan2D_left const u(bx.data_handle(), m_nb, 1);
-        ddc::DSpan2D_left const v(bx.data_handle() + m_nb, m_k, 1);
-
-        m_q_block->solve_multiple_inplace(u);
-
-        solve_lambda_section(v, u);
-
-        m_delta->solve_multiple_inplace(v);
-
-        solve_gamma_section(u, v);
-
-        return bx;
-    }
-    virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const bx) const override
-    {
-        assert(int(bx.extent(0)) == get_size());
-        ddc::DSpan2D_left const u(bx.data_handle(), m_nb, 1);
-        ddc::DSpan2D_left const v(bx.data_handle() + m_nb, m_k, 1);
-
-        solve_gamma_section_transpose(v, u);
-
-        m_delta->solve_multiple_transpose_inplace(v);
-
-        solve_lambda_section_transpose(u, v);
-
-        m_q_block->solve_multiple_transpose_inplace(u);
-
-        return bx;
-    }
 
 protected:
     Matrix_Corner_Block(

@@ -682,7 +682,7 @@ operator()(
     }
     std::experimental::mdspan bcoef_section_mdspan(spline_tr.data_handle(), layout_mapping);
     // Compute spline coef
-    matrix->solve_multiple_inplace2(bcoef_section_mdspan);
+    matrix->solve_inplace(bcoef_section_mdspan);
 
     // Transpose back spline_tr in spline
     ddc::for_each(

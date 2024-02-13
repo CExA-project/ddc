@@ -98,7 +98,7 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
     ddc::DSpan2D inv(inv_ptr.data(), N, N);
     fill_identity(inv);
     matrix->factorize();
-    matrix->solve_multiple_inplace(inv);
+    matrix->solve_inplace(inv);
     check_inverse(val, inv);
 }
 
@@ -128,7 +128,7 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
     ddc::DSpan2D inv(inv_ptr.data(), N, N);
     fill_identity(inv);
     matrix->factorize();
-    matrix->solve_multiple_inplace(inv);
+    matrix->solve_inplace(inv);
     check_inverse(val, inv);
 }
 
@@ -164,7 +164,7 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
         ddc::DSpan2D inv(inv_ptr.data(), N, N);
         fill_identity(inv);
         matrix->factorize();
-        matrix->solve_multiple_inplace(inv);
+        matrix->solve_inplace(inv);
         check_inverse(val, inv);
     }
 }
@@ -306,7 +306,7 @@ TEST_P(MatrixSizesFixture, Sparse)
     fill_identity(inv);
     inv_ptr.modify_host();
     inv_ptr.sync_device();
-    matrix->solve_multiple_inplace(ddc::DSpan2D(inv_ptr.d_view.data(), N, N));
+    matrix->solve_inplace(ddc::DSpan2D(inv_ptr.d_view.data(), N, N));
     inv_ptr.modify_device();
     inv_ptr.sync_host();
 

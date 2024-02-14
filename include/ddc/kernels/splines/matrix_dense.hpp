@@ -1,5 +1,5 @@
-#ifndef MATRIX_DENSE_H
-#define MATRIX_DENSE_H
+#pragma once
+
 #include <cassert>
 #include <memory>
 
@@ -124,4 +124,3 @@ private:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_DENSE_H

@@ -1,5 +1,5 @@
-#ifndef MATRIX_BANDED_H
-#define MATRIX_BANDED_H
+#pragma once
+
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -164,4 +164,3 @@ protected:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_BANDED_H

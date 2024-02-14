@@ -1,5 +1,4 @@
-#ifndef MATRIX_PDS_BANDED_H
-#define MATRIX_PDS_BANDED_H
+#pragma once
 
 #include <cassert>
 #include <cmath>
@@ -192,4 +191,3 @@ protected:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_SYMMETRIC_BANDED_H

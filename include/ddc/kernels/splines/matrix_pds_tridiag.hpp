@@ -1,5 +1,4 @@
-#ifndef MATRIX_PDS_TRIDIAG_H
-#define MATRIX_PDS_TRIDIAG_H
+#pragma once
 
 #include <cassert>
 #include <cmath>
@@ -166,4 +165,3 @@ protected:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_PDS_TRIDIAG_H

@@ -1,5 +1,5 @@
-#ifndef MATRIX_CENTER_BLOCK_H
-#define MATRIX_CENTER_BLOCK_H
+#pragma once
+
 #include <memory>
 #include <utility>
 
@@ -179,4 +179,3 @@ protected:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_CENTER_BLOCK_H

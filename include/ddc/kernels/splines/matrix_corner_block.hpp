@@ -1,5 +1,5 @@
-#ifndef MATRIX_CORNER_BLOCK_H
-#define MATRIX_CORNER_BLOCK_H
+#pragma once
+
 #include <cassert>
 #include <memory>
 #include <utility>
@@ -339,4 +339,3 @@ protected:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_CORNER_BLOCK_H

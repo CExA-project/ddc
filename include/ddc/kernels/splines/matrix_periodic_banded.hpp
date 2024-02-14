@@ -1,5 +1,5 @@
-#ifndef MATRIX_PERIODIC_BANDED_H
-#define MATRIX_PERIODIC_BANDED_H
+#pragma once
+
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -244,4 +244,3 @@ public:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_PERIODIC_BANDED_H

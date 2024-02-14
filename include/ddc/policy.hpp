@@ -55,13 +55,6 @@ inline parallel_host_policy const& policy(Kokkos::OpenMP)
 }
 #endif
 
-#ifdef KOKKOS_ENABLE_THREADS
-constexpr parallel_host_policy const& policy(::Kokkos::Threads)
-{
-    return parallel_host;
-}
-#endif
-
 } // namespace policies
 
 } // namespace ddc

@@ -23,20 +23,20 @@ class Matrix_Center_Block : public Matrix_Corner_Block<ExecSpace>
     using Matrix_Corner_Block<ExecSpace>::m_lambda;
 
 protected:
-    int const top_block_size;
-    int const bottom_block_size;
-    int const bottom_block_index;
+    int const m_top_block_size;
+    int const m_bottom_block_size;
+    int const m_bottom_block_index;
 
 public:
     Matrix_Center_Block(
             int const n,
-            int const top_block_size,
-            int const bottom_block_size,
+            int const m_top_block_size,
+            int const m_bottom_block_size,
             std::unique_ptr<Matrix> q)
-        : Matrix_Corner_Block<ExecSpace>(n, top_block_size + bottom_block_size, std::move(q))
-        , top_block_size(top_block_size)
-        , bottom_block_size(bottom_block_size)
-        , bottom_block_index(n - bottom_block_size)
+        : Matrix_Corner_Block<ExecSpace>(n, m_top_block_size + m_bottom_block_size, std::move(q))
+        , m_top_block_size(m_top_block_size)
+        , m_bottom_block_size(m_bottom_block_size)
+        , m_bottom_block_index(n - m_bottom_block_size)
     {
     }
 
@@ -62,29 +62,29 @@ public:
 protected:
     void adjust_indexes(int& i, int& j) const
     {
-        if (i < top_block_size)
+        if (i < m_top_block_size)
             i += m_q_block->get_size();
-        else if (i < bottom_block_index)
-            i -= top_block_size;
+        else if (i < m_bottom_block_index)
+            i -= m_top_block_size;
 
-        if (j < top_block_size)
+        if (j < m_top_block_size)
             j += m_q_block->get_size();
-        else if (j < bottom_block_index)
-            j -= top_block_size;
+        else if (j < m_bottom_block_index)
+            j -= m_top_block_size;
     }
     ddc::DSpan2D_stride swap_array_to_corner(ddc::DSpan2D_stride const bx) const
     {
         auto bx_top = std::experimental::submdspan(
                 bx,
-                std::pair<int, int> {0, top_block_size},
+                std::pair<int, int> {0, m_top_block_size},
                 std::experimental::full_extent);
         auto bx_q = std::experimental::submdspan(
                 bx,
-                std::pair<int, int> {top_block_size, top_block_size + m_q_block->get_size()},
+                std::pair<int, int> {m_top_block_size, m_top_block_size + m_q_block->get_size()},
                 std::experimental::full_extent);
         auto bx_top_dest = std::experimental::submdspan(
                 bx,
-                std::pair<int, int> {m_q_block->get_size(), top_block_size + m_q_block->get_size()},
+                std::pair<int, int> {m_q_block->get_size(), m_top_block_size + m_q_block->get_size()},
                 std::experimental::full_extent);
         auto bx_q_dest = std::experimental::submdspan(
                 bx,
@@ -128,15 +128,15 @@ protected:
     {
         auto bx_top = std::experimental::submdspan(
                 bx,
-                std::pair<int, int> {0, top_block_size},
+                std::pair<int, int> {0, m_top_block_size},
                 std::experimental::full_extent);
         auto bx_q = std::experimental::submdspan(
                 bx,
-                std::pair<int, int> {top_block_size, top_block_size + m_q_block->get_size()},
+                std::pair<int, int> {m_top_block_size, m_top_block_size + m_q_block->get_size()},
                 std::experimental::full_extent);
         auto bx_top_src = std::experimental::submdspan(
                 bx,
-                std::pair<int, int> {m_q_block->get_size(), top_block_size + m_q_block->get_size()},
+                std::pair<int, int> {m_q_block->get_size(), m_top_block_size + m_q_block->get_size()},
                 std::experimental::full_extent);
         auto bx_q_src = std::experimental::submdspan(
                 bx,

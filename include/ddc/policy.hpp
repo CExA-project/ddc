@@ -16,7 +16,7 @@ struct parallel_host_policy
 {
 };
 
-/// Kokkos parallel execution uisng MDRange policy
+/// Kokkos parallel execution using MDRange policy
 struct parallel_device_policy
 {
 };

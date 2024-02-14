@@ -63,27 +63,6 @@ constexpr parallel_host_policy const& policy(::Kokkos::Threads)
 }
 #endif
 
-#ifdef KOKKOS_ENABLE_HPX
-constexpr parallel_host_policy const& policy(::Kokkos::Experimental::HPX)
-{
-    return parallel_host;
-}
-#endif
-
-#ifdef KOKKOS_ENABLE_SYCL
-constexpr parallel_device_policy const& policy(::Kokkos::Experimental::SYCL)
-{
-    return parallel_device;
-}
-#endif
-
-#ifdef KOKKOS_ENABLE_OPENMPTARGET
-constexpr parallel_host_policy const& policy(::Kokkos::Experimental::OpenMPTarget)
-{
-    return parallel_host;
-}
-#endif
-
 } // namespace policies
 
 } // namespace ddc

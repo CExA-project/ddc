@@ -30,27 +30,27 @@ inline constexpr serial_host_policy serial_host;
 inline constexpr parallel_host_policy parallel_host;
 inline constexpr parallel_device_policy parallel_device;
 
-constexpr serial_host_policy const& policy(::Kokkos::Serial const&)
+inline serial_host_policy const& policy(Kokkos::Serial)
 {
     return serial_host;
 }
 
 #ifdef KOKKOS_ENABLE_CUDA
-constexpr parallel_device_policy const& policy(::Kokkos::Cuda)
+inline parallel_device_policy const& policy(Kokkos::Cuda)
 {
     return parallel_device;
 }
 #endif
 
 #ifdef KOKKOS_ENABLE_HIP
-constexpr parallel_device_policy const& policy(::Kokkos::HIP)
+inline parallel_device_policy const& policy(Kokkos::HIP)
 {
     return parallel_device;
 }
 #endif
 
 #ifdef KOKKOS_ENABLE_OPENMP
-constexpr parallel_host_policy const& policy(::Kokkos::OpenMP)
+inline parallel_host_policy const& policy(Kokkos::OpenMP)
 {
     return parallel_host;
 }

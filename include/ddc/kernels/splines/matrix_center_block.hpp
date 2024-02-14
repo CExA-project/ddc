@@ -39,12 +39,12 @@ public:
     {
     }
 
-    KOKKOS_FUNCTION double get_element(int i, int j) const override
+    double get_element(int i, int j) const override
     {
         adjust_indexes(i, j);
         return Matrix_Corner_Block<ExecSpace>::get_element(i, j);
     }
-    KOKKOS_FUNCTION void set_element(int i, int j, double aij) const override
+    void set_element(int i, int j, double aij) const override
     {
         adjust_indexes(i, j);
         Matrix_Corner_Block<ExecSpace>::set_element(i, j, aij);
@@ -59,7 +59,7 @@ public:
 
 
 protected:
-    void KOKKOS_FUNCTION adjust_indexes(int& i, int& j) const
+    void adjust_indexes(int& i, int& j) const
     {
         if (i < top_block_size)
             i += m_q_block->get_size();

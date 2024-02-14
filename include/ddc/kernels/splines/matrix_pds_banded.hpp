@@ -56,7 +56,7 @@ public:
                 KOKKOS_CLASS_LAMBDA(const int i, const int j) { m_q(i, j) = 0; });
     }
 
-    KOKKOS_FUNCTION double get_element(int i, int j) const override
+    double get_element(int i, int j) const override
     {
         if (i == j) {
             KOKKOS_IF_ON_HOST(
@@ -100,7 +100,7 @@ public:
         }
         return 0.0;
     }
-    KOKKOS_FUNCTION void set_element(int i, int j, double const aij) const override
+    void set_element(int i, int j, double const aij) const override
     {
         if (i == j) {
             KOKKOS_IF_ON_HOST(

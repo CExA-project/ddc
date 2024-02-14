@@ -52,23 +52,21 @@ public:
                 });
     }
 
-    KOKKOS_FUNCTION double get_element(int i, int j) const override
+    double get_element(int i, int j) const override
     {
         if (i == j) {
-            KOKKOS_IF_ON_HOST(
-                    if constexpr (Kokkos::SpaceAccessibility<
-                                          Kokkos::DefaultHostExecutionSpace,
-                                          typename ExecSpace::memory_space>::accessible) {
-                        return m_d(i);
-                    } else {
-                        // Inefficient, usage is strongly discouraged
-                        double aij;
-                        Kokkos::deep_copy(
-                                Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                Kokkos::subview(m_d, i));
-                        return aij;
-                    })
-            KOKKOS_IF_ON_DEVICE(return m_d(i);)
+            if constexpr (Kokkos::SpaceAccessibility<
+                                  Kokkos::DefaultHostExecutionSpace,
+                                  typename ExecSpace::memory_space>::accessible) {
+                return m_d(i);
+            } else {
+                // Inefficient, usage is strongly discouraged
+                double aij;
+                Kokkos::deep_copy(
+                        Kokkos::View<double, Kokkos::HostSpace>(&aij),
+                        Kokkos::subview(m_d, i));
+                return aij;
+            }
         }
         if (i > j) {
             // inline swap i<->j
@@ -77,38 +75,34 @@ public:
             j = tmp;
         }
         if (i + 1 == j) {
-            KOKKOS_IF_ON_HOST(
-                    if constexpr (Kokkos::SpaceAccessibility<
-                                          Kokkos::DefaultHostExecutionSpace,
-                                          typename ExecSpace::memory_space>::accessible) {
-                        return m_l(i);
-                    } else {
-                        // Inefficient, usage is strongly discouraged
-                        double aij;
-                        Kokkos::deep_copy(
-                                Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                Kokkos::subview(m_l, i));
-                        return aij;
-                    })
-            KOKKOS_IF_ON_DEVICE(return m_l(i);)
+            if constexpr (Kokkos::SpaceAccessibility<
+                                  Kokkos::DefaultHostExecutionSpace,
+                                  typename ExecSpace::memory_space>::accessible) {
+                return m_l(i);
+            } else {
+                // Inefficient, usage is strongly discouraged
+                double aij;
+                Kokkos::deep_copy(
+                        Kokkos::View<double, Kokkos::HostSpace>(&aij),
+                        Kokkos::subview(m_l, i));
+                return aij;
+            }
         }
         return 0.0;
     }
-    KOKKOS_FUNCTION void set_element(int i, int j, double const aij) const override
+    void set_element(int i, int j, double const aij) const override
     {
         if (i == j) {
-            KOKKOS_IF_ON_HOST(
-                    if constexpr (Kokkos::SpaceAccessibility<
-                                          Kokkos::DefaultHostExecutionSpace,
-                                          typename ExecSpace::memory_space>::accessible) {
-                        m_d(i) = aij;
-                    } else {
-                        // Inefficient, usage is strongly discouraged
-                        Kokkos::deep_copy(
-                                Kokkos::subview(m_d, i),
-                                Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-                    })
-            KOKKOS_IF_ON_DEVICE(m_d(i) = aij;)
+            if constexpr (Kokkos::SpaceAccessibility<
+                                  Kokkos::DefaultHostExecutionSpace,
+                                  typename ExecSpace::memory_space>::accessible) {
+                m_d(i) = aij;
+            } else {
+                // Inefficient, usage is strongly discouraged
+                Kokkos::deep_copy(
+                        Kokkos::subview(m_d, i),
+                        Kokkos::View<const double, Kokkos::HostSpace>(&aij));
+            }
             return;
         }
         if (i > j) {
@@ -120,18 +114,16 @@ public:
         if (i + 1 != j) {
             assert(std::fabs(aij) < 1e-20);
         } else {
-            KOKKOS_IF_ON_HOST(
-                    if constexpr (Kokkos::SpaceAccessibility<
-                                          Kokkos::DefaultHostExecutionSpace,
-                                          typename ExecSpace::memory_space>::accessible) {
-                        m_l(i) = aij;
-                    } else {
-                        // Inefficient, usage is strongly discouraged
-                        Kokkos::deep_copy(
-                                Kokkos::subview(m_l, i),
-                                Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-                    })
-            KOKKOS_IF_ON_DEVICE(m_l(i) = aij;)
+            if constexpr (Kokkos::SpaceAccessibility<
+                                  Kokkos::DefaultHostExecutionSpace,
+                                  typename ExecSpace::memory_space>::accessible) {
+                m_l(i) = aij;
+            } else {
+                // Inefficient, usage is strongly discouraged
+                Kokkos::deep_copy(
+                        Kokkos::subview(m_l, i),
+                        Kokkos::View<const double, Kokkos::HostSpace>(&aij));
+            }
         }
     }
 

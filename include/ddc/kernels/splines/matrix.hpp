@@ -22,9 +22,9 @@ public:
 
     virtual void reset() const = 0;
 
-    virtual KOKKOS_FUNCTION double get_element(int i, int j) const = 0;
+    virtual double get_element(int i, int j) const = 0;
 
-    virtual KOKKOS_FUNCTION void set_element(int i, int j, double aij) const = 0;
+    virtual void set_element(int i, int j, double aij) const = 0;
 
     virtual void factorize()
     {

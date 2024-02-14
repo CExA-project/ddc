@@ -61,7 +61,7 @@ public:
 */
 
 
-    double KOKKOS_FUNCTION get_element(int const i, int j) const override
+    double get_element(int const i, int j) const override
     {
         assert(i >= 0);
         assert(i < get_size());
@@ -77,41 +77,37 @@ public:
             if (d < -kl || d > ku)
                 return 0.0;
             if (d > 0) {
-                KOKKOS_IF_ON_HOST(
-                        if constexpr (Kokkos::SpaceAccessibility<
-                                              Kokkos::DefaultHostExecutionSpace,
-                                              typename ExecSpace::memory_space>::accessible) {
-                            return m_lambda(i - m_nb, j);
-                        } else {
-                            // Inefficient, usage is strongly discouraged
-                            double aij;
-                            Kokkos::deep_copy(
-                                    Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                    Kokkos::subview(m_lambda, i - m_nb, j));
-                            return aij;
-                        })
-                KOKKOS_IF_ON_DEVICE(return m_lambda(i - m_nb, j);)
+                if constexpr (Kokkos::SpaceAccessibility<
+                                      Kokkos::DefaultHostExecutionSpace,
+                                      typename ExecSpace::memory_space>::accessible) {
+                    return m_lambda(i - m_nb, j);
+                } else {
+                    // Inefficient, usage is strongly discouraged
+                    double aij;
+                    Kokkos::deep_copy(
+                            Kokkos::View<double, Kokkos::HostSpace>(&aij),
+                            Kokkos::subview(m_lambda, i - m_nb, j));
+                    return aij;
+                }
             } else {
-                KOKKOS_IF_ON_HOST(
-                        if constexpr (Kokkos::SpaceAccessibility<
-                                              Kokkos::DefaultHostExecutionSpace,
-                                              typename ExecSpace::memory_space>::accessible) {
-                            return m_lambda(i - m_nb, j - m_nb + m_k + 1);
-                        } else {
-                            // Inefficient, usage is strongly discouraged
-                            double aij;
-                            Kokkos::deep_copy(
-                                    Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                    Kokkos::subview(m_lambda, i - m_nb, j - m_nb + m_k + 1));
-                            return aij;
-                        })
-                KOKKOS_IF_ON_DEVICE(return m_lambda(i - m_nb, j - m_nb + m_k + 1);)
+                if constexpr (Kokkos::SpaceAccessibility<
+                                      Kokkos::DefaultHostExecutionSpace,
+                                      typename ExecSpace::memory_space>::accessible) {
+                    return m_lambda(i - m_nb, j - m_nb + m_k + 1);
+                } else {
+                    // Inefficient, usage is strongly discouraged
+                    double aij;
+                    Kokkos::deep_copy(
+                            Kokkos::View<double, Kokkos::HostSpace>(&aij),
+                            Kokkos::subview(m_lambda, i - m_nb, j - m_nb + m_k + 1));
+                    return aij;
+                }
             }
         } else {
             return Matrix_Corner_Block<ExecSpace>::get_element(i, j);
         }
     }
-    void KOKKOS_FUNCTION set_element(int const i, int j, double const aij) const override
+    void set_element(int const i, int j, double const aij) const override
     {
         assert(i >= 0);
         assert(i < get_size());
@@ -130,31 +126,27 @@ public:
             }
 
             if (d > 0) {
-                KOKKOS_IF_ON_HOST(
-                        if constexpr (Kokkos::SpaceAccessibility<
-                                              Kokkos::DefaultHostExecutionSpace,
-                                              typename ExecSpace::memory_space>::accessible) {
-                            m_lambda(i - m_nb, j) = aij;
-                        } else {
-                            // Inefficient, usage is strongly discouraged
-                            Kokkos::deep_copy(
-                                    Kokkos::subview(m_lambda, i - m_nb, j),
-                                    Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-                        })
-                KOKKOS_IF_ON_DEVICE(m_lambda(i - m_nb, j) = aij;)
+                if constexpr (Kokkos::SpaceAccessibility<
+                                      Kokkos::DefaultHostExecutionSpace,
+                                      typename ExecSpace::memory_space>::accessible) {
+                    m_lambda(i - m_nb, j) = aij;
+                } else {
+                    // Inefficient, usage is strongly discouraged
+                    Kokkos::deep_copy(
+                            Kokkos::subview(m_lambda, i - m_nb, j),
+                            Kokkos::View<const double, Kokkos::HostSpace>(&aij));
+                }
             } else {
-                KOKKOS_IF_ON_HOST(
-                        if constexpr (Kokkos::SpaceAccessibility<
-                                              Kokkos::DefaultHostExecutionSpace,
-                                              typename ExecSpace::memory_space>::accessible) {
-                            m_lambda(i - m_nb, j - m_nb + m_k + 1) = aij;
-                        } else {
-                            // Inefficient, usage is strongly discouraged
-                            Kokkos::deep_copy(
-                                    Kokkos::subview(m_lambda, i - m_nb, j - m_nb + m_k + 1),
-                                    Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-                        })
-                KOKKOS_IF_ON_DEVICE(m_lambda(i - m_nb, j - m_nb + m_k + 1) = aij;)
+                if constexpr (Kokkos::SpaceAccessibility<
+                                      Kokkos::DefaultHostExecutionSpace,
+                                      typename ExecSpace::memory_space>::accessible) {
+                    m_lambda(i - m_nb, j - m_nb + m_k + 1) = aij;
+                } else {
+                    // Inefficient, usage is strongly discouraged
+                    Kokkos::deep_copy(
+                            Kokkos::subview(m_lambda, i - m_nb, j - m_nb + m_k + 1),
+                            Kokkos::View<const double, Kokkos::HostSpace>(&aij));
+                }
             }
         } else {
             Matrix_Corner_Block<ExecSpace>::set_element(i, j, aij);
@@ -165,6 +157,10 @@ public:
     void calculate_delta_to_factorize() override
     {
         auto delta_proxy = *m_delta;
+        auto lambda_host = Kokkos::
+                create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_lambda);
+        auto Abm_1_gamma_host = Kokkos::
+                create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_Abm_1_gamma);
         Kokkos::parallel_for(
                 "calculate_delta_to_factorize",
                 Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {m_k, m_k}),
@@ -172,12 +168,12 @@ public:
                     double val = 0.0;
                     // Upper diagonals in lambda, lower diagonals in Abm_1_gamma
                     for (int l = 0; l < i + 1; ++l) {
-                        val += m_lambda(i, l) * m_Abm_1_gamma(l, j);
+                        val += lambda_host(i, l) * Abm_1_gamma_host(l, j);
                     }
                     // Lower diagonals in lambda, upper diagonals in Abm_1_gamma
                     for (int l = i + 1; l < m_k + 1; ++l) {
                         int l_full = m_nb - 1 - m_k + l;
-                        val += m_lambda(i, l) * m_Abm_1_gamma(l_full, j);
+                        val += lambda_host(i, l) * Abm_1_gamma_host(l_full, j);
                     }
                     auto tmp = delta_proxy.get_element(i, j);
                     delta_proxy.set_element(i, j, tmp - val);

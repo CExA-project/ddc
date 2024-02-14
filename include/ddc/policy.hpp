@@ -11,7 +11,6 @@ struct serial_host_policy
 {
 };
 
-
 /// Parallel execution on the default device
 struct parallel_host_policy
 {

@@ -163,8 +163,10 @@ public:
                 create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_Abm_1_gamma);
         Kokkos::parallel_for(
                 "calculate_delta_to_factorize",
-                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {m_k, m_k}),
-                KOKKOS_CLASS_LAMBDA(const int i, const int j) {
+                Kokkos::MDRangePolicy<
+                        Kokkos::DefaultHostExecutionSpace,
+                        Kokkos::Rank<2>>({0, 0}, {m_k, m_k}),
+                [&](const int i, const int j) {
                     double val = 0.0;
                     // Upper diagonals in lambda, lower diagonals in Abm_1_gamma
                     for (int l = 0; l < i + 1; ++l) {

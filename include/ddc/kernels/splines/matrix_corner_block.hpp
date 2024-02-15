@@ -318,11 +318,11 @@ protected:
         } else if (transpose == 'T') {
             solve_gamma_section_transpose(v, u);
 
-            m_delta->solve_multiple_transpose_inplace(v);
+            m_delta->solve_transpose_inplace(v);
 
             solve_lambda_section_transpose(u, v);
 
-            m_q_block->solve_multiple_transpose_inplace(u);
+            m_q_block->solve_transpose_inplace(u);
         } else {
             return -1;
         }

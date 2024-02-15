@@ -37,7 +37,7 @@ RUN chmod +x /bin/bash_run \
     cmake \
     git \
     libfftw3-dev \
-    libblas-dev \
+    libopenblas-dev \
     liblapack-dev \
     libhwloc-dev \
     libpdi-dev \

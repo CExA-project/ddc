@@ -315,7 +315,7 @@ TEST_P(MatrixSizesFixture, Sparse)
     fill_identity(inv_tr);
     inv_tr_ptr.modify_host();
     inv_tr_ptr.sync_device();
-    matrix->solve_multiple_transpose_inplace(ddc::DSpan2D(inv_tr_ptr.d_view.data(), N, N));
+    matrix->solve_transpose_inplace(ddc::DSpan2D(inv_tr_ptr.d_view.data(), N, N));
     inv_tr_ptr.modify_device();
     inv_tr_ptr.sync_host();
 

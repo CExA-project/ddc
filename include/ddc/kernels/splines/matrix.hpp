@@ -54,7 +54,7 @@ public:
     virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const b) const
     {
         ddc::DSpan2D_left b_left(b.data_handle(), b.extent(0), 1);
-        solve_multiple_transpose_inplace(b_left);
+        solve_transpose_inplace(b_left);
         return b;
     }
 
@@ -74,7 +74,7 @@ public:
         return bx;
     }
 
-    virtual ddc::DSpan2D_stride solve_multiple_transpose_inplace(ddc::DSpan2D_stride const bx) const
+    virtual ddc::DSpan2D_stride solve_transpose_inplace(ddc::DSpan2D_stride const bx) const
     {
         assert(int(bx.extent(0)) == m_n);
         int const info = solve_inplace_method(

@@ -40,7 +40,7 @@ class GrevilleInterpolationPoints
                 = ddc::discrete_space<BSplines>().full_domain().take_first(
                         ddc::DiscreteVector<BSplines>(ddc::discrete_space<BSplines>().nbasis()));
 
-        ddc::parallel_for_each(bspline_domain, [&](ddc::DiscreteElement<BSplines> ib) {
+        ddc::for_each(bspline_domain, [&](ddc::DiscreteElement<BSplines> ib) {
             // Define the Greville points from the bspline knots
             greville_points[ib.uid()] = 0.0;
             for (std::size_t i(0); i < BSplines::degree(); ++i) {
@@ -130,7 +130,7 @@ public:
                            ddc::DiscreteVector<ddc::UniformPointSampling<tag_type>>(domain_size));
 
             // Copy central points
-            ddc::parallel_for_each(domain, [&](auto ip) {
+            ddc::for_each(domain, [&](auto ip) {
                 points_with_bcs[ip.uid() + n_start - 1] = points_wo_bcs.coordinate(ip);
             });
 
@@ -172,7 +172,7 @@ public:
                                length(points_with_bcs.size()));
 
                 points_with_bcs[0] = points_wo_bcs.coordinate(domain.front());
-                ddc::parallel_for_each(domain.remove(length(1), length(1)), [&](auto ip) {
+                ddc::for_each(domain.remove(length(1), length(1)), [&](auto ip) {
                     points_with_bcs[ip.uid() - n_start] = points_wo_bcs.coordinate(ip);
                 });
                 points_with_bcs[points_with_bcs.size() - 1]

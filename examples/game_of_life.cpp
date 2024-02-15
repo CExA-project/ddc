@@ -45,10 +45,10 @@ std::ostream& print_2DChunk(
         ddc::ChunkSpan<ElementType, ddc::DiscreteDomain<DDimX, DDimY>>
                 chunk)
 {
-    ddc::parallel_for_each(
+    ddc::for_each(
             ddc::select<DDimY>(chunk.domain()),
             [&](ddc::DiscreteElement<DDimY> const iy) {
-                ddc::parallel_for_each(
+                ddc::for_each(
                         ddc::select<DDimX>(chunk.domain()),
                         [&](ddc::DiscreteElement<DDimX> const ix) {
                             os << (chunk(ix, iy) ? "*" : ".");

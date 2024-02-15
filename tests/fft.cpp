@@ -45,7 +45,7 @@ static void test_fft()
 
     ddc::Chunk f_alloc(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan const f = f_alloc.span_view();
-    if constexpr (std::is_same<exec_space, Kokkos::Serial>::value){
+    if constexpr (std::is_same<exec_space, Kokkos::Serial>::value) {
         ddc::for_each(
                 f.domain(),
                 KOKKOS_LAMBDA(DElem<DDim<X>...> const e) {

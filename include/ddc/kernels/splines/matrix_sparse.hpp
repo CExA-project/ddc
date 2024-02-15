@@ -189,10 +189,10 @@ public:
 
         int const main_chunk_size = std::min(m_cols_per_chunk, n_equations);
 
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
-                b_view(b, get_size(), n_equations);
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
-                x_view("", get_size(), main_chunk_size);
+        Kokkos::View<double**, Kokkos::LayoutStride, ExecSpace> const
+                b_view(b, Kokkos::LayoutStride(get_size(), stride, n_equations, 1));
+        Kokkos::View<double**, Kokkos::LayoutStride, ExecSpace> const
+                x_view("", Kokkos::LayoutStride(get_size(), stride, main_chunk_size, 1));
 
         int const iend = (n_equations + main_chunk_size - 1) / main_chunk_size;
         for (int i = 0; i < iend; ++i) {

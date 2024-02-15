@@ -213,7 +213,7 @@ static void BatchedSplineTest()
             IDim<I, I>,
             s_bcl,
             s_bcr,
-            ddc::SplineSolver::LAPACK,
+            ddc::SplineSolver::GINKGO,
             IDim<X, I>...>
             spline_builder(dom_vals);
 

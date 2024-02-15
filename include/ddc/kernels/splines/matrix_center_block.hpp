@@ -84,7 +84,9 @@ protected:
                 std::experimental::full_extent);
         auto bx_top_dest = std::experimental::submdspan(
                 bx,
-                std::pair<int, int> {m_q_block->get_size(), m_top_block_size + m_q_block->get_size()},
+                std::pair<
+                        int,
+                        int> {m_q_block->get_size(), m_top_block_size + m_q_block->get_size()},
                 std::experimental::full_extent);
         auto bx_q_dest = std::experimental::submdspan(
                 bx,
@@ -136,7 +138,9 @@ protected:
                 std::experimental::full_extent);
         auto bx_top_src = std::experimental::submdspan(
                 bx,
-                std::pair<int, int> {m_q_block->get_size(), m_top_block_size + m_q_block->get_size()},
+                std::pair<
+                        int,
+                        int> {m_q_block->get_size(), m_top_block_size + m_q_block->get_size()},
                 std::experimental::full_extent);
         auto bx_q_src = std::experimental::submdspan(
                 bx,

@@ -150,7 +150,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:classddc_1_1NonUniformPointSampling"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="namespaceddc.html#classddc_1_1NonUniformPointSampling" title="NonUniformPointSampling models a non-uniform discretization of the CDim segment .">NonUniformPointSampling</a></code> models a non-uniform discretization of the <code>CDim</code> segment <img class="formulaInl" alt="$[a, b]$" src="form_0.png" width="24" height="14"/>.  <a href="namespaceddc.html#classddc_1_1NonUniformPointSampling">More...</a><br /></td></tr>
 <tr class="separator:classddc_1_1NonUniformPointSampling"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structddc_1_1parallel__device__policy"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy">parallel_device_policy</a></td></tr>
-<tr class="memdesc:structddc_1_1parallel__device__policy"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kokkos parallel execution uisng MDRange policy.  <a href="namespaceddc.html#structddc_1_1parallel__device__policy">More...</a><br /></td></tr>
+<tr class="memdesc:structddc_1_1parallel__device__policy"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kokkos parallel execution using MDRange policy.  <a href="namespaceddc.html#structddc_1_1parallel__device__policy">More...</a><br /></td></tr>
 <tr class="separator:structddc_1_1parallel__device__policy"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structddc_1_1parallel__host__policy"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#structddc_1_1parallel__host__policy">parallel_host_policy</a></td></tr>
 <tr class="memdesc:structddc_1_1parallel__host__policy"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parallel execution on the default device.  <a href="namespaceddc.html#structddc_1_1parallel__host__policy">More...</a><br /></td></tr>
@@ -202,14 +202,14 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ad6cf37f23e5e0fc7893bf8cb37bc1a7a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">DiscreteVectorElement</a> = std::ptrdiff_t</td></tr>
 <tr class="memdesc:ad6cf37f23e5e0fc7893bf8cb37bc1a7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A DiscreteVectorElement is a scalar that represents the difference between two coordinates.  <a href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">More...</a><br /></td></tr>
 <tr class="separator:ad6cf37f23e5e0fc7893bf8cb37bc1a7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff9e610db3fc16ea59380a5e6d54381e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aff9e610db3fc16ea59380a5e6d54381e">default_policy</a> = <a class="el" href="namespaceddc.html#structddc_1_1serial__host__policy">serial_host_policy</a></td></tr>
-<tr class="separator:aff9e610db3fc16ea59380a5e6d54381e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e1a2cf32bc6b8aae8f98163fc2a2843"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a7e1a2cf32bc6b8aae8f98163fc2a2843"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a7e1a2cf32bc6b8aae8f98163fc2a2843">DeviceAllocator</a> = <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; T, Kokkos::DefaultExecutionSpace::memory_space &gt;</td></tr>
 <tr class="separator:a7e1a2cf32bc6b8aae8f98163fc2a2843"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3">HostAllocator</a> = <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; T, Kokkos::HostSpace &gt;</td></tr>
 <tr class="separator:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff9e610db3fc16ea59380a5e6d54381e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aff9e610db3fc16ea59380a5e6d54381e">default_policy</a> = <a class="el" href="namespaceddc.html#structddc_1_1serial__host__policy">serial_host_policy</a></td></tr>
+<tr class="separator:aff9e610db3fc16ea59380a5e6d54381e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab25c16a5ce1c3230941216a27acb684f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> = float</td></tr>
 <tr class="separator:ab25c16a5ce1c3230941216a27acb684f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -422,7 +422,7 @@ Functions</h2></td></tr>
 <tr class="separator:aed276f229839c6ff2ba2a9afe947899a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a954db1a92eaab79632c9210a7069e190"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Functor &gt; </td></tr>
 <tr class="memitem:a954db1a92eaab79632c9210a7069e190"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a954db1a92eaab79632c9210a7069e190">for_each</a> (<a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy">parallel_device_policy</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
-<tr class="memdesc:a954db1a92eaab79632c9210a7069e190"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the <a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy" title="Kokkos parallel execution uisng MDRange policy.">parallel_device_policy</a> execution policy  <a href="namespaceddc.html#a954db1a92eaab79632c9210a7069e190">More...</a><br /></td></tr>
+<tr class="memdesc:a954db1a92eaab79632c9210a7069e190"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the <a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy" title="Kokkos parallel execution using MDRange policy.">parallel_device_policy</a> execution policy  <a href="namespaceddc.html#a954db1a92eaab79632c9210a7069e190">More...</a><br /></td></tr>
 <tr class="separator:a954db1a92eaab79632c9210a7069e190"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a580afa45261b42925af30519dca3c0bf"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Functor &gt; </td></tr>
 <tr class="memitem:a580afa45261b42925af30519dca3c0bf"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a580afa45261b42925af30519dca3c0bf">for_each</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
@@ -919,7 +919,7 @@ discrete_vector_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"><p >Kokkos parallel execution uisng MDRange policy. </p>
+<div class="textblock"><p >Kokkos parallel execution using MDRange policy. </p>
 </div>
 </div>
 </div>
@@ -1117,20 +1117,6 @@ template&lt;typename... DDom&gt; </div>
 
 </div>
 </div>
-<a id="aff9e610db3fc16ea59380a5e6d54381e" name="aff9e610db3fc16ea59380a5e6d54381e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff9e610db3fc16ea59380a5e6d54381e">&#9670;&nbsp;</a></span>default_policy</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="namespaceddc.html#aff9e610db3fc16ea59380a5e6d54381e">ddc::default_policy</a> = typedef <a class="el" href="namespaceddc.html#structddc_1_1serial__host__policy">serial_host_policy</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a7e1a2cf32bc6b8aae8f98163fc2a2843" name="a7e1a2cf32bc6b8aae8f98163fc2a2843"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7e1a2cf32bc6b8aae8f98163fc2a2843">&#9670;&nbsp;</a></span>DeviceAllocator</h2>
 
@@ -1157,6 +1143,20 @@ template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3">ddc::HostAllocator</a> = typedef <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;T, Kokkos::HostSpace&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aff9e610db3fc16ea59380a5e6d54381e" name="aff9e610db3fc16ea59380a5e6d54381e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff9e610db3fc16ea59380a5e6d54381e">&#9670;&nbsp;</a></span>default_policy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceddc.html#aff9e610db3fc16ea59380a5e6d54381e">ddc::default_policy</a> = typedef <a class="el" href="namespaceddc.html#structddc_1_1serial__host__policy">serial_host_policy</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -3418,7 +3418,7 @@ template&lt;class... DDims, class Functor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>iterates over a nD domain using the <a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy" title="Kokkos parallel execution uisng MDRange policy.">parallel_device_policy</a> execution policy </p>
+<p>iterates over a nD domain using the <a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy" title="Kokkos parallel execution using MDRange policy.">parallel_device_policy</a> execution policy </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>

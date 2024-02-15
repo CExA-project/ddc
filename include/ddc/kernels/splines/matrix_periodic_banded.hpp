@@ -1,5 +1,5 @@
-#ifndef MATRIX_PERIODIC_BANDED_H
-#define MATRIX_PERIODIC_BANDED_H
+#pragma once
+
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -29,37 +29,21 @@ class Matrix_Periodic_Banded : public Matrix_Corner_Block<ExecSpace>
     using Matrix_Corner_Block<ExecSpace>::m_lambda;
 
 protected:
-    int const kl; // no. of subdiagonals
-    int const ku; // no. of superdiagonals
+    int const m_kl; // no. of subdiagonals
+    int const m_ku; // no. of superdiagonals
 
 public:
-    Matrix_Periodic_Banded(int const n, int const kl, int const ku, std::unique_ptr<Matrix> q)
+    Matrix_Periodic_Banded(int const n, int const m_kl, int const m_ku, std::unique_ptr<Matrix> q)
         : Matrix_Corner_Block<ExecSpace>(
                 n,
-                std::max(kl, ku),
+                std::max(m_kl, m_ku),
                 std::move(q),
-                std::max(kl, ku),
-                std::max(kl, ku) + 1)
-        , kl(kl)
-        , ku(ku)
+                std::max(m_kl, m_ku),
+                std::max(m_kl, m_ku) + 1)
+        , m_kl(m_kl)
+        , m_ku(m_ku)
     {
     }
-
-    /*
-	void reset() const override {
-        // return Matrix_Corner_Block<ExecSpace>::reset();
-		m_q_block->reset();
-        m_delta->reset();
-        Kokkos::parallel_for(
-                "fill_abm_lambda",
-                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {m_k, m_nb}),
-                KOKKOS_CLASS_LAMBDA(const int i, const int j) {
-                    m_Abm_1_gamma(i, j) = 0;
-                    m_lambda(j, i) = 0;
-                });
-	}
-*/
-
 
     double get_element(int const i, int j) const override
     {
@@ -74,7 +58,7 @@ public:
             if (d < -get_size() / 2)
                 d += get_size();
 
-            if (d < -kl || d > ku)
+            if (d < -m_kl || d > m_ku)
                 return 0.0;
             if (d > 0) {
                 if constexpr (Kokkos::SpaceAccessibility<
@@ -120,7 +104,7 @@ public:
             if (d < -get_size() / 2)
                 d += get_size();
 
-            if (d < -kl || d > ku) {
+            if (d < -m_kl || d > m_ku) {
                 assert(std::fabs(aij) < 1e-20);
                 return;
             }
@@ -184,7 +168,7 @@ public:
 
     ddc::DSpan2D_stride solve_lambda_section(
             ddc::DSpan2D_stride const v,
-            ddc::DSpan2D_stride const u) const override
+            ddc::DView2D_stride const u) const override
     {
         Kokkos::parallel_for(
                 "solve_lambda_section",
@@ -214,7 +198,7 @@ public:
 
     ddc::DSpan2D_stride solve_lambda_section_transpose(
             ddc::DSpan2D_stride const u,
-            ddc::DSpan2D_stride const v) const override
+            ddc::DView2D_stride const v) const override
     {
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
@@ -239,9 +223,8 @@ public:
                                 }
                             });
                 });
-        return v;
+        return u;
     }
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_PERIODIC_BANDED_H

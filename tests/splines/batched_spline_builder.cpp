@@ -213,7 +213,11 @@ static void BatchedSplineTest()
             IDim<I, I>,
             s_bcl,
             s_bcr,
+#if defined(SOLVER_LAPACK)
             ddc::SplineSolver::LAPACK,
+#elif defined(SOLVER_GINKGO)
+            ddc::SplineSolver::GINKGO,
+#endif
             IDim<X, I>...>
             spline_builder(dom_vals);
 
@@ -403,18 +407,20 @@ static void BatchedSplineTest()
                         1.0e-14 * max_norm_int));
 }
 
-#if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Periodic##Uniform
-#elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Periodic##NonUniform
-#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Greville##Uniform
-#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Greville##NonUniform
-#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Hermite##Uniform
-#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Hermite##NonUniform
+#if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
+#define SUFFIX(name) name##Ginkgo##Periodic##Uniform
+#elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
+#define SUFFIX(name) name##Lapack##Periodic##Uniform
+#elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
+#define SUFFIX(name) name##Lapack##Periodic##NonUniform
+#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
+#define SUFFIX(name) name##Lapack##Greville##Uniform
+#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
+#define SUFFIX(name) name##Lapack##Greville##NonUniform
+#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
+#define SUFFIX(name) name##Lapack##Hermite##Uniform
+#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
+#define SUFFIX(name) name##Lapack##Hermite##NonUniform
 #endif
 
 TEST(SUFFIX(BatchedSplineHost), 1DX)

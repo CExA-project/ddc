@@ -1,5 +1,4 @@
-#ifndef MATRIX_PDS_BANDED_H
-#define MATRIX_PDS_BANDED_H
+#pragma once
 
 #include <cassert>
 #include <cmath>
@@ -50,10 +49,7 @@ public:
 
     void reset() const override
     {
-        Kokkos::parallel_for(
-                "fill_q",
-                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {get_size(), m_kd + 1}),
-                KOKKOS_CLASS_LAMBDA(const int i, const int j) { m_q(i, j) = 0; });
+        Kokkos::deep_copy(m_q, 0.);
     }
 
     double get_element(int i, int j) const override
@@ -211,4 +207,3 @@ public:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_SYMMETRIC_BANDED_H

@@ -1,5 +1,4 @@
-#ifndef MATRIX_PDS_TRIDIAG_H
-#define MATRIX_PDS_TRIDIAG_H
+#pragma once
 
 #include <cassert>
 #include <cmath>
@@ -41,15 +40,8 @@ public:
 
     void reset() const override
     {
-        Kokkos::parallel_for(
-                "fill_d_l",
-                Kokkos::RangePolicy<ExecSpace>(0, get_size()),
-                KOKKOS_CLASS_LAMBDA(const int i) {
-                    m_d(i) = 0;
-                    if (i < get_size() - 1) {
-                        m_l(i) = 0;
-                    }
-                });
+        Kokkos::deep_copy(m_d, 0.);
+        Kokkos::deep_copy(m_l, 0.);
     }
 
     double get_element(int i, int j) const override
@@ -167,4 +159,3 @@ public:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_PDS_TRIDIAG_H

@@ -1,5 +1,5 @@
-#ifndef MATRIX_CORNER_BLOCK_H
-#define MATRIX_CORNER_BLOCK_H
+#pragma once
+
 #include <cassert>
 #include <memory>
 #include <utility>
@@ -51,16 +51,8 @@ public:
     {
         m_q_block->reset();
         m_delta->reset();
-        // TODO: restore
-        /*
-        Kokkos::parallel_for(
-                "fill_abm_lambda",
-                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {m_k, m_nb}),
-                KOKKOS_CLASS_LAMBDA(const int i, const int j) {
-                    m_Abm_1_gamma(i, j) = 0;
-                    m_lambda(j, i) = 0;
-                });
-				*/
+        Kokkos::deep_copy(m_Abm_1_gamma, 0.);
+        Kokkos::deep_copy(m_lambda, 0.);
     }
 
     virtual double get_element(int const i, int const j) const override
@@ -190,7 +182,7 @@ public:
     }
     virtual ddc::DSpan2D_stride solve_lambda_section(
             ddc::DSpan2D_stride const v,
-            ddc::DSpan2D_stride const u) const
+            ddc::DView2D_stride const u) const
     {
         Kokkos::parallel_for(
                 "solve_lambda_section",
@@ -213,7 +205,7 @@ public:
     }
     virtual ddc::DSpan2D_stride solve_lambda_section_transpose(
             ddc::DSpan2D_stride const u,
-            ddc::DSpan2D_stride const v) const
+            ddc::DView2D_stride const v) const
     {
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
@@ -236,7 +228,7 @@ public:
     }
     virtual ddc::DSpan2D_stride solve_gamma_section(
             ddc::DSpan2D_stride const u,
-            ddc::DSpan2D_stride const v) const
+            ddc::DView2D_stride const v) const
     {
         Kokkos::parallel_for(
                 "solve_gamma_section",
@@ -259,7 +251,7 @@ public:
     }
     virtual ddc::DSpan2D_stride solve_gamma_section_transpose(
             ddc::DSpan2D_stride const v,
-            ddc::DSpan2D_stride const u) const
+            ddc::DView2D_stride const u) const
     {
         Kokkos::parallel_for(
                 "solve_gamma_section_transpose",
@@ -339,4 +331,3 @@ protected:
 };
 
 } // namespace ddc::detail
-#endif // MATRIX_CORNER_BLOCK_H

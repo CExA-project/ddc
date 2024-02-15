@@ -198,14 +198,5 @@ inline void parallel_for_each(DiscreteDomain<DDims...> const& domain, Functor&& 
     parallel_for_each<Kokkos::DefaultExecutionSpace>(Kokkos::DefaultExecutionSpace(), domain, std::forward<Functor>(f));
 }
 
-/** iterates over a nD domain using the default execution policy
- * @param[in] domain the domain over which to iterate
- * @param[in] f      a functor taking an index as parameter
- */
-template <class... DDims, class Functor>
-inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
-{
-    for_each(default_policy(), domain, std::forward<Functor>(f));
-}
 
 } // namespace ddc

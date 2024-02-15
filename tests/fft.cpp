@@ -45,14 +45,24 @@ static void test_fft()
 
     ddc::Chunk f_alloc(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan const f = f_alloc.span_view();
-    ddc::for_each(
-            ddc::policies::policy(exec_space),
-            f.domain(),
-            KOKKOS_LAMBDA(DElem<DDim<X>...> const e) {
-                ddc::Real const xn2
-                        = (Kokkos::pow(ddc::coordinate(ddc::select<DDim<X>>(e)), 2) + ...);
-                f(e) = Kokkos::exp(-xn2 / 2);
-            });
+    if constexpr (std::is_same<exec_space, Kokkos::Serial>::value){
+        ddc::for_each(
+                f.domain(),
+                KOKKOS_LAMBDA(DElem<DDim<X>...> const e) {
+                    ddc::Real const xn2
+                            = (Kokkos::pow(ddc::coordinate(ddc::select<DDim<X>>(e)), 2) + ...);
+                    f(e) = Kokkos::exp(-xn2 / 2);
+                });
+    } else {
+        ddc::parallel_for_each<exec_space>(
+                exec_space(),
+                f.domain(),
+                KOKKOS_LAMBDA(DElem<DDim<X>...> const e) {
+                    ddc::Real const xn2
+                            = (Kokkos::pow(ddc::coordinate(ddc::select<DDim<X>>(e)), 2) + ...);
+                    f(e) = Kokkos::exp(-xn2 / 2);
+                });
+    }
     ddc::Chunk f_bis_alloc(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan const f_bis = f_bis_alloc.span_view();
     ddc::deepcopy(f_bis, f);

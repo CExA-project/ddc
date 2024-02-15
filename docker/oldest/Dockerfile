@@ -40,6 +40,8 @@ RUN chmod +x /bin/bash_run \
     git \
     libelf-dev \
     libfftw3-dev \
+    libopenblas-dev \
+    liblapack-dev \
     libhwloc-dev \
     libnuma1 \
     libpdi-dev \

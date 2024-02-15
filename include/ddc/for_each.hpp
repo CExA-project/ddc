@@ -67,7 +67,9 @@ inline void for_each_kokkos(
 {
     if constexpr (need_annotated_operator<ExecSpace>()) {
         Kokkos::parallel_for(
-                Kokkos::RangePolicy<ExecSpace, use_annotated_operator>(std::forward<ExecSpace>(execution_space), 0, 1),
+                Kokkos::RangePolicy<
+                        ExecSpace,
+                        use_annotated_operator>(std::forward<ExecSpace>(execution_space), 0, 1),
                 ForEachKokkosLambdaAdapter<Functor>(f));
     } else {
         Kokkos::parallel_for(
@@ -77,7 +79,10 @@ inline void for_each_kokkos(
 }
 
 template <class ExecSpace, class Functor, class DDim0>
-inline void for_each_kokkos(ExecSpace&& execution_space, DiscreteDomain<DDim0> const& domain, Functor const& f) noexcept
+inline void for_each_kokkos(
+        ExecSpace&& execution_space,
+        DiscreteDomain<DDim0> const& domain,
+        Functor const& f) noexcept
 {
     DiscreteElement<DDim0> const ddc_begin = domain.front();
     DiscreteElement<DDim0> const ddc_end = domain.front() + domain.extents();
@@ -85,18 +90,23 @@ inline void for_each_kokkos(ExecSpace&& execution_space, DiscreteDomain<DDim0> c
     std::size_t const end = ddc::uid<DDim0>(ddc_end);
     if constexpr (need_annotated_operator<ExecSpace>()) {
         Kokkos::parallel_for(
-                Kokkos::RangePolicy<ExecSpace, use_annotated_operator>(std::forward<ExecSpace>(execution_space), begin, end),
+                Kokkos::RangePolicy<ExecSpace, use_annotated_operator>(
+                        std::forward<ExecSpace>(execution_space),
+                        begin,
+                        end),
                 ForEachKokkosLambdaAdapter<Functor, DDim0>(f));
     } else {
         Kokkos::parallel_for(
-                Kokkos::RangePolicy<ExecSpace>(std::forward<ExecSpace>(execution_space), begin, end),
+                Kokkos::RangePolicy<
+                        ExecSpace>(std::forward<ExecSpace>(execution_space), begin, end),
                 ForEachKokkosLambdaAdapter<Functor, DDim0>(f));
     }
 }
 
 template <class ExecSpace, class Functor, class DDim0, class DDim1, class... DDims>
 inline void for_each_kokkos(
-        ExecSpace&& execution_space, DiscreteDomain<DDim0, DDim1, DDims...> const& domain,
+        ExecSpace&& execution_space,
+        DiscreteDomain<DDim0, DDim1, DDims...> const& domain,
         Functor&& f) noexcept
 {
     DiscreteElement<DDim0, DDim1, DDims...> const ddc_begin = domain.front();
@@ -115,7 +125,10 @@ inline void for_each_kokkos(
                                 2 + sizeof...(DDims),
                                 Kokkos::Iterate::Right,
                                 Kokkos::Iterate::Right>,
-                        use_annotated_operator>(std::forward<ExecSpace>(execution_space), begin, end),
+                        use_annotated_operator>(
+                        std::forward<ExecSpace>(execution_space),
+                        begin,
+                        end),
                 ForEachKokkosLambdaAdapter<Functor, DDim0, DDim1, DDims...>(f));
     } else {
         Kokkos::parallel_for(
@@ -124,7 +137,10 @@ inline void for_each_kokkos(
                         Kokkos::Rank<
                                 2 + sizeof...(DDims),
                                 Kokkos::Iterate::Right,
-                                Kokkos::Iterate::Right>>(std::forward<ExecSpace>(execution_space), begin, end),
+                                Kokkos::Iterate::Right>>(
+                        std::forward<ExecSpace>(execution_space),
+                        begin,
+                        end),
                 ForEachKokkosLambdaAdapter<Functor, DDim0, DDim1, DDims...>(f));
     }
 }
@@ -185,7 +201,8 @@ inline void parallel_for_each(
         DiscreteDomain<DDims...> const& domain,
         Functor&& f) noexcept
 {
-    detail::for_each_kokkos<ExecSpace>(std::forward<ExecSpace>(execution_space), domain, std::forward<Functor>(f));
+    detail::for_each_kokkos<
+            ExecSpace>(std::forward<ExecSpace>(execution_space), domain, std::forward<Functor>(f));
 }
 
 /** iterates over a nD domain using the default execution policy
@@ -195,7 +212,10 @@ inline void parallel_for_each(
 template <class... DDims, class Functor>
 inline void parallel_for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
-    parallel_for_each<Kokkos::DefaultExecutionSpace>(Kokkos::DefaultExecutionSpace(), domain, std::forward<Functor>(f));
+    parallel_for_each<Kokkos::DefaultExecutionSpace>(
+            Kokkos::DefaultExecutionSpace(),
+            domain,
+            std::forward<Functor>(f));
 }
 
 

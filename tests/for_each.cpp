@@ -82,7 +82,10 @@ TEST(ParallelForEachParallelHost, ZeroDimension)
     DDom0D const dom;
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDom0D> const view(storage.data(), dom);
-    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(Kokkos::DefaultHostExecutionSpace(), dom, [=](DElem0D const i) { view(i) += 1; });
+    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(
+            Kokkos::DefaultHostExecutionSpace(),
+            dom,
+            [=](DElem0D const i) { view(i) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
@@ -91,7 +94,10 @@ TEST(ParallelForEachParallelHost, OneDimension)
     DDomX const dom(lbound_x, nelems_x);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
-    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(Kokkos::DefaultHostExecutionSpace(), dom, [=](DElemX const ix) { view(ix) += 1; });
+    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(
+            Kokkos::DefaultHostExecutionSpace(),
+            dom,
+            [=](DElemX const ix) { view(ix) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
@@ -100,7 +106,10 @@ TEST(ParallelForEachParallelHost, TwoDimensions)
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomXY> const view(storage.data(), dom);
-    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(Kokkos::DefaultHostExecutionSpace(), dom, [=](DElemXY const ixy) { view(ixy) += 1; });
+    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(
+            Kokkos::DefaultHostExecutionSpace(),
+            dom,
+            [=](DElemXY const ixy) { view(ixy) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 

@@ -172,7 +172,7 @@ inline void for_each(
 template <class... DDims, class Functor>
 inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
-    for_each(serial_host_policy, domain, std::forward<Functor>(f));
+    for_each(ddc::policies::serial_host, domain, std::forward<Functor>(f));
 }
 
 /** iterates over a nD domain using the serial execution policy

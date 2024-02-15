@@ -190,7 +190,7 @@ public:
     }
     virtual ddc::DSpan2D_stride solve_lambda_section(
             ddc::DSpan2D_stride const v,
-            ddc::DSpan2D_stride const u) const
+            ddc::DView2D_stride const u) const
     {
         Kokkos::parallel_for(
                 "solve_lambda_section",
@@ -213,7 +213,7 @@ public:
     }
     virtual ddc::DSpan2D_stride solve_lambda_section_transpose(
             ddc::DSpan2D_stride const u,
-            ddc::DSpan2D_stride const v) const
+            ddc::DView2D_stride const v) const
     {
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
@@ -236,7 +236,7 @@ public:
     }
     virtual ddc::DSpan2D_stride solve_gamma_section(
             ddc::DSpan2D_stride const u,
-            ddc::DSpan2D_stride const v) const
+            ddc::DView2D_stride const v) const
     {
         Kokkos::parallel_for(
                 "solve_gamma_section",
@@ -259,7 +259,7 @@ public:
     }
     virtual ddc::DSpan2D_stride solve_gamma_section_transpose(
             ddc::DSpan2D_stride const v,
-            ddc::DSpan2D_stride const u) const
+            ddc::DView2D_stride const u) const
     {
         Kokkos::parallel_for(
                 "solve_gamma_section_transpose",

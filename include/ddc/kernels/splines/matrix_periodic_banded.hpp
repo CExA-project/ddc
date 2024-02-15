@@ -184,7 +184,7 @@ public:
 
     ddc::DSpan2D_stride solve_lambda_section(
             ddc::DSpan2D_stride const v,
-            ddc::DSpan2D_stride const u) const override
+            ddc::DView2D_stride const u) const override
     {
         Kokkos::parallel_for(
                 "solve_lambda_section",
@@ -214,7 +214,7 @@ public:
 
     ddc::DSpan2D_stride solve_lambda_section_transpose(
             ddc::DSpan2D_stride const u,
-            ddc::DSpan2D_stride const v) const override
+            ddc::DView2D_stride const v) const override
     {
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
@@ -239,7 +239,7 @@ public:
                                 }
                             });
                 });
-        return v;
+        return u;
     }
 };
 

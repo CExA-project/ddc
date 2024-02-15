@@ -37,6 +37,8 @@ RUN chmod +x /bin/bash_run \
     cmake \
     git \
     libfftw3-dev \
+    libblas-dev \
+    liblapack-dev \
     libhwloc-dev \
     libpdi-dev \
     pdidev-archive-keyring \

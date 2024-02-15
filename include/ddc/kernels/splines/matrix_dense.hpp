@@ -36,10 +36,7 @@ public:
 
     void reset() const override
     {
-        Kokkos::parallel_for(
-                "fill_a",
-                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {get_size(), get_size()}),
-                KOKKOS_CLASS_LAMBDA(const int i, const int j) { m_a(i, j) = 0; });
+        Kokkos::deep_copy(m_a, 0.);
     }
 
     double get_element(int const i, int const j) const override

@@ -45,22 +45,6 @@ public:
     {
     }
 
-    /*
-	void reset() const override {
-        // return Matrix_Corner_Block<ExecSpace>::reset();
-		m_q_block->reset();
-        m_delta->reset();
-        Kokkos::parallel_for(
-                "fill_abm_lambda",
-                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2>>({0, 0}, {m_k, m_nb}),
-                KOKKOS_CLASS_LAMBDA(const int i, const int j) {
-                    m_Abm_1_gamma(i, j) = 0;
-                    m_lambda(j, i) = 0;
-                });
-	}
-*/
-
-
     double get_element(int const i, int j) const override
     {
         assert(i >= 0);

@@ -77,43 +77,42 @@ TEST(ForEachSerialHost, TwoDimensions)
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
-TEST(ForEachParallelHost, ZeroDimension)
+TEST(ParallelForEachParallelHost, ZeroDimension)
 {
     DDom0D const dom;
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDom0D> const view(storage.data(), dom);
-    ddc::for_each(ddc::policies::parallel_host, dom, [=](DElem0D const i) { view(i) += 1; });
+    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(Kokkos::DefaultHostExecutionSpace(), dom, [=](DElem0D const i) { view(i) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
-TEST(ForEachParallelHost, OneDimension)
+TEST(ParallelForEachParallelHost, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
-    ddc::for_each(ddc::policies::parallel_host, dom, [=](DElemX const ix) { view(ix) += 1; });
+    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(Kokkos::DefaultHostExecutionSpace(), dom, [=](DElemX const ix) { view(ix) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
-TEST(ForEachParallelHost, TwoDimensions)
+TEST(ParallelForEachParallelHost, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomXY> const view(storage.data(), dom);
-    ddc::for_each(ddc::policies::parallel_host, dom, [=](DElemXY const ixy) { view(ixy) += 1; });
+    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(Kokkos::DefaultHostExecutionSpace(), dom, [=](DElemXY const ixy) { view(ixy) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
 namespace {
 
-void TestForEachParallelDeviceZeroDimension()
+void TestParallelForEachParallelDeviceZeroDimension()
 {
     DDom0D const dom;
     ddc::Chunk<int, DDom0D, ddc::DeviceAllocator<int>> storage(dom);
     Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
     ddc::ChunkSpan const view(storage.span_view());
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_for_each(
             dom,
             KOKKOS_LAMBDA(DElem0D const i) { view(i) += 1; });
     int const* const ptr = storage.data_handle();
@@ -127,21 +126,20 @@ void TestForEachParallelDeviceZeroDimension()
 
 } // namespace
 
-TEST(ForEachParallelDevice, ZeroDimension)
+TEST(ParallelForEachParallelDevice, ZeroDimension)
 {
-    TestForEachParallelDeviceZeroDimension();
+    TestParallelForEachParallelDeviceZeroDimension();
 }
 
 namespace {
 
-void TestForEachParallelDeviceOneDimension()
+void TestParallelForEachParallelDeviceOneDimension()
 {
     DDomX const dom(lbound_x, nelems_x);
     ddc::Chunk<int, DDomX, ddc::DeviceAllocator<int>> storage(dom);
     Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
     ddc::ChunkSpan const view(storage.span_view());
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_for_each(
             dom,
             KOKKOS_LAMBDA(DElemX const ix) { view(ix) += 1; });
     int const* const ptr = storage.data_handle();
@@ -155,21 +153,20 @@ void TestForEachParallelDeviceOneDimension()
 
 } // namespace
 
-TEST(ForEachParallelDevice, OneDimension)
+TEST(ParallelForEachParallelDevice, OneDimension)
 {
-    TestForEachParallelDeviceOneDimension();
+    TestParallelForEachParallelDeviceOneDimension();
 }
 
 namespace {
 
-void TestForEachParallelDeviceTwoDimensions()
+void TestParallelForEachParallelDeviceTwoDimensions()
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     ddc::Chunk<int, DDomXY, ddc::DeviceAllocator<int>> storage(dom);
     Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
     ddc::ChunkSpan const view(storage.span_view());
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_for_each(
             dom,
             KOKKOS_LAMBDA(DElemXY const ixy) { view(ixy) += 1; });
     int const* const ptr = storage.data_handle();
@@ -183,7 +180,7 @@ void TestForEachParallelDeviceTwoDimensions()
 
 } // namespace
 
-TEST(ForEachParallelDevice, TwoDimensions)
+TEST(ParallelForEachParallelDevice, TwoDimensions)
 {
-    TestForEachParallelDeviceTwoDimensions();
+    TestParallelForEachParallelDeviceTwoDimensions();
 }

@@ -237,8 +237,7 @@ int main(int argc, char** argv)
     ddc::ChunkSpan const ghosted_initial_temp
             = ghosted_last_temp.span_view();
     // Initialize the temperature on the main domain
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_for_each(
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
@@ -300,8 +299,7 @@ int main(int argc, char** argv)
 
         //! [numerical scheme]
         // Stencil computation on the main domain
-        ddc::for_each(
-                ddc::policies::parallel_device,
+        ddc::parallel_for_each(
                 next_temp.domain(),
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX, DDimY> const ixy) {

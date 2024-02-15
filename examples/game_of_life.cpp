@@ -23,8 +23,7 @@ void blinker_init(
                 std::experimental::layout_right,
                 Kokkos::DefaultExecutionSpace::memory_space> cells)
 {
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_for_each(
             domain,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 ddc::DiscreteElement<DDimX> const ix
@@ -46,10 +45,10 @@ std::ostream& print_2DChunk(
         ddc::ChunkSpan<ElementType, ddc::DiscreteDomain<DDimX, DDimY>>
                 chunk)
 {
-    ddc::for_each(
+    ddc::parallel_for_each(
             ddc::select<DDimY>(chunk.domain()),
             [&](ddc::DiscreteElement<DDimY> const iy) {
-                ddc::for_each(
+                ddc::parallel_for_each(
                         ddc::select<DDimX>(chunk.domain()),
                         [&](ddc::DiscreteElement<DDimX> const ix) {
                             os << (chunk(ix, iy) ? "*" : ".");
@@ -96,8 +95,7 @@ int main()
         ddc::deepcopy(cells_in_host_alloc, cells_in);
         print_2DChunk(std::cout, cells_in_host_alloc.span_cview())
                 << "\n";
-        ddc::for_each(
-                ddc::policies::parallel_device,
+        ddc::parallel_for_each(
                 inner_domain_xy,
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX, DDimY> const ixy) {

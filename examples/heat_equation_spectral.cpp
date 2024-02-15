@@ -183,8 +183,7 @@ int main(int argc, char** argv)
     // Initialize the temperature on the main domain
     ddc::DiscreteDomain<DDimX, DDimY> x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_for_each(
             x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
@@ -241,8 +240,7 @@ int main(int argc, char** argv)
         // Stencil computation on the main domain
         ddc::FFT_Normalization norm = ddc::FFT_Normalization::BACKWARD;
         ddc::fft(Kokkos::DefaultExecutionSpace(), Ff, last_temp, {norm});
-        ddc::for_each(
-                ddc::policies::parallel_device,
+        ddc::parallel_for_each(
                 k_mesh,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<
                               ddc::PeriodicSampling<ddc::Fourier<X>>,

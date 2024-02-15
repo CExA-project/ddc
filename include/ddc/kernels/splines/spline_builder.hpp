@@ -465,7 +465,7 @@ void SplineBuilder<
     // Interpolation points
     std::array<double, bsplines_type::degree() + 1> values;
     int start = interpolation_domain().front().uid();
-    ddc::for_each(interpolation_domain(), [&](auto ix) {
+    ddc::parallel_for_each(interpolation_domain(), [&](auto ix) {
         auto jmin = ddc::discrete_space<BSplines>().eval_basis(
                 values,
                 ddc::coordinate(ddc::DiscreteElement<interpolation_mesh_type>(ix)));

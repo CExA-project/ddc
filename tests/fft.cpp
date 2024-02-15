@@ -55,7 +55,7 @@ static void test_fft()
                 });
     } else {
         ddc::parallel_for_each<ExecSpace>(
-                exec_space,
+                ExecSpace(),
                 f.domain(),
                 KOKKOS_LAMBDA(DElem<DDim<X>...> const e) {
                     ddc::Real const xn2

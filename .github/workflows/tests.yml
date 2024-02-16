@@ -37,7 +37,7 @@ jobs:
     steps:
     - name: Free Disk Space (Ubuntu)
       uses: jlumbroso/free-disk-space@v1.2.0
-      with: { tool-cache: true, large-packages: false }
+      with: { tool-cache: true, large-packages: true }
     - name: Checkout built branch
       uses: actions/checkout@v3
     - name: Build

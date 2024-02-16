@@ -294,7 +294,7 @@ static void Batched2dSplineTest()
                 });
     } else {
         ddc::parallel_for_each<ExecSpace>(
-                exec_space(),
+                ExecSpace(),
                 vals.domain(),
                 KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                     vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
@@ -338,7 +338,7 @@ static void Batched2dSplineTest()
                     });
         } else {
             ddc::parallel_for_each<ExecSpace>(
-                    exec_space(),
+                    ExecSpace(),
                     Sderiv1_lhs.domain(),
                     KOKKOS_LAMBDA(
                             typename decltype(Sderiv1_lhs
@@ -384,7 +384,7 @@ static void Batched2dSplineTest()
                     });
         } else {
             ddc::parallel_for_each<ExecSpace>(
-                    exec_space(),
+                    ExecSpace(),
                     Sderiv1_rhs.domain(),
                     KOKKOS_LAMBDA(
                             typename decltype(Sderiv1_rhs
@@ -431,7 +431,7 @@ static void Batched2dSplineTest()
                     });
         } else {
             ddc::parallel_for_each<ExecSpace>(
-                    exec_space(),
+                    ExecSpace(),
                     Sderiv2_lhs.domain(),
                     KOKKOS_LAMBDA(
                             typename decltype(Sderiv2_lhs
@@ -478,7 +478,7 @@ static void Batched2dSplineTest()
                     });
         } else {
             ddc::parallel_for_each<ExecSpace>(
-                    exec_space(),
+                    ExecSpace(),
                     Sderiv2_rhs.domain(),
                     KOKKOS_LAMBDA(
                             typename decltype(Sderiv2_rhs
@@ -564,7 +564,7 @@ static void Batched2dSplineTest()
                     });
         } else {
             ddc::parallel_for_each<ExecSpace>(
-                    exec_space(),
+                    ExecSpace(),
                     dom_derivs,
                     KOKKOS_LAMBDA(typename decltype(dom_derivs)::discrete_element_type const e) {
                         Sderiv_mixed_lhs_lhs(e) = Sderiv_mixed_lhs_lhs1(
@@ -646,7 +646,7 @@ static void Batched2dSplineTest()
                 });
     } else {
         ddc::parallel_for_each<ExecSpace>(
-                exec_space(),
+                ExecSpace(),
                 coords_eval.domain(),
                 KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                     coords_eval(e) = ddc::coordinate(e);

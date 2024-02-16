@@ -232,7 +232,7 @@ public:
                     });
         } else {
             ddc::parallel_for_each<ExecSpace>(
-                    exec_space(),
+                    ExecSpace(),
                     batch_domain(),
                     KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                         const auto spline_eval_2D = spline_eval[j];
@@ -346,7 +346,7 @@ public:
                     });
         } else {
             ddc::parallel_for_each<ExecSpace>(
-                    exec_space(),
+                    ExecSpace(),
                     batch_domain(),
                     KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                         const auto spline_eval_2D = spline_eval[j];
@@ -393,7 +393,7 @@ public:
                     });
         } else {
             ddc::parallel_for_each<ExecSpace>(
-                    exec_space(),
+                    ExecSpace(),
                     batch_domain(),
                     KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                         const auto spline_eval_2D = spline_eval[j];
@@ -440,7 +440,7 @@ public:
                     });
         } else {
             ddc::parallel_for_each<ExecSpace>(
-                    exec_space(),
+                    ExecSpace(),
                     batch_domain(),
                     KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                         const auto spline_eval_2D = spline_eval[j];
@@ -550,7 +550,7 @@ public:
                     });
         } else {
             ddc::parallel_for_each<ExecSpace>(
-                    exec_space(),
+                    ExecSpace(),
                     batch_domain(),
                     KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                         integrals(j) = 0;

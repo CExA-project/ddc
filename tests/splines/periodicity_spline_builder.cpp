@@ -172,18 +172,18 @@ static void PeriodicitySplineBuilderTest()
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
-    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value){
+    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
         ddc::for_each(
                 coords_eval.domain(),
                 KOKKOS_LAMBDA(Index<IDim<X>> const e) {
-                        coords_eval(e) = ddc::coordinate(e) + Coord<X>(1.5);
+                    coords_eval(e) = ddc::coordinate(e) + Coord<X>(1.5);
                 }); // Translate function 1.5x domain width to the right.
     } else {
         ddc::parallel_for_each<ExecSpace>(
                 ExecSpace(),
                 coords_eval.domain(),
                 KOKKOS_LAMBDA(Index<IDim<X>> const e) {
-                        coords_eval(e) = ddc::coordinate(e) + Coord<X>(1.5);
+                    coords_eval(e) = ddc::coordinate(e) + Coord<X>(1.5);
                 }); // Translate function 1.5x domain width to the right.
     }
 

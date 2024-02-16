@@ -235,7 +235,7 @@ static void BatchedSplineTest()
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
-    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value){
+    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
         ddc::for_each(
                 vals.domain(),
                 KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
@@ -266,8 +266,7 @@ static void BatchedSplineTest()
         ddc::ChunkSpan Sderiv_lhs1 = Sderiv_lhs1_alloc.span_view();
         ddc::deepcopy(Sderiv_lhs1, Sderiv_lhs1_cpu);
 
-        if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value){
-
+        if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
             ddc::for_each(
                     Sderiv_lhs.domain(),
                     KOKKOS_LAMBDA(
@@ -298,7 +297,7 @@ static void BatchedSplineTest()
         ddc::ChunkSpan Sderiv_rhs1 = Sderiv_rhs1_alloc.span_view();
         ddc::deepcopy(Sderiv_rhs1, Sderiv_rhs1_cpu);
 
-        if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value){
+        if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
             ddc::for_each(
                     Sderiv_rhs.domain(),
                     KOKKOS_LAMBDA(
@@ -360,15 +359,19 @@ static void BatchedSplineTest()
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
-    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value){
+    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
         ddc::for_each(
                 coords_eval.domain(),
-                KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
+                KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
+                    coords_eval(e) = ddc::coordinate(e);
+                });
     } else {
         ddc::parallel_for_each<ExecSpace>(
                 ExecSpace(),
                 coords_eval.domain(),
-                KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
+                KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
+                    coords_eval(e) = ddc::coordinate(e);
+                });
     }
 
 

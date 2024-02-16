@@ -216,19 +216,34 @@ public:
     {
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
-        ddc::for_each(
-                ddc::policies::policy(exec_space()),
-                batch_domain(),
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    const auto spline_eval_2D = spline_eval[j];
-                    const auto coords_eval_2D = coords_eval[j];
-                    const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i1 : interpolation_domain1) {
-                        for (auto const i2 : interpolation_domain2) {
-                            spline_eval_2D(i1, i2) = eval(coords_eval_2D(i1, i2), spline_coef_2D);
+        if constexpr (std::is_same<exec_space, Kokkos::Serial>::value){
+                ddc::for_each(
+                        batch_domain(),
+                        KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                        const auto spline_eval_2D = spline_eval[j];
+                        const auto coords_eval_2D = coords_eval[j];
+                        const auto spline_coef_2D = spline_coef[j];
+                        for (auto const i1 : interpolation_domain1) {
+                                for (auto const i2 : interpolation_domain2) {
+                                spline_eval_2D(i1, i2) = eval(coords_eval_2D(i1, i2), spline_coef_2D);
+                                }
                         }
-                    }
-                });
+                        });
+        } else {
+                ddc::parallel_for_each<ExecSpace>(
+                        exec_space(),
+                        batch_domain(),
+                        KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                        const auto spline_eval_2D = spline_eval[j];
+                        const auto coords_eval_2D = coords_eval[j];
+                        const auto spline_coef_2D = spline_coef[j];
+                        for (auto const i1 : interpolation_domain1) {
+                                for (auto const i2 : interpolation_domain2) {
+                                spline_eval_2D(i1, i2) = eval(coords_eval_2D(i1, i2), spline_coef_2D);
+                                }
+                        }
+                        });
+        }
     }
 
     template <class Layout, class... CoordsDims>
@@ -312,21 +327,38 @@ public:
     {
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
-        ddc::for_each(
-                ddc::policies::policy(exec_space()),
-                batch_domain(),
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    const auto spline_eval_2D = spline_eval[j];
-                    const auto coords_eval_2D = coords_eval[j];
-                    const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i1 : interpolation_domain1) {
-                        for (auto const i2 : interpolation_domain2) {
-                            spline_eval_2D(i1, i2) = eval_no_bc<
-                                    eval_deriv_type,
-                                    eval_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+        if constexpr (std::is_same<exec_space, Kokkos::Serial>::value){
+                ddc::for_each(
+                        batch_domain(),
+                        KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                        const auto spline_eval_2D = spline_eval[j];
+                        const auto coords_eval_2D = coords_eval[j];
+                        const auto spline_coef_2D = spline_coef[j];
+                        for (auto const i1 : interpolation_domain1) {
+                                for (auto const i2 : interpolation_domain2) {
+                                spline_eval_2D(i1, i2) = eval_no_bc<
+                                        eval_deriv_type,
+                                        eval_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+                                }
                         }
-                    }
-                });
+                        });
+        } else {
+                ddc::parallel_for_each<ExecSpace>(
+                        exec_space(),
+                        batch_domain(),
+                        KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                        const auto spline_eval_2D = spline_eval[j];
+                        const auto coords_eval_2D = coords_eval[j];
+                        const auto spline_coef_2D = spline_coef[j];
+                        for (auto const i1 : interpolation_domain1) {
+                                for (auto const i2 : interpolation_domain2) {
+                                spline_eval_2D(i1, i2) = eval_no_bc<
+                                        eval_deriv_type,
+                                        eval_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+                                }
+                        }
+                        });
+        }
     }
 
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
@@ -342,21 +374,38 @@ public:
     {
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
-        ddc::for_each(
-                ddc::policies::policy(exec_space()),
-                batch_domain(),
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    const auto spline_eval_2D = spline_eval[j];
-                    const auto coords_eval_2D = coords_eval[j];
-                    const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i1 : interpolation_domain1) {
-                        for (auto const i2 : interpolation_domain2) {
-                            spline_eval_2D(i1, i2) = eval_no_bc<
-                                    eval_type,
-                                    eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+        if constexpr (std::is_same<exec_space, Kokkos::Serial>::value){
+                ddc::for_each(
+                        batch_domain(),
+                        KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                        const auto spline_eval_2D = spline_eval[j];
+                        const auto coords_eval_2D = coords_eval[j];
+                        const auto spline_coef_2D = spline_coef[j];
+                        for (auto const i1 : interpolation_domain1) {
+                                for (auto const i2 : interpolation_domain2) {
+                                spline_eval_2D(i1, i2) = eval_no_bc<
+                                        eval_type,
+                                        eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+                                }
                         }
-                    }
-                });
+                        });
+        } else {
+                ddc::parallel_for_each<ExecSpace>(
+                        exec_space(),
+                        batch_domain(),
+                        KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                        const auto spline_eval_2D = spline_eval[j];
+                        const auto coords_eval_2D = coords_eval[j];
+                        const auto spline_coef_2D = spline_coef[j];
+                        for (auto const i1 : interpolation_domain1) {
+                                for (auto const i2 : interpolation_domain2) {
+                                spline_eval_2D(i1, i2) = eval_no_bc<
+                                        eval_type,
+                                        eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+                                }
+                        }
+                        });
+        }
     }
 
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
@@ -372,21 +421,38 @@ public:
     {
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
-        ddc::for_each(
-                ddc::policies::policy(exec_space()),
-                batch_domain(),
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    const auto spline_eval_2D = spline_eval[j];
-                    const auto coords_eval_2D = coords_eval[j];
-                    const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i1 : interpolation_domain1) {
-                        for (auto const i2 : interpolation_domain2) {
-                            spline_eval_2D(i1, i2) = eval_no_bc<
-                                    eval_deriv_type,
-                                    eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+        if constexpr (std::is_same<exec_space, Kokkos::Serial>::value){
+                ddc::for_each(
+                        batch_domain(),
+                        KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                        const auto spline_eval_2D = spline_eval[j];
+                        const auto coords_eval_2D = coords_eval[j];
+                        const auto spline_coef_2D = spline_coef[j];
+                        for (auto const i1 : interpolation_domain1) {
+                                for (auto const i2 : interpolation_domain2) {
+                                spline_eval_2D(i1, i2) = eval_no_bc<
+                                        eval_deriv_type,
+                                        eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+                                }
                         }
-                    }
-                });
+                        });
+        } else {
+                ddc::parallel_for_each<ExecSpace>(
+                        exec_space(),
+                        batch_domain(),
+                        KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                        const auto spline_eval_2D = spline_eval[j];
+                        const auto coords_eval_2D = coords_eval[j];
+                        const auto spline_coef_2D = spline_coef[j];
+                        for (auto const i1 : interpolation_domain1) {
+                                for (auto const i2 : interpolation_domain2) {
+                                spline_eval_2D(i1, i2) = eval_no_bc<
+                                        eval_deriv_type,
+                                        eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+                                }
+                        }
+                        });
+        }
     }
 
     template <class InterestDim, class Layout1, class Layout2, class Layout3, class... CoordsDims>
@@ -467,19 +533,34 @@ public:
                     ddc::discrete_space<bsplines_type2>().integrals(values2);
                 });
 
-        ddc::for_each(
-                ddc::policies::policy(exec_space()),
-                batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    integrals(j) = 0;
-                    for (typename bsplines_domain_type1::discrete_element_type const i1 :
-                         values1.domain()) {
-                        for (typename bsplines_domain_type2::discrete_element_type const i2 :
-                             values2.domain()) {
-                            integrals(j) += spline_coef(i1, i2, j) * values1(i1) * values2(i2);
+        if constexpr (std::is_same<exec_space, Kokkos::Serial>::value){
+                ddc::for_each(
+                        batch_domain(),
+                        KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                        integrals(j) = 0;
+                        for (typename bsplines_domain_type1::discrete_element_type const i1 :
+                                values1.domain()) {
+                                for (typename bsplines_domain_type2::discrete_element_type const i2 :
+                                values2.domain()) {
+                                integrals(j) += spline_coef(i1, i2, j) * values1(i1) * values2(i2);
+                                }
                         }
-                    }
-                });
+                        });
+        } else {
+                ddc::parallel_for_each<ExecSpace>(
+                        exec_space(),
+                        batch_domain(),
+                        KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                        integrals(j) = 0;
+                        for (typename bsplines_domain_type1::discrete_element_type const i1 :
+                                values1.domain()) {
+                                for (typename bsplines_domain_type2::discrete_element_type const i2 :
+                                values2.domain()) {
+                                integrals(j) += spline_coef(i1, i2, j) * values1(i1) * values2(i2);
+                                }
+                        }
+                        });
+        }
     }
 
 private:

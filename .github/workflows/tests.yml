@@ -177,7 +177,7 @@ jobs:
         else echo "with_report=false" >> "$GITHUB_OUTPUT"
         fi
     - name: Publish Test Report
-      uses: mikepenz/action-junit-report@v3
+      uses: mikepenz/action-junit-report@v4
       if: ( success() || failure() ) && steps.test.outputs.with_report == 'true' # always run even if the previous step fails
       with:
         report_paths: '/home/runner/work/ddc/ddc/tests.xml'

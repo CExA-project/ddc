@@ -211,7 +211,7 @@ inline void parallel_for_each(
 template <class... DDims, class Functor>
 inline void parallel_for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
-    parallel_for_each<Kokkos::DefaultExecutionSpace>(
+    parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             domain,
             std::forward<Functor>(f));

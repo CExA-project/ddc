@@ -191,7 +191,7 @@ inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexce
     for_each(ddc::policies::serial_host, domain, std::forward<Functor>(f));
 }
 
-/** iterates over a nD domain using the serial execution policy
+/** iterates over a nD domain using a given `Kokkos` execution space
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */

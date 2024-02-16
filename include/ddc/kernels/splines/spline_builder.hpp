@@ -559,18 +559,7 @@ operator()(
         assert(derivs_xmin->template extent<deriv_type>() == s_nbc_xmin);
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = m_dx;
-        if constexpr (std::is_same<exec_space, Kokkos::Serial>::value) {
-            ddc::for_each(
-                    batch_domain(),
-                    KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
-                        for (int i = s_nbc_xmin; i > 0; --i) {
-                            spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin - i), j)
-                                    = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i), j)
-                                      * ddc::detail::ipow(dx_proxy, i + s_odd - 1);
-                        }
-                    });
-        } else {
-            ddc::parallel_for_each<exec_space>(
+            ddc::parallel_for_each(
                     exec_space(),
                     batch_domain(),
                     KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
@@ -580,7 +569,6 @@ operator()(
                                       * ddc::detail::ipow(dx_proxy, i + s_odd - 1);
                         }
                     });
-        }
     }
 
     // TODO : Consider optimizing

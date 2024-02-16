@@ -559,16 +559,16 @@ operator()(
         assert(derivs_xmin->template extent<deriv_type>() == s_nbc_xmin);
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = m_dx;
-            ddc::parallel_for_each(
-                    exec_space(),
-                    batch_domain(),
-                    KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
-                        for (int i = s_nbc_xmin; i > 0; --i) {
-                            spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin - i), j)
-                                    = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i), j)
-                                      * ddc::detail::ipow(dx_proxy, i + s_odd - 1);
-                        }
-                    });
+        ddc::parallel_for_each(
+                exec_space(),
+                batch_domain(),
+                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
+                    for (int i = s_nbc_xmin; i > 0; --i) {
+                        spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin - i), j)
+                                = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i), j)
+                                  * ddc::detail::ipow(dx_proxy, i + s_odd - 1);
+                    }
+                });
     }
 
     // TODO : Consider optimizing
@@ -576,34 +576,20 @@ operator()(
     auto const& offset_proxy = m_offset;
     auto const& interp_size_proxy = interpolation_domain().extents();
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
-    if constexpr (std::is_same<exec_space, Kokkos::Serial>::value) {
-        ddc::for_each(
-                batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
-                    for (int i = s_nbc_xmin; i < s_nbc_xmin + offset_proxy; ++i) {
-                        spline(ddc::DiscreteElement<bsplines_type>(i), j) = 0.0;
-                    }
-                    for (int i = 0; i < interp_size_proxy; ++i) {
-                        spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + i + offset_proxy),
-                               j)
-                                = vals(ddc::DiscreteElement<interpolation_mesh_type>(i), j);
-                    }
-                });
-    } else {
-        ddc::parallel_for_each<exec_space>(
-                exec_space(),
-                batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
-                    for (int i = s_nbc_xmin; i < s_nbc_xmin + offset_proxy; ++i) {
-                        spline(ddc::DiscreteElement<bsplines_type>(i), j) = 0.0;
-                    }
-                    for (int i = 0; i < interp_size_proxy; ++i) {
-                        spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + i + offset_proxy),
-                               j)
-                                = vals(ddc::DiscreteElement<interpolation_mesh_type>(i), j);
-                    }
-                });
-    }
+
+    ddc::parallel_for_each(
+            exec_space(),
+            batch_domain(),
+            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
+                for (int i = s_nbc_xmin; i < s_nbc_xmin + offset_proxy; ++i) {
+                    spline(ddc::DiscreteElement<bsplines_type>(i), j) = 0.0;
+                }
+                for (int i = 0; i < interp_size_proxy; ++i) {
+                    spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + i + offset_proxy), j)
+                            = vals(ddc::DiscreteElement<interpolation_mesh_type>(i), j);
+                }
+            });
+
     // Hermite boundary conditions at xmax, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
@@ -611,58 +597,36 @@ operator()(
         assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
         auto derivs_xmax_values = *derivs_xmax;
         auto const dx_proxy = m_dx;
-        if constexpr (std::is_same<exec_space, Kokkos::Serial>::value) {
-            ddc::for_each(
-                    batch_domain(),
-                    KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
-                        for (int i = 0; i < s_nbc_xmax; ++i) {
-                            spline(ddc::DiscreteElement<bsplines_type>(
-                                           nbasis_proxy - s_nbc_xmax - i),
-                                   j)
-                                    = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i + 1), j)
-                                      * ddc::detail::ipow(dx_proxy, i + s_odd);
-                        }
-                    });
-        } else {
-            ddc::parallel_for_each(
-                    exec_space(),
-                    batch_domain(),
-                    KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
-                        for (int i = 0; i < s_nbc_xmax; ++i) {
-                            spline(ddc::DiscreteElement<bsplines_type>(
-                                           nbasis_proxy - s_nbc_xmax - i),
-                                   j)
-                                    = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i + 1), j)
-                                      * ddc::detail::ipow(dx_proxy, i + s_odd);
-                        }
-                    });
-        }
+
+        ddc::parallel_for_each(
+                exec_space(),
+                batch_domain(),
+                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
+                    for (int i = 0; i < s_nbc_xmax; ++i) {
+                        spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbc_xmax - i),
+                               j)
+                                = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i + 1), j)
+                                  * ddc::detail::ipow(dx_proxy, i + s_odd);
+                    }
+                });
     }
+
 
     // TODO : Consider optimizing
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
     ddc::Chunk spline_tr_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
-    if constexpr (std::is_same<exec_space, Kokkos::Serial>::value) {
-        ddc::for_each(
-                batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    for (std::size_t i = 0; i < nbasis_proxy; i++) {
-                        spline_tr(ddc::DiscreteElement<bsplines_type>(i), j)
-                                = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
-                    }
-                });
-    } else {
-        ddc::parallel_for_each<exec_space>(
-                exec_space(),
-                batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    for (std::size_t i = 0; i < nbasis_proxy; i++) {
-                        spline_tr(ddc::DiscreteElement<bsplines_type>(i), j)
-                                = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
-                    }
-                });
-    }
+
+    ddc::parallel_for_each(
+            exec_space(),
+            batch_domain(),
+            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                for (std::size_t i = 0; i < nbasis_proxy; i++) {
+                    spline_tr(ddc::DiscreteElement<bsplines_type>(i), j)
+                            = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
+                }
+            });
+
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
     Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
             spline_tr.data_handle(),
@@ -671,76 +635,42 @@ operator()(
     // Compute spline coef
     matrix->solve_batch_inplace(bcoef_section);
     // Transpose back spline_tr in spline
-    if constexpr (std::is_same<exec_space, Kokkos::Serial>::value) {
-        ddc::for_each(
-                ddc::policies::policy(exec_space()),
-                batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    for (std::size_t i = 0; i < nbasis_proxy; i++) {
-                        spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j)
-                                = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
-                    }
-                });
-    } else {
-        ddc::parallel_for_each<exec_space>(
-                exec_space(),
-                batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    for (std::size_t i = 0; i < nbasis_proxy; i++) {
-                        spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j)
-                                = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
-                    }
-                });
-    }
+
+    ddc::parallel_for_each(
+            exec_space(),
+            batch_domain(),
+            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                for (std::size_t i = 0; i < nbasis_proxy; i++) {
+                    spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j)
+                            = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
+                }
+            });
+
 
     // Not sure yet of what this part do
     if (bsplines_type::is_periodic()) {
-        if constexpr (std::is_same<exec_space, Kokkos::Serial>::value) {
-            ddc::for_each(
-                    batch_domain(),
-                    KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                        if (offset_proxy != 0) {
-                            for (int i = 0; i < offset_proxy; ++i) {
-                                spline(ddc::DiscreteElement<bsplines_type>(i), j) = spline(
-                                        ddc::DiscreteElement<bsplines_type>(nbasis_proxy + i),
-                                        j);
-                            }
-                            for (std::size_t i = offset_proxy; i < bsplines_type::degree(); ++i) {
-                                spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy + i), j)
-                                        = spline(ddc::DiscreteElement<bsplines_type>(i), j);
-                            }
+        ddc::parallel_for_each(
+                exec_space(),
+                batch_domain(),
+                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                    if (offset_proxy != 0) {
+                        for (int i = 0; i < offset_proxy; ++i) {
+                            spline(ddc::DiscreteElement<bsplines_type>(i), j) = spline(
+                                    ddc::DiscreteElement<bsplines_type>(nbasis_proxy + i),
+                                    j);
                         }
-                        for (std::size_t i(0); i < bsplines_type::degree(); ++i) {
-                            const ddc::DiscreteElement<bsplines_type> i_start(i);
-                            const ddc::DiscreteElement<bsplines_type> i_end(nbasis_proxy + i);
+                        for (std::size_t i = offset_proxy; i < bsplines_type::degree(); ++i) {
+                            spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy + i), j)
+                                    = spline(ddc::DiscreteElement<bsplines_type>(i), j);
+                        }
+                    }
+                    for (std::size_t i(0); i < bsplines_type::degree(); ++i) {
+                        const ddc::DiscreteElement<bsplines_type> i_start(i);
+                        const ddc::DiscreteElement<bsplines_type> i_end(nbasis_proxy + i);
 
-                            spline(i_end, j) = spline(i_start, j);
-                        }
-                    });
-        } else {
-            ddc::parallel_for_each<exec_space>(
-                    exec_space(),
-                    batch_domain(),
-                    KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                        if (offset_proxy != 0) {
-                            for (int i = 0; i < offset_proxy; ++i) {
-                                spline(ddc::DiscreteElement<bsplines_type>(i), j) = spline(
-                                        ddc::DiscreteElement<bsplines_type>(nbasis_proxy + i),
-                                        j);
-                            }
-                            for (std::size_t i = offset_proxy; i < bsplines_type::degree(); ++i) {
-                                spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy + i), j)
-                                        = spline(ddc::DiscreteElement<bsplines_type>(i), j);
-                            }
-                        }
-                        for (std::size_t i(0); i < bsplines_type::degree(); ++i) {
-                            const ddc::DiscreteElement<bsplines_type> i_start(i);
-                            const ddc::DiscreteElement<bsplines_type> i_end(nbasis_proxy + i);
-
-                            spline(i_end, j) = spline(i_start, j);
-                        }
-                    });
-        }
+                        spline(i_end, j) = spline(i_start, j);
+                    }
+                });
     }
 }
 } // namespace ddc

@@ -286,20 +286,14 @@ static void Batched2dSplineTest()
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
-    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
-        ddc::for_each(
-                vals.domain(),
-                KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                    vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
-                });
-    } else {
-        ddc::parallel_for_each<ExecSpace>(
-                ExecSpace(),
-                vals.domain(),
-                KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                    vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
-                });
-    }
+
+    ddc::parallel_for_each(
+            ExecSpace(),
+            vals.domain(),
+            KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
+                vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
+            });
+
 
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
@@ -327,26 +321,14 @@ static void Batched2dSplineTest()
                 ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv1_lhs1 = Sderiv1_lhs1_alloc.span_view();
         ddc::deepcopy(Sderiv1_lhs1, Sderiv1_lhs1_cpu);
-        if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
-            ddc::for_each(
-                    Sderiv1_lhs.domain(),
-                    KOKKOS_LAMBDA(
-                            typename decltype(Sderiv1_lhs
-                                                      .domain())::discrete_element_type const e) {
-                        Sderiv1_lhs(e)
-                                = Sderiv1_lhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
-                    });
-        } else {
-            ddc::parallel_for_each<ExecSpace>(
-                    ExecSpace(),
-                    Sderiv1_lhs.domain(),
-                    KOKKOS_LAMBDA(
-                            typename decltype(Sderiv1_lhs
-                                                      .domain())::discrete_element_type const e) {
-                        Sderiv1_lhs(e)
-                                = Sderiv1_lhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
-                    });
-        }
+
+        ddc::parallel_for_each(
+                ExecSpace(),
+                Sderiv1_lhs.domain(),
+                KOKKOS_LAMBDA(
+                        typename decltype(Sderiv1_lhs.domain())::discrete_element_type const e) {
+                    Sderiv1_lhs(e) = Sderiv1_lhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
+                });
     }
 
     ddc::Chunk Sderiv1_rhs_alloc(dom_derivs1, ddc::KokkosAllocator<double, MemorySpace>());
@@ -373,26 +355,14 @@ static void Batched2dSplineTest()
         ddc::ChunkSpan Sderiv1_rhs1 = Sderiv1_rhs1_alloc.span_view();
         ddc::deepcopy(Sderiv1_rhs1, Sderiv1_rhs1_cpu);
 
-        if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
-            ddc::for_each(
-                    Sderiv1_rhs.domain(),
-                    KOKKOS_LAMBDA(
-                            typename decltype(Sderiv1_rhs
-                                                      .domain())::discrete_element_type const e) {
-                        Sderiv1_rhs(e)
-                                = Sderiv1_rhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
-                    });
-        } else {
-            ddc::parallel_for_each<ExecSpace>(
-                    ExecSpace(),
-                    Sderiv1_rhs.domain(),
-                    KOKKOS_LAMBDA(
-                            typename decltype(Sderiv1_rhs
-                                                      .domain())::discrete_element_type const e) {
-                        Sderiv1_rhs(e)
-                                = Sderiv1_rhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
-                    });
-        }
+
+        ddc::parallel_for_each(
+                ExecSpace(),
+                Sderiv1_rhs.domain(),
+                KOKKOS_LAMBDA(
+                        typename decltype(Sderiv1_rhs.domain())::discrete_element_type const e) {
+                    Sderiv1_rhs(e) = Sderiv1_rhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
+                });
     }
 
     ddc::Chunk Sderiv2_lhs_alloc(dom_derivs2, ddc::KokkosAllocator<double, MemorySpace>());
@@ -420,26 +390,14 @@ static void Batched2dSplineTest()
         ddc::ChunkSpan Sderiv2_lhs1 = Sderiv2_lhs1_alloc.span_view();
         ddc::deepcopy(Sderiv2_lhs1, Sderiv2_lhs1_cpu);
 
-        if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
-            ddc::for_each(
-                    Sderiv2_lhs.domain(),
-                    KOKKOS_LAMBDA(
-                            typename decltype(Sderiv2_lhs
-                                                      .domain())::discrete_element_type const e) {
-                        Sderiv2_lhs(e)
-                                = Sderiv2_lhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
-                    });
-        } else {
-            ddc::parallel_for_each<ExecSpace>(
-                    ExecSpace(),
-                    Sderiv2_lhs.domain(),
-                    KOKKOS_LAMBDA(
-                            typename decltype(Sderiv2_lhs
-                                                      .domain())::discrete_element_type const e) {
-                        Sderiv2_lhs(e)
-                                = Sderiv2_lhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
-                    });
-        }
+
+        ddc::parallel_for_each<ExecSpace>(
+                ExecSpace(),
+                Sderiv2_lhs.domain(),
+                KOKKOS_LAMBDA(
+                        typename decltype(Sderiv2_lhs.domain())::discrete_element_type const e) {
+                    Sderiv2_lhs(e) = Sderiv2_lhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
+                });
     }
 
     ddc::Chunk Sderiv2_rhs_alloc(dom_derivs2, ddc::KokkosAllocator<double, MemorySpace>());
@@ -467,26 +425,14 @@ static void Batched2dSplineTest()
         ddc::ChunkSpan Sderiv2_rhs1 = Sderiv2_rhs1_alloc.span_view();
         ddc::deepcopy(Sderiv2_rhs1, Sderiv2_rhs1_cpu);
 
-        if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
-            ddc::for_each(
-                    Sderiv2_rhs.domain(),
-                    KOKKOS_LAMBDA(
-                            typename decltype(Sderiv2_rhs
-                                                      .domain())::discrete_element_type const e) {
-                        Sderiv2_rhs(e)
-                                = Sderiv2_rhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
-                    });
-        } else {
-            ddc::parallel_for_each<ExecSpace>(
-                    ExecSpace(),
-                    Sderiv2_rhs.domain(),
-                    KOKKOS_LAMBDA(
-                            typename decltype(Sderiv2_rhs
-                                                      .domain())::discrete_element_type const e) {
-                        Sderiv2_rhs(e)
-                                = Sderiv2_rhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
-                    });
-        }
+
+        ddc::parallel_for_each(
+                ExecSpace(),
+                Sderiv2_rhs.domain(),
+                KOKKOS_LAMBDA(
+                        typename decltype(Sderiv2_rhs.domain())::discrete_element_type const e) {
+                    Sderiv2_rhs(e) = Sderiv2_rhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
+                });
     }
 
     ddc::Chunk Sderiv_mixed_lhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
@@ -549,34 +495,20 @@ static void Batched2dSplineTest()
         ddc::ChunkSpan Sderiv_mixed_rhs_rhs1 = Sderiv_mixed_rhs_rhs1_alloc.span_view();
         ddc::deepcopy(Sderiv_mixed_rhs_rhs1, Sderiv_mixed_rhs_rhs1_cpu);
 
-        if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
-            ddc::for_each(
-                    dom_derivs,
-                    KOKKOS_LAMBDA(typename decltype(dom_derivs)::discrete_element_type const e) {
-                        Sderiv_mixed_lhs_lhs(e) = Sderiv_mixed_lhs_lhs1(
-                                ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                        Sderiv_mixed_rhs_lhs(e) = Sderiv_mixed_rhs_lhs1(
-                                ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                        Sderiv_mixed_lhs_rhs(e) = Sderiv_mixed_lhs_rhs1(
-                                ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                        Sderiv_mixed_rhs_rhs(e) = Sderiv_mixed_rhs_rhs1(
-                                ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                    });
-        } else {
-            ddc::parallel_for_each<ExecSpace>(
-                    ExecSpace(),
-                    dom_derivs,
-                    KOKKOS_LAMBDA(typename decltype(dom_derivs)::discrete_element_type const e) {
-                        Sderiv_mixed_lhs_lhs(e) = Sderiv_mixed_lhs_lhs1(
-                                ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                        Sderiv_mixed_rhs_lhs(e) = Sderiv_mixed_rhs_lhs1(
-                                ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                        Sderiv_mixed_lhs_rhs(e) = Sderiv_mixed_lhs_rhs1(
-                                ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                        Sderiv_mixed_rhs_rhs(e) = Sderiv_mixed_rhs_rhs1(
-                                ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                    });
-        }
+
+        ddc::parallel_for_each(
+                ExecSpace(),
+                dom_derivs,
+                KOKKOS_LAMBDA(typename decltype(dom_derivs)::discrete_element_type const e) {
+                    Sderiv_mixed_lhs_lhs(e)
+                            = Sderiv_mixed_lhs_lhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                    Sderiv_mixed_rhs_lhs(e)
+                            = Sderiv_mixed_rhs_lhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                    Sderiv_mixed_lhs_rhs(e)
+                            = Sderiv_mixed_lhs_rhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                    Sderiv_mixed_rhs_rhs(e)
+                            = Sderiv_mixed_rhs_rhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                });
     }
 #endif
 
@@ -638,20 +570,14 @@ static void Batched2dSplineTest()
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
-    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
-        ddc::for_each(
-                coords_eval.domain(),
-                KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                    coords_eval(e) = ddc::coordinate(e);
-                });
-    } else {
-        ddc::parallel_for_each<ExecSpace>(
-                ExecSpace(),
-                coords_eval.domain(),
-                KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                    coords_eval(e) = ddc::coordinate(e);
-                });
-    }
+
+    ddc::parallel_for_each(
+            ExecSpace(),
+            coords_eval.domain(),
+            KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
+                coords_eval(e) = ddc::coordinate(e);
+            });
+
 
 
     // Instantiate chunks to receive outputs of spline_evaluator

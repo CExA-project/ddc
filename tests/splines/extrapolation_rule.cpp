@@ -245,20 +245,14 @@ static void ExtrapolationRuleSplineTest()
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
-    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
-        ddc::for_each(
-                vals.domain(),
-                KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                    vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
-                });
-    } else {
-        ddc::parallel_for_each<ExecSpace>(
-                ExecSpace(),
-                vals.domain(),
-                KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                    vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
-                });
-    }
+
+    ddc::parallel_for_each(
+            ExecSpace(),
+            vals.domain(),
+            KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
+                vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
+            });
+
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
@@ -326,34 +320,21 @@ static void ExtrapolationRuleSplineTest()
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
-    if constexpr (std::is_same<ExecSpace, Kokkos::Serial>::value) {
-        ddc::for_each(
-                coords_eval.domain(),
-                KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                    coords_eval(e) = ddc::coordinate(e);
-                    // Set coords_eval outside of the domain
-                    ddc::get<I1>(coords_eval(e))
-                            = xN<I1>() + (ddc::select<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
+
+    ddc::parallel_for_each(
+            ExecSpace(),
+            coords_eval.domain(),
+            KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
+                coords_eval(e) = ddc::coordinate(e);
+                // Set coords_eval outside of the domain
+                ddc::get<I1>(coords_eval(e))
+                        = xN<I1>() + (ddc::select<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
 #if defined(BC_GREVILLE)
-                    ddc::get<I2>(coords_eval(e))
-                            = xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>()) + 1;
+                ddc::get<I2>(coords_eval(e))
+                        = xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>()) + 1;
 #endif
-                });
-    } else {
-        ddc::parallel_for_each<ExecSpace>(
-                ExecSpace(),
-                coords_eval.domain(),
-                KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                    coords_eval(e) = ddc::coordinate(e);
-                    // Set coords_eval outside of the domain
-                    ddc::get<I1>(coords_eval(e))
-                            = xN<I1>() + (ddc::select<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
-#if defined(BC_GREVILLE)
-                    ddc::get<I2>(coords_eval(e))
-                            = xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>()) + 1;
-#endif
-                });
-    }
+            });
+
 
 
     // Instantiate chunks to receive outputs of spline_evaluator

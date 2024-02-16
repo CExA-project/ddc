@@ -106,7 +106,7 @@ TEST(ParallelForEachParallelHost, TwoDimensions)
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomXY> const view(storage.data(), dom);
-    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(
+    ddc::parallel_for_each(
             Kokkos::DefaultHostExecutionSpace(),
             dom,
             [=](DElemXY const ixy) { view(ixy) += 1; });

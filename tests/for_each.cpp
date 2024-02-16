@@ -82,7 +82,7 @@ TEST(ParallelForEachParallelHost, ZeroDimension)
     DDom0D const dom;
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDom0D> const view(storage.data(), dom);
-    ddc::parallel_for_each<Kokkos::DefaultHostExecutionSpace>(
+    ddc::parallel_for_each(
             Kokkos::DefaultHostExecutionSpace(),
             dom,
             [=](DElem0D const i) { view(i) += 1; });

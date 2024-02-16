@@ -204,7 +204,7 @@ inline void parallel_for_each(
     detail::for_each_kokkos(std::forward<ExecSpace>(execution_space), domain, std::forward<Functor>(f));
 }
 
-/** iterates over a nD domain using the default execution policy
+/** iterates over a nD domain using the `Kokkos` default execution space
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */

@@ -6,7 +6,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: DoozyX/clang-format-lint-action@v0.13
       with:
         source: 'include/ddc/ tests/ examples/'
@@ -39,7 +39,7 @@ jobs:
       uses: jlumbroso/free-disk-space@v1.2.0
       with: { tool-cache: true, large-packages: true }
     - name: Checkout built branch
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Build
       run: |
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin || true
@@ -100,7 +100,7 @@ jobs:
       uses: jlumbroso/free-disk-space@v1.2.0
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with: { submodules: recursive }
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'
@@ -177,7 +177,7 @@ jobs:
         else echo "with_report=false" >> "$GITHUB_OUTPUT"
         fi
     - name: Publish Test Report
-      uses: mikepenz/action-junit-report@v3
+      uses: mikepenz/action-junit-report@v4
       if: ( success() || failure() ) && steps.test.outputs.with_report == 'true' # always run even if the previous step fails
       with:
         report_paths: '/home/runner/work/ddc/ddc/tests.xml'
@@ -190,7 +190,7 @@ jobs:
       uses: jlumbroso/free-disk-space@v1.2.0
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with: { submodules: recursive }
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'

@@ -181,7 +181,7 @@ inline void for_each(
     detail::for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
 }
 
-/** iterates over a nD domain using the default execution policy
+/** iterates over a nD domain in serial
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */

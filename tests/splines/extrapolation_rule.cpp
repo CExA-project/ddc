@@ -253,7 +253,7 @@ static void ExtrapolationRuleSplineTest()
                 });
     } else {
         ddc::parallel_for_each<ExecSpace>(
-                exec_space,
+                ExecSpace(),
                 vals.domain(),
                 KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                     vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
@@ -341,7 +341,7 @@ static void ExtrapolationRuleSplineTest()
                 });
     } else {
         ddc::parallel_for_each<ExecSpace>(
-                exec_space,
+                ExecSpace(),
                 coords_eval.domain(),
                 KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                     coords_eval(e) = ddc::coordinate(e);

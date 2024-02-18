@@ -160,7 +160,6 @@ public:
                     spline_coef) const
     {
         interpolation_domain_type const interpolation_domain(spline_eval.domain());
-
         ddc::parallel_for_each(
                 exec_space(),
                 batch_domain(),
@@ -173,7 +172,6 @@ public:
                     }
                 });
     }
-
 
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv(
@@ -196,7 +194,6 @@ public:
                     spline_coef) const
     {
         interpolation_domain_type const interpolation_domain(spline_eval.domain());
-
         ddc::parallel_for_each(
                 exec_space(),
                 batch_domain(),
@@ -210,7 +207,6 @@ public:
                     }
                 });
     }
-
 
     template <class Layout1, class Layout2>
     void integrate(
@@ -226,7 +222,6 @@ public:
                 Kokkos::RangePolicy<exec_space>(0, 1),
                 KOKKOS_LAMBDA(int) { ddc::discrete_space<bsplines_type>().integrals(values); });
 
-
         ddc::parallel_for_each(
                 exec_space(),
                 batch_domain(),
@@ -238,7 +233,6 @@ public:
                     }
                 });
     }
-
 
 private:
     template <class Layout, class... CoordsDims>

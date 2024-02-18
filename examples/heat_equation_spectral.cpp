@@ -60,7 +60,6 @@ void display(double time, ChunkType temp)
     std::cout << "  * temperature[y:"
               << ddc::get_domain<DDimY>(temp).size() / 2 << "] = {";
     ddc::for_each(
-            ddc::policies::serial_host,
             ddc::get_domain<DDimX>(temp),
             [=](ddc::DiscreteElement<DDimX> const ix) {
                 std::cout << std::setw(6) << temp_slice(ix);

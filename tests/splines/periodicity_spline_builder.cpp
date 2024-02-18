@@ -172,14 +172,12 @@ static void PeriodicitySplineBuilderTest()
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
-
     ddc::parallel_for_each(
             ExecSpace(),
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X>> const e) {
                 coords_eval(e) = ddc::coordinate(e) + Coord<X>(1.5);
             }); // Translate function 1.5x domain width to the right.
-
 
 
     // Instantiate chunks to receive outputs of spline_evaluator

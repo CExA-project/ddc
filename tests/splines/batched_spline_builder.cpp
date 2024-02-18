@@ -235,14 +235,12 @@ static void BatchedSplineTest()
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
-
     ddc::parallel_for_each(
             ExecSpace(),
             vals.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
                 vals(e) = vals1(ddc::select<IDim<I, I>>(e));
             });
-
 
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
@@ -259,7 +257,6 @@ static void BatchedSplineTest()
         ddc::Chunk Sderiv_lhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv_lhs1 = Sderiv_lhs1_alloc.span_view();
         ddc::deepcopy(Sderiv_lhs1, Sderiv_lhs1_cpu);
-
         ddc::parallel_for_each(
                 ExecSpace(),
                 Sderiv_lhs.domain(),
@@ -281,7 +278,6 @@ static void BatchedSplineTest()
         ddc::Chunk Sderiv_rhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv_rhs1 = Sderiv_rhs1_alloc.span_view();
         ddc::deepcopy(Sderiv_rhs1, Sderiv_rhs1_cpu);
-
 
         ddc::parallel_for_each(
                 ExecSpace(),
@@ -336,12 +332,10 @@ static void BatchedSplineTest()
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
-
     ddc::parallel_for_each(
             ExecSpace(),
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
-
 
 
     // Instantiate chunks to receive outputs of spline_evaluator

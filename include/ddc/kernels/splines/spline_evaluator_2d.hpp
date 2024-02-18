@@ -216,7 +216,6 @@ public:
     {
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
-
         ddc::parallel_for_each(
                 ExecSpace(),
                 batch_domain(),
@@ -231,7 +230,6 @@ public:
                     }
                 });
     }
-
 
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_dim_1(
@@ -314,7 +312,6 @@ public:
     {
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
-
         ddc::parallel_for_each(
                 ExecSpace(),
                 batch_domain(),
@@ -332,7 +329,6 @@ public:
                 });
     }
 
-
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_dim_2(
             ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
@@ -346,7 +342,6 @@ public:
     {
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
-
         ddc::parallel_for_each(
                 ExecSpace(),
                 batch_domain(),
@@ -377,7 +372,6 @@ public:
     {
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
-
         ddc::parallel_for_each(
                 ExecSpace(),
                 batch_domain(),
@@ -472,7 +466,6 @@ public:
                     ddc::discrete_space<bsplines_type1>().integrals(values1);
                     ddc::discrete_space<bsplines_type2>().integrals(values2);
                 });
-
 
         ddc::parallel_for_each(
                 ExecSpace(),

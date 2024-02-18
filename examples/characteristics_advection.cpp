@@ -69,7 +69,6 @@ void display(double time, ChunkType density)
     std::cout << "  * density[y:"
               << ddc::get_domain<DDimY>(density).size() / 2 << "] = {";
     ddc::for_each(
-            ddc::policies::serial_host,
             ddc::get_domain<DDimX>(density),
             [=](ddc::DiscreteElement<DDimX> const ix) {
                 std::cout << std::setw(6) << density_slice(ix) << " ";

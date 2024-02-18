@@ -576,7 +576,6 @@ operator()(
     auto const& offset_proxy = m_offset;
     auto const& interp_size_proxy = interpolation_domain().extents();
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
-
     ddc::parallel_for_each(
             exec_space(),
             batch_domain(),
@@ -597,7 +596,6 @@ operator()(
         assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
         auto derivs_xmax_values = *derivs_xmax;
         auto const dx_proxy = m_dx;
-
         ddc::parallel_for_each(
                 exec_space(),
                 batch_domain(),
@@ -611,12 +609,10 @@ operator()(
                 });
     }
 
-
     // TODO : Consider optimizing
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
     ddc::Chunk spline_tr_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
-
     ddc::parallel_for_each(
             exec_space(),
             batch_domain(),
@@ -626,7 +622,6 @@ operator()(
                             = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
                 }
             });
-
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
     Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
             spline_tr.data_handle(),
@@ -635,7 +630,6 @@ operator()(
     // Compute spline coef
     matrix->solve_batch_inplace(bcoef_section);
     // Transpose back spline_tr in spline
-
     ddc::parallel_for_each(
             exec_space(),
             batch_domain(),
@@ -645,7 +639,6 @@ operator()(
                             = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
                 }
             });
-
 
     // Not sure yet of what this part do
     if (bsplines_type::is_periodic()) {

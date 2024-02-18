@@ -162,8 +162,6 @@ inline void for_each_serial(
     }
 }
 
-} // namespace detail
-
 /** iterates over a nD domain using the serial execution policy
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
@@ -181,6 +179,8 @@ inline void for_each(
     detail::for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
 }
 
+} // namespace detail
+
 /** iterates over a nD domain in serial
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
@@ -188,10 +188,11 @@ inline void for_each(
 template <class... DDims, class Functor>
 inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
-    for_each(ddc::policies::serial_host, domain, std::forward<Functor>(f));
+    detail::for_each(ddc::policies::serial_host, domain, std::forward<Functor>(f));
 }
 
 /** iterates over a nD domain using a given `Kokkos` execution space
+ * @param[in] execution_space a Kokkos execution space where the loop will be executed on
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
@@ -207,7 +208,6 @@ inline void parallel_for_each(
             std::forward<Functor>(f));
 }
 
-
 /** iterates over a nD domain using the `Kokkos` default execution space
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
@@ -217,6 +217,5 @@ inline void parallel_for_each(DiscreteDomain<DDims...> const& domain, Functor&& 
 {
     parallel_for_each(Kokkos::DefaultExecutionSpace(), domain, std::forward<Functor>(f));
 }
-
 
 } // namespace ddc

@@ -142,8 +142,7 @@ static void TestTransformReduceParallelDeviceZeroDimension()
     ddc::ChunkSpan const chunk(storage.span_view());
     Kokkos::View<int> const count("count");
     Kokkos::deep_copy(count, 0);
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_for_each(
             dom,
             KOKKOS_LAMBDA(DElem0D const i) { chunk(i) = Kokkos::atomic_fetch_add(&count(), 1); });
     EXPECT_EQ(
@@ -168,8 +167,7 @@ static void TestTransformReduceParallelDeviceOneDimension()
     ddc::ChunkSpan const chunk(storage.span_view());
     Kokkos::View<int> const count("count");
     Kokkos::deep_copy(count, 0);
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_for_each(
             dom,
             KOKKOS_LAMBDA(DElemX const ix) { chunk(ix) = Kokkos::atomic_fetch_add(&count(), 1); });
     EXPECT_EQ(
@@ -194,8 +192,7 @@ static void TestTransformReduceParallelDeviceTwoDimensions()
     ddc::ChunkSpan const chunk(storage.span_view());
     Kokkos::View<int> const count("count");
     Kokkos::deep_copy(count, 0);
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_for_each(
             dom,
             KOKKOS_LAMBDA(DElemXY const ixy) {
                 chunk(ixy) = Kokkos::atomic_fetch_add(&count(), 1);

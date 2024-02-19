@@ -69,7 +69,6 @@ void display(double time, ChunkType density)
     std::cout << "  * density[y:"
               << ddc::get_domain<DDimY>(density).size() / 2 << "] = {";
     ddc::for_each(
-            ddc::policies::serial_host,
             ddc::get_domain<DDimX>(density),
             [=](ddc::DiscreteElement<DDimX> const ix) {
                 std::cout << std::setw(6) << density_slice(ix) << " ";
@@ -172,8 +171,7 @@ int main(int argc, char** argv)
     // Initialize the density on the main domain
     ddc::DiscreteDomain<DDimX, DDimY> x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
-    ddc::for_each(
-            ddc::policies::parallel_device,
+    ddc::parallel_for_each(
             x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
@@ -261,8 +259,7 @@ int main(int argc, char** argv)
         //! [numerical scheme]
         // Stencil computation on the main domain
         // Find the coordinates of the characteristics feet
-        ddc::for_each(
-                ddc::policies::parallel_device,
+        ddc::parallel_for_each(
                 feet_coords.domain(),
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX, DDimY> const e) {

@@ -412,28 +412,18 @@ Functions</h2></td></tr>
 <tr class="memitem:ad7f23095ba5b91c742e04d4a9b6994e9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad7f23095ba5b91c742e04d4a9b6994e9">fill</a> (ChunkDst &amp;&amp;dst, T const &amp;value)</td></tr>
 <tr class="memdesc:ad7f23095ba5b91c742e04d4a9b6994e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a borrowed chunk with a given value.  <a href="namespaceddc.html#ad7f23095ba5b91c742e04d4a9b6994e9">More...</a><br /></td></tr>
 <tr class="separator:ad7f23095ba5b91c742e04d4a9b6994e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f0c6cc2043c2e9bd07844e5f3b78951"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Functor &gt; </td></tr>
-<tr class="memitem:a9f0c6cc2043c2e9bd07844e5f3b78951"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9f0c6cc2043c2e9bd07844e5f3b78951">for_each</a> (<a class="el" href="namespaceddc.html#structddc_1_1serial__host__policy">serial_host_policy</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
-<tr class="memdesc:a9f0c6cc2043c2e9bd07844e5f3b78951"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the serial execution policy  <a href="namespaceddc.html#a9f0c6cc2043c2e9bd07844e5f3b78951">More...</a><br /></td></tr>
-<tr class="separator:a9f0c6cc2043c2e9bd07844e5f3b78951"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed276f229839c6ff2ba2a9afe947899a"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Functor &gt; </td></tr>
-<tr class="memitem:aed276f229839c6ff2ba2a9afe947899a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aed276f229839c6ff2ba2a9afe947899a">for_each</a> (<a class="el" href="namespaceddc.html#structddc_1_1parallel__host__policy">parallel_host_policy</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
-<tr class="memdesc:aed276f229839c6ff2ba2a9afe947899a"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the serial execution policy  <a href="namespaceddc.html#aed276f229839c6ff2ba2a9afe947899a">More...</a><br /></td></tr>
-<tr class="separator:aed276f229839c6ff2ba2a9afe947899a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a954db1a92eaab79632c9210a7069e190"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Functor &gt; </td></tr>
-<tr class="memitem:a954db1a92eaab79632c9210a7069e190"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a954db1a92eaab79632c9210a7069e190">for_each</a> (<a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy">parallel_device_policy</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
-<tr class="memdesc:a954db1a92eaab79632c9210a7069e190"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the <a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy" title="Kokkos parallel execution using MDRange policy.">parallel_device_policy</a> execution policy  <a href="namespaceddc.html#a954db1a92eaab79632c9210a7069e190">More...</a><br /></td></tr>
-<tr class="separator:a954db1a92eaab79632c9210a7069e190"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a580afa45261b42925af30519dca3c0bf"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Functor &gt; </td></tr>
 <tr class="memitem:a580afa45261b42925af30519dca3c0bf"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a580afa45261b42925af30519dca3c0bf">for_each</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
-<tr class="memdesc:a580afa45261b42925af30519dca3c0bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the default execution policy  <a href="namespaceddc.html#a580afa45261b42925af30519dca3c0bf">More...</a><br /></td></tr>
+<tr class="memdesc:a580afa45261b42925af30519dca3c0bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain in serial  <a href="namespaceddc.html#a580afa45261b42925af30519dca3c0bf">More...</a><br /></td></tr>
 <tr class="separator:a580afa45261b42925af30519dca3c0bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac82fe432cb256baf2ba47e63ee61020"><td class="memTemplParams" colspan="2">template&lt;class ExecutionPolicy , class ElementType , class... DDims, class LayoutPolicy , class Functor &gt; </td></tr>
-<tr class="memitem:aac82fe432cb256baf2ba47e63ee61020"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aac82fe432cb256baf2ba47e63ee61020">for_each_elem</a> (ExecutionPolicy &amp;&amp;policy, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, LayoutPolicy &gt; chunk_span, Functor &amp;&amp;f) noexcept</td></tr>
-<tr class="separator:aac82fe432cb256baf2ba47e63ee61020"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5600be9e2c84e90f880325df430f4f17"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class... DDims, class LayoutPolicy , class Functor &gt; </td></tr>
-<tr class="memitem:a5600be9e2c84e90f880325df430f4f17"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a5600be9e2c84e90f880325df430f4f17">for_each_elem</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, LayoutPolicy &gt; chunk_span, Functor &amp;&amp;f) noexcept</td></tr>
-<tr class="separator:a5600be9e2c84e90f880325df430f4f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a886c68829782d203d5cabb688c8cb6ae"><td class="memTemplParams" colspan="2">template&lt;class ExecSpace , class... DDims, class Functor &gt; </td></tr>
+<tr class="memitem:a886c68829782d203d5cabb688c8cb6ae"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a886c68829782d203d5cabb688c8cb6ae">parallel_for_each</a> (ExecSpace &amp;&amp;execution_space, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
+<tr class="memdesc:a886c68829782d203d5cabb688c8cb6ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using a given <code>Kokkos</code> execution space  <a href="namespaceddc.html#a886c68829782d203d5cabb688c8cb6ae">More...</a><br /></td></tr>
+<tr class="separator:a886c68829782d203d5cabb688c8cb6ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad477f030c80deb9c1a4808ec3698ca8f"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Functor &gt; </td></tr>
+<tr class="memitem:ad477f030c80deb9c1a4808ec3698ca8f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad477f030c80deb9c1a4808ec3698ca8f">parallel_for_each</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
+<tr class="memdesc:ad477f030c80deb9c1a4808ec3698ca8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the <code>Kokkos</code> default execution space  <a href="namespaceddc.html#ad477f030c80deb9c1a4808ec3698ca8f">More...</a><br /></td></tr>
+<tr class="separator:ad477f030c80deb9c1a4808ec3698ca8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acae1ee737600836553012b1fc7d8e413"><td class="memTemplParams" colspan="2">template&lt;class T , class MST , class U , class MSU &gt; </td></tr>
 <tr class="memitem:acae1ee737600836553012b1fc7d8e413"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#acae1ee737600836553012b1fc7d8e413">operator==</a> (<a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; T, MST &gt; const &amp;, <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; U, MSU &gt; const &amp;) noexcept</td></tr>
 <tr class="separator:acae1ee737600836553012b1fc7d8e413"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3270,167 +3260,8 @@ template&lt;class ChunkDst , class T &gt; </div>
 
 </div>
 </div>
-<a id="a9f0c6cc2043c2e9bd07844e5f3b78951" name="a9f0c6cc2043c2e9bd07844e5f3b78951"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f0c6cc2043c2e9bd07844e5f3b78951">&#9670;&nbsp;</a></span>for_each() <span class="overload">[1/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class... DDims, class Functor &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ddc::for_each </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#structddc_1_1serial__host__policy">serial_host_policy</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>domain</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Functor &amp;&amp;&#160;</td>
-          <td class="paramname"><em>f</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>iterates over a nD domain using the serial execution policy </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a functor taking an index as parameter </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="aed276f229839c6ff2ba2a9afe947899a" name="aed276f229839c6ff2ba2a9afe947899a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed276f229839c6ff2ba2a9afe947899a">&#9670;&nbsp;</a></span>for_each() <span class="overload">[2/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class... DDims, class Functor &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ddc::for_each </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#structddc_1_1parallel__host__policy">parallel_host_policy</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>domain</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Functor &amp;&amp;&#160;</td>
-          <td class="paramname"><em>f</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>iterates over a nD domain using the serial execution policy </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a functor taking an index as parameter </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a954db1a92eaab79632c9210a7069e190" name="a954db1a92eaab79632c9210a7069e190"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a954db1a92eaab79632c9210a7069e190">&#9670;&nbsp;</a></span>for_each() <span class="overload">[3/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class... DDims, class Functor &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ddc::for_each </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy">parallel_device_policy</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>domain</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Functor &amp;&amp;&#160;</td>
-          <td class="paramname"><em>f</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>iterates over a nD domain using the <a class="el" href="namespaceddc.html#structddc_1_1parallel__device__policy" title="Kokkos parallel execution using MDRange policy.">parallel_device_policy</a> execution policy </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a functor taking an index as parameter </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a580afa45261b42925af30519dca3c0bf" name="a580afa45261b42925af30519dca3c0bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a580afa45261b42925af30519dca3c0bf">&#9670;&nbsp;</a></span>for_each() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a580afa45261b42925af30519dca3c0bf">&#9670;&nbsp;</a></span>for_each()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3465,7 +3296,7 @@ template&lt;class... DDims, class Functor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>iterates over a nD domain using the default execution policy </p>
+<p>iterates over a nD domain in serial </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
@@ -3476,28 +3307,28 @@ template&lt;class... DDims, class Functor &gt; </div>
 
 </div>
 </div>
-<a id="aac82fe432cb256baf2ba47e63ee61020" name="aac82fe432cb256baf2ba47e63ee61020"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac82fe432cb256baf2ba47e63ee61020">&#9670;&nbsp;</a></span>for_each_elem() <span class="overload">[1/2]</span></h2>
+<a id="a886c68829782d203d5cabb688c8cb6ae" name="a886c68829782d203d5cabb688c8cb6ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a886c68829782d203d5cabb688c8cb6ae">&#9670;&nbsp;</a></span>parallel_for_each() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ExecutionPolicy , class ElementType , class... DDims, class LayoutPolicy , class Functor &gt; </div>
+template&lt;class ExecSpace , class... DDims, class Functor &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void ddc::for_each_elem </td>
+          <td class="memname">void ddc::parallel_for_each </td>
           <td>(</td>
-          <td class="paramtype">ExecutionPolicy &amp;&amp;&#160;</td>
-          <td class="paramname"><em>policy</em>, </td>
+          <td class="paramtype">ExecSpace &amp;&amp;&#160;</td>
+          <td class="paramname"><em>execution_space</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, LayoutPolicy &gt;&#160;</td>
-          <td class="paramname"><em>chunk_span</em>, </td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -3518,24 +3349,34 @@ template&lt;class ExecutionPolicy , class ElementType , class... DDims, class La
 </table>
 </div><div class="memdoc">
 
+<p>iterates over a nD domain using a given <code>Kokkos</code> execution space </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">execution_space</td><td>a Kokkos execution space where the loop will be executed on </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a functor taking an index as parameter </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
-<a id="a5600be9e2c84e90f880325df430f4f17" name="a5600be9e2c84e90f880325df430f4f17"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5600be9e2c84e90f880325df430f4f17">&#9670;&nbsp;</a></span>for_each_elem() <span class="overload">[2/2]</span></h2>
+<a id="ad477f030c80deb9c1a4808ec3698ca8f" name="ad477f030c80deb9c1a4808ec3698ca8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad477f030c80deb9c1a4808ec3698ca8f">&#9670;&nbsp;</a></span>parallel_for_each() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ElementType , class... DDims, class LayoutPolicy , class Functor &gt; </div>
+template&lt;class... DDims, class Functor &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void ddc::for_each_elem </td>
+          <td class="memname">void ddc::parallel_for_each </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, LayoutPolicy &gt;&#160;</td>
-          <td class="paramname"><em>chunk_span</em>, </td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -3555,6 +3396,15 @@ template&lt;class ElementType , class... DDims, class LayoutPolicy , class Funct
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>iterates over a nD domain using the <code>Kokkos</code> default execution space </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a functor taking an index as parameter </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

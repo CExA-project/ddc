@@ -14,7 +14,6 @@
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
 #include "ddc/discrete_vector.hpp"
-#include "ddc/policy.hpp"
 
 namespace ddc {
 

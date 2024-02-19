@@ -12,7 +12,7 @@
 #include "ddc/detail/macros.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
-#include "ddc/for_each.hpp"
+#include "ddc/policy.hpp"
 #include "ddc/reducer.hpp"
 
 namespace ddc {

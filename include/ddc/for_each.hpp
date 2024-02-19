@@ -162,23 +162,6 @@ inline void for_each_serial(
     }
 }
 
-/** iterates over a nD domain using the serial execution policy
- * @param[in] domain the domain over which to iterate
- * @param[in] f      a functor taking an index as parameter
- */
-template <class... DDims, class Functor>
-inline void for_each(
-        serial_host_policy,
-        DiscreteDomain<DDims...> const& domain,
-        Functor&& f) noexcept
-{
-    DiscreteElement<DDims...> const ddc_begin = domain.front();
-    DiscreteElement<DDims...> const ddc_end = domain.front() + domain.extents();
-    std::array const begin = detail::array(ddc_begin);
-    std::array const end = detail::array(ddc_end);
-    detail::for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
-}
-
 } // namespace detail
 
 /** iterates over a nD domain in serial
@@ -188,7 +171,11 @@ inline void for_each(
 template <class... DDims, class Functor>
 inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
-    detail::for_each(ddc::policies::serial_host, domain, std::forward<Functor>(f));
+    DiscreteElement<DDims...> const ddc_begin = domain.front();
+    DiscreteElement<DDims...> const ddc_end = domain.front() + domain.extents();
+    std::array const begin = detail::array(ddc_begin);
+    std::array const end = detail::array(ddc_end);
+    detail::for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
 }
 
 /** iterates over a nD domain using a given `Kokkos` execution space

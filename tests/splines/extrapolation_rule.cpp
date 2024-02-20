@@ -245,8 +245,8 @@ static void ExtrapolationRuleSplineTest()
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
-    ddc::for_each(
-            ddc::policies::policy(exec_space),
+    ddc::parallel_for_each(
+            ExecSpace(),
             vals.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
@@ -318,8 +318,8 @@ static void ExtrapolationRuleSplineTest()
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
-    ddc::for_each(
-            ddc::policies::policy(exec_space),
+    ddc::parallel_for_each(
+            ExecSpace(),
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);

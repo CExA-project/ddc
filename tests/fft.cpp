@@ -45,8 +45,8 @@ static void test_fft()
 
     ddc::Chunk f_alloc(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan const f = f_alloc.span_view();
-    ddc::for_each(
-            ddc::policies::policy(exec_space),
+    ddc::parallel_for_each(
+            ExecSpace(),
             f.domain(),
             KOKKOS_LAMBDA(DElem<DDim<X>...> const e) {
                 ddc::Real const xn2

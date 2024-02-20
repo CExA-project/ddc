@@ -239,8 +239,8 @@ static void BatchedSplineTest()
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
-    ddc::for_each(
-            ddc::policies::policy(exec_space),
+    ddc::parallel_for_each(
+            ExecSpace(),
             vals.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
                 vals(e) = vals1(ddc::select<IDim<I, I>>(e));
@@ -261,9 +261,8 @@ static void BatchedSplineTest()
         ddc::Chunk Sderiv_lhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv_lhs1 = Sderiv_lhs1_alloc.span_view();
         ddc::deepcopy(Sderiv_lhs1, Sderiv_lhs1_cpu);
-
-        ddc::for_each(
-                ddc::policies::policy(exec_space),
+        ddc::parallel_for_each(
+                ExecSpace(),
                 Sderiv_lhs.domain(),
                 KOKKOS_LAMBDA(
                         typename decltype(Sderiv_lhs.domain())::discrete_element_type const e) {
@@ -284,8 +283,8 @@ static void BatchedSplineTest()
         ddc::ChunkSpan Sderiv_rhs1 = Sderiv_rhs1_alloc.span_view();
         ddc::deepcopy(Sderiv_rhs1, Sderiv_rhs1_cpu);
 
-        ddc::for_each(
-                ddc::policies::policy(exec_space),
+        ddc::parallel_for_each(
+                ExecSpace(),
                 Sderiv_rhs.domain(),
                 KOKKOS_LAMBDA(
                         typename decltype(Sderiv_rhs.domain())::discrete_element_type const e) {
@@ -337,8 +336,8 @@ static void BatchedSplineTest()
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
-    ddc::for_each(
-            ddc::policies::policy(exec_space),
+    ddc::parallel_for_each(
+            ExecSpace(),
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
 

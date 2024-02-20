@@ -97,7 +97,7 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
     - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1.2.0
+      uses: jlumbroso/free-disk-space@v1.3.1
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4
@@ -187,7 +187,7 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
     - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1.2.0
+      uses: jlumbroso/free-disk-space@v1.3.1
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4

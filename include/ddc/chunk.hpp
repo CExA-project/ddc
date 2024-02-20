@@ -109,7 +109,7 @@ public:
             Allocator allocator = Allocator())
         : Chunk(chunk_span.domain(), std::move(allocator))
     {
-        deepcopy(span_view(), chunk_span);
+        parallel_deepcopy(span_view(), chunk_span);
     }
 
     /// Deleted: use deepcopy instead

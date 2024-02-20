@@ -201,7 +201,7 @@ int main(int argc, char** argv)
 
     //! [initial output]
     // display the initial data
-    ddc::deepcopy(_host_temp, _last_temp);
+    ddc::parallel_deepcopy(_host_temp, _last_temp);
     display(ddc::coordinate(time_domain.front()),
             _host_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
@@ -274,7 +274,7 @@ int main(int argc, char** argv)
         //! [output]
         if (iter - last_output >= t_output_period) {
             last_output = iter;
-            ddc::deepcopy(_host_temp, _last_temp);
+            ddc::parallel_deepcopy(_host_temp, _last_temp);
             display(ddc::coordinate(iter),
                     _host_temp[x_domain][y_domain]);
         }
@@ -288,7 +288,7 @@ int main(int argc, char** argv)
 
     //! [final output]
     if (last_output < time_domain.back()) {
-        ddc::deepcopy(_host_temp, _last_temp);
+        ddc::parallel_deepcopy(_host_temp, _last_temp);
         display(ddc::coordinate(time_domain.back()),
                 _host_temp[x_domain][y_domain]);
     }

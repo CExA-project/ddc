@@ -231,7 +231,7 @@ static void BatchedSplineTest()
     evaluator(vals1_cpu);
     ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals1 = vals1_alloc.span_view();
-    ddc::deepcopy(vals1, vals1_cpu);
+    ddc::parallel_deepcopy(vals1, vals1_cpu);
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
@@ -256,7 +256,7 @@ static void BatchedSplineTest()
         }
         ddc::Chunk Sderiv_lhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv_lhs1 = Sderiv_lhs1_alloc.span_view();
-        ddc::deepcopy(Sderiv_lhs1, Sderiv_lhs1_cpu);
+        ddc::parallel_deepcopy(Sderiv_lhs1, Sderiv_lhs1_cpu);
         ddc::parallel_for_each(
                 exec_space,
                 Sderiv_lhs.domain(),
@@ -277,7 +277,7 @@ static void BatchedSplineTest()
         }
         ddc::Chunk Sderiv_rhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
         ddc::ChunkSpan Sderiv_rhs1 = Sderiv_rhs1_alloc.span_view();
-        ddc::deepcopy(Sderiv_rhs1, Sderiv_rhs1_cpu);
+        ddc::parallel_deepcopy(Sderiv_rhs1, Sderiv_rhs1_cpu);
 
         ddc::parallel_for_each(
                 exec_space,

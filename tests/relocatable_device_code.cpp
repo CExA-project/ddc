@@ -20,7 +20,7 @@ std::pair<ddc::Coordinate<rdc::DimX>, ddc::Coordinate<rdc::DimX>> read_from_devi
             dom_x.take_last(rdc::DVectX(1)),
             KOKKOS_LAMBDA(rdc::DElemX const ix) { array(ix) = ddc::step<rdc::DDimX>(); });
     ddc::Chunk allocation_h(dom_x, ddc::HostAllocator<double>());
-    ddc::deepcopy(allocation_h, allocation_d);
+    ddc::parallel_deepcopy(allocation_h, allocation_d);
     return std::pair<
             ddc::Coordinate<rdc::DimX>,
             ddc::Coordinate<rdc::DimX>>(allocation_h(rdc::DElemX(0)), allocation_h(rdc::DElemX(1)));

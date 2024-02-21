@@ -243,7 +243,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
     // 3. Compute values of aforementioned B-splines
     double xx, temp, saved;
     values[0] = 1.0;
-    for (std::size_t j = 1; j < deg + 1; ++j) {
+    for (std::size_t j = 1; j < Size; ++j) {
         xx = -offset;
         saved = 0.0;
         for (std::size_t r = 0; r < j; ++r) {

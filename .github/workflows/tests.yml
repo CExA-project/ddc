@@ -146,7 +146,7 @@ jobs:
           ;;
           esac
           cmake \
-            -DBUILD_BENCHMARKS=ON \
+            -DDDC_BUILD_BENCHMARKS=ON \
             -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
             -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -DMDSPAN_CXX_STANDARD=${{matrix.cxx_version}} \
@@ -209,7 +209,7 @@ jobs:
         cmake \
         -DCMAKE_CXX_COMPILER=clang++ \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-        -DBUILD_BENCHMARKS=ON \
+        -DDDC_BUILD_BENCHMARKS=ON \
         -DBUILD_TESTING=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_STANDARD=17 \

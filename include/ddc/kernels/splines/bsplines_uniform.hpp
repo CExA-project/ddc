@@ -230,7 +230,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
         Impl<MemorySpace>::eval_basis(
                 std::array<double, Size>& values,
                 ddc::Coordinate<Tag> const& x,
-                std::size_t const deg) const
+                [[maybe_unused]] std::size_t const deg) const
 {
     assert(values.size() == deg + 1);
 

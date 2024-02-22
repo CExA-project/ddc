@@ -78,7 +78,7 @@ jobs:
           export CC=clang
           export CXX=clang++
           cmake \
-              -DBUILD_DOCUMENTATION=ON \
+              -DDDC_BUILD_DOCUMENTATION=ON \
               -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
               -DCMAKE_CXX_STANDARD=20 \
               -DMDSPAN_CXX_STANDARD=20 \

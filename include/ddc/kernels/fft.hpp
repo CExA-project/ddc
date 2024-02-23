@@ -371,7 +371,7 @@ void core(
             = {(int)ddc::get<ddc::UniformPointSampling<X>>(mesh.extents())...};
     int idist = 1;
     int odist = 1;
-    for (size_t i = 0; i < sizeof...(X); i++) {
+    for (std::size_t i = 0; i < sizeof...(X); i++) {
         idist = transform_type_v<Tin, Tout> == TransformType::C2R && i == sizeof...(X) - 1
                         ? idist * (n[i] / 2 + 1)
                         : idist * n[i];

@@ -60,7 +60,8 @@ std::ostream& print_2DChunk(
 
 int main()
 {
-    ddc::ScopeGuard scope;
+    Kokkos::ScopeGuard const kokkos_scope;
+    ddc::ScopeGuard const ddc_scope;
 
     ddc::DiscreteDomain<DDimX, DDimY> const domain_xy(
             ddc::DiscreteElement<DDimX, DDimY>(0, 0),

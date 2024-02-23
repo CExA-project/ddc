@@ -224,7 +224,8 @@ int main(int argc, char** argv)
         return 1;
     }
     {
-        ddc::ScopeGuard const guard;
+        Kokkos::ScopeGuard const kokkos_scope(argc, argv);
+        ddc::ScopeGuard const ddc_scope(argc, argv);
         ::benchmark::RunSpecifiedBenchmarks();
     }
     ::benchmark::Shutdown();

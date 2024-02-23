@@ -25,7 +25,7 @@ static constexpr PDI_inout_t chunk_default_access_v = is_writable_chunk_v<T> ? P
 
 class PdiEvent
 {
-    std::string m_event;
+    std::string m_event_name;
 
     std::vector<std::string> m_names;
 
@@ -33,7 +33,7 @@ class PdiEvent
     std::pmr::monotonic_buffer_resource m_metadata;
 
 public:
-    explicit PdiEvent(std::string const& event_name) : m_event(event_name) {}
+    explicit PdiEvent(std::string const& event_name) : m_event_name(event_name) {}
 
     /// @{
     /// API with access argument
@@ -123,7 +123,7 @@ public:
 
     ~PdiEvent()
     {
-        PDI_event(m_event.c_str());
+        PDI_event(m_event_name.c_str());
         for (std::string const& one_name : m_names) {
             PDI_reclaim(one_name.c_str());
         }

@@ -33,7 +33,7 @@ class PdiEvent
     std::pmr::monotonic_buffer_resource m_metadata;
 
 public:
-    PdiEvent(std::string const& event_name) : m_event(event_name) {}
+    explicit PdiEvent(std::string const& event_name) : m_event(event_name) {}
 
     /// @{
     /// API with access argument

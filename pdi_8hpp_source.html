@@ -96,13 +96,13 @@ $(document).ready(function(){initNavTree('pdi_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                !(access &amp; PDI_IN) || (chunk_default_access_v&lt;BorrowedChunk&gt; &amp; PDI_IN),</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                <span class="stringliteral">&quot;Invalid access for constant data&quot;</span>);</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keyword">auto</span> extents = detail::array(data.domain().extents());</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        size_t&amp; rank = *std::pmr::polymorphic_allocator&lt;size_t&gt;(&amp;m_metadata).allocate(1);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        std::size_t&amp; rank = *std::pmr::polymorphic_allocator&lt;std::size_t&gt;(&amp;m_metadata).allocate(1);</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        rank = extents.size();</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        PDI_share((name + <span class="stringliteral">&quot;_rank&quot;</span>).c_str(), &amp;rank, PDI_OUT);</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        m_names.push_back(name + <span class="stringliteral">&quot;_rank&quot;</span>);</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        PDI_share(</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                (name + <span class="stringliteral">&quot;_extents&quot;</span>).c_str(),</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                std::pmr::vector&lt;size_t&gt;(extents.begin(), extents.end(), &amp;m_metadata).data(),</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                std::pmr::vector&lt;std::size_t&gt;(extents.begin(), extents.end(), &amp;m_metadata).data(),</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                PDI_OUT);</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        m_names.push_back(name + <span class="stringliteral">&quot;_extents&quot;</span>);</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        PDI_share(</div>
@@ -190,8 +190,7 @@ $(document).ready(function(){initNavTree('pdi_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <a class="code hl_class" href="classddc_1_1PdiEvent.html">PdiEvent</a><a class="code hl_function" href="classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258">(</a>name<a class="code hl_function" href="classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258">)</a>.with(name, std::forward&lt;DataType&gt;(data));</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>}</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1PdiEvent_html"><div class="ttname"><a href="classddc_1_1PdiEvent.html">ddc::PdiEvent</a></div><div class="ttdef"><b>Definition:</b> pdi.hpp:27</div></div>
 <div class="ttc" id="aclassddc_1_1PdiEvent_html_a2ccd8ca0c860ee77f9a62ce17354bbcd"><div class="ttname"><a href="classddc_1_1PdiEvent.html#a2ccd8ca0c860ee77f9a62ce17354bbcd">ddc::PdiEvent::and_with</a></div><div class="ttdeci">PdiEvent &amp; and_with(std::string const &amp;name, T &amp;&amp;t)</div><div class="ttdoc">With synonym.</div><div class="ttdef"><b>Definition:</b> pdi.hpp:117</div></div>
 <div class="ttc" id="aclassddc_1_1PdiEvent_html_a3d8e467ce0fc1b1d74795836e50775e3"><div class="ttname"><a href="classddc_1_1PdiEvent.html#a3d8e467ce0fc1b1d74795836e50775e3">ddc::PdiEvent::and_with</a></div><div class="ttdeci">PdiEvent &amp; and_with(std::string const &amp;name, T &amp;&amp;t)</div><div class="ttdef"><b>Definition:</b> pdi.hpp:90</div></div>

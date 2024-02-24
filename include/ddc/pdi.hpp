@@ -35,6 +35,22 @@ class PdiEvent
 public:
     explicit PdiEvent(std::string const& event_name) : m_event_name(event_name) {}
 
+    PdiEvent(PdiEvent const& rhs) = delete;
+
+    PdiEvent(PdiEvent&& rhs) noexcept = delete;
+
+    ~PdiEvent() noexcept
+    {
+        PDI_event(m_event_name.c_str());
+        for (std::string const& one_name : m_names) {
+            PDI_reclaim(one_name.c_str());
+        }
+    }
+
+    PdiEvent& operator=(PdiEvent const& rhs) = delete;
+
+    PdiEvent& operator=(PdiEvent&& rhs) noexcept = delete;
+
     /// @{
     /// API with access argument
 
@@ -120,14 +136,6 @@ public:
     }
 
     /// @}
-
-    ~PdiEvent()
-    {
-        PDI_event(m_event_name.c_str());
-        for (std::string const& one_name : m_names) {
-            PDI_reclaim(one_name.c_str());
-        }
-    }
 };
 
 template <PDI_inout_t access, class DataType>

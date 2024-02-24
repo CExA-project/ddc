@@ -54,8 +54,16 @@ $(document).ready(function(){initNavTree('classddc_1_1PdiEvent.html',''); initRe
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa694ad4ce4952cade218bfa994f98258"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258">PdiEvent</a> (std::string const &amp;event_name)</td></tr>
 <tr class="separator:aa694ad4ce4952cade218bfa994f98258"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7359d16983d6fe60678e3f98c9293cf7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#a7359d16983d6fe60678e3f98c9293cf7">~PdiEvent</a> ()</td></tr>
-<tr class="separator:a7359d16983d6fe60678e3f98c9293cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e12cf2d5971fa856d8abda63f9c56f8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#a1e12cf2d5971fa856d8abda63f9c56f8">PdiEvent</a> (<a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> const &amp;rhs)=delete</td></tr>
+<tr class="separator:a1e12cf2d5971fa856d8abda63f9c56f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2227852b65ab74db0de2ca2aae6d304"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#af2227852b65ab74db0de2ca2aae6d304">PdiEvent</a> (<a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&amp;rhs) noexcept=delete</td></tr>
+<tr class="separator:af2227852b65ab74db0de2ca2aae6d304"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a515f802992d76072a6933e3185b5ae95"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#a515f802992d76072a6933e3185b5ae95">~PdiEvent</a> () noexcept</td></tr>
+<tr class="separator:a515f802992d76072a6933e3185b5ae95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53df67a1b132b4127377b4810d76d0e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#a53df67a1b132b4127377b4810d76d0e1">operator=</a> (<a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> const &amp;rhs)=delete</td></tr>
+<tr class="separator:a53df67a1b132b4127377b4810d76d0e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d05bd0db8022f1c59e9b92cdbb60855"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#a4d05bd0db8022f1c59e9b92cdbb60855">operator=</a> (<a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&amp;rhs) noexcept=delete</td></tr>
+<tr class="separator:a4d05bd0db8022f1c59e9b92cdbb60855"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr class="memitem:ada4058655f4cadaf359894d0a544d3b8"><td class="memTemplParams" colspan="2">template&lt;PDI_inout_t access, class BorrowedChunk , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a00ef862a4d77c604c3818f628e134a55">is_borrowed_chunk_v</a>&lt; BorrowedChunk &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:ada4058655f4cadaf359894d0a544d3b8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1PdiEvent.html#ada4058655f4cadaf359894d0a544d3b8">with</a> (std::string const &amp;name, BorrowedChunk &amp;&amp;data)</td></tr>
@@ -82,7 +90,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa694ad4ce4952cade218bfa994f98258" name="aa694ad4ce4952cade218bfa994f98258"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa694ad4ce4952cade218bfa994f98258">&#9670;&nbsp;</a></span>PdiEvent()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa694ad4ce4952cade218bfa994f98258">&#9670;&nbsp;</a></span>PdiEvent() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -100,15 +108,67 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a7359d16983d6fe60678e3f98c9293cf7" name="a7359d16983d6fe60678e3f98c9293cf7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7359d16983d6fe60678e3f98c9293cf7">&#9670;&nbsp;</a></span>~PdiEvent()</h2>
+<a id="a1e12cf2d5971fa856d8abda63f9c56f8" name="a1e12cf2d5971fa856d8abda63f9c56f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e12cf2d5971fa856d8abda63f9c56f8">&#9670;&nbsp;</a></span>PdiEvent() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ddc::PdiEvent::PdiEvent </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> const &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af2227852b65ab74db0de2ca2aae6d304" name="af2227852b65ab74db0de2ca2aae6d304"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2227852b65ab74db0de2ca2aae6d304">&#9670;&nbsp;</a></span>PdiEvent() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ddc::PdiEvent::PdiEvent </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a515f802992d76072a6933e3185b5ae95" name="a515f802992d76072a6933e3185b5ae95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a515f802992d76072a6933e3185b5ae95">&#9670;&nbsp;</a></span>~PdiEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -125,7 +185,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -133,6 +193,58 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a53df67a1b132b4127377b4810d76d0e1" name="a53df67a1b132b4127377b4810d76d0e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53df67a1b132b4127377b4810d76d0e1">&#9670;&nbsp;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp; ddc::PdiEvent::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> const &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4d05bd0db8022f1c59e9b92cdbb60855" name="a4d05bd0db8022f1c59e9b92cdbb60855"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d05bd0db8022f1c59e9b92cdbb60855">&#9670;&nbsp;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp; ddc::PdiEvent::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1PdiEvent.html">PdiEvent</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ada4058655f4cadaf359894d0a544d3b8" name="ada4058655f4cadaf359894d0a544d3b8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ada4058655f4cadaf359894d0a544d3b8">&#9670;&nbsp;</a></span>with() <span class="overload">[1/4]</span></h2>
 

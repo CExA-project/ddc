@@ -100,7 +100,7 @@ endif()
 ## CUDA + CUDAToolkit
 if("${DDC_BUILD_KERNELS_FFT}" AND "${Kokkos_ENABLE_CUDA}")
 	find_package( CUDAToolkit MODULE REQUIRED )
-	if( NOT(CUDAToolkit_FOUND) ) 
+	if( NOT(CUDAToolkit_FOUND) )
 	  message(FATAL_ERROR "CUDAToolkit not found." )
 	endif()
 endif()
@@ -213,26 +213,26 @@ install(
 
 # Link library to DDC
 
-if( FFTW_FOUND ) 
+if( FFTW_FOUND )
 	target_link_libraries( DDC INTERFACE FFTW::Float )
 	target_link_libraries( DDC INTERFACE FFTW::Double )
 	target_compile_definitions(DDC INTERFACE fftw_AVAIL)
 endif()
 
-if( FFTW_FOUND AND "${Kokkos_ENABLE_OPENMP}") 
+if( FFTW_FOUND AND "${Kokkos_ENABLE_OPENMP}")
 	target_link_libraries( DDC INTERFACE FFTW::FloatOpenMP )
 	target_link_libraries( DDC INTERFACE FFTW::DoubleOpenMP )
 	target_compile_definitions(DDC INTERFACE fftw_omp_AVAIL)
 endif()
 
-if( CUDAToolkit_FOUND ) 
-	target_link_libraries( DDC INTERFACE CUDA::cufft )	
+if( CUDAToolkit_FOUND )
+	target_link_libraries( DDC INTERFACE CUDA::cufft )
 	target_compile_definitions(DDC INTERFACE cufft_AVAIL)
 endif()
 
 if("${Kokkos_ENABLE_HIP}")
 	find_package( hipfft REQUIRED ) # Not compatible with nvidia
-	target_link_libraries( DDC INTERFACE hip::hipfft )	
+	target_link_libraries( DDC INTERFACE hip::hipfft )
 	target_compile_definitions(DDC INTERFACE hipfft_AVAIL)
 endif()
 

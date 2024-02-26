@@ -172,12 +172,12 @@ inline void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexce
  */
 template <class ExecSpace, class... DDims, class Functor>
 inline void parallel_for_each(
-        ExecSpace&& execution_space,
+        ExecSpace const& execution_space,
         DiscreteDomain<DDims...> const& domain,
         Functor&& f) noexcept
 {
     detail::for_each_kokkos(
-            std::forward<ExecSpace>(execution_space),
+            execution_space,
             domain,
             std::forward<Functor>(f));
 }

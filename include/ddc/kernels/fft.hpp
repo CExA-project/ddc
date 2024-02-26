@@ -351,7 +351,7 @@ double b(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh)
 // core
 template <typename Tin, typename Tout, typename ExecSpace, typename MemorySpace, typename... X>
 void core(
-        ExecSpace& execSpace,
+        ExecSpace const& execSpace,
         Tout* out_data,
         Tin* in_data,
         ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> mesh,
@@ -637,7 +637,7 @@ template <
         typename layout_in,
         typename layout_out>
 void fft(
-        ExecSpace execSpace,
+        ExecSpace const& execSpace,
         ddc::ChunkSpan<
                 Tout,
                 ddc::DiscreteDomain<ddc::PeriodicSampling<ddc::Fourier<X>>...>,
@@ -675,7 +675,7 @@ template <
         typename layout_in,
         typename layout_out>
 void ifft(
-        ExecSpace execSpace,
+        ExecSpace const& execSpace,
         ddc::ChunkSpan<
                 Tout,
                 ddc::DiscreteDomain<ddc::UniformPointSampling<X>...>,

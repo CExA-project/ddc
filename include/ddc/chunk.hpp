@@ -256,10 +256,10 @@ public:
         return base_type::allocation_mdspan();
     }
 
-    /** Provide a mdspan on the memory allocation
-     * @return allocation mdspan
+    /** Provide an unmanaged `Kokkos::View` on the memory allocation
+     * @return allocation `Kokkos::View`
      */
-    constexpr auto allocation_kokkos_view()
+    auto allocation_kokkos_view()
     {
         auto s = this->allocation_mdspan();
         auto kokkos_layout = detail::build_kokkos_layout(
@@ -272,10 +272,10 @@ public:
                 typename Allocator::memory_space>(s.data_handle(), kokkos_layout);
     }
 
-    /** Provide a mdspan on the memory allocation
-     * @return allocation mdspan
+    /** Provide an unmanaged `Kokkos::View` on the memory allocation
+     * @return read-only allocation `Kokkos::View`
      */
-    constexpr auto allocation_kokkos_view() const
+    auto allocation_kokkos_view() const
     {
         auto s = this->allocation_mdspan();
         auto kokkos_layout = detail::build_kokkos_layout(

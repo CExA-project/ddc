@@ -408,10 +408,14 @@ Functions</h2></td></tr>
 <tr class="memitem:ab1493964ffd857dda950653e78ec824d"><td class="memTemplParams" colspan="2">template&lt;class Head , class... Tags&gt; </td></tr>
 <tr class="memitem:ab1493964ffd857dda950653e78ec824d"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab1493964ffd857dda950653e78ec824d">operator&lt;&lt;</a> (std::ostream &amp;out, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; Head, Tags... &gt; const &amp;arr)</td></tr>
 <tr class="separator:ab1493964ffd857dda950653e78ec824d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7f23095ba5b91c742e04d4a9b6994e9"><td class="memTemplParams" colspan="2">template&lt;class ChunkDst , class T &gt; </td></tr>
-<tr class="memitem:ad7f23095ba5b91c742e04d4a9b6994e9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad7f23095ba5b91c742e04d4a9b6994e9">fill</a> (ChunkDst &amp;&amp;dst, T const &amp;value)</td></tr>
-<tr class="memdesc:ad7f23095ba5b91c742e04d4a9b6994e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a borrowed chunk with a given value.  <a href="namespaceddc.html#ad7f23095ba5b91c742e04d4a9b6994e9">More...</a><br /></td></tr>
-<tr class="separator:ad7f23095ba5b91c742e04d4a9b6994e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9818f50e1b95ec461586abacca9b4819"><td class="memTemplParams" colspan="2">template&lt;class ChunkDst , class T &gt; </td></tr>
+<tr class="memitem:a9818f50e1b95ec461586abacca9b4819"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9818f50e1b95ec461586abacca9b4819">parallel_fill</a> (ChunkDst &amp;&amp;dst, T const &amp;value)</td></tr>
+<tr class="memdesc:a9818f50e1b95ec461586abacca9b4819"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a borrowed chunk with a given value.  <a href="namespaceddc.html#a9818f50e1b95ec461586abacca9b4819">More...</a><br /></td></tr>
+<tr class="separator:a9818f50e1b95ec461586abacca9b4819"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c253d54d0b7c769c0e789d6eabf5f55"><td class="memTemplParams" colspan="2">template&lt;class ExecSpace , class ChunkDst , class T &gt; </td></tr>
+<tr class="memitem:a0c253d54d0b7c769c0e789d6eabf5f55"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a0c253d54d0b7c769c0e789d6eabf5f55">parallel_fill</a> (ExecSpace const &amp;execution_space, ChunkDst &amp;&amp;dst, T const &amp;value)</td></tr>
+<tr class="memdesc:a0c253d54d0b7c769c0e789d6eabf5f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a borrowed chunk with a given value.  <a href="namespaceddc.html#a0c253d54d0b7c769c0e789d6eabf5f55">More...</a><br /></td></tr>
+<tr class="separator:a0c253d54d0b7c769c0e789d6eabf5f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a580afa45261b42925af30519dca3c0bf"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class Functor &gt; </td></tr>
 <tr class="memitem:a580afa45261b42925af30519dca3c0bf"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a580afa45261b42925af30519dca3c0bf">for_each</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
 <tr class="memdesc:a580afa45261b42925af30519dca3c0bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain in serial  <a href="namespaceddc.html#a580afa45261b42925af30519dca3c0bf">More...</a><br /></td></tr>
@@ -3220,8 +3224,8 @@ template&lt;class Head , class... Tags&gt; </div>
 
 </div>
 </div>
-<a id="ad7f23095ba5b91c742e04d4a9b6994e9" name="ad7f23095ba5b91c742e04d4a9b6994e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7f23095ba5b91c742e04d4a9b6994e9">&#9670;&nbsp;</a></span>fill()</h2>
+<a id="a9818f50e1b95ec461586abacca9b4819" name="a9818f50e1b95ec461586abacca9b4819"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9818f50e1b95ec461586abacca9b4819">&#9670;&nbsp;</a></span>parallel_fill() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3229,7 +3233,7 @@ template&lt;class Head , class... Tags&gt; </div>
 template&lt;class ChunkDst , class T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">auto ddc::fill </td>
+          <td class="memname">auto ddc::parallel_fill </td>
           <td>(</td>
           <td class="paramtype">ChunkDst &amp;&amp;&#160;</td>
           <td class="paramname"><em>dst</em>, </td>
@@ -3251,6 +3255,53 @@ template&lt;class ChunkDst , class T &gt; </div>
 <p>Fill a borrowed chunk with a given value. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">dst</td><td>the borrowed chunk in which to copy </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>the value to fill <code>dst</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> </dd></dl>
+
+</div>
+</div>
+<a id="a0c253d54d0b7c769c0e789d6eabf5f55" name="a0c253d54d0b7c769c0e789d6eabf5f55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c253d54d0b7c769c0e789d6eabf5f55">&#9670;&nbsp;</a></span>parallel_fill() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ExecSpace , class ChunkDst , class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ddc::parallel_fill </td>
+          <td>(</td>
+          <td class="paramtype">ExecSpace const &amp;&#160;</td>
+          <td class="paramname"><em>execution_space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ChunkDst &amp;&amp;&#160;</td>
+          <td class="paramname"><em>dst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T const &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fill a borrowed chunk with a given value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">execution_space</td><td>a Kokkos execution space where the loop will be executed on </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">dst</td><td>the borrowed chunk in which to copy </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>the value to fill <code>dst</code> </td></tr>
   </table>

@@ -287,7 +287,7 @@ static void Batched2dSplineTest()
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
     ddc::parallel_for_each(
-            ExecSpace(),
+            exec_space,
             vals.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
@@ -321,7 +321,7 @@ static void Batched2dSplineTest()
         ddc::deepcopy(Sderiv1_lhs1, Sderiv1_lhs1_cpu);
 
         ddc::parallel_for_each(
-                ExecSpace(),
+                exec_space,
                 Sderiv1_lhs.domain(),
                 KOKKOS_LAMBDA(
                         typename decltype(Sderiv1_lhs.domain())::discrete_element_type const e) {
@@ -354,7 +354,7 @@ static void Batched2dSplineTest()
         ddc::deepcopy(Sderiv1_rhs1, Sderiv1_rhs1_cpu);
 
         ddc::parallel_for_each(
-                ExecSpace(),
+                exec_space,
                 Sderiv1_rhs.domain(),
                 KOKKOS_LAMBDA(
                         typename decltype(Sderiv1_rhs.domain())::discrete_element_type const e) {
@@ -388,7 +388,7 @@ static void Batched2dSplineTest()
         ddc::deepcopy(Sderiv2_lhs1, Sderiv2_lhs1_cpu);
 
         ddc::parallel_for_each(
-                ExecSpace(),
+                exec_space,
                 Sderiv2_lhs.domain(),
                 KOKKOS_LAMBDA(
                         typename decltype(Sderiv2_lhs.domain())::discrete_element_type const e) {
@@ -422,7 +422,7 @@ static void Batched2dSplineTest()
         ddc::deepcopy(Sderiv2_rhs1, Sderiv2_rhs1_cpu);
 
         ddc::parallel_for_each(
-                ExecSpace(),
+                exec_space,
                 Sderiv2_rhs.domain(),
                 KOKKOS_LAMBDA(
                         typename decltype(Sderiv2_rhs.domain())::discrete_element_type const e) {
@@ -491,7 +491,7 @@ static void Batched2dSplineTest()
         ddc::deepcopy(Sderiv_mixed_rhs_rhs1, Sderiv_mixed_rhs_rhs1_cpu);
 
         ddc::parallel_for_each(
-                ExecSpace(),
+                exec_space,
                 dom_derivs,
                 KOKKOS_LAMBDA(typename decltype(dom_derivs)::discrete_element_type const e) {
                     Sderiv_mixed_lhs_lhs(e)
@@ -565,7 +565,7 @@ static void Batched2dSplineTest()
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
     ddc::parallel_for_each(
-            ExecSpace(),
+            exec_space,
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);

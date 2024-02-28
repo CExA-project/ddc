@@ -593,16 +593,16 @@ static void Batched2dSplineTest()
             I2>(spline_eval_deriv12, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors (we recover the initial values)
-    double max_norm_error = ddc::transform_reduce(
-            ddc::policies::policy(exec_space),
+    double max_norm_error = ddc::parallel_transform_reduce(
+            exec_space,
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
-    double max_norm_error_diff1 = ddc::transform_reduce(
-            ddc::policies::policy(exec_space),
+    double max_norm_error_diff1 = ddc::parallel_transform_reduce(
+            exec_space,
             spline_eval_deriv1.domain(),
             0.,
             ddc::reducer::max<double>(),
@@ -611,8 +611,8 @@ static void Batched2dSplineTest()
                 Coord<I2> const y = ddc::coordinate(ddc::select<IDim<I2, I1, I2>>(e));
                 return Kokkos::abs(spline_eval_deriv1(e) - evaluator.deriv(x, y, 1, 0));
             });
-    double max_norm_error_diff2 = ddc::transform_reduce(
-            ddc::policies::policy(exec_space),
+    double max_norm_error_diff2 = ddc::parallel_transform_reduce(
+            exec_space,
             spline_eval_deriv2.domain(),
             0.,
             ddc::reducer::max<double>(),
@@ -621,8 +621,8 @@ static void Batched2dSplineTest()
                 Coord<I2> const y = ddc::coordinate(ddc::select<IDim<I2, I1, I2>>(e));
                 return Kokkos::abs(spline_eval_deriv2(e) - evaluator.deriv(x, y, 0, 1));
             });
-    double max_norm_error_diff12 = ddc::transform_reduce(
-            ddc::policies::policy(exec_space),
+    double max_norm_error_diff12 = ddc::parallel_transform_reduce(
+            exec_space,
             spline_eval_deriv1.domain(),
             0.,
             ddc::reducer::max<double>(),

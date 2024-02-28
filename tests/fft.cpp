@@ -132,7 +132,7 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
 
     ddc::Chunk f_alloc = ddc::Chunk(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan const f = f_alloc.span_view();
-    ddc::fill(f, Tin(1));
+    ddc::parallel_fill(f, Tin(1));
 
     ddc::Chunk f_bis_alloc(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan const f_bis = f_bis_alloc.span_view();

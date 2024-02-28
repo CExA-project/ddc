@@ -635,7 +635,7 @@ TEST(Chunk3DTest, AccessFromDiscreteElements)
 TEST(Chunk2DTest, Mirror)
 {
     ChunkXY<double> chunk(dom_x_y);
-    ddc::fill(chunk, 1.4);
+    ddc::parallel_fill(chunk, 1.4);
     auto const chunk2 = ddc::create_mirror_and_copy(chunk.span_cview());
     for (auto&& ix : chunk.domain<DDimX>()) {
         for (auto&& iy : chunk.domain<DDimY>()) {

@@ -71,7 +71,8 @@ void display(double time, ChunkType temp)
 //! [main-start]
 int main(int argc, char** argv)
 {
-    ddc::ScopeGuard scope(argc, argv);
+    Kokkos::ScopeGuard const kokkos_scope(argc, argv);
+    ddc::ScopeGuard const ddc_scope(argc, argv);
 
     // some parameters that would typically be read from some form of
     // configuration file in a more realistic code

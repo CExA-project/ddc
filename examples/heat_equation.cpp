@@ -87,7 +87,8 @@ int main(int argc, char** argv)
     auto pdi_conf = PC_parse_string("");
     PDI_init(pdi_conf);
 #endif
-    ddc::ScopeGuard scope(argc, argv);
+    Kokkos::ScopeGuard const kokkos_scope(argc, argv);
+    ddc::ScopeGuard const ddc_scope(argc, argv);
 
     // some parameters that would typically be read from some form of
     // configuration file in a more realistic code

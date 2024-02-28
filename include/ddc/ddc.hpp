@@ -30,7 +30,6 @@
 #include "ddc/for_each.hpp"
 #include "ddc/mirror.hpp"
 #include "ddc/parallel_for_each.hpp"
-#include "ddc/policy.hpp"
 #include "ddc/reducer.hpp"
 #include "ddc/transform_reduce.hpp"
 

@@ -100,7 +100,7 @@ public:
         }
 
         /** Constructs a BSpline basis with n equidistant knots over \f$[a, b]\f$
-         * 
+         *
          * @param rmin    the real ddc::coordinate of the first knot
          * @param rmax    the real ddc::coordinate of the last knot
          * @param n_knots the number of knots

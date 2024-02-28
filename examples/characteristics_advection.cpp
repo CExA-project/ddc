@@ -46,7 +46,7 @@ using DDimT = ddc::UniformPointSampling<T>;
 //! [time-space]
 
 //! [display]
-/** A function to pretty print the density 
+/** A function to pretty print the density
  * @param time the time at which the output is made
  * @param density the density at this time-step
  */

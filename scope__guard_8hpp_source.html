@@ -53,58 +53,54 @@ $(document).ready(function(){initNavTree('scope__guard_8hpp_source.html',''); in
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">optional</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">string</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">Kokkos_Core</span><span class="preprocessor">.</span><span class="preprocessor">hpp</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;discrete_space.hpp&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;discrete_space.hpp&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">class</span> <a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    Kokkos::ScopeGuard m_kokkos_scope_guard;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordtype">void</span> discretization_store_initialization() <span class="keyword">const</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        detail::g_discretization_store</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>                = std::make_optional&lt;std::map&lt;std::string, std::function&lt;<span class="keywordtype">void</span>()&gt;&gt;&gt;();</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    }</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <a class="code hl_function" href="classddc_1_1ScopeGuard.html#a9a7d76fc84478af776f04591d12e47e0">ScopeGuard</a>()</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        discretization_store_initialization();</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    }</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <a class="code hl_function" href="classddc_1_1ScopeGuard.html#a5221eff702ea6f945121fb4bc181dd49">ScopeGuard</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>**&amp; argv) : m_kokkos_scope_guard(argc, argv)</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        discretization_store_initialization();</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    }</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">class</span> <a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>{</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keywordtype">void</span> discretization_store_initialization() <span class="keyword">const</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        detail::g_discretization_store</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>                = std::make_optional&lt;std::map&lt;std::string, std::function&lt;<span class="keywordtype">void</span>()&gt;&gt;&gt;();</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    }</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <a class="code hl_function" href="classddc_1_1ScopeGuard.html#a9a7d76fc84478af776f04591d12e47e0">ScopeGuard</a>()</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        discretization_store_initialization();</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    }</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <a class="code hl_function" href="classddc_1_1ScopeGuard.html#a5221eff702ea6f945121fb4bc181dd49">ScopeGuard</a>([[<a class="code hl_function" href="classddc_1_1ScopeGuard.html#a5221eff702ea6f945121fb4bc181dd49">maybe_unused</a>]] <span class="keywordtype">int</span> argc, [[<a class="code hl_function" href="classddc_1_1ScopeGuard.html#a5221eff702ea6f945121fb4bc181dd49">maybe_unused</a>]] <span class="keywordtype">char</span>**&amp; argv)</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        discretization_store_initialization();</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_function" href="classddc_1_1ScopeGuard.html#af3c8c95b03b92ef6606d35bed99fbbd8">ScopeGuard</a>(<a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a> <span class="keyword">const</span>&amp; x) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <a class="code hl_function" href="classddc_1_1ScopeGuard.html#a54fe4cdf8ea05d86c624af28707e526a">ScopeGuard</a>(<a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a>&amp;&amp; x) <span class="keyword">noexcept</span> = <span class="keyword">delete</span>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <a class="code hl_function" href="classddc_1_1ScopeGuard.html#af3c8c95b03b92ef6606d35bed99fbbd8">ScopeGuard</a>(<a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a> <span class="keyword">const</span>&amp; x) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <a class="code hl_function" href="classddc_1_1ScopeGuard.html#a54fe4cdf8ea05d86c624af28707e526a">ScopeGuard</a>(<a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a>&amp;&amp; x) <span class="keyword">noexcept</span> = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    ~<a class="code hl_function" href="classddc_1_1ScopeGuard.html#a22954ab7588823e92c0c236493bb2775">ScopeGuard</a>() <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; [name, fn] : *detail::g_discretization_store) {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            fn();</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        }</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        detail::g_discretization_store.reset();</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    }</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a>&amp; <a class="code hl_function" href="classddc_1_1ScopeGuard.html#a1e109514f8f55388d403caceb6abbdca">operator</a>=(<a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a> <span class="keyword">const</span>&amp; x) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a>&amp; <a class="code hl_function" href="classddc_1_1ScopeGuard.html#a88e613047210262f05bf24e045135d73">operator</a>=(<a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a>&amp;&amp; x) <span class="keyword">noexcept</span> = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>};</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>} <span class="comment">// namespace ddc</span></div>
-<div class="ttc" id="aclassddc_1_1ScopeGuard_html"><div class="ttname"><a href="classddc_1_1ScopeGuard.html">ddc::ScopeGuard</a></div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:15</div></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    ~<a class="code hl_function" href="classddc_1_1ScopeGuard.html#a22954ab7588823e92c0c236493bb2775">ScopeGuard</a>() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; [name, fn] : *detail::g_discretization_store) {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            fn();</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        }</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        detail::g_discretization_store.reset();</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a>&amp; <a class="code hl_function" href="classddc_1_1ScopeGuard.html#a1e109514f8f55388d403caceb6abbdca">operator</a>=(<a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a> <span class="keyword">const</span>&amp; x) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a>&amp; <a class="code hl_function" href="classddc_1_1ScopeGuard.html#a88e613047210262f05bf24e045135d73">operator</a>=(<a class="code hl_class" href="classddc_1_1ScopeGuard.html">ScopeGuard</a>&amp;&amp; x) <span class="keyword">noexcept</span> = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>} <span class="comment">// namespace ddc</span></div>
+<div class="ttc" id="aclassddc_1_1ScopeGuard_html"><div class="ttname"><a href="classddc_1_1ScopeGuard.html">ddc::ScopeGuard</a></div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:13</div></div>
 <div class="ttc" id="aclassddc_1_1ScopeGuard_html_a1e109514f8f55388d403caceb6abbdca"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a1e109514f8f55388d403caceb6abbdca">ddc::ScopeGuard::operator=</a></div><div class="ttdeci">ScopeGuard &amp; operator=(ScopeGuard const &amp;x)=delete</div></div>
-<div class="ttc" id="aclassddc_1_1ScopeGuard_html_a22954ab7588823e92c0c236493bb2775"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a22954ab7588823e92c0c236493bb2775">ddc::ScopeGuard::~ScopeGuard</a></div><div class="ttdeci">~ScopeGuard() noexcept</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:39</div></div>
-<div class="ttc" id="aclassddc_1_1ScopeGuard_html_a5221eff702ea6f945121fb4bc181dd49"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a5221eff702ea6f945121fb4bc181dd49">ddc::ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard(int argc, char **&amp;argv)</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:30</div></div>
+<div class="ttc" id="aclassddc_1_1ScopeGuard_html_a22954ab7588823e92c0c236493bb2775"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a22954ab7588823e92c0c236493bb2775">ddc::ScopeGuard::~ScopeGuard</a></div><div class="ttdeci">~ScopeGuard() noexcept</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:35</div></div>
+<div class="ttc" id="aclassddc_1_1ScopeGuard_html_a5221eff702ea6f945121fb4bc181dd49"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a5221eff702ea6f945121fb4bc181dd49">ddc::ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard(int argc, char **&amp;argv)</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:26</div></div>
 <div class="ttc" id="aclassddc_1_1ScopeGuard_html_a54fe4cdf8ea05d86c624af28707e526a"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a54fe4cdf8ea05d86c624af28707e526a">ddc::ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard(ScopeGuard &amp;&amp;x) noexcept=delete</div></div>
 <div class="ttc" id="aclassddc_1_1ScopeGuard_html_a88e613047210262f05bf24e045135d73"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a88e613047210262f05bf24e045135d73">ddc::ScopeGuard::operator=</a></div><div class="ttdeci">ScopeGuard &amp; operator=(ScopeGuard &amp;&amp;x) noexcept=delete</div></div>
-<div class="ttc" id="aclassddc_1_1ScopeGuard_html_a9a7d76fc84478af776f04591d12e47e0"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a9a7d76fc84478af776f04591d12e47e0">ddc::ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard()</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:25</div></div>
+<div class="ttc" id="aclassddc_1_1ScopeGuard_html_a9a7d76fc84478af776f04591d12e47e0"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#a9a7d76fc84478af776f04591d12e47e0">ddc::ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard()</div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:21</div></div>
 <div class="ttc" id="aclassddc_1_1ScopeGuard_html_af3c8c95b03b92ef6606d35bed99fbbd8"><div class="ttname"><a href="classddc_1_1ScopeGuard.html#af3c8c95b03b92ef6606d35bed99fbbd8">ddc::ScopeGuard::ScopeGuard</a></div><div class="ttdeci">ScopeGuard(ScopeGuard const &amp;x)=delete</div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:9</div></div>
 </div><!-- fragment --></div><!-- contents -->

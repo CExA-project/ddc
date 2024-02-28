@@ -116,7 +116,8 @@ Dimension X</h3>
 <div class="line">    <span class="keyword">auto</span> pdi_conf = PC_parse_string(<span class="stringliteral">&quot;&quot;</span>);</div>
 <div class="line">    PDI_init(pdi_conf);</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
-<div class="line">    <a class="code hl_class" href="classddc_1_1ScopeGuard.html">ddc::ScopeGuard</a> scope(argc, argv);</div>
+<div class="line">    Kokkos::ScopeGuard <span class="keyword">const</span> kokkos_scope(argc, argv);</div>
+<div class="line">    <a class="code hl_class" href="classddc_1_1ScopeGuard.html">ddc::ScopeGuard</a> <span class="keyword">const</span> ddc_scope(argc, argv);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// some parameters that would typically be read from some form of</span></div>
 <div class="line">    <span class="comment">// configuration file in a more realistic code</span></div>
@@ -144,7 +145,7 @@ Dimension X</h3>
 <div class="line">    <span class="comment">// Number of time-steps between outputs</span></div>
 <div class="line">    ptrdiff_t <span class="keyword">const</span> t_output_period = 10;</div>
 <div class="line"> </div>
-<div class="ttc" id="aclassddc_1_1ScopeGuard_html"><div class="ttname"><a href="classddc_1_1ScopeGuard.html">ddc::ScopeGuard</a></div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:15</div></div>
+<div class="ttc" id="aclassddc_1_1ScopeGuard_html"><div class="ttname"><a href="classddc_1_1ScopeGuard.html">ddc::ScopeGuard</a></div><div class="ttdef"><b>Definition:</b> scope_guard.hpp:13</div></div>
 </div><!-- fragment --><p >We start by defining <code>gwx</code>, the number of "ghost" points in the <code>X</code> dimension, those represented in dark grey in the figure on each side of the domain.</p>
 <div class="fragment"><div class="line">    <span class="comment">// Number of ghost points to use on each side in X</span></div>
 <div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimX&gt;</a> <span class="keyword">static</span> <span class="keyword">constexpr</span> gwx {1};</div>

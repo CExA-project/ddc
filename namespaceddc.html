@@ -224,10 +224,14 @@ Functions</h2></td></tr>
 <tr class="memitem:a6b058df8c02517deafeeb424e2f8803a"><td class="memTemplParams" colspan="2">template&lt;class... DDim, std::enable_if_t&lt;(sizeof...(DDim) &gt; 1), int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a6b058df8c02517deafeeb424e2f8803a"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim... &gt; const &amp;c)</td></tr>
 <tr class="separator:a6b058df8c02517deafeeb424e2f8803a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="memTemplParams" colspan="2">template&lt;class ChunkDst , class ChunkSrc &gt; </td></tr>
-<tr class="memitem:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">deepcopy</a> (ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</td></tr>
-<tr class="memdesc:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the content of a borrowed chunk into another.  <a href="namespaceddc.html#a70ccb44ff709a5939c2d2e0c0231dd0e">More...</a><br /></td></tr>
-<tr class="separator:a70ccb44ff709a5939c2d2e0c0231dd0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37d4f1dc7122e72c049517a90ff0b98b"><td class="memTemplParams" colspan="2">template&lt;class ChunkDst , class ChunkSrc &gt; </td></tr>
+<tr class="memitem:a37d4f1dc7122e72c049517a90ff0b98b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">parallel_deepcopy</a> (ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</td></tr>
+<tr class="memdesc:a37d4f1dc7122e72c049517a90ff0b98b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the content of a borrowed chunk into another.  <a href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">More...</a><br /></td></tr>
+<tr class="separator:a37d4f1dc7122e72c049517a90ff0b98b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad90d3688ee5986d7c9914cf94434375a"><td class="memTemplParams" colspan="2">template&lt;class ExecSpace , class ChunkDst , class ChunkSrc &gt; </td></tr>
+<tr class="memitem:ad90d3688ee5986d7c9914cf94434375a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad90d3688ee5986d7c9914cf94434375a">parallel_deepcopy</a> (ExecSpace const &amp;execution_space, ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</td></tr>
+<tr class="memdesc:ad90d3688ee5986d7c9914cf94434375a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the content of a borrowed chunk into another.  <a href="namespaceddc.html#ad90d3688ee5986d7c9914cf94434375a">More...</a><br /></td></tr>
+<tr class="separator:ad90d3688ee5986d7c9914cf94434375a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbc459eecdc4f531bad4e69fc7c60fe9"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
 <tr class="memitem:adbc459eecdc4f531bad4e69fc7c60fe9"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#adbc459eecdc4f531bad4e69fc7c60fe9">select</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain)</td></tr>
 <tr class="separator:adbc459eecdc4f531bad4e69fc7c60fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1325,8 +1329,8 @@ template&lt;class... DDim, std::enable_if_t&lt;(sizeof...(DDim) &gt; 1), int &gt
 
 </div>
 </div>
-<a id="a70ccb44ff709a5939c2d2e0c0231dd0e" name="a70ccb44ff709a5939c2d2e0c0231dd0e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a70ccb44ff709a5939c2d2e0c0231dd0e">&#9670;&nbsp;</a></span>deepcopy()</h2>
+<a id="a37d4f1dc7122e72c049517a90ff0b98b" name="a37d4f1dc7122e72c049517a90ff0b98b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37d4f1dc7122e72c049517a90ff0b98b">&#9670;&nbsp;</a></span>parallel_deepcopy() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1334,7 +1338,7 @@ template&lt;class... DDim, std::enable_if_t&lt;(sizeof...(DDim) &gt; 1), int &gt
 template&lt;class ChunkDst , class ChunkSrc &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">auto ddc::deepcopy </td>
+          <td class="memname">auto ddc::parallel_deepcopy </td>
           <td>(</td>
           <td class="paramtype">ChunkDst &amp;&amp;&#160;</td>
           <td class="paramname"><em>dst</em>, </td>
@@ -1356,6 +1360,53 @@ template&lt;class ChunkDst , class ChunkSrc &gt; </div>
 <p>Copy the content of a borrowed chunk into another. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">dst</td><td>the borrowed chunk in which to copy </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">src</td><td>the borrowed chunk from which to copy </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> </dd></dl>
+
+</div>
+</div>
+<a id="ad90d3688ee5986d7c9914cf94434375a" name="ad90d3688ee5986d7c9914cf94434375a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad90d3688ee5986d7c9914cf94434375a">&#9670;&nbsp;</a></span>parallel_deepcopy() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ExecSpace , class ChunkDst , class ChunkSrc &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ddc::parallel_deepcopy </td>
+          <td>(</td>
+          <td class="paramtype">ExecSpace const &amp;&#160;</td>
+          <td class="paramname"><em>execution_space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ChunkDst &amp;&amp;&#160;</td>
+          <td class="paramname"><em>dst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ChunkSrc &amp;&amp;&#160;</td>
+          <td class="paramname"><em>src</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy the content of a borrowed chunk into another. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">execution_space</td><td>a Kokkos execution space where the loop will be executed on </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">dst</td><td>the borrowed chunk in which to copy </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">src</td><td>the borrowed chunk from which to copy </td></tr>
   </table>

@@ -157,7 +157,7 @@ $(document).ready(function(){initNavTree('chunk_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            Allocator allocator = Allocator())</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        : <a class="code hl_friend" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a>(chunk_span.domain(), std::move(allocator))</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    {</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        deepcopy(span_view(), chunk_span);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        parallel_deepcopy(span_view(), chunk_span);</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    }</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="comment">/// Deleted: use deepcopy instead</span></div>

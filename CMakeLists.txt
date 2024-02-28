@@ -90,8 +90,10 @@ elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
 	find_package(Kokkos CONFIG REQUIRED)
 endif()
 
+# Custom cmake modules
+list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
+
 # FFTW
-list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ) # Maybe not specific to FFTW
 if("${BUILD_FFT_KERNEL}" AND NOT FFTW_FOUND)
 	find_package( FFTW MODULE REQUIRED )
 endif()

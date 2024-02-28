@@ -173,7 +173,7 @@ static void PeriodicitySplineBuilderTest()
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());
     ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
     ddc::parallel_for_each(
-            ExecSpace(),
+            exec_space,
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X>> const e) {
                 coords_eval(e) = ddc::coordinate(e) + Coord<X>(1.5);
@@ -188,8 +188,8 @@ static void PeriodicitySplineBuilderTest()
     spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors (we recover the initial values)
-    double max_norm_error = ddc::transform_reduce(
-            ddc::policies::policy(exec_space),
+    double max_norm_error = ddc::parallel_transform_reduce(
+            exec_space,
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),

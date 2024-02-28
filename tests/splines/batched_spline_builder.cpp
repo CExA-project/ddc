@@ -352,8 +352,8 @@ static void BatchedSplineTest()
     spline_evaluator_batched.integrate(spline_eval_integrals, coef.span_cview());
 
     // Checking errors (we recover the initial values)
-    double max_norm_error = ddc::transform_reduce(
-            ddc::policies::policy(exec_space),
+    double max_norm_error = ddc::parallel_transform_reduce(
+            exec_space,
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
@@ -361,8 +361,8 @@ static void BatchedSplineTest()
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 
-    double max_norm_error_diff = ddc::transform_reduce(
-            ddc::policies::policy(exec_space),
+    double max_norm_error_diff = ddc::parallel_transform_reduce(
+            exec_space,
             spline_eval_deriv.domain(),
             0.,
             ddc::reducer::max<double>(),
@@ -370,8 +370,8 @@ static void BatchedSplineTest()
                 Coord<I> const x = ddc::coordinate(ddc::select<IDim<I, I>>(e));
                 return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, 1));
             });
-    double max_norm_error_integ = ddc::transform_reduce(
-            ddc::policies::policy(exec_space),
+    double max_norm_error_integ = ddc::parallel_transform_reduce(
+            exec_space,
             spline_eval_integrals.domain(),
             0.,
             ddc::reducer::max<double>(),

@@ -12,7 +12,6 @@
 #include "ddc/detail/macros.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
-#include "ddc/policy.hpp"
 #include "ddc/reducer.hpp"
 
 namespace ddc {
@@ -177,6 +176,7 @@ public:
 };
 
 /** A parallel reduction over a nD domain using the default Kokkos execution space
+ * @param[in] execution_space a Kokkos execution space where the loop will be executed on
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] neutral the neutral element of the reduction operation
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
@@ -186,6 +186,7 @@ public:
  */
 template <class ExecSpace, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce_kokkos(
+        ExecSpace const& execution_space,
         [[maybe_unused]] DiscreteDomain<> const& domain,
         T neutral,
         BinaryReductionOp const& reduce,
@@ -194,14 +195,14 @@ inline T transform_reduce_kokkos(
     T result = neutral;
     if constexpr (need_annotated_operator<ExecSpace>()) {
         Kokkos::parallel_reduce(
-                Kokkos::RangePolicy<ExecSpace, use_annotated_operator>(0, 1),
+                Kokkos::RangePolicy<ExecSpace, use_annotated_operator>(execution_space, 0, 1),
                 TransformReducerKokkosLambdaAdapter<
                         BinaryReductionOp,
                         UnaryTransformOp>(reduce, transform),
                 ddc_to_kokkos_reducer_t<BinaryReductionOp>(result));
     } else {
         Kokkos::parallel_reduce(
-                Kokkos::RangePolicy<ExecSpace>(0, 1),
+                Kokkos::RangePolicy<ExecSpace>(execution_space, 0, 1),
                 TransformReducerKokkosLambdaAdapter<
                         BinaryReductionOp,
                         UnaryTransformOp>(reduce, transform),
@@ -211,6 +212,7 @@ inline T transform_reduce_kokkos(
 }
 
 /** A parallel reduction over a nD domain using the default Kokkos execution space
+ * @param[in] execution_space a Kokkos execution space where the loop will be executed on
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] neutral the neutral element of the reduction operation
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
@@ -220,6 +222,7 @@ inline T transform_reduce_kokkos(
  */
 template <class ExecSpace, class DDim0, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce_kokkos(
+        ExecSpace const& execution_space,
         DiscreteDomain<DDim0> const& domain,
         T neutral,
         BinaryReductionOp const& reduce,
@@ -228,9 +231,10 @@ inline T transform_reduce_kokkos(
     T result = neutral;
     if constexpr (need_annotated_operator<ExecSpace>()) {
         Kokkos::parallel_reduce(
-                Kokkos::RangePolicy<
-                        ExecSpace,
-                        use_annotated_operator>(domain.front().uid(), domain.back().uid() + 1),
+                Kokkos::RangePolicy<ExecSpace, use_annotated_operator>(
+                        execution_space,
+                        domain.front().uid(),
+                        domain.back().uid() + 1),
                 TransformReducerKokkosLambdaAdapter<
                         BinaryReductionOp,
                         UnaryTransformOp,
@@ -238,7 +242,8 @@ inline T transform_reduce_kokkos(
                 ddc_to_kokkos_reducer_t<BinaryReductionOp>(result));
     } else {
         Kokkos::parallel_reduce(
-                Kokkos::RangePolicy<ExecSpace>(domain.front().uid(), domain.back().uid() + 1),
+                Kokkos::RangePolicy<
+                        ExecSpace>(execution_space, domain.front().uid(), domain.back().uid() + 1),
                 TransformReducerKokkosLambdaAdapter<
                         BinaryReductionOp,
                         UnaryTransformOp,
@@ -249,6 +254,7 @@ inline T transform_reduce_kokkos(
 }
 
 /** A parallel reduction over a nD domain using the default Kokkos execution space
+ * @param[in] execution_space a Kokkos execution space where the loop will be executed on
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] neutral the neutral element of the reduction operation
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
@@ -265,6 +271,7 @@ template <
         class BinaryReductionOp,
         class UnaryTransformOp>
 inline T transform_reduce_kokkos(
+        ExecSpace const& execution_space,
         DiscreteDomain<DDim0, DDim1, DDims...> const& domain,
         T neutral,
         BinaryReductionOp const& reduce,
@@ -284,7 +291,7 @@ inline T transform_reduce_kokkos(
                 Kokkos::MDRangePolicy<
                         ExecSpace,
                         Kokkos::Rank<2 + sizeof...(DDims)>,
-                        use_annotated_operator>(begin, end),
+                        use_annotated_operator>(execution_space, begin, end),
                 TransformReducerKokkosLambdaAdapter<
                         BinaryReductionOp,
                         UnaryTransformOp,
@@ -294,7 +301,9 @@ inline T transform_reduce_kokkos(
                 ddc_to_kokkos_reducer_t<BinaryReductionOp>(result));
     } else {
         Kokkos::parallel_reduce(
-                Kokkos::MDRangePolicy<ExecSpace, Kokkos::Rank<2 + sizeof...(DDims)>>(begin, end),
+                Kokkos::MDRangePolicy<
+                        ExecSpace,
+                        Kokkos::Rank<2 + sizeof...(DDims)>>(execution_space, begin, end),
                 TransformReducerKokkosLambdaAdapter<
                         BinaryReductionOp,
                         UnaryTransformOp,
@@ -308,8 +317,7 @@ inline T transform_reduce_kokkos(
 
 } // namespace detail
 
-/** A reduction over a nD domain using the Serial execution policy
- * @param[in] policy the execution policy to use
+/** A reduction over a nD domain in serial
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] neutral the neutral element of the reduction operation
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
@@ -319,7 +327,6 @@ inline T transform_reduce_kokkos(
  */
 template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
 inline T transform_reduce(
-        [[maybe_unused]] serial_host_policy policy,
         DiscreteDomain<DDims...> const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
@@ -332,8 +339,8 @@ inline T transform_reduce(
             std::forward<UnaryTransformOp>(transform));
 }
 
-/** A reduction over a nD domain using the Kokkos execution policy
- * @param[in] policy the execution policy to use
+/** A reduction over a nD domain using a given `Kokkos` execution space
+ * @param[in] execution_space a Kokkos execution space where the loop will be executed on
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] neutral the neutral element of the reduction operation
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
@@ -341,23 +348,23 @@ inline T transform_reduce(
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
-template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
-inline T transform_reduce(
-        [[maybe_unused]] parallel_host_policy policy,
+template <class ExecSpace, class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
+inline T parallel_transform_reduce(
+        ExecSpace const& execution_space,
         DiscreteDomain<DDims...> const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
 {
-    return detail::transform_reduce_kokkos<Kokkos::DefaultHostExecutionSpace>(
+    return detail::transform_reduce_kokkos(
+            execution_space,
             domain,
             neutral,
             std::forward<BinaryReductionOp>(reduce),
             std::forward<UnaryTransformOp>(transform));
 }
 
-/** A reduction over a nD domain using the Kokkos execution policy
- * @param[in] policy the execution policy to use
+/** A reduction over a nD domain using the `Kokkos` default execution space
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] neutral the neutral element of the reduction operation
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
@@ -366,37 +373,14 @@ inline T transform_reduce(
  *            range. The return type must be acceptable as input to reduce
  */
 template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
-inline T transform_reduce(
-        [[maybe_unused]] parallel_device_policy policy,
+inline T parallel_transform_reduce(
         DiscreteDomain<DDims...> const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
 {
-    return detail::transform_reduce_kokkos<Kokkos::DefaultExecutionSpace>(
-            domain,
-            neutral,
-            std::forward<BinaryReductionOp>(reduce),
-            std::forward<UnaryTransformOp>(transform));
-}
-
-/** A reduction over a nD domain using the default execution policy
- * @param[in] domain the range over which to apply the algorithm
- * @param[in] neutral the neutral element of the reduction operation
- * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
- *            results of transform, the results of other reduce and neutral.
- * @param[in] transform a unary FunctionObject that will be applied to each element of the input
- *            range. The return type must be acceptable as input to reduce
- */
-template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
-inline T transform_reduce(
-        DiscreteDomain<DDims...> const& domain,
-        T neutral,
-        BinaryReductionOp&& reduce,
-        UnaryTransformOp&& transform) noexcept
-{
-    return transform_reduce(
-            default_policy(),
+    return parallel_transform_reduce(
+            Kokkos::DefaultExecutionSpace(),
             domain,
             neutral,
             std::forward<BinaryReductionOp>(reduce),

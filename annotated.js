@@ -55,12 +55,9 @@ var annotated =
       [ "IsDiscreteVector< DiscreteVector< Tags... > >", "structddc_1_1IsDiscreteVector_3_01DiscreteVector_3_01Tags_8_8_8_01_4_01_4.html", null ],
       [ "KokkosAllocator", "classddc_1_1KokkosAllocator.html", "classddc_1_1KokkosAllocator" ],
       [ "NonUniformPointSampling", "namespaceddc.html#classddc_1_1NonUniformPointSampling", "namespaceddc_classddc_1_1NonUniformPointSampling_dup" ],
-      [ "parallel_device_policy", "namespaceddc.html#structddc_1_1parallel__device__policy", null ],
-      [ "parallel_host_policy", "namespaceddc.html#structddc_1_1parallel__host__policy", null ],
       [ "PdiEvent", "classddc_1_1PdiEvent.html", "classddc_1_1PdiEvent" ],
       [ "PeriodicSampling", "classddc_1_1PeriodicSampling.html", "classddc_1_1PeriodicSampling" ],
       [ "ScopeGuard", "classddc_1_1ScopeGuard.html", "classddc_1_1ScopeGuard" ],
-      [ "serial_host_policy", "namespaceddc.html#structddc_1_1serial__host__policy", null ],
       [ "UniformPointSampling", "classddc_1_1UniformPointSampling.html", "classddc_1_1UniformPointSampling" ]
     ] ]
 ];

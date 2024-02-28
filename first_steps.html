@@ -216,7 +216,7 @@ Dimension Y</h3>
 Time dimension</h3>
 <p >Then we handle the domains for the simulated time dimension.</p>
 <div class="fragment"><div class="line">    <span class="comment">// max(1/dx^2)</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdx2_max = <a class="code hl_function" href="namespaceddc.html#a7906ce77e78836766ebaad783bcbd92a">ddc::transform_reduce</a>(</div>
+<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdx2_max = <a class="code hl_function" href="namespaceddc.html#a8093016bc9d65270b7b16ad4b7a1166e">ddc::transform_reduce</a>(</div>
 <div class="line">            x_domain,</div>
 <div class="line">            0.,</div>
 <div class="line">            <a class="code hl_struct" href="structddc_1_1reducer_1_1max.html">ddc::reducer::max&lt;double&gt;</a>(),</div>
@@ -226,7 +226,7 @@ Time dimension</h3>
 <div class="line">                          * <a class="code hl_function" href="namespaceddc.html#ae4194d943599870a3027703892628bef">ddc::distance_at_right</a>(ix));</div>
 <div class="line">            });</div>
 <div class="line">    <span class="comment">// max(1/dy^2)</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdy2_max = <a class="code hl_function" href="namespaceddc.html#a7906ce77e78836766ebaad783bcbd92a">ddc::transform_reduce</a>(</div>
+<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdy2_max = <a class="code hl_function" href="namespaceddc.html#a8093016bc9d65270b7b16ad4b7a1166e">ddc::transform_reduce</a>(</div>
 <div class="line">            y_domain,</div>
 <div class="line">            0.,</div>
 <div class="line">            <a class="code hl_struct" href="structddc_1_1reducer_1_1max.html">ddc::reducer::max&lt;double&gt;</a>(),</div>
@@ -253,7 +253,7 @@ Time dimension</h3>
 <div class="line">                                 <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;T&gt;</a>(end_time),</div>
 <div class="line">                                 nb_time_steps + 1));</div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html"><div class="ttname"><a href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition:</b> discrete_element.hpp:145</div></div>
-<div class="ttc" id="anamespaceddc_html_a7906ce77e78836766ebaad783bcbd92a"><div class="ttname"><a href="namespaceddc.html#a7906ce77e78836766ebaad783bcbd92a">ddc::transform_reduce</a></div><div class="ttdeci">T transform_reduce(serial_host_policy policy, DiscreteDomain&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</div><div class="ttdoc">A reduction over a nD domain using the Serial execution policy.</div><div class="ttdef"><b>Definition:</b> transform_reduce.hpp:321</div></div>
+<div class="ttc" id="anamespaceddc_html_a8093016bc9d65270b7b16ad4b7a1166e"><div class="ttname"><a href="namespaceddc.html#a8093016bc9d65270b7b16ad4b7a1166e">ddc::transform_reduce</a></div><div class="ttdeci">T transform_reduce(DiscreteDomain&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</div><div class="ttdoc">A reduction over a nD domain in serial.</div><div class="ttdef"><b>Definition:</b> transform_reduce.hpp:329</div></div>
 <div class="ttc" id="anamespaceddc_html_a8f253df8e8ff614487617d65ed69d2f7"><div class="ttname"><a href="namespaceddc.html#a8f253df8e8ff614487617d65ed69d2f7">ddc::distance_at_left</a></div><div class="ttdeci">KOKKOS_FUNCTION Coordinate&lt; CDim &gt; distance_at_left(DiscreteElement&lt; NonUniformPointSampling&lt; CDim &gt; &gt; i)</div><div class="ttdef"><b>Definition:</b> non_uniform_point_sampling.hpp:145</div></div>
 <div class="ttc" id="anamespaceddc_html_ae4194d943599870a3027703892628bef"><div class="ttname"><a href="namespaceddc.html#ae4194d943599870a3027703892628bef">ddc::distance_at_right</a></div><div class="ttdeci">KOKKOS_FUNCTION Coordinate&lt; CDim &gt; distance_at_right(DiscreteElement&lt; NonUniformPointSampling&lt; CDim &gt; &gt; i)</div><div class="ttdef"><b>Definition:</b> non_uniform_point_sampling.hpp:151</div></div>
 <div class="ttc" id="astructddc_1_1reducer_1_1max_html"><div class="ttname"><a href="structddc_1_1reducer_1_1max.html">ddc::reducer::max</a></div><div class="ttdef"><b>Definition:</b> reducer.hpp:105</div></div>

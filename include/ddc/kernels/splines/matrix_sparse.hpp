@@ -164,9 +164,13 @@ public:
                 = gko::solver::Bicgstab<double>::build()
                           .with_preconditioner(preconditioner)
                           .with_criteria(residual_criterion, iterations_criterion)
+#ifdef KOKKOS_ENABLE_OPENMP
                           .on(std::is_same_v<ExecSpace, Kokkos::OpenMP>
                                       ? create_gko_exec<Kokkos::Serial>()
                                       : gko_exec); // Workaround because unexpected behavior is observed in gslx::Landau4D with dx=0 in advection_x in OpenMP, even with OMP_NUM_THREADS=1
+#else
+                          .on(gko_exec);
+#endif
 
         m_solver = solver_factory->generate(m_matrix_sparse);
         m_solver_tr = m_solver->transpose();

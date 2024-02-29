@@ -28,7 +28,7 @@ class ForEachKokkosLambdaAdapter
     F m_f;
 
 public:
-    ForEachKokkosLambdaAdapter(F const& f) : m_f(f) {}
+    explicit ForEachKokkosLambdaAdapter(F const& f) : m_f(f) {}
 
     template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
     KOKKOS_IMPL_FORCEINLINE void operator()([[maybe_unused]] index_type<void> unused_id) const
@@ -100,7 +100,7 @@ template <class ExecSpace, class Functor, class DDim0, class DDim1, class... DDi
 inline void for_each_kokkos(
         ExecSpace const& execution_space,
         DiscreteDomain<DDim0, DDim1, DDims...> const& domain,
-        Functor&& f) noexcept
+        Functor const& f) noexcept
 {
     DiscreteElement<DDim0, DDim1, DDims...> const ddc_begin = domain.front();
     DiscreteElement<DDim0, DDim1, DDims...> const ddc_end = domain.front() + domain.extents();

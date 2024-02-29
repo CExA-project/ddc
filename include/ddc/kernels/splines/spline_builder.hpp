@@ -681,7 +681,14 @@ operator()(
     } else {
         assert("Unrecognized solver");
     }
-    std::experimental::mdspan bcoef_section_mdspan(spline_tr.data_handle(), layout_mapping);
+    std::experimental::mdspan<
+            double,
+            std::experimental::extents<
+                    size_t,
+                    std::experimental::dynamic_extent,
+                    std::experimental::dynamic_extent>,
+            std::experimental::layout_stride>
+            bcoef_section_mdspan(spline_tr.data_handle(), layout_mapping);
     // Compute spline coef
     matrix->solve_inplace(bcoef_section_mdspan);
 

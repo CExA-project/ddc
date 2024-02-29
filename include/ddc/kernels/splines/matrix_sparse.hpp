@@ -177,7 +177,7 @@ public:
 
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
     {
-        std::shared_ptr const gko_exec = m_solver->get_executor();
+        std::shared_ptr const gko_exec = m_matrix_sparse->get_executor();
 
         int const main_chunk_size = std::min(m_cols_per_chunk, n_equations);
 

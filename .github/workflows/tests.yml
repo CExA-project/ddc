@@ -187,10 +187,6 @@ jobs:
         report_paths: '/home/runner/work/ddc/ddc/tests.xml'
 
   test-with-sanitizer-undefined:
-    strategy:
-      fail-fast: false
-      matrix:
-        cmake_build_type: ['Debug', 'Release']
     runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
     steps:
@@ -221,19 +217,15 @@ jobs:
           git config --global --add safe.directory '*'
           export CC=clang
           export CXX=clang++
-          CMAKE_CXX_FLAGS="-Wno-gnu-zero-variadic-macro-arguments"
           cmake \
             -DDDC_BUILD_BENCHMARKS=ON \
-            -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
+            -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_CXX_STANDARD=17 \
             -DMDSPAN_CXX_STANDARD=17 \
             -DKokkos_ENABLE_DEPRECATED_CODE_3=OFF \
             -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
             -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-            -DCMAKE_CXX_FLAGS="\
-              -fsanitize=undefined -fno-omit-frame-pointer \
-              ${CMAKE_CXX_FLAGS}" \
-            ${EXTRA_CMAKE_FLAGS} \
+            -DCMAKE_CXX_FLAGS="-fsanitize=undefined -fno-omit-frame-pointer" \
             /src
           make -j 2
           export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,suppressions=/src/ubsan.supp

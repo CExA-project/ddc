@@ -19,7 +19,7 @@ add_executable(ddc_tests
     rectilinear_domain.cpp
     uniform_domain.cpp
     for_each.cpp
-    fill.cpp
+    parallel_fill.cpp
     discrete_element.cpp
     discrete_vector.cpp
     discrete_space.cpp

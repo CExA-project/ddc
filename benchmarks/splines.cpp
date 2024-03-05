@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstring>
 #include <iosfwd>
+#include <thread>
 #include <vector>
 
 #include <ddc/ddc.hpp>

@@ -25,9 +25,9 @@
 #include "ddc/uniform_point_sampling.hpp"
 
 // Algorithms
-#include "ddc/deepcopy.hpp"
 #include "ddc/for_each.hpp"
 #include "ddc/mirror.hpp"
+#include "ddc/parallel_deepcopy.hpp"
 #include "ddc/parallel_fill.hpp"
 #include "ddc/parallel_for_each.hpp"
 #include "ddc/reducer.hpp"

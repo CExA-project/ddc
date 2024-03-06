@@ -623,12 +623,19 @@ operator()(
                 }
             });
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
-    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
-            spline_tr.data_handle(),
-            ddc::discrete_space<bsplines_type>().nbasis(),
-            batch_domain().size());
+    std::experimental::mdspan<
+            double,
+            std::experimental::extents<
+                    size_t,
+                    std::experimental::dynamic_extent,
+                    std::experimental::dynamic_extent>,
+            std::experimental::layout_right>
+            bcoef_section(
+                    spline_tr.data_handle(),
+                    ddc::discrete_space<bsplines_type>().nbasis(),
+                    batch_domain().size());
     // Compute spline coef
-    matrix->solve_batch_inplace(bcoef_section);
+    matrix->solve_inplace(bcoef_section);
     // Transpose back spline_tr in spline
     ddc::parallel_for_each(
             exec_space(),

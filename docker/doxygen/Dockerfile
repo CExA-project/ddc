@@ -28,6 +28,8 @@ RUN chmod +x /bin/bash_run \
     pkg-config \
     cmake-data \
     libfftw3-dev \
+    libopenblas-dev \
+    liblapack-dev \
     libpdi-dev \
     doxygen \
     doxygen-latex \

@@ -91,8 +91,13 @@ elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
 	find_package(Kokkos CONFIG REQUIRED)
 endif()
 
+# Custom cmake modules
+list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
+if("${CMAKE_VERSION}" VERSION_LESS 3.18)
+	list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/3.18" )
+endif()
+
 # FFTW
-list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ) # Maybe not specific to FFTW
 if("${DDC_BUILD_KERNELS_FFT}" AND NOT FFTW_FOUND)
 	find_package( FFTW MODULE REQUIRED )
 endif()
@@ -241,6 +246,10 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
   find_package(Ginkgo 1.7.0 EXACT REQUIRED)
   target_link_libraries(DDC INTERFACE Ginkgo::ginkgo)
   target_compile_definitions(DDC INTERFACE ginkgo_AVAIL)
+
+  # Lapack
+  find_package(LAPACK REQUIRED COMPONENTS CXX)
+  target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
 endif()
 
 ## The PDI wrapper

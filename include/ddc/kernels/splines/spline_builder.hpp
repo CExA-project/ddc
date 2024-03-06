@@ -408,6 +408,7 @@ void SplineBuilder<
             ddc::discrete_space<BSplines>().nbasis(),
             cols_per_chunk,
             preconditionner_max_block_size);
+    matrix->reset();
 
     build_matrix_system();
 
@@ -622,7 +623,7 @@ operator()(
                             = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
                 }
             });
-    // Create a mdspan to manage spline_tr as a matrix
+    // Create a 2D mdspan to manage spline_tr as a matrix
     std::experimental::mdspan<
             double,
             std::experimental::extents<

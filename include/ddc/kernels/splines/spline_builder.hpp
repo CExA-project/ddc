@@ -622,7 +622,7 @@ operator()(
                             = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
                 }
             });
-    // Create a 2D Kokkos::View to manage spline_tr as a matrix
+    // Create a mdspan to manage spline_tr as a matrix
     std::experimental::mdspan<
             double,
             std::experimental::extents<

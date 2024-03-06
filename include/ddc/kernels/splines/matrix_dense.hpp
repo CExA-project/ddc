@@ -3,20 +3,13 @@
 #include <cassert>
 #include <memory>
 
+#include <KokkosBatched_ApplyPivot_Decl.hpp>
+#include <KokkosBatched_Gesv.hpp>
+
 #include "matrix.hpp"
 
 namespace ddc::detail {
 extern "C" int dgetrf_(int const* m, int const* n, double* a, int const* lda, int* ipiv, int* info);
-extern "C" int dgetrs_(
-        char const* trans,
-        int const* n,
-        int const* nrhs,
-        double* a,
-        int const* lda,
-        int* ipiv,
-        double* b,
-        int const* ldb,
-        int* info);
 
 template <class ExecSpace>
 class Matrix_Dense : public Matrix
@@ -71,7 +64,6 @@ public:
         }
     }
 
-private:
     int factorize_method() override
     {
         auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
@@ -79,9 +71,23 @@ private:
         int info;
         int const n = get_size();
         dgetrf_(&n, &n, a_host.data(), &n, ipiv_host.data(), &info);
+        // ipiv follows lapack convention, switch to kokkos-kernels one
+        for (int i = 0; i < n; ++i) {
+            ipiv_host(i) -= i + 1;
+        }
         Kokkos::deep_copy(m_a, a_host);
         Kokkos::deep_copy(m_ipiv, ipiv_host);
         return info;
+        /*
+        Kokkos::parallel_for(
+                "gertf",
+                Kokkos::RangePolicy<ExecSpace>(0, 1),
+                KOKKOS_CLASS_LAMBDA(const int i) {
+                    int info = KokkosBatched::SerialLU<
+                            KokkosBatched::Algo::Level3::Unblocked>::invoke(m_a);
+                });
+*/
+        //return 0;
     }
 
     int solve_inplace_method(
@@ -90,33 +96,76 @@ private:
             int const n_equations,
             int const stride) const override
     {
-        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
-        auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
                 b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
-        auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b_view);
-        for (int i = 0; i < n_equations; ++i) {
-            Kokkos::deep_copy(
-                    Kokkos::subview(b_host, Kokkos::ALL, i),
-                    Kokkos::subview(b_view, Kokkos::ALL, i));
-        }
-        int info;
-        int const n = get_size();
-        dgetrs_(&transpose,
-                &n,
-                &n_equations,
-                a_host.data(),
-                &n,
-                ipiv_host.data(),
-                b_host.data(),
-                &stride,
-                &info);
-        for (int i = 0; i < n_equations; ++i) {
-            Kokkos::deep_copy(
-                    Kokkos::subview(b_view, Kokkos::ALL, i),
-                    Kokkos::subview(b_host, Kokkos::ALL, i));
-        }
-        return info;
+
+        Kokkos::parallel_for(
+                "gerts",
+                Kokkos::TeamPolicy<ExecSpace>(n_equations, Kokkos::AUTO),
+                KOKKOS_CLASS_LAMBDA(
+                        const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+                    const int i = teamMember.league_rank();
+
+                    int info;
+                    auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+
+                    if (transpose == 'N') {
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorApplyPivot<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Direct::Forward>::
+                                invoke(teamMember, m_ipiv, b_slice);
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorTrsm<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Uplo::Lower,
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Diag::Unit,
+                                KokkosBatched::Algo::Level3::Unblocked>::
+                                invoke(teamMember, 1.0, m_a, b_slice);
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorTrsm<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Uplo::Upper,
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Diag::NonUnit,
+                                KokkosBatched::Algo::Level3::Unblocked>::
+                                invoke(teamMember, 1.0, m_a, b_slice);
+                        teamMember.team_barrier();
+                    } else if (transpose == 'T') {
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorTrsm<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Uplo::Upper,
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Diag::NonUnit,
+                                KokkosBatched::Algo::Level3::Unblocked>::
+                                invoke(teamMember, 1.0, m_a, b_slice);
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorTrsm<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Uplo::Lower,
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Diag::Unit,
+                                KokkosBatched::Algo::Level3::Unblocked>::
+                                invoke(teamMember, 1.0, m_a, b_slice);
+                        teamMember.team_barrier();
+                        KokkosBatched::TeamVectorApplyPivot<
+                                typename Kokkos::TeamPolicy<ExecSpace>::member_type,
+                                KokkosBatched::Side::Left,
+                                KokkosBatched::Direct::Backward>::
+                                invoke(teamMember, m_ipiv, b_slice);
+                        teamMember.team_barrier();
+                    } else {
+                        info = -1;
+                    }
+                });
+        return 0;
     }
 };
 

@@ -128,6 +128,7 @@ protected:
             int const n_equations,
             int const stride) const override
     {
+        // TODO : Rewrite using Kokkos-kernels
         auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
         auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>

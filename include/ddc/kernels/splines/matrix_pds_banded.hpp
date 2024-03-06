@@ -141,6 +141,36 @@ public:
     }
 
 protected:
+    KOKKOS_FUNCTION int tbsv(
+            char const uplo,
+            char const trans,
+            char const diag,
+            int const n,
+            int const k,
+            Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> const a,
+            int const lda,
+            Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space> const x,
+            int const incx) const
+    {
+        if (trans == 'N') {
+            for (int j = 0; j < n; ++j) {
+                if (x(j) != 0) {
+                    x(j) /= a(0, j);
+                    for (int i = j + 1; i <= Kokkos::min(n, j + k); ++i) {
+                        x(i) -= a(i - j, j) * x(j);
+                    }
+                }
+            }
+        } else if (trans == 'T') {
+            for (int j = n - 1; j >= 0; --j) {
+                for (int i = Kokkos::min(n, j + k); i >= j + 1; --i) {
+                    x(j) -= a(i - j, j) * x(i);
+                }
+                x(j) /= a(0, j);
+            }
+        }
+        return 0;
+    }
     int factorize_method() override
     {
         auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
@@ -153,37 +183,26 @@ protected:
         return info;
     }
 
+public:
     int solve_inplace_method(double* const b, char const, int const n_equations, int const stride)
             const override
     {
-        auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
-        Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
-                b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
-        auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b_view);
-        for (int i = 0; i < n_equations; ++i) {
-            Kokkos::deep_copy(
-                    Kokkos::subview(b_host, Kokkos::ALL, i),
-                    Kokkos::subview(b_view, Kokkos::ALL, i));
-        }
-        int info;
-        char const uplo = 'L';
-        int const n = get_size();
-        int const ldab = m_kd + 1;
-        dpbtrs_(&uplo,
-                &n,
-                &m_kd,
-                &n_equations,
-                q_host.data(),
-                &ldab,
-                b_host.data(),
-                &stride,
-                &info);
-        for (int i = 0; i < n_equations; ++i) {
-            Kokkos::deep_copy(
-                    Kokkos::subview(b_view, Kokkos::ALL, i),
-                    Kokkos::subview(b_host, Kokkos::ALL, i));
-        }
-        return info;
+        Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                b_view(b, get_size(), n_equations);
+
+        Kokkos::parallel_for(
+                "pbtrs",
+                Kokkos::RangePolicy<ExecSpace>(0, n_equations),
+                KOKKOS_CLASS_LAMBDA(const int i) {
+                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+
+                    int info;
+                    info = tbsv('L', 'N', 'N', get_size(), m_kd, m_q, m_kd, b_slice, 1);
+                    Kokkos::fence();
+                    info = tbsv('L', 'T', 'N', get_size(), m_kd, m_q, m_kd, b_slice, 1);
+                });
+        return 0;
     }
 };
 

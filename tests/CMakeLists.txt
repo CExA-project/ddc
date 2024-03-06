@@ -23,6 +23,8 @@ add_executable(ddc_tests
     discrete_element.cpp
     discrete_vector.cpp
     discrete_space.cpp
+    parallel_for_each.cpp
+    deepcopy.cpp
 )
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
 target_link_libraries(ddc_tests

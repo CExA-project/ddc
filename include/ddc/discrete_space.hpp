@@ -141,7 +141,7 @@ auto extract_after(Tuple&& t, std::index_sequence<Ids...>)
 } // namespace detail
 
 /** Initialize (emplace) a global singleton discrete space
- * 
+ *
  * @param args the constructor arguments
  */
 template <class DDim, class... Args>
@@ -168,7 +168,7 @@ void init_discrete_space(Args&&... args)
 }
 
 /** Move construct a global singleton discrete space and pass through the other argument
- * 
+ *
  * @param a - the discrete space to move at index 0
  *          - the arguments to pass through at index 1
  */
@@ -181,7 +181,7 @@ Arg init_discrete_space(std::tuple<DDimImpl, Arg>&& a)
 }
 
 /** Move construct a global singleton discrete space and pass through remaining arguments
- * 
+ *
  * @param a - the discrete space to move at index 0
  *          - the (2+) arguments to pass through in other indices
  */

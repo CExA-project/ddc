@@ -46,7 +46,7 @@ using DDimT = ddc::UniformPointSampling<T>;
 //! [time-space]
 
 //! [display]
-/** A function to pretty print the density 
+/** A function to pretty print the density
  * @param time the time at which the output is made
  * @param density the density at this time-step
  */
@@ -80,7 +80,8 @@ void display(double time, ChunkType density)
 //! [main-start]
 int main(int argc, char** argv)
 {
-    ddc::ScopeGuard scope(argc, argv);
+    Kokkos::ScopeGuard const kokkos_scope(argc, argv);
+    ddc::ScopeGuard const ddc_scope(argc, argv);
 
     // some parameters that would typically be read from some form of
     // configuration file in a more realistic code
@@ -192,7 +193,7 @@ int main(int argc, char** argv)
 
     //! [initial output]
     // display the initial data
-    ddc::deepcopy(host_density_alloc, last_density_alloc);
+    ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
     display(ddc::coordinate(time_domain.front()),
             host_density_alloc[x_domain][y_domain]);
     // time of the iteration where the last output happened
@@ -279,7 +280,9 @@ int main(int argc, char** argv)
         //! [output]
         if (iter - last_output >= t_output_period) {
             last_output = iter;
-            ddc::deepcopy(host_density_alloc, last_density_alloc);
+            ddc::parallel_deepcopy(
+                    host_density_alloc,
+                    last_density_alloc);
             display(ddc::coordinate(iter),
                     host_density_alloc[x_domain][y_domain]);
         }
@@ -293,7 +296,7 @@ int main(int argc, char** argv)
 
     //! [final output]
     if (last_output < time_domain.back()) {
-        ddc::deepcopy(host_density_alloc, last_density_alloc);
+        ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
         display(ddc::coordinate(time_domain.back()),
                 host_density_alloc[x_domain][y_domain]);
     }

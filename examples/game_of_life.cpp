@@ -60,7 +60,8 @@ std::ostream& print_2DChunk(
 
 int main()
 {
-    ddc::ScopeGuard scope;
+    Kokkos::ScopeGuard const kokkos_scope;
+    ddc::ScopeGuard const ddc_scope;
 
     ddc::DiscreteDomain<DDimX, DDimY> const domain_xy(
             ddc::DiscreteElement<DDimX, DDimY>(0, 0),
@@ -92,7 +93,7 @@ int main()
 
     std::size_t iter = 0;
     for (; iter < nt; ++iter) {
-        ddc::deepcopy(cells_in_host_alloc, cells_in);
+        ddc::parallel_deepcopy(cells_in_host_alloc, cells_in);
         print_2DChunk(std::cout, cells_in_host_alloc.span_cview())
                 << "\n";
         ddc::parallel_for_each(
@@ -123,9 +124,9 @@ int main()
                             cells_out(ixy) = true;
                     }
                 });
-        ddc::deepcopy(cells_in, cells_out);
+        ddc::parallel_deepcopy(cells_in, cells_out);
     }
-    ddc::deepcopy(cells_in_host_alloc, cells_in);
+    ddc::parallel_deepcopy(cells_in_host_alloc, cells_in);
     print_2DChunk(std::cout, cells_in_host_alloc.span_cview()) << "\n";
 
     return 0;

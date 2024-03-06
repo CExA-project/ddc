@@ -87,7 +87,8 @@ int main(int argc, char** argv)
     auto pdi_conf = PC_parse_string("");
     PDI_init(pdi_conf);
 #endif
-    ddc::ScopeGuard scope(argc, argv);
+    Kokkos::ScopeGuard const kokkos_scope(argc, argv);
+    ddc::ScopeGuard const ddc_scope(argc, argv);
 
     // some parameters that would typically be read from some form of
     // configuration file in a more realistic code
@@ -258,7 +259,7 @@ int main(int argc, char** argv)
 
     //! [initial output]
     // display the initial data
-    ddc::deepcopy(ghosted_temp, ghosted_last_temp);
+    ddc::parallel_deepcopy(ghosted_temp, ghosted_last_temp);
     display(ddc::coordinate(time_domain.front()),
             ghosted_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
@@ -272,16 +273,16 @@ int main(int argc, char** argv)
 
         //! [boundary conditions]
         // Periodic boundary conditions
-        ddc::deepcopy(
+        ddc::parallel_deepcopy(
                 ghosted_last_temp[x_pre_ghost][y_domain],
                 ghosted_last_temp[y_domain][x_domain_end]);
-        ddc::deepcopy(
+        ddc::parallel_deepcopy(
                 ghosted_last_temp[y_domain][x_post_ghost],
                 ghosted_last_temp[y_domain][x_domain_begin]);
-        ddc::deepcopy(
+        ddc::parallel_deepcopy(
                 ghosted_last_temp[x_domain][y_pre_ghost],
                 ghosted_last_temp[x_domain][y_domain_end]);
-        ddc::deepcopy(
+        ddc::parallel_deepcopy(
                 ghosted_last_temp[x_domain][y_post_ghost],
                 ghosted_last_temp[x_domain][y_domain_begin]);
         //! [boundary conditions]
@@ -331,7 +332,7 @@ int main(int argc, char** argv)
         //! [output]
         if (iter - last_output_iter >= t_output_period) {
             last_output_iter = iter;
-            ddc::deepcopy(ghosted_temp, ghosted_last_temp);
+            ddc::parallel_deepcopy(ghosted_temp, ghosted_last_temp);
             display(ddc::coordinate(iter),
                     ghosted_temp[x_domain][y_domain]);
         }
@@ -345,7 +346,7 @@ int main(int argc, char** argv)
 
     //! [final output]
     if (last_output_iter < time_domain.back()) {
-        ddc::deepcopy(ghosted_temp, ghosted_last_temp);
+        ddc::parallel_deepcopy(ghosted_temp, ghosted_last_temp);
         display(ddc::coordinate(time_domain.back()),
                 ghosted_temp[x_domain][y_domain]);
     }

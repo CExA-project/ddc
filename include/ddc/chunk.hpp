@@ -104,12 +104,12 @@ public:
 
     /// Construct a Chunk from a deepcopy of a ChunkSpan
     template <class OElementType, class... ODDims, class LayoutType>
-    explicit Chunk(
+    [[deprecated("Use 'ddc::create_mirror_and_copy' instead")]] explicit Chunk(
             ChunkSpan<OElementType, DiscreteDomain<ODDims...>, LayoutType> chunk_span,
             Allocator allocator = Allocator())
         : Chunk(chunk_span.domain(), std::move(allocator))
     {
-        deepcopy(span_view(), chunk_span);
+        parallel_deepcopy(span_view(), chunk_span);
     }
 
     /// Deleted: use deepcopy instead

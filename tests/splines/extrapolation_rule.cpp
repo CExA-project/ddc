@@ -241,7 +241,7 @@ static void ExtrapolationRuleSplineTest()
     evaluator(vals1_cpu);
     ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals1 = vals1_alloc.span_view();
-    ddc::deepcopy(vals1, vals1_cpu);
+    ddc::parallel_deepcopy(vals1, vals1_cpu);
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();

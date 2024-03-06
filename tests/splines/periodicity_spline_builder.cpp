@@ -146,7 +146,7 @@ static void PeriodicitySplineBuilderTest()
     evaluator(vals1_cpu);
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
-    ddc::deepcopy(vals, vals1_cpu);
+    ddc::parallel_deepcopy(vals, vals1_cpu);
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(dom_bsplines, ddc::KokkosAllocator<double, MemorySpace>());

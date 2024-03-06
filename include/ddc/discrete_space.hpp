@@ -197,8 +197,8 @@ std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_discrete_space(
 /**
  * @tparam DDim a discrete dimension
  * @return the discrete space instance associated with `DDim`.
- * It is recommended to call this function from a `KOKKOS_FUNCTION`.
- * Prefer `ddc::host_discrete_space` for a host-only function.
+ * This function must be called from a `KOKKOS_FUNCTION`.
+ * Call `ddc::host_discrete_space` for a host-only function instead.
  */
 template <class DDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
 KOKKOS_FORCEINLINE_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()

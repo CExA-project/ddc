@@ -96,7 +96,7 @@ class Matrix_Sparse : public Matrix
 {
     using matrix_sparse_type = gko::matrix::Csr<double, int>;
 
-private:
+protected:
     std::unique_ptr<gko::matrix::Dense<double>> m_matrix_dense;
 
     std::shared_ptr<matrix_sparse_type> m_matrix_sparse;
@@ -122,17 +122,23 @@ public:
         std::shared_ptr const gko_exec = create_gko_exec<ExecSpace>();
         m_matrix_dense = gko::matrix::Dense<
                 double>::create(gko_exec->get_master(), gko::dim<2>(mat_size, mat_size));
-        m_matrix_dense->fill(0);
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
     }
 
-    virtual double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
+    void reset() const override
+    {
+        m_matrix_dense->fill(0);
+        m_matrix_sparse->clear();
+    }
+
+    double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
     {
         throw std::runtime_error("MatrixSparse::get_element() is not implemented because no API is "
                                  "provided by Ginkgo");
+        return 0;
     }
 
-    virtual void set_element(int i, int j, double aij) override
+    void set_element(int i, int j, double aij) const override
     {
         m_matrix_dense->at(i, j) = aij;
     }
@@ -173,16 +179,20 @@ public:
         return 0;
     }
 
-    virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
+    int solve_inplace_method(
+            double* const b,
+            char const transpose,
+            int const n_equations,
+            int const stride) const override
     {
         std::shared_ptr const gko_exec = m_solver->get_executor();
 
         int const main_chunk_size = std::min(m_cols_per_chunk, n_equations);
 
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
-                b_view(b, get_size(), n_equations);
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
-                x_view("", get_size(), main_chunk_size);
+        Kokkos::View<double**, Kokkos::LayoutStride, ExecSpace> const
+                b_view(b, Kokkos::LayoutStride(get_size(), stride, n_equations, 1));
+        Kokkos::View<double**, Kokkos::LayoutStride, ExecSpace> const
+                x_view("", Kokkos::LayoutStride(get_size(), stride, main_chunk_size, 1));
 
         int const iend = (n_equations + main_chunk_size - 1) / main_chunk_size;
         for (int i = 0; i < iend; ++i) {

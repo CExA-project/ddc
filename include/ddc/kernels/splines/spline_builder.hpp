@@ -688,9 +688,9 @@ operator()(
                     std::experimental::dynamic_extent,
                     std::experimental::dynamic_extent>,
             std::experimental::layout_stride>
-            bcoef_section_mdspan(spline_tr.data_handle(), layout_mapping);
+            bcoef_section(spline_tr.data_handle(), layout_mapping);
     // Compute spline coef
-    matrix->solve_inplace(bcoef_section_mdspan);
+    matrix->solve_inplace(bcoef_section);
 
     // Transpose back spline_tr in spline
     ddc::parallel_for_each(

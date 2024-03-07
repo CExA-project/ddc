@@ -478,6 +478,14 @@ Functions</h2></td></tr>
 <tr class="memitem:ad477f030c80deb9c1a4808ec3698ca8f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad477f030c80deb9c1a4808ec3698ca8f">parallel_for_each</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</td></tr>
 <tr class="memdesc:ad477f030c80deb9c1a4808ec3698ca8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the <code>Kokkos</code> default execution space  <a href="namespaceddc.html#ad477f030c80deb9c1a4808ec3698ca8f">More...</a><br /></td></tr>
 <tr class="separator:ad477f030c80deb9c1a4808ec3698ca8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a1bd698f3b26417167e8e7f96cac216"><td class="memTemplParams" colspan="2">template&lt;class ExecSpace , class... DDims, class T , class BinaryReductionOp , class UnaryTransformOp &gt; </td></tr>
+<tr class="memitem:a6a1bd698f3b26417167e8e7f96cac216"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a6a1bd698f3b26417167e8e7f96cac216">parallel_transform_reduce</a> (ExecSpace const &amp;execution_space, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</td></tr>
+<tr class="memdesc:a6a1bd698f3b26417167e8e7f96cac216"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reduction over a nD domain using a given <code>Kokkos</code> execution space.  <a href="namespaceddc.html#a6a1bd698f3b26417167e8e7f96cac216">More...</a><br /></td></tr>
+<tr class="separator:a6a1bd698f3b26417167e8e7f96cac216"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af00cc443c9d5f113239f843cfbd34aa9"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTransformOp &gt; </td></tr>
+<tr class="memitem:af00cc443c9d5f113239f843cfbd34aa9"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#af00cc443c9d5f113239f843cfbd34aa9">parallel_transform_reduce</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</td></tr>
+<tr class="memdesc:af00cc443c9d5f113239f843cfbd34aa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reduction over a nD domain using the <code>Kokkos</code> default execution space.  <a href="namespaceddc.html#af00cc443c9d5f113239f843cfbd34aa9">More...</a><br /></td></tr>
+<tr class="separator:af00cc443c9d5f113239f843cfbd34aa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23d4abcde702238b33c5185cd6457658"><td class="memTemplParams" colspan="2">template&lt;PDI_inout_t access, class DataType &gt; </td></tr>
 <tr class="memitem:a23d4abcde702238b33c5185cd6457658"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a23d4abcde702238b33c5185cd6457658">expose_to_pdi</a> (std::string const &amp;name, DataType &amp;&amp;data)</td></tr>
 <tr class="separator:a23d4abcde702238b33c5185cd6457658"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -518,14 +526,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a8093016bc9d65270b7b16ad4b7a1166e"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8093016bc9d65270b7b16ad4b7a1166e">transform_reduce</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</td></tr>
 <tr class="memdesc:a8093016bc9d65270b7b16ad4b7a1166e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reduction over a nD domain in serial.  <a href="namespaceddc.html#a8093016bc9d65270b7b16ad4b7a1166e">More...</a><br /></td></tr>
 <tr class="separator:a8093016bc9d65270b7b16ad4b7a1166e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a1bd698f3b26417167e8e7f96cac216"><td class="memTemplParams" colspan="2">template&lt;class ExecSpace , class... DDims, class T , class BinaryReductionOp , class UnaryTransformOp &gt; </td></tr>
-<tr class="memitem:a6a1bd698f3b26417167e8e7f96cac216"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a6a1bd698f3b26417167e8e7f96cac216">parallel_transform_reduce</a> (ExecSpace const &amp;execution_space, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</td></tr>
-<tr class="memdesc:a6a1bd698f3b26417167e8e7f96cac216"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reduction over a nD domain using a given <code>Kokkos</code> execution space.  <a href="namespaceddc.html#a6a1bd698f3b26417167e8e7f96cac216">More...</a><br /></td></tr>
-<tr class="separator:a6a1bd698f3b26417167e8e7f96cac216"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af00cc443c9d5f113239f843cfbd34aa9"><td class="memTemplParams" colspan="2">template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTransformOp &gt; </td></tr>
-<tr class="memitem:af00cc443c9d5f113239f843cfbd34aa9"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#af00cc443c9d5f113239f843cfbd34aa9">parallel_transform_reduce</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</td></tr>
-<tr class="memdesc:af00cc443c9d5f113239f843cfbd34aa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reduction over a nD domain using the <code>Kokkos</code> default execution space.  <a href="namespaceddc.html#af00cc443c9d5f113239f843cfbd34aa9">More...</a><br /></td></tr>
-<tr class="separator:af00cc443c9d5f113239f843cfbd34aa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88d0baad1a1594918c6aa554b3ad1c47"><td class="memTemplParams" colspan="2">template&lt;class CDim &gt; </td></tr>
 <tr class="memitem:a88d0baad1a1594918c6aa554b3ad1c47"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a88d0baad1a1594918c6aa554b3ad1c47">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt; CDim &gt; &gt; const &amp;c)</td></tr>
 <tr class="separator:a88d0baad1a1594918c6aa554b3ad1c47"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3876,6 +3876,135 @@ template&lt;class... DDims, class Functor &gt; </div>
 
 </div>
 </div>
+<a id="a6a1bd698f3b26417167e8e7f96cac216" name="a6a1bd698f3b26417167e8e7f96cac216"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a1bd698f3b26417167e8e7f96cac216">&#9670;&nbsp;</a></span>parallel_transform_reduce() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ExecSpace , class... DDims, class T , class BinaryReductionOp , class UnaryTransformOp &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T ddc::parallel_transform_reduce </td>
+          <td>(</td>
+          <td class="paramtype">ExecSpace const &amp;&#160;</td>
+          <td class="paramname"><em>execution_space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>neutral</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">BinaryReductionOp &amp;&amp;&#160;</td>
+          <td class="paramname"><em>reduce</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UnaryTransformOp &amp;&amp;&#160;</td>
+          <td class="paramname"><em>transform</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A reduction over a nD domain using a given <code>Kokkos</code> execution space. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">execution_space</td><td>a Kokkos execution space where the loop will be executed on </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the range over which to apply the algorithm </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">neutral</td><td>the neutral element of the reduction operation </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">reduce</td><td>a binary FunctionObject that will be applied in unspecified order to the results of transform, the results of other reduce and neutral. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">transform</td><td>a unary FunctionObject that will be applied to each element of the input range. The return type must be acceptable as input to reduce </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af00cc443c9d5f113239f843cfbd34aa9" name="af00cc443c9d5f113239f843cfbd34aa9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af00cc443c9d5f113239f843cfbd34aa9">&#9670;&nbsp;</a></span>parallel_transform_reduce() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTransformOp &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T ddc::parallel_transform_reduce </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>neutral</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">BinaryReductionOp &amp;&amp;&#160;</td>
+          <td class="paramname"><em>reduce</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UnaryTransformOp &amp;&amp;&#160;</td>
+          <td class="paramname"><em>transform</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A reduction over a nD domain using the <code>Kokkos</code> default execution space. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the range over which to apply the algorithm </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">neutral</td><td>the neutral element of the reduction operation </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">reduce</td><td>a binary FunctionObject that will be applied in unspecified order to the results of transform, the results of other reduce and neutral. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">transform</td><td>a unary FunctionObject that will be applied to each element of the input range. The return type must be acceptable as input to reduce </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a23d4abcde702238b33c5185cd6457658" name="a23d4abcde702238b33c5185cd6457658"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a23d4abcde702238b33c5185cd6457658">&#9670;&nbsp;</a></span>expose_to_pdi() <span class="overload">[1/2]</span></h2>
 
@@ -4192,135 +4321,6 @@ template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTrans
 </div><div class="memdoc">
 
 <p>A reduction over a nD domain in serial. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the range over which to apply the algorithm </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">neutral</td><td>the neutral element of the reduction operation </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">reduce</td><td>a binary FunctionObject that will be applied in unspecified order to the results of transform, the results of other reduce and neutral. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">transform</td><td>a unary FunctionObject that will be applied to each element of the input range. The return type must be acceptable as input to reduce </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a6a1bd698f3b26417167e8e7f96cac216" name="a6a1bd698f3b26417167e8e7f96cac216"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a1bd698f3b26417167e8e7f96cac216">&#9670;&nbsp;</a></span>parallel_transform_reduce() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ExecSpace , class... DDims, class T , class BinaryReductionOp , class UnaryTransformOp &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">T ddc::parallel_transform_reduce </td>
-          <td>(</td>
-          <td class="paramtype">ExecSpace const &amp;&#160;</td>
-          <td class="paramname"><em>execution_space</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>domain</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>neutral</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">BinaryReductionOp &amp;&amp;&#160;</td>
-          <td class="paramname"><em>reduce</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">UnaryTransformOp &amp;&amp;&#160;</td>
-          <td class="paramname"><em>transform</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>A reduction over a nD domain using a given <code>Kokkos</code> execution space. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">execution_space</td><td>a Kokkos execution space where the loop will be executed on </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the range over which to apply the algorithm </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">neutral</td><td>the neutral element of the reduction operation </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">reduce</td><td>a binary FunctionObject that will be applied in unspecified order to the results of transform, the results of other reduce and neutral. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">transform</td><td>a unary FunctionObject that will be applied to each element of the input range. The return type must be acceptable as input to reduce </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="af00cc443c9d5f113239f843cfbd34aa9" name="af00cc443c9d5f113239f843cfbd34aa9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af00cc443c9d5f113239f843cfbd34aa9">&#9670;&nbsp;</a></span>parallel_transform_reduce() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTransformOp &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">T ddc::parallel_transform_reduce </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>domain</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>neutral</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">BinaryReductionOp &amp;&amp;&#160;</td>
-          <td class="paramname"><em>reduce</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">UnaryTransformOp &amp;&amp;&#160;</td>
-          <td class="paramname"><em>transform</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>A reduction over a nD domain using the <code>Kokkos</code> default execution space. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the range over which to apply the algorithm </td></tr>

@@ -30,6 +30,7 @@
 #include "ddc/parallel_deepcopy.hpp"
 #include "ddc/parallel_fill.hpp"
 #include "ddc/parallel_for_each.hpp"
+#include "ddc/parallel_transform_reduce.hpp"
 #include "ddc/reducer.hpp"
 #include "ddc/transform_reduce.hpp"
 

@@ -92,7 +92,7 @@ public:
         }
     }
 
-    void set_element(int const i, int const j, double const aij) const override
+    void set_element(int const i, int const j, double const aij) override
     {
         if (i >= std::max(0, j - m_ku) && i < std::min(get_size(), j + m_kl + 1)) {
             if constexpr (Kokkos::SpaceAccessibility<

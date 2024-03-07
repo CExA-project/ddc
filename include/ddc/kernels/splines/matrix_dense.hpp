@@ -57,7 +57,7 @@ public:
         }
     }
 
-    void set_element(int const i, int const j, double const aij) const override
+    void set_element(int const i, int const j, double const aij) override
     {
         if constexpr (Kokkos::SpaceAccessibility<
                               Kokkos::DefaultHostExecutionSpace,

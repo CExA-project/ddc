@@ -138,7 +138,7 @@ public:
         return 0;
     }
 
-    void set_element(int i, int j, double aij) const override
+    void set_element(int i, int j, double aij) override
     {
         m_matrix_dense->at(i, j) = aij;
     }

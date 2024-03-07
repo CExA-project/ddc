@@ -91,7 +91,7 @@ public:
             return Matrix_Corner_Block<ExecSpace>::get_element(i, j);
         }
     }
-    void set_element(int const i, int j, double const aij) const override
+    void set_element(int const i, int j, double const aij) override
     {
         assert(i >= 0);
         assert(i < get_size());

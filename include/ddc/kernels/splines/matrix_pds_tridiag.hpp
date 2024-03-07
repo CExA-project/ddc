@@ -82,7 +82,7 @@ public:
         }
         return 0.0;
     }
-    void set_element(int i, int j, double const aij) const override
+    void set_element(int i, int j, double const aij) override
     {
         if (i == j) {
             if constexpr (Kokkos::SpaceAccessibility<

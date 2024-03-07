@@ -93,7 +93,7 @@ public:
             }
         }
     }
-    virtual void set_element(int const i, int const j, double const aij) const override
+    virtual void set_element(int const i, int const j, double const aij) override
     {
         assert(i >= 0);
         assert(i < get_size());

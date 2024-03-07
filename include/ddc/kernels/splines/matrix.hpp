@@ -24,7 +24,7 @@ public:
 
     virtual double get_element(int i, int j) const = 0;
 
-    virtual void set_element(int i, int j, double aij) const = 0;
+    virtual void set_element(int i, int j, double aij) = 0;
 
     virtual void factorize()
     {
@@ -90,7 +90,7 @@ public:
         return bx;
     }
 
-    int KOKKOS_INLINE_FUNCTION get_size() const
+    int get_size() const
     {
         return m_n;
     }

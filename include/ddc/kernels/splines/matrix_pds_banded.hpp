@@ -45,10 +45,6 @@ public:
         , m_kd(kd)
         , m_q("q", kd + 1, mat_size)
     {
-    }
-
-    void reset() const override
-    {
         Kokkos::deep_copy(m_q, 0.);
     }
 

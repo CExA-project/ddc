@@ -32,10 +32,7 @@ public:
         , m_ipiv("ipiv", mat_size)
     {
         assert(mat_size > 0);
-    }
 
-    void reset() const override
-    {
         Kokkos::deep_copy(m_a, 0.);
     }
 

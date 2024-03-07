@@ -20,8 +20,6 @@ public:
 
     virtual ~Matrix() = default;
 
-    virtual void reset() const = 0;
-
     virtual double get_element(int i, int j) const = 0;
 
     virtual void set_element(int i, int j, double aij) = 0;

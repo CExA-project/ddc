@@ -45,12 +45,7 @@ public:
         assert(m_k >= 0);
         assert(m_k <= get_size());
         assert(m_nb == m_q_block->get_size());
-    }
 
-    virtual void reset() const override
-    {
-        m_q_block->reset();
-        m_delta->reset();
         Kokkos::deep_copy(m_Abm_1_gamma, 0.);
         Kokkos::deep_copy(m_lambda, 0.);
     }

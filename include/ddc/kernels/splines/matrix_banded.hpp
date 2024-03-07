@@ -65,10 +65,7 @@ public:
      * for the superdiagonals. (The kl additional rows are needed for pivoting.)
      * The term A(i,j) of the full matrix is stored in q(i-j+2*kl+1,j).
      */
-    }
 
-    void reset() const override
-    {
         Kokkos::deep_copy(m_q, 0.);
     }
 

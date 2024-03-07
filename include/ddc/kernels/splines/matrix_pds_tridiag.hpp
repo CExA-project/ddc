@@ -36,10 +36,6 @@ public:
         , m_d("d", mat_size)
         , m_l("l", mat_size - 1)
     {
-    }
-
-    void reset() const override
-    {
         Kokkos::deep_copy(m_d, 0.);
         Kokkos::deep_copy(m_l, 0.);
     }

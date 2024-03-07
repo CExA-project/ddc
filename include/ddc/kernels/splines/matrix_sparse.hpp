@@ -123,10 +123,7 @@ public:
         m_matrix_dense = gko::matrix::Dense<
                 double>::create(gko_exec->get_master(), gko::dim<2>(mat_size, mat_size));
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
-    }
 
-    void reset() const override
-    {
         m_matrix_dense->fill(0);
         m_matrix_sparse->clear();
     }
@@ -148,7 +145,6 @@ public:
         // Remove zeros
         gko::matrix_data<double> matrix_data(gko::dim<2>(get_size(), get_size()));
         m_matrix_dense->write(matrix_data);
-        m_matrix_dense.reset();
         matrix_data.remove_zeros();
         m_matrix_sparse->read(matrix_data);
         std::shared_ptr const gko_exec = m_matrix_sparse->get_executor();

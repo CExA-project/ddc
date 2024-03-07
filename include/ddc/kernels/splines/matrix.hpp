@@ -12,7 +12,7 @@ namespace ddc::detail {
 
 class Matrix
 {
-protected:
+private:
     int m_n;
 
 public:

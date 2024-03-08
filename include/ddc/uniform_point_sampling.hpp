@@ -200,7 +200,12 @@ public:
 };
 
 template <class DDim>
-constexpr bool is_uniform_sampling_v = std::is_base_of_v<UniformPointSamplingBase, DDim>;
+struct is_uniform_sampling : public std::is_base_of<UniformPointSamplingBase, DDim>
+{
+};
+
+template <class DDim>
+constexpr bool is_uniform_sampling_v = is_uniform_sampling<DDim>::value;
 
 template <
         class DDimImpl,

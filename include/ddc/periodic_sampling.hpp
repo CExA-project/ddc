@@ -182,7 +182,7 @@ public:
         assert(a < b);
         assert(n > 1);
         assert(n_period > 1);
-        double discretization_step {(b - a) / (n - 1)};
+        Real discretization_step {(b - a) / (n - 1)};
         Impl<DDim, Kokkos::HostSpace>
                 disc(a - n_ghosts_before.value() * discretization_step,
                      discretization_step,
@@ -231,7 +231,12 @@ public:
 };
 
 template <class DDim>
-constexpr bool is_periodic_sampling_v = std::is_base_of_v<PeriodicSamplingBase, DDim>;
+struct is_periodic_sampling : public std::is_base_of<PeriodicSamplingBase, DDim>
+{
+};
+
+template <class DDim>
+constexpr bool is_periodic_sampling_v = is_periodic_sampling<DDim>::value;
 
 template <
         class DDimImpl,

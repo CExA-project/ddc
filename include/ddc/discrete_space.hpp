@@ -150,7 +150,9 @@ auto extract_after(Tuple&& t, std::index_sequence<Ids...>)
 template <class DDim, class... Args>
 void init_discrete_space(Args&&... args)
 {
-    static_assert(!std::is_same_v<DDim, typename DDim::discrete_dimension_type>);
+    static_assert(
+            !std::is_same_v<DDim, typename DDim::discrete_dimension_type>,
+            "Discrete dimensions should inherit from the discretization, not use an alias");
     if (detail::g_discrete_space_dual<DDim>) {
         throw std::runtime_error("Discrete space function already initialized.");
     }

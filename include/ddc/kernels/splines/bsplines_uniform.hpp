@@ -213,7 +213,12 @@ public:
 };
 
 template <class DDim>
-constexpr bool is_uniform_bsplines_v = std::is_base_of_v<UniformBSplinesBase, DDim>;
+struct is_uniform_bsplines : public std::is_base_of<UniformBSplinesBase, DDim>
+{
+};
+
+template <class DDim>
+constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<DDim>::value;
 
 template <class Tag, std::size_t D>
 template <class DDim, class MemorySpace>

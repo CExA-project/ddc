@@ -14,18 +14,6 @@
 
 namespace ddc {
 
-template <class Sampling>
-struct UniformSamplingHidden
-    : ddc::UniformPointSampling<typename Sampling::continuous_dimension_type>
-{
-};
-
-template <class Sampling>
-struct NonUniformSamplingHidden
-    : ddc::NonUniformPointSampling<typename Sampling::continuous_dimension_type>
-{
-};
-
 /**
  * A class which provides helper functions to initialise the Greville points from a B-Spline definition.
  *
@@ -37,6 +25,18 @@ template <class BSplines, ddc::BoundCond BcXmin, ddc::BoundCond BcXmax>
 class GrevilleInterpolationPoints
 {
     using tag_type = typename BSplines::tag_type;
+
+    template <class Sampling>
+    struct IntermediateUniformSampling
+        : UniformPointSampling<typename Sampling::continuous_dimension_type>
+    {
+    };
+
+    template <class Sampling>
+    struct IntermediateNonUniformSampling
+        : NonUniformPointSampling<typename Sampling::continuous_dimension_type>
+    {
+    };
 
     template <class Sampling, typename U = BSplines, class = std::enable_if_t<U::is_uniform()>>
     static auto uniform_greville_points()
@@ -146,8 +146,8 @@ public:
     {
         using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
         if constexpr (U::is_uniform()) {
-            using HiddenSampling = UniformSamplingHidden<Sampling>;
-            auto points_wo_bcs = uniform_greville_points<HiddenSampling>();
+            using IntermediateSampling = IntermediateUniformSampling<Sampling>;
+            auto points_wo_bcs = uniform_greville_points<IntermediateSampling>();
             int const n_break_points = ddc::discrete_space<BSplines>().ncells() + 1;
             int const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE_MIN - N_BE_MAX;
             std::vector<double> points_with_bcs(npoints);
@@ -166,15 +166,15 @@ public:
                 }
             } else {
                 points_with_bcs[0]
-                        = points_wo_bcs.coordinate(ddc::DiscreteElement<HiddenSampling>(0));
+                        = points_wo_bcs.coordinate(ddc::DiscreteElement<IntermediateSampling>(0));
             }
 
             int const n_start
                     = (BcXmin == ddc::BoundCond::GREVILLE) ? BSplines::degree() / 2 + 1 : 1;
             int const domain_size = n_break_points - 2;
-            ddc::DiscreteDomain<HiddenSampling> const
-                    domain(ddc::DiscreteElement<HiddenSampling>(1),
-                           ddc::DiscreteVector<HiddenSampling>(domain_size));
+            ddc::DiscreteDomain<IntermediateSampling> const
+                    domain(ddc::DiscreteElement<IntermediateSampling>(1),
+                           ddc::DiscreteVector<IntermediateSampling>(domain_size));
 
             // Copy central points
             ddc::for_each(domain, [&](auto ip) {
@@ -197,25 +197,25 @@ public:
                 }
             } else {
                 points_with_bcs[npoints - 1]
-                        = points_wo_bcs.coordinate(ddc::DiscreteElement<HiddenSampling>(
+                        = points_wo_bcs.coordinate(ddc::DiscreteElement<IntermediateSampling>(
                                 ddc::discrete_space<BSplines>().ncells() - 1
                                 + BSplines::degree() % 2));
             }
             return SamplingImpl(points_with_bcs);
         } else {
-            using HiddenSampling = NonUniformSamplingHidden<Sampling>;
+            using IntermediateSampling = IntermediateNonUniformSampling<Sampling>;
             if constexpr (N_BE_MIN == 0 && N_BE_MAX == 0) {
                 return non_uniform_greville_points<Sampling>();
             } else {
-                auto points_wo_bcs = non_uniform_greville_points<HiddenSampling>();
+                auto points_wo_bcs = non_uniform_greville_points<IntermediateSampling>();
                 // All points are Greville points. Extract unnecessary points near the boundary
                 std::vector<double> points_with_bcs(points_wo_bcs.size() - N_BE_MIN - N_BE_MAX);
                 int constexpr n_start = N_BE_MIN;
 
-                using length = ddc::DiscreteVector<HiddenSampling>;
+                using length = ddc::DiscreteVector<IntermediateSampling>;
 
-                ddc::DiscreteDomain<HiddenSampling> const
-                        domain(ddc::DiscreteElement<HiddenSampling>(n_start),
+                ddc::DiscreteDomain<IntermediateSampling> const
+                        domain(ddc::DiscreteElement<IntermediateSampling>(n_start),
                                length(points_with_bcs.size()));
 
                 points_with_bcs[0] = points_wo_bcs.coordinate(domain.front());

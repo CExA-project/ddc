@@ -329,12 +329,18 @@ struct kwArgs_core
 template <typename DDim, typename... DDimX>
 int N(ddc::DiscreteDomain<DDimX...> x_mesh)
 {
+    static_assert(
+            (is_uniform_sampling_v<DDimX> && ...),
+            "DDimX dimensions should derive from UniformPointSampling");
     return ddc::get<DDim>(x_mesh.extents());
 }
 
 template <typename DDim, typename... DDimX>
 double a(ddc::DiscreteDomain<DDimX...> x_mesh)
 {
+    static_assert(
+            (is_uniform_sampling_v<DDimX> && ...),
+            "DDimX dimensions should derive from UniformPointSampling");
     return ((2 * N<DDim>(x_mesh) - 1) * coordinate(ddc::select<DDim>(x_mesh).front())
             - coordinate(ddc::select<DDim>(x_mesh).back()))
            / 2 / (N<DDim>(x_mesh) - 1);
@@ -343,6 +349,9 @@ double a(ddc::DiscreteDomain<DDimX...> x_mesh)
 template <typename DDim, typename... DDimX>
 double b(ddc::DiscreteDomain<DDimX...> x_mesh)
 {
+    static_assert(
+            (is_uniform_sampling_v<DDimX> && ...),
+            "DDimX dimensions should derive from UniformPointSampling");
     return ((2 * N<DDim>(x_mesh) - 1) * coordinate(ddc::select<DDim>(x_mesh).back())
             - coordinate(ddc::select<DDim>(x_mesh).front()))
            / 2 / (N<DDim>(x_mesh) - 1);
@@ -366,6 +375,9 @@ void core(
     static_assert(
             Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,
             "MemorySpace has to be accessible for ExecutionSpace.");
+    static_assert(
+            (is_uniform_sampling_v<DDimX> && ...),
+            "DDimX dimensions should derive from UniformPointSampling");
 
     std::array<int, sizeof...(DDimX)> n = {(int)ddc::get<DDimX>(mesh.extents())...};
     int idist = 1;
@@ -572,6 +584,12 @@ template <typename DDimFx, typename DDimX>
 typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
         ddc::DiscreteDomain<DDimX> x_mesh)
 {
+    static_assert(
+            is_uniform_sampling_v<DDimX>,
+            "DDimX dimensions should derive from UniformPointSampling");
+    static_assert(
+            is_periodic_sampling_v<DDimFx>,
+            "DDimFx dimensions should derive from PeriodicPointSampling");
     auto [impl, ddom] = DDimFx::template init<DDimFx>(
             ddc::Coordinate<typename DDimFx::continuous_dimension_type>(0),
             ddc::Coordinate<typename DDimFx::continuous_dimension_type>(
@@ -587,6 +605,12 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
 template <typename... DDimFx, typename... DDimX>
 ddc::DiscreteDomain<DDimFx...> FourierMesh(ddc::DiscreteDomain<DDimX...> x_mesh, bool C2C)
 {
+    static_assert(
+            (is_uniform_sampling_v<DDimX> && ...),
+            "DDimX dimensions should derive from UniformPointSampling");
+    static_assert(
+            (is_periodic_sampling_v<DDimFx> && ...),
+            "DDimFx dimensions should derive from PeriodicPointSampling");
     return ddc::DiscreteDomain<DDimFx...>(ddc::DiscreteDomain<DDimFx>(
             ddc::DiscreteElement<DDimFx>(0),
             ddc::DiscreteVector<DDimFx>(
@@ -623,6 +647,12 @@ void fft(
                     std::experimental::
                             layout_right> && std::is_same_v<layout_out, std::experimental::layout_right>,
             "Layouts must be right-handed");
+    static_assert(
+            (is_uniform_sampling_v<DDimX> && ...),
+            "DDimX dimensions should derive from UniformPointSampling");
+    static_assert(
+            (is_periodic_sampling_v<DDimFx> && ...),
+            "DDimFx dimensions should derive from PeriodicPointSampling");
 
     ddc::detail::fft::core<Tin, Tout, ExecSpace, MemorySpace, DDimX...>(
             execSpace,
@@ -654,6 +684,12 @@ void ifft(
                     std::experimental::
                             layout_right> && std::is_same_v<layout_out, std::experimental::layout_right>,
             "Layouts must be right-handed");
+    static_assert(
+            (is_uniform_sampling_v<DDimX> && ...),
+            "DDimX dimensions should derive from UniformPointSampling");
+    static_assert(
+            (is_periodic_sampling_v<DDimFx> && ...),
+            "DDimFx dimensions should derive from PeriodicPointSampling");
 
     ddc::detail::fft::core<Tin, Tout, ExecSpace, MemorySpace, DDimX...>(
             execSpace,

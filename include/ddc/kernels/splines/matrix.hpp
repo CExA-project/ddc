@@ -44,14 +44,14 @@ public:
 
     virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const b) const
     {
-        ddc::DSpan2D b_2d(b.data_handle(), b.extent(0), 1);
+        ddc::DSpan2D_left b_2d(b.data_handle(), b.extent(0), 1);
         solve_inplace(b_2d);
         return b;
     }
 
     virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const b) const
     {
-        ddc::DSpan2D b_2d(b.data_handle(), b.extent(0), 1);
+        ddc::DSpan2D_left b_2d(b.data_handle(), b.extent(0), 1);
         solve_transpose_inplace(b_2d);
         return b;
     }

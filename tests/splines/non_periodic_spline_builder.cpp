@@ -63,7 +63,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
 {
     CoordX constexpr x0(0.);
     CoordX constexpr xN(1.);
-    std::size_t constexpr ncells = 100;
+    std::size_t constexpr ncells = 32;
 
     // 1. Create BSplines
     {
@@ -204,7 +204,8 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
         const double h = (xN - x0) / ncells;
         EXPECT_LE(
                 max_norm_error,
-                std::max(error_bounds.error_bound(h, s_degree_x), 1.0e-14 * max_norm));
+                // std::max(error_bounds.error_bound(h, s_degree_x), 1.0e-14 * max_norm));
+                1.0e-16);
         EXPECT_LE(
                 max_norm_error_diff,
                 std::max(error_bounds.error_bound_on_deriv(h, s_degree_x), 1e-12 * max_norm_diff));

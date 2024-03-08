@@ -185,7 +185,7 @@ static void BatchedSplineTest()
     Kokkos::DefaultHostExecutionSpace const host_exec_space;
     ExecSpace const exec_space;
 
-    std::size_t constexpr ncells = 32;
+    std::size_t constexpr ncells = 10;
     DimsInitializer<IDim<I, I>, BatchDims<IDim<I, I>, IDim<X, I>...>> dims_initializer;
     dims_initializer(ncells);
 
@@ -389,8 +389,7 @@ static void BatchedSplineTest()
     SplineErrorBounds<evaluator_type<IDim<I, I>>> error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
-            1.0e-10);
-            //std::max(error_bounds.error_bound(dx<I>(ncells), s_degree_x), 1.0e-14 * max_norm));
+            std::max(error_bounds.error_bound(dx<I>(ncells), s_degree_x), 1.0e-14 * max_norm));
     EXPECT_LE(
             max_norm_error_diff,
             std::

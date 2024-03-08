@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <fstream>
 #include <memory>
 #include <optional>
 #include <type_traits>
@@ -197,6 +198,10 @@ public:
 
             Kokkos::deep_copy(x_subview, b_subview);
 
+            std::ofstream fout_csr("csr.txt");
+            std::ofstream fout_rhs("rhs.txt");
+            write(fout_csr, m_matrix_sparse);
+            write(fout_rhs, to_gko_dense(gko_exec, b_subview));
             if (transpose == 'N') {
                 m_solver
                         ->apply(to_gko_dense(gko_exec, b_subview),

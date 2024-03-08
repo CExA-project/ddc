@@ -275,7 +275,6 @@ protected:
     }
     virtual int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
     {
-        std::cout << b.stride(0) << "\n";
         assert(b.stride(0) == 1);
         int const n_equations = b.extent(1);
         int const stride = b.stride(1);

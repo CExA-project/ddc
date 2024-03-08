@@ -175,18 +175,18 @@ public:
         return 0;
     }
 
-    int solve_inplace_method(
-            double* const b,
-            char const transpose,
-            int const n_equations,
-            int const stride) const override
+    int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
     {
+        assert(b.stride(1) == 1 || b.extent(1) == 1);
+        int const n_equations = b.extent(1);
+        int const stride = b.stride(0);
+
         std::shared_ptr const gko_exec = m_solver->get_executor();
 
         int const main_chunk_size = std::min(m_cols_per_chunk, n_equations);
 
         Kokkos::View<double**, Kokkos::LayoutStride, ExecSpace> const
-                b_view(b, Kokkos::LayoutStride(get_size(), stride, n_equations, 1));
+                b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), stride, n_equations, 1));
         Kokkos::View<double**, Kokkos::LayoutStride, ExecSpace> const
                 x_view("", Kokkos::LayoutStride(get_size(), stride, main_chunk_size, 1));
 

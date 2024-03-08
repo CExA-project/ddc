@@ -273,12 +273,12 @@ protected:
     {
         return 0;
     }
-    virtual int solve_inplace_method(
-            double* const b,
-            char const transpose,
-            int const n_equations,
-            int const stride) const override
+    virtual int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
     {
+        assert(b.stride(0) == 1 || b.extent(1) == 1);
+        int const n_equations = b.extent(1);
+        int const stride = b.stride(1);
+
         std::experimental::layout_stride::mapping<std::experimental::extents<
                 size_t,
                 std::experimental::dynamic_extent,
@@ -299,8 +299,8 @@ protected:
                         std::array<std::size_t, 2> {1, (std::size_t)stride}};
 
 
-        ddc::DSpan2D_stride const u(b, layout_mapping_u);
-        ddc::DSpan2D_stride const v(b + m_nb, layout_mapping_v);
+        ddc::DSpan2D_stride const u(b.data_handle(), layout_mapping_u);
+        ddc::DSpan2D_stride const v(b.data_handle() + m_nb, layout_mapping_v);
 
         if (transpose == 'N') {
             m_q_block->solve_inplace(u);

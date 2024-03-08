@@ -149,12 +149,15 @@ protected:
         return info;
     }
 
-    int solve_inplace_method(double* const b, char const, int const n_equations, int const stride)
-            const override
+    int solve_inplace_method(ddc::DSpan2D_stride b, char const) const override
     {
+        assert(b.stride(0) == 1 || b.extent(1) == 1);
+        int const n_equations = b.extent(1);
+        int const stride = b.stride(1);
+
         auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
         Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
-                b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+                b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
         auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b_view);
         for (int i = 0; i < n_equations; ++i) {
             Kokkos::deep_copy(

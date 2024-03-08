@@ -57,14 +57,14 @@ public:
         assert(m_ku <= mat_size);
 
         /*
-     * Given the linear system A*x=b, we assume that A is a square (n by n)
-     * with ku super-diagonals and kl sub-diagonals.
-     * All non-zero elements of A are stored in the rectangular matrix q, using
-     * the format required by DGBTRF (LAPACK): diagonals of A are rows of q.
-     * q has 2*kl rows for the subdiagonals, 1 row for the diagonal, and ku rows
-     * for the superdiagonals. (The kl additional rows are needed for pivoting.)
-     * The term A(i,j) of the full matrix is stored in q(i-j+2*kl+1,j).
-     */
+         * Given the linear system A*x=b, we assume that A is a square (n by n)
+         * with ku super-diagonals and kl sub-diagonals.
+         * All non-zero elements of A are stored in the rectangular matrix q, using
+         * the format required by DGBTRF (LAPACK): diagonals of A are rows of q.
+         * q has 2*kl rows for the subdiagonals, 1 row for the diagonal, and ku rows
+         * for the superdiagonals. (The kl additional rows are needed for pivoting.)
+         * The term A(i,j) of the full matrix is stored in q(i-j+2*kl+1,j).
+         */
 
         Kokkos::deep_copy(m_q, 0.);
     }

@@ -74,7 +74,7 @@ unsigned int default_preconditionner_max_block_size() noexcept
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
     if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-        return 1u; // Related to #1563 issue
+        return 1u; // Related to Ginkgo#1563 issue
     }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA

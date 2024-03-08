@@ -119,7 +119,12 @@ public:
 };
 
 template <class DDim>
-constexpr bool is_non_uniform_sampling_v = std::is_base_of_v<NonUniformPointSamplingBase, DDim>;
+struct is_non_uniform_sampling : public std::is_base_of<NonUniformPointSamplingBase, DDim>
+{
+};
+
+template <class DDim>
+constexpr bool is_non_uniform_sampling_v = is_non_uniform_sampling<DDim>::value;
 
 template <
         class DDimImpl,

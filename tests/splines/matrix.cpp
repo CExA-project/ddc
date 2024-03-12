@@ -15,7 +15,7 @@
 
 namespace {
 
-void fill_identity(ddc::DSpan2D mat)
+void fill_identity(ddc::DSpan2D_stride mat)
 {
     assert(mat.extent(0) == mat.extent(1));
     for (std::size_t i(0); i < mat.extent(0); ++i) {
@@ -25,7 +25,7 @@ void fill_identity(ddc::DSpan2D mat)
     }
 }
 
-void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
+void copy_matrix(ddc::DSpan2D_stride copy, std::unique_ptr<ddc::detail::Matrix>& mat)
 {
     assert(mat->get_size() == int(copy.extent(0)));
     assert(mat->get_size() == int(copy.extent(1)));
@@ -37,23 +37,7 @@ void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
     }
 }
 
-void check_inverse(ddc::DSpan2D matrix, ddc::DSpan2D inv)
-{
-    double TOL = 1e-10;
-    std::size_t N = matrix.extent(0);
-
-    for (std::size_t i(0); i < N; ++i) {
-        for (std::size_t j(0); j < N; ++j) {
-            double id_val = 0.0;
-            for (std::size_t k(0); k < N; ++k) {
-                id_val += matrix(i, k) * inv(j, k);
-            }
-            EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
-        }
-    }
-}
-
-void check_inverse_transpose(ddc::DSpan2D matrix, ddc::DSpan2D inv)
+void check_inverse(ddc::DSpan2D_stride matrix, ddc::DSpan2D_stride inv)
 {
     double TOL = 1e-10;
     std::size_t N = matrix.extent(0);
@@ -63,6 +47,22 @@ void check_inverse_transpose(ddc::DSpan2D matrix, ddc::DSpan2D inv)
             double id_val = 0.0;
             for (std::size_t k(0); k < N; ++k) {
                 id_val += matrix(i, k) * inv(k, j);
+            }
+            EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
+        }
+    }
+}
+
+void check_inverse_transpose(ddc::DSpan2D_stride matrix, ddc::DSpan2D_stride inv)
+{
+    double TOL = 1e-10;
+    std::size_t N = matrix.extent(0);
+
+    for (std::size_t i(0); i < N; ++i) {
+        for (std::size_t j(0); j < N; ++j) {
+            double id_val = 0.0;
+            for (std::size_t k(0); k < N; ++k) {
+                id_val += matrix(i, k) * inv(j, k);
             }
             EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
         }
@@ -79,7 +79,6 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
     auto const [N, k] = GetParam();
     std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded<
             Kokkos::DefaultHostExecutionSpace>(N, k, k, true);
-    matrix->reset();
 
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 2.0 * k);
@@ -91,11 +90,11 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
         }
     }
     std::vector<double> val_ptr(N * N);
-    ddc::DSpan2D val(val_ptr.data(), N, N);
+    ddc::DSpan2D_left val(val_ptr.data(), N, N);
     copy_matrix(val, matrix);
 
     std::vector<double> inv_ptr(N * N);
-    ddc::DSpan2D inv(inv_ptr.data(), N, N);
+    ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
     fill_identity(inv);
     matrix->factorize();
     matrix->solve_inplace(inv);
@@ -107,7 +106,6 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
     auto const [N, k] = GetParam();
     std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded<
             Kokkos::DefaultHostExecutionSpace>(N, 0, 2 * k, true);
-    matrix->reset();
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(i); j < std::min(N, i + k); ++j) {
@@ -121,11 +119,11 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
         }
     }
     std::vector<double> val_ptr(N * N);
-    ddc::DSpan2D val(val_ptr.data(), N, N);
+    ddc::DSpan2D_left val(val_ptr.data(), N, N);
     copy_matrix(val, matrix);
 
     std::vector<double> inv_ptr(N * N);
-    ddc::DSpan2D inv(inv_ptr.data(), N, N);
+    ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
     fill_identity(inv);
     matrix->factorize();
     matrix->solve_inplace(inv);
@@ -143,7 +141,6 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
         std::unique_ptr<ddc::detail::Matrix> matrix
                 = ddc::detail::MatrixMaker::make_new_periodic_banded<
                         Kokkos::DefaultHostExecutionSpace>(N, k - s, k + s, false);
-        matrix->reset();
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
                 std::ptrdiff_t diag = ddc::detail::modulo((int)(j - i), (int)N);
@@ -157,11 +154,11 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
             }
         }
         std::vector<double> val_ptr(N * N);
-        ddc::DSpan2D val(val_ptr.data(), N, N);
+        ddc::DSpan2D_left val(val_ptr.data(), N, N);
         copy_matrix(val, matrix);
 
         std::vector<double> inv_ptr(N * N);
-        ddc::DSpan2D inv(inv_ptr.data(), N, N);
+        ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
         fill_identity(inv);
         matrix->factorize();
         matrix->solve_inplace(inv);
@@ -174,7 +171,6 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetricTranspose)
     auto const [N, k] = GetParam();
     std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded<
             Kokkos::DefaultHostExecutionSpace>(N, k, k, true);
-    matrix->reset();
 
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 2.0 * k);
@@ -186,11 +182,11 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetricTranspose)
         }
     }
     std::vector<double> val_ptr(N * N);
-    ddc::DSpan2D val(val_ptr.data(), N, N);
+    ddc::DSpan2D_left val(val_ptr.data(), N, N);
     copy_matrix(val, matrix);
 
     std::vector<double> inv_ptr(N * N);
-    ddc::DSpan2D inv(inv_ptr.data(), N, N);
+    ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
     fill_identity(inv);
     matrix->factorize();
     for (std::size_t i(0); i < N; ++i) {
@@ -205,7 +201,6 @@ TEST_P(MatrixSizesFixture, OffsetBandedTranspose)
     auto const [N, k] = GetParam();
     std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded<
             Kokkos::DefaultHostExecutionSpace>(N, 0, 2 * k, true);
-    matrix->reset();
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(i); j < std::min(N, i + k); ++j) {
@@ -219,11 +214,11 @@ TEST_P(MatrixSizesFixture, OffsetBandedTranspose)
         }
     }
     std::vector<double> val_ptr(N * N);
-    ddc::DSpan2D val(val_ptr.data(), N, N);
+    ddc::DSpan2D_left val(val_ptr.data(), N, N);
     copy_matrix(val, matrix);
 
     std::vector<double> inv_ptr(N * N);
-    ddc::DSpan2D inv(inv_ptr.data(), N, N);
+    ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
     fill_identity(inv);
     matrix->factorize();
     for (std::size_t i(0); i < N; ++i) {
@@ -244,7 +239,6 @@ TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
         std::unique_ptr<ddc::detail::Matrix> matrix
                 = ddc::detail::MatrixMaker::make_new_periodic_banded<
                         Kokkos::DefaultHostExecutionSpace>(N, k - s, k + s, false);
-        matrix->reset();
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
                 int diag = ddc::detail::modulo((int)(j - i), (int)N);
@@ -258,11 +252,11 @@ TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
             }
         }
         std::vector<double> val_ptr(N * N);
-        ddc::DSpan2D val(val_ptr.data(), N, N);
+        ddc::DSpan2D_left val(val_ptr.data(), N, N);
         copy_matrix(val, matrix);
 
         std::vector<double> inv_ptr(N * N);
-        ddc::DSpan2D inv(inv_ptr.data(), N, N);
+        ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
         fill_identity(inv);
         matrix->factorize();
         for (std::size_t i(0); i < N; ++i) {
@@ -280,10 +274,9 @@ TEST_P(MatrixSizesFixture, Sparse)
 
     std::unique_ptr<ddc::detail::Matrix> matrix
             = ddc::detail::MatrixMaker::make_new_sparse<Kokkos::DefaultExecutionSpace>(N);
-    matrix->reset();
 
     std::vector<double> val_ptr(N * N);
-    ddc::DSpan2D val(val_ptr.data(), N, N);
+    ddc::DSpan2D_left val(val_ptr.data(), N, N);
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(0); j < N; ++j) {
             if (i == j) {

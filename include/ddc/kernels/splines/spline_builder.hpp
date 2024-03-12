@@ -439,7 +439,6 @@ void SplineBuilder<
                 cols_per_chunk,
                 preconditionner_max_block_size);
     }
-    matrix->reset();
 
     build_matrix_system();
 

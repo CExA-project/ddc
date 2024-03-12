@@ -1,4 +1,7 @@
+# Copyright (C) 2021 - 2024 The DDC development team, see COPYRIGHT.md file
+#
 # SPDX-License-Identifier: MIT
+
 cmake_minimum_required(VERSION 3.15)
 
 add_subdirectory(discrete_space)

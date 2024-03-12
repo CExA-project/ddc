@@ -1,14 +1,26 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
 Multiple people have contributed to DDC. To show our appreciation for their
 public spirit, we list here in alphabetical order a condensed list of their
 contributions.
 
 
 Julien Bigot - CEA (julien.bigot@cea.fr)
-* Maintainer
+* Co-maintainer
 * Initial designer and first development steps
 * Co-developer
+* Participation to DDC-based redisign of splines
+
+Emily Bourne - CEA (emily.bourne@cea.fr)
+* Work on splines and matrices
 
 Thomas Padioleau - CEA (thomas.padioleau@cea.fr)
-* Co-maintainer
+* Maintainer
 * Co-designer
 * Main developer
+* Redesign and reimplementation of splines using DCC
+
+Baptiste Legouix - CEA (baptiste.legouix@cea.fr)
+* GPU port (batching & call to Ginkgo backend)

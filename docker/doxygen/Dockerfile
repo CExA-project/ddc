@@ -1,4 +1,7 @@
 FROM ubuntu:lunar
+
+# Copyright (C) 2021 - 2024 The DDC development team, see COPYRIGHT.md file
+#
 # SPDX-License-Identifier: MIT
 
 COPY bash_run /bin/

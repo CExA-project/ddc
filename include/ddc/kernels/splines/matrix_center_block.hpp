@@ -51,6 +51,7 @@ public:
         adjust_indexes(i, j);
         Matrix_Corner_Block<ExecSpace>::set_element(i, j, aij);
     }
+
     ddc::DSpan2D_stride solve_inplace(ddc::DSpan2D_stride const bx) const override
     {
         swap_array_to_corner(bx);

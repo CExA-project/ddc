@@ -127,26 +127,28 @@ public:
             ddc::DView2D_stride const u) const override
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
+        auto nb_proxy = m_nb;
+        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_lambda_section",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
-                KOKKOS_CLASS_LAMBDA(
+                KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, m_k),
+                            Kokkos::TeamThreadRange(teamMember, k_proxy),
                             [&](const int i) {
                                 /// Upper diagonals in lambda
                                 for (int l = 0; l <= i; ++l) {
                                     Kokkos::atomic_sub(&v(i, j), lambda_device(i, l) * u(l, j));
                                 }
                                 // Lower diagonals in lambda
-                                for (int l = i + 1; l < m_k + 1; ++l) {
+                                for (int l = i + 1; l < k_proxy + 1; ++l) {
                                     Kokkos::atomic_sub(
                                             &v(i, j),
-                                            lambda_device(i, l) * u(m_nb - 1 - m_k + l, j));
+                                            lambda_device(i, l) * u(nb_proxy - 1 - k_proxy + l, j));
                                 }
                             });
                 });
@@ -158,25 +160,27 @@ public:
             ddc::DView2D_stride const v) const override
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
+        auto nb_proxy = m_nb;
+        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
-                KOKKOS_CLASS_LAMBDA(
+                KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, m_k),
+                            Kokkos::TeamThreadRange(teamMember, k_proxy),
                             [&](const int i) {
                                 /// Upper diagonals in lambda
                                 for (int l = 0; l <= i; ++l) {
                                     Kokkos::atomic_sub(&u(l, j), lambda_device(i, l) * v(i, j));
                                 }
                                 // Lower diagonals in lambda
-                                for (int l = i + 1; l < m_k + 1; ++l) {
+                                for (int l = i + 1; l < k_proxy + 1; ++l) {
                                     Kokkos::atomic_sub(
-                                            &u(m_nb - 1 - m_k + l, j),
+                                            &u(nb_proxy - 1 - k_proxy + l, j),
                                             lambda_device(i, l) * v(i, j));
                                 }
                             });

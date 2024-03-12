@@ -22,8 +22,8 @@ template <class ExecSpace>
 class Matrix_Dense : public Matrix
 {
 protected:
-    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_a;
-    Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv;
+    Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace> m_a;
+    Kokkos::View<int*, Kokkos::HostSpace> m_ipiv;
 
 public:
     explicit Matrix_Dense(int const mat_size)
@@ -40,44 +40,20 @@ public:
     {
         assert(i < get_size());
         assert(j < get_size());
-        if constexpr (Kokkos::SpaceAccessibility<
-                              Kokkos::DefaultHostExecutionSpace,
-                              typename ExecSpace::memory_space>::accessible) {
-            return m_a(i, j);
-        } else {
-            // Inefficient, usage is strongly discouraged
-            double aij;
-            Kokkos::deep_copy(
-                    Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                    Kokkos::subview(m_a, i, j));
-            return aij;
-        }
+        return m_a(i, j);
     }
 
     void set_element(int const i, int const j, double const aij) override
     {
-        if constexpr (Kokkos::SpaceAccessibility<
-                              Kokkos::DefaultHostExecutionSpace,
-                              typename ExecSpace::memory_space>::accessible) {
-            m_a(i, j) = aij;
-        } else {
-            // Inefficient, usage is strongly discouraged
-            Kokkos::deep_copy(
-                    Kokkos::subview(m_a, i, j),
-                    Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-        }
+        m_a(i, j) = aij;
     }
 
 private:
     int factorize_method() override
     {
-        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
-        auto ipiv_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         int info;
         int const n = get_size();
-        dgetrf_(&n, &n, a_host.data(), &n, ipiv_host.data(), &info);
-        Kokkos::deep_copy(m_a, a_host);
-        Kokkos::deep_copy(m_ipiv, ipiv_host);
+        dgetrf_(&n, &n, m_a.data(), &n, m_ipiv.data(), &info);
         return info;
     }
 
@@ -87,8 +63,6 @@ private:
         int const n_equations = b.extent(1);
         int const stride = b.stride(1);
 
-        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
-        auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
                 b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
         auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b_view);
@@ -102,9 +76,9 @@ private:
         dgetrs_(&transpose,
                 &n,
                 &n_equations,
-                a_host.data(),
+                m_a.data(),
                 &n,
-                ipiv_host.data(),
+                m_ipiv.data(),
                 b_host.data(),
                 &stride,
                 &info);

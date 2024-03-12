@@ -28,8 +28,8 @@ protected:
     //-------------------------------------
     std::shared_ptr<Matrix> m_q_block;
     std::shared_ptr<Matrix_Dense<ExecSpace>> m_delta;
-    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_Abm_1_gamma;
-    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_lambda;
+    Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace> m_Abm_1_gamma;
+    Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace> m_lambda;
 
 public:
     Matrix_Corner_Block(int const n, int const k, std::unique_ptr<Matrix> q)
@@ -61,31 +61,9 @@ public:
         } else if (i >= m_nb && j >= m_nb) {
             return m_delta->get_element(i - m_nb, j - m_nb);
         } else if (j >= m_nb) {
-            if constexpr (Kokkos::SpaceAccessibility<
-                                  Kokkos::DefaultHostExecutionSpace,
-                                  typename ExecSpace::memory_space>::accessible) {
-                return m_Abm_1_gamma(i, j - m_nb);
-            } else {
-                // Inefficient, usage is strongly discouraged
-                double aij;
-                Kokkos::deep_copy(
-                        Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                        Kokkos::subview(m_Abm_1_gamma, i, j - m_nb));
-                return aij;
-            }
+            return m_Abm_1_gamma(i, j - m_nb);
         } else {
-            if constexpr (Kokkos::SpaceAccessibility<
-                                  Kokkos::DefaultHostExecutionSpace,
-                                  typename ExecSpace::memory_space>::accessible) {
-                return m_lambda(i - m_nb, j);
-            } else {
-                // Inefficient, usage is strongly discouraged
-                double aij;
-                Kokkos::deep_copy(
-                        Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                        Kokkos::subview(m_lambda, i - m_nb, j));
-                return aij;
-            }
+            return m_lambda(i - m_nb, j);
         }
     }
     virtual void set_element(int const i, int const j, double const aij) override
@@ -99,27 +77,9 @@ public:
         } else if (i >= m_nb && j >= m_nb) {
             m_delta->set_element(i - m_nb, j - m_nb, aij);
         } else if (j >= m_nb) {
-            if constexpr (Kokkos::SpaceAccessibility<
-                                  Kokkos::DefaultHostExecutionSpace,
-                                  typename ExecSpace::memory_space>::accessible) {
-                m_Abm_1_gamma(i, j - m_nb) = aij;
-            } else {
-                // Inefficient, usage is strongly discouraged
-                Kokkos::deep_copy(
-                        Kokkos::subview(m_Abm_1_gamma, i, j - m_nb),
-                        Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-            }
+            m_Abm_1_gamma(i, j - m_nb) = aij;
         } else {
-            if constexpr (Kokkos::SpaceAccessibility<
-                                  Kokkos::DefaultHostExecutionSpace,
-                                  typename ExecSpace::memory_space>::accessible) {
-                m_lambda(i - m_nb, j) = aij;
-            } else {
-                // Inefficient, usage is strongly discouraged
-                Kokkos::deep_copy(
-                        Kokkos::subview(m_lambda, i - m_nb, j),
-                        Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-            }
+            m_lambda(i - m_nb, j) = aij;
         }
     }
     virtual void factorize() override
@@ -158,10 +118,6 @@ public:
     virtual void calculate_delta_to_factorize()
     {
         auto delta_proxy = *m_delta;
-        auto lambda_host = Kokkos::
-                create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_lambda);
-        auto Abm_1_gamma_host = Kokkos::
-                create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_Abm_1_gamma);
         Kokkos::parallel_for(
                 "calculate_delta_to_factorize",
                 Kokkos::MDRangePolicy<
@@ -170,7 +126,7 @@ public:
                 [&](const int i, const int j) {
                     double val = 0.0;
                     for (int l = 0; l < m_nb; ++l) {
-                        val += lambda_host(i, l) * Abm_1_gamma_host(l, j);
+                        val += m_lambda(i, l) * m_Abm_1_gamma(l, j);
                     }
                     delta_proxy.set_element(i, j, delta_proxy.get_element(i, j) - val);
                 });
@@ -179,6 +135,7 @@ public:
             ddc::DSpan2D_stride const v,
             ddc::DView2D_stride const u) const
     {
+        auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
         Kokkos::parallel_for(
                 "solve_lambda_section",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
@@ -192,7 +149,7 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < m_nb; ++l) {
-                                    Kokkos::atomic_sub(&v(i, j), m_lambda(i, l) * u(l, j));
+                                    Kokkos::atomic_sub(&v(i, j), lambda_device(i, l) * u(l, j));
                                 }
                             });
                 });
@@ -202,6 +159,7 @@ public:
             ddc::DSpan2D_stride const u,
             ddc::DView2D_stride const v) const
     {
+        auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
                 Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
@@ -215,7 +173,7 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < m_k; ++l) {
-                                    Kokkos::atomic_sub(&u(i, j), m_lambda(l, i) * v(l, j));
+                                    Kokkos::atomic_sub(&u(i, j), lambda_device(l, i) * v(l, j));
                                 }
                             });
                 });
@@ -225,6 +183,7 @@ public:
             ddc::DSpan2D_stride const u,
             ddc::DView2D_stride const v) const
     {
+        auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
         Kokkos::parallel_for(
                 "solve_gamma_section",
                 Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
@@ -238,7 +197,9 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < m_k; ++l) {
-                                    Kokkos::atomic_sub(&u(i, j), m_Abm_1_gamma(i, l) * v(l, j));
+                                    Kokkos::atomic_sub(
+                                            &u(i, j),
+                                            Abm_1_gamma_device(i, l) * v(l, j));
                                 }
                             });
                 });
@@ -248,6 +209,7 @@ public:
             ddc::DSpan2D_stride const v,
             ddc::DView2D_stride const u) const
     {
+        auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
         Kokkos::parallel_for(
                 "solve_gamma_section_transpose",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
@@ -261,7 +223,9 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < m_nb; ++l) {
-                                    Kokkos::atomic_sub(&v(i, j), m_Abm_1_gamma(l, i) * u(l, j));
+                                    Kokkos::atomic_sub(
+                                            &v(i, j),
+                                            Abm_1_gamma_device(l, i) * u(l, j));
                                 }
                             });
                 });
@@ -297,7 +261,6 @@ protected:
                                 std::size_t,
                                 2> {(std::size_t)m_k, (std::size_t)n_equations},
                         std::array<std::size_t, 2> {1, (std::size_t)stride}};
-
 
         ddc::DSpan2D_stride const u(b.data_handle(), layout_mapping_u);
         ddc::DSpan2D_stride const v(b.data_handle() + m_nb, layout_mapping_v);

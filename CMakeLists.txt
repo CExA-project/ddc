@@ -248,7 +248,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
   target_compile_definitions(DDC INTERFACE ginkgo_AVAIL)
 
   # Lapack
-  find_package(LAPACK REQUIRED COMPONENTS CXX)
+  find_package(LAPACK REQUIRED)
   target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
 endif()
 

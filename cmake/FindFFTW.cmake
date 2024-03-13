@@ -2,7 +2,7 @@
 # Copyright (C) 2017, Patrick Bos
 # Copyright (C) The DDC development team, see COPYRIGHT.md file
 #
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: BSD-3-Clause
 
 # - Find the FFTW library
 #

@@ -14,6 +14,6 @@ For the purpose of copyright, the DDC development team is defined as follow:
 * Commissariat a l'énergie atomique et aux énergies alternatives (CEA)
 * École polytechnique fédérale de Lausanne
 * Julien Bigot <julien@julien-bigot.fr>
-* Thomas Padioleau <thomas.padioleau@gmail.com>
+* Thomas Padioleau <padioleau.thomas@gmail.com>
 * Université Paris-Saclay
 * Université de Versailles Saint-Quentin-en-Yvelines (UVSQ)

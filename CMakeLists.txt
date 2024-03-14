@@ -218,7 +218,10 @@ install(
 if( FFTW_FOUND )
 	target_link_libraries( DDC INTERFACE FFTW::Float )
 	target_link_libraries( DDC INTERFACE FFTW::Double )
-	target_compile_definitions(DDC INTERFACE fftw_AVAIL)
+endif()
+
+if( FFTW_FOUND AND "${Kokkos_ENABLE_SERIAL}")
+	target_compile_definitions(DDC INTERFACE fftw_serial_AVAIL)
 endif()
 
 if( FFTW_FOUND AND "${Kokkos_ENABLE_OPENMP}")

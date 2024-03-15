@@ -151,7 +151,7 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < nb_proxy; ++l) {
-                                    Kokkos::atomic_sub(&v(i, j), lambda_device(i, l) * u(l, j));
+                                    v(i, j) -= lambda_device(i, l) * u(l, j);
                                 }
                             });
                 });
@@ -177,7 +177,7 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < k_proxy; ++l) {
-                                    Kokkos::atomic_sub(&u(i, j), lambda_device(l, i) * v(l, j));
+                                    u(i, j) -= lambda_device(l, i) * v(l, j);
                                 }
                             });
                 });
@@ -203,9 +203,7 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < k_proxy; ++l) {
-                                    Kokkos::atomic_sub(
-                                            &u(i, j),
-                                            Abm_1_gamma_device(i, l) * v(l, j));
+                                    u(i, j) -= Abm_1_gamma_device(i, l) * v(l, j);
                                 }
                             });
                 });
@@ -231,9 +229,7 @@ public:
                             [&](const int i) {
                                 // Upper diagonals in lambda
                                 for (int l = 0; l < nb_proxy; ++l) {
-                                    Kokkos::atomic_sub(
-                                            &v(i, j),
-                                            Abm_1_gamma_device(l, i) * u(l, j));
+                                    v(i, j) -= Abm_1_gamma_device(l, i) * u(l, j);
                                 }
                             });
                 });

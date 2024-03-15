@@ -142,13 +142,12 @@ public:
                             [&](const int i) {
                                 /// Upper diagonals in lambda
                                 for (int l = 0; l <= i; ++l) {
-                                    Kokkos::atomic_sub(&v(i, j), lambda_device(i, l) * u(l, j));
+                                    v(i, j) -= lambda_device(i, l) * u(l, j);
                                 }
                                 // Lower diagonals in lambda
                                 for (int l = i + 1; l < k_proxy + 1; ++l) {
-                                    Kokkos::atomic_sub(
-                                            &v(i, j),
-                                            lambda_device(i, l) * u(nb_proxy - 1 - k_proxy + l, j));
+                                    v(i, j) -= lambda_device(i, l)
+                                               * u(nb_proxy - 1 - k_proxy + l, j);
                                 }
                             });
                 });
@@ -175,13 +174,12 @@ public:
                             [&](const int i) {
                                 /// Upper diagonals in lambda
                                 for (int l = 0; l <= i; ++l) {
-                                    Kokkos::atomic_sub(&u(l, j), lambda_device(i, l) * v(i, j));
+                                    u(l, j) -= lambda_device(i, l) * v(i, j);
                                 }
                                 // Lower diagonals in lambda
                                 for (int l = i + 1; l < k_proxy + 1; ++l) {
-                                    Kokkos::atomic_sub(
-                                            &u(nb_proxy - 1 - k_proxy + l, j),
-                                            lambda_device(i, l) * v(i, j));
+                                    u(nb_proxy - 1 - k_proxy + l, j)
+                                            -= lambda_device(i, l) * v(i, j);
                                 }
                             });
                 });

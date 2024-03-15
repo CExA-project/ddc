@@ -125,7 +125,6 @@ public:
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
 
         m_matrix_dense->fill(0);
-        m_matrix_sparse->clear();
     }
 
     double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override

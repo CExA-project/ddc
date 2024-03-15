@@ -74,7 +74,7 @@ $(document).ready(function(){initNavTree('for__each_8hpp_source.html',''); initR
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace</span> detail {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> RetType, <span class="keyword">class</span> Element, std::size_t N, <span class="keyword">class</span> Functor, <span class="keyword">class</span>... Is&gt;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">inline</span> <span class="keywordtype">void</span> for_each_serial(</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keywordtype">void</span> for_each_serial(</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        std::array&lt;Element, N&gt; <span class="keyword">const</span>&amp; begin,</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        std::array&lt;Element, N&gt; <span class="keyword">const</span>&amp; end,</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        Functor <span class="keyword">const</span>&amp; f,</div>
@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('for__each_8hpp_source.html',''); initR
 <div class="line"><span class="lineno">   45</span><span class="comment"> * @param[in] f      a functor taking an index as parameter</span></div>
 <div class="line"><span class="lineno">   46</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">template</span> &lt;<span class="keyword">class</span>... DDims, <span class="keyword">class</span> Functor&gt;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceddc.html#a580afa45261b42925af30519dca3c0bf">for_each</a>(<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDims...&gt; <span class="keyword">const</span>&amp; domain, Functor&amp;&amp; f) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceddc.html#a580afa45261b42925af30519dca3c0bf">for_each</a>(<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDims...&gt; <span class="keyword">const</span>&amp; domain, Functor&amp;&amp; f) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>{</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    DiscreteElement&lt;DDims...&gt; <span class="keyword">const</span> ddc_begin = domain.front();</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    DiscreteElement&lt;DDims...&gt; <span class="keyword">const</span> ddc_end = domain.front() + domain.extents();</div>

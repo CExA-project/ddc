@@ -325,10 +325,10 @@ Functions</h2></td></tr>
 <tr class="memitem:adfd82dc9c5a211a50f88e7d922d89274"><td class="memTemplItemLeft" align="right" valign="top">Arg&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#adfd82dc9c5a211a50f88e7d922d89274">init_discrete_space</a> (std::tuple&lt; DDimImpl, Arg &gt; &amp;&amp;a)</td></tr>
 <tr class="memdesc:adfd82dc9c5a211a50f88e7d922d89274"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move construct a global singleton discrete space and pass through the other argument.  <a href="namespaceddc.html#adfd82dc9c5a211a50f88e7d922d89274">More...</a><br /></td></tr>
 <tr class="separator:adfd82dc9c5a211a50f88e7d922d89274"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96a67ea775e1408d99dadf36a4be08cb"><td class="memTemplParams" colspan="2">template&lt;class DDimImpl , class... Args&gt; </td></tr>
-<tr class="memitem:a96a67ea775e1408d99dadf36a4be08cb"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; 2&lt;=sizeof...(Args), std::tuple&lt; Args... &gt; &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>(std::tuple&lt; DDimImpl, Args... &gt; &amp;&amp;a){ using DDim=typename DDimImpl::discrete_dimension_type;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>&lt; DDim &gt;(std::move(std::get&lt; 0 &gt;(a)));return detail::extract_after(std::move(a), std::index_sequence_for&lt; Args... &gt;());}template&lt; class DDim, class MemorySpace=DDC_CURRENT_KOKKOS_SPACE &gt; KOKKOS_FORCEINLINE_FUNCTION detail::ddim_impl_t&lt; DDim, MemorySpace &gt; const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a96a67ea775e1408d99dadf36a4be08cb">discrete_space</a> ()</td></tr>
-<tr class="memdesc:a96a67ea775e1408d99dadf36a4be08cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move construct a global singleton discrete space and pass through remaining arguments.  <a href="namespaceddc.html#a96a67ea775e1408d99dadf36a4be08cb">More...</a><br /></td></tr>
-<tr class="separator:a96a67ea775e1408d99dadf36a4be08cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0bb3269623881393375241f9959bef1"><td class="memTemplParams" colspan="2">template&lt;class DDimImpl , class... Args&gt; </td></tr>
+<tr class="memitem:ac0bb3269623881393375241f9959bef1"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; 2&lt;=sizeof...(Args), std::tuple&lt; Args... &gt; &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>(std::tuple&lt; DDimImpl, Args... &gt; &amp;&amp;a){ using DDim=typename DDimImpl::discrete_dimension_type;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>&lt; DDim &gt;(std::move(std::get&lt; 0 &gt;(a)));return detail::extract_after(std::move(a), std::index_sequence_for&lt; Args... &gt;());}template&lt; class DDim, class MemorySpace=DDC_CURRENT_KOKKOS_SPACE &gt; KOKKOS_FUNCTION detail::ddim_impl_t&lt; DDim, MemorySpace &gt; const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac0bb3269623881393375241f9959bef1">discrete_space</a> ()</td></tr>
+<tr class="memdesc:ac0bb3269623881393375241f9959bef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move construct a global singleton discrete space and pass through remaining arguments.  <a href="namespaceddc.html#ac0bb3269623881393375241f9959bef1">More...</a><br /></td></tr>
+<tr class="separator:ac0bb3269623881393375241f9959bef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25c1a75897511fcd2f79f00db19fc85a"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
 <tr class="memitem:a25c1a75897511fcd2f79f00db19fc85a"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a25c1a75897511fcd2f79f00db19fc85a">is_discrete_space_initialized</a> () noexcept</td></tr>
 <tr class="separator:a25c1a75897511fcd2f79f00db19fc85a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2380,8 +2380,8 @@ template&lt;class DDimImpl , class Arg &gt; </div>
 
 </div>
 </div>
-<a id="a96a67ea775e1408d99dadf36a4be08cb" name="a96a67ea775e1408d99dadf36a4be08cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96a67ea775e1408d99dadf36a4be08cb">&#9670;&nbsp;</a></span>discrete_space()</h2>
+<a id="ac0bb3269623881393375241f9959bef1" name="ac0bb3269623881393375241f9959bef1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0bb3269623881393375241f9959bef1">&#9670;&nbsp;</a></span>discrete_space()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2389,7 +2389,7 @@ template&lt;class DDimImpl , class Arg &gt; </div>
 template&lt;class DDimImpl , class... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::enable_if_t&lt; 2&lt;=sizeof...(Args), std::tuple&lt; Args... &gt; &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>( std::tuple&lt; DDimImpl, Args... &gt; &amp;&amp;a){ using DDim=typename DDimImpl::discrete_dimension_type; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>&lt; DDim &gt;(std::move(std::get&lt; 0 &gt;(a))); return detail::extract_after(std::move(a), std::index_sequence_for&lt; Args... &gt;());}template&lt; class DDim, class MemorySpace=DDC_CURRENT_KOKKOS_SPACE &gt; KOKKOS_FORCEINLINE_FUNCTION detail::ddim_impl_t&lt; DDim, MemorySpace &gt; const  &amp; ddc::discrete_space </td>
+          <td class="memname">std::enable_if_t&lt; 2&lt;=sizeof...(Args), std::tuple&lt; Args... &gt; &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>( std::tuple&lt; DDimImpl, Args... &gt; &amp;&amp;a){ using DDim=typename DDimImpl::discrete_dimension_type; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">init_discrete_space</a>&lt; DDim &gt;(std::move(std::get&lt; 0 &gt;(a))); return detail::extract_after(std::move(a), std::index_sequence_for&lt; Args... &gt;());}template&lt; class DDim, class MemorySpace=DDC_CURRENT_KOKKOS_SPACE &gt; KOKKOS_FUNCTION detail::ddim_impl_t&lt; DDim, MemorySpace &gt; const  &amp; ddc::discrete_space </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -3147,7 +3147,7 @@ template&lt;class... DDims, class Functor &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3816,7 +3816,7 @@ template&lt;class ExecSpace , class... DDims, class Functor &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3864,7 +3864,7 @@ template&lt;class... DDims, class Functor &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3929,7 +3929,7 @@ template&lt;class ExecSpace , class... DDims, class T , class BinaryReductionOp 
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3991,7 +3991,7 @@ template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTrans
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -4319,7 +4319,7 @@ template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTrans
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #include <algorithm>
 #include <cmath>
 #include <memory>
@@ -78,7 +82,7 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
 {
     auto const [N, k] = GetParam();
     std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded<
-            Kokkos::DefaultHostExecutionSpace>(N, k, k, true);
+            Kokkos::DefaultExecutionSpace>(N, k, k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 2.0 * k);
@@ -93,19 +97,35 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
     ddc::DSpan2D_left val(val_ptr.data(), N, N);
     copy_matrix(val, matrix);
 
-    std::vector<double> inv_ptr(N * N);
-    ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
-    fill_identity(inv);
     matrix->factorize();
-    matrix->solve_inplace(inv);
+
+    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
+    ddc::DSpan2D_left inv(inv_ptr.h_view.data(), N, N);
+    fill_identity(inv);
+    inv_ptr.modify_host();
+    inv_ptr.sync_device();
+    matrix->solve_inplace(ddc::DSpan2D_left(inv_ptr.d_view.data(), N, N));
+    inv_ptr.modify_device();
+    inv_ptr.sync_host();
+
+    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
+    ddc::DSpan2D_left inv_tr(inv_tr_ptr.h_view.data(), N, N);
+    fill_identity(inv_tr);
+    inv_tr_ptr.modify_host();
+    inv_tr_ptr.sync_device();
+    matrix->solve_transpose_inplace(ddc::DSpan2D_left(inv_tr_ptr.d_view.data(), N, N));
+    inv_tr_ptr.modify_device();
+    inv_tr_ptr.sync_host();
+
     check_inverse(val, inv);
+    check_inverse_transpose(val, inv_tr);
 }
 
 TEST_P(MatrixSizesFixture, OffsetBanded)
 {
     auto const [N, k] = GetParam();
     std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded<
-            Kokkos::DefaultHostExecutionSpace>(N, 0, 2 * k, true);
+            Kokkos::DefaultExecutionSpace>(N, 0, 2 * k, true);
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(i); j < std::min(N, i + k); ++j) {
@@ -118,16 +138,33 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
             matrix->set_element(i, j, -1.0);
         }
     }
+
     std::vector<double> val_ptr(N * N);
     ddc::DSpan2D_left val(val_ptr.data(), N, N);
     copy_matrix(val, matrix);
 
-    std::vector<double> inv_ptr(N * N);
-    ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
-    fill_identity(inv);
     matrix->factorize();
-    matrix->solve_inplace(inv);
+
+    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
+    ddc::DSpan2D_left inv(inv_ptr.h_view.data(), N, N);
+    fill_identity(inv);
+    inv_ptr.modify_host();
+    inv_ptr.sync_device();
+    matrix->solve_inplace(ddc::DSpan2D_left(inv_ptr.d_view.data(), N, N));
+    inv_ptr.modify_device();
+    inv_ptr.sync_host();
+
+    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
+    ddc::DSpan2D_left inv_tr(inv_tr_ptr.h_view.data(), N, N);
+    fill_identity(inv_tr);
+    inv_tr_ptr.modify_host();
+    inv_tr_ptr.sync_device();
+    matrix->solve_transpose_inplace(ddc::DSpan2D_left(inv_tr_ptr.d_view.data(), N, N));
+    inv_tr_ptr.modify_device();
+    inv_tr_ptr.sync_host();
+
     check_inverse(val, inv);
+    check_inverse_transpose(val, inv_tr);
 }
 
 TEST_P(MatrixSizesFixture, PeriodicBanded)
@@ -140,105 +177,7 @@ TEST_P(MatrixSizesFixture, PeriodicBanded)
 
         std::unique_ptr<ddc::detail::Matrix> matrix
                 = ddc::detail::MatrixMaker::make_new_periodic_banded<
-                        Kokkos::DefaultHostExecutionSpace>(N, k - s, k + s, false);
-        for (std::size_t i(0); i < N; ++i) {
-            for (std::size_t j(0); j < N; ++j) {
-                std::ptrdiff_t diag = ddc::detail::modulo((int)(j - i), (int)N);
-                if (diag == s || diag == (std::ptrdiff_t)N + s) {
-                    matrix->set_element(i, j, 0.5);
-                } else if (
-                        diag <= s + (std::ptrdiff_t)k
-                        || diag >= (std::ptrdiff_t)N + s - (std::ptrdiff_t)k) {
-                    matrix->set_element(i, j, -1.0 / k);
-                }
-            }
-        }
-        std::vector<double> val_ptr(N * N);
-        ddc::DSpan2D_left val(val_ptr.data(), N, N);
-        copy_matrix(val, matrix);
-
-        std::vector<double> inv_ptr(N * N);
-        ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
-        fill_identity(inv);
-        matrix->factorize();
-        matrix->solve_inplace(inv);
-        check_inverse(val, inv);
-    }
-}
-
-TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetricTranspose)
-{
-    auto const [N, k] = GetParam();
-    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded<
-            Kokkos::DefaultHostExecutionSpace>(N, k, k, true);
-
-    for (std::size_t i(0); i < N; ++i) {
-        matrix->set_element(i, i, 2.0 * k);
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
-            matrix->set_element(i, j, -1.0);
-        }
-        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
-            matrix->set_element(i, j, -1.0);
-        }
-    }
-    std::vector<double> val_ptr(N * N);
-    ddc::DSpan2D_left val(val_ptr.data(), N, N);
-    copy_matrix(val, matrix);
-
-    std::vector<double> inv_ptr(N * N);
-    ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
-    fill_identity(inv);
-    matrix->factorize();
-    for (std::size_t i(0); i < N; ++i) {
-        ddc::DSpan1D inv_line(inv_ptr.data() + i * N, N);
-        matrix->solve_transpose_inplace(inv_line);
-    }
-    check_inverse_transpose(val, inv);
-}
-
-TEST_P(MatrixSizesFixture, OffsetBandedTranspose)
-{
-    auto const [N, k] = GetParam();
-    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded<
-            Kokkos::DefaultHostExecutionSpace>(N, 0, 2 * k, true);
-
-    for (std::size_t i(0); i < N; ++i) {
-        for (std::size_t j(i); j < std::min(N, i + k); ++j) {
-            matrix->set_element(i, i, -1.0);
-        }
-        if (i + k < N) {
-            matrix->set_element(i, i + k, 2.0 * k);
-        }
-        for (std::size_t j(i + k + 1); j < std::min(N, i + k + 1); ++j) {
-            matrix->set_element(i, j, -1.0);
-        }
-    }
-    std::vector<double> val_ptr(N * N);
-    ddc::DSpan2D_left val(val_ptr.data(), N, N);
-    copy_matrix(val, matrix);
-
-    std::vector<double> inv_ptr(N * N);
-    ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
-    fill_identity(inv);
-    matrix->factorize();
-    for (std::size_t i(0); i < N; ++i) {
-        ddc::DSpan1D inv_line(inv_ptr.data() + i * N, N);
-        matrix->solve_transpose_inplace(inv_line);
-    }
-    check_inverse_transpose(val, inv);
-}
-
-TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
-{
-    auto const [N, k] = GetParam();
-
-    for (std::ptrdiff_t s(-k); s < (std::ptrdiff_t)k + 1; ++s) {
-        if (s == 0)
-            continue;
-
-        std::unique_ptr<ddc::detail::Matrix> matrix
-                = ddc::detail::MatrixMaker::make_new_periodic_banded<
-                        Kokkos::DefaultHostExecutionSpace>(N, k - s, k + s, false);
+                        Kokkos::DefaultExecutionSpace>(N, k - s, k + s, false);
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
                 int diag = ddc::detail::modulo((int)(j - i), (int)N);
@@ -251,19 +190,33 @@ TEST_P(MatrixSizesFixture, PeriodicBandedTranspose)
                 }
             }
         }
+
         std::vector<double> val_ptr(N * N);
         ddc::DSpan2D_left val(val_ptr.data(), N, N);
         copy_matrix(val, matrix);
 
-        std::vector<double> inv_ptr(N * N);
-        ddc::DSpan2D_left inv(inv_ptr.data(), N, N);
-        fill_identity(inv);
         matrix->factorize();
-        for (std::size_t i(0); i < N; ++i) {
-            ddc::DSpan1D inv_line(inv_ptr.data() + i * N, N);
-            matrix->solve_transpose_inplace(inv_line);
-        }
-        check_inverse_transpose(val, inv);
+
+        Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
+        ddc::DSpan2D_left inv(inv_ptr.h_view.data(), N, N);
+        fill_identity(inv);
+        inv_ptr.modify_host();
+        inv_ptr.sync_device();
+        matrix->solve_inplace(ddc::DSpan2D_left(inv_ptr.d_view.data(), N, N));
+        inv_ptr.modify_device();
+        inv_ptr.sync_host();
+
+        Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
+        ddc::DSpan2D_left inv_tr(inv_tr_ptr.h_view.data(), N, N);
+        fill_identity(inv_tr);
+        inv_tr_ptr.modify_host();
+        inv_tr_ptr.sync_device();
+        matrix->solve_transpose_inplace(ddc::DSpan2D_left(inv_tr_ptr.d_view.data(), N, N));
+        inv_tr_ptr.modify_device();
+        inv_tr_ptr.sync_host();
+
+        check_inverse(val, inv);
+        check_inverse_transpose(val, inv_tr);
     }
 }
 

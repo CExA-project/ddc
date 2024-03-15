@@ -1,3 +1,5 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
 # SPDX-License-Identifier: MIT
 
 cmake_minimum_required(VERSION 3.15)
@@ -221,7 +223,10 @@ install(
 if( FFTW_FOUND )
 	target_link_libraries( DDC INTERFACE FFTW::Float )
 	target_link_libraries( DDC INTERFACE FFTW::Double )
-	target_compile_definitions(DDC INTERFACE fftw_AVAIL)
+endif()
+
+if( FFTW_FOUND AND "${Kokkos_ENABLE_SERIAL}")
+	target_compile_definitions(DDC INTERFACE fftw_serial_AVAIL)
 endif()
 
 if( FFTW_FOUND AND "${Kokkos_ENABLE_OPENMP}")
@@ -248,7 +253,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
   target_compile_definitions(DDC INTERFACE ginkgo_AVAIL)
 
   # Lapack
-  find_package(LAPACK REQUIRED COMPONENTS CXX)
+  find_package(LAPACK REQUIRED)
   target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
 endif()
 

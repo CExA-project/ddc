@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <algorithm>
@@ -125,14 +129,12 @@ public:
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
 
         m_matrix_dense->fill(0);
-        m_matrix_sparse->clear();
     }
 
     double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
     {
         throw std::runtime_error("MatrixSparse::get_element() is not implemented because no API is "
                                  "provided by Ginkgo");
-        return 0;
     }
 
     void set_element(int i, int j, double aij) override

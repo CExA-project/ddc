@@ -1,3 +1,5 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
 // SPDX-License-Identifier: MIT
 
 #pragma once
@@ -9,8 +11,8 @@
 
 #include "ddc/chunk_common.hpp"
 #include "ddc/chunk_span.hpp"
-#include "ddc/deepcopy.hpp"
 #include "ddc/kokkos_allocator.hpp"
+#include "ddc/parallel_deepcopy.hpp"
 
 namespace ddc {
 

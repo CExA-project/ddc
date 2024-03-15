@@ -136,20 +136,22 @@ public:
             ddc::DView2D_stride const u) const
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
+        auto nb_proxy = m_nb;
+        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_lambda_section",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
-                KOKKOS_CLASS_LAMBDA(
+                KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, m_k),
+                            Kokkos::TeamThreadRange(teamMember, k_proxy),
                             [&](const int i) {
                                 // Upper diagonals in lambda
-                                for (int l = 0; l < m_nb; ++l) {
-                                    Kokkos::atomic_sub(&v(i, j), lambda_device(i, l) * u(l, j));
+                                for (int l = 0; l < nb_proxy; ++l) {
+                                    v(i, j) -= lambda_device(i, l) * u(l, j);
                                 }
                             });
                 });
@@ -160,20 +162,22 @@ public:
             ddc::DView2D_stride const v) const
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
+        auto nb_proxy = m_nb;
+        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
                 Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
-                KOKKOS_CLASS_LAMBDA(
+                KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, m_nb),
+                            Kokkos::TeamThreadRange(teamMember, nb_proxy),
                             [&](const int i) {
                                 // Upper diagonals in lambda
-                                for (int l = 0; l < m_k; ++l) {
-                                    Kokkos::atomic_sub(&u(i, j), lambda_device(l, i) * v(l, j));
+                                for (int l = 0; l < k_proxy; ++l) {
+                                    u(i, j) -= lambda_device(l, i) * v(l, j);
                                 }
                             });
                 });
@@ -184,22 +188,22 @@ public:
             ddc::DView2D_stride const v) const
     {
         auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
+        auto nb_proxy = m_nb;
+        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_gamma_section",
                 Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
-                KOKKOS_CLASS_LAMBDA(
+                KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, m_nb),
+                            Kokkos::TeamThreadRange(teamMember, nb_proxy),
                             [&](const int i) {
                                 // Upper diagonals in lambda
-                                for (int l = 0; l < m_k; ++l) {
-                                    Kokkos::atomic_sub(
-                                            &u(i, j),
-                                            Abm_1_gamma_device(i, l) * v(l, j));
+                                for (int l = 0; l < k_proxy; ++l) {
+                                    u(i, j) -= Abm_1_gamma_device(i, l) * v(l, j);
                                 }
                             });
                 });
@@ -210,22 +214,22 @@ public:
             ddc::DView2D_stride const u) const
     {
         auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
+        auto nb_proxy = m_nb;
+        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_gamma_section_transpose",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
-                KOKKOS_CLASS_LAMBDA(
+                KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, m_k),
+                            Kokkos::TeamThreadRange(teamMember, k_proxy),
                             [&](const int i) {
                                 // Upper diagonals in lambda
-                                for (int l = 0; l < m_nb; ++l) {
-                                    Kokkos::atomic_sub(
-                                            &v(i, j),
-                                            Abm_1_gamma_device(l, i) * u(l, j));
+                                for (int l = 0; l < nb_proxy; ++l) {
+                                    v(i, j) -= Abm_1_gamma_device(l, i) * u(l, j);
                                 }
                             });
                 });

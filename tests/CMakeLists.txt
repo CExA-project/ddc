@@ -1,4 +1,7 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
 # SPDX-License-Identifier: MIT
+
 cmake_minimum_required(VERSION 3.15)
 
 add_subdirectory(discrete_space)
@@ -19,12 +22,13 @@ add_executable(ddc_tests
     rectilinear_domain.cpp
     uniform_domain.cpp
     for_each.cpp
-    fill.cpp
+    parallel_fill.cpp
     discrete_element.cpp
     discrete_vector.cpp
     discrete_space.cpp
     parallel_for_each.cpp
-    deepcopy.cpp
+    parallel_deepcopy.cpp
+    parallel_transform_reduce.cpp
 )
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
 target_link_libraries(ddc_tests

@@ -168,18 +168,17 @@ public:
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
-
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, k_proxy),
+                            Kokkos::TeamThreadRange(teamMember, k_proxy + 1),
                             [&](const int i) {
-                                /// Upper diagonals in lambda
-                                for (int l = 0; l <= i; ++l) {
-                                    u(l, j) -= lambda_device(i, l) * v(i, j);
-                                }
                                 // Lower diagonals in lambda
-                                for (int l = i + 1; l < k_proxy + 1; ++l) {
-                                    u(nb_proxy - 1 - k_proxy + l, j)
-                                            -= lambda_device(i, l) * v(i, j);
+                                for (int l = 0; l < i; ++l) {
+                                    u(nb_proxy - 1 - k_proxy + i, j)
+                                            -= lambda_device(l, i) * v(l, j);
+                                }
+                                /// Upper diagonals in lambda
+                                for (int l = i; l < k_proxy; ++l) {
+                                    u(i, j) -= lambda_device(l, i) * v(l, j);
                                 }
                             });
                 });

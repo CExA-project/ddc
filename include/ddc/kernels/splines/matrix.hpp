@@ -100,7 +100,7 @@ public:
 protected:
     virtual int factorize_method() = 0;
 
-    virtual int solve_inplace_method(ddc::DSpan2D_stride const b, char const transpose) const = 0;
+    virtual int solve_inplace_method(ddc::DSpan2D_stride b, char transpose) const = 0;
 };
 
 } // namespace ddc::detail

@@ -11,7 +11,8 @@
 
 namespace ddc {
 enum class SplineSolver {
-    GINKGO
+    GINKGO,
+    LAPACK
 }; // Only GINKGO available atm, other solvers will be implemented in the futur
 
 constexpr bool is_spline_interpolation_mesh_uniform(
@@ -77,12 +78,18 @@ public:
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
-    using spline_tr_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
+    using spline_tr_domain_type = typename std::conditional_t<
+            Solver == ddc::SplineSolver::LAPACK,
+            ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
+                    ddc::type_seq_remove_t<
+                            ddc::detail::TypeSeq<IDimX...>,
+                            ddc::detail::TypeSeq<interpolation_mesh_type>>,
+                    ddc::detail::TypeSeq<bsplines_type>>>,
+            ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
                     ddc::type_seq_remove_t<
                             ddc::detail::TypeSeq<IDimX...>,
-                            ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
+                            ddc::detail::TypeSeq<interpolation_mesh_type>>>>>;
 
     using derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
@@ -407,10 +414,34 @@ void SplineBuilder<
         return;
 	*/
 
-    matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
-            ddc::discrete_space<BSplines>().nbasis(),
-            cols_per_chunk,
-            preconditionner_max_block_size);
+    if constexpr (Solver == ddc::SplineSolver::LAPACK) {
+        int upper_band_width;
+        if (bsplines_type::is_uniform()) {
+            upper_band_width = bsplines_type::degree() / 2;
+        } else {
+            upper_band_width = bsplines_type::degree() - 1;
+        }
+        if constexpr (bsplines_type::is_periodic()) {
+            matrix = ddc::detail::MatrixMaker::make_new_periodic_banded<ExecSpace>(
+                    ddc::discrete_space<BSplines>().nbasis(),
+                    upper_band_width,
+                    upper_band_width,
+                    bsplines_type::is_uniform());
+        } else {
+            matrix = ddc::detail::MatrixMaker::make_new_block_with_banded_region<ExecSpace>(
+                    ddc::discrete_space<BSplines>().nbasis(),
+                    upper_band_width,
+                    upper_band_width,
+                    bsplines_type::is_uniform(),
+                    upper_block_size,
+                    lower_block_size);
+        }
+    } else if (Solver == SplineSolver::GINKGO) {
+        matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
+                ddc::discrete_space<BSplines>().nbasis(),
+                cols_per_chunk,
+                preconditionner_max_block_size);
+    }
 
     build_matrix_system();
 
@@ -626,19 +657,43 @@ operator()(
                 }
             });
     // Create a 2D mdspan to manage spline_tr as a matrix
+    std::experimental::layout_stride::mapping<std::experimental::extents<
+            size_t,
+            std::experimental::dynamic_extent,
+            std::experimental::dynamic_extent>>
+            layout_mapping {};
+    if (Solver == ddc::SplineSolver::GINKGO) {
+        layout_mapping = std::experimental::layout_stride::mapping<std::experimental::extents<
+                size_t,
+                std::experimental::dynamic_extent,
+                std::experimental::dynamic_extent>> {
+                std::experimental::dextents<
+                        std::size_t,
+                        2> {ddc::discrete_space<bsplines_type>().nbasis(), batch_domain().size()},
+                std::array<std::size_t, 2> {batch_domain().size(), 1}};
+    } else if (Solver == ddc::SplineSolver::LAPACK) {
+        layout_mapping = std::experimental::layout_stride::mapping<std::experimental::extents<
+                size_t,
+                std::experimental::dynamic_extent,
+                std::experimental::dynamic_extent>> {
+                std::experimental::dextents<
+                        std::size_t,
+                        2> {ddc::discrete_space<bsplines_type>().nbasis(), batch_domain().size()},
+                std::array<std::size_t, 2> {1, ddc::discrete_space<bsplines_type>().size()}};
+    } else {
+        assert("Unrecognized solver");
+    }
     std::experimental::mdspan<
             double,
             std::experimental::extents<
                     size_t,
                     std::experimental::dynamic_extent,
                     std::experimental::dynamic_extent>,
-            std::experimental::layout_right>
-            bcoef_section(
-                    spline_tr.data_handle(),
-                    ddc::discrete_space<bsplines_type>().nbasis(),
-                    batch_domain().size());
+            std::experimental::layout_stride>
+            bcoef_section(spline_tr.data_handle(), layout_mapping);
     // Compute spline coef
     matrix->solve_inplace(bcoef_section);
+
     // Transpose back spline_tr in spline
     ddc::parallel_for_each(
             exec_space(),

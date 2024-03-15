@@ -85,7 +85,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
             IDimX,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::GINKGO,
+            ddc::SplineSolver::LAPACK,
             IDimX>
             spline_builder(interpolation_domain);
 

@@ -134,7 +134,7 @@ static void PeriodicitySplineBuilderTest()
             IDim<X>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::GINKGO,
+            ddc::SplineSolver::LAPACK,
             IDim<X>>
             spline_builder(dom_vals);
 

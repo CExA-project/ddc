@@ -132,7 +132,6 @@ public:
     {
         throw std::runtime_error("MatrixSparse::get_element() is not implemented because no API is "
                                  "provided by Ginkgo");
-        return 0;
     }
 
     void set_element(int i, int j, double aij) override

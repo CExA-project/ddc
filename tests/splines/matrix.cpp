@@ -62,7 +62,6 @@ void check_inverse_transpose(ddc::DSpan2D_stride matrix, ddc::DSpan2D_stride inv
         for (std::size_t j(0); j < N; ++j) {
             double id_val = 0.0;
             for (std::size_t k(0); k < N; ++k) {
-                std::cout << inv(j, k) << " ";
                 id_val += matrix(i, k) * inv(j, k);
             }
             EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);

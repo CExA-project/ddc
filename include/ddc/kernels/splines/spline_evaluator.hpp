@@ -146,11 +146,13 @@ public:
         return ddc::remove_dims_of(spline_domain(), bsplines_domain());
     }
 
-    left_extrapolation_rule left_extrapolation_rule() const {
+    left_extrapolation_rule left_extrapolation_rule() const
+    {
         return m_left_extrap_rule;
     }
 
-    right_extrapolation_rule right_extrapolation_rule() const {
+    right_extrapolation_rule right_extrapolation_rule() const
+    {
         return m_right_extrap_rule;
     }
 

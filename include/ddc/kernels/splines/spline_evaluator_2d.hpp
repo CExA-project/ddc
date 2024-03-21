@@ -203,19 +203,23 @@ public:
         return ddc::remove_dims_of(spline_domain(), bsplines_domain());
     }
 
-    left_extrapolation_rule_1 left_extrapolation_rule_dim_1() const {
+    left_extrapolation_rule_1 left_extrapolation_rule_dim_1() const
+    {
         return m_left_extrap_rule_1;
     }
 
-    right_extrapolation_rule_1 right_extrapolation_rule_dim_1() const {
+    right_extrapolation_rule_1 right_extrapolation_rule_dim_1() const
+    {
         return m_right_extrap_rule_1;
     }
 
-    left_extrapolation_rule_2 left_extrapolation_rule_dim_2() const {
+    left_extrapolation_rule_2 left_extrapolation_rule_dim_2() const
+    {
         return m_left_extrap_rule_2;
     }
 
-    right_extrapolation_rule_2 right_extrapolation_rule_dim_2() const {
+    right_extrapolation_rule_2 right_extrapolation_rule_dim_2() const
+    {
         return m_right_extrap_rule_2;
     }
 

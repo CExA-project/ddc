@@ -48,6 +48,11 @@ public:
     using bsplines_type1 = BSplinesType1;
     using bsplines_type2 = BSplinesType2;
 
+    using left_extrapolation_rule_1 = LeftExtrapolationRule1;
+    using right_extrapolation_rule_1 = RightExtrapolationRule1;
+    using left_extrapolation_rule_2 = LeftExtrapolationRule2;
+    using right_extrapolation_rule_2 = RightExtrapolationRule2;
+
     using interpolation_domain_type1 = ddc::DiscreteDomain<interpolation_mesh_type1>;
     using interpolation_domain_type2 = ddc::DiscreteDomain<interpolation_mesh_type2>;
     using interpolation_domain_type
@@ -196,6 +201,22 @@ public:
     KOKKOS_FUNCTION batch_domain_type batch_domain() const noexcept
     {
         return ddc::remove_dims_of(spline_domain(), bsplines_domain());
+    }
+
+    left_extrapolation_rule_1 left_extrapolation_rule_dim_1() const {
+        return m_left1_bc;
+    }
+
+    right_extrapolation_rule_1 right_extrapolation_rule_dim_1() const {
+        return m_right1_bc;
+    }
+
+    left_extrapolation_rule_2 left_extrapolation_rule_dim_2() const {
+        return m_left2_bc;
+    }
+
+    right_extrapolation_rule_2 right_extrapolation_rule_dim_2() const {
+        return m_right2_bc;
     }
 
     template <class Layout, class... CoordsDims>

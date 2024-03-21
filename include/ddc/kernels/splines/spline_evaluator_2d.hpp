@@ -48,6 +48,11 @@ public:
     using bsplines_type1 = BSplinesType1;
     using bsplines_type2 = BSplinesType2;
 
+    using left_extrapolation_rule_1_type = LeftExtrapolationRule1;
+    using right_extrapolation_rule_1_type = RightExtrapolationRule1;
+    using left_extrapolation_rule_2_type = LeftExtrapolationRule2;
+    using right_extrapolation_rule_2_type = RightExtrapolationRule2;
+
     using interpolation_domain_type1 = ddc::DiscreteDomain<interpolation_mesh_type1>;
     using interpolation_domain_type2 = ddc::DiscreteDomain<interpolation_mesh_type2>;
     using interpolation_domain_type
@@ -80,13 +85,13 @@ public:
 private:
     spline_domain_type m_spline_domain;
 
-    LeftExtrapolationRule1 m_left1_bc;
+    LeftExtrapolationRule1 m_left_extrap_rule_1;
 
-    RightExtrapolationRule1 m_right1_bc;
+    RightExtrapolationRule1 m_right_extrap_rule_1;
 
-    LeftExtrapolationRule2 m_left2_bc;
+    LeftExtrapolationRule2 m_left_extrap_rule_2;
 
-    RightExtrapolationRule2 m_right2_bc;
+    RightExtrapolationRule2 m_right_extrap_rule_2;
 
 public:
     static_assert(
@@ -162,10 +167,10 @@ public:
             LeftExtrapolationRule2 const& left_extrap_rule2,
             RightExtrapolationRule2 const& right_extrap_rule2)
         : m_spline_domain(spline_domain)
-        , m_left1_bc(left_extrap_rule1)
-        , m_right1_bc(right_extrap_rule1)
-        , m_left2_bc(left_extrap_rule2)
-        , m_right2_bc(right_extrap_rule2)
+        , m_left_extrap_rule_1(left_extrap_rule1)
+        , m_right_extrap_rule_1(right_extrap_rule1)
+        , m_left_extrap_rule_2(left_extrap_rule2)
+        , m_right_extrap_rule_2(right_extrap_rule2)
     {
     }
 
@@ -196,6 +201,26 @@ public:
     KOKKOS_FUNCTION batch_domain_type batch_domain() const noexcept
     {
         return ddc::remove_dims_of(spline_domain(), bsplines_domain());
+    }
+
+    left_extrapolation_rule_1_type left_extrapolation_rule_dim_1() const
+    {
+        return m_left_extrap_rule_1;
+    }
+
+    right_extrapolation_rule_1_type right_extrapolation_rule_dim_1() const
+    {
+        return m_right_extrap_rule_1;
+    }
+
+    left_extrapolation_rule_2_type left_extrapolation_rule_dim_2() const
+    {
+        return m_left_extrap_rule_2;
+    }
+
+    right_extrapolation_rule_2_type right_extrapolation_rule_dim_2() const
+    {
+        return m_right_extrap_rule_2;
     }
 
     template <class Layout, class... CoordsDims>
@@ -509,10 +534,10 @@ private:
             }
         } else {
             if (coord_eval_interpolation1 < ddc::discrete_space<bsplines_type1>().rmin()) {
-                return m_left1_bc(coord_eval, spline_coef);
+                return m_left_extrap_rule_1(coord_eval, spline_coef);
             }
             if (coord_eval_interpolation1 > ddc::discrete_space<bsplines_type1>().rmax()) {
-                return m_right1_bc(coord_eval, spline_coef);
+                return m_right_extrap_rule_1(coord_eval, spline_coef);
             }
         }
         if constexpr (bsplines_type2::is_periodic()) {
@@ -527,10 +552,10 @@ private:
             }
         } else {
             if (coord_eval_interpolation2 < ddc::discrete_space<bsplines_type2>().rmin()) {
-                return m_left2_bc(coord_eval, spline_coef);
+                return m_left_extrap_rule_2(coord_eval, spline_coef);
             }
             if (coord_eval_interpolation2 > ddc::discrete_space<bsplines_type2>().rmax()) {
-                return m_right2_bc(coord_eval, spline_coef);
+                return m_right_extrap_rule_2(coord_eval, spline_coef);
             }
         }
         return eval_no_bc<eval_type, eval_type>(

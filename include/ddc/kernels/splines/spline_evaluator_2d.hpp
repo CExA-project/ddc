@@ -87,7 +87,7 @@ private:
 
     LeftExtrapolationRule1 m_left_extrap_rule_1;
 
-    RightExtrapolationRule1 m_right1_bc;
+    RightExtrapolationRule1 m_right_extrap_rule_1;
 
     LeftExtrapolationRule2 m_left_extrap_rule_2;
 
@@ -168,7 +168,7 @@ public:
             RightExtrapolationRule2 const& right_extrap_rule2)
         : m_spline_domain(spline_domain)
         , m_left_extrap_rule_1(left_extrap_rule1)
-        , m_right1_bc(right_extrap_rule1)
+        , m_right_extrap_rule_1(right_extrap_rule1)
         , m_left_extrap_rule_2(left_extrap_rule2)
         , m_right_extrap_rule_2(right_extrap_rule2)
     {
@@ -208,7 +208,7 @@ public:
     }
 
     right_extrapolation_rule_1 right_extrapolation_rule_dim_1() const {
-        return m_right1_bc;
+        return m_right_extrap_rule_1;
     }
 
     left_extrapolation_rule_2 left_extrapolation_rule_dim_2() const {
@@ -533,7 +533,7 @@ private:
                 return m_left_extrap_rule_1(coord_eval, spline_coef);
             }
             if (coord_eval_interpolation1 > ddc::discrete_space<bsplines_type1>().rmax()) {
-                return m_right1_bc(coord_eval, spline_coef);
+                return m_right_extrap_rule_1(coord_eval, spline_coef);
             }
         }
         if constexpr (bsplines_type2::is_periodic()) {

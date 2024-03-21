@@ -268,8 +268,8 @@ static void ExtrapolationRuleSplineTest()
     ddc::NullExtrapolationRule extrapolation_rule_left_dim_1;
     ddc::NullExtrapolationRule extrapolation_rule_right_dim_1;
 #if defined(BC_PERIODIC)
-    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_left_dim_1;
-    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_right_dim_1;
+    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_left_dim_2;
+    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_right_dim_2;
 #else
     ddc::NullExtrapolationRule extrapolation_rule_left_dim_2;
     ddc::NullExtrapolationRule extrapolation_rule_right_dim_2;
@@ -320,7 +320,6 @@ static void ExtrapolationRuleSplineTest()
 
             IDim<X, I1, I2>...>
             spline_evaluator_batched(
-                    coef.domain(),
                     extrapolation_rule_left_dim_1,
                     extrapolation_rule_right_dim_1,
                     extrapolation_rule_left_dim_2,

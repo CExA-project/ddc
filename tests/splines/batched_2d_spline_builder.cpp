@@ -557,7 +557,11 @@ static void Batched2dSplineTest()
             ddc::NullExtrapolationRule,
 #endif
             IDim<X, I1, I2>...>
-            spline_evaluator(extrapolation_rule_1, extrapolation_rule_2);
+            spline_evaluator(
+                    extrapolation_rule_1,
+                    extrapolation_rule_1,
+                    extrapolation_rule_2,
+                    extrapolation_rule_2);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());

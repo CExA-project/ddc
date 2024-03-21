@@ -110,7 +110,7 @@ public:
     explicit SplineEvaluator(
             LeftExtrapolationRule const& left_extrap_rule,
             RightExtrapolationRule const& right_extrap_rule)
-        , m_left_extrap_rule(left_extrap_rule)
+        : m_left_extrap_rule(left_extrap_rule)
         , m_right_extrap_rule(right_extrap_rule)
     {
     }

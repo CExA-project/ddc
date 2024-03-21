@@ -182,8 +182,6 @@ public:
 
 
 
-  
-
     left_extrapolation_rule_1_type left_extrapolation_rule_dim_1() const
     {
         return m_left_extrap_rule_1;

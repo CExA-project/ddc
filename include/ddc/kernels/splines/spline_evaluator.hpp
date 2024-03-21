@@ -42,6 +42,9 @@ public:
 
     using bsplines_type = BSplinesType;
 
+    using left_extrapolation_rule_type = LeftExtrapolationRule;
+    using right_extrapolation_rule_type = RightExtrapolationRule;
+
     using interpolation_mesh_type = InterpolationMesh;
 
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
@@ -69,7 +72,7 @@ public:
 private:
     LeftExtrapolationRule m_left_extrap_rule;
 
-    RightExtrapolationRule m_right_bc;
+    RightExtrapolationRule m_right_extrap_rule;
 
 public:
     static_assert(
@@ -107,8 +110,8 @@ public:
     explicit SplineEvaluator(
             LeftExtrapolationRule const& left_extrap_rule,
             RightExtrapolationRule const& right_extrap_rule)
-        : m_left_extrap_rule(left_extrap_rule)
-        , m_right_bc(right_extrap_rule)
+        , m_left_extrap_rule(left_extrap_rule)
+        , m_right_extrap_rule(right_extrap_rule)
     {
     }
 
@@ -121,6 +124,7 @@ public:
     SplineEvaluator& operator=(SplineEvaluator const& x) = default;
 
     SplineEvaluator& operator=(SplineEvaluator&& x) = default;
+
 
 
 
@@ -249,7 +253,7 @@ private:
                 return m_left_extrap_rule(coord_eval_interpolation, spline_coef);
             }
             if (coord_eval_interpolation > ddc::discrete_space<bsplines_type>().rmax()) {
-                return m_right_bc(coord_eval_interpolation, spline_coef);
+                return m_right_extrap_rule(coord_eval_interpolation, spline_coef);
             }
         }
         return eval_no_bc<eval_type>(coord_eval_interpolation, spline_coef);

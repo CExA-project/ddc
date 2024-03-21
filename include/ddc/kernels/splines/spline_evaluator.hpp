@@ -42,8 +42,8 @@ public:
 
     using bsplines_type = BSplinesType;
 
-    using left_extrapolation_rule = LeftExtrapolationRule;
-    using right_extrapolation_rule = RightExtrapolationRule;
+    using left_extrapolation_rule_type = LeftExtrapolationRule;
+    using right_extrapolation_rule_type = RightExtrapolationRule;
 
     using interpolation_mesh_type = InterpolationMesh;
 
@@ -146,12 +146,12 @@ public:
         return ddc::remove_dims_of(spline_domain(), bsplines_domain());
     }
 
-    left_extrapolation_rule left_extrapolation_rule() const
+    left_extrapolation_rule_type left_extrapolation_rule() const
     {
         return m_left_extrap_rule;
     }
 
-    right_extrapolation_rule right_extrapolation_rule() const
+    right_extrapolation_rule_type right_extrapolation_rule() const
     {
         return m_right_extrap_rule;
     }

@@ -48,10 +48,10 @@ public:
     using bsplines_type1 = BSplinesType1;
     using bsplines_type2 = BSplinesType2;
 
-    using left_extrapolation_rule_1 = LeftExtrapolationRule1;
-    using right_extrapolation_rule_1 = RightExtrapolationRule1;
-    using left_extrapolation_rule_2 = LeftExtrapolationRule2;
-    using right_extrapolation_rule_2 = RightExtrapolationRule2;
+    using left_extrapolation_rule_1_type = LeftExtrapolationRule1;
+    using right_extrapolation_rule_1_type = RightExtrapolationRule1;
+    using left_extrapolation_rule_2_type = LeftExtrapolationRule2;
+    using right_extrapolation_rule_2_type = RightExtrapolationRule2;
 
     using interpolation_domain_type1 = ddc::DiscreteDomain<interpolation_mesh_type1>;
     using interpolation_domain_type2 = ddc::DiscreteDomain<interpolation_mesh_type2>;
@@ -203,22 +203,22 @@ public:
         return ddc::remove_dims_of(spline_domain(), bsplines_domain());
     }
 
-    left_extrapolation_rule_1 left_extrapolation_rule_dim_1() const
+    left_extrapolation_rule_1_type left_extrapolation_rule_dim_1() const
     {
         return m_left_extrap_rule_1;
     }
 
-    right_extrapolation_rule_1 right_extrapolation_rule_dim_1() const
+    right_extrapolation_rule_1_type right_extrapolation_rule_dim_1() const
     {
         return m_right_extrap_rule_1;
     }
 
-    left_extrapolation_rule_2 left_extrapolation_rule_dim_2() const
+    left_extrapolation_rule_2_type left_extrapolation_rule_dim_2() const
     {
         return m_left_extrap_rule_2;
     }
 
-    right_extrapolation_rule_2 right_extrapolation_rule_dim_2() const
+    right_extrapolation_rule_2_type right_extrapolation_rule_dim_2() const
     {
         return m_right_extrap_rule_2;
     }

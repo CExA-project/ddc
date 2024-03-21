@@ -322,8 +322,7 @@ static void BatchedSplineTest()
             ddc::NullExtrapolationRule,
 #endif
             IDim<X, I>...>
-            spline_evaluator_batched(
-                    coef.domain(),
+            spline_evaluator_batched{
 #if defined(BC_PERIODIC)
                     ddc::PeriodicExtrapolationRule<I>(),
                     ddc::PeriodicExtrapolationRule<I>()
@@ -331,7 +330,7 @@ static void BatchedSplineTest()
                     ddc::NullExtrapolationRule(),
                     ddc::NullExtrapolationRule()
 #endif
-            );
+            };
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());

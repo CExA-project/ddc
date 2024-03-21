@@ -157,7 +157,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             IDimX>
-            spline_evaluator(coef.domain(), extrapolation_rule, extrapolation_rule);
+            spline_evaluator(extrapolation_rule, extrapolation_rule);
 
     ddc::Chunk<ddc::Coordinate<DimX>, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);
     for (IndexX const ix : interpolation_domain) {

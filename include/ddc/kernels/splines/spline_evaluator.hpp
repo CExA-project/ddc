@@ -125,6 +125,16 @@ public:
 
     SplineEvaluator& operator=(SplineEvaluator&& x) = default;
 
+    left_extrapolation_rule_type left_extrapolation_rule() const
+    {
+        return m_left_extrap_rule;
+    }
+
+    right_extrapolation_rule_type right_extrapolation_rule() const
+    {
+        return m_right_extrap_rule;
+    }
+
 
 
     template <class Layout, class... CoordsDims>

@@ -135,8 +135,6 @@ public:
         return m_right_extrap_rule;
     }
 
-
-
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double operator()(
             ddc::Coordinate<CoordsDims...> const& coord_eval,

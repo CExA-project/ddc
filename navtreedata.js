@@ -30,29 +30,7 @@ var NAVTREE =
       [ "Join us!", "index.html#autotoc_md1", null ]
     ] ],
     [ "About", "md_About.html", null ],
-    [ "first_steps", "md_first_steps.html", [
-      [ "Commented example: the heat equation", "md_first_steps.html#first_steps", null ],
-      [ "Definition of the discretization", "md_first_steps.html#autotoc_md2", [
-        [ "Dimensions naming", "md_first_steps.html#autotoc_md3", null ],
-        [ "Domains", "md_first_steps.html#autotoc_md4", [
-          [ "Dimension X", "md_first_steps.html#autotoc_md5", null ],
-          [ "Dimension Y", "md_first_steps.html#autotoc_md6", null ],
-          [ "Time dimension", "md_first_steps.html#autotoc_md7", null ]
-        ] ]
-      ] ],
-      [ "Data allocation", "md_first_steps.html#autotoc_md8", null ],
-      [ "Initial conditions", "md_first_steps.html#autotoc_md9", null ],
-      [ "Time loop", "md_first_steps.html#autotoc_md10", [
-        [ "Periodic conditions", "md_first_steps.html#autotoc_md11", null ],
-        [ "Numerical scheme", "md_first_steps.html#autotoc_md12", null ],
-        [ "Output", "md_first_steps.html#autotoc_md13", null ],
-        [ "Final swap", "md_first_steps.html#autotoc_md14", null ]
-      ] ],
-      [ "Final output", "md_first_steps.html#autotoc_md15", null ]
-    ] ],
-    [ "heat_equation", "md_heat_equation.html", [
-      [ "examples/heat_equation.cpp", "md_heat_equation.html#heat_equation", null ]
-    ] ],
+    [ "Commented example: the heat equation", "first_steps.html", "first_steps" ],
     [ "API reference", "annotated.html", "annotated" ]
   ] ]
 ];

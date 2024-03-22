@@ -28,7 +28,7 @@ mesh to a non-uniform one) with performance portability.
 
 # Discover more
 
-* First, you should \ref first_steps "have a look at our commented example / tutorial".
+* First, you should \ref ddc_first_steps "have a look at our commented example / tutorial".
 * To know more, you can [delve in the reference documentation](annotated.html).
 * [Use the source, Luke](https://github.com/Maison-de-la-Simulation/ddc).
 * [You should definitely come see us on Slack](https://join.slack.com/t/ddc-lib/shared_invite/zt-14b6rjcrn-AwSfM6_arEamAKk_VgQPhg).

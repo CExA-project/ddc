@@ -17,12 +17,8 @@ jobs:
         exclude: ''
         extensions: 'hpp,cpp'
         clangFormatVersion: 12
-
-  reuse:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
     - name: REUSE Compliance Check
+      if: always()
       uses: fsfe/reuse-action@v3
 
   id_repo:

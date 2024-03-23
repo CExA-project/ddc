@@ -13,10 +13,18 @@ namespace {
 struct X;
 struct Y;
 
-using DDimX = ddc::UniformPointSampling<X>;
-using DDimY = ddc::UniformPointSampling<Y>;
-using NUDDimX = ddc::NonUniformPointSampling<X>;
-using NUDDimY = ddc::NonUniformPointSampling<Y>;
+struct DDimX : ddc::UniformPointSampling<X>
+{
+};
+struct DDimY : ddc::UniformPointSampling<Y>
+{
+};
+struct NUDDimX : ddc::NonUniformPointSampling<X>
+{
+};
+struct NUDDimY : ddc::NonUniformPointSampling<Y>
+{
+};
 
 using DDomNull = ddc::DiscreteDomain<std::nullptr_t>;
 using DDomX = ddc::DiscreteDomain<DDimX>;

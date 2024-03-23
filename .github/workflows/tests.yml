@@ -17,6 +17,9 @@ jobs:
         exclude: ''
         extensions: 'hpp,cpp'
         clangFormatVersion: 12
+    - name: REUSE Compliance Check
+      if: always()
+      uses: fsfe/reuse-action@v3
 
   id_repo:
     runs-on: ubuntu-latest

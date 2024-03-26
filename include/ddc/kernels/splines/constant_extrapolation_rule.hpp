@@ -44,7 +44,7 @@ public:
      * @param[in] spline_coef
      *			The coefficients of the function on B-splines.
      *
-     *@return A double with the value of the function on B-splines evaluated at the coordinate.
+     * @return A double with the value of the function on B-splines evaluated at the coordinate.
      */
     template <class CoordType, class BSplines, class Layout, class MemorySpace>
     KOKKOS_FUNCTION double operator()(

@@ -134,15 +134,13 @@ public:
      *
      * In the dimension defined in the constructor Dim1 (or Dim2), it sets the coordinate pos_1 (or pos_2)
      * given at the m_eval_pos coordinate if it is outside the domain.
-     * If the coordinate on the complementary dimension of the boundary condition dimension pos_2 (or pos_1) is
+     * If the coordinate on the complementary dimension of the boundary condition dimension ddc::select<DimNI>(coord_extrap) is
      * outside the domain, then it also sets the coordinate at eval_pos_not_interest_min
-     * (if pos_2 (or pos_1) @f$ < @f$ eval_pos_not_interest_min) or
-     * at eval_pos_not_interest_max (if pos_2 (or pos_1) @f$ > @f$ eval_pos_not_interest_max).
+     * (if ddc::select<DimNI>(coord_extrap) @f$ < @f$ eval_pos_not_interest_min) or
+     * at eval_pos_not_interest_max (if ddc::select<DimNI>(coord_extrap) @f$ > @f$ eval_pos_not_interest_max).
      *
-     * @param[in] pos_1
-     * 			The coordinate in the first dimension where we want to evaluate the function on B-splines
-     * @param[in] pos_2
-     * 			The coordinate in the second dimension where we want to evaluate the function on B-splines.
+     * @param[in] coord_extrap
+     * 			The coordinates where we want to evaluate the function on B-splines
      * @param[in] spline_coef
      *			The coefficients of the function on B-splines.
      *

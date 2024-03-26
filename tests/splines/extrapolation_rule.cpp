@@ -336,10 +336,8 @@ static void ExtrapolationRuleSplineTest()
                 // Set coords_eval outside of the domain
                 ddc::get<I1>(coords_eval(e))
                         = xN<I1>() + (ddc::select<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
-#if defined(BC_GREVILLE)
                 ddc::get<I2>(coords_eval(e))
                         = xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>()) + 1;
-#endif
             });
 
 

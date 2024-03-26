@@ -216,6 +216,7 @@ jobs:
         cmake -DDDC_BUILD_DOCUMENTATION=ON -B build -S /src
         cd build
         make doc
+        mv docs/doxygen.log /src/doxygen.log
         EOF
         docker run \
           -v ${PWD}:/src:ro ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} \
@@ -228,7 +229,7 @@ jobs:
         # Search through modified files to find relevant errors
         touch relevant_errors.txt
         while read f; do
-          grep "$f" build/docs/doxygen.log 2>&1 | tee -a relevant_errors.txt
+          grep "$f" doxygen.log 2>&1 | tee -a relevant_errors.txt
         done < pull_diff.txt
         if [ -s diff.txt ]; then
           # The file is not-empty.

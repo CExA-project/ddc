@@ -219,7 +219,7 @@ jobs:
         mv docs/doxygen.log /src/doxygen.log
         EOF
         docker run \
-          -v ${PWD}:/src:ro ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} \
+          -v ${PWD}:/src ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} \
           bash /src/run.sh
     - name: errors
       run: |

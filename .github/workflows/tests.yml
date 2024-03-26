@@ -21,57 +21,6 @@ jobs:
       if: always()
       uses: fsfe/reuse-action@v3
 
-  docs:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    needs: [docker-build, id_repo]
-    steps:
-    - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1.3.1
-      with: { tool-cache: true, large-packages: false }
-    - name: Checkout built branch
-      uses: actions/checkout@v4
-      with:
-        submodules: recursive
-        fetch-depth: 0
-    - name: Collect image artifact
-      if: needs.id_repo.outputs.in_base_repo == 'false'
-      uses: actions/download-artifact@v3
-      with: { name: 'latest_cpu-artifact' }
-    - name: Load image artifact into docker
-      if: needs.id_repo.outputs.in_base_repo == 'false'
-      run: |
-        docker load < latest_cpu-artifact.tar
-        rm latest_cpu-artifact.tar
-    - name: documentation
-      run: |
-        cat<<-'EOF' > run.sh
-        set -xe
-        git config --global --add safe.directory '*'
-        cmake \
-        -DDDC_BUILD_DOCUMENTATION=ON \
-        -B build
-        cd build
-        make doc
-        EOF
-        docker run \
-          -v ${PWD}:/src:ro ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} \
-          bash /src/run.sh
-    - name: errors
-      run: |
-        ls
-        # Get files which have changed in this merge request
-        git diff ${{github.event.pull_request.base.ref}}..HEAD --name-only --output=pull_diff.txt
-        # Search through modified files to find relevant errors
-        touch relevant_errors.txt
-        while read f; do
-          grep "$f" build/docs/doxygen.log 2>&1 | tee -a relevant_errors.txt
-        done < pull_diff.txt
-        if [ -s diff.txt ]; then
-          # The file is not-empty.
-          exit 1
-        fi
-
   id_repo:
     runs-on: ubuntu-latest
     steps:
@@ -236,6 +185,55 @@ jobs:
       if: ( success() || failure() ) && steps.test.outputs.with_report == 'true' # always run even if the previous step fails
       with:
         report_paths: '/home/runner/work/ddc/ddc/tests.xml'
+
+  docs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: [docker-build, id_repo]
+    steps:
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@v1.3.1
+      with: { tool-cache: true, large-packages: false }
+    - name: Checkout built branch
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
+    - name: Collect image artifact
+      if: needs.id_repo.outputs.in_base_repo == 'false'
+      uses: actions/download-artifact@v3
+      with: { name: 'latest_cpu-artifact' }
+    - name: Load image artifact into docker
+      if: needs.id_repo.outputs.in_base_repo == 'false'
+      run: |
+        docker load < latest_cpu-artifact.tar
+        rm latest_cpu-artifact.tar
+    - name: documentation
+      run: |
+        cat<<-'EOF' > run.sh
+        set -xe
+        git config --global --add safe.directory '*'
+        cmake -DDDC_BUILD_DOCUMENTATION=ON -B build -S /src
+        cd build
+        make doc
+        EOF
+        docker run \
+          -v ${PWD}:/src:ro ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} \
+          bash /src/run.sh
+    - name: errors
+      run: |
+        ls
+        # Get files which have changed in this merge request
+        git diff ${{github.event.pull_request.base.ref}}..HEAD --name-only --output=pull_diff.txt
+        # Search through modified files to find relevant errors
+        touch relevant_errors.txt
+        while read f; do
+          grep "$f" build/docs/doxygen.log 2>&1 | tee -a relevant_errors.txt
+        done < pull_diff.txt
+        if [ -s diff.txt ]; then
+          # The file is not-empty.
+          exit 1
+        fi
 
   clang-tidy-test:
     runs-on: ubuntu-latest

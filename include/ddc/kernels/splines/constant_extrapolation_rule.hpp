@@ -68,7 +68,7 @@ public:
 };
 
 /**
- * @brief A class for describing a spline boundary value by a constant extrapolation for 2D evaluator.
+ * @brief A functor for describing a spline boundary value by a constant extrapolation for 2D evaluator.
  *
  * To define the value of a function on B-splines out of the domain, we here use a constant
  * extrapolation on the edge.

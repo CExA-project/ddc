@@ -144,6 +144,7 @@ public:
 
     KOKKOS_FUNCTION constexpr DiscreteDomain take_first(mlength_type n) const
     {
+        int a = 1 + 2;
         return DiscreteDomain(front(), n);
     }
 

@@ -223,12 +223,13 @@ jobs:
     - name: errors
       run: |
         ls
+        ls docs_out
         # Get files which have changed in this merge request
         git diff ${{github.event.pull_request.base.sha}}..HEAD --name-only --output=pull_diff.txt
         # Search through modified files to find relevant errors
         touch relevant_errors.txt
         while read f; do
-          grep "$f" doxygen.log 2>&1 | tee -a relevant_errors.txt
+          grep "$f" docs_out/doxygen.log 2>&1 | tee -a relevant_errors.txt
         done < pull_diff.txt
         if [ -s diff.txt ]; then
           # The file is not-empty.

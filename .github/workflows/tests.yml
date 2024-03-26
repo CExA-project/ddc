@@ -210,17 +210,16 @@ jobs:
         rm latest_cpu-artifact.tar
     - name: documentation
       run: |
-        cat<<-'EOF' > run.sh
-        set -xe
-        git config --global --add safe.directory '*'
-        cmake -DDDC_BUILD_DOCUMENTATION=ON -B build -S /src
-        cd build
-        make doc
-        mv docs/doxygen.log /src/doxygen.log
+        cat<<-EOF > run.sh
+          set -xe
+          git config --global --add safe.directory '*'
+          cmake -DDDC_BUILD_DOCUMENTATION=ON -S /src
+          make doc
+          mv docs/doxygen.log /src/docs_out/doxygen.log
         EOF
-        docker run \
-          -v ${PWD}:/src ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} \
-          bash /src/run.sh
+        mkdir docs_out
+        chmod a+rwx docs_out
+        docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} bash /src/run.sh
     - name: errors
       run: |
         ls

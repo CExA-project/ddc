@@ -105,7 +105,7 @@ KOKKOS_FUNCTION T host_transform_reduce_serial(
 } // namespace detail
 
 /** A reduction over a nD domain in serial
- * This version must only be called from a host-device function.
+ * This version must only be called with `reducer`  and `transform` being functions compiled for all execution spaces. See also `host_transform_reduce` when these functions are only compiled for the host.
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] neutral the neutral element of the reduction operation
  * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the

@@ -58,7 +58,7 @@ void host_for_each_serial(
 } // namespace detail
 
 /** iterates over a nD domain in serial
- * This version must only be called from a host-device function.
+ * This version must only be called with `f` being a function compiled for all execution spaces. See also `host_for_each` when this function is only compiled for the host.
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */

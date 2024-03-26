@@ -25,9 +25,7 @@ If you like the project, please leave us a github star.
 
 If you want to know more, join un on [Slack](https://join.slack.com/t/ddc-lib/shared_invite/zt-14b6rjcrn-AwSfM6_arEamAKk_VgQPhg)
 
-## Getting the code and basic installation
+## Getting the code and basic configuration
 git clone --recurse-submodules -j8 https://github.com/CExA-project/ddc.git
 
 cmake -B build -D DDC_BUILD_KERNELS_FFT=OFF -D DDC_BUILD_KERNELS_SPLINES=OFF -D DDC_BUILD_PDI_WRAPPER=OFF
-
-cmake --install install

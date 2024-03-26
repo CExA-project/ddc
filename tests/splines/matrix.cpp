@@ -19,7 +19,7 @@
 
 namespace {
 
-void fill_identity(ddc::DSpan2D mat)
+void fill_identity(ddc::DSpan2D_stride mat)
 {
     assert(mat.extent(0) == mat.extent(1));
     for (std::size_t i(0); i < mat.extent(0); ++i) {
@@ -29,8 +29,7 @@ void fill_identity(ddc::DSpan2D mat)
     }
 }
 
-/*
-void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
+void copy_matrix(ddc::DSpan2D_stride copy, std::unique_ptr<ddc::detail::Matrix>& mat)
 {
     assert(mat->get_size() == int(copy.extent(0)));
     assert(mat->get_size() == int(copy.extent(1)));
@@ -41,25 +40,8 @@ void copy_matrix(ddc::DSpan2D copy, std::unique_ptr<ddc::detail::Matrix>& mat)
         }
     }
 }
-*/
 
-void check_inverse(ddc::DSpan2D matrix, ddc::DSpan2D inv)
-{
-    double TOL = 1e-10;
-    std::size_t N = matrix.extent(0);
-
-    for (std::size_t i(0); i < N; ++i) {
-        for (std::size_t j(0); j < N; ++j) {
-            double id_val = 0.0;
-            for (std::size_t k(0); k < N; ++k) {
-                id_val += matrix(i, k) * inv(j, k);
-            }
-            EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
-        }
-    }
-}
-
-void check_inverse_transpose(ddc::DSpan2D matrix, ddc::DSpan2D inv)
+void check_inverse(ddc::DSpan2D_stride matrix, ddc::DSpan2D_stride inv)
 {
     double TOL = 1e-10;
     std::size_t N = matrix.extent(0);
@@ -74,11 +56,169 @@ void check_inverse_transpose(ddc::DSpan2D matrix, ddc::DSpan2D inv)
         }
     }
 }
+
+void check_inverse_transpose(ddc::DSpan2D_stride matrix, ddc::DSpan2D_stride inv)
+{
+    double TOL = 1e-10;
+    std::size_t N = matrix.extent(0);
+
+    for (std::size_t i(0); i < N; ++i) {
+        for (std::size_t j(0); j < N; ++j) {
+            double id_val = 0.0;
+            for (std::size_t k(0); k < N; ++k) {
+                id_val += matrix(i, k) * inv(j, k);
+            }
+            EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
+        }
+    }
+}
 } // namespace
 
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
 {
 };
+
+TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
+{
+    auto const [N, k] = GetParam();
+    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded<
+            Kokkos::DefaultExecutionSpace>(N, k, k, true);
+
+    for (std::size_t i(0); i < N; ++i) {
+        matrix->set_element(i, i, 2.0 * k);
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -1.0);
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -1.0);
+        }
+    }
+    std::vector<double> val_ptr(N * N);
+    ddc::DSpan2D_left val(val_ptr.data(), N, N);
+    copy_matrix(val, matrix);
+
+    matrix->factorize();
+
+    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
+    ddc::DSpan2D_left inv(inv_ptr.h_view.data(), N, N);
+    fill_identity(inv);
+    inv_ptr.modify_host();
+    inv_ptr.sync_device();
+    matrix->solve_inplace(ddc::DSpan2D_left(inv_ptr.d_view.data(), N, N));
+    inv_ptr.modify_device();
+    inv_ptr.sync_host();
+
+    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
+    ddc::DSpan2D_left inv_tr(inv_tr_ptr.h_view.data(), N, N);
+    fill_identity(inv_tr);
+    inv_tr_ptr.modify_host();
+    inv_tr_ptr.sync_device();
+    matrix->solve_transpose_inplace(ddc::DSpan2D_left(inv_tr_ptr.d_view.data(), N, N));
+    inv_tr_ptr.modify_device();
+    inv_tr_ptr.sync_host();
+
+    check_inverse(val, inv);
+    check_inverse_transpose(val, inv_tr);
+}
+
+TEST_P(MatrixSizesFixture, OffsetBanded)
+{
+    auto const [N, k] = GetParam();
+    std::unique_ptr<ddc::detail::Matrix> matrix = ddc::detail::MatrixMaker::make_new_banded<
+            Kokkos::DefaultExecutionSpace>(N, 0, 2 * k, true);
+
+    for (std::size_t i(0); i < N; ++i) {
+        for (std::size_t j(i); j < std::min(N, i + k); ++j) {
+            matrix->set_element(i, i, -1.0);
+        }
+        if (i + k < N) {
+            matrix->set_element(i, i + k, 2.0 * k);
+        }
+        for (std::size_t j(i + k + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -1.0);
+        }
+    }
+
+    std::vector<double> val_ptr(N * N);
+    ddc::DSpan2D_left val(val_ptr.data(), N, N);
+    copy_matrix(val, matrix);
+
+    matrix->factorize();
+
+    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
+    ddc::DSpan2D_left inv(inv_ptr.h_view.data(), N, N);
+    fill_identity(inv);
+    inv_ptr.modify_host();
+    inv_ptr.sync_device();
+    matrix->solve_inplace(ddc::DSpan2D_left(inv_ptr.d_view.data(), N, N));
+    inv_ptr.modify_device();
+    inv_ptr.sync_host();
+
+    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
+    ddc::DSpan2D_left inv_tr(inv_tr_ptr.h_view.data(), N, N);
+    fill_identity(inv_tr);
+    inv_tr_ptr.modify_host();
+    inv_tr_ptr.sync_device();
+    matrix->solve_transpose_inplace(ddc::DSpan2D_left(inv_tr_ptr.d_view.data(), N, N));
+    inv_tr_ptr.modify_device();
+    inv_tr_ptr.sync_host();
+
+    check_inverse(val, inv);
+    check_inverse_transpose(val, inv_tr);
+}
+
+TEST_P(MatrixSizesFixture, PeriodicBanded)
+{
+    auto const [N, k] = GetParam();
+
+    for (std::ptrdiff_t s(-k); s < (std::ptrdiff_t)k + 1; ++s) {
+        if (s == 0)
+            continue;
+
+        std::unique_ptr<ddc::detail::Matrix> matrix
+                = ddc::detail::MatrixMaker::make_new_periodic_banded<
+                        Kokkos::DefaultExecutionSpace>(N, k - s, k + s, false);
+        for (std::size_t i(0); i < N; ++i) {
+            for (std::size_t j(0); j < N; ++j) {
+                int diag = ddc::detail::modulo((int)(j - i), (int)N);
+                if (diag == s || diag == (std::ptrdiff_t)N + s) {
+                    matrix->set_element(i, j, 0.5);
+                } else if (
+                        diag <= s + (std::ptrdiff_t)k
+                        || diag >= (std::ptrdiff_t)N + s - (std::ptrdiff_t)k) {
+                    matrix->set_element(i, j, -1.0 / k);
+                }
+            }
+        }
+
+        std::vector<double> val_ptr(N * N);
+        ddc::DSpan2D_left val(val_ptr.data(), N, N);
+        copy_matrix(val, matrix);
+
+        matrix->factorize();
+
+        Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
+        ddc::DSpan2D_left inv(inv_ptr.h_view.data(), N, N);
+        fill_identity(inv);
+        inv_ptr.modify_host();
+        inv_ptr.sync_device();
+        matrix->solve_inplace(ddc::DSpan2D_left(inv_ptr.d_view.data(), N, N));
+        inv_ptr.modify_device();
+        inv_ptr.sync_host();
+
+        Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
+        ddc::DSpan2D_left inv_tr(inv_tr_ptr.h_view.data(), N, N);
+        fill_identity(inv_tr);
+        inv_tr_ptr.modify_host();
+        inv_tr_ptr.sync_device();
+        matrix->solve_transpose_inplace(ddc::DSpan2D_left(inv_tr_ptr.d_view.data(), N, N));
+        inv_tr_ptr.modify_device();
+        inv_tr_ptr.sync_host();
+
+        check_inverse(val, inv);
+        check_inverse_transpose(val, inv_tr);
+    }
+}
 
 TEST_P(MatrixSizesFixture, Sparse)
 {
@@ -89,7 +229,7 @@ TEST_P(MatrixSizesFixture, Sparse)
             = ddc::detail::MatrixMaker::make_new_sparse<Kokkos::DefaultExecutionSpace>(N);
 
     std::vector<double> val_ptr(N * N);
-    ddc::DSpan2D val(val_ptr.data(), N, N);
+    ddc::DSpan2D_left val(val_ptr.data(), N, N);
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(0); j < N; ++j) {
             if (i == j) {
@@ -112,7 +252,7 @@ TEST_P(MatrixSizesFixture, Sparse)
     fill_identity(inv);
     inv_ptr.modify_host();
     inv_ptr.sync_device();
-    matrix->solve_multiple_inplace(ddc::DSpan2D(inv_ptr.d_view.data(), N, N));
+    matrix->solve_inplace(ddc::DSpan2D(inv_ptr.d_view.data(), N, N));
     inv_ptr.modify_device();
     inv_ptr.sync_host();
 
@@ -121,7 +261,7 @@ TEST_P(MatrixSizesFixture, Sparse)
     fill_identity(inv_tr);
     inv_tr_ptr.modify_host();
     inv_tr_ptr.sync_device();
-    matrix->solve_multiple_transpose_inplace(ddc::DSpan2D(inv_tr_ptr.d_view.data(), N, N));
+    matrix->solve_transpose_inplace(ddc::DSpan2D(inv_tr_ptr.d_view.data(), N, N));
     inv_tr_ptr.modify_device();
     inv_tr_ptr.sync_host();
 

@@ -337,7 +337,7 @@ static void ExtrapolationRuleSplineTest()
                 ddc::get<I1>(coords_eval(e))
                         = xN<I1>() + (ddc::select<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
                 ddc::get<I2>(coords_eval(e))
-                        = xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>()) + 1;
+                        = xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>());
             });
 
 
@@ -368,10 +368,16 @@ static void ExtrapolationRuleSplineTest()
                         discrete_element_type e_batch(e);
                 double tmp;
                 if (ddc::select<I2>(coords_eval(e)) > xN<I2>()) {
+#if defined(BC_PERIODIC)
+                    tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
+                            vals.template domain<IDim<I1, I1, I2>>().back(),
+                            e_without_interest));
+#else
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),
                             vals.template domain<IDim<I2, I1, I2>>().back(),
                             e_batch));
+#endif
                 } else {
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),

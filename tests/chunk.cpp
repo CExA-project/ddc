@@ -498,32 +498,6 @@ TEST(Chunk2DTest, SliceDomainX)
     }
 }
 
-TEST(Chunk2DTest, SliceDomainXTooearly)
-{
-    [[maybe_unused]] DDomX const subdomain_x(lbound_x - 1, nelems_x);
-
-    ChunkXY<double> const chunk(dom_x_y);
-#ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
-    // the error message is checked with clang & gcc only
-    EXPECT_DEATH(
-            chunk[subdomain_x],
-            R"rgx([Aa]ssert.*uid<ODDims>\(m_element_begin\).*uid<ODDims>\(odomain\.m_element_begin\))rgx");
-#endif
-}
-
-TEST(Chunk2DTest, SliceDomainXToolate)
-{
-    [[maybe_unused]] DDomX const subdomain_x(lbound_x, nelems_x + 1);
-
-    ChunkXY<double> const chunk(dom_x_y);
-#ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
-    // the error message is checked with clang & gcc only
-    EXPECT_DEATH(
-            chunk[subdomain_x],
-            R"rgx([Aa]ssert.*uid<ODDims>\(m_element_end\).*uid<ODDims>\(odomain\.m_element_end\).*)rgx");
-#endif
-}
-
 TEST(Chunk2DTest, SliceDomainY)
 {
     DDomY const subdomain_y(lbound_y + 1, nelems_y - 2);

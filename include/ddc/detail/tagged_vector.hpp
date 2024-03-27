@@ -224,12 +224,12 @@ KOKKOS_FUNCTION constexpr auto const& take(
 
 
 template <class T>
-class ConversionOperators
+class TaggedVectorConversionOperators
 {
 };
 
 template <class ElementType, class Tag>
-class ConversionOperators<TaggedVector<ElementType, Tag>>
+class TaggedVectorConversionOperators<TaggedVector<ElementType, Tag>>
 {
 public:
     KOKKOS_FUNCTION constexpr operator ElementType const &() const noexcept
@@ -244,9 +244,9 @@ public:
 };
 
 template <class ElementType, class... Tags>
-class TaggedVector : public ConversionOperators<TaggedVector<ElementType, Tags...>>
+class TaggedVector : public TaggedVectorConversionOperators<TaggedVector<ElementType, Tags...>>
 {
-    friend class ConversionOperators<TaggedVector<ElementType, Tags...>>;
+    friend class TaggedVectorConversionOperators<TaggedVector<ElementType, Tags...>>;
 
     using tags_seq = detail::TypeSeq<Tags...>;
 

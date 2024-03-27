@@ -21,17 +21,17 @@ template <class...>
 class DiscreteElement;
 
 template <class T>
-struct IsDiscreteElement : std::false_type
+struct is_discrete_element : std::false_type
 {
 };
 
 template <class... Tags>
-struct IsDiscreteElement<DiscreteElement<Tags...>> : std::true_type
+struct is_discrete_element<DiscreteElement<Tags...>> : std::true_type
 {
 };
 
 template <class T>
-inline constexpr bool is_discrete_element_v = IsDiscreteElement<T>::value;
+inline constexpr bool is_discrete_element_v = is_discrete_element<T>::value;
 
 
 namespace detail {

@@ -49,6 +49,8 @@ RUN chmod +x /bin/bash_run \
       clang \
       clang-tidy-14 \
       clang-format-14 \
+      doxygen \
+      doxygen-latex \
       llvm-14-tools \
  ;; "cuda") \
       apt-get install -y --no-install-recommends \

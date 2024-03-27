@@ -1,2 +1,4 @@
 \_form#0=24x14:$[a, b]$
-\_form#1=83x14:$[a, b] \subset [a, +\infty[$
+\_form#1=9x9:$ < $
+\_form#2=9x9:$ > $
+\_form#3=83x14:$[a, b] \subset [a, +\infty[$

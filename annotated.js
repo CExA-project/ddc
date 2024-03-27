@@ -36,7 +36,6 @@ var annotated =
       [ "DiscreteDomainIterator", "structddc_1_1DiscreteDomainIterator.html", "structddc_1_1DiscreteDomainIterator" ],
       [ "DiscreteElement", "classddc_1_1DiscreteElement.html", "classddc_1_1DiscreteElement" ],
       [ "DiscreteVector", "classddc_1_1DiscreteVector.html", "classddc_1_1DiscreteVector" ],
-      [ "DualDiscretization", "classddc_1_1DualDiscretization.html", "classddc_1_1DualDiscretization" ],
       [ "Fourier", "namespaceddc.html#structddc_1_1Fourier", null ],
       [ "GrevilleInterpolationPoints", "classddc_1_1GrevilleInterpolationPoints.html", "classddc_1_1GrevilleInterpolationPoints" ],
       [ "is_discrete_domain", "structddc_1_1is__discrete__domain.html", null ],

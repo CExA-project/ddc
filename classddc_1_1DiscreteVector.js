@@ -24,6 +24,5 @@ var classddc_1_1DiscreteVector =
     [ "operator+=", "classddc_1_1DiscreteVector.html#a22301ae2c273adbdf7eb8ee5ed5addaf", null ],
     [ "operator-=", "classddc_1_1DiscreteVector.html#a50c9d5da7fc75e22a73193b6fda77602", null ],
     [ "operator-=", "classddc_1_1DiscreteVector.html#a520b38851d0f1700853839aad94e6c20", null ],
-    [ "operator*=", "classddc_1_1DiscreteVector.html#aeebe074769b332626fb3fa496e27157f", null ],
-    [ "ConversionOperators< DiscreteVector< Tags... > >", "classddc_1_1DiscreteVector.html#aade13e9b466e0ce5c8e91ed0fd7bafe7", null ]
+    [ "operator*=", "classddc_1_1DiscreteVector.html#aeebe074769b332626fb3fa496e27157f", null ]
 ];

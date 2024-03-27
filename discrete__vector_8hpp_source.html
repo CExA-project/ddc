@@ -257,27 +257,27 @@ $(document).ready(function(){initNavTree('discrete__vector_8hpp_source.html','')
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    DDC_IF_NVCC_THEN_POP</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>}</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span><span class="keyword">class</span> <a class="code hl_class" href="namespaceddc.html#classddc_1_1ConversionOperators">ConversionOperators</a></div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>{</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>};</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> Tag&gt;</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><span class="keyword">class</span> <a class="code hl_class" href="namespaceddc.html#classddc_1_1ConversionOperators">ConversionOperators</a>&lt;DiscreteVector&lt;Tag&gt;&gt;</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>{</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <a class="code hl_class" href="namespaceddc.html#classddc_1_1ConversionOperators">KOKKOS_FUNCTION</a> <span class="keyword">constexpr</span> <a class="code hl_function" href="classddc_1_1ConversionOperators_3_01DiscreteVector_3_01Tag_01_4_01_4.html#aaab6c4c40c4301516ccbe16048c9e244">operator</a> DiscreteVectorElement <span class="keyword">const</span> &amp;() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    {</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <span class="keywordflow">return</span> <span class="keyword">static_cast</span>&lt;DiscreteVector&lt;Tag&gt; <span class="keyword">const</span>*&gt;(<span class="keyword">this</span>)-&gt;m_values[0];</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    }</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <a class="code hl_class" href="namespaceddc.html#classddc_1_1ConversionOperators">KOKKOS_FUNCTION</a> <span class="keyword">constexpr</span> <a class="code hl_function" href="classddc_1_1ConversionOperators_3_01DiscreteVector_3_01Tag_01_4_01_4.html#a9459723c4c073bf8ee091318dc3a0366">operator</a> DiscreteVectorElement&amp;() <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    {</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        <span class="keywordflow">return</span> <span class="keyword">static_cast</span>&lt;DiscreteVector&lt;Tag&gt;*&gt;(<span class="keyword">this</span>)-&gt;m_values[0];</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    }</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>};</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span><span class="keyword">namespace</span> detail {</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="keyword">namespace</span> detail {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span><span class="keyword">class</span> DiscreteVectorConversionOperators</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>{</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>};</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> Tag&gt;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span><span class="keyword">class</span> DiscreteVectorConversionOperators&lt;DiscreteVector&lt;Tag&gt;&gt;</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>{</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    KOKKOS_FUNCTION <span class="keyword">constexpr</span> operator DiscreteVectorElement <span class="keyword">const</span> &amp;() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    {</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        <span class="keywordflow">return</span> <span class="keyword">static_cast</span>&lt;DiscreteVector&lt;Tag&gt; <span class="keyword">const</span>*&gt;(<span class="keyword">this</span>)-&gt;m_values[0];</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    }</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    KOKKOS_FUNCTION <span class="keyword">constexpr</span> operator DiscreteVectorElement&amp;() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    {</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        <span class="keywordflow">return</span> <span class="keyword">static_cast</span>&lt;DiscreteVector&lt;Tag&gt;*&gt;(<span class="keyword">this</span>)-&gt;m_values[0];</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    }</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>};</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span><span class="comment">/// Returns a reference to the underlying `std::array`</span></div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Tags&gt;</div>
@@ -302,9 +302,9 @@ $(document).ready(function(){initNavTree('discrete__vector_8hpp_source.html','')
 <div class="line"><span class="lineno">  250</span><span class="comment"> * Each is tagged by its associated dimensions.</span></div>
 <div class="line"><span class="lineno">  251</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Tags&gt;</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="keyword">class</span> DiscreteVector : <span class="keyword">public</span> <a class="code hl_class" href="namespaceddc.html#classddc_1_1ConversionOperators">ConversionOperators</a>&lt;DiscreteVector&lt;Tags...&gt;&gt;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="keyword">class</span> DiscreteVector : <span class="keyword">public</span> detail::DiscreteVectorConversionOperators&lt;DiscreteVector&lt;Tags...&gt;&gt;</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>{</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="keyword">friend</span> <span class="keyword">class</span> <a class="code hl_class" href="namespaceddc.html#classddc_1_1ConversionOperators">ConversionOperators</a>&lt;DiscreteVector&lt;Tags...&gt;&gt;;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="keyword">friend</span> <span class="keyword">class</span> detail::DiscreteVectorConversionOperators&lt;DiscreteVector&lt;Tags...&gt;&gt;;</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keyword">friend</span> KOKKOS_FUNCTION <span class="keyword">constexpr</span> std::array&lt;DiscreteVectorElement, <span class="keyword">sizeof</span>...(Tags)&gt;&amp; detail::</div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            array&lt;Tags...&gt;(DiscreteVector&lt;Tags...&gt;&amp; v) <span class="keyword">noexcept</span>;</div>
@@ -523,8 +523,6 @@ $(document).ready(function(){initNavTree('discrete__vector_8hpp_source.html','')
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>}</div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span> </div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>} <span class="comment">// namespace ddc</span></div>
-<div class="ttc" id="aclassddc_1_1ConversionOperators_3_01DiscreteVector_3_01Tag_01_4_01_4_html_a9459723c4c073bf8ee091318dc3a0366"><div class="ttname"><a href="classddc_1_1ConversionOperators_3_01DiscreteVector_3_01Tag_01_4_01_4.html#a9459723c4c073bf8ee091318dc3a0366">ddc::ConversionOperators&lt; DiscreteVector&lt; Tag &gt; &gt;::operator DiscreteVectorElement &amp;</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr operator DiscreteVectorElement &amp;() noexcept</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:222</div></div>
-<div class="ttc" id="aclassddc_1_1ConversionOperators_3_01DiscreteVector_3_01Tag_01_4_01_4_html_aaab6c4c40c4301516ccbe16048c9e244"><div class="ttname"><a href="classddc_1_1ConversionOperators_3_01DiscreteVector_3_01Tag_01_4_01_4.html#aaab6c4c40c4301516ccbe16048c9e244">ddc::ConversionOperators&lt; DiscreteVector&lt; Tag &gt; &gt;::operator DiscreteVectorElement const &amp;</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr operator DiscreteVectorElement const &amp;() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:217</div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteVector_html_a07fb532811c1e05844ae002f5ab7dab1"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a07fb532811c1e05844ae002f5ab7dab1">ddc::DiscreteVector::operator--</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteVector &amp; operator--()</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:382</div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteVector_html_a0b9c68aa4bf48f5a7ce12c86deb9b319"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a0b9c68aa4bf48f5a7ce12c86deb9b319">ddc::DiscreteVector::get_or</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteVectorElement const &amp; get_or(DiscreteVectorElement const &amp;default_value) const &amp;</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:347</div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteVector_html_a12134675e87d448743bccd78ca9a8467"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a12134675e87d448743bccd78ca9a8467">ddc::DiscreteVector::value</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr std::enable_if_t&lt; N==1, DiscreteVectorElement const &amp; &gt; value() const noexcept</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:360</div></div>
@@ -570,7 +568,6 @@ $(document).ready(function(){initNavTree('discrete__vector_8hpp_source.html','')
 <div class="ttc" id="anamespaceddc_html_a9fdc2cbe96c3789a3f09d7f7ffd08119"><div class="ttname"><a href="namespaceddc.html#a9fdc2cbe96c3789a3f09d7f7ffd08119">ddc::operator-</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteVector&lt; Tag &gt; operator-(IntegralType const &amp;lhs, DiscreteVector&lt; Tag &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:151</div></div>
 <div class="ttc" id="anamespaceddc_html_ab382a5e827e8921a275ef1c7f46125af"><div class="ttname"><a href="namespaceddc.html#ab382a5e827e8921a275ef1c7f46125af">ddc::operator+</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteVector&lt; Tag &gt; operator+(DiscreteVector&lt; Tag &gt; const &amp;lhs, IntegralType const &amp;rhs)</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:127</div></div>
 <div class="ttc" id="anamespaceddc_html_ac4e808ab08b6a4bd398b26032ea67376"><div class="ttname"><a href="namespaceddc.html#ac4e808ab08b6a4bd398b26032ea67376">ddc::select</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteVector&lt; QueryTags... &gt; select(DiscreteVector&lt; Tags... &gt; &amp;&amp;arr) noexcept</div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:179</div></div>
-<div class="ttc" id="anamespaceddc_html_classddc_1_1ConversionOperators"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ConversionOperators">ddc::ConversionOperators</a></div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:210</div></div>
 <div class="ttc" id="astructddc_1_1is__discrete__vector_html"><div class="ttname"><a href="structddc_1_1is__discrete__vector.html">ddc::is_discrete_vector</a></div><div class="ttdef"><b>Definition:</b> discrete_vector.hpp:25</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

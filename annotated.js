@@ -28,8 +28,6 @@ var annotated =
       [ "ConstantExtrapolationRule", "namespaceddc.html#structddc_1_1ConstantExtrapolationRule", null ],
       [ "ConstantExtrapolationRule< DimI >", "structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html", "structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4" ],
       [ "ConstantExtrapolationRule< DimI, DimNI >", "structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html", "structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4" ],
-      [ "ConversionOperators", "namespaceddc.html#classddc_1_1ConversionOperators", null ],
-      [ "ConversionOperators< DiscreteVector< Tag > >", "classddc_1_1ConversionOperators_3_01DiscreteVector_3_01Tag_01_4_01_4.html", "classddc_1_1ConversionOperators_3_01DiscreteVector_3_01Tag_01_4_01_4" ],
       [ "coordinate_of", "namespaceddc.html#structddc_1_1coordinate__of", null ],
       [ "coordinate_of< ddc::DiscreteElement< DDims... > >", "namespaceddc.html#structddc_1_1coordinate__of_3_01ddc_1_1DiscreteElement_3_01DDims_8_8_8_01_4_01_4", "namespaceddc_structddc_1_1coordinate__of_3_01ddc_1_1DiscreteElement_3_01DDims_8_8_8_01_4_01_4_dup" ],
       [ "Deriv", "namespaceddc.html#structddc_1_1Deriv", null ],

@@ -14,7 +14,6 @@ var annotated =
         [ "sum", "structddc_1_1reducer_1_1sum.html", "structddc_1_1reducer_1_1sum" ]
       ] ],
       [ "AlignedAllocator", "classddc_1_1AlignedAllocator.html", "classddc_1_1AlignedAllocator" ],
-      [ "BSpline", "namespaceddc.html#structddc_1_1BSpline", null ],
       [ "cartesian_prod", "namespaceddc.html#structddc_1_1cartesian__prod", null ],
       [ "cartesian_prod< ddc::DiscreteDomain< DDim1... >, ddc::DiscreteDomain< DDim2... > >", "namespaceddc.html#structddc_1_1cartesian__prod_3_01ddc_1_1DiscreteDomain_3_01DDim1_8_8_8_01_4_00_01ddc_1_1Discrete74c011d44ff586684f50f3f3d6d191c1", "namespaceddc_structddc_1_1cartesian__prod_3_01ddc_1_1DiscreteDomain_3_01DDim1_8_8_8_01_4_00_01ddc_1_1Discrete74c011d44ff586684f50f3f3d6d191c1_dup" ],
       [ "cartesian_prod< DDom >", "namespaceddc.html#structddc_1_1cartesian__prod_3_01DDom_01_4", "namespaceddc_structddc_1_1cartesian__prod_3_01DDom_01_4_dup" ],

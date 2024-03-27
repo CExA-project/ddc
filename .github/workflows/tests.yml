@@ -226,9 +226,12 @@ jobs:
         ls docs_out
         # Get files which have changed in this merge request
         git diff ${{github.event.pull_request.base.sha}}..HEAD --name-only --output=pull_diff.txt
+        cat pull_diff.txt
+        cat docs_out/doxygen.log
         # Search through modified files to find relevant errors
         touch relevant_errors.txt
         while read f; do
+          echo "Looking for $f"
           grep "$f" docs_out/doxygen.log 2>&1 | tee -a relevant_errors.txt
         done < pull_diff.txt
         if [ -s diff.txt ]; then

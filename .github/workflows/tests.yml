@@ -208,7 +208,7 @@ jobs:
       run: |
         docker load < latest_cpu-artifact.tar
         rm latest_cpu-artifact.tar
-    - name: documentation
+    - name: Generate documentation
       run: |
         cat<<-EOF > run.sh
           set -xe
@@ -220,7 +220,7 @@ jobs:
         mkdir docs_out
         chmod a+rwx docs_out
         docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} bash /src/run.sh
-    - name: errors
+    - name: Check for relevant documentation errors
       run: |
         # Get files which have changed in this merge request
         git diff ${{github.event.pull_request.base.sha}}..HEAD --name-only --output=pull_diff.txt

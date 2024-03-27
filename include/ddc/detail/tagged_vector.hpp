@@ -21,17 +21,17 @@ template <class, class...>
 class TaggedVector;
 
 template <class T>
-struct IsTaggedVector : std::false_type
+struct is_tagged_vector : std::false_type
 {
 };
 
 template <class ElementType, class... Tags>
-struct IsTaggedVector<TaggedVector<ElementType, Tags...>> : std::true_type
+struct is_tagged_vector<TaggedVector<ElementType, Tags...>> : std::true_type
 {
 };
 
 template <class T>
-inline constexpr bool is_tagged_vector_v = IsTaggedVector<T>::value;
+inline constexpr bool is_tagged_vector_v = is_tagged_vector<T>::value;
 
 template <class ElementType, class... Tags>
 struct ToTypeSeq<TaggedVector<ElementType, Tags...>>

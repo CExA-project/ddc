@@ -222,19 +222,15 @@ jobs:
         docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} bash /src/run.sh
     - name: errors
       run: |
-        ls
-        ls docs_out
         # Get files which have changed in this merge request
         git diff ${{github.event.pull_request.base.sha}}..HEAD --name-only --output=pull_diff.txt
-        cat pull_diff.txt
-        cat docs_out/doxygen.log
         # Search through modified files to find relevant errors
         touch relevant_errors.txt
         while read f; do
           echo "Looking for $f"
           grep "$f" docs_out/doxygen.log 2>&1 | tee -a relevant_errors.txt
         done < pull_diff.txt
-        if [ -s diff.txt ]; then
+        if [ -s relevant_errors.txt ]; then
           # The file is not-empty.
           exit 1
         fi

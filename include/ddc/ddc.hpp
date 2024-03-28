@@ -19,7 +19,6 @@
 #include "ddc/kokkos_allocator.hpp"
 
 // Discretizations
-#include "ddc/coordinate_md.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
 #include "ddc/discrete_space.hpp"

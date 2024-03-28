@@ -14,8 +14,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/misc/ginkgo_executors.hpp"
-
+#include "ginkgo_executors.hpp"
 #include "matrix.hpp"
 
 namespace ddc::detail {

@@ -339,7 +339,7 @@ static void ExtrapolationRuleSplineTest()
                 // Set coords_eval outside of the domain (this point should be found on the grid in
                 // the periodic case)
                 ddc::get<I2>(coords_eval(e))
-                        = 2*xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>());
+                        = 2 * xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>());
             });
 
 

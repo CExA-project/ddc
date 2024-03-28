@@ -1,4 +1,4 @@
-// Copyright (C) The DDC development team, see COPYRIGHT.md file
+8// Copyright (C) The DDC development team, see COPYRIGHT.md file
 //
 // SPDX-License-Identifier: MIT
 

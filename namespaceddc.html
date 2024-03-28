@@ -199,6 +199,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:a2b6977fe9b28adbb8b73a630ded5e7b1"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class SupportType , class LayoutStridedPolicy  = std::experimental::layout_right, class MemorySpace  = Kokkos::HostSpace&gt; </td></tr>
+<tr class="memitem:a2b6977fe9b28adbb8b73a630ded5e7b1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a2b6977fe9b28adbb8b73a630ded5e7b1">ChunkView</a> = <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType const, SupportType, LayoutStridedPolicy, MemorySpace &gt;</td></tr>
+<tr class="separator:a2b6977fe9b28adbb8b73a630ded5e7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb335346eb3412e07727f1097c76302b"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:adb335346eb3412e07727f1097c76302b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#adb335346eb3412e07727f1097c76302b">chunk_value_t</a> = typename <a class="el" href="namespaceddc.html#structddc_1_1chunk__traits">chunk_traits</a>&lt; T &gt;::value_type</td></tr>
 <tr class="separator:adb335346eb3412e07727f1097c76302b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,9 +211,6 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a4f36a871e49681abe05cc39604126187"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a4f36a871e49681abe05cc39604126187"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a4f36a871e49681abe05cc39604126187">chunk_reference_t</a> = typename <a class="el" href="namespaceddc.html#structddc_1_1chunk__traits">chunk_traits</a>&lt; T &gt;::reference_type</td></tr>
 <tr class="separator:a4f36a871e49681abe05cc39604126187"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b6977fe9b28adbb8b73a630ded5e7b1"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class SupportType , class LayoutStridedPolicy  = std::experimental::layout_right, class MemorySpace  = Kokkos::HostSpace&gt; </td></tr>
-<tr class="memitem:a2b6977fe9b28adbb8b73a630ded5e7b1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a2b6977fe9b28adbb8b73a630ded5e7b1">ChunkView</a> = <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType const, SupportType, LayoutStridedPolicy, MemorySpace &gt;</td></tr>
-<tr class="separator:a2b6977fe9b28adbb8b73a630ded5e7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a287fd69405cf97cad795bf3d70139928"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a287fd69405cf97cad795bf3d70139928">CoordinateElement</a> = <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a></td></tr>
 <tr class="memdesc:a287fd69405cf97cad795bf3d70139928"><td class="mdescLeft">&#160;</td><td class="mdescRight">A CoordinateElement the type of the scalar used to represent elements of coordinates in the continuous space.  <a href="namespaceddc.html#a287fd69405cf97cad795bf3d70139928">More...</a><br /></td></tr>
 <tr class="separator:a287fd69405cf97cad795bf3d70139928"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -696,6 +696,12 @@ Variables</h2></td></tr>
 <tr class="memitem:a0408c8fc71367c112c298719ad6b9885"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class SupportType , class Allocator &gt; </td></tr>
 <tr class="memitem:a0408c8fc71367c112c298719ad6b9885"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a0408c8fc71367c112c298719ad6b9885">enable_chunk&lt; Chunk&lt; ElementType, SupportType, Allocator &gt; &gt;</a> = true</td></tr>
 <tr class="separator:a0408c8fc71367c112c298719ad6b9885"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a940791d3528033e07205be12f8aee358"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class SupportType , class LayoutStridedPolicy , class MemorySpace &gt; </td></tr>
+<tr class="memitem:a940791d3528033e07205be12f8aee358"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a940791d3528033e07205be12f8aee358">enable_chunk&lt; ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt;</a> = true</td></tr>
+<tr class="separator:a940791d3528033e07205be12f8aee358"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1654348aeba85c8ac3c8b933ee87a4c1"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class SupportType , class LayoutStridedPolicy , class MemorySpace &gt; </td></tr>
+<tr class="memitem:a1654348aeba85c8ac3c8b933ee87a4c1"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1654348aeba85c8ac3c8b933ee87a4c1">enable_borrowed_chunk&lt; ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt;</a> = true</td></tr>
+<tr class="separator:a1654348aeba85c8ac3c8b933ee87a4c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c0e4de1cdacb9ca1ec06c43675d7a5b"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a0c0e4de1cdacb9ca1ec06c43675d7a5b"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a0c0e4de1cdacb9ca1ec06c43675d7a5b">enable_borrowed_chunk</a> = false</td></tr>
 <tr class="separator:a0c0e4de1cdacb9ca1ec06c43675d7a5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -711,12 +717,6 @@ Variables</h2></td></tr>
 <tr class="memitem:a6b0404afeb25a439cafc10e9bd7cbec6"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a6b0404afeb25a439cafc10e9bd7cbec6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a6b0404afeb25a439cafc10e9bd7cbec6">is_writable_chunk_v</a> = !std::is_const_v&lt;std::remove_pointer_t&lt;<a class="el" href="namespaceddc.html#afe65f9c9cde8577cc63500bc296315a0">chunk_pointer_t</a>&lt;T&gt;&gt;&gt;</td></tr>
 <tr class="separator:a6b0404afeb25a439cafc10e9bd7cbec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a940791d3528033e07205be12f8aee358"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class SupportType , class LayoutStridedPolicy , class MemorySpace &gt; </td></tr>
-<tr class="memitem:a940791d3528033e07205be12f8aee358"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a940791d3528033e07205be12f8aee358">enable_chunk&lt; ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt;</a> = true</td></tr>
-<tr class="separator:a940791d3528033e07205be12f8aee358"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1654348aeba85c8ac3c8b933ee87a4c1"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class SupportType , class LayoutStridedPolicy , class MemorySpace &gt; </td></tr>
-<tr class="memitem:a1654348aeba85c8ac3c8b933ee87a4c1"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1654348aeba85c8ac3c8b933ee87a4c1">enable_borrowed_chunk&lt; ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt;</a> = true</td></tr>
-<tr class="separator:a1654348aeba85c8ac3c8b933ee87a4c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2cf0a43efdcfdbd2d1cb64f74cb18b6"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:ac2cf0a43efdcfdbd2d1cb64f74cb18b6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac2cf0a43efdcfdbd2d1cb64f74cb18b6">is_discrete_domain_v</a> = <a class="el" href="structddc_1_1is__discrete__domain.html">is_discrete_domain</a>&lt;T&gt;::value</td></tr>
 <tr class="separator:ac2cf0a43efdcfdbd2d1cb64f74cb18b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1077,6 +1077,22 @@ discrete_vector_type</td>
 </div>
 </div>
 <h2 class="groupheader">Typedef Documentation</h2>
+<a id="a2b6977fe9b28adbb8b73a630ded5e7b1" name="a2b6977fe9b28adbb8b73a630ded5e7b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b6977fe9b28adbb8b73a630ded5e7b1">&#9670;&nbsp;</a></span>ChunkView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ElementType , class SupportType , class LayoutStridedPolicy  = std::experimental::layout_right, class MemorySpace  = Kokkos::HostSpace&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceddc.html#a2b6977fe9b28adbb8b73a630ded5e7b1">ddc::ChunkView</a> = typedef <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt;ElementType const, SupportType, LayoutStridedPolicy, MemorySpace&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="adb335346eb3412e07727f1097c76302b" name="adb335346eb3412e07727f1097c76302b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adb335346eb3412e07727f1097c76302b">&#9670;&nbsp;</a></span>chunk_value_t</h2>
 
@@ -1119,22 +1135,6 @@ template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespaceddc.html#a4f36a871e49681abe05cc39604126187">ddc::chunk_reference_t</a> = typedef typename <a class="el" href="namespaceddc.html#structddc_1_1chunk__traits">chunk_traits</a>&lt;T&gt;::reference_type</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2b6977fe9b28adbb8b73a630ded5e7b1" name="a2b6977fe9b28adbb8b73a630ded5e7b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b6977fe9b28adbb8b73a630ded5e7b1">&#9670;&nbsp;</a></span>ChunkView</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ElementType , class SupportType , class LayoutStridedPolicy  = std::experimental::layout_right, class MemorySpace  = Kokkos::HostSpace&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="namespaceddc.html#a2b6977fe9b28adbb8b73a630ded5e7b1">ddc::ChunkView</a> = typedef <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt;ElementType const, SupportType, LayoutStridedPolicy, MemorySpace&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -5384,6 +5384,54 @@ template&lt;class ElementType , class SupportType , class Allocator &gt; </div>
 
 </div>
 </div>
+<a id="a940791d3528033e07205be12f8aee358" name="a940791d3528033e07205be12f8aee358"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a940791d3528033e07205be12f8aee358">&#9670;&nbsp;</a></span>enable_chunk&lt; ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ElementType , class SupportType , class LayoutStridedPolicy , class MemorySpace &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::enable_chunk</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt; = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1654348aeba85c8ac3c8b933ee87a4c1" name="a1654348aeba85c8ac3c8b933ee87a4c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1654348aeba85c8ac3c8b933ee87a4c1">&#9670;&nbsp;</a></span>enable_borrowed_chunk&lt; ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ElementType , class SupportType , class LayoutStridedPolicy , class MemorySpace &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool <a class="el" href="namespaceddc.html#a0c0e4de1cdacb9ca1ec06c43675d7a5b">ddc::enable_borrowed_chunk</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt; = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a0c0e4de1cdacb9ca1ec06c43675d7a5b" name="a0c0e4de1cdacb9ca1ec06c43675d7a5b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0c0e4de1cdacb9ca1ec06c43675d7a5b">&#9670;&nbsp;</a></span>enable_borrowed_chunk</h2>
 
@@ -5479,7 +5527,7 @@ template&lt;class T &gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= <a class="code hl_variable" href="namespaceddc.html#a19c5fc81d81d5676bfcc0eededc0bd22">is_chunk_v</a>&lt;</div>
 <div class="line">                  T&gt; &amp;&amp; (std::is_lvalue_reference_v&lt;T&gt; || enable_borrowed_chunk&lt;std::remove_cv_t&lt;std::remove_reference_t&lt;T&gt;&gt;&gt;)</div>
-<div class="ttc" id="anamespaceddc_html_a19c5fc81d81d5676bfcc0eededc0bd22"><div class="ttname"><a href="namespaceddc.html#a19c5fc81d81d5676bfcc0eededc0bd22">ddc::is_chunk_v</a></div><div class="ttdeci">constexpr bool is_chunk_v</div><div class="ttdef"><b>Definition:</b> chunk_common.hpp:28</div></div>
+<div class="ttc" id="anamespaceddc_html_a19c5fc81d81d5676bfcc0eededc0bd22"><div class="ttname"><a href="namespaceddc.html#a19c5fc81d81d5676bfcc0eededc0bd22">ddc::is_chunk_v</a></div><div class="ttdeci">constexpr bool is_chunk_v</div><div class="ttdef"><b>Definition:</b> chunk_traits.hpp:19</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -5496,54 +5544,6 @@ template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">constexpr bool ddc::is_writable_chunk_v = !std::is_const_v&lt;std::remove_pointer_t&lt;<a class="el" href="namespaceddc.html#afe65f9c9cde8577cc63500bc296315a0">chunk_pointer_t</a>&lt;T&gt;&gt;&gt;</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a940791d3528033e07205be12f8aee358" name="a940791d3528033e07205be12f8aee358"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a940791d3528033e07205be12f8aee358">&#9670;&nbsp;</a></span>enable_chunk&lt; ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt;</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ElementType , class SupportType , class LayoutStridedPolicy , class MemorySpace &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::enable_chunk</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt; = true</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1654348aeba85c8ac3c8b933ee87a4c1" name="a1654348aeba85c8ac3c8b933ee87a4c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1654348aeba85c8ac3c8b933ee87a4c1">&#9670;&nbsp;</a></span>enable_borrowed_chunk&lt; ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt;</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ElementType , class SupportType , class LayoutStridedPolicy , class MemorySpace &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool <a class="el" href="namespaceddc.html#a0c0e4de1cdacb9ca1ec06c43675d7a5b">ddc::enable_borrowed_chunk</a>&lt; <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt; &gt; = true</td>
         </tr>
       </table>
   </td>

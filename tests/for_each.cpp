@@ -47,7 +47,7 @@ TEST(ForEachSerialHost, Empty)
     DDomX const dom(lbound_x, DVectX(0));
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
-    ddc::for_each(dom, [=](DElemX const ix) { view(ix) += 1; });
+    ddc::host_for_each(dom, [=](DElemX const ix) { view(ix) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size())
             << std::count(storage.begin(), storage.end(), 1) << std::endl;
 }
@@ -57,7 +57,7 @@ TEST(ForEachSerialHost, ZeroDimension)
     DDom0D const dom;
     int storage = 0;
     ddc::ChunkSpan<int, DDom0D> const view(&storage, dom);
-    ddc::for_each(dom, [=](DElem0D const ii) { view(ii) += 1; });
+    ddc::host_for_each(dom, [=](DElem0D const ii) { view(ii) += 1; });
     EXPECT_EQ(storage, 1) << storage << std::endl;
 }
 
@@ -66,7 +66,7 @@ TEST(ForEachSerialHost, OneDimension)
     DDomX const dom(lbound_x, nelems_x);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
-    ddc::for_each(dom, [=](DElemX const ix) { view(ix) += 1; });
+    ddc::host_for_each(dom, [=](DElemX const ix) { view(ix) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
@@ -75,6 +75,6 @@ TEST(ForEachSerialHost, TwoDimensions)
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);
     ddc::ChunkSpan<int, DDomXY> const view(storage.data(), dom);
-    ddc::for_each(dom, [=](DElemXY const ixy) { view(ixy) += 1; });
+    ddc::host_for_each(dom, [=](DElemXY const ixy) { view(ixy) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }

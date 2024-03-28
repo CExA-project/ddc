@@ -90,7 +90,7 @@ static void test_fft()
         return x * x;
     };
 
-    double const criterion = Kokkos::sqrt(ddc::transform_reduce(
+    double const criterion = Kokkos::sqrt(ddc::host_transform_reduce(
             Ff_host.domain(),
             0.,
             ddc::reducer::sum<double>(),
@@ -103,7 +103,7 @@ static void test_fft()
                 return pow2(diff) / denom;
             }));
 
-    double const criterion2 = Kokkos::sqrt(ddc::transform_reduce(
+    double const criterion2 = Kokkos::sqrt(ddc::host_transform_reduce(
             FFf_host.domain(),
             0.,
             ddc::reducer::sum<double>(),
@@ -154,7 +154,7 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
     ddc::ChunkSpan const FFf = FFf_alloc.span_view();
     ddc::ifft(exec_space, FFf, Ff_bis, {norm});
 
-    double const f_sum = ddc::transform_reduce(f.domain(), 0., ddc::reducer::sum<double>(), f);
+    double const f_sum = ddc::host_transform_reduce(f.domain(), 0., ddc::reducer::sum<double>(), f);
 
     double Ff0_expected;
     double FFf_expected;

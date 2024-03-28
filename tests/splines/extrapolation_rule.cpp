@@ -333,11 +333,13 @@ static void ExtrapolationRuleSplineTest()
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);
-                // Set coords_eval outside of the domain
+                // Set coords_eval outside of the domain (+1 to ensure left bound is outside domain)
                 ddc::get<I1>(coords_eval(e))
                         = xN<I1>() + (ddc::select<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
+                // Set coords_eval outside of the domain (this point should be found on the grid in
+                // the periodic case)
                 ddc::get<I2>(coords_eval(e))
-                        = xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>());
+                        = 2*xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>());
             });
 
 

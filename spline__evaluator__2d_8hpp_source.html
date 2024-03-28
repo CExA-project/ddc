@@ -703,47 +703,47 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><span class="lineno">  651</span><span class="comment">     */</span></div>
 <div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> Layout, <span class="keyword">class</span>... CoordsDims&gt;</div>
 <div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>    KOKKOS_INLINE_FUNCTION <span class="keywordtype">double</span> eval(</div>
-<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; <span class="keyword">const</span>&amp; coord_eval,</div>
+<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; coord_eval,</div>
 <div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, bsplines_domain_type, Layout, memory_space&gt; <span class="keyword">const</span></div>
 <div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>                    spline_coef) <span class="keyword">const</span></div>
 <div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>    {</div>
-<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> interpolation_mesh_type1::continuous_dimension_type&gt;</div>
-<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>                coord_eval_interpolation1(coord_eval);</div>
-<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> interpolation_mesh_type2::continuous_dimension_type&gt;</div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>                coord_eval_interpolation2(coord_eval);</div>
-<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (bsplines_type1::is_periodic()) {</div>
-<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>            <span class="keywordflow">if</span> (coord_eval_interpolation1 &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin()</div>
-<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>                || coord_eval_interpolation1 &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmax()) {</div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>                coord_eval_interpolation1</div>
-<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>                        -= Kokkos::floor(</div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>                                   (coord_eval_interpolation1</div>
-<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>                                    - <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin())</div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>                                   / <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().length())</div>
-<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>                           * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().length();</div>
-<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>            }</div>
-<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>            <span class="keywordflow">if</span> (coord_eval_interpolation1 &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin()) {</div>
-<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>                <span class="keywordflow">return</span> m_left_extrap_rule_1(coord_eval, spline_coef);</div>
-<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>            }</div>
-<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>            <span class="keywordflow">if</span> (coord_eval_interpolation1 &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmax()) {</div>
-<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>                <span class="keywordflow">return</span> m_right_extrap_rule_1(coord_eval, spline_coef);</div>
-<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>            }</div>
-<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>        }</div>
-<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (bsplines_type2::is_periodic()) {</div>
-<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>            <span class="keywordflow">if</span> (coord_eval_interpolation2 &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin()</div>
-<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>                || coord_eval_interpolation2 &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmax()) {</div>
-<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>                coord_eval_interpolation2</div>
-<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>                        -= Kokkos::floor(</div>
-<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>                                   (coord_eval_interpolation2</div>
-<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>                                    - <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin())</div>
-<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>                                   / <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().length())</div>
-<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>                           * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().length();</div>
-<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>            }</div>
-<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>            <span class="keywordflow">if</span> (coord_eval_interpolation2 &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin()) {</div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        <span class="keyword">using</span> Dim1 = <span class="keyword">typename</span> interpolation_mesh_type1::continuous_dimension_type;</div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>        <span class="keyword">using</span> Dim2 = <span class="keyword">typename</span> interpolation_mesh_type2::continuous_dimension_type;</div>
+<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (bsplines_type1::is_periodic()) {</div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin()</div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>                || <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmax()) {</div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval)</div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>                        -= Kokkos::floor(</div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>                                   (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval)</div>
+<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>                                    - <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin())</div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>                                   / <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().length())</div>
+<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>                           * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().length();</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>            }</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>        }</div>
+<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (bsplines_type2::is_periodic()) {</div>
+<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin()</div>
+<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>                || <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmax()) {</div>
+<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval)</div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>                        -= Kokkos::floor(</div>
+<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>                                   (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval)</div>
+<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>                                    - <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin())</div>
+<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>                                   / <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().length())</div>
+<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>                           * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().length();</div>
+<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>            }</div>
+<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>        }</div>
+<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!bsplines_type1::is_periodic()) {</div>
+<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin()) {</div>
+<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>                <span class="keywordflow">return</span> m_left_extrap_rule_1(coord_eval, spline_coef);</div>
+<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>            }</div>
+<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmax()) {</div>
+<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>                <span class="keywordflow">return</span> m_right_extrap_rule_1(coord_eval, spline_coef);</div>
+<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>            }</div>
+<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>        }</div>
+<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!bsplines_type2::is_periodic()) {</div>
+<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin()) {</div>
 <div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>                <span class="keywordflow">return</span> m_left_extrap_rule_2(coord_eval, spline_coef);</div>
 <div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span>            }</div>
-<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>            <span class="keywordflow">if</span> (coord_eval_interpolation2 &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmax()) {</div>
+<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmax()) {</div>
 <div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>                <span class="keywordflow">return</span> m_right_extrap_rule_2(coord_eval, spline_coef);</div>
 <div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>            }</div>
 <div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>        }</div>
@@ -751,83 +751,77 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;</div>
 <div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span>                        <span class="keyword">typename</span> interpolation_mesh_type1::continuous_dimension_type,</div>
 <div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>                        <span class="keyword">typename</span> interpolation_mesh_type2::continuous_dimension_type&gt;(</div>
-<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>                        coord_eval_interpolation1,</div>
-<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>                        coord_eval_interpolation2),</div>
+<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval),</div>
+<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval)),</div>
 <div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>                spline_coef);</div>
 <div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>    }</div>
 <div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span> </div>
 <div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>    <span class="comment">/**</span></div>
 <div class="line"><span class="lineno">  708</span><span class="comment">     * @brief Evaluate the function or its derivative at the coordinate given.</span></div>
 <div class="line"><span class="lineno">  709</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  710</span><span class="comment">     * @param[in] coord_eval1</span></div>
-<div class="line"><span class="lineno">  711</span><span class="comment">     *          The coordinate on the first dimension where we want to evaluate.</span></div>
-<div class="line"><span class="lineno">  712</span><span class="comment">     * @param[in] coord_eval2</span></div>
-<div class="line"><span class="lineno">  713</span><span class="comment">     *          The coordinate on the second dimension where we want to evaluate.</span></div>
-<div class="line"><span class="lineno">  714</span><span class="comment">     * @param[in] splne_coef</span></div>
-<div class="line"><span class="lineno">  715</span><span class="comment">     *          The B-splines coefficients of the function we want to evaluate.</span></div>
-<div class="line"><span class="lineno">  716</span><span class="comment">     * @param[out] vals1</span></div>
-<div class="line"><span class="lineno">  717</span><span class="comment">     *          A ChunkSpan with the not-null values of each function of the spline in the first dimension.</span></div>
-<div class="line"><span class="lineno">  718</span><span class="comment">     * @param[out] vals2</span></div>
-<div class="line"><span class="lineno">  719</span><span class="comment">     *          A ChunkSpan with the not-null values of each function of the spline in the second dimension.</span></div>
-<div class="line"><span class="lineno">  720</span><span class="comment">     * @param[in] eval_type_1</span></div>
-<div class="line"><span class="lineno">  721</span><span class="comment">     *          A flag indicating if we evaluate the function or its derivative in the first dimension.</span></div>
-<div class="line"><span class="lineno">  722</span><span class="comment">     *          The type of this object is either `eval_type` or `eval_deriv_type`.</span></div>
-<div class="line"><span class="lineno">  723</span><span class="comment">     * @param[in] eval_type_2</span></div>
-<div class="line"><span class="lineno">  724</span><span class="comment">     *          A flag indicating if we evaluate the function or its derivative in the second dimension.</span></div>
-<div class="line"><span class="lineno">  725</span><span class="comment">     *          The type of this object is either `eval_type` or `eval_deriv_type`.</span></div>
-<div class="line"><span class="lineno">  726</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> EvalType1, <span class="keyword">class</span> EvalType2, <span class="keyword">class</span> Layout, <span class="keyword">class</span>... CoordsDims&gt;</div>
-<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>    KOKKOS_INLINE_FUNCTION <span class="keywordtype">double</span> eval_no_bc(</div>
-<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; <span class="keyword">const</span>&amp; coord_eval,</div>
-<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, bsplines_domain_type, Layout, memory_space&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>                    spline_coef) <span class="keyword">const</span></div>
-<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span>    {</div>
-<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span>        <span class="keyword">static_assert</span>(</div>
-<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>                std::is_same_v&lt;EvalType1, eval_type&gt; || std::is_same_v&lt;EvalType1, eval_deriv_type&gt;);</div>
-<div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span>        <span class="keyword">static_assert</span>(</div>
-<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>                std::is_same_v&lt;EvalType2, eval_type&gt; || std::is_same_v&lt;EvalType2, eval_deriv_type&gt;);</div>
-<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type1&gt; jmin1;</div>
-<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type2&gt; jmin2;</div>
-<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span> </div>
-<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span>        std::array&lt;<span class="keywordtype">double</span>, bsplines_type1::degree() + 1&gt; vals1;</div>
-<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>        std::array&lt;<span class="keywordtype">double</span>, bsplines_type2::degree() + 1&gt; vals2;</div>
-<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> interpolation_mesh_type1::continuous_dimension_type&gt;</div>
-<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span>                coord_eval_interpolation1</div>
-<div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> interpolation_mesh_type1::continuous_dimension_type&gt;(</div>
-<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>                        coord_eval);</div>
-<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> interpolation_mesh_type2::continuous_dimension_type&gt;</div>
-<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>                coord_eval_interpolation2</div>
-<div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> interpolation_mesh_type2::continuous_dimension_type&gt;(</div>
-<div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>                        coord_eval);</div>
-<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span> </div>
-<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;EvalType1, eval_type&gt;) {</div>
-<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span>            jmin1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;()</div>
-<div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span>                            .eval_basis(vals1, coord_eval_interpolation1);</div>
-<div class="line"><a id="l00754" name="l00754"></a><span class="lineno">  754</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;EvalType1, eval_deriv_type&gt;) {</div>
-<div class="line"><a id="l00755" name="l00755"></a><span class="lineno">  755</span>            jmin1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;()</div>
-<div class="line"><a id="l00756" name="l00756"></a><span class="lineno">  756</span>                            .eval_deriv(vals1, coord_eval_interpolation1);</div>
-<div class="line"><a id="l00757" name="l00757"></a><span class="lineno">  757</span>        }</div>
-<div class="line"><a id="l00758" name="l00758"></a><span class="lineno">  758</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;EvalType2, eval_type&gt;) {</div>
-<div class="line"><a id="l00759" name="l00759"></a><span class="lineno">  759</span>            jmin2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;()</div>
-<div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span>                            .eval_basis(vals2, coord_eval_interpolation2);</div>
-<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;EvalType2, eval_deriv_type&gt;) {</div>
-<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>            jmin2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;()</div>
-<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>                            .eval_deriv(vals2, coord_eval_interpolation2);</div>
-<div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span>        }</div>
-<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span> </div>
-<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>        <span class="keywordtype">double</span> y = 0.0;</div>
-<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>        <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; bsplines_type1::degree() + 1; ++i) {</div>
-<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>            <span class="keywordflow">for</span> (std::size_t j = 0; j &lt; bsplines_type2::degree() + 1; ++j) {</div>
-<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>                y += spline_coef(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;</div>
-<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span>                                 bsplines_type1,</div>
-<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span>                                 bsplines_type2&gt;(jmin1 + i, jmin2 + j))</div>
-<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span>                     * vals1[i] * vals2[j];</div>
-<div class="line"><a id="l00773" name="l00773"></a><span class="lineno">  773</span>            }</div>
-<div class="line"><a id="l00774" name="l00774"></a><span class="lineno">  774</span>        }</div>
-<div class="line"><a id="l00775" name="l00775"></a><span class="lineno">  775</span>        <span class="keywordflow">return</span> y;</div>
-<div class="line"><a id="l00776" name="l00776"></a><span class="lineno">  776</span>    }</div>
-<div class="line"><a id="l00777" name="l00777"></a><span class="lineno">  777</span>};</div>
-<div class="line"><a id="l00778" name="l00778"></a><span class="lineno">  778</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><span class="lineno">  710</span><span class="comment">     * @param[in] coord_eval</span></div>
+<div class="line"><span class="lineno">  711</span><span class="comment">     *          The coordinate where we want to evaluate.</span></div>
+<div class="line"><span class="lineno">  712</span><span class="comment">     * @param[in] splne_coef</span></div>
+<div class="line"><span class="lineno">  713</span><span class="comment">     *          The B-splines coefficients of the function we want to evaluate.</span></div>
+<div class="line"><span class="lineno">  714</span><span class="comment">     * @tparam EvalType1</span></div>
+<div class="line"><span class="lineno">  715</span><span class="comment">     *          A flag indicating if we evaluate the function or its derivative in the first dimension.</span></div>
+<div class="line"><span class="lineno">  716</span><span class="comment">     *          The type of this object is either `eval_type` or `eval_deriv_type`.</span></div>
+<div class="line"><span class="lineno">  717</span><span class="comment">     * @tparam EvalType2</span></div>
+<div class="line"><span class="lineno">  718</span><span class="comment">     *          A flag indicating if we evaluate the function or its derivative in the second dimension.</span></div>
+<div class="line"><span class="lineno">  719</span><span class="comment">     *          The type of this object is either `eval_type` or `eval_deriv_type`.</span></div>
+<div class="line"><span class="lineno">  720</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> EvalType1, <span class="keyword">class</span> EvalType2, <span class="keyword">class</span> Layout, <span class="keyword">class</span>... CoordsDims&gt;</div>
+<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    KOKKOS_INLINE_FUNCTION <span class="keywordtype">double</span> eval_no_bc(</div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; <span class="keyword">const</span>&amp; coord_eval,</div>
+<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, bsplines_domain_type, Layout, memory_space&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>                    spline_coef) <span class="keyword">const</span></div>
+<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>    {</div>
+<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span>        <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>                std::is_same_v&lt;EvalType1, eval_type&gt; || std::is_same_v&lt;EvalType1, eval_deriv_type&gt;);</div>
+<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>        <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>                std::is_same_v&lt;EvalType2, eval_type&gt; || std::is_same_v&lt;EvalType2, eval_deriv_type&gt;);</div>
+<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type1&gt; jmin1;</div>
+<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type2&gt; jmin2;</div>
+<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span> </div>
+<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>        std::array&lt;<span class="keywordtype">double</span>, bsplines_type1::degree() + 1&gt; vals1;</div>
+<div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span>        std::array&lt;<span class="keywordtype">double</span>, bsplines_type2::degree() + 1&gt; vals2;</div>
+<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> interpolation_mesh_type1::continuous_dimension_type&gt;</div>
+<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>                coord_eval_interpolation1</div>
+<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> interpolation_mesh_type1::continuous_dimension_type&gt;(</div>
+<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>                        coord_eval);</div>
+<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> interpolation_mesh_type2::continuous_dimension_type&gt;</div>
+<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>                coord_eval_interpolation2</div>
+<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> interpolation_mesh_type2::continuous_dimension_type&gt;(</div>
+<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span>                        coord_eval);</div>
+<div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span> </div>
+<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;EvalType1, eval_type&gt;) {</div>
+<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>            jmin1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;()</div>
+<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>                            .eval_basis(vals1, coord_eval_interpolation1);</div>
+<div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;EvalType1, eval_deriv_type&gt;) {</div>
+<div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>            jmin1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;()</div>
+<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>                            .eval_deriv(vals1, coord_eval_interpolation1);</div>
+<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>        }</div>
+<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;EvalType2, eval_type&gt;) {</div>
+<div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span>            jmin2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;()</div>
+<div class="line"><a id="l00754" name="l00754"></a><span class="lineno">  754</span>                            .eval_basis(vals2, coord_eval_interpolation2);</div>
+<div class="line"><a id="l00755" name="l00755"></a><span class="lineno">  755</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;EvalType2, eval_deriv_type&gt;) {</div>
+<div class="line"><a id="l00756" name="l00756"></a><span class="lineno">  756</span>            jmin2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;()</div>
+<div class="line"><a id="l00757" name="l00757"></a><span class="lineno">  757</span>                            .eval_deriv(vals2, coord_eval_interpolation2);</div>
+<div class="line"><a id="l00758" name="l00758"></a><span class="lineno">  758</span>        }</div>
+<div class="line"><a id="l00759" name="l00759"></a><span class="lineno">  759</span> </div>
+<div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span>        <span class="keywordtype">double</span> y = 0.0;</div>
+<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span>        <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; bsplines_type1::degree() + 1; ++i) {</div>
+<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>            <span class="keywordflow">for</span> (std::size_t j = 0; j &lt; bsplines_type2::degree() + 1; ++j) {</div>
+<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>                y += spline_coef(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;</div>
+<div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span>                                 bsplines_type1,</div>
+<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>                                 bsplines_type2&gt;(jmin1 + i, jmin2 + j))</div>
+<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>                     * vals1[i] * vals2[j];</div>
+<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>            }</div>
+<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>        }</div>
+<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>        <span class="keywordflow">return</span> y;</div>
+<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span>    }</div>
+<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span>};</div>
+<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4_html_a0214c802aca8ce0770988bb2784f104a"><div class="ttname"><a href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ddc::ChunkCommon&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy &gt;::ChunkSpan</a></div><div class="ttdeci">friend class ChunkSpan</div><div class="ttdef"><b>Definition:</b> chunk_common.hpp:85</div></div>
 <div class="ttc" id="aclassddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4_html_aa299fb96adef4e448d8d35a354e71806"><div class="ttname"><a href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#aa299fb96adef4e448d8d35a354e71806">ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt;::Chunk</a></div><div class="ttdeci">friend class Chunk</div><div class="ttdef"><b>Definition:</b> chunk.hpp:80</div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition:</b> discrete_domain.hpp:53</div></div>

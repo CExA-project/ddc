@@ -15,6 +15,7 @@
 #include "ddc/aligned_allocator.hpp"
 #include "ddc/chunk.hpp"
 #include "ddc/chunk_span.hpp"
+#include "ddc/chunk_traits.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
 // Discretizations

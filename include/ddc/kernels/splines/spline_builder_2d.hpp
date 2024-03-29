@@ -150,7 +150,7 @@ public:
      * @param vals_domain
      *      The 2D domain on which points will be provided in order to
      *      create the 2D spline approximation.
-     * @param cols_per_chunk The number of rhs passed to the underlying solver.
+     * @param cols_per_chunk The number of columns in the rhs passed to the underlying linear solver.
      * @param preconditionner_max_block_size The block size of in the block Jacobi preconditioner.
      */
     explicit SplineBuilder2D(

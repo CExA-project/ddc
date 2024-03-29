@@ -89,16 +89,16 @@ protected:
     }
 
 public:
-	int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
+    int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
     {
-		assert(b.stride(0) == 1);
+        assert(b.stride(0) == 1);
         int const n_equations = b.extent(1);
         int const stride = b.stride(1);
 
-		Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
-		                  b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+        Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
+                b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
 
-		auto const size_proxy = get_size();
+        auto const size_proxy = get_size();
         auto d_device = create_mirror_view_and_copy(ExecSpace(), m_d);
         auto l_device = create_mirror_view_and_copy(ExecSpace(), m_l);
         Kokkos::parallel_for(

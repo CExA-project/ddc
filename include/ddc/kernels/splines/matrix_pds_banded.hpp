@@ -134,28 +134,46 @@ protected:
     }
 
 public:
-	int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
+    int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
     {
-		assert(b.stride(0) == 1);
+        assert(b.stride(0) == 1);
         int const n_equations = b.extent(1);
         int const stride = b.stride(1);
 
-		Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
-		                  b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+        Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
+                b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
 
-		auto const kd_proxy = m_kd;
-		auto const size_proxy = get_size();
+        auto const kd_proxy = m_kd;
+        auto const size_proxy = get_size();
         auto q_device = create_mirror_view_and_copy(ExecSpace(), m_q);
         Kokkos::parallel_for(
                 "pbtrs",
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),
                 KOKKOS_CLASS_LAMBDA(const int i) {
-                   auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                    auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
                     int info;
-                    info = tbsv('L', 'N', 'N', size_proxy, kd_proxy, q_device, kd_proxy, b_slice, 1);
+                    info
+                            = tbsv('L',
+                                   'N',
+                                   'N',
+                                   size_proxy,
+                                   kd_proxy,
+                                   q_device,
+                                   kd_proxy,
+                                   b_slice,
+                                   1);
                     Kokkos::fence();
-                    info = tbsv('L', 'T', 'N', size_proxy, kd_proxy, q_device, kd_proxy, b_slice, 1);
+                    info
+                            = tbsv('L',
+                                   'T',
+                                   'N',
+                                   size_proxy,
+                                   kd_proxy,
+                                   q_device,
+                                   kd_proxy,
+                                   b_slice,
+                                   1);
                 });
         return 0;
     }

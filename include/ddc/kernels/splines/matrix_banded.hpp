@@ -105,9 +105,9 @@ protected:
         int const n_equations = b.extent(1);
         int const stride = b.stride(1);
 
-		Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
-		                  b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
-		
+        Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
+                b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+
         auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b_view);
         for (int i = 0; i < n_equations; ++i) {
             Kokkos::deep_copy(

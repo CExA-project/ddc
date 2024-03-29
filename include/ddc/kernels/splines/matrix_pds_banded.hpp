@@ -99,7 +99,7 @@ protected:
             char const diag,
             int const n,
             int const k,
-            Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> const a,
+            Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space> const a,
             int const lda,
             Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space> const x,
             int const incx) const
@@ -150,7 +150,9 @@ public:
                 "pbtrs",
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),
                 KOKKOS_CLASS_LAMBDA(const int i) {
-                    auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+
 
                     int info;
                     info
@@ -163,7 +165,6 @@ public:
                                    kd_proxy,
                                    b_slice,
                                    1);
-                    Kokkos::fence();
                     info
                             = tbsv('L',
                                    'T',

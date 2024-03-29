@@ -50,6 +50,9 @@ public:
         int info;
         int const n = get_size();
         dgetrf_(&n, &n, m_a.data(), &n, m_ipiv.data(), &info);
+        for (int i = 0; i < n; ++i) {
+            m_ipiv(i) -= i + 1;
+        }
         return info;
         /*
         Kokkos::parallel_for(
@@ -83,7 +86,8 @@ public:
                     const int i = teamMember.league_rank();
 
                     int info;
-                    auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
                     if (transpose == 'N') {
                         teamMember.team_barrier();

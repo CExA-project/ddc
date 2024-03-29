@@ -15,10 +15,10 @@
 #include "ddc/aligned_allocator.hpp"
 #include "ddc/chunk.hpp"
 #include "ddc/chunk_span.hpp"
+#include "ddc/chunk_traits.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
 // Discretizations
-#include "ddc/coordinate_md.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
 #include "ddc/discrete_space.hpp"
@@ -41,8 +41,4 @@
 // PDI wrapper
 #if defined(DDC_BUILD_PDI_WRAPPER)
 #include "ddc/pdi.hpp"
-#endif
-
-#if ginkgo_AVAIL
-#include "misc/ginkgo_executors.hpp"
 #endif

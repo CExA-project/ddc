@@ -11,6 +11,7 @@
 
 #include "ddc/chunk_common.hpp"
 #include "ddc/chunk_span.hpp"
+#include "ddc/chunk_traits.hpp"
 #include "ddc/kokkos_allocator.hpp"
 #include "ddc/parallel_deepcopy.hpp"
 
@@ -102,16 +103,6 @@ public:
     explicit Chunk(mdomain_type const& domain, Allocator allocator = Allocator())
         : Chunk("no-label", domain, std::move(allocator))
     {
-    }
-
-    /// Construct a Chunk from a deepcopy of a ChunkSpan
-    template <class OElementType, class... ODDims, class LayoutType>
-    [[deprecated("Use 'ddc::create_mirror_and_copy' instead")]] explicit Chunk(
-            ChunkSpan<OElementType, DiscreteDomain<ODDims...>, LayoutType> chunk_span,
-            Allocator allocator = Allocator())
-        : Chunk(chunk_span.domain(), std::move(allocator))
-    {
-        parallel_deepcopy(span_view(), chunk_span);
     }
 
     /// Deleted: use deepcopy instead

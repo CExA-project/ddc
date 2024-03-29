@@ -17,7 +17,9 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "ddc/detail/dual_discretization.hpp"
 #include "ddc/detail/macros.hpp"
+
 #if defined(__CUDACC__)
 #include <sstream>
 
@@ -29,7 +31,6 @@
 #include <hip/hip_runtime.h>
 #endif
 
-#include "ddc/dual_discretization.hpp"
 
 namespace ddc {
 
@@ -85,19 +86,19 @@ private:
     alignas(T) Kokkos::Array<std::byte, sizeof(T)> m_data;
 
 public:
-    KOKKOS_FORCEINLINE_FUNCTION
+    KOKKOS_FUNCTION
     T* operator->()
     {
         return reinterpret_cast<T*>(m_data.data());
     }
 
-    KOKKOS_FORCEINLINE_FUNCTION
+    KOKKOS_FUNCTION
     T& operator*()
     {
         return *reinterpret_cast<T*>(m_data.data());
     }
 
-    KOKKOS_FORCEINLINE_FUNCTION
+    KOKKOS_FUNCTION
     T* data()
     {
         return reinterpret_cast<T*>(m_data.data());
@@ -203,7 +204,7 @@ std::enable_if_t<2 <= sizeof...(Args), std::tuple<Args...>> init_discrete_space(
  * Call `ddc::host_discrete_space` for a host-only function instead.
  */
 template <class DDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
-KOKKOS_FORCEINLINE_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
+KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
 {
     if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
         return detail::g_discrete_space_dual<DDim>->get_host();

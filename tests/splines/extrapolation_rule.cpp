@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -260,6 +264,33 @@ static void ExtrapolationRuleSplineTest()
     spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
+#if defined(ER_NULL)
+    ddc::NullExtrapolationRule extrapolation_rule_left_dim_1;
+    ddc::NullExtrapolationRule extrapolation_rule_right_dim_1;
+#if defined(BC_PERIODIC)
+    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_left_dim_2;
+    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_right_dim_2;
+#else
+    ddc::NullExtrapolationRule extrapolation_rule_left_dim_2;
+    ddc::NullExtrapolationRule extrapolation_rule_right_dim_2;
+#endif
+#elif defined(ER_CONSTANT)
+#if defined(BC_PERIODIC)
+    ddc::ConstantExtrapolationRule<I1, I2> extrapolation_rule_left_dim_1(x0<I1>());
+    ddc::ConstantExtrapolationRule<I1, I2> extrapolation_rule_right_dim_1(xN<I1>());
+    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_left_dim_2;
+    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_right_dim_2;
+#else
+    ddc::ConstantExtrapolationRule<I1, I2>
+            extrapolation_rule_left_dim_1(x0<I1>(), x0<I2>(), xN<I2>());
+    ddc::ConstantExtrapolationRule<I1, I2>
+            extrapolation_rule_right_dim_1(xN<I1>(), x0<I2>(), xN<I2>());
+    ddc::ConstantExtrapolationRule<I2, I1>
+            extrapolation_rule_left_dim_2(x0<I2>(), x0<I1>(), xN<I1>());
+    ddc::ConstantExtrapolationRule<I2, I1>
+            extrapolation_rule_right_dim_2(xN<I2>(), x0<I1>(), xN<I1>());
+#endif
+#endif
     ddc::SplineEvaluator2D<
             ExecSpace,
             MemorySpace,
@@ -289,31 +320,10 @@ static void ExtrapolationRuleSplineTest()
 
             IDim<X, I1, I2>...>
             spline_evaluator_batched(
-                    coef.domain(),
-#if defined(ER_NULL)
-                    ddc::NullExtrapolationRule(),
-                    ddc::NullExtrapolationRule(),
-#if defined(BC_PERIODIC)
-                    ddc::PeriodicExtrapolationRule<I2>(),
-                    ddc::PeriodicExtrapolationRule<I2>()
-#else
-                    ddc::NullExtrapolationRule(),
-                    ddc::NullExtrapolationRule()
-#endif
-#elif defined(ER_CONSTANT)
-#if defined(BC_PERIODIC)
-                    ddc::ConstantExtrapolationRule<I1, I2>(x0<I1>()),
-                    ddc::ConstantExtrapolationRule<I1, I2>(xN<I1>()),
-                    ddc::PeriodicExtrapolationRule<I2>(),
-                    ddc::PeriodicExtrapolationRule<I2>()
-#else
-                    ddc::ConstantExtrapolationRule<I1, I2>(x0<I1>(), x0<I2>(), xN<I2>()),
-                    ddc::ConstantExtrapolationRule<I1, I2>(xN<I1>(), x0<I2>(), xN<I2>()),
-                    ddc::ConstantExtrapolationRule<I2, I1>(x0<I2>(), x0<I1>(), xN<I1>()),
-                    ddc::ConstantExtrapolationRule<I2, I1>(xN<I2>(), x0<I1>(), xN<I1>())
-#endif
-#endif
-            );
+                    extrapolation_rule_left_dim_1,
+                    extrapolation_rule_right_dim_1,
+                    extrapolation_rule_left_dim_2,
+                    extrapolation_rule_right_dim_2);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
@@ -323,13 +333,13 @@ static void ExtrapolationRuleSplineTest()
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);
-                // Set coords_eval outside of the domain
+                // Set coords_eval outside of the domain (+1 to ensure left bound is outside domain)
                 ddc::get<I1>(coords_eval(e))
                         = xN<I1>() + (ddc::select<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
-#if defined(BC_GREVILLE)
+                // Set coords_eval outside of the domain (this point should be found on the grid in
+                // the periodic case)
                 ddc::get<I2>(coords_eval(e))
-                        = xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>()) + 1;
-#endif
+                        = 2 * xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>());
             });
 
 
@@ -360,10 +370,16 @@ static void ExtrapolationRuleSplineTest()
                         discrete_element_type e_batch(e);
                 double tmp;
                 if (ddc::select<I2>(coords_eval(e)) > xN<I2>()) {
+#if defined(BC_PERIODIC)
+                    tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
+                            vals.template domain<IDim<I1, I1, I2>>().back(),
+                            e_without_interest));
+#else
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),
                             vals.template domain<IDim<I2, I1, I2>>().back(),
                             e_batch));
+#endif
                 } else {
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),

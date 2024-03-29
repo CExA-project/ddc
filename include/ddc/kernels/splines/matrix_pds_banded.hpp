@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <cassert>
@@ -36,7 +40,7 @@ class Matrix_PDS_Banded : public Matrix
      * */
 protected:
     int const m_kd; // no. of columns in q
-    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
+    Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>
             m_q; // pds banded matrix representation
 
 public:
@@ -45,30 +49,13 @@ public:
         , m_kd(kd)
         , m_q("q", kd + 1, mat_size)
     {
-    }
-
-    void reset() const override
-    {
         Kokkos::deep_copy(m_q, 0.);
     }
 
     double get_element(int i, int j) const override
     {
         if (i == j) {
-            KOKKOS_IF_ON_HOST(
-                    if constexpr (Kokkos::SpaceAccessibility<
-                                          Kokkos::DefaultHostExecutionSpace,
-                                          typename ExecSpace::memory_space>::accessible) {
-                        return m_q(0, i);
-                    } else {
-                        // Inefficient, usage is strongly discouraged
-                        double aij;
-                        Kokkos::deep_copy(
-                                Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                Kokkos::subview(m_q, 0, i));
-                        return aij;
-                    })
-            KOKKOS_IF_ON_DEVICE(return m_q(0, i);)
+            return m_q(0, i);
         }
         if (i > j) {
             // inline swap i<->j
@@ -78,39 +65,15 @@ public:
         }
         for (int k = 1; k < m_kd + 1; ++k) {
             if (i + k == j) {
-                KOKKOS_IF_ON_HOST(
-                        if constexpr (Kokkos::SpaceAccessibility<
-                                              Kokkos::DefaultHostExecutionSpace,
-                                              typename ExecSpace::memory_space>::accessible) {
-                            return m_q(k, i);
-                        } else {
-                            // Inefficient, usage is strongly discouraged
-                            double aij;
-                            Kokkos::deep_copy(
-                                    Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                                    Kokkos::subview(m_q, k, i));
-                            return aij;
-                        })
-                KOKKOS_IF_ON_DEVICE(return m_q(k, i);)
+                return m_q(k, i);
             }
         }
         return 0.0;
     }
-    void set_element(int i, int j, double const aij) const override
+    void set_element(int i, int j, double const aij) override
     {
         if (i == j) {
-            KOKKOS_IF_ON_HOST(
-                    if constexpr (Kokkos::SpaceAccessibility<
-                                          Kokkos::DefaultHostExecutionSpace,
-                                          typename ExecSpace::memory_space>::accessible) {
-                        m_q(0, i) = aij;
-                    } else {
-                        // Inefficient, usage is strongly discouraged
-                        Kokkos::deep_copy(
-                                Kokkos::subview(m_q, 0, i),
-                                Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-                    })
-            KOKKOS_IF_ON_DEVICE(m_q(0, i) = aij;)
+            m_q(0, i) = aij;
             return;
         }
         if (i > j) {
@@ -121,18 +84,7 @@ public:
         }
         for (int k = 1; k < m_kd + 1; ++k) {
             if (i + k == j) {
-                KOKKOS_IF_ON_HOST(
-                        if constexpr (Kokkos::SpaceAccessibility<
-                                              Kokkos::DefaultHostExecutionSpace,
-                                              typename ExecSpace::memory_space>::accessible) {
-                            m_q(k, i) = aij;
-                        } else {
-                            // Inefficient, usage is strongly discouraged
-                            Kokkos::deep_copy(
-                                    Kokkos::subview(m_q, k, i),
-                                    Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-                        })
-                KOKKOS_IF_ON_DEVICE(m_q(k, i) = aij;)
+                m_q(k, i) = aij;
                 return;
             }
         }
@@ -173,34 +125,37 @@ protected:
     }
     int factorize_method() override
     {
-        auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
         int info;
         char const uplo = 'L';
         int const n = get_size();
         int const ldab = m_kd + 1;
-        dpbtrf_(&uplo, &n, &m_kd, q_host.data(), &ldab, &info);
-        Kokkos::deep_copy(m_q, q_host);
+        dpbtrf_(&uplo, &n, &m_kd, m_q.data(), &ldab, &info);
         return info;
     }
 
 public:
-    int solve_inplace_method(double* const b, char const, int const n_equations, int const stride)
-            const override
+	int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
     {
-        Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                b_view(b, get_size(), n_equations);
+		assert(b.stride(0) == 1);
+        int const n_equations = b.extent(1);
+        int const stride = b.stride(1);
 
+		Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
+		                  b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+
+		auto const kd_proxy = m_kd;
+		auto const size_proxy = get_size();
+        auto q_device = create_mirror_view_and_copy(ExecSpace(), m_q);
         Kokkos::parallel_for(
                 "pbtrs",
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),
                 KOKKOS_CLASS_LAMBDA(const int i) {
-                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                   auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
                     int info;
-                    info = tbsv('L', 'N', 'N', get_size(), m_kd, m_q, m_kd, b_slice, 1);
+                    info = tbsv('L', 'N', 'N', size_proxy, kd_proxy, q_device, kd_proxy, b_slice, 1);
                     Kokkos::fence();
-                    info = tbsv('L', 'T', 'N', get_size(), m_kd, m_q, m_kd, b_slice, 1);
+                    info = tbsv('L', 'T', 'N', size_proxy, kd_proxy, q_device, kd_proxy, b_slice, 1);
                 });
         return 0;
     }

@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <algorithm>
@@ -37,9 +41,9 @@ protected:
     int const m_kl; // no. of subdiagonals
     int const m_ku; // no. of superdiagonals
     int const m_c; // no. of columns in q
-    Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv; // pivot indices
+    Kokkos::View<int*, Kokkos::HostSpace> m_ipiv; // pivot indices
     // TODO: double**
-    Kokkos::View<double*, typename ExecSpace::memory_space> m_q; // banded matrix representation
+    Kokkos::View<double*, Kokkos::HostSpace> m_q; // banded matrix representation
 
 public:
     Matrix_Banded(int const mat_size, int const kl, int const ku)
@@ -57,54 +61,31 @@ public:
         assert(m_ku <= mat_size);
 
         /*
-     * Given the linear system A*x=b, we assume that A is a square (n by n)
-     * with ku super-diagonals and kl sub-diagonals.
-     * All non-zero elements of A are stored in the rectangular matrix q, using
-     * the format required by DGBTRF (LAPACK): diagonals of A are rows of q.
-     * q has 2*kl rows for the subdiagonals, 1 row for the diagonal, and ku rows
-     * for the superdiagonals. (The kl additional rows are needed for pivoting.)
-     * The term A(i,j) of the full matrix is stored in q(i-j+2*kl+1,j).
-     */
-    }
+         * Given the linear system A*x=b, we assume that A is a square (n by n)
+         * with ku super-diagonals and kl sub-diagonals.
+         * All non-zero elements of A are stored in the rectangular matrix q, using
+         * the format required by DGBTRF (LAPACK): diagonals of A are rows of q.
+         * q has 2*kl rows for the subdiagonals, 1 row for the diagonal, and ku rows
+         * for the superdiagonals. (The kl additional rows are needed for pivoting.)
+         * The term A(i,j) of the full matrix is stored in q(i-j+2*kl+1,j).
+         */
 
-    void reset() const override
-    {
         Kokkos::deep_copy(m_q, 0.);
     }
 
     double get_element(int const i, int const j) const override
     {
         if (i >= std::max(0, j - m_ku) && i < std::min(get_size(), j + m_kl + 1)) {
-            if constexpr (Kokkos::SpaceAccessibility<
-                                  Kokkos::DefaultHostExecutionSpace,
-                                  typename ExecSpace::memory_space>::accessible) {
-                return m_q(j * m_c + m_kl + m_ku + i - j);
-            } else {
-                // Inefficient, usage is strongly discouraged
-                double aij;
-                Kokkos::deep_copy(
-                        Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                        Kokkos::subview(m_q, j * m_c + m_kl + m_ku + i - j));
-                return aij;
-            }
+            return m_q(j * m_c + m_kl + m_ku + i - j);
         } else {
             return 0.0;
         }
     }
 
-    void set_element(int const i, int const j, double const aij) const override
+    void set_element(int const i, int const j, double const aij) override
     {
         if (i >= std::max(0, j - m_ku) && i < std::min(get_size(), j + m_kl + 1)) {
-            if constexpr (Kokkos::SpaceAccessibility<
-                                  Kokkos::DefaultHostExecutionSpace,
-                                  typename ExecSpace::memory_space>::accessible) {
-                m_q(j * m_c + m_kl + m_ku + i - j) = aij;
-            } else {
-                // Inefficient, usage is strongly discouraged
-                Kokkos::deep_copy(
-                        Kokkos::subview(m_q, j * m_c + m_kl + m_ku + i - j),
-                        Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-            }
+            m_q(j * m_c + m_kl + m_ku + i - j) = aij;
         } else {
             assert(std::fabs(aij) < 1e-20);
         }
@@ -113,26 +94,20 @@ public:
 protected:
     int factorize_method() override
     {
-        auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
-        auto ipiv_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         int info;
         int const n = get_size();
-        dgbtrf_(&n, &n, &m_kl, &m_ku, q_host.data(), &m_c, ipiv_host.data(), &info);
-        Kokkos::deep_copy(m_q, q_host);
-        Kokkos::deep_copy(m_ipiv, ipiv_host);
+        dgbtrf_(&n, &n, &m_kl, &m_ku, m_q.data(), &m_c, m_ipiv.data(), &info);
         return info;
     }
-    int solve_inplace_method(
-            double* b,
-            char const transpose,
-            int const n_equations,
-            int const stride) const override
+    int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
     {
-        // TODO : Rewrite using Kokkos-kernels
-        auto q_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_q);
-        auto ipiv_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
-        Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
-                b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+        assert(b.stride(0) == 1);
+        int const n_equations = b.extent(1);
+        int const stride = b.stride(1);
+
+		Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
+		                  b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+		
         auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b_view);
         for (int i = 0; i < n_equations; ++i) {
             Kokkos::deep_copy(
@@ -146,9 +121,9 @@ protected:
                 &m_kl,
                 &m_ku,
                 &n_equations,
-                q_host.data(),
+                m_q.data(),
                 &m_c,
-                ipiv_host.data(),
+                m_ipiv.data(),
                 b_host.data(),
                 &stride,
                 &info);

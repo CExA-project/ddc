@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <cassert>
@@ -27,18 +31,14 @@ class Matrix_PDS_Tridiag : public Matrix
      * stored in a block format
      * */
 protected:
-    Kokkos::View<double*, typename ExecSpace::memory_space> m_d; // diagonal
-    Kokkos::View<double*, typename ExecSpace::memory_space> m_l; // lower diagonal
+    Kokkos::View<double*, Kokkos::HostSpace> m_d; // diagonal
+    Kokkos::View<double*, Kokkos::HostSpace> m_l; // lower diagonal
 
 public:
     Matrix_PDS_Tridiag(int const mat_size)
         : Matrix(mat_size)
         , m_d("d", mat_size)
         , m_l("l", mat_size - 1)
-    {
-    }
-
-    void reset() const override
     {
         Kokkos::deep_copy(m_d, 0.);
         Kokkos::deep_copy(m_l, 0.);
@@ -47,18 +47,7 @@ public:
     double get_element(int i, int j) const override
     {
         if (i == j) {
-            if constexpr (Kokkos::SpaceAccessibility<
-                                  Kokkos::DefaultHostExecutionSpace,
-                                  typename ExecSpace::memory_space>::accessible) {
-                return m_d(i);
-            } else {
-                // Inefficient, usage is strongly discouraged
-                double aij;
-                Kokkos::deep_copy(
-                        Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                        Kokkos::subview(m_d, i));
-                return aij;
-            }
+            return m_d(i);
         }
         if (i > j) {
             // inline swap i<->j
@@ -67,34 +56,14 @@ public:
             j = tmp;
         }
         if (i + 1 == j) {
-            if constexpr (Kokkos::SpaceAccessibility<
-                                  Kokkos::DefaultHostExecutionSpace,
-                                  typename ExecSpace::memory_space>::accessible) {
-                return m_l(i);
-            } else {
-                // Inefficient, usage is strongly discouraged
-                double aij;
-                Kokkos::deep_copy(
-                        Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                        Kokkos::subview(m_l, i));
-                return aij;
-            }
+            return m_l(i);
         }
         return 0.0;
     }
-    void set_element(int i, int j, double const aij) const override
+    void set_element(int i, int j, double const aij) override
     {
         if (i == j) {
-            if constexpr (Kokkos::SpaceAccessibility<
-                                  Kokkos::DefaultHostExecutionSpace,
-                                  typename ExecSpace::memory_space>::accessible) {
-                m_d(i) = aij;
-            } else {
-                // Inefficient, usage is strongly discouraged
-                Kokkos::deep_copy(
-                        Kokkos::subview(m_d, i),
-                        Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-            }
+            m_d(i) = aij;
             return;
         }
         if (i > j) {
@@ -106,51 +75,44 @@ public:
         if (i + 1 != j) {
             assert(std::fabs(aij) < 1e-20);
         } else {
-            if constexpr (Kokkos::SpaceAccessibility<
-                                  Kokkos::DefaultHostExecutionSpace,
-                                  typename ExecSpace::memory_space>::accessible) {
-                m_l(i) = aij;
-            } else {
-                // Inefficient, usage is strongly discouraged
-                Kokkos::deep_copy(
-                        Kokkos::subview(m_l, i),
-                        Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-            }
+            m_l(i) = aij;
         }
     }
 
 protected:
     int factorize_method() override
     {
-        auto d_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_d);
-        auto l_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_l);
         int info;
         int const n = get_size();
-        dpttrf_(&n, d_host.data(), l_host.data(), &info);
-        Kokkos::deep_copy(m_d, d_host);
-        Kokkos::deep_copy(m_l, l_host);
+        dpttrf_(&n, m_d.data(), m_l.data(), &info);
         return info;
     }
 
 public:
-    int solve_inplace_method(double* const b, char const, int const n_equations, int const stride)
-            const override
+	int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
     {
-        Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
-                b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+		assert(b.stride(0) == 1);
+        int const n_equations = b.extent(1);
+        int const stride = b.stride(1);
+
+		Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
+		                  b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+
+		auto const size_proxy = get_size();
+        auto d_device = create_mirror_view_and_copy(ExecSpace(), m_d);
+        auto l_device = create_mirror_view_and_copy(ExecSpace(), m_l);
         Kokkos::parallel_for(
                 "pbtrs",
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),
-                KOKKOS_CLASS_LAMBDA(const int i) {
-                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                KOKKOS_LAMBDA(const int i) {
+                    auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
-                    for (int j = 1; j < get_size(); ++j) {
-                        b_slice(j) -= b_slice(j - 1) * m_l(j - 1);
+                    for (int j = 1; j < size_proxy; ++j) {
+                        b_slice(j) -= b_slice(j - 1) * d_device(j - 1);
                     }
-                    b_slice(get_size() - 1) /= m_d(get_size() - 1);
-                    for (int j = get_size() - 2; j >= 0; --j) {
-                        b_slice(j) = b_slice(j) / m_d(j) - b_slice(j + 1) * m_l(j);
+                    b_slice(size_proxy - 1) /= d_device(size_proxy - 1);
+                    for (int j = size_proxy - 2; j >= 0; --j) {
+                        b_slice(j) = b_slice(j) / d_device(j) - b_slice(j + 1) * l_device(j);
                     }
                     int info;
                 });

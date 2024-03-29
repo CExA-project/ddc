@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <algorithm>
@@ -10,8 +14,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/misc/ginkgo_executors.hpp"
-
+#include "ginkgo_executors.hpp"
 #include "matrix.hpp"
 
 namespace ddc::detail {
@@ -123,22 +126,17 @@ public:
         m_matrix_dense = gko::matrix::Dense<
                 double>::create(gko_exec->get_master(), gko::dim<2>(mat_size, mat_size));
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
-    }
 
-    void reset() const override
-    {
         m_matrix_dense->fill(0);
-        m_matrix_sparse->clear();
     }
 
     double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
     {
         throw std::runtime_error("MatrixSparse::get_element() is not implemented because no API is "
                                  "provided by Ginkgo");
-        return 0;
     }
 
-    void set_element(int i, int j, double aij) const override
+    void set_element(int i, int j, double aij) override
     {
         m_matrix_dense->at(i, j) = aij;
     }
@@ -148,7 +146,6 @@ public:
         // Remove zeros
         gko::matrix_data<double> matrix_data(gko::dim<2>(get_size(), get_size()));
         m_matrix_dense->write(matrix_data);
-        m_matrix_dense.reset();
         matrix_data.remove_zeros();
         m_matrix_sparse->read(matrix_data);
         std::shared_ptr const gko_exec = m_matrix_sparse->get_executor();
@@ -179,18 +176,18 @@ public:
         return 0;
     }
 
-    int solve_inplace_method(
-            double* const b,
-            char const transpose,
-            int const n_equations,
-            int const stride) const override
+    int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
     {
+        assert(b.stride(1) == 1 || b.extent(1) == 1);
+        int const n_equations = b.extent(1);
+        int const stride = b.stride(0);
+
         std::shared_ptr const gko_exec = m_solver->get_executor();
 
         int const main_chunk_size = std::min(m_cols_per_chunk, n_equations);
 
         Kokkos::View<double**, Kokkos::LayoutStride, ExecSpace> const
-                b_view(b, Kokkos::LayoutStride(get_size(), stride, n_equations, 1));
+                b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), stride, n_equations, 1));
         Kokkos::View<double**, Kokkos::LayoutStride, ExecSpace> const
                 x_view("", Kokkos::LayoutStride(get_size(), stride, main_chunk_size, 1));
 

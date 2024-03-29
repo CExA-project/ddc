@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <memory>
@@ -6,6 +10,8 @@
 #include <ginkgo/ginkgo.hpp>
 
 #include <Kokkos_Core.hpp>
+
+namespace ddc::detail {
 
 inline std::shared_ptr<gko::Executor> create_default_host_executor()
 {
@@ -22,7 +28,7 @@ inline std::shared_ptr<gko::Executor> create_default_host_executor()
 } // Comes from "Basic Kokkos Extension" Ginkgo MR
 
 template <typename ExecSpace>
-inline std::shared_ptr<gko::Executor> create_gko_exec()
+std::shared_ptr<gko::Executor> create_gko_exec()
 {
 #ifdef KOKKOS_ENABLE_SERIAL
     if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
@@ -55,3 +61,5 @@ inline std::shared_ptr<gko::Executor> create_gko_exec()
     }
 #endif
 }
+
+} // namespace ddc::detail

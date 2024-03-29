@@ -1,6 +1,9 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
-#include "splines/bspline.hpp"
 #include "splines/bsplines_non_uniform.hpp"
 #include "splines/bsplines_uniform.hpp"
 #include "splines/constant_extrapolation_rule.hpp"

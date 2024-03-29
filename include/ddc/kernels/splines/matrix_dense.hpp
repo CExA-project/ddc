@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <cassert>
@@ -15,8 +19,8 @@ template <class ExecSpace>
 class Matrix_Dense : public Matrix
 {
 protected:
-    Kokkos::View<double**, Kokkos::LayoutLeft, typename ExecSpace::memory_space> m_a;
-    Kokkos::View<int*, typename ExecSpace::memory_space> m_ipiv;
+    Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace> m_a;
+    Kokkos::View<int*, Kokkos::HostSpace> m_ipiv;
 
 public:
     explicit Matrix_Dense(int const mat_size)
@@ -25,10 +29,7 @@ public:
         , m_ipiv("ipiv", mat_size)
     {
         assert(mat_size > 0);
-    }
 
-    void reset() const override
-    {
         Kokkos::deep_copy(m_a, 0.);
     }
 
@@ -36,47 +37,19 @@ public:
     {
         assert(i < get_size());
         assert(j < get_size());
-        if constexpr (Kokkos::SpaceAccessibility<
-                              Kokkos::DefaultHostExecutionSpace,
-                              typename ExecSpace::memory_space>::accessible) {
-            return m_a(i, j);
-        } else {
-            // Inefficient, usage is strongly discouraged
-            double aij;
-            Kokkos::deep_copy(
-                    Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                    Kokkos::subview(m_a, i, j));
-            return aij;
-        }
+        return m_a(i, j);
     }
 
-    void set_element(int const i, int const j, double const aij) const override
+    void set_element(int const i, int const j, double const aij) override
     {
-        if constexpr (Kokkos::SpaceAccessibility<
-                              Kokkos::DefaultHostExecutionSpace,
-                              typename ExecSpace::memory_space>::accessible) {
-            m_a(i, j) = aij;
-        } else {
-            // Inefficient, usage is strongly discouraged
-            Kokkos::deep_copy(
-                    Kokkos::subview(m_a, i, j),
-                    Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-        }
+        m_a(i, j) = aij;
     }
 
     int factorize_method() override
     {
-        auto a_host = create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_a);
-        auto ipiv_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), m_ipiv);
         int info;
         int const n = get_size();
-        dgetrf_(&n, &n, a_host.data(), &n, ipiv_host.data(), &info);
-        // ipiv follows lapack convention, switch to kokkos-kernels one
-        for (int i = 0; i < n; ++i) {
-            ipiv_host(i) -= i + 1;
-        }
-        Kokkos::deep_copy(m_a, a_host);
-        Kokkos::deep_copy(m_ipiv, ipiv_host);
+        dgetrf_(&n, &n, m_a.data(), &n, m_ipiv.data(), &info);
         return info;
         /*
         Kokkos::parallel_for(
@@ -90,19 +63,22 @@ public:
         //return 0;
     }
 
-    int solve_inplace_method(
-            double* const b,
-            char const transpose,
-            int const n_equations,
-            int const stride) const override
+public:
+	int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
     {
-        Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
-                b_view(b, Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+		assert(b.stride(0) == 1);
+        int const n_equations = b.extent(1);
+        int const stride = b.stride(1);
 
+		Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
+		                  b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
+
+        auto a_device = create_mirror_view_and_copy(ExecSpace(), m_a);
+        auto ipiv_device = create_mirror_view_and_copy(ExecSpace(), m_ipiv);
         Kokkos::parallel_for(
                 "gerts",
                 Kokkos::TeamPolicy<ExecSpace>(n_equations, Kokkos::AUTO),
-                KOKKOS_CLASS_LAMBDA(
+                KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int i = teamMember.league_rank();
 
@@ -115,7 +91,7 @@ public:
                                 typename Kokkos::TeamPolicy<ExecSpace>::member_type,
                                 KokkosBatched::Side::Left,
                                 KokkosBatched::Direct::Forward>::
-                                invoke(teamMember, m_ipiv, b_slice);
+                                invoke(teamMember, ipiv_device, b_slice);
                         teamMember.team_barrier();
                         KokkosBatched::TeamVectorTrsm<
                                 typename Kokkos::TeamPolicy<ExecSpace>::member_type,
@@ -124,7 +100,7 @@ public:
                                 KokkosBatched::Trans::NoTranspose,
                                 KokkosBatched::Diag::Unit,
                                 KokkosBatched::Algo::Level3::Unblocked>::
-                                invoke(teamMember, 1.0, m_a, b_slice);
+                                invoke(teamMember, 1.0, a_device, b_slice);
                         teamMember.team_barrier();
                         KokkosBatched::TeamVectorTrsm<
                                 typename Kokkos::TeamPolicy<ExecSpace>::member_type,
@@ -133,7 +109,7 @@ public:
                                 KokkosBatched::Trans::NoTranspose,
                                 KokkosBatched::Diag::NonUnit,
                                 KokkosBatched::Algo::Level3::Unblocked>::
-                                invoke(teamMember, 1.0, m_a, b_slice);
+                                invoke(teamMember, 1.0, a_device, b_slice);
                         teamMember.team_barrier();
                     } else if (transpose == 'T') {
                         teamMember.team_barrier();
@@ -144,7 +120,7 @@ public:
                                 KokkosBatched::Trans::Transpose,
                                 KokkosBatched::Diag::NonUnit,
                                 KokkosBatched::Algo::Level3::Unblocked>::
-                                invoke(teamMember, 1.0, m_a, b_slice);
+                                invoke(teamMember, 1.0, a_device, b_slice);
                         teamMember.team_barrier();
                         KokkosBatched::TeamVectorTrsm<
                                 typename Kokkos::TeamPolicy<ExecSpace>::member_type,
@@ -153,13 +129,13 @@ public:
                                 KokkosBatched::Trans::Transpose,
                                 KokkosBatched::Diag::Unit,
                                 KokkosBatched::Algo::Level3::Unblocked>::
-                                invoke(teamMember, 1.0, m_a, b_slice);
+                                invoke(teamMember, 1.0, a_device, b_slice);
                         teamMember.team_barrier();
                         KokkosBatched::TeamVectorApplyPivot<
                                 typename Kokkos::TeamPolicy<ExecSpace>::member_type,
                                 KokkosBatched::Side::Left,
                                 KokkosBatched::Direct::Backward>::
-                                invoke(teamMember, m_ipiv, b_slice);
+                                invoke(teamMember, ipiv_device, b_slice);
                         teamMember.team_barrier();
                     } else {
                         info = -1;

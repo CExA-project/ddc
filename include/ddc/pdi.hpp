@@ -1,3 +1,5 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
 // SPDX-License-Identifier: MIT
 
 #pragma once
@@ -10,7 +12,7 @@
 
 #include <pdi.h>
 
-#include "ddc/chunk_common.hpp"
+#include "ddc/chunk_traits.hpp"
 
 namespace ddc {
 

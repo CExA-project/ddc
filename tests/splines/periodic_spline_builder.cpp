@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -94,6 +98,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
     spline_builder(coef.span_view(), yvals.span_cview());
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
+    ddc::PeriodicExtrapolationRule<DimX> periodic_extrapolation;
     ddc::SplineEvaluator<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::HostSpace,
@@ -102,10 +107,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
             ddc::PeriodicExtrapolationRule<DimX>,
             ddc::PeriodicExtrapolationRule<DimX>,
             IDimX>
-            spline_evaluator(
-                    coef.domain(),
-                    ddc::PeriodicExtrapolationRule<DimX>(),
-                    ddc::PeriodicExtrapolationRule<DimX>());
+            spline_evaluator(periodic_extrapolation, periodic_extrapolation);
 
     ddc::Chunk<CoordX, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);
     for (IndexX const ix : interpolation_domain) {

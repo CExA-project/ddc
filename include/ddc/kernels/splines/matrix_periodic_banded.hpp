@@ -1,3 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <algorithm>
@@ -61,37 +65,15 @@ public:
             if (d < -m_kl || d > m_ku)
                 return 0.0;
             if (d > 0) {
-                if constexpr (Kokkos::SpaceAccessibility<
-                                      Kokkos::DefaultHostExecutionSpace,
-                                      typename ExecSpace::memory_space>::accessible) {
-                    return m_lambda(i - m_nb, j);
-                } else {
-                    // Inefficient, usage is strongly discouraged
-                    double aij;
-                    Kokkos::deep_copy(
-                            Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                            Kokkos::subview(m_lambda, i - m_nb, j));
-                    return aij;
-                }
+                return m_lambda(i - m_nb, j);
             } else {
-                if constexpr (Kokkos::SpaceAccessibility<
-                                      Kokkos::DefaultHostExecutionSpace,
-                                      typename ExecSpace::memory_space>::accessible) {
-                    return m_lambda(i - m_nb, j - m_nb + m_k + 1);
-                } else {
-                    // Inefficient, usage is strongly discouraged
-                    double aij;
-                    Kokkos::deep_copy(
-                            Kokkos::View<double, Kokkos::HostSpace>(&aij),
-                            Kokkos::subview(m_lambda, i - m_nb, j - m_nb + m_k + 1));
-                    return aij;
-                }
+                return m_lambda(i - m_nb, j - m_nb + m_k + 1);
             }
         } else {
             return Matrix_Corner_Block<ExecSpace>::get_element(i, j);
         }
     }
-    void set_element(int const i, int j, double const aij) const override
+    void set_element(int const i, int j, double const aij) override
     {
         assert(i >= 0);
         assert(i < get_size());
@@ -110,27 +92,9 @@ public:
             }
 
             if (d > 0) {
-                if constexpr (Kokkos::SpaceAccessibility<
-                                      Kokkos::DefaultHostExecutionSpace,
-                                      typename ExecSpace::memory_space>::accessible) {
-                    m_lambda(i - m_nb, j) = aij;
-                } else {
-                    // Inefficient, usage is strongly discouraged
-                    Kokkos::deep_copy(
-                            Kokkos::subview(m_lambda, i - m_nb, j),
-                            Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-                }
+                m_lambda(i - m_nb, j) = aij;
             } else {
-                if constexpr (Kokkos::SpaceAccessibility<
-                                      Kokkos::DefaultHostExecutionSpace,
-                                      typename ExecSpace::memory_space>::accessible) {
-                    m_lambda(i - m_nb, j - m_nb + m_k + 1) = aij;
-                } else {
-                    // Inefficient, usage is strongly discouraged
-                    Kokkos::deep_copy(
-                            Kokkos::subview(m_lambda, i - m_nb, j - m_nb + m_k + 1),
-                            Kokkos::View<const double, Kokkos::HostSpace>(&aij));
-                }
+                m_lambda(i - m_nb, j - m_nb + m_k + 1) = aij;
             }
         } else {
             Matrix_Corner_Block<ExecSpace>::set_element(i, j, aij);
@@ -141,10 +105,6 @@ public:
     void calculate_delta_to_factorize() override
     {
         auto delta_proxy = *m_delta;
-        auto lambda_host = Kokkos::
-                create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_lambda);
-        auto Abm_1_gamma_host = Kokkos::
-                create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), m_Abm_1_gamma);
         Kokkos::parallel_for(
                 "calculate_delta_to_factorize",
                 Kokkos::MDRangePolicy<
@@ -154,12 +114,12 @@ public:
                     double val = 0.0;
                     // Upper diagonals in lambda, lower diagonals in Abm_1_gamma
                     for (int l = 0; l < i + 1; ++l) {
-                        val += lambda_host(i, l) * Abm_1_gamma_host(l, j);
+                        val += m_lambda(i, l) * m_Abm_1_gamma(l, j);
                     }
                     // Lower diagonals in lambda, upper diagonals in Abm_1_gamma
                     for (int l = i + 1; l < m_k + 1; ++l) {
                         int l_full = m_nb - 1 - m_k + l;
-                        val += lambda_host(i, l) * Abm_1_gamma_host(l_full, j);
+                        val += m_lambda(i, l) * m_Abm_1_gamma(l_full, j);
                     }
                     auto tmp = delta_proxy.get_element(i, j);
                     delta_proxy.set_element(i, j, tmp - val);
@@ -170,26 +130,28 @@ public:
             ddc::DSpan2D_stride const v,
             ddc::DView2D_stride const u) const override
     {
+        auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
+        auto nb_proxy = m_nb;
+        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_lambda_section",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
-                KOKKOS_CLASS_LAMBDA(
+                KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, m_k),
+                            Kokkos::TeamThreadRange(teamMember, k_proxy),
                             [&](const int i) {
                                 /// Upper diagonals in lambda
                                 for (int l = 0; l <= i; ++l) {
-                                    Kokkos::atomic_sub(&v(i, j), m_lambda(i, l) * u(l, j));
+                                    v(i, j) -= lambda_device(i, l) * u(l, j);
                                 }
                                 // Lower diagonals in lambda
-                                for (int l = i + 1; l < m_k + 1; ++l) {
-                                    Kokkos::atomic_sub(
-                                            &v(i, j),
-                                            m_lambda(i, l) * u(m_nb - 1 - m_k + l, j));
+                                for (int l = i + 1; l < k_proxy + 1; ++l) {
+                                    v(i, j) -= lambda_device(i, l)
+                                               * u(nb_proxy - 1 - k_proxy + l, j);
                                 }
                             });
                 });
@@ -200,26 +162,27 @@ public:
             ddc::DSpan2D_stride const u,
             ddc::DView2D_stride const v) const override
     {
+        auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
+        auto nb_proxy = m_nb;
+        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
-                KOKKOS_CLASS_LAMBDA(
+                KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
-
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, m_k),
+                            Kokkos::TeamThreadRange(teamMember, k_proxy + 1),
                             [&](const int i) {
-                                /// Upper diagonals in lambda
-                                for (int l = 0; l <= i; ++l) {
-                                    Kokkos::atomic_sub(&u(l, j), m_lambda(i, l) * v(i, j));
-                                }
                                 // Lower diagonals in lambda
-                                for (int l = i + 1; l < m_k + 1; ++l) {
-                                    Kokkos::atomic_sub(
-                                            &u(m_nb - 1 - m_k + l, j),
-                                            m_lambda(i, l) * v(i, j));
+                                for (int l = 0; l < i; ++l) {
+                                    u(nb_proxy - 1 - k_proxy + i, j)
+                                            -= lambda_device(l, i) * v(l, j);
+                                }
+                                /// Upper diagonals in lambda
+                                for (int l = i; l < k_proxy; ++l) {
+                                    u(i, j) -= lambda_device(l, i) * v(l, j);
                                 }
                             });
                 });

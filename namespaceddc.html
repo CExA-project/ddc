@@ -329,6 +329,38 @@ Functions</h2></td></tr>
 <tr class="memitem:a6b058df8c02517deafeeb424e2f8803a"><td class="memTemplParams" colspan="2">template&lt;class... DDim, std::enable_if_t&lt;(sizeof...(DDim) &gt; 1), int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a6b058df8c02517deafeeb424e2f8803a"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim... &gt; const &amp;c)</td></tr>
 <tr class="separator:a6b058df8c02517deafeeb424e2f8803a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5a820cbfa67651ae082f77f446ed882"><td class="memTemplParams" colspan="2">template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
+<tr class="memitem:af5a820cbfa67651ae082f77f446ed882"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">create_mirror</a> (Space const &amp;space, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
+<tr class="memdesc:af5a820cbfa67651ae082f77f446ed882"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code>.  <a href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">More...</a><br /></td></tr>
+<tr class="separator:af5a820cbfa67651ae082f77f446ed882"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9acf5aabb0421518743fe6e8eb57abf2"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
+<tr class="memitem:a9acf5aabb0421518743fe6e8eb57abf2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9acf5aabb0421518743fe6e8eb57abf2">create_mirror</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
+<tr class="memdesc:a9acf5aabb0421518743fe6e8eb57abf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code>.  <a href="namespaceddc.html#a9acf5aabb0421518743fe6e8eb57abf2">More...</a><br /></td></tr>
+<tr class="separator:a9acf5aabb0421518743fe6e8eb57abf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8275b5ab8ef74493a63b8511b3579e72"><td class="memTemplParams" colspan="2">template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
+<tr class="memitem:a8275b5ab8ef74493a63b8511b3579e72"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8275b5ab8ef74493a63b8511b3579e72">create_mirror_and_copy</a> (Space const &amp;space, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
+<tr class="memdesc:a8275b5ab8ef74493a63b8511b3579e72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code> and operates a deep copy between the two.  <a href="namespaceddc.html#a8275b5ab8ef74493a63b8511b3579e72">More...</a><br /></td></tr>
+<tr class="separator:a8275b5ab8ef74493a63b8511b3579e72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae424d60fa2d297fc202f0dd5c4452d39"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
+<tr class="memitem:ae424d60fa2d297fc202f0dd5c4452d39"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ae424d60fa2d297fc202f0dd5c4452d39">create_mirror_and_copy</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
+<tr class="memdesc:ae424d60fa2d297fc202f0dd5c4452d39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> and operates a deep copy between the two.  <a href="namespaceddc.html#ae424d60fa2d297fc202f0dd5c4452d39">More...</a><br /></td></tr>
+<tr class="separator:ae424d60fa2d297fc202f0dd5c4452d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afda518c4e1649cb655fbd123c9bfce78"><td class="memTemplParams" colspan="2">template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
+<tr class="memitem:afda518c4e1649cb655fbd123c9bfce78"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#afda518c4e1649cb655fbd123c9bfce78">create_mirror_view</a> (Space const &amp;space, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
+<tr class="memdesc:afda518c4e1649cb655fbd123c9bfce78"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <code>src</code> is accessible from <code>space</code> then returns a copy of <code>src</code>, otherwise returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code>.  <a href="namespaceddc.html#afda518c4e1649cb655fbd123c9bfce78">More...</a><br /></td></tr>
+<tr class="separator:afda518c4e1649cb655fbd123c9bfce78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31cc1b0db51ba2264e09a5d51dc8f949"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
+<tr class="memitem:a31cc1b0db51ba2264e09a5d51dc8f949"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a31cc1b0db51ba2264e09a5d51dc8f949">create_mirror_view</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
+<tr class="memdesc:a31cc1b0db51ba2264e09a5d51dc8f949"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <code>src</code> is host accessible then returns a copy of <code>src</code>, otherwise returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout.  <a href="namespaceddc.html#a31cc1b0db51ba2264e09a5d51dc8f949">More...</a><br /></td></tr>
+<tr class="separator:a31cc1b0db51ba2264e09a5d51dc8f949"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74e0fc7177de8eecbe4d23596979ccc5"><td class="memTemplParams" colspan="2">template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
+<tr class="memitem:a74e0fc7177de8eecbe4d23596979ccc5"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a74e0fc7177de8eecbe4d23596979ccc5">create_mirror_view_and_copy</a> (Space const &amp;space, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
+<tr class="memdesc:a74e0fc7177de8eecbe4d23596979ccc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <code>src</code> is accessible from <code>space</code> then returns a copy of <code>src</code>, otherwise returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code> and operates a deep copy between the two.  <a href="namespaceddc.html#a74e0fc7177de8eecbe4d23596979ccc5">More...</a><br /></td></tr>
+<tr class="separator:a74e0fc7177de8eecbe4d23596979ccc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a092ce7410d0be40006e171e599adee7c"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
+<tr class="memitem:a092ce7410d0be40006e171e599adee7c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a092ce7410d0be40006e171e599adee7c">create_mirror_view_and_copy</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
+<tr class="memdesc:a092ce7410d0be40006e171e599adee7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <code>src</code> is host accessible then returns a copy of <code>src</code>, otherwise returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> and operates a deep copy between the two.  <a href="namespaceddc.html#a092ce7410d0be40006e171e599adee7c">More...</a><br /></td></tr>
+<tr class="separator:a092ce7410d0be40006e171e599adee7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbc459eecdc4f531bad4e69fc7c60fe9"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
 <tr class="memitem:adbc459eecdc4f531bad4e69fc7c60fe9"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#adbc459eecdc4f531bad4e69fc7c60fe9">select</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain)</td></tr>
 <tr class="separator:adbc459eecdc4f531bad4e69fc7c60fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -537,38 +569,6 @@ Functions</h2></td></tr>
 <tr class="memitem:ae4269f314ca30fb3ded4fdcc3a399965"><td class="memTemplParams" colspan="2">template&lt;class T , class MST , class U , class MSU &gt; </td></tr>
 <tr class="memitem:ae4269f314ca30fb3ded4fdcc3a399965"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ae4269f314ca30fb3ded4fdcc3a399965">operator!=</a> (<a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; T, MST &gt; const &amp;, <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; U, MSU &gt; const &amp;) noexcept</td></tr>
 <tr class="separator:ae4269f314ca30fb3ded4fdcc3a399965"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5a820cbfa67651ae082f77f446ed882"><td class="memTemplParams" colspan="2">template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
-<tr class="memitem:af5a820cbfa67651ae082f77f446ed882"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">create_mirror</a> (Space const &amp;space, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
-<tr class="memdesc:af5a820cbfa67651ae082f77f446ed882"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code>.  <a href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">More...</a><br /></td></tr>
-<tr class="separator:af5a820cbfa67651ae082f77f446ed882"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9acf5aabb0421518743fe6e8eb57abf2"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
-<tr class="memitem:a9acf5aabb0421518743fe6e8eb57abf2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9acf5aabb0421518743fe6e8eb57abf2">create_mirror</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
-<tr class="memdesc:a9acf5aabb0421518743fe6e8eb57abf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code>.  <a href="namespaceddc.html#a9acf5aabb0421518743fe6e8eb57abf2">More...</a><br /></td></tr>
-<tr class="separator:a9acf5aabb0421518743fe6e8eb57abf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8275b5ab8ef74493a63b8511b3579e72"><td class="memTemplParams" colspan="2">template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
-<tr class="memitem:a8275b5ab8ef74493a63b8511b3579e72"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8275b5ab8ef74493a63b8511b3579e72">create_mirror_and_copy</a> (Space const &amp;space, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
-<tr class="memdesc:a8275b5ab8ef74493a63b8511b3579e72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code> and operates a deep copy between the two.  <a href="namespaceddc.html#a8275b5ab8ef74493a63b8511b3579e72">More...</a><br /></td></tr>
-<tr class="separator:a8275b5ab8ef74493a63b8511b3579e72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae424d60fa2d297fc202f0dd5c4452d39"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
-<tr class="memitem:ae424d60fa2d297fc202f0dd5c4452d39"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ae424d60fa2d297fc202f0dd5c4452d39">create_mirror_and_copy</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
-<tr class="memdesc:ae424d60fa2d297fc202f0dd5c4452d39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> and operates a deep copy between the two.  <a href="namespaceddc.html#ae424d60fa2d297fc202f0dd5c4452d39">More...</a><br /></td></tr>
-<tr class="separator:ae424d60fa2d297fc202f0dd5c4452d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afda518c4e1649cb655fbd123c9bfce78"><td class="memTemplParams" colspan="2">template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
-<tr class="memitem:afda518c4e1649cb655fbd123c9bfce78"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#afda518c4e1649cb655fbd123c9bfce78">create_mirror_view</a> (Space const &amp;space, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
-<tr class="memdesc:afda518c4e1649cb655fbd123c9bfce78"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <code>src</code> is accessible from <code>space</code> then returns a copy of <code>src</code>, otherwise returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code>.  <a href="namespaceddc.html#afda518c4e1649cb655fbd123c9bfce78">More...</a><br /></td></tr>
-<tr class="separator:afda518c4e1649cb655fbd123c9bfce78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31cc1b0db51ba2264e09a5d51dc8f949"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
-<tr class="memitem:a31cc1b0db51ba2264e09a5d51dc8f949"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a31cc1b0db51ba2264e09a5d51dc8f949">create_mirror_view</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
-<tr class="memdesc:a31cc1b0db51ba2264e09a5d51dc8f949"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <code>src</code> is host accessible then returns a copy of <code>src</code>, otherwise returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout.  <a href="namespaceddc.html#a31cc1b0db51ba2264e09a5d51dc8f949">More...</a><br /></td></tr>
-<tr class="separator:a31cc1b0db51ba2264e09a5d51dc8f949"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74e0fc7177de8eecbe4d23596979ccc5"><td class="memTemplParams" colspan="2">template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
-<tr class="memitem:a74e0fc7177de8eecbe4d23596979ccc5"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a74e0fc7177de8eecbe4d23596979ccc5">create_mirror_view_and_copy</a> (Space const &amp;space, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
-<tr class="memdesc:a74e0fc7177de8eecbe4d23596979ccc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <code>src</code> is accessible from <code>space</code> then returns a copy of <code>src</code>, otherwise returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code> and operates a deep copy between the two.  <a href="namespaceddc.html#a74e0fc7177de8eecbe4d23596979ccc5">More...</a><br /></td></tr>
-<tr class="separator:a74e0fc7177de8eecbe4d23596979ccc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a092ce7410d0be40006e171e599adee7c"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </td></tr>
-<tr class="memitem:a092ce7410d0be40006e171e599adee7c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a092ce7410d0be40006e171e599adee7c">create_mirror_view_and_copy</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</td></tr>
-<tr class="memdesc:a092ce7410d0be40006e171e599adee7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <code>src</code> is host accessible then returns a copy of <code>src</code>, otherwise returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> and operates a deep copy between the two.  <a href="namespaceddc.html#a092ce7410d0be40006e171e599adee7c">More...</a><br /></td></tr>
-<tr class="separator:a092ce7410d0be40006e171e599adee7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d5b65eff91b58f4c733a6339caf325f"><td class="memTemplParams" colspan="2">template&lt;class DDimImpl , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; typename DDimImpl::discrete_dimension_type &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a8d5b65eff91b58f4c733a6339caf325f"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8d5b65eff91b58f4c733a6339caf325f">operator&lt;&lt;</a> (std::ostream &amp;out, DDimImpl const &amp;mesh)</td></tr>
 <tr class="separator:a8d5b65eff91b58f4c733a6339caf325f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1791,6 +1791,222 @@ template&lt;class... DDim, std::enable_if_t&lt;(sizeof...(DDim) &gt; 1), int &gt
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="af5a820cbfa67651ae082f77f446ed882" name="af5a820cbfa67651ae082f77f446ed882"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5a820cbfa67651ae082f77f446ed882">&#9670;&nbsp;</a></span>create_mirror() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ddc::create_mirror </td>
+          <td>(</td>
+          <td class="paramtype">Space const &amp;&#160;</td>
+          <td class="paramname"><em>space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>src</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code>. </p>
+
+</div>
+</div>
+<a id="a9acf5aabb0421518743fe6e8eb57abf2" name="a9acf5aabb0421518743fe6e8eb57abf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9acf5aabb0421518743fe6e8eb57abf2">&#9670;&nbsp;</a></span>create_mirror() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ddc::create_mirror </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>src</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code>. </p>
+
+</div>
+</div>
+<a id="a8275b5ab8ef74493a63b8511b3579e72" name="a8275b5ab8ef74493a63b8511b3579e72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8275b5ab8ef74493a63b8511b3579e72">&#9670;&nbsp;</a></span>create_mirror_and_copy() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ddc::create_mirror_and_copy </td>
+          <td>(</td>
+          <td class="paramtype">Space const &amp;&#160;</td>
+          <td class="paramname"><em>space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>src</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code> and operates a deep copy between the two. </p>
+
+</div>
+</div>
+<a id="ae424d60fa2d297fc202f0dd5c4452d39" name="ae424d60fa2d297fc202f0dd5c4452d39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae424d60fa2d297fc202f0dd5c4452d39">&#9670;&nbsp;</a></span>create_mirror_and_copy() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ddc::create_mirror_and_copy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>src</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> and operates a deep copy between the two. </p>
+
+</div>
+</div>
+<a id="afda518c4e1649cb655fbd123c9bfce78" name="afda518c4e1649cb655fbd123c9bfce78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afda518c4e1649cb655fbd123c9bfce78">&#9670;&nbsp;</a></span>create_mirror_view() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ddc::create_mirror_view </td>
+          <td>(</td>
+          <td class="paramtype">Space const &amp;&#160;</td>
+          <td class="paramname"><em>space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>src</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If <code>src</code> is accessible from <code>space</code> then returns a copy of <code>src</code>, otherwise returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code>. </p>
+
+</div>
+</div>
+<a id="a31cc1b0db51ba2264e09a5d51dc8f949" name="a31cc1b0db51ba2264e09a5d51dc8f949"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31cc1b0db51ba2264e09a5d51dc8f949">&#9670;&nbsp;</a></span>create_mirror_view() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ddc::create_mirror_view </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>src</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If <code>src</code> is host accessible then returns a copy of <code>src</code>, otherwise returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout. </p>
+
+</div>
+</div>
+<a id="a74e0fc7177de8eecbe4d23596979ccc5" name="a74e0fc7177de8eecbe4d23596979ccc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74e0fc7177de8eecbe4d23596979ccc5">&#9670;&nbsp;</a></span>create_mirror_view_and_copy() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ddc::create_mirror_view_and_copy </td>
+          <td>(</td>
+          <td class="paramtype">Space const &amp;&#160;</td>
+          <td class="paramname"><em>space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>src</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If <code>src</code> is accessible from <code>space</code> then returns a copy of <code>src</code>, otherwise returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code> and operates a deep copy between the two. </p>
+
+</div>
+</div>
+<a id="a092ce7410d0be40006e171e599adee7c" name="a092ce7410d0be40006e171e599adee7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a092ce7410d0be40006e171e599adee7c">&#9670;&nbsp;</a></span>create_mirror_view_and_copy() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ddc::create_mirror_view_and_copy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>src</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If <code>src</code> is host accessible then returns a copy of <code>src</code>, otherwise returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> and operates a deep copy between the two. </p>
 
 </div>
 </div>
@@ -4067,222 +4283,6 @@ template&lt;class T , class MST , class U , class MSU &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="af5a820cbfa67651ae082f77f446ed882" name="af5a820cbfa67651ae082f77f446ed882"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5a820cbfa67651ae082f77f446ed882">&#9670;&nbsp;</a></span>create_mirror() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ddc::create_mirror </td>
-          <td>(</td>
-          <td class="paramtype">Space const &amp;&#160;</td>
-          <td class="paramname"><em>space</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>src</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code>. </p>
-
-</div>
-</div>
-<a id="a9acf5aabb0421518743fe6e8eb57abf2" name="a9acf5aabb0421518743fe6e8eb57abf2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9acf5aabb0421518743fe6e8eb57abf2">&#9670;&nbsp;</a></span>create_mirror() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ddc::create_mirror </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>src</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code>. </p>
-
-</div>
-</div>
-<a id="a8275b5ab8ef74493a63b8511b3579e72" name="a8275b5ab8ef74493a63b8511b3579e72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8275b5ab8ef74493a63b8511b3579e72">&#9670;&nbsp;</a></span>create_mirror_and_copy() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ddc::create_mirror_and_copy </td>
-          <td>(</td>
-          <td class="paramtype">Space const &amp;&#160;</td>
-          <td class="paramname"><em>space</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>src</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code> and operates a deep copy between the two. </p>
-
-</div>
-</div>
-<a id="ae424d60fa2d297fc202f0dd5c4452d39" name="ae424d60fa2d297fc202f0dd5c4452d39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae424d60fa2d297fc202f0dd5c4452d39">&#9670;&nbsp;</a></span>create_mirror_and_copy() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ddc::create_mirror_and_copy </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>src</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> and operates a deep copy between the two. </p>
-
-</div>
-</div>
-<a id="afda518c4e1649cb655fbd123c9bfce78" name="afda518c4e1649cb655fbd123c9bfce78"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afda518c4e1649cb655fbd123c9bfce78">&#9670;&nbsp;</a></span>create_mirror_view() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ddc::create_mirror_view </td>
-          <td>(</td>
-          <td class="paramtype">Space const &amp;&#160;</td>
-          <td class="paramname"><em>space</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>src</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>If <code>src</code> is accessible from <code>space</code> then returns a copy of <code>src</code>, otherwise returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code>. </p>
-
-</div>
-</div>
-<a id="a31cc1b0db51ba2264e09a5d51dc8f949" name="a31cc1b0db51ba2264e09a5d51dc8f949"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31cc1b0db51ba2264e09a5d51dc8f949">&#9670;&nbsp;</a></span>create_mirror_view() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ddc::create_mirror_view </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>src</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>If <code>src</code> is host accessible then returns a copy of <code>src</code>, otherwise returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout. </p>
-
-</div>
-</div>
-<a id="a74e0fc7177de8eecbe4d23596979ccc5" name="a74e0fc7177de8eecbe4d23596979ccc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74e0fc7177de8eecbe4d23596979ccc5">&#9670;&nbsp;</a></span>create_mirror_view_and_copy() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Space , class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ddc::create_mirror_view_and_copy </td>
-          <td>(</td>
-          <td class="paramtype">Space const &amp;&#160;</td>
-          <td class="paramname"><em>space</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>src</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>If <code>src</code> is accessible from <code>space</code> then returns a copy of <code>src</code>, otherwise returns a new <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> allocated on the memory space <code>Space::memory_space</code> and operates a deep copy between the two. </p>
-
-</div>
-</div>
-<a id="a092ce7410d0be40006e171e599adee7c" name="a092ce7410d0be40006e171e599adee7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a092ce7410d0be40006e171e599adee7c">&#9670;&nbsp;</a></span>create_mirror_view_and_copy() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ElementType , class Support , class Layout , class MemorySpace &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto ddc::create_mirror_view_and_copy </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;&#160;</td>
-          <td class="paramname"><em>src</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>If <code>src</code> is host accessible then returns a copy of <code>src</code>, otherwise returns a new host <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same layout as <code>src</code> and operates a deep copy between the two. </p>
 
 </div>
 </div>

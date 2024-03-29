@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 	<meta charset="UTF-8">
 	<meta name="generator" content="Doxygen 1.9.4"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<title>DDC: mirror.hpp Source File</title>
+	<title>DDC: create_mirror.hpp Source File</title>
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="dynsections.js"></script>
 	<script type="text/javascript" src="navtreedata.js"></script>
@@ -42,12 +42,12 @@ SPDX-License-Identifier: MIT
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('mirror_8hpp_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('create__mirror_8hpp_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
 <div class="header">
-  <div class="headertitle"><div class="title">mirror.hpp</div></div>
+  <div class="headertitle"><div class="title">create_mirror.hpp</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (C) The DDC development team, see COPYRIGHT.md file</span></div>
@@ -172,10 +172,10 @@ $(document).ready(function(){initNavTree('mirror_8hpp_source.html',''); initResi
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdef"><b>Definition:</b> aligned_allocator.hpp:11</div></div>
 <div class="ttc" id="anamespaceddc_html_a37d4f1dc7122e72c049517a90ff0b98b"><div class="ttname"><a href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a></div><div class="ttdeci">auto parallel_deepcopy(ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</div><div class="ttdoc">Copy the content of a borrowed chunk into another.</div><div class="ttdef"><b>Definition:</b> parallel_deepcopy.hpp:21</div></div>
 <div class="ttc" id="anamespaceddc_html_a54da8d37b5ff148e68c65185c0c1e44e"><div class="ttname"><a href="namespaceddc.html#a54da8d37b5ff148e68c65185c0c1e44e">ddc::Chunk</a></div><div class="ttdeci">Chunk(std::string const &amp;, DiscreteDomain&lt; DDims... &gt; const &amp;, Allocator) -&gt; Chunk&lt; typename Allocator::value_type, DiscreteDomain&lt; DDims... &gt;, Allocator &gt;</div></div>
-<div class="ttc" id="anamespaceddc_html_a74e0fc7177de8eecbe4d23596979ccc5"><div class="ttname"><a href="namespaceddc.html#a74e0fc7177de8eecbe4d23596979ccc5">ddc::create_mirror_view_and_copy</a></div><div class="ttdeci">auto create_mirror_view_and_copy(Space const &amp;space, ChunkSpan&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</div><div class="ttdoc">If src is accessible from space then returns a copy of src, otherwise returns a new Chunk with the sa...</div><div class="ttdef"><b>Definition:</b> mirror.hpp:101</div></div>
-<div class="ttc" id="anamespaceddc_html_a8275b5ab8ef74493a63b8511b3579e72"><div class="ttname"><a href="namespaceddc.html#a8275b5ab8ef74493a63b8511b3579e72">ddc::create_mirror_and_copy</a></div><div class="ttdeci">auto create_mirror_and_copy(Space const &amp;space, ChunkSpan&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</div><div class="ttdoc">Returns a new Chunk with the same layout as src allocated on the memory space Space::memory_space and...</div><div class="ttdef"><b>Definition:</b> mirror.hpp:42</div></div>
-<div class="ttc" id="anamespaceddc_html_af5a820cbfa67651ae082f77f446ed882"><div class="ttname"><a href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">ddc::create_mirror</a></div><div class="ttdeci">auto create_mirror(Space const &amp;space, ChunkSpan&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</div><div class="ttdoc">Returns a new Chunk with the same layout as src allocated on the memory space Space::memory_space.</div><div class="ttdef"><b>Definition:</b> mirror.hpp:18</div></div>
-<div class="ttc" id="anamespaceddc_html_afda518c4e1649cb655fbd123c9bfce78"><div class="ttname"><a href="namespaceddc.html#afda518c4e1649cb655fbd123c9bfce78">ddc::create_mirror_view</a></div><div class="ttdeci">auto create_mirror_view(Space const &amp;space, ChunkSpan&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</div><div class="ttdoc">If src is accessible from space then returns a copy of src, otherwise returns a new Chunk with the sa...</div><div class="ttdef"><b>Definition:</b> mirror.hpp:69</div></div>
+<div class="ttc" id="anamespaceddc_html_a74e0fc7177de8eecbe4d23596979ccc5"><div class="ttname"><a href="namespaceddc.html#a74e0fc7177de8eecbe4d23596979ccc5">ddc::create_mirror_view_and_copy</a></div><div class="ttdeci">auto create_mirror_view_and_copy(Space const &amp;space, ChunkSpan&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</div><div class="ttdoc">If src is accessible from space then returns a copy of src, otherwise returns a new Chunk with the sa...</div><div class="ttdef"><b>Definition:</b> create_mirror.hpp:101</div></div>
+<div class="ttc" id="anamespaceddc_html_a8275b5ab8ef74493a63b8511b3579e72"><div class="ttname"><a href="namespaceddc.html#a8275b5ab8ef74493a63b8511b3579e72">ddc::create_mirror_and_copy</a></div><div class="ttdeci">auto create_mirror_and_copy(Space const &amp;space, ChunkSpan&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</div><div class="ttdoc">Returns a new Chunk with the same layout as src allocated on the memory space Space::memory_space and...</div><div class="ttdef"><b>Definition:</b> create_mirror.hpp:42</div></div>
+<div class="ttc" id="anamespaceddc_html_af5a820cbfa67651ae082f77f446ed882"><div class="ttname"><a href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">ddc::create_mirror</a></div><div class="ttdeci">auto create_mirror(Space const &amp;space, ChunkSpan&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</div><div class="ttdoc">Returns a new Chunk with the same layout as src allocated on the memory space Space::memory_space.</div><div class="ttdef"><b>Definition:</b> create_mirror.hpp:18</div></div>
+<div class="ttc" id="anamespaceddc_html_afda518c4e1649cb655fbd123c9bfce78"><div class="ttname"><a href="namespaceddc.html#afda518c4e1649cb655fbd123c9bfce78">ddc::create_mirror_view</a></div><div class="ttdeci">auto create_mirror_view(Space const &amp;space, ChunkSpan&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</div><div class="ttdoc">If src is accessible from space then returns a copy of src, otherwise returns a new Chunk with the sa...</div><div class="ttdef"><b>Definition:</b> create_mirror.hpp:69</div></div>
 <div class="ttc" id="anamespaceddc_html_classddc_1_1Chunk"><div class="ttname"><a href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a></div><div class="ttdef"><b>Definition:</b> chunk.hpp:21</div></div>
 <div class="ttc" id="anamespaceddc_html_classddc_1_1ChunkSpan"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition:</b> chunk_span.hpp:30</div></div>
 </div><!-- fragment --></div><!-- contents -->

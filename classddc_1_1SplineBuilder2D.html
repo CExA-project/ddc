@@ -529,7 +529,9 @@ template&lt;class ExecSpace , class MemorySpace , class BSpline1 , class BSpline
 <p>Create a new <a class="el" href="classddc_1_1SplineBuilder2D.html" title="A class for creating a 2D spline approximation of a function.">SplineBuilder2D</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">interpolation_domain</td><td>The 2D domain on which points will be provided in order to create the 2D spline approximation. </td></tr>
+    <tr><td class="paramname">vals_domain</td><td>The 2D domain on which points will be provided in order to create the 2D spline approximation. </td></tr>
+    <tr><td class="paramname">cols_per_chunk</td><td>The number of columns in the rhs passed to the underlying linear solver. </td></tr>
+    <tr><td class="paramname">preconditionner_max_block_size</td><td>The block size of in the block Jacobi preconditioner. </td></tr>
   </table>
   </dd>
 </dl>
@@ -929,14 +931,14 @@ template&lt;class Layout &gt; </div>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">spline</td><td>The coefficients of the spline calculated by the function. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vals</td><td>The values of the function at the grid points. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">derivs_xmin</td><td>The values of the derivatives at the lower boundary in the first dimension. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">derivs_xmax</td><td>The values of the derivatives at the upper boundary in the first dimension. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">derivs_ymin</td><td>The values of the derivatives at the lower boundary in the second dimension. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">derivs_ymax</td><td>The values of the derivatives at the upper boundary in the second dimension. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mixed_derivs_xmin_ymin</td><td>The values of the the cross-derivatives at the lower boundary in the first dimension and the lower boundary in the second dimension. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mixed_derivs_xmax_ymin</td><td>The values of the the cross-derivatives at the upper boundary in the first dimension and the lower boundary in the second dimension. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mixed_derivs_xmin_ymax</td><td>The values of the the cross-derivatives at the lower boundary in the first dimension and the upper boundary in the second dimension. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mixed_derivs_xmax_ymax</td><td>The values of the the cross-derivatives at the upper boundary in the first dimension and the upper boundary in the second dimension. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">derivs_min1</td><td>The values of the derivatives at the lower boundary in the first dimension. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">derivs_max1</td><td>The values of the derivatives at the upper boundary in the first dimension. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">derivs_min2</td><td>The values of the derivatives at the lower boundary in the second dimension. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">derivs_max2</td><td>The values of the derivatives at the upper boundary in the second dimension. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mixed_derivs_min1_min2</td><td>The values of the the cross-derivatives at the lower boundary in the first dimension and the lower boundary in the second dimension. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mixed_derivs_max1_min2</td><td>The values of the the cross-derivatives at the upper boundary in the first dimension and the lower boundary in the second dimension. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mixed_derivs_min1_max2</td><td>The values of the the cross-derivatives at the lower boundary in the first dimension and the upper boundary in the second dimension. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mixed_derivs_max1_max2</td><td>The values of the the cross-derivatives at the upper boundary in the first dimension and the upper boundary in the second dimension. </td></tr>
   </table>
   </dd>
 </dl>

@@ -122,7 +122,7 @@ template&lt;class DimI , class DimNI &gt; </div>
 <p >The boundary value will be the same as at the coordinate given in a dimension given. The dimension of the input defines the dimension of the boundary condition. The second and the third parameters are needed in case of non-periodic splines on the dimension off-interest (the complementary dimension of the boundary condition), because the evaluator can receive coordinates outside the domain in both dimension.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">eval_pos_bc</td><td>Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">eval_pos</td><td>Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">eval_pos_not_interest_min</td><td>The minimum coordinate inside the domain on the complementary dimension of the boundary condition. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">eval_pos_not_interest_max</td><td>The maximum coordinate inside the domain on the complementary dimension of the boundary condition. </td></tr>
   </table>
@@ -163,7 +163,7 @@ template&lt;class DimNI_sfinae  = DimNI, std::enable_if_t&lt; DimNI_sfinae::PERI
 <p >The boundary value will be the same as at the coordinate given in a dimension given. The dimension of the input defines the dimension of the boundary condition. No second and third parameters are needed in case of periodic splines on the dimension off-interest (the complementary dimension of the boundary condition).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">eval_pos_bc</td><td>Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">eval_pos</td><td>Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain. </td></tr>
   </table>
   </dd>
 </dl>

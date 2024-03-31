@@ -152,7 +152,6 @@ public:
                 KOKKOS_CLASS_LAMBDA(const int i) {
                     auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
-
                     int info;
                     info
                             = tbsv('L',
@@ -164,7 +163,6 @@ public:
                                    kd_proxy,
                                    b_slice,
                                    1);
-                    Kokkos::fence();
                     info
                             = tbsv('L',
                                    'T',

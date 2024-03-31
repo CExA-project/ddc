@@ -150,7 +150,7 @@ public:
                 "pbtrs",
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),
                 KOKKOS_CLASS_LAMBDA(const int i) {
-                   auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                    auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
 
                     int info;
@@ -164,7 +164,7 @@ public:
                                    kd_proxy,
                                    b_slice,
                                    1);
-					Kokkos::fence();
+                    Kokkos::fence();
                     info
                             = tbsv('L',
                                    'T',

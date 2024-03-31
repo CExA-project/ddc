@@ -89,8 +89,10 @@ public:
     virtual void factorize() override
     {
         m_q_block->factorize();
+        auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
         m_q_block->solve_inplace(
-                detail::build_mdspan(m_Abm_1_gamma, std::make_index_sequence<2> {}));
+                detail::build_mdspan(Abm_1_gamma_device, std::make_index_sequence<2> {}));
+        Kokkos::deep_copy(m_Abm_1_gamma, Abm_1_gamma_device);
 
         calculate_delta_to_factorize();
 

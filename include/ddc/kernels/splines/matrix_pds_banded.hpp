@@ -134,7 +134,7 @@ protected:
     }
 
 public:
-    int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
+    int solve_inplace_method(ddc::DSpan2D_stride b, char const) const override
     {
         assert(b.stride(0) == 1);
         int const n_equations = b.extent(1);
@@ -150,8 +150,7 @@ public:
                 "pbtrs",
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),
                 KOKKOS_CLASS_LAMBDA(const int i) {
-                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                   auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
 
                     int info;
@@ -165,6 +164,7 @@ public:
                                    kd_proxy,
                                    b_slice,
                                    1);
+					Kokkos::fence();
                     info
                             = tbsv('L',
                                    'T',

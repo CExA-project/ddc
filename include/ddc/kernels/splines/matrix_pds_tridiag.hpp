@@ -94,7 +94,7 @@ public:
         assert(b.stride(0) == 1);
         int const n_equations = b.extent(1);
         int const stride = b.stride(1);
-
+		
         Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space>
                 b_view(b.data_handle(), Kokkos::LayoutStride(get_size(), 1, n_equations, stride));
 
@@ -102,11 +102,10 @@ public:
         auto d_device = create_mirror_view_and_copy(ExecSpace(), m_d);
         auto l_device = create_mirror_view_and_copy(ExecSpace(), m_l);
         Kokkos::parallel_for(
-                "pbtrs",
+                "pttrs",
                 Kokkos::RangePolicy<ExecSpace>(0, n_equations),
                 KOKKOS_LAMBDA(const int i) {
-                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                    auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
                     for (int j = 1; j < size_proxy; ++j) {
                         b_slice(j) -= b_slice(j - 1) * l_device(j - 1);

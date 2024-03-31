@@ -86,8 +86,7 @@ public:
                     const int i = teamMember.league_rank();
 
                     int info;
-                    Kokkos::View<double*, Kokkos::LayoutLeft, typename ExecSpace::memory_space>
-                            b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
+                    auto b_slice = Kokkos::subview(b_view, Kokkos::ALL, i);
 
                     if (transpose == 'N') {
                         teamMember.team_barrier();

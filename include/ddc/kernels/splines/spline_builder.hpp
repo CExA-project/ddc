@@ -78,7 +78,7 @@ public:
      */
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
 
-    using vals_domain_type = ddc::DiscreteDomain<IDimX...>;
+    using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
@@ -89,20 +89,20 @@ public:
     using spline_dim_type
             = std::conditional_t<std::is_same_v<Tag, interpolation_mesh_type>, bsplines_type, Tag>;
 
-    using spline_domain_type =
+    using batched_batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
-    using spline_tr_domain_type =
+    using batched_spline_tr_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
                     ddc::type_seq_remove_t<
                             ddc::detail::TypeSeq<IDimX...>,
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
-    using derivs_domain_type =
+    using batched_derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
@@ -152,7 +152,7 @@ public:
     static constexpr ddc::BoundCond s_bc_xmax = BcXmax;
 
 private:
-    vals_domain_type m_vals_domain;
+    batched_interpolation_domain_type m_batched_interpolation_domain;
 
     int m_offset;
 
@@ -165,10 +165,10 @@ public:
     int compute_offset(interpolation_domain_type const& interpolation_domain);
 
     explicit SplineBuilder(
-            vals_domain_type const& vals_domain,
+            batched_interpolation_domain_type const& batched_interpolation_domain,
             std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
-        : m_vals_domain(vals_domain)
+        : m_batched_interpolation_domain(batched_interpolation_domain)
         , m_offset(compute_offset(interpolation_domain()))
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                / ddc::discrete_space<BSplines>().ncells())
@@ -212,9 +212,9 @@ public:
      */
     SplineBuilder& operator=(SplineBuilder&& x) = default;
 
-    vals_domain_type vals_domain() const noexcept
+    batched_interpolation_domain_type batched_interpolation_domain() const noexcept
     {
-        return m_vals_domain;
+        return m_batched_interpolation_domain;
     }
 
     /**
@@ -227,15 +227,15 @@ public:
      */
     interpolation_domain_type interpolation_domain() const noexcept
     {
-        return interpolation_domain_type(vals_domain());
+        return interpolation_domain_type(batched_interpolation_domain());
     }
 
     batch_domain_type batch_domain() const noexcept
     {
-        return ddc::remove_dims_of(vals_domain(), interpolation_domain());
+        return ddc::remove_dims_of(batched_interpolation_domain(), interpolation_domain());
     }
 
-    ddc::DiscreteDomain<bsplines_type> bsplines_domain() const noexcept // TODO : clarify name
+    ddc::DiscreteDomain<bsplines_type> spline_domain() const noexcept // TODO : clarify name
     {
         return ddc::discrete_space<bsplines_type>().full_domain();
     }
@@ -248,31 +248,31 @@ public:
      *
      * @return The domain for the splines.
      */
-    spline_domain_type spline_domain() const noexcept
+    batched_batched_spline_domain_type batched_spline_domain() const noexcept
     {
         return ddc::replace_dim_of<
                 interpolation_mesh_type,
-                bsplines_type>(vals_domain(), bsplines_domain());
+                bsplines_type>(batched_interpolation_domain(), spline_domain());
     }
 
-    spline_tr_domain_type spline_tr_domain() const noexcept
+    batched_spline_tr_domain_type spline_tr_domain() const noexcept
     {
-        return spline_tr_domain_type(bsplines_domain(), batch_domain());
+        return batched_spline_tr_domain_type(spline_domain(), batch_domain());
     }
 
-    derivs_domain_type derivs_xmin_domain() const noexcept
+    batched_derivs_domain_type derivs_xmin_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
-                vals_domain(),
+                batched_interpolation_domain(),
                 ddc::DiscreteDomain<deriv_type>(
                         ddc::DiscreteElement<deriv_type>(1),
                         ddc::DiscreteVector<deriv_type>(s_nbc_xmin)));
     }
 
-    derivs_domain_type derivs_xmax_domain() const noexcept
+    batched_derivs_domain_type derivs_xmax_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
-                vals_domain(),
+                batched_interpolation_domain(),
                 ddc::DiscreteDomain<deriv_type>(
                         ddc::DiscreteElement<deriv_type>(1),
                         ddc::DiscreteVector<deriv_type>(s_nbc_xmax)));
@@ -309,15 +309,20 @@ public:
      */
     template <class Layout>
     void operator()(
-            ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
-            ddc::ChunkSpan<double const, vals_domain_type, Layout, memory_space> vals,
-            std::optional<
-                    ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
-                    derivs_xmin
+            ddc::ChunkSpan<double, batched_batched_spline_domain_type, Layout, memory_space> spline,
+            ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space>
+                    vals,
+            std::optional<ddc::ChunkSpan<
+                    double const,
+                    batched_derivs_domain_type,
+                    Layout,
+                    memory_space>> const derivs_xmin
             = std::nullopt,
-            std::optional<
-                    ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
-                    derivs_xmax
+            std::optional<ddc::ChunkSpan<
+                    double const,
+                    batched_derivs_domain_type,
+                    Layout,
+                    memory_space>> const derivs_xmax
             = std::nullopt) const;
 
 private:
@@ -629,12 +634,18 @@ void SplineBuilder<
         Solver,
         IDimX...>::
 operator()(
-        ddc::ChunkSpan<double, spline_domain_type, Layout, memory_space> spline,
-        ddc::ChunkSpan<double const, vals_domain_type, Layout, memory_space> vals,
-        std::optional<ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
-                derivs_xmin,
-        std::optional<ddc::ChunkSpan<double const, derivs_domain_type, Layout, memory_space>> const
-                derivs_xmax) const
+        ddc::ChunkSpan<double, batched_batched_spline_domain_type, Layout, memory_space> spline,
+        ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space> vals,
+        std::optional<ddc::ChunkSpan<
+                double const,
+                batched_derivs_domain_type,
+                Layout,
+                memory_space>> const derivs_xmin,
+        std::optional<ddc::ChunkSpan<
+                double const,
+                batched_derivs_domain_type,
+                Layout,
+                memory_space>> const derivs_xmax) const
 {
     assert(vals.template extent<interpolation_mesh_type>()
            == ddc::discrete_space<bsplines_type>().nbasis() - s_nbe_xmin - s_nbe_xmax);

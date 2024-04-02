@@ -66,11 +66,11 @@ public:
     using interpolation_domain_type
             = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
 
-    using vals_domain_type = ddc::DiscreteDomain<IDimX...>;
+    using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
-    using bsplines_domain_type1 = ddc::DiscreteDomain<bsplines_type1>;
-    using bsplines_domain_type2 = ddc::DiscreteDomain<bsplines_type2>;
-    using bsplines_domain_type = ddc::DiscreteDomain<bsplines_type1, bsplines_type2>;
+    using batched_spline_domain_type1 = ddc::DiscreteDomain<bsplines_type1>;
+    using batched_spline_domain_type2 = ddc::DiscreteDomain<bsplines_type2>;
+    using batched_spline_domain_type = ddc::DiscreteDomain<bsplines_type1, bsplines_type2>;
 
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
@@ -83,7 +83,7 @@ public:
             bsplines_type1,
             std::conditional_t<std::is_same_v<Tag, interpolation_mesh_type2>, bsplines_type2, Tag>>;
 
-    using spline_domain_type =
+    using batched_batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>,
@@ -124,7 +124,7 @@ public:
                     ddc::Coordinate<tag_type1>,
                     ddc::ChunkSpan<
                             double const,
-                            bsplines_domain_type,
+                            batched_spline_domain_type,
                             std::experimental::layout_right,
                             memory_space>>,
             "LeftExtrapolationRule1::operator() has to be callable "
@@ -136,7 +136,7 @@ public:
                     ddc::Coordinate<tag_type1>,
                     ddc::ChunkSpan<
                             double const,
-                            bsplines_domain_type,
+                            batched_spline_domain_type,
                             std::experimental::layout_right,
                             memory_space>>,
             "RightExtrapolationRule1::operator() has to be callable "
@@ -148,7 +148,7 @@ public:
                     ddc::Coordinate<tag_type2>,
                     ddc::ChunkSpan<
                             double const,
-                            bsplines_domain_type,
+                            batched_spline_domain_type,
                             std::experimental::layout_right,
                             memory_space>>,
             "LeftExtrapolationRule2::operator() has to be callable "
@@ -160,7 +160,7 @@ public:
                     ddc::Coordinate<tag_type2>,
                     ddc::ChunkSpan<
                             double const,
-                            bsplines_domain_type,
+                            batched_spline_domain_type,
                             std::experimental::layout_right,
                             memory_space>>,
             "RightExtrapolationRule2::operator() has to be callable "
@@ -271,7 +271,7 @@ public:
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double operator()(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
         return eval(coord_eval, spline_coef);
@@ -279,14 +279,18 @@ public:
 
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void operator()(
-            ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
+            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+                    spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    vals_domain_type,
+                    batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_batched_spline_domain_type,
+                    Layout3,
+                    memory_space> const spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
@@ -319,7 +323,7 @@ public:
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_dim_1(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
         return eval_no_bc<eval_deriv_type, eval_type>(coord_eval, spline_coef);
@@ -338,7 +342,7 @@ public:
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_dim_2(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
         return eval_no_bc<eval_type, eval_deriv_type>(coord_eval, spline_coef);
@@ -357,7 +361,7 @@ public:
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_1_and_2(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
         return eval_no_bc<eval_deriv_type, eval_deriv_type>(coord_eval, spline_coef);
@@ -366,7 +370,7 @@ public:
     template <class InterestDim, class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
         static_assert(
@@ -389,7 +393,7 @@ public:
     template <class InterestDim1, class InterestDim2, class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv2(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
         static_assert(
@@ -416,14 +420,18 @@ public:
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_dim_1(
-            ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
+            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+                    spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    vals_domain_type,
+                    batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_batched_spline_domain_type,
+                    Layout3,
+                    memory_space> const spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
@@ -457,14 +465,18 @@ public:
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_dim_2(
-            ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
+            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+                    spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    vals_domain_type,
+                    batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_batched_spline_domain_type,
+                    Layout3,
+                    memory_space> const spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
@@ -498,14 +510,18 @@ public:
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_1_and_2(
-            ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
+            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+                    spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    vals_domain_type,
+                    batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_batched_spline_domain_type,
+                    Layout3,
+                    memory_space> const spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
@@ -529,14 +545,18 @@ public:
 
     template <class InterestDim, class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv(
-            ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
+            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+                    spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    vals_domain_type,
+                    batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_batched_spline_domain_type,
+                    Layout3,
+                    memory_space> const spline_coef) const
     {
         static_assert(
                 std::is_same_v<
@@ -563,14 +583,18 @@ public:
             class Layout3,
             class... CoordsDims>
     void deriv2(
-            ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
+            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+                    spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    vals_domain_type,
+                    batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_batched_spline_domain_type,
+                    Layout3,
+                    memory_space> const spline_coef) const
     {
         static_assert(
                 (std::is_same_v<
@@ -594,8 +618,11 @@ public:
     template <class Layout1, class Layout2>
     void integrate(
             ddc::ChunkSpan<double, batch_domain_type, Layout1, memory_space> const integrals,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout2, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_batched_spline_domain_type,
+                    Layout2,
+                    memory_space> const spline_coef) const
     {
         batch_domain_type batch_domain(integrals.domain());
         ddc::Chunk values1_alloc(
@@ -618,9 +645,9 @@ public:
                 batch_domain,
                 KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                     integrals(j) = 0;
-                    for (typename bsplines_domain_type1::discrete_element_type const i1 :
+                    for (typename batched_spline_domain_type1::discrete_element_type const i1 :
                          values1.domain()) {
-                        for (typename bsplines_domain_type2::discrete_element_type const i2 :
+                        for (typename batched_spline_domain_type2::discrete_element_type const i2 :
                              values2.domain()) {
                             integrals(j) += spline_coef(i1, i2, j) * values1(i1) * values2(i2);
                         }
@@ -651,7 +678,7 @@ private:
     template <class Layout, class... CoordsDims>
     KOKKOS_INLINE_FUNCTION double eval(
             ddc::Coordinate<CoordsDims...> coord_eval,
-            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
         using Dim1 = typename interpolation_mesh_type1::continuous_dimension_type;
@@ -720,7 +747,7 @@ private:
     template <class EvalType1, class EvalType2, class Layout, class... CoordsDims>
     KOKKOS_INLINE_FUNCTION double eval_no_bc(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
         static_assert(

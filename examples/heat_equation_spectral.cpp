@@ -211,7 +211,10 @@ int main(int argc, char** argv)
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
 
-    ddc::init_fourier_space<X, Y>(initial_temp.domain());
+    ddc::init_fourier_space(
+            ddc::DiscreteDomain<DDimX>(initial_temp.domain()));
+    ddc::init_fourier_space(
+            ddc::DiscreteDomain<DDimY>(initial_temp.domain()));
     ddc::DiscreteDomain<
             ddc::PeriodicSampling<ddc::Fourier<X>>,
             ddc::PeriodicSampling<ddc::Fourier<Y>>> const k_mesh

@@ -599,13 +599,11 @@ typename ddc::PeriodicSampling<ddc::Fourier<X>>::template Impl<Kokkos::HostSpace
 
 namespace ddc {
 
-template <typename... X>
-void init_fourier_space(ddc::DiscreteDomain<ddc::UniformPointSampling<X>...> x_mesh)
+template <typename X>
+void init_fourier_space(ddc::DiscreteDomain<ddc::UniformPointSampling<X>> x_mesh)
 {
-    return (ddc::init_discrete_space<ddc::PeriodicSampling<ddc::Fourier<X>>>(
-                    ddc::detail::fft::FourierSampling(
-                            ddc::select<ddc::UniformPointSampling<X>>(x_mesh))),
-            ...);
+    return ddc::init_discrete_space<ddc::PeriodicSampling<ddc::Fourier<X>>>(
+            ddc::detail::fft::FourierSampling(x_mesh));
 }
 
 // FourierMesh, first element corresponds to mode 0

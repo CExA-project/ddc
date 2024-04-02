@@ -42,7 +42,7 @@ static void test_fft()
                                              init(ddc::Coordinate<X>(a + (b - a) / Nx / 2),
                                                   ddc::Coordinate<X>(b - (b - a) / Nx / 2),
                                                   DVect<DDim<X>>(Nx)))...);
-    ddc::init_fourier_space<X...>(x_mesh);
+    (ddc::init_fourier_space(ddc::DiscreteDomain<DDim<X>>(x_mesh)), ...);
     DDom<DFDim<ddc::Fourier<X>>...> const k_mesh = ddc::FourierMesh(x_mesh, full_fft);
 
     ddc::Chunk f_alloc(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());

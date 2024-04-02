@@ -124,7 +124,7 @@ $(document).ready(function(){initNavTree('matrix__sparse_8hpp_source.html',''); 
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#ifdef KOKKOS_ENABLE_OPENMP</span></div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordflow">if</span> (std::is_same_v&lt;ExecSpace, Kokkos::OpenMP&gt;) {</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordflow">return</span> 32u;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordflow">return</span> 1u;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="preprocessor">#ifdef KOKKOS_ENABLE_CUDA</span></div>
@@ -151,7 +151,7 @@ $(document).ready(function(){initNavTree('matrix__sparse_8hpp_source.html',''); 
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::shared_ptr&lt;matrix_sparse_type&gt; m_matrix_sparse;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    std::shared_ptr&lt;gko::solver::Bicgstab&lt;double&gt;&gt; m_solver;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    std::shared_ptr&lt;gko::solver::Gmres&lt;double&gt;&gt; m_solver;</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    std::shared_ptr&lt;gko::LinOp&gt; m_solver_tr;</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keywordtype">int</span> m_cols_per_chunk; <span class="comment">// Maximum number of columns of B to be passed to a Ginkgo solver</span></div>
@@ -199,7 +199,7 @@ $(document).ready(function(){initNavTree('matrix__sparse_8hpp_source.html',''); 
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="comment">// Create the solver factory</span></div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        std::shared_ptr <span class="keyword">const</span> residual_criterion</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                = gko::stop::ResidualNorm&lt;double&gt;::build().with_reduction_factor(1e-19).on(</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                = gko::stop::ResidualNorm&lt;double&gt;::build().with_reduction_factor(1e-16).on(</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                        gko_exec);</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        std::shared_ptr <span class="keyword">const</span> iterations_criterion</div>
@@ -211,7 +211,7 @@ $(document).ready(function(){initNavTree('matrix__sparse_8hpp_source.html',''); 
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                          .on(gko_exec);</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        std::unique_ptr <span class="keyword">const</span> solver_factory</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                = gko::solver::Bicgstab&lt;double&gt;::build()</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                = gko::solver::Gmres&lt;double&gt;::build()</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                          .with_preconditioner(preconditioner)</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                          .with_criteria(residual_criterion, iterations_criterion)</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                          .on(gko_exec);</div>

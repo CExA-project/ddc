@@ -44,6 +44,18 @@ struct ToTypeSeq<DiscreteDomain<Tags...>>
     using type = TypeSeq<Tags...>;
 };
 
+template <class T>
+struct ConvertTypeSeqToDiscreteDomain;
+
+template <class... DDims>
+struct ConvertTypeSeqToDiscreteDomain<detail::TypeSeq<DDims...>>
+{
+    using type = DiscreteDomain<DDims...>;
+};
+
+template <class T>
+using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDomain<T>::type;
+
 } // namespace detail
 
 template <class... DDims>
@@ -165,6 +177,15 @@ public:
     KOKKOS_FUNCTION constexpr DiscreteDomain remove(mlength_type n1, mlength_type n2) const
     {
         return DiscreteDomain(front() + n1, extents() - n1 - n2);
+    }
+
+    // Computes the substraction DDom - ODDom in the sense of linear spaces(retained dimensions are those in DDom which are not in ODDom)
+    template <class... ODDims>
+    KOKKOS_FUNCTION constexpr auto remove_dims_from(
+            [[maybe_unused]] DiscreteDomain<ODDims...> const& ODDom)
+    {
+        using type_seq_r = type_seq_remove_t<detail::TypeSeq<DDims...>, detail::TypeSeq<ODDims...>>;
+        return detail::convert_type_seq_to_discrete_domain<type_seq_r>(*this);
     }
 
     template <class... ODDims>
@@ -345,6 +366,14 @@ public:
         return *this;
     }
 
+    // Computes the substraction DDom - ODDom in the sense of linear spaces(retained dimensions are those in DDom which are not in ODDom)
+    template <class... ODDims>
+    KOKKOS_FUNCTION constexpr auto remove_dims_from(
+            [[maybe_unused]] DiscreteDomain<ODDims...> const& ODDom) noexcept
+    {
+        return *this;
+    }
+
     template <class... ODims>
     KOKKOS_FUNCTION constexpr DiscreteDomain restrict(DiscreteDomain<ODims...> const&) const
     {
@@ -370,22 +399,6 @@ KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> select(
             select<QueryDDims...>(domain.front()),
             select<QueryDDims...>(domain.extents()));
 }
-
-namespace detail {
-
-template <class T>
-struct ConvertTypeSeqToDiscreteDomain;
-
-template <class... DDims>
-struct ConvertTypeSeqToDiscreteDomain<detail::TypeSeq<DDims...>>
-{
-    using type = DiscreteDomain<DDims...>;
-};
-
-template <class T>
-using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDomain<T>::type;
-
-} // namespace detail
 
 // Computes the cartesian product of DiscreteDomain types
 // Example usage : "using DDom = cartesian_prod_t<DDom1,DDom2,DDom3>;"
@@ -413,20 +426,6 @@ struct cartesian_prod<DDom1, DDom2, Tail...>
 
 template <typename... DDom>
 using cartesian_prod_t = typename cartesian_prod<DDom...>::type;
-
-// Computes the substraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
-template <class... DDimsA, class... DDimsB>
-KOKKOS_FUNCTION constexpr auto remove_dims_of(
-        DiscreteDomain<DDimsA...> const& DDom_a,
-        [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
-{
-    using TagSeqA = detail::TypeSeq<DDimsA...>;
-    using TagSeqB = detail::TypeSeq<DDimsB...>;
-
-    using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
-    return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
-}
-
 
 // Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be usefull in its own, it helps for replace_dim_of
 template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>

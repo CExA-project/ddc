@@ -232,7 +232,7 @@ public:
 
     batch_domain_type batch_domain() const noexcept
     {
-        return ddc::remove_dims_of(vals_domain(), interpolation_domain());
+        return vals_domain().remove_dims_from(interpolation_domain());
     }
 
     ddc::DiscreteDomain<bsplines_type> bsplines_domain() const noexcept // TODO : clarify name

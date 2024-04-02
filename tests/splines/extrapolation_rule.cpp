@@ -360,12 +360,9 @@ static void ExtrapolationRuleSplineTest()
 #if defined(ER_NULL)
                 return Kokkos::abs(spline_eval(e));
 #elif defined(ER_CONSTANT)
-                typename decltype(ddc::remove_dims_of(
-                        vals.domain(),
-                        vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type
+                typename decltype(vals.domain().remove_dims_from(vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type
                         e_without_interest(e);
-                typename decltype(ddc::remove_dims_of(
-                        vals.domain(),
+                typename decltype(vals.domain().remove_dims_from(
                         vals.template domain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>()))::
                         discrete_element_type e_batch(e);
                 double tmp;

@@ -288,7 +288,7 @@ $(document).ready(function(){initNavTree('chunk__common_8hpp_source.html',''); i
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a763c486cd61510130c12744bbfd90b1e">  277</a></span>    KOKKOS_FUNCTION <span class="keyword">constexpr</span> ElementType* <a class="code hl_function" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a763c486cd61510130c12744bbfd90b1e">data_handle</a>()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        ElementType* <span class="keyword">const</span> ptr = m_internal_mdspan.data_handle();</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        ElementType* ptr = m_internal_mdspan.data_handle();</div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        <span class="keywordflow">if</span> (!m_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a4c7cbb4a86785bc239c235fa6c8d1e37">empty</a>()) {</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>            ptr += m_internal_mdspan.mapping()(front&lt;DDims&gt;(m_domain).uid()...);</div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        }</div>

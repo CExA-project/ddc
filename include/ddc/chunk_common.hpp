@@ -276,7 +276,7 @@ protected:
      */
     KOKKOS_FUNCTION constexpr ElementType* data_handle() const
     {
-        ElementType* const ptr = m_internal_mdspan.data_handle();
+        ElementType* ptr = m_internal_mdspan.data_handle();
         if (!m_domain.empty()) {
             ptr += m_internal_mdspan.mapping()(front<DDims>(m_domain).uid()...);
         }

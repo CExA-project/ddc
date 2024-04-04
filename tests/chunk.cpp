@@ -281,6 +281,20 @@ TEST(Chunk1DTest, RankDynamic)
     EXPECT_EQ(ChunkX<double>::rank_dynamic(), 1);
 }
 
+TEST(Chunk1DTest, NullExtents)
+{
+    DDomX dom(lbound_x, DVectX(0));
+    ChunkX<double> const chunk(dom);
+    EXPECT_EQ(chunk.extents(), DVectX(0));
+}
+
+TEST(Chunk1DTest, NullExtent)
+{
+    DDomX dom(lbound_x, DVectX(0));
+    ChunkX<double> const chunk(dom);
+    EXPECT_EQ(chunk.extent<DDimX>(), DVectX(0));
+}
+
 TEST(Chunk1DTest, Extents)
 {
     ChunkX<double> const chunk(dom_x);

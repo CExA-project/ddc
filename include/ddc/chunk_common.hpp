@@ -156,16 +156,13 @@ public:
 
     KOKKOS_FUNCTION constexpr DiscreteVector<DDims...> extents() const noexcept
     {
-        return DiscreteVector<DDims...>(
-                (m_internal_mdspan.extent(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)
-                 - front<DDims>(m_domain).uid())...);
+        return m_domain.extents();
     }
 
     template <class QueryDDim>
     KOKKOS_FUNCTION constexpr size_type extent() const noexcept
     {
-        return m_internal_mdspan.extent(type_seq_rank_v<QueryDDim, detail::TypeSeq<DDims...>>)
-               - front<QueryDDim>(m_domain).uid();
+        return m_domain.template extent<QueryDDim>();
     }
 
     KOKKOS_FUNCTION constexpr size_type size() const noexcept
@@ -244,7 +241,7 @@ protected:
         , m_domain(domain)
     {
         // Handle the case where an allocation of size 0 returns a nullptr.
-        assert((domain.size() == 0) || ((ptr != nullptr) && (domain.size() != 0)));
+        assert(domain.empty() || ((ptr != nullptr) && !domain.empty()));
     }
 
     /** Constructs a new ChunkCommon by copy, yields a new view to the same data

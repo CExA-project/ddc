@@ -199,7 +199,7 @@ $(document).ready(function(){initNavTree('matrix__sparse_8hpp_source.html',''); 
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="comment">// Create the solver factory</span></div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        std::shared_ptr <span class="keyword">const</span> residual_criterion</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                = gko::stop::ResidualNorm&lt;double&gt;::build().with_reduction_factor(1e-16).on(</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                = gko::stop::ResidualNorm&lt;double&gt;::build().with_reduction_factor(1e-15).on(</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                        gko_exec);</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        std::shared_ptr <span class="keyword">const</span> iterations_criterion</div>

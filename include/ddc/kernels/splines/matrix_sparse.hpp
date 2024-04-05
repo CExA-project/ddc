@@ -104,7 +104,7 @@ class Matrix_Sparse : public Matrix
             gko::solver::Gmres<double>,
             gko::solver::Bicgstab<double>>;
 #else
-    using solver_type = std::shared_ptr<gko::solver::Gmres<double>>;
+    using solver_type = gko::solver::Bicgstab<double>;
 #endif
 
 

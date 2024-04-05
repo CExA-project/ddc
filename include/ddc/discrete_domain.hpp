@@ -427,7 +427,7 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
     return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
 }
 
-// Computes the substraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
+// Remove the dimensions DDimsB from DDom_a
 template <class... DDimsB, class DDomA>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(DDomA const& DDom_a) noexcept
 {

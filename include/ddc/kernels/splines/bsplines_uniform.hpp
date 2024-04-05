@@ -10,7 +10,6 @@
 
 #include <ddc/ddc.hpp>
 
-#include "bspline.hpp"
 #include "math_tools.hpp"
 #include "view.hpp"
 
@@ -45,8 +44,6 @@ public:
 
 public:
     using tag_type = Tag;
-
-    using continuous_dimension_type = BSpline<Tag>;
 
 
     using discrete_dimension_type = UniformBSplines;
@@ -107,7 +104,7 @@ public:
          *
          * @param rmin    the real ddc::coordinate of the first knot
          * @param rmax    the real ddc::coordinate of the last knot
-         * @param n_knots the number of knots
+         * @param ncells the number of cells in the range [rmin, rmax]
          */
         explicit Impl(ddc::Coordinate<Tag> rmin, ddc::Coordinate<Tag> rmax, std::size_t ncells)
             : m_domain(

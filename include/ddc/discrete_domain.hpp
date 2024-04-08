@@ -427,7 +427,9 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
     return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
 }
 
-// Remove the dimensions DDimsB from DDom_a
+//! Remove the dimensions DDimsB from DDom_a
+//! @param[in] DDom_a The discrete domain on which to remove dimensions
+//! @return The discrete domain without DDimsB dimensions
 template <class... DDimsB, class DDomA>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(DDomA const& DDom_a) noexcept
 {

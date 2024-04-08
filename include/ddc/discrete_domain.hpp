@@ -431,11 +431,11 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
 template <class... DDimsB, class DDomA>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(DDomA const& DDom_a) noexcept
 {
-    return remove_dims_of(
-            DDom_a,
-            ddc::DiscreteDomain<DDimsB...>(
-                    ddc::DiscreteElement<DDimsB...>(ddc::DiscreteElement<DDimsB>(0)...),
-                    ddc::DiscreteVector<DDimsB...>(ddc::DiscreteVector<DDimsB>(0)...)));
+    using TagSeqA = typename detail::ToTypeSeq<DDomA>::type;
+    using TagSeqB = detail::TypeSeq<DDimsB...>;
+
+    using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
+    return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
 }
 
 // Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be usefull in its own, it helps for replace_dim_of

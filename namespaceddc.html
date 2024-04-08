@@ -367,6 +367,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a8c5099ed1365bf973383b84302b8228b"><td class="memTemplParams" colspan="2">template&lt;class... DDimsA, class... DDimsB&gt; </td></tr>
 <tr class="memitem:a8c5099ed1365bf973383b84302b8228b"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8c5099ed1365bf973383b84302b8228b">remove_dims_of</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsA... &gt; const &amp;DDom_a, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;DDom_b) noexcept</td></tr>
 <tr class="separator:a8c5099ed1365bf973383b84302b8228b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7197d9ff102e113319536b520944a024"><td class="memTemplParams" colspan="2">template&lt;class... DDimsB, class DDomA &gt; </td></tr>
+<tr class="memitem:a7197d9ff102e113319536b520944a024"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a7197d9ff102e113319536b520944a024">remove_dims_of</a> (DDomA const &amp;DDom_a) noexcept</td></tr>
+<tr class="memdesc:a7197d9ff102e113319536b520944a024"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the dimensions DDimsB from DDom_a.  <a href="namespaceddc.html#a7197d9ff102e113319536b520944a024">More...</a><br /></td></tr>
+<tr class="separator:a7197d9ff102e113319536b520944a024"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a760aead7b4c146ae0624cb28967c9d47"><td class="memTemplParams" colspan="2">template&lt;typename DDim1 , typename DDim2 , typename DDimA , typename... DDimsB&gt; </td></tr>
 <tr class="memitem:a760aead7b4c146ae0624cb28967c9d47"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr std::conditional_t&lt; std::is_same_v&lt; DDimA, DDim1 &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; DDim2 &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; DDimA &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a760aead7b4c146ae0624cb28967c9d47">replace_dim_of_1d</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimA &gt; const &amp;DDom_a, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; const &amp;DDom_b) noexcept</td></tr>
 <tr class="separator:a760aead7b4c146ae0624cb28967c9d47"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2039,7 +2043,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </div>
 </div>
 <a id="a8c5099ed1365bf973383b84302b8228b" name="a8c5099ed1365bf973383b84302b8228b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c5099ed1365bf973383b84302b8228b">&#9670;&nbsp;</a></span>remove_dims_of()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c5099ed1365bf973383b84302b8228b">&#9670;&nbsp;</a></span>remove_dims_of() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2073,6 +2077,43 @@ template&lt;class... DDimsA, class... DDimsB&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7197d9ff102e113319536b520944a024" name="a7197d9ff102e113319536b520944a024"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7197d9ff102e113319536b520944a024">&#9670;&nbsp;</a></span>remove_dims_of() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... DDimsB, class DDomA &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION constexpr auto ddc::remove_dims_of </td>
+          <td>(</td>
+          <td class="paramtype">DDomA const &amp;&#160;</td>
+          <td class="paramname"><em>DDom_a</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Remove the dimensions DDimsB from DDom_a. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">DDom_a</td><td>The discrete domain on which to remove dimensions </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The discrete domain without DDimsB dimensions </dd></dl>
 
 </div>
 </div>

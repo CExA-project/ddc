@@ -31,18 +31,6 @@ class KnotsAsInterpolationPoints
 
     using tag_type = typename BSplines::tag_type;
 
-    template <class Sampling>
-    struct IntermediateUniformSampling
-        : UniformPointSampling<typename Sampling::continuous_dimension_type>
-    {
-    };
-
-    template <class Sampling>
-    struct IntermediateNonUniformSampling
-        : NonUniformPointSampling<typename Sampling::continuous_dimension_type>
-    {
-    };
-
 public:
     /**
      * Get the sampling of interpolation points.

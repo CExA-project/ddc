@@ -378,10 +378,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
                 d += a(k, s2) * ndu(pk, r);
             }
             derivs(r, k) = d;
-            // swap s1 <-> s2
-            auto tmp = s1;
-            s1 = s2;
-            s2 = tmp;
+            Kokkos::kokkos_swap(s1, s2);
         }
     }
 

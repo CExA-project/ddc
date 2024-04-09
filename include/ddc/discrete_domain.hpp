@@ -440,6 +440,8 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(DDomA const& DDom_a) noexcept
     return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
 }
 
+namespace detail {
+
 // Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be usefull in its own, it helps for replace_dim_of
 template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>
 KOKKOS_FUNCTION constexpr std::conditional_t<
@@ -457,6 +459,8 @@ replace_dim_of_1d(
     }
 }
 
+} // namespace detail
+
 // Replace in DDom_a the dimension Dim1 by the dimension Dim2 of DDom_b
 template <typename DDim1, typename DDim2, typename... DDimsA, typename... DDimsB>
 KOKKOS_FUNCTION constexpr auto replace_dim_of(
@@ -470,7 +474,7 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
 
     using type_seq_r = ddc::type_seq_replace_t<TagSeqA, TagSeqB, TagSeqC>;
     return ddc::detail::convert_type_seq_to_discrete_domain<type_seq_r>(
-            replace_dim_of_1d<
+            detail::replace_dim_of_1d<
                     DDim1,
                     DDim2,
                     DDimsA,

@@ -255,7 +255,7 @@ public:
         return 0;
     }
 
-    constexpr DiscreteDomain() = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteDomain() = default;
 
     // Construct a DiscreteDomain from a reordered copy of `domain`
     template <class... ODDims>

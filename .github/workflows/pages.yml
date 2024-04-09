@@ -160,7 +160,7 @@ jobs:
         chmod a+rwx docs_out
         docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
     - name: Publish site
-      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true' }}
+      if: ${{ needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |
         git fetch origin gh-pages
         git worktree add -B gh-pages public remotes/origin/gh-pages

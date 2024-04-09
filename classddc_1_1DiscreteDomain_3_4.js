@@ -2,7 +2,7 @@ var classddc_1_1DiscreteDomain_3_4 =
 [
     [ "discrete_element_type", "classddc_1_1DiscreteDomain_3_4.html#ac6f1a7e713905c16e7e0ffd150b880db", null ],
     [ "mlength_type", "classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1", null ],
-    [ "DiscreteDomain", "classddc_1_1DiscreteDomain_3_4.html#ac4a9442511e235128e7babb1d9f46fbc", null ],
+    [ "DiscreteDomain", "classddc_1_1DiscreteDomain_3_4.html#a69b586355263da95e58f66aca6af8189", null ],
     [ "DiscreteDomain", "classddc_1_1DiscreteDomain_3_4.html#ac795d5473e93b3b62eb4ad092db407cf", null ],
     [ "DiscreteDomain", "classddc_1_1DiscreteDomain_3_4.html#ae6952f0ba62d1fe2e4f4975d2a0673b5", null ],
     [ "DiscreteDomain", "classddc_1_1DiscreteDomain_3_4.html#a547922efbd0952867dd7fec9d88f1a5a", null ],

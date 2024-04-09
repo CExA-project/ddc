@@ -19,8 +19,6 @@ add_executable(ddc_tests
     type_seq.cpp
     uniform_point_sampling.cpp
     transform_reduce.cpp
-    rectilinear_domain.cpp
-    uniform_domain.cpp
     for_each.cpp
     parallel_fill.cpp
     discrete_element.cpp

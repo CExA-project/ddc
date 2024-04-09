@@ -278,18 +278,4 @@ KOKKOS_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<UniformPointSampling<CDi
     return rmax(d) - rmin(d);
 }
 
-template <class T>
-struct is_uniform_domain : std::false_type
-{
-};
-
-template <class... DDims>
-struct is_uniform_domain<DiscreteDomain<DDims...>>
-    : std::conditional_t<(is_uniform_sampling_v<DDims> && ...), std::true_type, std::false_type>
-{
-};
-
-template <class T>
-constexpr bool is_uniform_domain_v = is_uniform_domain<T>::value;
-
 } // namespace ddc

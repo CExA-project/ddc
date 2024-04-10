@@ -306,18 +306,4 @@ KOKKOS_FUNCTION Coordinate<CDim> rlength(DiscreteDomain<PeriodicSampling<CDim>> 
     return rmax(d) - rmin(d);
 }
 
-template <class T>
-struct is_periodic_domain : std::false_type
-{
-};
-
-template <class... DDims>
-struct is_periodic_domain<DiscreteDomain<DDims...>>
-    : std::conditional_t<(is_periodic_sampling_v<DDims> && ...), std::true_type, std::false_type>
-{
-};
-
-template <class T>
-constexpr bool is_periodic_domain_v = is_periodic_domain<T>::value;
-
 } // namespace ddc

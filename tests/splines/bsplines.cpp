@@ -48,7 +48,9 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnity_Uniform)
     static constexpr std::size_t ncells = TestFixture::ncells;
     ddc::init_discrete_space<ddc::UniformBSplines<DimX, degree>>(xmin, xmax, ncells);
 
-    std::array<double, degree + 1> values;
+    std::array<double, degree + 1> values_ptr;
+    std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
+            values(values_ptr.data());
 
     std::size_t const n_test_points = ncells * 30;
     double const dx = (xmax - xmin) / (n_test_points - 1);
@@ -58,7 +60,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnity_Uniform)
         ddc::discrete_space<ddc::UniformBSplines<DimX, degree>>().eval_basis(values, test_point);
         double sum = 0.0;
         for (std::size_t j(0); j < degree + 1; ++j) {
-            sum += values[j];
+            sum += values(j);
         }
         EXPECT_LE(fabs(sum - 1.0), 1.0e-15);
     }
@@ -79,7 +81,10 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnity_NonUniform)
     }
     ddc::init_discrete_space<ddc::NonUniformBSplines<DimX, degree>>(breaks);
 
-    std::array<double, degree + 1> values;
+    std::array<double, degree + 1> values_ptr;
+    std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
+            values(values_ptr.data());
+
 
     std::size_t n_test_points = ncells * 30;
     dx = (xmax - xmin) / (n_test_points - 1);
@@ -89,7 +94,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnity_NonUniform)
         ddc::discrete_space<ddc::NonUniformBSplines<DimX, degree>>().eval_basis(values, test_point);
         double sum = 0.0;
         for (std::size_t j(0); j < degree + 1; ++j) {
-            sum += values[j];
+            sum += values(j);
         }
         EXPECT_LE(fabs(sum - 1.0), 1.0e-15);
     }

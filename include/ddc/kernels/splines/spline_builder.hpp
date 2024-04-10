@@ -356,7 +356,11 @@ int SplineBuilder<
     int offset;
     if constexpr (bsplines_type::is_periodic()) {
         // Calculate offset so that the matrix is diagonally dominant
-        std::array<double, bsplines_type::degree() + 1> values;
+        std::array<double, bsplines_type::degree() + 1> values_ptr;
+        std::experimental::mdspan<
+                double,
+                std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
+                values(values_ptr.data());
         ddc::DiscreteElement<interpolation_mesh_type> start(interpolation_domain.front());
         auto jmin = ddc::discrete_space<BSplines>()
                             .eval_basis(values, ddc::coordinate(start + BSplines::degree()));
@@ -364,7 +368,7 @@ int SplineBuilder<
             offset = jmin.uid() - start.uid() + bsplines_type::degree() / 2 - BSplines::degree();
         } else {
             int const mid = bsplines_type::degree() / 2;
-            offset = jmin.uid() - start.uid() + (values[mid] > values[mid + 1] ? mid : mid + 1)
+            offset = jmin.uid() - start.uid() + (values(mid) > values(mid + 1) ? mid : mid + 1)
                      - BSplines::degree();
         }
     } else {
@@ -561,7 +565,12 @@ void SplineBuilder<
     }
 
     // Interpolation points
-    std::array<double, bsplines_type::degree() + 1> values;
+    std::array<double, bsplines_type::degree() + 1> values_ptr;
+    std::experimental::mdspan<
+            double,
+            std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
+            values(values_ptr.data());
+
     int start = interpolation_domain().front().uid();
     ddc::for_each(interpolation_domain(), [&](auto ix) {
         auto jmin = ddc::discrete_space<BSplines>().eval_basis(
@@ -571,7 +580,7 @@ void SplineBuilder<
             int const j = ddc::detail::
                     modulo(int(jmin.uid() - m_offset + s),
                            (int)ddc::discrete_space<BSplines>().nbasis());
-            matrix->set_element(ix.uid() - start + s_nbc_xmin, j, values[s]);
+            matrix->set_element(ix.uid() - start + s_nbc_xmin, j, values(s));
         }
     });
 

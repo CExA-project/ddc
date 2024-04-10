@@ -130,13 +130,14 @@ public:
         Impl& operator=(Impl&& x) = default;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(std::array<double, D + 1>& values, ddc::Coordinate<Tag> const& x) const
+        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
         {
+            assert(values.size() == degree() + 1);
             return eval_basis(values, x, degree());
         }
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const;
+        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
@@ -211,11 +212,8 @@ public:
             return 1.0 / ddc::step<mesh_type>();
         }
 
-        template <std::size_t Size>
-        KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
-                std::array<double, Size>& values,
-                ddc::Coordinate<Tag> const& x,
-                std::size_t degree) const;
+        KOKKOS_INLINE_FUNCTION discrete_element_type
+        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x, std::size_t degree) const;
 
         KOKKOS_INLINE_FUNCTION void get_icell_and_offset(
                 int& icell,
@@ -226,14 +224,13 @@ public:
 
 template <class Tag, std::size_t D>
 template <class MemorySpace>
-template <std::size_t Size>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::
         Impl<MemorySpace>::eval_basis(
-                std::array<double, Size>& values,
+                DSpan1D values,
                 ddc::Coordinate<Tag> const& x,
                 [[maybe_unused]] std::size_t const deg) const
 {
-    assert(values.size() == deg + 1);
+    assert(values.size() == D + 1);
 
     double offset;
     int jmin;
@@ -244,7 +241,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
     // 3. Compute values of aforementioned B-splines
     double xx, temp, saved;
     values[0] = 1.0;
-    for (std::size_t j = 1; j < Size; ++j) {
+    for (std::size_t j = 1; j < values.size(); ++j) {
         xx = -offset;
         saved = 0.0;
         for (std::size_t r = 0; r < j; ++r) {
@@ -262,10 +259,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
 template <class Tag, std::size_t D>
 template <class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::Impl<
-        MemorySpace>::eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x)
-        const
+        MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const
 {
-    assert(derivs.size() == degree() + 1);
+    assert(values.size() == D + 1);
 
     double offset;
     int jmin;
@@ -476,7 +472,7 @@ UniformBSplines<Tag, D>::Impl<MemorySpace>::integrals(
                 mdspan<double, std::experimental::extents<std::size_t, degree() + 2>> const
                         edge_vals(edge_vals_ptr.data());
 
-        eval_basis(edge_vals_ptr, rmin(), degree() + 1);
+        eval_basis(edge_vals, rmin(), degree() + 1);
 
         double const d_eval = ddc::detail::sum(edge_vals);
 

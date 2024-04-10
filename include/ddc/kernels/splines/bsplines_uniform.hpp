@@ -240,17 +240,17 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
 
     // 3. Compute values of aforementioned B-splines
     double xx, temp, saved;
-    values[0] = 1.0;
+    values(0) = 1.0;
     for (std::size_t j = 1; j < values.size(); ++j) {
         xx = -offset;
         saved = 0.0;
         for (std::size_t r = 0; r < j; ++r) {
             xx += 1;
-            temp = values[r] / j;
-            values[r] = saved + xx * temp;
+            temp = values(r) / j;
+            values(r) = saved + xx * temp;
             saved = (j - xx) * temp;
         }
-        values[j] = saved;
+        values(j) = saved;
     }
 
     return discrete_element_type(jmin);
@@ -261,8 +261,6 @@ template <class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::Impl<
         MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const
 {
-    assert(values.size() == D + 1);
-
     double offset;
     int jmin;
     // 1. Compute cell index 'icell' and x_offset
@@ -272,29 +270,29 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
     // 3. Compute derivatives of aforementioned B-splines
     //    Derivatives are normalized, hence they should be divided by dx
     double xx, temp, saved;
-    derivs[0] = 1.0 / ddc::step<mesh_type>();
+    derivs(0) = 1.0 / ddc::step<mesh_type>();
     for (std::size_t j = 1; j < degree(); ++j) {
         xx = -offset;
         saved = 0.0;
         for (std::size_t r = 0; r < j; ++r) {
             xx += 1.0;
-            temp = derivs[r] / j;
-            derivs[r] = saved + xx * temp;
+            temp = derivs(r) / j;
+            derivs(r) = saved + xx * temp;
             saved = (j - xx) * temp;
         }
-        derivs[j] = saved;
+        derivs(j) = saved;
     }
 
     // Compute derivatives
     double bjm1 = derivs[0];
     double bj = bjm1;
-    derivs[0] = -bjm1;
+    derivs(0) = -bjm1;
     for (std::size_t j = 1; j < degree(); ++j) {
-        bj = derivs[j];
-        derivs[j] = bjm1 - bj;
+        bj = derivs(j);
+        derivs(j) = bjm1 - bj;
         bjm1 = bj;
     }
-    derivs[degree()] = bj;
+    derivs(degree()) = bj;
 
     return discrete_element_type(jmin);
 }

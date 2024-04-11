@@ -58,6 +58,15 @@ $(document).ready(function(){initNavTree('classddc_1_1UniformPointSampling.html'
 
 <p><a class="el" href="classddc_1_1UniformPointSampling.html" title="UniformPointSampling models a uniform discretization of the provided continuous dimension.">UniformPointSampling</a> models a uniform discretization of the provided continuous dimension.  
  <a href="classddc_1_1UniformPointSampling.html#details">More...</a></p>
+<div class="dynheader">
+Inheritance diagram for ddc::UniformPointSampling&lt; CDim &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classddc_1_1UniformPointSampling__inherit__graph.png" border="0" usemap="#addc_1_1UniformPointSampling_3_01CDim_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="addc_1_1UniformPointSampling_3_01CDim_01_4_inherit__map" id="addc_1_1UniformPointSampling_3_01CDim_01_4_inherit__map">
+<area shape="rect" title="UniformPointSampling models a uniform discretization of the provided continuous dimension." alt="" coords="21,131,221,252"/>
+<area shape="rect" href="structddc_1_1UniformPointSamplingBase.html" title=" " alt="" coords="5,5,237,83"/>
+</map>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -72,24 +81,21 @@ Public Types</h2></td></tr>
 <tr class="separator:a161040fcb8674519b2cf03d510883fa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafd7b9d7821182b3a0aa7b1bc8ee4ba1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#aafd7b9d7821182b3a0aa7b1bc8ee4ba1">discrete_dimension_type</a> = <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a></td></tr>
 <tr class="separator:aafd7b9d7821182b3a0aa7b1bc8ee4ba1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17f9fcc43b26fd9b2fd66cae97e6e2f7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#a17f9fcc43b26fd9b2fd66cae97e6e2f7">discrete_element_type</a> = <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a> &gt;</td></tr>
-<tr class="separator:a17f9fcc43b26fd9b2fd66cae97e6e2f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66dbb53b699eaf80dfe79cb611251bb5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a> = <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a> &gt;</td></tr>
-<tr class="separator:a66dbb53b699eaf80dfe79cb611251bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0a1180a553d57102138e3fa4734b642"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a> = <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; <a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a> &gt;</td></tr>
-<tr class="separator:ae0a1180a553d57102138e3fa4734b642"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a9d41e9d3c3bdfe06c2861d41fff50033"><td class="memItemLeft" align="right" valign="top">static std::tuple&lt; <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#a9d41e9d3c3bdfe06c2861d41fff50033">init</a> (<a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a> a, <a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a> b, <a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a> n)</td></tr>
-<tr class="memdesc:a9d41e9d3c3bdfe06c2861d41fff50033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a Impl&lt;Kokkos::HostSpace&gt; and associated discrete_domain_type from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_3.png" width="83" height="14"/> and a number of points <code>n</code>.  <a href="classddc_1_1UniformPointSampling.html#a9d41e9d3c3bdfe06c2861d41fff50033">More...</a><br /></td></tr>
-<tr class="separator:a9d41e9d3c3bdfe06c2861d41fff50033"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a598c738aabda8a778a2e3f0b4c68b94e"><td class="memItemLeft" align="right" valign="top">static std::tuple&lt; <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#a598c738aabda8a778a2e3f0b4c68b94e">init_ghosted</a> (<a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a> a, <a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a> b, <a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a> n, <a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a> n_ghosts_before, <a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a> n_ghosts_after)</td></tr>
-<tr class="memdesc:a598c738aabda8a778a2e3f0b4c68b94e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_3.png" width="83" height="14"/> and a number of points <code>n</code>.  <a href="classddc_1_1UniformPointSampling.html#a598c738aabda8a778a2e3f0b4c68b94e">More...</a><br /></td></tr>
-<tr class="separator:a598c738aabda8a778a2e3f0b4c68b94e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a88d0b80a02fbf5f49f4fd07b165234"><td class="memItemLeft" align="right" valign="top">static std::tuple&lt; <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#a4a88d0b80a02fbf5f49f4fd07b165234">init_ghosted</a> (<a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a> a, <a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a> b, <a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a> n, <a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a> n_ghosts)</td></tr>
-<tr class="memdesc:a4a88d0b80a02fbf5f49f4fd07b165234"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_3.png" width="83" height="14"/> and a number of points <code>n</code>.  <a href="classddc_1_1UniformPointSampling.html#a4a88d0b80a02fbf5f49f4fd07b165234">More...</a><br /></td></tr>
-<tr class="separator:a4a88d0b80a02fbf5f49f4fd07b165234"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28cdba79b1cdbaa0833687d0e5f7de4b"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:a28cdba79b1cdbaa0833687d0e5f7de4b"><td class="memTemplItemLeft" align="right" valign="top">static std::tuple&lt; typename DDim::template <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; DDim, Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#a28cdba79b1cdbaa0833687d0e5f7de4b">init</a> (<a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt; a, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt; b, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt; n)</td></tr>
+<tr class="memdesc:a28cdba79b1cdbaa0833687d0e5f7de4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a Impl&lt;Kokkos::HostSpace&gt; and associated discrete_domain_type from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_3.png" width="83" height="14"/> and a number of points <code>n</code>.  <a href="classddc_1_1UniformPointSampling.html#a28cdba79b1cdbaa0833687d0e5f7de4b">More...</a><br /></td></tr>
+<tr class="separator:a28cdba79b1cdbaa0833687d0e5f7de4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc315e9fe09e69f789d16cf45b38c713"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:afc315e9fe09e69f789d16cf45b38c713"><td class="memTemplItemLeft" align="right" valign="top">static std::tuple&lt; typename DDim::template <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; DDim, Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#afc315e9fe09e69f789d16cf45b38c713">init_ghosted</a> (<a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt; a, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt; b, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt; n, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt; n_ghosts_before, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt; n_ghosts_after)</td></tr>
+<tr class="memdesc:afc315e9fe09e69f789d16cf45b38c713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_3.png" width="83" height="14"/> and a number of points <code>n</code>.  <a href="classddc_1_1UniformPointSampling.html#afc315e9fe09e69f789d16cf45b38c713">More...</a><br /></td></tr>
+<tr class="separator:afc315e9fe09e69f789d16cf45b38c713"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3df74134c8f3bf7029672c69c00ebe6f"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:a3df74134c8f3bf7029672c69c00ebe6f"><td class="memTemplItemLeft" align="right" valign="top">static std::tuple&lt; typename DDim::template <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; DDim, Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#a3df74134c8f3bf7029672c69c00ebe6f">init_ghosted</a> (<a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt; a, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt; b, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt; n, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt; n_ghosts)</td></tr>
+<tr class="memdesc:a3df74134c8f3bf7029672c69c00ebe6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_3.png" width="83" height="14"/> and a number of points <code>n</code>.  <a href="classddc_1_1UniformPointSampling.html#a3df74134c8f3bf7029672c69c00ebe6f">More...</a><br /></td></tr>
+<tr class="separator:a3df74134c8f3bf7029672c69c00ebe6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class CDim&gt;<br />
@@ -143,82 +149,36 @@ template&lt;class CDim &gt; </div>
 
 </div>
 </div>
-<a id="a17f9fcc43b26fd9b2fd66cae97e6e2f7" name="a17f9fcc43b26fd9b2fd66cae97e6e2f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17f9fcc43b26fd9b2fd66cae97e6e2f7">&#9670;&nbsp;</a></span>discrete_element_type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class CDim &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; CDim &gt;::discrete_element_type =  <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;<a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a66dbb53b699eaf80dfe79cb611251bb5" name="a66dbb53b699eaf80dfe79cb611251bb5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66dbb53b699eaf80dfe79cb611251bb5">&#9670;&nbsp;</a></span>discrete_domain_type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class CDim &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; CDim &gt;::discrete_domain_type =  <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;<a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae0a1180a553d57102138e3fa4734b642" name="ae0a1180a553d57102138e3fa4734b642"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0a1180a553d57102138e3fa4734b642">&#9670;&nbsp;</a></span>discrete_vector_type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class CDim &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; CDim &gt;::discrete_vector_type =  <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;<a class="el" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9d41e9d3c3bdfe06c2861d41fff50033" name="a9d41e9d3c3bdfe06c2861d41fff50033"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d41e9d3c3bdfe06c2861d41fff50033">&#9670;&nbsp;</a></span>init()</h2>
+<a id="a28cdba79b1cdbaa0833687d0e5f7de4b" name="a28cdba79b1cdbaa0833687d0e5f7de4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28cdba79b1cdbaa0833687d0e5f7de4b">&#9670;&nbsp;</a></span>init()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class CDim &gt; </div>
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static std::tuple&lt; <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a> &gt; <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; CDim &gt;::init </td>
+          <td class="memname">static std::tuple&lt; typename DDim::template <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; DDim, Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt; &gt; <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; CDim &gt;::init </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td>
           <td class="paramname"><em>a</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td>
           <td class="paramname"><em>b</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt;&#160;</td>
           <td class="paramname"><em>n</em>&#160;</td>
         </tr>
         <tr>
@@ -246,45 +206,47 @@ template&lt;class CDim &gt; </div>
 
 </div>
 </div>
-<a id="a598c738aabda8a778a2e3f0b4c68b94e" name="a598c738aabda8a778a2e3f0b4c68b94e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a598c738aabda8a778a2e3f0b4c68b94e">&#9670;&nbsp;</a></span>init_ghosted() <span class="overload">[1/2]</span></h2>
+<a id="afc315e9fe09e69f789d16cf45b38c713" name="afc315e9fe09e69f789d16cf45b38c713"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc315e9fe09e69f789d16cf45b38c713">&#9670;&nbsp;</a></span>init_ghosted() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class CDim &gt; </div>
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static std::tuple&lt; <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a> &gt; <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; CDim &gt;::init_ghosted </td>
+          <td class="memname">static std::tuple&lt; typename DDim::template <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; DDim, Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt; &gt; <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; CDim &gt;::init_ghosted </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td>
           <td class="paramname"><em>a</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td>
           <td class="paramname"><em>b</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt;&#160;</td>
           <td class="paramname"><em>n</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt;&#160;</td>
           <td class="paramname"><em>n_ghosts_before</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt;&#160;</td>
           <td class="paramname"><em>n_ghosts_after</em>&#160;</td>
         </tr>
         <tr>
@@ -314,39 +276,41 @@ template&lt;class CDim &gt; </div>
 
 </div>
 </div>
-<a id="a4a88d0b80a02fbf5f49f4fd07b165234" name="a4a88d0b80a02fbf5f49f4fd07b165234"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a88d0b80a02fbf5f49f4fd07b165234">&#9670;&nbsp;</a></span>init_ghosted() <span class="overload">[2/2]</span></h2>
+<a id="a3df74134c8f3bf7029672c69c00ebe6f" name="a3df74134c8f3bf7029672c69c00ebe6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3df74134c8f3bf7029672c69c00ebe6f">&#9670;&nbsp;</a></span>init_ghosted() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class CDim &gt; </div>
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static std::tuple&lt; <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a>, <a class="el" href="classddc_1_1UniformPointSampling.html#a66dbb53b699eaf80dfe79cb611251bb5">discrete_domain_type</a> &gt; <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; CDim &gt;::init_ghosted </td>
+          <td class="memname">static std::tuple&lt; typename DDim::template <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; DDim, Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt; &gt; <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; CDim &gt;::init_ghosted </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td>
           <td class="paramname"><em>a</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#a161040fcb8674519b2cf03d510883fa5">continuous_element_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; CDim &gt;&#160;</td>
           <td class="paramname"><em>b</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt;&#160;</td>
           <td class="paramname"><em>n</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformPointSampling.html#ae0a1180a553d57102138e3fa4734b642">discrete_vector_type</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; DDim &gt;&#160;</td>
           <td class="paramname"><em>n_ghosts</em>&#160;</td>
         </tr>
         <tr>

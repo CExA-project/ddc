@@ -60,27 +60,28 @@ $(document).ready(function(){initNavTree('classddc_1_1KnotsAsInterpolationPoints
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aa368676561cbbd4191d4dc11bff9f13c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#aa368676561cbbd4191d4dc11bff9f13c">interpolation_mesh_type</a> = typename decltype(<a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#a083f07d59c0417c13bc6fca8d96e1549">get_sampling</a>())::discrete_dimension_type</td></tr>
-<tr class="memdesc:aa368676561cbbd4191d4dc11bff9f13c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DDC type of the sampling for the interpolation points.  <a href="classddc_1_1KnotsAsInterpolationPoints.html#aa368676561cbbd4191d4dc11bff9f13c">More...</a><br /></td></tr>
-<tr class="separator:aa368676561cbbd4191d4dc11bff9f13c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ce3529761b15823138f55e97f1f01ce"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#a8ce3529761b15823138f55e97f1f01ce">interpolation_mesh_type</a> = std::conditional_t&lt; <a class="el" href="namespaceddc.html#a20d13e258d90b019d44b38be91885f35">is_uniform_bsplines_v</a>&lt; BSplines &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; tag_type &gt;, <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt; tag_type &gt; &gt;</td></tr>
+<tr class="memdesc:a8ce3529761b15823138f55e97f1f01ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DDC type of the sampling for the interpolation points.  <a href="classddc_1_1KnotsAsInterpolationPoints.html#a8ce3529761b15823138f55e97f1f01ce">More...</a><br /></td></tr>
+<tr class="separator:a8ce3529761b15823138f55e97f1f01ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a083f07d59c0417c13bc6fca8d96e1549"><td class="memTemplParams" colspan="2">template&lt;typename U  = BSplines&gt; </td></tr>
-<tr class="memitem:a083f07d59c0417c13bc6fca8d96e1549"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#a083f07d59c0417c13bc6fca8d96e1549">get_sampling</a> ()</td></tr>
-<tr class="memdesc:a083f07d59c0417c13bc6fca8d96e1549"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the sampling of interpolation points.  <a href="classddc_1_1KnotsAsInterpolationPoints.html#a083f07d59c0417c13bc6fca8d96e1549">More...</a><br /></td></tr>
-<tr class="separator:a083f07d59c0417c13bc6fca8d96e1549"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a126fa3705858b41949b592c1fcbbdc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#aa368676561cbbd4191d4dc11bff9f13c">interpolation_mesh_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#a7a126fa3705858b41949b592c1fcbbdc">get_domain</a> ()</td></tr>
-<tr class="memdesc:a7a126fa3705858b41949b592c1fcbbdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the domain which can be used to access the interpolation points in the sampling.  <a href="classddc_1_1KnotsAsInterpolationPoints.html#a7a126fa3705858b41949b592c1fcbbdc">More...</a><br /></td></tr>
-<tr class="separator:a7a126fa3705858b41949b592c1fcbbdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ae0c5cdb98e9765cd34584d396d9558"><td class="memTemplParams" colspan="2">template&lt;typename Sampling , typename U  = BSplines&gt; </td></tr>
+<tr class="memitem:a2ae0c5cdb98e9765cd34584d396d9558"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#a2ae0c5cdb98e9765cd34584d396d9558">get_sampling</a> ()</td></tr>
+<tr class="memdesc:a2ae0c5cdb98e9765cd34584d396d9558"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the sampling of interpolation points.  <a href="classddc_1_1KnotsAsInterpolationPoints.html#a2ae0c5cdb98e9765cd34584d396d9558">More...</a><br /></td></tr>
+<tr class="separator:a2ae0c5cdb98e9765cd34584d396d9558"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af83a54cf8c032a09d5039ced55563797"><td class="memTemplParams" colspan="2">template&lt;typename Sampling &gt; </td></tr>
+<tr class="memitem:af83a54cf8c032a09d5039ced55563797"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; Sampling &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#af83a54cf8c032a09d5039ced55563797">get_domain</a> ()</td></tr>
+<tr class="memdesc:af83a54cf8c032a09d5039ced55563797"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the domain which can be used to access the interpolation points in the sampling.  <a href="classddc_1_1KnotsAsInterpolationPoints.html#af83a54cf8c032a09d5039ced55563797">More...</a><br /></td></tr>
+<tr class="separator:af83a54cf8c032a09d5039ced55563797"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class BSplines, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax&gt;<br />
 class ddc::KnotsAsInterpolationPoints&lt; BSplines, BcXmin, BcXmax &gt;</div><p >Helper class for the initialisation of the mesh of interpolation points. </p>
 <p >A helper class for the initialisation of the mesh of interpolation points. This class should be used when the interpolation points should be located at the knots of the spline. This is possible with any kind of boundary condition except Greville boundary conditions (as there will not be enough interpolation points). In the case of strongly non-uniform splines this choice may result in a less well conditioned problem, however most mathematical stability results are proven with this choice of interpolation points. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="aa368676561cbbd4191d4dc11bff9f13c" name="aa368676561cbbd4191d4dc11bff9f13c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa368676561cbbd4191d4dc11bff9f13c">&#9670;&nbsp;</a></span>interpolation_mesh_type</h2>
+<a id="a8ce3529761b15823138f55e97f1f01ce" name="a8ce3529761b15823138f55e97f1f01ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ce3529761b15823138f55e97f1f01ce">&#9670;&nbsp;</a></span>interpolation_mesh_type</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -88,7 +89,7 @@ class ddc::KnotsAsInterpolationPoints&lt; BSplines, BcXmin, BcXmax &gt;</div><p 
 template&lt;class BSplines , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html">ddc::KnotsAsInterpolationPoints</a>&lt; BSplines, BcXmin, BcXmax &gt;::interpolation_mesh_type =  typename decltype(<a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#a083f07d59c0417c13bc6fca8d96e1549">get_sampling</a>())::discrete_dimension_type</td>
+          <td class="memname">using <a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html">ddc::KnotsAsInterpolationPoints</a>&lt; BSplines, BcXmin, BcXmax &gt;::interpolation_mesh_type =  std::conditional_t&lt; <a class="el" href="namespaceddc.html#a20d13e258d90b019d44b38be91885f35">is_uniform_bsplines_v</a>&lt;BSplines&gt;, <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;tag_type&gt;, <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt;tag_type&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -98,15 +99,15 @@ template&lt;class BSplines , <a class="el" href="namespaceddc.html#a28f4ae114fe8
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a083f07d59c0417c13bc6fca8d96e1549" name="a083f07d59c0417c13bc6fca8d96e1549"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a083f07d59c0417c13bc6fca8d96e1549">&#9670;&nbsp;</a></span>get_sampling()</h2>
+<a id="a2ae0c5cdb98e9765cd34584d396d9558" name="a2ae0c5cdb98e9765cd34584d396d9558"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ae0c5cdb98e9765cd34584d396d9558">&#9670;&nbsp;</a></span>get_sampling()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class BSplines , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax&gt; </div>
 <div class="memtemplate">
-template&lt;typename U  = BSplines&gt; </div>
+template&lt;typename Sampling , typename U  = BSplines&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -130,19 +131,21 @@ template&lt;typename U  = BSplines&gt; </div>
 
 </div>
 </div>
-<a id="a7a126fa3705858b41949b592c1fcbbdc" name="a7a126fa3705858b41949b592c1fcbbdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a126fa3705858b41949b592c1fcbbdc">&#9670;&nbsp;</a></span>get_domain()</h2>
+<a id="af83a54cf8c032a09d5039ced55563797" name="af83a54cf8c032a09d5039ced55563797"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af83a54cf8c032a09d5039ced55563797">&#9670;&nbsp;</a></span>get_domain()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class BSplines , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax&gt; </div>
+<div class="memtemplate">
+template&lt;typename Sampling &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#aa368676561cbbd4191d4dc11bff9f13c">interpolation_mesh_type</a> &gt; <a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html">ddc::KnotsAsInterpolationPoints</a>&lt; BSplines, BcXmin, BcXmax &gt;::get_domain </td>
+          <td class="memname">static <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; Sampling &gt; <a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html">ddc::KnotsAsInterpolationPoints</a>&lt; BSplines, BcXmin, BcXmax &gt;::get_domain </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>

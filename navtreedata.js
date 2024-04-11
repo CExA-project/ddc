@@ -38,7 +38,7 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classddc_1_1DiscreteVector.html#af8f929d7b9589a21c255c18f5afb6f07",
-"classddc_1_1UniformBSplines_1_1Impl.html#a219fbcef554ce8d99265d545825c18dc"
+"classddc_1_1SplineEvaluator2D.html#aec9d6e77f37a00718b5e6a702fde6a94"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

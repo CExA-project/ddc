@@ -215,11 +215,13 @@ public:
                 m_solver
                         ->apply(to_gko_dense(gko_exec, b_subview),
                                 to_gko_dense(gko_exec, x_subview));
+                m_solver->remove_logger(convergence_logger);
             } else if (transpose == 'T') {
                 m_solver_tr->add_logger(convergence_logger);
                 m_solver_tr
                         ->apply(to_gko_dense(gko_exec, b_subview),
                                 to_gko_dense(gko_exec, x_subview));
+                m_solver_tr->remove_logger(convergence_logger);
             } else {
                 throw std::domain_error("transpose option not recognized");
             }

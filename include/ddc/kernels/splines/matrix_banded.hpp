@@ -42,7 +42,6 @@ protected:
     int const m_ku; // no. of superdiagonals
     int const m_c; // no. of columns in q
     Kokkos::View<int*, Kokkos::HostSpace> m_ipiv; // pivot indices
-    // TODO: double**
     Kokkos::View<double*, Kokkos::HostSpace> m_q; // banded matrix representation
 
 public:

@@ -316,7 +316,7 @@ $(document).ready(function(){initNavTree('spline__builder__2d_8hpp_source.html',
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            <a class="code hl_class" href="classddc_1_1KokkosAllocator.html">ddc::KokkosAllocator&lt;double, MemorySpace&gt;</a>());</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="keyword">auto</span> spline1_deriv_min = spline1_deriv_min_alloc.span_view();</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keyword">auto</span> spline1_deriv_min_opt = std::optional(spline1_deriv_min.span_cview());</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcXmin1 == <a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">ddc::BoundCond::HERMITE</a>) {</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcXmin2 == <a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">ddc::BoundCond::HERMITE</a>) {</div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>        m_spline_builder_deriv1(</div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>                spline1_deriv_min,</div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>                *derivs_min2,</div>
@@ -340,7 +340,7 @@ $(document).ready(function(){initNavTree('spline__builder__2d_8hpp_source.html',
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>            <a class="code hl_class" href="classddc_1_1KokkosAllocator.html">ddc::KokkosAllocator&lt;double, MemorySpace&gt;</a>());</div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="keyword">auto</span> spline1_deriv_max = spline1_deriv_max_alloc.span_view();</div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    <span class="keyword">auto</span> spline1_deriv_max_opt = std::optional(spline1_deriv_max.span_cview());</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcXmax1 == <a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">ddc::BoundCond::HERMITE</a>) {</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcXmax2 == <a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">ddc::BoundCond::HERMITE</a>) {</div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>        m_spline_builder_deriv1(</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>                spline1_deriv_max,</div>
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>                *derivs_max2,</div>

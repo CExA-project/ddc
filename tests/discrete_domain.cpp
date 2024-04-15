@@ -8,19 +8,25 @@
 
 namespace {
 
-struct DDimX;
+struct DDimX
+{
+};
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
 using DDomX = ddc::DiscreteDomain<DDimX>;
 
 
-struct DDimY;
+struct DDimY
+{
+};
 using DElemY = ddc::DiscreteElement<DDimY>;
 using DVectY = ddc::DiscreteVector<DDimY>;
 using DDomY = ddc::DiscreteDomain<DDimY>;
 
 
-struct DDimZ;
+struct DDimZ
+{
+};
 using DElemZ = ddc::DiscreteElement<DDimZ>;
 using DVectZ = ddc::DiscreteVector<DDimZ>;
 using DDomZ = ddc::DiscreteDomain<DDimZ>;
@@ -138,8 +144,10 @@ TEST(ProductMDomainTest, RangeFor)
 TEST(ProductMDomainTest, DiffEmpty)
 {
     DDomX const dom_x = DDomX();
-    auto const subdomain = ddc::remove_dims_of(dom_x, dom_x);
-    EXPECT_EQ(subdomain, ddc::DiscreteDomain<>());
+    auto const subdomain1 = ddc::remove_dims_of(dom_x, dom_x);
+    auto const subdomain2 = ddc::remove_dims_of<DDimX>(dom_x);
+    EXPECT_EQ(subdomain1, ddc::DiscreteDomain<>());
+    EXPECT_EQ(subdomain2, ddc::DiscreteDomain<>());
 }
 
 TEST(ProductMDomainTest, Diff)
@@ -147,8 +155,10 @@ TEST(ProductMDomainTest, Diff)
     DDomX const dom_x = DDomX();
     DDomXY const dom_x_y = DDomXY();
     DDomZY const dom_z_y = DDomZY();
-    auto const subdomain = ddc::remove_dims_of(dom_x_y, dom_z_y);
-    EXPECT_EQ(subdomain, dom_x);
+    auto const subdomain1 = ddc::remove_dims_of(dom_x_y, dom_z_y);
+    auto const subdomain2 = ddc::remove_dims_of<DDimZ, DDimY>(dom_x_y);
+    EXPECT_EQ(subdomain1, dom_x);
+    EXPECT_EQ(subdomain2, dom_x);
 }
 
 TEST(ProductMDomainTest, Replace)
@@ -197,4 +207,30 @@ TEST(ProductMDomainTest, Remove)
     EXPECT_EQ(
             dom_x_y.remove(DVectXY(1, 4), DVectXY(1, 1)),
             DDomXY(dom_x_y.front() + DVectXY(1, 4), dom_x_y.extents() - DVectXY(2, 5)));
+}
+
+TEST(ProductMDomainTest, SliceDomainXTooearly)
+{
+    [[maybe_unused]] DDomX const subdomain_x(lbound_x - 1, nelems_x);
+
+    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
+#ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
+    // the error message is checked with clang & gcc only
+    EXPECT_DEATH(
+            dom_x_y.restrict(subdomain_x),
+            R"rgx([Aa]ssert.*uid<ODDims>\(m_element_begin\).*uid<ODDims>\(odomain\.m_element_begin\))rgx");
+#endif
+}
+
+TEST(ProductMDomainTest, SliceDomainXToolate)
+{
+    [[maybe_unused]] DDomX const subdomain_x(lbound_x, nelems_x + 1);
+
+    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
+#ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
+    // the error message is checked with clang & gcc only
+    EXPECT_DEATH(
+            dom_x_y.restrict(subdomain_x),
+            R"rgx([Aa]ssert.*uid<ODDims>\(m_element_end\).*uid<ODDims>\(odomain\.m_element_end\).*)rgx");
+#endif
 }

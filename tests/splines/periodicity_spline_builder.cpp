@@ -32,18 +32,26 @@ using GrevillePoints = ddc::
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-using BSplines = ddc::UniformBSplines<X, s_degree_x>;
+struct BSplines : ddc::UniformBSplines<X, s_degree_x>
+{
+};
 
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <typename X>
-using IDim = typename GrevillePoints<BSplines<X>>::interpolation_mesh_type;
+struct IDim : GrevillePoints<BSplines<X>>::interpolation_mesh_type
+{
+};
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-using BSplines = ddc::NonUniformBSplines<X, s_degree_x>;
+struct BSplines : ddc::NonUniformBSplines<X, s_degree_x>
+{
+};
 
 template <typename X>
-using IDim = typename GrevillePoints<BSplines<X>>::interpolation_mesh_type;
+struct IDim : GrevillePoints<BSplines<X>>::interpolation_mesh_type
+{
+};
 
 #endif
 template <typename IDimX>
@@ -104,8 +112,8 @@ struct DimsInitializer
                 breaks<typename IDimX::continuous_dimension_type>(ncells));
 #endif
         ddc::init_discrete_space<IDimX>(
-                GrevillePoints<
-                        BSplines<typename IDimX::continuous_dimension_type>>::get_sampling());
+                GrevillePoints<BSplines<typename IDimX::continuous_dimension_type>>::
+                        template get_sampling<IDimX>());
     }
 };
 
@@ -123,8 +131,8 @@ static void PeriodicitySplineBuilderTest()
     dims_initializer(ncells);
 
     // Create the values domain (mesh)
-    ddc::DiscreteDomain<IDim<X>> const dom_vals
-            = ddc::DiscreteDomain<IDim<X>>(GrevillePoints<BSplines<X>>::get_domain());
+    ddc::DiscreteDomain<IDim<X>> const dom_vals = ddc::DiscreteDomain<IDim<X>>(
+            GrevillePoints<BSplines<X>>::template get_domain<IDim<X>>());
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
     ddc::SplineBuilder<
@@ -160,6 +168,7 @@ static void PeriodicitySplineBuilderTest()
     spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
+    ddc::PeriodicExtrapolationRule<X> extrapolation_rule;
     ddc::SplineEvaluator<
             ExecSpace,
             MemorySpace,
@@ -168,10 +177,7 @@ static void PeriodicitySplineBuilderTest()
             ddc::PeriodicExtrapolationRule<X>,
             ddc::PeriodicExtrapolationRule<X>,
             IDim<X>>
-            spline_evaluator(
-                    coef.domain(),
-                    ddc::PeriodicExtrapolationRule<X>(),
-                    ddc::PeriodicExtrapolationRule<X>());
+            spline_evaluator(extrapolation_rule, extrapolation_rule);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());

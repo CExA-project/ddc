@@ -69,24 +69,34 @@ using GrevillePoints = ddc::
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-using BSplines = ddc::UniformBSplines<X, s_degree>;
+struct BSplines : ddc::UniformBSplines<X, s_degree>
+{
+};
 
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <typename X, typename I1, typename I2>
-using IDim = std::conditional_t<
-        std::is_same_v<X, I1> || std::is_same_v<X, I2>,
-        typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
-        ddc::UniformPointSampling<X>>;
+struct IDim
+    : std::conditional_t<
+              std::is_same_v<X, I1> || std::is_same_v<X, I2>,
+              typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
+              ddc::UniformPointSampling<X>>
+{
+};
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-using BSplines = ddc::NonUniformBSplines<X, s_degree>;
+struct BSplines : ddc::NonUniformBSplines<X, s_degree>
+{
+};
 
 template <typename X, typename I1, typename I2>
-using IDim = std::conditional_t<
-        std::is_same_v<X, I1> || std::is_same_v<X, I2>,
-        typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
-        ddc::NonUniformPointSampling<X>>;
+struct IDim
+    : std::conditional_t<
+              std::is_same_v<X, I1> || std::is_same_v<X, I2>,
+              typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
+              ddc::NonUniformPointSampling<X>>
+{
+};
 #endif
 
 #if defined(BC_PERIODIC)
@@ -153,10 +163,10 @@ struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
     void operator()(std::size_t const ncells)
     {
 #if defined(BSPLINES_TYPE_UNIFORM)
-        (ddc::init_discrete_space(IDimX::
-                                          init(x0<typename IDimX::continuous_dimension_type>(),
-                                               xN<typename IDimX::continuous_dimension_type>(),
-                                               DVect<IDimX>(ncells))),
+        (ddc::init_discrete_space<IDimX>(IDimX::template init<IDimX>(
+                 x0<typename IDimX::continuous_dimension_type>(),
+                 xN<typename IDimX::continuous_dimension_type>(),
+                 DVect<IDimX>(ncells))),
          ...);
         ddc::init_discrete_space<BSplines<typename IDimI1::continuous_dimension_type>>(
                 x0<typename IDimI1::continuous_dimension_type>(),
@@ -175,11 +185,11 @@ struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
                 breaks<typename IDimI2::continuous_dimension_type>(ncells));
 #endif
         ddc::init_discrete_space<IDimI1>(
-                GrevillePoints<
-                        BSplines<typename IDimI1::continuous_dimension_type>>::get_sampling());
+                GrevillePoints<BSplines<typename IDimI1::continuous_dimension_type>>::
+                        template get_sampling<IDimI1>());
         ddc::init_discrete_space<IDimI2>(
-                GrevillePoints<
-                        BSplines<typename IDimI2::continuous_dimension_type>>::get_sampling());
+                GrevillePoints<BSplines<typename IDimI2::continuous_dimension_type>>::
+                        template get_sampling<IDimI2>());
     }
 };
 
@@ -201,8 +211,8 @@ static void ExtrapolationRuleSplineTest()
 
     // Create the values domain (mesh)
     auto interpolation_domain = ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(
-            GrevillePoints<BSplines<I1>>::get_domain(),
-            GrevillePoints<BSplines<I2>>::get_domain());
+            GrevillePoints<BSplines<I1>>::template get_domain<IDim<I1, I1, I2>>(),
+            GrevillePoints<BSplines<I2>>::template get_domain<IDim<I2, I1, I2>>());
     auto const dom_vals_tmp = ddc::DiscreteDomain<IDim<X, void, void>...>(
             ddc::DiscreteDomain<IDim<
                     X,
@@ -264,6 +274,33 @@ static void ExtrapolationRuleSplineTest()
     spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
+#if defined(ER_NULL)
+    ddc::NullExtrapolationRule extrapolation_rule_left_dim_1;
+    ddc::NullExtrapolationRule extrapolation_rule_right_dim_1;
+#if defined(BC_PERIODIC)
+    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_left_dim_2;
+    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_right_dim_2;
+#else
+    ddc::NullExtrapolationRule extrapolation_rule_left_dim_2;
+    ddc::NullExtrapolationRule extrapolation_rule_right_dim_2;
+#endif
+#elif defined(ER_CONSTANT)
+#if defined(BC_PERIODIC)
+    ddc::ConstantExtrapolationRule<I1, I2> extrapolation_rule_left_dim_1(x0<I1>());
+    ddc::ConstantExtrapolationRule<I1, I2> extrapolation_rule_right_dim_1(xN<I1>());
+    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_left_dim_2;
+    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_right_dim_2;
+#else
+    ddc::ConstantExtrapolationRule<I1, I2>
+            extrapolation_rule_left_dim_1(x0<I1>(), x0<I2>(), xN<I2>());
+    ddc::ConstantExtrapolationRule<I1, I2>
+            extrapolation_rule_right_dim_1(xN<I1>(), x0<I2>(), xN<I2>());
+    ddc::ConstantExtrapolationRule<I2, I1>
+            extrapolation_rule_left_dim_2(x0<I2>(), x0<I1>(), xN<I1>());
+    ddc::ConstantExtrapolationRule<I2, I1>
+            extrapolation_rule_right_dim_2(xN<I2>(), x0<I1>(), xN<I1>());
+#endif
+#endif
     ddc::SplineEvaluator2D<
             ExecSpace,
             MemorySpace,
@@ -293,31 +330,10 @@ static void ExtrapolationRuleSplineTest()
 
             IDim<X, I1, I2>...>
             spline_evaluator_batched(
-                    coef.domain(),
-#if defined(ER_NULL)
-                    ddc::NullExtrapolationRule(),
-                    ddc::NullExtrapolationRule(),
-#if defined(BC_PERIODIC)
-                    ddc::PeriodicExtrapolationRule<I2>(),
-                    ddc::PeriodicExtrapolationRule<I2>()
-#else
-                    ddc::NullExtrapolationRule(),
-                    ddc::NullExtrapolationRule()
-#endif
-#elif defined(ER_CONSTANT)
-#if defined(BC_PERIODIC)
-                    ddc::ConstantExtrapolationRule<I1, I2>(x0<I1>()),
-                    ddc::ConstantExtrapolationRule<I1, I2>(xN<I1>()),
-                    ddc::PeriodicExtrapolationRule<I2>(),
-                    ddc::PeriodicExtrapolationRule<I2>()
-#else
-                    ddc::ConstantExtrapolationRule<I1, I2>(x0<I1>(), x0<I2>(), xN<I2>()),
-                    ddc::ConstantExtrapolationRule<I1, I2>(xN<I1>(), x0<I2>(), xN<I2>()),
-                    ddc::ConstantExtrapolationRule<I2, I1>(x0<I2>(), x0<I1>(), xN<I1>()),
-                    ddc::ConstantExtrapolationRule<I2, I1>(xN<I2>(), x0<I1>(), xN<I1>())
-#endif
-#endif
-            );
+                    extrapolation_rule_left_dim_1,
+                    extrapolation_rule_right_dim_1,
+                    extrapolation_rule_left_dim_2,
+                    extrapolation_rule_right_dim_2);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
@@ -327,13 +343,13 @@ static void ExtrapolationRuleSplineTest()
             coords_eval.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);
-                // Set coords_eval outside of the domain
+                // Set coords_eval outside of the domain (+1 to ensure left bound is outside domain)
                 ddc::get<I1>(coords_eval(e))
                         = xN<I1>() + (ddc::select<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
-#if defined(BC_GREVILLE)
+                // Set coords_eval outside of the domain (this point should be found on the grid in
+                // the periodic case)
                 ddc::get<I2>(coords_eval(e))
-                        = xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>()) + 1;
-#endif
+                        = 2 * xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>());
             });
 
 
@@ -364,10 +380,16 @@ static void ExtrapolationRuleSplineTest()
                         discrete_element_type e_batch(e);
                 double tmp;
                 if (ddc::select<I2>(coords_eval(e)) > xN<I2>()) {
+#if defined(BC_PERIODIC)
+                    tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
+                            vals.template domain<IDim<I1, I1, I2>>().back(),
+                            e_without_interest));
+#else
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),
                             vals.template domain<IDim<I2, I1, I2>>().back(),
                             e_batch));
+#endif
                 } else {
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),

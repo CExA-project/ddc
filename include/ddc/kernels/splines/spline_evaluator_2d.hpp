@@ -13,6 +13,9 @@
 
 namespace ddc {
 
+/**
+ * @brief Define an evaluator 2D on B-splines.
+ */
 template <
         class ExecSpace,
         class MemorySpace,
@@ -28,11 +31,16 @@ template <
 class SplineEvaluator2D
 {
 private:
-    // Tags to determine what to evaluate
+    /**
+     * @brief Tag to indicate that the value of the spline should be evaluated.
+     */
     struct eval_type
     {
     };
 
+    /**
+     * @brief Tag to indicate that derivative of the spline should be evaluated.
+     */
     struct eval_deriv_type
     {
     };
@@ -47,6 +55,11 @@ public:
 
     using bsplines_type1 = BSplinesType1;
     using bsplines_type2 = BSplinesType2;
+
+    using left_extrapolation_rule_1_type = LeftExtrapolationRule1;
+    using right_extrapolation_rule_1_type = RightExtrapolationRule1;
+    using left_extrapolation_rule_2_type = LeftExtrapolationRule2;
+    using right_extrapolation_rule_2_type = RightExtrapolationRule2;
 
     using interpolation_domain_type1 = ddc::DiscreteDomain<interpolation_mesh_type1>;
     using interpolation_domain_type2 = ddc::DiscreteDomain<interpolation_mesh_type2>;
@@ -78,15 +91,13 @@ public:
 
 
 private:
-    spline_domain_type m_spline_domain;
+    LeftExtrapolationRule1 m_left_extrap_rule_1;
 
-    LeftExtrapolationRule1 m_left1_bc;
+    RightExtrapolationRule1 m_right_extrap_rule_1;
 
-    RightExtrapolationRule1 m_right1_bc;
+    LeftExtrapolationRule2 m_left_extrap_rule_2;
 
-    LeftExtrapolationRule2 m_left2_bc;
-
-    RightExtrapolationRule2 m_right2_bc;
+    RightExtrapolationRule2 m_right_extrap_rule_2;
 
 public:
     static_assert(
@@ -155,49 +166,108 @@ public:
             "RightExtrapolationRule2::operator() has to be callable "
             "with usual arguments.");
 
+    /**
+     * @brief Instantiate an evaluator operator.
+     *
+     * @param[in] left_extrap_rule1
+     * 			A SplineBoundaryValue2D object giving the value on the "left side" of the domain
+     * 			in the first dimension.
+     * @param[in] right_extrap_rule1
+     * 			A SplineBoundaryValue2D object giving the value on the "right side" of the domain
+     * 			in the first dimension.
+     * @param[in] left_extrap_rule2
+     * 			A SplineBoundaryValue2D object giving the value on the "left side" of the domain
+     * 			in the second dimension.
+     * @param[in] right_extrap_rule2
+     * 			A SplineBoundaryValue2D object giving the value on the "right side" of the domain
+     * 			in the second dimension.
+     *
+     * @see SplineBoundaryValue2D
+     */
     explicit SplineEvaluator2D(
-            spline_domain_type const& spline_domain,
             LeftExtrapolationRule1 const& left_extrap_rule1,
             RightExtrapolationRule1 const& right_extrap_rule1,
             LeftExtrapolationRule2 const& left_extrap_rule2,
             RightExtrapolationRule2 const& right_extrap_rule2)
-        : m_spline_domain(spline_domain)
-        , m_left1_bc(left_extrap_rule1)
-        , m_right1_bc(right_extrap_rule1)
-        , m_left2_bc(left_extrap_rule2)
-        , m_right2_bc(right_extrap_rule2)
+        : m_left_extrap_rule_1(left_extrap_rule1)
+        , m_right_extrap_rule_1(right_extrap_rule1)
+        , m_left_extrap_rule_2(left_extrap_rule2)
+        , m_right_extrap_rule_2(right_extrap_rule2)
     {
     }
 
+    /**
+     * @brief Instantiate a SplineEvaluator2D from another
+     * SplineEvaluator2D (lvalue).
+     *
+     * @param[in] x
+     * 		SplineEvaluator2D evaluator used to instantiate the new one.
+     */
     SplineEvaluator2D(SplineEvaluator2D const& x) = default;
 
+    /**
+     * @brief Instantiate a SplineEvaluator2D from another temporary
+     * SplineEvaluator2D (rvalue).
+     *
+     * @param[in] x
+     * 		SplineEvaluator2D evaluator used to instantiate the new one.
+     */
     SplineEvaluator2D(SplineEvaluator2D&& x) = default;
 
     ~SplineEvaluator2D() = default;
 
+    /**
+     * @brief Assign a SplineEvaluator2D from another SplineEvaluator2D (lvalue).
+     *
+     * @param[in] x
+     * 		SplineEvaluator2D mapping used to assign.
+     *
+     * @return The SplineEvaluator2D assigned.
+     */
     SplineEvaluator2D& operator=(SplineEvaluator2D const& x) = default;
 
+    /**
+     * @brief Assign a SplineEvaluator2D from another temporary SplineEvaluator2D (rvalue).
+     *
+     * @param[in] x
+     * 		SplineEvaluator2D mapping used to assign.
+     *
+     * @return The SplineEvaluator2D assigned.
+     */
     SplineEvaluator2D& operator=(SplineEvaluator2D&& x) = default;
 
 
 
-    KOKKOS_FUNCTION spline_domain_type spline_domain() const noexcept
+    left_extrapolation_rule_1_type left_extrapolation_rule_dim_1() const
     {
-        return m_spline_domain;
+        return m_left_extrap_rule_1;
     }
 
-    KOKKOS_FUNCTION bsplines_domain_type bsplines_domain() const noexcept // TODO : clarify name
+    right_extrapolation_rule_1_type right_extrapolation_rule_dim_1() const
     {
-        return bsplines_domain_type(
-                ddc::discrete_space<bsplines_type1>().full_domain(),
-                ddc::discrete_space<bsplines_type2>().full_domain());
+        return m_right_extrap_rule_1;
     }
 
-    KOKKOS_FUNCTION batch_domain_type batch_domain() const noexcept
+    left_extrapolation_rule_2_type left_extrapolation_rule_dim_2() const
     {
-        return ddc::remove_dims_of(spline_domain(), bsplines_domain());
+        return m_left_extrap_rule_2;
     }
 
+    right_extrapolation_rule_2_type right_extrapolation_rule_dim_2() const
+    {
+        return m_right_extrap_rule_2;
+    }
+
+    /**
+     * @brief Get the value of the function on B-splines at the coordinate given.
+     *
+     * @param[in] coord_eval
+     * 			The 2D coordinate where we want to evaluate the function.
+     * @param[in] spline_coef
+     * 			The B-splines coefficients of the function we want to evaluate.
+     *
+     * @return A double containing the value of the function at the coordinate given.
+     */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double operator()(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
@@ -218,11 +288,12 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
+        batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
                 exec_space(),
-                batch_domain(),
+                batch_domain,
                 KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
@@ -235,6 +306,16 @@ public:
                 });
     }
 
+    /**
+     * @brief Get the value of the derivative of the first dimension of the function on B-splines at the coordinate given.
+     *
+     * @param[in] coord_eval
+     * 			The 2D coordinate where we want to evaluate the derivative of the first dimension of the function.
+     * @param[in] spline_coef
+     * 			The B-splines coefficients of the function we want to evaluate.
+     *
+     * @return A double containing the value of the derivative of the first dimension of the function at the coordinate given.
+     */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_dim_1(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
@@ -244,6 +325,16 @@ public:
         return eval_no_bc<eval_deriv_type, eval_type>(coord_eval, spline_coef);
     }
 
+    /**
+     * @brief Get the value of the derivative of the second dimension of the function on B-splines at the coordinate given.
+     *
+     * @param[in] coord_eval
+     * 			The 2D coordinate where we want to evaluate the derivative of the second dimension of the function.
+     * @param[in] spline_coef
+     * 			The B-splines coefficients of the function we want to evaluate.
+     *
+     * @return A double containing the value of the derivative of the second dimension of the function at the coordinate given.
+     */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_dim_2(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
@@ -253,6 +344,16 @@ public:
         return eval_no_bc<eval_type, eval_deriv_type>(coord_eval, spline_coef);
     }
 
+    /**
+     * @brief Get the value of the cross derivative of the function on B-splines at the coordinate given.
+     *
+     * @param[in] coord_eval
+     * 			The 2D coordinate where we want to evaluate the cross derivative of the function.
+     * @param[in] spline_coef
+     * 			The B-splines coefficients of the function we want to evaluate.
+     *
+     * @return A double containing the value of the cross derivative of the function at the coordinate given.
+     */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_1_and_2(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
@@ -303,6 +404,16 @@ public:
         return deriv_1_and_2(coord_eval, spline_coef);
     }
 
+    /**
+     * @brief Get the values of the derivative of the first dimension of the function on B-splines at the coordinates given.
+     *
+     * @param[out] spline_eval
+     * 			A ChunkSpan with the values of the derivative of the first dimension of the function at the coordinates given.
+     * @param[in] coords_eval
+     * 			A ChunkSpan with the 2D coordinates where we want to evaluate the derivative of the first dimension of the function.
+     * @param[in] spline_coef
+     * 			The B-splines coefficients of the function we want to evaluate.
+     */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_dim_1(
             ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
@@ -314,11 +425,12 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
+        batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
                 exec_space(),
-                batch_domain(),
+                batch_domain,
                 KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
@@ -333,6 +445,16 @@ public:
                 });
     }
 
+    /**
+     * @brief Get the values of the derivative of the second dimension of the function on B-splines at the coordinates given.
+     *
+     * @param[out] spline_eval
+     * 			A ChunkSpan with the values of the derivative of the second dimension of the function at the coordinates given.
+     * @param[in] coords_eval
+     * 			A ChunkSpan with the 2D coordinates where we want to evaluate the derivative of the second dimension of the function.
+     * @param[in] spline_coef
+     * 			The B-splines coefficients of the function we want to evaluate.
+     */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_dim_2(
             ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
@@ -344,11 +466,12 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
+        batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
                 exec_space(),
-                batch_domain(),
+                batch_domain,
                 KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
@@ -363,6 +486,16 @@ public:
                 });
     }
 
+    /**
+     * @brief Get the values of the cross derivative of the function on B-splines at the coordinates given.
+     *
+     * @param[out] spline_eval
+     * 			A ChunkSpan with the values of the cross derivative of the function at the coordinates given.
+     * @param[in] coords_eval
+     * 			A ChunkSpan with the 2D coordinates where we want to evaluate the cross derivative of the function.
+     * @param[in] spline_coef
+     * 			The B-splines coefficients of the function we want to evaluate.
+     */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_1_and_2(
             ddc::ChunkSpan<double, vals_domain_type, Layout1, memory_space> const spline_eval,
@@ -374,11 +507,12 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
+        batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
         interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
                 exec_space(),
-                batch_domain(),
+                batch_domain,
                 KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
@@ -450,12 +584,20 @@ public:
         return deriv_1_and_2(spline_eval, coords_eval, spline_coef);
     }
 
+    /**
+     * @brief Get the the integral of the function on B-splines on the domain.
+     * @param[out] integrals
+     * 			The integrals of the function
+     * @param[in] spline_coef
+     * 			The B-splines coefficients of the function we want to integrate.
+     */
     template <class Layout1, class Layout2>
     void integrate(
             ddc::ChunkSpan<double, batch_domain_type, Layout1, memory_space> const integrals,
             ddc::ChunkSpan<double const, spline_domain_type, Layout2, memory_space> const
                     spline_coef) const
     {
+        batch_domain_type batch_domain(integrals.domain());
         ddc::Chunk values1_alloc(
                 ddc::DiscreteDomain<bsplines_type1>(spline_coef.domain()),
                 ddc::KokkosAllocator<double, memory_space>());
@@ -473,7 +615,7 @@ public:
 
         ddc::parallel_for_each(
                 exec_space(),
-                batch_domain(),
+                batch_domain,
                 KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
                     integrals(j) = 0;
                     for (typename bsplines_domain_type1::discrete_element_type const i1 :
@@ -487,61 +629,94 @@ public:
     }
 
 private:
+    /**
+     * @brief Evaluate the function on B-splines at the coordinate given.
+     *
+     * This function firstly deals with the boundary conditions and calls the SplineEvaluator2D::eval_no_bc function
+     * to evaluate.
+     *
+     * @param[in] coord_eval
+     * 			The 2D coordinate where we want to evaluate.
+     * @param[in] spline_coef
+     * 			The B-splines coefficients of the function we want to evaluate.
+     * @param[out] vals1
+     * 			A ChunkSpan with the not-null values of each function of the spline in the first dimension.
+     * @param[out] vals2
+     * 			A ChunkSpan with the not-null values of each function of the spline in the second dimension.
+     *
+     * @return A double with the value of the function at the coordinate given.
+     *
+     * @see SplineBoundaryValue
+     */
     template <class Layout, class... CoordsDims>
     KOKKOS_INLINE_FUNCTION double eval(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
+            ddc::Coordinate<CoordsDims...> coord_eval,
             ddc::ChunkSpan<double const, bsplines_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        ddc::Coordinate<typename interpolation_mesh_type1::continuous_dimension_type>
-                coord_eval_interpolation1(coord_eval);
-        ddc::Coordinate<typename interpolation_mesh_type2::continuous_dimension_type>
-                coord_eval_interpolation2(coord_eval);
+        using Dim1 = typename interpolation_mesh_type1::continuous_dimension_type;
+        using Dim2 = typename interpolation_mesh_type2::continuous_dimension_type;
         if constexpr (bsplines_type1::is_periodic()) {
-            if (coord_eval_interpolation1 < ddc::discrete_space<bsplines_type1>().rmin()
-                || coord_eval_interpolation1 > ddc::discrete_space<bsplines_type1>().rmax()) {
-                coord_eval_interpolation1
+            if (ddc::get<Dim1>(coord_eval) < ddc::discrete_space<bsplines_type1>().rmin()
+                || ddc::get<Dim1>(coord_eval) > ddc::discrete_space<bsplines_type1>().rmax()) {
+                ddc::get<Dim1>(coord_eval)
                         -= Kokkos::floor(
-                                   (coord_eval_interpolation1
+                                   (ddc::get<Dim1>(coord_eval)
                                     - ddc::discrete_space<bsplines_type1>().rmin())
                                    / ddc::discrete_space<bsplines_type1>().length())
                            * ddc::discrete_space<bsplines_type1>().length();
             }
-        } else {
-            if (coord_eval_interpolation1 < ddc::discrete_space<bsplines_type1>().rmin()) {
-                return m_left1_bc(coord_eval, spline_coef);
-            }
-            if (coord_eval_interpolation1 > ddc::discrete_space<bsplines_type1>().rmax()) {
-                return m_right1_bc(coord_eval, spline_coef);
-            }
         }
         if constexpr (bsplines_type2::is_periodic()) {
-            if (coord_eval_interpolation2 < ddc::discrete_space<bsplines_type2>().rmin()
-                || coord_eval_interpolation2 > ddc::discrete_space<bsplines_type2>().rmax()) {
-                coord_eval_interpolation2
+            if (ddc::get<Dim2>(coord_eval) < ddc::discrete_space<bsplines_type2>().rmin()
+                || ddc::get<Dim2>(coord_eval) > ddc::discrete_space<bsplines_type2>().rmax()) {
+                ddc::get<Dim2>(coord_eval)
                         -= Kokkos::floor(
-                                   (coord_eval_interpolation2
+                                   (ddc::get<Dim2>(coord_eval)
                                     - ddc::discrete_space<bsplines_type2>().rmin())
                                    / ddc::discrete_space<bsplines_type2>().length())
                            * ddc::discrete_space<bsplines_type2>().length();
             }
-        } else {
-            if (coord_eval_interpolation2 < ddc::discrete_space<bsplines_type2>().rmin()) {
-                return m_left2_bc(coord_eval, spline_coef);
+        }
+        if constexpr (!bsplines_type1::is_periodic()) {
+            if (ddc::get<Dim1>(coord_eval) < ddc::discrete_space<bsplines_type1>().rmin()) {
+                return m_left_extrap_rule_1(coord_eval, spline_coef);
             }
-            if (coord_eval_interpolation2 > ddc::discrete_space<bsplines_type2>().rmax()) {
-                return m_right2_bc(coord_eval, spline_coef);
+            if (ddc::get<Dim1>(coord_eval) > ddc::discrete_space<bsplines_type1>().rmax()) {
+                return m_right_extrap_rule_1(coord_eval, spline_coef);
+            }
+        }
+        if constexpr (!bsplines_type2::is_periodic()) {
+            if (ddc::get<Dim2>(coord_eval) < ddc::discrete_space<bsplines_type2>().rmin()) {
+                return m_left_extrap_rule_2(coord_eval, spline_coef);
+            }
+            if (ddc::get<Dim2>(coord_eval) > ddc::discrete_space<bsplines_type2>().rmax()) {
+                return m_right_extrap_rule_2(coord_eval, spline_coef);
             }
         }
         return eval_no_bc<eval_type, eval_type>(
                 ddc::Coordinate<
                         typename interpolation_mesh_type1::continuous_dimension_type,
                         typename interpolation_mesh_type2::continuous_dimension_type>(
-                        coord_eval_interpolation1,
-                        coord_eval_interpolation2),
+                        ddc::get<Dim1>(coord_eval),
+                        ddc::get<Dim2>(coord_eval)),
                 spline_coef);
     }
 
+    /**
+     * @brief Evaluate the function or its derivative at the coordinate given.
+     *
+     * @param[in] coord_eval
+     * 			The coordinate where we want to evaluate.
+     * @param[in] splne_coef
+     * 			The B-splines coefficients of the function we want to evaluate.
+     * @tparam EvalType1
+     * 			A flag indicating if we evaluate the function or its derivative in the first dimension.
+     * 			The type of this object is either `eval_type` or `eval_deriv_type`.
+     * @tparam EvalType2
+     * 			A flag indicating if we evaluate the function or its derivative in the second dimension.
+     *          The type of this object is either `eval_type` or `eval_deriv_type`.
+     */
     template <class EvalType1, class EvalType2, class Layout, class... CoordsDims>
     KOKKOS_INLINE_FUNCTION double eval_no_bc(
             ddc::Coordinate<CoordsDims...> const& coord_eval,

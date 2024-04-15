@@ -13,47 +13,11 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "ddc/chunk_traits.hpp"
 #include "ddc/detail/macros.hpp"
 #include "ddc/discrete_domain.hpp"
 
 namespace ddc {
-
-template <class T>
-inline constexpr bool enable_borrowed_chunk = false;
-
-template <class T>
-inline constexpr bool enable_chunk = false;
-
-template <class T>
-inline constexpr bool is_chunk_v = enable_chunk<std::remove_const_t<std::remove_reference_t<T>>>;
-
-template <class T>
-inline constexpr bool is_borrowed_chunk_v
-        = is_chunk_v<
-                  T> && (std::is_lvalue_reference_v<T> || enable_borrowed_chunk<std::remove_cv_t<std::remove_reference_t<T>>>);
-
-template <class T>
-struct chunk_traits
-{
-    static_assert(is_chunk_v<T>);
-    using value_type
-            = std::remove_cv_t<std::remove_pointer_t<decltype(std::declval<T>().data_handle())>>;
-    using pointer_type = decltype(std::declval<T>().data_handle());
-    using reference_type = decltype(*std::declval<T>().data_handle());
-};
-
-template <class T>
-using chunk_value_t = typename chunk_traits<T>::value_type;
-
-template <class T>
-using chunk_pointer_t = typename chunk_traits<T>::pointer_type;
-
-template <class T>
-using chunk_reference_t = typename chunk_traits<T>::reference_type;
-
-template <class T>
-inline constexpr bool is_writable_chunk_v
-        = !std::is_const_v<std::remove_pointer_t<chunk_pointer_t<T>>>;
 
 /** Access the domain (or subdomain) of a view
  * @param[in]  chunk the view whose domain to access
@@ -163,6 +127,27 @@ public:
         return mapping_type::is_always_strided();
     }
 
+private:
+    template <class Mapping = mapping_type>
+    static KOKKOS_FUNCTION constexpr std::
+            enable_if_t<std::is_constructible_v<Mapping, extents_type>, internal_mdspan_type>
+            make_internal_mdspan(ElementType* ptr, mdomain_type const& domain)
+    {
+        if (domain.empty()) {
+            return internal_mdspan_type(
+                    ptr,
+                    std::experimental::layout_stride::mapping<extents_type>());
+        }
+        extents_type extents_r(::ddc::extents<DDims>(domain).value()...);
+        mapping_type mapping_r(extents_r);
+
+        extents_type extents_s((front<DDims>(domain) + ddc::extents<DDims>(domain)).uid()...);
+        std::array<std::size_t, sizeof...(DDims)> strides_s {
+                mapping_r.stride(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
+        std::experimental::layout_stride::mapping<extents_type> mapping_s(extents_s, strides_s);
+        return internal_mdspan_type(ptr - mapping_s(front<DDims>(domain).uid()...), mapping_s);
+    }
+
 public:
     KOKKOS_FUNCTION constexpr accessor_type accessor() const
     {
@@ -171,16 +156,13 @@ public:
 
     KOKKOS_FUNCTION constexpr DiscreteVector<DDims...> extents() const noexcept
     {
-        return DiscreteVector<DDims...>(
-                (m_internal_mdspan.extent(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)
-                 - front<DDims>(m_domain).uid())...);
+        return m_domain.extents();
     }
 
     template <class QueryDDim>
     KOKKOS_FUNCTION constexpr size_type extent() const noexcept
     {
-        return m_internal_mdspan.extent(type_seq_rank_v<QueryDDim, detail::TypeSeq<DDims...>>)
-               - front<QueryDDim>(m_domain).uid();
+        return m_domain.template extent<QueryDDim>();
     }
 
     KOKKOS_FUNCTION constexpr size_type size() const noexcept
@@ -255,8 +237,11 @@ protected:
             class Mapping = mapping_type,
             std::enable_if_t<std::is_constructible_v<Mapping, extents_type>, int> = 0>
     KOKKOS_FUNCTION constexpr ChunkCommon(ElementType* ptr, mdomain_type const& domain)
-        : ChunkCommon {ptr, domain, make_mapping_for(domain)}
+        : m_internal_mdspan(make_internal_mdspan(ptr, domain))
+        , m_domain(domain)
     {
+        // Handle the case where an allocation of size 0 returns a nullptr.
+        assert(domain.empty() || ((ptr != nullptr) && !domain.empty()));
     }
 
     /** Constructs a new ChunkCommon by copy, yields a new view to the same data
@@ -288,7 +273,11 @@ protected:
      */
     KOKKOS_FUNCTION constexpr ElementType* data_handle() const
     {
-        return &m_internal_mdspan(front<DDims>(m_domain).uid()...);
+        ElementType* ptr = m_internal_mdspan.data_handle();
+        if (!m_domain.empty()) {
+            ptr += m_internal_mdspan.mapping()(front<DDims>(m_domain).uid()...);
+        }
+        return ptr;
     }
 
     /** Provide a modifiable view of the data
@@ -315,41 +304,6 @@ protected:
         }
         DDC_IF_NVCC_THEN_POP
     }
-
-private:
-    /** builds the mapping to use in the internal mdspan
-     * @param domain the domain that sustains the view
-     */
-    template <class Mapping = mapping_type>
-    KOKKOS_FUNCTION constexpr std::enable_if_t<
-            std::is_constructible_v<Mapping, extents_type>,
-            std::experimental::layout_stride::mapping<extents_type>>
-    make_mapping_for(mdomain_type const& domain)
-    {
-        extents_type extents_r(::ddc::extents<DDims>(domain).value()...);
-        mapping_type mapping_r(extents_r);
-
-        extents_type extents_s((front<DDims>(domain) + ddc::extents<DDims>(domain)).uid()...);
-        std::array<std::size_t, sizeof...(DDims)> strides_s {
-                mapping_r.stride(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
-        return std::experimental::layout_stride::mapping<extents_type>(extents_s, strides_s);
-    }
-
-    /** Constructs a new ChunkCommon from scratch
-     * @param ptr the allocation pointer to the data_handle()
-     * @param domain the domain that sustains the view
-     */
-    KOKKOS_FUNCTION constexpr ChunkCommon(
-            ElementType* ptr,
-            mdomain_type const& domain,
-            std::experimental::layout_stride::mapping<extents_type>&& s_domain)
-        : m_internal_mdspan {ptr - s_domain(front<DDims>(domain).uid()...), s_domain}
-        , m_domain {domain}
-    {
-        // Handle the case where an allocation of size 0 returns a nullptr.
-        assert((domain.size() == 0) || ((ptr != nullptr) && (domain.size() != 0)));
-    }
 };
-
 
 } // namespace ddc

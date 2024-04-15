@@ -39,14 +39,20 @@ static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
 #endif
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-using BSplinesX = ddc::UniformBSplines<DimX, s_degree_x>;
+struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+{
+};
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-using BSplinesX = ddc::NonUniformBSplines<DimX, s_degree_x>;
+struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree_x>
+{
+};
 #endif
 
 using GrevillePoints = ddc::GrevilleInterpolationPoints<BSplinesX, s_bcl, s_bcr>;
 
-using IDimX = GrevillePoints::interpolation_mesh_type;
+struct IDimX : GrevillePoints::interpolation_mesh_type
+{
+};
 
 #if defined(EVALUATOR_COSINE)
 using evaluator_type = CosineEvaluator::Evaluator<IDimX>;
@@ -95,8 +101,8 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<double, Kokkos::HostSpace>());
 
     // 3. Create the interpolation domain
-    ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling());
-    ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain());
+    ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling<IDimX>());
+    ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain<IDimX>());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
     ddc::SplineBuilder<
@@ -148,6 +154,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     spline_builder(coef.span_view(), yvals.span_cview(), deriv_l, deriv_r);
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
+    ddc::NullExtrapolationRule extrapolation_rule;
     ddc::SplineEvaluator<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::HostSpace,
@@ -156,10 +163,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
             IDimX>
-            spline_evaluator(
-                    coef.domain(),
-                    ddc::NullExtrapolationRule(),
-                    ddc::NullExtrapolationRule());
+            spline_evaluator(extrapolation_rule, extrapolation_rule);
 
     ddc::Chunk<ddc::Coordinate<DimX>, ddc::DiscreteDomain<IDimX>> coords_eval(interpolation_domain);
     for (IndexX const ix : interpolation_domain) {

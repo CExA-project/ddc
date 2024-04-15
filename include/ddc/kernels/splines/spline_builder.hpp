@@ -235,7 +235,7 @@ public:
         return ddc::remove_dims_of(batched_interpolation_domain(), interpolation_domain());
     }
 
-    ddc::DiscreteDomain<bsplines_type> spline_domain() const noexcept // TODO : clarify name
+    ddc::DiscreteDomain<bsplines_type> spline_domain() const noexcept
     {
         return ddc::discrete_space<bsplines_type>().full_domain();
     }

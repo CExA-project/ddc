@@ -286,11 +286,8 @@ public:
                     batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type,
-                    Layout3,
-                    memory_space> const spline_coef) const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
+                    spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
@@ -427,11 +424,8 @@ public:
                     batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type,
-                    Layout3,
-                    memory_space> const spline_coef) const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
+                    spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
@@ -472,11 +466,8 @@ public:
                     batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type,
-                    Layout3,
-                    memory_space> const spline_coef) const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
+                    spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
@@ -517,11 +508,8 @@ public:
                     batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type,
-                    Layout3,
-                    memory_space> const spline_coef) const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
+                    spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
         interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
@@ -552,11 +540,8 @@ public:
                     batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type,
-                    Layout3,
-                    memory_space> const spline_coef) const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
+                    spline_coef) const
     {
         static_assert(
                 std::is_same_v<
@@ -590,11 +575,8 @@ public:
                     batched_interpolation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type,
-                    Layout3,
-                    memory_space> const spline_coef) const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
+                    spline_coef) const
     {
         static_assert(
                 (std::is_same_v<
@@ -618,11 +600,8 @@ public:
     template <class Layout1, class Layout2>
     void integrate(
             ddc::ChunkSpan<double, batch_domain_type, Layout1, memory_space> const integrals,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type,
-                    Layout2,
-                    memory_space> const spline_coef) const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
+                    spline_coef) const
     {
         batch_domain_type batch_domain(integrals.domain());
         ddc::Chunk values1_alloc(

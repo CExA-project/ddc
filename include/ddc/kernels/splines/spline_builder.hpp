@@ -89,7 +89,7 @@ public:
     using spline_dim_type
             = std::conditional_t<std::is_same_v<Tag, interpolation_mesh_type>, bsplines_type, Tag>;
 
-    using batched_batched_spline_domain_type =
+    using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
@@ -248,7 +248,7 @@ public:
      *
      * @return The domain for the splines.
      */
-    batched_batched_spline_domain_type batched_spline_domain() const noexcept
+    batched_spline_domain_type batched_spline_domain() const noexcept
     {
         return ddc::replace_dim_of<
                 interpolation_mesh_type,
@@ -309,7 +309,7 @@ public:
      */
     template <class Layout>
     void operator()(
-            ddc::ChunkSpan<double, batched_batched_spline_domain_type, Layout, memory_space> spline,
+            ddc::ChunkSpan<double, batched_spline_domain_type, Layout, memory_space> spline,
             ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space>
                     vals,
             std::optional<ddc::ChunkSpan<
@@ -634,7 +634,7 @@ void SplineBuilder<
         Solver,
         IDimX...>::
 operator()(
-        ddc::ChunkSpan<double, batched_batched_spline_domain_type, Layout, memory_space> spline,
+        ddc::ChunkSpan<double, batched_spline_domain_type, Layout, memory_space> spline,
         ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space> vals,
         std::optional<ddc::ChunkSpan<
                 double const,

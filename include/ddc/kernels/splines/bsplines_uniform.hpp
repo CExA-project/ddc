@@ -230,7 +230,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
                 ddc::Coordinate<Tag> const& x,
                 [[maybe_unused]] std::size_t const deg) const
 {
-    assert(values.size() == D + 1);
+    assert(values.size() == deg + 1);
 
     double offset;
     int jmin;

@@ -23,14 +23,14 @@ extern "C" int dgetrs_(
         int* info);
 
 template <class ExecSpace>
-class Matrix_Dense : public Matrix
+class MatrixDense : public Matrix
 {
 protected:
     Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace> m_a;
     Kokkos::View<int*, Kokkos::HostSpace> m_ipiv;
 
 public:
-    explicit Matrix_Dense(int const mat_size)
+    explicit MatrixDense(int const mat_size)
         : Matrix(mat_size)
         , m_a("a", mat_size, mat_size)
         , m_ipiv("ipiv", mat_size)

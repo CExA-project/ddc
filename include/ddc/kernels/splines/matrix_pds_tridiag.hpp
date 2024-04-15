@@ -24,7 +24,7 @@ extern "C" int dpttrs_(
         int* info);
 
 template <class ExecSpace>
-class Matrix_PDS_Tridiag : public Matrix
+class MatrixPDSTridiag : public Matrix
 {
     /*
      * Represents a real symmetric positive definite matrix
@@ -35,7 +35,7 @@ protected:
     Kokkos::View<double*, Kokkos::HostSpace> m_l; // lower diagonal
 
 public:
-    Matrix_PDS_Tridiag(int const mat_size)
+    MatrixPDSTridiag(int const mat_size)
         : Matrix(mat_size)
         , m_d("d", mat_size)
         , m_l("l", mat_size - 1)

@@ -95,7 +95,7 @@ unsigned int default_preconditionner_max_block_size() noexcept
 
 // Matrix class for sparse storage and iterative solve
 template <class ExecSpace>
-class Matrix_Sparse : public Matrix
+class MatrixSparse : public Matrix
 {
     using matrix_sparse_type = gko::matrix::Csr<double, int>;
 #ifdef KOKKOS_ENABLE_OPENMP
@@ -122,7 +122,7 @@ protected:
 
 public:
     // Constructor
-    explicit Matrix_Sparse(
+    explicit MatrixSparse(
             const int mat_size,
             std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)

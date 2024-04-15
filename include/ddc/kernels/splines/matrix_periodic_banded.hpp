@@ -21,24 +21,24 @@
 namespace ddc::detail {
 
 template <class ExecSpace>
-class Matrix_Periodic_Banded : public Matrix_Corner_Block<ExecSpace>
+class MatrixPeriodicBanded : public MatrixCornerBlock<ExecSpace>
 {
     // Necessary because we inherit from a template class, otherwise we should use this-> everywhere
-    using Matrix_Corner_Block<ExecSpace>::get_size;
-    using Matrix_Corner_Block<ExecSpace>::m_k;
-    using Matrix_Corner_Block<ExecSpace>::m_nb;
-    using Matrix_Corner_Block<ExecSpace>::m_q_block;
-    using Matrix_Corner_Block<ExecSpace>::m_delta;
-    using Matrix_Corner_Block<ExecSpace>::m_Abm_1_gamma;
-    using Matrix_Corner_Block<ExecSpace>::m_lambda;
+    using MatrixCornerBlock<ExecSpace>::get_size;
+    using MatrixCornerBlock<ExecSpace>::m_k;
+    using MatrixCornerBlock<ExecSpace>::m_nb;
+    using MatrixCornerBlock<ExecSpace>::m_q_block;
+    using MatrixCornerBlock<ExecSpace>::m_delta;
+    using MatrixCornerBlock<ExecSpace>::m_Abm_1_gamma;
+    using MatrixCornerBlock<ExecSpace>::m_lambda;
 
 protected:
     int const m_kl; // no. of subdiagonals
     int const m_ku; // no. of superdiagonals
 
 public:
-    Matrix_Periodic_Banded(int const n, int const m_kl, int const m_ku, std::unique_ptr<Matrix> q)
-        : Matrix_Corner_Block<ExecSpace>(
+    MatrixPeriodicBanded(int const n, int const m_kl, int const m_ku, std::unique_ptr<Matrix> q)
+        : MatrixCornerBlock<ExecSpace>(
                 n,
                 std::max(m_kl, m_ku),
                 std::move(q),
@@ -70,7 +70,7 @@ public:
                 return m_lambda(i - m_nb, j - m_nb + m_k + 1);
             }
         } else {
-            return Matrix_Corner_Block<ExecSpace>::get_element(i, j);
+            return MatrixCornerBlock<ExecSpace>::get_element(i, j);
         }
     }
     void set_element(int const i, int j, double const aij) override
@@ -97,7 +97,7 @@ public:
                 m_lambda(i - m_nb, j - m_nb + m_k + 1) = aij;
             }
         } else {
-            Matrix_Corner_Block<ExecSpace>::set_element(i, j, aij);
+            MatrixCornerBlock<ExecSpace>::set_element(i, j, aij);
         }
     }
 

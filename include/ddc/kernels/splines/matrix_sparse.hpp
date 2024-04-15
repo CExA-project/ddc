@@ -180,7 +180,6 @@ public:
 
         m_solver = solver_factory->generate(m_matrix_sparse);
         m_solver_tr = m_solver->transpose();
-
         gko_exec->synchronize();
 
         return 0;

@@ -730,8 +730,16 @@ private:
         ddc::DiscreteElement<bsplines_type1> jmin1;
         ddc::DiscreteElement<bsplines_type2> jmin2;
 
-        std::array<double, bsplines_type1::degree() + 1> vals1;
-        std::array<double, bsplines_type2::degree() + 1> vals2;
+        std::array<double, bsplines_type1::degree() + 1> vals1_ptr;
+        std::experimental::mdspan<
+                double,
+                std::experimental::extents<std::size_t, bsplines_type1::degree() + 1>> const
+                vals1(vals1_ptr.data());
+        std::array<double, bsplines_type2::degree() + 1> vals2_ptr;
+        std::experimental::mdspan<
+                double,
+                std::experimental::extents<std::size_t, bsplines_type2::degree() + 1>> const
+                vals2(vals2_ptr.data());
         ddc::Coordinate<typename interpolation_mesh_type1::continuous_dimension_type>
                 coord_eval_interpolation1
                 = ddc::select<typename interpolation_mesh_type1::continuous_dimension_type>(

@@ -247,7 +247,9 @@ int main(int argc, char** argv)
 
         //! [manipulated views]
         ddc::ChunkSpan const next_temp(
-                ghosted_next_temp[x_domain][y_domain]);
+                ghosted_next_temp[ddc::DiscreteDomain<
+                        DDimX,
+                        DDimY>(x_domain, y_domain)]);
         ddc::ChunkSpan const last_temp(ghosted_last_temp.span_cview());
         //! [manipulated views]
 

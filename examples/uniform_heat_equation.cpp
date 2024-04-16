@@ -146,14 +146,13 @@ int main(int argc, char** argv)
 
     double const dx = ddc::step<DDimX>();
     double const dy = ddc::step<DDimY>();
-    double const invdx2 = 1./ (dx * dx);
-    double const invdy2 = 1./ (dy * dy);
+    double const invdx2 = 1. / (dx * dx);
+    double const invdy2 = 1. / (dy * dy);
 
-    ddc::Coordinate<T> const dt (
-            .5 / (kx * invdx2 + ky * invdy2));
+    ddc::Coordinate<T> const dt(.5 / (kx * invdx2 + ky * invdy2));
 
 
-    ddc::DiscreteVector<DDimT> const nb_time_steps (
+    ddc::DiscreteVector<DDimT> const nb_time_steps(
             std::ceil((end_time - start_time) / dt) + .2);
 
     ddc::DiscreteDomain<DDimT> const time_domain
@@ -217,23 +216,39 @@ int main(int argc, char** argv)
 
         //! [boundary conditions]
         ddc::parallel_deepcopy(
-                ghosted_last_temp[ddc::DiscreteDomain<DDimX, DDimY>(x_pre_ghost, y_domain)],
-                ghosted_last_temp[ddc::DiscreteDomain<DDimX, DDimY>(y_domain, x_domain_end)]);
+                ghosted_last_temp[ddc::DiscreteDomain<
+                        DDimX,
+                        DDimY>(x_pre_ghost, y_domain)],
+                ghosted_last_temp[ddc::DiscreteDomain<
+                        DDimX,
+                        DDimY>(y_domain, x_domain_end)]);
         ddc::parallel_deepcopy(
-                ghosted_last_temp[ddc::DiscreteDomain<DDimX, DDimY>(y_domain, x_post_ghost)],
-                ghosted_last_temp[ddc::DiscreteDomain<DDimX, DDimY>(y_domain, x_domain_begin)]);
+                ghosted_last_temp[ddc::DiscreteDomain<
+                        DDimX,
+                        DDimY>(y_domain, x_post_ghost)],
+                ghosted_last_temp[ddc::DiscreteDomain<
+                        DDimX,
+                        DDimY>(y_domain, x_domain_begin)]);
         ddc::parallel_deepcopy(
-                ghosted_last_temp[ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_pre_ghost)],
-                ghosted_last_temp[ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain_end)]);
+                ghosted_last_temp[ddc::DiscreteDomain<
+                        DDimX,
+                        DDimY>(x_domain, y_pre_ghost)],
+                ghosted_last_temp[ddc::DiscreteDomain<
+                        DDimX,
+                        DDimY>(x_domain, y_domain_end)]);
         ddc::parallel_deepcopy(
-                ghosted_last_temp[ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_post_ghost)],
-                ghosted_last_temp[ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain_begin)]);
+                ghosted_last_temp[ddc::DiscreteDomain<
+                        DDimX,
+                        DDimY>(x_domain, y_post_ghost)],
+                ghosted_last_temp[ddc::DiscreteDomain<
+                        DDimX,
+                        DDimY>(x_domain, y_domain_begin)]);
         //! [boundary conditions]
 
         //! [manipulated views]
-        ddc::ChunkSpan const next_temp (
+        ddc::ChunkSpan const next_temp(
                 ghosted_next_temp[x_domain][y_domain]);
-        ddc::ChunkSpan const last_temp (ghosted_last_temp.span_cview());
+        ddc::ChunkSpan const last_temp(ghosted_last_temp.span_cview());
         //! [manipulated views]
 
         //! [numerical scheme]
@@ -248,17 +263,17 @@ int main(int argc, char** argv)
                     double const dt = ddc::step<DDimT>();
 
                     next_temp(ix, iy) = last_temp(ix, iy);
-                    next_temp(ix, iy)
-                            += kx * dt
-                               * (last_temp(ix + 1, iy)
-                                  - 2.0 * last_temp(ix, iy)
-                                  + last_temp(ix - 1, iy)) * invdx2;
-                               
-                    next_temp(ix, iy)
-                            += ky * dt
-                               * (last_temp(ix, iy + 1)
-                                  - 2.0 * last_temp(ix, iy)
-                                  + last_temp(ix, iy - 1)) * invdy2; 
+                    next_temp(ix, iy) += kx * dt
+                                         * (last_temp(ix + 1, iy)
+                                            - 2.0 * last_temp(ix, iy)
+                                            + last_temp(ix - 1, iy))
+                                         * invdx2;
+
+                    next_temp(ix, iy) += ky * dt
+                                         * (last_temp(ix, iy + 1)
+                                            - 2.0 * last_temp(ix, iy)
+                                            + last_temp(ix, iy - 1))
+                                         * invdy2;
                 });
         //! [numerical scheme]
 
@@ -267,7 +282,9 @@ int main(int argc, char** argv)
             last_output_iter = iter;
             ddc::parallel_deepcopy(ghosted_temp, ghosted_last_temp);
             display(ddc::coordinate(iter),
-                    ghosted_temp[ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain)]);
+                    ghosted_temp[ddc::DiscreteDomain<
+                            DDimX,
+                            DDimY>(x_domain, y_domain)]);
         }
         //! [output]
 
@@ -281,7 +298,9 @@ int main(int argc, char** argv)
     if (last_output_iter < time_domain.back()) {
         ddc::parallel_deepcopy(ghosted_temp, ghosted_last_temp);
         display(ddc::coordinate(time_domain.back()),
-                ghosted_temp[ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain)]);
+                ghosted_temp[ddc::DiscreteDomain<
+                        DDimX,
+                        DDimY>(x_domain, y_domain)]);
     }
     //! [final output]
 

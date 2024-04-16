@@ -120,10 +120,10 @@ public:
         Impl& operator=(Impl&& x) = default;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(std::array<double, D + 1>& values, ddc::Coordinate<Tag> const& x) const;
+        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const;
+        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
@@ -257,10 +257,10 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
 template <class Tag, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
-        Impl<DDim, MemorySpace>::eval_basis(
-                std::array<double, D + 1>& values,
-                ddc::Coordinate<Tag> const& x) const
+        Impl<DDim, MemorySpace>::eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
 {
+    assert(values.size() == D + 1);
+
     std::array<double, degree()> left;
     std::array<double, degree()> right;
 
@@ -297,9 +297,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
 template <class Tag, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
-        Impl<DDim, MemorySpace>::eval_deriv(
-                std::array<double, D + 1>& derivs,
-                ddc::Coordinate<Tag> const& x) const
+        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const
 {
     std::array<double, degree()> left;
     std::array<double, degree()> right;

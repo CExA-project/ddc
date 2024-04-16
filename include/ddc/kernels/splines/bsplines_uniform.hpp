@@ -118,13 +118,14 @@ public:
         Impl& operator=(Impl&& x) = default;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(std::array<double, D + 1>& values, ddc::Coordinate<Tag> const& x) const
+        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
         {
+            assert(values.size() == degree() + 1);
             return eval_basis(values, x, degree());
         }
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const;
+        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
@@ -199,11 +200,8 @@ public:
             return 1.0 / ddc::step<mesh_type>();
         }
 
-        template <std::size_t Size>
-        KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
-                std::array<double, Size>& values,
-                ddc::Coordinate<Tag> const& x,
-                std::size_t degree) const;
+        KOKKOS_INLINE_FUNCTION discrete_element_type
+        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x, std::size_t degree) const;
 
         KOKKOS_INLINE_FUNCTION void get_icell_and_offset(
                 int& icell,
@@ -222,10 +220,9 @@ constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<DDim>::value;
 
 template <class Tag, std::size_t D>
 template <class DDim, class MemorySpace>
-template <std::size_t Size>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::
         eval_basis(
-                std::array<double, Size>& values,
+                DSpan1D values,
                 ddc::Coordinate<Tag> const& x,
                 [[maybe_unused]] std::size_t const deg) const
 {
@@ -239,17 +236,17 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<
 
     // 3. Compute values of aforementioned B-splines
     double xx, temp, saved;
-    values[0] = 1.0;
-    for (std::size_t j = 1; j < Size; ++j) {
+    values(0) = 1.0;
+    for (std::size_t j = 1; j < values.size(); ++j) {
         xx = -offset;
         saved = 0.0;
         for (std::size_t r = 0; r < j; ++r) {
             xx += 1;
-            temp = values[r] / j;
-            values[r] = saved + xx * temp;
+            temp = values(r) / j;
+            values(r) = saved + xx * temp;
             saved = (j - xx) * temp;
         }
-        values[j] = saved;
+        values(j) = saved;
     }
 
     return discrete_element_type(jmin);
@@ -258,7 +255,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<
 template <class Tag, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::
-        eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const
+        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const
 {
     assert(derivs.size() == degree() + 1);
 
@@ -271,29 +268,29 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<
     // 3. Compute derivatives of aforementioned B-splines
     //    Derivatives are normalized, hence they should be divided by dx
     double xx, temp, saved;
-    derivs[0] = 1.0 / ddc::step<mesh_type>();
+    derivs(0) = 1.0 / ddc::step<mesh_type>();
     for (std::size_t j = 1; j < degree(); ++j) {
         xx = -offset;
         saved = 0.0;
         for (std::size_t r = 0; r < j; ++r) {
             xx += 1.0;
-            temp = derivs[r] / j;
-            derivs[r] = saved + xx * temp;
+            temp = derivs(r) / j;
+            derivs(r) = saved + xx * temp;
             saved = (j - xx) * temp;
         }
-        derivs[j] = saved;
+        derivs(j) = saved;
     }
 
     // Compute derivatives
     double bjm1 = derivs[0];
     double bj = bjm1;
-    derivs[0] = -bjm1;
+    derivs(0) = -bjm1;
     for (std::size_t j = 1; j < degree(); ++j) {
-        bj = derivs[j];
-        derivs[j] = bjm1 - bj;
+        bj = derivs(j);
+        derivs(j) = bjm1 - bj;
         bjm1 = bj;
     }
-    derivs[degree()] = bj;
+    derivs(degree()) = bj;
 
     return discrete_element_type(jmin);
 }
@@ -463,7 +460,7 @@ UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
                 mdspan<double, std::experimental::extents<std::size_t, degree() + 2>> const
                         edge_vals(edge_vals_ptr.data());
 
-        eval_basis(edge_vals_ptr, rmin(), degree() + 1);
+        eval_basis(edge_vals, rmin(), degree() + 1);
 
         double const d_eval = ddc::detail::sum(edge_vals);
 

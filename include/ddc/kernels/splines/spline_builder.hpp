@@ -255,12 +255,12 @@ public:
                 bsplines_type>(batched_interpolation_domain(), spline_domain());
     }
 
-    batched_spline_tr_domain_type spline_tr_domain() const noexcept
+    batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
     {
         return batched_spline_tr_domain_type(spline_domain(), batch_domain());
     }
 
-    batched_derivs_domain_type derivs_xmin_domain() const noexcept
+    batched_derivs_domain_type batched_derivs_xmin_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
                 batched_interpolation_domain(),
@@ -269,7 +269,7 @@ public:
                         ddc::DiscreteVector<deriv_type>(s_nbc_xmin)));
     }
 
-    batched_derivs_domain_type derivs_xmax_domain() const noexcept
+    batched_derivs_domain_type batched_derivs_xmax_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
                 batched_interpolation_domain(),
@@ -729,7 +729,9 @@ operator()(
 
     // TODO : Consider optimizing
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
-    ddc::Chunk spline_tr_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, memory_space>());
+    ddc::Chunk spline_tr_alloc(
+            batched_spline_tr_domain(),
+            ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
     ddc::parallel_for_each(
             exec_space(),

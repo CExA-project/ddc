@@ -10,10 +10,26 @@
 #include "deriv.hpp"
 
 namespace ddc {
+
+/**
+ * @brief An enum determining the backend solver of a SplineBuilder or SplineBuilder2d.
+ *
+ * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d. Only GINKGO available at the moment,
+ * other solvers will be implemented in the futur.
+ */
 enum class SplineSolver {
     GINKGO
-}; // Only GINKGO available atm, other solvers will be implemented in the futur
+};
 
+/**
+ * @brief An helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
+ *
+ * An helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
+ * @param is_uniform A boolean giving the presumed status before considering boundary conditions.
+ * @param BcXmin The Xmin boundary condition.
+ * @param BcXmax The Xmax boundary condition.
+ * @param int The degree of the spline.
+ */
 constexpr bool is_spline_interpolation_mesh_uniform(
         bool const is_uniform,
         ddc::BoundCond const BcXmin,
@@ -34,6 +50,14 @@ constexpr bool is_spline_interpolation_mesh_uniform(
  * of BSplines. The spline is constructed such that it respects the boundary conditions
  * BcXmin and BcXmax, and it interpolates the function at the points on the interpolation_mesh
  * associated with interpolation_mesh_type.
+ * @tparam ExecSpace The Kokkos execution space on which the spline transform is performed.
+ * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) are stored.
+ * @tparam BSplines The BSplines dimension.
+ * @tparam InterpolationMesh The discrete dimension supporting the interpolation points.
+ * @tparam BcXmin The Xmin boundary condition.
+ * @tparam BcXmax The Xmax boundary condition.
+ * @tparam Solver The SplineSolver giving the backend used to perform the spline transform.
+ * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (InterpolationMesh + batched dimensions).
  */
 template <
         class ExecSpace,
@@ -57,20 +81,29 @@ private:
     using tag_type = typename InterpolationMesh::continuous_dimension_type;
 
 public:
+    /**
+     * @brief The type of the Kokkos execution space used by this class.
+     */
     using exec_space = ExecSpace;
 
+    /**
+     * @brief The type of the Kokkos memory space used by this class.
+     */
     using memory_space = MemorySpace;
 
     /**
-     * @brief The type of the interpolation mesh used by this class.
+     * @brief The type of the interpolation mesh (discrete dimension of interest) used by this class.
      */
     using interpolation_mesh_type = InterpolationMesh;
 
     /**
-     * @brief The type of the BSplines which are compatible with this class.
+     * @brief The BSplines dimension.
      */
     using bsplines_type = BSplines;
 
+	/**
+     * @brief The deriv dimension at the boundaries.
+     */
     using deriv_type = ddc::Deriv<tag_type>;
 
     /**
@@ -78,13 +111,22 @@ public:
      */
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
 
+    /**
+     * @brief The type of the whole domain representing interpolation points.
+     */
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
+    /**
+     * @brief The type of the batch domain (obtained by removing dimension of interest from whole space).
+     */
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
+	/**
+     * @brief The dimension WIP.
+     */
     template <typename Tag>
     using spline_dim_type
             = std::conditional_t<std::is_same_v<Tag, interpolation_mesh_type>, bsplines_type, Tag>;

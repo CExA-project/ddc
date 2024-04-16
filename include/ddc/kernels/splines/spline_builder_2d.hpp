@@ -87,7 +87,14 @@ public:
      */
     using bsplines_type2 = typename builder_type2::bsplines_type;
 
+	/**
+     * @brief The type of the derivatives on boundaries in the first dimension which are compatible with this class.
+     */
     using deriv_type1 = typename builder_type1::deriv_type;
+
+	/**
+     * @brief The type of the derivatives on boundaries in the second dimension which are compatible with this class.
+     */
     using deriv_type2 = typename builder_type2::deriv_type;
 
     /**

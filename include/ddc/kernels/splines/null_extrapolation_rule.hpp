@@ -6,6 +6,9 @@
 
 namespace ddc {
 
+/**
+ * @brief A functor for describing a spline boundary value by a null extrapolation for 1D evaluator.
+ */
 struct NullExtrapolationRule
 {
     template <class CoordType, class ChunkSpan>

@@ -15,7 +15,7 @@
 namespace ddc {
 
 /**
- * A class which provides helper functions to initialise the Greville points from a B-Spline definition.
+ * A class which provides helper functions to initialize the Greville points from a B-Spline definition.
  *
  * @tparam BSplines The bspline class relative to which the Greville points will be calculated.
  * @tparam BcXmin The (left) boundary condition that will be used to build the splines.

@@ -80,7 +80,6 @@ void for_each_kokkos(
     }
 }
 
-
 template <class ExecSpace, class Functor, class DDim0>
 void for_each_kokkos(
         std::string const& label,
@@ -104,7 +103,6 @@ void for_each_kokkos(
                 ForEachKokkosLambdaAdapter<Functor, DDim0>(f));
     }
 }
-
 
 template <class ExecSpace, class Functor, class DDim0, class DDim1, class... DDims>
 void for_each_kokkos(
@@ -208,6 +206,5 @@ void parallel_for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noex
             domain,
             std::forward<Functor>(f));
 }
-
 
 } // namespace ddc

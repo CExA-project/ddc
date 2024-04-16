@@ -26,6 +26,7 @@ If you like the project, please leave us a github star.
 If you want to know more, join un on [Slack](https://join.slack.com/t/ddc-lib/shared_invite/zt-14b6rjcrn-AwSfM6_arEamAKk_VgQPhg)
 
 ## Getting the code and basic configuration
+
 ```bash
 git clone --recurse-submodules -j4 https://github.com/CExA-project/ddc.git
 cd ddc

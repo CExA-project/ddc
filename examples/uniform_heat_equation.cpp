@@ -99,7 +99,7 @@ int main(int argc, char** argv)
     double const ky = .002;
     double const start_time = 0.;
     double const end_time = 10.;
-    ptrdiff_t const t_output_period = 10;
+    std::ptrdiff_t const t_output_period = 10;
     //! [parameters]
 
     //! [main-start]

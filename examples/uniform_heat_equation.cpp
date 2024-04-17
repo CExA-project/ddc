@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     //! [parameters]
     double const x_start = -1.;
     double const x_end = 1.;
-    size_t const nb_x_points = 10;
+    std::size_t const nb_x_points = 10;
     double const kx = .01;
     double const y_start = -1.;
     double const y_end = 1.;

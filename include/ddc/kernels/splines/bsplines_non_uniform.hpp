@@ -24,7 +24,12 @@ struct NonUniformBSplinesBase
 {
 };
 
-/// NonUniformPointSampling specialization of BSplines
+/**
+ * The type of a non-uniform BSplines 1D basis.
+ *
+ * @tparam Tag The tag identifying the continuous dimension which supports the building of the BSplines.
+ * @tparam D The degree of the BSplines.
+ */
 template <class Tag, std::size_t D>
 class NonUniformBSplines : NonUniformBSplinesBase
 {

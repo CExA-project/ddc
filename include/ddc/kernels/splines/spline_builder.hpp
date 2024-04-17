@@ -161,9 +161,9 @@ private:
     // interpolator specific
     std::unique_ptr<ddc::detail::Matrix> matrix;
 
-public:
     int compute_offset(interpolation_domain_type const& interpolation_domain);
 
+public:
     explicit SplineBuilder(
             vals_domain_type const& vals_domain,
             std::optional<int> cols_per_chunk = std::nullopt,

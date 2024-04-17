@@ -258,10 +258,8 @@ int main(int argc, char** argv)
                 next_temp.domain(),
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                    ddc::DiscreteElement<DDimX> const ix
-                            = ddc::select<DDimX>(ixy);
-                    ddc::DiscreteElement<DDimY> const iy
-                            = ddc::select<DDimY>(ixy);
+                    ddc::DiscreteElement<DDimX> const ix(ixy);
+                    ddc::DiscreteElement<DDimY> const iy(ixy);
                     double const dt = ddc::step<DDimT>();
 
                     next_temp(ix, iy) = last_temp(ix, iy);

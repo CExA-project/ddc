@@ -185,9 +185,9 @@ int main(int argc, char** argv)
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
-                        = ddc::coordinate(ddc::select<DDimX>(ixy));
+                        = ddc::coordinate(ddc::DiscreteElement<DDimX>(ixy));
                 double const y
-                        = ddc::coordinate(ddc::select<DDimY>(ixy));
+                        = ddc::coordinate(ddc::DiscreteElement<DDimY>(ixy));
                 ghosted_initial_temp(ixy)
                         = 9.999 * ((x * x + y * y) < 0.25);
             });

@@ -277,7 +277,11 @@ private:
         static_assert(
                 std::is_same_v<EvalType, eval_type> || std::is_same_v<EvalType, eval_deriv_type>);
         ddc::DiscreteElement<bsplines_type> jmin;
-        std::array<double, bsplines_type::degree() + 1> vals;
+        std::array<double, bsplines_type::degree() + 1> vals_ptr;
+        std::experimental::mdspan<
+                double,
+                std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
+                vals(vals_ptr.data());
         ddc::Coordinate<typename interpolation_mesh_type::continuous_dimension_type>
                 coord_eval_interpolation
                 = ddc::select<typename interpolation_mesh_type::continuous_dimension_type>(

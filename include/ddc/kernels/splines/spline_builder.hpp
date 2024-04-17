@@ -342,7 +342,7 @@ public:
      *
      * @return The (transposed) domain for the spline coefficients.
      */
-    batched_spline_tr_domain_type spline_tr_domain() const noexcept
+    batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
     {
         return batched_spline_tr_domain_type(spline_domain(), batch_domain());
     }
@@ -354,7 +354,7 @@ public:
      *
      * @return The domain for the Derivs values.
      */
-    batched_derivs_domain_type derivs_xmin_domain() const noexcept
+    batched_derivs_domain_type batched_derivs_xmin_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
                 batched_interpolation_domain(),
@@ -370,7 +370,7 @@ public:
      *
      * @return The domain for the Derivs values.
      */
-    batched_derivs_domain_type derivs_xmax_domain() const noexcept
+    batched_derivs_domain_type batched_derivs_xmax_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
                 batched_interpolation_domain(),
@@ -468,7 +468,11 @@ int SplineBuilder<
     int offset;
     if constexpr (bsplines_type::is_periodic()) {
         // Calculate offset so that the matrix is diagonally dominant
-        std::array<double, bsplines_type::degree() + 1> values;
+        std::array<double, bsplines_type::degree() + 1> values_ptr;
+        std::experimental::mdspan<
+                double,
+                std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
+                values(values_ptr.data());
         ddc::DiscreteElement<interpolation_mesh_type> start(interpolation_domain.front());
         auto jmin = ddc::discrete_space<BSplines>()
                             .eval_basis(values, ddc::coordinate(start + BSplines::degree()));
@@ -476,7 +480,7 @@ int SplineBuilder<
             offset = jmin.uid() - start.uid() + bsplines_type::degree() / 2 - BSplines::degree();
         } else {
             int const mid = bsplines_type::degree() / 2;
-            offset = jmin.uid() - start.uid() + (values[mid] > values[mid + 1] ? mid : mid + 1)
+            offset = jmin.uid() - start.uid() + (values(mid) > values(mid + 1) ? mid : mid + 1)
                      - BSplines::degree();
         }
     } else {
@@ -673,7 +677,12 @@ void SplineBuilder<
     }
 
     // Interpolation points
-    std::array<double, bsplines_type::degree() + 1> values;
+    std::array<double, bsplines_type::degree() + 1> values_ptr;
+    std::experimental::mdspan<
+            double,
+            std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
+            values(values_ptr.data());
+
     int start = interpolation_domain().front().uid();
     ddc::for_each(interpolation_domain(), [&](auto ix) {
         auto jmin = ddc::discrete_space<BSplines>().eval_basis(
@@ -683,7 +692,7 @@ void SplineBuilder<
             int const j = ddc::detail::
                     modulo(int(jmin.uid() - m_offset + s),
                            (int)ddc::discrete_space<BSplines>().nbasis());
-            matrix->set_element(ix.uid() - start + s_nbc_xmin, j, values[s]);
+            matrix->set_element(ix.uid() - start + s_nbc_xmin, j, values(s));
         }
     });
 
@@ -827,7 +836,9 @@ operator()(
 
     // TODO : Consider optimizing
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
-    ddc::Chunk spline_tr_alloc(spline_tr_domain(), ddc::KokkosAllocator<double, memory_space>());
+    ddc::Chunk spline_tr_alloc(
+            batched_spline_tr_domain(),
+            ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
     ddc::parallel_for_each(
             exec_space(),

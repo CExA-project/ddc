@@ -26,8 +26,8 @@ enum class SplineSolver {
  *
  * An helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
  * @param is_uniform A boolean giving the presumed status before considering boundary conditions.
- * @param BcXmin The Xmin boundary condition.
- * @param BcXmax The Xmax boundary condition.
+ * @param BcXmin The lower boundary condition.
+ * @param BcXmax The upper boundary condition.
  * @param int The degree of the spline.
  */
 constexpr bool is_spline_interpolation_mesh_uniform(
@@ -54,8 +54,8 @@ constexpr bool is_spline_interpolation_mesh_uniform(
  * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) are stored.
  * @tparam BSplines The discrete dimension representing the BSplines.
  * @tparam InterpolationMesh The discrete dimension supporting the interpolation points.
- * @tparam BcXmin The Xmin boundary condition.
- * @tparam BcXmax The Xmax boundary condition.
+ * @tparam BcXmin The lower boundary condition.
+ * @tparam BcXmax The upper boundary condition.
  * @tparam Solver The SplineSolver giving the backend used to perform the spline transform.
  * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (InterpolationMesh + batched dimensions).
  */
@@ -125,18 +125,24 @@ public:
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
 	/**
-     * @brief The dimension WIP.
+     * @brief Helper to get the dimension of batched_spline_domain_type associated to a dimension of batched_interpolation_domain_type.
      */
     template <typename Tag>
     using spline_dim_type
             = std::conditional_t<std::is_same_v<Tag, interpolation_mesh_type>, bsplines_type, Tag>;
 
+    /**
+     * @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
+     */
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
+	/**
+     * @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) with 1D spline domain being contiguous .
+     */
     using batched_spline_tr_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
@@ -144,6 +150,9 @@ public:
                             ddc::detail::TypeSeq<IDimX...>,
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
+    /**
+     * @brief The type of the whole derivs domain (cartesian product of 1D deriv domain and batch domain) preserving the underlying memory layout (order of dimensions).
+     */
     using batched_derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -156,12 +165,12 @@ public:
     static constexpr bool s_odd = BSplines::degree() % 2;
 
     /**
-     * @brief The number of equations which define the boundary conditions at the lower bound.
+     * @brief The number of equations defining the boundary conditions at the lower bound.
      */
     static constexpr int s_nbe_xmin = n_boundary_equations(BcXmin, BSplines::degree());
 
     /**
-     * @brief The number of equations which define the boundary conditions at the upper bound.
+     * @brief The number of equations defining the boundary conditions at the upper bound.
      */
     static constexpr int s_nbe_xmax = n_boundary_equations(BcXmax, BSplines::degree());
 

@@ -220,7 +220,7 @@ public:
 
     /**
      * @brief Build a SplineBuilder acting on batched_interpolation_domain.
-	 * 
+     * 
      * @param batched_interpolation_domain The domain on which are defined the interpolation points.
      * @param cols_per_chunk An hyperparameter used by the slicer (internal to the solver) to define the size of a chunk of right-and-sides of the linear problem to be computed in parallel.
      */

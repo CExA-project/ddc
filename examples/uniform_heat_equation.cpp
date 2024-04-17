@@ -95,7 +95,7 @@ int main(int argc, char** argv)
     double const kx = .01;
     double const y_start = -1.;
     double const y_end = 1.;
-    size_t const nb_y_points = 100;
+    std::size_t const nb_y_points = 100;
     double const ky = .002;
     double const start_time = 0.;
     double const end_time = 10.;

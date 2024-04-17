@@ -92,7 +92,7 @@ public:
     using memory_space = MemorySpace;
 
     /**
-     * @brief The type of the interpolation mesh (discrete dimension of interest) used by this class.
+     * @brief The type of the interpolation discrete dimension (discrete dimension of interest) used by this class.
      */
     using interpolation_mesh_type = InterpolationMesh;
 
@@ -102,7 +102,7 @@ public:
     using bsplines_type = BSplines;
 
 	/**
-     * @brief The deriv dimension at the boundaries.
+     * @brief The Deriv dimension at the boundaries.
      */
     using deriv_type = ddc::Deriv<tag_type>;
 
@@ -151,7 +151,7 @@ public:
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
     /**
-     * @brief The type of the whole derivs domain (cartesian product of 1D deriv domain and batch domain) preserving the underlying memory layout (order of dimensions).
+     * @brief The type of the whole Derivs domain (cartesian product of 1D Deriv domain and batch domain) preserving the underlying memory layout (order of dimensions).
      */
     using batched_derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
@@ -352,7 +352,7 @@ public:
      *
      * Get the whole domain on which derivatives on lower boundary are defined. This is used only with HERMITE boundary conditions.
      *
-     * @return The domain for the derivs values.
+     * @return The domain for the Derivs values.
      */
     batched_derivs_domain_type derivs_xmin_domain() const noexcept
     {
@@ -368,7 +368,7 @@ public:
      *
      * Get the whole domain on which derivatives on upper boundary are defined. This is used only with HERMITE boundary conditions.
      *
-     * @return The domain for the derivs values.
+     * @return The domain for the Derivs values.
      */
     batched_derivs_domain_type derivs_xmax_domain() const noexcept
     {

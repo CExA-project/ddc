@@ -107,7 +107,7 @@ public:
     using deriv_type = ddc::Deriv<tag_type>;
 
     /**
-     * @brief The type of the domain for the interpolation mesh used by this class.
+     * @brief The type of the domain for the 1D interpolation mesh used by this class.
      */
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
 
@@ -213,8 +213,17 @@ private:
     std::unique_ptr<ddc::detail::Matrix> matrix;
 
 public:
+    /**
+     * @brief An helper to compute the offset.
+     */
     int compute_offset(interpolation_domain_type const& interpolation_domain);
 
+    /**
+     * @brief Build a SplineBuilder acting on batched_interpolation_domain.
+	 * 
+     * @param batched_interpolation_domain The domain on which are defined the interpolation points.
+     * @param cols_per_chunk An hyperparameter used by the slicer (internal to the solver) to define the size of a chunk of right-and-sides of the linear problem to be computed in parallel.
+     */
     explicit SplineBuilder(
             batched_interpolation_domain_type const& batched_interpolation_domain,
             std::optional<int> cols_per_chunk = std::nullopt,
@@ -261,43 +270,63 @@ public:
      * @param x The SplineBuilder being copied.
      * @returns A reference to this object.
      */
-    SplineBuilder& operator=(SplineBuilder&& x) = default;
+    SplineBuilder& operator=(SplineBuilder&& x) = default;	
 
+    /**
+     * @brief Get the domain for the 1D interpolation mesh used by this class.
+     *
+     * Get the 1D interpolation domain associated to dimension of interest.
+     *
+     * @return The 1D domain for the grid points.
+     */
+    interpolation_domain_type interpolation_domain() const noexcept
+    {
+        return interpolation_domain_type(m_batched_interpolation_domain);
+    }
+
+    /**
+     * @brief Get the whole domain representing interpolation points.
+     *
+     * Get the domain on which values of the function must be provided in order
+     * to build a spline transform of the function.
+     *
+     * @return The domain for the grid points.
+     */
     batched_interpolation_domain_type batched_interpolation_domain() const noexcept
     {
         return m_batched_interpolation_domain;
     }
 
     /**
-     * @brief Get the domain from which the approximation is defined.
+     * @brief Get the batch domain.
      *
-     * Get the domain on which values of the function must be provided in order
-     * to build a spline approximation of the function.
+     * Get the batch domain (obtained by removing dimension of interest from whole interpolation domain).
      *
-     * @return The domain for the grid points.
+     * @return The batch domain.
      */
-    interpolation_domain_type interpolation_domain() const noexcept
-    {
-        return interpolation_domain_type(batched_interpolation_domain());
-    }
-
     batch_domain_type batch_domain() const noexcept
     {
         return ddc::remove_dims_of(batched_interpolation_domain(), interpolation_domain());
     }
 
+	/**
+     * @brief Get the 1D domain on which spline coefficients are defined.
+     *
+     * Get the 1D spline domain corresponding to dimension of interest.
+     *
+     * @return The 1D domain for the spline coefficients.
+     */
     ddc::DiscreteDomain<bsplines_type> spline_domain() const noexcept
     {
         return ddc::discrete_space<bsplines_type>().full_domain();
     }
 
     /**
-     * @brief Get the domain on which the approximation is defined.
+     * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
      *
-     * Get the domain of the basis-splines for which the coefficients of the spline
-     * approximation must be calculated.
+     * Get the whole domain on which spline coefficients will be computed, preserving memory layout (order of dimensions).
      *
-     * @return The domain for the splines.
+     * @return The domain for the spline coefficients.
      */
     batched_spline_domain_type batched_spline_domain() const noexcept
     {
@@ -306,11 +335,25 @@ public:
                 bsplines_type>(batched_interpolation_domain(), spline_domain());
     }
 
+    /**
+     * @brief Get the whole domain on which spline coefficients are defined, with dimension of interest contiguous.
+     *
+     * Get the (transposed) whole domain on which spline coefficients will be computed, with dimension of interest contiguous.
+     *
+     * @return The (transposed) domain for the spline coefficients.
+     */
     batched_spline_tr_domain_type spline_tr_domain() const noexcept
     {
         return batched_spline_tr_domain_type(spline_domain(), batch_domain());
     }
 
+    /**
+     * @brief Get the whole domain on which derivatives on lower boundary are defined.
+     *
+     * Get the whole domain on which derivatives on lower boundary are defined. This is used only with HERMITE boundary conditions.
+     *
+     * @return The domain for the derivs values.
+     */
     batched_derivs_domain_type derivs_xmin_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
@@ -320,6 +363,13 @@ public:
                         ddc::DiscreteVector<deriv_type>(s_nbc_xmin)));
     }
 
+	/**
+     * @brief Get the whole domain on which derivatives on upper boundary are defined.
+     *
+     * Get the whole domain on which derivatives on upper boundary are defined. This is used only with HERMITE boundary conditions.
+     *
+     * @return The domain for the derivs values.
+     */
     batched_derivs_domain_type derivs_xmax_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
@@ -334,6 +384,10 @@ public:
      *
      * Get the interpolation matrix. This can be useful for debugging (as it allows
      * one to print the matrix) or for more complex quadrature schemes.
+	 *
+	 * Warning: the returned ddc::detail::Matrix class is not supposed to be exposed
+	 * to user, which means its usage is not tested out of the scope of DDC splines transforms.
+	 * Use at your own risk.
      *
      * @return A reference to the interpolation matrix.
      */
@@ -355,8 +409,10 @@ public:
      *
      * @param[out] spline The coefficients of the spline calculated by the function.
      * @param[in] vals The values of the function at the grid points.
-     * @param[in] derivs_xmin The values of the derivatives at the lower boundary.
-     * @param[in] derivs_xmax The values of the derivatives at the upper boundary.
+     * @param[in] derivs_xmin The values of the derivatives at the lower boundary
+	 * (used only with HERMITE lower boundary condition).
+     * @param[in] derivs_xmax The values of the derivatives at the upper boundary
+	 * (used only with HERMITE upper boundary condition).
      */
     template <class Layout>
     void operator()(

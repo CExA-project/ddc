@@ -125,7 +125,7 @@ int main(int argc, char** argv)
     //! [X-domains]
 
     //! [Y-domains]
-    ddc::DiscreteVector<DDimY> static gwy(1);
+    ddc::DiscreteVector<DDimY> const gwy(1);
 
     auto const [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]
             = ddc::init_discrete_space<DDimY>(DDimY::init_ghosted<DDimY>(

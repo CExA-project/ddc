@@ -52,7 +52,7 @@ constexpr bool is_spline_interpolation_mesh_uniform(
  * associated with interpolation_mesh_type.
  * @tparam ExecSpace The Kokkos execution space on which the spline transform is performed.
  * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) are stored.
- * @tparam BSplines The BSplines dimension.
+ * @tparam BSplines The discrete dimension representing the BSplines.
  * @tparam InterpolationMesh The discrete dimension supporting the interpolation points.
  * @tparam BcXmin The Xmin boundary condition.
  * @tparam BcXmax The Xmax boundary condition.
@@ -97,7 +97,7 @@ public:
     using interpolation_mesh_type = InterpolationMesh;
 
     /**
-     * @brief The BSplines dimension.
+     * @brief The discrete dimension representing the BSplines.
      */
     using bsplines_type = BSplines;
 

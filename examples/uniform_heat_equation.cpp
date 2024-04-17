@@ -104,7 +104,7 @@ int main(int argc, char** argv)
 
     //! [main-start]
     //! [X-parameters]
-    ddc::DiscreteVector<DDimX> static gwx(1);
+    ddc::DiscreteVector<DDimX> const gwx(1);
     //! [X-parameters]
 
     //! [X-global-domain]

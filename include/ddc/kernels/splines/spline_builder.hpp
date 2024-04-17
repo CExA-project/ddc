@@ -101,7 +101,7 @@ public:
      */
     using bsplines_type = BSplines;
 
-	/**
+    /**
      * @brief The Deriv dimension at the boundaries.
      */
     using deriv_type = ddc::Deriv<tag_type>;
@@ -124,7 +124,7 @@ public:
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
-	/**
+    /**
      * @brief Helper to get the dimension of batched_spline_domain_type associated to a dimension of batched_interpolation_domain_type.
      */
     template <typename Tag>
@@ -140,7 +140,7 @@ public:
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
-	/**
+    /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) with 1D spline domain being contiguous .
      */
     using batched_spline_tr_domain_type =
@@ -270,7 +270,7 @@ public:
      * @param x The SplineBuilder being copied.
      * @returns A reference to this object.
      */
-    SplineBuilder& operator=(SplineBuilder&& x) = default;	
+    SplineBuilder& operator=(SplineBuilder&& x) = default;
 
     /**
      * @brief Get the domain for the 1D interpolation mesh used by this class.
@@ -309,7 +309,7 @@ public:
         return ddc::remove_dims_of(batched_interpolation_domain(), interpolation_domain());
     }
 
-	/**
+    /**
      * @brief Get the 1D domain on which spline coefficients are defined.
      *
      * Get the 1D spline domain corresponding to dimension of interest.
@@ -363,7 +363,7 @@ public:
                         ddc::DiscreteVector<deriv_type>(s_nbc_xmin)));
     }
 
-	/**
+    /**
      * @brief Get the whole domain on which derivatives on upper boundary are defined.
      *
      * Get the whole domain on which derivatives on upper boundary are defined. This is used only with HERMITE boundary conditions.

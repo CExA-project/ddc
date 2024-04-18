@@ -42,12 +42,6 @@ public:
     /// @brief The discrete dimension representing BSplines.
     using discrete_dimension_type = UniformBSplines;
 
-    /// @brief The rank.
-    static constexpr std::size_t rank()
-    {
-        return 1;
-    }
-
     /// @brief The degree of BSplines.
     static constexpr std::size_t degree() noexcept
     {

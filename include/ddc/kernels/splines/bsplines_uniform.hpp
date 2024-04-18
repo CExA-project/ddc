@@ -39,7 +39,7 @@ public:
     /// @brief The tag identifying the continuous dimension which supports the building of the BSplines.
     using tag_type = Tag;
 
-    /// @brief The discrete dimension corresponding to BSplines.
+    /// @brief The discrete dimension representing BSplines.
     using discrete_dimension_type = UniformBSplines;
 
     /// @brief The rank.
@@ -66,7 +66,7 @@ public:
         return false;
     }
 
-    /// @brief Indicates if the BSplines are uniform or not (this is obviously the case here).
+    /// @brief Indicates if the BSplines are uniform or not (this is the case here).
     static constexpr bool is_uniform() noexcept
     {
         return true;
@@ -86,7 +86,7 @@ public:
         ddc::DiscreteDomain<mesh_type> m_domain;
 
     public:
-        /// @brief The type of discrete dimension associated to BSplines.
+        /// @brief The type of discrete dimension identifying BSplines.
         using discrete_dimension_type = UniformBSplines;
 
         /// @brief The type of discrete domain indexing the BSplines.
@@ -100,7 +100,7 @@ public:
 
         Impl() = default;
 
-        /** Constructs a BSpline basis with n equidistant knots over \f$[a, b]\f$
+        /** Constructs a BSplines basis with n equidistant knots over \f$[a, b]\f$
          *
          * @param rmin    the real ddc::coordinate of the first knot
          * @param rmax    the real ddc::coordinate of the last knot
@@ -118,7 +118,7 @@ public:
                             mesh_type>(rmin, rmax, ddc::DiscreteVector<mesh_type>(ncells + 1)));
         }
 
-        /// @brief Copy-constructs from another impl with different Kokkos memory space
+        /// @brief Copy-constructs from another Impl with different Kokkos memory space
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_domain(impl.m_domain)
         {
@@ -143,7 +143,7 @@ public:
          *
          * The values are computed for every BSplines at the given coordinate x. A spline approximation at coordinate x is a linear combination of those BSplines evaluations weigthed with splines coefficients of the spline-transformed initial discrete function.
          * @param[out] values The values of the BSplines evaluated at coordinate x. It has to be a (1+degree) 1D mdspan.
-         * @param[in] x The coordinates where BSplines are evaluated.
+         * @param[in] x The coordinate where BSplines are evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
@@ -156,12 +156,12 @@ public:
          *
          * The derivatives are computed for every BSplines at the given coordinate x. A spline approximation of a derivative at coordinate x is a linear combination of those BSplines derivatives weigthed with splines coefficients of the spline-transformed initial discrete function.
          * @param[out] derivs The derivatives of the BSplines evaluated at coordinate x. It has to be a (1+degree) 1D mdspan.
-         * @param[in] x The coordinates where BSplines derivatives are evaluated.
+         * @param[in] x The coordinate where BSplines derivatives are evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
 
-        /** @brief Evaluates BSplines values and n derivatives at a given coordinate
+        /** @brief Evaluates BSplines values and \f$n\f$ derivatives at a given coordinate
          *
          * The values and derivatives are computed for every BSplines at the given coordinate x.
          * @param[out] derivs The values and n derivatives of the BSplines evaluated at coordinate x. It has to be a (1+degree)*(1+n) 2D mdspan.
@@ -173,7 +173,7 @@ public:
                 ddc::Coordinate<Tag> const& x,
                 std::size_t n) const;
 
-        /** @brief Compute the integrals of the bsplines 
+        /** @brief Compute the integrals of the BSplines.
          *
          * @param[out] int_vals The values of the integrals. It has to be a (1+nbasis) 1D mdspan.
          */
@@ -192,9 +192,9 @@ public:
             return ddc::Coordinate<Tag>(rmin() + idx * ddc::step<mesh_type>());
         }
 
-        /** @brief Returns the first support knot associated to a discrete_element identifying a BSpline.
+        /** @brief Returns the first support knot associated to a DiscreteElement identifying a BSpline.
          *
-         * @param[in] ix Index of the BSpline.
+         * @param[in] ix DiscreteElement identifying the BSpline.
          * @return Coordinate of the knot.
          */
         KOKKOS_INLINE_FUNCTION double get_first_support_knot(discrete_element_type const& ix) const
@@ -202,9 +202,9 @@ public:
             return get_knot(ix.uid() - degree());
         }
 
-        /** @brief Returns the last support knot associated to a discrete_element identifying a BSpline.
+        /** @brief Returns the last support knot associated to a DiscreteElement identifying a BSpline.
          *
-         * @param[in] ix Index of the BSpline.
+         * @param[in] ix DiscreteElement identifying the BSpline.
          * @return Coordinate of the knot.
          */
         KOKKOS_INLINE_FUNCTION double get_last_support_knot(discrete_element_type const& ix) const
@@ -212,10 +212,10 @@ public:
             return get_knot(ix.uid() + 1);
         }
 
-        /** @brief Returns the n-th knot associated to a discrete_element identifying a BSpline.
+        /** @brief Returns the \f$n\f$-th knot associated to a discrete_element identifying a BSpline.
          *
-         * @param[in] ix Index of the BSpline.
-         * @param[in] n Integer identifying a knot in the support of the BSpline.
+         * @param[in] ix DiscreteElement identifying the BSpline.
+         * @param[in] n Integer indexing a knot in the support of the BSpline.
          */
         KOKKOS_INLINE_FUNCTION double get_support_knot_n(discrete_element_type const& ix, int n)
                 const
@@ -308,9 +308,9 @@ struct is_uniform_bsplines : public std::is_base_of<UniformBSplinesBase, DDim>
 };
 
 /**
- * @brief Indicates if a dimension representing BSplines corresponds to uniform BSplines of not.
+ * @brief Indicates if a tag corresponds to uniform BSplines of not.
  *
- * @tparam The discrete dimension associated to BSplines
+ * @tparam The presumed uniform BSplines. 
  */
 template <class DDim>
 constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<DDim>::value;

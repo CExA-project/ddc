@@ -36,11 +36,6 @@ public:
     using discrete_dimension_type = UniformBSplines;
 
 public:
-    static constexpr std::size_t rank()
-    {
-        return 1;
-    }
-
     static constexpr std::size_t degree() noexcept
     {
         return D;

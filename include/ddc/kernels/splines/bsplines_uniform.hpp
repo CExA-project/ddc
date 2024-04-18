@@ -36,22 +36,25 @@ class UniformBSplines : UniformBSplinesBase
     static_assert(D > 0, "Parameter `D` must be positive");
 
 public:
+	/// @brief The tag identifying the continuous dimension which supports the building of the BSplines.
     using tag_type = Tag;
 
-
+	/// @brief The discrete dimension corresponding to BSplines.
     using discrete_dimension_type = UniformBSplines;
 
-public:
+	/// @brief The rank.
     static constexpr std::size_t rank()
     {
         return 1;
     }
 
+	/// @brief The degree of BSplines.
     static constexpr std::size_t degree() noexcept
     {
         return D;
     }
 
+	/// @brief Indicates if the BSplines are periodic or not.
     static constexpr bool is_periodic() noexcept
     {
         return Tag::PERIODIC;
@@ -67,6 +70,7 @@ public:
         return true;
     }
 
+	/// @brief Impl
     template <class DDim, class MemorySpace>
     class Impl
     {
@@ -221,6 +225,11 @@ struct is_uniform_bsplines : public std::is_base_of<UniformBSplinesBase, DDim>
 {
 };
 
+/**
+ * @brief Indicates if a dimension representing BSplines corresponds to uniform BSplines of not.
+ *
+ * @tparam The discrete dimension associated to BSplines
+ */
 template <class DDim>
 constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<DDim>::value;
 

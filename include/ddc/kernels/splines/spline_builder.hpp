@@ -17,9 +17,7 @@ namespace ddc {
  * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d. Only GINKGO available at the moment,
  * other solvers will be implemented in the futur.
  */
-enum class SplineSolver {
-    GINKGO
-};
+enum class SplineSolver { GINKGO };
 
 /**
  * @brief An helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.

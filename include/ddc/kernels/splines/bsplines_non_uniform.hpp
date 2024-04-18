@@ -172,6 +172,7 @@ public:
         /** @brief Compute the integrals of the BSplines.
          *
          * @param[out] int_vals The values of the integrals. It has to be a (1+nbasis) 1D mdspan.
+         * @return The values of the integrals.
          */
         template <class Layout, class MemorySpace2>
         KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>

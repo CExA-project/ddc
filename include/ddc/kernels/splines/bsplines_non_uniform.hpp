@@ -36,43 +36,43 @@ class NonUniformBSplines : NonUniformBSplinesBase
     static_assert(D > 0, "Parameter `D` must be positive");
 
 public:
-	/// @brief The tag identifying the continuous dimension which supports the building of the BSplines.
+    /// @brief The tag identifying the continuous dimension which supports the building of the BSplines.
     using tag_type = Tag;
 
-	/// @brief The discrete dimension corresponding to BSplines.
+    /// @brief The discrete dimension corresponding to BSplines.
     using discrete_dimension_type = NonUniformBSplines;
 
-	/// @brief The rank.
+    /// @brief The rank.
     static constexpr std::size_t rank()
     {
         return 1;
     }
 
-	/// @brief The degree of BSplines.
+    /// @brief The degree of BSplines.
     static constexpr std::size_t degree() noexcept
     {
         return D;
     }
 
-	/// @brief Indicates if the BSplines are periodic or not.
+    /// @brief Indicates if the BSplines are periodic or not.
     static constexpr bool is_periodic() noexcept
     {
         return Tag::PERIODIC;
     }
 
-	/// @brief Indicates if the BSplines are radial or not (should be deprecated soon because this concept is not in the scope of DDC).
+    /// @brief Indicates if the BSplines are radial or not (should be deprecated soon because this concept is not in the scope of DDC).
     static constexpr bool is_radial() noexcept
     {
         return false;
     }
 
-	/// @brief Indicates if the BSplines are uniform or not (this is obviously the case here).
+    /// @brief Indicates if the BSplines are uniform or not (this is obviously the case here).
     static constexpr bool is_uniform() noexcept
     {
         return false;
     }
 
-	/// @brief Impl
+    /// @brief Impl
     template <class DDim, class MemorySpace>
     class Impl
     {
@@ -87,16 +87,16 @@ public:
         int m_nknots;
 
     public:
-	    /// @brief The type of discrete dimension associated to BSplines.
+        /// @brief The type of discrete dimension associated to BSplines.
         using discrete_dimension_type = NonUniformBSplines;
 
-	    /// @brief The type of discrete domain indexing the BSplines.
+        /// @brief The type of discrete domain indexing the BSplines.
         using discrete_domain_type = DiscreteDomain<DDim>;
 
-	    /// @brief The type of discrete element indexing a BSpline.
+        /// @brief The type of discrete element indexing a BSpline.
         using discrete_element_type = DiscreteElement<DDim>;
 
-	    /// @brief The type of discrete vector representing an "indexes displacement" between two BSplines.
+        /// @brief The type of discrete vector representing an "indexes displacement" between two BSplines.
         using discrete_vector_type = DiscreteVector<DDim>;
 
         Impl() = default;

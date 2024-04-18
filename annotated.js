@@ -52,24 +52,17 @@ var annotated =
       [ "KokkosAllocator", "classddc_1_1KokkosAllocator.html", "classddc_1_1KokkosAllocator" ],
       [ "kwArgs_fft", "namespaceddc.html#structddc_1_1kwArgs__fft", "namespaceddc_structddc_1_1kwArgs__fft_dup" ],
       [ "NonUniformBSplines", "classddc_1_1NonUniformBSplines.html", "classddc_1_1NonUniformBSplines" ],
-      [ "NonUniformBSplinesBase", "structddc_1_1NonUniformBSplinesBase.html", null ],
-      [ "NonUniformBsplinesKnots", "structddc_1_1NonUniformBsplinesKnots.html", null ],
       [ "NonUniformPointSampling", "classddc_1_1NonUniformPointSampling.html", "classddc_1_1NonUniformPointSampling" ],
-      [ "NonUniformPointSamplingBase", "structddc_1_1NonUniformPointSamplingBase.html", null ],
       [ "NullExtrapolationRule", "structddc_1_1NullExtrapolationRule.html", "structddc_1_1NullExtrapolationRule" ],
       [ "PdiEvent", "classddc_1_1PdiEvent.html", "classddc_1_1PdiEvent" ],
       [ "PeriodicExtrapolationRule", "structddc_1_1PeriodicExtrapolationRule.html", "structddc_1_1PeriodicExtrapolationRule" ],
       [ "PeriodicSampling", "classddc_1_1PeriodicSampling.html", "classddc_1_1PeriodicSampling" ],
-      [ "PeriodicSamplingBase", "structddc_1_1PeriodicSamplingBase.html", null ],
       [ "ScopeGuard", "classddc_1_1ScopeGuard.html", "classddc_1_1ScopeGuard" ],
       [ "SplineBuilder", "classddc_1_1SplineBuilder.html", "classddc_1_1SplineBuilder" ],
       [ "SplineBuilder2D", "classddc_1_1SplineBuilder2D.html", "classddc_1_1SplineBuilder2D" ],
       [ "SplineEvaluator", "classddc_1_1SplineEvaluator.html", "classddc_1_1SplineEvaluator" ],
       [ "SplineEvaluator2D", "classddc_1_1SplineEvaluator2D.html", "classddc_1_1SplineEvaluator2D" ],
       [ "UniformBSplines", "classddc_1_1UniformBSplines.html", "classddc_1_1UniformBSplines" ],
-      [ "UniformBSplinesBase", "structddc_1_1UniformBSplinesBase.html", null ],
-      [ "UniformBsplinesKnots", "structddc_1_1UniformBsplinesKnots.html", null ],
-      [ "UniformPointSampling", "classddc_1_1UniformPointSampling.html", "classddc_1_1UniformPointSampling" ],
-      [ "UniformPointSamplingBase", "structddc_1_1UniformPointSamplingBase.html", null ]
+      [ "UniformPointSampling", "classddc_1_1UniformPointSampling.html", "classddc_1_1UniformPointSampling" ]
     ] ]
 ];

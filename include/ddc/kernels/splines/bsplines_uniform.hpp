@@ -60,11 +60,13 @@ public:
         return Tag::PERIODIC;
     }
 
+	/// @brief Indicates if the BSplines are radial or not (should be deprecated soon because this concept is not in the scope of DDC).
     static constexpr bool is_radial() noexcept
     {
         return false;
     }
 
+	/// @brief Indicates if the BSplines are uniform or not (this is obviously the case here).
     static constexpr bool is_uniform() noexcept
     {
         return true;
@@ -84,20 +86,19 @@ public:
         ddc::DiscreteDomain<mesh_type> m_domain;
 
     public:
+	    /// @brief The type of discrete dimension associated to BSplines.
         using discrete_dimension_type = UniformBSplines;
 
+	    /// @brief The type of discrete domain indexing the BSplines.
         using discrete_domain_type = DiscreteDomain<DDim>;
 
+	    /// @brief The type of discrete element indexing a BSpline.
         using discrete_element_type = DiscreteElement<DDim>;
 
+	    /// @brief The type of discrete vector representing an "indexes displacement" between two BSplines.
         using discrete_vector_type = DiscreteVector<DDim>;
 
-        Impl() = default;
-
-        template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_domain(impl.m_domain)
-        {
-        }
+        Impl() = default; 
 
         /** Constructs a BSpline basis with n equidistant knots over \f$[a, b]\f$
          *
@@ -117,16 +118,33 @@ public:
                             mesh_type>(rmin, rmax, ddc::DiscreteVector<mesh_type>(ncells + 1)));
         }
 
+        /// @brief Copy-constructs from another impl with different Kokkos memory space
+        template <class OriginMemorySpace>
+        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_domain(impl.m_domain)
+        {
+        }
+
+        /// @brief Copy-constructs
         Impl(Impl const& x) = default;
 
+        /// @brief Move-constructs
         Impl(Impl&& x) = default;
 
+        /// @brief Destructs
         ~Impl() = default;
 
+        /// @brief Copy-assigns
         Impl& operator=(Impl const& x) = default;
 
+        /// @brief Move-assigns
         Impl& operator=(Impl&& x) = default;
 
+        /** @brief Evaluates BSplines at a given coordinate
+         *
+         * The values are computed for every BSplines at the given coordinate x. A spline approximation at coordinate x is a linear combination of those BSplines evaluations weigthed with splines coefficients of the spline-transformed initial discrete function.
+         * @param[out] values The values of the BSplines evaluated at coordinate x. It has to be a (1+degree) 1D mdspan.
+         * @param[in] x The coordinates where BSplines are evaluated.
+         */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
         {
@@ -134,71 +152,135 @@ public:
             return eval_basis(values, x, degree());
         }
 
+        /** @brief Evaluates BSplines derivatives at a given coordinate
+         *
+         * The derivatives are computed for every BSplines at the given coordinate x. A spline approximation of a derivative at coordinate x is a linear combination of those BSplines derivatives weigthed with splines coefficients of the spline-transformed initial discrete function.
+         * @param[out] derivs The derivatives of the BSplines evaluated at coordinate x. It has to be a (1+degree) 1D mdspan.
+         * @param[in] x The coordinates where BSplines derivatives are evaluated.
+         */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
 
+        /** @brief Evaluates BSplines values and n derivatives at a given coordinate
+         *
+         * The values and derivatives are computed for every BSplines at the given coordinate x.
+         * @param[out] derivs The values and n derivatives of the BSplines evaluated at coordinate x. It has to be a (1+degree)*(1+n) 2D mdspan.
+         * @param[in] x The coordinates where BSplines derivatives are evaluated.
+         * @param[in] n The number of derivatives to evaluate (in addition to the BSplines values themselves).
+         */
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
                 ddc::Coordinate<Tag> const& x,
                 std::size_t n) const;
 
+        /** @brief Compute the integrals of the bsplines 
+         *
+         * @param[out] int_vals The values of the integrals. It has to be a (1+nbasis) 1D mdspan.
+         */
         template <class Layout, class MemorySpace2>
         KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
         integrals(
                 ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const;
 
+		/** @brief Returns the coordinate of the knot corresponding to the given index for a BSpline.
+         *
+         * @param[in] idx Integer identifying index of the knot.
+         * @return Coordinate of the knot.
+         */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_knot(int idx) const noexcept
         {
             return ddc::Coordinate<Tag>(rmin() + idx * ddc::step<mesh_type>());
         }
 
+        /** @brief Returns the first support knot associated to a discrete_element identifying a BSpline.
+         *
+         * @param[in] ix Index of the BSpline.
+         * @return Coordinate of the knot.
+         */
         KOKKOS_INLINE_FUNCTION double get_first_support_knot(discrete_element_type const& ix) const
         {
             return get_knot(ix.uid() - degree());
         }
 
+        /** @brief Returns the last support knot associated to a discrete_element identifying a BSpline.
+         *
+         * @param[in] ix Index of the BSpline.
+         * @return Coordinate of the knot.
+         */
         KOKKOS_INLINE_FUNCTION double get_last_support_knot(discrete_element_type const& ix) const
         {
             return get_knot(ix.uid() + 1);
         }
 
+        /** @brief Returns the n-th knot associated to a discrete_element identifying a BSpline.
+         *
+         * @param[in] ix Index of the BSpline.
+         * @param[in] n Integer identifying a knot in the support of the BSpline.
+         */
         KOKKOS_INLINE_FUNCTION double get_support_knot_n(discrete_element_type const& ix, int n)
                 const
         {
             return get_knot(ix.uid() + n - degree());
         }
 
+        /** @brief Returns the coordinate of the lower boundary BSpline.
+         *
+         * @return Coordinate of the lower boundary BSpline.
+         */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
         {
             return ddc::coordinate(m_domain.front());
         }
 
+        /** @brief Returns the coordinate of the upper boundary BSpline.
+         *
+         * @return Coordinate of the upper boundary BSpline.
+         */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
         {
             return ddc::coordinate(m_domain.back());
         }
 
+        /** @brief TODO
+         *
+         * @return TODO.
+         */
         KOKKOS_INLINE_FUNCTION double length() const noexcept
         {
             return rmax() - rmin();
         }
 
+        /** @brief TODO
+         *
+         * @return TODO.
+         */
         KOKKOS_INLINE_FUNCTION std::size_t size() const noexcept
         {
             return degree() + ncells();
         }
 
-        /// Returns the discrete domain including ghost bsplines
+        /** @brief Returns the discrete domain including ghost bsplines
+         *
+         * @return The discrete domain including ghost bsplines.
+         */
         KOKKOS_INLINE_FUNCTION discrete_domain_type full_domain() const
         {
             return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
         }
 
+        /** @brief TODO
+         *
+         * @return TODO
+         */
         KOKKOS_INLINE_FUNCTION std::size_t nbasis() const noexcept
         {
             return ncells() + !is_periodic() * degree();
         }
 
+        /** @brief TODO
+         *
+         * @return TODO
+         */
         KOKKOS_INLINE_FUNCTION std::size_t ncells() const noexcept
         {
             return m_domain.size() - 1;

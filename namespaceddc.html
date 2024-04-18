@@ -135,13 +135,13 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__non__uniform__bsplines.html">is_non_uniform_bsplines</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__non__uniform__sampling.html">is_non_uniform_sampling</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__non__uniform__point__sampling.html">is_non_uniform_point_sampling</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__periodic__sampling.html">is_periodic_sampling</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__uniform__bsplines.html">is_uniform_bsplines</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__uniform__sampling.html">is_uniform_sampling</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__uniform__point__sampling.html">is_uniform_point_sampling</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html">KnotsAsInterpolationPoints</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper class for the initialisation of the mesh of interpolation points.  <a href="classddc_1_1KnotsAsInterpolationPoints.html#details">More...</a><br /></td></tr>
@@ -254,8 +254,14 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3">HostAllocator</a> = <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; T, Kokkos::HostSpace &gt;</td></tr>
 <tr class="separator:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43745831efff531b3ddadd9d4a780161"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:a43745831efff531b3ddadd9d4a780161"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a43745831efff531b3ddadd9d4a780161">is_non_uniform_sampling</a> = <a class="el" href="structddc_1_1is__non__uniform__point__sampling.html">is_non_uniform_point_sampling</a>&lt; DDim &gt;</td></tr>
+<tr class="separator:a43745831efff531b3ddadd9d4a780161"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab25c16a5ce1c3230941216a27acb684f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> = float</td></tr>
 <tr class="separator:ab25c16a5ce1c3230941216a27acb684f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abed2c5d1964475db79a8dc6c233c7973"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:abed2c5d1964475db79a8dc6c233c7973"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#abed2c5d1964475db79a8dc6c233c7973">is_uniform_sampling</a> = <a class="el" href="structddc_1_1is__uniform__point__sampling.html">is_uniform_point_sampling</a>&lt; DDim &gt;</td></tr>
+<tr class="separator:abed2c5d1964475db79a8dc6c233c7973"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -559,25 +565,25 @@ Functions</h2></td></tr>
 <tr class="memitem:ae4269f314ca30fb3ded4fdcc3a399965"><td class="memTemplParams" colspan="2">template&lt;class T , class MST , class U , class MSU &gt; </td></tr>
 <tr class="memitem:ae4269f314ca30fb3ded4fdcc3a399965"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ae4269f314ca30fb3ded4fdcc3a399965">operator!=</a> (<a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; T, MST &gt; const &amp;, <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; U, MSU &gt; const &amp;) noexcept</td></tr>
 <tr class="separator:ae4269f314ca30fb3ded4fdcc3a399965"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d5b65eff91b58f4c733a6339caf325f"><td class="memTemplParams" colspan="2">template&lt;class DDimImpl , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; typename DDimImpl::discrete_dimension_type &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a8d5b65eff91b58f4c733a6339caf325f"><td class="memTemplParams" colspan="2">template&lt;class DDimImpl , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; typename DDimImpl::discrete_dimension_type &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a8d5b65eff91b58f4c733a6339caf325f"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8d5b65eff91b58f4c733a6339caf325f">operator&lt;&lt;</a> (std::ostream &amp;out, DDimImpl const &amp;mesh)</td></tr>
 <tr class="separator:a8d5b65eff91b58f4c733a6339caf325f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb92141804530afd55d2747b2f0e7398"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:acb92141804530afd55d2747b2f0e7398"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:acb92141804530afd55d2747b2f0e7398"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#acb92141804530afd55d2747b2f0e7398">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; const &amp;c)</td></tr>
 <tr class="separator:acb92141804530afd55d2747b2f0e7398"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a6e577fbbb7ead9dbe81a3c46c26592"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a9a6e577fbbb7ead9dbe81a3c46c26592"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a9a6e577fbbb7ead9dbe81a3c46c26592"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9a6e577fbbb7ead9dbe81a3c46c26592">distance_at_left</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; i)</td></tr>
 <tr class="separator:a9a6e577fbbb7ead9dbe81a3c46c26592"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af78ae4219dfa28ce02622005e8a06b41"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:af78ae4219dfa28ce02622005e8a06b41"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:af78ae4219dfa28ce02622005e8a06b41"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#af78ae4219dfa28ce02622005e8a06b41">distance_at_right</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; i)</td></tr>
 <tr class="separator:af78ae4219dfa28ce02622005e8a06b41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ffe1925cf2fc3ccaac25eece7ab84e4"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a9ffe1925cf2fc3ccaac25eece7ab84e4"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a9ffe1925cf2fc3ccaac25eece7ab84e4"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9ffe1925cf2fc3ccaac25eece7ab84e4">rmin</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt; const &amp;d)</td></tr>
 <tr class="separator:a9ffe1925cf2fc3ccaac25eece7ab84e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f6fdedc3306e0a0b5a34f6446db1294"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a0f6fdedc3306e0a0b5a34f6446db1294"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a0f6fdedc3306e0a0b5a34f6446db1294"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a0f6fdedc3306e0a0b5a34f6446db1294">rmax</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt; const &amp;d)</td></tr>
 <tr class="separator:a0f6fdedc3306e0a0b5a34f6446db1294"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9843ffde244885e82a6307449cc13682"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a9843ffde244885e82a6307449cc13682"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a9843ffde244885e82a6307449cc13682"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9843ffde244885e82a6307449cc13682">rlength</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim &gt; const &amp;d)</td></tr>
 <tr class="separator:a9843ffde244885e82a6307449cc13682"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37d4f1dc7122e72c049517a90ff0b98b"><td class="memTemplParams" colspan="2">template&lt;class ChunkDst , class ChunkSrc &gt; </td></tr>
@@ -650,21 +656,21 @@ Functions</h2></td></tr>
 <tr class="memitem:a8093016bc9d65270b7b16ad4b7a1166e"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8093016bc9d65270b7b16ad4b7a1166e">transform_reduce</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</td></tr>
 <tr class="memdesc:a8093016bc9d65270b7b16ad4b7a1166e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reduction over a nD domain in serial.  <a href="namespaceddc.html#a8093016bc9d65270b7b16ad4b7a1166e">More...</a><br /></td></tr>
 <tr class="separator:a8093016bc9d65270b7b16ad4b7a1166e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1dd2f87c3672f42f1adbddcdaa78b97"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:ad1dd2f87c3672f42f1adbddcdaa78b97"><td class="memTemplParams" colspan="2">template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:ad1dd2f87c3672f42f1adbddcdaa78b97"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION constexpr <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad1dd2f87c3672f42f1adbddcdaa78b97">coordinate</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; const &amp;c)</td></tr>
 <tr class="separator:ad1dd2f87c3672f42f1adbddcdaa78b97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80cb09454156c73189cc78c8f330743a"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
-<tr class="memitem:a80cb09454156c73189cc78c8f330743a"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a80cb09454156c73189cc78c8f330743a">origin</a> () noexcept</td></tr>
-<tr class="memdesc:a80cb09454156c73189cc78c8f330743a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lower bound index of the mesh.  <a href="namespaceddc.html#a80cb09454156c73189cc78c8f330743a">More...</a><br /></td></tr>
-<tr class="separator:a80cb09454156c73189cc78c8f330743a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb5ef3cc1e845f6220d00cc7c3862918"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
-<tr class="memitem:aeb5ef3cc1e845f6220d00cc7c3862918"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aeb5ef3cc1e845f6220d00cc7c3862918">front</a> () noexcept</td></tr>
-<tr class="memdesc:aeb5ef3cc1e845f6220d00cc7c3862918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lower bound index of the mesh.  <a href="namespaceddc.html#aeb5ef3cc1e845f6220d00cc7c3862918">More...</a><br /></td></tr>
-<tr class="separator:aeb5ef3cc1e845f6220d00cc7c3862918"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a875f06741be48c7122148795ee1e2e98"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
-<tr class="memitem:a875f06741be48c7122148795ee1e2e98"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a875f06741be48c7122148795ee1e2e98">step</a> () noexcept</td></tr>
-<tr class="memdesc:a875f06741be48c7122148795ee1e2e98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <a href="namespaceddc.html#a875f06741be48c7122148795ee1e2e98">More...</a><br /></td></tr>
-<tr class="separator:a875f06741be48c7122148795ee1e2e98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a976dd0529ee8d77478a94062c8fdc990"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:a976dd0529ee8d77478a94062c8fdc990"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a976dd0529ee8d77478a94062c8fdc990">origin</a> () noexcept</td></tr>
+<tr class="memdesc:a976dd0529ee8d77478a94062c8fdc990"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lower bound index of the mesh.  <a href="namespaceddc.html#a976dd0529ee8d77478a94062c8fdc990">More...</a><br /></td></tr>
+<tr class="separator:a976dd0529ee8d77478a94062c8fdc990"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fcc420419c1228f8087acb91c118da2"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:a5fcc420419c1228f8087acb91c118da2"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a5fcc420419c1228f8087acb91c118da2">front</a> () noexcept</td></tr>
+<tr class="memdesc:a5fcc420419c1228f8087acb91c118da2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lower bound index of the mesh.  <a href="namespaceddc.html#a5fcc420419c1228f8087acb91c118da2">More...</a><br /></td></tr>
+<tr class="separator:a5fcc420419c1228f8087acb91c118da2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3520dd93ddfd4e16ac38d6678b535b7"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:ae3520dd93ddfd4e16ac38d6678b535b7"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ae3520dd93ddfd4e16ac38d6678b535b7">step</a> () noexcept</td></tr>
+<tr class="memdesc:ae3520dd93ddfd4e16ac38d6678b535b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <a href="namespaceddc.html#ae3520dd93ddfd4e16ac38d6678b535b7">More...</a><br /></td></tr>
+<tr class="separator:ae3520dd93ddfd4e16ac38d6678b535b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -707,14 +713,20 @@ Variables</h2></td></tr>
 <tr class="memitem:a20d13e258d90b019d44b38be91885f35"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
 <tr class="memitem:a20d13e258d90b019d44b38be91885f35"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a20d13e258d90b019d44b38be91885f35">is_uniform_bsplines_v</a> = <a class="el" href="structddc_1_1is__uniform__bsplines.html">is_uniform_bsplines</a>&lt;DDim&gt;::value</td></tr>
 <tr class="separator:a20d13e258d90b019d44b38be91885f35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c621cc4a504cb9368d8e6ce080067e9"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:a0c621cc4a504cb9368d8e6ce080067e9"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a> = <a class="el" href="structddc_1_1is__non__uniform__point__sampling.html">is_non_uniform_point_sampling</a>&lt;DDim&gt;::value</td></tr>
+<tr class="separator:a0c621cc4a504cb9368d8e6ce080067e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b1f18fdde2f11a941252f543b991d31"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
-<tr class="memitem:a8b1f18fdde2f11a941252f543b991d31"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a> = <a class="el" href="structddc_1_1is__non__uniform__sampling.html">is_non_uniform_sampling</a>&lt;DDim&gt;::value</td></tr>
+<tr class="memitem:a8b1f18fdde2f11a941252f543b991d31"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a> = <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt;DDim&gt;</td></tr>
 <tr class="separator:a8b1f18fdde2f11a941252f543b991d31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab228bb1534b98a4a4faceff92b4f16d0"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
 <tr class="memitem:ab228bb1534b98a4a4faceff92b4f16d0"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">is_periodic_sampling_v</a> = <a class="el" href="structddc_1_1is__periodic__sampling.html">is_periodic_sampling</a>&lt;DDim&gt;::value</td></tr>
 <tr class="separator:ab228bb1534b98a4a4faceff92b4f16d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d92fe6350fd1f8ecc31403595d976a8"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
+<tr class="memitem:a5d92fe6350fd1f8ecc31403595d976a8"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a> = <a class="el" href="structddc_1_1is__uniform__point__sampling.html">is_uniform_point_sampling</a>&lt;DDim&gt;::value</td></tr>
+<tr class="separator:a5d92fe6350fd1f8ecc31403595d976a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a85fd4d2ccf9dd0cee46fc2849c165f"><td class="memTemplParams" colspan="2">template&lt;class DDim &gt; </td></tr>
-<tr class="memitem:a2a85fd4d2ccf9dd0cee46fc2849c165f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a> = <a class="el" href="structddc_1_1is__uniform__sampling.html">is_uniform_sampling</a>&lt;DDim&gt;::value</td></tr>
+<tr class="memitem:a2a85fd4d2ccf9dd0cee46fc2849c165f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a> = <a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a>&lt;DDim&gt;</td></tr>
 <tr class="separator:a2a85fd4d2ccf9dd0cee46fc2849c165f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -1359,6 +1371,22 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
+<a id="a43745831efff531b3ddadd9d4a780161" name="a43745831efff531b3ddadd9d4a780161"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43745831efff531b3ddadd9d4a780161">&#9670;&nbsp;</a></span>is_non_uniform_sampling</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceddc.html#a43745831efff531b3ddadd9d4a780161">ddc::is_non_uniform_sampling</a> = typedef <a class="el" href="structddc_1_1is__non__uniform__point__sampling.html">is_non_uniform_point_sampling</a>&lt;DDim&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab25c16a5ce1c3230941216a27acb684f" name="ab25c16a5ce1c3230941216a27acb684f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab25c16a5ce1c3230941216a27acb684f">&#9670;&nbsp;</a></span>Real</h2>
 
@@ -1367,6 +1395,22 @@ template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">ddc::Real</a> = typedef float</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abed2c5d1964475db79a8dc6c233c7973" name="abed2c5d1964475db79a8dc6c233c7973"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abed2c5d1964475db79a8dc6c233c7973">&#9670;&nbsp;</a></span>is_uniform_sampling</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceddc.html#abed2c5d1964475db79a8dc6c233c7973">ddc::is_uniform_sampling</a> = typedef <a class="el" href="structddc_1_1is__uniform__point__sampling.html">is_uniform_point_sampling</a>&lt;DDim&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4209,7 +4253,7 @@ template&lt;class T , class MST , class U , class MSU &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class DDimImpl , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; typename DDimImpl::discrete_dimension_type &gt;, int &gt;  = 0&gt; </div>
+template&lt;class DDimImpl , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; typename DDimImpl::discrete_dimension_type &gt;, int &gt;  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">std::ostream &amp; ddc::operator&lt;&lt; </td>
@@ -4239,7 +4283,7 @@ template&lt;class DDimImpl , std::enable_if_t&lt; <a class="el" href="namespaced
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
+template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt; ddc::coordinate </td>
@@ -4259,7 +4303,7 @@ template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.h
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
+template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt; ddc::distance_at_left </td>
@@ -4279,7 +4323,7 @@ template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.h
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
+template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt; ddc::distance_at_right </td>
@@ -4299,7 +4343,7 @@ template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.h
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
+template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt; ddc::rmin </td>
@@ -4319,7 +4363,7 @@ template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.h
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
+template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt; ddc::rmax </td>
@@ -4339,7 +4383,7 @@ template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.h
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a8b1f18fdde2f11a941252f543b991d31">is_non_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
+template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">KOKKOS_FUNCTION <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt; ddc::rlength </td>
@@ -5229,7 +5273,7 @@ template&lt;class... DDims, class T , class BinaryReductionOp , class UnaryTrans
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
+template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a>&lt; DDim &gt;, int &gt;  = 0&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -5251,8 +5295,8 @@ template&lt;class DDim , std::enable_if_t&lt; <a class="el" href="namespaceddc.h
 
 </div>
 </div>
-<a id="a80cb09454156c73189cc78c8f330743a" name="a80cb09454156c73189cc78c8f330743a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80cb09454156c73189cc78c8f330743a">&#9670;&nbsp;</a></span>origin() <span class="overload">[2/2]</span></h2>
+<a id="a976dd0529ee8d77478a94062c8fdc990" name="a976dd0529ee8d77478a94062c8fdc990"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a976dd0529ee8d77478a94062c8fdc990">&#9670;&nbsp;</a></span>origin() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5263,7 +5307,7 @@ template&lt;class DDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt; &gt; ddc::origin </td>
+          <td class="memname">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; typename DDim::continuous_dimension_type &gt; &gt; ddc::origin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5280,8 +5324,8 @@ template&lt;class DDim &gt; </div>
 
 </div>
 </div>
-<a id="aeb5ef3cc1e845f6220d00cc7c3862918" name="aeb5ef3cc1e845f6220d00cc7c3862918"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb5ef3cc1e845f6220d00cc7c3862918">&#9670;&nbsp;</a></span>front() <span class="overload">[3/3]</span></h2>
+<a id="a5fcc420419c1228f8087acb91c118da2" name="a5fcc420419c1228f8087acb91c118da2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fcc420419c1228f8087acb91c118da2">&#9670;&nbsp;</a></span>front() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5292,7 +5336,7 @@ template&lt;class DDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; &gt; ddc::front </td>
+          <td class="memname">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a>&lt; DDim &gt;, <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; &gt; ddc::front </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5309,8 +5353,8 @@ template&lt;class DDim &gt; </div>
 
 </div>
 </div>
-<a id="a875f06741be48c7122148795ee1e2e98" name="a875f06741be48c7122148795ee1e2e98"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a875f06741be48c7122148795ee1e2e98">&#9670;&nbsp;</a></span>step() <span class="overload">[2/2]</span></h2>
+<a id="ae3520dd93ddfd4e16ac38d6678b535b7" name="ae3520dd93ddfd4e16ac38d6678b535b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3520dd93ddfd4e16ac38d6678b535b7">&#9670;&nbsp;</a></span>step() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5321,7 +5365,7 @@ template&lt;class DDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a2a85fd4d2ccf9dd0cee46fc2849c165f">is_uniform_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> &gt; ddc::step </td>
+          <td class="memname">KOKKOS_FUNCTION std::enable_if_t&lt; <a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> &gt; ddc::step </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5654,6 +5698,30 @@ template&lt;class DDim &gt; </div>
 
 </div>
 </div>
+<a id="a0c621cc4a504cb9368d8e6ce080067e9" name="a0c621cc4a504cb9368d8e6ce080067e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c621cc4a504cb9368d8e6ce080067e9">&#9670;&nbsp;</a></span>is_non_uniform_point_sampling_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool ddc::is_non_uniform_point_sampling_v = <a class="el" href="structddc_1_1is__non__uniform__point__sampling.html">is_non_uniform_point_sampling</a>&lt;DDim&gt;::value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8b1f18fdde2f11a941252f543b991d31" name="a8b1f18fdde2f11a941252f543b991d31"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8b1f18fdde2f11a941252f543b991d31">&#9670;&nbsp;</a></span>is_non_uniform_sampling_v</h2>
 
@@ -5666,7 +5734,7 @@ template&lt;class DDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool ddc::is_non_uniform_sampling_v = <a class="el" href="structddc_1_1is__non__uniform__sampling.html">is_non_uniform_sampling</a>&lt;DDim&gt;::value</td>
+          <td class="memname">constexpr bool ddc::is_non_uniform_sampling_v = <a class="el" href="namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9">is_non_uniform_point_sampling_v</a>&lt;DDim&gt;</td>
         </tr>
       </table>
   </td>
@@ -5702,6 +5770,30 @@ template&lt;class DDim &gt; </div>
 
 </div>
 </div>
+<a id="a5d92fe6350fd1f8ecc31403595d976a8" name="a5d92fe6350fd1f8ecc31403595d976a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d92fe6350fd1f8ecc31403595d976a8">&#9670;&nbsp;</a></span>is_uniform_point_sampling_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DDim &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool ddc::is_uniform_point_sampling_v = <a class="el" href="structddc_1_1is__uniform__point__sampling.html">is_uniform_point_sampling</a>&lt;DDim&gt;::value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2a85fd4d2ccf9dd0cee46fc2849c165f" name="a2a85fd4d2ccf9dd0cee46fc2849c165f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2a85fd4d2ccf9dd0cee46fc2849c165f">&#9670;&nbsp;</a></span>is_uniform_sampling_v</h2>
 
@@ -5714,7 +5806,7 @@ template&lt;class DDim &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool ddc::is_uniform_sampling_v = <a class="el" href="structddc_1_1is__uniform__sampling.html">is_uniform_sampling</a>&lt;DDim&gt;::value</td>
+          <td class="memname">constexpr bool ddc::is_uniform_sampling_v = <a class="el" href="namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8">is_uniform_point_sampling_v</a>&lt;DDim&gt;</td>
         </tr>
       </table>
   </td>

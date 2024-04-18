@@ -21,14 +21,18 @@
 
 namespace ddc {
 
+namespace detail {
+
 struct UniformPointSamplingBase
 {
 };
 
+} // namespace detail
+
 /** UniformPointSampling models a uniform discretization of the provided continuous dimension
  */
 template <class CDim>
-class UniformPointSampling : UniformPointSamplingBase
+class UniformPointSampling : detail::UniformPointSamplingBase
 {
 public:
     using continuous_dimension_type = CDim;
@@ -200,7 +204,7 @@ public:
 };
 
 template <class DDim>
-struct is_uniform_sampling : public std::is_base_of<UniformPointSamplingBase, DDim>
+struct is_uniform_sampling : public std::is_base_of<detail::UniformPointSamplingBase, DDim>
 {
 };
 

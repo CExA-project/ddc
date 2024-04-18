@@ -20,13 +20,17 @@
 
 namespace ddc {
 
+namespace detail {
+
 struct NonUniformPointSamplingBase
 {
 };
 
+} // namespace detail
+
 /// `NonUniformPointSampling` models a non-uniform discretization of the `CDim` segment \f$[a, b]\f$.
 template <class CDim>
-class NonUniformPointSampling : NonUniformPointSamplingBase
+class NonUniformPointSampling : detail::NonUniformPointSamplingBase
 {
 public:
     using continuous_dimension_type = CDim;
@@ -119,7 +123,7 @@ public:
 };
 
 template <class DDim>
-struct is_non_uniform_sampling : public std::is_base_of<NonUniformPointSamplingBase, DDim>
+struct is_non_uniform_sampling : public std::is_base_of<detail::NonUniformPointSamplingBase, DDim>
 {
 };
 

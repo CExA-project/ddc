@@ -138,6 +138,7 @@ public:
          * The values are computed for every BSplines at the given coordinate x. A spline approximation at coordinate x is a linear combination of those BSplines evaluations weigthed with splines coefficients of the spline-transformed initial discrete function.
          * @param[out] values The values of the BSplines evaluated at coordinate x. It has to be a (1+degree) 1D mdspan.
          * @param[in] x The coordinate where BSplines are evaluated.
+         * @return TODO
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
@@ -151,6 +152,7 @@ public:
          * The derivatives are computed for every BSplines at the given coordinate x. A spline approximation of a derivative at coordinate x is a linear combination of those BSplines derivatives weigthed with splines coefficients of the spline-transformed initial discrete function.
          * @param[out] derivs The derivatives of the BSplines evaluated at coordinate x. It has to be a (1+degree) 1D mdspan.
          * @param[in] x The coordinate where BSplines derivatives are evaluated.
+         * @return TODO
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
@@ -161,6 +163,7 @@ public:
          * @param[out] derivs The values and n derivatives of the BSplines evaluated at coordinate x. It has to be a (1+degree)*(1+n) 2D mdspan.
          * @param[in] x The coordinates where BSplines derivatives are evaluated.
          * @param[in] n The number of derivatives to evaluate (in addition to the BSplines values themselves).
+         * @return TODO
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
@@ -187,7 +190,7 @@ public:
             return ddc::Coordinate<Tag>(rmin() + idx * ddc::step<mesh_type>());
         }
 
-        /** @brief Returns the first support knot associated to a DiscreteElement identifying a BSpline.
+        /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a BSpline.
          *
          * @param[in] ix DiscreteElement identifying the BSpline.
          * @return Coordinate of the knot.
@@ -197,7 +200,7 @@ public:
             return get_knot(ix.uid() - degree());
         }
 
-        /** @brief Returns the last support knot associated to a DiscreteElement identifying a BSpline.
+        /** @brief Returns the coordinate of the last support knot associated to a DiscreteElement identifying a BSpline.
          *
          * @param[in] ix DiscreteElement identifying the BSpline.
          * @return Coordinate of the knot.
@@ -207,7 +210,7 @@ public:
             return get_knot(ix.uid() + 1);
         }
 
-        /** @brief Returns the \f$n\f$-th knot associated to a discrete_element identifying a BSpline.
+        /** @brief Returns the coordinate of the \f$n\f$-th knot associated to a discrete_element identifying a BSpline.
          *
          * @param[in] ix DiscreteElement identifying the BSpline.
          * @param[in] n Integer indexing a knot in the support of the BSpline.
@@ -218,34 +221,34 @@ public:
             return get_knot(ix.uid() + n - degree());
         }
 
-        /** @brief Returns the coordinate of the lower boundary BSpline.
+        /** @brief Returns the coordinate of the lower boundary knot.
          *
-         * @return Coordinate of the lower boundary BSpline.
+         * @return Coordinate of the lower boundary knot.
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
         {
             return ddc::coordinate(m_domain.front());
         }
 
-        /** @brief Returns the coordinate of the upper boundary BSpline.
+        /** @brief Returns the coordinate of the upper boundary knot.
          *
-         * @return Coordinate of the upper boundary BSpline.
+         * @return Coordinate of the upper boundary knot.
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
         {
             return ddc::coordinate(m_domain.back());
         }
 
-        /** @brief TODO
+        /** @brief Returns the length of the domain supporting knots.
          *
-         * @return TODO.
+         * @return The length of the domain supporting knots.
          */
         KOKKOS_INLINE_FUNCTION double length() const noexcept
         {
             return rmax() - rmin();
         }
 
-        /** @brief TODO
+        /** @brief TODO (number of knots ?).
          *
          * @return TODO.
          */

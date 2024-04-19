@@ -83,7 +83,8 @@ public:
     explicit KOKKOS_FUNCTION constexpr DiscreteDomain(
             [[maybe_unused]] DiscreteDomain<ODDims...> const& domain)
         : m_element_begin((ddc::select<DDims>(domain.front()))...)
-        , m_element_end((ddc::select<DDims>(domain.front()) + ddc::select<DDims>(domain.extents()))...)
+        , m_element_end(
+                  (ddc::select<DDims>(domain.front()) + ddc::select<DDims>(domain.extents()))...)
     {
     }
 

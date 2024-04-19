@@ -84,16 +84,16 @@ public:
         ddc::DiscreteDomain<mesh_type> m_domain;
 
     public:
-        /// @brief The type of discrete dimension representing the B-splines.
+        /// @brief The type of the discrete dimension representing the B-splines.
         using discrete_dimension_type = UniformBSplines;
 
-        /// @brief The type of discrete domain identifying the B-splines.
+        /// @brief The type of a discrete domain identifying the B-splines.
         using discrete_domain_type = DiscreteDomain<DDim>;
 
-        /// @brief The type of discrete element identifying a B-spline.
+        /// @brief The type of a discrete element identifying a B-spline.
         using discrete_element_type = DiscreteElement<DDim>;
 
-        /// @brief The type of discrete vector representing an "indexes displacement" between two B-splines.
+        /// @brief The type of a discrete vector representing an "index displacement" between two B-splines.
         using discrete_vector_type = DiscreteVector<DDim>;
 
         Impl() = default;

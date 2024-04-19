@@ -218,6 +218,7 @@ public:
          *
          * @param[in] ix DiscreteElement identifying the BSpline.
          * @param[in] n Integer indexing a knot in the support of the BSpline.
+         * @return Coordinate of the knot.
          */
         KOKKOS_INLINE_FUNCTION double get_support_knot_n(discrete_element_type const& ix, int n)
                 const

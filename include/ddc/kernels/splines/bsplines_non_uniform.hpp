@@ -99,13 +99,6 @@ public:
 
         Impl() = default;
 
-        template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
-            : m_domain(impl.m_domain)
-            , m_nknots(impl.m_nknots)
-        {
-        }
-
         /// @brief Construct a `Impl` using a brace-list, i.e. `Impl bsplines({0., 1.})`
         explicit Impl(std::initializer_list<ddc::Coordinate<Tag>> breaks)
             : Impl(breaks.begin(), breaks.end())
@@ -121,6 +114,14 @@ public:
         /// @brief Construct a `Impl` using a pair of iterators.
         template <class RandomIt>
         Impl(RandomIt breaks_begin, RandomIt breaks_end);
+
+        /// @brief Copy-constructs from another Impl with different Kokkos memory space
+        template <class OriginMemorySpace>
+        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
+            : m_domain(impl.m_domain)
+            , m_nknots(impl.m_nknots)
+        {
+        }
 
         /// @brief Copy-constructs
         Impl(Impl const& x) = default;
@@ -216,7 +217,7 @@ public:
          *
          * @param[in] ix DiscreteElement identifying the BSpline.
          * @param[in] n Integer indexing a knot in the support of the BSpline.
-         * @return TODO
+         * @return Coordinate of the knot.
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_support_knot_n(
                 discrete_element_type const& ix,

@@ -78,6 +78,7 @@ void display(double time, ChunkType temp)
 
 
 //! [main-start]
+//! [main-start-x-parameters]
 int main(int argc, char** argv)
 {
 #ifdef DDC_BUILD_PDI_WRAPPER
@@ -93,12 +94,17 @@ int main(int argc, char** argv)
     double const x_end = 1.;
     std::size_t const nb_x_points = 10;
     double const kx = .01;
+    //! [main-start-x-parameters]
+    //! [main-start-y-parameters]
     double const y_start = -1.;
     double const y_end = 1.;
     std::size_t const nb_y_points = 100;
     double const ky = .002;
+    //! [main-start-y-parameters]
+    //! [main-start-t-parameters]
     double const start_time = 0.;
     double const end_time = 10.;
+    //! [main-start-t-parameters]
     std::ptrdiff_t const t_output_period = 10;
     //! [parameters]
 
@@ -142,7 +148,7 @@ int main(int argc, char** argv)
             y_pre_ghost.extents());
     //! [Y-domains]
 
-    //! [time-domains]
+    //! [CFL-condition]
 
     double const dx = ddc::step<DDimX>();
     double const dy = ddc::step<DDimY>();
@@ -151,7 +157,9 @@ int main(int argc, char** argv)
 
     ddc::Coordinate<T> const dt(.5 / (kx * invdx2 + ky * invdy2));
 
+    //! [CFL-condition]
 
+    //! [time-domain]
     ddc::DiscreteVector<DDimT> const nb_time_steps(
             std::ceil((end_time - start_time) / dt) + .2);
 
@@ -160,7 +168,8 @@ int main(int argc, char** argv)
                     ddc::Coordinate<T>(start_time),
                     ddc::Coordinate<T>(end_time),
                     nb_time_steps + 1));
-    //! [time-domains]
+            
+    //! [time-domain]
 
     //! [data allocation]
     ddc::Chunk ghosted_last_temp(
@@ -178,9 +187,12 @@ int main(int argc, char** argv)
             ddc::DeviceAllocator<double>());
     //! [data allocation]
 
-    //! [initial-conditions]
+    //! [initial-chunkspan]
     ddc::ChunkSpan const ghosted_initial_temp
             = ghosted_last_temp.span_view();
+    //! [initial-chunkspan]
+
+    //! [fill-initial-chunkspan]
     ddc::parallel_for_each(
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
@@ -191,26 +203,32 @@ int main(int argc, char** argv)
                 ghosted_initial_temp(ixy)
                         = 9.999 * ((x * x + y * y) < 0.25);
             });
-    //! [initial-conditions]
+    //! [fill-initial-chunkspan]
 
+    //! [host-chunk]
     ddc::Chunk ghosted_temp(
             "ghost_temp",
             ddc::DiscreteDomain<
                     DDimX,
                     DDimY>(ghosted_x_domain, ghosted_y_domain),
             ddc::HostAllocator<double>());
+    //! [host-chunk]
 
-
-    //! [initial output]
+    //! [initial-deepcopy]
     ddc::parallel_deepcopy(ghosted_temp, ghosted_last_temp);
+    //! [initial-deepcopy]
+
+    //! [initial-display]
     display(ddc::coordinate(time_domain.front()),
             ghosted_temp[x_domain][y_domain]);
+    //! [initial-display]
 
+    //! [last-output-iter]
     ddc::DiscreteElement<DDimT> last_output_iter = time_domain.front();
-    //! [initial output]
+    //! [last-output-iter]
 
     //! [time iteration]
-    for (auto const iter :
+    for (ddc::DiscreteElement<DDimT> const iter :
          time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
         //! [time iteration]
 

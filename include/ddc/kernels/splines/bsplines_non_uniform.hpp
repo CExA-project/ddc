@@ -94,7 +94,7 @@ public:
         /// @brief The type of discrete element identifying a BSpline.
         using discrete_element_type = DiscreteElement<DDim>;
 
-        /// @brief The type of discrete vector representing an "indexes displacement" between two BSplines.
+        /// @brief The type of a discrete vector representing an "index displacement" between two B-splines.
         using discrete_vector_type = DiscreteVector<DDim>;
 
         Impl() = default;

@@ -15,6 +15,8 @@
 
 namespace ddc {
 
+namespace detail {
+
 template <class T>
 struct UniformBsplinesKnots : UniformPointSampling<typename T::tag_type>
 {
@@ -24,6 +26,8 @@ struct UniformBSplinesBase
 {
 };
 
+} // namespace detail
+
 /**
  * The type of a uniform BSplines 1D basis.
  *
@@ -31,7 +35,7 @@ struct UniformBSplinesBase
  * @tparam D The degree of the BSplines.
  */
 template <class Tag, std::size_t D>
-class UniformBSplines : UniformBSplinesBase
+class UniformBSplines : detail::UniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
 
@@ -74,7 +78,7 @@ public:
         friend class Impl;
 
     private:
-        using mesh_type = UniformBsplinesKnots<DDim>;
+        using mesh_type = detail::UniformBsplinesKnots<DDim>;
 
         // In the periodic case, it contains twice the periodic point!!!
         ddc::DiscreteDomain<mesh_type> m_domain;
@@ -301,7 +305,7 @@ public:
 };
 
 template <class DDim>
-struct is_uniform_bsplines : public std::is_base_of<UniformBSplinesBase, DDim>
+struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase, DDim>
 {
 };
 

@@ -7,10 +7,10 @@ var classddc_1_1SplineEvaluator =
     [ "right_extrapolation_rule_type", "classddc_1_1SplineEvaluator.html#a302a1ee6f057ae89aed2a1c5f70b39ab", null ],
     [ "interpolation_mesh_type", "classddc_1_1SplineEvaluator.html#aceab201ee04e870a3ba0a1562d6837e1", null ],
     [ "interpolation_domain_type", "classddc_1_1SplineEvaluator.html#a84a7e5674f9a23e83b13da4880e32477", null ],
-    [ "vals_domain_type", "classddc_1_1SplineEvaluator.html#aaddc5a5469502c1165f924de9bac7f52", null ],
-    [ "bsplines_domain_type", "classddc_1_1SplineEvaluator.html#a743a4eb5332fada1db28c77549545cd0", null ],
+    [ "batched_interpolation_domain_type", "classddc_1_1SplineEvaluator.html#a041e29ca863c1d17f03d14526705e0d8", null ],
+    [ "spline_domain_type", "classddc_1_1SplineEvaluator.html#a5f26734b5661e8122363294f47d9be89", null ],
     [ "batch_domain_type", "classddc_1_1SplineEvaluator.html#af1388b1aa76cdeb524c889cbfe97c717", null ],
-    [ "spline_domain_type", "classddc_1_1SplineEvaluator.html#a42e0ea3298a217064ceb5d680a6f6492", null ],
+    [ "batched_spline_domain_type", "classddc_1_1SplineEvaluator.html#abe41035af8b4e87e7933b5aed597b17b", null ],
     [ "SplineEvaluator", "classddc_1_1SplineEvaluator.html#ac248ae17106ca2733d80148d1273657d", null ],
     [ "SplineEvaluator", "classddc_1_1SplineEvaluator.html#af0ee7a65792937c5245ca74ae4b22ea8", null ],
     [ "SplineEvaluator", "classddc_1_1SplineEvaluator.html#a769d26b8c07d9308822ba385d908c9f5", null ],
@@ -19,9 +19,9 @@ var classddc_1_1SplineEvaluator =
     [ "operator=", "classddc_1_1SplineEvaluator.html#a2f557c7b42aa7ab0844e01f77488d0af", null ],
     [ "left_extrapolation_rule", "classddc_1_1SplineEvaluator.html#af3d0921f8e8647758af332c9a9558012", null ],
     [ "right_extrapolation_rule", "classddc_1_1SplineEvaluator.html#a8f439dbc12921a703701d8141a790adb", null ],
-    [ "operator()", "classddc_1_1SplineEvaluator.html#a3603799854f990769076e6a057b47617", null ],
-    [ "operator()", "classddc_1_1SplineEvaluator.html#ae8ff45eccf23896c899c4fa05d2a2ac4", null ],
-    [ "deriv", "classddc_1_1SplineEvaluator.html#acbddd8697a5e567c950b851a5fe7dc59", null ],
-    [ "deriv", "classddc_1_1SplineEvaluator.html#ae1aaa5957ca4513bde8e8dfa5868f7be", null ],
-    [ "integrate", "classddc_1_1SplineEvaluator.html#a0555f52731935a3bb304b19b89c9deb4", null ]
+    [ "operator()", "classddc_1_1SplineEvaluator.html#a1c4d398a0c7388832a380cf7a6e68bd0", null ],
+    [ "operator()", "classddc_1_1SplineEvaluator.html#ac7e0302bbc570e66c06a565d76f13567", null ],
+    [ "deriv", "classddc_1_1SplineEvaluator.html#a2881c13f8f7b9ed6a032e85f985275f9", null ],
+    [ "deriv", "classddc_1_1SplineEvaluator.html#a7b7701615de96b929218f44cf21c7263", null ],
+    [ "integrate", "classddc_1_1SplineEvaluator.html#a76443b4829e03119998c70408f9f9f8b", null ]
 ];

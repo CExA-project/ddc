@@ -523,9 +523,17 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::ge
 template <class Tag, std::size_t D>
 template <class DDim, class MemorySpace>
 template <class Layout, class MemorySpace2>
-KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, typename UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::discrete_domain_type, Layout, MemorySpace2>
+KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<
+        double,
+        typename UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::discrete_domain_type,
+        Layout,
+        MemorySpace2>
 UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
-        ddc::ChunkSpan<double, typename UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::discrete_domain_type, Layout, MemorySpace2> int_vals) const
+        ddc::ChunkSpan<
+                double,
+                typename UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::discrete_domain_type,
+                Layout,
+                MemorySpace2> int_vals) const
 {
     if constexpr (is_periodic()) {
         assert(int_vals.size() == nbasis() || int_vals.size() == size());

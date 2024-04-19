@@ -238,7 +238,7 @@ static void BatchedSplineTest()
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<IDim<I, I>> const dom_interpolation = spline_builder.interpolation_domain();
     auto const dom_batch = spline_builder.batch_domain();
-    auto const dom_spline = spline_builder.spline_domain();
+    auto const dom_spline = spline_builder.batched_spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals1_cpu_alloc(

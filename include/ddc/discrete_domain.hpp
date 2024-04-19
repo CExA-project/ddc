@@ -78,6 +78,15 @@ public:
     {
     }
 
+    // Construct a DiscreteDomain from a reordered copy of `domain`
+    template <class... ODDims>
+    explicit KOKKOS_FUNCTION constexpr DiscreteDomain(
+            [[maybe_unused]] DiscreteDomain<ODDims...> const& domain)
+        : m_element_begin((ddc::select<DDims>(domain.front()))...)
+        , m_element_end((ddc::select<DDims>(domain.front()) + ddc::select<DDims>(domain.extents()))...)
+    {
+    }
+
     /** Construct a DiscreteDomain starting from element_begin with size points.
      * @param element_begin the lower bound in each direction
      * @param size the number of points in each direction

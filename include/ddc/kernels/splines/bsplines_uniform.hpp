@@ -70,7 +70,7 @@ public:
         return true;
     }
 
-    /// @brief Impl
+    /// @brief Impl TODO
     template <class DDim, class MemorySpace>
     class Impl
     {
@@ -84,13 +84,13 @@ public:
         ddc::DiscreteDomain<mesh_type> m_domain;
 
     public:
-        /// @brief The type of discrete dimension identifying BSplines.
+        /// @brief The type of discrete dimension representing the BSplines.
         using discrete_dimension_type = UniformBSplines;
 
-        /// @brief The type of discrete domain indexing the BSplines.
+        /// @brief The type of discrete domain identifying the BSplines.
         using discrete_domain_type = DiscreteDomain<DDim>;
 
-        /// @brief The type of discrete element indexing a BSpline.
+        /// @brief The type of discrete element identifying a BSpline.
         using discrete_element_type = DiscreteElement<DDim>;
 
         /// @brief The type of discrete vector representing an "indexes displacement" between two BSplines.
@@ -214,7 +214,7 @@ public:
             return get_knot(ix.uid() + 1);
         }
 
-        /** @brief Returns the coordinate of the \f$n\f$-th knot associated to a discrete_element identifying a BSpline.
+        /** @brief Returns the coordinate of the \f$n\f$-th knot associated to a DiscreteElement identifying a BSpline.
          *
          * @param[in] ix DiscreteElement identifying the BSpline.
          * @param[in] n Integer indexing a knot in the support of the BSpline.

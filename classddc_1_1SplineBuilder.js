@@ -8,7 +8,6 @@ var classddc_1_1SplineBuilder =
     [ "interpolation_domain_type", "classddc_1_1SplineBuilder.html#a0e425fe73429c478949bba51ca0fcf1e", null ],
     [ "vals_domain_type", "classddc_1_1SplineBuilder.html#a1c03f7a03a482a860d13817ef8d0f5d4", null ],
     [ "batch_domain_type", "classddc_1_1SplineBuilder.html#a5d805244c41eeb685b8ad67e90869547", null ],
-    [ "spline_dim_type", "classddc_1_1SplineBuilder.html#a142456ad92685d31a0b3e482bf31bd31", null ],
     [ "spline_domain_type", "classddc_1_1SplineBuilder.html#ae6828801d86fb6db41542db1913c0c31", null ],
     [ "spline_tr_domain_type", "classddc_1_1SplineBuilder.html#ac1424dcb05485b651846050346ce2d28", null ],
     [ "derivs_domain_type", "classddc_1_1SplineBuilder.html#a161034c4bc225746940a04a6e60ad2a0", null ],

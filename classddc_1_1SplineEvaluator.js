@@ -10,7 +10,6 @@ var classddc_1_1SplineEvaluator =
     [ "vals_domain_type", "classddc_1_1SplineEvaluator.html#aaddc5a5469502c1165f924de9bac7f52", null ],
     [ "bsplines_domain_type", "classddc_1_1SplineEvaluator.html#a743a4eb5332fada1db28c77549545cd0", null ],
     [ "batch_domain_type", "classddc_1_1SplineEvaluator.html#af1388b1aa76cdeb524c889cbfe97c717", null ],
-    [ "spline_dim_type", "classddc_1_1SplineEvaluator.html#a7e242d2f8a4908c42e829f4d01eb12f5", null ],
     [ "spline_domain_type", "classddc_1_1SplineEvaluator.html#a42e0ea3298a217064ceb5d680a6f6492", null ],
     [ "SplineEvaluator", "classddc_1_1SplineEvaluator.html#ac248ae17106ca2733d80148d1273657d", null ],
     [ "SplineEvaluator", "classddc_1_1SplineEvaluator.html#af0ee7a65792937c5245ca74ae4b22ea8", null ],

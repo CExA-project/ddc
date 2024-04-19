@@ -16,7 +16,6 @@ var classddc_1_1SplineEvaluator2D =
     [ "bsplines_domain_type2", "classddc_1_1SplineEvaluator2D.html#a8a111f48d9a0201739586ec9033738e0", null ],
     [ "bsplines_domain_type", "classddc_1_1SplineEvaluator2D.html#a0c011cd9ce388bbb0e60ab92f559f0ac", null ],
     [ "batch_domain_type", "classddc_1_1SplineEvaluator2D.html#a7408000cacc25bccf6482b7753e908fe", null ],
-    [ "spline_dim_type", "classddc_1_1SplineEvaluator2D.html#a69f9adefa4f7812074a9379dca701ead", null ],
     [ "spline_domain_type", "classddc_1_1SplineEvaluator2D.html#a1bddf795fc74554505ef2ba9a1e96a19", null ],
     [ "SplineEvaluator2D", "classddc_1_1SplineEvaluator2D.html#a2ec4fba57ad25c7182e031943a6ee8ec", null ],
     [ "SplineEvaluator2D", "classddc_1_1SplineEvaluator2D.html#a1c01666371c72cd5275ef6641bf87a46", null ],

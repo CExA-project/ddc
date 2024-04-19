@@ -78,9 +78,6 @@ Public Types</h2></td></tr>
 <tr class="separator:a743a4eb5332fada1db28c77549545cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1388b1aa76cdeb524c889cbfe97c717"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator.html#af1388b1aa76cdeb524c889cbfe97c717">batch_domain_type</a> = typename ddc::detail::convert_type_seq_to_discrete_domain&lt; ddc::type_seq_remove_t&lt; ddc::detail::TypeSeq&lt; IDimX... &gt;, ddc::detail::TypeSeq&lt; <a class="el" href="classddc_1_1SplineEvaluator.html#aceab201ee04e870a3ba0a1562d6837e1">interpolation_mesh_type</a> &gt; &gt; &gt;</td></tr>
 <tr class="separator:af1388b1aa76cdeb524c889cbfe97c717"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e242d2f8a4908c42e829f4d01eb12f5"><td class="memTemplParams" colspan="2">template&lt;typename Tag &gt; </td></tr>
-<tr class="memitem:a7e242d2f8a4908c42e829f4d01eb12f5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator.html#a7e242d2f8a4908c42e829f4d01eb12f5">spline_dim_type</a> = std::conditional_t&lt; std::is_same_v&lt; Tag, <a class="el" href="classddc_1_1SplineEvaluator.html#aceab201ee04e870a3ba0a1562d6837e1">interpolation_mesh_type</a> &gt;, <a class="el" href="classddc_1_1SplineEvaluator.html#acd36b9f75a77ae8439b290928ccf877c">bsplines_type</a>, Tag &gt;</td></tr>
-<tr class="separator:a7e242d2f8a4908c42e829f4d01eb12f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42e0ea3298a217064ceb5d680a6f6492"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator.html#a42e0ea3298a217064ceb5d680a6f6492">spline_domain_type</a> = typename ddc::detail::convert_type_seq_to_discrete_domain&lt; ddc::type_seq_replace_t&lt; ddc::detail::TypeSeq&lt; IDimX... &gt;, ddc::detail::TypeSeq&lt; <a class="el" href="classddc_1_1SplineEvaluator.html#aceab201ee04e870a3ba0a1562d6837e1">interpolation_mesh_type</a> &gt;, ddc::detail::TypeSeq&lt; <a class="el" href="classddc_1_1SplineEvaluator.html#acd36b9f75a77ae8439b290928ccf877c">bsplines_type</a> &gt; &gt; &gt;</td></tr>
 <tr class="separator:a42e0ea3298a217064ceb5d680a6f6492"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -273,24 +270,6 @@ template&lt;class ExecSpace , class MemorySpace , class BSplinesType , class Int
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="classddc_1_1SplineEvaluator.html">ddc::SplineEvaluator</a>&lt; ExecSpace, MemorySpace, BSplinesType, InterpolationMesh, LeftExtrapolationRule, RightExtrapolationRule, IDimX &gt;::batch_domain_type =  typename ddc::detail::convert_type_seq_to_discrete_domain&lt;ddc::type_seq_remove_t&lt; ddc::detail::TypeSeq&lt;IDimX...&gt;, ddc::detail::TypeSeq&lt;<a class="el" href="classddc_1_1SplineEvaluator.html#aceab201ee04e870a3ba0a1562d6837e1">interpolation_mesh_type</a>&gt; &gt;&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7e242d2f8a4908c42e829f4d01eb12f5" name="a7e242d2f8a4908c42e829f4d01eb12f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e242d2f8a4908c42e829f4d01eb12f5">&#9670;&nbsp;</a></span>spline_dim_type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ExecSpace , class MemorySpace , class BSplinesType , class InterpolationMesh , class LeftExtrapolationRule , class RightExtrapolationRule , class... IDimX&gt; </div>
-<div class="memtemplate">
-template&lt;typename Tag &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classddc_1_1SplineEvaluator.html">ddc::SplineEvaluator</a>&lt; ExecSpace, MemorySpace, BSplinesType, InterpolationMesh, LeftExtrapolationRule, RightExtrapolationRule, IDimX &gt;::spline_dim_type =  std::conditional_t&lt;std::is_same_v&lt;Tag, <a class="el" href="classddc_1_1SplineEvaluator.html#aceab201ee04e870a3ba0a1562d6837e1">interpolation_mesh_type</a>&gt;, <a class="el" href="classddc_1_1SplineEvaluator.html#acd36b9f75a77ae8439b290928ccf877c">bsplines_type</a>, Tag&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

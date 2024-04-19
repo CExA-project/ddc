@@ -15,6 +15,8 @@
 
 namespace ddc {
 
+namespace detail {
+
 template <class T>
 struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::tag_type>
 {
@@ -24,9 +26,11 @@ struct NonUniformBSplinesBase
 {
 };
 
+} // namespace detail
+
 /// NonUniformPointSampling specialization of BSplines
 template <class Tag, std::size_t D>
-class NonUniformBSplines : NonUniformBSplinesBase
+class NonUniformBSplines : detail::NonUniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
 
@@ -37,11 +41,6 @@ public:
     using discrete_dimension_type = NonUniformBSplines;
 
 public:
-    static constexpr std::size_t rank()
-    {
-        return 1;
-    }
-
     static constexpr std::size_t degree() noexcept
     {
         return D;
@@ -69,7 +68,7 @@ public:
         friend class Impl;
 
     private:
-        using mesh_type = NonUniformBsplinesKnots<DDim>;
+        using mesh_type = detail::NonUniformBsplinesKnots<DDim>;
 
         ddc::DiscreteDomain<mesh_type> m_domain;
 
@@ -206,7 +205,7 @@ public:
 };
 
 template <class DDim>
-struct is_non_uniform_bsplines : public std::is_base_of<NonUniformBSplinesBase, DDim>
+struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplinesBase, DDim>
 {
 };
 

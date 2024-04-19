@@ -82,6 +82,7 @@ jobs:
         cat<<-EOF > run.sh
           set -xe
           git config --global --add safe.directory '*'
+          doxygen --version
           cmake \
               -DDDC_BUILD_DOCUMENTATION=ON \
               -DCMAKE_CXX_STANDARD=20 \

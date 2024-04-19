@@ -123,13 +123,6 @@ public:
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
     /**
-     * @brief Helper to get the dimension of batched_spline_domain_type associated to a dimension of batched_interpolation_domain_type.
-     */
-    template <typename Tag>
-    using spline_dim_type
-            = std::conditional_t<std::is_same_v<Tag, interpolation_mesh_type>, bsplines_type, Tag>;
-
-    /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
      */
     using batched_spline_domain_type =

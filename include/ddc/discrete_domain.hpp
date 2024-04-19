@@ -78,7 +78,17 @@ public:
     {
     }
 
-    // Construct a DiscreteDomain from a reordered copy of `domain`
+    /**
+     * @brief Construct a DiscreteDomain from a reordered copy of `domain`
+     *
+     * A constructor to build a DiscreteDomain from another compatible domain.
+     * A domain is compatible if it either contains the same dimensions as this
+     * domain (even if they are in a different order) or if it contains at
+     * the dimensions of this domain plus some additional dimensions which will
+     * be unused here.
+     *
+     * @param domain A compatible domain.
+     */
     template <class... ODDims>
     explicit KOKKOS_FUNCTION constexpr DiscreteDomain(
             [[maybe_unused]] DiscreteDomain<ODDims...> const& domain)

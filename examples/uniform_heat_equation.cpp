@@ -168,7 +168,7 @@ int main(int argc, char** argv)
                     ddc::Coordinate<T>(start_time),
                     ddc::Coordinate<T>(end_time),
                     nb_time_steps + 1));
-            
+
     //! [time-domain]
 
     //! [data allocation]

@@ -26,15 +26,15 @@ RUN chmod +x /bin/bash_run \
  && apt-get install -y --no-install-recommends \
     build-essential \
     clang \
-    cmake \
     cm-super-minimal \
-    pkg-config \
+    cmake \
     cmake-data \
     libfftw3-dev \
     libpdi-dev \
-    git \
     ghostscript \
+    git \
     graphviz \
+    pkg-config \
     texlive \
     texlive-extra-utils \
     texlive-font-utils \

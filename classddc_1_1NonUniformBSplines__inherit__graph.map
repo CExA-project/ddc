@@ -1,4 +1,5 @@
 <map id="ddc::NonUniformBSplines&lt; Tag, D &gt;" name="ddc::NonUniformBSplines&lt; Tag, D &gt;">
-<area shape="rect" id="node1" title="NonUniformPointSampling specialization of BSplines." alt="" coords="44,131,232,267"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,271,83"/>
+<area shape="rect" id="Node000001" title="NonUniformPointSampling specialization of BSplines." alt="" coords="40,119,205,259"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,240,71"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,84,125,118,120,118,120,84"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="ddc::UniformPointSampling&lt; CDim &gt;" name="ddc::UniformPointSampling&lt; CDim &gt;">
-<area shape="rect" id="node1" title="UniformPointSampling models a uniform discretization of the provided continuous dimension." alt="" coords="5,145,205,267"/>
-<area shape="rect" id="node2" title=" " alt="" coords="13,5,197,97"/>
+<area shape="rect" id="Node000001" title="UniformPointSampling models a uniform discretization of the provided continuous dimension." alt="" coords="5,133,179,253"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="13,5,171,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,99,95,133,89,133,89,99"/>
 </map>

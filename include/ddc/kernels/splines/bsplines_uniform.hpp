@@ -66,15 +66,6 @@ public:
         return Tag::PERIODIC;
     }
 
-    /** @brief Indicates if the B-splines are radial or not (should be deprecated soon because this concept is not in the scope of DDC).
-     *
-     * @return A boolean indicating if the dimension is radial or not.
-     */
-    [[deprecated]] static constexpr bool is_radial() noexcept
-    {
-        return false;
-    }
-
     /** @brief Indicates if the B-splines are uniform or not (this is the case here).
      *
      * @return A boolean indicating if the B-splines are uniform or not.

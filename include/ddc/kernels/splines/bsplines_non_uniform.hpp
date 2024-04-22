@@ -49,25 +49,37 @@ public:
     /// @brief The discrete dimension identifying B-splines.
     using discrete_dimension_type = NonUniformBSplines;
 
-    /// @brief The degree of B-splines.
+    /** @brief The degree of B-splines.
+     *
+     * @return The degree.
+     */
     static constexpr std::size_t degree() noexcept
     {
         return D;
     }
 
-    /// @brief Indicates if the B-splines are periodic or not.
+    /** @brief Indicates if the B-splines are periodic or not.
+     *
+     * @return A boolean indicating if the B-splines are periodic or not.
+     */
     static constexpr bool is_periodic() noexcept
     {
         return Tag::PERIODIC;
     }
 
-    /// @brief Indicates if the B-splines are radial or not (should be deprecated soon because this concept is not in the scope of DDC).
+    /** @brief Indicates if the B-splines are radial or not (should be deprecated soon because this concept is not in the scope of DDC).
+     *
+     * @return A boolean indicating if the dimension is radial or not.
+     */
     [[deprecated]] static constexpr bool is_radial() noexcept
     {
         return false;
     }
 
-    /// @brief Indicates if the B-splines are uniform or not (this is not the case here).
+    /** @brief Indicates if the B-splines are uniform or not (this is not the case here).
+     *
+     * @return A boolean indicating if the B-splines are uniform or not.
+     */
     static constexpr bool is_uniform() noexcept
     {
         return false;
@@ -134,7 +146,10 @@ public:
         template <class RandomIt>
         Impl(RandomIt breaks_begin, RandomIt breaks_end);
 
-        /// @brief Copy-constructs from another Impl with different Kokkos memory space
+        /** @brief Copy-constructs from another Impl with different Kokkos memory space
+         *
+         * @param A reference to the other Impl
+         */
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
             : m_domain(impl.m_domain)
@@ -142,19 +157,31 @@ public:
         {
         }
 
-        /// @brief Copy-constructs
+        /** @brief Copy-constructs
+         *
+         * @param A reference to another Impl
+         */
         Impl(Impl const& x) = default;
 
-        /// @brief Move-constructs
+        /** @brief Move-constructs
+         *
+         * @param An rvalue to another Impl
+         */
         Impl(Impl&& x) = default;
 
         /// @brief Destructs
         ~Impl() = default;
 
-        /// @brief Copy-assigns
+        /** @brief Copy-assigns
+         *
+         * @param A reference to another Impl
+         */
         Impl& operator=(Impl const& x) = default;
 
-        /// @brief Move-assigns
+        /** @brief Move-assigns
+         *
+         * @param An rvalue to another Impl
+         */
         Impl& operator=(Impl&& x) = default;
 
         /** @brief Evaluates non-zero B-splines at a given coordinate.

@@ -115,7 +115,7 @@ public:
     DiscreteDomain& KOKKOS_FUNCTION operator=(DiscreteDomain<ODDims...> const& domain)
     {
         m_element_begin = DiscreteElement<DDims...>(domain.front());
-        m_element_end = DiscreteElement<DDims...>(domain.back());
+        m_element_end = m_element_begin + DiscreteVector<DDims...>(domain.extents());
         return *this;
     }
 

@@ -173,12 +173,14 @@ public:
         /** @brief Copy-assigns
          *
          * @param x A reference to another Impl
+         * @return A reference to the copy Impl
          */
         Impl& operator=(Impl const& x) = default;
 
         /** @brief Move-assigns
          *
          * @param x An rvalue to another Impl
+         * @return A reference to the moved Impl
          */
         Impl& operator=(Impl&& x) = default;
 

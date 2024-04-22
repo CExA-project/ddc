@@ -126,7 +126,7 @@ public:
         {
         }
 
-        /** @brief Construct a `Impl` using a pair of iterators.
+        /** @brief Constructs a Impl using a pair of iterators.
          *
          * The (lower and upper) iterators are used to build the DiscreteDomain indexing the B-splines.
          */

@@ -247,7 +247,7 @@ public:
             return ddc::coordinate(ddc::DiscreteElement<mesh_type>(ix.uid() + degree() + 1));
         }
 
-        /** @brief Returns the coordinate of the first knot in the support of the identified B-spline.
+        /** @brief Returns the coordinate of the (n+1)-th knot in the support of the identified B-spline.
          *
          * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
          * provided DiscreteElement, this function returns the (n+1)-th knot in the support of the B-spline.

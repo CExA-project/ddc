@@ -239,7 +239,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_knot(int knot_idx) const noexcept
         {
-            return ddc::Coordinate<Tag>(rmin() + idx * ddc::step<mesh_type>());
+            return ddc::Coordinate<Tag>(rmin() + knot_idx * ddc::step<mesh_type>());
         }
 
         /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a B-spline.

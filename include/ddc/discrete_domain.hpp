@@ -101,7 +101,7 @@ public:
     KOKKOS_DEFAULTED_FUNCTION DiscreteDomain& operator=(DiscreteDomain&& x) = default;
 
     /**
-     * @brief Copy a DiscreteDomain by reordering.
+     * @brief Copy a DiscreteDomain by reordering and slicing.
      *
      * An assign operator to build a DiscreteDomain from another compatible domain.
      * A domain is compatible if it either contains the same dimensions as this

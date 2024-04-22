@@ -106,19 +106,30 @@ public:
 
         Impl() = default;
 
-        /// @brief Construct a `Impl` using a brace-list, i.e. `Impl bsplines({0., 1.})`
+        /** @brief Constructs an Impl using a brace-list, i.e. `Impl bsplines({0., 1.})`
+         *
+         * The brace-list is usually the iterable list of knots. However, only the first and last
+         * indexes of the elements of the lists are effectively used by the constructor to build the Impl.
+         */
         explicit Impl(std::initializer_list<ddc::Coordinate<Tag>> breaks)
             : Impl(breaks.begin(), breaks.end())
         {
         }
 
-        /// @brief Construct a `Impl` using a C++20 "common range".
+        /** @brief Constructs an Impl using a std::vector.
+         *
+         * The std::vector is usually the iterable list of knots. However, only the first and last
+         * indexes of the elements of the lists are effectively used by the constructor to build the Impl.
+         */
         explicit Impl(std::vector<ddc::Coordinate<Tag>> const& breaks)
             : Impl(breaks.begin(), breaks.end())
         {
         }
 
-        /// @brief Construct a `Impl` using a pair of iterators.
+        /** @brief Construct a `Impl` using a pair of iterators.
+         *
+         * The (lower and upper) iterators are used to build the DiscreteDomain indexing the B-splines.
+         */
         template <class RandomIt>
         Impl(RandomIt breaks_begin, RandomIt breaks_end);
 

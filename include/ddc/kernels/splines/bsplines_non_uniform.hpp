@@ -341,7 +341,7 @@ public:
          *
          * @return The number of cells over which the B-splines are defined.
          */
-        KOKKOS_INLINE_FUNCTIO  std::size_t ncells() const noexcept
+        KOKKOS_INLINE_FUNCTION std::size_t ncells() const noexcept
         {
             return npoints() - 1;
         }

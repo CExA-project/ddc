@@ -50,11 +50,6 @@ public:
         return Tag::PERIODIC;
     }
 
-    static constexpr bool is_radial() noexcept
-    {
-        return false;
-    }
-
     static constexpr bool is_uniform() noexcept
     {
         return true;

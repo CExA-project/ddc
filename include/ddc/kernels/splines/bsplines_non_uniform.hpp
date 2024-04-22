@@ -59,7 +59,7 @@ public:
     }
 
     /// @brief Indicates if the B-splines are radial or not (should be deprecated soon because this concept is not in the scope of DDC).
-    static constexpr bool is_radial() noexcept
+     [[deprecated]] static constexpr bool is_radial() noexcept
     {
         return false;
     }

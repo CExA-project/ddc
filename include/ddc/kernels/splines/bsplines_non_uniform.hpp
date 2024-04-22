@@ -31,6 +31,9 @@ struct NonUniformBSplinesBase
 /**
  * The type of a non-uniform B-splines 1D basis.
  *
+ * Knots for non-uniform B-splines are non-uniformly distributed (no assumption is made on the uniformity of their distribution,
+ * the associated discrete dimension is a NonUniformPointSampling).
+ *
  * @tparam Tag The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
  * @tparam D The degree of the B-splines.
  */

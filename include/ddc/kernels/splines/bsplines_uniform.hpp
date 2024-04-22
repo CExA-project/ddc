@@ -31,6 +31,8 @@ struct UniformBSplinesBase
 /**
  * The type of a uniform B-splines 1D basis.
  *
+ * Knots for non-uniform B-splines basis are non-uniformly distributed (no assumption is made on the uniformity of their distribution).
+ *
  * @tparam Tag The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
  * @tparam D The degree of the B-splines.
  */

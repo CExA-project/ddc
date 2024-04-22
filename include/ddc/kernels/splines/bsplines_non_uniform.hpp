@@ -59,7 +59,7 @@ public:
     }
 
     /// @brief Indicates if the B-splines are radial or not (should be deprecated soon because this concept is not in the scope of DDC).
-     [[deprecated]] static constexpr bool is_radial() noexcept
+    [[deprecated]] static constexpr bool is_radial() noexcept
     {
         return false;
     }
@@ -70,7 +70,11 @@ public:
         return false;
     }
 
-    /// @brief Impl TODO
+    /** @brief Impl Storage class of the static attributes of the discrete dimension.
+     *
+     * @tparam DDim The name of the discrete dimension.
+     * @tparam MemorySpace The Kokkos memory space where the attributes are being stored.
+     */
     template <class DDim, class MemorySpace>
     class Impl
     {
@@ -190,7 +194,7 @@ public:
          *
          * The integral of each of the B-splines over their support within the domain on which this basis was defined.
          *
-         * @param[out] int_vals The values of the integrals. It has to be a (nbasis) 1D mdspan.
+         * @param[out] int_vals The values of the integrals. It has to be a 1D mdspan of size (nbasis).
          * @return The values of the integrals.
          */
         template <class Layout, class MemorySpace2>
@@ -259,74 +263,85 @@ public:
             return ddc::coordinate(ddc::DiscreteElement<mesh_type>(ix.uid() + n));
         }
 
-        /** @brief Returns the coordinate of the lower boundary knot.
+        /** @brief Returns the coordinate of the lower bound of the domain on which the B-splines are defined.
          *
-         * @return Coordinate of the lower boundary knot.
+         * @return Coordinate of the lower bound of the domain.
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
         {
             return get_knot(0);
         }
 
-        /** @brief Returns the coordinate of the upper boundary knot.
+        /** @brief Returns the coordinate of the upper bound of the domain on which the B-splines are defined.
          *
-         * @return Coordinate of the upper boundary knot.
+         * @return Coordinate of the upper bound of the domain.
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
         {
             return get_knot(ncells());
         }
 
-        /** @brief Returns the length of the domain supporting knots.
+        /** @brief Returns the length of the domain.
          *
-         * @return The length of the domain supporting knots.
+         * @return The length of the domain.
          */
         KOKKOS_INLINE_FUNCTION double length() const noexcept
         {
             return rmax() - rmin();
         }
 
-        /** @brief TODO
+        /** @brief Returns the number of elements necessary to construct a spline representation of a function.
          *
-         * @return TODO.
+         * For a non-periodic domain the number of elements necessary to construct a spline representation of a function
+         * is equal to the number of basis functions. However in the periodic case it additionally includes degree additional elements
+         * which allow the first B-splines to be evaluated close to rmax (where they also appear due to the periodicity).
+         *
+         * @return The number of elements necessary to construct a spline representation of a function.
          */
         KOKKOS_INLINE_FUNCTION std::size_t size() const noexcept
         {
             return degree() + ncells();
         }
 
-        /** @brief Returns the discrete domain including ghost bsplines
+        /** @brief Returns the discrete domain including eventual additionnal bsplines in the periodic case. See size().
          *
-         * @return The discrete domain including ghost bsplines.
+         * @return The discrete domain including eventual additionnal bsplines.
          */
         KOKKOS_INLINE_FUNCTION discrete_domain_type full_domain() const
         {
             return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
         }
 
-        /** @brief TODO
+        /** @brief The number of break points
          *
-         * @return TODO
+         * The number of break points or cell boundaries.
+         *
+         * @return The number of break points
          */
         KOKKOS_INLINE_FUNCTION std::size_t npoints() const noexcept
         {
             return m_nknots - 2 * degree();
         }
 
-        /** @brief TODO
+        /** @brief Returns the number of basis functions.
          *
-         * @return TODO
+         * The number of functions in the spline basis.
+         *
+         * @return The number of basis functions.
          */
         KOKKOS_INLINE_FUNCTION std::size_t nbasis() const noexcept
         {
             return ncells() + !is_periodic() * degree();
         }
 
-        /** @brief TODO
+        /** @brief Returns the number of cells over which the B-splines are defined.
          *
-         * @return TODO
+         * The number of cells over which the B-splines and any spline representation are defined.
+         * In other words the number of polynomials that comprise a spline representation on the domain where the basis is defined.
+         *
+         * @return The number of cells over which the B-splines are defined.
          */
-        KOKKOS_INLINE_FUNCTION std::size_t ncells() const noexcept
+        KOKKOS_INLINE_FUNCTIO  std::size_t ncells() const noexcept
         {
             return npoints() - 1;
         }
@@ -342,7 +357,7 @@ struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplin
 };
 
 /**
- * @brief Indicates if a tag corresponds to uniform B-splines of not.
+ * @brief Indicates if a tag corresponds to non-uniform B-splines or not.
  *
  * @tparam The presumed non-uniform B-splines.
  */

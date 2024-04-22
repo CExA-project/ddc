@@ -127,7 +127,7 @@ public:
 
         /** @brief Copy-constructs from another Impl with different Kokkos memory space
          *
-         * @param A reference to the other Impl
+         * @param impl A reference to the other Impl
          */
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_domain(impl.m_domain)
@@ -136,13 +136,13 @@ public:
 
         /** @brief Copy-constructs
          *
-         * @param A reference to another Impl
+         * @param x A reference to another Impl
          */
         Impl(Impl const& x) = default;
 
         /** @brief Move-constructs
          *
-         * @param An rvalue to another Impl
+         * @param x An rvalue to another Impl
          */
         Impl(Impl&& x) = default;
 
@@ -151,13 +151,13 @@ public:
 
         /** @brief Copy-assigns
          *
-         * @param A reference to another Impl
+         * @param x A reference to another Impl
          */
         Impl& operator=(Impl const& x) = default;
 
         /** @brief Move-assigns
          *
-         * @param An rvalue to another Impl
+         * @param x An rvalue to another Impl
          */
         Impl& operator=(Impl&& x) = default;
 

@@ -113,6 +113,8 @@ public:
          *
          * The brace-list is the list of break points. It is used to build the DiscreteDomain indexing
          * the knots and iterated over to build the knots coordinates list and initialize the associated DiscreteSpace.
+         *
+         * @param breaks The std::initializer_list of the coordinates of break points.
          */
         explicit Impl(std::initializer_list<ddc::Coordinate<Tag>> breaks)
             : Impl(breaks.begin(), breaks.end())
@@ -123,6 +125,8 @@ public:
          *
          * The std::vector is the list of break points. It is used to build the DiscreteDomain indexing
          * the knots and iterated over to build the knots coordinates list and initialize the associated DiscreteSpace.
+         *
+         * @param breaks The std::vector of the coordinates of break points.
          */
         explicit Impl(std::vector<ddc::Coordinate<Tag>> const& breaks)
             : Impl(breaks.begin(), breaks.end())
@@ -133,13 +137,16 @@ public:
          *
          * The iterators are used to build the DiscreteDomain indexing the knots, build the knots list
          * and initialize the associated DiscreteSpace.
+         *
+         * @param breaks_begin The iterator to begin with to iterate on break points.
+         * @param breaks_end The iterator to end with to iterate on break points.
          */
         template <class RandomIt>
         Impl(RandomIt breaks_begin, RandomIt breaks_end);
 
         /** @brief Copy-constructs from another Impl with different Kokkos memory space
          *
-         * @param A reference to the other Impl
+         * @param impl A reference to the other Impl
          */
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
@@ -150,13 +157,13 @@ public:
 
         /** @brief Copy-constructs
          *
-         * @param A reference to another Impl
+         * @param x A reference to another Impl
          */
         Impl(Impl const& x) = default;
 
         /** @brief Move-constructs
          *
-         * @param An rvalue to another Impl
+         * @param x An rvalue to another Impl
          */
         Impl(Impl&& x) = default;
 
@@ -165,13 +172,13 @@ public:
 
         /** @brief Copy-assigns
          *
-         * @param A reference to another Impl
+         * @param x A reference to another Impl
          */
         Impl& operator=(Impl const& x) = default;
 
         /** @brief Move-assigns
          *
-         * @param An rvalue to another Impl
+         * @param x An rvalue to another Impl
          */
         Impl& operator=(Impl&& x) = default;
 

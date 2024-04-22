@@ -108,8 +108,8 @@ public:
 
         /** @brief Constructs an Impl using a brace-list, i.e. `Impl bsplines({0., 1.})`
          *
-         * The brace-list is usually the iterable list of knots. However, only the first and last
-         * indexes of the elements of the lists are effectively used by the constructor to build the Impl.
+         * The brace-list is the list of break points. It is used to build the DiscreteDomain indexing
+         * the knots and iterated over to build the knots coordinates list and initialize the associated DiscreteSpace.
          */
         explicit Impl(std::initializer_list<ddc::Coordinate<Tag>> breaks)
             : Impl(breaks.begin(), breaks.end())
@@ -118,8 +118,8 @@ public:
 
         /** @brief Constructs an Impl using a std::vector.
          *
-         * The std::vector is usually the iterable list of knots. However, only the first and last
-         * indexes of the elements of the lists are effectively used by the constructor to build the Impl.
+         * The std::vector is the list of break points. It is used to build the DiscreteDomain indexing
+         * the knots and iterated over to build the knots coordinates list and initialize the associated DiscreteSpace.
          */
         explicit Impl(std::vector<ddc::Coordinate<Tag>> const& breaks)
             : Impl(breaks.begin(), breaks.end())
@@ -128,7 +128,8 @@ public:
 
         /** @brief Constructs a Impl using a pair of iterators.
          *
-         * The (lower and upper) iterators are used to build the DiscreteDomain indexing the B-splines.
+         * The iterators are used to build the DiscreteDomain indexing the knots, build the knots list
+         * and initialize the associated DiscreteSpace.
          */
         template <class RandomIt>
         Impl(RandomIt breaks_begin, RandomIt breaks_end);

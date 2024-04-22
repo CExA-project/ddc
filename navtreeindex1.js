@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"classddc_1_1DiscreteVector.html#af8e0b6074c1b563ede2626d7e1503248":[2,0,22,2],
 "classddc_1_1DiscreteVector.html#af8f929d7b9589a21c255c18f5afb6f07":[2,0,22,6],
 "classddc_1_1DiscreteVector.html#afb3c8c9ab49ebd9923116eda48657037":[2,0,22,20],
 "classddc_1_1GrevilleInterpolationPoints.html":[2,0,24],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "classddc_1_1SplineEvaluator2D.html#aee8916fb28fdd5666d2ee31a946dc84d":[2,0,49,33],
 "classddc_1_1SplineEvaluator2D.html#af1334afbb669896afa5e763d3632afc0":[2,0,49,28],
 "classddc_1_1SplineEvaluator2D.html#af14476e7cf09bbcc63d2ed280d7fb5df":[2,0,49,6],
-"classddc_1_1SplineEvaluator2D.html#af8524a928c3f951e728bd0fbf2d43a56":[2,0,49,23],
-"classddc_1_1SplineEvaluator2D.html#afea5a06362f2c3881d7a5d54fa4f1204":[2,0,49,11]
+"classddc_1_1SplineEvaluator2D.html#af8524a928c3f951e728bd0fbf2d43a56":[2,0,49,23]
 };

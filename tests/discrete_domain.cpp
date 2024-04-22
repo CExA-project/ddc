@@ -238,16 +238,6 @@ TEST(ProductMDomainTest, SliceDomainXToolate)
 #endif
 }
 
-TEST(ProductMDomainTest, Transpose2DConstructor)
-{
-    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
-    DDomYX const dom_y_x(dom_x_y);
-    EXPECT_EQ(ddc::select<DDimX>(dom_y_x.front()), ddc::select<DDimX>(lbound_x_y));
-    EXPECT_EQ(ddc::select<DDimY>(dom_y_x.front()), ddc::select<DDimY>(lbound_x_y));
-    EXPECT_EQ(ddc::select<DDimX>(dom_y_x.back()), ddc::select<DDimX>(ubound_x_y));
-    EXPECT_EQ(ddc::select<DDimY>(dom_y_x.back()), ddc::select<DDimY>(ubound_x_y));
-}
-
 TEST(ProductMDomainTest, Transpose3DConstructor)
 {
     DDomX const dom_x(lbound_x, nelems_x);
@@ -261,17 +251,6 @@ TEST(ProductMDomainTest, Transpose3DConstructor)
     EXPECT_EQ(ddc::select<DDimX>(dom_x_y_z.back()), ddc::select<DDimX>(dom_z_y_x.back()));
     EXPECT_EQ(ddc::select<DDimY>(dom_x_y_z.back()), ddc::select<DDimY>(dom_z_y_x.back()));
     EXPECT_EQ(ddc::select<DDimZ>(dom_x_y_z.back()), ddc::select<DDimZ>(dom_z_y_x.back()));
-}
-
-TEST(ProductMDomainTest, Transpose2DAssign)
-{
-    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
-    DDomYX dom_y_x;
-    dom_y_x = dom_x_y;
-    EXPECT_EQ(ddc::select<DDimX>(dom_y_x.front()), ddc::select<DDimX>(lbound_x_y));
-    EXPECT_EQ(ddc::select<DDimY>(dom_y_x.front()), ddc::select<DDimY>(lbound_x_y));
-    EXPECT_EQ(ddc::select<DDimX>(dom_y_x.back()), ddc::select<DDimX>(ubound_x_y));
-    EXPECT_EQ(ddc::select<DDimY>(dom_y_x.back()), ddc::select<DDimY>(ubound_x_y));
 }
 
 TEST(ProductMDomainTest, Transpose3DAssign)

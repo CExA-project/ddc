@@ -54,6 +54,9 @@ using DElemXYZ = ddc::DiscreteElement<DDimX, DDimY, DDimZ>;
 using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
 using DDomXYZ = ddc::DiscreteDomain<DDimX, DDimY, DDimZ>;
 
+using DElemZYX = ddc::DiscreteElement<DDimZ, DDimY, DDimX>;
+using DVectZYX = ddc::DiscreteVector<DDimZ, DDimY, DDimX>;
+using DDomZYX = ddc::DiscreteDomain<DDimZ, DDimY, DDimX>;
 
 static DElemX constexpr lbound_x(50);
 static DVectX constexpr nelems_x(3);
@@ -233,4 +236,35 @@ TEST(ProductMDomainTest, SliceDomainXToolate)
             dom_x_y.restrict(subdomain_x),
             R"rgx([Aa]ssert.*uid<ODDims>\(m_element_end\).*uid<ODDims>\(odomain\.m_element_end\).*)rgx");
 #endif
+}
+
+TEST(ProductMDomainTest, Transpose3DConstructor)
+{
+    DDomX const dom_x(lbound_x, nelems_x);
+    DDomY const dom_y(lbound_y, nelems_y);
+    DDomZ const dom_z(lbound_z, nelems_z);
+    DDomXYZ const dom_x_y_z(dom_x, dom_y, dom_z);
+    DDomZYX const dom_z_y_x(dom_x_y_z);
+    EXPECT_EQ(ddc::select<DDimX>(dom_x_y_z.front()), ddc::select<DDimX>(dom_z_y_x.front()));
+    EXPECT_EQ(ddc::select<DDimY>(dom_x_y_z.front()), ddc::select<DDimY>(dom_z_y_x.front()));
+    EXPECT_EQ(ddc::select<DDimZ>(dom_x_y_z.front()), ddc::select<DDimZ>(dom_z_y_x.front()));
+    EXPECT_EQ(ddc::select<DDimX>(dom_x_y_z.back()), ddc::select<DDimX>(dom_z_y_x.back()));
+    EXPECT_EQ(ddc::select<DDimY>(dom_x_y_z.back()), ddc::select<DDimY>(dom_z_y_x.back()));
+    EXPECT_EQ(ddc::select<DDimZ>(dom_x_y_z.back()), ddc::select<DDimZ>(dom_z_y_x.back()));
+}
+
+TEST(ProductMDomainTest, Transpose3DAssign)
+{
+    DDomX const dom_x(lbound_x, nelems_x);
+    DDomY const dom_y(lbound_y, nelems_y);
+    DDomZ const dom_z(lbound_z, nelems_z);
+    DDomXYZ const dom_x_y_z(dom_x, dom_y, dom_z);
+    DDomZYX dom_z_y_x;
+    dom_z_y_x = dom_x_y_z;
+    EXPECT_EQ(ddc::select<DDimX>(dom_x_y_z.front()), ddc::select<DDimX>(dom_z_y_x.front()));
+    EXPECT_EQ(ddc::select<DDimY>(dom_x_y_z.front()), ddc::select<DDimY>(dom_z_y_x.front()));
+    EXPECT_EQ(ddc::select<DDimZ>(dom_x_y_z.front()), ddc::select<DDimZ>(dom_z_y_x.front()));
+    EXPECT_EQ(ddc::select<DDimX>(dom_x_y_z.back()), ddc::select<DDimX>(dom_z_y_x.back()));
+    EXPECT_EQ(ddc::select<DDimY>(dom_x_y_z.back()), ddc::select<DDimY>(dom_z_y_x.back()));
+    EXPECT_EQ(ddc::select<DDimZ>(dom_x_y_z.back()), ddc::select<DDimZ>(dom_z_y_x.back()));
 }

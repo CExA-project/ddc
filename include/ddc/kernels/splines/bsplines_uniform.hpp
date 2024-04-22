@@ -203,15 +203,15 @@ public:
 
         /** @brief Returns the coordinate of the knot corresponding to the given index.
          *
-         * Returns the coordinate of the knot corresponding to the given index for a B-spline. The domain
+         * Returns the coordinate of the knot corresponding to the given index. The domain
          * over which the B-splines are defined is comprised of ncells+1 knots however there are a total of
          * ncells+1+2*degree knots. The additional knots which control the shape of the B-splines near the
          * boundary are added before and after the break points. The knot index is therefore in the interval [-degree, ncells+degree]
          *
-         * @param[in] idx Integer identifying index of the knot.
+         * @param[in] knot_idx Integer identifying index of the knot.
          * @return Coordinate of the knot.
          */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_knot(int idx) const noexcept
+        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_knot(int knot_idx) const noexcept
         {
             return ddc::Coordinate<Tag>(rmin() + idx * ddc::step<mesh_type>());
         }

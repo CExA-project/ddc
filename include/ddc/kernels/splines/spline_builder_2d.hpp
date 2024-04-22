@@ -120,25 +120,45 @@ public:
     using interpolation_domain_type
             = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
 
+    /**
+     * @brief The type of the whole domain representing interpolation points.
+     */
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
+    /**
+     * @brief The type of the batch domain (obtained by removing dimensions of interests from whole space).
+     */
     using batch_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>>>;
 
+    /**
+     * @brief The type of the whole spline domain (cartesian product of 2D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
+     */
     using batched_spline_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>,
                     ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain and the associated batch domain) in the first dimension used by the class, preserving the underlying memory layout (order of dimensions).
+     */
     using batched_derivs_domain_type1 = typename builder_type1::batched_derivs_domain_type;
+
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain and the associated batch domain) in the second dimension used by the class, preserving the underlying memory layout (order of dimensions).
+     */
     using batched_derivs_domain_type2
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type2>,
                     ddc::detail::TypeSeq<deriv_type2>>>;
+
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain and the batch domain) in the second dimension used by the class, preserving the underlying memory layout (order of dimensions).
+     */
     using batched_derivs_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -251,6 +271,13 @@ public:
                 ddc::discrete_space<bsplines_type2>().full_domain());
     }
 
+    /**
+     * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
+     *
+     * Get the whole domain on which spline coefficients will be computed, preserving memory layout (order of dimensions).
+     *
+     * @return The domain for the spline coefficients.
+     */
     batched_spline_domain_type batched_spline_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type1, bsplines_type1>(

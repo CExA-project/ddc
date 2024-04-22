@@ -23,10 +23,11 @@ enum class SplineSolver { GINKGO };
  * @brief An helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
  *
  * An helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
+ *
  * @param is_uniform A boolean giving the presumed status before considering boundary conditions.
  * @param BcXmin The lower boundary condition.
  * @param BcXmax The upper boundary condition.
- * @param int The degree of the spline.
+ * @param degree The degree of the spline.
  */
 constexpr bool is_spline_interpolation_mesh_uniform(
         bool const is_uniform,
@@ -214,6 +215,7 @@ public:
      * 
      * @param batched_interpolation_domain The domain on which are defined the interpolation points.
      * @param cols_per_chunk An hyperparameter used by the slicer (internal to the solver) to define the size of a chunk of right-and-sides of the linear problem to be computed in parallel.
+     * @param preconditionner_max_block_size An hyperparameter used by the slicer (internal to the solver) to define the size of a block used by Block-Jacobi preconditionner.
      */
     explicit SplineBuilder(
             batched_interpolation_domain_type const& batched_interpolation_domain,

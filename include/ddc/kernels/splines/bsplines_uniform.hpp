@@ -326,9 +326,9 @@ public:
             return degree() + ncells();
         }
 
-        /** @brief Returns the discrete domain including eventual additionnal B-splines in the periodic case. See size().
+        /** @brief Returns the discrete domain including eventual additional B-splines in the periodic case. See size().
          *
-         * @return The discrete domain including eventual additionnal B-splines.
+         * @return The discrete domain including eventual additional B-splines.
          */
         KOKKOS_INLINE_FUNCTION discrete_domain_type full_domain() const
         {

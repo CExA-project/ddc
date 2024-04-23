@@ -188,7 +188,7 @@ public:
          * The derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
          * B-splines which are non-zero at any given point. It is these B-splines which are derivated.
          * A spline approximation of a derivative at coordinate x is a linear
-         * combination of those B-splines derivatives weighted with the splines coefficients of the spline-transformed
+         * combination of those B-splines derivatives weighted with the spline coefficients of the spline-transformed
          * initial discrete function.
          *
          * @param[out] derivs The derivatives of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.
@@ -203,7 +203,7 @@ public:
          * The values and derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
          * B-splines which are non-zero at any given point. It is these B-splines which are evaluated and derivated.
          * A spline approximation of a derivative at coordinate x is a linear
-         * combination of those B-splines derivatives weighted with splines coefficients of the spline-transformed
+         * combination of those B-splines derivatives weighted with spline coefficients of the spline-transformed
          * initial discrete function.
          *
          * @param[out] derivs The values and \f$n\f$ derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan with (degree+1)*(n+1) elements.

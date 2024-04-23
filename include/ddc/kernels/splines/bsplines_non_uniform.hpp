@@ -212,7 +212,7 @@ public:
 
         /** @brief Evaluates non-zero B-splines derivatives at a given coordinate
          *
-         * The derivatives are computed for every B-splines with support at the given coordinate x. There are only (degree+1)
+         * The derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
          * B-splines which are non-zero at any given point. It is these B-splines which are derivated.
          * A spline approximation of a derivative at coordinate x is a linear
          * combination of those B-splines derivatives weighted with splines coefficients of the spline-transformed

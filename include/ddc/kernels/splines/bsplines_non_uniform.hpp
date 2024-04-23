@@ -137,13 +137,20 @@ public:
         {
         }
 
-        /** @brief Constructs a Impl using a pair of iterators.
+        /** @brief Constructs a Impl by iterating over a set of break points from begin to end.
          *
-         * The iterators are used to build the DiscreteDomain indexing the knots, build the knots list
-         * and initialize the associated DiscreteSpace.
+         * The provided break points describe the separation between the cells on which the polynomials
+         * comprising a spline are defined. They are used to build a set of knots. There are 2*degree more
+         * knots than break points. The knots are defined as follows:
+         * @f$ k_i = b_0 \forall 0 \leq i < d @f$
+         * @f$ k_{i+d} = b_i \forall 0 \leq i < n_b @f$
+         * @f$ k_{i+d+n_b} = b_{n_b} \forall 0 \leq i < d @f$
+         * where @f$d@f$ is the degree of the polynomials, and @f$n_b@f$ is the number of basis points.
          *
-         * @param breaks_begin The iterator to begin with to iterate on break points.
-         * @param breaks_end The iterator to end with to iterate on break points.
+         * This constructor makes the knots accessible via a DiscreteSpace.
+         *
+         * @param breaks_begin The iterator which points at the beginning of the break points.
+         * @param breaks_end The iterator which points at the end of the break points.
          */
         template <class RandomIt>
         Impl(RandomIt breaks_begin, RandomIt breaks_end);

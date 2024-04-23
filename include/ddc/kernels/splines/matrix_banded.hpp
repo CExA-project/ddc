@@ -35,18 +35,17 @@ extern "C" int dgbtrs_(
         int* info);
 
 template <class ExecSpace>
-class Matrix_Banded : public Matrix
+class MatrixBanded : public Matrix
 {
 protected:
     int const m_kl; // no. of subdiagonals
     int const m_ku; // no. of superdiagonals
     int const m_c; // no. of columns in q
     Kokkos::View<int*, Kokkos::HostSpace> m_ipiv; // pivot indices
-    // TODO: double**
     Kokkos::View<double*, Kokkos::HostSpace> m_q; // banded matrix representation
 
 public:
-    Matrix_Banded(int const mat_size, int const kl, int const ku)
+    MatrixBanded(int const mat_size, int const kl, int const ku)
         : Matrix(mat_size)
         , m_kl(kl)
         , m_ku(ku)

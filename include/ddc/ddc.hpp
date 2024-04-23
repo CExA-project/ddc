@@ -4,6 +4,11 @@
 
 #pragma once
 
+//! @brief The top-level namespace of DDC.
+//! All DDC symbols are defined either in this namespace or in a nested namespace.
+namespace ddc {
+}
+
 // Misc
 #include "ddc/detail/macros.hpp"
 #include "ddc/detail/tagged_vector.hpp"
@@ -25,12 +30,11 @@
 #include "ddc/discrete_vector.hpp"
 #include "ddc/non_uniform_point_sampling.hpp"
 #include "ddc/periodic_sampling.hpp"
-#include "ddc/rectilinear_domain.hpp"
 #include "ddc/uniform_point_sampling.hpp"
 
 // Algorithms
+#include "ddc/create_mirror.hpp"
 #include "ddc/for_each.hpp"
-#include "ddc/mirror.hpp"
 #include "ddc/parallel_deepcopy.hpp"
 #include "ddc/parallel_fill.hpp"
 #include "ddc/parallel_for_each.hpp"

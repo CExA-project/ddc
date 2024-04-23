@@ -19,7 +19,7 @@
 namespace ddc::detail {
 
 template <class ExecSpace>
-class Matrix_Corner_Block : public Matrix
+class MatrixCornerBlock : public Matrix
 {
 protected:
     int const m_k; // small block size
@@ -31,17 +31,17 @@ protected:
     //
     //-------------------------------------
     std::shared_ptr<Matrix> m_q_block;
-    std::shared_ptr<Matrix_Dense<ExecSpace>> m_delta;
+    std::shared_ptr<MatrixDense<ExecSpace>> m_delta;
     Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace> m_Abm_1_gamma;
     Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace> m_lambda;
 
 public:
-    Matrix_Corner_Block(int const n, int const k, std::unique_ptr<Matrix> q)
+    MatrixCornerBlock(int const n, int const k, std::unique_ptr<Matrix> q)
         : Matrix(n)
         , m_k(k)
         , m_nb(n - k)
         , m_q_block(std::move(q))
-        , m_delta(new Matrix_Dense<ExecSpace>(k))
+        , m_delta(new MatrixDense<ExecSpace>(k))
         , m_Abm_1_gamma("Abm_1_gamma", m_nb, m_k)
         , m_lambda("lambda", m_k, m_nb)
     {
@@ -98,7 +98,7 @@ public:
     }
 
 protected:
-    Matrix_Corner_Block(
+    MatrixCornerBlock(
             int const n,
             int const k,
             std::unique_ptr<Matrix> q,
@@ -108,7 +108,7 @@ protected:
         , m_k(k)
         , m_nb(n - k)
         , m_q_block(std::move(q))
-        , m_delta(new Matrix_Dense<ExecSpace>(k))
+        , m_delta(new MatrixDense<ExecSpace>(k))
         , m_Abm_1_gamma("Abm_1_gamma", m_nb, m_k)
         , m_lambda("lambda", lambda_size1, lambda_size2)
     {

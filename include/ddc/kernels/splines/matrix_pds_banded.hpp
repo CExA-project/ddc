@@ -32,7 +32,7 @@ extern "C" int dpbtrs_(
         int* info);
 
 template <class ExecSpace>
-class Matrix_PDS_Banded : public Matrix
+class MatrixPDSBanded : public Matrix
 {
     /*
      * Represents a real symmetric positive definite matrix
@@ -44,7 +44,7 @@ protected:
             m_q; // pds banded matrix representation
 
 public:
-    Matrix_PDS_Banded(int const mat_size, int const kd)
+    MatrixPDSBanded(int const mat_size, int const kd)
         : Matrix(mat_size)
         , m_kd(kd)
         , m_q("q", kd + 1, mat_size)

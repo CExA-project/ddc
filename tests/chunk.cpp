@@ -22,7 +22,9 @@ template <class Datatype>
 using ChunkSpan0D = ddc::ChunkSpan<Datatype, DDom0D>;
 
 
-struct DDimX;
+struct DDimX
+{
+};
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
 using DDomX = ddc::DiscreteDomain<DDimX>;
@@ -31,7 +33,9 @@ template <class Datatype>
 using ChunkX = ddc::Chunk<Datatype, DDomX>;
 
 
-struct DDimY;
+struct DDimY
+{
+};
 using DElemY = ddc::DiscreteElement<DDimY>;
 using DVectY = ddc::DiscreteVector<DDimY>;
 using DDomY = ddc::DiscreteDomain<DDimY>;
@@ -40,7 +44,9 @@ template <class Datatype>
 using ChunkY = ddc::Chunk<Datatype, DDomY>;
 
 
-struct DDimZ;
+struct DDimZ
+{
+};
 using DElemZ = ddc::DiscreteElement<DDimZ>;
 using DVectZ = ddc::DiscreteVector<DDimZ>;
 using DDomZ = ddc::DiscreteDomain<DDimZ>;
@@ -281,6 +287,20 @@ TEST(Chunk1DTest, RankDynamic)
     EXPECT_EQ(ChunkX<double>::rank_dynamic(), 1);
 }
 
+TEST(Chunk1DTest, NullExtents)
+{
+    DDomX dom(lbound_x, DVectX(0));
+    ChunkX<double> const chunk(dom);
+    EXPECT_EQ(chunk.extents(), DVectX(0));
+}
+
+TEST(Chunk1DTest, NullExtent)
+{
+    DDomX dom(lbound_x, DVectX(0));
+    ChunkX<double> const chunk(dom);
+    EXPECT_EQ(chunk.extent<DDimX>(), DVectX(0));
+}
+
 TEST(Chunk1DTest, Extents)
 {
     ChunkX<double> const chunk(dom_x);
@@ -496,32 +516,6 @@ TEST(Chunk2DTest, SliceDomainX)
             EXPECT_EQ(subchunk_x(ix, iy), chunk_cref(ix, iy));
         }
     }
-}
-
-TEST(Chunk2DTest, SliceDomainXTooearly)
-{
-    [[maybe_unused]] DDomX const subdomain_x(lbound_x - 1, nelems_x);
-
-    ChunkXY<double> const chunk(dom_x_y);
-#ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
-    // the error message is checked with clang & gcc only
-    EXPECT_DEATH(
-            chunk[subdomain_x],
-            R"rgx([Aa]ssert.*uid<ODDims>\(m_element_begin\).*uid<ODDims>\(odomain\.m_element_begin\))rgx");
-#endif
-}
-
-TEST(Chunk2DTest, SliceDomainXToolate)
-{
-    [[maybe_unused]] DDomX const subdomain_x(lbound_x, nelems_x + 1);
-
-    ChunkXY<double> const chunk(dom_x_y);
-#ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
-    // the error message is checked with clang & gcc only
-    EXPECT_DEATH(
-            chunk[subdomain_x],
-            R"rgx([Aa]ssert.*uid<ODDims>\(m_element_end\).*uid<ODDims>\(odomain\.m_element_end\).*)rgx");
-#endif
 }
 
 TEST(Chunk2DTest, SliceDomainY)

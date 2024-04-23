@@ -48,13 +48,17 @@ public:
      */
     template <class CoordType, class BSplines, class Layout, class MemorySpace>
     KOKKOS_FUNCTION double operator()(
-            CoordType,
+            [[maybe_unused]] CoordType pos,
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
                     spline_coef) const
     {
         static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
 
-        std::array<double, BSplines::degree() + 1> vals;
+        std::array<double, BSplines::degree() + 1> vals_ptr;
+        std::experimental::mdspan<
+                double,
+                std::experimental::extents<std::size_t, BSplines::degree() + 1>> const
+                vals(vals_ptr.data());
 
         ddc::DiscreteElement<BSplines> idx
                 = ddc::discrete_space<BSplines>().eval_basis(vals, m_eval_pos);
@@ -91,7 +95,7 @@ public:
      * dimension off-interest (the complementary dimension of the boundary condition),
      * because the evaluator can receive coordinates outside the domain in both dimension.
      *
-     * @param[in] eval_pos_bc
+     * @param[in] eval_pos
      * 			Coordinate in the dimension given inside the domain where we will evaluate
      * 			each points outside the domain.
      * @param[in] eval_pos_not_interest_min
@@ -117,7 +121,7 @@ public:
      * No second and third parameters are needed in case of periodic splines on the
      * dimension off-interest (the complementary dimension of the boundary condition).
      *
-     * @param[in] eval_pos_bc
+     * @param[in] eval_pos
      * 			Coordinate in the dimension given inside the domain where we will evaluate
      * 			each points outside the domain.
      */
@@ -172,8 +176,16 @@ public:
                                   m_eval_pos_not_interest_max));
         }
 
-        std::array<double, BSplines1::degree() + 1> vals1;
-        std::array<double, BSplines2::degree() + 1> vals2;
+        std::array<double, BSplines1::degree() + 1> vals1_ptr;
+        std::experimental::mdspan<
+                double,
+                std::experimental::extents<std::size_t, BSplines1::degree() + 1>> const
+                vals1(vals1_ptr.data());
+        std::array<double, BSplines2::degree() + 1> vals2_ptr;
+        std::experimental::mdspan<
+                double,
+                std::experimental::extents<std::size_t, BSplines2::degree() + 1>> const
+                vals2(vals2_ptr.data());
 
         ddc::DiscreteElement<BSplines1> idx1
                 = ddc::discrete_space<BSplines1>()

@@ -24,7 +24,7 @@ public:
     template <typename ExecSpace>
     static std::unique_ptr<Matrix> make_new_dense(int const n)
     {
-        return std::make_unique<Matrix_Dense<ExecSpace>>(n);
+        return std::make_unique<MatrixDense<ExecSpace>>(n);
     }
 
     template <typename ExecSpace>
@@ -35,13 +35,13 @@ public:
             bool const pds)
     {
         if (kl == ku && kl == 1 && pds) {
-            return std::make_unique<Matrix_PDS_Tridiag<ExecSpace>>(n);
+            return std::make_unique<MatrixPDSTridiag<ExecSpace>>(n);
         } else if (2 * kl + 1 + ku >= n) {
-            return std::make_unique<Matrix_Dense<ExecSpace>>(n);
+            return std::make_unique<MatrixDense<ExecSpace>>(n);
         } else if (kl == ku && pds) {
-            return std::make_unique<Matrix_PDS_Banded<ExecSpace>>(n, kl);
+            return std::make_unique<MatrixPDSBanded<ExecSpace>>(n, kl);
         } else {
-            return std::make_unique<Matrix_Banded<ExecSpace>>(n, kl, ku);
+            return std::make_unique<MatrixBanded<ExecSpace>>(n, kl, ku);
         }
     }
 
@@ -56,17 +56,17 @@ public:
         int const banded_size = n - border_size;
         std::unique_ptr<Matrix> block_mat;
         if (pds && kl == ku && kl == 1) {
-            block_mat = std::make_unique<Matrix_PDS_Tridiag<ExecSpace>>(banded_size);
+            block_mat = std::make_unique<MatrixPDSTridiag<ExecSpace>>(banded_size);
         } else if (
                 border_size * n + border_size * (border_size + 1) + (2 * kl + 1 + ku) * banded_size
                 >= n * n) {
-            return std::make_unique<Matrix_Dense<ExecSpace>>(n);
+            return std::make_unique<MatrixDense<ExecSpace>>(n);
         } else if (kl == ku && pds) {
-            block_mat = std::make_unique<Matrix_PDS_Banded<ExecSpace>>(banded_size, kl);
+            block_mat = std::make_unique<MatrixPDSBanded<ExecSpace>>(banded_size, kl);
         } else {
-            block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, kl, ku);
+            block_mat = std::make_unique<MatrixBanded<ExecSpace>>(banded_size, kl, ku);
         }
-        return std::make_unique<Matrix_Periodic_Banded<ExecSpace>>(n, kl, ku, std::move(block_mat));
+        return std::make_unique<MatrixPeriodicBanded<ExecSpace>>(n, kl, ku, std::move(block_mat));
     }
 
     template <typename ExecSpace>
@@ -81,19 +81,19 @@ public:
         int const banded_size = n - block1_size - block2_size;
         std::unique_ptr<Matrix> block_mat;
         if (pds && kl == ku && kl == 1) {
-            block_mat = std::make_unique<Matrix_PDS_Tridiag<ExecSpace>>(banded_size);
+            block_mat = std::make_unique<MatrixPDSTridiag<ExecSpace>>(banded_size);
         } else if (2 * kl + 1 + ku >= banded_size) {
-            return std::make_unique<Matrix_Dense<ExecSpace>>(n);
+            return std::make_unique<MatrixDense<ExecSpace>>(n);
         } else if (kl == ku && pds) {
-            block_mat = std::make_unique<Matrix_PDS_Banded<ExecSpace>>(banded_size, kl);
+            block_mat = std::make_unique<MatrixPDSBanded<ExecSpace>>(banded_size, kl);
         } else {
-            block_mat = std::make_unique<Matrix_Banded<ExecSpace>>(banded_size, kl, ku);
+            block_mat = std::make_unique<MatrixBanded<ExecSpace>>(banded_size, kl, ku);
         }
         if (block2_size == 0) {
             return std::make_unique<
-                    Matrix_Corner_Block<ExecSpace>>(n, block1_size, std::move(block_mat));
+                    MatrixCornerBlock<ExecSpace>>(n, block1_size, std::move(block_mat));
         } else {
-            return std::make_unique<Matrix_Center_Block<
+            return std::make_unique<MatrixCenterBlock<
                     ExecSpace>>(n, block1_size, block2_size, std::move(block_mat));
         }
     }
@@ -105,7 +105,7 @@ public:
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
     {
         return std::make_unique<
-                Matrix_Sparse<ExecSpace>>(n, cols_per_chunk, preconditionner_max_block_size);
+                MatrixSparse<ExecSpace>>(n, cols_per_chunk, preconditionner_max_block_size);
     }
 };
 

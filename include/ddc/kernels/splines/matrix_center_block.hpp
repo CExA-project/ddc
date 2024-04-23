@@ -16,15 +16,15 @@ namespace ddc::detail {
 class Matrix;
 
 template <class ExecSpace>
-class Matrix_Center_Block : public Matrix_Corner_Block<ExecSpace>
+class MatrixCenterBlock : public MatrixCornerBlock<ExecSpace>
 {
     // Necessary because we inherit from a template class, otherwise we should use this-> everywhere
-    using Matrix_Corner_Block<ExecSpace>::get_size;
-    using Matrix_Corner_Block<ExecSpace>::solve_inplace;
-    using Matrix_Corner_Block<ExecSpace>::m_q_block;
-    using Matrix_Corner_Block<ExecSpace>::m_delta;
-    using Matrix_Corner_Block<ExecSpace>::m_Abm_1_gamma;
-    using Matrix_Corner_Block<ExecSpace>::m_lambda;
+    using MatrixCornerBlock<ExecSpace>::get_size;
+    using MatrixCornerBlock<ExecSpace>::solve_inplace;
+    using MatrixCornerBlock<ExecSpace>::m_q_block;
+    using MatrixCornerBlock<ExecSpace>::m_delta;
+    using MatrixCornerBlock<ExecSpace>::m_Abm_1_gamma;
+    using MatrixCornerBlock<ExecSpace>::m_lambda;
 
 protected:
     int const m_top_block_size;
@@ -32,12 +32,12 @@ protected:
     int const m_bottom_block_index;
 
 public:
-    Matrix_Center_Block(
+    MatrixCenterBlock(
             int const n,
             int const m_top_block_size,
             int const m_bottom_block_size,
             std::unique_ptr<Matrix> q)
-        : Matrix_Corner_Block<ExecSpace>(n, m_top_block_size + m_bottom_block_size, std::move(q))
+        : MatrixCornerBlock<ExecSpace>(n, m_top_block_size + m_bottom_block_size, std::move(q))
         , m_top_block_size(m_top_block_size)
         , m_bottom_block_size(m_bottom_block_size)
         , m_bottom_block_index(n - m_bottom_block_size)
@@ -47,19 +47,19 @@ public:
     double get_element(int i, int j) const override
     {
         adjust_indexes(i, j);
-        return Matrix_Corner_Block<ExecSpace>::get_element(i, j);
+        return MatrixCornerBlock<ExecSpace>::get_element(i, j);
     }
 
     void set_element(int i, int j, double aij) override
     {
         adjust_indexes(i, j);
-        Matrix_Corner_Block<ExecSpace>::set_element(i, j, aij);
+        MatrixCornerBlock<ExecSpace>::set_element(i, j, aij);
     }
 
     ddc::DSpan2D_stride solve_inplace(ddc::DSpan2D_stride const bx) const override
     {
         swap_array_to_corner(bx);
-        Matrix_Corner_Block<ExecSpace>::solve_inplace(bx);
+        MatrixCornerBlock<ExecSpace>::solve_inplace(bx);
         swap_array_to_center(bx);
         return bx;
     }

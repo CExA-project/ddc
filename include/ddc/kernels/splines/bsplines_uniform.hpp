@@ -14,33 +14,24 @@
 #include "view.hpp"
 
 namespace ddc {
+
+namespace detail {
+
+template <class T>
+struct UniformBsplinesKnots : UniformPointSampling<typename T::tag_type>
+{
+};
+
+struct UniformBSplinesBase
+{
+};
+
+} // namespace detail
+
 template <class Tag, std::size_t D>
-class UniformBSplines
+class UniformBSplines : detail::UniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
-
-public:
-    // From nvcc: 'A type that is defined inside a class and has private or protected access cannot be used
-    // in the template argument type of a variable template instantiation'
-    template <class T>
-    struct InternalTagGenerator;
-
-    /// An internal tag necessary to allocate an internal ddc::discrete_space function.
-    /// It must remain internal, for example it shall not be exposed when returning ddc::coordinates. Instead use `Tag`
-    using KnotDim = InternalTagGenerator<Tag>;
-
-    using mesh_type = ddc::UniformPointSampling<KnotDim>;
-
-    static KOKKOS_INLINE_FUNCTION ddc::Coordinate<KnotDim> knot_from_coord(
-            ddc::Coordinate<Tag> const& coord)
-    {
-        return ddc::Coordinate<KnotDim>(ddc::get<Tag>(coord));
-    }
-    static KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> coord_from_knot(
-            ddc::Coordinate<KnotDim> const& coord)
-    {
-        return ddc::Coordinate<Tag>(ddc::get<KnotDim>(coord));
-    }
 
 public:
     using tag_type = Tag;
@@ -48,18 +39,7 @@ public:
 
     using discrete_dimension_type = UniformBSplines;
 
-    using discrete_element_type = ddc::DiscreteElement<UniformBSplines>;
-
-    using discrete_domain_type = ddc::DiscreteDomain<UniformBSplines>;
-
-    using discrete_vector_type = ddc::DiscreteVector<UniformBSplines>;
-
 public:
-    static constexpr std::size_t rank()
-    {
-        return 1;
-    }
-
     static constexpr std::size_t degree() noexcept
     {
         return D;
@@ -70,33 +50,36 @@ public:
         return Tag::PERIODIC;
     }
 
-    static constexpr bool is_radial() noexcept
-    {
-        return false;
-    }
-
     static constexpr bool is_uniform() noexcept
     {
         return true;
     }
 
-    template <class MemorySpace>
+    template <class DDim, class MemorySpace>
     class Impl
     {
-        template <class OMemorySpace>
+        template <class ODDim, class OMemorySpace>
         friend class Impl;
 
     private:
+        using mesh_type = detail::UniformBsplinesKnots<DDim>;
+
         // In the periodic case, it contains twice the periodic point!!!
         ddc::DiscreteDomain<mesh_type> m_domain;
 
     public:
         using discrete_dimension_type = UniformBSplines;
 
+        using discrete_domain_type = DiscreteDomain<DDim>;
+
+        using discrete_element_type = DiscreteElement<DDim>;
+
+        using discrete_vector_type = DiscreteVector<DDim>;
+
         Impl() = default;
 
         template <class OriginMemorySpace>
-        explicit Impl(Impl<OriginMemorySpace> const& impl) : m_domain(impl.m_domain)
+        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_domain(impl.m_domain)
         {
         }
 
@@ -104,7 +87,7 @@ public:
          *
          * @param rmin    the real ddc::coordinate of the first knot
          * @param rmax    the real ddc::coordinate of the last knot
-         * @param n_knots the number of knots
+         * @param ncells the number of cells in the range [rmin, rmax]
          */
         explicit Impl(ddc::Coordinate<Tag> rmin, ddc::Coordinate<Tag> rmax, std::size_t ncells)
             : m_domain(
@@ -113,10 +96,9 @@ public:
                             ncells + 1)) // Create a mesh including the eventual periodic point
         {
             assert(ncells > 0);
-            ddc::init_discrete_space(mesh_type::
-                                             init(knot_from_coord(rmin),
-                                                  knot_from_coord(rmax),
-                                                  ddc::DiscreteVector<mesh_type>(ncells + 1)));
+            ddc::init_discrete_space<mesh_type>(
+                    mesh_type::template init<
+                            mesh_type>(rmin, rmax, ddc::DiscreteVector<mesh_type>(ncells + 1)));
         }
 
         Impl(Impl const& x) = default;
@@ -130,13 +112,14 @@ public:
         Impl& operator=(Impl&& x) = default;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(std::array<double, D + 1>& values, ddc::Coordinate<Tag> const& x) const
+        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
         {
+            assert(values.size() == degree() + 1);
             return eval_basis(values, x, degree());
         }
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const;
+        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
@@ -171,12 +154,12 @@ public:
 
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
         {
-            return coord_from_knot(ddc::coordinate(m_domain.front()));
+            return ddc::coordinate(m_domain.front());
         }
 
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
         {
-            return coord_from_knot(ddc::coordinate(m_domain.back()));
+            return ddc::coordinate(m_domain.back());
         }
 
         KOKKOS_INLINE_FUNCTION double length() const noexcept
@@ -211,11 +194,8 @@ public:
             return 1.0 / ddc::step<mesh_type>();
         }
 
-        template <std::size_t Size>
-        KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
-                std::array<double, Size>& values,
-                ddc::Coordinate<Tag> const& x,
-                std::size_t degree) const;
+        KOKKOS_INLINE_FUNCTION discrete_element_type
+        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x, std::size_t degree) const;
 
         KOKKOS_INLINE_FUNCTION void get_icell_and_offset(
                 int& icell,
@@ -224,12 +204,19 @@ public:
     };
 };
 
+template <class DDim>
+struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase, DDim>
+{
+};
+
+template <class DDim>
+constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<DDim>::value;
+
 template <class Tag, std::size_t D>
-template <class MemorySpace>
-template <std::size_t Size>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::
-        Impl<MemorySpace>::eval_basis(
-                std::array<double, Size>& values,
+template <class DDim, class MemorySpace>
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::
+        eval_basis(
+                DSpan1D values,
                 ddc::Coordinate<Tag> const& x,
                 [[maybe_unused]] std::size_t const deg) const
 {
@@ -243,27 +230,26 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
 
     // 3. Compute values of aforementioned B-splines
     double xx, temp, saved;
-    values[0] = 1.0;
-    for (std::size_t j = 1; j < Size; ++j) {
+    values(0) = 1.0;
+    for (std::size_t j = 1; j < values.size(); ++j) {
         xx = -offset;
         saved = 0.0;
         for (std::size_t r = 0; r < j; ++r) {
             xx += 1;
-            temp = values[r] / j;
-            values[r] = saved + xx * temp;
+            temp = values(r) / j;
+            values(r) = saved + xx * temp;
             saved = (j - xx) * temp;
         }
-        values[j] = saved;
+        values(j) = saved;
     }
 
     return discrete_element_type(jmin);
 }
 
 template <class Tag, std::size_t D>
-template <class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::Impl<
-        MemorySpace>::eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x)
-        const
+template <class DDim, class MemorySpace>
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::
+        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const
 {
     assert(derivs.size() == degree() + 1);
 
@@ -276,37 +262,37 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
     // 3. Compute derivatives of aforementioned B-splines
     //    Derivatives are normalized, hence they should be divided by dx
     double xx, temp, saved;
-    derivs[0] = 1.0 / ddc::step<mesh_type>();
+    derivs(0) = 1.0 / ddc::step<mesh_type>();
     for (std::size_t j = 1; j < degree(); ++j) {
         xx = -offset;
         saved = 0.0;
         for (std::size_t r = 0; r < j; ++r) {
             xx += 1.0;
-            temp = derivs[r] / j;
-            derivs[r] = saved + xx * temp;
+            temp = derivs(r) / j;
+            derivs(r) = saved + xx * temp;
             saved = (j - xx) * temp;
         }
-        derivs[j] = saved;
+        derivs(j) = saved;
     }
 
     // Compute derivatives
     double bjm1 = derivs[0];
     double bj = bjm1;
-    derivs[0] = -bjm1;
+    derivs(0) = -bjm1;
     for (std::size_t j = 1; j < degree(); ++j) {
-        bj = derivs[j];
-        derivs[j] = bjm1 - bj;
+        bj = derivs(j);
+        derivs(j) = bjm1 - bj;
         bjm1 = bj;
     }
-    derivs[degree()] = bj;
+    derivs(degree()) = bj;
 
     return discrete_element_type(jmin);
 }
 
 template <class Tag, std::size_t D>
-template <class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSplines<Tag, D>::
-        Impl<MemorySpace>::eval_basis_and_n_derivs(
+template <class DDim, class MemorySpace>
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::
+        eval_basis_and_n_derivs(
                 ddc::DSpan2D const derivs,
                 ddc::Coordinate<Tag> const& x,
                 std::size_t const n) const
@@ -378,10 +364,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
                 d += a(k, s2) * ndu(pk, r);
             }
             derivs(r, k) = d;
-            // swap s1 <-> s2
-            auto tmp = s1;
-            s1 = s2;
-            s2 = tmp;
+            Kokkos::kokkos_swap(s1, s2);
         }
     }
 
@@ -401,8 +384,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<UniformBSplines<Tag, D>> UniformBSpl
 }
 
 template <class Tag, std::size_t D>
-template <class MemorySpace>
-KOKKOS_INLINE_FUNCTION void UniformBSplines<Tag, D>::Impl<MemorySpace>::get_icell_and_offset(
+template <class DDim, class MemorySpace>
+KOKKOS_INLINE_FUNCTION void UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::get_icell_and_offset(
         int& icell,
         double& offset,
         ddc::Coordinate<Tag> const& x) const
@@ -432,16 +415,11 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<Tag, D>::Impl<MemorySpace>::get_icel
 }
 
 template <class Tag, std::size_t D>
-template <class MemorySpace>
+template <class DDim, class MemorySpace>
 template <class Layout, class MemorySpace2>
-KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<
-        double,
-        ddc::DiscreteDomain<UniformBSplines<Tag, D>>,
-        Layout,
-        MemorySpace2>
-UniformBSplines<Tag, D>::Impl<MemorySpace>::integrals(
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<UniformBSplines<Tag, D>>, Layout, MemorySpace2>
-                int_vals) const
+KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
+UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
+        ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2> int_vals) const
 {
     if constexpr (is_periodic()) {
         assert(int_vals.size() == nbasis() || int_vals.size() == size());
@@ -476,7 +454,7 @@ UniformBSplines<Tag, D>::Impl<MemorySpace>::integrals(
                 mdspan<double, std::experimental::extents<std::size_t, degree() + 2>> const
                         edge_vals(edge_vals_ptr.data());
 
-        eval_basis(edge_vals_ptr, rmin(), degree() + 1);
+        eval_basis(edge_vals, rmin(), degree() + 1);
 
         double const d_eval = ddc::detail::sum(edge_vals);
 

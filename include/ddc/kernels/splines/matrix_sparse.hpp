@@ -77,7 +77,7 @@ unsigned int default_preconditionner_max_block_size() noexcept
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
     if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-        return 32u;
+        return 1u;
     }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
@@ -95,16 +95,25 @@ unsigned int default_preconditionner_max_block_size() noexcept
 
 // Matrix class for sparse storage and iterative solve
 template <class ExecSpace>
-class Matrix_Sparse : public Matrix
+class MatrixSparse : public Matrix
 {
     using matrix_sparse_type = gko::matrix::Csr<double, int>;
+#ifdef KOKKOS_ENABLE_OPENMP
+    using solver_type = std::conditional_t<
+            std::is_same_v<ExecSpace, Kokkos::OpenMP>,
+            gko::solver::Gmres<double>,
+            gko::solver::Bicgstab<double>>;
+#else
+    using solver_type = gko::solver::Bicgstab<double>;
+#endif
+
 
 protected:
     std::unique_ptr<gko::matrix::Dense<double>> m_matrix_dense;
 
     std::shared_ptr<matrix_sparse_type> m_matrix_sparse;
 
-    std::shared_ptr<gko::solver::Bicgstab<double>> m_solver;
+    std::shared_ptr<solver_type> m_solver;
     std::shared_ptr<gko::LinOp> m_solver_tr;
 
     int m_cols_per_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
@@ -113,7 +122,7 @@ protected:
 
 public:
     // Constructor
-    explicit Matrix_Sparse(
+    explicit MatrixSparse(
             const int mat_size,
             std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
@@ -152,7 +161,7 @@ public:
 
         // Create the solver factory
         std::shared_ptr const residual_criterion
-                = gko::stop::ResidualNorm<double>::build().with_reduction_factor(1e-19).on(
+                = gko::stop::ResidualNorm<double>::build().with_reduction_factor(1e-15).on(
                         gko_exec);
 
         std::shared_ptr const iterations_criterion
@@ -164,7 +173,7 @@ public:
                           .on(gko_exec);
 
         std::unique_ptr const solver_factory
-                = gko::solver::Bicgstab<double>::build()
+                = solver_type::build()
                           .with_preconditioner(preconditioner)
                           .with_criteria(residual_criterion, iterations_criterion)
                           .on(gko_exec);
@@ -183,6 +192,7 @@ public:
         int const stride = b.stride(0);
 
         std::shared_ptr const gko_exec = m_solver->get_executor();
+        std::shared_ptr const convergence_logger = gko::log::Convergence<double>::create();
 
         int const main_chunk_size = std::min(m_cols_per_chunk, n_equations);
 
@@ -205,17 +215,24 @@ public:
             Kokkos::deep_copy(x_subview, b_subview);
 
             if (transpose == 'N') {
+                m_solver->add_logger(convergence_logger);
                 m_solver
                         ->apply(to_gko_dense(gko_exec, b_subview),
                                 to_gko_dense(gko_exec, x_subview));
+                m_solver->remove_logger(convergence_logger);
             } else if (transpose == 'T') {
+                m_solver_tr->add_logger(convergence_logger);
                 m_solver_tr
                         ->apply(to_gko_dense(gko_exec, b_subview),
                                 to_gko_dense(gko_exec, x_subview));
+                m_solver_tr->remove_logger(convergence_logger);
             } else {
                 throw std::domain_error("transpose option not recognized");
             }
 
+            if (!convergence_logger->has_converged()) {
+                throw std::runtime_error("Ginkgo did not converged in ddc::detail::Matrix_Sparse");
+            }
 
             Kokkos::deep_copy(b_subview, x_subview);
         }

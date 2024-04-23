@@ -26,25 +26,34 @@ RUN chmod +x /bin/bash_run \
  && apt-get install -y --no-install-recommends \
     build-essential \
     clang \
+    cm-super-minimal \
     cmake \
-    doxygen \
-    pkg-config \
     cmake-data \
     libfftw3-dev \
     libopenblas-dev \
     liblapack-dev \
     libpdi-dev \
-    doxygen \
-    doxygen-latex \
+    ghostscript \
     git \
     graphviz \
+    pkg-config \
     texlive \
- && git clone -b v1.7.0 https://github.com/ginkgo-project/ginkgo.git \
- && cd ginkgo \
- && cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGINKGO_BUILD_OMP=OFF -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF \
- && cmake --build build \
- && cmake --install build \
+    texlive-extra-utils \
+    texlive-font-utils \
+    texlive-fonts-recommended \
+    texlive-latex-extra \
+    texlive-latex-recommended \
+    texlive-plain-generic \
+ && wget -q https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz \
+ && tar -xf doxygen-1.10.0.linux.bin.tar.gz \
+ && cd doxygen-1.10.0 \
+ && make install \
  && cd .. \
+ && rm -rf doxygen-1.10.0* \
+ && git clone -b v1.7.0 https://github.com/ginkgo-project/ginkgo.git \
+ && cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGINKGO_BUILD_OMP=OFF -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B build-ginkgo -S ginkgo \
+ && cmake --build build-ginkgo \
+ && cmake --install build-ginkgo \
  && rm -rf ginkgo \
  && apt-get purge -y \
     apt-transport-https \

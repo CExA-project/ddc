@@ -15,6 +15,8 @@
 
 namespace ddc {
 
+namespace detail {
+
 template <class T>
 struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::tag_type>
 {
@@ -24,9 +26,11 @@ struct NonUniformBSplinesBase
 {
 };
 
+} // namespace detail
+
 /// NonUniformPointSampling specialization of BSplines
 template <class Tag, std::size_t D>
-class NonUniformBSplines : NonUniformBSplinesBase
+class NonUniformBSplines : detail::NonUniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
 
@@ -37,11 +41,6 @@ public:
     using discrete_dimension_type = NonUniformBSplines;
 
 public:
-    static constexpr std::size_t rank()
-    {
-        return 1;
-    }
-
     static constexpr std::size_t degree() noexcept
     {
         return D;
@@ -50,11 +49,6 @@ public:
     static constexpr bool is_periodic() noexcept
     {
         return Tag::PERIODIC;
-    }
-
-    static constexpr bool is_radial() noexcept
-    {
-        return false;
     }
 
     static constexpr bool is_uniform() noexcept
@@ -69,7 +63,7 @@ public:
         friend class Impl;
 
     private:
-        using mesh_type = NonUniformBsplinesKnots<DDim>;
+        using mesh_type = detail::NonUniformBsplinesKnots<DDim>;
 
         ddc::DiscreteDomain<mesh_type> m_domain;
 
@@ -120,10 +114,10 @@ public:
         Impl& operator=(Impl&& x) = default;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(std::array<double, D + 1>& values, ddc::Coordinate<Tag> const& x) const;
+        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_deriv(std::array<double, D + 1>& derivs, ddc::Coordinate<Tag> const& x) const;
+        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
 
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
@@ -206,7 +200,7 @@ public:
 };
 
 template <class DDim>
-struct is_non_uniform_bsplines : public std::is_base_of<NonUniformBSplinesBase, DDim>
+struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplinesBase, DDim>
 {
 };
 
@@ -257,10 +251,10 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
 template <class Tag, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
-        Impl<DDim, MemorySpace>::eval_basis(
-                std::array<double, D + 1>& values,
-                ddc::Coordinate<Tag> const& x) const
+        Impl<DDim, MemorySpace>::eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
 {
+    assert(values.size() == D + 1);
+
     std::array<double, degree()> left;
     std::array<double, degree()> right;
 
@@ -297,9 +291,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
 template <class Tag, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
-        Impl<DDim, MemorySpace>::eval_deriv(
-                std::array<double, D + 1>& derivs,
-                ddc::Coordinate<Tag> const& x) const
+        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const
 {
     std::array<double, degree()> left;
     std::array<double, degree()> right;

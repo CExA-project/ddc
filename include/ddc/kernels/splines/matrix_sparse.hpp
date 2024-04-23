@@ -192,6 +192,7 @@ public:
         int const stride = b.stride(0);
 
         std::shared_ptr const gko_exec = m_solver->get_executor();
+        std::shared_ptr const convergence_logger = gko::log::Convergence<double>::create();
 
         int const main_chunk_size = std::min(m_cols_per_chunk, n_equations);
 
@@ -214,17 +215,24 @@ public:
             Kokkos::deep_copy(x_subview, b_subview);
 
             if (transpose == 'N') {
+                m_solver->add_logger(convergence_logger);
                 m_solver
                         ->apply(to_gko_dense(gko_exec, b_subview),
                                 to_gko_dense(gko_exec, x_subview));
+                m_solver->remove_logger(convergence_logger);
             } else if (transpose == 'T') {
+                m_solver_tr->add_logger(convergence_logger);
                 m_solver_tr
                         ->apply(to_gko_dense(gko_exec, b_subview),
                                 to_gko_dense(gko_exec, x_subview));
+                m_solver_tr->remove_logger(convergence_logger);
             } else {
                 throw std::domain_error("transpose option not recognized");
             }
 
+            if (!convergence_logger->has_converged()) {
+                throw std::runtime_error("Ginkgo did not converged in ddc::detail::Matrix_Sparse");
+            }
 
             Kokkos::deep_copy(b_subview, x_subview);
         }

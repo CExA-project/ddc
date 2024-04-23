@@ -132,11 +132,11 @@ static void characteristics_advection(benchmark::State& state)
             DDimY>
             spline_evaluator(periodic_extrapolation, periodic_extrapolation);
     ddc::Chunk coef_alloc(
-            spline_builder.spline_domain(),
+            spline_builder.batched_spline_domain(),
             ddc::KokkosAllocator<double, Kokkos::DefaultExecutionSpace::memory_space>());
     ddc::ChunkSpan coef = coef_alloc.span_view();
     ddc::Chunk feet_coords_alloc(
-            spline_builder.vals_domain(),
+            spline_builder.batched_interpolation_domain(),
             ddc::KokkosAllocator<
                     ddc::Coordinate<X, Y>,
                     Kokkos::DefaultExecutionSpace::memory_space>());
@@ -175,7 +175,7 @@ static void characteristics_advection(benchmark::State& state)
     /// variables, which is always a bad idea.       ///
     ////////////////////////////////////////////////////
     ddc::detail::g_discrete_space_dual<BSplinesX>.reset();
-    ddc::detail::g_discrete_space_dual<ddc::UniformBsplinesKnots<BSplinesX>>.reset();
+    ddc::detail::g_discrete_space_dual<ddc::detail::UniformBsplinesKnots<BSplinesX>>.reset();
     ddc::detail::g_discrete_space_dual<DDimX>.reset();
     ddc::detail::g_discrete_space_dual<DDimY>.reset();
     ////////////////////////////////////////////////////

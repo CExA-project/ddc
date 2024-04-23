@@ -31,7 +31,8 @@ struct UniformBSplinesBase
 /**
  * The type of a uniform B-splines 1D basis.
  *
- * Knots for non-uniform B-splines basis are non-uniformly distributed (no assumption is made on the uniformity of their distribution).
+ * Knots for uniform B-splines basis are uniformly distributed (the associated discrete dimension 
+ * is a UniformPointSampling).
  *
  * @tparam Tag The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
  * @tparam D The degree of the B-splines.
@@ -325,9 +326,9 @@ public:
             return degree() + ncells();
         }
 
-        /** @brief Returns the discrete domain including eventual additionnal bsplines in the periodic case. See size().
+        /** @brief Returns the discrete domain including eventual additionnal B-splines in the periodic case. See size().
          *
-         * @return The discrete domain including eventual additionnal bsplines.
+         * @return The discrete domain including eventual additionnal B-splines.
          */
         KOKKOS_INLINE_FUNCTION discrete_domain_type full_domain() const
         {

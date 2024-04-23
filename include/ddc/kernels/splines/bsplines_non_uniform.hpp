@@ -142,10 +142,10 @@ public:
          * The provided break points describe the separation between the cells on which the polynomials
          * comprising a spline are defined. They are used to build a set of knots. There are 2*degree more
          * knots than break points. The knots are defined as follows:
-         * @f$ k_i = b_0 \forall 0 \leq i < d @f$
-         * @f$ k_{i+d} = b_i \forall 0 \leq i < n_b @f$
-         * @f$ k_{i+d+n_b} = b_{n_b} \forall 0 \leq i < d @f$
-         * where @f$d@f$ is the degree of the polynomials, and @f$n_b@f$ is the number of basis points.
+         * \f$ k_i = b_0 \forall 0 \leq i < d \f$
+         * \f$ k_{i+d} = b_i \forall 0 \leq i < n_b \f$
+         * \f$ k_{i+d+n_b} = b_{n_b} \forall 0 \leq i < d \f$
+         * where \f$d\f$ is the degree of the polynomials, and \f$n_b\f$ is the number of basis points.
          *
          * This constructor makes the knots accessible via a DiscreteSpace.
          *
@@ -356,9 +356,9 @@ public:
             return degree() + ncells();
         }
 
-        /** @brief Returns the discrete domain including eventual additionnal bsplines in the periodic case. See size().
+        /** @brief Returns the discrete domain including eventual additionnal B-splines in the periodic case. See size().
          *
-         * @return The discrete domain including eventual additionnal bsplines.
+         * @return The discrete domain including eventual additionnal B-splines.
          */
         KOKKOS_INLINE_FUNCTION discrete_domain_type full_domain() const
         {

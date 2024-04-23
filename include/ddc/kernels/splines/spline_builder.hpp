@@ -17,7 +17,9 @@ namespace ddc {
  * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d. Only GINKGO available at the moment,
  * other solvers will be implemented in the futur.
  */
-enum class SplineSolver { GINKGO };
+enum class SplineSolver {
+  GINKGO ///< Enum member to identify the Ginkgo-based solver (iterative method)
+};
 
 /**
  * @brief An helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
@@ -28,6 +30,8 @@ enum class SplineSolver { GINKGO };
  * @param BcXmin The lower boundary condition.
  * @param BcXmax The upper boundary condition.
  * @param degree The degree of the spline.
+ *
+ * @return A boolean giving the uniform/non_uniform status.
  */
 constexpr bool is_spline_interpolation_mesh_uniform(
         bool const is_uniform,
@@ -204,12 +208,12 @@ private:
     // interpolator specific
     std::unique_ptr<ddc::detail::Matrix> matrix;
 
-public:
     /**
      * @brief An helper to compute the offset.
      */
     int compute_offset(interpolation_domain_type const& interpolation_domain);
 
+public:
     /**
      * @brief Build a SplineBuilder acting on batched_interpolation_domain.
      * 
@@ -244,19 +248,31 @@ public:
                 preconditionner_max_block_size);
     }
 
-    /// @brief Copy-constructor is deleted
+    /** @brief Copy-constructor is deleted
+     *
+     * @param x A reference to another SplineBuilder.
+     */
     SplineBuilder(SplineBuilder const& x) = delete;
 
-    /// @brief Move-constructs
+    /** @brief Move-constructs
+     *
+     * @param x An rvalue to another SplineBuilder.
+     */
     SplineBuilder(SplineBuilder&& x) = default;
 
     /// @brief Destructs
     ~SplineBuilder() = default;
 
-    /// @brief Copy-assignment is deleted
+    /** @brief Copy-assignment is deleted
+     *
+     * @param x A reference to another SplineBuilder.
+     */
     SplineBuilder& operator=(SplineBuilder const& x) = delete;
 
-    /// @brief Move-assigns
+    /** @brief Move-assigns
+     *
+     * @param x An rvalue to another SplineBuilder.
+     */
     SplineBuilder& operator=(SplineBuilder&& x) = default;
 
     /**

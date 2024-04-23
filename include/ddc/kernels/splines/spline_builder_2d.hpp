@@ -32,10 +32,19 @@ template <
 class SplineBuilder2D
 {
 public:
+    /**
+     * @brief The type of the Kokkos execution space used by this class.
+     */
     using exec_space = ExecSpace;
 
+    /**
+     * @brief The type of the Kokkos memory space used by this class.
+     */
     using memory_space = MemorySpace;
 
+    /**
+     * @brief The type of the SplineBuilder used by this class to spline-transform along first dimension.
+     */
     using builder_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -45,6 +54,10 @@ public:
             BcXmax1,
             Solver,
             IDimX...>;
+
+    /**
+     * @brief The type of the SplineBuilder used by this class to spline-transform along second dimension.
+     */
     using builder_type2 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -54,6 +67,10 @@ public:
             BcXmax2,
             Solver,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
+
+    /**
+     * @brief The type of the SplineBuilder used by this class to spline-transform the second-dimension-derivatives along first dimension.
+     */
     using builder_deriv_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -72,6 +89,7 @@ private:
      * @brief Tag the dimension of the first 1D SplineBuilder.
      */
     using tag_type1 = typename builder_type1::bsplines_type::tag_type;
+
     /**
      * @brief Tag the dimension of the second 1D SplineBuilder.
      */
@@ -82,6 +100,7 @@ public:
      * @brief The type of the BSplines in the first dimension which are compatible with this class.
      */
     using bsplines_type1 = typename builder_type1::bsplines_type;
+
     /**
      * @brief The type of the BSplines in the second dimension which are compatible with this class.
      */
@@ -230,6 +249,14 @@ public:
      */
     SplineBuilder2D& operator=(SplineBuilder2D&& x) = default;
 
+    /**
+     * @brief Get the whole domain representing interpolation points.
+     *
+     * Get the domain on which values of the function must be provided in order
+     * to build a 2D spline transform of the function.
+     *
+     * @return The domain for the grid points.
+     */
     batched_interpolation_domain_type batched_interpolation_domain() const noexcept
     {
         return m_spline_builder1.batched_interpolation_domain();
@@ -250,6 +277,13 @@ public:
                 m_spline_builder2.interpolation_domain());
     }
 
+    /**
+     * @brief Get the batch domain.
+     *
+     * Get the batch domain (obtained by removing dimensions of interest from whole interpolation domain).
+     *
+     * @return The batch domain.
+     */
     batch_domain_type batch_domain() const noexcept
     {
         return ddc::remove_dims_of(batched_interpolation_domain(), interpolation_domain());

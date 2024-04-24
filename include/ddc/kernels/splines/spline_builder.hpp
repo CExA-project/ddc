@@ -156,9 +156,10 @@ private:
     // interpolator specific
     std::unique_ptr<ddc::detail::Matrix> matrix;
 
-public:
+    /// Calculate offset so that the matrix is diagonally dominant
     int compute_offset(interpolation_domain_type const& interpolation_domain);
 
+public:
     explicit SplineBuilder(
             batched_interpolation_domain_type const& batched_interpolation_domain,
             std::optional<int> cols_per_chunk = std::nullopt,

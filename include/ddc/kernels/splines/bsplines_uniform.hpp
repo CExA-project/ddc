@@ -29,9 +29,9 @@ struct UniformBSplinesBase
 } // namespace detail
 
 /**
- * The type of a uniform B-splines 1D basis.
+ * The type of a uniform 1D spline basis (B-spline).
  *
- * Knots for uniform B-splines basis are uniformly distributed (the associated discrete dimension 
+ * Knots for uniform B-splines are uniformly distributed (the associated discrete dimension
  * is a UniformPointSampling).
  *
  * @tparam Tag The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
@@ -108,7 +108,7 @@ public:
 
         Impl() = default;
 
-        /** Constructs a B-splines basis with n equidistant knots over \f$[a, b]\f$
+        /** Constructs a spline basis (B-splines) with n equidistant knots over \f$[a, b]\f$
          *
          * @param rmin    the real ddc::coordinate of the first knot
          * @param rmax    the real ddc::coordinate of the last knot
@@ -126,7 +126,7 @@ public:
                             mesh_type>(rmin, rmax, ddc::DiscreteVector<mesh_type>(ncells + 1)));
         }
 
-        /** @brief Copy-constructs from another Impl with different Kokkos memory space
+        /** @brief Copy-constructs from another Impl with a different Kokkos memory space
          *
          * @param impl A reference to the other Impl
          */
@@ -153,7 +153,7 @@ public:
         /** @brief Copy-assigns
          *
          * @param x A reference to another Impl
-         * @return A reference to the copy Impl
+         * @return A reference to the copied Impl
          */
         Impl& operator=(Impl const& x) = default;
 
@@ -183,32 +183,32 @@ public:
             return eval_basis(values, x, degree());
         }
 
-        /** @brief Evaluates non-zero B-splines derivatives at a given coordinate
+        /** @brief Evaluates non-zero B-spline derivatives at a given coordinate
          *
          * The derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
          * B-splines which are non-zero at any given point. It is these B-splines which are derivated.
          * A spline approximation of a derivative at coordinate x is a linear
-         * combination of those B-splines derivatives weighted with the spline coefficients of the spline-transformed
+         * combination of those B-spline derivatives weighted with the spline coefficients of the spline-transformed
          * initial discrete function.
          *
          * @param[out] derivs The derivatives of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.
-         * @param[in] x The coordinate where B-splines derivatives are evaluated.
+         * @param[in] x The coordinate where B-spline derivatives are evaluated.
          * @return The index of the first B-spline which is evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
 
-        /** @brief Evaluates non-zero B-splines values and \f$n\f$ derivatives at a given coordinate
+        /** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate
          *
          * The values and derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
          * B-splines which are non-zero at any given point. It is these B-splines which are evaluated and derivated.
          * A spline approximation of a derivative at coordinate x is a linear
-         * combination of those B-splines derivatives weighted with spline coefficients of the spline-transformed
+         * combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed
          * initial discrete function.
          *
          * @param[out] derivs The values and \f$n\f$ derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan with (degree+1)*(n+1) elements.
-         * @param[in] x The coordinate where B-splines derivatives are evaluated.
-         * @param[in] n The number of derivatives to evaluate (in addition to the B-splines values themselves).
+         * @param[in] x The coordinate where B-spline derivatives are evaluated.
+         * @param[in] n The number of derivatives to evaluate (in addition to the B-spline values themselves).
          * @return The index of the first B-spline which is evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
@@ -232,9 +232,9 @@ public:
         /** @brief Returns the coordinate of the knot corresponding to the given index.
          *
          * Returns the coordinate of the knot corresponding to the given index. The domain
-         * over which the B-splines are defined is comprised of ncells+1 knots however there are a total of
+         * over which the B-splines are defined is comprised of ncells+1 break points however there are a total of
          * ncells+1+2*degree knots. The additional knots which control the shape of the B-splines near the
-         * boundary are added before and after the break points. The knot index is therefore in the interval [-degree, ncells+degree]
+         * boundary are added equidistantly before and after the break points. The knot index is therefore in the interval [-degree, ncells+degree]
          *
          * @param[in] knot_idx Integer identifying index of the knot.
          * @return Coordinate of the knot.

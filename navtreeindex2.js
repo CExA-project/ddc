@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"classddc_1_1SplineEvaluator2D.html#afea5a06362f2c3881d7a5d54fa4f1204":[2,0,49,11],
 "classddc_1_1UniformBSplines.html":[2,0,50],
 "classddc_1_1UniformBSplines.html#aa3bc55d453f10c3eea5d738750ad28cc":[2,0,50,2],
 "classddc_1_1UniformBSplines.html#aaac98549e75c3a29535391aef52dd8f7":[2,0,50,1],

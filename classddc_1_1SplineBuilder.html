@@ -89,8 +89,6 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af87de6a22486e55abe0b033bd4e25dde" id="r_af87de6a22486e55abe0b033bd4e25dde"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af87de6a22486e55abe0b033bd4e25dde">compute_offset</a> (<a class="el" href="#a0e425fe73429c478949bba51ca0fcf1e">interpolation_domain_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="#a7075a60f99a65bdafb9cda1c134787aa">interpolation_domain</a>)</td></tr>
-<tr class="separator:af87de6a22486e55abe0b033bd4e25dde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2abd120865160a6a7a62b7dca23eb917" id="r_a2abd120865160a6a7a62b7dca23eb917"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2abd120865160a6a7a62b7dca23eb917">SplineBuilder</a> (<a class="el" href="#a7337a7e59f55ad4d27fc16764fe7ac27">batched_interpolation_domain_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="#a20abb53d1c4b62b0a43808c2b6f67ada">batched_interpolation_domain</a>, std::optional&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">cols_per_chunk</a>=std::nullopt, std::optional&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">unsigned</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">preconditionner_max_block_size</a>=std::nullopt)</td></tr>
 <tr class="separator:a2abd120865160a6a7a62b7dca23eb917"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a744aebd4fd12b94c0d484bdd66f8d293" id="r_a744aebd4fd12b94c0d484bdd66f8d293"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a744aebd4fd12b94c0d484bdd66f8d293">SplineBuilder</a> (<a class="el" href="classddc_1_1SplineBuilder.html">SplineBuilder</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">x</a>)=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">delete</a></td></tr>
@@ -136,17 +134,11 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a068463e39e3c7cda97f195d3cda1b6df" id="r_a068463e39e3c7cda97f195d3cda1b6df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">static</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a068463e39e3c7cda97f195d3cda1b6df">s_odd</a> = BSplines::degree() % 2</td></tr>
 <tr class="memdesc:a068463e39e3c7cda97f195d3cda1b6df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the degree of the splines is odd or even.  <br /></td></tr>
 <tr class="separator:a068463e39e3c7cda97f195d3cda1b6df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67ffcb4114b376d145df5ce8f299ded5" id="r_a67ffcb4114b376d145df5ce8f299ded5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">static</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67ffcb4114b376d145df5ce8f299ded5">s_nbe_xmin</a> = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, BSplines::degree())</td></tr>
-<tr class="memdesc:a67ffcb4114b376d145df5ce8f299ded5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of equations which define the boundary conditions at the lower bound.  <br /></td></tr>
-<tr class="separator:a67ffcb4114b376d145df5ce8f299ded5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5d09d18ff7fcf68dd547b8ad7759d77" id="r_ae5d09d18ff7fcf68dd547b8ad7759d77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">static</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5d09d18ff7fcf68dd547b8ad7759d77">s_nbe_xmax</a> = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, BSplines::degree())</td></tr>
-<tr class="memdesc:ae5d09d18ff7fcf68dd547b8ad7759d77"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of equations which define the boundary conditions at the upper bound.  <br /></td></tr>
-<tr class="separator:ae5d09d18ff7fcf68dd547b8ad7759d77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa32ba1eed1a5a542d228b9b53c2dc73e" id="r_aa32ba1eed1a5a542d228b9b53c2dc73e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">static</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa32ba1eed1a5a542d228b9b53c2dc73e">s_nbc_xmin</a> = <a class="el" href="namespaceddc.html#acab6393aaef840f9f528c1f77efc55ba">n_user_input</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, BSplines::degree())</td></tr>
-<tr class="memdesc:aa32ba1eed1a5a542d228b9b53c2dc73e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of boundary conditions which must be provided by the user at the lower bound.  <br /></td></tr>
+<tr class="memitem:aa32ba1eed1a5a542d228b9b53c2dc73e" id="r_aa32ba1eed1a5a542d228b9b53c2dc73e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">static</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa32ba1eed1a5a542d228b9b53c2dc73e">s_nbc_xmin</a> = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, BSplines::degree())</td></tr>
+<tr class="memdesc:aa32ba1eed1a5a542d228b9b53c2dc73e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of equations which define the boundary conditions at the lower bound.  <br /></td></tr>
 <tr class="separator:aa32ba1eed1a5a542d228b9b53c2dc73e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5af0fe9bf34de3e8780a5d6770ea8c53" id="r_a5af0fe9bf34de3e8780a5d6770ea8c53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">static</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5af0fe9bf34de3e8780a5d6770ea8c53">s_nbc_xmax</a> = <a class="el" href="namespaceddc.html#acab6393aaef840f9f528c1f77efc55ba">n_user_input</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, BSplines::degree())</td></tr>
-<tr class="memdesc:a5af0fe9bf34de3e8780a5d6770ea8c53"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of boundary conditions which must be provided by the user at the upper bound.  <br /></td></tr>
+<tr class="memitem:a5af0fe9bf34de3e8780a5d6770ea8c53" id="r_a5af0fe9bf34de3e8780a5d6770ea8c53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">static</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5af0fe9bf34de3e8780a5d6770ea8c53">s_nbc_xmax</a> = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, BSplines::degree())</td></tr>
+<tr class="memdesc:a5af0fe9bf34de3e8780a5d6770ea8c53"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of equations which define the boundary conditions at the upper bound.  <br /></td></tr>
 <tr class="separator:a5af0fe9bf34de3e8780a5d6770ea8c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8038ed31ea77226961fb1bf474f1bb3" id="r_af8038ed31ea77226961fb1bf474f1bb3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">static</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8038ed31ea77226961fb1bf474f1bb3">s_bc_xmin</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a></td></tr>
 <tr class="memdesc:af8038ed31ea77226961fb1bf474f1bb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The boundary condition implemented at the lower bound.  <br /></td></tr>
@@ -490,25 +482,6 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af87de6a22486e55abe0b033bd4e25dde" name="af87de6a22486e55abe0b033bd4e25dde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af87de6a22486e55abe0b033bd4e25dde">&#9670;&#160;</a></span>compute_offset()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BSplines</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">InterpolationMesh</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax, <a class="el" href="namespaceddc.html#a36c0210a850dde0979ad8b5772ee730c">SplineSolver</a> Solver, class... IDimX&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BSplines</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">InterpolationMesh</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Solver</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">IDimX</a> &gt;::compute_offset </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#a0e425fe73429c478949bba51ca0fcf1e">interpolation_domain_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>interpolation_domain</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a50e80767ca3d914a15bf66486f35caa5" name="a50e80767ca3d914a15bf66486f35caa5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a50e80767ca3d914a15bf66486f35caa5">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
 
@@ -902,58 +875,6 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 
 </div>
 </div>
-<a id="a67ffcb4114b376d145df5ce8f299ded5" name="a67ffcb4114b376d145df5ce8f299ded5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67ffcb4114b376d145df5ce8f299ded5">&#9670;&#160;</a></span>s_nbe_xmin</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BSplines</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">InterpolationMesh</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax, <a class="el" href="namespaceddc.html#a36c0210a850dde0979ad8b5772ee730c">SplineSolver</a> Solver, class... IDimX&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BSplines</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">InterpolationMesh</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Solver</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">IDimX</a> &gt;::s_nbe_xmin = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, BSplines::degree())</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The number of equations which define the boundary conditions at the lower bound. </p>
-
-</div>
-</div>
-<a id="ae5d09d18ff7fcf68dd547b8ad7759d77" name="ae5d09d18ff7fcf68dd547b8ad7759d77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae5d09d18ff7fcf68dd547b8ad7759d77">&#9670;&#160;</a></span>s_nbe_xmax</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BSplines</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">InterpolationMesh</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax, <a class="el" href="namespaceddc.html#a36c0210a850dde0979ad8b5772ee730c">SplineSolver</a> Solver, class... IDimX&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BSplines</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">InterpolationMesh</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Solver</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">IDimX</a> &gt;::s_nbe_xmax = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, BSplines::degree())</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The number of equations which define the boundary conditions at the upper bound. </p>
-
-</div>
-</div>
 <a id="aa32ba1eed1a5a542d228b9b53c2dc73e" name="aa32ba1eed1a5a542d228b9b53c2dc73e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa32ba1eed1a5a542d228b9b53c2dc73e">&#9670;&#160;</a></span>s_nbc_xmin</h2>
 
@@ -966,7 +887,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BSplines</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">InterpolationMesh</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Solver</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">IDimX</a> &gt;::s_nbc_xmin = <a class="el" href="namespaceddc.html#acab6393aaef840f9f528c1f77efc55ba">n_user_input</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, BSplines::degree())</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BSplines</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">InterpolationMesh</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Solver</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">IDimX</a> &gt;::s_nbc_xmin = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, BSplines::degree())</td>
         </tr>
       </table>
   </td>
@@ -976,8 +897,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </table>
 </div><div class="memdoc">
 
-<p>The number of boundary conditions which must be provided by the user at the lower bound. </p>
-<p>This value is usually equal to s_nbe_xmin, but it may be difference if the chosen boundary conditions impose a specific value (e.g. no values need to be provided for Dirichlet boundary conditions). </p>
+<p>The number of equations which define the boundary conditions at the lower bound. </p>
 
 </div>
 </div>
@@ -993,7 +913,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BSplines</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">InterpolationMesh</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Solver</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">IDimX</a> &gt;::s_nbc_xmax = <a class="el" href="namespaceddc.html#acab6393aaef840f9f528c1f77efc55ba">n_user_input</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, BSplines::degree())</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BSplines</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">InterpolationMesh</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Solver</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">IDimX</a> &gt;::s_nbc_xmax = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, BSplines::degree())</td>
         </tr>
       </table>
   </td>
@@ -1003,8 +923,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </table>
 </div><div class="memdoc">
 
-<p>The number of boundary conditions which must be provided by the user at the upper bound. </p>
-<p>This value is usually equal to s_nbe_xmin, but it may be difference if the chosen boundary conditions impose a specific value (e.g. no values need to be provided for Dirichlet boundary conditions). </p>
+<p>The number of equations which define the boundary conditions at the upper bound. </p>
 
 </div>
 </div>

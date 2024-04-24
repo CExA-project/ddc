@@ -15,7 +15,6 @@ var classddc_1_1SplineBuilder =
     [ "SplineBuilder", "classddc_1_1SplineBuilder.html#a744aebd4fd12b94c0d484bdd66f8d293", null ],
     [ "SplineBuilder", "classddc_1_1SplineBuilder.html#a8e3166637e6eecd4de489c47d282f090", null ],
     [ "~SplineBuilder", "classddc_1_1SplineBuilder.html#a97d38a2252ec04d7d4ed9dd28384789a", null ],
-    [ "compute_offset", "classddc_1_1SplineBuilder.html#af87de6a22486e55abe0b033bd4e25dde", null ],
     [ "operator=", "classddc_1_1SplineBuilder.html#a50e80767ca3d914a15bf66486f35caa5", null ],
     [ "operator=", "classddc_1_1SplineBuilder.html#ae77ff05436d8c60895195b1525d26558", null ],
     [ "batched_interpolation_domain", "classddc_1_1SplineBuilder.html#a20abb53d1c4b62b0a43808c2b6f67ada", null ],

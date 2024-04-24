@@ -104,7 +104,7 @@ public:
     using bsplines_type = BSplines;
 
     /**
-     * @brief The Deriv dimension at the boundaries.
+     * @brief The type of the Deriv dimension at the boundaries.
      */
     using deriv_type = ddc::Deriv<tag_type>;
 
@@ -136,7 +136,7 @@ public:
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
     /**
-     * @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) with 1D spline domain being contiguous .
+     * @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) with 1D spline dimension being contiguous .
      */
     using batched_spline_tr_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
@@ -146,7 +146,7 @@ public:
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
     /**
-     * @brief The type of the whole Derivs domain (cartesian product of 1D Deriv domain and batch domain) preserving the underlying memory layout (order of dimensions).
+     * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain and batch domain) preserving the underlying memory layout (order of dimensions).
      */
     using batched_derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
@@ -160,12 +160,12 @@ public:
     static constexpr bool s_odd = BSplines::degree() % 2;
 
     /**
-     * @brief The number of equations defining the boundary conditions at the lower bound.
+     * @brief The number of equations defining the boundary condition at the lower bound.
      */
     static constexpr int s_nbe_xmin = n_boundary_equations(BcXmin, BSplines::degree());
 
     /**
-     * @brief The number of equations defining the boundary conditions at the upper bound.
+     * @brief The number of equations defining the boundary condition at the upper bound.
      */
     static constexpr int s_nbe_xmax = n_boundary_equations(BcXmax, BSplines::degree());
 

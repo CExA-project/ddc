@@ -78,7 +78,6 @@ class SplineBuilder
              && (BcXmax == ddc::BoundCond::PERIODIC))
             || (!BSplines::is_periodic() && (BcXmin != ddc::BoundCond::PERIODIC)
                 && (BcXmax != ddc::BoundCond::PERIODIC)));
-    static_assert(!BSplines::is_radial());
 
 private:
     using tag_type = typename InterpolationMesh::continuous_dimension_type;

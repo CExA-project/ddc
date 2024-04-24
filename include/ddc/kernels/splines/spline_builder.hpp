@@ -18,7 +18,7 @@ namespace ddc {
  * other solvers will be implemented in the futur.
  */
 enum class SplineSolver {
-  GINKGO ///< Enum member to identify the Ginkgo-based solver (iterative method)
+    GINKGO ///< Enum member to identify the Ginkgo-based solver (iterative method)
 };
 
 /**

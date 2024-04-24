@@ -248,10 +248,7 @@ public:
                 preconditionner_max_block_size);
     }
 
-    /** @brief Copy-constructor is deleted
-     *
-     * @param x A reference to another SplineBuilder.
-     */
+    /// @brief Copy-constructor is deleted
     SplineBuilder(SplineBuilder const& x) = delete;
 
     /** @brief Move-constructs
@@ -263,15 +260,13 @@ public:
     /// @brief Destructs
     ~SplineBuilder() = default;
 
-    /** @brief Copy-assignment is deleted
-     *
-     * @param x A reference to another SplineBuilder.
-     */
+    /// @brief Copy-assignment is deleted
     SplineBuilder& operator=(SplineBuilder const& x) = delete;
 
     /** @brief Move-assigns
      *
      * @param x An rvalue to another SplineBuilder.
+     * @return A reference to the moved SplineBuilder
      */
     SplineBuilder& operator=(SplineBuilder&& x) = default;
 

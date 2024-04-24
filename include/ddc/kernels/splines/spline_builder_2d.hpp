@@ -219,12 +219,7 @@ public:
     {
     }
 
-    /**
-     * @brief Create a new SplineBuilder2D by copy
-     *
-     * @param x
-     *      The SplineBuilder2D being copied.
-     */
+    /// @brief Copy-constructor is deleted
     SplineBuilder2D(SplineBuilder2D const& x) = delete;
 
     /**
@@ -235,8 +230,10 @@ public:
      */
     SplineBuilder2D(SplineBuilder2D&& x) = default;
 
+    /// @brief Destructs
     ~SplineBuilder2D() = default;
 
+    /// @brief Copy-assignment is deleted
     SplineBuilder2D& operator=(SplineBuilder2D const& x) = delete;
 
 

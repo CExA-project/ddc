@@ -224,9 +224,10 @@ public:
          * @return The values of the integrals.
          */
         template <class Layout, class MemorySpace2>
-        KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
-        integrals(
-                ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const;
+        KOKKOS_INLINE_FUNCTION ddc::
+                ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
+                integrals(ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
+                                  int_vals) const;
 
         /** @brief Returns the coordinate of the knot corresponding to the given index.
          *
@@ -593,7 +594,7 @@ template <class DDim, class MemorySpace>
 template <class Layout, class MemorySpace2>
 KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
 UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2> int_vals) const
+        ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const
 {
     if constexpr (is_periodic()) {
         assert(int_vals.size() == nbasis() || int_vals.size() == size());

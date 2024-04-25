@@ -36,33 +36,45 @@ private:
     using tag_type = typename BSplinesType::tag_type;
 
 public:
+    /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
 
+    /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
-    using bsplines_type = BSplinesType;
-
-    using left_extrapolation_rule_type = LeftExtrapolationRule;
-    using right_extrapolation_rule_type = RightExtrapolationRule;
-
+    /// @brief The type of the interpolation discrete dimension (discrete dimension of interest) used by this class.
     using interpolation_mesh_type = InterpolationMesh;
 
+    /// @brief The discrete dimension representing the B-splines.
+    using bsplines_type = BSplinesType;
+
+	/// @brief The type of the domain for the 1D interpolation mesh used by this class.
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
 
+    /// @brief The type of the whole domain representing interpolation points.
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
+	/// @brief The type of the 1D spline domain corresponding to the dimension of interest.
     using spline_domain_type = ddc::DiscreteDomain<bsplines_type>;
 
+    /// @brief The type of the batch domain (obtained by removing dimension of interest from whole space).
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
+    /// @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
+
+    /// @brief The type of the extrapolation rule at the lower boundary.
+    using left_extrapolation_rule_type = LeftExtrapolationRule;
+
+    /// @brief The type of the extrapolation rule at the lower boundary.
+    using right_extrapolation_rule_type = RightExtrapolationRule;
 
 
 private:
@@ -111,16 +123,36 @@ public:
     {
     }
 
+    /** @brief Copy-constructs
+     *
+     * @param x A reference to another SplineEvaluator
+     */
     SplineEvaluator(SplineEvaluator const& x) = default;
 
+    /** @brief Move-constructs
+     *
+     * @param x An rvalue to another SplineEvaluator
+     */
     SplineEvaluator(SplineEvaluator&& x) = default;
 
+    /// @brief Destructs
     ~SplineEvaluator() = default;
 
+    /** @brief Copy-assigns
+     *
+     * @param x A reference to another SplineEvaluator
+     * @return A reference to the copied SplineEvaluator
+     */
     SplineEvaluator& operator=(SplineEvaluator const& x) = default;
 
+    /** @brief Move-assigns
+     *
+     * @param x An rvalue to another SplineEvaluator
+     * @return A reference to the moved SplineEvaluator
+     */
     SplineEvaluator& operator=(SplineEvaluator&& x) = default;
 
+    
     left_extrapolation_rule_type left_extrapolation_rule() const
     {
         return m_left_extrap_rule;

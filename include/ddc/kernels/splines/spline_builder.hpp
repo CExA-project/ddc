@@ -252,9 +252,9 @@ public:
     /**
      * @brief Get the domain for the 1D interpolation mesh used by this class.
      *
-     * This is the 1D because it is defined along the dimension of interest.
+     * This is 1D because it is defined along the dimension of interest.
      *
-     * @return The 1D domain for the grid points.
+     * @return The 1D domain for the interpolation mesh.
      */
     interpolation_domain_type interpolation_domain() const noexcept
     {
@@ -267,7 +267,7 @@ public:
      * Values of the function must be provided on this domain in order
      * to build a spline transform of the function (cartesian product of 1D interpolation_domain and batch_domain).
      *
-     * @return The domain for the interpolation points.
+     * @return The domain for the interpolation mesh.
      */
     batched_interpolation_domain_type batched_interpolation_domain() const noexcept
     {
@@ -289,7 +289,7 @@ public:
     /**
      * @brief Get the 1D domain on which spline coefficients are defined.
      *
-     * The 1D spline domain corresponding to dimension of interest.
+     * The 1D spline domain corresponding to the dimension of interest.
      *
      * @return The 1D domain for the spline coefficients.
      */
@@ -301,7 +301,7 @@ public:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
      *
-     * The domain on which spline coefficients will be computed, preserving memory layout (order of dimensions).
+     * Spline-transformed functions are computed on this domain.
      *
      * @return The domain for the spline coefficients.
      */
@@ -315,7 +315,7 @@ public:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, with dimension of interest contiguous.
      *
-     * The (transposed) whole domain on which spline coefficients will be computed, with dimension of interest contiguous.
+     * This is used internally because of solvers limitation and because it may be beneficial to computation performance.
      *
      * @return The (transposed) domain for the spline coefficients.
      */
@@ -327,7 +327,7 @@ public:
     /**
      * @brief Get the whole domain on which derivatives on lower boundary are defined.
      *
-     * This is only used with HERMITE boundary conditions.
+     * This is only used with BoundCond::HERMITE boundary conditions.
      *
      * @return The domain for the Derivs values.
      */
@@ -343,7 +343,7 @@ public:
     /**
      * @brief Get the whole domain on which derivatives on upper boundary are defined.
      *
-     * This is only used with HERMITE boundary conditions.
+     * This is only used with BoundCond::HERMITE boundary conditions.
      *
      * @return The domain for the Derivs values.
      */
@@ -359,11 +359,11 @@ public:
     /**
      * @brief Get the interpolation matrix.
      *
-     * Get the interpolation matrix. This can be useful for debugging (as it allows
+     * This can be useful for debugging (as it allows
      * one to print the matrix) or for more complex quadrature schemes.
 	 *
-	 * Warning: the returned ddc::detail::Matrix class is not supposed to be exposed
-	 * to user, which means its usage is not tested out of the scope of DDC splines transforms.
+	 * Warning: the returned detail::Matrix class is not supposed to be exposed
+	 * to user, which means its usage is not supported out of the scope of DDC spline transforms.
 	 * Use at your own risk.
      *
      * @return A reference to the interpolation matrix.
@@ -374,22 +374,23 @@ public:
     }
 
     /**
-     * @brief Build a spline approximation of a function.
+     * @brief Compute a spline approximation of a function.
      *
-     * Use the values of a function at known grid points (as specified by
-     * SplineBuilder::interpolation_domain) and the derivatives of the
-     * function at the boundaries (if necessary for the chosen boundary
-     * conditions) to calculate a spline approximation of a function.
+     * Use the values of a function (defined on
+     * SplineBuilder::batched_interpolation_domain) and the derivatives of the
+     * function at the boundaries (in the case of BoundCond::HERMITE only, defined 
+	 * on SplineBuilder::batched_derivs_xmin_domain and SplineBuilder::batched_derivs_xmax_domain) 
+	 * to calculate a spline approximation of this function.
      *
      * The spline approximation is stored as a ChunkSpan of coefficients
-     * associated with basis-splines.
+     * associated with B-splines.
      *
-     * @param[out] spline The coefficients of the spline calculated by the function.
-     * @param[in] vals The values of the function at the grid points.
+     * @param[out] spline The coefficients of the spline computed by this SplineBuilder.
+     * @param[in] vals The values of the function on the interpolation mesh.
      * @param[in] derivs_xmin The values of the derivatives at the lower boundary
-	 * (used only with HERMITE lower boundary condition).
+	 * (used only with BoundCond::HERMITE lower boundary condition).
      * @param[in] derivs_xmax The values of the derivatives at the upper boundary
-	 * (used only with HERMITE upper boundary condition).
+	 * (used only with BoundCond::HERMITE upper boundary condition).
      */
     template <class Layout>
     void operator()(

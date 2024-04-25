@@ -22,9 +22,9 @@ enum class SplineSolver {
 };
 
 /**
- * @brief An helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
+ * @brief A helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
  *
- * An helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
+ * A helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
  *
  * @param is_uniform A boolean giving the presumed status before considering boundary conditions.
  * @param BcXmin The lower boundary condition.

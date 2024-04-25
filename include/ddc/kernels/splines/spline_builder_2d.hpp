@@ -12,7 +12,7 @@ namespace ddc {
  * @brief A class for creating a 2D spline approximation of a function.
  *
  * A class which contains an operator () which can be used to build a 2D spline approximation
- * of a function. A 2D spline approximation uses a cross-product between two 1D spline builder.
+ * of a function. A 2D spline approximation uses a cross-product between two 1D SplineBuilder.
  *
  * @see SplineBuilder
  */
@@ -32,10 +32,19 @@ template <
 class SplineBuilder2D
 {
 public:
+    /**
+     * @brief The type of the Kokkos execution space used by this class.
+     */
     using exec_space = ExecSpace;
 
+    /**
+     * @brief The type of the Kokkos memory space used by this class.
+     */
     using memory_space = MemorySpace;
 
+    /**
+     * @brief The type of the SplineBuilder used by this class to spline-transform along first dimension.
+     */
     using builder_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -45,6 +54,10 @@ public:
             BcXmax1,
             Solver,
             IDimX...>;
+
+    /**
+     * @brief The type of the SplineBuilder used by this class to spline-transform along second dimension.
+     */
     using builder_type2 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -54,6 +67,10 @@ public:
             BcXmax2,
             Solver,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
+
+    /**
+     * @brief The type of the SplineBuilder used by this class to spline-transform the second-dimension-derivatives along first dimension.
+     */
     using builder_deriv_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -72,6 +89,7 @@ private:
      * @brief Tag the dimension of the first 1D SplineBuilder.
      */
     using tag_type1 = typename builder_type1::bsplines_type::tag_type;
+
     /**
      * @brief Tag the dimension of the second 1D SplineBuilder.
      */
@@ -79,59 +97,87 @@ private:
 
 public:
     /**
-     * @brief The type of the BSplines in the first dimension which are compatible with this class.
+     * @brief The type of the B-splines in the first dimension.
      */
     using bsplines_type1 = typename builder_type1::bsplines_type;
+
     /**
-     * @brief The type of the BSplines in the second dimension which are compatible with this class.
+     * @brief The type of the B-splines in the second dimension.
      */
     using bsplines_type2 = typename builder_type2::bsplines_type;
 
+    /**
+     * @brief The type of the Deriv domain on boundaries in the first dimension.
+     */
     using deriv_type1 = typename builder_type1::deriv_type;
+
+    /**
+     * @brief The type of the Deriv domain on boundaries in the second dimension.
+     */
     using deriv_type2 = typename builder_type2::deriv_type;
 
     /**
-     * @brief The type of the interpolation mesh in the first dimension used by this class.
+     * @brief The type of the interpolation mesh in the first dimension.
      */
     using interpolation_mesh_type1 = typename builder_type1::interpolation_mesh_type;
     /**
-     * @brief The type of the interpolation mesh in the second dimension used by this class.
+     * @brief The type of the interpolation mesh in the second dimension.
      */
     using interpolation_mesh_type2 = typename builder_type2::interpolation_mesh_type;
 
     /**
-     * @brief The type of the domain for the interpolation mesh is the first dimension used by this class.
+     * @brief The type of the domain for the interpolation mesh is the first dimension.
      */
     using interpolation_domain_type1 = typename builder_type1::interpolation_mesh_type;
     /**
-     * @brief The type of the domain for the interpolation mesh is the second dimension used by this class.
+     * @brief The type of the domain for the interpolation mesh is the second dimension.
      */
     using interpolation_domain_type2 = typename builder_type2::interpolation_mesh_type;
     /**
-     * @brief The type of the domain for the interpolation mesh is the 2D dimension used by this class.
+     * @brief The type of the domain for the interpolation mesh is the 2D dimension.
      */
     using interpolation_domain_type
             = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
 
+    /**
+     * @brief The type of the whole domain representing interpolation points.
+     */
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
+    /**
+     * @brief The type of the batch domain (obtained by removing dimensions of interest from whole space).
+     */
     using batch_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>>>;
 
+    /**
+     * @brief The type of the whole spline domain (cartesian product of 2D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
+     */
     using batched_spline_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>,
                     ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain and the associated batch domain) in the first dimension, preserving the underlying memory layout (order of dimensions).
+     */
     using batched_derivs_domain_type1 = typename builder_type1::batched_derivs_domain_type;
+
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain and the associated batch domain) in the second dimension, preserving the underlying memory layout (order of dimensions).
+     */
     using batched_derivs_domain_type2
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type2>,
                     ddc::detail::TypeSeq<deriv_type2>>>;
+
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain and the batch domain) in the second dimension, preserving the underlying memory layout (order of dimensions).
+     */
     using batched_derivs_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -173,48 +219,35 @@ public:
     {
     }
 
-    /**
-     * @brief Create a new SplineBuilder2D by copy
-     *
-     * @param x
-     *      The SplineBuilder2D being copied.
-     */
+    /// @brief Copy-constructor is deleted
     SplineBuilder2D(SplineBuilder2D const& x) = delete;
 
     /**
-     * @brief Create a new SplineBuilder2D by copy
+     * @brief Move-constructs
      *
-     * @param x
-     *      The temporary SplineBuilder2D being copied.
+     * @param x An rvalue to another SplineBuilder2D.
      */
     SplineBuilder2D(SplineBuilder2D&& x) = default;
 
+    /// @brief Destructs
     ~SplineBuilder2D() = default;
 
+    /// @brief Copy-assignment is deleted
     SplineBuilder2D& operator=(SplineBuilder2D const& x) = delete;
 
-
-    /**
-     * @brief Copy a SplineBuilder2D.
+    /** @brief Move-assigns
      *
-     * @param x
-     *      The temporary SplineBuilder2D being copied.
-     * @returns A reference to this object.
+     * @param x An rvalue to another SplineBuilder.
+     * @return A reference to the moved SplineBuilder
      */
     SplineBuilder2D& operator=(SplineBuilder2D&& x) = default;
 
-    batched_interpolation_domain_type batched_interpolation_domain() const noexcept
-    {
-        return m_spline_builder1.batched_interpolation_domain();
-    }
-
     /**
-     * @brief Get the 2D dimension domain from which the approximation is defined.
+     * @brief Get the domain for the 2D interpolation mesh used by this class.
      *
-     * Get the 2D dimension  domain on which values of the function must be provided in order
-     * to build a spline approximation of the function.
+     * This is 2D because it is defined along the dimensions of interest.
      *
-     * @return The 2D dimension domain for the grid points.
+     * @return The 2D domain for the interpolation mesh.
      */
     interpolation_domain_type interpolation_domain() const noexcept
     {
@@ -223,27 +256,52 @@ public:
                 m_spline_builder2.interpolation_domain());
     }
 
+    /**
+     * @brief Get the whole domain representing interpolation points.
+     *
+     * Values of the function must be provided on this domain in order
+     * to build a spline transform of the function (cartesian product of 2D interpolation_domain and batch_domain).
+     *
+     * @return The domain for the interpolation mesh.
+     */
+    batched_interpolation_domain_type batched_interpolation_domain() const noexcept
+    {
+        return m_spline_builder1.batched_interpolation_domain();
+    }
+
+    /**
+     * @brief Get the batch domain.
+     *
+     * Obtained by removing dimensions of interest from whole interpolation domain.
+     *
+     * @return The batch domain.
+     */
     batch_domain_type batch_domain() const noexcept
     {
         return ddc::remove_dims_of(batched_interpolation_domain(), interpolation_domain());
     }
 
     /**
-     * @brief Get the 2D domain on which the approximation is defined.
+     * @brief Get the 2D domain on which spline coefficients are defined.
      *
-     * Get the 2D domain of the basis-splines for which the coefficients of the spline
-     * approximation must be calculated.
+     * The 2D spline domain corresponding to the dimensions of interest.
      *
-     * @return The 2D domain for the splines.
+     * @return The 2D domain for the spline coefficients.
      */
-    ddc::DiscreteDomain<bsplines_type1, bsplines_type2> spline_domain()
-            const noexcept // TODO : clarify name
+    ddc::DiscreteDomain<bsplines_type1, bsplines_type2> spline_domain() const noexcept
     {
         return ddc::DiscreteDomain<bsplines_type1, bsplines_type2>(
                 ddc::discrete_space<bsplines_type1>().full_domain(),
                 ddc::discrete_space<bsplines_type2>().full_domain());
     }
 
+    /**
+     * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
+     *
+     * Spline-transformed functions are computed on this domain.
+     *
+     * @return The domain for the spline coefficients.
+     */
     batched_spline_domain_type batched_spline_domain() const noexcept
     {
         return ddc::replace_dim_of<interpolation_mesh_type1, bsplines_type1>(
@@ -254,20 +312,20 @@ public:
     }
 
     /**
-     * @brief Build a 2D spline approximation of a function.
+     * @brief Compute a 2D spline approximation of a function.
      *
-     * Use the values of a function at known grid points (as specified by
-     * SplineBuilder2D::interpolation_domain_type) and the derivatives of the
-     * function at the boundaries (if necessary for the chosen boundary
-     * conditions) to calculate a 2D spline approximation of a function.
-     *
+     * Use the values of a function (defined on
+     * SplineBuilder2D::batched_interpolation_domain) and the derivatives of the
+     * function at the boundaries (in the case of BoundCond::HERMITE only)
+	 * to calculate a 2D spline approximation of this function.
+	 *
      * The spline approximation is stored as a ChunkSpan of coefficients
-     * associated with basis-splines.
+     * associated with B-splines.
      *
      * @param[out] spline
-     *      The coefficients of the spline calculated by the function.
+     *      The coefficients of the spline computed by this SplineBuilder.
      * @param[in] vals
-     *      The values of the function at the grid points.
+     *      The values of the function at the interpolation mesh.
      * @param[in] derivs_min1
      *      The values of the derivatives at the lower boundary in the first dimension.
      * @param[in] derivs_max1

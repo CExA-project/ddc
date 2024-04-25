@@ -76,7 +76,7 @@ public:
         return true;
     }
 
-    /** @brief Impl Storage class of the static attributes of the discrete dimension.
+    /** @brief Storage class of the static attributes of the discrete dimension.
      *
      * @tparam DDim The name of the discrete dimension.
      * @tparam MemorySpace The Kokkos memory space where the attributes are being stored.
@@ -173,7 +173,7 @@ public:
          * initial discrete function.
          *
          * @param[out] values The values of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.
-         * @param[in] x The coordinate where B-splines are evaluated.
+         * @param[in] x The coordinate where B-splines are evaluated. It has to be in the range of break points coordinates.
          * @return The index of the first B-spline which is evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
@@ -192,7 +192,7 @@ public:
          * initial discrete function.
          *
          * @param[out] derivs The derivatives of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.
-         * @param[in] x The coordinate where B-spline derivatives are evaluated.
+         * @param[in] x The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates.
          * @return The index of the first B-spline which is evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
@@ -206,8 +206,8 @@ public:
          * combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed
          * initial discrete function.
          *
-         * @param[out] derivs The values and \f$n\f$ derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan with (degree+1)*(n+1) elements.
-         * @param[in] x The coordinate where B-spline derivatives are evaluated.
+         * @param[out] derivs The values and \f$n\f$ derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan of sizes (degree+1, n+1).
+         * @param[in] x The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates.
          * @param[in] n The number of derivatives to evaluate (in addition to the B-spline values themselves).
          * @return The index of the first B-spline which is evaluated.
          */
@@ -220,7 +220,7 @@ public:
          *
          * The integral of each of the B-splines over their support within the domain on which this basis was defined.
          *
-         * @param[out] int_vals The values of the integrals. It has to be a 1D mdspan of size (nbasis).
+         * @param[out] int_vals The values of the integrals. It has to be a 1D Chunkspan of size (nbasis).
          * @return The values of the integrals.
          */
         template <class Layout, class MemorySpace2>

@@ -29,7 +29,7 @@ struct NonUniformBSplinesBase
 } // namespace detail
 
 /**
- * The type of a non-uniform B-splines 1D basis.
+ * The type of a non-uniform 1D spline basis (B-spline).
  *
  * Knots for non-uniform B-splines are non-uniformly distributed (no assumption is made on the uniformity of their distribution,
  * the associated discrete dimension is a NonUniformPointSampling).
@@ -111,7 +111,7 @@ public:
 
         /** @brief Constructs an Impl using a brace-list, i.e. `Impl bsplines({0., 1.})`
          *
-         * Constructs a Impl by iterating over a list of break points. Internally this constructor calls the constructor
+         * Constructs an Impl by iterating over a list of break points. Internally this constructor calls the constructor
          * Impl(RandomIt breaks_begin, RandomIt breaks_end).
          *
          * @param breaks The std::initializer_list of the coordinates of break points.
@@ -123,7 +123,7 @@ public:
 
         /** @brief Constructs an Impl using a std::vector.
          *
-         * Constructs a Impl by iterating over a list of break points. Internally this constructor calls the constructor
+         * Constructs an Impl by iterating over a list of break points. Internally this constructor calls the constructor
          * Impl(RandomIt breaks_begin, RandomIt breaks_end).
          *
          * @param breaks The std::vector of the coordinates of break points.
@@ -133,7 +133,7 @@ public:
         {
         }
 
-        /** @brief Constructs a Impl by iterating over a set of break points from begin to end.
+        /** @brief Constructs an Impl by iterating over a set of break points from begin to end.
          *
          * The provided break points describe the separation between the cells on which the polynomials
          * comprising a spline are defined. They are used to build a set of knots. There are 2*degree more
@@ -151,7 +151,7 @@ public:
         template <class RandomIt>
         Impl(RandomIt breaks_begin, RandomIt breaks_end);
 
-        /** @brief Copy-constructs from another Impl with different Kokkos memory space
+        /** @brief Copy-constructs from another Impl with a different Kokkos memory space
          *
          * @param impl A reference to the other Impl
          */
@@ -180,7 +180,7 @@ public:
         /** @brief Copy-assigns
          *
          * @param x A reference to another Impl
-         * @return A reference to the copy Impl
+         * @return A reference to the copied Impl
          */
         Impl& operator=(Impl const& x) = default;
 
@@ -206,32 +206,32 @@ public:
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const;
 
-        /** @brief Evaluates non-zero B-splines derivatives at a given coordinate
+        /** @brief Evaluates non-zero B-spline derivatives at a given coordinate
          *
          * The derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
          * B-splines which are non-zero at any given point. It is these B-splines which are derivated.
          * A spline approximation of a derivative at coordinate x is a linear
-         * combination of those B-splines derivatives weighted with the spline coefficients of the spline-transformed
+         * combination of those B-spline derivatives weighted with the spline coefficients of the spline-transformed
          * initial discrete function.
          *
          * @param[out] derivs The derivatives of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.
-         * @param[in] x The coordinate where B-splines derivatives are evaluated.
+         * @param[in] x The coordinate where B-spline derivatives are evaluated.
          * @return The index of the first B-spline which is derivated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
 
-        /** @brief Evaluates non-zero B-splines values and \f$n\f$ derivatives at a given coordinate
+        /** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate
          *
          * The values and derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
          * B-splines which are non-zero at any given point. It is these B-splines which are evaluated and derivated.
          * A spline approximation of a derivative at coordinate x is a linear
-         * combination of those B-splines derivatives weighted with spline coefficients of the spline-transformed
+         * combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed
          * initial discrete function.
          *
          * @param[out] derivs The values and \f$n\f$ derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan with (degree+1)*(n+1) elements.
-         * @param[in] x The coordinate where B-splines derivatives are evaluated.
-         * @param[in] n The number of derivatives to evaluate (in addition to the B-splines values themselves).
+         * @param[in] x The coordinate where B-spline derivatives are evaluated.
+         * @param[in] n The number of derivatives to evaluate (in addition to the B-spline values themselves).
          * @return The index of the first B-spline which is evaluated/derivated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
@@ -255,7 +255,7 @@ public:
         /** @brief Returns the coordinate of the knot corresponding to the given index.
          *
          * Returns the coordinate of the knot corresponding to the given index. The domain
-         * over which the B-splines are defined is comprised of ncells+1 knots however there are a total of
+         * over which the B-splines are defined is comprised of ncells+1 break points however there are a total of
          * ncells+1+2*degree knots. The additional knots which control the shape of the B-splines near the
          * boundary are added before and after the break points. The knot index is therefore in the interval [-degree, ncells+degree]
          *

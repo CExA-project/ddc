@@ -83,61 +83,41 @@ private:
     using tag_type = typename InterpolationMesh::continuous_dimension_type;
 
 public:
-    /**
-     * @brief The type of the Kokkos execution space used by this class.
-     */
+    /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
 
-    /**
-     * @brief The type of the Kokkos memory space used by this class.
-     */
+    /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
-    /**
-     * @brief The type of the interpolation discrete dimension (discrete dimension of interest) used by this class.
-     */
+    /// @brief The type of the interpolation discrete dimension (discrete dimension of interest) used by this class.
     using interpolation_mesh_type = InterpolationMesh;
 
-    /**
-     * @brief The discrete dimension representing the B-splines.
-     */
+    /// @brief The discrete dimension representing the B-splines.
     using bsplines_type = BSplines;
 
-    /**
-     * @brief The type of the Deriv dimension at the boundaries.
-     */
+    /// @brief The type of the Deriv dimension at the boundaries.
     using deriv_type = ddc::Deriv<tag_type>;
 
-    /**
-     * @brief The type of the domain for the 1D interpolation mesh used by this class.
-     */
+    /// @brief The type of the domain for the 1D interpolation mesh used by this class.
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
 
-    /**
-     * @brief The type of the whole domain representing interpolation points.
-     */
+    /// @brief The type of the whole domain representing interpolation points.
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
-    /**
-     * @brief The type of the batch domain (obtained by removing dimension of interest from whole space).
-     */
+    /// @brief The type of the batch domain (obtained by removing dimension of interest from whole space).
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
-    /**
-     * @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
-     */
+    /// @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
-    /**
-     * @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) with 1D spline dimension being contiguous .
-     */
+    /// @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) with 1D spline dimension being contiguous .
     using batched_spline_tr_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
@@ -145,38 +125,26 @@ public:
                             ddc::detail::TypeSeq<IDimX...>,
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
-    /**
-     * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain and batch domain) preserving the underlying memory layout (order of dimensions).
-     */
+    /// @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain and batch domain) preserving the underlying memory layout (order of dimensions).
     using batched_derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<deriv_type>>>;
 
-    /**
-     * @brief Indicates if the degree of the splines is odd or even.
-     */
+    /// @brief Indicates if the degree of the splines is odd or even.
     static constexpr bool s_odd = BSplines::degree() % 2;
 
-    /**
-     * @brief The number of equations defining the boundary condition at the lower bound.
-     */
+    /// @brief The number of equations defining the boundary condition at the lower bound.
     static constexpr int s_nbc_xmin = n_boundary_equations(BcXmin, BSplines::degree());
 
-    /**
-     * @brief The number of equations defining the boundary condition at the upper bound.
-     */
+    /// @brief The number of equations defining the boundary condition at the upper bound.
     static constexpr int s_nbc_xmax = n_boundary_equations(BcXmax, BSplines::degree());
 
-    /**
-     * @brief The boundary condition implemented at the lower bound.
-     */
+    /// @brief The boundary condition implemented at the lower bound.
     static constexpr ddc::BoundCond s_bc_xmin = BcXmin;
 
-    /**
-     * @brief The boundary condition implemented at the upper bound.
-     */
+    /// @brief The boundary condition implemented at the upper bound.
     static constexpr ddc::BoundCond s_bc_xmax = BcXmax;
 
 private:

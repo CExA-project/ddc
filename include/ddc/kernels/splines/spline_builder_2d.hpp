@@ -32,19 +32,13 @@ template <
 class SplineBuilder2D
 {
 public:
-    /**
-     * @brief The type of the Kokkos execution space used by this class.
-     */
+    /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
 
-    /**
-     * @brief The type of the Kokkos memory space used by this class.
-     */
+    /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
-    /**
-     * @brief The type of the SplineBuilder used by this class to spline-transform along first dimension.
-     */
+    /// @brief The type of the SplineBuilder used by this class to spline-transform along first dimension.
     using builder_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -55,9 +49,7 @@ public:
             Solver,
             IDimX...>;
 
-    /**
-     * @brief The type of the SplineBuilder used by this class to spline-transform along second dimension.
-     */
+    /// @brief The type of the SplineBuilder used by this class to spline-transform along second dimension.
     using builder_type2 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -68,9 +60,7 @@ public:
             Solver,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
 
-    /**
-     * @brief The type of the SplineBuilder used by this class to spline-transform the second-dimension-derivatives along first dimension.
-     */
+    /// @brief The type of the SplineBuilder used by this class to spline-transform the second-dimension-derivatives along first dimension.
     using builder_deriv_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -85,99 +75,68 @@ public:
                     IDimX>...>;
 
 private:
-    /**
-     * @brief Tag the dimension of the first 1D SplineBuilder.
-     */
+    /// @brief Tag the dimension of the first 1D SplineBuilder.
     using tag_type1 = typename builder_type1::bsplines_type::tag_type;
 
-    /**
-     * @brief Tag the dimension of the second 1D SplineBuilder.
-     */
+    /// @brief Tag the dimension of the second 1D SplineBuilder.
     using tag_type2 = typename builder_type2::bsplines_type::tag_type;
 
 public:
-    /**
-     * @brief The type of the B-splines in the first dimension.
-     */
+    /// @brief The type of the B-splines in the first dimension.
     using bsplines_type1 = typename builder_type1::bsplines_type;
 
-    /**
-     * @brief The type of the B-splines in the second dimension.
-     */
+    /// @brief The type of the B-splines in the second dimension.
     using bsplines_type2 = typename builder_type2::bsplines_type;
 
-    /**
-     * @brief The type of the Deriv domain on boundaries in the first dimension.
-     */
+    /// @brief The type of the Deriv domain on boundaries in the first dimension.
     using deriv_type1 = typename builder_type1::deriv_type;
 
-    /**
-     * @brief The type of the Deriv domain on boundaries in the second dimension.
-     */
+    /// @brief The type of the Deriv domain on boundaries in the second dimension.
     using deriv_type2 = typename builder_type2::deriv_type;
 
-    /**
-     * @brief The type of the interpolation mesh in the first dimension.
-     */
+    /// @brief The type of the interpolation mesh in the first dimension.
     using interpolation_mesh_type1 = typename builder_type1::interpolation_mesh_type;
-    /**
-     * @brief The type of the interpolation mesh in the second dimension.
-     */
+
+    /// @brief The type of the interpolation mesh in the second dimension.
     using interpolation_mesh_type2 = typename builder_type2::interpolation_mesh_type;
 
-    /**
-     * @brief The type of the domain for the interpolation mesh is the first dimension.
-     */
+    /// @brief The type of the domain for the interpolation mesh is the first dimension.
     using interpolation_domain_type1 = typename builder_type1::interpolation_mesh_type;
-    /**
-     * @brief The type of the domain for the interpolation mesh is the second dimension.
-     */
+
+    /// @brief The type of the domain for the interpolation mesh is the second dimension.
     using interpolation_domain_type2 = typename builder_type2::interpolation_mesh_type;
-    /**
-     * @brief The type of the domain for the interpolation mesh is the 2D dimension.
-     */
+
+    /// @brief The type of the domain for the interpolation mesh is the 2D dimension.
     using interpolation_domain_type
             = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
 
-    /**
-     * @brief The type of the whole domain representing interpolation points.
-     */
+    /// @brief The type of the whole domain representing interpolation points.
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
-    /**
-     * @brief The type of the batch domain (obtained by removing dimensions of interest from whole space).
-     */
+    /// @brief The type of the batch domain (obtained by removing dimensions of interest from whole space).
     using batch_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>>>;
 
-    /**
-     * @brief The type of the whole spline domain (cartesian product of 2D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
-     */
+    /// @brief The type of the whole spline domain (cartesian product of 2D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
     using batched_spline_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>,
                     ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
-    /**
-     * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain and the associated batch domain) in the first dimension, preserving the underlying memory layout (order of dimensions).
-     */
+    /// @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain and the associated batch domain) in the first dimension, preserving the underlying memory layout (order of dimensions).
     using batched_derivs_domain_type1 = typename builder_type1::batched_derivs_domain_type;
 
-    /**
-     * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain and the associated batch domain) in the second dimension, preserving the underlying memory layout (order of dimensions).
-     */
+    /// @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain and the associated batch domain) in the second dimension, preserving the underlying memory layout (order of dimensions).
     using batched_derivs_domain_type2
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type2>,
                     ddc::detail::TypeSeq<deriv_type2>>>;
 
-    /**
-     * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain and the batch domain) in the second dimension, preserving the underlying memory layout (order of dimensions).
-     */
+    /// @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain and the batch domain) in the second dimension, preserving the underlying memory layout (order of dimensions).
     using batched_derivs_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,

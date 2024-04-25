@@ -26,7 +26,8 @@ var NAVTREE =
 [
   [ "DDC", "index.html", [
     [ "About", "index.html", "index" ],
-    [ "Commented example: the heat equation", "first_steps.html", "first_steps" ],
+    [ "Commented example: the uniform heat equation", "first_steps.html", "first_steps" ],
+    [ "examples/uniform_heat_equation.cpp", "uniform_heat_equation.html", null ],
     [ "API reference", "annotated.html", "annotated" ]
   ] ]
 ];

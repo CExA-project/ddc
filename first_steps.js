@@ -12,10 +12,7 @@ var first_steps =
     [ "Initial conditions", "first_steps.html#autotoc_md9", null ],
     [ "Time loop", "first_steps.html#autotoc_md10", [
       [ "Periodic conditions", "first_steps.html#autotoc_md11", null ],
-      [ "Numerical scheme", "first_steps.html#autotoc_md12", null ],
-      [ "Output", "first_steps.html#autotoc_md13", null ],
-      [ "Final swap", "first_steps.html#autotoc_md14", null ]
+      [ "Numerical scheme", "first_steps.html#autotoc_md12", null ]
     ] ],
-    [ "Final output", "first_steps.html#autotoc_md15", null ],
     [ "examples/heat_equation.cpp", "heat_equation.html", null ]
 ];

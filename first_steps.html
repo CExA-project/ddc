@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 	<meta charset="UTF-8">
 	<meta name="generator" content="Doxygen 1.10.0"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<title>DDC: Commented example: the heat equation</title>
+	<title>DDC: Commented example: the uniform heat equation</title>
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="dynsections.js"></script>
 	<script type="text/javascript" src="navtreedata.js"></script>
@@ -47,11 +47,11 @@ $(function(){initNavTree('first_steps.html',''); initResizable(); });
 </script>
 <div id="doc-content">
 <div><div class="header">
-  <div class="headertitle"><div class="title">Commented example: the heat equation</div></div>
+  <div class="headertitle"><div class="title">Commented example: the uniform heat equation</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_first__steps"></a></p>
-<p>In <a class="el" href="heat_equation.html">examples/heat_equation.cpp</a> is a DDC example implementing a forward finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary conditions.</p>
+<p>In <a class="el" href="heat_equation.html">examples/uniform_heat_equation.cpp</a> is a DDC example implementing a forward finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary conditions.</p>
 <p>As usual, the file starts with a few includes that will be used in the code.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iomanip&gt;</span></div>
@@ -60,56 +60,29 @@ $(function(){initNavTree('first_steps.html',''); initResizable(); });
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;ddc/ddc.hpp&gt;</span></div>
 </div><!-- fragment --><p>As you can see, to use DDC, we have to include <code>&lt;<a class="el" href="ddc_8hpp_source.html">ddc/ddc.hpp</a>&gt;</code></p>
-<p>Then, we define the value of some parameters that would typically be read from some form of configuration file in a more realistic code.</p>
-<div class="fragment"><div class="line">    <span class="comment">// Start of the domain of interest in the X dimension</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> x_start = -1.;</div>
-<div class="line">    <span class="comment">// End of the domain of interest in the X dimension</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> x_end = 1.;</div>
-<div class="line">    <span class="comment">// Number of discretization points in the X dimension</span></div>
-<div class="line">    <span class="keywordtype">size_t</span> <span class="keyword">const</span> nb_x_points = 10;</div>
-<div class="line">    <span class="comment">// Thermal diffusion coefficient</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> kx = .01;</div>
-<div class="line">    <span class="comment">// Start of the domain of interest in the Y dimension</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> y_start = -1.;</div>
-<div class="line">    <span class="comment">// End of the domain of interest in the Y dimension</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> y_end = 1.;</div>
-<div class="line">    <span class="comment">// Number of discretization points in the Y dimension</span></div>
-<div class="line">    <span class="keywordtype">size_t</span> <span class="keyword">const</span> nb_y_points = 100;</div>
-<div class="line">    <span class="comment">// Thermal diffusion coefficient</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> ky = .002;</div>
-<div class="line">    <span class="comment">// Simulated time at which to start simulation</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> start_time = 0.;</div>
-<div class="line">    <span class="comment">// Simulated time to reach as target of the simulation</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> end_time = 10.;</div>
-<div class="line">    <span class="comment">// Number of time-steps between outputs</span></div>
-<div class="line">    ptrdiff_t <span class="keyword">const</span> t_output_period = 10;</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Definition of the discretization</h1>
-<p>Given the previous parameters, we will now define a 2D point discretization.</p>
+<p>Before solving the equation, DDC's primary goal is to define a discrete domain of dimensions specified by the user, along with a discretization along each dimension, which also needs to be specified.</p>
 <div class="image">
 <img src="domains.png" alt=""/>
 <div class="caption">
 Domains</div></div>
-    <h2><a class="anchor" id="autotoc_md3"></a>
+    <p>Each point in the <em>DiscreteDomain</em> is a <em>DiscreteElement</em>. These concepts will be clarified later. Let's start by constructing this DiscreteDomain necessary for solving our 2D problem for the heat equation.</p>
+<h2><a class="anchor" id="autotoc_md3"></a>
 Dimensions naming</h2>
-<p>Before starting the <code>main</code> function, we start by defining types that we later use to name our dimensions.</p>
+<p>We start by defining types that we later use to name our dimensions.</p>
 <p>First, we create <code>X</code>: a type that is declared but never defined to act as a tag identifying our first dimension.</p>
-<div class="fragment"><div class="line"><span class="keyword">struct </span>X;</div>
-</div><!-- fragment --><p>Then, we create <code>DDimX</code>, a type that will also act as a tag, but we define it to be a uniform discretization of <code>X</code>. Thus <code>DDimX</code> is an identifier for a discrete dimension.</p>
+<div class="fragment"></div><!-- fragment --><p>Then, we create <code>DDimX</code>, a type that will also act as a tag, but we define it to be a uniform discretization of <code>X</code>. Thus <code>DDimX</code> is an identifier for a discrete dimension.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>DDimX : <a class="code hl_class" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;X&gt;</div>
 <div class="line">{</div>
 <div class="line">};</div>
 </div><!-- fragment --><p>We do the same thing for the second dimension <code>Y</code>.</p>
-<div class="fragment"><div class="line"><span class="comment">// Our second continuous dimension</span></div>
-<div class="line"><span class="keyword">struct </span>Y;</div>
-<div class="line"><span class="comment">// Its uniform discretization</span></div>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>Y;</div>
 <div class="line"><span class="keyword">struct </span>DDimY : <a class="code hl_class" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;Y&gt;</div>
 <div class="line">{</div>
 <div class="line">};</div>
 </div><!-- fragment --><p>And once again, now for the time dimension.</p>
-<div class="fragment"><div class="line"><span class="comment">// Our simulated time dimension</span></div>
-<div class="line"><span class="keyword">struct </span>T;</div>
-<div class="line"><span class="comment">// Its uniform discretization</span></div>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>T;</div>
 <div class="line"><span class="keyword">struct </span>DDimT : <a class="code hl_class" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;T&gt;</div>
 <div class="line">{</div>
 <div class="line">};</div>
@@ -117,7 +90,7 @@ Dimensions naming</h2>
 Domains</h2>
 <h3><a class="anchor" id="autotoc_md5"></a>
 Dimension X</h3>
-<p>Once the types are defined, we can start the <code>main</code> function where we will define our various domains.</p>
+<p>Once the types are defined, we can start the <code>main</code> function where we will define our various domains. Here for each dimension, the user needs to specify the starting and ending coordinates of the dimension of the domain, as well as the number of discretization points along each of these dimensions. Additionally, we specify here the physical characteristics specific to our equation (the thermal diffusion coefficient).</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv)</div>
 <div class="line">{</div>
 <div class="line"><span class="preprocessor">#ifdef DDC_BUILD_PDI_WRAPPER</span></div>
@@ -127,40 +100,15 @@ Dimension X</h3>
 <div class="line">    Kokkos::ScopeGuard <span class="keyword">const</span> kokkos_scope(argc, argv);</div>
 <div class="line">    <a class="code hl_class" href="classddc_1_1ScopeGuard.html">ddc::ScopeGuard</a> <span class="keyword">const</span> ddc_scope(argc, argv);</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// some parameters that would typically be read from some form of</span></div>
-<div class="line">    <span class="comment">// configuration file in a more realistic code</span></div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// Start of the domain of interest in the X dimension</span></div>
 <div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> x_start = -1.;</div>
-<div class="line">    <span class="comment">// End of the domain of interest in the X dimension</span></div>
 <div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> x_end = 1.;</div>
-<div class="line">    <span class="comment">// Number of discretization points in the X dimension</span></div>
-<div class="line">    <span class="keywordtype">size_t</span> <span class="keyword">const</span> nb_x_points = 10;</div>
-<div class="line">    <span class="comment">// Thermal diffusion coefficient</span></div>
+<div class="line">    std::size_t <span class="keyword">const</span> nb_x_points = 10;</div>
 <div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> kx = .01;</div>
-<div class="line">    <span class="comment">// Start of the domain of interest in the Y dimension</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> y_start = -1.;</div>
-<div class="line">    <span class="comment">// End of the domain of interest in the Y dimension</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> y_end = 1.;</div>
-<div class="line">    <span class="comment">// Number of discretization points in the Y dimension</span></div>
-<div class="line">    <span class="keywordtype">size_t</span> <span class="keyword">const</span> nb_y_points = 100;</div>
-<div class="line">    <span class="comment">// Thermal diffusion coefficient</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> ky = .002;</div>
-<div class="line">    <span class="comment">// Simulated time at which to start simulation</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> start_time = 0.;</div>
-<div class="line">    <span class="comment">// Simulated time to reach as target of the simulation</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> end_time = 10.;</div>
-<div class="line">    <span class="comment">// Number of time-steps between outputs</span></div>
-<div class="line">    ptrdiff_t <span class="keyword">const</span> t_output_period = 10;</div>
-<div class="line"> </div>
 </div><!-- fragment --><p>We start by defining <code>gwx</code>, the number of "ghost" points in the <code>X</code> dimension, those represented in dark grey in the figure on each side of the domain.</p>
-<div class="fragment"><div class="line">    <span class="comment">// Number of ghost points to use on each side in X</span></div>
-<div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimX&gt;</a> <span class="keyword">static</span> <span class="keyword">constexpr</span> gwx {1};</div>
-</div><!-- fragment --><p> This can be made <code>static constexpr</code> since here this is a compile-time constant. The type for this constant is <code>DiscreteVector&lt;DDimX&gt;</code> that represents a number of elements in the discretization of the <code>X</code> dimension.</p>
+<div class="fragment"></div><!-- fragment --><p> The type for this constant is <code>DiscreteVector&lt;DDimX&gt;</code> that represents a number of elements in the discretization of the <code>X</code> dimension.</p>
 <p>Once done, we initialize the discretization of the <code>X</code> dimension. Its name has been specified before, but we now set its parameters with the <code>init_discretization</code> function.</p>
-<div class="fragment"><div class="line">    <span class="comment">// Initialization of the global domain in X with gwx ghost points on</span></div>
-<div class="line">    <span class="comment">// each side</span></div>
-<div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]</div>
+<div class="fragment"><div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]</div>
 <div class="line">            = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::init_discrete_space&lt;DDimX&gt;</a>(DDimX::init_ghosted&lt;DDimX&gt;(</div>
 <div class="line">                    <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;X&gt;</a>(x_start),</div>
 <div class="line">                    <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;X&gt;</a>(x_end),</div>
@@ -174,13 +122,9 @@ Dimension X</h3>
 <li><code>x_post_ghost</code>: the "ghost" points that come after the main domain.</li>
 </ul>
 <p>The parameters of raw C++ types like <code>double</code> or <code>size_t</code> can not be used as-is since DDC enforces strong typing. Instead, for a coordinate in the <code>X</code> dimension, we use <code>Coordinate&lt;X&gt;</code> and &ndash;as already mentioned&ndash; for a number of elements in the discretization of <code>X</code>, we use <code>DiscreteVector&lt;DDimX&gt;</code>.</p>
-<p>Once this is done, we define two additional domains.</p>
-<div class="fragment"><div class="line">    <span class="comment">// our zone at the start of the domain that will be mirrored to the</span></div>
-<div class="line">    <span class="comment">// ghost</span></div>
-<div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX&gt;</a> <span class="keyword">const</span></div>
+<p>Once this is done, we define two additional domains that will be mirrored to the ghost at the start and at the end of the domain.</p>
+<div class="fragment"><div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX&gt;</a> <span class="keyword">const</span></div>
 <div class="line">            x_domain_begin(x_domain.front(), x_post_ghost.extents());</div>
-<div class="line">    <span class="comment">// our zone at the end of the domain that will be mirrored to the</span></div>
-<div class="line">    <span class="comment">// ghost</span></div>
 <div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX&gt;</a> <span class="keyword">const</span> x_domain_end(</div>
 <div class="line">            x_domain.back() - x_pre_ghost.extents() + 1,</div>
 <div class="line">            x_pre_ghost.extents());</div>
@@ -194,12 +138,14 @@ Dimension X</h3>
 </ul>
 <h3><a class="anchor" id="autotoc_md6"></a>
 Dimension Y</h3>
-<p>The domains in the <code>Y</code> dimension are handled in a way very similar to the <code>X</code> dimension.</p>
-<div class="fragment"><div class="line">    <span class="comment">// Number of ghost points to use on each side in Y</span></div>
-<div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimY&gt;</a> <span class="keyword">static</span> <span class="keyword">constexpr</span> gwy {1};</div>
+<p>The domains in the <code>Y</code> dimension are handled in a way very similar to the <code>X</code> dimension. We first define the domain characteristics along this dimension</p>
+<div class="fragment"><div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> y_start = -1.;</div>
+<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> y_end = 1.;</div>
+<div class="line">    std::size_t <span class="keyword">const</span> nb_y_points = 100;</div>
+<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> ky = .002;</div>
+</div><!-- fragment --><p>Then we initialize the domain along this dimension just like we did with the <code>X</code> dimension.</p>
+<div class="fragment"><div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimY&gt;</a> <span class="keyword">const</span> gwy(1);</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// Initialization of the global domain in Y with gwy ghost points on</span></div>
-<div class="line">    <span class="comment">// each side</span></div>
 <div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]</div>
 <div class="line">            = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::init_discrete_space&lt;DDimY&gt;</a>(DDimY::init_ghosted&lt;DDimY&gt;(</div>
 <div class="line">                    <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;Y&gt;</a>(y_start),</div>
@@ -207,49 +153,28 @@ Dimension Y</h3>
 <div class="line">                    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimY&gt;</a>(nb_y_points),</div>
 <div class="line">                    gwy));</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// our zone at the start of the domain that will be mirrored to the</span></div>
-<div class="line">    <span class="comment">// ghost</span></div>
 <div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimY&gt;</a> <span class="keyword">const</span></div>
 <div class="line">            y_domain_begin(y_domain.front(), y_post_ghost.extents());</div>
-<div class="line">    <span class="comment">// our zone at the end of the domain that will be mirrored to the</span></div>
-<div class="line">    <span class="comment">// ghost</span></div>
+<div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimY&gt;</a> <span class="keyword">const</span> y_domain_end(</div>
 <div class="line">            y_domain.back() - y_pre_ghost.extents() + 1,</div>
 <div class="line">            y_pre_ghost.extents());</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md7"></a>
 Time dimension</h3>
-<p>Then we handle the domains for the simulated time dimension.</p>
-<div class="fragment"><div class="line">    <span class="comment">// max(1/dx^2)</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdx2_max = <a class="code hl_function" href="namespaceddc.html#a8093016bc9d65270b7b16ad4b7a1166e">ddc::transform_reduce</a>(</div>
-<div class="line">            x_domain,</div>
-<div class="line">            0.,</div>
-<div class="line">            <a class="code hl_struct" href="structddc_1_1reducer_1_1max.html">ddc::reducer::max&lt;double&gt;</a>(),</div>
-<div class="line">            [](<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> ix) {</div>
-<div class="line">                <span class="keywordflow">return</span> 1.</div>
-<div class="line">                       / (<a class="code hl_function" href="namespaceddc.html#a9a6e577fbbb7ead9dbe81a3c46c26592">ddc::distance_at_left</a>(ix)</div>
-<div class="line">                          * <a class="code hl_function" href="namespaceddc.html#af78ae4219dfa28ce02622005e8a06b41">ddc::distance_at_right</a>(ix));</div>
-<div class="line">            });</div>
-<div class="line">    <span class="comment">// max(1/dy^2)</span></div>
-<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdy2_max = <a class="code hl_function" href="namespaceddc.html#a8093016bc9d65270b7b16ad4b7a1166e">ddc::transform_reduce</a>(</div>
-<div class="line">            y_domain,</div>
-<div class="line">            0.,</div>
-<div class="line">            <a class="code hl_struct" href="structddc_1_1reducer_1_1max.html">ddc::reducer::max&lt;double&gt;</a>(),</div>
-<div class="line">            [](<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> iy) {</div>
-<div class="line">                <span class="keywordflow">return</span> 1.</div>
-<div class="line">                       / (<a class="code hl_function" href="namespaceddc.html#a9a6e577fbbb7ead9dbe81a3c46c26592">ddc::distance_at_left</a>(iy)</div>
-<div class="line">                          * <a class="code hl_function" href="namespaceddc.html#af78ae4219dfa28ce02622005e8a06b41">ddc::distance_at_right</a>(iy));</div>
-<div class="line">            });</div>
-<div class="line">    <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;T&gt;</a> <span class="keyword">const</span> max_dt {</div>
-<div class="line">            .5 / (kx * invdx2_max + ky * invdy2_max)};</div>
+<p>Then we handle the domains for the simulated time dimension. We first give the simulated time at which to stard and end the simulation.</p>
+<div class="fragment"><div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> start_time = 0.;</div>
+<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> end_time = 10.;</div>
+</div><!-- fragment --><p>Then we use the CFL condition to determine the time step of the simulation.</p>
+<div class="fragment"><div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> dx = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::step&lt;DDimX&gt;</a>();</div>
+<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> dy = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::step&lt;DDimY&gt;</a>();</div>
+<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdx2 = 1. / (dx * dx);</div>
+<div class="line">    <span class="keywordtype">double</span> <span class="keyword">const</span> invdy2 = 1. / (dy * dy);</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// number of time intervals required to reach the end time</span></div>
-<div class="line">    <span class="comment">// The + .2 is used to make sure it is rounded to the correct number of steps</span></div>
-<div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimT&gt;</a> <span class="keyword">const</span> nb_time_steps {</div>
-<div class="line">            std::ceil((end_time - start_time) / max_dt) + .2};</div>
-<div class="line">    <span class="comment">// Initialization of the global domain in time:</span></div>
-<div class="line">    <span class="comment">// - the number of discrete time-points is equal to the number of</span></div>
-<div class="line">    <span class="comment">//   steps + 1</span></div>
-<div class="line">    <span class="comment">// `init` takes required information to initialize the attributes of the dimension.</span></div>
+<div class="line">    <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;T&gt;</a> <span class="keyword">const</span> dt(.5 / (kx * invdx2 + ky * invdy2));</div>
+</div><!-- fragment --><p>Finally, we determine the number of time steps and as we did with the <code>X</code> and <code>Y</code> dimensions, we create the time domain.</p>
+<div class="fragment"><div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimT&gt;</a> <span class="keyword">const</span> nb_time_steps(</div>
+<div class="line">            std::ceil((end_time - start_time) / dt) + .2);</div>
+<div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimT&gt;</a> <span class="keyword">const</span> time_domain</div>
 <div class="line">            = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::init_discrete_space&lt;DDimT&gt;</a>(DDimT::init&lt;DDimT&gt;(</div>
 <div class="line">                    <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;T&gt;</a>(start_time),</div>
@@ -258,122 +183,118 @@ Time dimension</h3>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
 Data allocation</h1>
 <p>We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains' points at t and t+dt. When constructing the Chunks one can give an optional string to label the memory allocations. This helps debugging and profiling applications using the Kokkos tools, see also <a href="https://github.com/kokkos/kokkos-tools">Kokkos Tools</a>.</p>
-<div class="fragment"><div class="line">    <span class="comment">// Maps temperature into the full domain (including ghosts) twice:</span></div>
-<div class="line">    <span class="comment">// - once for the last fully computed time-step</span></div>
-<div class="line">    <a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_last_temp(</div>
+<p>These chunks map the temperature into the full domain (including ghosts) twice:</p><ul>
+<li><em>ghosted_last_temp</em> for the last fully computed time-step.</li>
+<li><em>ghosted_next_temp</em> for time-step being computed.</li>
+</ul>
+<div class="fragment"><div class="line">    <a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_last_temp(</div>
 <div class="line">            <span class="stringliteral">&quot;ghosted_last_temp&quot;</span>,</div>
 <div class="line">            <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
 <div class="line">                    DDimX,</div>
 <div class="line">                    DDimY&gt;(ghosted_x_domain, ghosted_y_domain),</div>
 <div class="line">            <a class="code hl_class" href="classddc_1_1KokkosAllocator.html">ddc::DeviceAllocator&lt;double&gt;</a>());</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// - once for time-step being computed</span></div>
-<div class="line">    <span class="comment">// The `DeviceAllocator` is responsible for allocating memory on the default memory space.</span></div>
 <div class="line">    <a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_next_temp(</div>
 <div class="line">            <span class="stringliteral">&quot;ghosted_next_temp&quot;</span>,</div>
 <div class="line">            <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
 <div class="line">                    DDimX,</div>
 <div class="line">                    DDimY&gt;(ghosted_x_domain, ghosted_y_domain),</div>
 <div class="line">            <a class="code hl_class" href="classddc_1_1KokkosAllocator.html">ddc::DeviceAllocator&lt;double&gt;</a>());</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md9"></a>
+</div><!-- fragment --><p>Note that the <code>DeviceAllocator</code> is responsible for allocating memory on the default memory space.</p>
+<h1><a class="anchor" id="autotoc_md9"></a>
 Initial conditions</h1>
-<div class="fragment"><div class="line">    <span class="comment">// The const qualifier makes it clear that ghosted_initial_temp always references</span></div>
-<div class="line">    <span class="comment">// the same chunk, `ghosted_last_temp` in this case</span></div>
-<div class="line">    <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> ghosted_initial_temp</div>
+<p>To set the initial conditions, the <code>ghosted_intial_temp</code> is created and acts as a pointer to the chunk. The const qualifier makes it clear that ghosted_initial_temp always references the same chunk, <code>ghosted_last_temp</code> in this case.</p>
+<div class="fragment"><div class="line">    <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> ghosted_initial_temp</div>
 <div class="line">            = ghosted_last_temp.span_view();</div>
-<div class="line">    <span class="comment">// Initialize the temperature on the main domain</span></div>
-<div class="line">    <a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
+</div><!-- fragment --><p>Then, we iterate over each <em>DiscreteElement</em> of the domain to fill <code>ghosted_initial_temp</code> with the initial values of the simulation.</p>
+<div class="fragment"><div class="line">    <a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
 <div class="line">            <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain),</div>
 <div class="line">            KOKKOS_LAMBDA(<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> ixy) {</div>
-<div class="line">                <span class="keywordtype">double</span> <span class="keyword">const</span> x</div>
-<div class="line">                        = <a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::select&lt;DDimX&gt;</a>(ixy));</div>
-<div class="line">                <span class="keywordtype">double</span> <span class="keyword">const</span> y</div>
-<div class="line">                        = <a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::select&lt;DDimY&gt;</a>(ixy));</div>
+<div class="line">                <span class="keywordtype">double</span> <span class="keyword">const</span> x = <a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(</div>
+<div class="line">                        <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a>(ixy));</div>
+<div class="line">                <span class="keywordtype">double</span> <span class="keyword">const</span> y = <a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(</div>
+<div class="line">                        <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a>(ixy));</div>
 <div class="line">                ghosted_initial_temp(ixy)</div>
 <div class="line">                        = 9.999 * ((x * x + y * y) &lt; 0.25);</div>
 <div class="line">            });</div>
-</div><!-- fragment --><div class="fragment"><div class="line">    <span class="comment">// display the initial data</span></div>
-<div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
-<div class="line">    display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>()),</div>
+</div><!-- fragment --><p>To display the data, a chunk is created on the host.</p>
+<div class="fragment"><div class="line">    <a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_temp(</div>
+<div class="line">            <span class="stringliteral">&quot;ghost_temp&quot;</span>,</div>
+<div class="line">            <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line">                    DDimX,</div>
+<div class="line">                    DDimY&gt;(ghosted_x_domain, ghosted_y_domain),</div>
+<div class="line">            <a class="code hl_class" href="classddc_1_1KokkosAllocator.html">ddc::HostAllocator&lt;double&gt;</a>());</div>
+</div><!-- fragment --><p>We deepcopy the data from the <code>ghosted_last_temp</code> chunk to <code>ghosted_temp</code> on the host.</p>
+<div class="fragment"></div><!-- fragment --><p>And we display the initial data.</p>
+<div class="fragment"><div class="line">    display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>()),</div>
 <div class="line">            ghosted_temp[x_domain][y_domain]);</div>
-<div class="line">    <span class="comment">// time of the iteration where the last output happened</span></div>
-<div class="line">    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> last_output_iter = time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>();</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
 Time loop</h1>
-<div class="fragment"><div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> iter :</div>
+<div class="fragment"><div class="line">    <span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> <span class="keyword">const</span> iter :</div>
 <div class="line">         time_domain.remove_first(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;DDimT&gt;(1))) {</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
 Periodic conditions</h2>
-<div class="fragment"><div class="line">        <span class="comment">// Periodic boundary conditions</span></div>
+<div class="fragment"><div class="line">        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
+<div class="line">                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line">                        DDimX,</div>
+<div class="line">                        DDimY&gt;(x_pre_ghost, y_domain)],</div>
+<div class="line">                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line">                        DDimX,</div>
+<div class="line">                        DDimY&gt;(y_domain, x_domain_end)]);</div>
 <div class="line">        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line">                ghosted_last_temp[x_pre_ghost][y_domain],</div>
-<div class="line">                ghosted_last_temp[y_domain][x_domain_end]);</div>
+<div class="line">                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line">                        DDimX,</div>
+<div class="line">                        DDimY&gt;(y_domain, x_post_ghost)],</div>
+<div class="line">                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line">                        DDimX,</div>
+<div class="line">                        DDimY&gt;(y_domain, x_domain_begin)]);</div>
 <div class="line">        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line">                ghosted_last_temp[y_domain][x_post_ghost],</div>
-<div class="line">                ghosted_last_temp[y_domain][x_domain_begin]);</div>
+<div class="line">                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line">                        DDimX,</div>
+<div class="line">                        DDimY&gt;(x_domain, y_pre_ghost)],</div>
+<div class="line">                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line">                        DDimX,</div>
+<div class="line">                        DDimY&gt;(x_domain, y_domain_end)]);</div>
 <div class="line">        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line">                ghosted_last_temp[x_domain][y_pre_ghost],</div>
-<div class="line">                ghosted_last_temp[x_domain][y_domain_end]);</div>
-<div class="line">        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line">                ghosted_last_temp[x_domain][y_post_ghost],</div>
-<div class="line">                ghosted_last_temp[x_domain][y_domain_begin]);</div>
+<div class="line">                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line">                        DDimX,</div>
+<div class="line">                        DDimY&gt;(x_domain, y_post_ghost)],</div>
+<div class="line">                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line">                        DDimX,</div>
+<div class="line">                        DDimY&gt;(x_domain, y_domain_begin)]);</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
 Numerical scheme</h2>
-<div class="fragment"><div class="line">        <span class="comment">// a span excluding ghosts of the temperature at the time-step we</span></div>
-<div class="line">        <span class="comment">// will build</span></div>
-<div class="line">        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> next_temp {</div>
-<div class="line">                ghosted_next_temp[x_domain][y_domain]};</div>
-<div class="line">        <span class="comment">// a read-only view of the temperature at the previous time-step</span></div>
-<div class="line">        <span class="comment">// span_cview returns a read-only ChunkSpan</span></div>
-<div class="line">        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> last_temp {ghosted_last_temp.span_cview()};</div>
-</div><!-- fragment --><div class="fragment"><div class="line">        <span class="comment">// Stencil computation on the main domain</span></div>
-<div class="line">        <a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
+<p>For the numerical scheme, two chunkspans are created:</p><ul>
+<li><code>next_temp</code> a span excluding ghosts of the temperature at the time-step we will build.</li>
+<li><code>last_temp</code> a read-only view of the temperature at the previous time-step.Note that <em>span_cview</em> returns a read-only ChunkSpan.</li>
+</ul>
+<div class="fragment"><div class="line">        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> next_temp(</div>
+<div class="line">                ghosted_next_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line">                        DDimX,</div>
+<div class="line">                        DDimY&gt;(x_domain, y_domain)]);</div>
+<div class="line">        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> last_temp(ghosted_last_temp.span_cview());</div>
+</div><!-- fragment --><p>We then solve the equation.</p>
+<div class="fragment"><div class="line">        <a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
 <div class="line">                next_temp.domain(),</div>
 <div class="line">                KOKKOS_LAMBDA(</div>
 <div class="line">                        <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> ixy) {</div>
-<div class="line">                    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> <span class="keyword">const</span> ix</div>
-<div class="line">                            = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::select&lt;DDimX&gt;</a>(ixy);</div>
-<div class="line">                    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> <span class="keyword">const</span> iy</div>
-<div class="line">                            = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::select&lt;DDimY&gt;</a>(ixy);</div>
-<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dx_l = <a class="code hl_function" href="namespaceddc.html#a9a6e577fbbb7ead9dbe81a3c46c26592">ddc::distance_at_left</a>(ix);</div>
-<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dx_r = <a class="code hl_function" href="namespaceddc.html#af78ae4219dfa28ce02622005e8a06b41">ddc::distance_at_right</a>(ix);</div>
-<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dx_m = 0.5 * (dx_l + dx_r);</div>
-<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dy_l = <a class="code hl_function" href="namespaceddc.html#a9a6e577fbbb7ead9dbe81a3c46c26592">ddc::distance_at_left</a>(iy);</div>
-<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dy_r = <a class="code hl_function" href="namespaceddc.html#af78ae4219dfa28ce02622005e8a06b41">ddc::distance_at_right</a>(iy);</div>
-<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dy_m = 0.5 * (dy_l + dy_r);</div>
+<div class="line">                    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> <span class="keyword">const</span> ix(ixy);</div>
+<div class="line">                    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> <span class="keyword">const</span> iy(ixy);</div>
+<div class="line">                    <span class="keywordtype">double</span> <span class="keyword">const</span> dt = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::step&lt;DDimT&gt;</a>();</div>
+<div class="line"> </div>
 <div class="line">                    next_temp(ix, iy) = last_temp(ix, iy);</div>
-<div class="line">                    next_temp(ix, iy)</div>
-<div class="line">                            += kx * <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::step&lt;DDimT&gt;</a>()</div>
-<div class="line">                               * (dx_l * last_temp(ix + 1, iy)</div>
-<div class="line">                                  - 2.0 * dx_m * last_temp(ix, iy)</div>
-<div class="line">                                  + dx_r * last_temp(ix - 1, iy))</div>
-<div class="line">                               / (dx_l * dx_m * dx_r);</div>
-<div class="line">                    next_temp(ix, iy)</div>
-<div class="line">                            += ky * <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::step&lt;DDimT&gt;</a>()</div>
-<div class="line">                               * (dy_l * last_temp(ix, iy + 1)</div>
-<div class="line">                                  - 2.0 * dy_m * last_temp(ix, iy)</div>
-<div class="line">                                  + dy_r * last_temp(ix, iy - 1))</div>
-<div class="line">                               / (dy_l * dy_m * dy_r);</div>
+<div class="line">                    next_temp(ix, iy) += kx * dt</div>
+<div class="line">                                         * (last_temp(ix + 1, iy)</div>
+<div class="line">                                            - 2.0 * last_temp(ix, iy)</div>
+<div class="line">                                            + last_temp(ix - 1, iy))</div>
+<div class="line">                                         * invdx2;</div>
+<div class="line"> </div>
+<div class="line">                    next_temp(ix, iy) += ky * dt</div>
+<div class="line">                                         * (last_temp(ix, iy + 1)</div>
+<div class="line">                                            - 2.0 * last_temp(ix, iy)</div>
+<div class="line">                                            + last_temp(ix, iy - 1))</div>
+<div class="line">                                         * invdy2;</div>
 <div class="line">                });</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md13"></a>
-Output</h2>
-<div class="fragment"><div class="line">        <span class="keywordflow">if</span> (iter - last_output_iter &gt;= t_output_period) {</div>
-<div class="line">            last_output_iter = iter;</div>
-<div class="line">            <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
-<div class="line">            display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(iter),</div>
-<div class="line">                    ghosted_temp[x_domain][y_domain]);</div>
-<div class="line">        }</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md14"></a>
-Final swap</h2>
-<div class="fragment"><div class="line">        <span class="comment">// Swap our two buffers</span></div>
-<div class="line">        std::swap(ghosted_last_temp, ghosted_next_temp);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md15"></a>
-Final output</h1>
-<div class="fragment"><div class="line">    <span class="keywordflow">if</span> (last_output_iter &lt; time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()) {</div>
-<div class="line">        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
-<div class="line">        display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()),</div>
-<div class="line">                ghosted_temp[x_domain][y_domain]);</div>
-<div class="line">    }</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

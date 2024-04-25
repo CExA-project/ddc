@@ -76,7 +76,7 @@ public:
         return false;
     }
 
-    /** @brief Impl Storage class of the static attributes of the discrete dimension.
+    /** @brief Storage class of the static attributes of the discrete dimension.
      *
      * @tparam DDim The name of the discrete dimension.
      * @tparam MemorySpace The Kokkos memory space where the attributes are being stored.
@@ -133,15 +133,18 @@ public:
         {
         }
 
-        /** @brief Constructs an Impl by iterating over a set of break points from begin to end.
+        /** @brief Constructs an Impl by iterating over a range of break points from begin to end.
          *
          * The provided break points describe the separation between the cells on which the polynomials
          * comprising a spline are defined. They are used to build a set of knots. There are 2*degree more
-         * knots than break points. The knots are defined as follows:
+         * knots than break points. In the non-periodic case the knots are defined as follows:
          * \f$ k_i = b_0 \forall 0 \leq i < d \f$
          * \f$ k_{i+d} = b_i \forall 0 \leq i < n_b \f$
-         * \f$ k_{i+d+n_b} = b_{n_b} \forall 0 \leq i < d \f$
-         * where \f$d\f$ is the degree of the polynomials, and \f$n_b\f$ is the number of basis points.
+         * \f$ k_{i+d+n_b} = b_{n_b-1} \forall 0 \leq i < d \f$
+         * where \f$d\f$ is the degree of the polynomials, and \f$n_b\f$ is the number of break points in the input pair of iterators. And in the periodic case:
+         * \f$ k_i = b_{n_b-1-d+i} \forall 0 \leq i < d \f$
+         * \f$ k_{i+d} = b_i \forall 0 \leq i \leq n_b \f$
+         * \f$ k_{i+d+n_b} = b_{i+1} \forall 0 \leq i < d \f$
          *
          * This constructor makes the knots accessible via a DiscreteSpace.
          *
@@ -200,7 +203,7 @@ public:
          * initial discrete function.
          *
          * @param[out] values The values of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.
-         * @param[in] x The coordinate where B-splines are evaluated.
+         * @param[in] x The coordinate where B-splines are evaluated. It has to be in the range of break points coordinates.
          * @return The index of the first B-spline which is evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
@@ -215,7 +218,7 @@ public:
          * initial discrete function.
          *
          * @param[out] derivs The derivatives of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.
-         * @param[in] x The coordinate where B-spline derivatives are evaluated.
+         * @param[in] x The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates.
          * @return The index of the first B-spline which is derivated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
@@ -229,8 +232,8 @@ public:
          * combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed
          * initial discrete function.
          *
-         * @param[out] derivs The values and \f$n\f$ derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan with (degree+1)*(n+1) elements.
-         * @param[in] x The coordinate where B-spline derivatives are evaluated.
+         * @param[out] derivs The values and \f$n\f$ derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan of sizes (degree+1, n+1).
+         * @param[in] x The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates.
          * @param[in] n The number of derivatives to evaluate (in addition to the B-spline values themselves).
          * @return The index of the first B-spline which is evaluated/derivated.
          */
@@ -243,7 +246,7 @@ public:
          *
          * The integral of each of the B-splines over their support within the domain on which this basis was defined.
          *
-         * @param[out] int_vals The values of the integrals. It has to be a 1D mdspan of size (nbasis).
+         * @param[out] int_vals The values of the integrals. It has to be a 1D Chunkspan of size (nbasis).
          * @return The values of the integrals.
          */
         template <class Layout, class MemorySpace2>
@@ -313,7 +316,7 @@ public:
             return ddc::coordinate(ddc::DiscreteElement<mesh_type>(ix.uid() + n));
         }
 
-        /** @brief Returns the coordinate of the lower bound of the domain on which the B-splines are defined.
+        /** @brief Returns the coordinate of the first break point of the domain on which the B-splines are defined.
          *
          * @return Coordinate of the lower bound of the domain.
          */
@@ -322,7 +325,7 @@ public:
             return get_knot(0);
         }
 
-        /** @brief Returns the coordinate of the upper bound of the domain on which the B-splines are defined.
+        /** @brief Returns the coordinate of the last break point of the domain on which the B-splines are defined.
          *
          * @return Coordinate of the upper bound of the domain.
          */

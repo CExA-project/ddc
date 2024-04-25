@@ -92,9 +92,7 @@ strong typing.
 Instead, for a coordinate in the `X` dimension, we use `Coordinate<X>` and --as already mentioned--
 for a number of elements in the discretization of `X`, we use `DiscreteVector<DDimX>`.
 
-Once this is done, we define two additional domains:
-+ our zone at the start of the domain that will be mirrored to the ghost.
-+ our zone at the end of the domain that will be mirrored to the ghost.
+Once this is done, we define two additional domains that will be mirrored to the ghost at the start and at the end of the domain.
 
 \snippet uniform_heat_equation.cpp X-domains
 
@@ -198,18 +196,3 @@ For the numerical scheme, two chunkspans are created:
 We then solve the equation.
 
 \snippet uniform_heat_equation.cpp numerical scheme
-
-
-## Output
-
-\snippet uniform_heat_equation.cpp output
-
-
-## Final swap
-
-\snippet uniform_heat_equation.cpp swap
-
-
-# Final output
-
-\snippet uniform_heat_equation.cpp final output

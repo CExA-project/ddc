@@ -149,14 +149,12 @@ int main(int argc, char** argv)
     //! [Y-domains]
 
     //! [CFL-condition]
-
     double const dx = ddc::step<DDimX>();
     double const dy = ddc::step<DDimY>();
     double const invdx2 = 1. / (dx * dx);
     double const invdy2 = 1. / (dy * dy);
 
     ddc::Coordinate<T> const dt(.5 / (kx * invdx2 + ky * invdy2));
-
     //! [CFL-condition]
 
     //! [time-domain]

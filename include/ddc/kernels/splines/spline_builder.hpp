@@ -50,12 +50,12 @@ constexpr bool is_spline_interpolation_mesh_uniform(
  *
  * A class which contains an operator () which can be used to build a spline approximation
  * of a function. A spline approximation is represented by coefficients stored in a Chunk
- * of BSplines. The spline is constructed such that it respects the boundary conditions
+ * of B-splines. The spline is constructed such that it respects the boundary conditions
  * BcXmin and BcXmax, and it interpolates the function at the points on the interpolation_mesh
  * associated with interpolation_mesh_type.
  * @tparam ExecSpace The Kokkos execution space on which the spline transform is performed.
  * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) are stored.
- * @tparam BSplines The discrete dimension representing the BSplines.
+ * @tparam BSplines The discrete dimension representing the B-splines.
  * @tparam InterpolationMesh The discrete dimension supporting the interpolation points.
  * @tparam BcXmin The lower boundary condition.
  * @tparam BcXmax The upper boundary condition.
@@ -99,7 +99,7 @@ public:
     using interpolation_mesh_type = InterpolationMesh;
 
     /**
-     * @brief The discrete dimension representing the BSplines.
+     * @brief The discrete dimension representing the B-splines.
      */
     using bsplines_type = BSplines;
 
@@ -252,7 +252,7 @@ public:
     /**
      * @brief Get the domain for the 1D interpolation mesh used by this class.
      *
-     * Get the 1D interpolation domain associated to dimension of interest.
+     * This is the 1D because it is defined along the dimension of interest.
      *
      * @return The 1D domain for the grid points.
      */
@@ -264,10 +264,10 @@ public:
     /**
      * @brief Get the whole domain representing interpolation points.
      *
-     * Get the domain on which values of the function must be provided in order
-     * to build a spline transform of the function.
+     * Values of the function must be provided on this domain in order
+     * to build a spline transform of the function (cartesian product of 1D interpolation_domain and batch_domain).
      *
-     * @return The domain for the grid points.
+     * @return The domain for the interpolation points.
      */
     batched_interpolation_domain_type batched_interpolation_domain() const noexcept
     {
@@ -276,8 +276,8 @@ public:
 
     /**
      * @brief Get the batch domain.
-     *
-     * Get the batch domain (obtained by removing dimension of interest from whole interpolation domain).
+	 *
+	 * Obtained by removing dimension of interest from whole interpolation domain.
      *
      * @return The batch domain.
      */
@@ -289,7 +289,7 @@ public:
     /**
      * @brief Get the 1D domain on which spline coefficients are defined.
      *
-     * Get the 1D spline domain corresponding to dimension of interest.
+     * The 1D spline domain corresponding to dimension of interest.
      *
      * @return The 1D domain for the spline coefficients.
      */
@@ -301,7 +301,7 @@ public:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
      *
-     * Get the whole domain on which spline coefficients will be computed, preserving memory layout (order of dimensions).
+     * The domain on which spline coefficients will be computed, preserving memory layout (order of dimensions).
      *
      * @return The domain for the spline coefficients.
      */
@@ -315,7 +315,7 @@ public:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, with dimension of interest contiguous.
      *
-     * Get the (transposed) whole domain on which spline coefficients will be computed, with dimension of interest contiguous.
+     * The (transposed) whole domain on which spline coefficients will be computed, with dimension of interest contiguous.
      *
      * @return The (transposed) domain for the spline coefficients.
      */
@@ -327,7 +327,7 @@ public:
     /**
      * @brief Get the whole domain on which derivatives on lower boundary are defined.
      *
-     * Get the whole domain on which derivatives on lower boundary are defined. This is used only with HERMITE boundary conditions.
+     * This is only used with HERMITE boundary conditions.
      *
      * @return The domain for the Derivs values.
      */
@@ -343,7 +343,7 @@ public:
     /**
      * @brief Get the whole domain on which derivatives on upper boundary are defined.
      *
-     * Get the whole domain on which derivatives on upper boundary are defined. This is used only with HERMITE boundary conditions.
+     * This is only used with HERMITE boundary conditions.
      *
      * @return The domain for the Derivs values.
      */

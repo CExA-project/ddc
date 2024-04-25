@@ -5,8 +5,8 @@ var classddc_1_1UniformBSplines_1_1Impl =
     [ "discrete_element_type", "classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322", null ],
     [ "discrete_vector_type", "classddc_1_1UniformBSplines_1_1Impl.html#a84416b81e8fec40f365e99e746226a59", null ],
     [ "Impl", "classddc_1_1UniformBSplines_1_1Impl.html#af712602b0c637221b7df33bdebb1cf86", null ],
-    [ "Impl", "classddc_1_1UniformBSplines_1_1Impl.html#aa7b83f890743b6c5653c0e2c6f480215", null ],
     [ "Impl", "classddc_1_1UniformBSplines_1_1Impl.html#a1487eaa45eb12cb82684abc06bd52048", null ],
+    [ "Impl", "classddc_1_1UniformBSplines_1_1Impl.html#aa7b83f890743b6c5653c0e2c6f480215", null ],
     [ "Impl", "classddc_1_1UniformBSplines_1_1Impl.html#aa3cd2dcdebc80275ec931547287b7067", null ],
     [ "Impl", "classddc_1_1UniformBSplines_1_1Impl.html#a70a7771aee8e34b30af42be8bbe8e4b1", null ],
     [ "~Impl", "classddc_1_1UniformBSplines_1_1Impl.html#aeb7daf3628617181f26c86e0ba4abe13", null ],
@@ -15,8 +15,8 @@ var classddc_1_1UniformBSplines_1_1Impl =
     [ "eval_basis", "classddc_1_1UniformBSplines_1_1Impl.html#a8df189e6c60bed358726b47cbdb8afa0", null ],
     [ "eval_deriv", "classddc_1_1UniformBSplines_1_1Impl.html#a626eef1628492d2b2a28d4521f8755c9", null ],
     [ "eval_basis_and_n_derivs", "classddc_1_1UniformBSplines_1_1Impl.html#ab44f2dc3f5ec21536194605296eb73fa", null ],
-    [ "integrals", "classddc_1_1UniformBSplines_1_1Impl.html#a9014c09f309c81346a8478f4c8ab4c0f", null ],
-    [ "get_knot", "classddc_1_1UniformBSplines_1_1Impl.html#a7e5f0662b726538c1d5e7fb978432cb5", null ],
+    [ "integrals", "classddc_1_1UniformBSplines_1_1Impl.html#a64159785723d23970d37f70ccc14d929", null ],
+    [ "get_knot", "classddc_1_1UniformBSplines_1_1Impl.html#a281d66b1224dd7b2f49b1c22009e3c0e", null ],
     [ "get_first_support_knot", "classddc_1_1UniformBSplines_1_1Impl.html#a7614729d7507273738c39599a6c1559a", null ],
     [ "get_last_support_knot", "classddc_1_1UniformBSplines_1_1Impl.html#a8999b45b6cf233c3f6c806e65533f11b", null ],
     [ "get_support_knot_n", "classddc_1_1UniformBSplines_1_1Impl.html#a5d8caa2a2370074fb15702157a88e627", null ],
@@ -27,6 +27,5 @@ var classddc_1_1UniformBSplines_1_1Impl =
     [ "full_domain", "classddc_1_1UniformBSplines_1_1Impl.html#a20223a26726ded2d7a47a2395b233975", null ],
     [ "nbasis", "classddc_1_1UniformBSplines_1_1Impl.html#a4eb5520c30b6ca33f4ef2bd9e277ec3e", null ],
     [ "ncells", "classddc_1_1UniformBSplines_1_1Impl.html#a779a3744f1c4889f418447e345ba515a", null ],
-    [ "integrals", "classddc_1_1UniformBSplines_1_1Impl.html#a37eb19ade5be360ad454d970728d2e7c", null ],
     [ "Impl", "classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56", null ]
 ];

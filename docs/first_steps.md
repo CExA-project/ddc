@@ -54,7 +54,7 @@ And once again, now for the time dimension.
 ### Dimension X
 
 Once the types are defined, we can start the `main` function where we will define our various
-domains. Here for each dimension, the user needs to specify the starting and ending coordinates of the dimension of the domain, as well as the number of discretization points along each of these dimensions. Additionally, we specify here the physical characteristics specific to our study (the thermal diffusion coefficient).
+domains. Here for each dimension, the user needs to specify the starting and ending coordinates of the dimension of the domain, as well as the number of discretization points along each of these dimensions. Additionally, we specify here the physical characteristics specific to our equation (the thermal diffusion coefficient).
 
 \snippet uniform_heat_equation.cpp main-start-x-parameters
 

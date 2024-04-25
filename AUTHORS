@@ -29,3 +29,7 @@ Thomas Padioleau - CEA (thomas.padioleau@cea.fr)
 
 Baptiste Legouix - CEA (baptiste.legouix@cea.fr)
 * GPU port (batching & call to Ginkgo backend)
+
+Thierry Antoun - CEA (thierry.antoun@cea.fr)
+* Work on Documentation
+* Work on adding new features 

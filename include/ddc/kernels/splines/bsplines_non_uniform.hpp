@@ -28,34 +28,59 @@ struct NonUniformBSplinesBase
 
 } // namespace detail
 
-/// NonUniformPointSampling specialization of BSplines
+/**
+ * The type of a non-uniform 1D spline basis (B-spline).
+ *
+ * Knots for non-uniform B-splines are non-uniformly distributed (no assumption is made on the uniformity of their distribution,
+ * the associated discrete dimension is a NonUniformPointSampling).
+ *
+ * @tparam Tag The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
+ * @tparam D The degree of the B-splines.
+ */
 template <class Tag, std::size_t D>
 class NonUniformBSplines : detail::NonUniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
 
 public:
+    /// @brief The tag identifying the continuous dimension on which the support of the B-splines are defined.
     using tag_type = Tag;
 
-
+    /// @brief The discrete dimension identifying B-splines.
     using discrete_dimension_type = NonUniformBSplines;
 
-public:
+    /** @brief The degree of B-splines.
+     *
+     * @return The degree.
+     */
     static constexpr std::size_t degree() noexcept
     {
         return D;
     }
 
+    /** @brief Indicates if the B-splines are periodic or not.
+     *
+     * @return A boolean indicating if the B-splines are periodic or not.
+     */
     static constexpr bool is_periodic() noexcept
     {
         return Tag::PERIODIC;
     }
 
+    /** @brief Indicates if the B-splines are uniform or not (this is not the case here).
+     *
+     * @return A boolean indicating if the B-splines are uniform or not.
+     */
     static constexpr bool is_uniform() noexcept
     {
         return false;
     }
 
+    /** @brief Storage class of the static attributes of the discrete dimension.
+     *
+     * @tparam DDim The name of the discrete dimension.
+     * @tparam MemorySpace The Kokkos memory space where the attributes are being stored.
+     */
     template <class DDim, class MemorySpace>
     class Impl
     {
@@ -70,16 +95,69 @@ public:
         int m_nknots;
 
     public:
+        /// @brief The type of the discrete dimension representing the B-splines.
         using discrete_dimension_type = NonUniformBSplines;
 
+        /// @brief The type of a DiscreteDomain whose elements identify the B-splines.
         using discrete_domain_type = DiscreteDomain<DDim>;
 
+        /// @brief The type of a DiscreteElement identifying a B-spline.
         using discrete_element_type = DiscreteElement<DDim>;
 
+        /// @brief The type of a DiscreteVector representing an "index displacement" between two B-splines.
         using discrete_vector_type = DiscreteVector<DDim>;
 
         Impl() = default;
 
+        /** @brief Constructs an Impl using a brace-list, i.e. `Impl bsplines({0., 1.})`
+         *
+         * Constructs an Impl by iterating over a list of break points. Internally this constructor calls the constructor
+         * Impl(RandomIt breaks_begin, RandomIt breaks_end).
+         *
+         * @param breaks The std::initializer_list of the coordinates of break points.
+         */
+        explicit Impl(std::initializer_list<ddc::Coordinate<Tag>> breaks)
+            : Impl(breaks.begin(), breaks.end())
+        {
+        }
+
+        /** @brief Constructs an Impl using a std::vector.
+         *
+         * Constructs an Impl by iterating over a list of break points. Internally this constructor calls the constructor
+         * Impl(RandomIt breaks_begin, RandomIt breaks_end).
+         *
+         * @param breaks The std::vector of the coordinates of break points.
+         */
+        explicit Impl(std::vector<ddc::Coordinate<Tag>> const& breaks)
+            : Impl(breaks.begin(), breaks.end())
+        {
+        }
+
+        /** @brief Constructs an Impl by iterating over a range of break points from begin to end.
+         *
+         * The provided break points describe the separation between the cells on which the polynomials
+         * comprising a spline are defined. They are used to build a set of knots. There are 2*degree more
+         * knots than break points. In the non-periodic case the knots are defined as follows:
+         * \f$ k_i = b_0 \forall 0 \leq i < d \f$
+         * \f$ k_{i+d} = b_i \forall 0 \leq i < n_b \f$
+         * \f$ k_{i+d+n_b} = b_{n_b-1} \forall 0 \leq i < d \f$
+         * where \f$d\f$ is the degree of the polynomials, and \f$n_b\f$ is the number of break points in the input pair of iterators. And in the periodic case:
+         * \f$ k_i = b_{n_b-1-d+i} \forall 0 \leq i < d \f$
+         * \f$ k_{i+d} = b_i \forall 0 \leq i \leq n_b \f$
+         * \f$ k_{i+d+n_b} = b_{i+1} \forall 0 \leq i < d \f$
+         *
+         * This constructor makes the knots accessible via a DiscreteSpace.
+         *
+         * @param breaks_begin The iterator which points at the beginning of the break points.
+         * @param breaks_end The iterator which points at the end of the break points.
+         */
+        template <class RandomIt>
+        Impl(RandomIt breaks_begin, RandomIt breaks_end);
+
+        /** @brief Copy-constructs from another Impl with a different Kokkos memory space
+         *
+         * @param impl A reference to the other Impl
+         */
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
             : m_domain(impl.m_domain)
@@ -87,65 +165,150 @@ public:
         {
         }
 
-        /// @brief Construct a `Impl` using a brace-list, i.e. `Impl bsplines({0., 1.})`
-        explicit Impl(std::initializer_list<ddc::Coordinate<Tag>> breaks)
-            : Impl(breaks.begin(), breaks.end())
-        {
-        }
-
-        /// @brief Construct a `Impl` using a C++20 "common range".
-        explicit Impl(std::vector<ddc::Coordinate<Tag>> const& breaks)
-            : Impl(breaks.begin(), breaks.end())
-        {
-        }
-
-        /// @brief Construct a `Impl` using a pair of iterators.
-        template <class RandomIt>
-        Impl(RandomIt breaks_begin, RandomIt breaks_end);
-
+        /** @brief Copy-constructs
+         *
+         * @param x A reference to another Impl
+         */
         Impl(Impl const& x) = default;
 
+        /** @brief Move-constructs
+         *
+         * @param x An rvalue to another Impl
+         */
         Impl(Impl&& x) = default;
 
+        /// @brief Destructs
         ~Impl() = default;
 
+        /** @brief Copy-assigns
+         *
+         * @param x A reference to another Impl
+         * @return A reference to the copied Impl
+         */
         Impl& operator=(Impl const& x) = default;
 
+        /** @brief Move-assigns
+         *
+         * @param x An rvalue to another Impl
+         * @return A reference to the moved Impl
+         */
         Impl& operator=(Impl&& x) = default;
 
+        /** @brief Evaluates non-zero B-splines at a given coordinate.
+         *
+         * The values are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
+         * B-splines which are non-zero at any given point. It is these B-splines which are evaluated.
+         * This can be useful to calculate a spline approximation of a function. A spline approximation at coordinate x
+         * is a linear combination of these B-spline evaluations weighted with the spline coefficients of the spline-transformed
+         * initial discrete function.
+         *
+         * @param[out] values The values of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.
+         * @param[in] x The coordinate where B-splines are evaluated. It has to be in the range of break points coordinates.
+         * @return The index of the first B-spline which is evaluated.
+         */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const;
 
+        /** @brief Evaluates non-zero B-spline derivatives at a given coordinate
+         *
+         * The derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
+         * B-splines which are non-zero at any given point. It is these B-splines which are derivated.
+         * A spline approximation of a derivative at coordinate x is a linear
+         * combination of those B-spline derivatives weighted with the spline coefficients of the spline-transformed
+         * initial discrete function.
+         *
+         * @param[out] derivs The derivatives of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.
+         * @param[in] x The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates.
+         * @return The index of the first B-spline which is derivated.
+         */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
 
+        /** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate
+         *
+         * The values and derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
+         * B-splines which are non-zero at any given point. It is these B-splines which are evaluated and derivated.
+         * A spline approximation of a derivative at coordinate x is a linear
+         * combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed
+         * initial discrete function.
+         *
+         * @param[out] derivs The values and \f$n\f$ derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan of sizes (degree+1, n+1).
+         * @param[in] x The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates.
+         * @param[in] n The number of derivatives to evaluate (in addition to the B-spline values themselves).
+         * @return The index of the first B-spline which is evaluated/derivated.
+         */
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
                 ddc::Coordinate<Tag> const& x,
                 std::size_t n) const;
 
+        /** @brief Compute the integrals of the B-splines.
+         *
+         * The integral of each of the B-splines over their support within the domain on which this basis was defined.
+         *
+         * @param[out] int_vals The values of the integrals. It has to be a 1D Chunkspan of size (nbasis).
+         * @return The values of the integrals.
+         */
         template <class Layout, class MemorySpace2>
-        KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
-        integrals(
-                ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const;
+        KOKKOS_INLINE_FUNCTION ddc::
+                ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
+                integrals(ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
+                                  int_vals) const;
 
+        /** @brief Returns the coordinate of the knot corresponding to the given index.
+         *
+         * Returns the coordinate of the knot corresponding to the given index. The domain
+         * over which the B-splines are defined is comprised of ncells+1 break points however there are a total of
+         * ncells+1+2*degree knots. The additional knots which control the shape of the B-splines near the
+         * boundary are added before and after the break points. The knot index is therefore in the interval [-degree, ncells+degree]
+         *
+         * @param[in] knot_idx Integer identifying index of the knot.
+         * @return Coordinate of the knot.
+         */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_knot(int knot_idx) const noexcept
         {
             return ddc::coordinate(ddc::DiscreteElement<mesh_type>(knot_idx + degree()));
         }
 
+        /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a B-spline.
+         * 
+         * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
+         * provided DiscreteElement, this function returns the first knot in the support of the B-spline.
+         * In other words it returns the lower bound of the support.
+         *
+         * @param[in] ix DiscreteElement identifying the B-spline.
+         * @return Coordinate of the knot.
+         */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_first_support_knot(
                 discrete_element_type const& ix) const
         {
             return ddc::coordinate(ddc::DiscreteElement<mesh_type>(ix.uid()));
         }
 
+        /** @brief Returns the coordinate of the last support knot associated to a DiscreteElement identifying a B-spline.
+         *
+         * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
+         * provided DiscreteElement, this function returns the last knot in the support of the B-spline.
+         * In other words it returns the upper bound of the support.
+         *
+         * @param[in] ix DiscreteElement identifying the B-spline.
+         * @return Coordinate of the knot.
+         */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_last_support_knot(
                 discrete_element_type const& ix) const
         {
             return ddc::coordinate(ddc::DiscreteElement<mesh_type>(ix.uid() + degree() + 1));
         }
 
+        /** @brief Returns the coordinate of the (n+1)-th knot in the support of the identified B-spline.
+         *
+         * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
+         * provided DiscreteElement, this function returns the (n+1)-th knot in the support of the B-spline.
+         *
+         * @param[in] ix DiscreteElement identifying the B-spline.
+         * @param[in] n Integer indexing a knot in the support of the B-spline.
+         * @return Coordinate of the knot.
+         */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_support_knot_n(
                 discrete_element_type const& ix,
                 int n) const
@@ -153,42 +316,84 @@ public:
             return ddc::coordinate(ddc::DiscreteElement<mesh_type>(ix.uid() + n));
         }
 
+        /** @brief Returns the coordinate of the first break point of the domain on which the B-splines are defined.
+         *
+         * @return Coordinate of the lower bound of the domain.
+         */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
         {
             return get_knot(0);
         }
 
+        /** @brief Returns the coordinate of the last break point of the domain on which the B-splines are defined.
+         *
+         * @return Coordinate of the upper bound of the domain.
+         */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
         {
             return get_knot(ncells());
         }
 
+        /** @brief Returns the length of the domain.
+         *
+         * @return The length of the domain.
+         */
         KOKKOS_INLINE_FUNCTION double length() const noexcept
         {
             return rmax() - rmin();
         }
 
+        /** @brief Returns the number of elements necessary to construct a spline representation of a function.
+         *
+         * For a non-periodic domain the number of elements necessary to construct a spline representation of a function
+         * is equal to the number of basis functions. However in the periodic case it additionally includes degree additional elements
+         * which allow the first B-splines to be evaluated close to rmax (where they also appear due to the periodicity).
+         *
+         * @return The number of elements necessary to construct a spline representation of a function.
+         */
         KOKKOS_INLINE_FUNCTION std::size_t size() const noexcept
         {
             return degree() + ncells();
         }
 
-        /// Returns the discrete domain including ghost bsplines
+        /** @brief Returns the discrete domain including eventual additional B-splines in the periodic case. See size().
+         *
+         * @return The discrete domain including eventual additional B-splines.
+         */
         KOKKOS_INLINE_FUNCTION discrete_domain_type full_domain() const
         {
             return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
         }
 
+        /** @brief The number of break points
+         *
+         * The number of break points or cell boundaries.
+         *
+         * @return The number of break points
+         */
         KOKKOS_INLINE_FUNCTION std::size_t npoints() const noexcept
         {
             return m_nknots - 2 * degree();
         }
 
+        /** @brief Returns the number of basis functions.
+         *
+         * The number of functions in the spline basis.
+         *
+         * @return The number of basis functions.
+         */
         KOKKOS_INLINE_FUNCTION std::size_t nbasis() const noexcept
         {
             return ncells() + !is_periodic() * degree();
         }
 
+        /** @brief Returns the number of cells over which the B-splines are defined.
+         *
+         * The number of cells over which the B-splines and any spline representation are defined.
+         * In other words the number of polynomials that comprise a spline representation on the domain where the basis is defined.
+         *
+         * @return The number of cells over which the B-splines are defined.
+         */
         KOKKOS_INLINE_FUNCTION std::size_t ncells() const noexcept
         {
             return npoints() - 1;
@@ -204,6 +409,11 @@ struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplin
 {
 };
 
+/**
+ * @brief Indicates if a tag corresponds to non-uniform B-splines or not.
+ *
+ * @tparam The presumed non-uniform B-splines.
+ */
 template <class DDim>
 constexpr bool is_non_uniform_bsplines_v = is_non_uniform_bsplines<DDim>::value;
 
@@ -486,7 +696,7 @@ template <class DDim, class MemorySpace>
 template <class Layout, class MemorySpace2>
 KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
 NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2> int_vals) const
+        ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const
 {
     if constexpr (is_periodic()) {
         assert(int_vals.size() == nbasis() || int_vals.size() == size());

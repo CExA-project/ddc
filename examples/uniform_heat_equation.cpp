@@ -36,13 +36,13 @@ struct DDimT : ddc::UniformPointSampling<T>
 };
 //! [time-space]
 
-//! [display]
 /** A function to pretty print the temperature
  * @tparam ChunkType The type of chunk span. This way the template parameters are avoided,
  *                   should be deduced by the compiler.
  * @param time The time at which the output is made.
  * @param temp The temperature at this time-step.
  */
+//! [display]
 template <class ChunkType>
 void display(double time, ChunkType temp)
 {

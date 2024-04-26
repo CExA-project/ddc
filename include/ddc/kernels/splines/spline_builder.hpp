@@ -14,8 +14,8 @@ namespace ddc {
 /**
  * @brief An enum determining the backend solver of a SplineBuilder or SplineBuilder2d.
  *
- * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d. Only GINKGO available at the moment,
- * other solvers will be implemented in the futur.
+ * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d. Only GINKGO is available at the moment,
+ * other solvers will be implemented in the future.
  */
 enum class SplineSolver {
     GINKGO ///< Enum member to identify the Ginkgo-based solver (iterative method)
@@ -54,9 +54,9 @@ constexpr bool is_spline_interpolation_mesh_uniform(
  * BcXmin and BcXmax, and it interpolates the function at the points on the interpolation_mesh
  * associated with interpolation_mesh_type.
  * @tparam ExecSpace The Kokkos execution space on which the spline transform is performed.
- * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) are stored.
+ * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
- * @tparam InterpolationMesh The discrete dimension supporting the interpolation points.
+ * @tparam InterpolationMesh The discrete dimension on which interpolation points are defined.
  * @tparam BcXmin The lower boundary condition.
  * @tparam BcXmax The upper boundary condition.
  * @tparam Solver The SplineSolver giving the backend used to perform the spline transform.
@@ -104,20 +104,29 @@ public:
     /// @brief The type of the whole domain representing interpolation points.
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
-    /// @brief The type of the batch domain (obtained by removing dimension of interest from whole space).
+    /**
+	 * @brief The type of the batch domain (obtained by removing the dimension of interest
+	 * from the whole domain).
+	 */
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
-    /// @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
+    /**
+	 * @brief The type of the whole spline domain (cartesian product of 1D spline domain
+	 * and batch domain) preserving the underlying memory layout (order of dimensions).
+	 */
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
-    /// @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) with 1D spline dimension being contiguous .
+    /**
+	 * @brief The type of the whole spline domain (cartesian product of the 1D spline domain
+	 * and the batch domain) with 1D spline dimension being coalescent.
+	 */
     using batched_spline_tr_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
@@ -125,7 +134,10 @@ public:
                             ddc::detail::TypeSeq<IDimX...>,
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
-    /// @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain and batch domain) preserving the underlying memory layout (order of dimensions).
+    /**
+	 * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain 
+	 * and batch domain) preserving the underlying memory layout (order of dimensions).
+	 */
     using batched_derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -164,9 +176,11 @@ public:
     /**
      * @brief Build a SplineBuilder acting on batched_interpolation_domain.
      * 
-     * @param batched_interpolation_domain The domain on which are defined the interpolation points.
-     * @param cols_per_chunk An hyperparameter used by the slicer (internal to the solver) to define the size of a chunk of right-and-sides of the linear problem to be computed in parallel.
-     * @param preconditionner_max_block_size An hyperparameter used by the slicer (internal to the solver) to define the size of a block used by Block-Jacobi preconditionner.
+     * @param batched_interpolation_domain The domain on which the interpolation points are defined.
+     * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size of a chunk of right-and-sides of the linear problem to be computed in parallel.
+     * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to define the size of a block used by the Block-Jacobi preconditioner.
+     *
+     * @see MatrixSparse
      */
     explicit SplineBuilder(
             batched_interpolation_domain_type const& batched_interpolation_domain,
@@ -233,7 +247,7 @@ public:
      * @brief Get the whole domain representing interpolation points.
      *
      * Values of the function must be provided on this domain in order
-     * to build a spline transform of the function (cartesian product of 1D interpolation_domain and batch_domain).
+     * to build a spline representation of the function (cartesian product of 1D interpolation_domain and batch_domain).
      *
      * @return The domain for the interpolation mesh.
      */
@@ -245,7 +259,7 @@ public:
     /**
      * @brief Get the batch domain.
 	 *
-	 * Obtained by removing dimension of interest from whole interpolation domain.
+     * Obtained by removing the dimension of interest from the whole interpolation domain.
      *
      * @return The batch domain.
      */
@@ -281,7 +295,7 @@ public:
     }
 
     /**
-     * @brief Get the whole domain on which spline coefficients are defined, with dimension of interest contiguous.
+     * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest coalescent.
      *
      * This is used internally because of solvers limitation and because it may be beneficial to computation performance.
      *
@@ -329,10 +343,10 @@ public:
      *
      * This can be useful for debugging (as it allows
      * one to print the matrix) or for more complex quadrature schemes.
-	 *
-	 * Warning: the returned detail::Matrix class is not supposed to be exposed
-	 * to user, which means its usage is not supported out of the scope of DDC spline transforms.
-	 * Use at your own risk.
+     *
+     * Warning: the returned detail::Matrix class is not supposed to be exposed
+     * to user, which means its usage is not supported out of the scope of DDC spline transforms.
+     * Use at your own risk.
      *
      * @return A reference to the interpolation matrix.
      */
@@ -347,8 +361,8 @@ public:
      * Use the values of a function (defined on
      * SplineBuilder::batched_interpolation_domain) and the derivatives of the
      * function at the boundaries (in the case of BoundCond::HERMITE only, defined 
-	 * on SplineBuilder::batched_derivs_xmin_domain and SplineBuilder::batched_derivs_xmax_domain) 
-	 * to calculate a spline approximation of this function.
+     * on SplineBuilder::batched_derivs_xmin_domain and SplineBuilder::batched_derivs_xmax_domain) 
+     * to calculate a spline approximation of this function.
      *
      * The spline approximation is stored as a ChunkSpan of coefficients
      * associated with B-splines.
@@ -356,9 +370,9 @@ public:
      * @param[out] spline The coefficients of the spline computed by this SplineBuilder.
      * @param[in] vals The values of the function on the interpolation mesh.
      * @param[in] derivs_xmin The values of the derivatives at the lower boundary
-	 * (used only with BoundCond::HERMITE lower boundary condition).
+     * (used only with BoundCond::HERMITE lower boundary condition).
      * @param[in] derivs_xmax The values of the derivatives at the upper boundary
-	 * (used only with BoundCond::HERMITE upper boundary condition).
+     * (used only with BoundCond::HERMITE upper boundary condition).
      */
     template <class Layout>
     void operator()(

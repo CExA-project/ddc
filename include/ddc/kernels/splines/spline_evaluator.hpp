@@ -57,13 +57,19 @@ public:
 	/// @brief The type of the 1D spline domain corresponding to the dimension of interest.
     using spline_domain_type = ddc::DiscreteDomain<bsplines_type>;
 
-    /// @brief The type of the batch domain (obtained by removing dimension of interest from whole space).
+   /**
+	 * @brief The type of the batch domain (obtained by removing the dimension of interest
+	 * from the whole domain).
+	 */
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
-    /// @brief The type of the whole spline domain (cartesian product of 1D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).
+    /**
+	 * @brief The type of the whole spline domain (cartesian product of 1D spline domain
+	 * and batch domain) preserving the underlying memory layout (order of dimensions).
+	 */
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -152,12 +158,27 @@ public:
      */
     SplineEvaluator& operator=(SplineEvaluator&& x) = default;
 
-    
+    /** @brief Get the lower extrapolation rule.
+     *
+     * Extrapolation rules are functors used to define the behavior of the SplineEvaluator out of the domain where the break points of the B-splines are defined.
+     *
+     * @return The lower extrapolation rule. 
+     *
+     * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
+     */
     left_extrapolation_rule_type left_extrapolation_rule() const
     {
         return m_left_extrap_rule;
     }
 
+    /** @brief Get the upper extrapolation rule.
+     *
+     * Extrapolation rules are functors used to define the behavior of the SplineEvaluator out of the domain where the break points of the B-splines are defined.
+     *
+     * @return The upper extrapolation rule. 
+     *
+     * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
+     */
     right_extrapolation_rule_type right_extrapolation_rule() const
     {
         return m_right_extrap_rule;

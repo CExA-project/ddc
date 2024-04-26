@@ -255,21 +255,6 @@ public:
                 integrals(ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
                                   int_vals) const;
 
-        /** @brief Returns the coordinate of the knot corresponding to the given index.
-         *
-         * Returns the coordinate of the knot corresponding to the given index. The domain
-         * over which the B-splines are defined is comprised of ncells+1 break points however there are a total of
-         * ncells+1+2*degree knots. The additional knots which control the shape of the B-splines near the
-         * boundary are added before and after the break points. The knot index is therefore in the interval [-degree, ncells+degree]
-         *
-         * @param[in] knot_idx Integer identifying index of the knot.
-         * @return Coordinate of the knot.
-         */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_knot(int knot_idx) const noexcept
-        {
-            return ddc::coordinate(ddc::DiscreteElement<mesh_type>(knot_idx + degree()));
-        }
-
         /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a B-spline.
          * 
          * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
@@ -277,12 +262,12 @@ public:
          * In other words it returns the lower bound of the support.
          *
          * @param[in] ix DiscreteElement identifying the B-spline.
-         * @return Coordinate of the knot.
+         * @return Index of the lower bound of the support of the B-spline.
          */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_first_support_knot(
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<mesh_type> get_first_support_knot(
                 discrete_element_type const& ix) const
         {
-            return ddc::coordinate(ddc::DiscreteElement<mesh_type>(ix.uid()));
+            return ddc::DiscreteElement<mesh_type>((ix - discrete_element_type(0)).value());
         }
 
         /** @brief Returns the coordinate of the last support knot associated to a DiscreteElement identifying a B-spline.
@@ -292,28 +277,12 @@ public:
          * In other words it returns the upper bound of the support.
          *
          * @param[in] ix DiscreteElement identifying the B-spline.
-         * @return Coordinate of the knot.
+         * @return Index of the upper bound of the support of the B-spline.
          */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_last_support_knot(
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<mesh_type> get_last_support_knot(
                 discrete_element_type const& ix) const
         {
-            return ddc::coordinate(ddc::DiscreteElement<mesh_type>(ix.uid() + degree() + 1));
-        }
-
-        /** @brief Returns the coordinate of the (n+1)-th knot in the support of the identified B-spline.
-         *
-         * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
-         * provided DiscreteElement, this function returns the (n+1)-th knot in the support of the B-spline.
-         *
-         * @param[in] ix DiscreteElement identifying the B-spline.
-         * @param[in] n Integer indexing a knot in the support of the B-spline.
-         * @return Coordinate of the knot.
-         */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_support_knot_n(
-                discrete_element_type const& ix,
-                int n) const
-        {
-            return ddc::coordinate(ddc::DiscreteElement<mesh_type>(ix.uid() + n));
+            return get_first_support_knot(ix) + ddc::DiscreteVector<mesh_type>(degree() + 2);
         }
 
         /** @brief Returns the coordinate of the first break point of the domain on which the B-splines are defined.
@@ -322,7 +291,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
         {
-            return get_knot(0);
+            return ddc::coordinate(m_domain.front() + ddc::DiscreteVector<mesh_type>(degree()));
         }
 
         /** @brief Returns the coordinate of the last break point of the domain on which the B-splines are defined.
@@ -331,7 +300,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
         {
-            return get_knot(ncells());
+            return ddc::coordinate(m_domain.back() - ddc::DiscreteVector<mesh_type>(degree()));
         }
 
         /** @brief Returns the length of the domain.
@@ -427,7 +396,7 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
             ddc::DiscreteElement<mesh_type>(0),
             ddc::DiscreteVector<mesh_type>(
                     (break_end - break_begin)
-                    + 2 * degree())) // Create a mesh including the eventual periodic point
+                    + 2 * degree())) // Create a mesh of knots including the eventual periodic point
     , m_nknots((break_end - break_begin) + 2 * degree())
 {
     std::vector<ddc::Coordinate<Tag>> knots((break_end - break_begin) + 2 * degree());
@@ -709,7 +678,9 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
     discrete_domain_type const dom_bsplines(
             full_domain().take_first(discrete_vector_type {nbasis()}));
     for (auto ix : dom_bsplines) {
-        int_vals(ix) = (get_last_support_knot(ix) - get_first_support_knot(ix)) * inv_deg;
+        int_vals(ix) = double(ddc::coordinate(get_last_support_knot(ix))
+                        - ddc::coordinate(get_first_support_knot(ix)))
+                       * inv_deg;
     }
 
     if constexpr (is_periodic()) {

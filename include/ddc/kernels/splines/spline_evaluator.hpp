@@ -184,6 +184,17 @@ public:
         return m_right_extrap_rule;
     }
 
+    /** @brief Evaluate spline function (described by its spline coefficients) at a given coordinate.
+     *
+     * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
+     *
+     * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline interpolation.
+     *
+     * @param coord_eval The coordinate where the spline is evaluated.
+     * @param spline_coef A Chunkspan storing the spline coefficients.
+     *
+     * @return The value of the spline function at the desired coordinate. 
+     */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double operator()(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
@@ -193,6 +204,20 @@ public:
         return eval(coord_eval, spline_coef);
     }
 
+    /** @brief Evaluate spline function (described by its spline coefficients) on a set of coordinates.
+     *
+     * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
+     *
+     * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline interpolation.
+     *
+     * @param[out] The values of the spline function at the desired coordinates. For practical reasons those are
+     * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * points represented by this domains are unused and irrelevant. TODO: this is wrong, more explaination.
+     * @param[in] coords_eval The coordinates where the spline is evaluated. For practical reasons those are
+     * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * points represented by this domains are unused and irrelevant.
+     * @param[in] spline_coef A Chunkspan storing the spline coefficients.
+     */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void operator()(
             ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
@@ -221,6 +246,15 @@ public:
                 });
     }
 
+    /** @brief Derivate spline function (described by its spline coefficients) at a given coordinate.
+     *
+     * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
+     *
+     * @param coord_eval The coordinate where the spline is derivated.
+     * @param spline_coef A Chunkspan storing the spline coefficients.
+     *
+     * @return The value of the spline function at the desired coordinate. 
+     */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
@@ -230,6 +264,18 @@ public:
         return eval_no_bc<eval_deriv_type>(coord_eval, spline_coef);
     }
 
+    /** @brief Derivate spline function (described by its spline coefficients) on a set of coordinates.
+     *
+     * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
+     *
+     * @param[out] The values of the spline function at the desired coordinates. For practical reasons those are
+     * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * points represented by this domains are unused and irrelevant.
+     * @param[in] coords_eval The coordinates where the spline is derivated. For practical reasons those are
+     * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * points represented by this domains are unused and irrelevant.
+     * @param[in] spline_coef A Chunkspan storing the spline coefficients.
+     */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv(
             ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
@@ -259,6 +305,18 @@ public:
                 });
     }
 
+    /** @brief Perform batched integrations of a spline function (described by its spline coefficients) along dimension of interest and store results on a subdomain of batch_domain.
+     *
+     * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
+     *
+     * @param[out] The integrals of the spline function on the subdomain of batch_domain. For practical reasons those are
+     * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * points represented by this domains are unused and irrelevant.
+     * @param[in] coords_eval The coordinates where the spline is derivated. For practical reasons those are
+     * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * points represented by this domains are unused and irrelevant.
+     * @param[in] spline_coef A Chunkspan storing the spline coefficients.
+     */
     template <class Layout1, class Layout2>
     void integrate(
             ddc::ChunkSpan<double, batch_domain_type, Layout1, memory_space> const integrals,

@@ -179,8 +179,8 @@ public:
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
      * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size of a chunk of right-and-sides of the linear problem to be computed in parallel.
      * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to define the size of a block used by the Block-Jacobi preconditioner.
-	 *
-	 * @see MatrixSparse
+     *
+     * @see MatrixSparse
      */
     explicit SplineBuilder(
             batched_interpolation_domain_type const& batched_interpolation_domain,

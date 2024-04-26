@@ -123,9 +123,9 @@ public:
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>>>;
 
     /** 
-	 * @brief The type of the whole spline domain (cartesian product of 2D spline domain
-	 * and batch domain) preserving the underlying memory layout (order of dimensions).
-	 */
+     * @brief The type of the whole spline domain (cartesian product of 2D spline domain
+     * and batch domain) preserving the underlying memory layout (order of dimensions).
+     */
     using batched_spline_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -133,17 +133,17 @@ public:
                     ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
     /**
-	 * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
-	 * and the associated batch domain) in the first dimension, preserving the underlying
-	 * memory layout (order of dimensions).
-	 */
+     * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
+     * and the associated batch domain) in the first dimension, preserving the underlying
+     * memory layout (order of dimensions).
+     */
     using batched_derivs_domain_type1 = typename builder_type1::batched_derivs_domain_type;
 
     /**
-	 * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
-	 * and the associated batch domain) in the second dimension, preserving the underlying
-	 * memory layout (order of dimensions).
-	 */
+     * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
+     * and the associated batch domain) in the second dimension, preserving the underlying
+     * memory layout (order of dimensions).
+     */
     using batched_derivs_domain_type2
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -151,10 +151,10 @@ public:
                     ddc::detail::TypeSeq<deriv_type2>>>;
 
     /**
-	 * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
-	 * and the batch domain) in the second dimension, preserving the underlying
-	 * memory layout (order of dimensions).
-	 */
+     * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
+     * and the batch domain) in the second dimension, preserving the underlying
+     * memory layout (order of dimensions).
+     */
     using batched_derivs_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -171,10 +171,10 @@ public:
      * @brief Create a new SplineBuilder2D.
      *
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
-	 * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size of a chunk of right-and-sides of the linear problem to be computed in parallel.
+     * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size of a chunk of right-and-sides of the linear problem to be computed in parallel.
      * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to define the size of a block used by the Block-Jacobi preconditioner.
-	 *
-	 * @see MatrixSparse
+     *
+     * @see MatrixSparse
      */
     explicit SplineBuilder2D(
             batched_interpolation_domain_type const& batched_interpolation_domain,

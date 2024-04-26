@@ -70,10 +70,12 @@ class GrevilleInterpolationPoints
         ddc::for_each(bspline_domain, [&](ddc::DiscreteElement<BSplines> ib) {
             // Define the Greville points from the bspline knots
             greville_points[ib.uid()] = 0.0;
-            for (std::size_t i(0); i < BSplines::degree(); ++i) {
-                greville_points[ib.uid()]
-                        += ddc::discrete_space<BSplines>().get_support_knot_n(ib, i + 1);
-            }
+            ddc::DiscreteDomain<detail::NonUniformBsplinesKnots<BSplines>> sub_domain(
+                    ddc::discrete_space<BSplines>().get_first_support_knot(ib) + 1,
+                    BSplines::degree());
+            ddc::for_each(sub_domain, [&](auto ik) {
+                greville_points[ib.uid()] += ddc::coordinate(ik);
+            });
             greville_points[ib.uid()] /= BSplines::degree();
         });
 

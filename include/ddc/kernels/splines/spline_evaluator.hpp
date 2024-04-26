@@ -184,14 +184,14 @@ public:
         return m_right_extrap_rule;
     }
 
-    /** @brief Evaluate spline function (described by its spline coefficients) at a given coordinate.
+    /** @brief Evaluate 1D spline function (described by its spline coefficients) at a given coordinate.
      *
-     * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
+     * The spline coefficients represent a 1D spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder. 
      *
      * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline interpolation.
      *
-     * @param coord_eval The coordinate where the spline is evaluated.
-     * @param spline_coef A Chunkspan storing the spline coefficients.
+     * @param coord_eval The coordinate where the spline is evaluated. Note that only the component along interpolation_mesh_type::continuous_dimension_type is used.
+     * @param spline_coef A Chunkspan storing the 1D spline coefficients.
      *
      * @return The value of the spline function at the desired coordinate. 
      */
@@ -204,18 +204,22 @@ public:
         return eval(coord_eval, spline_coef);
     }
 
-    /** @brief Evaluate spline function (described by its spline coefficients) on a set of coordinates.
+    /** @brief Evaluate spline function (described by its spline coefficients) on a mesh.
      *
      * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
+     *
+     * This is not a multidimensional evaluation. This is a batched 1D evaluation. It means for each coordinate of coords_eval, the evaluation is performed with the 1D set of spline coefficents of spline_eval identified with the same batch_domain_type::discrete_element_type which identifies the given coordinate of coords_eval (or the corresponding value of spline_eval which is computed).
      *
      * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline interpolation.
      *
      * @param[out] The values of the spline function at the desired coordinates. For practical reasons those are
      * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
-     * points represented by this domains are unused and irrelevant. TODO: this is wrong, more explaination.
-     * @param[in] coords_eval The coordinates where the spline is evaluated. For practical reasons those are
+     * points represented by this domains are unused and irrelevant (but the points themselves are used to select
+     * the set of 1D spline coefficients used to perform the evaluation).
+     * @param[in] coords_eval The coordinates where the spline is evaluated. Those are
      * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
-     * points represented by this domains are unused and irrelevant.
+     * points represented by this domains are unused and irrelevant (but the points themselves are used to select
+     * the set of 1D spline coefficients used to perform the evaluation).
      * @param[in] spline_coef A Chunkspan storing the spline coefficients.
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>

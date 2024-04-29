@@ -13,10 +13,23 @@
 
 namespace ddc {
 
+/**
+ * @brief A class to evaluate, derivate or integrate a spline function.
+ *
+ * A class which contains an operator () which can be used to evaluate, derivate or integrate a spline function.
+ *
+ * @tparam ExecSpace The Kokkos execution space on which the spline transform is performed.
+ * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) is stored.
+ * @tparam BSplines The discrete dimension representing the B-splines.
+ * @tparam InterpolationMesh The discrete dimension on which interpolation points are defined.
+ * @tparam BcXmin The lower extrapolation rule type.
+ * @tparam BcXmax The upper extrapolation rule type.
+ * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (InterpolationMesh + batched dimensions).
+ */
 template <
         class ExecSpace,
         class MemorySpace,
-        class BSplinesType,
+        class BSplines,
         class InterpolationMesh,
         class LeftExtrapolationRule,
         class RightExtrapolationRule,
@@ -33,7 +46,7 @@ private:
     {
     };
 
-    using tag_type = typename BSplinesType::tag_type;
+    using tag_type = typename BSplines::tag_type;
 
 public:
     /// @brief The type of the Kokkos execution space used by this class.
@@ -46,7 +59,7 @@ public:
     using interpolation_mesh_type = InterpolationMesh;
 
     /// @brief The discrete dimension representing the B-splines.
-    using bsplines_type = BSplinesType;
+    using bsplines_type = BSplines;
 
     /// @brief The type of the domain for the 1D interpolation mesh used by this class.
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
@@ -58,18 +71,18 @@ public:
     using spline_domain_type = ddc::DiscreteDomain<bsplines_type>;
 
     /**
-	 * @brief The type of the batch domain (obtained by removing the dimension of interest
-	 * from the whole domain).
-	 */
+     * @brief The type of the batch domain (obtained by removing the dimension of interest
+     * from the whole domain).
+     */
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
     /**
-	 * @brief The type of the whole spline domain (cartesian product of 1D spline domain
-	 * and batch domain) preserving the underlying memory layout (order of dimensions).
-	 */
+     * @brief The type of the whole spline domain (cartesian product of 1D spline domain
+     * and batch domain) preserving the underlying memory layout (order of dimensions).
+     */
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,

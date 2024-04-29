@@ -49,40 +49,70 @@ private:
     using tag_type2 = typename BSplinesType2::tag_type;
 
 public:
+    /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
 
+    /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
+    /// @brief The discrete dimension representing the B-splines along first dimension.
     using bsplines_type1 = BSplinesType1;
+
+    /// @brief The discrete dimension representing the B-splines along second dimension.
     using bsplines_type2 = BSplinesType2;
 
-    using left_extrapolation_rule_1_type = LeftExtrapolationRule1;
-    using right_extrapolation_rule_1_type = RightExtrapolationRule1;
-    using left_extrapolation_rule_2_type = LeftExtrapolationRule2;
-    using right_extrapolation_rule_2_type = RightExtrapolationRule2;
-
+    /// @brief The type of the domain for the 1D interpolation mesh along first dimension used by this class.
     using interpolation_domain_type1 = ddc::DiscreteDomain<interpolation_mesh_type1>;
+
+    /// @brief The type of the domain for the 1D interpolation mesh along second dimension used by this class.
     using interpolation_domain_type2 = ddc::DiscreteDomain<interpolation_mesh_type2>;
+
+    /// @brief The type of the domain for the 2D interpolation mesh used by this class.
     using interpolation_domain_type
             = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
 
+    /// @brief The type of the whole domain representing interpolation points.
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
+    /// @brief The type of the 1D spline domain corresponding to the first dimension of interest.
     using spline_domain_type1 = ddc::DiscreteDomain<bsplines_type1>;
+
+    /// @brief The type of the 1D spline domain corresponding to the second dimension of interest.
     using spline_domain_type2 = ddc::DiscreteDomain<bsplines_type2>;
+
+    /// @brief The type of the 2D spline domain corresponding to the dimensions of interest.
     using spline_domain_type = ddc::DiscreteDomain<bsplines_type1, bsplines_type2>;
 
+    /**
+	 * @brief The type of the batch domain (obtained by removing the dimensions of interest
+	 * from the whole domain).
+	 */
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>>>;
 
+    /**
+	 * @brief The type of the whole spline domain (cartesian product of 2D spline domain
+	 * and batch domain) preserving the underlying memory layout (order of dimensions).
+	 */
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>,
                     ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
+    /// @brief The type of the extrapolation rule at the lower boundary along the first dimension.
+    using left_extrapolation_rule_1_type = LeftExtrapolationRule1;
+
+    /// @brief The type of the extrapolation rule at the upper boundary along the first dimension.
+    using right_extrapolation_rule_1_type = RightExtrapolationRule1;
+
+    /// @brief The type of the extrapolation rule at the lower boundary along the second dimension.
+    using left_extrapolation_rule_2_type = LeftExtrapolationRule2;
+
+    /// @brief The type of the extrapolation rule at the upper boundary along the second dimension.
+    using right_extrapolation_rule_2_type = RightExtrapolationRule2;
 
 private:
     LeftExtrapolationRule1 m_left_extrap_rule_1;

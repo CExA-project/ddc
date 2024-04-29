@@ -121,6 +121,14 @@ public:
                             memory_space>>,
             "RightExtrapolationRule::operator() has to be callable with usual arguments.");
 
+    /**
+     * @brief Build a SplineEvaluator acting on batched_spline_domain.
+     * 
+     * @param left_extrap_rule The extrapolation rule at the lower boundary.
+     * @param right_extrap_rule The extrapolation rule at the upper boundary.
+     *
+     * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
+     */
     explicit SplineEvaluator(
             LeftExtrapolationRule const& left_extrap_rule,
             RightExtrapolationRule const& right_extrap_rule)
@@ -197,7 +205,7 @@ public:
      *
      * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline interpolation.
      *
-     * @param coord_eval The coordinate where the spline is evaluated. Note that only the component along interpolation_mesh_type::continuous_dimension_type is used.
+     * @param coord_eval The coordinate where the spline is evaluated. Note that only the component along the dimension of interest is used.
      * @param spline_coef A Chunkspan storing the 1D spline coefficients.
      *
      * @return The value of the spline function at the desired coordinate. 
@@ -263,7 +271,7 @@ public:
      *
      * The spline coefficients represent a 1D spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder. 
      *
-     * @param coord_eval The coordinate where the spline is derivated. Note that only the component along interpolation_mesh_type::continuous_dimension_type is used.
+     * @param coord_eval The coordinate where the spline is derivated. Note that only the component along the dimension of interest is used.
      * @param spline_coef A Chunkspan storing the 1D spline coefficients.
      *
      * @return The derivative of the spline function at the desired coordinate. 
@@ -323,7 +331,7 @@ public:
                 });
     }
 
-    /** @brief Perform batched 1D integrations of a spline function (described by its spline coefficients) along dimension of interest and store results on a subdomain of batch_domain.
+    /** @brief Perform batched 1D integrations of a spline function (described by its spline coefficients) along the dimension of interest and store results on a subdomain of batch_domain.
      *
      * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
      *

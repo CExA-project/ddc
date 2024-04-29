@@ -191,22 +191,14 @@ public:
             "with usual arguments.");
 
     /**
-     * @brief Instantiate an evaluator operator.
+     * @brief Build a SplineEvaluator acting on batched_spline_domain.
+     * 
+     * @param left_extrap_rule1 The extrapolation rule at the lower boundary along first dimension.
+     * @param right_extrap_rule1 The extrapolation rule at the upper boundary along first dimension.
+     * @param left_extrap_rule2 The extrapolation rule at the lower boundary along second dimension.
+     * @param right_extrap_rule2 The extrapolation rule at the upper boundary along second dimension.
      *
-     * @param[in] left_extrap_rule1
-     * 			A SplineBoundaryValue2D object giving the value on the "left side" of the domain
-     * 			in the first dimension.
-     * @param[in] right_extrap_rule1
-     * 			A SplineBoundaryValue2D object giving the value on the "right side" of the domain
-     * 			in the first dimension.
-     * @param[in] left_extrap_rule2
-     * 			A SplineBoundaryValue2D object giving the value on the "left side" of the domain
-     * 			in the second dimension.
-     * @param[in] right_extrap_rule2
-     * 			A SplineBoundaryValue2D object giving the value on the "right side" of the domain
-     * 			in the second dimension.
-     *
-     * @see SplineBoundaryValue2D
+     * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
      */
     explicit SplineEvaluator2D(
             LeftExtrapolationRule1 const& left_extrap_rule1,
@@ -221,76 +213,105 @@ public:
     }
 
     /**
-     * @brief Instantiate a SplineEvaluator2D from another
-     * SplineEvaluator2D (lvalue).
+     * @brief Copy-constructs
      *
-     * @param[in] x
-     * 		SplineEvaluator2D evaluator used to instantiate the new one.
+     * @param x A reference to another SplineEvaluator
      */
     SplineEvaluator2D(SplineEvaluator2D const& x) = default;
 
     /**
-     * @brief Instantiate a SplineEvaluator2D from another temporary
-     * SplineEvaluator2D (rvalue).
+     * @brief Move-constructs
      *
-     * @param[in] x
-     * 		SplineEvaluator2D evaluator used to instantiate the new one.
+     * @param x An rvalue to another SplineEvaluator
      */
     SplineEvaluator2D(SplineEvaluator2D&& x) = default;
 
+    /// @brief Destructs
     ~SplineEvaluator2D() = default;
 
     /**
-     * @brief Assign a SplineEvaluator2D from another SplineEvaluator2D (lvalue).
+     * @brief Copy-assigns
      *
-     * @param[in] x
-     * 		SplineEvaluator2D mapping used to assign.
-     *
-     * @return The SplineEvaluator2D assigned.
+     * @param x A reference to another SplineEvaluator
+     * @return A reference to the copied SplineEvaluator
      */
     SplineEvaluator2D& operator=(SplineEvaluator2D const& x) = default;
 
     /**
-     * @brief Assign a SplineEvaluator2D from another temporary SplineEvaluator2D (rvalue).
+     * @brief Move-assigns
      *
-     * @param[in] x
-     * 		SplineEvaluator2D mapping used to assign.
-     *
-     * @return The SplineEvaluator2D assigned.
+     * @param x An rvalue to another SplineEvaluator
+     * @return A reference to the moved SplineEvaluator
      */
     SplineEvaluator2D& operator=(SplineEvaluator2D&& x) = default;
 
-
-
+    /**
+     * @brief Get the lower extrapolation rule along the first dimension.
+     *
+     * Extrapolation rules are functors used to define the behavior of the SplineEvaluator out of the domain where the break points of the B-splines are defined.
+     *
+     * @return The lower extrapolation rule along the first dimension.
+     *
+     * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
+     */
     left_extrapolation_rule_1_type left_extrapolation_rule_dim_1() const
     {
         return m_left_extrap_rule_1;
     }
 
+    /**
+     * @brief Get the upper extrapolation rule along the first dimension.
+     *
+     * Extrapolation rules are functors used to define the behavior of the SplineEvaluator out of the domain where the break points of the B-splines are defined.
+     *
+     * @return The upper extrapolation rule along the first dimension.
+     *
+     * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
+     */
     right_extrapolation_rule_1_type right_extrapolation_rule_dim_1() const
     {
         return m_right_extrap_rule_1;
     }
 
+    /**
+     * @brief Get the lower extrapolation rule along the second dimension.
+     *
+     * Extrapolation rules are functors used to define the behavior of the SplineEvaluator out of the domain where the break points of the B-splines are defined.
+     *
+     * @return The lower extrapolation rule along the second dimension.
+     *
+     * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
+     */
     left_extrapolation_rule_2_type left_extrapolation_rule_dim_2() const
     {
         return m_left_extrap_rule_2;
     }
 
+    /**
+     * @brief Get the upper extrapolation rule along the second dimension.
+     *
+     * Extrapolation rules are functors used to define the behavior of the SplineEvaluator out of the domain where the break points of the B-splines are defined.
+     *
+     * @return The upper extrapolation rule along the second dimension.
+     *
+     * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
+     */
     right_extrapolation_rule_2_type right_extrapolation_rule_dim_2() const
     {
         return m_right_extrap_rule_2;
     }
 
     /**
-     * @brief Get the value of the function on B-splines at the coordinate given.
+     * @brief Evaluate 2D spline function (described by its spline coefficients) at a given coordinate.
      *
-     * @param[in] coord_eval
-     * 			The 2D coordinate where we want to evaluate the function.
-     * @param[in] spline_coef
-     * 			The B-splines coefficients of the function we want to evaluate.
+     * The spline coefficients represent a 2D spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder2D.
      *
-     * @return A double containing the value of the function at the coordinate given.
+     * Remark: calling SplineBuilder2D then SplineEvaluator2D corresponds to a 2D spline interpolation.
+     *
+     * @param coord_eval The coordinate where the spline is evaluated. Note that only the component along the dimensions of interest are used.
+     * @param spline_coef A Chunkspan storing the 2D spline coefficients.
+     *
+     * @return The value of the spline function at the desired coordinate. 
      */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double operator()(

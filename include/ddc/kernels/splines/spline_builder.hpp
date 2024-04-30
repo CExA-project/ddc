@@ -188,7 +188,7 @@ public:
      * 
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
      * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size
-     * of a chunk of right-and-sides of the linear problem to be computed in parallel (chunks are treated
+     * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
      * by the linear solver one-after-the-other).
      *
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.

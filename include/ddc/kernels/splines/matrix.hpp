@@ -175,7 +175,7 @@ public:
         return m_n;
     }
 
-	/**
+    /**
      * @brief Prints a Matrix in a std::ostream. It will segfault is the Matrix is on GPU.
      *
      * @param out The stream in which the matrix is printed.

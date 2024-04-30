@@ -116,6 +116,9 @@ public:
     /**
 	 * @brief The type of the batch domain (obtained by removing the dimensions of interest
 	 * from the whole domain).
+	 *
+	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+	 * this is DiscreteDomain<Z>.
 	 */
     using batch_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
@@ -125,6 +128,9 @@ public:
     /** 
      * @brief The type of the whole spline domain (cartesian product of 2D spline domain
      * and batch domain) preserving the underlying memory layout (order of dimensions).
+	 *
+	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y
+	 * (associated to B-splines tags BSplinesX and BSplinesY), this is DiscreteDomain<BSplinesX, BSplinesY, Z>
      */
     using batched_spline_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
@@ -136,6 +142,9 @@ public:
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
      * and the associated batch domain) in the first dimension, preserving the underlying
      * memory layout (order of dimensions).
+	 *
+	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+	 * this is DiscreteDomain<Deriv<X>, Y, Z>.
      */
     using batched_derivs_domain_type1 = typename builder_type1::batched_derivs_domain_type;
 
@@ -143,6 +152,9 @@ public:
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
      * and the associated batch domain) in the second dimension, preserving the underlying
      * memory layout (order of dimensions).
+	 *
+	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+	 * this is DiscreteDomain<X, Deriv<Y>, Z>.
      */
     using batched_derivs_domain_type2
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
@@ -154,6 +166,9 @@ public:
      * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
      * and the batch domain) in the second dimension, preserving the underlying
      * memory layout (order of dimensions).
+	 *
+	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+	 * this is DiscreteDomain<Deriv<X>, Deriv<Y>, Z>.
      */
     using batched_derivs_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<

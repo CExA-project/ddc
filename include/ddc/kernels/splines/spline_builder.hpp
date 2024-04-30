@@ -53,13 +53,13 @@ constexpr bool is_spline_interpolation_mesh_uniform(
  * of B-splines. The spline is constructed such that it respects the boundary conditions
  * BcXmin and BcXmax, and it interpolates the function at the points on the interpolation_mesh
  * associated with interpolation_mesh_type.
- * @tparam ExecSpace The Kokkos execution space on which the spline transform is performed.
+ * @tparam ExecSpace The Kokkos execution space on which the spline approximation is performed.
  * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
  * @tparam InterpolationMesh The discrete dimension on which interpolation points are defined.
  * @tparam BcXmin The lower boundary condition.
  * @tparam BcXmax The upper boundary condition.
- * @tparam Solver The SplineSolver giving the backend used to perform the spline transform.
+ * @tparam Solver The SplineSolver giving the backend used to perform the spline approximation.
  * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (InterpolationMesh + batched dimensions).
  */
 template <
@@ -300,7 +300,7 @@ public:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
      *
-     * Spline-transformed functions are computed on this domain.
+     * Spline approximations (spline-transformed functions) are computed on this domain.
      *
      * @return The domain for the spline coefficients.
      */
@@ -362,7 +362,7 @@ public:
      * one to print the matrix) or for more complex quadrature schemes.
      *
      * Warning: the returned detail::Matrix class is not supposed to be exposed
-     * to user, which means its usage is not supported out of the scope of DDC spline transforms.
+     * to user, which means its usage is not supported out of the scope of current class.
      * Use at your own risk.
      *
      * @return A reference to the interpolation matrix.

@@ -38,7 +38,7 @@ public:
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
-    /// @brief The type of the SplineBuilder used by this class to spline-transform along first dimension.
+    /// @brief The type of the SplineBuilder used by this class to spline-approximate along first dimension.
     using builder_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -49,7 +49,7 @@ public:
             Solver,
             IDimX...>;
 
-    /// @brief The type of the SplineBuilder used by this class to spline-transform along second dimension.
+    /// @brief The type of the SplineBuilder used by this class to spline-approximate along second dimension.
     using builder_type2 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -60,7 +60,7 @@ public:
             Solver,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
 
-    /// @brief The type of the SplineBuilder used by this class to spline-transform the second-dimension-derivatives along first dimension.
+    /// @brief The type of the SplineBuilder used by this class to spline-approximate the second-dimension-derivatives along first dimension.
     using builder_deriv_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -297,7 +297,7 @@ public:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
      *
-     * Spline-transformed functions are computed on this domain.
+     * Spline approximations (spline-transformed functions) are computed on this domain.
      *
      * @return The domain for the spline coefficients.
      */
@@ -474,7 +474,7 @@ operator()(
                 memory_space>> const mixed_derivs_max1_max2) const
 {
     // TODO: perform computations along dimension 1 on different streams ?
-    // Spline1-transform derivs_min2 (to spline1_deriv_min)
+    // Spline1-approximate derivs_min2 (to spline1_deriv_min)
     ddc::Chunk spline1_deriv_min_alloc(
             m_spline_builder_deriv1.batched_spline_domain(),
             ddc::KokkosAllocator<double, MemorySpace>());
@@ -490,7 +490,7 @@ operator()(
         spline1_deriv_min_opt = std::nullopt;
     }
 
-    // Spline1-transform vals (to spline1)
+    // Spline1-approximate vals (to spline1)
     ddc::Chunk spline1_alloc(
             m_spline_builder1.batched_spline_domain(),
             ddc::KokkosAllocator<double, MemorySpace>());
@@ -498,7 +498,7 @@ operator()(
 
     m_spline_builder1(spline1, vals, derivs_min1, derivs_max1);
 
-    // Spline1-transform derivs_max2 (to spline1_deriv_max)
+    // Spline1-approximate derivs_max2 (to spline1_deriv_max)
     ddc::Chunk spline1_deriv_max_alloc(
             m_spline_builder_deriv1.batched_spline_domain(),
             ddc::KokkosAllocator<double, MemorySpace>());
@@ -514,7 +514,7 @@ operator()(
         spline1_deriv_max_opt = std::nullopt;
     }
 
-    // Spline2-transform spline1
+    // Spline2-approximate spline1
     m_spline_builder2(spline, spline1.span_cview(), spline1_deriv_min_opt, spline1_deriv_max_opt);
 }
 } // namespace ddc

@@ -67,16 +67,19 @@ class GrevilleInterpolationPoints
                 = ddc::discrete_space<BSplines>().full_domain().take_first(
                         ddc::DiscreteVector<BSplines>(ddc::discrete_space<BSplines>().nbasis()));
 
+        ddc::DiscreteVector<detail::NonUniformBsplinesKnots<BSplines>> n_points_in_average(
+                BSplines::degree());
+
         ddc::for_each(bspline_domain, [&](ddc::DiscreteElement<BSplines> ib) {
             // Define the Greville points from the bspline knots
             greville_points[ib.uid()] = 0.0;
             ddc::DiscreteDomain<detail::NonUniformBsplinesKnots<BSplines>> sub_domain(
                     ddc::discrete_space<BSplines>().get_first_support_knot(ib) + 1,
-                    BSplines::degree());
+                    n_points_in_average);
             ddc::for_each(sub_domain, [&](auto ik) {
                 greville_points[ib.uid()] += ddc::coordinate(ik);
             });
-            greville_points[ib.uid()] /= BSplines::degree();
+            greville_points[ib.uid()] /= n_points_in_average.value();
         });
 
         std::vector<double> temp_knots(BSplines::degree());

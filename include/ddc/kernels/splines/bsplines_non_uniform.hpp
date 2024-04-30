@@ -87,15 +87,10 @@ public:
         template <class ODDim, class OMemorySpace>
         friend class Impl;
 
-    private:
-        using mesh_type = detail::NonUniformBsplinesKnots<DDim>;
-
-        ddc::DiscreteDomain<mesh_type> m_domain;
-        ddc::DiscreteDomain<mesh_type> m_break_point_domain;
-
-        int m_nknots;
-
     public:
+        /// @brief The type of the knots defining the B-splines.
+        using knot_mesh_type = detail::NonUniformBsplinesKnots<DDim>;
+
         /// @brief The type of the discrete dimension representing the B-splines.
         using discrete_dimension_type = NonUniformBSplines;
 
@@ -108,6 +103,13 @@ public:
         /// @brief The type of a DiscreteVector representing an "index displacement" between two B-splines.
         using discrete_vector_type = DiscreteVector<DDim>;
 
+    private:
+        ddc::DiscreteDomain<knot_mesh_type> m_domain;
+        ddc::DiscreteDomain<knot_mesh_type> m_break_point_domain;
+
+        int m_nknots;
+
+    public:
         Impl() = default;
 
         /** @brief Constructs an Impl using a brace-list, i.e. `Impl bsplines({0., 1.})`
@@ -265,10 +267,10 @@ public:
          * @param[in] ix DiscreteElement identifying the B-spline.
          * @return Index of the lower bound of the support of the B-spline.
          */
-        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<mesh_type> get_first_support_knot(
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> get_first_support_knot(
                 discrete_element_type const& ix) const
         {
-            return ddc::DiscreteElement<mesh_type>((ix - discrete_element_type(0)).value());
+            return ddc::DiscreteElement<knot_mesh_type>((ix - discrete_element_type(0)).value());
         }
 
         /** @brief Returns the coordinate of the last support knot associated to a DiscreteElement identifying a B-spline.
@@ -280,16 +282,16 @@ public:
          * @param[in] ix DiscreteElement identifying the B-spline.
          * @return Index of the upper bound of the support of the B-spline.
          */
-        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<mesh_type> get_last_support_knot(
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> get_last_support_knot(
                 discrete_element_type const& ix) const
         {
-            return get_first_support_knot(ix) + ddc::DiscreteVector<mesh_type>(degree() + 2);
+            return get_first_support_knot(ix) + ddc::DiscreteVector<knot_mesh_type>(degree() + 2);
         }
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        get_bspline_from_first_support_knot(ddc::DiscreteElement<mesh_type> const& ix) const
+        get_bspline_from_first_support_knot(ddc::DiscreteElement<knot_mesh_type> const& ix) const
         {
-            return discrete_element_type((ix - ddc::DiscreteElement<mesh_type>(0)).value());
+            return discrete_element_type((ix - ddc::DiscreteElement<knot_mesh_type>(0)).value());
         }
 
         /** @brief Returns the coordinate of the first break point of the domain on which the B-splines are defined.
@@ -341,6 +343,11 @@ public:
             return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
         }
 
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteDomain<knot_mesh_type> break_point_domain() const
+        {
+            return m_break_point_domain;
+        }
+
         /** @brief The number of break points
          *
          * The number of break points or cell boundaries.
@@ -381,7 +388,7 @@ public:
          * @param x The point whose location must be determined.
          * @returns The DiscreteElement describing the knot at the lower bound of the cell of interest.
          */
-        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<mesh_type> find_cell(
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> find_cell(
                 ddc::Coordinate<Tag> const& x) const;
     };
 };
@@ -406,13 +413,13 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
         RandomIt const break_begin,
         RandomIt const break_end)
     : m_domain(
-            ddc::DiscreteElement<mesh_type>(0),
-            ddc::DiscreteVector<mesh_type>(
+            ddc::DiscreteElement<knot_mesh_type>(0),
+            ddc::DiscreteVector<knot_mesh_type>(
                     (break_end - break_begin)
                     + 2 * degree())) // Create a mesh of knots including the eventual periodic point
     , m_break_point_domain(
-              ddc::DiscreteElement<mesh_type>(degree()),
-              ddc::DiscreteVector<mesh_type>(
+              ddc::DiscreteElement<knot_mesh_type>(degree()),
+              ddc::DiscreteVector<knot_mesh_type>(
                       (break_end - break_begin))) // Create a mesh of break points
     , m_nknots((break_end - break_begin) + 2 * degree())
 {
@@ -441,7 +448,7 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
             knots[degree() + npoints() - 1 + i] = rmax;
         }
     }
-    ddc::init_discrete_space<mesh_type>(knots);
+    ddc::init_discrete_space<knot_mesh_type>(knots);
 }
 
 template <class Tag, std::size_t D>
@@ -459,7 +466,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     assert(values.size() == degree() + 1);
 
     // 1. Compute cell index 'icell'
-    ddc::DiscreteElement<mesh_type> const icell = find_cell(x);
+    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell(x);
 
     assert(icell >= m_break_point_domain.front());
     assert(icell <= m_break_point_domain.back());
@@ -497,7 +504,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     assert(derivs.size() == degree() + 1);
 
     // 1. Compute cell index 'icell'
-    ddc::DiscreteElement<mesh_type> const icell = find_cell(x);
+    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell(x);
 
     assert(icell >= m_break_point_domain.front());
     assert(icell <= m_break_point_domain.back());
@@ -573,7 +580,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     assert(derivs.extent(1) == 1 + n);
 
     // 1. Compute cell index 'icell' and x_offset
-    ddc::DiscreteElement<mesh_type> const icell = find_cell(x);
+    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell(x);
 
     assert(icell >= m_break_point_domain.front());
     assert(icell <= m_break_point_domain.back());
@@ -663,9 +670,9 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::find_cell(ddc::Coordinate<T
         return m_break_point_domain.back();
 
     // Binary search
-    ddc::DiscreteElement<mesh_type> low = m_break_point_domain.front();
-    ddc::DiscreteElement<mesh_type> high = m_break_point_domain.back();
-    ddc::DiscreteElement<mesh_type> icell = low + (high - low) / 2;
+    ddc::DiscreteElement<knot_mesh_type> low = m_break_point_domain.front();
+    ddc::DiscreteElement<knot_mesh_type> high = m_break_point_domain.back();
+    ddc::DiscreteElement<knot_mesh_type> icell = low + (high - low) / 2;
     while (x < ddc::coordinate(icell) || x >= ddc::coordinate(icell + 1)) {
         if (x < ddc::coordinate(icell)) {
             high = icell;

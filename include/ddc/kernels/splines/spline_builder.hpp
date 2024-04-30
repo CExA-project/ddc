@@ -116,12 +116,12 @@ public:
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
     /**
-	 * @brief The type of the whole spline domain (cartesian product of 1D spline domain
-	 * and batch domain) preserving the underlying memory layout (order of dimensions).
-	 *
-	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
-	 * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<X,BSplinesY,Z>.
-	 */
+     * @brief The type of the whole spline domain (cartesian product of 1D spline domain
+     * and batch domain) preserving the underlying memory layout (order of dimensions).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
+     * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<X,BSplinesY,Z>.
+     */
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -129,12 +129,12 @@ public:
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
     /**
-	 * @brief The type of the whole spline domain (cartesian product of the 1D spline domain
-	 * and the batch domain) with 1D spline dimension being the leading dimension.
-	 *
-	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
-	 * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<BSplinesY,X,Z>.
-	 */
+     * @brief The type of the whole spline domain (cartesian product of the 1D spline domain
+     * and the batch domain) with 1D spline dimension being the leading dimension.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
+     * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<BSplinesY,X,Z>.
+     */
     using batched_spline_tr_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
@@ -143,11 +143,11 @@ public:
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
     /**
-	 * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain 
-	 * and batch domain) preserving the underlying memory layout (order of dimensions).
-	 *
-	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y, this is DiscreteDomain<X,Deriv<Y>,Z>
-	 */
+     * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain 
+     * and batch domain) preserving the underlying memory layout (order of dimensions).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y, this is DiscreteDomain<X,Deriv<Y>,Z>
+     */
     using batched_derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,

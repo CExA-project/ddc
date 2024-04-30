@@ -288,12 +288,6 @@ public:
             return get_first_support_knot(ix) + ddc::DiscreteVector<knot_mesh_type>(degree() + 2);
         }
 
-        KOKKOS_INLINE_FUNCTION discrete_element_type
-        get_bspline_from_first_support_knot(ddc::DiscreteElement<knot_mesh_type> const& ix) const
-        {
-            return discrete_element_type((ix - ddc::DiscreteElement<knot_mesh_type>(0)).value());
-        }
-
         /** @brief Returns the coordinate of the first break point of the domain on which the B-splines are defined.
          *
          * @return Coordinate of the lower bound of the domain.
@@ -343,6 +337,10 @@ public:
             return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
         }
 
+        /** @brief Returns the discrete domain which describes the break points.
+         *
+         * @return The discrete domain describing the break points.
+         */
         KOKKOS_INLINE_FUNCTION ddc::DiscreteDomain<knot_mesh_type> break_point_domain() const
         {
             return m_break_point_domain;
@@ -383,6 +381,12 @@ public:
         }
 
     private:
+        KOKKOS_INLINE_FUNCTION discrete_element_type
+        get_bspline_from_first_support_knot(ddc::DiscreteElement<knot_mesh_type> const& ix) const
+        {
+            return discrete_element_type((ix - ddc::DiscreteElement<knot_mesh_type>(0)).value());
+        }
+
         /**
          * @brief Get the cell where x is found
          * @param x The point whose location must be determined.

@@ -339,6 +339,15 @@ public:
             return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
         }
 
+        /** @brief Returns the discrete domain which describes the break points.
+         *
+         * @return The discrete domain describing the break points.
+         */
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteDomain<knot_mesh_type> break_point_domain() const
+        {
+            return m_domain;
+        }
+
         /** @brief Returns the number of basis functions.
          *
          * The number of functions in the spline basis.

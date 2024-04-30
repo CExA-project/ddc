@@ -51,9 +51,11 @@ public:
             std::vector<double> knots(ddc::discrete_space<BSplines>().npoints());
             ddc::DiscreteDomain<typename BSplines::knot_mesh_type> break_point_domain(
                     ddc::discrete_space<BSplines>().break_point_domain());
-            ddc::for_each(break_point_domain, [&](ddc::DiscreteElement<typename BSplines::knot_mesh_type> ik) {
-                knots[ik - break_point_domain.front()] = ddc::coordinate(ik);
-            });
+            ddc::for_each(
+                    break_point_domain,
+                    [&](ddc::DiscreteElement<typename BSplines::knot_mesh_type> ik) {
+                        knots[ik - break_point_domain.front()] = ddc::coordinate(ik);
+                    });
             return SamplingImpl(knots);
         }
     }

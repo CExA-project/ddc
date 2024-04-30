@@ -123,9 +123,10 @@ public:
                             ncells + 1)) // Create a mesh including the eventual periodic point
         {
             assert(ncells > 0);
-            ddc::init_discrete_space<knot_mesh_type>(
-                    knot_mesh_type::template init<
-                            knot_mesh_type>(rmin, rmax, ddc::DiscreteVector<knot_mesh_type>(ncells + 1)));
+            ddc::init_discrete_space<knot_mesh_type>(knot_mesh_type::template init<knot_mesh_type>(
+                    rmin,
+                    rmax,
+                    ddc::DiscreteVector<knot_mesh_type>(ncells + 1)));
         }
 
         /** @brief Copy-constructs from another Impl with a different Kokkos memory space

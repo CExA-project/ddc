@@ -382,9 +382,9 @@ public:
 
     private:
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        get_bspline_from_first_support_knot(ddc::DiscreteElement<knot_mesh_type> const& ix) const
+        get_first_bspline_in_cell(ddc::DiscreteElement<knot_mesh_type> const& ic) const
         {
-            return discrete_element_type((ix - m_break_point_domain.front()).value());
+            return discrete_element_type((ic - m_break_point_domain.front()).value());
         }
 
         /**
@@ -492,7 +492,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
         values[j + 1] = saved;
     }
 
-    return get_bspline_from_first_support_knot(icell);
+    return get_first_bspline_in_cell(icell);
 }
 
 template <class Tag, std::size_t D>
@@ -551,7 +551,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     }
     derivs[degree()] = saved;
 
-    return get_bspline_from_first_support_knot(icell);
+    return get_first_bspline_in_cell(icell);
 }
 
 template <class Tag, std::size_t D>
@@ -657,7 +657,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
         r *= degree() - k;
     }
 
-    return get_bspline_from_first_support_knot(icell);
+    return get_first_bspline_in_cell(icell);
 }
 
 template <class Tag, std::size_t D>

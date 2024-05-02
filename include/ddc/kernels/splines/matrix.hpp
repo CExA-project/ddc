@@ -14,6 +14,11 @@
 
 namespace ddc::detail {
 
+/**
+ * @brief The parent class for matrices.
+ *
+ * It represents a Matrix storage format, methods to fill it and multiple-right-hand-size linear solvers. The matrix is necessarily squared.
+ */
 class Matrix
 {
     int m_n;
@@ -203,7 +208,7 @@ protected:
     virtual int factorize_method() = 0;
 
     /**
-     * @brief A function called by factorize() to actually perform the pre-process operation.
+     * @brief A function called by solve_inplace() and similar functions to actually perform the linear solve operation.
      *
      * @param b A double* to a contiguous array containing the (eventually multiple) right-hand-sides. Memory layout depends on the
      * derivated class (and the underlying algorithm).

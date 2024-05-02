@@ -304,12 +304,12 @@ public:
     /**
      * @brief Evaluate 2D spline function (described by its spline coefficients) at a given coordinate.
      *
-     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be obtained using a SplineBuilder2D.
+     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
      *
      * Remark: calling SplineBuilder2D then SplineEvaluator2D corresponds to a 2D spline interpolation.
      *
      * @param coord_eval The coordinate where the spline is evaluated. Note that only the component along the dimensions of interest are used.
-     * @param spline_coef A Chunkspan storing the 2D spline coefficients.
+     * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
      *
      * @return The value of the spline function at the desired coordinate. 
      */

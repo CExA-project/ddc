@@ -671,7 +671,7 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::find_cell(ddc::Coordinate<T
     if (x == rmin())
         return m_break_point_domain.front();
     if (x == rmax())
-        return m_break_point_domain.back()-1;
+        return m_break_point_domain.back() - 1;
 
     // Binary search
     ddc::DiscreteElement<knot_mesh_type> low = m_break_point_domain.front();

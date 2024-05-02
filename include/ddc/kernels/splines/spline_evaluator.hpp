@@ -14,12 +14,12 @@
 namespace ddc {
 
 /**
- * @brief A class to evaluate, derivate or integrate a spline function.
+ * @brief A class to evaluate, differentiate or integrate a spline function.
  *
- * A class which contains an operator () which can be used to evaluate, derivate or integrate a spline function.
+ * A class which contains an operator () which can be used to evaluate, differentiate or integrate a spline function.
  *
- * @tparam ExecSpace The Kokkos execution space on which the spline transform is performed.
- * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) is stored.
+ * @tparam ExecSpace The Kokkos execution space on which the spline evaluation is performed.
+ * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and spline coefficients) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
  * @tparam InterpolationMesh The discrete dimension on which interpolation points are defined.
  * @tparam BcXmin The lower extrapolation rule type.
@@ -214,12 +214,12 @@ public:
     /**
      * @brief Evaluate 1D spline function (described by its spline coefficients) at a given coordinate.
      *
-     * The spline coefficients represent a 1D spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder. 
+     * The spline coefficients represent a 1D spline function defined on a B-splines (basis splines). They can be obtained using a SplineBuilder. 
      *
      * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline interpolation.
      *
      * @param coord_eval The coordinate where the spline is evaluated. Note that only the component along the dimension of interest is used.
-     * @param spline_coef A Chunkspan storing the 1D spline coefficients.
+     * @param spline_coef A ChunkSpan storing the 1D spline coefficients.
      *
      * @return The value of the spline function at the desired coordinate. 
      */
@@ -235,21 +235,21 @@ public:
     /**
      * @brief Evaluate spline function (described by its spline coefficients) on a mesh.
      *
-     * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
+     * The spline coefficients represent a spline function defined on a B-splines (basis splines). They can be obtained using a SplineBuilder.
      *
      * This is not a multidimensional evaluation. This is a batched 1D evaluation. It means for each coordinate of coords_eval, the evaluation is performed with the 1D set of spline coefficents of spline_coef identified with the same batch_domain_type::discrete_element_type which identifies the given coordinate of coords_eval (or the corresponding value of spline_eval which is computed).
      *
      * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline interpolation.
      *
      * @param[out] spline_eval The values of the spline function at the desired coordinates. For practical reasons those are
-     * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
-     * points represented by this domains are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
+     * stored in a ChunkSpan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 1D spline coefficients retained to perform the evaluation).
      * @param[in] coords_eval The coordinates where the spline is evaluated. Those are
-     * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
-     * points represented by this domains are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
+     * stored in a ChunkSpan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 1D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A Chunkspan storing the spline coefficients.
+     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void operator()(
@@ -280,12 +280,12 @@ public:
     }
 
     /**
-     * @brief Derivate 1D spline function (described by its spline coefficients) at a given coordinate.
+     * @brief Differentiate 1D spline function (described by its spline coefficients) at a given coordinate.
      *
-     * The spline coefficients represent a 1D spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder. 
+     * The spline coefficients represent a 1D spline function defined on a B-splines (basis splines). They can be obtained using a SplineBuilder. 
      *
-     * @param coord_eval The coordinate where the spline is derivated. Note that only the component along the dimension of interest is used.
-     * @param spline_coef A Chunkspan storing the 1D spline coefficients.
+     * @param coord_eval The coordinate where the spline is differentiated. Note that only the component along the dimension of interest is used.
+     * @param spline_coef A ChunkSpan storing the 1D spline coefficients.
      *
      * @return The derivative of the spline function at the desired coordinate. 
      */
@@ -299,21 +299,21 @@ public:
     }
 
     /**
-     * @brief Derivate spline function (described by its spline coefficients) on a mesh.
+     * @brief Differentiate spline function (described by its spline coefficients) on a mesh.
      *
-     * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
+     * The spline coefficients represent a spline function defined on a B-splines (basis splines). They can be obtained using a SplineBuilder.
      *
      * The derivation is not performed in a multidimensional way (in any sense). This is a batched 1D derivation. It means for each coordinate of coords_eval, the derivation is performed with the 1D set of spline coefficents of spline_coef identified with the same batch_domain_type::discrete_element_type which identifies the given coordinate of coords_eval (or the corresponding value of spline_eval which is computed).
      *
      * @param[out] spline_eval The derivatives of the spline function at the desired coordinates. For practical reasons those are
-     * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
-     * points represented by this domains are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
+     * stored in a ChunkSpan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 1D spline coefficients retained to perform the evaluation).
-     * @param[in] coords_eval The coordinates where the spline is derivated. Those are
-     * stored in a Chunkspan defined on a batched_interpolation_domain_type. Note that the coordinates of the
-     * points represented by this domains are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
+     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
+     * stored in a ChunkSpan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 1D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A Chunkspan storing the spline coefficients.
+     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv(
@@ -346,14 +346,14 @@ public:
 
     /** @brief Perform batched 1D integrations of a spline function (described by its spline coefficients) along the dimension of interest and store results on a subdomain of batch_domain.
      *
-     * The spline coefficients represent a spline function in a B-splines (basis splines). They can be obtained using a SplineBuilder.
+     * The spline coefficients represent a spline function defined on a B-splines (basis splines). They can be obtained using a SplineBuilder.
      *
      * The integration is not performed in a multidimensional way (in any sense). This is a batched 1D integration. It means for each element of integrals, the integration is performed with the 1D set of spline coefficents of spline_coef identified with the same DiscreteElement.
      *
      * @param[out] integrals The integrals of the spline function on the subdomain of batch_domain. For practical reasons those are
-     * stored in a Chunkspan defined on a batch_domain_type. Note that the coordinates of the
-     * points represented by this domains are unused and irrelevant.
-     * @param[in] spline_coef A Chunkspan storing the spline coefficients.
+     * stored in a ChunkSpan defined on a batch_domain_type. Note that the coordinates of the
+     * points represented by this domain are unused and irrelevant.
+     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
     template <class Layout1, class Layout2>
     void integrate(

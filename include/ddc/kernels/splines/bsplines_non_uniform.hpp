@@ -384,7 +384,7 @@ public:
         KOKKOS_INLINE_FUNCTION discrete_element_type
         get_bspline_from_first_support_knot(ddc::DiscreteElement<knot_mesh_type> const& ix) const
         {
-            return discrete_element_type((ix - ddc::DiscreteElement<knot_mesh_type>(0)).value());
+            return discrete_element_type((ix - m_break_point_domain.front()).value());
         }
 
         /**

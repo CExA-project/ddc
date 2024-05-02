@@ -303,7 +303,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
         {
-            return ddc::coordinate(m_break_point_domain.back() + 1);
+            return ddc::coordinate(m_break_point_domain.back());
         }
 
         /** @brief Returns the length of the domain.

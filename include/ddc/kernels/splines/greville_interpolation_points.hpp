@@ -70,16 +70,18 @@ class GrevilleInterpolationPoints
         ddc::DiscreteVector<detail::NonUniformBsplinesKnots<BSplines>> n_points_in_average(
                 BSplines::degree());
 
+        ddc::DiscreteElement<BSplines> ib0(bspline_domain.front());
+
         ddc::for_each(bspline_domain, [&](ddc::DiscreteElement<BSplines> ib) {
             // Define the Greville points from the bspline knots
-            greville_points[ib.uid()] = 0.0;
+            greville_points[ib - ib0] = 0.0;
             ddc::DiscreteDomain<detail::NonUniformBsplinesKnots<BSplines>> sub_domain(
                     ddc::discrete_space<BSplines>().get_first_support_knot(ib) + 1,
                     n_points_in_average);
             ddc::for_each(sub_domain, [&](auto ik) {
-                greville_points[ib.uid()] += ddc::coordinate(ik);
+                greville_points[ib - ib0] += ddc::coordinate(ik);
             });
-            greville_points[ib.uid()] /= n_points_in_average.value();
+            greville_points[ib - ib0] /= n_points_in_average.value();
         });
 
         std::vector<double> temp_knots(BSplines::degree());
@@ -177,13 +179,13 @@ public:
             int const n_start
                     = (BcXmin == ddc::BoundCond::GREVILLE) ? BSplines::degree() / 2 + 1 : 1;
             int const domain_size = n_break_points - 2;
+            ddc::DiscreteElement<IntermediateSampling> domain_start(1);
             ddc::DiscreteDomain<IntermediateSampling> const
-                    domain(ddc::DiscreteElement<IntermediateSampling>(1),
-                           ddc::DiscreteVector<IntermediateSampling>(domain_size));
+                    domain(domain_start, ddc::DiscreteVector<IntermediateSampling>(domain_size));
 
             // Copy central points
             ddc::for_each(domain, [&](auto ip) {
-                points_with_bcs[ip.uid() + n_start - 1] = points_wo_bcs.coordinate(ip);
+                points_with_bcs[ip - domain_start + n_start] = points_wo_bcs.coordinate(ip);
             });
 
             // Construct Greville-like points at the edge
@@ -219,13 +221,13 @@ public:
 
                 using length = ddc::DiscreteVector<IntermediateSampling>;
 
+                ddc::DiscreteElement<IntermediateSampling> domain_start(n_start);
                 ddc::DiscreteDomain<IntermediateSampling> const
-                        domain(ddc::DiscreteElement<IntermediateSampling>(n_start),
-                               length(points_with_bcs.size()));
+                        domain(domain_start, length(points_with_bcs.size()));
 
                 points_with_bcs[0] = points_wo_bcs.coordinate(domain.front());
                 ddc::for_each(domain.remove(length(1), length(1)), [&](auto ip) {
-                    points_with_bcs[ip.uid() - n_start] = points_wo_bcs.coordinate(ip);
+                    points_with_bcs[ip - domain_start] = points_wo_bcs.coordinate(ip);
                 });
                 points_with_bcs[points_with_bcs.size() - 1]
                         = points_wo_bcs.coordinate(domain.back());

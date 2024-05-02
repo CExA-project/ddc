@@ -38,7 +38,7 @@ public:
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
-    /// @brief The type of the SplineBuilder used by this class to spline-transform along first dimension.
+    /// @brief The type of the SplineBuilder used by this class to spline-approximate along first dimension.
     using builder_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -49,7 +49,7 @@ public:
             Solver,
             IDimX...>;
 
-    /// @brief The type of the SplineBuilder used by this class to spline-transform along second dimension.
+    /// @brief The type of the SplineBuilder used by this class to spline-approximate along second dimension.
     using builder_type2 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -60,7 +60,7 @@ public:
             Solver,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
 
-    /// @brief The type of the SplineBuilder used by this class to spline-transform the second-dimension-derivatives along first dimension.
+    /// @brief The type of the SplineBuilder used by this class to spline-approximate the second-dimension-derivatives along first dimension.
     using builder_deriv_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
@@ -114,9 +114,12 @@ public:
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
     /**
-	 * @brief The type of the batch domain (obtained by removing the dimensions of interest
-	 * from the whole domain).
-	 */
+     * @brief The type of the batch domain (obtained by removing the dimensions of interest
+     * from the whole domain).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+     * this is DiscreteDomain<Z>.
+     */
     using batch_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -125,6 +128,9 @@ public:
     /** 
      * @brief The type of the whole spline domain (cartesian product of 2D spline domain
      * and batch domain) preserving the underlying memory layout (order of dimensions).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y
+     * (associated to B-splines tags BSplinesX and BSplinesY), this is DiscreteDomain<BSplinesX, BSplinesY, Z>
      */
     using batched_spline_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
@@ -136,6 +142,9 @@ public:
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
      * and the associated batch domain) in the first dimension, preserving the underlying
      * memory layout (order of dimensions).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+     * this is DiscreteDomain<Deriv<X>, Y, Z>.
      */
     using batched_derivs_domain_type1 = typename builder_type1::batched_derivs_domain_type;
 
@@ -143,6 +152,9 @@ public:
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
      * and the associated batch domain) in the second dimension, preserving the underlying
      * memory layout (order of dimensions).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+     * this is DiscreteDomain<X, Deriv<Y>, Z>.
      */
     using batched_derivs_domain_type2
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
@@ -154,6 +166,9 @@ public:
      * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
      * and the batch domain) in the second dimension, preserving the underlying
      * memory layout (order of dimensions).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+     * this is DiscreteDomain<Deriv<X>, Deriv<Y>, Z>.
      */
     using batched_derivs_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
@@ -171,8 +186,15 @@ public:
      * @brief Create a new SplineBuilder2D.
      *
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
-     * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size of a chunk of right-and-sides of the linear problem to be computed in parallel.
-     * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to define the size of a block used by the Block-Jacobi preconditioner.
+	 * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size
+	 * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
+	 * by the linear solver one-after-the-other).
+	 *
+	 * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to
+	 * define the size of a block used by the Block-Jacobi preconditioner.
+	 *
+	 * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
      * @see MatrixSparse
      */
@@ -275,7 +297,7 @@ public:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
      *
-     * Spline-transformed functions are computed on this domain.
+     * Spline approximations (spline-transformed functions) are computed on this domain.
      *
      * @return The domain for the spline coefficients.
      */
@@ -452,7 +474,7 @@ operator()(
                 memory_space>> const mixed_derivs_max1_max2) const
 {
     // TODO: perform computations along dimension 1 on different streams ?
-    // Spline1-transform derivs_min2 (to spline1_deriv_min)
+    // Spline1-approximate derivs_min2 (to spline1_deriv_min)
     ddc::Chunk spline1_deriv_min_alloc(
             m_spline_builder_deriv1.batched_spline_domain(),
             ddc::KokkosAllocator<double, MemorySpace>());
@@ -468,7 +490,7 @@ operator()(
         spline1_deriv_min_opt = std::nullopt;
     }
 
-    // Spline1-transform vals (to spline1)
+    // Spline1-approximate vals (to spline1)
     ddc::Chunk spline1_alloc(
             m_spline_builder1.batched_spline_domain(),
             ddc::KokkosAllocator<double, MemorySpace>());
@@ -476,7 +498,7 @@ operator()(
 
     m_spline_builder1(spline1, vals, derivs_min1, derivs_max1);
 
-    // Spline1-transform derivs_max2 (to spline1_deriv_max)
+    // Spline1-approximate derivs_max2 (to spline1_deriv_max)
     ddc::Chunk spline1_deriv_max_alloc(
             m_spline_builder_deriv1.batched_spline_domain(),
             ddc::KokkosAllocator<double, MemorySpace>());
@@ -492,7 +514,7 @@ operator()(
         spline1_deriv_max_opt = std::nullopt;
     }
 
-    // Spline2-transform spline1
+    // Spline2-approximate spline1
     m_spline_builder2(spline, spline1.span_cview(), spline1_deriv_min_opt, spline1_deriv_max_opt);
 }
 } // namespace ddc

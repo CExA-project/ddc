@@ -53,13 +53,13 @@ constexpr bool is_spline_interpolation_mesh_uniform(
  * of B-splines. The spline is constructed such that it respects the boundary conditions
  * BcXmin and BcXmax, and it interpolates the function at the points on the interpolation_mesh
  * associated with interpolation_mesh_type.
- * @tparam ExecSpace The Kokkos execution space on which the spline transform is performed.
+ * @tparam ExecSpace The Kokkos execution space on which the spline approximation is performed.
  * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
  * @tparam InterpolationMesh The discrete dimension on which interpolation points are defined.
  * @tparam BcXmin The lower boundary condition.
  * @tparam BcXmax The upper boundary condition.
- * @tparam Solver The SplineSolver giving the backend used to perform the spline transform.
+ * @tparam Solver The SplineSolver giving the backend used to perform the spline approximation.
  * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (InterpolationMesh + batched dimensions).
  */
 template <
@@ -107,6 +107,8 @@ public:
     /**
 	 * @brief The type of the batch domain (obtained by removing the dimension of interest
 	 * from the whole domain).
+	 *
+	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y, this is DiscreteDomain<X,Z>
 	 */
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
@@ -114,9 +116,12 @@ public:
                     ddc::detail::TypeSeq<interpolation_mesh_type>>>;
 
     /**
-	 * @brief The type of the whole spline domain (cartesian product of 1D spline domain
-	 * and batch domain) preserving the underlying memory layout (order of dimensions).
-	 */
+     * @brief The type of the whole spline domain (cartesian product of 1D spline domain
+     * and batch domain) preserving the underlying memory layout (order of dimensions).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
+     * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<X,BSplinesY,Z>.
+     */
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -124,9 +129,12 @@ public:
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
     /**
-	 * @brief The type of the whole spline domain (cartesian product of the 1D spline domain
-	 * and the batch domain) with 1D spline dimension being coalescent.
-	 */
+     * @brief The type of the whole spline domain (cartesian product of the 1D spline domain
+     * and the batch domain) with 1D spline dimension being the leading dimension.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
+     * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<BSplinesY,X,Z>.
+     */
     using batched_spline_tr_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
@@ -135,9 +143,11 @@ public:
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
     /**
-	 * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain 
-	 * and batch domain) preserving the underlying memory layout (order of dimensions).
-	 */
+     * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain 
+     * and batch domain) preserving the underlying memory layout (order of dimensions).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y, this is DiscreteDomain<X,Deriv<Y>,Z>
+     */
     using batched_derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -177,8 +187,15 @@ public:
      * @brief Build a SplineBuilder acting on batched_interpolation_domain.
      * 
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
-     * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size of a chunk of right-and-sides of the linear problem to be computed in parallel.
-     * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to define the size of a block used by the Block-Jacobi preconditioner.
+     * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size
+     * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
+     * by the linear solver one-after-the-other).
+     *
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to
+     * define the size of a block used by the Block-Jacobi preconditioner.
+     *
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
      * @see MatrixSparse
      */
@@ -283,7 +300,7 @@ public:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
      *
-     * Spline-transformed functions are computed on this domain.
+     * Spline approximations (spline-transformed functions) are computed on this domain.
      *
      * @return The domain for the spline coefficients.
      */
@@ -295,7 +312,7 @@ public:
     }
 
     /**
-     * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest coalescent.
+     * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest being the leading dimension.
      *
      * This is used internally because of solvers limitation and because it may be beneficial to computation performance.
      *
@@ -345,7 +362,7 @@ public:
      * one to print the matrix) or for more complex quadrature schemes.
      *
      * Warning: the returned detail::Matrix class is not supposed to be exposed
-     * to user, which means its usage is not supported out of the scope of DDC spline transforms.
+     * to user, which means its usage is not supported out of the scope of current class.
      * Use at your own risk.
      *
      * @return A reference to the interpolation matrix.

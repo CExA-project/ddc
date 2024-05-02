@@ -19,9 +19,9 @@ namespace ddc {
  * A class which contains an operator () which can be used to evaluate, differentiate or integrate a spline function.
  *
  * @tparam ExecSpace The Kokkos execution space on which the spline evaluation is performed.
- * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and spline coefficients) is stored.
+ * @tparam MemorySpace The Kokkos memory space on which the data (evaluation function and spline coefficients) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
- * @tparam InterpolationMesh The discrete dimension on which interpolation points are defined.
+ * @tparam InterpolationMesh The discrete dimension on which evaluation points are defined.
  * @tparam BcXmin The lower extrapolation rule type.
  * @tparam BcXmax The upper extrapolation rule type.
  * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (InterpolationMesh + batched dimensions).
@@ -29,8 +29,8 @@ namespace ddc {
 template <
         class ExecSpace,
         class MemorySpace,
-        class BSplines,
-        class InterpolationMesh,
+        class BSplinesType,
+        class EvaluationMesh,
         class LeftExtrapolationRule,
         class RightExtrapolationRule,
         class... IDimX>
@@ -55,17 +55,17 @@ public:
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
-    /// @brief The type of the interpolation discrete dimension (discrete dimension of interest) used by this class.
-    using interpolation_mesh_type = InterpolationMesh;
+    /// @brief The type of the evaluation discrete dimension (discrete dimension of interest) used by this class.
+    using evaluation_mesh_type = EvaluationMesh;
 
     /// @brief The discrete dimension representing the B-splines.
     using bsplines_type = BSplines;
 
-    /// @brief The type of the domain for the 1D interpolation mesh used by this class.
-    using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
+    /// @brief The type of the domain for the 1D evaluation mesh used by this class.
+    using evaluation_domain_type = ddc::DiscreteDomain<evaluation_mesh_type>;
 
-    /// @brief The type of the whole domain representing interpolation points.
-    using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
+    /// @brief The type of the whole domain representing evaluation points.
+    using batched_evaluation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
     /// @brief The type of the 1D spline domain corresponding to the dimension of interest.
     using spline_domain_type = ddc::DiscreteDomain<bsplines_type>;
@@ -77,7 +77,7 @@ public:
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type>>>;
+                    ddc::detail::TypeSeq<evaluation_mesh_type>>>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain
@@ -86,7 +86,7 @@ public:
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type>,
+                    ddc::detail::TypeSeq<evaluation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
     /// @brief The type of the extrapolation rule at the lower boundary.
@@ -242,28 +242,28 @@ public:
      * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline interpolation.
      *
      * @param[out] spline_eval The values of the spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 1D spline coefficients retained to perform the evaluation).
      * @param[in] coords_eval The coordinates where the spline is evaluated. Those are
-     * stored in a ChunkSpan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 1D spline coefficients retained to perform the evaluation).
      * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void operator()(
-            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_interpolation_domain_type,
+                    batched_evaluation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        interpolation_domain_type const interpolation_domain(spline_eval.domain());
+        evaluation_domain_type const evaluation_domain(spline_eval.domain());
         batch_domain_type const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
@@ -273,7 +273,7 @@ public:
                     const auto spline_eval_1D = spline_eval[j];
                     const auto coords_eval_1D = coords_eval[j];
                     const auto spline_coef_1D = spline_coef[j];
-                    for (auto const i : interpolation_domain) {
+                    for (auto const i : evaluation_domain) {
                         spline_eval_1D(i) = eval(coords_eval_1D(i), spline_coef_1D);
                     }
                 });
@@ -306,28 +306,28 @@ public:
      * The derivation is not performed in a multidimensional way (in any sense). This is a batched 1D derivation. It means for each coordinate of coords_eval, the derivation is performed with the 1D set of spline coefficents of spline_coef identified with the same batch_domain_type::discrete_element_type which identifies the given coordinate of coords_eval (or the corresponding value of spline_eval which is computed).
      *
      * @param[out] spline_eval The derivatives of the spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 1D spline coefficients retained to perform the evaluation).
      * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
-     * stored in a ChunkSpan defined on a batched_interpolation_domain_type. Note that the coordinates of the
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 1D spline coefficients retained to perform the evaluation).
      * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv(
-            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_interpolation_domain_type,
+                    batched_evaluation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        interpolation_domain_type const interpolation_domain(spline_eval.domain());
+        evaluation_domain_type const evaluation_domain(spline_eval.domain());
         batch_domain_type const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
@@ -337,7 +337,7 @@ public:
                     const auto spline_eval_1D = spline_eval[j];
                     const auto coords_eval_1D = coords_eval[j];
                     const auto spline_coef_1D = spline_coef[j];
-                    for (auto const i : interpolation_domain) {
+                    for (auto const i : evaluation_domain) {
                         spline_eval_1D(i)
                                 = eval_no_bc<eval_deriv_type>(coords_eval_1D(i), spline_coef_1D);
                     }
@@ -389,28 +389,27 @@ private:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        ddc::Coordinate<typename interpolation_mesh_type::continuous_dimension_type>
-                coord_eval_interpolation
-                = ddc::select<typename interpolation_mesh_type::continuous_dimension_type>(
-                        coord_eval);
+        ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
+                coord_eval_evaluation
+                = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
         if constexpr (bsplines_type::is_periodic()) {
-            if (coord_eval_interpolation < ddc::discrete_space<bsplines_type>().rmin()
-                || coord_eval_interpolation > ddc::discrete_space<bsplines_type>().rmax()) {
-                coord_eval_interpolation -= Kokkos::floor(
-                                                    (coord_eval_interpolation
-                                                     - ddc::discrete_space<bsplines_type>().rmin())
-                                                    / ddc::discrete_space<bsplines_type>().length())
-                                            * ddc::discrete_space<bsplines_type>().length();
+            if (coord_eval_evaluation < ddc::discrete_space<bsplines_type>().rmin()
+                || coord_eval_evaluation > ddc::discrete_space<bsplines_type>().rmax()) {
+                coord_eval_evaluation -= Kokkos::floor(
+                                                 (coord_eval_evaluation
+                                                  - ddc::discrete_space<bsplines_type>().rmin())
+                                                 / ddc::discrete_space<bsplines_type>().length())
+                                         * ddc::discrete_space<bsplines_type>().length();
             }
         } else {
-            if (coord_eval_interpolation < ddc::discrete_space<bsplines_type>().rmin()) {
-                return m_left_extrap_rule(coord_eval_interpolation, spline_coef);
+            if (coord_eval_evaluation < ddc::discrete_space<bsplines_type>().rmin()) {
+                return m_left_extrap_rule(coord_eval_evaluation, spline_coef);
             }
-            if (coord_eval_interpolation > ddc::discrete_space<bsplines_type>().rmax()) {
-                return m_right_extrap_rule(coord_eval_interpolation, spline_coef);
+            if (coord_eval_evaluation > ddc::discrete_space<bsplines_type>().rmax()) {
+                return m_right_extrap_rule(coord_eval_evaluation, spline_coef);
             }
         }
-        return eval_no_bc<eval_type>(coord_eval_interpolation, spline_coef);
+        return eval_no_bc<eval_type>(coord_eval_evaluation, spline_coef);
     }
 
     template <class EvalType, class Layout, class... CoordsDims>
@@ -427,14 +426,13 @@ private:
                 double,
                 std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
                 vals(vals_ptr.data());
-        ddc::Coordinate<typename interpolation_mesh_type::continuous_dimension_type>
-                coord_eval_interpolation
-                = ddc::select<typename interpolation_mesh_type::continuous_dimension_type>(
-                        coord_eval);
+        ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
+                coord_eval_evaluation
+                = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
         if constexpr (std::is_same_v<EvalType, eval_type>) {
-            jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interpolation);
+            jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_evaluation);
         } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {
-            jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interpolation);
+            jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_evaluation);
         }
         double y = 0.0;
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {

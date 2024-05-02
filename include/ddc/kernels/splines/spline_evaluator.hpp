@@ -17,7 +17,7 @@ template <
         class ExecSpace,
         class MemorySpace,
         class BSplinesType,
-        class InterpolationMesh,
+        class EvaluationMesh,
         class LeftExtrapolationRule,
         class RightExtrapolationRule,
         class... IDimX>
@@ -45,7 +45,7 @@ public:
     using left_extrapolation_rule_type = LeftExtrapolationRule;
     using right_extrapolation_rule_type = RightExtrapolationRule;
 
-    using evaluation_mesh_type = InterpolationMesh;
+    using evaluation_mesh_type = EvaluationMesh;
 
     using evaluation_domain_type = ddc::DiscreteDomain<evaluation_mesh_type>;
 

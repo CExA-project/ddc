@@ -285,7 +285,7 @@ public:
         KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> get_last_support_knot(
                 discrete_element_type const& ix) const
         {
-            return get_first_support_knot(ix) + ddc::DiscreteVector<knot_mesh_type>(degree() + 2);
+            return get_first_support_knot(ix) + ddc::DiscreteVector<knot_mesh_type>(degree() + 1);
         }
 
         /** @brief Returns the coordinate of the first break point of the domain on which the B-splines are defined.

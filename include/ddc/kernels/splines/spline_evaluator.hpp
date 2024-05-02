@@ -235,7 +235,8 @@ public:
     /**
      * @brief Evaluate spline function (described by its spline coefficients) on a mesh.
      *
-     * The spline coefficients represent a spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
+     * The spline coefficients represent a spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
      *
      * This is not a multidimensional evaluation. This is a batched 1D evaluation. It means for each coordinate of coords_eval, the evaluation is performed with the 1D set of spline coefficents of spline_coef identified with the same batch_domain_type::discrete_element_type which identifies the given coordinate of coords_eval (or the corresponding value of spline_eval which is computed).
      *
@@ -301,7 +302,8 @@ public:
     /**
      * @brief Differentiate spline function (described by its spline coefficients) on a mesh.
      *
-     * The spline coefficients represent a spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
+     * The spline coefficients represent a spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
      *
      * The derivation is not performed in a multidimensional way (in any sense). This is a batched 1D derivation. It means for each coordinate of coords_eval, the derivation is performed with the 1D set of spline coefficents of spline_coef identified with the same batch_domain_type::discrete_element_type which identifies the given coordinate of coords_eval (or the corresponding value of spline_eval which is computed).
      *

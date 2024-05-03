@@ -10,8 +10,8 @@ On the top of DDC core - which provides the basic tools for the needs of perform
 to perform transformations. At the moment, the two available transformations are Discrete Fourier Transform and Spline methods.
 
 Those methods are performance portable (supported with CPU Serial, CPU OpenMP, CUDA and HIP backends). They are used
-in examples/heat_equation_spectral.cpp (for DFT) and examples/characteristics_advection.cpp (for splines).
-A particular use-case of splines is benchmarked in benchmarks/splines.cpp.
+in *examples/heat_equation_spectral.cpp* (for DFT) and *examples/characteristics_advection.cpp* (for splines).
+A particular use-case of splines is benchmarked in *benchmarks/splines.cpp*.
 
 ## General presentation of transformations
 
@@ -21,8 +21,8 @@ A transformation is a change of basis, going from a function space to another. B
 the basis are necessarily finite (which means it contains a finite set of basis functions, but those basis functions
 may be continuous).
 
-The use-cases of transformations for simulation needs are plethoric: interpolation, spectral methods, finite element methods,
-filtering (compression), signal analysis (post-process)...
+The use-cases of transformations for simulation or signal processing needs are plethoric: interpolation, spectral methods,
+finite element methods, filtering (compression), signal analysis (post-process)...
 
 Every basis have their own specificities (ie. orthogonality, n-derivability, etc...) but as they belong to the same frame
 of set of functions which form a basis, they have in common a formalism and a terminology. However, this is currently
@@ -34,7 +34,9 @@ It must be explained:
 the Fourier space. Mesh of "real" space and mesh of Fourier space are in bijection one-to-the-other.
 The situation is more complicated for Splines.
 - Fourier and Splines basis use-cases are quite different. Thus - as shown below - the so-called "evaluator" is not
-implemented for Fourier (while inverse DFT is) and inverse Spline transform is not implementes (while Spline evaluation is).
+implemented for Fourier (while inverse DFT is) and inverse Spline transform is not implemented (while Spline evaluation is).
+- FFT backends support 1D to 3D Fourier transforms. General n-dimensional Spline transform would be a mess to implement for all supported boundary conditions so we limit to the 2D case.
+- DFT is not currently supported in batched configuration (but it may be the subject of futur development). Batched splines are supported.
 
 To summarize the available features of the two kernels:
 
@@ -43,12 +45,14 @@ To summarize the available features of the two kernels:
 | DFT      | *fft*           | *ifft* | x                 |
 | Spline   | *SplineBuilder* | x      | *SplineEvaluator* |
 
+So, even if the two kernels *could* share a common API, this is not currently the case but this is more due to pratical considerations than intrinsic mathematical differences between the two methods.
+
 ### General transformations theory
 
 The simplest way to describe a discrete function \f$ f \f$ is to provide its value \f$ f(x_i) \f$ at every point of the mesh which supports it.
 
 Another more general method is to define a basis \f$ \phi_j \f$ in a function space and provide the set of coefficients
-\f$ c_j \f$ which generates the discrete function. The set of coefficients is thus another way to represent the discrete
+\f$ c_j \f$ which generate the discrete function. The set of coefficients is thus another way to represent the discrete
 function:
 
 \f[
@@ -67,7 +71,7 @@ function which can be evaluated anywhere between the points of the mesh.
 Note: performing a (direct) transformation then an evaluation is an interpolation.
 
 Basis of function spaces can have additional properties like orthogonality
-\f$ <\phi_i|\phi_j>= \int \phi_i(x) \phi_j(x)\; dx = \delta_{ij} \f$. Thus, \f$ c_j = <f|\phi_j> \f$.
+\f$ <\phi_i|\phi_j>= \int \phi_i(x) \phi_j(x)\; dx = \delta_{ij} \f$ (thus, \f$ c_j = <f|\phi_j> \f$).
 This is the case for Fourier transform, and it provides a numerical method to perform the transformation (but not the most
 efficient one). In the general case orthogonality is not verified though, thus transformation algorithms are basis-specific.
 
@@ -84,4 +88,4 @@ commonly-implemented feature in the well-known FFT libraries).
 
 ## Spline transform
 
-Please refer to Emily Bourne's thesis (https://www.theses.fr/2022AIXM0412.pdf)
+Please refer to Emily Bourne's thesis (https://www.theses.fr/2022AIXM0412.pdf) and the spline-related API documentation.

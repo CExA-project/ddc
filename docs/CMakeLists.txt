@@ -76,6 +76,7 @@ doxygen_add_docs(
     "${CMAKE_CURRENT_SOURCE_DIR}/examples.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake_integration.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/installation.md"
+    "${CMAKE_CURRENT_SOURCE_DIR}/transformations.md"
     "${DDC_BINARY_DIR}/ddc_core_verify_interface_header_sets"
     "${DDC_BINARY_DIR}/ddc_fft_verify_interface_header_sets"
     "${DDC_BINARY_DIR}/ddc_pdi_verify_interface_header_sets"

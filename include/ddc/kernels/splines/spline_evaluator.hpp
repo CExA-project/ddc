@@ -21,15 +21,15 @@ namespace ddc {
  * @tparam ExecSpace The Kokkos execution space on which the spline evaluation is performed.
  * @tparam MemorySpace The Kokkos memory space on which the data (spline coefficients and evaluation) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
- * @tparam InterpolationMesh The discrete dimension on which evaluation points are defined.
- * @tparam BcXmin The lower extrapolation rule type.
- * @tparam BcXmax The upper extrapolation rule type.
- * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (InterpolationMesh + batched dimensions).
+ * @tparam EvaluationMesh The discrete dimension on which evaluation points are defined.
+ * @tparam LeftExtrapolationRule The lower extrapolation rule type.
+ * @tparam RightExtrapolationRule The upper extrapolation rule type.
+ * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (EvaluationMesh + batched dimensions).
  */
 template <
         class ExecSpace,
         class MemorySpace,
-        class BSplinesType,
+        class BSplines,
         class EvaluationMesh,
         class LeftExtrapolationRule,
         class RightExtrapolationRule,

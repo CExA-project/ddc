@@ -14,15 +14,29 @@
 namespace ddc {
 
 /**
- * @brief Define an evaluator 2D on B-splines.
+ * @brief A class to evaluate, differentiate or integrate a 2D spline function.
+ *
+ * A class which contains an operator () which can be used to evaluate, differentiate or integrate a 2D spline function.
+ *
+ * @tparam ExecSpace The Kokkos execution space on which the spline evaluation is performed.
+ * @tparam MemorySpace The Kokkos memory space on which the data (spline coefficients and evaluation) is stored.
+ * @tparam BSplines1 The discrete dimension representing the B-splines along the first dimension of interest.
+ * @tparam BSplines2 The discrete dimension representing the B-splines along the second dimension of interest.
+ * @tparam EvaluationMesh1 The first discrete dimension on which evaluation points are defined.
+ * @tparam EvaluationMesh2 The second discrete dimension on which evaluation points are defined.
+ * @tparam LeftExtrapolationRule1 The lower extrapolation rule type along first dimension of interest.
+ * @tparam RightExtrapolationRule1 The upper extrapolation rule type along first dimension of interest.
+ * @tparam LeftExtrapolationRule2 The lower extrapolation rule type along second dimension of interest.
+ * @tparam RightExtrapolationRule2 The upper extrapolation rule type along second dimension of interest.
+ * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (EvaluationMesh1 + EvaluationMesh2 + batched dimensions).
  */
 template <
         class ExecSpace,
         class MemorySpace,
-        class BSplinesType1,
-        class BSplinesType2,
-        class evaluation_mesh_type1,
-        class evaluation_mesh_type2,
+        class BSplines1,
+        class BSplines2,
+        class EvaluationMesh1,
+        class EvaluationMesh2,
         class LeftExtrapolationRule1,
         class RightExtrapolationRule1,
         class LeftExtrapolationRule2,
@@ -45,8 +59,8 @@ private:
     {
     };
 
-    using tag_type1 = typename BSplinesType1::tag_type;
-    using tag_type2 = typename BSplinesType2::tag_type;
+    using tag_type1 = typename BSplines1::tag_type;
+    using tag_type2 = typename BSplines2::tag_type;
 
 public:
     /// @brief The type of the Kokkos execution space used by this class.
@@ -55,11 +69,17 @@ public:
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
+    /// @brief The type of the first evaluation discrete dimension (discrete dimension of interest).
+    using evaluation_mesh_type1 = EvaluationMesh1;
+
+    /// @brief The type of the second evaluation discrete dimension (discrete dimension of interest).
+    using evaluation_mesh_type2 = EvaluationMesh2;
+
     /// @brief The discrete dimension representing the B-splines along first dimension.
-    using bsplines_type1 = BSplinesType1;
+    using bsplines_type1 = BSplines1;
 
     /// @brief The discrete dimension representing the B-splines along second dimension.
-    using bsplines_type2 = BSplinesType2;
+    using bsplines_type2 = BSplines2;
 
     /// @brief The type of the domain for the 1D evaluation mesh along first dimension used by this class.
     using evaluation_domain_type1 = ddc::DiscreteDomain<evaluation_mesh_type1>;

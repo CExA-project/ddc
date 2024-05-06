@@ -46,7 +46,7 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
 /**
  * @brief Return the default value of the hyperparameter cols_per_chunk for a given Kokkos::ExecutionSpace.
  *
- * The values are hardware-specific (but they can be overriden in the constructor of MatrixSparse). They have been tuned on the basis of ddc/benchmarks/splines.cpp results.
+ * The values are hardware-specific (but they can be overriden in the constructor of MatrixSparse). They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace type.
  * @return The default value for the hyperparameter cols_per_chunk.
@@ -80,7 +80,7 @@ int default_cols_per_chunk() noexcept
 /**
  * @brief Return the default value of the hyperparameter preconditionner_max_block_size for a given Kokkos::ExecutionSpace.
  *
- * The values are hardware-specific (but they can be overriden in the constructor of MatrixSparse). They have been tuned on the basis of ddc/benchmarks/splines.cpp results.
+ * The values are hardware-specific (but they can be overriden in the constructor of MatrixSparse). They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace type.
  * @return The default value for the hyperparameter preconditionner_max_block_size.
@@ -114,7 +114,7 @@ unsigned int default_preconditionner_max_block_size() noexcept
 /**
  * @brief A sparse Matrix.
  *
- * The current storage format is Csr. Ginkgo is used to perform every matrix and linear solver-related operations.
+ * The current storage format is CSR. Ginkgo is used to perform every matrix and linear solver-related operations.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are performed.
  */
@@ -182,7 +182,7 @@ public:
     /**
      * @brief A function called by factorize() to perform the pre-process operation.
      *
-     * Removes the zeros from the Csr object and instantiate a Ginkgo solver. It also construct a transposed version of the solver.
+     * Removes the zeros from the CSR object and instantiate a Ginkgo solver. It also constructs a transposed version of the solver.
      *
      * The stopping criterion is a reduction factor ||x||/||b||<1e-15 with 1000 maximum iterations.
      *

@@ -395,26 +395,26 @@ private:
                     spline_coef) const
     {
         ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
-                coord_eval_evaluation
+                coord_eval_interest
                 = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
         if constexpr (bsplines_type::is_periodic()) {
-            if (coord_eval_evaluation < ddc::discrete_space<bsplines_type>().rmin()
-                || coord_eval_evaluation > ddc::discrete_space<bsplines_type>().rmax()) {
-                coord_eval_evaluation -= Kokkos::floor(
-                                                 (coord_eval_evaluation
-                                                  - ddc::discrete_space<bsplines_type>().rmin())
-                                                 / ddc::discrete_space<bsplines_type>().length())
-                                         * ddc::discrete_space<bsplines_type>().length();
+            if (coord_eval_interest < ddc::discrete_space<bsplines_type>().rmin()
+                || coord_eval_interest > ddc::discrete_space<bsplines_type>().rmax()) {
+                coord_eval_interest -= Kokkos::floor(
+                                               (coord_eval_interest
+                                                - ddc::discrete_space<bsplines_type>().rmin())
+                                               / ddc::discrete_space<bsplines_type>().length())
+                                       * ddc::discrete_space<bsplines_type>().length();
             }
         } else {
-            if (coord_eval_evaluation < ddc::discrete_space<bsplines_type>().rmin()) {
-                return m_left_extrap_rule(coord_eval_evaluation, spline_coef);
+            if (coord_eval_interest < ddc::discrete_space<bsplines_type>().rmin()) {
+                return m_left_extrap_rule(coord_eval_interest, spline_coef);
             }
-            if (coord_eval_evaluation > ddc::discrete_space<bsplines_type>().rmax()) {
-                return m_right_extrap_rule(coord_eval_evaluation, spline_coef);
+            if (coord_eval_interest > ddc::discrete_space<bsplines_type>().rmax()) {
+                return m_right_extrap_rule(coord_eval_interest, spline_coef);
             }
         }
-        return eval_no_bc<eval_type>(coord_eval_evaluation, spline_coef);
+        return eval_no_bc<eval_type>(coord_eval_interest, spline_coef);
     }
 
     template <class EvalType, class Layout, class... CoordsDims>
@@ -432,12 +432,12 @@ private:
                 std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
                 vals(vals_ptr.data());
         ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
-                coord_eval_evaluation
+                coord_eval_interest
                 = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
         if constexpr (std::is_same_v<EvalType, eval_type>) {
-            jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_evaluation);
+            jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
         } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {
-            jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_evaluation);
+            jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interest);
         }
         double y = 0.0;
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {

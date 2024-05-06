@@ -105,12 +105,12 @@ public:
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
     /**
-	 * @brief The type of the batch domain (obtained by removing the dimension of interest
-	 * from the whole domain).
-	 *
-	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
+     * @brief The type of the batch domain (obtained by removing the dimension of interest
+     * from the whole domain).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
      * this is DiscreteDomain<X,Z>
-	 */
+     */
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,

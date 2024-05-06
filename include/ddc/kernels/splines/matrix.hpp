@@ -112,7 +112,8 @@ public:
      * @brief Solve the multiple-right-hand-side linear problem Ax=b inplace.
      *
      * @param[in, out] bx A 2D mdpsan storing the multiple right-hand-sides of the problem and receiving the corresponding solution.
-     * Important note: the convention is the reverse of the common matrix one, row number is second index and column number the first one. It should be changed in the future.
+     * Important note: the convention is the reverse of the common matrix one, row number is second index and column number
+     * the first one. It should be changed in the future.
      *
      * @return bx
      */
@@ -132,7 +133,8 @@ public:
      * @brief Solve the transposed multiple-right-hand-side linear problem A^tx=b inplace.
      *
      * @param[in, out] bx A 2D mdpsan storing the multiple right-hand-sides of the problem and receiving the corresponding solution.
-     * Important note: the convention is the reverse of the common matrix one, row number is second index and column number the first one. It should be changed in the future.
+     * Important note: the convention is the reverse of the common matrix one, row number is second index and column number
+     * the first one. It should be changed in the future.
      *
      * @return bx
      */
@@ -152,7 +154,8 @@ public:
      * @brief Solve the multiple-right-hand-side linear problem Ax=b inplace.
      *
      * @param[in, out] bx A 2D Kokkos::View storing the multiple right-hand-sides of the problem and receiving the corresponding solution.
-     * Important note: the convention is the reverse of the common matrix one, row number is second index and column number the first one. It should be changed in the future.
+     * Important note: the convention is the reverse of the common matrix one, row number is second index and column number
+     * the first one. It should be changed in the future.
      *
      * @return bx
      */

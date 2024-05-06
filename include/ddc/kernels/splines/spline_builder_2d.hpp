@@ -183,7 +183,7 @@ private:
 
 public:
     /**
-	 * @brief Build a SplineBuilder2D acting on batched_interpolation_domain.
+     * @brief Build a SplineBuilder2D acting on batched_interpolation_domain.
      * 
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
      *

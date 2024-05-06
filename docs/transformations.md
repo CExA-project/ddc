@@ -26,15 +26,15 @@ finite element methods, filtering (compression), signal analysis (post-process).
 
 Every basis has its own specificities (ie. orthogonality, n-derivability, etc...) but as they belong to the same frame
 of "set of functions which form a basis", they have in common a formalism and a terminology. However, this is currently
-not very manifest when looking at the API in the DDC implementations (DFT and Spline API are very different).
+not very manifest when looking at the API in the DDC implementations (DFT and Splines API are very different).
 It must be explained:
 
 - Fourier requires the periodicity of the represented function, thus boundary conditions does not need to be provided.
-- Fourier basis functions are indexed with the wave vector k, whose possible values form a set of coordinates which generates
+- Fourier basis functions are indexed with the wave vector \f$ \vec{k} \f$, whose possible values form a set of coordinates which generates
 the Fourier space. Mesh of "real" space and mesh of Fourier space are in bijection one-to-the-other.
 The situation is more complicated for Splines.
 - Fourier and Splines basis use-cases are quite different. Thus - as shown below - the so-called "evaluator" is not
-implemented for Fourier (while inverse DFT is) and inverse Spline transform is not implemented (while Spline evaluation is).
+implemented for Fourier (while inverse DFT is) and inverse Spline transform is not implemented (while Spline evaluator is).
 - FFT backends support 1D to 3D Fourier transforms. General n-dimensional Spline transform would be a mess to implement for all supported boundary conditions so we limit to the 2D case.
 - DFT is not currently supported in batched configuration (but it may be the subject of future development). Batched splines are supported.
 
@@ -95,7 +95,7 @@ Fourier transform is the transformation with \f$ \phi_j=e^{ikx} \f$. The algorit
 
 Fourier space associated to continuous dimension *X* is represented using the *Fourier<X>* templated tag.
 
-The performance-compatibility is ensured using the backends FFTW, cuFFT or hipFFT depending of Kokkos::ExecutionSpace
+The performance-compatibility is ensured using the backends FFTW, cuFFT or hipFFT depending of *Kokkos::ExecutionSpace*
 which templates the functions. Thus, no FFT algorithm is actually implemented in DDC, which is more a wrapper of those
 backends. However, the spectral mesh can be computed (as a *DiscreteDomain*) knowing the real mesh (which is not a
 commonly-implemented feature in the well-known FFT libraries).

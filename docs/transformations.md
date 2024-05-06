@@ -24,8 +24,8 @@ may be continuous).
 There are many use-cases of transformations for simulation or signal processing needs: interpolation, spectral methods,
 finite element methods, filtering (compression), signal analysis (post-process)...
 
-Every basis has its own specificities (ie. orthogonality, n-derivability, etc...) but as they belong to the same frame
-of "set of functions which form a basis", they have in common a formalism and a terminology. However, this is currently
+Every basis has its own specificities (ie. orthogonality, n-derivability, etc...) but as they all are
+function space basis, they have in common a formalism and a terminology. However, this is currently
 not very manifest when looking at the API in the DDC implementations (DFT and Splines API are very different).
 It must be explained:
 

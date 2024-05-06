@@ -19,7 +19,7 @@ namespace ddc {
  * A class which contains an operator () which can be used to evaluate, differentiate or integrate a spline function.
  *
  * @tparam ExecSpace The Kokkos execution space on which the spline evaluation is performed.
- * @tparam MemorySpace The Kokkos memory space on which the data (evaluation function and spline coefficients) is stored.
+ * @tparam MemorySpace The Kokkos memory space on which the data (spline coefficients and evaluation) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
  * @tparam InterpolationMesh The discrete dimension on which evaluation points are defined.
  * @tparam BcXmin The lower extrapolation rule type.
@@ -238,7 +238,7 @@ public:
      * The spline coefficients represent a spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
      *
-     * This is not a multidimensional evaluation. This is a batched 1D evaluation. It means for each coordinate of coords_eval, the evaluation is performed with the 1D set of spline coefficents of spline_coef identified with the same batch_domain_type::discrete_element_type which identifies the given coordinate of coords_eval (or the corresponding value of spline_eval which is computed).
+     * This is not a multidimensional evaluation. This is a batched 1D evaluation. This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type, the evaluation is performed with the 1D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline interpolation.
      *
@@ -305,7 +305,7 @@ public:
      * The spline coefficients represent a spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
      *
-     * The derivation is not performed in a multidimensional way (in any sense). This is a batched 1D derivation. It means for each coordinate of coords_eval, the derivation is performed with the 1D set of spline coefficents of spline_coef identified with the same batch_domain_type::discrete_element_type which identifies the given coordinate of coords_eval (or the corresponding value of spline_eval which is computed).
+     * The derivation is not performed in a multidimensional way (in any sense). This is a batched 1D derivation. This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type, the derivation is performed with the 1D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * @param[out] spline_eval The derivatives of the spline function at the desired coordinates. For practical reasons those are
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
@@ -350,7 +350,7 @@ public:
      *
      * The spline coefficients represent a spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
      *
-     * The integration is not performed in a multidimensional way (in any sense). This is a batched 1D integration. It means for each element of integrals, the integration is performed with the 1D set of spline coefficents of spline_coef identified with the same DiscreteElement.
+     * The integration is not performed in a multidimensional way (in any sense). This is a batched 1D integration. This means that for each element of integrals, the integration is performed with the 1D set of spline coefficients identified by the same DiscreteElement.
      *
      * @param[out] integrals The integrals of the spline function on the subdomain of batch_domain. For practical reasons those are
      * stored in a ChunkSpan defined on a batch_domain_type. Note that the coordinates of the

@@ -84,8 +84,7 @@ Here is a summary of different general terms used in the context of DDC transfor
 | Discrete function | Function defined on a mesh (via its values at each point of via its coefficients in a particular finite basis representation). |
 | Dimension(s) of interest | Dimension(s) along which the transformation is performed |
 | Batch dimension(s) | Dimension(s) unaffected by the transformation. It leads to a set of transformations performed independantly (along dimensions of interest). Those are embarassingly parallelizable. |
-| Interpolant functions | Same as basis functions \f$ \phi_j \f$ |
-| Interpolating function | Continuous function generated from the coefficients \f$ c_j \f$ and the interpolant functions. |
+| Interpolating function | Continuous function generated from the coefficients \f$ c_j \f$ and the basis functions \f$ \phi_j \f$. |
 | Approximation | Same as transformation (computing the coefficients of the interpolating function). |
 | Interpolation points | Points of the mesh, supporting the discrete function through which interpolating function goes. |
 | Evaluation points | Points on which we want the interpolating function to be evaluated. |

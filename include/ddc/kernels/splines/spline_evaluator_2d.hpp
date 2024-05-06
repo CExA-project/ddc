@@ -739,23 +739,23 @@ private:
                 std::experimental::extents<std::size_t, bsplines_type2::degree() + 1>> const
                 vals2(vals2_ptr.data());
         ddc::Coordinate<typename evaluation_mesh_type1::continuous_dimension_type>
-                coord_eval_evaluation1
+                coord_eval_interest1
                 = ddc::select<typename evaluation_mesh_type1::continuous_dimension_type>(
                         coord_eval);
         ddc::Coordinate<typename evaluation_mesh_type2::continuous_dimension_type>
-                coord_eval_evaluation2
+                coord_eval_interest2
                 = ddc::select<typename evaluation_mesh_type2::continuous_dimension_type>(
                         coord_eval);
 
         if constexpr (std::is_same_v<EvalType1, eval_type>) {
-            jmin1 = ddc::discrete_space<bsplines_type1>().eval_basis(vals1, coord_eval_evaluation1);
+            jmin1 = ddc::discrete_space<bsplines_type1>().eval_basis(vals1, coord_eval_interest1);
         } else if constexpr (std::is_same_v<EvalType1, eval_deriv_type>) {
-            jmin1 = ddc::discrete_space<bsplines_type1>().eval_deriv(vals1, coord_eval_evaluation1);
+            jmin1 = ddc::discrete_space<bsplines_type1>().eval_deriv(vals1, coord_eval_interest1);
         }
         if constexpr (std::is_same_v<EvalType2, eval_type>) {
-            jmin2 = ddc::discrete_space<bsplines_type2>().eval_basis(vals2, coord_eval_evaluation2);
+            jmin2 = ddc::discrete_space<bsplines_type2>().eval_basis(vals2, coord_eval_interest2);
         } else if constexpr (std::is_same_v<EvalType2, eval_deriv_type>) {
-            jmin2 = ddc::discrete_space<bsplines_type2>().eval_deriv(vals2, coord_eval_evaluation2);
+            jmin2 = ddc::discrete_space<bsplines_type2>().eval_deriv(vals2, coord_eval_interest2);
         }
 
         double y = 0.0;

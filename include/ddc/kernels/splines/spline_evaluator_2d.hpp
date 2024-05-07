@@ -211,12 +211,12 @@ public:
             "with usual arguments.");
 
     /**
-     * @brief Build a SplineEvaluator acting on batched_spline_domain.
+     * @brief Build a SplineEvaluator2D acting on batched_spline_domain.
      * 
-     * @param left_extrap_rule1 The extrapolation rule at the lower boundary along first dimension.
-     * @param right_extrap_rule1 The extrapolation rule at the upper boundary along first dimension.
-     * @param left_extrap_rule2 The extrapolation rule at the lower boundary along second dimension.
-     * @param right_extrap_rule2 The extrapolation rule at the upper boundary along second dimension.
+     * @param left_extrap_rule1 The extrapolation rule at the lower boundary along the first dimension.
+     * @param right_extrap_rule1 The extrapolation rule at the upper boundary along the first dimension.
+     * @param left_extrap_rule2 The extrapolation rule at the lower boundary along the second dimension.
+     * @param right_extrap_rule2 The extrapolation rule at the upper boundary along the second dimension.
      *
      * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
      */
@@ -324,11 +324,11 @@ public:
     /**
      * @brief Evaluate 2D spline function (described by its spline coefficients) at a given coordinate.
      *
-     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
+     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
      *
      * Remark: calling SplineBuilder2D then SplineEvaluator2D corresponds to a 2D spline interpolation.
      *
-     * @param coord_eval The coordinate where the spline is evaluated. Note that only the component along the dimensions of interest are used.
+     * @param coord_eval The coordinate where the spline is evaluated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
      *
      * @return The value of the spline function at the desired coordinate. 
@@ -342,6 +342,28 @@ public:
         return eval(coord_eval, spline_coef);
     }
 
+    /**
+     * @brief Evaluate 2D spline function (described by its spline coefficients) on a mesh.
+     *
+     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
+     *
+     * This is not a nD evaluation. This is a batched 2D evaluation. This means that for each slice of coordinates
+     * identified by a batch_domain_type::discrete_element_type, the evaluation is performed with the 2D set of
+     * spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     *
+     * Remark: calling SplineBuilder2D then SplineEvaluator2D corresponds to a 2D spline interpolation.
+     *
+     * @param[out] spline_eval The values of the 2D spline function at the desired coordinates. For practical reasons those are
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
+     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
+     * the set of 2D spline coefficients retained to perform the evaluation).
+     * @param[in] coords_eval The coordinates where the spline is evaluated. Those are
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
+     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
+     * the set of 2D spline coefficients retained to perform the evaluation).
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
+     */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void operator()(
             ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
@@ -373,14 +395,15 @@ public:
     }
 
     /**
-     * @brief Get the value of the derivative of the first dimension of the function on B-splines at the coordinate given.
+     * @brief Differentiate 2D spline function (described by its spline coefficients) at a given coordinate along first dimension of interest.
      *
-     * @param[in] coord_eval
-     * 			The 2D coordinate where we want to evaluate the derivative of the first dimension of the function.
-     * @param[in] spline_coef
-     * 			The B-splines coefficients of the function we want to evaluate.
+     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be
+     * obtained via various methods, such as using a SplineBuilder2D.
      *
-     * @return A double containing the value of the derivative of the first dimension of the function at the coordinate given.
+     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
+     * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
+     *
+     * @return The derivative of the spline function at the desired coordinate. 
      */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_dim_1(
@@ -392,14 +415,15 @@ public:
     }
 
     /**
-     * @brief Get the value of the derivative of the second dimension of the function on B-splines at the coordinate given.
+     * @brief Differentiate 2D spline function (described by its spline coefficients) at a given coordinate along second dimension of interest.
      *
-     * @param[in] coord_eval
-     * 			The 2D coordinate where we want to evaluate the derivative of the second dimension of the function.
-     * @param[in] spline_coef
-     * 			The B-splines coefficients of the function we want to evaluate.
+     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be
+     * obtained via various methods, such as using a SplineBuilder2D.
      *
-     * @return A double containing the value of the derivative of the second dimension of the function at the coordinate given.
+     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
+     * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
+     *
+     * @return The derivative of the spline function at the desired coordinate. 
      */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_dim_2(
@@ -411,14 +435,15 @@ public:
     }
 
     /**
-     * @brief Get the value of the cross derivative of the function on B-splines at the coordinate given.
+     * @brief Cross-differentiate 2D spline function (described by its spline coefficients) at a given coordinate.
      *
-     * @param[in] coord_eval
-     * 			The 2D coordinate where we want to evaluate the cross derivative of the function.
-     * @param[in] spline_coef
-     * 			The B-splines coefficients of the function we want to evaluate.
+     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be
+     * obtained via various methods, such as using a SplineBuilder2D.
      *
-     * @return A double containing the value of the cross derivative of the function at the coordinate given.
+     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
+     * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
+     *
+     * @return The derivative of the spline function at the desired coordinate. 
      */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_1_and_2(

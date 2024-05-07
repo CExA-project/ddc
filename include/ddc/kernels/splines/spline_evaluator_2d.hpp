@@ -69,10 +69,10 @@ public:
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
-    /// @brief The type of the first evaluation discrete dimension (discrete dimension of interest) used by this class.
+    /// @brief The type of the first discrete dimension of interest used by this class.
     using evaluation_mesh_type1 = EvaluationMesh1;
 
-    /// @brief The type of the second evaluation discrete dimension (discrete dimension of interest) used by this class.
+    /// @brief The type of the second discrete dimension of interest used by this class.
     using evaluation_mesh_type2 = EvaluationMesh2;
 
     /// @brief The discrete dimension representing the B-splines along first dimension.
@@ -324,7 +324,7 @@ public:
     /**
      * @brief Evaluate 2D spline function (described by its spline coefficients) at a given coordinate.
      *
-     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
+     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
      *
      * Remark: calling SplineBuilder2D then SplineEvaluator2D corresponds to a 2D spline interpolation.
      *
@@ -490,15 +490,15 @@ public:
     }
 
     /**
-     * @brief Double-differentiate 2D spline function (described by its spline coefficients) at a given coordinate.
+     * @brief Double-differentiate 2D spline function (described by its spline coefficients) at a given coordinate along specified dimensions of interest.
      *
      * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be
      * obtained via various methods, such as using a SplineBuilder2D.
      *
-     * Note: Double-differentiation other than cross-differentiation is not supported atm. See #440
+     * Note: double-differentiation other than cross-differentiation is not supported atm. See #440
      *
      * @tparam InterestDim1 First dimension along which differentiation is performed.
-     * @tparam InterestDim1 Second dimension along which differentiation is performed.
+     * @tparam InterestDim2 Second dimension along which differentiation is performed.
      *
      * @param coord_eval The coordinate where the spline is double-differentiated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
@@ -541,7 +541,7 @@ public:
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 2D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_dim_1(
@@ -593,7 +593,7 @@ public:
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 2D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_dim_2(
@@ -645,7 +645,7 @@ public:
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 2D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_1_and_2(
@@ -698,7 +698,7 @@ public:
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 2D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
     template <class InterestDim, class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv(
@@ -729,7 +729,7 @@ public:
     }
 
     /**
-     * @brief Double-differentiate spline function (described by its spline coefficients) on a mesh along specified dimensions of interest.
+     * @brief Double-differentiate 2D spline function (described by its spline coefficients) on a mesh along specified dimensions of interest.
      *
      * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
@@ -738,7 +738,7 @@ public:
      * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
      * the differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
-     * Note: Double-differentiation other than cross-differentiation is not supported atm. See #440
+     * Note: double-differentiation other than cross-differentiation is not supported atm. See #440
      *
      * @tparam InterestDim1 First dimension along which differentiation is performed.
      * @tparam InterestDim2 Second dimension along which differentiation is performed.
@@ -751,7 +751,7 @@ public:
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
      * the set of 2D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
     template <
             class InterestDim1,
@@ -794,7 +794,7 @@ public:
      * @param[out] integrals The integrals of the 2D spline function on the subdomain of batch_domain. For practical reasons those are
      * stored in a ChunkSpan defined on a batch_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant.
-     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
     template <class Layout1, class Layout2>
     void integrate(

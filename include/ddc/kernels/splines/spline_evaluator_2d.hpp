@@ -69,10 +69,10 @@ public:
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
-    /// @brief The type of the first evaluation discrete dimension (discrete dimension of interest).
+    /// @brief The type of the first evaluation discrete dimension (discrete dimension of interest) used by this class.
     using evaluation_mesh_type1 = EvaluationMesh1;
 
-    /// @brief The type of the second evaluation discrete dimension (discrete dimension of interest).
+    /// @brief The type of the second evaluation discrete dimension (discrete dimension of interest) used by this class.
     using evaluation_mesh_type2 = EvaluationMesh2;
 
     /// @brief The discrete dimension representing the B-splines along first dimension.

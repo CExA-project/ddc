@@ -37,11 +37,16 @@ template <
 class SplineEvaluator
 {
 private:
-    // Tags to determine what to evaluate
+    /**
+     * @brief Tag to indicate that the value of the spline should be evaluated.
+     */
     struct eval_type
     {
     };
 
+    /**
+     * @brief Tag to indicate that derivative of the spline should be evaluated.
+     */
     struct eval_deriv_type
     {
     };

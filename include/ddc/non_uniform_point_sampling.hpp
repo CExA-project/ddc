@@ -109,6 +109,12 @@ public:
             return m_points.size();
         }
 
+        /// @brief Lower bound index of the mesh
+        KOKKOS_FUNCTION discrete_element_type front() const noexcept
+        {
+            return discrete_element_type {0};
+        }
+
         /// @brief Convert a mesh index into a position in `CDim`
         KOKKOS_FUNCTION continuous_element_type
         coordinate(discrete_element_type const& icoord) const noexcept
@@ -116,6 +122,78 @@ public:
             return m_points(icoord.uid());
         }
     };
+
+    /** Construct an Impl<Kokkos::HostSpace> and associated discrete_domain_type from an iterator
+     * containing the points coordinates along the `DDim` dimension.
+     *
+     * @param non_uniform_points a vector containing the coordinates of the points of the domain.
+     */
+    template <class DDim, class InputRange>
+    static std::tuple<typename DDim::template Impl<DDim, Kokkos::HostSpace>, DiscreteDomain<DDim>>
+    init(InputRange const non_uniform_points)
+    {
+        auto a = non_uniform_points.begin();
+        auto b = non_uniform_points.end();
+        auto n = std::distance(non_uniform_points.begin(), non_uniform_points.end());
+        assert(a < b);
+        assert(n > 0);
+        typename DDim::template Impl<DDim, Kokkos::HostSpace>
+                disc(non_uniform_points);
+        DiscreteDomain<DDim> domain {disc.front(), DiscreteVector<DDim> {n} };
+        return std::make_tuple(std::move(disc), std::move(domain));
+    }
+
+    /** Construct 4 non-uniform `DiscreteDomain` and an Impl<Kokkos::HostSpace> from 3 iterators containing the points coordinates along the `DDim` dimension.
+     *
+     * @param domain_it an iterator containing the coordinates of the points of the main domain along the DDim position
+     * @param pre_ghost_it an iterator containing the positions of the ghost points before the main domain the DDim position
+     * @param post_ghost_it an iterator containing the positions of the ghost points after the main domain the DDim position
+     */
+    template <class DDim, class InputRange>
+    static std::tuple<
+            typename DDim::template Impl<DDim, Kokkos::HostSpace>,
+            DiscreteDomain<DDim>,
+            DiscreteDomain<DDim>,
+            DiscreteDomain<DDim>,
+            DiscreteDomain<DDim>>
+    init_ghosted(
+            InputRange const domain_it, InputRange const pre_ghost_it, InputRange const post_ghost_it)
+    {
+        using discrete_domain_type = DiscreteDomain<DDim>;
+        auto a = domain_it.begin();
+        auto b = domain_it.end();
+        auto n = DiscreteVector<DDim>{std::distance(domain_it.begin(), domain_it.end())};
+
+        assert(a < b);
+        assert(n > 0);
+
+        auto n_ghosts_before = DiscreteVector<DDim>{std::distance(pre_ghost_it.begin(), pre_ghost_it.end())};
+        auto n_ghosts_after = DiscreteVector<DDim>{std::distance(post_ghost_it.begin(), post_ghost_it.end())};
+
+        std::vector<typename InputRange::value_type> full_domain;
+
+        std::copy(pre_ghost_it.begin(), pre_ghost_it.end(), std::back_inserter(full_domain));
+        std::copy(domain_it.begin(), domain_it.end(), std::back_inserter(full_domain));
+        std::copy(post_ghost_it.begin(), post_ghost_it.end(), std::back_inserter(full_domain));
+
+        typename DDim::template Impl<DDim, Kokkos::HostSpace> disc(full_domain);
+
+        discrete_domain_type ghosted_domain
+                = discrete_domain_type(disc.front(), n + n_ghosts_before + n_ghosts_after);
+        discrete_domain_type pre_ghost
+                = discrete_domain_type(ghosted_domain.front(), n_ghosts_before);
+        discrete_domain_type main_domain
+                = discrete_domain_type(ghosted_domain.front() + n_ghosts_before, n);
+        discrete_domain_type post_ghost
+                = discrete_domain_type(main_domain.back() + 1, n_ghosts_after);
+        return std::make_tuple(
+                std::move(disc),
+                std::move(main_domain),
+                std::move(ghosted_domain),
+                std::move(pre_ghost),
+                std::move(post_ghost));
+    }
+
 };
 
 template <class DDim>

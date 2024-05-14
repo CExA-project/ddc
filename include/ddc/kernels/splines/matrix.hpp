@@ -17,7 +17,7 @@ namespace ddc::detail {
 /**
  * @brief The parent class for matrices.
  *
- * It represents a Matrix storage format, methods to fill it and multiple-right-hand-size linear solvers. The matrix is necessarily squared.
+ * It represents a square Matrix. Implementations may have different storage formats, filling methods and multiple right-hand sides linear solvers.
  */
 class Matrix
 {
@@ -30,17 +30,17 @@ public:
     virtual ~Matrix() = default;
 
     /**
-     * @brief Get an element of the matrix at indexes i, j.
+     * @brief Get an element of the matrix at indexes i, j. It must not be called after `factorize`.
      *
      * @param i The row index of the desired element.
-     * @param j The columns index of the desired element.
+     * @param j The column index of the desired element.
      *
      * @return The value of the element of the matrix.
      */
     virtual double get_element(int i, int j) const = 0;
 
     /**
-     * @brief Set an element of the matrix at indexes i, j.
+     * @brief Set an element of the matrix at indexes i, j. It must not be called after `factorize`.
      *
      * @param i The row index of the setted element.
      * @param j The column index of the setted element.
@@ -75,7 +75,7 @@ public:
     /**
      * @brief Solve the linear problem Ax=b inplace.
      *
-     * @param[in, out] b A 1D mdpsan storing a right-hand-side of the problem and receiving the corresponding solution.
+     * @param[in, out] b A 1D mdpsan storing a right-hand side of the problem and receiving the corresponding solution.
      */
     virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const b) const
     {
@@ -92,7 +92,7 @@ public:
     /**
      * @brief Solve the transposed linear problem A^tx=b inplace.
      *
-     * @param[in, out] b A 1D mdpsan storing a right-hand-side of the problem and receiving the corresponding solution.
+     * @param[in, out] b A 1D mdpsan storing a right-hand side of the problem and receiving the corresponding solution.
      *
      * @return b
      */
@@ -109,11 +109,11 @@ public:
     }
 
     /**
-     * @brief Solve the multiple-right-hand-side linear problem Ax=b inplace.
+     * @brief Solve the multiple right-hand sides linear problem Ax=b inplace.
      *
-     * @param[in, out] bx A 2D mdpsan storing the multiple right-hand-sides of the problem and receiving the corresponding solution.
+     * @param[in, out] bx A 2D mdpsan storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * Important note: the convention is the reverse of the common matrix one, row number is second index and column number
-     * the first one. It should be changed in the future.
+     * the first one. This means when solving `A x_i = b_i`,  element `(b_i)_j` is stored in `b(j, i)`.
      *
      * @return bx
      */
@@ -130,9 +130,9 @@ public:
     }
 
     /**
-     * @brief Solve the transposed multiple-right-hand-side linear problem A^tx=b inplace.
+     * @brief Solve the transposed multiple right-hand sides linear problem A^tx=b inplace.
      *
-     * @param[in, out] bx A 2D mdpsan storing the multiple right-hand-sides of the problem and receiving the corresponding solution.
+     * @param[in, out] bx A 2D mdspan storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * Important note: the convention is the reverse of the common matrix one, row number is second index and column number
      * the first one. It should be changed in the future.
      *
@@ -151,9 +151,9 @@ public:
     }
 
     /**
-     * @brief Solve the multiple-right-hand-side linear problem Ax=b inplace.
+     * @brief Solve the multiple-right-hand sides linear problem Ax=b inplace.
      *
-     * @param[in, out] bx A 2D Kokkos::View storing the multiple right-hand-sides of the problem and receiving the corresponding solution.
+     * @param[in, out] bx A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * Important note: the convention is the reverse of the common matrix one, row number is second index and column number
      * the first one. It should be changed in the future.
      *
@@ -174,7 +174,7 @@ public:
     }
 
     /**
-     * @brief Get the size of the matrix (which is necessarily squared) in one of its dimensions.
+     * @brief Get the size of the square matrix in one of its dimensions.
      *
      * @return The size of the matrix in one of its dimensions.
      */
@@ -184,7 +184,7 @@ public:
     }
 
     /**
-     * @brief Prints a Matrix in a std::ostream. It will segfault is the Matrix is on GPU.
+     * @brief Prints a Matrix in a std::ostream. It must not be called after `factorize`.
      *
      * @param out The stream in which the matrix is printed.
      *
@@ -213,8 +213,7 @@ protected:
     /**
      * @brief A function called by solve_inplace() and similar functions to actually perform the linear solve operation.
      *
-     * @param b A double* to a contiguous array containing the (eventually multiple) right-hand-sides. Memory layout depends on the
-     * derivated class (and the underlying algorithm).
+     * @param b A double* to a contiguous array containing the (eventually multiple) right-hand-sides. The memory layout is right.
      * @param transpose A character identifying if the normal ('N') or transposed ('T') linear system is solved.
      * @param n_equations The number of multiple-right-hand-sides (number of columns of b).
      * @return The error code of the function.

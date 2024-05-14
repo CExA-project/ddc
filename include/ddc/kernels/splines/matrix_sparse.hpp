@@ -44,13 +44,13 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
 }
 
 /**
- * @brief Return the default value of the hyperparameter cols_per_chunk for a given Kokkos::ExecutionSpace.
+ * @brief Return the default value of the parameter cols_per_chunk for a given Kokkos::ExecutionSpace.
  *
  * The values are hardware-specific (but they can be overriden in the constructor of MatrixSparse).
  * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace type.
- * @return The default value for the hyperparameter cols_per_chunk.
+ * @return The default value for the parameter cols_per_chunk.
  */
 template <class ExecSpace>
 int default_cols_per_chunk() noexcept
@@ -79,13 +79,13 @@ int default_cols_per_chunk() noexcept
 }
 
 /**
- * @brief Return the default value of the hyperparameter preconditionner_max_block_size for a given Kokkos::ExecutionSpace.
+ * @brief Return the default value of the parameter preconditionner_max_block_size for a given Kokkos::ExecutionSpace.
  *
  * The values are hardware-specific (but they can be overriden in the constructor of MatrixSparse).
  * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace type.
- * @return The default value for the hyperparameter preconditionner_max_block_size.
+ * @return The default value for the parameter preconditionner_max_block_size.
  */
 template <class ExecSpace>
 unsigned int default_preconditionner_max_block_size() noexcept
@@ -116,7 +116,7 @@ unsigned int default_preconditionner_max_block_size() noexcept
 /**
  * @brief A sparse Matrix.
  *
- * The current storage format is CSR. Ginkgo is used to perform every matrix and linear solver-related operations.
+ * The storage format is CSR. Ginkgo is used to perform every matrix and linear solver-related operations.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are performed.
  */
@@ -150,10 +150,10 @@ public:
     /**
      * @brief Matrix_Sparse constructor.
      *
-     * @param mat_size The size of one of the dimensions of the matrix (which is necessarily squared).
-     * @param cols_per_chunk An optional hyperparameter used to define the number of right-hand-sides to pass to
+     * @param mat_size The size of one of the dimensions of the square matrix.
+     * @param cols_per_chunk An optional parameter used to define the number of right-hand sides to pass to
      * Ginkgo solver calls. see default_cols_per_chunk.
-     * @param preconditionner_max_block_size An optional hyperparameter used to define the maximum size of a block
+     * @param preconditionner_max_block_size An optional parameter used to define the maximum size of a block
      * used by the block-Jacobi preconditionner. see default_preconditionner_max_block_size.
      */
     explicit Matrix_Sparse(
@@ -233,12 +233,11 @@ public:
      *
      * The solver method is currently Bicgstab on CPU Serial and GPU and Gmres on OMP (because of Ginkgo issue #1563).
      *
-     * Multiple-right-hand-sides are sliced in chunks of size cols_per_chunk which are passed one-after-the-other to Ginkgo.
+     * Multiple right-hand sides are sliced in chunks of size cols_per_chunk which are passed one-after-the-other to Ginkgo.
      *
-     * @param b A double* to a contiguous array containing the (eventually multiple) right-hand-sides. 
-     * Because of Ginkgo limitation, it has to be right layout (row-major).
+     * @param b A double* to a contiguous array containing the (eventually multiple) right-hand sides. 
      * @param transpose A character identifying if the normal ('N') or transposed ('T') linear system is solved.
-     * @param n_equations The number of multiple-right-hand-sides (number of columns in b).
+     * @param n_equations The number of multiple right-hand sides (number of columns in b).
      *
      * @return The error code of the function.
      */

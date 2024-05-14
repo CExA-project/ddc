@@ -190,12 +190,12 @@ public:
      * 
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
      *
-     * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size
+     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
      * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
      * by the linear solver one-after-the-other).
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
-     * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to
+     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to
      * define the size of a block used by the Block-Jacobi preconditioner.
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *

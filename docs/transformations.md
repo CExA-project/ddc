@@ -25,13 +25,13 @@ There are many use-cases of transformations for simulation or signal processing 
 finite element methods, filtering (compression), signal analysis (post-process)...
 
 Every basis has its own specificities (ie. orthogonality, n-derivability, etc...) but as they all are
-function space basis, they have in common a formalism and a terminology. However, this is currently
+function space bases, they have in common a formalism and a terminology. However, this is currently
 not very manifest when looking at the API in the DDC implementations (DFT and Splines API are very different).
 It must be explained:
 
-- Fourier requires the periodicity of the represented function, thus boundary conditions does not need to be provided.
-- Fourier basis functions are indexed with the wave vector \f$ \vec{k} \f$, whose possible values form a set of coordinates which generates
-the Fourier space. Mesh of "real" space and mesh of Fourier space are in bijection one-to-the-other.
+- Fourier requires the periodicity of the represented function, thus boundary conditions do not need to be provided.
+- Fourier basis functions are indexed with the wave vector \f$ \vec{k} \f$, whose possible values form a set of coordinates which generate
+the Fourier space. There is a bijection between the mesh of the "real" space and the mesh of the Fourier space.
 The situation is more complicated for Splines.
 - Fourier and Splines basis use-cases are quite different. Thus - as shown below - the so-called "evaluator" is not
 implemented for Fourier (while inverse DFT is) and inverse Spline transform is not implemented (while Spline evaluator is).
@@ -40,10 +40,10 @@ implemented for Fourier (while inverse DFT is) and inverse Spline transform is n
 
 To summarize the available features of the two kernels:
 
-|          | Direct transformation | Inverse transformation | Evaluation |
-|----------|-----------------|--------|-------------------|
-| DFT      | *fft*           | *ifft* | x                 |
-| Spline   | *SplineBuilder* | x      | *SplineEvaluator* |
+|          | Direct transformation | Inverse transformation | Evaluation        |
+|----------|-----------------------|------------------------|-------------------|
+| DFT      | *fft*                 | *ifft*                 | x                 |
+| Spline   | *SplineBuilder*       | x                      | *SplineEvaluator* |
 
 So, even if the two kernels *could* share a common API, this is not currently the case but this is more due to pratical considerations than intrinsic mathematical differences between the two methods.
 
@@ -62,7 +62,7 @@ f(x_i) = \sum_j c_j \phi_j(x_i)
 Note: the first method is covered by the second one in the particular case of \f$ \phi \f$ being the Dirac basis functions.
 
 The aim of a computation kernel dedicated to a transformation is to determine the values of coefficients \f$ c_j \f$
-knowing \f$ f(x_i) \f$ (and for the inverse transformation, \f$ f(x_i) \f$ knowing \f$ c_j \f$). 
+knowing \f$ f(x_i) \f$ (and for the inverse transformation, \f$ f(x_i) \f$ knowing \f$ c_j \f$).
 
 Additionally to the *transformation* and the *inverse transformation*, there is a third operation which can be useful:
 the *evaluation*. Indeed, more than a discrete function, coefficients \f$ c_j \f$ generate an interpolating (continuous)
@@ -75,19 +75,19 @@ Bases of function spaces can have additional properties like orthogonality
 This is the case for Fourier transform, and it provides a numerical method to perform the transformation (but not the most
 efficient one). In the general case orthogonality is not verified though, thus transformation algorithms are basis-specific.
 
-### Lexical 
+### Lexical
 
 Here is a summary of different general terms used in the context of DDC transformations:
 
-| Term     | Meaning & commentary |
-|----------|-----------------|
-| Discrete function | Function defined on a mesh (via its values at each point of via its coefficients in a particular finite basis representation). |
-| Dimension(s) of interest | Dimension(s) along which the transformation is performed |
-| Batch dimension(s) | Dimension(s) unaffected by the transformation. It leads to a set of transformations performed independantly (along dimensions of interest). Those are embarassingly parallelizable. |
-| Interpolating function | Continuous function generated from the coefficients \f$ c_j \f$ and the basis functions \f$ \phi_j \f$. |
-| Approximation | Same as transformation (computing the coefficients of the interpolating function). |
-| Interpolation points | Points of the mesh, supporting the discrete function through which interpolating function goes. |
-| Evaluation points | Points on which we want the interpolating function to be evaluated. |
+| Term                     | Meaning & commentary                                                                                                                                                                |
+|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Discrete function        | Function defined on a mesh (via its values at each point of via its coefficients in a particular finite basis representation).                                                      |
+| Dimension(s) of interest | Dimension(s) along which the transformation is performed                                                                                                                            |
+| Batch dimension(s)       | Dimension(s) unaffected by the transformation. It leads to a set of transformations performed independantly (along dimensions of interest). Those are embarassingly parallelizable. |
+| Interpolating function   | Continuous function generated from the coefficients \f$ c_j \f$ and the basis functions \f$ \phi_j \f$.                                                                             |
+| Approximation            | Same as transformation (computing the coefficients of the interpolating function).                                                                                                  |
+| Interpolation points     | Points of the mesh, supporting the discrete function through which interpolating function goes.                                                                                     |
+| Evaluation points        | Points on which we want the interpolating function to be evaluated.                                                                                                                 |
 
 ## Discrete Fourier Transform
 
@@ -102,4 +102,4 @@ commonly-implemented feature in the well-known FFT libraries).
 
 ## Spline transform
 
-Please refer to Emily Bourne's thesis (https://www.theses.fr/2022AIXM0412.pdf) and the spline-related API documentation.
+Please refer to Emily Bourne's thesis (<https://www.theses.fr/2022AIXM0412.pdf>) and the spline-related API documentation.

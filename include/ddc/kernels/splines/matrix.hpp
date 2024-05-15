@@ -15,19 +15,26 @@
 namespace ddc::detail {
 
 /**
- * @brief The parent class for matrices.
+ * @brief The parent class for a linear problem dedicated to compute a spline approximation.
  *
- * It represents a square Matrix. Implementations may have different storage formats, filling methods and multiple right-hand sides linear solvers.
+ * It represents a square Matrix and provides methods to solve a multiple right-hand sides linear problem.
+ * Implementations may have different storage formats, filling methods and multiple right-hand sides linear solvers.
  */
-class Matrix
+class SplinesLinearProblem
 {
-    int m_n;
+public:
+    /// @brief The type of a Kokkos::View storing multiple right-hand sides.
+    using MultiRHS = Kokkos::View<double**, typename ExecSpace::memory_space, Kokkos::LayoutRight>;
+
+private:
+    std::size_t m_size;
+
+protected:
+    explicit SplinesLinearProblem(const std::size_t size) : m_size(size) {}
 
 public:
-    explicit Matrix(const int mat_size) : m_n(mat_size) {}
-
     /// @brief Destruct
-    virtual ~Matrix() = default;
+    virtual ~SplinesLinearProblem() = default;
 
     /**
      * @brief Get an element of the matrix at indexes i, j. It must not be called after `factorize`.
@@ -54,7 +61,7 @@ public:
      * Note: this function should be renamed in the future because the pre-
      * process operation is not necessarily a factorization.
      */
-    virtual void factorize()
+    virtual void finished_filling()
     {
         int const info = factorize_method();
 
@@ -70,42 +77,6 @@ public:
             std::cerr << " solve a system of equations.";
             // TODO: Add LOG_FATAL_ERROR
         }
-    }
-
-    /**
-     * @brief Solve the linear problem Ax=b inplace.
-     *
-     * @param[in, out] b A 1D mdpsan storing a right-hand side of the problem and receiving the corresponding solution.
-     */
-    virtual ddc::DSpan1D solve_inplace(ddc::DSpan1D const b) const
-    {
-        assert(int(b.extent(0)) == m_n);
-        int const info = solve_inplace_method(b.data_handle(), 'N', 1);
-
-        if (info < 0) {
-            std::cerr << -info << "-th argument had an illegal value" << std::endl;
-            // TODO: Add LOG_FATAL_ERROR
-        }
-        return b;
-    }
-
-    /**
-     * @brief Solve the transposed linear problem A^tx=b inplace.
-     *
-     * @param[in, out] b A 1D mdpsan storing a right-hand side of the problem and receiving the corresponding solution.
-     *
-     * @return b
-     */
-    virtual ddc::DSpan1D solve_transpose_inplace(ddc::DSpan1D const b) const
-    {
-        assert(int(b.extent(0)) == m_n);
-        int const info = solve_inplace_method(b.data_handle(), 'T', 1);
-
-        if (info < 0) {
-            std::cerr << -info << "-th argument had an illegal value" << std::endl;
-            // TODO: Add LOG_FATAL_ERROR
-        }
-        return b;
     }
 
     /**
@@ -151,34 +122,11 @@ public:
     }
 
     /**
-     * @brief Solve the multiple-right-hand sides linear problem Ax=b inplace.
-     *
-     * @param[in, out] bx A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
-     * Important note: the convention is the reverse of the common matrix one, row number is second index and column number
-     * the first one. It should be changed in the future.
-     *
-     * @return bx
-     */
-    template <class... Args>
-    Kokkos::View<double**, Args...> solve_batch_inplace(
-            Kokkos::View<double**, Args...> const bx) const
-    {
-        assert(int(bx.extent(0)) == m_n);
-        int const info = solve_inplace_method(bx.data(), 'N', bx.extent(1));
-
-        if (info < 0) {
-            std::cerr << -info << "-th argument had an illegal value" << std::endl;
-            // TODO: Add LOG_FATAL_ERROR
-        }
-        return bx;
-    }
-
-    /**
      * @brief Get the size of the square matrix in one of its dimensions.
      *
      * @return The size of the matrix in one of its dimensions.
      */
-    int get_size() const
+    int size() const
     {
         return m_n;
     }

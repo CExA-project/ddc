@@ -244,21 +244,20 @@ public:
     void solve(typename SplinesLinearProblem<ExecSpace>::MultiRHS b, bool const transpose)
             const override
     {
-        std::size_t const n_equations = b.extent(1);
         assert(int(b.extent(0)) == size());
 
         std::shared_ptr const gko_exec = m_solver->get_executor();
         std::shared_ptr const convergence_logger = gko::log::Convergence<double>::create();
 
-        int const main_chunk_size = std::min(m_cols_per_chunk, (int)n_equations);
+        int const main_chunk_size = std::min(m_cols_per_chunk, (int)b.extent(1));
 
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const x("", size(), main_chunk_size);
 
-        int const iend = (n_equations + main_chunk_size - 1) / main_chunk_size;
+        int const iend = (b.extent(1) + main_chunk_size - 1) / main_chunk_size;
         for (int i = 0; i < iend; ++i) {
             int const subview_begin = i * main_chunk_size;
             int const subview_end
-                    = (i + 1 == iend) ? n_equations : (subview_begin + main_chunk_size);
+                    = (i + 1 == iend) ? b.extent(1) : (subview_begin + main_chunk_size);
 
             auto const b_chunk
                     = Kokkos::subview(b, Kokkos::ALL, Kokkos::pair(subview_begin, subview_end));

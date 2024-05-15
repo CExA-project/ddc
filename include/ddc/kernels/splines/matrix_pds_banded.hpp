@@ -13,23 +13,6 @@
 #include "matrix.hpp"
 
 namespace ddc::detail {
-extern "C" int dpbtrf_(
-        char const* uplo,
-        int const* n,
-        int const* kd,
-        double* ab,
-        int const* ldab,
-        int* info);
-extern "C" int dpbtrs_(
-        char const* uplo,
-        int const* n,
-        int const* kd,
-        int const* nrhs,
-        double const* ab,
-        int const* ldab,
-        double* b,
-        int const* ldb,
-        int* info);
 
 template <class ExecSpace>
 class MatrixPDSBanded : public Matrix
@@ -95,11 +78,10 @@ public:
 protected:
     int factorize_method() override
     {
-        int info;
         char const uplo = 'L';
         int const n = get_size();
         int const ldab = m_kd + 1;
-        dpbtrf_(&uplo, &n, &m_kd, m_q.data(), &ldab, &info);
+        int const info = LAPACKE_dpbtrf(LAPACK_COL_MAJOR, uplo, n, m_kd, m_q.data(), ldab);
         return info;
     }
 
@@ -117,11 +99,19 @@ protected:
                     Kokkos::subview(b_host, Kokkos::ALL, i),
                     Kokkos::subview(b_view, Kokkos::ALL, i));
         }
-        int info;
         char const uplo = 'L';
         int const n = get_size();
         int const ldab = m_kd + 1;
-        dpbtrs_(&uplo, &n, &m_kd, &n_equations, m_q.data(), &ldab, b_host.data(), &stride, &info);
+        int const info = LAPACKE_dpbtrs(
+                LAPACK_COL_MAJOR,
+                uplo,
+                n,
+                m_kd,
+                n_equations,
+                m_q.data(),
+                ldab,
+                b_host.data(),
+                stride);
         for (int i = 0; i < n_equations; ++i) {
             Kokkos::deep_copy(
                     Kokkos::subview(b_view, Kokkos::ALL, i),

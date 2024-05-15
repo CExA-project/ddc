@@ -9,30 +9,11 @@
 #include <cmath>
 #include <memory>
 
+#include <lapacke.h>
+
 #include "matrix.hpp"
 
 namespace ddc::detail {
-extern "C" int dgbtrf_(
-        int const* m,
-        int const* n,
-        int const* kl,
-        int const* ku,
-        double* a_b,
-        int const* lda_b,
-        int* ipiv,
-        int* info);
-extern "C" int dgbtrs_(
-        char const* trans,
-        int const* n,
-        int const* kl,
-        int const* ku,
-        int const* nrhs,
-        double* a_b,
-        int const* lda_b,
-        int* ipiv,
-        double* b,
-        int const* ldb,
-        int* info);
 
 template <class ExecSpace>
 class MatrixBanded : public Matrix
@@ -93,9 +74,16 @@ public:
 protected:
     int factorize_method() override
     {
-        int info;
         int const n = get_size();
-        dgbtrf_(&n, &n, &m_kl, &m_ku, m_q.data(), &m_c, m_ipiv.data(), &info);
+        int const info = LAPACKE_dgbtrf(
+                LAPACK_COL_MAJOR,
+                n,
+                n,
+                m_kl,
+                m_ku,
+                m_q.data(),
+                m_c,
+                m_ipiv.data());
         return info;
     }
     int solve_inplace_method(ddc::DSpan2D_stride b, char const transpose) const override
@@ -112,19 +100,19 @@ protected:
                     Kokkos::subview(b_host, Kokkos::ALL, i),
                     Kokkos::subview(b_view, Kokkos::ALL, i));
         }
-        int info;
         int const n = get_size();
-        dgbtrs_(&transpose,
-                &n,
-                &m_kl,
-                &m_ku,
-                &n_equations,
+        int const info = LAPACKE_dgbtrs(
+                LAPACK_COL_MAJOR,
+                transpose,
+                n,
+                m_kl,
+                m_ku,
+                n_equations,
                 m_q.data(),
-                &m_c,
+                m_c,
                 m_ipiv.data(),
                 b_host.data(),
-                &stride,
-                &info);
+                stride);
         for (int i = 0; i < n_equations; ++i) {
             Kokkos::deep_copy(
                     Kokkos::subview(b_view, Kokkos::ALL, i),

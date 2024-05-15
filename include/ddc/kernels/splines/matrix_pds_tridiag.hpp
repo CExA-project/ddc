@@ -13,15 +13,6 @@
 #include "matrix.hpp"
 
 namespace ddc::detail {
-extern "C" int dpttrf_(int const* n, double* d, double* e, int* info);
-extern "C" int dpttrs_(
-        int const* n,
-        int const* nrhs,
-        double* d,
-        double* e,
-        double* b,
-        int const* ldb,
-        int* info);
 
 template <class ExecSpace>
 class MatrixPDSTridiag : public Matrix
@@ -82,9 +73,8 @@ public:
 protected:
     int factorize_method() override
     {
-        int info;
         int const n = get_size();
-        dpttrf_(&n, m_d.data(), m_l.data(), &info);
+        int const info = LAPACKE_dpttrf(n, m_d.data(), m_l.data());
         return info;
     }
 
@@ -102,9 +92,15 @@ protected:
                     Kokkos::subview(b_host, Kokkos::ALL, i),
                     Kokkos::subview(b_view, Kokkos::ALL, i));
         }
-        int info;
         int const n = get_size();
-        dpttrs_(&n, &n_equations, m_d.data(), m_l.data(), b_host.data(), &stride, &info);
+        int const info = LAPACKE_dpttrs(
+                LAPACK_COL_MAJOR,
+                n,
+                n_equations,
+                m_d.data(),
+                m_l.data(),
+                b_host.data(),
+                stride);
         for (int i = 0; i < n_equations; ++i) {
             Kokkos::deep_copy(
                     Kokkos::subview(b_view, Kokkos::ALL, i),

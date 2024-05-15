@@ -7,20 +7,11 @@
 #include <cassert>
 #include <memory>
 
+#include <lapacke.h>
+
 #include "matrix.hpp"
 
 namespace ddc::detail {
-extern "C" int dgetrf_(int const* m, int const* n, double* a, int const* lda, int* ipiv, int* info);
-extern "C" int dgetrs_(
-        char const* trans,
-        int const* n,
-        int const* nrhs,
-        double* a,
-        int const* lda,
-        int* ipiv,
-        double* b,
-        int const* ldb,
-        int* info);
 
 template <class ExecSpace>
 class MatrixDense : public Matrix
@@ -55,9 +46,8 @@ public:
 private:
     int factorize_method() override
     {
-        int info;
         int const n = get_size();
-        dgetrf_(&n, &n, m_a.data(), &n, m_ipiv.data(), &info);
+        int const info = LAPACKE_dgetrf(LAPACK_COL_MAJOR, n, n, m_a.data(), n, m_ipiv.data());
         return info;
     }
 
@@ -75,17 +65,17 @@ private:
                     Kokkos::subview(b_host, Kokkos::ALL, i),
                     Kokkos::subview(b_view, Kokkos::ALL, i));
         }
-        int info;
         int const n = get_size();
-        dgetrs_(&transpose,
-                &n,
-                &n_equations,
+        int const info = LAPACKE_dgetrs(
+                LAPACK_COL_MAJOR,
+                transpose,
+                n,
+                n_equations,
                 m_a.data(),
-                &n,
+                n,
                 m_ipiv.data(),
                 b_host.data(),
-                &stride,
-                &info);
+                stride);
         for (int i = 0; i < n_equations; ++i) {
             Kokkos::deep_copy(
                     Kokkos::subview(b_view, Kokkos::ALL, i),

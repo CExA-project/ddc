@@ -111,30 +111,12 @@ public:
     /**
      * @brief The number of equations which define the boundary conditions at the lower bound.
      */
-    static constexpr int s_nbe_xmin = n_boundary_equations(BcXmin, BSplines::degree());
+    static constexpr int s_nbc_xmin = n_boundary_equations(BcXmin, BSplines::degree());
 
     /**
      * @brief The number of equations which define the boundary conditions at the upper bound.
      */
-    static constexpr int s_nbe_xmax = n_boundary_equations(BcXmax, BSplines::degree());
-
-    /**
-     * @brief The number of boundary conditions which must be provided by the user at the lower bound.
-     *
-     * This value is usually equal to s_nbe_xmin, but it may be difference if the chosen boundary
-     * conditions impose a specific value (e.g. no values need to be provided for Dirichlet boundary
-     * conditions).
-     */
-    static constexpr int s_nbc_xmin = n_user_input(BcXmin, BSplines::degree());
-
-    /**
-     * @brief The number of boundary conditions which must be provided by the user at the upper bound.
-     *
-     * This value is usually equal to s_nbe_xmin, but it may be difference if the chosen boundary
-     * conditions impose a specific value (e.g. no values need to be provided for Dirichlet boundary
-     * conditions).
-     */
-    static constexpr int s_nbc_xmax = n_user_input(BcXmax, BSplines::degree());
+    static constexpr int s_nbc_xmax = n_boundary_equations(BcXmax, BSplines::degree());
 
     /**
      * @brief The boundary condition implemented at the lower bound.
@@ -156,9 +138,10 @@ private:
     // interpolator specific
     std::unique_ptr<ddc::detail::Matrix> matrix;
 
-public:
+    /// Calculate offset so that the matrix is diagonally dominant
     int compute_offset(interpolation_domain_type const& interpolation_domain);
 
+public:
     explicit SplineBuilder(
             batched_interpolation_domain_type const& batched_interpolation_domain,
             std::optional<int> cols_per_chunk = std::nullopt,
@@ -400,7 +383,6 @@ void SplineBuilder<
     case ddc::BoundCond::PERIODIC:
         upper_block_size = (bsplines_type::degree()) / 2;
         break;
-    case ddc::BoundCond::NATURAL:
     case ddc::BoundCond::HERMITE:
         upper_block_size = s_nbc_xmin;
         break;
@@ -414,7 +396,6 @@ void SplineBuilder<
     case ddc::BoundCond::PERIODIC:
         lower_block_size = (bsplines_type::degree()) / 2;
         break;
-    case ddc::BoundCond::NATURAL:
     case ddc::BoundCond::HERMITE:
         lower_block_size = s_nbc_xmax;
         break;
@@ -652,7 +633,7 @@ operator()(
                 memory_space>> const derivs_xmax) const
 {
     assert(vals.template extent<interpolation_mesh_type>()
-           == ddc::discrete_space<bsplines_type>().nbasis() - s_nbe_xmin - s_nbe_xmax);
+           == ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin - s_nbc_xmax);
 
     assert((BcXmin == ddc::BoundCond::HERMITE)
            != (!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0));

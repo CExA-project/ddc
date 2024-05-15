@@ -17,7 +17,7 @@ namespace ddc::detail {
 /**
  * @brief The parent class for a linear problem dedicated to the computation of a spline approximation.
  *
- * It represents a square Matrix and provides methods to solve a multiple right-hand sides linear problem.
+ * It stores a square matrix and provides methods to solve a multiple right-hand sides linear problem.
  * Implementations may have different storage formats, filling methods and multiple right-hand sides linear solvers.
  */
 template <class ExecSpace>
@@ -38,7 +38,7 @@ public:
     virtual ~SplinesLinearProblem() = default;
 
     /**
-     * @brief Get an element of the matrix at indexes i, j. It must not be called after `factorize`.
+     * @brief Get an element of the matrix at indexes i, j. It must not be called after `setup_solver`.
      *
      * @param i The row index of the desired element.
      * @param j The column index of the desired element.
@@ -48,7 +48,7 @@ public:
     virtual double get_element(int i, int j) const = 0;
 
     /**
-     * @brief Set an element of the matrix at indexes i, j. It must not be called after `factorize`.
+     * @brief Set an element of the matrix at indexes i, j. It must not be called after `setup_solver`.
      *
      * @param i The row index of the setted element.
      * @param j The column index of the setted element.
@@ -57,16 +57,15 @@ public:
     virtual void set_element(int i, int j, double aij) = 0;
 
     /**
-     * @brief Performs a pre-process operation on the solver.
+     * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.
      */
     virtual void setup_solver() = 0;
 
     /**
-     * @brief Solve the multiple right-hand sides linear problem Ax=b inplace.
+     * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
      * @param[in, out] multi_rhs A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
-     * Important note: the convention is the reverse of the common matrix one, row number is second index and column number
-     * the first one. This means when solving `A x_i = b_i`,  element `b_{ij}` is stored in `b(j, i)`.
+     * @param transpose Choose between the direct or transposed version of the linear problem.
      */
     virtual void solve(MultiRHS b, bool transpose = false) const = 0;
 

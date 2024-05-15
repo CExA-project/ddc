@@ -191,13 +191,11 @@ public:
     }
 
     /**
-     * @brief A function called by factorize() to perform the pre-process operation.
+     * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.
      *
      * Removes the zeros from the CSR object and instantiate a Ginkgo solver. It also constructs a transposed version of the solver.
      *
      * The stopping criterion is a reduction factor ||x||/||b||<1e-15 with 1000 maximum iterations.
-     *
-     * @return The error code of the function.
      */
     void setup_solver() override
     {
@@ -234,15 +232,14 @@ public:
     }
 
     /**
-     * @brief A function called by solve_inplace() and similar functions to actually perform the linear solve operation.
+     * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
      * The solver method is currently Bicgstab on CPU Serial and GPU and Gmres on OMP (because of Ginkgo issue #1563).
      *
      * Multiple right-hand sides are sliced in chunks of size cols_per_chunk which are passed one-after-the-other to Ginkgo.
      *
-     * @param b A double* to a contiguous array containing the (eventually multiple) right-hand sides. 
-     * @param transpose A character identifying if the normal ('N') or transposed ('T') linear system is solved.
-     * @param n_equations The number of multiple right-hand sides (number of columns in b).
+     * @param[in, out] multi_rhs A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
+     * @param transpose Choose between the direct or transposed version of the linear problem.
      */
     void solve(typename SplinesLinearProblem<ExecSpace>::MultiRHS b, bool const transpose)
             const override

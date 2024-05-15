@@ -7,7 +7,7 @@
 #include <memory>
 #include <optional>
 
-#include "matrix_sparse.hpp"
+#include "splines_linear_solver_sparse.hpp"
 
 namespace ddc::detail {
 

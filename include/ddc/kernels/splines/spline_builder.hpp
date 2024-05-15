@@ -8,6 +8,7 @@
 #include "ddc/kokkos_allocator.hpp"
 
 #include "deriv.hpp"
+#include "splines_linear_solver_maker.hpp"
 
 namespace ddc {
 enum class SplineSolver {

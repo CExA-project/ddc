@@ -15,7 +15,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "ginkgo_executors.hpp"
-#include "matrix.hpp"
+#include "splines_linear_solver.hpp"
 
 namespace ddc::detail {
 

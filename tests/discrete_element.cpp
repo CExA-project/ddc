@@ -57,6 +57,42 @@ TEST(DiscreteElementXYZTest, ConstructorFromDiscreteElements)
     EXPECT_EQ(ixyz.uid<DDimZ>(), uid_z);
 }
 
+TEST(DiscreteElementXTest, PreIncrement)
+{
+    DElemX const ix0(3);
+    DElemX ix1(ix0);
+    DElemX const ix2 = ++ix1;
+    EXPECT_EQ(ix1, ix0 + 1);
+    EXPECT_EQ(ix2, ix0 + 1);
+}
+
+TEST(DiscreteElementXTest, PostIncrement)
+{
+    DElemX const ix0(3);
+    DElemX ix1(ix0);
+    DElemX const ix2 = ix1++;
+    EXPECT_EQ(ix1, ix0 + 1);
+    EXPECT_EQ(ix2, ix0);
+}
+
+TEST(DiscreteElementXTest, PreDecrement)
+{
+    DElemX const ix0(3);
+    DElemX ix1(ix0);
+    DElemX const ix2 = --ix1;
+    EXPECT_EQ(ix1, ix0 - 1);
+    EXPECT_EQ(ix2, ix0 - 1);
+}
+
+TEST(DiscreteElementXTest, PostDecrement)
+{
+    DElemX const ix0(3);
+    DElemX ix1(ix0);
+    DElemX const ix2 = ix1--;
+    EXPECT_EQ(ix1, ix0 - 1);
+    EXPECT_EQ(ix2, ix0);
+}
+
 TEST(DiscreteElementXTest, RightExternalBinaryOperatorPlus)
 {
     std::size_t const uid_x = 7;

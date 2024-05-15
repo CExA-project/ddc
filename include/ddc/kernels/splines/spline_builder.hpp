@@ -144,7 +144,7 @@ private:
 public:
     explicit SplineBuilder(
             batched_interpolation_domain_type const& batched_interpolation_domain,
-            std::optional<int> cols_per_chunk = std::nullopt,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : m_batched_interpolation_domain(batched_interpolation_domain)
         , m_offset(compute_offset(interpolation_domain()))
@@ -311,7 +311,7 @@ private:
     void allocate_matrix(
             int lower_block_size,
             int upper_block_size,
-            std::optional<int> cols_per_chunk = std::nullopt,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt);
 
     void build_matrix_system();
@@ -476,7 +476,7 @@ void SplineBuilder<
         allocate_matrix(
                 [[maybe_unused]] int lower_block_size,
                 [[maybe_unused]] int upper_block_size,
-                std::optional<int> cols_per_chunk,
+                std::optional<std::size_t> cols_per_chunk,
                 std::optional<unsigned int> preconditionner_max_block_size)
 {
     // Special case: linear spline

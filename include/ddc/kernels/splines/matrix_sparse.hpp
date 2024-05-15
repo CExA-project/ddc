@@ -53,7 +53,7 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
  * @return The default value for the parameter cols_per_chunk.
  */
 template <class ExecSpace>
-int default_cols_per_chunk() noexcept
+std::size_t default_cols_per_chunk() noexcept
 {
 #ifdef KOKKOS_ENABLE_SERIAL
     if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
@@ -129,7 +129,7 @@ public:
     using SplinesLinearProblem<ExecSpace>::operator<<;
 
 private:
-    using matrix_sparse_type = gko::matrix::Csr<double, int>;
+    using matrix_sparse_type = gko::matrix::Csr<double, gko::int32>;
 #ifdef KOKKOS_ENABLE_OPENMP
     using solver_type = std::conditional_t<
             std::is_same_v<ExecSpace, Kokkos::OpenMP>,
@@ -148,7 +148,7 @@ private:
     std::shared_ptr<solver_type> m_solver;
     std::shared_ptr<gko::LinOp> m_solver_tr;
 
-    int m_cols_per_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
+    std::size_t m_cols_per_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
 
     unsigned int m_preconditionner_max_block_size; // Maximum size of Jacobi-block preconditionner
 
@@ -163,8 +163,8 @@ public:
      * used by the block-Jacobi preconditionner. see default_preconditionner_max_block_size.
      */
     explicit SplinesLinearProblemSparse(
-            const int mat_size,
-            std::optional<int> cols_per_chunk = std::nullopt,
+            const std::size_t mat_size,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : SplinesLinearProblem<ExecSpace>(mat_size)
         , m_cols_per_chunk(cols_per_chunk.value_or(default_cols_per_chunk<ExecSpace>()))
@@ -178,14 +178,15 @@ public:
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
     }
 
-    virtual double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
+    virtual double get_element([[maybe_unused]] std::size_t i, [[maybe_unused]] std::size_t j)
+            const override
     {
         throw std::runtime_error(
                 "SplinesLinearProblemSparse::get_element() is not implemented because no API is "
                 "provided by Ginkgo");
     }
 
-    virtual void set_element(int i, int j, double aij) override
+    virtual void set_element(std::size_t i, std::size_t j, double aij) override
     {
         m_matrix_dense->at(i, j) = aij;
     }
@@ -244,25 +245,27 @@ public:
     void solve(typename SplinesLinearProblem<ExecSpace>::MultiRHS b, bool const transpose)
             const override
     {
-        assert(int(b.extent(0)) == size());
+        assert(b.extent(0) == size());
 
         std::shared_ptr const gko_exec = m_solver->get_executor();
         std::shared_ptr const convergence_logger = gko::log::Convergence<double>::create();
 
-        int const main_chunk_size = std::min(m_cols_per_chunk, (int)b.extent(1));
+        std::size_t const main_chunk_size = std::min(m_cols_per_chunk, b.extent(1));
 
         Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const x("", size(), main_chunk_size);
 
-        int const iend = (b.extent(1) + main_chunk_size - 1) / main_chunk_size;
-        for (int i = 0; i < iend; ++i) {
-            int const subview_begin = i * main_chunk_size;
-            int const subview_end
+        std::size_t const iend = (b.extent(1) + main_chunk_size - 1) / main_chunk_size;
+        for (std::size_t i = 0; i < iend; ++i) {
+            std::size_t const subview_begin = i * main_chunk_size;
+            std::size_t const subview_end
                     = (i + 1 == iend) ? b.extent(1) : (subview_begin + main_chunk_size);
 
             auto const b_chunk
                     = Kokkos::subview(b, Kokkos::ALL, Kokkos::pair(subview_begin, subview_end));
-            auto const x_chunk
-                    = Kokkos::subview(x, Kokkos::ALL, Kokkos::pair(0, subview_end - subview_begin));
+            auto const x_chunk = Kokkos::
+                    subview(x,
+                            Kokkos::ALL,
+                            Kokkos::pair(std::size_t(0), subview_end - subview_begin));
 
             Kokkos::deep_copy(x_chunk, b_chunk);
 

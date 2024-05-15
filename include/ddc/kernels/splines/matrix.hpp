@@ -15,9 +15,9 @@
 namespace ddc::detail {
 
 /**
- * @brief The parent class for a linear problem dedicated to the computation of a spline approximation.
+ * @brief The parent class for linear problems dedicated to the computation of spline approximations.
  *
- * It stores a square matrix and provides methods to solve a multiple right-hand sides linear problem.
+ * Store a square matrix and provide method to solve a multiple right-hand sides linear problem.
  * Implementations may have different storage formats, filling methods and multiple right-hand sides linear solvers.
  */
 template <class ExecSpace>
@@ -45,7 +45,7 @@ public:
      *
      * @return The value of the element of the matrix.
      */
-    virtual double get_element(int i, int j) const = 0;
+    virtual double get_element(std::size_t i, std::size_t j) const = 0;
 
     /**
      * @brief Set an element of the matrix at indexes i, j. It must not be called after `setup_solver`.
@@ -54,7 +54,7 @@ public:
      * @param j The column index of the setted element.
      * @param aij The value to set in the element of the matrix.
      */
-    virtual void set_element(int i, int j, double aij) = 0;
+    virtual void set_element(std::size_t i, std::size_t j, double aij) = 0;
 
     /**
      * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.
@@ -74,7 +74,7 @@ public:
      *
      * @return The size of the matrix in one of its dimensions.
      */
-    int size() const
+    std::size_t size() const
     {
         return m_size;
     }
@@ -88,9 +88,9 @@ public:
      **/
     std::ostream& operator<<(std::ostream& os)
     {
-        int const n = size();
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n; ++j) {
+        std::size_t const n = size();
+        for (std::size_t i = 0; i < n; ++i) {
+            for (std::size_t j = 0; j < n; ++j) {
                 os << std::fixed << std::setprecision(3) << std::setw(10) << get_element(i, j);
             }
             os << std::endl;

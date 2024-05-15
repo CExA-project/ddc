@@ -36,7 +36,7 @@ public:
     template <typename ExecSpace>
     static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_sparse(
             int const n,
-            std::optional<int> cols_per_chunk = std::nullopt,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
     {
         return std::make_unique<SplinesLinearProblemSparse<

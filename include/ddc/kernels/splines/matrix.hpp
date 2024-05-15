@@ -15,16 +15,17 @@
 namespace ddc::detail {
 
 /**
- * @brief The parent class for a linear problem dedicated to compute a spline approximation.
+ * @brief The parent class for a linear problem dedicated to the computation of a spline approximation.
  *
  * It represents a square Matrix and provides methods to solve a multiple right-hand sides linear problem.
  * Implementations may have different storage formats, filling methods and multiple right-hand sides linear solvers.
  */
+template <class ExecSpace>
 class SplinesLinearProblem
 {
 public:
     /// @brief The type of a Kokkos::View storing multiple right-hand sides.
-    using MultiRHS = Kokkos::View<double**, typename ExecSpace::memory_space, Kokkos::LayoutRight>;
+    using MultiRHS = Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>;
 
 private:
     std::size_t m_size;
@@ -56,70 +57,18 @@ public:
     virtual void set_element(int i, int j, double aij) = 0;
 
     /**
-     * @brief Performs a pre-process operation on the Matrix.
-     *
-     * Note: this function should be renamed in the future because the pre-
-     * process operation is not necessarily a factorization.
+     * @brief Performs a pre-process operation on the solver.
      */
-    virtual void finished_filling()
-    {
-        int const info = factorize_method();
-
-        if (info < 0) {
-            std::cerr << -info << "-th argument had an illegal value" << std::endl;
-            // TODO: Add LOG_FATAL_ERROR
-        } else if (info > 0) {
-            std::cerr << "U(" << info << "," << info << ") is exactly zero.";
-            std::cerr << " The factorization has been completed, but the factor";
-            std::cerr << " U is exactly singular, and division by zero will occur "
-                         "if "
-                         "it is used to";
-            std::cerr << " solve a system of equations.";
-            // TODO: Add LOG_FATAL_ERROR
-        }
-    }
+    virtual void setup_solver() = 0;
 
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b inplace.
      *
-     * @param[in, out] bx A 2D mdpsan storing the multiple right-hand sides of the problem and receiving the corresponding solution.
+     * @param[in, out] multi_rhs A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * Important note: the convention is the reverse of the common matrix one, row number is second index and column number
-     * the first one. This means when solving `A x_i = b_i`,  element `(b_i)_j` is stored in `b(j, i)`.
-     *
-     * @return bx
+     * the first one. This means when solving `A x_i = b_i`,  element `b_{ij}` is stored in `b(j, i)`.
      */
-    virtual ddc::DSpan2D solve_multiple_inplace(ddc::DSpan2D const bx) const
-    {
-        assert(int(bx.extent(1)) == m_n);
-        int const info = solve_inplace_method(bx.data_handle(), 'N', bx.extent(0));
-
-        if (info < 0) {
-            std::cerr << -info << "-th argument had an illegal value" << std::endl;
-            // TODO: Add LOG_FATAL_ERROR
-        }
-        return bx;
-    }
-
-    /**
-     * @brief Solve the transposed multiple right-hand sides linear problem A^tx=b inplace.
-     *
-     * @param[in, out] bx A 2D mdspan storing the multiple right-hand sides of the problem and receiving the corresponding solution.
-     * Important note: the convention is the reverse of the common matrix one, row number is second index and column number
-     * the first one. It should be changed in the future.
-     *
-     * @return bx
-     */
-    virtual ddc::DSpan2D solve_multiple_transpose_inplace(ddc::DSpan2D const bx) const
-    {
-        assert(int(bx.extent(1)) == m_n);
-        int const info = solve_inplace_method(bx.data_handle(), 'T', bx.extent(0));
-
-        if (info < 0) {
-            std::cerr << -info << "-th argument had an illegal value" << std::endl;
-            // TODO: Add LOG_FATAL_ERROR
-        }
-        return bx;
-    }
+    virtual void solve(MultiRHS b, bool transpose = false) const = 0;
 
     /**
      * @brief Get the size of the square matrix in one of its dimensions.
@@ -128,11 +77,11 @@ public:
      */
     int size() const
     {
-        return m_n;
+        return m_size;
     }
 
     /**
-     * @brief Prints a Matrix in a std::ostream. It must not be called after `factorize`.
+     * @brief Prints a Matrix in a std::ostream. It must not be called after `setup_solver`.
      *
      * @param out The stream in which the matrix is printed.
      *
@@ -140,7 +89,7 @@ public:
      **/
     std::ostream& operator<<(std::ostream& os)
     {
-        int const n = get_size();
+        int const n = size();
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
                 os << std::fixed << std::setprecision(3) << std::setw(10) << get_element(i, j);
@@ -149,24 +98,6 @@ public:
         }
         return os;
     }
-
-protected:
-    /**
-     * @brief A function called by factorize() to actually perform the pre-process operation.
-     *
-     * @return The error code of the function.
-     */
-    virtual int factorize_method() = 0;
-
-    /**
-     * @brief A function called by solve_inplace() and similar functions to actually perform the linear solve operation.
-     *
-     * @param b A double* to a contiguous array containing the (eventually multiple) right-hand-sides. The memory layout is right.
-     * @param transpose A character identifying if the normal ('N') or transposed ('T') linear system is solved.
-     * @param n_equations The number of multiple-right-hand-sides (number of columns of b).
-     * @return The error code of the function.
-     */
-    virtual int solve_inplace_method(double* b, char transpose, int n_equations) const = 0;
 };
 
 } // namespace ddc::detail

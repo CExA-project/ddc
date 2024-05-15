@@ -136,7 +136,7 @@ private:
     double m_dx; // average cell size for normalization of derivatives
 
     // interpolator specific
-    std::unique_ptr<ddc::detail::Matrix> matrix;
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> matrix;
 
     /// Calculate offset so that the matrix is diagonally dominant
     int compute_offset(interpolation_domain_type const& interpolation_domain);
@@ -264,7 +264,7 @@ public:
      *
      * @return A reference to the interpolation matrix.
      */
-    const ddc::detail::Matrix& get_interpolation_matrix() const noexcept
+    const ddc::detail::SplinesLinearProblem<exec_space>& get_interpolation_matrix() const noexcept
     {
         return *matrix;
     }
@@ -487,14 +487,14 @@ void SplineBuilder<
         return;
 	*/
 
-    matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
+    matrix = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<ExecSpace>(
             ddc::discrete_space<BSplines>().nbasis(),
             cols_per_chunk,
             preconditionner_max_block_size);
 
     build_matrix_system();
 
-    matrix->factorize();
+    matrix->setup_solver();
 }
 
 template <
@@ -724,7 +724,7 @@ operator()(
             ddc::discrete_space<bsplines_type>().nbasis(),
             batch_domain().size());
     // Compute spline coef
-    matrix->solve_batch_inplace(bcoef_section);
+    matrix->solve(bcoef_section);
     // Transpose back spline_tr in spline
     ddc::parallel_for_each(
             exec_space(),

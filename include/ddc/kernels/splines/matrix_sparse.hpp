@@ -46,7 +46,7 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
 /**
  * @brief Return the default value of the parameter cols_per_chunk for a given Kokkos::ExecutionSpace.
  *
- * The values are hardware-specific (but they can be overriden in the constructor of MatrixSparse).
+ * The values are hardware-specific (but they can be overriden in the constructor of SplinesLinearProblemSparse).
  * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace type.
@@ -81,7 +81,7 @@ int default_cols_per_chunk() noexcept
 /**
  * @brief Return the default value of the parameter preconditionner_max_block_size for a given Kokkos::ExecutionSpace.
  *
- * The values are hardware-specific (but they can be overriden in the constructor of MatrixSparse).
+ * The values are hardware-specific (but they can be overriden in the constructor of SplinesLinearProblemSparse).
  * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace type.
@@ -114,15 +114,21 @@ unsigned int default_preconditionner_max_block_size() noexcept
 }
 
 /**
- * @brief A sparse Matrix.
+ * @brief A sparse linear problem dedicated to the computation of a spline approximation.
  *
  * The storage format is CSR. Ginkgo is used to perform every matrix and linear solver-related operations.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are performed.
  */
 template <class ExecSpace>
-class Matrix_Sparse : public Matrix
+class SplinesLinearProblemSparse : public SplinesLinearProblem<ExecSpace>
 {
+public:
+    using SplinesLinearProblem<ExecSpace>::MultiRHS;
+    using SplinesLinearProblem<ExecSpace>::size;
+    using SplinesLinearProblem<ExecSpace>::operator<<;
+
+private:
     using matrix_sparse_type = gko::matrix::Csr<double, int>;
 #ifdef KOKKOS_ENABLE_OPENMP
     using solver_type = std::conditional_t<
@@ -148,7 +154,7 @@ private:
 
 public:
     /**
-     * @brief Matrix_Sparse constructor.
+     * @brief SplinesLinearProblemSparse constructor.
      *
      * @param mat_size The size of one of the dimensions of the square matrix.
      * @param cols_per_chunk An optional parameter used to define the number of right-hand sides to pass to
@@ -156,11 +162,11 @@ public:
      * @param preconditionner_max_block_size An optional parameter used to define the maximum size of a block
      * used by the block-Jacobi preconditionner. see default_preconditionner_max_block_size.
      */
-    explicit Matrix_Sparse(
+    explicit SplinesLinearProblemSparse(
             const int mat_size,
             std::optional<int> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
-        : Matrix(mat_size)
+        : SplinesLinearProblem<ExecSpace>(mat_size)
         , m_cols_per_chunk(cols_per_chunk.value_or(default_cols_per_chunk<ExecSpace>()))
         , m_preconditionner_max_block_size(preconditionner_max_block_size.value_or(
                   default_preconditionner_max_block_size<ExecSpace>()))
@@ -174,8 +180,9 @@ public:
 
     virtual double get_element([[maybe_unused]] int i, [[maybe_unused]] int j) const override
     {
-        throw std::runtime_error("MatrixSparse::get_element() is not implemented because no API is "
-                                 "provided by Ginkgo");
+        throw std::runtime_error(
+                "SplinesLinearProblemSparse::get_element() is not implemented because no API is "
+                "provided by Ginkgo");
     }
 
     virtual void set_element(int i, int j, double aij) override
@@ -192,10 +199,10 @@ public:
      *
      * @return The error code of the function.
      */
-    int factorize_method() override
+    void setup_solver() override
     {
         // Remove zeros
-        gko::matrix_data<double> matrix_data(gko::dim<2>(get_size(), get_size()));
+        gko::matrix_data<double> matrix_data(gko::dim<2>(size(), size()));
         m_matrix_dense->write(matrix_data);
         m_matrix_dense.reset();
         matrix_data.remove_zeros();
@@ -224,8 +231,6 @@ public:
         m_solver = solver_factory->generate(m_matrix_sparse);
         m_solver_tr = m_solver->transpose();
         gko_exec->synchronize();
-
-        return 0;
     }
 
     /**
@@ -238,20 +243,19 @@ public:
      * @param b A double* to a contiguous array containing the (eventually multiple) right-hand sides. 
      * @param transpose A character identifying if the normal ('N') or transposed ('T') linear system is solved.
      * @param n_equations The number of multiple right-hand sides (number of columns in b).
-     *
-     * @return The error code of the function.
      */
-    virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
+    void solve(typename SplinesLinearProblem<ExecSpace>::MultiRHS b, bool const transpose)
+            const override
     {
+        std::size_t const n_equations = b.extent(1);
+        assert(int(b.extent(0)) == size());
+
         std::shared_ptr const gko_exec = m_solver->get_executor();
         std::shared_ptr const convergence_logger = gko::log::Convergence<double>::create();
 
-        int const main_chunk_size = std::min(m_cols_per_chunk, n_equations);
+        int const main_chunk_size = std::min(m_cols_per_chunk, (int)n_equations);
 
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
-                b_view(b, get_size(), n_equations);
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
-                x_view("", get_size(), main_chunk_size);
+        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const x("", size(), main_chunk_size);
 
         int const iend = (n_equations + main_chunk_size - 1) / main_chunk_size;
         for (int i = 0; i < iend; ++i) {
@@ -259,37 +263,31 @@ public:
             int const subview_end
                     = (i + 1 == iend) ? n_equations : (subview_begin + main_chunk_size);
 
-            auto const b_subview = Kokkos::
-                    subview(b_view, Kokkos::ALL, Kokkos::pair(subview_begin, subview_end));
-            auto const x_subview = Kokkos::
-                    subview(x_view, Kokkos::ALL, Kokkos::pair(0, subview_end - subview_begin));
+            auto const b_chunk
+                    = Kokkos::subview(b, Kokkos::ALL, Kokkos::pair(subview_begin, subview_end));
+            auto const x_chunk
+                    = Kokkos::subview(x, Kokkos::ALL, Kokkos::pair(0, subview_end - subview_begin));
 
-            Kokkos::deep_copy(x_subview, b_subview);
+            Kokkos::deep_copy(x_chunk, b_chunk);
 
-            if (transpose == 'N') {
+            if (!transpose) {
                 m_solver->add_logger(convergence_logger);
-                m_solver
-                        ->apply(to_gko_dense(gko_exec, b_subview),
-                                to_gko_dense(gko_exec, x_subview));
+                m_solver->apply(to_gko_dense(gko_exec, b_chunk), to_gko_dense(gko_exec, x_chunk));
                 m_solver->remove_logger(convergence_logger);
-            } else if (transpose == 'T') {
+            } else {
                 m_solver_tr->add_logger(convergence_logger);
                 m_solver_tr
-                        ->apply(to_gko_dense(gko_exec, b_subview),
-                                to_gko_dense(gko_exec, x_subview));
+                        ->apply(to_gko_dense(gko_exec, b_chunk), to_gko_dense(gko_exec, x_chunk));
                 m_solver_tr->remove_logger(convergence_logger);
-            } else {
-                throw std::domain_error("transpose option not recognized");
             }
 
             if (!convergence_logger->has_converged()) {
-                throw std::runtime_error("Ginkgo did not converged in ddc::detail::Matrix_Sparse");
+                throw std::runtime_error(
+                        "Ginkgo did not converged in ddc::detail::SplinesLinearProblemSparse");
             }
 
-            Kokkos::deep_copy(b_subview, x_subview);
+            Kokkos::deep_copy(b_chunk, x_chunk);
         }
-
-        return 1;
     }
 };
 

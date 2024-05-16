@@ -124,7 +124,7 @@ template <class ExecSpace>
 class SplinesLinearProblemSparse : public SplinesLinearProblem<ExecSpace>
 {
 public:
-    using SplinesLinearProblem<ExecSpace>::MultiRHS;
+    using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
     using SplinesLinearProblem<ExecSpace>::operator<<;
 
@@ -242,8 +242,7 @@ public:
      * @param[in, out] multi_rhs A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.
      */
-    void solve(typename SplinesLinearProblem<ExecSpace>::MultiRHS b, bool const transpose)
-            const override
+    void solve(MultiRHS b, bool const transpose) const override
     {
         assert(b.extent(0) == size());
 

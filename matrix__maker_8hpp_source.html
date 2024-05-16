@@ -63,21 +63,21 @@ $(function(){initNavTree('matrix__maker_8hpp_source.html',''); initResizable(); 
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span>ddc::detail {</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">class </span>MatrixMaker</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ExecSpace&gt;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">static</span> std::unique_ptr&lt;Matrix&gt; make_new_sparse(</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>,</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            std::optional&lt;int&gt; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">cols_per_chunk</a> = std::nullopt,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>            std::optional&lt;unsigned int&gt; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">preconditionner_max_block_size</a> = std::nullopt)</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordflow">return</span> std::make_unique&lt;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>                <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Matrix_Sparse&lt;ExecSpace&gt;</a>&gt;(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">cols_per_chunk</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">preconditionner_max_block_size</a>);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    }</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>};</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>} <span class="comment">// namespace ddc::detail</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">class </span>MatrixMaker</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ExecSpace&gt;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">static</span> std::unique_ptr&lt;Matrix&gt; make_new_sparse(</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            std::optional&lt;int&gt; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">cols_per_chunk</a> = std::nullopt,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            std::optional&lt;unsigned int&gt; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">preconditionner_max_block_size</a> = std::nullopt)</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keywordflow">return</span> std::make_unique&lt;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Matrix_Sparse&lt;ExecSpace&gt;</a>&gt;(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">cols_per_chunk</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">preconditionner_max_block_size</a>);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>};</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>} <span class="comment">// namespace ddc::detail</span></div>
 <div class="ttc" id="anamespaceddc_html_a0d8d6125787befc59862bed182ea1717"><div class="ttname"><a href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::enable_chunk</a></div><div class="ttdeci">constexpr bool enable_chunk</div><div class="ttdef"><b>Definition</b> chunk_traits.hpp:16</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -20,6 +20,8 @@
 namespace ddc::detail {
 
 /**
+ * @brief Convert KokkosView to Ginkgo Dense matrix.
+ *
  * @param gko_exec[in] A Ginkgo executor that has access to the Kokkos::View memory space
  * @param view[in] A 2-D Kokkos::View with unit stride in the second dimension
  * @return A Ginkgo Dense matrix view over the Kokkos::View data
@@ -41,6 +43,15 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
                    view.stride_0());
 }
 
+/**
+ * @brief Return the default value of the parameter cols_per_chunk for a given Kokkos::ExecutionSpace.
+ *
+ * The values are hardware-specific (but they can be overriden in the constructor of MatrixSparse).
+ * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
+ *
+ * @tparam ExecSpace The Kokkos::ExecutionSpace type.
+ * @return The default value for the parameter cols_per_chunk.
+ */
 template <class ExecSpace>
 int default_cols_per_chunk() noexcept
 {
@@ -67,6 +78,15 @@ int default_cols_per_chunk() noexcept
     return 1;
 }
 
+/**
+ * @brief Return the default value of the parameter preconditionner_max_block_size for a given Kokkos::ExecutionSpace.
+ *
+ * The values are hardware-specific (but they can be overriden in the constructor of MatrixSparse).
+ * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
+ *
+ * @tparam ExecSpace The Kokkos::ExecutionSpace type.
+ * @return The default value for the parameter preconditionner_max_block_size.
+ */
 template <class ExecSpace>
 unsigned int default_preconditionner_max_block_size() noexcept
 {
@@ -93,7 +113,13 @@ unsigned int default_preconditionner_max_block_size() noexcept
     return 1u;
 }
 
-// Matrix class for sparse storage and iterative solve
+/**
+ * @brief A sparse Matrix.
+ *
+ * The storage format is CSR. Ginkgo is used to perform every matrix and linear solver-related operations.
+ *
+ * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are performed.
+ */
 template <class ExecSpace>
 class Matrix_Sparse : public Matrix
 {
@@ -121,7 +147,15 @@ private:
     unsigned int m_preconditionner_max_block_size; // Maximum size of Jacobi-block preconditionner
 
 public:
-    // Constructor
+    /**
+     * @brief Matrix_Sparse constructor.
+     *
+     * @param mat_size The size of one of the dimensions of the square matrix.
+     * @param cols_per_chunk An optional parameter used to define the number of right-hand sides to pass to
+     * Ginkgo solver calls. see default_cols_per_chunk.
+     * @param preconditionner_max_block_size An optional parameter used to define the maximum size of a block
+     * used by the block-Jacobi preconditionner. see default_preconditionner_max_block_size.
+     */
     explicit Matrix_Sparse(
             const int mat_size,
             std::optional<int> cols_per_chunk = std::nullopt,
@@ -149,6 +183,15 @@ public:
         m_matrix_dense->at(i, j) = aij;
     }
 
+    /**
+     * @brief A function called by factorize() to perform the pre-process operation.
+     *
+     * Removes the zeros from the CSR object and instantiate a Ginkgo solver. It also constructs a transposed version of the solver.
+     *
+     * The stopping criterion is a reduction factor ||x||/||b||<1e-15 with 1000 maximum iterations.
+     *
+     * @return The error code of the function.
+     */
     int factorize_method() override
     {
         // Remove zeros
@@ -185,6 +228,19 @@ public:
         return 0;
     }
 
+    /**
+     * @brief A function called by solve_inplace() and similar functions to actually perform the linear solve operation.
+     *
+     * The solver method is currently Bicgstab on CPU Serial and GPU and Gmres on OMP (because of Ginkgo issue #1563).
+     *
+     * Multiple right-hand sides are sliced in chunks of size cols_per_chunk which are passed one-after-the-other to Ginkgo.
+     *
+     * @param b A double* to a contiguous array containing the (eventually multiple) right-hand sides. 
+     * @param transpose A character identifying if the normal ('N') or transposed ('T') linear system is solved.
+     * @param n_equations The number of multiple right-hand sides (number of columns in b).
+     *
+     * @return The error code of the function.
+     */
     virtual int solve_inplace_method(double* b, char transpose, int n_equations) const override
     {
         std::shared_ptr const gko_exec = m_solver->get_executor();

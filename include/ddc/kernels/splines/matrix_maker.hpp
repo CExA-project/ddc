@@ -11,9 +11,28 @@
 
 namespace ddc::detail {
 
+/**
+ * @brief A static factory for Matrix classes.
+ */
 class MatrixMaker
 {
 public:
+    /**
+     * @brief Construct a sparse matrix
+     *
+     * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.
+     * @param n The size of one of the dimensions of the square matrix.
+     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
+     * of a chunk of right-hand sides of the linear problem to be computed in parallel (chunks are treated
+     * by the linear solver one-after-the-other).
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * define the size of a block used by the Block-Jacobi preconditioner.
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @return The Matrix instance.
+     */
     template <typename ExecSpace>
     static std::unique_ptr<Matrix> make_new_sparse(
             int const n,

@@ -103,6 +103,7 @@ Classes</h2></td></tr>
 <tr class="memitem:structddc_1_1coordinate__of" id="r_structddc_1_1coordinate__of"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structddc_1_1coordinate__of">coordinate_of</a></td></tr>
 <tr class="separator:structddc_1_1coordinate__of"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structddc_1_1Deriv" id="r_structddc_1_1Deriv"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structddc_1_1Deriv">Deriv</a></td></tr>
+<tr class="memdesc:structddc_1_1Deriv"><td class="mdescLeft">&#160;</td><td class="mdescRight">A templated struct representing a discrete dimension storing the derivatives of a function along a continuous dimension Tag.  <a href="#structddc_1_1Deriv">More...</a><br /></td></tr>
 <tr class="separator:structddc_1_1Deriv"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -288,6 +289,7 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">GREVILLE</a>
 <br />
  }</td></tr>
+<tr class="memdesc:a28f4ae114fe8694bf78c0d761bc9744a"><td class="mdescLeft">&#160;</td><td class="mdescRight">An enum representing a spline boundary condition.  <a href="#a28f4ae114fe8694bf78c0d761bc9744a">More...</a><br /></td></tr>
 <tr class="separator:a28f4ae114fe8694bf78c0d761bc9744a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36c0210a850dde0979ad8b5772ee730c" id="r_a36c0210a850dde0979ad8b5772ee730c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36c0210a850dde0979ad8b5772ee730c">SplineSolver</a> { <a class="el" href="#a36c0210a850dde0979ad8b5772ee730caa3a0305034fc65890f8e232fdf60ab46">GINKGO</a>
  }</td></tr>
@@ -537,6 +539,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a8d594d729f409993dac2aa04f64778f5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="#a0d8d6125787befc59862bed182ea1717">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a8d594d729f409993dac2aa04f64778f5">ifft</a> (<a class="el" href="#a0d8d6125787befc59862bed182ea1717">ExecSpace</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="#a0d8d6125787befc59862bed182ea1717">execSpace</a>, <a class="el" href="#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="#a0d8d6125787befc59862bed182ea1717">Tout</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; DDimX... &gt;, <a class="el" href="#a0d8d6125787befc59862bed182ea1717">layout_out</a>, <a class="el" href="#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt; <a class="el" href="#a0d8d6125787befc59862bed182ea1717">out</a>, <a class="el" href="#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="#a0d8d6125787befc59862bed182ea1717">Tin</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; DDimFx... &gt;, <a class="el" href="#a0d8d6125787befc59862bed182ea1717">layout_in</a>, <a class="el" href="#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt; <a class="el" href="#a0d8d6125787befc59862bed182ea1717">in</a>, <a class="el" href="#structddc_1_1kwArgs__fft">ddc::kwArgs_fft</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">kwargs</a>={<a class="el" href="#a5d5291156a65ec442dfcd7274f045631a88559a0cfd8250c9d65970cc145c92d4">ddc::FFT_Normalization::OFF</a>})</td></tr>
 <tr class="separator:a8d594d729f409993dac2aa04f64778f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a086f7e0fd872b6bd2aef5760d1b3845f" id="r_a086f7e0fd872b6bd2aef5760d1b3845f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a> (<a class="el" href="#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">bc</a>, std::size_t <a class="el" href="#a0d8d6125787befc59862bed182ea1717">const</a> degree)</td></tr>
+<tr class="memdesc:a086f7e0fd872b6bd2aef5760d1b3845f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of equations needed to describe a given boundary condition.  <br /></td></tr>
 <tr class="separator:a086f7e0fd872b6bd2aef5760d1b3845f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5f9302eae1518f3cc0b3038274ae0e6" id="r_aa5f9302eae1518f3cc0b3038274ae0e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5f9302eae1518f3cc0b3038274ae0e6">is_spline_interpolation_mesh_uniform</a> (<a class="el" href="#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">const</a> is_uniform, <a class="el" href="#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, <a class="el" href="#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, <a class="el" href="#a0d8d6125787befc59862bed182ea1717">int</a> degree)</td></tr>
 <tr class="separator:aa5f9302eae1518f3cc0b3038274ae0e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -945,7 +948,8 @@ type <a class="el" href="#a0d8d6125787befc59862bed182ea1717">decltype</a>(<a cla
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">Tag</a>&gt;<br />
-struct ddc::Deriv&lt; Tag &gt;</div></div>
+struct ddc::Deriv&lt; Tag &gt;</div><p>A templated struct representing a discrete dimension storing the derivatives of a function along a continuous dimension Tag. </p>
+</div>
 </div>
 </div>
 <a name="structddc_1_1Fourier" id="structddc_1_1Fourier"></a>
@@ -1453,10 +1457,16 @@ template&lt;<a class="el" href="#a0d8d6125787befc59862bed182ea1717">class</a> T 
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>An enum representing a spline boundary condition. </p>
+<p>Please refer to Emily Bourne's thesis (<a href="https://www.theses.fr/2022AIXM0412.pdf">https://www.theses.fr/2022AIXM0412.pdf</a>) </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a28f4ae114fe8694bf78c0d761bc9744aad9d83fc826ae0d42075af007a477e2c9" name="a28f4ae114fe8694bf78c0d761bc9744aad9d83fc826ae0d42075af007a477e2c9"></a>PERIODIC&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e" name="a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e"></a>HERMITE&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9" name="a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9"></a>GREVILLE&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a28f4ae114fe8694bf78c0d761bc9744aad9d83fc826ae0d42075af007a477e2c9" name="a28f4ae114fe8694bf78c0d761bc9744aad9d83fc826ae0d42075af007a477e2c9"></a>PERIODIC&#160;</td><td class="fielddoc"><p>Periodic boundary condition <a class="el" href="#a0d8d6125787befc59862bed182ea1717">u(1)</a>=<a class="el" href="#a0d8d6125787befc59862bed182ea1717">u(n)</a> </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e" name="a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e"></a>HERMITE&#160;</td><td class="fielddoc"><p>Hermite boundary condition. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9" name="a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9"></a>GREVILLE&#160;</td><td class="fielddoc"><p>Use Greville points instead of conditions on derivative for B-Spline interpolation. </p>
+</td></tr>
 </table>
 
 </div>
@@ -3614,6 +3624,16 @@ template&lt;<a class="el" href="#a0d8d6125787befc59862bed182ea1717">typename</a>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Return the number of equations needed to describe a given boundary condition. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bc</td><td>The boundary condition. </td></tr>
+    <tr><td class="paramname">degree</td><td>The degree of the spline.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of equations. </dd></dl>
 
 </div>
 </div>

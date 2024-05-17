@@ -30,11 +30,12 @@ void fill_identity(
     }
 }
 
-/*
-void copy_matrix(ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS copy, std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>>& mat)
+void copy_matrix(
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS copy,
+        std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>>& mat)
 {
-    assert(mat->get_size() == int(copy.extent(0)));
-    assert(mat->get_size() == int(copy.extent(1)));
+    assert(mat->size() == int(copy.extent(0)));
+    assert(mat->size() == int(copy.extent(1)));
 
     for (std::size_t i(0); i < copy.extent(0); ++i) {
         for (std::size_t j(0); j < copy.extent(1); ++j) {
@@ -42,7 +43,6 @@ void copy_matrix(ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionS
         }
     }
 }
-*/
 
 void check_inverse(
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
@@ -101,16 +101,12 @@ TEST_P(MatrixSizesFixture, Sparse)
         for (std::size_t j(0); j < N; ++j) {
             if (i == j) {
                 matrix->set_element(i, j, 3. / 4);
-                val(i, j) = 3. / 4;
             } else if (std::abs((std::ptrdiff_t)(j - i)) <= (std::ptrdiff_t)k) {
                 matrix->set_element(i, j, -(1. / 4) / k);
-                val(i, j) = -(1. / 4) / k;
-            } else {
-                val(i, j) = 0.;
             }
         }
     }
-    // copy_matrix(val, matrix); // copy_matrix is not available for sparse matrix because of a limitation of Ginkgo API (get_element is not implemented). The workaround is to fill val directly in the loop
+    copy_matrix(val, matrix);
 
     matrix->setup_solver();
 

@@ -181,9 +181,7 @@ public:
     virtual double get_element([[maybe_unused]] std::size_t i, [[maybe_unused]] std::size_t j)
             const override
     {
-        throw std::runtime_error(
-                "SplinesLinearProblemSparse::get_element() is not implemented because no API is "
-                "provided by Ginkgo");
+        return m_matrix_dense->at(i, j);
     }
 
     virtual void set_element(std::size_t i, std::size_t j, double aij) override

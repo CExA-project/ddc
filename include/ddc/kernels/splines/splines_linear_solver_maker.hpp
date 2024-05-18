@@ -7,14 +7,14 @@
 #include <memory>
 #include <optional>
 
-#include "matrix_sparse.hpp"
+#include "splines_linear_solver_sparse.hpp"
 
 namespace ddc::detail {
 
 /**
- * @brief A static factory for Matrix classes.
+ * @brief A static factory for SplinesLinearProblem classes.
  */
-class MatrixMaker
+class SplinesLinearProblemMaker
 {
 public:
     /**
@@ -31,16 +31,16 @@ public:
      * define the size of a block used by the Block-Jacobi preconditioner.
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
-     * @return The Matrix instance.
+     * @return The SplinesLinearProblem instance.
      */
     template <typename ExecSpace>
-    static std::unique_ptr<Matrix> make_new_sparse(
+    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_sparse(
             int const n,
-            std::optional<int> cols_per_chunk = std::nullopt,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
     {
-        return std::make_unique<
-                Matrix_Sparse<ExecSpace>>(n, cols_per_chunk, preconditionner_max_block_size);
+        return std::make_unique<SplinesLinearProblemSparse<
+                ExecSpace>>(n, cols_per_chunk, preconditionner_max_block_size);
     }
 };
 

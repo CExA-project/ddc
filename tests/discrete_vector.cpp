@@ -48,6 +48,42 @@ TEST(DiscreteVectorXYZTest, ConstructorFromDiscreteVectors)
     EXPECT_EQ(ixyz.get<DDimZ>(), dv_z);
 }
 
+TEST(DiscreteVectorXTest, PreIncrement)
+{
+    DVectX const ix0(3);
+    DVectX ix1(ix0);
+    DVectX const ix2 = ++ix1;
+    EXPECT_EQ(ix1, ix0 + 1);
+    EXPECT_EQ(ix2, ix0 + 1);
+}
+
+TEST(DiscreteVectorXTest, PostIncrement)
+{
+    DVectX const ix0(3);
+    DVectX ix1(ix0);
+    DVectX const ix2 = ix1++;
+    EXPECT_EQ(ix1, ix0 + 1);
+    EXPECT_EQ(ix2, ix0);
+}
+
+TEST(DiscreteVectorXTest, PreDecrement)
+{
+    DVectX const ix0(3);
+    DVectX ix1(ix0);
+    DVectX const ix2 = --ix1;
+    EXPECT_EQ(ix1, ix0 - 1);
+    EXPECT_EQ(ix2, ix0 - 1);
+}
+
+TEST(DiscreteVectorXTest, PostDecrement)
+{
+    DVectX const ix0(3);
+    DVectX ix1(ix0);
+    DVectX const ix2 = ix1--;
+    EXPECT_EQ(ix1, ix0 - 1);
+    EXPECT_EQ(ix2, ix0);
+}
+
 TEST(DiscreteVectorTest, ExternalBinaryOperatorPlus)
 {
     std::size_t const dv_x = 7;

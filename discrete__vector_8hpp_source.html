@@ -483,7 +483,7 @@ $(function(){initNavTree('discrete__vector_8hpp_source.html',''); initResizable(
 <div class="foldopen" id="foldopen00382" data-start="{" data-end="}">
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno"><a class="line" href="classddc_1_1DiscreteVector.html#a07fb532811c1e05844ae002f5ab7dab1">  382</a></span>    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <span class="keyword">constexpr</span> <a class="code hl_class" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&amp; <span class="keyword">operator</span>--()</div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    {</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        ++m_values[0];</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        --m_values[0];</div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    }</div>
 </div>
@@ -493,7 +493,7 @@ $(function(){initNavTree('discrete__vector_8hpp_source.html',''); initResizable(
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno"><a class="line" href="classddc_1_1DiscreteVector.html#a478fa58d209f3940d1aa732cec45139f">  389</a></span>    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <span class="keyword">constexpr</span> <a class="code hl_class" href="classddc_1_1DiscreteVector.html">DiscreteVector</a> <span class="keyword">operator</span>--(<span class="keywordtype">int</span>)</div>
 <div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    {</div>
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>        <a class="code hl_class" href="classddc_1_1DiscreteVector.html">DiscreteVector</a> <span class="keyword">const</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">tmp</a> = *<span class="keyword">this</span>;</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>        ++m_values[0];</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>        --m_values[0];</div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">tmp</a>;</div>
 <div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    }</div>
 </div>

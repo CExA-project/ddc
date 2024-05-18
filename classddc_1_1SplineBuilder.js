@@ -11,7 +11,7 @@ var classddc_1_1SplineBuilder =
     [ "batched_spline_domain_type", "classddc_1_1SplineBuilder.html#a323a9184a1f6e0c378082d72b3f4f83f", null ],
     [ "batched_spline_tr_domain_type", "classddc_1_1SplineBuilder.html#ace986c24dfa458dcfbab5e4f1be6fd01", null ],
     [ "batched_derivs_domain_type", "classddc_1_1SplineBuilder.html#aaf4cfe3810dd31e15607de98e64f7df8", null ],
-    [ "SplineBuilder", "classddc_1_1SplineBuilder.html#a2abd120865160a6a7a62b7dca23eb917", null ],
+    [ "SplineBuilder", "classddc_1_1SplineBuilder.html#a7c74f6876b9541c3018495e9c57d1abb", null ],
     [ "SplineBuilder", "classddc_1_1SplineBuilder.html#a744aebd4fd12b94c0d484bdd66f8d293", null ],
     [ "SplineBuilder", "classddc_1_1SplineBuilder.html#a8e3166637e6eecd4de489c47d282f090", null ],
     [ "~SplineBuilder", "classddc_1_1SplineBuilder.html#a97d38a2252ec04d7d4ed9dd28384789a", null ],
@@ -25,6 +25,6 @@ var classddc_1_1SplineBuilder =
     [ "batched_spline_tr_domain", "classddc_1_1SplineBuilder.html#a224d240ba5129d3fe2cf00a6ad70a5f6", null ],
     [ "batched_derivs_xmin_domain", "classddc_1_1SplineBuilder.html#acde387c13477d88514e623420657ae3a", null ],
     [ "batched_derivs_xmax_domain", "classddc_1_1SplineBuilder.html#a650ba48e9b73b03abe3bb6c0cafdd9f3", null ],
-    [ "get_interpolation_matrix", "classddc_1_1SplineBuilder.html#a00796733c971d18758ff33ca6f0eaff6", null ],
+    [ "get_interpolation_matrix", "classddc_1_1SplineBuilder.html#a76c7f7d2a53f99c1c61d8920d3c73dbc", null ],
     [ "operator()", "classddc_1_1SplineBuilder.html#a46f174a8521f54d1e3926aaab47274e9", null ]
 ];

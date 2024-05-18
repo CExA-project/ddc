@@ -20,7 +20,7 @@ var classddc_1_1SplineBuilder2D =
     [ "batched_derivs_domain_type1", "classddc_1_1SplineBuilder2D.html#a62b147004f3b321b3b32991bcfc3e151", null ],
     [ "batched_derivs_domain_type2", "classddc_1_1SplineBuilder2D.html#a582ecacf3eaf93731c1543770ce0b1e6", null ],
     [ "batched_derivs_domain_type", "classddc_1_1SplineBuilder2D.html#a1aa47def3b4d9b71a92cfe452d546e42", null ],
-    [ "SplineBuilder2D", "classddc_1_1SplineBuilder2D.html#a0cfacf84437909939ec2a3969804bad3", null ],
+    [ "SplineBuilder2D", "classddc_1_1SplineBuilder2D.html#a80f711b6a1c1523b3ae416f27390294a", null ],
     [ "SplineBuilder2D", "classddc_1_1SplineBuilder2D.html#a11c806d72e2a5405608c87dd98844a17", null ],
     [ "SplineBuilder2D", "classddc_1_1SplineBuilder2D.html#a8cbc37d72e4724eac98033be496fe73d", null ],
     [ "~SplineBuilder2D", "classddc_1_1SplineBuilder2D.html#a78b695d869893262bf36f507d578ee05", null ],

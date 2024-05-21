@@ -44,7 +44,7 @@ RUN chmod +x /bin/bash_run \
     libelf-dev \
     libfftw3-dev \
     libopenblas-dev \
-    liblapack-dev \
+    liblapacke-dev \
     libhwloc-dev \
     libnuma1 \
     libpdi-dev \

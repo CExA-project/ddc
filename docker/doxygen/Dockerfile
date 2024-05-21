@@ -31,7 +31,7 @@ RUN chmod +x /bin/bash_run \
     cmake-data \
     libfftw3-dev \
     libopenblas-dev \
-    liblapack-dev \
+    liblapacke-dev \
     libpdi-dev \
     ghostscript \
     git \

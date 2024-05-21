@@ -7,7 +7,8 @@
 #include <memory>
 #include <optional>
 
-#include "splines_linear_solver_sparse.hpp"
+#include "splines_linear_problem_dense.hpp"
+#include "splines_linear_problem_sparse.hpp"
 
 namespace ddc::detail {
 
@@ -17,6 +18,42 @@ namespace ddc::detail {
 class SplinesLinearProblemMaker
 {
 public:
+    /**
+     * @brief Construct a dense matrix
+     *
+     * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.
+     * @param n The size of one of the dimensions of the square matrix.
+     *
+     * @return The SplinesLinearProblem instance.
+     */
+    template <typename ExecSpace>
+    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_dense(int const n)
+    {
+        return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+    }
+
+    /**
+     * @brief Construct a band matrix
+     *
+     * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.
+     * @param n The size of one of the dimensions of the square matrix.
+     * @param kl The number of subdiagonals.
+     * @param ku The number of superdiagonals.
+     * @param pds A boolean indicating if the matrix is positive-definite symetric or not.
+     *
+     * @return The SplinesLinearProblem instance.
+     */
+    template <typename ExecSpace>
+    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_band(
+            int const n,
+            int const kl,
+            int const ku,
+            bool const pds)
+    {
+        // Placeholder while SplinesLinearProblemBand is not implemented
+        return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+    }
+
     /**
      * @brief Construct a sparse matrix
      *

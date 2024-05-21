@@ -19,9 +19,9 @@ RUN chmod +x /bin/bash_run \
     apt-utils \
     ca-certificates \
     wget \
- && mkdir --parents --mode=0755 /etc/apt/keyrings \
- && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/pdidev-archive-keyring.gpg] https://raw.githubusercontent.com/pdidev/repo/ubuntu lunar main" > /etc/apt/sources.list.d/pdi.list \
- && wget -q -O /etc/apt/keyrings/pdidev-archive-keyring.gpg https://raw.githubusercontent.com/pdidev/repo/ubuntu/pdidev-archive-keyring.gpg \
+ && echo "deb [ arch=amd64 ] https://raw.githubusercontent.com/pdidev/repo/ubuntu lunar main" > /etc/apt/sources.list.d/pdi.list \
+ && wget -q -O /etc/apt/trusted.gpg.d/pdidev-archive-keyring.gpg https://raw.githubusercontent.com/pdidev/repo/ubuntu/pdidev-archive-keyring.gpg \
+ && chmod -R a+r /etc/apt/trusted.gpg.d/ \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends \
     build-essential \
@@ -30,6 +30,8 @@ RUN chmod +x /bin/bash_run \
     cmake \
     cmake-data \
     libfftw3-dev \
+    libopenblas-dev \
+    liblapack-dev \
     libpdi-dev \
     ghostscript \
     git \

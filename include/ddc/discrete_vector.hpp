@@ -381,7 +381,7 @@ public:
     template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     KOKKOS_FUNCTION constexpr DiscreteVector& operator--()
     {
-        ++m_values[0];
+        --m_values[0];
         return *this;
     }
 
@@ -389,7 +389,7 @@ public:
     KOKKOS_FUNCTION constexpr DiscreteVector operator--(int)
     {
         DiscreteVector const tmp = *this;
-        ++m_values[0];
+        --m_values[0];
         return tmp;
     }
 

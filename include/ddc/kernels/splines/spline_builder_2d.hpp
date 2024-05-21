@@ -200,7 +200,7 @@ public:
      */
     explicit SplineBuilder2D(
             batched_interpolation_domain_type const& batched_interpolation_domain,
-            std::optional<int> cols_per_chunk = std::nullopt,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : m_spline_builder1(
                 batched_interpolation_domain,

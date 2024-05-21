@@ -175,7 +175,7 @@ static void characteristics_advection(benchmark::State& state)
     /// variables, which is always a bad idea.       ///
     ////////////////////////////////////////////////////
     ddc::detail::g_discrete_space_dual<BSplinesX>.reset();
-    ddc::detail::g_discrete_space_dual<ddc::detail::UniformBsplinesKnots<BSplinesX>>.reset();
+    ddc::detail::g_discrete_space_dual<ddc::UniformBsplinesKnots<BSplinesX>>.reset();
     ddc::detail::g_discrete_space_dual<DDimX>.reset();
     ddc::detail::g_discrete_space_dual<DDimY>.reset();
     ////////////////////////////////////////////////////
@@ -185,15 +185,15 @@ static void characteristics_advection(benchmark::State& state)
 
 #ifdef KOKKOS_ENABLE_CUDA
 std::string chip = "gpu";
-int cols_per_chunk_ref = 65535;
+std::size_t cols_per_chunk_ref = 65535;
 unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_OPENMP)
 std::string chip = "cpu";
-int cols_per_chunk_ref = 8192;
+std::size_t cols_per_chunk_ref = 8192;
 unsigned int preconditionner_max_block_size_ref = 32u;
 #elif defined(KOKKOS_ENABLE_SERIAL)
 std::string chip = "cpu";
-int cols_per_chunk_ref = 8192;
+std::size_t cols_per_chunk_ref = 8192;
 unsigned int preconditionner_max_block_size_ref = 32u;
 #endif
 

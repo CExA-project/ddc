@@ -17,16 +17,16 @@ namespace ddc {
 
 namespace detail {
 
-template <class T>
-struct UniformBsplinesKnots : UniformPointSampling<typename T::tag_type>
-{
-};
-
 struct UniformBSplinesBase
 {
 };
 
 } // namespace detail
+
+template <class T>
+struct UniformBsplinesKnots : UniformPointSampling<typename T::tag_type>
+{
+};
 
 /**
  * The type of a uniform 1D spline basis (B-spline).
@@ -87,13 +87,10 @@ public:
         template <class ODDim, class OMemorySpace>
         friend class Impl;
 
-    private:
-        using mesh_type = detail::UniformBsplinesKnots<DDim>;
-
-        // In the periodic case, it contains twice the periodic point!!!
-        ddc::DiscreteDomain<mesh_type> m_domain;
-
     public:
+        /// @brief The type of the knots defining the B-splines.
+        using knot_mesh_type = UniformBsplinesKnots<DDim>;
+
         /// @brief The type of the discrete dimension representing the B-splines.
         using discrete_dimension_type = UniformBSplines;
 
@@ -106,6 +103,11 @@ public:
         /// @brief The type of a DiscreteVector representing an "index displacement" between two B-splines.
         using discrete_vector_type = DiscreteVector<DDim>;
 
+    private:
+        // In the periodic case, it contains twice the periodic point!!!
+        ddc::DiscreteDomain<knot_mesh_type> m_domain;
+
+    public:
         Impl() = default;
 
         /** Constructs a spline basis (B-splines) with n equidistant knots over \f$[a, b]\f$
@@ -116,14 +118,15 @@ public:
          */
         explicit Impl(ddc::Coordinate<Tag> rmin, ddc::Coordinate<Tag> rmax, std::size_t ncells)
             : m_domain(
-                    ddc::DiscreteElement<mesh_type>(0),
-                    ddc::DiscreteVector<mesh_type>(
+                    ddc::DiscreteElement<knot_mesh_type>(0),
+                    ddc::DiscreteVector<knot_mesh_type>(
                             ncells + 1)) // Create a mesh including the eventual periodic point
         {
             assert(ncells > 0);
-            ddc::init_discrete_space<mesh_type>(
-                    mesh_type::template init<
-                            mesh_type>(rmin, rmax, ddc::DiscreteVector<mesh_type>(ncells + 1)));
+            ddc::init_discrete_space<knot_mesh_type>(knot_mesh_type::template init<knot_mesh_type>(
+                    rmin,
+                    rmax,
+                    ddc::DiscreteVector<knot_mesh_type>(ncells + 1)));
         }
 
         /** @brief Copy-constructs from another Impl with a different Kokkos memory space
@@ -241,7 +244,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_knot(int knot_idx) const noexcept
         {
-            return ddc::Coordinate<Tag>(rmin() + knot_idx * ddc::step<mesh_type>());
+            return ddc::Coordinate<Tag>(rmin() + knot_idx * ddc::step<knot_mesh_type>());
         }
 
         /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a B-spline.
@@ -336,6 +339,15 @@ public:
             return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
         }
 
+        /** @brief Returns the discrete domain which describes the break points.
+         *
+         * @return The discrete domain describing the break points.
+         */
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteDomain<knot_mesh_type> break_point_domain() const
+        {
+            return m_domain;
+        }
+
         /** @brief Returns the number of basis functions.
          *
          * The number of functions in the spline basis.
@@ -362,7 +374,7 @@ public:
     private:
         KOKKOS_INLINE_FUNCTION double inv_step() const noexcept
         {
-            return 1.0 / ddc::step<mesh_type>();
+            return 1.0 / ddc::step<knot_mesh_type>();
         }
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
@@ -438,7 +450,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<
     // 3. Compute derivatives of aforementioned B-splines
     //    Derivatives are normalized, hence they should be divided by dx
     double xx, temp, saved;
-    derivs(0) = 1.0 / ddc::step<mesh_type>();
+    derivs(0) = 1.0 / ddc::step<knot_mesh_type>();
     for (std::size_t j = 1; j < degree(); ++j) {
         xx = -offset;
         saved = 0.0;
@@ -607,7 +619,7 @@ UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
         discrete_domain_type const dom_bsplines(
                 full_dom_splines.take_first(discrete_vector_type {nbasis()}));
         for (auto ix : dom_bsplines) {
-            int_vals(ix) = ddc::step<mesh_type>();
+            int_vals(ix) = ddc::step<knot_mesh_type>();
         }
         if (int_vals.size() == size()) {
             discrete_domain_type const dom_bsplines_repeated(
@@ -621,7 +633,7 @@ UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
                 = full_dom_splines
                           .remove(discrete_vector_type(degree()), discrete_vector_type(degree()));
         for (auto ix : dom_bspline_entirely_in_domain) {
-            int_vals(ix) = ddc::step<mesh_type>();
+            int_vals(ix) = ddc::step<knot_mesh_type>();
         }
 
         std::array<double, degree() + 2> edge_vals_ptr;
@@ -636,7 +648,7 @@ UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
         for (std::size_t i = 0; i < degree(); ++i) {
             double const c_eval = ddc::detail::sum(edge_vals, 0, degree() - i);
 
-            double const edge_value = ddc::step<mesh_type>() * (d_eval - c_eval);
+            double const edge_value = ddc::step<knot_mesh_type>() * (d_eval - c_eval);
 
             int_vals(discrete_element_type(i)) = edge_value;
             int_vals(discrete_element_type(nbasis() - 1 - i)) = edge_value;

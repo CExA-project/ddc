@@ -61,6 +61,9 @@ $(function(){initNavTree('classddc_1_1UniformBSplines_1_1Impl.html',''); initRes
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a54a8cc990ae15aaf6f89580792e5d104" id="r_a54a8cc990ae15aaf6f89580792e5d104"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> = <a class="el" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;DDim&gt;</td></tr>
+<tr class="memdesc:a54a8cc990ae15aaf6f89580792e5d104"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the knots defining the B-splines.  <br /></td></tr>
+<tr class="separator:a54a8cc990ae15aaf6f89580792e5d104"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4c5c00ec28881d5118ac1759ea8f759" id="r_ab4c5c00ec28881d5118ac1759ea8f759"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4c5c00ec28881d5118ac1759ea8f759">discrete_dimension_type</a> = <a class="el" href="classddc_1_1UniformBSplines.html">UniformBSplines</a></td></tr>
 <tr class="memdesc:ab4c5c00ec28881d5118ac1759ea8f759"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the discrete dimension representing the B-splines.  <br /></td></tr>
 <tr class="separator:ab4c5c00ec28881d5118ac1759ea8f759"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,6 +143,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a20223a26726ded2d7a47a2395b233975" id="r_a20223a26726ded2d7a47a2395b233975"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="#a5674c2f0c7818d6ff156cb2a90df5fee">discrete_domain_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20223a26726ded2d7a47a2395b233975">full_domain</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
 <tr class="memdesc:a20223a26726ded2d7a47a2395b233975"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the discrete domain including eventual additional B-splines in the periodic case.  <br /></td></tr>
 <tr class="separator:a20223a26726ded2d7a47a2395b233975"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8427f6d5594e286e0925edb534cc90f2" id="r_a8427f6d5594e286e0925edb534cc90f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8427f6d5594e286e0925edb534cc90f2">break_point_domain</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memdesc:a8427f6d5594e286e0925edb534cc90f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the discrete domain which describes the break points.  <br /></td></tr>
+<tr class="separator:a8427f6d5594e286e0925edb534cc90f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4eb5520c30b6ca33f4ef2bd9e277ec3e" id="r_a4eb5520c30b6ca33f4ef2bd9e277ec3e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4eb5520c30b6ca33f4ef2bd9e277ec3e">nbasis</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
 <tr class="memdesc:a4eb5520c30b6ca33f4ef2bd9e277ec3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of basis functions.  <br /></td></tr>
 <tr class="separator:a4eb5520c30b6ca33f4ef2bd9e277ec3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,6 +171,26 @@ class ddc::UniformBSplines&lt; Tag, D &gt;::Impl&lt; DDim, MemorySpace &gt;</div
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a54a8cc990ae15aaf6f89580792e5d104" name="a54a8cc990ae15aaf6f89580792e5d104"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54a8cc990ae15aaf6f89580792e5d104">&#9670;&#160;</a></span>knot_mesh_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a> , std::size_t D&gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">D</a> &gt;<a class="el" href="#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; DDim, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt;::knot_mesh_type = <a class="el" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;DDim&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The type of the knots defining the B-splines. </p>
+
+</div>
+</div>
 <a id="ab4c5c00ec28881d5118ac1759ea8f759" name="ab4c5c00ec28881d5118ac1759ea8f759"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab4c5c00ec28881d5118ac1759ea8f759">&#9670;&#160;</a></span>discrete_dimension_type</h2>
 
@@ -1019,6 +1045,38 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <p>Returns the discrete domain including eventual additional B-splines in the periodic case. </p>
 <p>See <a class="el" href="#abd406e1695c60435beabce2ca9f6500f" title="Returns the number of elements necessary to construct a spline representation of a function.">size()</a>.</p>
 <dl class="section return"><dt>Returns</dt><dd>The discrete domain including eventual additional B-splines. </dd></dl>
+
+</div>
+</div>
+<a id="a8427f6d5594e286e0925edb534cc90f2" name="a8427f6d5594e286e0925edb534cc90f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8427f6d5594e286e0925edb534cc90f2">&#9670;&#160;</a></span>break_point_domain()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a> , std::size_t D&gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">D</a> &gt;<a class="el" href="#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; DDim, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt;::break_point_domain </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the discrete domain which describes the break points. </p>
+<dl class="section return"><dt>Returns</dt><dd>The discrete domain describing the break points. </dd></dl>
 
 </div>
 </div>

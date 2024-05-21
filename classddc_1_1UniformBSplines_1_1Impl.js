@@ -1,5 +1,6 @@
 var classddc_1_1UniformBSplines_1_1Impl =
 [
+    [ "knot_mesh_type", "classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104", null ],
     [ "discrete_dimension_type", "classddc_1_1UniformBSplines_1_1Impl.html#ab4c5c00ec28881d5118ac1759ea8f759", null ],
     [ "discrete_domain_type", "classddc_1_1UniformBSplines_1_1Impl.html#a5674c2f0c7818d6ff156cb2a90df5fee", null ],
     [ "discrete_element_type", "classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322", null ],
@@ -25,6 +26,7 @@ var classddc_1_1UniformBSplines_1_1Impl =
     [ "length", "classddc_1_1UniformBSplines_1_1Impl.html#ae13684f5af844a7ed50ed29599ed703c", null ],
     [ "size", "classddc_1_1UniformBSplines_1_1Impl.html#abd406e1695c60435beabce2ca9f6500f", null ],
     [ "full_domain", "classddc_1_1UniformBSplines_1_1Impl.html#a20223a26726ded2d7a47a2395b233975", null ],
+    [ "break_point_domain", "classddc_1_1UniformBSplines_1_1Impl.html#a8427f6d5594e286e0925edb534cc90f2", null ],
     [ "nbasis", "classddc_1_1UniformBSplines_1_1Impl.html#a4eb5520c30b6ca33f4ef2bd9e277ec3e", null ],
     [ "ncells", "classddc_1_1UniformBSplines_1_1Impl.html#a779a3744f1c4889f418447e345ba515a", null ],
     [ "Impl", "classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56", null ]

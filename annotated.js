@@ -52,6 +52,7 @@ var annotated =
       [ "KokkosAllocator", "classddc_1_1KokkosAllocator.html", "classddc_1_1KokkosAllocator" ],
       [ "kwArgs_fft", "namespaceddc.html#structddc_1_1kwArgs__fft", "namespaceddc_structddc_1_1kwArgs__fft_dup" ],
       [ "NonUniformBSplines", "classddc_1_1NonUniformBSplines.html", "classddc_1_1NonUniformBSplines" ],
+      [ "NonUniformBsplinesKnots", "structddc_1_1NonUniformBsplinesKnots.html", null ],
       [ "NonUniformPointSampling", "classddc_1_1NonUniformPointSampling.html", "classddc_1_1NonUniformPointSampling" ],
       [ "NullExtrapolationRule", "structddc_1_1NullExtrapolationRule.html", "structddc_1_1NullExtrapolationRule" ],
       [ "PdiEvent", "classddc_1_1PdiEvent.html", "classddc_1_1PdiEvent" ],
@@ -63,6 +64,7 @@ var annotated =
       [ "SplineEvaluator", "classddc_1_1SplineEvaluator.html", "classddc_1_1SplineEvaluator" ],
       [ "SplineEvaluator2D", "classddc_1_1SplineEvaluator2D.html", "classddc_1_1SplineEvaluator2D" ],
       [ "UniformBSplines", "classddc_1_1UniformBSplines.html", "classddc_1_1UniformBSplines" ],
+      [ "UniformBsplinesKnots", "structddc_1_1UniformBsplinesKnots.html", null ],
       [ "UniformPointSampling", "classddc_1_1UniformPointSampling.html", "classddc_1_1UniformPointSampling" ]
     ] ]
 ];

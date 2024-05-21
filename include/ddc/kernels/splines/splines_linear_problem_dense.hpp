@@ -16,7 +16,7 @@ namespace ddc::detail {
 /**
  * @brief A dense linear problem dedicated to the computation of a spline approximation.
  *
- * The storage format is dense column-major. Lapack is used to perform every matrix and linear solver-related operations.
+ * The storage format is dense row-major. Lapack is used to perform every matrix and linear solver-related operations.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are supposed to be performed. Note: atm this is a placeholder for futur developments on GPU.
  */

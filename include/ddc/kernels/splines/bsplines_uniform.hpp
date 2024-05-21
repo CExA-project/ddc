@@ -17,16 +17,16 @@ namespace ddc {
 
 namespace detail {
 
-template <class T>
-struct UniformBsplinesKnots : UniformPointSampling<typename T::tag_type>
-{
-};
-
 struct UniformBSplinesBase
 {
 };
 
 } // namespace detail
+
+template <class T>
+struct UniformBsplinesKnots : UniformPointSampling<typename T::tag_type>
+{
+};
 
 /**
  * The type of a uniform 1D spline basis (B-spline).
@@ -89,7 +89,7 @@ public:
 
     public:
         /// @brief The type of the knots defining the B-splines.
-        using knot_mesh_type = detail::UniformBsplinesKnots<DDim>;
+        using knot_mesh_type = UniformBsplinesKnots<DDim>;
 
         /// @brief The type of the discrete dimension representing the B-splines.
         using discrete_dimension_type = UniformBSplines;

@@ -107,8 +107,6 @@ public:
         ddc::DiscreteDomain<knot_mesh_type> m_domain;
         ddc::DiscreteDomain<knot_mesh_type> m_break_point_domain;
 
-        int m_nknots;
-
     public:
         Impl() = default;
 
@@ -162,9 +160,7 @@ public:
          * @param impl A reference to the other Impl
          */
         template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
-            : m_domain(impl.m_domain)
-            , m_nknots(impl.m_nknots)
+        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_domain(impl.m_domain)
         {
         }
 
@@ -354,7 +350,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION std::size_t npoints() const noexcept
         {
-            return m_nknots - 2 * degree();
+            return m_domain.size() - 2 * degree();
         }
 
         /** @brief Returns the number of basis functions.
@@ -425,7 +421,6 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
               ddc::DiscreteElement<knot_mesh_type>(degree()),
               ddc::DiscreteVector<knot_mesh_type>(
                       (break_end - break_begin))) // Create a mesh of break points
-    , m_nknots((break_end - break_begin) + 2 * degree())
 {
     std::vector<ddc::Coordinate<Tag>> knots((break_end - break_begin) + 2 * degree());
     // Fill the provided knots

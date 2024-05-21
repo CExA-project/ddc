@@ -41,7 +41,7 @@ RUN chmod +x /bin/bash_run \
     git \
     libfftw3-dev \
     libopenblas-dev \
-    liblapack-dev \
+    liblapacke-dev \
     libhwloc-dev \
     libpdi-dev \
     pdidev-archive-keyring \

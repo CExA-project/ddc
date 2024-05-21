@@ -175,7 +175,7 @@ static void characteristics_advection(benchmark::State& state)
     /// variables, which is always a bad idea.       ///
     ////////////////////////////////////////////////////
     ddc::detail::g_discrete_space_dual<BSplinesX>.reset();
-    ddc::detail::g_discrete_space_dual<ddc::detail::UniformBsplinesKnots<BSplinesX>>.reset();
+    ddc::detail::g_discrete_space_dual<ddc::UniformBsplinesKnots<BSplinesX>>.reset();
     ddc::detail::g_discrete_space_dual<DDimX>.reset();
     ddc::detail::g_discrete_space_dual<DDimY>.reset();
     ////////////////////////////////////////////////////

@@ -384,11 +384,11 @@ public:
         }
 
         /**
-         * @brief Get the cell where x is found
+         * @brief Get the DiscreteElement describing the knot at the start of the cell where x is found.
          * @param x The point whose location must be determined.
          * @returns The DiscreteElement describing the knot at the lower bound of the cell of interest.
          */
-        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> find_cell(
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> find_cell_start(
                 ddc::Coordinate<Tag> const& x) const;
     };
 };
@@ -465,7 +465,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     assert(values.size() == degree() + 1);
 
     // 1. Compute cell index 'icell'
-    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell(x);
+    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell_start(x);
 
     assert(icell >= m_break_point_domain.front());
     assert(icell <= m_break_point_domain.back());
@@ -503,7 +503,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     assert(derivs.size() == degree() + 1);
 
     // 1. Compute cell index 'icell'
-    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell(x);
+    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell_start(x);
 
     assert(icell >= m_break_point_domain.front());
     assert(icell <= m_break_point_domain.back());
@@ -579,7 +579,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     assert(derivs.extent(1) == 1 + n);
 
     // 1. Compute cell index 'icell' and x_offset
-    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell(x);
+    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell_start(x);
 
     assert(icell >= m_break_point_domain.front());
     assert(icell <= m_break_point_domain.back());
@@ -658,7 +658,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
 template <class Tag, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<detail::NonUniformBsplinesKnots<DDim>>
-NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::find_cell(ddc::Coordinate<Tag> const& x) const
+NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<Tag> const& x) const
 {
     assert(x <= rmax());
     assert(x >= rmin());

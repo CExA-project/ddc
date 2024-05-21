@@ -23,16 +23,17 @@ RUN chmod +x /bin/bash_run \
     apt-transport-https \
     apt-utils \
     ca-certificates \
+    gpg \
     wget \
+ && mkdir --parents --mode=0755 /etc/apt/keyrings \
  && if [ "xhip" = "x${BACKEND}" ] \
-  ; then echo 'deb [arch=amd64] https://repo.radeon.com/amdgpu/latest/ubuntu jammy main' > /etc/apt/sources.list.d/amdgpu.list \
-      && echo 'deb [arch=amd64] https://repo.radeon.com/rocm/apt/5.7.3 jammy main' > /etc/apt/sources.list.d/rocm.list \
-      && wget -q -O /etc/apt/trusted.gpg.d/rocm.asc https://repo.radeon.com/rocm/rocm.gpg.key \
-      && echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' > /etc/apt/preferences.d/rocm-pin-600 \
+  ; then echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/5.7.3/ubuntu jammy main" > /etc/apt/sources.list.d/amdgpu.list \
+      && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/5.7.3 jammy main" > /etc/apt/sources.list.d/rocm.list \
+      && wget -q -O - https://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor --output /etc/apt/keyrings/rocm.gpg \
+      && echo -e "Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600" > /etc/apt/preferences.d/rocm-pin-600 \
  ;  fi \
- && echo "deb [arch=amd64] https://raw.githubusercontent.com/pdidev/repo/ubuntu jammy main" > /etc/apt/sources.list.d/pdi.list \
- && wget -q -O /etc/apt/trusted.gpg.d/pdidev-archive-keyring.gpg https://raw.githubusercontent.com/pdidev/repo/ubuntu/pdidev-archive-keyring.gpg \
- && chmod -R a+r /etc/apt/trusted.gpg.d/ \
+ && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/pdidev-archive-keyring.gpg] https://raw.githubusercontent.com/pdidev/repo/ubuntu jammy main" > /etc/apt/sources.list.d/pdi.list \
+ && wget -q -O /etc/apt/keyrings/pdidev-archive-keyring.gpg https://raw.githubusercontent.com/pdidev/repo/ubuntu/pdidev-archive-keyring.gpg \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends \
     build-essential \

@@ -93,19 +93,23 @@ public:
 
         auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b);
         Kokkos::deep_copy(b_host, b);
+        Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::DefaultHostExecutionSpace> const
+                b_host_tr("", b.extent(0), b.extent(1));
+        Kokkos::deep_copy(b_host_tr, b_host);
         int const info = LAPACKE_dgetrs(
-                LAPACK_ROW_MAJOR,
+                LAPACK_COL_MAJOR,
                 transpose ? 'T' : 'N',
-                b_host.extent(0),
-                b_host.extent(1),
+                b_host_tr.extent(0),
+                b_host_tr.extent(1),
                 m_a.data(),
-                b_host.extent(0),
+                b_host_tr.extent(0),
                 m_ipiv.data(),
-                b_host.data(),
-                b_host.stride(0));
+                b_host_tr.data(),
+                b_host_tr.stride(1));
         if (info != 0) {
             throw std::runtime_error("LAPACK failed with error code " + info);
         }
+        Kokkos::deep_copy(b_host, b_host_tr);
         Kokkos::deep_copy(b, b_host);
     }
 };

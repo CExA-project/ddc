@@ -29,7 +29,7 @@ public:
     using SplinesLinearProblem<ExecSpace>::operator<<;
 
 protected:
-    Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace> m_a;
+    Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::HostSpace> m_a;
     Kokkos::View<int*, Kokkos::HostSpace> m_ipiv;
 
 public:
@@ -68,7 +68,7 @@ public:
     void setup_solver() override
     {
         int const info = LAPACKE_dgetrf(
-                LAPACK_COL_MAJOR,
+                LAPACK_ROW_MAJOR,
                 size(),
                 size(),
                 m_a.data(),
@@ -93,23 +93,19 @@ public:
 
         auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b);
         Kokkos::deep_copy(b_host, b);
-        Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::DefaultHostExecutionSpace> const
-                b_host_tr("", b.extent(0), b.extent(1));
-        Kokkos::deep_copy(b_host_tr, b_host);
         int const info = LAPACKE_dgetrs(
-                LAPACK_COL_MAJOR,
+                LAPACK_ROW_MAJOR,
                 transpose ? 'T' : 'N',
-                b_host_tr.extent(0),
-                b_host_tr.extent(1),
+                b_host.extent(0),
+                b_host.extent(1),
                 m_a.data(),
-                b_host_tr.extent(0),
+                b_host.extent(0),
                 m_ipiv.data(),
-                b_host_tr.data(),
-                b_host_tr.stride(1));
+                b_host.data(),
+                b_host.stride(0));
         if (info != 0) {
             throw std::runtime_error("LAPACK failed with error code " + info);
         }
-        Kokkos::deep_copy(b_host, b_host_tr);
         Kokkos::deep_copy(b, b_host);
     }
 };

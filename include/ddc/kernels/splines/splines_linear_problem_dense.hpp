@@ -102,7 +102,7 @@ public:
                 b_host.extent(0),
                 m_ipiv.data(),
                 b_host.data(),
-                b_host.stride(1));
+                b_host.stride(0));
         if (info != 0) {
             throw std::runtime_error("LAPACK failed with error code " + info);
         }

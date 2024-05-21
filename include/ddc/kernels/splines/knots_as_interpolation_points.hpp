@@ -22,6 +22,10 @@ namespace ddc {
  * In the case of strongly non-uniform splines this choice may result in a less
  * well conditioned problem, however most mathematical stability results are proven
  * with this choice of interpolation points.
+ *
+ * @tparam BSplines The type of the uniform or non-uniform spline basis whose knots are used as interpolation points.
+ * @tparam BcXmin The lower boundary condition.
+ * @tparam BcXmin The upper boundary condition.
  */
 template <class BSplines, ddc::BoundCond BcXmin, ddc::BoundCond BcXmax>
 class KnotsAsInterpolationPoints

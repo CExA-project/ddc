@@ -85,6 +85,57 @@ class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t,
 {
 };
 
+TEST_P(MatrixSizesFixture, NonSymmetric)
+{
+    auto const [N, k] = GetParam();
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = ddc::detail::SplinesLinearProblemMaker::make_new_band<
+                    Kokkos::DefaultExecutionSpace>(N, k, k, false);
+
+    for (std::size_t i(0); i < N; ++i) {
+        matrix->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+    }
+    std::vector<double> val_ptr(N * N);
+    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+            val(val_ptr.data(), N, N);
+    copy_matrix(val, matrix);
+
+    matrix->setup_solver();
+
+    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
+    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+            inv(inv_ptr.h_view.data(), N, N);
+    fill_identity(inv);
+    inv_ptr.modify_host();
+    inv_ptr.sync_device();
+    matrix->solve(ddc::detail::SplinesLinearProblem<
+                  Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
+    inv_ptr.modify_device();
+    inv_ptr.sync_host();
+
+    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
+    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+            inv_tr(inv_tr_ptr.h_view.data(), N, N);
+    fill_identity(inv_tr);
+    inv_tr_ptr.modify_host();
+    inv_tr_ptr.sync_device();
+    matrix
+            ->solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
+                            MultiRHS(inv_tr_ptr.d_view.data(), N, N),
+                    true);
+    inv_tr_ptr.modify_device();
+    inv_tr_ptr.sync_host();
+
+    check_inverse(val, inv);
+    check_inverse_transpose(val, inv_tr);
+}
+
 TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
 {
     auto const [N, k] = GetParam();

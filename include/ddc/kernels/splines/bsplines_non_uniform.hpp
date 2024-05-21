@@ -657,8 +657,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
 
 template <class Tag, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>>
-NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<Tag> const& x) const
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUniformBSplines<
+        Tag,
+        D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<Tag> const& x) const
 {
     assert(x <= rmax());
     assert(x >= rmin());

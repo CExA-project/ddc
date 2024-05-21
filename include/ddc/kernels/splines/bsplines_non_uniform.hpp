@@ -17,16 +17,16 @@ namespace ddc {
 
 namespace detail {
 
-template <class T>
-struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::tag_type>
-{
-};
-
 struct NonUniformBSplinesBase
 {
 };
 
 } // namespace detail
+
+template <class T>
+struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::tag_type>
+{
+};
 
 /**
  * The type of a non-uniform 1D spline basis (B-spline).
@@ -89,7 +89,7 @@ public:
 
     public:
         /// @brief The type of the knots defining the B-splines.
-        using knot_mesh_type = detail::NonUniformBsplinesKnots<DDim>;
+        using knot_mesh_type = NonUniformBsplinesKnots<DDim>;
 
         /// @brief The type of the discrete dimension representing the B-splines.
         using discrete_dimension_type = NonUniformBSplines;

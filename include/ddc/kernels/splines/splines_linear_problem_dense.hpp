@@ -82,7 +82,7 @@ public:
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
-     * The solver method gaussian elimination with partial pivoting using the LU-factorized matrix A. The implementation is LAPACK method dgetrs.
+     * The solver method is gaussian elimination with partial pivoting using the LU-factorized matrix A. The implementation is LAPACK method dgetrs.
      *
      * @param[in, out] multi_rhs A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.

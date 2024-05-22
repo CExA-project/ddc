@@ -7,11 +7,11 @@
 #include <cassert>
 #include <memory>
 
+#include <lapacke.h>
+
 #include "splines_linear_problem.hpp"
 
 namespace ddc::detail {
-
-#include <lapacke.h>
 
 /**
  * @brief A dense linear problem dedicated to the computation of a spline approximation.

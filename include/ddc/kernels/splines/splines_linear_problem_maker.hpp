@@ -45,7 +45,7 @@ public:
      */
     template <typename ExecSpace>
     static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_band(
-            [[maybe_unused]] int const n,
+            int const n,
             [[maybe_unused]] int const kl,
             [[maybe_unused]] int const ku,
             [[maybe_unused]] bool const pds)

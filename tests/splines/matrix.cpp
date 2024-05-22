@@ -34,8 +34,8 @@ void copy_matrix(
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS copy,
         std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>>& mat)
 {
-    assert(mat->size() == int(copy.extent(0)));
-    assert(mat->size() == int(copy.extent(1)));
+    assert(mat->size() == copy.extent(0));
+    assert(mat->size() == copy.extent(1));
 
     for (std::size_t i(0); i < copy.extent(0); ++i) {
         for (std::size_t j(0); j < copy.extent(1); ++j) {

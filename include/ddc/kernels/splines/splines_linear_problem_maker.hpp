@@ -45,10 +45,10 @@ public:
      */
     template <typename ExecSpace>
     static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_band(
-            int const n,
-            int const kl,
-            int const ku,
-            bool const pds)
+            [[maybe_unused]] int const n,
+            [[maybe_unused]] int const kl,
+            [[maybe_unused]] int const ku,
+            [[maybe_unused]] bool const pds)
     {
         // Placeholder while SplinesLinearProblemBand is not implemented
         return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);

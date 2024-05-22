@@ -6,10 +6,10 @@
 #include <cmath>
 #include <memory>
 
+#include <gtest/gtest.h>
+
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
-
-#include <gtest/gtest.h>
 
 #include <Kokkos_DualView.hpp>
 

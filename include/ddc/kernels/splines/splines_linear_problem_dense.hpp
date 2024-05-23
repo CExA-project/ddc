@@ -6,6 +6,7 @@
 
 #include <cassert>
 #include <memory>
+#include <string>
 
 #include <lapacke.h>
 
@@ -75,7 +76,7 @@ public:
                 size(),
                 m_ipiv.data());
         if (info != 0) {
-            throw std::runtime_error("LAPACK failed with error code " + info);
+            throw std::runtime_error("LAPACK failed with error code " + std::to_string(info));
         }
     }
 
@@ -104,7 +105,7 @@ public:
                 b_host.data(),
                 b_host.stride(0));
         if (info != 0) {
-            throw std::runtime_error("LAPACK failed with error code " + info);
+            throw std::runtime_error("LAPACK failed with error code " + std::to_string(info));
         }
         Kokkos::deep_copy(b, b_host);
     }

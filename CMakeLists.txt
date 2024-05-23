@@ -254,8 +254,9 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
   # Lapack
   find_package(LAPACK REQUIRED)
-  target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
-  target_compile_definitions(DDC INTERFACE HAVE_LAPACK_CONFIG_H LAPACK_COMPLEX_CPP)
+  target_link_libraries(DDC INTERFACE LAPACK::LAPACK -llapacke)
+  # The following should not be necessary for LAPACKE >=3.9.1
+  # target_compile_definitions(DDC INTERFACE HAVE_LAPACK_CONFIG_H LAPACK_COMPLEX_CPP)
 endif()
 
 ## The PDI wrapper

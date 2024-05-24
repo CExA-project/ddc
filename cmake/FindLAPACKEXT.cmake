@@ -6,7 +6,6 @@
 #
 # SPDX-License-Identifier: CECILL-C
 
-#
 # - Find LAPACK EXTENDED for MORSE projects: find include dirs and libraries
 #
 # This module allows to find LAPACK libraries by calling the official FindLAPACK module

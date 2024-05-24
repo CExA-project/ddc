@@ -79,6 +79,47 @@ void check_inverse_transpose(
         }
     }
 }
+
+void solve_and_validate(
+        std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>>& matrix)
+{
+    const std::size_t N = matrix->size();
+
+    std::vector<double> val_ptr(N * N);
+    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+            val(val_ptr.data(), N, N);
+
+    copy_matrix(val, matrix);
+
+    matrix->setup_solver();
+
+    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
+    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+            inv(inv_ptr.h_view.data(), N, N);
+    fill_identity(inv);
+    inv_ptr.modify_host();
+    inv_ptr.sync_device();
+    matrix->solve(ddc::detail::SplinesLinearProblem<
+                  Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
+    inv_ptr.modify_device();
+    inv_ptr.sync_host();
+
+    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
+    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+            inv_tr(inv_tr_ptr.h_view.data(), N, N);
+    fill_identity(inv_tr);
+    inv_tr_ptr.modify_host();
+    inv_tr_ptr.sync_device();
+    matrix
+            ->solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
+                            MultiRHS(inv_tr_ptr.d_view.data(), N, N),
+                    true);
+    inv_tr_ptr.modify_device();
+    inv_tr_ptr.sync_host();
+
+    check_inverse(val, inv);
+    check_inverse_transpose(val, inv_tr);
+}
 } // namespace
 
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
@@ -104,36 +145,7 @@ TEST_P(MatrixSizesFixture, NonSymmetric)
     std::vector<double> val_ptr(N * N);
     ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
             val(val_ptr.data(), N, N);
-    copy_matrix(val, matrix);
-
-    matrix->setup_solver();
-
-    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            inv(inv_ptr.h_view.data(), N, N);
-    fill_identity(inv);
-    inv_ptr.modify_host();
-    inv_ptr.sync_device();
-    matrix->solve(ddc::detail::SplinesLinearProblem<
-                  Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
-    inv_ptr.modify_device();
-    inv_ptr.sync_host();
-
-    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            inv_tr(inv_tr_ptr.h_view.data(), N, N);
-    fill_identity(inv_tr);
-    inv_tr_ptr.modify_host();
-    inv_tr_ptr.sync_device();
-    matrix
-            ->solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
-                            MultiRHS(inv_tr_ptr.d_view.data(), N, N),
-                    true);
-    inv_tr_ptr.modify_device();
-    inv_tr_ptr.sync_host();
-
-    check_inverse(val, inv);
-    check_inverse_transpose(val, inv_tr);
+    solve_and_validate(matrix);
 }
 
 TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
@@ -152,39 +164,8 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
             matrix->set_element(i, j, -1.0);
         }
     }
-    std::vector<double> val_ptr(N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            val(val_ptr.data(), N, N);
-    copy_matrix(val, matrix);
 
-    matrix->setup_solver();
-
-    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            inv(inv_ptr.h_view.data(), N, N);
-    fill_identity(inv);
-    inv_ptr.modify_host();
-    inv_ptr.sync_device();
-    matrix->solve(ddc::detail::SplinesLinearProblem<
-                  Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
-    inv_ptr.modify_device();
-    inv_ptr.sync_host();
-
-    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            inv_tr(inv_tr_ptr.h_view.data(), N, N);
-    fill_identity(inv_tr);
-    inv_tr_ptr.modify_host();
-    inv_tr_ptr.sync_device();
-    matrix
-            ->solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
-                            MultiRHS(inv_tr_ptr.d_view.data(), N, N),
-                    true);
-    inv_tr_ptr.modify_device();
-    inv_tr_ptr.sync_host();
-
-    check_inverse(val, inv);
-    check_inverse_transpose(val, inv_tr);
+    solve_and_validate(matrix);
 }
 
 TEST_P(MatrixSizesFixture, OffsetBanded)
@@ -205,39 +186,8 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
             matrix->set_element(i, j, -1.0);
         }
     }
-    std::vector<double> val_ptr(N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            val(val_ptr.data(), N, N);
-    copy_matrix(val, matrix);
 
-    matrix->setup_solver();
-
-    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            inv(inv_ptr.h_view.data(), N, N);
-    fill_identity(inv);
-    inv_ptr.modify_host();
-    inv_ptr.sync_device();
-    matrix->solve(ddc::detail::SplinesLinearProblem<
-                  Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
-    inv_ptr.modify_device();
-    inv_ptr.sync_host();
-
-    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            inv_tr(inv_tr_ptr.h_view.data(), N, N);
-    fill_identity(inv_tr);
-    inv_tr_ptr.modify_host();
-    inv_tr_ptr.sync_device();
-    matrix
-            ->solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
-                            MultiRHS(inv_tr_ptr.d_view.data(), N, N),
-                    true);
-    inv_tr_ptr.modify_device();
-    inv_tr_ptr.sync_host();
-
-    check_inverse(val, inv);
-    check_inverse_transpose(val, inv_tr);
+    solve_and_validate(matrix);
 }
 
 TEST_P(MatrixSizesFixture, Sparse)
@@ -259,36 +209,8 @@ TEST_P(MatrixSizesFixture, Sparse)
             }
         }
     }
-    copy_matrix(val, matrix);
 
-    matrix->setup_solver();
-
-    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            inv(inv_ptr.h_view.data(), N, N);
-    fill_identity(inv);
-    inv_ptr.modify_host();
-    inv_ptr.sync_device();
-    matrix->solve(ddc::detail::SplinesLinearProblem<
-                  Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
-    inv_ptr.modify_device();
-    inv_ptr.sync_host();
-
-    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            inv_tr(inv_tr_ptr.h_view.data(), N, N);
-    fill_identity(inv_tr);
-    inv_tr_ptr.modify_host();
-    inv_tr_ptr.sync_device();
-    matrix
-            ->solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
-                            MultiRHS(inv_tr_ptr.d_view.data(), N, N),
-                    true);
-    inv_tr_ptr.modify_device();
-    inv_tr_ptr.sync_host();
-
-    check_inverse(val, inv);
-    check_inverse_transpose(val, inv_tr);
+    solve_and_validate(matrix);
 }
 
 INSTANTIATE_TEST_SUITE_P(

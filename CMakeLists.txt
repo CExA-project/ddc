@@ -255,7 +255,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
   # Lapack
   find_package(LAPACK REQUIRED)
   find_package(LAPACKE REQUIRED)
-  target_link_libraries(DDC INTERFACE LAPACK::LAPACK -llapacke)
+  target_link_libraries(DDC INTERFACE LAPACK::LAPACK)
   # The following should not be necessary for LAPACKE >=3.9.1
   # target_compile_definitions(DDC INTERFACE HAVE_LAPACK_CONFIG_H LAPACK_COMPLEX_CPP)
 endif()

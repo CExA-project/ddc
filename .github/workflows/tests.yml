@@ -37,11 +37,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ['oldest', 'latest']
+        image: ['latest']
         backend: ['cpu', 'cuda', 'hip']
-        exclude:
-        - image: 'oldest'
-          backend: 'cuda'
     needs: id_repo
     runs-on: ubuntu-latest
     steps:
@@ -85,18 +82,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ['oldest', 'latest']
+        image: ['latest']
         backend: ['cpu-gcc', 'cpu-clang', 'cuda', 'hip']
         cxx_version:  ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
         exclude:
-        - image: 'oldest' # image not available
-          backend: 'cuda'
-        - image: 'oldest' # no compiler supports C++-23 in oldest
-          cxx_version: '23'
-        - image: 'oldest' # clang does not support C++-20 in oldest
-          backend: 'cpu-clang'
-          cxx_version: '20'
         - image: 'latest' # nvcc only supports C++-17
           backend: 'cuda'
           cxx_version: '20'

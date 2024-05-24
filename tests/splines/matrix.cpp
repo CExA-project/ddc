@@ -122,6 +122,27 @@ void solve_and_validate(
 }
 } // namespace
 
+TEST(Matrix, Dense)
+{
+    std::size_t const N = 10;
+    std::size_t const k = 10;
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = std::make_unique<
+                    ddc::detail::SplinesLinearProblemDense<Kokkos::DefaultExecutionSpace>>(N);
+
+    for (std::size_t i(0); i < N; ++i) {
+        matrix->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+    }
+
+    solve_and_validate(matrix);
+}
+
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
 {
 };
@@ -142,9 +163,7 @@ TEST_P(MatrixSizesFixture, NonSymmetric)
             matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
         }
     }
-    std::vector<double> val_ptr(N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            val(val_ptr.data(), N, N);
+
     solve_and_validate(matrix);
 }
 

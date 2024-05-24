@@ -8,11 +8,11 @@
 #include <memory>
 #include <string>
 
-# if __has_include (<mkl_lapacke.h>)
-#   include <mkl_lapacke.h>
-# else
-#   include <lapacke.h>
-# endif
+#if __has_include(<mkl_lapacke.h>)
+#include <mkl_lapacke.h>
+#else
+#include <lapacke.h>
+#endif
 
 #include "splines_linear_problem.hpp"
 

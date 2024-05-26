@@ -39,16 +39,10 @@ public:
 
         Impl(Impl&&) = default;
 
-        /** @brief Construct a `Impl` from a point and a spacing step.
-         *
-         * @param origin the real coordinate of mesh coordinate 0
-         * @param step   the real distance between two points of mesh distance 1
-         */
         explicit Impl(int value) : m_value(value) {}
 
         ~Impl() = default;
 
-        /// @brief Convert a mesh index into a position in `CDim`
         KOKKOS_FUNCTION int value() const noexcept
         {
             return m_value;

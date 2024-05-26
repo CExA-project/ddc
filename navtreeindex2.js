@@ -1,10 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"classddc_1_1UniformBSplines.html#aa3bc55d453f10c3eea5d738750ad28cc":[3,0,51,2],
-"classddc_1_1UniformBSplines.html#aaac98549e75c3a29535391aef52dd8f7":[3,0,51,1],
-"classddc_1_1UniformBSplines_1_1Impl.html":[3,0,51,0],
-"classddc_1_1UniformBSplines_1_1Impl.html#a061d9d1cf3a68ff427589a7b3245bbb4":[3,0,51,0,11],
-"classddc_1_1UniformBSplines_1_1Impl.html#a1487eaa45eb12cb82684abc06bd52048":[3,0,51,0,6],
 "classddc_1_1UniformBSplines_1_1Impl.html#a20223a26726ded2d7a47a2395b233975":[3,0,51,0,25],
 "classddc_1_1UniformBSplines_1_1Impl.html#a281d66b1224dd7b2f49b1c22009e3c0e":[3,0,51,0,17],
 "classddc_1_1UniformBSplines_1_1Impl.html#a4eb5520c30b6ca33f4ef2bd9e277ec3e":[3,0,51,0,27],

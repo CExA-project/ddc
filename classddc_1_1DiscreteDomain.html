@@ -85,10 +85,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac70badc068ec26dd5168cad2ea6598c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a889c11020cf74358526ac5a04f8007b3" id="r_a889c11020cf74358526ac5a04f8007b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a889c11020cf74358526ac5a04f8007b3">operator=</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;&amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">x</a>)=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">default</a></td></tr>
 <tr class="separator:a889c11020cf74358526ac5a04f8007b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18589fe9a5880e42bc5d6ff546aaa050" id="r_a18589fe9a5880e42bc5d6ff546aaa050"><td class="memTemplParams" colspan="2">template&lt;class... ODDims&gt; </td></tr>
-<tr class="memitem:a18589fe9a5880e42bc5d6ff546aaa050"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a18589fe9a5880e42bc5d6ff546aaa050">operator=</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;domain)</td></tr>
-<tr class="memdesc:a18589fe9a5880e42bc5d6ff546aaa050"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy a <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> by reordering and slicing.  <br /></td></tr>
-<tr class="separator:a18589fe9a5880e42bc5d6ff546aaa050"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bb9e9ef8f1f7faf3a11ab4f82dc96b8" id="r_a8bb9e9ef8f1f7faf3a11ab4f82dc96b8"><td class="memTemplParams" colspan="2">template&lt;class... ODims&gt; </td></tr>
 <tr class="memitem:a8bb9e9ef8f1f7faf3a11ab4f82dc96b8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a8bb9e9ef8f1f7faf3a11ab4f82dc96b8">operator==</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;other) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
 <tr class="separator:a8bb9e9ef8f1f7faf3a11ab4f82dc96b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -394,7 +390,7 @@ template&lt;class... DDims&gt; </div>
 </div>
 </div>
 <a id="ac70badc068ec26dd5168cad2ea6598c7" name="ac70badc068ec26dd5168cad2ea6598c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac70badc068ec26dd5168cad2ea6598c7">&#9670;&#160;</a></span>operator=() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac70badc068ec26dd5168cad2ea6598c7">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -421,7 +417,7 @@ template&lt;class... DDims&gt; </div>
 </div>
 </div>
 <a id="a889c11020cf74358526ac5a04f8007b3" name="a889c11020cf74358526ac5a04f8007b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a889c11020cf74358526ac5a04f8007b3">&#9670;&#160;</a></span>operator=() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a889c11020cf74358526ac5a04f8007b3">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -444,44 +440,6 @@ template&lt;class... DDims&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a18589fe9a5880e42bc5d6ff546aaa050" name="a18589fe9a5880e42bc5d6ff546aaa050"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a18589fe9a5880e42bc5d6ff546aaa050">&#9670;&#160;</a></span>operator=() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class... DDims&gt; </div>
-<div class="memtemplate">
-template&lt;class... ODDims&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDims</a> &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>= </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>domain</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Copy a <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> by reordering and slicing. </p>
-<p>An assign operator to build a <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> from another compatible domain. A domain is compatible if it either contains the same dimensions as this domain (even if they are in a different order) or if it contains at the dimensions of this domain plus some additional dimensions which will be unused here.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">domain</td><td>A compatible domain. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>

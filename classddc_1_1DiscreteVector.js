@@ -8,8 +8,6 @@ var classddc_1_1DiscreteVector =
     [ "~DiscreteVector", "classddc_1_1DiscreteVector.html#a39f496c7cb108bfd1fbea0a63765fac3", null ],
     [ "operator=", "classddc_1_1DiscreteVector.html#af8f929d7b9589a21c255c18f5afb6f07", null ],
     [ "operator=", "classddc_1_1DiscreteVector.html#a6a46738165b3caa5156316ac69c8fb2f", null ],
-    [ "operator=", "classddc_1_1DiscreteVector.html#a41ed8f13d1494913b0165f9da4496600", null ],
-    [ "operator=", "classddc_1_1DiscreteVector.html#ac22acec8cae77e690c615be743dcf00c", null ],
     [ "operator==", "classddc_1_1DiscreteVector.html#ad30e853c827396876d1cb287fc188c1e", null ],
     [ "operator!=", "classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb", null ],
     [ "get", "classddc_1_1DiscreteVector.html#abb83e5022034b982fc64248c3b3410b6", null ],

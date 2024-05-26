@@ -81,7 +81,7 @@ static DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
 
 } // namespace
 
-TEST(ProductMDomainTest, Constructor)
+TEST(DiscreteDomainTest, Constructor)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     EXPECT_EQ(dom_x_y.extents(), nelems_x_y);
@@ -102,7 +102,7 @@ TEST(ProductMDomainTest, Constructor)
     EXPECT_EQ(empty_domain[0], lbound_x);
 }
 
-TEST(ProductMDomainTest, ConstructorFromDiscreteDomains)
+TEST(DiscreteDomainTest, ConstructorFromDiscreteDomains)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     DDomZ const dom_z(lbound_z, nelems_z);
@@ -111,7 +111,7 @@ TEST(ProductMDomainTest, ConstructorFromDiscreteDomains)
     EXPECT_EQ(dom_x_y_z.extents(), DVectXYZ(nelems_x, nelems_y, nelems_z));
 }
 
-TEST(ProductMDomainTest, EmptyDomain)
+TEST(DiscreteDomainTest, EmptyDomain)
 {
     DDomXY const dom_x_y = DDomXY();
     EXPECT_EQ(dom_x_y.extents(), DVectXY(0, 0));
@@ -119,7 +119,7 @@ TEST(ProductMDomainTest, EmptyDomain)
     EXPECT_TRUE(dom_x_y.empty());
 }
 
-TEST(ProductMDomainTest, Subdomain)
+TEST(DiscreteDomainTest, Subdomain)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     ddc::DiscreteElement<DDimX> const lbound_subdomain_x(lbound_x + 1);
@@ -132,7 +132,7 @@ TEST(ProductMDomainTest, Subdomain)
                    ddc::DiscreteVector<DDimX, DDimY>(npoints_subdomain_x, nelems_y)));
 }
 
-TEST(ProductMDomainTest, RangeFor)
+TEST(DiscreteDomainTest, RangeFor)
 {
     DDomX const dom(lbound_x, nelems_x);
     DElemX ii = lbound_x;
@@ -144,7 +144,7 @@ TEST(ProductMDomainTest, RangeFor)
     }
 }
 
-TEST(ProductMDomainTest, DiffEmpty)
+TEST(DiscreteDomainTest, DiffEmpty)
 {
     DDomX const dom_x = DDomX();
     auto const subdomain1 = ddc::remove_dims_of(dom_x, dom_x);
@@ -153,7 +153,7 @@ TEST(ProductMDomainTest, DiffEmpty)
     EXPECT_EQ(subdomain2, ddc::DiscreteDomain<>());
 }
 
-TEST(ProductMDomainTest, Diff)
+TEST(DiscreteDomainTest, Diff)
 {
     DDomX const dom_x = DDomX();
     DDomXY const dom_x_y = DDomXY();
@@ -164,7 +164,7 @@ TEST(ProductMDomainTest, Diff)
     EXPECT_EQ(subdomain2, dom_x);
 }
 
-TEST(ProductMDomainTest, Replace)
+TEST(DiscreteDomainTest, Replace)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     DDomZ const dom_z(lbound_z, nelems_z);
@@ -174,13 +174,13 @@ TEST(ProductMDomainTest, Replace)
 }
 
 
-TEST(ProductMDomainTest, TakeFirst)
+TEST(DiscreteDomainTest, TakeFirst)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     EXPECT_EQ(dom_x_y.take_first(DVectXY(1, 4)), DDomXY(dom_x_y.front(), DVectXY(1, 4)));
 }
 
-TEST(ProductMDomainTest, TakeLast)
+TEST(DiscreteDomainTest, TakeLast)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     EXPECT_EQ(
@@ -188,7 +188,7 @@ TEST(ProductMDomainTest, TakeLast)
             DDomXY(dom_x_y.front() + dom_x_y.extents() - DVectXY(1, 4), DVectXY(1, 4)));
 }
 
-TEST(ProductMDomainTest, RemoveFirst)
+TEST(DiscreteDomainTest, RemoveFirst)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     EXPECT_EQ(
@@ -196,7 +196,7 @@ TEST(ProductMDomainTest, RemoveFirst)
             DDomXY(dom_x_y.front() + DVectXY(1, 4), dom_x_y.extents() - DVectXY(1, 4)));
 }
 
-TEST(ProductMDomainTest, RemoveLast)
+TEST(DiscreteDomainTest, RemoveLast)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     EXPECT_EQ(
@@ -204,7 +204,7 @@ TEST(ProductMDomainTest, RemoveLast)
             DDomXY(dom_x_y.front(), dom_x_y.extents() - DVectXY(1, 4)));
 }
 
-TEST(ProductMDomainTest, Remove)
+TEST(DiscreteDomainTest, Remove)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     EXPECT_EQ(
@@ -212,7 +212,7 @@ TEST(ProductMDomainTest, Remove)
             DDomXY(dom_x_y.front() + DVectXY(1, 4), dom_x_y.extents() - DVectXY(2, 5)));
 }
 
-TEST(ProductMDomainTest, SliceDomainXTooearly)
+TEST(DiscreteDomainTest, SliceDomainXTooearly)
 {
     [[maybe_unused]] DDomX const subdomain_x(lbound_x - 1, nelems_x);
 
@@ -225,7 +225,7 @@ TEST(ProductMDomainTest, SliceDomainXTooearly)
 #endif
 }
 
-TEST(ProductMDomainTest, SliceDomainXToolate)
+TEST(DiscreteDomainTest, SliceDomainXToolate)
 {
     [[maybe_unused]] DDomX const subdomain_x(lbound_x, nelems_x + 1);
 
@@ -238,7 +238,7 @@ TEST(ProductMDomainTest, SliceDomainXToolate)
 #endif
 }
 
-TEST(ProductMDomainTest, Transpose3DConstructor)
+TEST(DiscreteDomainTest, Transpose3DConstructor)
 {
     DDomX const dom_x(lbound_x, nelems_x);
     DDomY const dom_y(lbound_y, nelems_y);

@@ -160,7 +160,9 @@ public:
          * @param impl A reference to the other Impl
          */
         template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_domain(impl.m_domain)
+        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
+            : m_domain(impl.m_domain)
+            , m_break_point_domain(impl.m_break_point_domain)
         {
         }
 

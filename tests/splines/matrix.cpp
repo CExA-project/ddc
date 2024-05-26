@@ -16,69 +16,70 @@
 
 #include "test_utils.hpp"
 
-namespace {
-
-void fill_identity(
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS mat)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
 {
-    assert(mat.extent(0) == mat.extent(1));
-    for (std::size_t i(0); i < mat.extent(0); ++i) {
-        for (std::size_t j(0); j < mat.extent(1); ++j) {
-            mat(i, j) = int(i == j);
-        }
-    }
-}
-
-void copy_matrix(
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS copy,
-        std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>>& mat)
-{
-    assert(mat->size() == copy.extent(0));
-    assert(mat->size() == copy.extent(1));
-
-    for (std::size_t i(0); i < copy.extent(0); ++i) {
-        for (std::size_t j(0); j < copy.extent(1); ++j) {
-            copy(i, j) = mat->get_element(i, j);
-        }
-    }
-}
-
-void check_inverse(
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
-{
-    double TOL = 1e-10;
-    std::size_t N = matrix.extent(0);
-
-    for (std::size_t i(0); i < N; ++i) {
-        for (std::size_t j(0); j < N; ++j) {
-            double id_val = 0.0;
-            for (std::size_t k(0); k < N; ++k) {
-                id_val += matrix(i, k) * inv(k, j);
+    void fill_identity(
+            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS mat)
+    {
+        assert(mat.extent(0) == mat.extent(1));
+        for (std::size_t i(0); i < mat.extent(0); ++i) {
+            for (std::size_t j(0); j < mat.extent(1); ++j) {
+                mat(i, j) = int(i == j);
             }
-            EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
         }
     }
-}
 
-void check_inverse_transpose(
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
-{
-    double TOL = 1e-10;
-    std::size_t N = matrix.extent(0);
+    void copy_matrix(
+            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS copy,
+            std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> & mat)
+    {
+        assert(mat->size() == copy.extent(0));
+        assert(mat->size() == copy.extent(1));
 
-    for (std::size_t i(0); i < N; ++i) {
-        for (std::size_t j(0); j < N; ++j) {
-            double id_val = 0.0;
-            for (std::size_t k(0); k < N; ++k) {
-                id_val += matrix(i, k) * inv(j, k);
+        for (std::size_t i(0); i < copy.extent(0); ++i) {
+            for (std::size_t j(0); j < copy.extent(1); ++j) {
+                copy(i, j) = mat->get_element(i, j);
             }
-            EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
         }
     }
-}
-} // namespace
+
+    void check_inverse(
+            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
+            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
+    {
+        double TOL = 1e-10;
+        std::size_t N = matrix.extent(0);
+
+        for (std::size_t i(0); i < N; ++i) {
+            for (std::size_t j(0); j < N; ++j) {
+                double id_val = 0.0;
+                for (std::size_t k(0); k < N; ++k) {
+                    id_val += matrix(i, k) * inv(k, j);
+                }
+                EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
+            }
+        }
+    }
+
+    void check_inverse_transpose(
+            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
+            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
+    {
+        double TOL = 1e-10;
+        std::size_t N = matrix.extent(0);
+
+        for (std::size_t i(0); i < N; ++i) {
+            for (std::size_t j(0); j < N; ++j) {
+                double id_val = 0.0;
+                for (std::size_t k(0); k < N; ++k) {
+                    id_val += matrix(i, k) * inv(j, k);
+                }
+                EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
+            }
+        }
+    }
+
+} // namespace )
 
 TEST(MatrixSparse, Formatting)
 {

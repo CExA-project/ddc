@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <memory>
+#include <sstream>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
@@ -12,8 +13,6 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_DualView.hpp>
-
-#include "ddc/kernels/splines/view.hpp"
 
 #include "test_utils.hpp"
 
@@ -80,6 +79,18 @@ void check_inverse_transpose(
     }
 }
 } // namespace
+
+TEST(MatrixSparse, Formatting)
+{
+    ddc::detail::SplinesLinearProblemSparse<Kokkos::DefaultExecutionSpace> matrix(2);
+    matrix.set_element(0, 0, 1);
+    matrix.set_element(0, 1, 2);
+    matrix.set_element(1, 0, 3);
+    matrix.set_element(1, 1, 4);
+    std::stringstream ss;
+    ss << matrix;
+    EXPECT_EQ(ss.str(), "     1.000     2.000\n     3.000     4.000\n");
+}
 
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
 {

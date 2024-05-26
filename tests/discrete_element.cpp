@@ -57,6 +57,19 @@ TEST(DiscreteElementXYZTest, ConstructorFromDiscreteElements)
     EXPECT_EQ(ixyz.uid<DDimZ>(), uid_z);
 }
 
+TEST(DiscreteElementXYZTest, CopyAssignment)
+{
+    std::size_t const uid_x = 7;
+    std::size_t const uid_y = 13;
+    std::size_t const uid_z = 4;
+    DElemXYZ const ixyz(uid_x, uid_y, uid_z);
+    DElemXYZ ixyz2(0, 0, 0);
+    ixyz2 = ixyz;
+    EXPECT_EQ(ixyz2.uid<DDimX>(), uid_x);
+    EXPECT_EQ(ixyz2.uid<DDimY>(), uid_y);
+    EXPECT_EQ(ixyz2.uid<DDimZ>(), uid_z);
+}
+
 TEST(DiscreteElementXTest, PreIncrement)
 {
     DElemX const ix0(3);

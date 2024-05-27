@@ -109,7 +109,8 @@ public:
 #if __cplusplus <= 201703L
     // Shall not be necessary anymore in C++20
     // `a!=b` shall be translated by the compiler to `!(a==b)`
-    KOKKOS_FUNCTION constexpr bool operator!=(DiscreteDomain const& other) const
+    template <class... ODims>
+    KOKKOS_FUNCTION constexpr bool operator!=(DiscreteDomain<ODims...> const& other) const
     {
         return !(*this == other);
     }

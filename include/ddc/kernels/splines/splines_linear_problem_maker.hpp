@@ -7,6 +7,7 @@
 #include <memory>
 #include <optional>
 
+#include "splines_linear_problem_band.hpp"
 #include "splines_linear_problem_dense.hpp"
 #include "splines_linear_problem_sparse.hpp"
 
@@ -50,8 +51,11 @@ public:
             [[maybe_unused]] int const ku,
             [[maybe_unused]] bool const pds)
     {
-        // Placeholder while SplinesLinearProblemBand is not implemented
-        return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+        if (2 * kl + 1 + ku >= n) {
+            return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+        } else {
+            return std::make_unique<SplinesLinearProblemBand<ExecSpace>>(n, kl, ku);
+        }
     }
 
     /**

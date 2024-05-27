@@ -79,7 +79,7 @@ public:
                 size(),
                 m_ipiv.data());
         if (info != 0) {
-            throw std::runtime_error("LAPACK failed with error code " + std::to_string(info));
+            throw std::runtime_error("LAPACKE_dgetrf failed with error code " + std::to_string(info));
         }
     }
 
@@ -108,7 +108,7 @@ public:
                 b_host.data(),
                 b_host.stride(0));
         if (info != 0) {
-            throw std::runtime_error("LAPACK failed with error code " + std::to_string(info));
+            throw std::runtime_error("LAPACKE_dgetrs failed with error code " + std::to_string(info));
         }
         Kokkos::deep_copy(b, b_host);
     }

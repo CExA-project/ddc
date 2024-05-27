@@ -31,14 +31,14 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
 
     void copy_matrix(
             ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS copy,
-            std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> & mat)
+            ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace> const& mat)
     {
-        assert(mat->size() == copy.extent(0));
-        assert(mat->size() == copy.extent(1));
+        assert(mat.size() == copy.extent(0));
+        assert(mat.size() == copy.extent(1));
 
         for (std::size_t i(0); i < copy.extent(0); ++i) {
             for (std::size_t j(0); j < copy.extent(1); ++j) {
-                copy(i, j) = mat->get_element(i, j);
+                copy(i, j) = mat.get_element(i, j);
             }
         }
     }
@@ -79,6 +79,47 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
         }
     }
 
+    void solve_and_validate(
+            ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace> & matrix)
+    {
+        const std::size_t N = matrix.size();
+
+        std::vector<double> val_ptr(N * N);
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+                val(val_ptr.data(), N, N);
+
+        copy_matrix(val, matrix);
+
+        matrix.setup_solver();
+
+        Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+                inv(inv_ptr.h_view.data(), N, N);
+        fill_identity(inv);
+        inv_ptr.modify_host();
+        inv_ptr.sync_device();
+        matrix.solve(ddc::detail::SplinesLinearProblem<
+                     Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
+        inv_ptr.modify_device();
+        inv_ptr.sync_host();
+
+        Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+                inv_tr(inv_tr_ptr.h_view.data(), N, N);
+        fill_identity(inv_tr);
+        inv_tr_ptr.modify_host();
+        inv_tr_ptr.sync_device();
+        matrix
+                .solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
+                               MultiRHS(inv_tr_ptr.d_view.data(), N, N),
+                       true);
+        inv_tr_ptr.modify_device();
+        inv_tr_ptr.sync_host();
+
+        check_inverse(val, inv);
+        check_inverse_transpose(val, inv_tr);
+    }
+
 } // namespace )
 
 TEST(MatrixSparse, Formatting)
@@ -93,22 +134,106 @@ TEST(MatrixSparse, Formatting)
     EXPECT_EQ(ss.str(), "     1.000     2.000\n     3.000     4.000\n");
 }
 
+
+TEST(Matrix, Dense)
+{
+    std::size_t const N = 10;
+    std::size_t const k = 10;
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = std::make_unique<
+                    ddc::detail::SplinesLinearProblemDense<Kokkos::DefaultExecutionSpace>>(N);
+
+    // Build a non-symmetric full-rank matrix (without zero)
+    for (std::size_t i(0); i < N; ++i) {
+        matrix->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+    }
+
+    solve_and_validate(*matrix);
+}
+
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
 {
 };
 
+TEST_P(MatrixSizesFixture, NonSymmetric)
+{
+    auto const [N, k] = GetParam();
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = ddc::detail::SplinesLinearProblemMaker::make_new_band<
+                    Kokkos::DefaultExecutionSpace>(N, k, k, false);
+
+    // Build a non-symmetric full-rank band matrix
+    for (std::size_t i(0); i < N; ++i) {
+        matrix->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+    }
+
+    solve_and_validate(*matrix);
+}
+
+TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
+{
+    auto const [N, k] = GetParam();
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = ddc::detail::SplinesLinearProblemMaker::make_new_band<
+                    Kokkos::DefaultExecutionSpace>(N, k, k, true);
+
+    // Build a positive-definite symmetric full-rank band matrix
+    for (std::size_t i(0); i < N; ++i) {
+        matrix->set_element(i, i, 2.0 * k);
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -1.0);
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -1.0);
+        }
+    }
+
+    solve_and_validate(*matrix);
+}
+
+TEST_P(MatrixSizesFixture, OffsetBanded)
+{
+    auto const [N, k] = GetParam();
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = ddc::detail::SplinesLinearProblemMaker::make_new_band<
+                    Kokkos::DefaultExecutionSpace>(N, 0, 2 * k, true);
+
+    // Build a positive-definite symmetric full-rank band matrix permuted in such a way the band is shifted
+    for (std::size_t i(0); i < N; ++i) {
+        for (std::size_t j(i); j < std::min(N, i + k); ++j) {
+            matrix->set_element(i, i, -1.0);
+        }
+        if (i + k < N) {
+            matrix->set_element(i, i + k, 2.0 * k);
+        }
+        for (std::size_t j(i + k + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -1.0);
+        }
+    }
+
+    solve_and_validate(*matrix);
+}
+
 TEST_P(MatrixSizesFixture, Sparse)
 {
     auto const [N, k] = GetParam();
-
-
     std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
             = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<
                     Kokkos::DefaultExecutionSpace>(N);
 
-    std::vector<double> val_ptr(N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            val(val_ptr.data(), N, N);
+    // Build a positive-definite symmetric diagonal-dominant band matrix (stored as a sparse matrix)
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(0); j < N; ++j) {
             if (i == j) {
@@ -118,36 +243,8 @@ TEST_P(MatrixSizesFixture, Sparse)
             }
         }
     }
-    copy_matrix(val, matrix);
 
-    matrix->setup_solver();
-
-    Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            inv(inv_ptr.h_view.data(), N, N);
-    fill_identity(inv);
-    inv_ptr.modify_host();
-    inv_ptr.sync_device();
-    matrix->solve(ddc::detail::SplinesLinearProblem<
-                  Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
-    inv_ptr.modify_device();
-    inv_ptr.sync_host();
-
-    Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            inv_tr(inv_tr_ptr.h_view.data(), N, N);
-    fill_identity(inv_tr);
-    inv_tr_ptr.modify_host();
-    inv_tr_ptr.sync_device();
-    matrix
-            ->solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
-                            MultiRHS(inv_tr_ptr.d_view.data(), N, N),
-                    true);
-    inv_tr_ptr.modify_device();
-    inv_tr_ptr.sync_host();
-
-    check_inverse(val, inv);
-    check_inverse_transpose(val, inv_tr);
+    solve_and_validate(*matrix);
 }
 
 INSTANTIATE_TEST_SUITE_P(

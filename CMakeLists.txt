@@ -95,9 +95,6 @@ endif()
 
 # Custom cmake modules
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
-if("${CMAKE_VERSION}" VERSION_LESS 3.18)
-	list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/3.18" )
-endif()
 
 # FFTW
 if("${DDC_BUILD_KERNELS_FFT}" AND NOT FFTW_FOUND)
@@ -254,8 +251,8 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
   # Lapacke
   find_package(LAPACKE REQUIRED)
-  target_link_libraries(DDC INTERFACE ${LAPACKE_LIBRARIES})
-  target_include_directories(DDC INTERFACE ${LAPACKE_INCLUDE_DIRS})
+  target_link_libraries(DDC INTERFACE "${LAPACKE_LIBRARIES}")
+  target_include_directories(DDC INTERFACE "${LAPACKE_INCLUDE_DIRS}")
 endif()
 
 ## The PDI wrapper

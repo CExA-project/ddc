@@ -32,14 +32,14 @@ void fill_identity(
 
 void copy_matrix(
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS copy,
-        std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>>& mat)
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace> const& mat)
 {
-    assert(mat->size() == copy.extent(0));
-    assert(mat->size() == copy.extent(1));
+    assert(mat.size() == copy.extent(0));
+    assert(mat.size() == copy.extent(1));
 
     for (std::size_t i(0); i < copy.extent(0); ++i) {
         for (std::size_t j(0); j < copy.extent(1); ++j) {
-            copy(i, j) = mat->get_element(i, j);
+            copy(i, j) = mat.get_element(i, j);
         }
     }
 }
@@ -80,10 +80,9 @@ void check_inverse_transpose(
     }
 }
 
-void solve_and_validate(
-        std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>>& matrix)
+void solve_and_validate(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>& matrix)
 {
-    const std::size_t N = matrix->size();
+    const std::size_t N = matrix.size();
 
     std::vector<double> val_ptr(N * N);
     ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
@@ -91,7 +90,7 @@ void solve_and_validate(
 
     copy_matrix(val, matrix);
 
-    matrix->setup_solver();
+    matrix.setup_solver();
 
     Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
     ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
@@ -99,8 +98,8 @@ void solve_and_validate(
     fill_identity(inv);
     inv_ptr.modify_host();
     inv_ptr.sync_device();
-    matrix->solve(ddc::detail::SplinesLinearProblem<
-                  Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
+    matrix.solve(ddc::detail::SplinesLinearProblem<
+                 Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
     inv_ptr.modify_device();
     inv_ptr.sync_host();
 
@@ -111,9 +110,9 @@ void solve_and_validate(
     inv_tr_ptr.modify_host();
     inv_tr_ptr.sync_device();
     matrix
-            ->solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
-                            MultiRHS(inv_tr_ptr.d_view.data(), N, N),
-                    true);
+            .solve(ddc::detail::SplinesLinearProblem<
+                           Kokkos::DefaultExecutionSpace>::MultiRHS(inv_tr_ptr.d_view.data(), N, N),
+                   true);
     inv_tr_ptr.modify_device();
     inv_tr_ptr.sync_host();
 
@@ -130,6 +129,7 @@ TEST(Matrix, Dense)
             = std::make_unique<
                     ddc::detail::SplinesLinearProblemDense<Kokkos::DefaultExecutionSpace>>(N);
 
+    // Build a non-symmetric full-rank matrix (without zero)
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
         for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
@@ -140,7 +140,7 @@ TEST(Matrix, Dense)
         }
     }
 
-    solve_and_validate(matrix);
+    solve_and_validate(*matrix);
 }
 
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
@@ -154,6 +154,7 @@ TEST_P(MatrixSizesFixture, NonSymmetric)
             = ddc::detail::SplinesLinearProblemMaker::make_new_band<
                     Kokkos::DefaultExecutionSpace>(N, k, k, false);
 
+    // Build a non-symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
         for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
@@ -164,7 +165,7 @@ TEST_P(MatrixSizesFixture, NonSymmetric)
         }
     }
 
-    solve_and_validate(matrix);
+    solve_and_validate(*matrix);
 }
 
 TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
@@ -174,6 +175,7 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
             = ddc::detail::SplinesLinearProblemMaker::make_new_band<
                     Kokkos::DefaultExecutionSpace>(N, k, k, true);
 
+    // Build a positive-definite symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {
         matrix->set_element(i, i, 2.0 * k);
         for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
@@ -184,7 +186,7 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
         }
     }
 
-    solve_and_validate(matrix);
+    solve_and_validate(*matrix);
 }
 
 TEST_P(MatrixSizesFixture, OffsetBanded)
@@ -194,6 +196,7 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
             = ddc::detail::SplinesLinearProblemMaker::make_new_band<
                     Kokkos::DefaultExecutionSpace>(N, 0, 2 * k, true);
 
+    // Build a positive-definite symmetric full-rank band matrix permuted in such a way the band is shifted
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(i); j < std::min(N, i + k); ++j) {
             matrix->set_element(i, i, -1.0);
@@ -206,7 +209,7 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
         }
     }
 
-    solve_and_validate(matrix);
+    solve_and_validate(*matrix);
 }
 
 TEST_P(MatrixSizesFixture, Sparse)
@@ -216,9 +219,7 @@ TEST_P(MatrixSizesFixture, Sparse)
             = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<
                     Kokkos::DefaultExecutionSpace>(N);
 
-    std::vector<double> val_ptr(N * N);
-    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-            val(val_ptr.data(), N, N);
+    // Build a positive-definite symmetric diagonal-dominant band matrix (stored as a sparse matrix)
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(0); j < N; ++j) {
             if (i == j) {
@@ -229,7 +230,7 @@ TEST_P(MatrixSizesFixture, Sparse)
         }
     }
 
-    solve_and_validate(matrix);
+    solve_and_validate(*matrix);
 }
 
 INSTANTIATE_TEST_SUITE_P(

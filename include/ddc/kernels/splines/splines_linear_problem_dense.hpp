@@ -48,8 +48,6 @@ public:
         , m_a("a", mat_size, mat_size)
         , m_ipiv("ipiv", mat_size)
     {
-        assert(mat_size > 0);
-
         Kokkos::deep_copy(m_a, 0.);
     }
 
@@ -62,6 +60,8 @@ public:
 
     virtual void set_element(std::size_t const i, std::size_t const j, double const aij) override
     {
+        assert(i < size());
+        assert(j < size());
         m_a(i, j) = aij;
     }
 

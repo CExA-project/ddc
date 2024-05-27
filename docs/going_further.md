@@ -57,9 +57,9 @@ To do so, we have to create the iterator for the main domain.
 
 \snippet non_uniform_heat_equation.cpp iterator_main-domain
 
-And the iterators containing ghost points coordinates before and after the main domain.
+For the initialization of ghost points in the non-uniform case, it was necessary to explicitly describe the position of the pre-ghost and post-ghost points. For the pre-ghost, it was necessary to start from the first coordinate along x and subtract the difference between the last and the penultimate coordinate of the x dimension to maintain periodicity. For the post-ghost point, take the last point and add the difference between the first and second points along the x dimension.
 
-\snippet non_uniform_heat_equation.cpp iterator-ghost-domain
+\snippet non_uniform_heat_equation.cpp ghost_points_x
 
 Then we can create our 4 domains using the `init_discretization`
 function with the `init_ghosted` function that takes the vectors as parameters. 

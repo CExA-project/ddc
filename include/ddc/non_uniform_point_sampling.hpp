@@ -145,9 +145,9 @@ public:
 
     /** Construct 4 non-uniform `DiscreteDomain` and an Impl<Kokkos::HostSpace> from 3 iterators containing the points coordinates along the `DDim` dimension.
      *
-     * @param domain_it an iterator containing the coordinates of the points of the main domain along the DDim position
-     * @param pre_ghost_it an iterator containing the positions of the ghost points before the main domain the DDim position
-     * @param post_ghost_it an iterator containing the positions of the ghost points after the main domain the DDim position
+     * @param domain_r an iterator containing the coordinates of the points of the main domain along the DDim position
+     * @param pre_ghost_r an iterator containing the positions of the ghost points before the main domain the DDim position
+     * @param post_ghost_r an iterator containing the positions of the ghost points after the main domain the DDim position
      */
     template <class DDim, class InputRange>
     static std::tuple<

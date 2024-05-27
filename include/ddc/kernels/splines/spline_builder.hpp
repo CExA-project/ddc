@@ -15,8 +15,7 @@ namespace ddc {
 /**
  * @brief An enum determining the backend solver of a SplineBuilder or SplineBuilder2d.
  *
- * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d. Only GINKGO is available at the moment,
- * other solvers will be implemented in the future.
+ * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d.
  */
 enum class SplineSolver {
     GINKGO ///< Enum member to identify the Ginkgo-based solver (iterative method)
@@ -192,7 +191,7 @@ public:
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
      *
      * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
-     * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
+     * of a chunk of right-hand sides of the linear problem to be computed in parallel (chunks are treated
      * by the linear solver one-after-the-other).
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *

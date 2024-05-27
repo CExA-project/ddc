@@ -302,7 +302,7 @@ public:
     }
 
     /**
-     * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
+     * @brief Get the whole domain on which spline coefficients are defined.
      *
      * Spline approximations (spline-transformed functions) are computed on this domain.
      *

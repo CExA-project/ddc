@@ -129,6 +129,7 @@ public:
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
+private:
     /**
      * @brief The type of the whole spline domain (cartesian product of the 1D spline domain
      * and the batch domain) with 1D spline dimension being the leading dimension.
@@ -143,6 +144,7 @@ public:
                             ddc::detail::TypeSeq<IDimX...>,
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
+public:
     /**
      * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain 
      * and batch domain) preserving the underlying memory layout (order of dimensions).
@@ -313,6 +315,7 @@ public:
                 bsplines_type>(batched_interpolation_domain(), spline_domain());
     }
 
+private:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest being the leading dimension.
      *
@@ -325,6 +328,7 @@ public:
         return batched_spline_tr_domain_type(spline_domain(), batch_domain());
     }
 
+public:
     /**
      * @brief Get the whole domain on which derivatives on lower boundary are defined.
      *

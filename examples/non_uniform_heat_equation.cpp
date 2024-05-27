@@ -134,18 +134,18 @@ int main(int argc, char** argv)
     std::ptrdiff_t const t_output_period = 10;
     //! [parameters]
 
-    //! [main-start]
-
     //! [iterator_main-domain]
     std::vector<double> x_domain_vect
             = generate_random_vector(nb_x_points, x_start, x_end);
     //! [iterator_main-domain]
 
+    std::size_t size_x = x_domain_vect.size();
+
     //! [iterator-ghost-domain]
     std::vector<double> x_pre_ghost_vect {
-            x_domain_vect[std::size(x_domain_vect) - 1]};
+            x_domain_vect.front()-(x_domain_vect.back()-x_domain_vect[size_x-2])};
 
-    std::vector<double> x_post_ghost_vect {x_domain_vect[0]};
+    std::vector<double> x_post_ghost_vect {x_domain_vect.back()+(x_domain_vect[1]-x_domain_vect.front())};
     //! [iterator-ghost-domain]
 
     //! [build-domains]
@@ -165,9 +165,12 @@ int main(int argc, char** argv)
     //! [Y-vectors]
     std::vector<double> y_domain_vect
             = generate_random_vector(nb_y_points, y_start, y_end);
+
+    std::size_t size_y = y_domain_vect.size();
+
     std::vector<double> y_pre_ghost_vect {
-            y_domain_vect[std::size(y_domain_vect) - 1]};
-    std::vector<double> y_post_ghost_vect {y_domain_vect[0]};
+            y_domain_vect.front()-(y_domain_vect.back()-y_domain_vect[size_y-2])};
+    std::vector<double> y_post_ghost_vect {y_domain_vect.back()+(y_domain_vect[1]-y_domain_vect.front())};
     //! [Y-vectors]
 
     //! [build-Y-domain]
@@ -209,6 +212,7 @@ int main(int argc, char** argv)
 
     ddc::Coordinate<T> const max_dt {
             .5 / (kx * invdx2_max + ky * invdy2_max)};
+
     //! [CFL-condition]
 
     //! [time-domain]

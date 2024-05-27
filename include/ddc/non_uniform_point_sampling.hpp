@@ -157,24 +157,24 @@ public:
             DiscreteDomain<DDim>,
             DiscreteDomain<DDim>>
     init_ghosted(
-            InputRange const domain_it, InputRange const pre_ghost_it, InputRange const post_ghost_it)
+            InputRange const& domain_r, InputRange const& pre_ghost_r, InputRange const& post_ghost_r)
     {
         using discrete_domain_type = DiscreteDomain<DDim>;
-        auto a = domain_it.begin();
-        auto b = domain_it.end();
-        auto n = DiscreteVector<DDim>{std::distance(domain_it.begin(), domain_it.end())};
+        auto a = domain_r.begin();
+        auto b = domain_r.end();
+        auto n = DiscreteVector<DDim>{std::distance(domain_r.begin(), domain_r.end())};
 
         assert(a < b);
-        assert(n > 0);
+        assert(n > 1);
 
-        auto n_ghosts_before = DiscreteVector<DDim>{std::distance(pre_ghost_it.begin(), pre_ghost_it.end())};
-        auto n_ghosts_after = DiscreteVector<DDim>{std::distance(post_ghost_it.begin(), post_ghost_it.end())};
+        auto n_ghosts_before = DiscreteVector<DDim>{std::distance(pre_ghost_r.begin(), pre_ghost_r.end())};
+        auto n_ghosts_after = DiscreteVector<DDim>{std::distance(post_ghost_r.begin(), post_ghost_r.end())};
 
         std::vector<typename InputRange::value_type> full_domain;
 
-        std::copy(pre_ghost_it.begin(), pre_ghost_it.end(), std::back_inserter(full_domain));
-        std::copy(domain_it.begin(), domain_it.end(), std::back_inserter(full_domain));
-        std::copy(post_ghost_it.begin(), post_ghost_it.end(), std::back_inserter(full_domain));
+        std::copy(pre_ghost_r.begin(), pre_ghost_r.end(), std::back_inserter(full_domain));
+        std::copy(domain_r.begin(), domain_r.end(), std::back_inserter(full_domain));
+        std::copy(post_ghost_r.begin(), post_ghost_r.end(), std::back_inserter(full_domain));
 
         typename DDim::template Impl<DDim, Kokkos::HostSpace> disc(full_domain);
 

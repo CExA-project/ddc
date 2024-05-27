@@ -25,13 +25,6 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
         for (std::size_t i(0); i < mat.extent(0); ++i) {
             for (std::size_t j(0); j < mat.extent(1); ++j) {
                 mat(i, j) = int(i == j);
-
-                assert(mat.extent(0) == mat.extent(1));
-                for (std::size_t i(0); i < mat.extent(0); ++i) {
-                    for (std::size_t j(0); j < mat.extent(1); ++j) {
-                        mat(i, j) = int(i == j);
-                    }
-                }
             }
         }
     }

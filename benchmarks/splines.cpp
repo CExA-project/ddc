@@ -14,31 +14,32 @@
 
 #include <benchmark/benchmark.h>
 
-namespace {
-
-static constexpr std::size_t s_degree_x = 3;
-
-struct X
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
 {
-    static constexpr bool PERIODIC = true;
-};
+    static constexpr std::size_t s_degree_x = 3;
 
-struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
-{
-};
-using GrevillePoints = ddc::
-        GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
-struct DDimX : GrevillePoints::interpolation_mesh_type
-{
-};
+    struct X
+    {
+        static constexpr bool PERIODIC = true;
+    };
 
-struct Y;
-struct DDimY : ddc::UniformPointSampling<Y>
-{
-};
+    struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
+    {
+    };
+    using GrevillePoints = ddc::GrevilleInterpolationPoints<
+            BSplinesX,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC>;
+    struct DDimX : GrevillePoints::interpolation_mesh_type
+    {
+    };
 
+    struct Y;
+    struct DDimY : ddc::UniformPointSampling<Y>
+    {
+    };
 
-} // namespace
+} // namespace )
 
 // Function to monitor GPU memory asynchronously
 void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem)

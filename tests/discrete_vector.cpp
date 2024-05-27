@@ -8,32 +8,32 @@
 
 #include <gtest/gtest.h>
 
-namespace {
-
-struct DDimX
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_VECTOR_CPP)
 {
-};
-using DVectX = ddc::DiscreteVector<DDimX>;
+    struct DDimX
+    {
+    };
+    using DVectX = ddc::DiscreteVector<DDimX>;
 
 
-struct DDimY
-{
-};
-using DVectY = ddc::DiscreteVector<DDimY>;
+    struct DDimY
+    {
+    };
+    using DVectY = ddc::DiscreteVector<DDimY>;
 
 
-struct DDimZ
-{
-};
-using DVectZ = ddc::DiscreteVector<DDimZ>;
+    struct DDimZ
+    {
+    };
+    using DVectZ = ddc::DiscreteVector<DDimZ>;
 
 
-using DVectXZ = ddc::DiscreteVector<DDimX, DDimZ>;
+    using DVectXZ = ddc::DiscreteVector<DDimX, DDimZ>;
 
 
-using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
+    using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
 
-} // namespace
+} // namespace )
 
 TEST(DiscreteVectorXYZTest, ConstructorFromDiscreteVectors)
 {

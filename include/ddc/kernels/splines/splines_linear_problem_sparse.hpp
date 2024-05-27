@@ -126,7 +126,6 @@ class SplinesLinearProblemSparse : public SplinesLinearProblem<ExecSpace>
 public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
-    using SplinesLinearProblem<ExecSpace>::operator<<;
 
 private:
     using matrix_sparse_type = gko::matrix::Csr<double, gko::int32>;

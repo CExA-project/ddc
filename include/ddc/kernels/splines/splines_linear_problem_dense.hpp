@@ -31,7 +31,6 @@ class SplinesLinearProblemDense : public SplinesLinearProblem<ExecSpace>
 public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
-    using SplinesLinearProblem<ExecSpace>::operator<<;
 
 protected:
     Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::HostSpace> m_a;

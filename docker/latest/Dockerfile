@@ -32,8 +32,8 @@ RUN chmod +x /bin/bash_run \
 #       && wget -q -O - https://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor --output /etc/apt/keyrings/rocm.gpg \
 #       && echo -e "Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600" > /etc/apt/preferences.d/rocm-pin-600 \
 #  ;  fi \
-#  && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/pdidev-archive-keyring.gpg] https://raw.githubusercontent.com/pdidev/repo/ubuntu noble main" > /etc/apt/sources.list.d/pdi.list \
-#  && wget -q -O /etc/apt/keyrings/pdidev-archive-keyring.gpg https://raw.githubusercontent.com/pdidev/repo/ubuntu/pdidev-archive-keyring.gpg \
+ && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/pdidev-archive-keyring.gpg] https://raw.githubusercontent.com/pdidev/repo/ubuntu noble main" > /etc/apt/sources.list.d/pdi.list \
+ && wget -q -O /etc/apt/keyrings/pdidev-archive-keyring.gpg https://raw.githubusercontent.com/pdidev/repo/ubuntu/pdidev-archive-keyring.gpg \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends \
     build-essential \
@@ -41,8 +41,8 @@ RUN chmod +x /bin/bash_run \
     git \
     libfftw3-dev \
     libhwloc-dev \
-#     libpdi-dev \
-#     pdidev-archive-keyring \
+    libpdi-dev \
+    pdidev-archive-keyring \
     pkg-config \
  && case "${BACKEND}" in \
     "cpu") \

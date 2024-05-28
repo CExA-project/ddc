@@ -56,7 +56,7 @@ public:
         , m_ipiv("ipiv", mat_size)
         /*
          * The matrix itself stored in band format requires a (kl + ku + 1)*mat_size 
-   		 * allocation, but the LU-factorization requires an additional kl*mat_size block
+         * allocation, but the LU-factorization requires an additional kl*mat_size block
          */
         , m_q("q", m_c * mat_size)
     {
@@ -70,7 +70,6 @@ public:
          * the format required by DGBTRF (LAPACK): diagonals of A are rows of q.
          * q has 2*kl rows for the subdiagonals, 1 row for the diagonal, and ku rows
          * for the superdiagonals. (The kl additional rows are needed for pivoting.)
-         * The term A(i,j) of the full matrix is stored in q(i-j+2*kl+1,j).
          */
         Kokkos::deep_copy(m_q, 0.);
     }

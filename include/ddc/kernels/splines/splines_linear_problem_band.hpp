@@ -131,7 +131,8 @@ public:
                 m_kl,
                 m_ku,
                 m_q.data(),
-                m_q.stride(0),
+                m_q.stride(
+                        0), // m_q.stride(0) if LAPACK_ROW_MAJOR, m_q.stride(1) if LAPACK_COL_MAJOR
                 m_ipiv.data());
         if (info != 0) {
             throw std::runtime_error(
@@ -161,7 +162,8 @@ public:
                 m_ku,
                 b_host.extent(1),
                 m_q.data(),
-                m_q.stride(0),
+                m_q.stride(
+                        0), // m_q.stride(0) if LAPACK_ROW_MAJOR, m_q.stride(1) if LAPACK_COL_MAJOR
                 m_ipiv.data(),
                 b_host.data(),
                 b_host.stride(0));

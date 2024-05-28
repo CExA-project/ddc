@@ -74,6 +74,13 @@ public:
         Kokkos::deep_copy(m_q, 0.);
     }
 
+private:
+    std::size_t band_storage_row_index(std::size_t const i, std::size_t const j) const
+    {
+        return m_kl + m_ku + i - j;
+    }
+
+public:
     virtual double get_element(std::size_t const i, std::size_t const j) const override
     {
         assert(i < size());
@@ -86,7 +93,7 @@ public:
          */
         if (i >= std::max((std::ptrdiff_t)0, (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku)
             && i < std::min(size(), j + m_kl + 1)) {
-            return m_q(m_kl + m_ku + i - j, j);
+            return m_q(band_storage_row_index(i, j), j);
         } else {
             return 0.0;
         }
@@ -104,7 +111,7 @@ public:
          */
         if (i >= std::max((std::ptrdiff_t)0, (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku)
             && i < std::min(size(), j + m_kl + 1)) {
-            m_q(m_kl + m_ku + i - j, +j) = aij;
+            m_q(band_storage_row_index(i, j), j) = aij;
         } else {
             assert(std::fabs(aij) < 1e-20);
         }

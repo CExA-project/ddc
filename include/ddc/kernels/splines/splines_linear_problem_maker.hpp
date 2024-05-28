@@ -7,11 +7,7 @@
 #include <memory>
 #include <optional>
 
-<<<<<<< HEAD
 #include "splines_linear_problem_band.hpp"
-=======
->>>>>>> main
-        #include "splines_linear_problem_dense.hpp"
 #include "splines_linear_problem_sparse.hpp"
 
         namespace ddc::detail

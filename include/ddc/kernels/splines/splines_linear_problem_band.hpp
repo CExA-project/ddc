@@ -35,9 +35,9 @@ public:
 protected:
     const std::size_t m_kl; // no. of subdiagonals
     const std::size_t m_ku; // no. of superdiagonals
-    const std::size_t m_c; // no. of columns in q
+    const std::size_t m_c; // no. of "rows" in q (in the sense of a band format storage)
     Kokkos::View<int*, Kokkos::HostSpace> m_ipiv; // pivot indices
-    Kokkos::View<double*, Kokkos::HostSpace> m_q; // banded matrix representation
+    Kokkos::View<double*, Kokkos::HostSpace> m_q; // band matrix representation
 
 public:
     /**
@@ -54,6 +54,10 @@ public:
         , m_ku(ku)
         , m_c(2 * kl + ku + 1)
         , m_ipiv("ipiv", mat_size)
+        /*
+         * The matrix itself stored in band format requires a (kl + ku + 1)*mat_size 
+   		 * allocation, but the LU-factorization requires an additional kl*mat_size block
+         */
         , m_q("q", m_c * mat_size)
     {
         assert(m_kl <= mat_size);
@@ -75,6 +79,12 @@ public:
     {
         assert(i < size());
         assert(j < size());
+        /*
+         * The "row index" of the band format storage identify the (sub/supra)-diagonal
+         * while the column index is actually the column index of the matrix. Two layouts
+         * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of 
+         * the matrix itself but required for the storage of its LU factorization.
+         */
         if (i >= std::max((std::ptrdiff_t)0, (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku)
             && i < std::min(size(), j + m_kl + 1)) {
             // return m_q(j * m_c + m_kl + m_ku + i - j); //LAPACK_COL_MAJOR
@@ -88,6 +98,12 @@ public:
     {
         assert(i < size());
         assert(j < size());
+        /*
+         * The "row index" of the band format storage identify the (sub/supra)-diagonal
+         * while the column index is actually the column index of the matrix. Two layouts
+         * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of 
+         * the matrix itself but required for the storage of its LU factorization.
+         */
         if (i >= std::max((std::ptrdiff_t)0, (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku)
             && i < std::min(size(), j + m_kl + 1)) {
             // m_q(j * m_c + m_kl + m_ku + i - j) = aij; // LAPACK_COL_MAJOR

@@ -23,7 +23,7 @@ namespace ddc::detail {
  *
  * The storage format is dense row-major. Lapack is used to perform every matrix and linear solver-related operations.
  *
- * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are supposed to be performed. Note: atm this is a placeholder for futur developments on GPU.
+ * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are supposed to be performed.
  */
 template <class ExecSpace>
 class SplinesLinearProblemDense : public SplinesLinearProblem<ExecSpace>
@@ -42,7 +42,7 @@ public:
      *
      * @param mat_size The size of one of the dimensions of the square matrix.
      */
-    explicit SplinesLinearProblemDense(const std::size_t mat_size)
+    explicit SplinesLinearProblemDense(std::size_t const mat_size)
         : SplinesLinearProblem<ExecSpace>(mat_size)
         , m_a("a", mat_size, mat_size)
         , m_ipiv("ipiv", mat_size)

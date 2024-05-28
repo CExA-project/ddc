@@ -46,8 +46,8 @@ public:
     template <typename ExecSpace>
     static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_band(
             int const n,
-            [[maybe_unused]] int const kl,
-            [[maybe_unused]] int const ku,
+            int const kl,
+            int const ku,
             [[maybe_unused]] bool const pds)
     {
         if (2 * kl + 1 + ku >= n) {

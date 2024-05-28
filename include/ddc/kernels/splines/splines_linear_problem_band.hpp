@@ -23,7 +23,7 @@ namespace ddc::detail {
  *
  * The storage format is dense row-major. Lapack is used to perform every matrix and linear solver-related operations.
  *
- * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are supposed to be performed. Note: atm this is a placeholder for futur developments on GPU.
+ * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are supposed to be performed.
  */
 template <class ExecSpace>
 class SplinesLinearProblemBand : public SplinesLinearProblem<ExecSpace>
@@ -33,11 +33,11 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    const std::size_t m_kl; // no. of subdiagonals
-    const std::size_t m_ku; // no. of superdiagonals
-    const std::size_t m_c; // no. of "rows" in q (in the sense of a band format storage)
+    std::size_t m_kl; // no. of subdiagonals
+    std::size_t m_ku; // no. of superdiagonals
+    std::size_t m_c; // no. of "rows" in q (in the sense of a band format storage)
     Kokkos::View<int*, Kokkos::HostSpace> m_ipiv; // pivot indices
-    Kokkos::View<double*, Kokkos::HostSpace> m_q; // band matrix representation
+    Kokkos::View<double**, Kokkos::HostSpace> m_q; // band matrix representation
 
 public:
     /**
@@ -46,9 +46,9 @@ public:
      * @param mat_size The size of one of the dimensions of the square matrix.
      */
     explicit SplinesLinearProblemBand(
-            const std::size_t mat_size,
-            const std::size_t kl,
-            const std::size_t ku)
+            std::size_t const mat_size,
+            std::size_t const kl,
+            std::size_t const ku)
         : SplinesLinearProblem<ExecSpace>(mat_size)
         , m_kl(kl)
         , m_ku(ku)
@@ -58,7 +58,7 @@ public:
          * The matrix itself stored in band format requires a (kl + ku + 1)*mat_size 
          * allocation, but the LU-factorization requires an additional kl*mat_size block
          */
-        , m_q("q", m_c * mat_size)
+        , m_q("q", m_c, mat_size)
     {
         assert(m_kl <= mat_size);
         assert(m_ku <= mat_size);
@@ -86,8 +86,7 @@ public:
          */
         if (i >= std::max((std::ptrdiff_t)0, (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku)
             && i < std::min(size(), j + m_kl + 1)) {
-            // return m_q(j * m_c + m_kl + m_ku + i - j); //LAPACK_COL_MAJOR
-            return m_q((m_kl + m_ku + i - j) * size() + j); //LAPACK_ROW_MAJOR
+            return m_q(m_kl + m_ku + i - j, j);
         } else {
             return 0.0;
         }
@@ -105,8 +104,7 @@ public:
          */
         if (i >= std::max((std::ptrdiff_t)0, (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku)
             && i < std::min(size(), j + m_kl + 1)) {
-            // m_q(j * m_c + m_kl + m_ku + i - j) = aij; // LAPACK_COL_MAJOR
-            m_q((m_kl + m_ku + i - j) * size() + j) = aij; // LAPACK_ROW_MAJOR
+            m_q(m_kl + m_ku + i - j, +j) = aij;
         } else {
             assert(std::fabs(aij) < 1e-20);
         }
@@ -126,7 +124,7 @@ public:
                 m_kl,
                 m_ku,
                 m_q.data(),
-                size(), // size() if LAPACK_ROW_MAJOR, m_c if LAPACK_COL_MAJOR
+                m_q.stride(0),
                 m_ipiv.data());
         if (info != 0) {
             throw std::runtime_error(
@@ -156,7 +154,7 @@ public:
                 m_ku,
                 b_host.extent(1),
                 m_q.data(),
-                size(), // size() if LAPACK_ROW_MAJOR, m_c if LAPACK_COL_MAJOR
+                m_q.stride(0),
                 m_ipiv.data(),
                 b_host.data(),
                 b_host.stride(0));

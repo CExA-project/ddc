@@ -119,6 +119,26 @@ TEST(DiscreteDomainTest, EmptyDomain)
     EXPECT_TRUE(dom_x_y.empty());
 }
 
+TEST(DiscreteDomainTest, CompareSameDomains)
+{
+    DDomXY const dom_x_y_1(lbound_x_y, nelems_x_y);
+    DDomXY const dom_x_y_2(dom_x_y_1);
+    EXPECT_TRUE(dom_x_y_1 == dom_x_y_2);
+    EXPECT_TRUE(dom_x_y_1 == DDomYX(dom_x_y_2));
+    EXPECT_FALSE(dom_x_y_1 != dom_x_y_2);
+    EXPECT_FALSE(dom_x_y_1 != DDomYX(dom_x_y_2));
+}
+
+TEST(DiscreteDomainTest, CompareDifferentDomains)
+{
+    DDomXY const dom_x_y_1(DElemXY(0, 1), DVectXY(1, 2));
+    DDomXY const dom_x_y_2(DElemXY(2, 3), DVectXY(3, 4));
+    EXPECT_FALSE(dom_x_y_1 == dom_x_y_2);
+    EXPECT_FALSE(dom_x_y_1 == DDomYX(dom_x_y_2));
+    EXPECT_TRUE(dom_x_y_1 != dom_x_y_2);
+    EXPECT_TRUE(dom_x_y_1 != DDomYX(dom_x_y_2));
+}
+
 TEST(DiscreteDomainTest, Subdomain)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
@@ -214,27 +234,29 @@ TEST(DiscreteDomainTest, Remove)
 
 TEST(DiscreteDomainTest, SliceDomainXTooearly)
 {
-    [[maybe_unused]] DDomX const subdomain_x(lbound_x - 1, nelems_x);
-
-    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
 #ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
+    DDomX const subdomain_x(lbound_x - 1, nelems_x);
+    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     // the error message is checked with clang & gcc only
     EXPECT_DEATH(
             dom_x_y.restrict(subdomain_x),
             R"rgx([Aa]ssert.*uid<ODDims>\(m_element_begin\).*uid<ODDims>\(odomain\.m_element_begin\))rgx");
+#else
+    GTEST_SKIP();
 #endif
 }
 
 TEST(DiscreteDomainTest, SliceDomainXToolate)
 {
-    [[maybe_unused]] DDomX const subdomain_x(lbound_x, nelems_x + 1);
-
-    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
 #ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
+    DDomX const subdomain_x(lbound_x, nelems_x + 1);
+    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     // the error message is checked with clang & gcc only
     EXPECT_DEATH(
             dom_x_y.restrict(subdomain_x),
             R"rgx([Aa]ssert.*uid<ODDims>\(m_element_end\).*uid<ODDims>\(odomain\.m_element_end\).*)rgx");
+#else
+    GTEST_SKIP();
 #endif
 }
 

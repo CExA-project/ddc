@@ -151,11 +151,6 @@ jobs:
             fi
           ;;
           esac
-          case "${{matrix.image}}" in
-          'latest')
-            EXTRA_CMAKE_FLAGS="-DDDC_BUILD_PDI_WRAPPER=OFF ${EXTRA_CMAKE_FLAGS}"
-          ;;
-          esac
           cmake \
             -DDDC_BUILD_BENCHMARKS=ON \
             -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \

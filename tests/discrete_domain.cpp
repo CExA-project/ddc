@@ -139,6 +139,16 @@ TEST(DiscreteDomainTest, CompareDifferentDomains)
     EXPECT_TRUE(dom_x_y_1 != DDomYX(dom_x_y_2));
 }
 
+TEST(DiscreteDomainTest, CompareEmptyDomains)
+{
+    DDomXY const dom_x_y_1(DElemXY(4, 1), DVectXY(0, 0));
+    DDomXY const dom_x_y_2(DElemXY(3, 9), DVectXY(0, 0));
+    EXPECT_TRUE(dom_x_y_1.empty());
+    EXPECT_TRUE(dom_x_y_2.empty());
+    EXPECT_TRUE(dom_x_y_1 == dom_x_y_2);
+    EXPECT_FALSE(dom_x_y_1 != dom_x_y_2);
+}
+
 TEST(DiscreteDomainTest, Subdomain)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);

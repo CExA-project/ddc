@@ -103,6 +103,9 @@ public:
     template <class... ODims>
     KOKKOS_FUNCTION constexpr bool operator==(DiscreteDomain<ODims...> const& other) const
     {
+        if (empty() && other.empty()) {
+            return true;
+        }
         return m_element_begin == other.m_element_begin && m_element_end == other.m_element_end;
     }
 

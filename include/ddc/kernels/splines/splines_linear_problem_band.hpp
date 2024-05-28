@@ -75,8 +75,10 @@ public:
     {
         assert(i < size());
         assert(j < size());
-        if ((std::ptrdiff_t)i >= (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku && i < j + m_kl + 1) {
-            return m_q(j * m_c + m_kl + m_ku + i - j);
+        if (i >= std::max((std::ptrdiff_t)0, (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku)
+            && i < std::min(size(), j + m_kl + 1)) {
+            // return m_q(j * m_c + m_kl + m_ku + i - j); //LAPACK_COL_MAJOR
+            return m_q((m_kl + m_ku + i - j) * size() + j); //LAPACK_ROW_MAJOR
         } else {
             return 0.0;
         }
@@ -86,8 +88,10 @@ public:
     {
         assert(i < size());
         assert(j < size());
-        if ((std::ptrdiff_t)i >= (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku && i < j + m_kl + 1) {
-            m_q(j * m_c + m_kl + m_ku + i - j) = aij;
+        if (i >= std::max((std::ptrdiff_t)0, (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku)
+            && i < std::min(size(), j + m_kl + 1)) {
+            // m_q(j * m_c + m_kl + m_ku + i - j) = aij; // LAPACK_COL_MAJOR
+            m_q((m_kl + m_ku + i - j) * size() + j) = aij; // LAPACK_ROW_MAJOR
         } else {
             assert(std::fabs(aij) < 1e-20);
         }
@@ -101,16 +105,17 @@ public:
     void setup_solver() override
     {
         int const info = LAPACKE_dgbtrf(
-                LAPACK_COL_MAJOR,
+                LAPACK_ROW_MAJOR,
                 size(),
                 size(),
                 m_kl,
                 m_ku,
                 m_q.data(),
-                m_c,
+                size(), // size() if LAPACK_ROW_MAJOR, m_c if LAPACK_COL_MAJOR
                 m_ipiv.data());
         if (info != 0) {
-            throw std::runtime_error("LAPACKE_dgbtrf failed with error code " + std::to_string(info));
+            throw std::runtime_error(
+                    "LAPACKE_dgbtrf failed with error code " + std::to_string(info));
         }
     }
 
@@ -136,12 +141,13 @@ public:
                 m_ku,
                 b_host.extent(1),
                 m_q.data(),
-                m_c,
+                size(), // size() if LAPACK_ROW_MAJOR, m_c if LAPACK_COL_MAJOR
                 m_ipiv.data(),
                 b_host.data(),
                 b_host.stride(0));
         if (info != 0) {
-            throw std::runtime_error("LAPACKE_dgbtrs failed with error code " + std::to_string(info));
+            throw std::runtime_error(
+                    "LAPACKE_dgbtrs failed with error code " + std::to_string(info));
         }
         Kokkos::deep_copy(b, b_host);
     }

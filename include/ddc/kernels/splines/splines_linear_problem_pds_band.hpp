@@ -57,7 +57,7 @@ public:
         Kokkos::deep_copy(m_q, 0.);
     }
 
-    virtual double get_element(std::size_t const i, std::size_t const j) const override
+    virtual double get_element(std::size_t i, std::size_t j) const override
     {
         assert(i < size());
         assert(j < size());
@@ -67,24 +67,18 @@ public:
         }
 
         // Indices are swapped for an element on subdiagonal
-        std::size_t i_tmp;
-        std::size_t j_tmp;
-        if (i < j) {
-            i_tmp = i;
-            j_tmp = j;
-        } else {
-            i_tmp = j;
-            j_tmp = i;
+        if (i > j) {
+            std::swap(i, j);
         }
         for (int k = 1; k < m_q.extent(0); ++k) {
-            if (i_tmp + k == j_tmp) {
-                return m_q(k, i_tmp);
+            if (i + k == j) {
+                return m_q(k, i);
             }
         }
         return 0.0;
     }
 
-    virtual void set_element(std::size_t const i, std::size_t const j, double const aij) override
+    virtual void set_element(std::size_t i, std::size_t j, double const aij) override
     {
         assert(i < size());
         assert(j < size());
@@ -95,18 +89,12 @@ public:
         }
 
         // Indices are swapped for an element on subdiagonal
-        std::size_t i_tmp;
-        std::size_t j_tmp;
-        if (i < j) {
-            i_tmp = i;
-            j_tmp = j;
-        } else {
-            i_tmp = j;
-            j_tmp = i;
+        if (i > j) {
+            std::swap(i, j);
         }
         for (int k = 1; k < m_q.extent(0); ++k) {
-            if (i_tmp + k == j_tmp) {
-                m_q(k, i_tmp) = aij;
+            if (i + k == j) {
+                m_q(k, i) = aij;
                 return;
             }
         }

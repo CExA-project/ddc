@@ -64,7 +64,7 @@ public:
             std::swap(i, j);
         }
         if (j - i < 2) {
-            return m_q(j-i, i);
+            return m_q(j - i, i);
         } else {
             return 0.0;
         }

@@ -62,20 +62,15 @@ public:
         assert(i < size());
         assert(j < size());
 
-        if (i == j) {
-            return m_q(0, i);
-        }
-
         // Indices are swapped for an element on subdiagonal
         if (i > j) {
             std::swap(i, j);
         }
-        for (int k = 1; k < m_q.extent(0); ++k) {
-            if (i + k == j) {
-                return m_q(k, i);
-            }
+        if (j - i < m_q.extent(0)) {
+            return m_q(j - i, i);
+        } else {
+            return 0.0;
         }
-        return 0.0;
     }
 
     virtual void set_element(std::size_t i, std::size_t j, double const aij) override
@@ -83,23 +78,15 @@ public:
         assert(i < size());
         assert(j < size());
 
-        if (i == j) {
-            m_q(0, i) = aij;
-            return;
-        }
-
         // Indices are swapped for an element on subdiagonal
         if (i > j) {
             std::swap(i, j);
         }
-        for (int k = 1; k < m_q.extent(0); ++k) {
-            if (i + k == j) {
-                m_q(k, i) = aij;
-                return;
-            }
+        if (j - i < m_q.extent(0)) {
+            m_q(j - i, i) = aij;
+        } else {
+            assert(std::fabs(aij) < 1e-20);
         }
-        assert(std::fabs(aij) < 1e-20);
-        return;
     }
 
     /**

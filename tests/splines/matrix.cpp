@@ -211,7 +211,7 @@ TEST(Matrix, PDSTridiag)
 
     // Build a positive-definite symmetric full-rank tridiagonal matrix
     for (std::size_t i(0); i < N; ++i) {
-        matrix->set_element(i, i, 2.0 * k);
+        matrix->set_element(i, i, 2.0 * k + 1);
         for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
             matrix->set_element(i, j, -1.0);
         }

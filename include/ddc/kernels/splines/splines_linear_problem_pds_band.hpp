@@ -33,7 +33,6 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    std::size_t m_kd; // no. of rows in m_q
     Kokkos::View<double**, Kokkos::HostSpace> m_q; // pds band matrix representation
 
 public:
@@ -45,10 +44,9 @@ public:
      */
     explicit SplinesLinearProblemPDSBand(std::size_t const mat_size, std::size_t const kd)
         : SplinesLinearProblem<ExecSpace>(mat_size)
-        , m_kd(kd)
         , m_q("q", kd + 1, mat_size)
     {
-        assert(m_kd <= mat_size);
+        assert(m_q.extent(0) <= mat_size);
 
         Kokkos::deep_copy(m_q, 0.);
     }
@@ -71,7 +69,7 @@ public:
             i_tmp = j;
             j_tmp = i;
         }
-        for (int k = 1; k < m_kd + 1; ++k) {
+        for (int k = 1; k < m_q.extent(0); ++k) {
             if (i_tmp + k == j_tmp) {
                 return m_q(k, i_tmp);
             }
@@ -98,7 +96,7 @@ public:
             i_tmp = j;
             j_tmp = i;
         }
-        for (int k = 1; k < m_kd + 1; ++k) {
+        for (int k = 1; k < m_q.extent(0); ++k) {
             if (i_tmp + k == j_tmp) {
                 m_q(k, i_tmp) = aij;
                 return;
@@ -119,7 +117,7 @@ public:
                 LAPACK_ROW_MAJOR,
                 'L',
                 size(),
-                m_kd,
+                m_q.extent(0) - 1,
                 m_q.data(),
                 m_q.stride(
                         0) // m_q.stride(0) if LAPACK_ROW_MAJOR, m_q.stride(1) if LAPACK_COL_MAJOR
@@ -148,7 +146,7 @@ public:
                 LAPACK_ROW_MAJOR,
                 'L',
                 b_host.extent(0),
-                m_kd,
+                m_q.extent(0) - 1,
                 b_host.extent(1),
                 m_q.data(),
                 m_q.stride(

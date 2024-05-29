@@ -248,6 +248,27 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
     solve_and_validate(*matrix);
 }
 
+TEST_P(MatrixSizesFixture, 2x2Blocks)
+{
+    auto const [N, k] = GetParam();
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = ddc::detail::SplinesLinearProblemMaker::make_new_2x2_blocks_with_band_top_left<
+                    Kokkos::DefaultExecutionSpace>(N, k, k, false, 3);
+
+    // Build a non-symmetric full-rank band matrix
+    for (std::size_t i(0); i < N; ++i) {
+        matrix->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+    }
+
+    solve_and_validate(*matrix);
+}
+
 TEST_P(MatrixSizesFixture, Sparse)
 {
     auto const [N, k] = GetParam();

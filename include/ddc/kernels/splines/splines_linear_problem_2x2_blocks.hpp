@@ -45,8 +45,8 @@ protected:
     //-------------------------------------
     std::shared_ptr<Matrix> m_q_block;
     std::shared_ptr<MatrixDense<ExecSpace>> m_delta;
-    Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace> m_Abm_1_gamma;
-    Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace> m_lambda;
+    Kokkos::View<double**, Kokkos::HostSpace> m_Abm_1_gamma;
+    Kokkos::View<double**, Kokkos::HostSpace> m_lambda;
 
 public:
     /**
@@ -144,7 +144,7 @@ private:
                     delta.set_element(i, j, delta.get_element(i, j) - val);
                 });
     }
- 
+
 public:
     /**
      * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.
@@ -160,9 +160,7 @@ public:
     }
 
 private:
-    virtual ddc::DSpan2D_stride solve_lambda_section(
-            ddc::DSpan2D_stride const v,
-            ddc::DView2D_stride const u) const
+    virtual MultiRHS solve_lambda_section(MultiRHS const v, MultiRHS const u) const
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
         auto nb_proxy = m_nb;
@@ -187,9 +185,7 @@ private:
         return v;
     }
 
-    virtual ddc::DSpan2D_stride solve_lambda_section_transpose(
-            ddc::DSpan2D_stride const u,
-            ddc::DView2D_stride const v) const
+    virtual MultiRHS solve_lambda_section_transpose(MultiRHS const u, MultiRHS const v) const
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
         auto nb_proxy = m_nb;
@@ -214,9 +210,7 @@ private:
         return u;
     }
 
-    virtual ddc::DSpan2D_stride solve_gamma_section(
-            ddc::DSpan2D_stride const u,
-            ddc::DView2D_stride const v) const
+    virtual MultiRHS solve_gamma_section(MultiRHS const u, MultiRHS const v) const
     {
         auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
         auto nb_proxy = m_nb;
@@ -241,9 +235,7 @@ private:
         return u;
     }
 
-    virtual ddc::DSpan2D_stride solve_gamma_section_transpose(
-            ddc::DSpan2D_stride const v,
-            ddc::DView2D_stride const u) const
+    virtual MultiRHS solve_gamma_section_transpose(MultiRHS const v, MultiRHS const u) const
     {
         auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
         auto nb_proxy = m_nb;
@@ -283,22 +275,19 @@ public:
 
         auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b);
         Kokkos::deep_copy(b_host, b);
-        int const info = LAPACKE_dgbtrs(
-                LAPACK_ROW_MAJOR,
-                transpose ? 'T' : 'N',
-                b_host.extent(0),
-                m_kl,
-                m_ku,
-                b_host.extent(1),
-                m_q.data(),
-                m_q.stride(
-                        0), // m_q.stride(0) if LAPACK_ROW_MAJOR, m_q.stride(1) if LAPACK_COL_MAJOR
-                m_ipiv.data(),
-                b_host.data(),
-                b_host.stride(0));
-        if (info != 0) {
-            throw std::runtime_error(
-                    "LAPACKE_dgbtrs failed with error code " + std::to_string(info));
+        MultiRHS u = Kokkos::subview(b, std::pair<std::size_t, std::size_t>(0, m_nb), Kokkos::ALL);
+        MultiRHS v = Kokkos::
+                subview(b, std::pair<std::size_t, std::size_t>(m_nb, b.extent(0)), Kokkos::ALL);
+        if (!transpose) {
+            m_q_block->solve_inplace(u);
+            solve_lambda_section(v, u);
+            m_delta->solve_inplace(v);
+            solve_gamma_section(u, v);
+        } else {
+            solve_gamma_section_transpose(v, u);
+            m_delta->solve_transpose_inplace(v);
+            solve_lambda_section_transpose(u, v);
+            m_q_block->solve_transpose_inplace(u);
         }
         Kokkos::deep_copy(b, b_host);
     }

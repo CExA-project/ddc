@@ -7,6 +7,7 @@
 #include <memory>
 #include <optional>
 
+#include "splines_linear_problem_2x2_blocks.hpp"
 #include "splines_linear_problem_band.hpp"
 #include "splines_linear_problem_dense.hpp"
 #include "splines_linear_problem_sparse.hpp"
@@ -50,13 +51,51 @@ public:
             int const ku,
             [[maybe_unused]] bool const pds)
     {
-        if (2 * kl + 1 + ku >= n) {
+        if (2 * kl + ku + 1 >= n) {
             return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
         } else {
             return std::make_unique<SplinesLinearProblemBand<ExecSpace>>(n, kl, ku);
         }
     }
 
+    /**
+     * @brief Construct a 2x2-blocks with band top-left block matrix
+     *
+     * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.
+     * @param n The size of one of the dimensions of the square matrix.
+     * @param kl The number of subdiagonals.
+     * @param ku The number of superdiagonals.
+     * @param pds A boolean indicating if the matrix is positive-definite symetric or not.
+     *
+     * @return The SplinesLinearProblem instance.
+     */
+    template <typename ExecSpace>
+    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_2x2_blocks_with_band_top_left(
+            int const n,
+            int const kl,
+            int const ku,
+            bool const pds,
+            int const block1_size,
+            int const block2_size = 0)
+    {
+        assert(block2_size
+               == 0); // block2_size is a placeholder while SplinesLinearProblem3x3Blocks is not implemented.
+
+        // TODO: clarify if top-left or bottom_right is the band
+
+        int const top_left_size = n - block1_size - block2_size;
+        std::unique_ptr<SplinesLinearProblem<ExecSpace>> top_left_block
+                = make_new_band(top_left_size, kl, ku, pds);
+        if (block2_size == 0) {
+            return std::make_unique<SplinesLinearProblem2x2Blocks<
+                    ExecSpace>>(n, block1_size, std::move(top_left_block));
+        } else {
+            /*
+            return std::make_unique<MatrixCenterBlock<
+                    ExecSpace>>(n, block1_size, block2_size, std::move(block_mat));
+*/
+        }
+    }
     /**
      * @brief Construct a sparse matrix
      *

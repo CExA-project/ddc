@@ -43,6 +43,8 @@ public:
      * @brief SplinesLinearProblemBand constructor.
      *
      * @param mat_size The size of one of the dimensions of the square matrix.
+     * @param kl The number of subdiagonals of the matrix.
+     * @param ku The number of supradiagonals of the matrix.
      */
     explicit SplinesLinearProblemBand(
             std::size_t const mat_size,

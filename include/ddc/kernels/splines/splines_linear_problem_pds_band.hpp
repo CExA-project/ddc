@@ -24,10 +24,10 @@ namespace ddc::detail {
  * The storage format is dense row-major. Lapack is used to perform every matrix and linear solver-related operations.
  *
  * Given the linear system A*x=b, we assume that A is a square (n by n)
- * with kd sub and super-diagonals.
+ * with kd sub and superdiagonals.
  * All non-zero elements of A are stored in the rectangular matrix q, using
- * the format required by DPBTRF (LAPACK): (sub-)diagonals of A are rows of q.
- * q has 1 row for the diagonal and kd rows for the subdiagonals.
+ * the format required by DPBTRF (LAPACK): (super-)diagonals of A are rows of q.
+ * q has 1 row for the diagonal and kd rows for the superdiagonals.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are supposed to be performed.
  */
@@ -46,7 +46,7 @@ public:
      * @brief SplinesLinearProblemPDSBand constructor.
      *
      * @param mat_size The size of one of the dimensions of the square matrix.
-     * @param kd The number of sub/supradiagonals of the matrix.
+     * @param kd The number of sub/superdiagonals of the matrix.
      */
     explicit SplinesLinearProblemPDSBand(std::size_t const mat_size, std::size_t const kd)
         : SplinesLinearProblem<ExecSpace>(mat_size)

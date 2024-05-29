@@ -137,7 +137,7 @@ public:
         Kokkos::deep_copy(b_host, b);
         int const info = LAPACKE_dpttrs(
                 LAPACK_ROW_MAJOR,
-                m_q.extent(0),
+                b_host.extent(0),
                 b_host.extent(1),
                 m_q.data(),
                 m_q.data() + m_q.stride(0),

@@ -88,7 +88,7 @@ public:
 
         int const top_left_size = n - block1_size - block2_size;
         std::unique_ptr<SplinesLinearProblem<ExecSpace>> top_left_block
-                = make_new_band(top_left_size, kl, ku, pds);
+                = make_new_band<ExecSpace>(top_left_size, kl, ku, pds);
         if (block2_size == 0) {
             return std::make_unique<SplinesLinearProblem2x2Blocks<
                     ExecSpace>>(n, block1_size, std::move(top_left_block));

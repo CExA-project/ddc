@@ -15,6 +15,7 @@
 #endif
 
 #include "splines_linear_problem.hpp"
+#include "splines_linear_problem_dense.hpp"
 
 namespace ddc::detail {
 
@@ -43,8 +44,8 @@ protected:
     //        |  lambda | delta |
     //
     //-------------------------------------
-    std::shared_ptr<Matrix> m_q_block;
-    std::shared_ptr<MatrixDense<ExecSpace>> m_delta;
+    std::shared_ptr<SplinesLinearProblem<ExecSpace>> m_q_block;
+    std::shared_ptr<SplinesLinearProblem<ExecSpace>> m_delta;
     Kokkos::View<double**, Kokkos::HostSpace> m_Abm_1_gamma;
     Kokkos::View<double**, Kokkos::HostSpace> m_lambda;
 
@@ -62,7 +63,7 @@ public:
         , m_k(k)
         , m_nb(mat_size - k)
         , m_q_block(std::move(q))
-        , m_delta(new SplinesLinearSolver<ExecSpace>(k))
+        , m_delta(new SplinesLinearProblemDense<ExecSpace>(k))
         , m_Abm_1_gamma("Abm_1_gamma", m_nb, m_k)
         , m_lambda("lambda", m_k, m_nb)
     {
@@ -75,7 +76,7 @@ public:
 
 protected:
     explicit SplinesLinearProblem2x2Blocks(
-            std::size_t const n,
+            std::size_t const mat_size,
             std::size_t const k,
             std::unique_ptr<SplinesLinearProblem<ExecSpace>> q,
             std::size_t const lambda_size1,
@@ -84,7 +85,7 @@ protected:
         , m_k(k)
         , m_nb(mat_size - k)
         , m_q_block(std::move(q))
-        , m_delta(new MatrixDense<ExecSpace>(k))
+        , m_delta(new SplinesLinearProblemDense<ExecSpace>(k))
         , m_Abm_1_gamma("Abm_1_gamma", m_nb, m_k)
         , m_lambda("lambda", lambda_size1, lambda_size2)
     {
@@ -141,7 +142,7 @@ private:
                     for (int l = 0; l < m_nb; ++l) {
                         val += m_lambda(i, l) * m_Abm_1_gamma(l, j);
                     }
-                    delta.set_element(i, j, delta.get_element(i, j) - val);
+                    m_delta->set_element(i, j, m_delta->get_element(i, j) - val);
                 });
     }
 
@@ -154,12 +155,16 @@ public:
     void setup_solver() override
     {
         m_q_block->setup_solver();
-        m_q_block->solve_inplace(m_Abm_1_gamma);
+        auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
+        m_q_block->solve(Abm_1_gamma_device);
+        deep_copy(m_Abm_1_gamma, Abm_1_gamma_device);
         calculate_delta_to_factorize();
         m_delta->setup_solver();
     }
 
-private:
+    /**
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     */
     virtual MultiRHS solve_lambda_section(MultiRHS const v, MultiRHS const u) const
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
@@ -185,6 +190,9 @@ private:
         return v;
     }
 
+    /**
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     */
     virtual MultiRHS solve_lambda_section_transpose(MultiRHS const u, MultiRHS const v) const
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
@@ -210,6 +218,9 @@ private:
         return u;
     }
 
+    /**
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     */
     virtual MultiRHS solve_gamma_section(MultiRHS const u, MultiRHS const v) const
     {
         auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
@@ -235,6 +246,9 @@ private:
         return u;
     }
 
+    /**
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     */
     virtual MultiRHS solve_gamma_section_transpose(MultiRHS const v, MultiRHS const u) const
     {
         auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
@@ -260,7 +274,6 @@ private:
         return v;
     }
 
-public:
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
@@ -279,15 +292,15 @@ public:
         MultiRHS v = Kokkos::
                 subview(b, std::pair<std::size_t, std::size_t>(m_nb, b.extent(0)), Kokkos::ALL);
         if (!transpose) {
-            m_q_block->solve_inplace(u);
+            m_q_block->solve(u);
             solve_lambda_section(v, u);
-            m_delta->solve_inplace(v);
+            m_delta->solve(v);
             solve_gamma_section(u, v);
         } else {
             solve_gamma_section_transpose(v, u);
-            m_delta->solve_transpose_inplace(v);
+            m_delta->solve(v, true);
             solve_lambda_section_transpose(u, v);
-            m_q_block->solve_transpose_inplace(u);
+            m_q_block->solve(u, true);
         }
         Kokkos::deep_copy(b, b_host);
     }

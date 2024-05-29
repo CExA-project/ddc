@@ -23,6 +23,13 @@ namespace ddc::detail {
  *
  * The storage format is dense row-major. Lapack is used to perform every matrix and linear solver-related operations.
  *
+ * Given the linear system A*x=b, we assume that A is a square (n by n)
+ * with ku superdiagonals and kl subdiagonals.
+ * All non-zero elements of A are stored in the rectangular matrix q, using
+ * the format required by DGBTRF (LAPACK): diagonals of A are rows of q.
+ * q has 2*kl rows for the subdiagonals, 1 row for the diagonal, and ku rows
+ * for the superdiagonals. (The kl additional rows are needed for pivoting.)
+ *
  * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are supposed to be performed.
  */
 template <class ExecSpace>
@@ -43,6 +50,8 @@ public:
      * @brief SplinesLinearProblemBand constructor.
      *
      * @param mat_size The size of one of the dimensions of the square matrix.
+     * @param kl The number of subdiagonals of the matrix.
+     * @param ku The number of superdiagonals of the matrix.
      */
     explicit SplinesLinearProblemBand(
             std::size_t const mat_size,
@@ -61,14 +70,6 @@ public:
         assert(m_kl <= mat_size);
         assert(m_ku <= mat_size);
 
-        /*
-         * Given the linear system A*x=b, we assume that A is a square (n by n)
-         * with ku super-diagonals and kl sub-diagonals.
-         * All non-zero elements of A are stored in the rectangular matrix q, using
-         * the format required by DGBTRF (LAPACK): diagonals of A are rows of q.
-         * q has 2*kl rows for the subdiagonals, 1 row for the diagonal, and ku rows
-         * for the superdiagonals. (The kl additional rows are needed for pivoting.)
-         */
         Kokkos::deep_copy(m_q, 0.);
     }
 
@@ -84,7 +85,7 @@ public:
         assert(i < size());
         assert(j < size());
         /*
-         * The "row index" of the band format storage identify the (sub/supra)-diagonal
+         * The "row index" of the band format storage identify the (sub/super)-diagonal
          * while the column index is actually the column index of the matrix. Two layouts
          * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of 
          * the matrix itself but required for the storage of its LU factorization.
@@ -102,7 +103,7 @@ public:
         assert(i < size());
         assert(j < size());
         /*
-         * The "row index" of the band format storage identify the (sub/supra)-diagonal
+         * The "row index" of the band format storage identify the (sub/super)-diagonal
          * while the column index is actually the column index of the matrix. Two layouts
          * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of 
          * the matrix itself but required for the storage of its LU factorization.

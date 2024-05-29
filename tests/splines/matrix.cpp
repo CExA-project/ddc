@@ -179,6 +179,28 @@ TEST(Matrix, Band)
     solve_and_validate(*matrix);
 }
 
+TEST(Matrix, PDSBand)
+{
+    std::size_t const N = 10;
+    std::size_t const k = 3;
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = std::make_unique<
+                    ddc::detail::SplinesLinearProblemPDSBand<Kokkos::DefaultExecutionSpace>>(N, k);
+
+    // Build a positive-definite symmetric full-rank band matrix
+    for (std::size_t i(0); i < N; ++i) {
+        matrix->set_element(i, i, 2.0 * k + 1);
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -1.0);
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -1.0);
+        }
+    }
+
+    solve_and_validate(*matrix);
+}
+
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
 {
 };
@@ -213,7 +235,7 @@ TEST_P(MatrixSizesFixture, PositiveDefiniteSymmetric)
 
     // Build a positive-definite symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {
-        matrix->set_element(i, i, 2.0 * k);
+        matrix->set_element(i, i, 2.0 * k + 1);
         for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
             matrix->set_element(i, j, -1.0);
         }
@@ -238,7 +260,7 @@ TEST_P(MatrixSizesFixture, OffsetBanded)
             matrix->set_element(i, i, -1.0);
         }
         if (i + k < N) {
-            matrix->set_element(i, i + k, 2.0 * k);
+            matrix->set_element(i, i + k, 2.0 * k + 1);
         }
         for (std::size_t j(i + k + 1); j < std::min(N, i + k + 1); ++j) {
             matrix->set_element(i, j, -1.0);

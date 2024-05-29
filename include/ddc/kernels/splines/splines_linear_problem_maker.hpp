@@ -9,6 +9,7 @@
 
 #include "splines_linear_problem_band.hpp"
 #include "splines_linear_problem_dense.hpp"
+#include "splines_linear_problem_pds_band.hpp"
 #include "splines_linear_problem_sparse.hpp"
 
 namespace ddc::detail {
@@ -48,10 +49,12 @@ public:
             int const n,
             int const kl,
             int const ku,
-            [[maybe_unused]] bool const pds)
+            bool const pds)
     {
         if (2 * kl + 1 + ku >= n) {
             return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+        } else if (kl == ku && pds) {
+            return std::make_unique<SplinesLinearProblemPDSBand<ExecSpace>>(n, kl);
         } else {
             return std::make_unique<SplinesLinearProblemBand<ExecSpace>>(n, kl, ku);
         }

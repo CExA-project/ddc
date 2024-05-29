@@ -67,8 +67,8 @@ public:
         if (i > j) {
             std::swap(i, j);
         }
-        if (i_tmp + 1 == j_tmp) {
-            return m_q(1, i_tmp);
+        if (i + 1 == j) {
+            return m_q(1, i);
         }
         return 0.0;
     }
@@ -87,8 +87,8 @@ public:
         if (i > j) {
             std::swap(i, j);
         }
-        if (i_tmp + 1 == j_tmp) {
-            m_q(1, i_tmp) = aij;
+        if (i + 1 == j) {
+            m_q(1, i) = aij;
             return;
         }
         assert(std::fabs(aij) < 1e-20);

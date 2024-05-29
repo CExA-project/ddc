@@ -59,7 +59,7 @@
 # (To distribute this file outside of Morse, substitute the full
 #  License text for the above reference.)
 #
-# This file has been slightly modified by DDC team
+# This file has been slightly modified by DDC team.
 
 if (NOT LAPACKE_FOUND)
   set(LAPACKE_DIR "" CACHE PATH "Installation directory of LAPACKE library")

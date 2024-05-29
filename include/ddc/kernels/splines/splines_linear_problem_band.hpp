@@ -23,6 +23,13 @@ namespace ddc::detail {
  *
  * The storage format is dense row-major. Lapack is used to perform every matrix and linear solver-related operations.
  *
+ * Given the linear system A*x=b, we assume that A is a square (n by n)
+ * with ku super-diagonals and kl sub-diagonals.
+ * All non-zero elements of A are stored in the rectangular matrix q, using
+ * the format required by DGBTRF (LAPACK): diagonals of A are rows of q.
+ * q has 2*kl rows for the subdiagonals, 1 row for the diagonal, and ku rows
+ * for the superdiagonals. (The kl additional rows are needed for pivoting.)
+ *
  * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are supposed to be performed.
  */
 template <class ExecSpace>
@@ -63,14 +70,6 @@ public:
         assert(m_kl <= mat_size);
         assert(m_ku <= mat_size);
 
-        /*
-         * Given the linear system A*x=b, we assume that A is a square (n by n)
-         * with ku super-diagonals and kl sub-diagonals.
-         * All non-zero elements of A are stored in the rectangular matrix q, using
-         * the format required by DGBTRF (LAPACK): diagonals of A are rows of q.
-         * q has 2*kl rows for the subdiagonals, 1 row for the diagonal, and ku rows
-         * for the superdiagonals. (The kl additional rows are needed for pivoting.)
-         */
         Kokkos::deep_copy(m_q, 0.);
     }
 

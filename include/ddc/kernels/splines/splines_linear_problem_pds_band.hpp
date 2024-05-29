@@ -23,6 +23,12 @@ namespace ddc::detail {
  *
  * The storage format is dense row-major. Lapack is used to perform every matrix and linear solver-related operations.
  *
+ * Given the linear system A*x=b, we assume that A is a square (n by n)
+ * with kd sub and super-diagonals.
+ * All non-zero elements of A are stored in the rectangular matrix q, using
+ * the format required by DPBTRF (LAPACK): (sub-)diagonals of A are rows of q.
+ * q has 1 row for the diagonal and kd rows for the subdiagonals.
+ *
  * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are supposed to be performed.
  */
 template <class ExecSpace>
@@ -60,6 +66,7 @@ public:
             return m_q(0, i);
         }
 
+        // Indices are swapped for an element on subdiagonal
         std::size_t i_tmp;
         std::size_t j_tmp;
         if (i < j) {
@@ -87,6 +94,7 @@ public:
             return;
         }
 
+        // Indices are swapped for an element on subdiagonal
         std::size_t i_tmp;
         std::size_t j_tmp;
         if (i < j) {
@@ -109,7 +117,7 @@ public:
     /**
      * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.
      *
-     * LU-factorize the matrix A and store the pivots using the LAPACK dgbtrf() implementation.
+     * LU-factorize the matrix A and store the pivots using the LAPACK dpbtrf() implementation.
      */
     void setup_solver() override
     {

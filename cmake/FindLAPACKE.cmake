@@ -58,6 +58,8 @@
 #=============================================================================
 # (To distribute this file outside of Morse, substitute the full
 #  License text for the above reference.)
+#
+# This file has been slightly modified by DDC team
 
 if (NOT LAPACKE_FOUND)
   set(LAPACKE_DIR "" CACHE PATH "Installation directory of LAPACKE library")
@@ -69,9 +71,9 @@ endif()
 # LAPACKE depends on LAPACK anyway, try to find it
 if (NOT LAPACK_FOUND)
   if(LAPACKE_FIND_REQUIRED)
-    find_package(LAPACKEXT REQUIRED)
+    find_package(LAPACK REQUIRED) # LAPACKEXT is replaced with LAPACK for DDC usage
   else()
-    find_package(LAPACKEXT)
+    find_package(LAPACK) # LAPACKEXT is replaced with LAPACK for DDC usage
   endif()
 endif()
 

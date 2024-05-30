@@ -165,7 +165,7 @@ public:
     /**
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      */
-    virtual MultiRHS solve_lambda_section(MultiRHS const v, MultiRHS const u) const
+    virtual void solve_lambda_section(MultiRHS const v, MultiRHS const u) const
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
         auto nb_proxy = m_nb;
@@ -187,13 +187,12 @@ public:
                                 }
                             });
                 });
-        return v;
     }
 
     /**
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      */
-    virtual MultiRHS solve_lambda_section_transpose(MultiRHS const u, MultiRHS const v) const
+    virtual void solve_lambda_section_transpose(MultiRHS const u, MultiRHS const v) const
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
         auto nb_proxy = m_nb;
@@ -215,13 +214,12 @@ public:
                                 }
                             });
                 });
-        return u;
     }
 
     /**
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      */
-    virtual MultiRHS solve_gamma_section(MultiRHS const u, MultiRHS const v) const
+    virtual void solve_gamma_section(MultiRHS const u, MultiRHS const v) const
     {
         auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
         auto nb_proxy = m_nb;
@@ -243,13 +241,12 @@ public:
                                 }
                             });
                 });
-        return u;
     }
 
     /**
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      */
-    virtual MultiRHS solve_gamma_section_transpose(MultiRHS const v, MultiRHS const u) const
+    virtual void solve_gamma_section_transpose(MultiRHS const v, MultiRHS const u) const
     {
         auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
         auto nb_proxy = m_nb;
@@ -271,7 +268,6 @@ public:
                                 }
                             });
                 });
-        return v;
     }
 
     /**
@@ -286,8 +282,6 @@ public:
     {
         assert(b.extent(0) == size());
 
-        auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b);
-        Kokkos::deep_copy(b_host, b);
         MultiRHS u = Kokkos::subview(b, std::pair<std::size_t, std::size_t>(0, m_nb), Kokkos::ALL);
         MultiRHS v = Kokkos::
                 subview(b, std::pair<std::size_t, std::size_t>(m_nb, b.extent(0)), Kokkos::ALL);
@@ -302,7 +296,6 @@ public:
             solve_lambda_section_transpose(u, v);
             m_q_block->solve(u, true);
         }
-        Kokkos::deep_copy(b, b_host);
     }
 };
 

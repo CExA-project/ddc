@@ -36,16 +36,14 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    //-------------------------------------
-    //
-    //    q = | top_left_block | top_right_block |
-    //        |  bottom_left_block | bottom_right_block |
-    //
-    //-------------------------------------
+    /*
+     * A = |   Q    | gamma |
+     *     | lambda | delta |
+     */
     std::shared_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
-    std::shared_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
     Kokkos::View<double**, Kokkos::HostSpace> m_top_right_block;
     Kokkos::View<double**, Kokkos::HostSpace> m_bottom_left_block;
+    std::shared_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
 
 public:
     /**
@@ -55,11 +53,9 @@ public:
      */
     explicit SplinesLinearProblem2x2Blocks(
             std::size_t const mat_size,
-            std::size_t const k,
             std::unique_ptr<SplinesLinearProblem<ExecSpace>> q)
         : SplinesLinearProblem<ExecSpace>(mat_size)
         , m_top_left_block(std::move(q))
-        , m_bottom_right_block(new SplinesLinearProblemDense<ExecSpace>(k))
         , m_top_right_block(
                   "top_right_block",
                   m_top_left_block->size(),
@@ -68,6 +64,8 @@ public:
                   "bottom_left_block",
                   mat_size - m_top_left_block->size(),
                   m_top_left_block->size())
+        , m_bottom_right_block(
+                  new SplinesLinearProblemDense<ExecSpace>(mat_size - m_top_left_block->size()))
     {
         assert(m_top_left_block->size() <= mat_size);
 
@@ -78,18 +76,18 @@ public:
 protected:
     explicit SplinesLinearProblem2x2Blocks(
             std::size_t const mat_size,
-            std::size_t const k,
             std::unique_ptr<SplinesLinearProblem<ExecSpace>> q,
             std::size_t const bottom_left_block_size1,
             std::size_t const bottom_left_block_size2)
         : SplinesLinearProblem<ExecSpace>(mat_size)
         , m_top_left_block(std::move(q))
-        , m_bottom_right_block(new SplinesLinearProblemDense<ExecSpace>(k))
         , m_top_right_block(
                   "top_right_block",
                   m_top_left_block->size(),
                   mat_size - m_top_left_block->size())
         , m_bottom_left_block("bottom_left_block", bottom_left_block_size1, bottom_left_block_size2)
+        , m_bottom_right_block(
+                  new SplinesLinearProblemDense<ExecSpace>(mat_size - m_top_left_block->size()))
     {
         assert(m_top_left_block->size() <= mat_size);
 
@@ -133,10 +131,10 @@ public:
     }
 
 private:
-    virtual void calculate_bottom_right_block_to_factorize()
+    virtual void compute_schur_complement()
     {
         Kokkos::parallel_for(
-                "calculate_bottom_right_block_to_factorize",
+                "compute_schur_complement",
                 Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
                         {0, 0},
                         {m_bottom_right_block->size(), m_bottom_right_block->size()}),
@@ -154,15 +152,28 @@ public:
     /**
      * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.
      *
-     * Block-LU factorize the matrix A according to the Schur complement method.
+     * Block-LU factorize the matrix A according to the Schur complement method. The block-LU factorization is:
+     *
+     * A = |   Q    |             0             |  | I | Q^-1*gamma |
+     *     | lambda | delta - lambda*Q^-1*gamma |  | 0 |      I     |
+     *
+     * So we perform the factorization inplace to store only the relevant blocks in the matrix (while factorizing
+     * the blocks themselves):
+     * |   Q    |             Q^-1*gamma    |
+     * | lambda | delta - lambda*Q^-1*gamma |
      */
     void setup_solver() override
     {
         m_top_left_block->setup_solver();
+
+        // Compute Q^-1*gamma
         auto top_right_block_device = create_mirror_view_and_copy(ExecSpace(), m_top_right_block);
         m_top_left_block->solve(top_right_block_device);
         deep_copy(m_top_right_block, top_right_block_device);
-        calculate_bottom_right_block_to_factorize();
+
+        // Compute delta - lambda*Q^-1*gamma
+        compute_schur_complement();
+
         m_bottom_right_block->setup_solver();
     }
 

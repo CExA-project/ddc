@@ -62,31 +62,28 @@ public:
     }
 
     /**
-     * @brief Construct a 2x2-blocks with band top-left block matrix
+     * @brief Construct a 2x2-blocks linear problem with band "main" block (the one called
+     * Q in SplinesLinearProblem2x2Blocks).
      *
      * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.
-     * @param n The size of one of the dimensions of the square matrix.
-     * @param kl The number of subdiagonals.
-     * @param ku The number of superdiagonals.
-     * @param pds A boolean indicating if the matrix is positive-definite symetric or not.
+     * @param n The size of one of the dimensions of the whole square matrix.
+     * @param kl The number of subdiagonals in the band block.
+     * @param ku The number of superdiagonals in the band block.
+     * @param pds A boolean indicating if the band block is positive-definite symetric or not.
+     * @param bottom_right_size The size of one of the dimensions of the bottom-right block.
      *
      * @return The SplinesLinearProblem instance.
      */
     template <typename ExecSpace>
-    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_2x2_blocks_with_band_top_left(
+    static std::unique_ptr<SplinesLinearProblem<ExecSpace>>
+    make_new_block_matrix_with_band_main_block(
             int const n,
             int const kl,
             int const ku,
             bool const pds,
-            int const block1_size,
-            int const block2_size = 0)
+            int const bottom_right_size)
     {
-        assert(block2_size
-               == 0); // block2_size is a placeholder while SplinesLinearProblem3x3Blocks is not implemented.
-
-        // TODO: clarify if top-left or bottom_right is the band
-
-        int const top_left_size = n - block1_size - block2_size;
+        int const top_left_size = n - bottom_right_size;
         std::unique_ptr<SplinesLinearProblem<ExecSpace>> top_left_block
                 = make_new_band<ExecSpace>(top_left_size, kl, ku, pds);
         return std::make_unique<

@@ -80,7 +80,7 @@ private:
     }
 
 public:
-    virtual double get_element(std::size_t const i, std::size_t const j) const override
+    double get_element(std::size_t const i, std::size_t const j) const override
     {
         assert(i < size());
         assert(j < size());
@@ -98,7 +98,7 @@ public:
         }
     }
 
-    virtual void set_element(std::size_t const i, std::size_t const j, double const aij) override
+    void set_element(std::size_t const i, std::size_t const j, double const aij) override
     {
         assert(i < size());
         assert(j < size());

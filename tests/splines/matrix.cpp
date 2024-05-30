@@ -201,6 +201,26 @@ TEST(Matrix, PDSBand)
     solve_and_validate(*matrix);
 }
 
+TEST(Matrix, PDSTridiag)
+{
+    std::size_t const N = 10;
+    std::size_t const k = 1;
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = std::make_unique<
+                    ddc::detail::SplinesLinearProblemPDSTridiag<Kokkos::DefaultExecutionSpace>>(N);
+
+    // Build a positive-definite symmetric full-rank tridiagonal matrix
+    for (std::size_t i(0); i < N; ++i) {
+        matrix->set_element(i, i, 2.0 * k + 1);
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -1.0);
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -1.0);
+        }
+    }
+}
+
 TEST(Matrix, 2x2Blocks)
 {
     std::size_t const N = 10;
@@ -225,6 +245,7 @@ TEST(Matrix, 2x2Blocks)
 
     solve_and_validate(*matrix);
 }
+
 
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
 {

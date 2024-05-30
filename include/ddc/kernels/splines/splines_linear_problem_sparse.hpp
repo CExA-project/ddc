@@ -177,12 +177,12 @@ public:
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
     }
 
-    virtual double get_element(std::size_t i, std::size_t j) const override
+    double get_element(std::size_t i, std::size_t j) const override
     {
         return m_matrix_dense->at(i, j);
     }
 
-    virtual void set_element(std::size_t i, std::size_t j, double aij) override
+    void set_element(std::size_t i, std::size_t j, double aij) override
     {
         m_matrix_dense->at(i, j) = aij;
     }

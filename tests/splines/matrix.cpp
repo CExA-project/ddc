@@ -219,6 +219,8 @@ TEST(Matrix, PDSTridiag)
             matrix->set_element(i, j, -1.0);
         }
     }
+
+    solve_and_validate(*matrix);
 }
 
 TEST(Matrix, 2x2Blocks)

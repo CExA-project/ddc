@@ -84,11 +84,11 @@ public:
             int const kl,
             int const ku,
             bool const pds,
-            int const bottom_right_size)
+            int const bottom_size)
     {
-        int const top_left_size = n - bottom_right_size;
+        int const top_size = n - bottom_size;
         std::unique_ptr<SplinesLinearProblem<ExecSpace>> top_left_block
-                = make_new_band<ExecSpace>(top_left_size, kl, ku, pds);
+                = make_new_band<ExecSpace>(top_size, kl, ku, pds);
         return std::make_unique<
                 SplinesLinearProblem2x2Blocks<ExecSpace>>(n, std::move(top_left_block));
     }

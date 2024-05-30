@@ -57,7 +57,7 @@ public:
         Kokkos::deep_copy(m_q, 0.);
     }
 
-    virtual double get_element(std::size_t i, std::size_t j) const override
+    double get_element(std::size_t i, std::size_t j) const override
     {
         assert(i < size());
         assert(j < size());
@@ -73,7 +73,7 @@ public:
         }
     }
 
-    virtual void set_element(std::size_t i, std::size_t j, double const aij) override
+    void set_element(std::size_t i, std::size_t j, double const aij) override
     {
         assert(i < size());
         assert(j < size());

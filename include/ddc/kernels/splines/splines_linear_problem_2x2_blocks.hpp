@@ -36,8 +36,6 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    std::size_t const m_k; // small block size
-    std::size_t const m_nb; // main block matrix size
     //-------------------------------------
     //
     //    q = | q_block | gamma |
@@ -60,15 +58,12 @@ public:
             std::size_t const k,
             std::unique_ptr<SplinesLinearProblem<ExecSpace>> q)
         : SplinesLinearProblem<ExecSpace>(mat_size)
-        , m_k(k)
-        , m_nb(mat_size - k)
         , m_q_block(std::move(q))
         , m_delta(new SplinesLinearProblemDense<ExecSpace>(k))
-        , m_Abm_1_gamma("Abm_1_gamma", m_nb, m_k)
-        , m_lambda("lambda", m_k, m_nb)
+        , m_Abm_1_gamma("Abm_1_gamma", m_q_block->size(), mat_size - m_q_block->size())
+        , m_lambda("lambda", mat_size - m_q_block->size(), m_q_block->size())
     {
-        assert(m_k <= mat_size);
-        assert(m_nb == m_q_block->size()); // TODO: remove
+        assert(m_q_block->size() <= mat_size);
 
         Kokkos::deep_copy(m_Abm_1_gamma, 0.);
         Kokkos::deep_copy(m_lambda, 0.);
@@ -82,15 +77,12 @@ protected:
             std::size_t const lambda_size1,
             std::size_t const lambda_size2)
         : SplinesLinearProblem<ExecSpace>(mat_size)
-        , m_k(k)
-        , m_nb(mat_size - k)
         , m_q_block(std::move(q))
         , m_delta(new SplinesLinearProblemDense<ExecSpace>(k))
-        , m_Abm_1_gamma("Abm_1_gamma", m_nb, m_k)
+        , m_Abm_1_gamma("Abm_1_gamma", m_q_block->size(), mat_size - m_q_block->size())
         , m_lambda("lambda", lambda_size1, lambda_size2)
     {
-        assert(m_k <= mat_size);
-        assert(m_nb == m_q_block->size()); // TODO: remove
+        assert(m_q_block->size() <= mat_size);
 
         Kokkos::deep_copy(m_Abm_1_gamma, 0.);
         Kokkos::deep_copy(m_lambda, 0.);
@@ -102,14 +94,15 @@ public:
         assert(i < size());
         assert(j < size());
 
-        if (i < m_nb && j < m_nb) {
+        std::size_t const nq = m_q_block->size();
+        if (i < nq && j < nq) {
             return m_q_block->get_element(i, j);
-        } else if (i >= m_nb && j >= m_nb) {
-            return m_delta->get_element(i - m_nb, j - m_nb);
-        } else if (j >= m_nb) {
-            return m_Abm_1_gamma(i, j - m_nb);
+        } else if (i >= nq && j >= nq) {
+            return m_delta->get_element(i - nq, j - nq);
+        } else if (j >= nq) {
+            return m_Abm_1_gamma(i, j - nq);
         } else {
-            return m_lambda(i - m_nb, j);
+            return m_lambda(i - nq, j);
         }
     }
 
@@ -118,14 +111,15 @@ public:
         assert(i < size());
         assert(j < size());
 
-        if (i < m_nb && j < m_nb) {
+        std::size_t const nq = m_q_block->size();
+        if (i < nq && j < nq) {
             m_q_block->set_element(i, j, aij);
-        } else if (i >= m_nb && j >= m_nb) {
-            m_delta->set_element(i - m_nb, j - m_nb, aij);
-        } else if (j >= m_nb) {
-            m_Abm_1_gamma(i, j - m_nb) = aij;
+        } else if (i >= nq && j >= nq) {
+            m_delta->set_element(i - nq, j - nq, aij);
+        } else if (j >= nq) {
+            m_Abm_1_gamma(i, j - nq) = aij;
         } else {
-            m_lambda(i - m_nb, j) = aij;
+            m_lambda(i - nq, j) = aij;
         }
     }
 
@@ -136,10 +130,10 @@ private:
                 "calculate_delta_to_factorize",
                 Kokkos::MDRangePolicy<
                         Kokkos::DefaultHostExecutionSpace,
-                        Kokkos::Rank<2>>({0, 0}, {m_k, m_k}),
+                        Kokkos::Rank<2>>({0, 0}, {m_delta->size(), m_delta->size()}),
                 [&](const int i, const int j) {
                     double val = 0.0;
-                    for (int l = 0; l < m_nb; ++l) {
+                    for (int l = 0; l < m_q_block->size(); ++l) {
                         val += m_lambda(i, l) * m_Abm_1_gamma(l, j);
                     }
                     m_delta->set_element(i, j, m_delta->get_element(i, j) - val);
@@ -168,8 +162,6 @@ public:
     virtual void solve_lambda_section(MultiRHS const v, MultiRHS const u) const
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
-        auto nb_proxy = m_nb;
-        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_lambda_section",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
@@ -179,10 +171,10 @@ public:
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, k_proxy),
+                            Kokkos::TeamThreadRange(teamMember, v.extent(0)),
                             [&](const int i) {
                                 // Upper diagonals in lambda
-                                for (int l = 0; l < nb_proxy; ++l) {
+                                for (int l = 0; l < u.extent(0); ++l) {
                                     v(i, j) -= lambda_device(i, l) * u(l, j);
                                 }
                             });
@@ -195,8 +187,6 @@ public:
     virtual void solve_lambda_section_transpose(MultiRHS const u, MultiRHS const v) const
     {
         auto lambda_device = create_mirror_view_and_copy(ExecSpace(), m_lambda);
-        auto nb_proxy = m_nb;
-        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_lambda_section_transpose",
                 Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
@@ -206,10 +196,10 @@ public:
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, nb_proxy),
+                            Kokkos::TeamThreadRange(teamMember, u.extent(0)),
                             [&](const int i) {
                                 // Upper diagonals in lambda
-                                for (int l = 0; l < k_proxy; ++l) {
+                                for (int l = 0; l < v.extent(0); ++l) {
                                     u(i, j) -= lambda_device(l, i) * v(l, j);
                                 }
                             });
@@ -222,8 +212,6 @@ public:
     virtual void solve_gamma_section(MultiRHS const u, MultiRHS const v) const
     {
         auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
-        auto nb_proxy = m_nb;
-        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_gamma_section",
                 Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
@@ -233,10 +221,10 @@ public:
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, nb_proxy),
+                            Kokkos::TeamThreadRange(teamMember, u.extent(0)),
                             [&](const int i) {
                                 // Upper diagonals in lambda
-                                for (int l = 0; l < k_proxy; ++l) {
+                                for (int l = 0; l < v.extent(0); ++l) {
                                     u(i, j) -= Abm_1_gamma_device(i, l) * v(l, j);
                                 }
                             });
@@ -249,8 +237,6 @@ public:
     virtual void solve_gamma_section_transpose(MultiRHS const v, MultiRHS const u) const
     {
         auto Abm_1_gamma_device = create_mirror_view_and_copy(ExecSpace(), m_Abm_1_gamma);
-        auto nb_proxy = m_nb;
-        auto k_proxy = m_k;
         Kokkos::parallel_for(
                 "solve_gamma_section_transpose",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
@@ -260,10 +246,10 @@ public:
 
 
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, k_proxy),
+                            Kokkos::TeamThreadRange(teamMember, v.extent(0)),
                             [&](const int i) {
                                 // Upper diagonals in lambda
-                                for (int l = 0; l < nb_proxy; ++l) {
+                                for (int l = 0; l < u.extent(0); ++l) {
                                     v(i, j) -= Abm_1_gamma_device(l, i) * u(l, j);
                                 }
                             });
@@ -282,9 +268,12 @@ public:
     {
         assert(b.extent(0) == size());
 
-        MultiRHS u = Kokkos::subview(b, std::pair<std::size_t, std::size_t>(0, m_nb), Kokkos::ALL);
+        MultiRHS u = Kokkos::
+                subview(b, std::pair<std::size_t, std::size_t>(0, m_q_block->size()), Kokkos::ALL);
         MultiRHS v = Kokkos::
-                subview(b, std::pair<std::size_t, std::size_t>(m_nb, b.extent(0)), Kokkos::ALL);
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(m_q_block->size(), b.extent(0)),
+                        Kokkos::ALL);
         if (!transpose) {
             m_q_block->solve(u);
             solve_lambda_section(v, u);

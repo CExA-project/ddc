@@ -10,6 +10,7 @@
 #include "splines_linear_problem_band.hpp"
 #include "splines_linear_problem_dense.hpp"
 #include "splines_linear_problem_pds_band.hpp"
+#include "splines_linear_problem_pds_tridiag.hpp"
 #include "splines_linear_problem_sparse.hpp"
 
 namespace ddc::detail {
@@ -53,6 +54,8 @@ public:
     {
         if (2 * kl + 1 + ku >= n) {
             return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+        } else if (kl == ku && kl == 1 && pds) {
+            return std::make_unique<SplinesLinearProblemPDSTridiag<ExecSpace>>(n);
         } else if (kl == ku && pds) {
             return std::make_unique<SplinesLinearProblemPDSBand<ExecSpace>>(n, kl);
         } else {

@@ -158,8 +158,8 @@ public:
      *
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      *
-     * @param u Upper part of the multiple right-hand sides
-     * @param v Lower part of the multiple right-hand sides
+     * @param u
+     * @param v
      */
     virtual void solve_bottom_left_block_section(MultiRHS const u, MultiRHS v) const
     {
@@ -176,7 +176,6 @@ public:
                     Kokkos::parallel_for(
                             Kokkos::TeamThreadRange(teamMember, v.extent(0)),
                             [&](const int i) {
-                                // Upper diagonals in bottom_left_block
                                 for (int l = 0; l < u.extent(0); ++l) {
                                     v(i, j) -= bottom_left_block_device(i, l) * u(l, j);
                                 }
@@ -189,8 +188,8 @@ public:
      *
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      *
-     * @param u Upper part of the multiple right-hand sides
-     * @param v Lower part of the multiple right-hand sides
+     * @param u
+     * @param v
      */
     virtual void solve_bottom_left_block_section_transpose(MultiRHS u, MultiRHS const v) const
     {
@@ -207,7 +206,6 @@ public:
                     Kokkos::parallel_for(
                             Kokkos::TeamThreadRange(teamMember, u.extent(0)),
                             [&](const int i) {
-                                // Upper diagonals in bottom_left_block
                                 for (int l = 0; l < v.extent(0); ++l) {
                                     u(i, j) -= bottom_left_block_device(l, i) * v(l, j);
                                 }
@@ -220,8 +218,8 @@ public:
      *
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      *
-     * @param u Upper part of the multiple right-hand sides
-     * @param v Lower part of the multiple right-hand sides
+     * @param u
+     * @param v
      */
     virtual void solve_top_right_block_section(MultiRHS u, MultiRHS const v) const
     {
@@ -237,7 +235,6 @@ public:
                     Kokkos::parallel_for(
                             Kokkos::TeamThreadRange(teamMember, u.extent(0)),
                             [&](const int i) {
-                                // Upper diagonals in bottom_left_block
                                 for (int l = 0; l < v.extent(0); ++l) {
                                     u(i, j) -= top_right_block_device(i, l) * v(l, j);
                                 }
@@ -250,8 +247,8 @@ public:
      *
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      *
-     * @param u Upper part of the multiple right-hand sides
-     * @param v Lower part of the multiple right-hand sides
+     * @param u
+     * @param v
      */
     virtual void solve_top_right_block_section_transpose(MultiRHS const u, MultiRHS v) const
     {
@@ -267,7 +264,6 @@ public:
                     Kokkos::parallel_for(
                             Kokkos::TeamThreadRange(teamMember, v.extent(0)),
                             [&](const int i) {
-                                // Upper diagonals in bottom_left_block
                                 for (int l = 0; l < u.extent(0); ++l) {
                                     v(i, j) -= top_right_block_device(l, i) * u(l, j);
                                 }

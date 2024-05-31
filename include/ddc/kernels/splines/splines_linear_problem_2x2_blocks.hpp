@@ -66,7 +66,7 @@ public:
                   mat_size - m_top_left_block->size(),
                   m_top_left_block->size())
         , m_bottom_right_block(
-                  new SplinesLinearProblemDense<ExecSpace>(mat_size - m_top_left_block->size()))
+                  new SplinesLinearProblemDense<ExecSpace>(mat_size - top_left_block->size()))
     {
         assert(m_top_left_block->size() <= mat_size);
 

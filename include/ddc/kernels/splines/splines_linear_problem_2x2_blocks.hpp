@@ -74,7 +74,7 @@ public:
         Kokkos::deep_copy(m_bottom_left_block.h_view, 0.);
     }
 
-    virtual double get_element(std::size_t const i, std::size_t const j) const override
+    double get_element(std::size_t const i, std::size_t const j) const override
     {
         assert(i < size());
         assert(j < size());
@@ -91,7 +91,7 @@ public:
         }
     }
 
-    virtual void set_element(std::size_t const i, std::size_t const j, double const aij) override
+    void set_element(std::size_t const i, std::size_t const j, double const aij) override
     {
         assert(i < size());
         assert(j < size());
@@ -110,7 +110,7 @@ public:
 
 private:
     // @brief Compute the Schur complement delta - lambda*Q^-1*gamma.
-    virtual void compute_schur_complement()
+    void compute_schur_complement()
     {
         Kokkos::parallel_for(
                 "compute_schur_complement",

@@ -166,124 +166,38 @@ public:
     }
 
     /**
-     * @brief Compute v <- v - lambda*u.
+     * @brief Compute y <- y - LinOp*x or y <- y - LinOp^t*x.
      *
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      *
-     * @param u
-     * @param v
+     * @param x
+     * @param y
+     * @param LinOp
+     * @param transpose
      */
-    virtual void solve_bottom_left_block_section(MultiRHS const u, MultiRHS const v) const
+    void gemv_minus1_1(
+            MultiRHS const x,
+            MultiRHS const y,
+            Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> const
+                    LinOp,
+            bool const transpose = false) const
     {
-        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                bottom_left_block_device = m_bottom_left_block.d_view;
-
         Kokkos::parallel_for(
-                "solve_bottom_left_block_section",
-                Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
+                "gemv_minus1_1",
+                Kokkos::TeamPolicy<ExecSpace>(y.extent(1), Kokkos::AUTO),
                 KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int j = teamMember.league_rank();
 
-
                     Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, v.extent(0)),
-                            [&](const int i) {
-                                for (int l = 0; l < u.extent(0); ++l) {
-                                    v(i, j) -= bottom_left_block_device(i, l) * u(l, j);
-                                }
-                            });
-                });
-    }
-
-    /**
-     * @brief Compute u <- u - lambda^t*v.
-     *
-     * [SHOULD BE PRIVATE (GPU programming limitation)]
-     *
-     * @param u
-     * @param v
-     */
-    virtual void solve_bottom_left_block_section_transpose(MultiRHS const u, MultiRHS const v) const
-    {
-        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                bottom_left_block_device = m_bottom_left_block.d_view;
-
-        Kokkos::parallel_for(
-                "solve_bottom_left_block_section_transpose",
-                Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
-                KOKKOS_LAMBDA(
-                        const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                    const int j = teamMember.league_rank();
-
-
-                    Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, u.extent(0)),
-                            [&](const int i) {
-                                for (int l = 0; l < v.extent(0); ++l) {
-                                    u(i, j) -= bottom_left_block_device(l, i) * v(l, j);
-                                }
-                            });
-                });
-    }
-
-    /**
-     * @brief Compute u <- u - gamma*v.
-     *
-     * [SHOULD BE PRIVATE (GPU programming limitation)]
-     *
-     * @param u
-     * @param v
-     */
-    virtual void solve_top_right_block_section(MultiRHS const u, MultiRHS const v) const
-    {
-        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                top_right_block_device = m_top_right_block.d_view;
-
-        Kokkos::parallel_for(
-                "solve_top_right_block_section",
-                Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
-                KOKKOS_LAMBDA(
-                        const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                    const int j = teamMember.league_rank();
-
-
-                    Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, u.extent(0)),
-                            [&](const int i) {
-                                for (int l = 0; l < v.extent(0); ++l) {
-                                    u(i, j) -= top_right_block_device(i, l) * v(l, j);
-                                }
-                            });
-                });
-    }
-
-    /**
-     * @brief Compute v <- v - gamma^t*u.
-     *
-     * [SHOULD BE PRIVATE (GPU programming limitation)]
-     *
-     * @param u
-     * @param v
-     */
-    virtual void solve_top_right_block_section_transpose(MultiRHS const u, MultiRHS const v) const
-    {
-        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                top_right_block_device = m_top_right_block.d_view;
-
-        Kokkos::parallel_for(
-                "solve_top_right_block_section_transpose",
-                Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
-                KOKKOS_LAMBDA(
-                        const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                    const int j = teamMember.league_rank();
-
-
-                    Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, v.extent(0)),
-                            [&](const int i) {
-                                for (int l = 0; l < u.extent(0); ++l) {
-                                    v(i, j) -= top_right_block_device(l, i) * u(l, j);
+                            Kokkos::TeamThreadRange(teamMember, y.extent(0)),
+                            [&](int const i) {
+                                for (int l = 0; l < x.extent(0); ++l) {
+                                    if (!transpose) {
+                                        y(i, j) -= LinOp(i, l) * x(l, j);
+                                    } else {
+                                        y(i, j) -= LinOp(l, i) * x(l, j);
+                                    }
                                 }
                             });
                 });
@@ -321,13 +235,13 @@ public:
                         Kokkos::ALL);
         if (!transpose) {
             m_top_left_block->solve(b1);
-            solve_bottom_left_block_section(b1, b2);
+            gemv_minus1_1(b1, b2, m_bottom_left_block.d_view);
             m_bottom_right_block->solve(b2);
-            solve_top_right_block_section(b1, b2);
+            gemv_minus1_1(b2, b1, m_top_right_block.d_view);
         } else {
-            solve_top_right_block_section_transpose(b1, b2);
+            gemv_minus1_1(b1, b2, m_top_right_block.d_view, true);
             m_bottom_right_block->solve(b2, true);
-            solve_bottom_left_block_section_transpose(b1, b2);
+            gemv_minus1_1(b2, b1, m_bottom_left_block.d_view, true);
             m_top_left_block->solve(b1, true);
         }
     }

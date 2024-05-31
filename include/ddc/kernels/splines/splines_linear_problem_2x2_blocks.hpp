@@ -54,9 +54,9 @@ public:
      */
     explicit SplinesLinearProblem2x2Blocks(
             std::size_t const mat_size,
-            std::unique_ptr<SplinesLinearProblem<ExecSpace>> q)
+            std::unique_ptr<SplinesLinearProblem<ExecSpace>> top_left_block)
         : SplinesLinearProblem<ExecSpace>(mat_size)
-        , m_top_left_block(std::move(q))
+        , m_top_left_block(std::move(top_left_block))
         , m_top_right_block(
                   "top_right_block",
                   m_top_left_block->size(),

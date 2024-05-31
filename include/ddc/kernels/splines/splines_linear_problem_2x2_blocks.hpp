@@ -182,24 +182,34 @@ public:
                     LinOp,
             bool const transpose = false) const
     {
+        assert(!transpose && LinOp.extent(0) == y.extent(0)
+               || transpose && LinOp.extent(1) == y.extent(0));
+        assert(!transpose && LinOp.extent(1) == x.extent(0)
+               || transpose && LinOp.extent(0) == x.extent(0));
+        assert(x.extent(1) == y.extent(1));
+
         Kokkos::parallel_for(
                 "gemv_minus1_1",
-                Kokkos::TeamPolicy<ExecSpace>(y.extent(1), Kokkos::AUTO),
+                Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
                 KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                    const int j = teamMember.league_rank();
+                    const int i = teamMember.league_rank() / y.extent(1);
+                    const int j = teamMember.league_rank() % y.extent(1);
 
-                    Kokkos::parallel_for(
-                            Kokkos::TeamThreadRange(teamMember, y.extent(0)),
-                            [&](int const i) {
-                                for (int l = 0; l < x.extent(0); ++l) {
-                                    if (!transpose) {
-                                        y(i, j) -= LinOp(i, l) * x(l, j);
-                                    } else {
-                                        y(i, j) -= LinOp(l, i) * x(l, j);
-                                    }
+                    double LinOpTimesX = 0.;
+                    Kokkos::parallel_reduce(
+                            Kokkos::TeamThreadRange(teamMember, x.extent(0)),
+                            [&](const int l, double& y_tmp) {
+                                if (!transpose) {
+                                    y_tmp += LinOp(i, l) * x(l, j);
+                                } else {
+                                    y_tmp += LinOp(l, i) * x(l, j);
                                 }
-                            });
+                            },
+                            LinOpTimesX);
+                    if (teamMember.team_rank() == 0) {
+                        y(i, j) -= LinOpTimesX;
+                    }
                 });
     }
 

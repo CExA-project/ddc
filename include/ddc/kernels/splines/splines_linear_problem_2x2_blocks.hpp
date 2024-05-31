@@ -199,11 +199,11 @@ public:
                     double LinOpTimesX = 0.;
                     Kokkos::parallel_reduce(
                             Kokkos::TeamThreadRange(teamMember, x.extent(0)),
-                            [&](const int l, double& y_tmp) {
+                            [&](const int l, double& LinOpTimesX_tmp) {
                                 if (!transpose) {
-                                    y_tmp += LinOp(i, l) * x(l, j);
+                                    LinOpTimesX_tmp += LinOp(i, l) * x(l, j);
                                 } else {
-                                    y_tmp += LinOp(l, i) * x(l, j);
+                                    LinOpTimesX_tmp += LinOp(l, i) * x(l, j);
                                 }
                             },
                             LinOpTimesX);

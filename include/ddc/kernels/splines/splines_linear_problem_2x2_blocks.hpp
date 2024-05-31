@@ -8,6 +8,8 @@
 #include <memory>
 #include <string>
 
+#include <Kokkos_DualView.hpp>
+
 #include "splines_linear_problem.hpp"
 #include "splines_linear_problem_dense.hpp"
 
@@ -36,10 +38,12 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    std::shared_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
-    Kokkos::View<double**, Kokkos::HostSpace> m_top_right_block;
-    Kokkos::View<double**, Kokkos::HostSpace> m_bottom_left_block;
-    std::shared_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
+    std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
+    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+            m_top_right_block;
+    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+            m_bottom_left_block;
+    std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
 
 public:
     /**
@@ -66,8 +70,8 @@ public:
     {
         assert(m_top_left_block->size() <= mat_size);
 
-        Kokkos::deep_copy(m_top_right_block, 0.);
-        Kokkos::deep_copy(m_bottom_left_block, 0.);
+        Kokkos::deep_copy(m_top_right_block.h_view, 0.);
+        Kokkos::deep_copy(m_bottom_left_block.h_view, 0.);
     }
 
     virtual double get_element(std::size_t const i, std::size_t const j) const override
@@ -81,9 +85,9 @@ public:
         } else if (i >= nq && j >= nq) {
             return m_bottom_right_block->get_element(i - nq, j - nq);
         } else if (j >= nq) {
-            return m_top_right_block(i, j - nq);
+            return m_top_right_block.h_view(i, j - nq);
         } else {
-            return m_bottom_left_block(i - nq, j);
+            return m_bottom_left_block.h_view(i - nq, j);
         }
     }
 
@@ -98,9 +102,9 @@ public:
         } else if (i >= nq && j >= nq) {
             m_bottom_right_block->set_element(i - nq, j - nq, aij);
         } else if (j >= nq) {
-            m_top_right_block(i, j - nq) = aij;
+            m_top_right_block.h_view(i, j - nq) = aij;
         } else {
-            m_bottom_left_block(i - nq, j) = aij;
+            m_bottom_left_block.h_view(i - nq, j) = aij;
         }
     }
 
@@ -116,7 +120,7 @@ private:
                 [&](const int i, const int j) {
                     double val = 0.0;
                     for (int l = 0; l < m_top_left_block->size(); ++l) {
-                        val += m_bottom_left_block(i, l) * m_top_right_block(l, j);
+                        val += m_bottom_left_block.h_view(i, l) * m_top_right_block.h_view(l, j);
                     }
                     m_bottom_right_block
                             ->set_element(i, j, m_bottom_right_block->get_element(i, j) - val);
@@ -140,16 +144,24 @@ public:
      */
     void setup_solver() override
     {
+        // Setup the top-left solver
         m_top_left_block->setup_solver();
 
-        // Compute Q^-1*gamma
-        auto top_right_block_device = create_mirror_view_and_copy(ExecSpace(), m_top_right_block);
-        m_top_left_block->solve(top_right_block_device);
-        deep_copy(m_top_right_block, top_right_block_device);
+        // Compute Q^-1*gamma in top-right block
+        m_top_right_block.modify_host();
+        m_top_right_block.sync_device();
+        m_top_left_block->solve(m_top_right_block.d_view);
+        m_top_right_block.modify_device();
+        m_top_right_block.sync_host();
 
-        // Compute delta - lambda*Q^-1*gamma
+        // Push lambda on device in bottom-left block
+        m_bottom_left_block.modify_host();
+        m_bottom_left_block.sync_device();
+
+        // Compute delta - lambda*Q^-1*gamma in bottom-right block
         compute_schur_complement();
 
+        // Setup the bottom-right solver
         m_bottom_right_block->setup_solver();
     }
 
@@ -161,10 +173,11 @@ public:
      * @param u
      * @param v
      */
-    virtual void solve_bottom_left_block_section(MultiRHS const u, MultiRHS v) const
+    virtual void solve_bottom_left_block_section(MultiRHS const u, MultiRHS const v) const
     {
-        auto bottom_left_block_device
-                = create_mirror_view_and_copy(ExecSpace(), m_bottom_left_block);
+        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                bottom_left_block_device = m_bottom_left_block.d_view;
+
         Kokkos::parallel_for(
                 "solve_bottom_left_block_section",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),
@@ -191,10 +204,11 @@ public:
      * @param u
      * @param v
      */
-    virtual void solve_bottom_left_block_section_transpose(MultiRHS u, MultiRHS const v) const
+    virtual void solve_bottom_left_block_section_transpose(MultiRHS const u, MultiRHS const v) const
     {
-        auto bottom_left_block_device
-                = create_mirror_view_and_copy(ExecSpace(), m_bottom_left_block);
+        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                bottom_left_block_device = m_bottom_left_block.d_view;
+
         Kokkos::parallel_for(
                 "solve_bottom_left_block_section_transpose",
                 Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
@@ -221,9 +235,11 @@ public:
      * @param u
      * @param v
      */
-    virtual void solve_top_right_block_section(MultiRHS u, MultiRHS const v) const
+    virtual void solve_top_right_block_section(MultiRHS const u, MultiRHS const v) const
     {
-        auto top_right_block_device = create_mirror_view_and_copy(ExecSpace(), m_top_right_block);
+        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                top_right_block_device = m_top_right_block.d_view;
+
         Kokkos::parallel_for(
                 "solve_top_right_block_section",
                 Kokkos::TeamPolicy<ExecSpace>(u.extent(1), Kokkos::AUTO),
@@ -250,9 +266,11 @@ public:
      * @param u
      * @param v
      */
-    virtual void solve_top_right_block_section_transpose(MultiRHS const u, MultiRHS v) const
+    virtual void solve_top_right_block_section_transpose(MultiRHS const u, MultiRHS const v) const
     {
-        auto top_right_block_device = create_mirror_view_and_copy(ExecSpace(), m_top_right_block);
+        Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                top_right_block_device = m_top_right_block.d_view;
+
         Kokkos::parallel_for(
                 "solve_top_right_block_section_transpose",
                 Kokkos::TeamPolicy<ExecSpace>(v.extent(1), Kokkos::AUTO),

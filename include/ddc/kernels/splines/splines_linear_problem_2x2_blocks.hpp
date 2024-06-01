@@ -158,10 +158,8 @@ public:
         m_bottom_left_block.modify_host();
         m_bottom_left_block.sync_device();
 
-        // Compute delta - lambda*Q^-1*gamma in bottom-right block
+        // Compute delta - lambda*Q^-1*gamma in bottom-right block & setup the bottom-right solver
         compute_schur_complement();
-
-        // Setup the bottom-right solver
         m_bottom_right_block->setup_solver();
     }
 

@@ -118,7 +118,6 @@ public:
                 m_bottom_left_block.h_view(i - nq, j - nq + ndelta + 1) = aij;
             }
         } else {
-            printf("%i %i \n", i, j);
             SplinesLinearProblem2x2Blocks<ExecSpace>::set_element(i, j, aij);
         }
     }
@@ -180,7 +179,8 @@ public:
         std::size_t const ndelta = m_bottom_right_block->size();
         Kokkos::parallel_for(
                 "per_gemv_minus1_1",
-                Kokkos::TeamPolicy<ExecSpace>((y.extent(0) + transpose) * y.extent(1), Kokkos::AUTO),
+                Kokkos::TeamPolicy<
+                        ExecSpace>((y.extent(0) + transpose) * y.extent(1), Kokkos::AUTO),
                 KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int i = teamMember.league_rank() / y.extent(1);
@@ -197,10 +197,7 @@ public:
                         teamMember.team_barrier();
                         double LinOpTimesX2 = 0.;
                         Kokkos::parallel_reduce(
-                                Kokkos::TeamThreadRange(
-                                        teamMember,
-                                        i + 1,
-                                        ndelta),
+                                Kokkos::TeamThreadRange(teamMember, i + 1, ndelta),
                                 [&](const int l, double& LinOpTimesX_tmp) {
                                     int const l_full = nq - 1 - ndelta + l;
                                     LinOpTimesX_tmp += LinOp(i, l) * x(l_full, j);
@@ -212,11 +209,15 @@ public:
                     } else {
                         // Lower diagonals in lambda
                         for (int l = 0; l < i; ++l) {
-                            y(nq - 1 - ndelta + i, j) -= LinOp(l, i) * x(l, j);
+                            if (teamMember.team_rank() == 0) {
+                                y(nq - 1 - ndelta + i, j) -= LinOp(l, i) * x(l, j);
+                            }
                         }
                         /// Upper diagonals in lambda
                         for (int l = i; l < ndelta; ++l) {
-                            y(i, j) -= LinOp(l, i) * x(l, j);
+                            if (teamMember.team_rank() == 0) {
+                                y(i, j) -= LinOp(l, i) * x(l, j);
+                            }
                         }
                     }
                 });

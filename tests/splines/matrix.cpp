@@ -248,6 +248,31 @@ TEST(Matrix, 2x2Blocks)
     solve_and_validate(*matrix);
 }
 
+TEST(Matrix, PeriodicBand)
+{
+    std::size_t const N = 10;
+    std::size_t const k = 3;
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> top_left_block
+            = std::make_unique<ddc::detail::SplinesLinearProblemBand<
+                    Kokkos::DefaultExecutionSpace>>(N - k, k, k);
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = std::make_unique<ddc::detail::SplinesLinearProblemPeriodicBand<
+                    Kokkos::DefaultExecutionSpace>>(N, k, k, std::move(top_left_block));
+
+    // Build a periodic band full-rank matrix
+    for (std::size_t i(0); i < N; ++i) {
+        for (std::size_t j(0); j < N; ++j) {
+            std::size_t diag = ((std::ptrdiff_t)j - (std::ptrdiff_t)i) % (std::ptrdiff_t)N;
+            if (diag == 0 || diag == N) {
+                matrix->set_element(i, j, 0.5);
+            } else if (diag <= k || diag >= N - k) {
+                matrix->set_element(i, j, -1.0 / k);
+            }
+        }
+    }
+
+    solve_and_validate(*matrix);
+}
 
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
 {
@@ -337,6 +362,35 @@ TEST_P(MatrixSizesFixture, 2x2Blocks)
     }
 
     solve_and_validate(*matrix);
+}
+
+TEST_P(MatrixSizesFixture, PeriodicBand)
+{
+    auto const [N, k] = GetParam();
+
+    // Build a non-symmetric full-rank band matrix
+    for (std::ptrdiff_t s(-k); s < (std::ptrdiff_t)k + 1; ++s) {
+        if (s == 0)
+            continue;
+
+        std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+                = ddc::detail::SplinesLinearProblemMaker::make_new_periodic_band_matrix<
+                        Kokkos::DefaultExecutionSpace>(N, k - s, k + s, false);
+        for (std::size_t i(0); i < N; ++i) {
+            for (std::size_t j(0); j < N; ++j) {
+                int diag = ddc::detail::modulo((int)(j - i), (int)N);
+                if (diag == s || diag == (std::ptrdiff_t)N + s) {
+                    matrix->set_element(i, j, 0.5);
+                } else if (
+                        diag <= s + (std::ptrdiff_t)k
+                        || diag >= (std::ptrdiff_t)N + s - (std::ptrdiff_t)k) {
+                    matrix->set_element(i, j, -1.0 / k);
+                }
+            }
+        }
+
+        solve_and_validate(*matrix);
+    }
 }
 
 TEST_P(MatrixSizesFixture, Sparse)

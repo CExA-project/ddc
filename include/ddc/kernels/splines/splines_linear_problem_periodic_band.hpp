@@ -40,6 +40,11 @@ public:
 protected:
     std::size_t m_kl; // no. of subdiagonals
     std::size_t m_ku; // no. of superdiagonals
+    using SplinesLinearProblem2x2Blocks<ExecSpace>::m_top_left_block;
+    using SplinesLinearProblem2x2Blocks<ExecSpace>::m_top_right_block;
+    using SplinesLinearProblem2x2Blocks<ExecSpace>::m_bottom_left_block;
+    using SplinesLinearProblem2x2Blocks<ExecSpace>::m_bottom_right_block;
+    using SplinesLinearProblem2x2Blocks<ExecSpace>::gemv_minus1_1;
 
 public:
     /**
@@ -53,7 +58,13 @@ public:
             std::size_t const kl,
             std::size_t const ku,
             std::unique_ptr<SplinesLinearProblem<ExecSpace>> top_left_block)
-        : SplinesLinearProblem2x2Blocks<ExecSpace>(mat_size, std::move(top_left_block))
+        : SplinesLinearProblem2x2Blocks<ExecSpace>(
+                mat_size,
+                std::move(top_left_block),
+                std::max(kl, ku),
+                std::max(kl, ku) + 1)
+        , m_kl(kl)
+        , m_ku(ku)
     {
     }
 
@@ -65,7 +76,7 @@ public:
         std::size_t const nq = m_top_left_block->size();
         std::size_t const ndelta = m_bottom_right_block->size();
         if (i >= nq && j < nq) {
-            std::size_t const d = j - i;
+            std::size_t d = j - i;
             if (d > size() / 2)
                 d -= size();
             if (d < -size() / 2)
@@ -74,12 +85,12 @@ public:
             if (d < -m_kl || d > m_ku)
                 return 0.0;
             if (d > 0) {
-                return m_bottom_left_block(i - nq, j);
+                return m_bottom_left_block.h_view(i - nq, j);
             } else {
-                return m_bottom_left_block(i - nq, j - nq + ndelta + 1);
+                return m_bottom_left_block.h_view(i - nq, j - nq + ndelta + 1);
             }
         } else {
-            return MatrixCornerBlock<ExecSpace>::get_element(i, j);
+            return SplinesLinearProblem2x2Blocks<ExecSpace>::get_element(i, j);
         }
     }
 
@@ -91,24 +102,24 @@ public:
         std::size_t const nq = m_top_left_block->size();
         std::size_t const ndelta = m_bottom_right_block->size();
         if (i >= nq && j < nq) {
-            int d = j - i;
+            std::size_t d = j - i;
             if (d > size() / 2)
                 d -= size();
             if (d < -size() / 2)
                 d += size();
 
             if (d < -m_kl || d > m_ku) {
-                assert(std::fabs(aij) < 1e-20);
+                // assert(std::fabs(aij) < 1e-20);
                 return;
             }
 
             if (d > 0) {
-                m_bottom_left_block(i - nq, j) = aij;
+                m_bottom_left_block.h_view(i - nq, j) = aij;
             } else {
-                m_bottom_left_block(i - nq, j - nq + ndelta + 1) = aij;
+                m_bottom_left_block.h_view(i - nq, j - nq + ndelta + 1) = aij;
             }
         } else {
-            MatrixCornerBlock<ExecSpace>::set_element(i, j, aij);
+            SplinesLinearProblem2x2Blocks<ExecSpace>::set_element(i, j, aij);
         }
     }
 
@@ -139,6 +150,7 @@ private:
                 });
     }
 
+public:
     /**
      * @brief Compute y <- y - LinOp*x or y <- y - LinOp^t*x.
      *
@@ -149,21 +161,25 @@ private:
      * @param LinOp
      * @param transpose
      */
-    void gemv_minus1_1(
+    void per_gemv_minus1_1(
             MultiRHS const x,
             MultiRHS const y,
             Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> const
                     LinOp,
             bool const transpose = false) const
     {
+        /*
         assert(!transpose && LinOp.extent(0) == y.extent(0)
                || transpose && LinOp.extent(1) == y.extent(0));
         assert(!transpose && LinOp.extent(1) == x.extent(0)
                || transpose && LinOp.extent(0) == x.extent(0));
+		*/
         assert(x.extent(1) == y.extent(1));
 
+        std::size_t const nq = m_top_left_block->size();
+        std::size_t const ndelta = m_bottom_right_block->size();
         Kokkos::parallel_for(
-                "gemv_minus1_1",
+                "per_gemv_minus1_1",
                 Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
                 KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
@@ -189,8 +205,7 @@ private:
                                     !transpose ? i + 1 : i,
                                     x.extent(0)),
                             [&](const int l, double& LinOpTimesX_tmp) {
-                                int const l_full = m_top_left_block->size() - 1
-                                                   - m_bottom_right_block->size() + l;
+                                int const l_full = nq - 1 - ndelta + l;
                                 if (!transpose) {
                                     LinOpTimesX_tmp += LinOp(i, l) * x(l_full, j);
                                 } else {
@@ -202,6 +217,49 @@ private:
                         y(i, j) -= LinOpTimesX + LinOpTimesX2;
                     }
                 });
+    }
+
+    /**
+     * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
+     *
+     * The solver method is the one known as Schur complement method. It can be summarized as follow,
+     * starting with the pre-computed elements of the matrix:
+     *
+     * |   Q    |         Q^-1*gamma        |
+     * | lambda | delta - lambda*Q^-1*gamma |
+     *
+     * For the non-transposed case:
+     * - Solve inplace Q * x'1 = b1 (using the solver internal to Q).
+     * - Compute inplace b'2 = b2 - lambda*x'1.
+     * - Solve inplace (delta - lambda*Q^-1*gamma) * x2 = b'2. 
+     * - Compute inplace x1 = x'1 - (delta - lambda*Q^-1*gamma)*x2. 
+     *
+     * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
+     * @param transpose Choose between the direct or transposed version of the linear problem.
+     */
+    void solve(MultiRHS b, bool const transpose) const override
+    {
+        assert(b.extent(0) == size());
+
+        MultiRHS b1 = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
+                        Kokkos::ALL);
+        MultiRHS b2 = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
+                        Kokkos::ALL);
+        if (!transpose) {
+            m_top_left_block->solve(b1);
+            per_gemv_minus1_1(b1, b2, m_bottom_left_block.d_view);
+            m_bottom_right_block->solve(b2);
+            gemv_minus1_1(b2, b1, m_top_right_block.d_view);
+        } else {
+            gemv_minus1_1(b1, b2, m_top_right_block.d_view, true);
+            m_bottom_right_block->solve(b2, true);
+            per_gemv_minus1_1(b2, b1, m_bottom_left_block.d_view, true);
+            m_top_left_block->solve(b1, true);
+        }
     }
 };
 

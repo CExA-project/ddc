@@ -262,7 +262,7 @@ TEST(Matrix, PeriodicBand)
     // Build a periodic band full-rank matrix
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(0); j < N; ++j) {
-            std::size_t diag = ((std::ptrdiff_t)j - (std::ptrdiff_t)i) % (std::ptrdiff_t)N;
+            std::size_t diag = std::abs((std::ptrdiff_t)j - (std::ptrdiff_t)i) % N;
             if (diag == 0 || diag == N) {
                 matrix->set_element(i, j, 0.5);
             } else if (diag <= k || diag >= N - k) {

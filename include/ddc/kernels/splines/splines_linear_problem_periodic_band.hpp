@@ -76,15 +76,15 @@ public:
         std::size_t const nq = m_top_left_block->size();
         std::size_t const ndelta = m_bottom_right_block->size();
         if (i >= nq && j < nq) {
-            std::size_t d = j - i;
-            if (d > size() / 2)
+            std::ptrdiff_t d = j - i;
+            if (d > (std::ptrdiff_t)(size() / 2))
                 d -= size();
-            if (d < -size() / 2)
+            if (d < -(std::ptrdiff_t)(size() / 2))
                 d += size();
 
-            if (d < -m_kl || d > m_ku)
+            if (d < -(std::ptrdiff_t)m_kl || d > (std::ptrdiff_t)m_ku)
                 return 0.0;
-            if (d > 0) {
+            if (d > (std::ptrdiff_t)0) {
                 return m_bottom_left_block.h_view(i - nq, j);
             } else {
                 return m_bottom_left_block.h_view(i - nq, j - nq + ndelta + 1);
@@ -102,23 +102,23 @@ public:
         std::size_t const nq = m_top_left_block->size();
         std::size_t const ndelta = m_bottom_right_block->size();
         if (i >= nq && j < nq) {
-            std::size_t d = j - i;
-            if (d > size() / 2)
+            std::ptrdiff_t d = j - i;
+            if (d > (std::ptrdiff_t)(size() / 2))
                 d -= size();
-            if (d < -size() / 2)
+            if (d < -(std::ptrdiff_t)(size() / 2))
                 d += size();
 
-            if (d < -m_kl || d > m_ku) {
-                // assert(std::fabs(aij) < 1e-20);
+            if (d < -(std::ptrdiff_t)m_kl || d > (std::ptrdiff_t)m_ku) {
+                assert(std::fabs(aij) < 1e-20);
                 return;
             }
-
-            if (d > 0) {
+            if (d > (std::ptrdiff_t)0) {
                 m_bottom_left_block.h_view(i - nq, j) = aij;
             } else {
                 m_bottom_left_block.h_view(i - nq, j - nq + ndelta + 1) = aij;
             }
         } else {
+            printf("%i %i \n", i, j);
             SplinesLinearProblem2x2Blocks<ExecSpace>::set_element(i, j, aij);
         }
     }
@@ -180,41 +180,44 @@ public:
         std::size_t const ndelta = m_bottom_right_block->size();
         Kokkos::parallel_for(
                 "per_gemv_minus1_1",
-                Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
+                Kokkos::TeamPolicy<ExecSpace>((y.extent(0) + transpose) * y.extent(1), Kokkos::AUTO),
                 KOKKOS_LAMBDA(
                         const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
                     const int i = teamMember.league_rank() / y.extent(1);
                     const int j = teamMember.league_rank() % y.extent(1);
 
-                    double LinOpTimesX = 0.;
-                    Kokkos::parallel_reduce(
-                            Kokkos::TeamThreadRange(teamMember, !transpose ? i + 1 : i),
-                            [&](const int l, double& LinOpTimesX_tmp) {
-                                if (!transpose) {
+                    if (!transpose) {
+                        double LinOpTimesX = 0.;
+                        Kokkos::parallel_reduce(
+                                Kokkos::TeamThreadRange(teamMember, i + 1),
+                                [&](const int l, double& LinOpTimesX_tmp) {
                                     LinOpTimesX_tmp += LinOp(i, l) * x(l, j);
-                                } else {
-                                    LinOpTimesX_tmp += LinOp(l, i) * x(l, j);
-                                }
-                            },
-                            LinOpTimesX);
-                    teamMember.team_barrier();
-                    double LinOpTimesX2 = 0.;
-                    Kokkos::parallel_reduce(
-                            Kokkos::TeamThreadRange(
-                                    teamMember,
-                                    !transpose ? i + 1 : i,
-                                    x.extent(0)),
-                            [&](const int l, double& LinOpTimesX_tmp) {
-                                int const l_full = nq - 1 - ndelta + l;
-                                if (!transpose) {
+                                },
+                                LinOpTimesX);
+                        teamMember.team_barrier();
+                        double LinOpTimesX2 = 0.;
+                        Kokkos::parallel_reduce(
+                                Kokkos::TeamThreadRange(
+                                        teamMember,
+                                        i + 1,
+                                        ndelta),
+                                [&](const int l, double& LinOpTimesX_tmp) {
+                                    int const l_full = nq - 1 - ndelta + l;
                                     LinOpTimesX_tmp += LinOp(i, l) * x(l_full, j);
-                                } else {
-                                    LinOpTimesX_tmp += LinOp(l, i) * x(l_full, j);
-                                }
-                            },
-                            LinOpTimesX2);
-                    if (teamMember.team_rank() == 0) {
-                        y(i, j) -= LinOpTimesX + LinOpTimesX2;
+                                },
+                                LinOpTimesX2);
+                        if (teamMember.team_rank() == 0) {
+                            y(i, j) -= LinOpTimesX + LinOpTimesX2;
+                        }
+                    } else {
+                        // Lower diagonals in lambda
+                        for (int l = 0; l < i; ++l) {
+                            y(nq - 1 - ndelta + i, j) -= LinOp(l, i) * x(l, j);
+                        }
+                        /// Upper diagonals in lambda
+                        for (int l = i; l < ndelta; ++l) {
+                            y(i, j) -= LinOp(l, i) * x(l, j);
+                        }
                     }
                 });
     }

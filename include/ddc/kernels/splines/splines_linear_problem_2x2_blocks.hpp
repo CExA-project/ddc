@@ -16,7 +16,7 @@
 namespace ddc::detail {
 
 /**
- * @brief A 2x2-blocks linear problem dedicated to the computation of a spline approximation (taking in account boundary conditions),
+ * @brief A 2x2-blocks linear problem dedicated to the computation of a spline approximation,
  * with all blocks except top-left one being stored in dense format.
  *
  * A = |   Q    | gamma |

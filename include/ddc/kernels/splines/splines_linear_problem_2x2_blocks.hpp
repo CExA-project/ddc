@@ -205,9 +205,7 @@ public:
                                 }
                             },
                             LinOpTimesX);
-                    if (teamMember.team_rank() == 0) {
-                        y(i, j) -= LinOpTimesX;
-                    }
+                    Kokkos::single(Kokkos::PerTeam(team), [&]() { y(i, j) -= LinOpTimesX; });
                 });
     }
 

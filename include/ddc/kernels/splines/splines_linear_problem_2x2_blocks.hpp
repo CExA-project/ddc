@@ -50,7 +50,7 @@ public:
      * @brief SplinesLinearProblem2x2Blocks constructor.
      *
      * @param mat_size The size of one of the dimensions of the square matrix.
-     * @param q A pointer toward the top-left SplinesLinearProblem.
+     * @param top_left_block A pointer toward the top-left SplinesLinearProblem. `setup_solver` must not have been called on `q`.
      */
     explicit SplinesLinearProblem2x2Blocks(
             std::size_t const mat_size,
@@ -109,7 +109,7 @@ public:
     }
 
 private:
-    // @brief Compute the Schur complement delta - lambda*Q^-1*gamma.
+    /// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.
     void compute_schur_complement()
     {
         Kokkos::parallel_for(
@@ -180,10 +180,10 @@ public:
                     LinOp,
             bool const transpose = false) const
     {
-        assert(!transpose && LinOp.extent(0) == y.extent(0)
-               || transpose && LinOp.extent(1) == y.extent(0));
-        assert(!transpose && LinOp.extent(1) == x.extent(0)
-               || transpose && LinOp.extent(0) == x.extent(0));
+        assert((!transpose && LinOp.extent(0) == y.extent(0))
+               || (transpose && LinOp.extent(1) == y.extent(0)));
+        assert((!transpose && LinOp.extent(1) == x.extent(0))
+               || (transpose && LinOp.extent(0) == x.extent(0)));
         assert(x.extent(1) == y.extent(1));
 
         Kokkos::parallel_for(

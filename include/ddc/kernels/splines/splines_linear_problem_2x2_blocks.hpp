@@ -186,27 +186,47 @@ public:
                || (transpose && LinOp.extent(0) == x.extent(0)));
         assert(x.extent(1) == y.extent(1));
 
-        Kokkos::parallel_for(
-                "gemv_minus1_1",
-                Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
-                KOKKOS_LAMBDA(
-                        const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                    const int i = teamMember.league_rank() / y.extent(1);
-                    const int j = teamMember.league_rank() % y.extent(1);
+        if (!transpose) {
+            Kokkos::parallel_for(
+                    "gemv_minus1_1",
+                    Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
+                    KOKKOS_LAMBDA(
+                            const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+                        const int i = teamMember.league_rank() / y.extent(1);
+                        const int j = teamMember.league_rank() % y.extent(1);
 
-                    double LinOpTimesX = 0.;
-                    Kokkos::parallel_reduce(
-                            Kokkos::TeamThreadRange(teamMember, x.extent(0)),
-                            [&](const int l, double& LinOpTimesX_tmp) {
-                                if (!transpose) {
+                        double LinOpTimesX = 0.;
+                        Kokkos::parallel_reduce(
+                                Kokkos::TeamThreadRange(teamMember, x.extent(0)),
+                                [&](const int l, double& LinOpTimesX_tmp) {
                                     LinOpTimesX_tmp += LinOp(i, l) * x(l, j);
-                                } else {
+                                },
+                                LinOpTimesX);
+                        Kokkos::single(Kokkos::PerTeam(teamMember), [&]() {
+                            y(i, j) -= LinOpTimesX;
+                        });
+                    });
+        } else {
+            Kokkos::parallel_for(
+                    "gemv_minus1_1_tr",
+                    Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
+                    KOKKOS_LAMBDA(
+                            const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+                        const int i = teamMember.league_rank() / y.extent(1);
+                        const int j = teamMember.league_rank() % y.extent(1);
+
+                        double LinOpTimesX = 0.;
+                        Kokkos::parallel_reduce(
+                                Kokkos::TeamThreadRange(teamMember, x.extent(0)),
+                                [&](const int l, double& LinOpTimesX_tmp) {
                                     LinOpTimesX_tmp += LinOp(l, i) * x(l, j);
-                                }
-                            },
-                            LinOpTimesX);
-                    Kokkos::single(Kokkos::PerTeam(team), [&]() { y(i, j) -= LinOpTimesX; });
-                });
+                                },
+                                LinOpTimesX);
+                        Kokkos::single(Kokkos::PerTeam(teamMember), [&]() {
+                            y(i, j) -= LinOpTimesX;
+                        });
+                    });
+        }
     }
 
     /**

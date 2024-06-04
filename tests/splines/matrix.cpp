@@ -343,7 +343,7 @@ TEST_P(MatrixSizesFixture, PeriodicBand)
 {
     auto const [N, k] = GetParam();
 
-    // Build a positive-definite symmetric full-rank band matrix permuted in such a way the band is shifted
+    // Build a full-rank periodic band matrix permuted in such a way the band is shifted
     for (std::ptrdiff_t s(-k); s < (std::ptrdiff_t)k + 1; ++s) {
         std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
                 = ddc::detail::SplinesLinearProblemMaker::make_new_periodic_band_matrix<

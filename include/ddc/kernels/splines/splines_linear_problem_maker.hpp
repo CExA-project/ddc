@@ -94,6 +94,39 @@ public:
     }
 
     /**
+     * @brief Construct a 2x2-blocks linear problem with band "main" block (the one called
+     * Q in SplinesLinearProblem2x2Blocks) and other blocks containing the "periodic parts" of
+     * a periodic band matrix.
+     *
+     * It simply calls make_new_block_matrix_with_band_main_block with bottom_size being
+     * max(kl, ku) (except if the band part is too small, then the entire matrix is stored as dense).
+     *
+     * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.
+     * @param n The size of one of the dimensions of the whole square matrix.
+     * @param kl The number of subdiagonals in the band block.
+     * @param ku The number of superdiagonals in the band block.
+     * @param pds A boolean indicating if the band block is positive-definite symetric or not.
+     *
+     * @return The SplinesLinearProblem instance.
+     */
+    template <typename ExecSpace>
+    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_periodic_band_matrix(
+            int const n,
+            int const kl,
+            int const ku,
+            bool const pds)
+    {
+        int const bottom_size = std::max(kl, ku);
+        int const top_size = n - bottom_size;
+
+        if (bottom_size > top_size) {
+            return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+        }
+
+        return make_new_block_matrix_with_band_main_block<ExecSpace>(n, kl, ku, pds, bottom_size);
+    }
+
+    /**
      * @brief Construct a sparse matrix
      *
      * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.

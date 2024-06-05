@@ -11,6 +11,7 @@
 #include <Kokkos_DualView.hpp>
 
 #include <KokkosBlas2_gemv.hpp>
+#include <KokkosBlas3_gemm.hpp>
 
 #include "splines_linear_problem.hpp"
 #include "splines_linear_problem_dense.hpp"
@@ -245,6 +246,9 @@ public:
     {
         assert(b.extent(0) == size());
 
+        auto bottom_left_block = m_bottom_left_block.d_view;
+        auto top_right_block = m_top_right_block.d_view;
+
         MultiRHS b1 = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
@@ -255,13 +259,17 @@ public:
                         Kokkos::ALL);
         if (!transpose) {
             m_top_left_block->solve(b1);
-            gemv_minus1_1(b1, b2, m_bottom_left_block.d_view);
+            // gemv_minus1_1(b1, b2, m_bottom_left_block.d_view);
+            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., bottom_left_block, b1, 1., b2);
             m_bottom_right_block->solve(b2);
-            gemv_minus1_1(b2, b1, m_top_right_block.d_view);
+            // gemv_minus1_1(b2, b1, m_top_right_block.d_view);
+            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., top_right_block, b2, 1., b1);
         } else {
-            gemv_minus1_1(b1, b2, m_top_right_block.d_view, true);
+            // gemv_minus1_1(b1, b2, m_top_right_block.d_view, true);
+            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., top_right_block, b1, 1., b2);
             m_bottom_right_block->solve(b2, true);
-            gemv_minus1_1(b2, b1, m_bottom_left_block.d_view, true);
+            // gemv_minus1_1(b2, b1, m_bottom_left_block.d_view, true);
+            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., bottom_left_block, b2, 1., b1);
             m_top_left_block->solve(b1, true);
         }
     }

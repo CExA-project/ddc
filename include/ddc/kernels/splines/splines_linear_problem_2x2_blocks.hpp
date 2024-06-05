@@ -10,6 +10,8 @@
 
 #include <Kokkos_DualView.hpp>
 
+#include <KokkosBlas2_gemv.hpp>
+
 #include "splines_linear_problem.hpp"
 #include "splines_linear_problem_dense.hpp"
 
@@ -192,19 +194,15 @@ public:
                     Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
                     KOKKOS_LAMBDA(
                             const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                        const int i = teamMember.league_rank() / y.extent(1);
-                        const int j = teamMember.league_rank() % y.extent(1);
+                        const int i = teamMember.league_rank();
 
-                        double LinOpTimesX = 0.;
-                        Kokkos::parallel_reduce(
-                                Kokkos::TeamThreadRange(teamMember, x.extent(0)),
-                                [&](const int l, double& LinOpTimesX_tmp) {
-                                    LinOpTimesX_tmp += LinOp(i, l) * x(l, j);
-                                },
-                                LinOpTimesX);
-                        Kokkos::single(Kokkos::PerTeam(teamMember), [&]() {
-                            y(i, j) -= LinOpTimesX;
-                        });
+                        auto x_slice = Kokkos::subview(x, Kokkos::ALL, i);
+                        auto y_slice = Kokkos::subview(y, Kokkos::ALL, i);
+
+                        teamMember.team_barrier();
+                        KokkosBlas::Experimental::team_gemv
+                                (teamMember, 'N', -1, LinOp, x_slice, 1, y_slice);
+                        teamMember.team_barrier();
                     });
         } else {
             Kokkos::parallel_for(
@@ -212,20 +210,16 @@ public:
                     Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
                     KOKKOS_LAMBDA(
                             const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                        const int i = teamMember.league_rank() / y.extent(1);
-                        const int j = teamMember.league_rank() % y.extent(1);
+                        const int i = teamMember.league_rank();
 
-                        double LinOpTimesX = 0.;
-                        Kokkos::parallel_reduce(
-                                Kokkos::TeamThreadRange(teamMember, x.extent(0)),
-                                [&](const int l, double& LinOpTimesX_tmp) {
-                                    LinOpTimesX_tmp += LinOp(l, i) * x(l, j);
-                                },
-                                LinOpTimesX);
-                        Kokkos::single(Kokkos::PerTeam(teamMember), [&]() {
-                            y(i, j) -= LinOpTimesX;
-                        });
-                    });
+                        auto x_slice = Kokkos::subview(x, Kokkos::ALL, i);
+                        auto y_slice = Kokkos::subview(y, Kokkos::ALL, i);
+
+                        teamMember.team_barrier();
+                        KokkosBlas::Experimental::team_gemv
+                                (teamMember, 'T', -1, LinOp, x_slice, 1, y_slice);
+                        teamMember.team_barrier();
+                   });
         }
     }
 

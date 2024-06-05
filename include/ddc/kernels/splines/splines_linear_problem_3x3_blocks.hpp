@@ -8,8 +8,6 @@
 #include <memory>
 #include <string>
 
-#include <Kokkos_DualView.hpp>
-
 #include "splines_linear_problem.hpp"
 #include "splines_linear_problem_2x2_blocks.hpp"
 
@@ -62,8 +60,8 @@ public:
     }
 
 private:
-    /// @brief Adjust indexes, governs the row & columns interchanges to restructure the 3x3-blocks matrix into a 2x2-blocks matrix.
-    void adjust_indexes(std::size_t& i, std::size_t& j) const
+    /// @brief Adjust indices, governs the row & columns interchanges to restructure the 3x3-blocks matrix into a 2x2-blocks matrix.
+    void adjust_indices(std::size_t& i, std::size_t& j) const
     {
         std::size_t const nq = m_top_left_block->size(); // size of the center block
 
@@ -81,19 +79,19 @@ private:
 public:
     double get_element(std::size_t i, std::size_t j) const override
     {
-        adjust_indexes(i, j);
+        adjust_indices(i, j);
         return SplinesLinearProblem2x2Blocks<ExecSpace>::get_element(i, j);
     }
 
     void set_element(std::size_t i, std::size_t j, double const aij) override
     {
-        adjust_indexes(i, j);
+        adjust_indices(i, j);
         return SplinesLinearProblem2x2Blocks<ExecSpace>::set_element(i, j, aij);
     }
 
 private:
     /**
-     * @brief Performs row interchanges on multiple right-hand sides to get a 2-blocks structure (matching the requirements
+     * @brief Perform row interchanges on multiple right-hand sides to get a 2-blocks structure (matching the requirements
      * of the SplinesLinearProblem2x2Blocks solver).
      *
      * |  b_top   |    | b_center |
@@ -130,7 +128,7 @@ private:
     }
 
     /**
-     * @brief Performs row interchanges on multiple right-hand sides to restore its 3-blocks structure.
+     * @brief Perform row interchanges on multiple right-hand sides to restore its 3-blocks structure.
      *
      * | b_center |    |  b_top   |
      * |  b_top   | -> | b_center |

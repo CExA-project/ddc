@@ -8,10 +8,8 @@
 #include <memory>
 #include <string>
 
-#include <Kokkos_DualView.hpp>
-
-#include <KokkosBlas2_gemv.hpp>
 #include <KokkosBlas3_gemm.hpp>
+#include <Kokkos_DualView.hpp>
 
 #include "splines_linear_problem.hpp"
 #include "splines_linear_problem_dense.hpp"
@@ -167,64 +165,6 @@ public:
     }
 
     /**
-     * @brief Compute y <- y - LinOp*x or y <- y - LinOp^t*x.
-     *
-     * [SHOULD BE PRIVATE (GPU programming limitation)]
-     *
-     * @param x
-     * @param y
-     * @param LinOp
-     * @param transpose
-     */
-    void gemv_minus1_1(
-            MultiRHS const x,
-            MultiRHS const y,
-            Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> const
-                    LinOp,
-            bool const transpose = false) const
-    {
-        assert((!transpose && LinOp.extent(0) == y.extent(0))
-               || (transpose && LinOp.extent(1) == y.extent(0)));
-        assert((!transpose && LinOp.extent(1) == x.extent(0))
-               || (transpose && LinOp.extent(0) == x.extent(0)));
-        assert(x.extent(1) == y.extent(1));
-
-        if (!transpose) {
-            Kokkos::parallel_for(
-                    "gemv_minus1_1",
-                    Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
-                    KOKKOS_LAMBDA(
-                            const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                        const int i = teamMember.league_rank();
-
-                        auto x_slice = Kokkos::subview(x, Kokkos::ALL, i);
-                        auto y_slice = Kokkos::subview(y, Kokkos::ALL, i);
-
-                        teamMember.team_barrier();
-                        KokkosBlas::Experimental::team_gemv
-                                (teamMember, 'N', -1, LinOp, x_slice, 1, y_slice);
-                        teamMember.team_barrier();
-                    });
-        } else {
-            Kokkos::parallel_for(
-                    "gemv_minus1_1_tr",
-                    Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
-                    KOKKOS_LAMBDA(
-                            const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                        const int i = teamMember.league_rank();
-
-                        auto x_slice = Kokkos::subview(x, Kokkos::ALL, i);
-                        auto y_slice = Kokkos::subview(y, Kokkos::ALL, i);
-
-                        teamMember.team_barrier();
-                        KokkosBlas::Experimental::team_gemv
-                                (teamMember, 'T', -1, LinOp, x_slice, 1, y_slice);
-                        teamMember.team_barrier();
-                   });
-        }
-    }
-
-    /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
      * The solver method is the one known as Schur complement method. It can be summarized as follow,
@@ -246,9 +186,6 @@ public:
     {
         assert(b.extent(0) == size());
 
-        auto bottom_left_block = m_bottom_left_block.d_view;
-        auto top_right_block = m_top_right_block.d_view;
-
         MultiRHS b1 = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
@@ -259,17 +196,13 @@ public:
                         Kokkos::ALL);
         if (!transpose) {
             m_top_left_block->solve(b1);
-            // gemv_minus1_1(b1, b2, m_bottom_left_block.d_view);
-            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., bottom_left_block, b1, 1., b2);
+            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., m_bottom_left_block.d_view, b1, 1., b2);
             m_bottom_right_block->solve(b2);
-            // gemv_minus1_1(b2, b1, m_top_right_block.d_view);
-            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., top_right_block, b2, 1., b1);
+            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., m_top_right_block.d_view, b2, 1., b1);
         } else {
-            // gemv_minus1_1(b1, b2, m_top_right_block.d_view, true);
-            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., top_right_block, b1, 1., b2);
+            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., m_top_right_block.d_view, b1, 1., b2);
             m_bottom_right_block->solve(b2, true);
-            // gemv_minus1_1(b2, b1, m_bottom_left_block.d_view, true);
-            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., bottom_left_block, b2, 1., b1);
+            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., m_bottom_left_block.d_view, b2, 1., b1);
             m_top_left_block->solve(b1, true);
         }
     }

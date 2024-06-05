@@ -74,8 +74,8 @@ public:
      * @param kl The number of subdiagonals in the band block.
      * @param ku The number of superdiagonals in the band block.
      * @param pds A boolean indicating if the band block is positive-definite symetric or not.
-     * @param bottom_size The size of one of the dimensions of the bottom-right block.
-     * @param top_size The size of one of the dimensions of the top-left block.
+     * @param bottom_right_size The size of one of the dimensions of the bottom-right square block.
+     * @param top_left_size The size of one of the dimensions of the top-left square block.
      *
      * @return The SplinesLinearProblem instance.
      */
@@ -86,18 +86,18 @@ public:
             int const kl,
             int const ku,
             bool const pds,
-            int const bottom_size,
-            int const top_size = 0)
+            int const bottom_right_size,
+            int const top_left_size = 0)
     {
-        int const main_size = n - bottom_size - top_size;
+        int const main_size = n - top_left_size - bottom_right_size;
         std::unique_ptr<SplinesLinearProblem<ExecSpace>> main_block
                 = make_new_band<ExecSpace>(main_size, kl, ku, pds);
-        if (top_size == 0) {
+        if (top_left_size == 0) {
             return std::make_unique<
                     SplinesLinearProblem2x2Blocks<ExecSpace>>(n, std::move(main_block));
         }
         return std::make_unique<
-                SplinesLinearProblem3x3Blocks<ExecSpace>>(n, top_size, std::move(main_block));
+                SplinesLinearProblem3x3Blocks<ExecSpace>>(n, top_left_size, std::move(main_block));
     }
 
     /**

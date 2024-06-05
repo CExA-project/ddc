@@ -39,7 +39,8 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    Kokkos::View<double**, Kokkos::HostSpace> m_q; // pds band matrix representation
+    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+            m_q; // pds band matrix representation
 
 public:
     /**
@@ -54,7 +55,7 @@ public:
     {
         assert(m_q.extent(0) <= mat_size);
 
-        Kokkos::deep_copy(m_q, 0.);
+        Kokkos::deep_copy(m_q.h_view, 0.);
     }
 
     double get_element(std::size_t i, std::size_t j) const override
@@ -67,7 +68,7 @@ public:
             std::swap(i, j);
         }
         if (j - i < m_q.extent(0)) {
-            return m_q(j - i, i);
+            return m_q.h_view(j - i, i);
         } else {
             return 0.0;
         }
@@ -83,7 +84,7 @@ public:
             std::swap(i, j);
         }
         if (j - i < m_q.extent(0)) {
-            m_q(j - i, i) = aij;
+            m_q.h_view(j - i, i) = aij;
         } else {
             assert(std::fabs(aij) < 1e-20);
         }
@@ -101,16 +102,53 @@ public:
                 'L',
                 size(),
                 m_q.extent(0) - 1,
-                m_q.data(),
-                m_q.stride(
-                        0) // m_q.stride(0) if LAPACK_ROW_MAJOR, m_q.stride(1) if LAPACK_COL_MAJOR
+                m_q.h_view.data(),
+                m_q.h_view.stride(
+                        0) // m_q.h_view.stride(0) if LAPACK_ROW_MAJOR, m_q.h_view.stride(1) if LAPACK_COL_MAJOR
         );
         if (info != 0) {
             throw std::runtime_error(
                     "LAPACKE_dpbtrf failed with error code " + std::to_string(info));
         }
+
+        // Push on device
+        m_q.modify_host();
+        m_q.sync_device();
     }
 
+private:
+    KOKKOS_FUNCTION int tbsv(
+            char const uplo,
+            char const trans,
+            char const diag,
+            int const n,
+            int const k,
+            Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space> const a,
+            int const lda,
+            Kokkos::View<double*, Kokkos::LayoutStride, typename ExecSpace::memory_space> const x,
+            int const incx) const
+    {
+        if (trans == 'N') {
+            for (int j = 0; j < n; ++j) {
+                if (x(j) != 0) {
+                    x(j) /= a(0, j);
+                    for (int i = j + 1; i <= Kokkos::min(n, j + k); ++i) {
+                        x(i) -= a(i - j, j) * x(j);
+                    }
+                }
+            }
+        } else if (trans == 'T') {
+            for (int j = n - 1; j >= 0; --j) {
+                for (int i = Kokkos::min(n, j + k); i >= j + 1; --i) {
+                    x(j) -= a(i - j, j) * x(i);
+                }
+                x(j) /= a(0, j);
+            }
+        }
+        return 0;
+    }
+
+public:
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
@@ -123,24 +161,36 @@ public:
     {
         assert(b.extent(0) == size());
 
-        auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b);
-        Kokkos::deep_copy(b_host, b);
-        int const info = LAPACKE_dpbtrs(
-                LAPACK_ROW_MAJOR,
-                'L',
-                b_host.extent(0),
-                m_q.extent(0) - 1,
-                b_host.extent(1),
-                m_q.data(),
-                m_q.stride(
-                        0), // m_q.stride(0) if LAPACK_ROW_MAJOR, m_q.stride(1) if LAPACK_COL_MAJOR
-                b_host.data(),
-                b_host.stride(0));
-        if (info != 0) {
-            throw std::runtime_error(
-                    "LAPACKE_dpbtrs failed with error code " + std::to_string(info));
-        }
-        Kokkos::deep_copy(b, b_host);
+        auto q_device = m_q.d_view;
+
+        Kokkos::parallel_for(
+                "pbtrs",
+                Kokkos::RangePolicy<ExecSpace>(0, b.extent(1)),
+                KOKKOS_CLASS_LAMBDA(const int i) {
+                    auto b_slice = Kokkos::subview(b, Kokkos::ALL, i);
+
+                    int info;
+                    info
+                            = tbsv('L',
+                                   'N',
+                                   'N',
+                                   q_device.extent(1),
+                                   q_device.extent(0) - 1,
+                                   q_device,
+                                   q_device.extent(0) - 1,
+                                   b_slice,
+                                   1);
+                    info
+                            = tbsv('L',
+                                   'T',
+                                   'N',
+                                   q_device.extent(1),
+                                   q_device.extent(0) - 1,
+                                   q_device,
+                                   q_device.extent(0) - 1,
+                                   b_slice,
+                                   1);
+                });
     }
 };
 

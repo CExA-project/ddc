@@ -8,6 +8,7 @@
 #include <optional>
 
 #include "splines_linear_problem_2x2_blocks.hpp"
+#include "splines_linear_problem_3x3_blocks.hpp"
 #include "splines_linear_problem_band.hpp"
 #include "splines_linear_problem_dense.hpp"
 #include "splines_linear_problem_pds_band.hpp"
@@ -65,15 +66,16 @@ public:
     }
 
     /**
-     * @brief Construct a 2x2-blocks linear problem with band "main" block (the one called
-     * Q in SplinesLinearProblem2x2Blocks).
+     * @brief Construct a 2x2-blocks or 3x3-blocks linear problem with band "main" block (the one called
+     * Q in SplinesLinearProblem2x2Blocks and SplinesLinearProblem3x3Blocks).
      *
      * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.
      * @param n The size of one of the dimensions of the whole square matrix.
      * @param kl The number of subdiagonals in the band block.
      * @param ku The number of superdiagonals in the band block.
      * @param pds A boolean indicating if the band block is positive-definite symetric or not.
-     * @param bottom_right_size The size of one of the dimensions of the bottom-right block.
+     * @param bottom_size The size of one of the dimensions of the bottom-right block.
+     * @param top_size The size of one of the dimensions of the top-left block.
      *
      * @return The SplinesLinearProblem instance.
      */
@@ -84,13 +86,18 @@ public:
             int const kl,
             int const ku,
             bool const pds,
-            int const bottom_size)
+            int const bottom_size,
+            int const top_size = 0)
     {
-        int const top_size = n - bottom_size;
-        std::unique_ptr<SplinesLinearProblem<ExecSpace>> top_left_block
-                = make_new_band<ExecSpace>(top_size, kl, ku, pds);
+        int const main_size = n - bottom_size - top_size;
+        std::unique_ptr<SplinesLinearProblem<ExecSpace>> main_block
+                = make_new_band<ExecSpace>(main_size, kl, ku, pds);
+        if (top_size == 0) {
+            return std::make_unique<
+                    SplinesLinearProblem2x2Blocks<ExecSpace>>(n, std::move(main_block));
+        }
         return std::make_unique<
-                SplinesLinearProblem2x2Blocks<ExecSpace>>(n, std::move(top_left_block));
+                SplinesLinearProblem3x3Blocks<ExecSpace>>(n, top_size, std::move(main_block));
     }
 
     /**

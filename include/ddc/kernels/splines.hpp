@@ -20,6 +20,7 @@
 #include "splines/spline_evaluator_2d.hpp"
 #include "splines/splines_linear_problem.hpp"
 #include "splines/splines_linear_problem_2x2_blocks.hpp"
+#include "splines/splines_linear_problem_3x3_blocks.hpp"
 #include "splines/splines_linear_problem_band.hpp"
 #include "splines/splines_linear_problem_dense.hpp"
 #include "splines/splines_linear_problem_maker.hpp"

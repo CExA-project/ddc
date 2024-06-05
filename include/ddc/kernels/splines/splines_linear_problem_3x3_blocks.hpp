@@ -25,6 +25,8 @@ namespace ddc::detail {
  *
  * The storage format is dense for all blocks except center one, whose storage format is determined by its type.
  *
+ * The matrix itself and blocks a, Q and h are square (which fully determines the dimensions of the others).
+ *
  * This class implements row & columns interchanges of the matrix and of multiple right-hand sides to restructure the
  * 3x3-blocks linear problem into a 2x2-blocks linear problem, relying then on the operations implemented in SplinesLinearProblem2x2Blocks.
  *
@@ -38,9 +40,6 @@ public:
     using SplinesLinearProblem2x2Blocks<ExecSpace>::size;
     using SplinesLinearProblem2x2Blocks<ExecSpace>::solve;
     using SplinesLinearProblem2x2Blocks<ExecSpace>::m_top_left_block;
-    using SplinesLinearProblem2x2Blocks<ExecSpace>::m_top_right_block;
-    using SplinesLinearProblem2x2Blocks<ExecSpace>::m_bottom_left_block;
-    using SplinesLinearProblem2x2Blocks<ExecSpace>::m_bottom_right_block;
 
 protected:
     std::size_t m_top_size;
@@ -49,9 +48,9 @@ public:
     /**
      * @brief SplinesLinearProblem3x3Blocks constructor.
      *
-     * @param top_size The size of one of the dimensions of the top-left block.
+     * @param mat_size The size of one of the dimensions of the square matrix.
+     * @param top_size The size of one of the dimensions of the top-left square block.
      * @param center_block A pointer toward the center SplinesLinearProblem. `setup_solver` must not have been called on it.
-     * @param bottom_size The size of one of the dimensions of the bottom-right block.
      */
     explicit SplinesLinearProblem3x3Blocks(
             std::size_t const mat_size,
@@ -66,7 +65,7 @@ private:
     /// @brief Adjust indexes, governs the row & columns interchanges to restructure the 3x3-blocks matrix into a 2x2-blocks matrix.
     void adjust_indexes(std::size_t& i, std::size_t& j) const
     {
-        std::size_t nq = m_top_left_block->size(); // size of the center block
+        std::size_t const nq = m_top_left_block->size(); // size of the center block
 
         if (i < m_top_size)
             i += nq;
@@ -94,36 +93,36 @@ public:
 
 private:
     /**
-     * @brief Performs row interchanges on multiple right-hand sides to give it a 2-blocks structure (matching the requirements
-     * of the SplinesLinearSolver2x2Blocks solver).
+     * @brief Performs row interchanges on multiple right-hand sides to get a 2-blocks structure (matching the requirements
+     * of the SplinesLinearProblem2x2Blocks solver).
      *
      * |  b_top   |    | b_center |
-     * | b_center | -> |  b_top   | -| Considered as a 
-     * | b_bottom |    | b_bottom | -| single bottom block
+     * | b_center | -> |  b_top   | -- Considered as a 
+     * | b_bottom |    | b_bottom | -- single bottom block
      *
      * @param b The multiple right-hand sides.
      */
-    void row_interchanges_from_3_to_2_blocks_rhs(MultiRHS b) const
+    void interchange_rows_from_3_to_2_blocks_rhs(MultiRHS b) const
     {
-        std::size_t nq = m_top_left_block->size(); // size of the center block
+        std::size_t const nq = m_top_left_block->size(); // size of the center block
 
-        MultiRHS b_top = Kokkos::
+        MultiRHS const b_top = Kokkos::
                 subview(b, std::pair<std::size_t, std::size_t> {0, m_top_size}, Kokkos::ALL);
-        MultiRHS b_center = Kokkos::
+        MultiRHS const b_center = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t> {m_top_size, m_top_size + nq},
                         Kokkos::ALL);
-        MultiRHS b_bottom = Kokkos::
+        MultiRHS const b_bottom = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t> {m_top_size + nq, size()},
                         Kokkos::ALL);
 
-        MultiRHS b_center_dst
+        MultiRHS const b_center_dst
                 = Kokkos::subview(b, std::pair<std::size_t, std::size_t> {0, nq}, Kokkos::ALL);
-        MultiRHS b_top_dst = Kokkos::
+        MultiRHS const b_top_dst = Kokkos::
                 subview(b, std::pair<std::size_t, std::size_t> {nq, nq + m_top_size}, Kokkos::ALL);
 
-        MultiRHS buffer = Kokkos::create_mirror(ExecSpace(), b_center);
+        MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_center);
 
         Kokkos::deep_copy(buffer, b_center);
         Kokkos::deep_copy(b_top_dst, b_top);
@@ -131,7 +130,7 @@ private:
     }
 
     /**
-     * @brief Performs row interchanges on multiple right-hand sides to restore the 3-blocks structure.
+     * @brief Performs row interchanges on multiple right-hand sides to restore its 3-blocks structure.
      *
      * | b_center |    |  b_top   |
      * |  b_top   | -> | b_center |
@@ -139,27 +138,27 @@ private:
      *
      * @param b The multiple right-hand sides.
      */
-    void row_interchanges_from_2_to_3_blocks_rhs(MultiRHS b) const
+    void interchange_rows_from_2_to_3_blocks_rhs(MultiRHS b) const
     {
-        std::size_t nq = m_top_left_block->size(); // size of the center block
+        std::size_t const nq = m_top_left_block->size(); // size of the center block
 
-        MultiRHS b_center_src
+        MultiRHS const b_center_src
                 = Kokkos::subview(b, std::pair<std::size_t, std::size_t> {0, nq}, Kokkos::ALL);
-        MultiRHS b_top_src = Kokkos::
+        MultiRHS const b_top_src = Kokkos::
                 subview(b, std::pair<std::size_t, std::size_t> {nq, nq + m_top_size}, Kokkos::ALL);
 
-        MultiRHS b_top = Kokkos::
+        MultiRHS const b_top = Kokkos::
                 subview(b, std::pair<std::size_t, std::size_t> {0, m_top_size}, Kokkos::ALL);
-        MultiRHS b_center = Kokkos::
+        MultiRHS const b_center = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t> {m_top_size, m_top_size + nq},
                         Kokkos::ALL);
-        MultiRHS b_bottom = Kokkos::
+        MultiRHS const b_bottom = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t> {m_top_size + nq, size()},
                         Kokkos::ALL);
 
-        MultiRHS buffer = Kokkos::create_mirror(ExecSpace(), b_center);
+        MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_center);
 
         Kokkos::deep_copy(buffer, b_center_src);
         Kokkos::deep_copy(b_top, b_top_src);
@@ -179,9 +178,9 @@ public:
     {
         assert(b.extent(0) == size());
 
-        row_interchanges_from_3_to_2_blocks_rhs(b);
+        interchange_rows_from_3_to_2_blocks_rhs(b);
         SplinesLinearProblem2x2Blocks<ExecSpace>::solve(b, transpose);
-        row_interchanges_from_2_to_3_blocks_rhs(b);
+        interchange_rows_from_2_to_3_blocks_rhs(b);
     }
 };
 

@@ -18,7 +18,8 @@ namespace ddc {
  * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d.
  */
 enum class SplineSolver {
-    GINKGO ///< Enum member to identify the Ginkgo-based solver (iterative method)
+    GINKGO, ///< Enum member to identify the Ginkgo-based solver (iterative method)
+    LAPACK ///< Enum member to identify the LAPACK-based solver (direct method)
 };
 
 /**
@@ -599,10 +600,36 @@ void SplineBuilder<
         return;
 	*/
 
-    matrix = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<ExecSpace>(
-            ddc::discrete_space<BSplines>().nbasis(),
-            cols_per_chunk,
-            preconditionner_max_block_size);
+    if constexpr (Solver == ddc::SplineSolver::LAPACK) {
+        int upper_band_width;
+        if (bsplines_type::is_uniform()) {
+            upper_band_width = bsplines_type::degree() / 2;
+        } else {
+            upper_band_width = bsplines_type::degree() - 1;
+        }
+        if constexpr (bsplines_type::is_periodic()) {
+            matrix = ddc::detail::SplinesLinearProblemMaker::make_new_periodic_band_matrix<
+                    ExecSpace>(
+                    ddc::discrete_space<BSplines>().nbasis(),
+                    upper_band_width,
+                    upper_band_width,
+                    bsplines_type::is_uniform());
+        } else {
+            matrix = ddc::detail::SplinesLinearProblemMaker::
+                    make_new_block_matrix_with_band_main_block<ExecSpace>(
+                            ddc::discrete_space<BSplines>().nbasis(),
+                            upper_band_width,
+                            upper_band_width,
+                            bsplines_type::is_uniform(),
+                            lower_block_size,
+                            upper_block_size);
+        }
+    } else if constexpr (Solver == ddc::SplineSolver::GINKGO) {
+        matrix = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<ExecSpace>(
+                ddc::discrete_space<BSplines>().nbasis(),
+                cols_per_chunk,
+                preconditionner_max_block_size);
+    }
 
     build_matrix_system();
 

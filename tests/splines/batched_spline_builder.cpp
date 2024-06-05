@@ -432,7 +432,7 @@ static void BatchedSplineTest()
 #define SUFFIX(name) name##Lapack##Hermite##Uniform
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
 #define SUFFIX(name) name##Lapack##Hermite##NonUniform
-#elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
+#elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
 #define SUFFIX(name) name##Ginkgo##Periodic##Uniform
 #endif
 

@@ -8,7 +8,7 @@
 #include "ddc/kokkos_allocator.hpp"
 
 #include "deriv.hpp"
-#include "splines_linear_solver_maker.hpp"
+#include "splines_linear_problem_maker.hpp"
 
 namespace ddc {
 

@@ -15,7 +15,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "ginkgo_executors.hpp"
-#include "splines_linear_solver.hpp"
+#include "splines_linear_problem.hpp"
 
 namespace ddc::detail {
 
@@ -126,7 +126,6 @@ class SplinesLinearProblemSparse : public SplinesLinearProblem<ExecSpace>
 public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
-    using SplinesLinearProblem<ExecSpace>::operator<<;
 
 private:
     using matrix_sparse_type = gko::matrix::Csr<double, gko::int32>;
@@ -178,12 +177,12 @@ public:
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
     }
 
-    virtual double get_element(std::size_t i, std::size_t j) const override
+    double get_element(std::size_t i, std::size_t j) const override
     {
         return m_matrix_dense->at(i, j);
     }
 
-    virtual void set_element(std::size_t i, std::size_t j, double aij) override
+    void set_element(std::size_t i, std::size_t j, double aij) override
     {
         m_matrix_dense->at(i, j) = aij;
     }
@@ -236,7 +235,7 @@ public:
      *
      * Multiple right-hand sides are sliced in chunks of size cols_per_chunk which are passed one-after-the-other to Ginkgo.
      *
-     * @param[in, out] multi_rhs A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
+     * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.
      */
     void solve(MultiRHS b, bool const transpose) const override

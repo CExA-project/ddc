@@ -1,4 +1,4 @@
-FROM ubuntu:lunar
+FROM ubuntu:noble
 
 # Copyright (C) The DDC development team, see COPYRIGHT.md file
 #
@@ -20,7 +20,7 @@ RUN chmod +x /bin/bash_run \
     ca-certificates \
     wget \
  && mkdir --parents --mode=0755 /etc/apt/keyrings \
- && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/pdidev-archive-keyring.gpg] https://raw.githubusercontent.com/pdidev/repo/ubuntu lunar main" > /etc/apt/sources.list.d/pdi.list \
+ && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/pdidev-archive-keyring.gpg] https://raw.githubusercontent.com/pdidev/repo/ubuntu noble main" > /etc/apt/sources.list.d/pdi.list \
  && wget -q -O /etc/apt/keyrings/pdidev-archive-keyring.gpg https://raw.githubusercontent.com/pdidev/repo/ubuntu/pdidev-archive-keyring.gpg \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends \
@@ -30,6 +30,7 @@ RUN chmod +x /bin/bash_run \
     cmake \
     cmake-data \
     libfftw3-dev \
+    liblapacke-dev \
     libpdi-dev \
     ghostscript \
     git \

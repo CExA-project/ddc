@@ -16,7 +16,7 @@
 namespace ddc::detail {
 
 /**
- * @brief A 2x2-blocks linear problem dedicated to the computation of a spline approximation (taking in account boundary conditions),
+ * @brief A 2x2-blocks linear problem dedicated to the computation of a spline approximation,
  * with all blocks except top-left one being stored in dense format.
  *
  * A = |   Q    | gamma |
@@ -50,7 +50,7 @@ public:
      * @brief SplinesLinearProblem2x2Blocks constructor.
      *
      * @param mat_size The size of one of the dimensions of the square matrix.
-     * @param q A pointer toward the top-left SplinesLinearProblem.
+     * @param top_left_block A pointer toward the top-left SplinesLinearProblem. `setup_solver` must not have been called on `q`.
      */
     explicit SplinesLinearProblem2x2Blocks(
             std::size_t const mat_size,
@@ -109,7 +109,7 @@ public:
     }
 
 private:
-    // @brief Compute the Schur complement delta - lambda*Q^-1*gamma.
+    /// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.
     void compute_schur_complement()
     {
         Kokkos::parallel_for(
@@ -158,10 +158,8 @@ public:
         m_bottom_left_block.modify_host();
         m_bottom_left_block.sync_device();
 
-        // Compute delta - lambda*Q^-1*gamma in bottom-right block
+        // Compute delta - lambda*Q^-1*gamma in bottom-right block & setup the bottom-right solver
         compute_schur_complement();
-
-        // Setup the bottom-right solver
         m_bottom_right_block->setup_solver();
     }
 
@@ -182,35 +180,53 @@ public:
                     LinOp,
             bool const transpose = false) const
     {
-        assert(!transpose && LinOp.extent(0) == y.extent(0)
-               || transpose && LinOp.extent(1) == y.extent(0));
-        assert(!transpose && LinOp.extent(1) == x.extent(0)
-               || transpose && LinOp.extent(0) == x.extent(0));
+        assert((!transpose && LinOp.extent(0) == y.extent(0))
+               || (transpose && LinOp.extent(1) == y.extent(0)));
+        assert((!transpose && LinOp.extent(1) == x.extent(0))
+               || (transpose && LinOp.extent(0) == x.extent(0)));
         assert(x.extent(1) == y.extent(1));
 
-        Kokkos::parallel_for(
-                "gemv_minus1_1",
-                Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
-                KOKKOS_LAMBDA(
-                        const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                    const int i = teamMember.league_rank() / y.extent(1);
-                    const int j = teamMember.league_rank() % y.extent(1);
+        if (!transpose) {
+            Kokkos::parallel_for(
+                    "gemv_minus1_1",
+                    Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
+                    KOKKOS_LAMBDA(
+                            const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+                        const int i = teamMember.league_rank() / y.extent(1);
+                        const int j = teamMember.league_rank() % y.extent(1);
 
-                    double LinOpTimesX = 0.;
-                    Kokkos::parallel_reduce(
-                            Kokkos::TeamThreadRange(teamMember, x.extent(0)),
-                            [&](const int l, double& LinOpTimesX_tmp) {
-                                if (!transpose) {
+                        double LinOpTimesX = 0.;
+                        Kokkos::parallel_reduce(
+                                Kokkos::TeamThreadRange(teamMember, x.extent(0)),
+                                [&](const int l, double& LinOpTimesX_tmp) {
                                     LinOpTimesX_tmp += LinOp(i, l) * x(l, j);
-                                } else {
+                                },
+                                LinOpTimesX);
+                        Kokkos::single(Kokkos::PerTeam(teamMember), [&]() {
+                            y(i, j) -= LinOpTimesX;
+                        });
+                    });
+        } else {
+            Kokkos::parallel_for(
+                    "gemv_minus1_1_tr",
+                    Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
+                    KOKKOS_LAMBDA(
+                            const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+                        const int i = teamMember.league_rank() / y.extent(1);
+                        const int j = teamMember.league_rank() % y.extent(1);
+
+                        double LinOpTimesX = 0.;
+                        Kokkos::parallel_reduce(
+                                Kokkos::TeamThreadRange(teamMember, x.extent(0)),
+                                [&](const int l, double& LinOpTimesX_tmp) {
                                     LinOpTimesX_tmp += LinOp(l, i) * x(l, j);
-                                }
-                            },
-                            LinOpTimesX);
-                    if (teamMember.team_rank() == 0) {
-                        y(i, j) -= LinOpTimesX;
-                    }
-                });
+                                },
+                                LinOpTimesX);
+                        Kokkos::single(Kokkos::PerTeam(teamMember), [&]() {
+                            y(i, j) -= LinOpTimesX;
+                        });
+                    });
+        }
     }
 
     /**

@@ -17,7 +17,7 @@
 #endif
 
 #include <KokkosBatched_ApplyPivot_Decl.hpp>
-#include <KokkosBatched_Gesv.hpp>
+#include <KokkosBatched_Trsm_Decl.hpp>
 
 #include "splines_linear_problem.hpp"
 

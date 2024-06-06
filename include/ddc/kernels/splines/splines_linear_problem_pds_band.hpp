@@ -120,15 +120,15 @@ public:
 
 private:
     KOKKOS_FUNCTION int tbsv(
-            char const uplo,
-            char const trans,
-            char const diag,
+            [[maybe_unused]] char const uplo,
+            [[maybe_unused]] char const trans,
+            [[maybe_unused]] char const diag,
             int const n,
             int const k,
             Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space> const a,
-            int const lda,
+            [[maybe_unused]] int const lda,
             Kokkos::View<double*, Kokkos::LayoutStride, typename ExecSpace::memory_space> const x,
-            int const incx) const
+            [[maybe_unused]] int const incx) const
     {
         if (trans == 'N') {
             for (int j = 0; j < n; ++j) {
@@ -179,7 +179,7 @@ public:
                                    q_device.extent(1),
                                    q_device.extent(0) - 1,
                                    q_device,
-                                   q_device.extent(0) - 1,
+                                   q_device.extent(0),
                                    b_slice,
                                    1);
                     info
@@ -189,7 +189,7 @@ public:
                                    q_device.extent(1),
                                    q_device.extent(0) - 1,
                                    q_device,
-                                   q_device.extent(0) - 1,
+                                   q_device.extent(0),
                                    b_slice,
                                    1);
                 });

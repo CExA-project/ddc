@@ -131,40 +131,94 @@ jobs:
           'cuda')
             export CC=${CUDA_GCC}
             export CXX=${CUDA_GXX}
-            EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_LIBDL=OFF"
+            EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_CUDA_CONSTEXPR=ON -DKokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_LIBDL=OFF"
           ;;
           'hip')
             export CC=hipcc
             export CXX=hipcc
-            EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_ROCTHRUST=OFF -DKokkos_ARCH_VEGA90A=ON -DCMAKE_PREFIX_PATH=/opt/rocm"
+            export CMAKE_PREFIX_PATH=/opt/rocm
+            EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ENABLE_ROCTHRUST=OFF -DKokkos_ARCH_VEGA90A=ON"
           ;;
           'cpu-clang')
             export CC=clang
             export CXX=clang++
+            DDC_CMAKE_CXX_FLAGS="-Werror=extra-semi"
           ;;
           'cpu-gcc')
             export CC=gcc
             export CXX=g++
+            DDC_CMAKE_CXX_FLAGS="-Werror=extra-semi"
             if [ 'xDebug' = 'x${{matrix.cmake_build_type}}' ]
             then
-              CMAKE_CXX_FLAGS="-fno-omit-frame-pointer -fsanitize=address"
+              DDC_CMAKE_CXX_FLAGS="${DDC_CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=address"
             fi
           ;;
           esac
+
+          export benchmark_ROOT=$PWD/opt/benchmark
+          export GTest_ROOT=$PWD/opt/gtest
+          export Kokkos_ROOT=$PWD/opt/kokkos
+          export mdspan_ROOT=$PWD/opt/mdspan
+
           cmake \
-            -DDDC_BUILD_BENCHMARKS=ON \
+            -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -DBENCHMARK_ENABLE_GTEST_TESTS=OFF \
+            -DBENCHMARK_ENABLE_TESTING=OFF \
+            -DBENCHMARK_INSTALL_DOCS=OFF \
+            -DBENCHMARK_USE_BUNDLED_GTEST=OFF \
+            -B build \
+            -S /src/vendor/benchmark
+          cmake --build build --parallel 2
+          cmake --install build --prefix $benchmark_ROOT
+          rm -rf build
+
+          cmake \
+            -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -B build \
+            -S /src/vendor/googletest
+          cmake --build build --parallel 2
+          cmake --install build --prefix $GTest_ROOT
+          rm -rf build
+
+          cmake \
+            -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
+            -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+            ${EXTRA_CMAKE_FLAGS} \
+            -B build \
+            -S /src/vendor/kokkos
+          cmake --build build --parallel 2
+          cmake --install build --prefix $Kokkos_ROOT
+          rm -rf build
+
+          cmake \
             -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
             -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -DMDSPAN_CXX_STANDARD=${{matrix.cxx_version}} \
-            -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
-            -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+            -B build \
+            -S /src/vendor/mdspan
+          cmake --build build --parallel 2
+          cmake --install build --prefix $mdspan_ROOT
+          rm -rf build
+
+          cmake \
+            -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
             -DCMAKE_CXX_FLAGS="\
-              -Werror -Wall -Wextra -Wpedantic -Wno-sign-compare \
-              ${CMAKE_CXX_FLAGS}" \
-            ${EXTRA_CMAKE_FLAGS} \
+              -Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors \
+              ${DDC_CMAKE_CXX_FLAGS}" \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -DDDC_BUILD_BENCHMARKS=ON \
+            -DDDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
+            -DDDC_GTest_DEPENDENCY_POLICY=INSTALLED \
+            -DDDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
+            -DDDC_mdspan_DEPENDENCY_POLICY=INSTALLED \
             -B build \
             -S /src
           cmake --build build --parallel 2
+
           case "${{matrix.backend}}" in
           'cpu-'*)
             ctest --test-dir build --parallel 2 --output-on-failure --timeout 5 --output-junit tests.xml

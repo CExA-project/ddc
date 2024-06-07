@@ -162,11 +162,12 @@ jobs:
               -Werror -Wall -Wextra -Wpedantic -Wno-sign-compare \
               ${CMAKE_CXX_FLAGS}" \
             ${EXTRA_CMAKE_FLAGS} \
-            /src
-          make -j 2
+            -B build \
+            -S /src
+          cmake --build build --parallel 2
           case "${{matrix.backend}}" in
           'cpu-'*)
-            ctest -j 2 --output-on-failure --timeout 5 --output-junit tests.xml
+            ctest --test-dir build --parallel 2 --output-on-failure --timeout 5 --output-junit tests.xml
           ;;
           esac
         EOF
@@ -225,10 +226,11 @@ jobs:
             -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
             -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
             -DCMAKE_CXX_FLAGS="-fsanitize=undefined -fno-omit-frame-pointer" \
-            /src
-          make -j 2
+            -B build \
+            -S /src
+          cmake --build build --parallel 2
           export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,suppressions=/src/ubsan.supp
-          ctest -j 2 --output-on-failure --timeout 5 --output-junit tests.xml
+          ctest --test-dir build --parallel 2 --output-on-failure --timeout 5 --output-junit tests.xml
         EOF
         docker run \
           --cidfile='docker.cid' \
@@ -279,8 +281,8 @@ jobs:
         -DMDSPAN_CXX_STANDARD=17 \
         -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
         -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-        -S /src \
-        -B build
+        -B build \
+        -S /src
         find /src/benchmarks /src/examples /src/tests -name '*.cpp' -exec clang-tidy-14 -p build -header-filter="(/src/include/ddc/.*|/src/tests/.*)" '{}' '+'
         EOF
         docker run \

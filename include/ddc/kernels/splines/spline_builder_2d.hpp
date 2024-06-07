@@ -234,7 +234,7 @@ public:
     /** @brief Move-assigns
      *
      * @param x An rvalue to another SplineBuilder.
-     * @return A reference to the moved SplineBuilder
+     * @return A reference to this object.
      */
     SplineBuilder2D& operator=(SplineBuilder2D&& x) = default;
 

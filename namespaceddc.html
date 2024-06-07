@@ -297,6 +297,7 @@ Enumerations</h2></td></tr>
 <tr class="separator:a28f4ae114fe8694bf78c0d761bc9744a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36c0210a850dde0979ad8b5772ee730c" id="r_a36c0210a850dde0979ad8b5772ee730c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36c0210a850dde0979ad8b5772ee730c">SplineSolver</a> { <a class="el" href="#a36c0210a850dde0979ad8b5772ee730caa3a0305034fc65890f8e232fdf60ab46">GINKGO</a>
  }</td></tr>
+<tr class="memdesc:a36c0210a850dde0979ad8b5772ee730c"><td class="mdescLeft">&#160;</td><td class="mdescRight">An enum determining the backend solver of a SplineBuilder or SplineBuilder2d.  <a href="#a36c0210a850dde0979ad8b5772ee730c">More...</a><br /></td></tr>
 <tr class="separator:a36c0210a850dde0979ad8b5772ee730c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -546,6 +547,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a086f7e0fd872b6bd2aef5760d1b3845f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of equations needed to describe a given boundary condition.  <br /></td></tr>
 <tr class="separator:a086f7e0fd872b6bd2aef5760d1b3845f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5f9302eae1518f3cc0b3038274ae0e6" id="r_aa5f9302eae1518f3cc0b3038274ae0e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5f9302eae1518f3cc0b3038274ae0e6">is_spline_interpolation_mesh_uniform</a> (<a class="el" href="#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">const</a> is_uniform, <a class="el" href="#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">BcXmin</a>, <a class="el" href="#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">BcXmax</a>, <a class="el" href="#a0d8d6125787befc59862bed182ea1717">int</a> degree)</td></tr>
+<tr class="memdesc:aa5f9302eae1518f3cc0b3038274ae0e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.  <br /></td></tr>
 <tr class="separator:aa5f9302eae1518f3cc0b3038274ae0e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5f4b442bd231cb75cac113a0f508863" id="r_ab5f4b442bd231cb75cac113a0f508863"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="#a0d8d6125787befc59862bed182ea1717">ElementType</a> , std::size_t N&gt; </td></tr>
 <tr class="memitem:ab5f4b442bd231cb75cac113a0f508863"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="#a122f189000ad82426cd0f64c449c75a4">Span1D</a>&lt; <a class="el" href="#a0d8d6125787befc59862bed182ea1717">ElementType</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab5f4b442bd231cb75cac113a0f508863">as_span</a> (std::array&lt; <a class="el" href="#a0d8d6125787befc59862bed182ea1717">ElementType</a>, N &gt; &amp;<a class="el" href="#a0d8d6125787befc59862bed182ea1717">arr</a>) <a class="el" href="#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
@@ -1494,8 +1496,12 @@ template&lt;<a class="el" href="#a0d8d6125787befc59862bed182ea1717">class</a> T 
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>An enum determining the backend solver of a <a class="el" href="classddc_1_1SplineBuilder.html" title="A class for creating a spline approximation of a function.">SplineBuilder</a> or SplineBuilder2d. </p>
+<p>An enum determining the backend solver of a <a class="el" href="classddc_1_1SplineBuilder.html" title="A class for creating a spline approximation of a function.">SplineBuilder</a> or SplineBuilder2d. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a36c0210a850dde0979ad8b5772ee730caa3a0305034fc65890f8e232fdf60ab46" name="a36c0210a850dde0979ad8b5772ee730caa3a0305034fc65890f8e232fdf60ab46"></a>GINKGO&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a36c0210a850dde0979ad8b5772ee730caa3a0305034fc65890f8e232fdf60ab46" name="a36c0210a850dde0979ad8b5772ee730caa3a0305034fc65890f8e232fdf60ab46"></a>GINKGO&#160;</td><td class="fielddoc"><p>Enum member to identify the Ginkgo-based solver (iterative method) </p>
+</td></tr>
 </table>
 
 </div>
@@ -3677,6 +3683,19 @@ template&lt;<a class="el" href="#a0d8d6125787befc59862bed182ea1717">typename</a>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>A helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes. </p>
+<p>A helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">is_uniform</td><td>A boolean giving the presumed status before considering boundary conditions. </td></tr>
+    <tr><td class="paramname">BcXmin</td><td>The lower boundary condition. </td></tr>
+    <tr><td class="paramname">BcXmax</td><td>The upper boundary condition. </td></tr>
+    <tr><td class="paramname">degree</td><td>The degree of the spline.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A boolean giving the uniform/non_uniform status. </dd></dl>
 
 </div>
 </div>

@@ -402,11 +402,11 @@ void core(
                 n.data(),
                 1,
                 reinterpret_cast<typename _fftw_type<Tin>::type*>(in_data),
-                static_cast<int*>(NULL),
+                static_cast<int*>(nullptr),
                 1,
                 idist,
                 reinterpret_cast<typename _fftw_type<Tout>::type*>(out_data),
-                static_cast<int*>(NULL),
+                static_cast<int*>(nullptr),
                 1,
                 odist);
         if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
@@ -434,11 +434,11 @@ void core(
                 n.data(),
                 1,
                 reinterpret_cast<typename _fftw_type<Tin>::type*>(in_data),
-                static_cast<int*>(NULL),
+                static_cast<int*>(nullptr),
                 1,
                 idist,
                 reinterpret_cast<typename _fftw_type<Tout>::type*>(out_data),
-                static_cast<int*>(NULL),
+                static_cast<int*>(nullptr),
                 1,
                 odist);
         if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
@@ -468,10 +468,10 @@ void core(
                 &unmanaged_plan, // plan handle
                 sizeof...(DDimX),
                 n.data(), // Nx, Ny...
-                NULL,
+                nullptr,
                 1,
                 idist,
-                NULL,
+                nullptr,
                 1,
                 odist,
                 cufft_transform_type<Tin, Tout>(),
@@ -507,10 +507,10 @@ void core(
                 &unmanaged_plan, // plan handle
                 sizeof...(DDimX),
                 n.data(), // Nx, Ny...
-                NULL,
+                nullptr,
                 1,
                 idist,
-                NULL,
+                nullptr,
                 1,
                 odist,
                 hipfft_transform_type<Tin, Tout>(),

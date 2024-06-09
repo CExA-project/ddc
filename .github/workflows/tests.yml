@@ -131,13 +131,13 @@ jobs:
           'cuda')
             export CC=${CUDA_GCC}
             export CXX=${CUDA_GXX}
-            EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_CUDA_CONSTEXPR=ON -DKokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_LIBDL=OFF"
+            EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_CUDA_CONSTEXPR=ON -DKokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ARCH_AMPERE80=ON"
           ;;
           'hip')
             export CC=hipcc
             export CXX=hipcc
             export CMAKE_PREFIX_PATH=/opt/rocm
-            EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ENABLE_ROCTHRUST=OFF -DKokkos_ARCH_VEGA90A=ON"
+            EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ENABLE_ROCTHRUST=OFF -DKokkos_ARCH_AMD_GFX90A=ON"
           ;;
           'cpu-clang')
             export CC=clang
@@ -187,6 +187,7 @@ jobs:
             -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
             -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+            -DKokkos_ENABLE_SERIAL=ON \
             ${EXTRA_CMAKE_FLAGS} \
             -B build \
             -S /src/vendor/kokkos

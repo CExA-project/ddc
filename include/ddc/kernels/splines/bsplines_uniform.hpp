@@ -104,8 +104,9 @@ public:
         using discrete_vector_type = DiscreteVector<DDim>;
 
     private:
-        // In the periodic case, it contains twice the periodic point!!!
+        // In the periodic case, they contain the periodic point twice!!!
         ddc::DiscreteDomain<knot_mesh_type> m_domain;
+        ddc::DiscreteDomain<knot_mesh_type> m_break_point_domain;
 
     public:
         Impl() = default;
@@ -120,7 +121,12 @@ public:
             : m_domain(
                     ddc::DiscreteElement<knot_mesh_type>(0),
                     ddc::DiscreteVector<knot_mesh_type>(
-                            ncells + 1)) // Create a mesh including the eventual periodic point
+                            ncells + 1
+                            + 2 * degree())) // Create a mesh of knots including the eventual periodic point
+            , m_break_point_domain(
+                      ddc::DiscreteElement<knot_mesh_type>(degree()),
+                      ddc::DiscreteVector<knot_mesh_type>(
+                              ncells + 1)) // Create a mesh of break points
         {
             assert(ncells > 0);
             ddc::init_discrete_space<knot_mesh_type>(knot_mesh_type::template init<knot_mesh_type>(
@@ -134,7 +140,9 @@ public:
          * @param impl A reference to the other Impl
          */
         template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_domain(impl.m_domain)
+        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
+            : m_domain(impl.m_domain)
+            , m_break_point_domain(impl.m_break_point_domain)
         {
         }
 
@@ -241,9 +249,10 @@ public:
          * @param[in] ix DiscreteElement identifying the B-spline.
          * @return Coordinate of the knot.
          */
-        KOKKOS_INLINE_FUNCTION double get_first_support_knot(discrete_element_type const& ix) const
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> get_first_support_knot(
+                discrete_element_type const& ix) const
         {
-            return get_knot(ix.uid() - degree());
+            return ddc::DiscreteElement<knot_mesh_type>((ix - discrete_element_type(0)).value());
         }
 
         /** @brief Returns the coordinate of the last support knot associated to a DiscreteElement identifying a B-spline.
@@ -255,9 +264,10 @@ public:
          * @param[in] ix DiscreteElement identifying the B-spline.
          * @return Coordinate of the knot.
          */
-        KOKKOS_INLINE_FUNCTION double get_last_support_knot(discrete_element_type const& ix) const
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> get_last_support_knot(
+                discrete_element_type const& ix) const
         {
-            return get_knot(ix.uid() + 1);
+            return get_first_support_knot(ix) + ddc::DiscreteVector<knot_mesh_type>(degree() + 1);
         }
 
         /** @brief Returns the coordinate of the lower bound of the domain on which the B-splines are defined.
@@ -266,7 +276,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
         {
-            return ddc::coordinate(m_domain.front());
+            return ddc::coordinate(m_break_point_domain.front());
         }
 
         /** @brief Returns the coordinate of the upper bound of the domain on which the B-splines are defined.
@@ -275,7 +285,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
         {
-            return ddc::coordinate(m_domain.back());
+            return ddc::coordinate(m_break_point_domain.back());
         }
 
         /** @brief Returns the length of the domain.
@@ -315,7 +325,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION ddc::DiscreteDomain<knot_mesh_type> break_point_domain() const
         {
-            return m_domain;
+            return m_break_point_domain;
         }
 
         /** @brief Returns the number of basis functions.
@@ -338,7 +348,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION std::size_t ncells() const noexcept
         {
-            return m_domain.size() - 1;
+            return m_break_point_domain.size() - 1;
         }
 
     private:

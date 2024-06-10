@@ -247,7 +247,7 @@ public:
          * In other words it returns the lower bound of the support.
          *
          * @param[in] ix DiscreteElement identifying the B-spline.
-         * @return Coordinate of the knot.
+         * @return DiscreteElement of the lower bound of the support of the B-spline.
          */
         KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> get_first_support_knot(
                 discrete_element_type const& ix) const
@@ -262,7 +262,7 @@ public:
          * In other words it returns the upper bound of the support.
          *
          * @param[in] ix DiscreteElement identifying the B-spline.
-         * @return Coordinate of the knot.
+         * @return DiscreteElement of the upper bound of the support of the B-spline.
          */
         KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> get_last_support_knot(
                 discrete_element_type const& ix) const

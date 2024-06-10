@@ -23,28 +23,24 @@ struct NonUniformBSplinesBase
 
 } // namespace detail
 
-template <class T>
-struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::tag_type>
-{
-};
-
 /**
  * The type of a non-uniform 1D spline basis (B-spline).
  *
  * Knots for non-uniform B-splines are non-uniformly distributed (no assumption is made on the uniformity of their distribution,
  * the associated discrete dimension is a NonUniformPointSampling).
  *
- * @tparam Tag The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
+ * @tparam tag_type The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
  * @tparam D The degree of the B-splines.
  */
-template <class Tag, std::size_t D>
+template <class NonUniformBsplinesKnots, std::size_t D>
 class NonUniformBSplines : detail::NonUniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
+    static_assert(is_non_uniform_point_sampling_v<NonUniformBsplinesKnots>);
 
 public:
     /// @brief The tag identifying the continuous dimension on which the support of the B-splines are defined.
-    using tag_type = Tag;
+    using tag_type = NonUniformBsplinesKnots::continuous_dimension_type;
 
     /// @brief The discrete dimension identifying B-splines.
     using discrete_dimension_type = NonUniformBSplines;
@@ -64,7 +60,7 @@ public:
      */
     static constexpr bool is_periodic() noexcept
     {
-        return Tag::PERIODIC;
+        return tag_type::PERIODIC;
     }
 
     /** @brief Indicates if the B-splines are uniform or not (this is not the case here).
@@ -89,7 +85,7 @@ public:
 
     public:
         /// @brief The type of the knots defining the B-splines.
-        using knot_mesh_type = NonUniformBsplinesKnots<DDim>;
+        using knot_mesh_type = NonUniformBsplinesKnots;
 
         /// @brief The type of the discrete dimension representing the B-splines.
         using discrete_dimension_type = NonUniformBSplines;
@@ -117,7 +113,7 @@ public:
          *
          * @param breaks The std::initializer_list of the coordinates of break points.
          */
-        explicit Impl(std::initializer_list<ddc::Coordinate<Tag>> breaks)
+        explicit Impl(std::initializer_list<ddc::Coordinate<tag_type>> breaks)
             : Impl(breaks.begin(), breaks.end())
         {
         }
@@ -129,7 +125,7 @@ public:
          *
          * @param breaks The std::vector of the coordinates of break points.
          */
-        explicit Impl(std::vector<ddc::Coordinate<Tag>> const& breaks)
+        explicit Impl(std::vector<ddc::Coordinate<tag_type>> const& breaks)
             : Impl(breaks.begin(), breaks.end())
         {
         }
@@ -208,7 +204,7 @@ public:
          * @return The index of the first B-spline which is evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const;
+        eval_basis(DSpan1D values, ddc::Coordinate<tag_type> const& x) const;
 
         /** @brief Evaluates non-zero B-spline derivatives at a given coordinate
          *
@@ -223,7 +219,7 @@ public:
          * @return The index of the first B-spline which is derivated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
+        eval_deriv(DSpan1D derivs, ddc::Coordinate<tag_type> const& x) const;
 
         /** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate
          *
@@ -240,7 +236,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
-                ddc::Coordinate<Tag> const& x,
+                ddc::Coordinate<tag_type> const& x,
                 std::size_t n) const;
 
         /** @brief Compute the integrals of the B-splines.
@@ -290,7 +286,7 @@ public:
          *
          * @return Coordinate of the lower bound of the domain.
          */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
+        KOKKOS_INLINE_FUNCTION ddc::Coordinate<tag_type> rmin() const noexcept
         {
             return ddc::coordinate(m_break_point_domain.front());
         }
@@ -299,7 +295,7 @@ public:
          *
          * @return Coordinate of the upper bound of the domain.
          */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
+        KOKKOS_INLINE_FUNCTION ddc::Coordinate<tag_type> rmax() const noexcept
         {
             return ddc::coordinate(m_break_point_domain.back());
         }
@@ -391,7 +387,7 @@ public:
          * @returns The DiscreteElement describing the knot at the lower bound of the cell of interest.
          */
         KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> find_cell_start(
-                ddc::Coordinate<Tag> const& x) const;
+                ddc::Coordinate<tag_type> const& x) const;
     };
 };
 
@@ -408,10 +404,10 @@ struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplin
 template <class DDim>
 constexpr bool is_non_uniform_bsplines_v = is_non_uniform_bsplines<DDim>::value;
 
-template <class Tag, std::size_t D>
+template <class NonUniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
 template <class RandomIt>
-NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
+NonUniformBSplines<NonUniformBsplinesKnots, D>::Impl<DDim, MemorySpace>::Impl(
         RandomIt const break_begin,
         RandomIt const break_end)
     : m_domain(
@@ -424,15 +420,15 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
               ddc::DiscreteVector<knot_mesh_type>(
                       (break_end - break_begin))) // Create a mesh of break points
 {
-    std::vector<ddc::Coordinate<Tag>> knots((break_end - break_begin) + 2 * degree());
+    std::vector<ddc::Coordinate<tag_type>> knots((break_end - break_begin) + 2 * degree());
     // Fill the provided knots
     int ii = 0;
     for (RandomIt it = break_begin; it < break_end; ++it) {
         knots[degree() + ii] = *it;
         ++ii;
     }
-    ddc::Coordinate<Tag> const rmin = knots[degree()];
-    ddc::Coordinate<Tag> const rmax = knots[(break_end - break_begin) + degree() - 1];
+    ddc::Coordinate<tag_type> const rmin = knots[degree()];
+    ddc::Coordinate<tag_type> const rmax = knots[(break_end - break_begin) + degree() - 1];
     assert(rmin < rmax);
 
     // Fill out the extra knots
@@ -452,10 +448,10 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
     ddc::init_discrete_space<knot_mesh_type>(knots);
 }
 
-template <class Tag, std::size_t D>
+template <class NonUniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
-        Impl<DDim, MemorySpace>::eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<NonUniformBsplinesKnots, D>::
+        Impl<DDim, MemorySpace>::eval_basis(DSpan1D values, ddc::Coordinate<tag_type> const& x) const
 {
     assert(values.size() == D + 1);
 
@@ -492,10 +488,10 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     return get_first_bspline_in_cell(icell);
 }
 
-template <class Tag, std::size_t D>
+template <class NonUniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
-        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<NonUniformBsplinesKnots, D>::
+        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<tag_type> const& x) const
 {
     std::array<double, degree()> left;
     std::array<double, degree()> right;
@@ -551,12 +547,12 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     return get_first_bspline_in_cell(icell);
 }
 
-template <class Tag, std::size_t D>
+template <class NonUniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<NonUniformBsplinesKnots, D>::
         Impl<DDim, MemorySpace>::eval_basis_and_n_derivs(
                 ddc::DSpan2D const derivs,
-                ddc::Coordinate<Tag> const& x,
+                ddc::Coordinate<tag_type> const& x,
                 std::size_t const n) const
 {
     std::array<double, degree()> left;
@@ -657,11 +653,11 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     return get_first_bspline_in_cell(icell);
 }
 
-template <class Tag, std::size_t D>
+template <class NonUniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUniformBSplines<
-        Tag,
-        D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<Tag> const& x) const
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots> NonUniformBSplines<
+        NonUniformBsplinesKnots,
+        D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<tag_type> const& x) const
 {
     assert(x <= rmax());
     assert(x >= rmin());
@@ -686,11 +682,11 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUn
     return icell;
 }
 
-template <class Tag, std::size_t D>
+template <class NonUniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
 template <class Layout, class MemorySpace2>
 KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
-NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
+NonUniformBSplines<NonUniformBsplinesKnots, D>::Impl<DDim, MemorySpace>::integrals(
         ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const
 {
     if constexpr (is_periodic()) {

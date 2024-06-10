@@ -23,9 +23,16 @@ struct X
 };
 //! [X-dimension]
 
+//! [X-knot-discretization]
+/// The uniform discretization describing the knots of the splines in the X direction
+struct UKnotX : ddc::UniformPointSampling<X>
+{
+};
+//! [X-knot-discretization]
+
 //! [X-discretization]
 /// A uniform discretization of X
-struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
+struct BSplinesX : ddc::UniformBSplines<UKnotX, s_degree_x>
 {
 };
 using GrevillePoints = ddc::GrevilleInterpolationPoints<

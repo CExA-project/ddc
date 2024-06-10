@@ -25,10 +25,12 @@ struct BSplinesFixture<std::tuple<
     {
         static constexpr bool PERIODIC = periodic;
     };
-    struct UBSplinesX : ddc::UniformBSplines<DimX, D>
+    struct UKnotDimX : UniformPointSampling<DimX> {};
+    struct NUKnotDimX : NotUniformPointSampling<DimX> {};
+    struct UBSplinesX : ddc::UniformBSplines<UKnotDimX, D>
     {
     };
-    struct NUBSplinesX : ddc::NonUniformBSplines<DimX, D>
+    struct NUBSplinesX : ddc::NonUniformBSplines<NUKnotDimX, D>
     {
     };
     static constexpr std::size_t spline_degree = D;

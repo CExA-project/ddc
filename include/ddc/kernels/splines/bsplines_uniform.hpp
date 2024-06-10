@@ -232,21 +232,6 @@ public:
                 integrals(ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
                                   int_vals) const;
 
-        /** @brief Returns the coordinate of the knot corresponding to the given index.
-         *
-         * Returns the coordinate of the knot corresponding to the given index. The domain
-         * over which the B-splines are defined is comprised of ncells+1 break points however there are a total of
-         * ncells+1+2*degree knots. The additional knots which control the shape of the B-splines near the
-         * boundary are added equidistantly before and after the break points. The knot index is therefore in the interval [-degree, ncells+degree]
-         *
-         * @param[in] knot_idx Integer identifying index of the knot.
-         * @return Coordinate of the knot.
-         */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_knot(int knot_idx) const noexcept
-        {
-            return ddc::Coordinate<Tag>(rmin() + knot_idx * ddc::step<knot_mesh_type>());
-        }
-
         /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a B-spline.
          *
          * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
@@ -273,21 +258,6 @@ public:
         KOKKOS_INLINE_FUNCTION double get_last_support_knot(discrete_element_type const& ix) const
         {
             return get_knot(ix.uid() + 1);
-        }
-
-        /** @brief Returns the coordinate of the (n+1)-th knot in the support of the identified B-spline.
-         *
-         * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
-         * provided DiscreteElement, this function returns the (n+1)-th knot in the support of the B-spline.
-         *
-         * @param[in] ix DiscreteElement identifying the B-spline.
-         * @param[in] n Integer indexing a knot in the support of the B-spline.
-         * @return Coordinate of the knot.
-         */
-        KOKKOS_INLINE_FUNCTION double get_support_knot_n(discrete_element_type const& ix, int n)
-                const
-        {
-            return get_knot(ix.uid() + n - degree());
         }
 
         /** @brief Returns the coordinate of the lower bound of the domain on which the B-splines are defined.

@@ -105,7 +105,7 @@ public:
 
     private:
         // In the periodic case, they contain the periodic point twice!!!
-        ddc::DiscreteDomain<knot_mesh_type> m_domain;
+        ddc::DiscreteDomain<knot_mesh_type> m_knot_domain;
         ddc::DiscreteDomain<knot_mesh_type> m_break_point_domain;
 
     public:
@@ -118,7 +118,7 @@ public:
          * @param ncells the number of cells in the range [rmin, rmax]
          */
         explicit Impl(ddc::Coordinate<Tag> rmin, ddc::Coordinate<Tag> rmax, std::size_t ncells)
-            : m_domain(
+            : m_knot_domain(
                     ddc::DiscreteElement<knot_mesh_type>(0),
                     ddc::DiscreteVector<knot_mesh_type>(
                             ncells + 1
@@ -141,7 +141,7 @@ public:
          */
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
-            : m_domain(impl.m_domain)
+            : m_knot_domain(impl.m_knot_domain)
             , m_break_point_domain(impl.m_break_point_domain)
         {
         }

@@ -27,13 +27,17 @@ struct DimX
 static constexpr std::size_t s_degree_x = DEGREE_X;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-struct KnotsX : ddc::UniformPointSampling<DimX> {};
-struct BSplinesX : ddc::UniformBSplines<KnotsX, s_degree_x>
+struct UKnotsX : ddc::UniformPointSampling<DimX>
+{
+};
+struct BSplinesX : ddc::UniformBSplines<UKnotsX, s_degree_x>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-struct KnotsX : ddc::NonUniformPointSampling<DimX> {};
-struct BSplinesX : ddc::NonUniformBSplines<KnotsX, s_degree_x>
+struct NUKnotsX : ddc::NonUniformPointSampling<DimX>
+{
+};
+struct BSplinesX : ddc::NonUniformBSplines<NUKnotsX, s_degree_x>
 {
 };
 #endif

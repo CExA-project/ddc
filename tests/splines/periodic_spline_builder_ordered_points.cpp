@@ -22,7 +22,11 @@ struct DimX
 
 static constexpr std::size_t s_degree_x = DEGREE_X;
 
-struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree_x>
+struct KnotsX : ddc::NonUniformPointSampling<DimX>
+{
+};
+
+struct BSplinesX : ddc::NonUniformBSplines<KnotsX, s_degree_x>
 {
 };
 

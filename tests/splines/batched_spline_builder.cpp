@@ -86,7 +86,9 @@ using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-struct Knots : ddc::UniformPointSampling<X> {};
+struct Knots : ddc::UniformPointSampling<X>
+{
+};
 template <typename X>
 struct BSplines : ddc::UniformBSplines<Knots<X>, s_degree_x>
 {
@@ -107,7 +109,9 @@ using IDim = IDim_<X, std::is_same_v<X, I>>;
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-struct Knots : ddc::NonUniformPointSampling<X> {};
+struct Knots : ddc::NonUniformPointSampling<X>
+{
+};
 template <typename X>
 struct BSplines : ddc::NonUniformBSplines<Knots<X>, s_degree_x>
 {

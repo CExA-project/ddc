@@ -451,7 +451,8 @@ NonUniformBSplines<NonUniformBsplinesKnots, D>::Impl<DDim, MemorySpace>::Impl(
 template <class NonUniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<NonUniformBsplinesKnots, D>::
-        Impl<DDim, MemorySpace>::eval_basis(DSpan1D values, ddc::Coordinate<tag_type> const& x) const
+        Impl<DDim, MemorySpace>::eval_basis(DSpan1D values, ddc::Coordinate<tag_type> const& x)
+                const
 {
     assert(values.size() == D + 1);
 
@@ -491,7 +492,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<NonUniformB
 template <class NonUniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<NonUniformBsplinesKnots, D>::
-        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<tag_type> const& x) const
+        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<tag_type> const& x)
+                const
 {
     std::array<double, degree()> left;
     std::array<double, degree()> right;

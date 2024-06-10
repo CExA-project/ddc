@@ -39,12 +39,16 @@ static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
 #endif
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-struct KnotsX : ddc::UniformPointSampling<DimX> {};
+struct KnotsX : ddc::UniformPointSampling<DimX>
+{
+};
 struct BSplinesX : ddc::UniformBSplines<KnotsX, s_degree_x>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-struct KnotsX : ddc::NonUniformPointSampling<DimX> {};
+struct KnotsX : ddc::NonUniformPointSampling<DimX>
+{
+};
 struct BSplinesX : ddc::NonUniformBSplines<KnotsX, s_degree_x>
 {
 };

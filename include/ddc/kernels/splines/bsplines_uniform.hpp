@@ -112,7 +112,10 @@ public:
          * @param rmax    the real ddc::coordinate of the last knot
          * @param ncells the number of cells in the range [rmin, rmax]
          */
-        explicit Impl(ddc::Coordinate<tag_type> rmin, ddc::Coordinate<tag_type> rmax, std::size_t ncells)
+        explicit Impl(
+                ddc::Coordinate<tag_type> rmin,
+                ddc::Coordinate<tag_type> rmax,
+                std::size_t ncells)
             : m_domain(
                     ddc::DiscreteElement<knot_mesh_type>(0),
                     ddc::DiscreteVector<knot_mesh_type>(
@@ -398,8 +401,8 @@ constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<DDim>::value;
 
 template <class UniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<UniformBsplinesKnots, D>::Impl<DDim, MemorySpace>::
-        eval_basis(
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<UniformBsplinesKnots, D>::
+        Impl<DDim, MemorySpace>::eval_basis(
                 DSpan1D values,
                 ddc::Coordinate<tag_type> const& x,
                 [[maybe_unused]] std::size_t const deg) const
@@ -432,8 +435,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<UniformBspline
 
 template <class UniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<UniformBsplinesKnots, D>::Impl<DDim, MemorySpace>::
-        eval_deriv(DSpan1D derivs, ddc::Coordinate<tag_type> const& x) const
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<UniformBsplinesKnots, D>::Impl<
+        DDim,
+        MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<tag_type> const& x) const
 {
     assert(derivs.size() == degree() + 1);
 
@@ -475,8 +479,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<UniformBspline
 
 template <class UniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<UniformBsplinesKnots, D>::Impl<DDim, MemorySpace>::
-        eval_basis_and_n_derivs(
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<UniformBsplinesKnots, D>::
+        Impl<DDim, MemorySpace>::eval_basis_and_n_derivs(
                 ddc::DSpan2D const derivs,
                 ddc::Coordinate<tag_type> const& x,
                 std::size_t const n) const
@@ -568,10 +572,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<UniformBspline
 
 template <class UniformBsplinesKnots, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION void UniformBSplines<UniformBsplinesKnots, D>::Impl<DDim, MemorySpace>::get_icell_and_offset(
-        int& icell,
-        double& offset,
-        ddc::Coordinate<tag_type> const& x) const
+KOKKOS_INLINE_FUNCTION void UniformBSplines<UniformBsplinesKnots, D>::Impl<DDim, MemorySpace>::
+        get_icell_and_offset(int& icell, double& offset, ddc::Coordinate<tag_type> const& x) const
 {
     assert(x >= rmin());
     assert(x <= rmax());

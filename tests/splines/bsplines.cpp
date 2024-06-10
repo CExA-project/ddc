@@ -25,8 +25,12 @@ struct BSplinesFixture<std::tuple<
     {
         static constexpr bool PERIODIC = periodic;
     };
-    struct UKnotDimX : ddc::UniformPointSampling<DimX> {};
-    struct NUKnotDimX : ddc::NonUniformPointSampling<DimX> {};
+    struct UKnotDimX : ddc::UniformPointSampling<DimX>
+    {
+    };
+    struct NUKnotDimX : ddc::NonUniformPointSampling<DimX>
+    {
+    };
     struct UBSplinesX : ddc::UniformBSplines<UKnotDimX, D>
     {
     };

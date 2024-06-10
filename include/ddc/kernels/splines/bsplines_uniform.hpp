@@ -118,23 +118,18 @@ public:
          * @param ncells the number of cells in the range [rmin, rmax]
          */
         explicit Impl(ddc::Coordinate<Tag> rmin, ddc::Coordinate<Tag> rmax, std::size_t ncells)
-            : m_knot_domain(
-                    ddc::DiscreteElement<knot_mesh_type>(0),
-                    ddc::DiscreteVector<knot_mesh_type>(
-                            ncells + 1
-                            + 2 * degree())) // Create a mesh of knots including the eventual periodic point
-            , m_break_point_domain(
-                      ddc::DiscreteElement<knot_mesh_type>(degree()),
-                      ddc::DiscreteVector<knot_mesh_type>(
-                              ncells + 1)) // Create a mesh of break points
         {
             assert(ncells > 0);
-            ddc::init_discrete_space<knot_mesh_type>(knot_mesh_type::template init_ghosted<knot_mesh_type>(
-                    rmin,
-                    rmax,
-                    ddc::DiscreteVector<knot_mesh_type>(ncells + 1),
-                    ddc::DiscreteVector<knot_mesh_type>(degree()),
-                    ddc::DiscreteVector<knot_mesh_type>(degree())));
+            ddc::DiscreteDomain<knot_mesh_type> pre_ghost;
+            ddc::DiscreteDomain<knot_mesh_type> post_ghost;
+            std::tie(m_break_point_domain, m_knot_domain, pre_ghost, post_ghost)
+                    = ddc::init_discrete_space<knot_mesh_type>(
+                            knot_mesh_type::template init_ghosted<knot_mesh_type>(
+                                    rmin,
+                                    rmax,
+                                    ddc::DiscreteVector<knot_mesh_type>(ncells + 1),
+                                    ddc::DiscreteVector<knot_mesh_type>(degree()),
+                                    ddc::DiscreteVector<knot_mesh_type>(degree())));
         }
 
         /** @brief Copy-constructs from another Impl with a different Kokkos memory space

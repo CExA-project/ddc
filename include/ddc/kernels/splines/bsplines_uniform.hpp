@@ -40,7 +40,7 @@ class UniformBSplines : detail::UniformBSplinesBase
 
 public:
     /// @brief The tag identifying the continuous dimension on which the support of the B-splines are defined.
-    using tag_type = UniformBsplinesKnots::continuous_dimension_type;
+    using tag_type = typename UniformBsplinesKnots::continuous_dimension_type;
 
     /// @brief The type of the knots defining the B-splines.
     using knot_mesh_type = UniformBsplinesKnots;

@@ -36,7 +36,7 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classddc_1_1KnotsAsInterpolationPoints.html",
-"classddc_1_1UniformBSplines_1_1Impl.html#a4eb5520c30b6ca33f4ef2bd9e277ec3e"
+"classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

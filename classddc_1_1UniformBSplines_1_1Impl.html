@@ -116,18 +116,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a64159785723d23970d37f70ccc14d929"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; DDim &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Layout</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace2</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a64159785723d23970d37f70ccc14d929">integrals</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>, <a class="el" href="#a5674c2f0c7818d6ff156cb2a90df5fee">discrete_domain_type</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Layout</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace2</a> &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int_vals</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
 <tr class="memdesc:a64159785723d23970d37f70ccc14d929"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the integrals of the B-splines.  <br /></td></tr>
 <tr class="separator:a64159785723d23970d37f70ccc14d929"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a281d66b1224dd7b2f49b1c22009e3c0e" id="r_a281d66b1224dd7b2f49b1c22009e3c0e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a281d66b1224dd7b2f49b1c22009e3c0e">get_knot</a> (<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">knot_idx</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
-<tr class="memdesc:a281d66b1224dd7b2f49b1c22009e3c0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the knot corresponding to the given index.  <br /></td></tr>
-<tr class="separator:a281d66b1224dd7b2f49b1c22009e3c0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7614729d7507273738c39599a6c1559a" id="r_a7614729d7507273738c39599a6c1559a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7614729d7507273738c39599a6c1559a">get_first_support_knot</a> (<a class="el" href="#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ix</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
-<tr class="memdesc:a7614729d7507273738c39599a6c1559a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the first support knot associated to a <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying a B-spline.  <br /></td></tr>
-<tr class="separator:a7614729d7507273738c39599a6c1559a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8999b45b6cf233c3f6c806e65533f11b" id="r_a8999b45b6cf233c3f6c806e65533f11b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8999b45b6cf233c3f6c806e65533f11b">get_last_support_knot</a> (<a class="el" href="#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ix</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
-<tr class="memdesc:a8999b45b6cf233c3f6c806e65533f11b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the last support knot associated to a <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying a B-spline.  <br /></td></tr>
-<tr class="separator:a8999b45b6cf233c3f6c806e65533f11b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d8caa2a2370074fb15702157a88e627" id="r_a5d8caa2a2370074fb15702157a88e627"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d8caa2a2370074fb15702157a88e627">get_support_knot_n</a> (<a class="el" href="#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ix</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
-<tr class="memdesc:a5d8caa2a2370074fb15702157a88e627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the (n+1)-th knot in the support of the identified B-spline.  <br /></td></tr>
-<tr class="separator:a5d8caa2a2370074fb15702157a88e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9664bd4f58741f0ac5a3475045428e9d" id="r_a9664bd4f58741f0ac5a3475045428e9d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9664bd4f58741f0ac5a3475045428e9d">get_first_support_knot</a> (<a class="el" href="#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ix</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memdesc:a9664bd4f58741f0ac5a3475045428e9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the first support knot associated to a <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying a B-spline.  <br /></td></tr>
+<tr class="separator:a9664bd4f58741f0ac5a3475045428e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fccdf6c47afc8f7bb9bb58353ef7087" id="r_a7fccdf6c47afc8f7bb9bb58353ef7087"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7fccdf6c47afc8f7bb9bb58353ef7087">get_last_support_knot</a> (<a class="el" href="#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ix</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memdesc:a7fccdf6c47afc8f7bb9bb58353ef7087"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the last support knot associated to a <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying a B-spline.  <br /></td></tr>
+<tr class="separator:a7fccdf6c47afc8f7bb9bb58353ef7087"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaeed188e20d6d65bd5d9ca3c8b44e01d" id="r_aaeed188e20d6d65bd5d9ca3c8b44e01d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaeed188e20d6d65bd5d9ca3c8b44e01d">rmin</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
 <tr class="memdesc:aaeed188e20d6d65bd5d9ca3c8b44e01d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the lower bound of the domain on which the B-splines are defined.  <br /></td></tr>
 <tr class="separator:aaeed188e20d6d65bd5d9ca3c8b44e01d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -725,8 +719,8 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 
 </div>
 </div>
-<a id="a281d66b1224dd7b2f49b1c22009e3c0e" name="a281d66b1224dd7b2f49b1c22009e3c0e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a281d66b1224dd7b2f49b1c22009e3c0e">&#9670;&#160;</a></span>get_knot()</h2>
+<a id="a9664bd4f58741f0ac5a3475045428e9d" name="a9664bd4f58741f0ac5a3475045428e9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9664bd4f58741f0ac5a3475045428e9d">&#9670;&#160;</a></span>get_first_support_knot()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -739,46 +733,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">D</a> &gt;<a class="el" href="#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; DDim, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt;::get_knot </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a></td>          <td class="paramname"><span class="paramname"><em>knot_idx</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns the coordinate of the knot corresponding to the given index. </p>
-<p>Returns the coordinate of the knot corresponding to the given index. The domain over which the B-splines are defined is comprised of ncells+1 break points however there are a total of ncells+1+2*degree knots. The additional knots which control the shape of the B-splines near the boundary are added equidistantly before and after the break points. The knot index is therefore in the interval [-degree, ncells+degree]</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">knot_idx</td><td>Integer identifying index of the knot. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Coordinate of the knot. </dd></dl>
-
-</div>
-</div>
-<a id="a7614729d7507273738c39599a6c1559a" name="a7614729d7507273738c39599a6c1559a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7614729d7507273738c39599a6c1559a">&#9670;&#160;</a></span>get_first_support_knot()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a> , std::size_t D&gt; </div>
-<div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">D</a> &gt;<a class="el" href="#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; DDim, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt;::get_first_support_knot </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">D</a> &gt;<a class="el" href="#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; DDim, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt;::get_first_support_knot </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ix</em></span></td><td>)</td>
           <td> const</td>
@@ -799,12 +754,12 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Coordinate of the knot. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> of the lower bound of the support of the B-spline. </dd></dl>
 
 </div>
 </div>
-<a id="a8999b45b6cf233c3f6c806e65533f11b" name="a8999b45b6cf233c3f6c806e65533f11b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8999b45b6cf233c3f6c806e65533f11b">&#9670;&#160;</a></span>get_last_support_knot()</h2>
+<a id="a7fccdf6c47afc8f7bb9bb58353ef7087" name="a7fccdf6c47afc8f7bb9bb58353ef7087"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7fccdf6c47afc8f7bb9bb58353ef7087">&#9670;&#160;</a></span>get_last_support_knot()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -817,7 +772,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">D</a> &gt;<a class="el" href="#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; DDim, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt;::get_last_support_knot </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">D</a> &gt;<a class="el" href="#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; DDim, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt;::get_last_support_knot </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ix</em></span></td><td>)</td>
           <td> const</td>
@@ -838,51 +793,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Coordinate of the knot. </dd></dl>
-
-</div>
-</div>
-<a id="a5d8caa2a2370074fb15702157a88e627" name="a5d8caa2a2370074fb15702157a88e627"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d8caa2a2370074fb15702157a88e627">&#9670;&#160;</a></span>get_support_knot_n()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a> , std::size_t D&gt; </div>
-<div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Tag</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">D</a> &gt;<a class="el" href="#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; DDim, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a> &gt;::get_support_knot_n </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ix</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns the coordinate of the (n+1)-th knot in the support of the identified B-spline. </p>
-<p>Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the provided <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a>, this function returns the (n+1)-th knot in the support of the B-spline.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">ix</td><td><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying the B-spline. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">n</td><td>Integer indexing a knot in the support of the B-spline. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Coordinate of the knot. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> of the upper bound of the support of the B-spline. </dd></dl>
 
 </div>
 </div>

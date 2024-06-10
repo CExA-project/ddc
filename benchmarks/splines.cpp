@@ -23,7 +23,11 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
         static constexpr bool PERIODIC = true;
     };
 
-    struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
+    struct KnotsX : ddc::UniformPointSampling<X>
+    {
+    };
+
+    struct BSplinesX : ddc::UniformBSplines<KnotsX, s_degree_x>
     {
     };
     using GrevillePoints = ddc::GrevilleInterpolationPoints<
@@ -176,7 +180,7 @@ static void characteristics_advection(benchmark::State& state)
     /// variables, which is always a bad idea.       ///
     ////////////////////////////////////////////////////
     ddc::detail::g_discrete_space_dual<BSplinesX>.reset();
-    ddc::detail::g_discrete_space_dual<ddc::UniformBsplinesKnots<BSplinesX>>.reset();
+    ddc::detail::g_discrete_space_dual<KnotsX>.reset();
     ddc::detail::g_discrete_space_dual<DDimX>.reset();
     ddc::detail::g_discrete_space_dual<DDimY>.reset();
     ////////////////////////////////////////////////////

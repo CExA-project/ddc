@@ -29,7 +29,7 @@ struct UniformBSplinesBase
  * Knots for uniform B-splines are uniformly distributed (the associated discrete dimension
  * is a UniformPointSampling).
  *
- * @tparam tag_type The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
+ * @tparam UniformBsplinesKnots The tag identifying the dimension on which the knots of the B-spline functions are defined.
  * @tparam D The degree of the B-splines.
  */
 template <class UniformBsplinesKnots, std::size_t D>

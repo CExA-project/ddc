@@ -42,6 +42,9 @@ public:
     /// @brief The tag identifying the continuous dimension on which the support of the B-splines are defined.
     using tag_type = UniformBsplinesKnots::continuous_dimension_type;
 
+    /// @brief The type of the knots defining the B-splines.
+    using knot_mesh_type = UniformBsplinesKnots;
+
     /// @brief The discrete dimension representing B-splines.
     using discrete_dimension_type = UniformBSplines;
 
@@ -84,9 +87,6 @@ public:
         friend class Impl;
 
     public:
-        /// @brief The type of the knots defining the B-splines.
-        using knot_mesh_type = UniformBsplinesKnots;
-
         /// @brief The type of the discrete dimension representing the B-splines.
         using discrete_dimension_type = UniformBSplines;
 

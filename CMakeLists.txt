@@ -253,6 +253,16 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
   find_package(LAPACKE REQUIRED)
   target_link_libraries(DDC INTERFACE "${LAPACKE_LIBRARIES}")
   target_include_directories(DDC INTERFACE "${LAPACKE_INCLUDE_DIRS}")
+
+  # Kokkos-kernels
+  set(KokkosKernels_ENABLE_ALL_COMPONENTS OFF)
+  set(KokkosKernels_ENABLE_COMPONENT_BLAS ON)
+  set(KokkosKernels_ENABLE_COMPONENT_BATCHED ON)
+  set(KokkosKernels_ENABLE_COMPONENT_LAPACK OFF)
+  set(KokkosKernels_ENABLE_TPL_BLAS ON)
+  set(KokkosKernels_ENABLE_TPL_LAPACK OFF)
+  add_subdirectory(vendor/kokkos-kernels/)
+  target_link_libraries(DDC INTERFACE Kokkos::kokkoskernels)
 endif()
 
 ## The PDI wrapper

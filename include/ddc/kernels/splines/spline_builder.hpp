@@ -249,11 +249,7 @@ public:
     /** @brief Move-assigns
      *
      * @param x An rvalue to another SplineBuilder.
-<<<<<<< HEAD
      * @return A reference to the moved SplineBuilder
-=======
-     * @return A reference to this object.
->>>>>>> f7ebfb6 (SplineBuilder doc (#409))
      */
     SplineBuilder& operator=(SplineBuilder&& x) = default;
 
@@ -703,7 +699,7 @@ void SplineBuilder<
         for (std::size_t s = 0; s < bsplines_type::degree() + 1; ++s) {
             int const j = ddc::detail::
                     modulo(int(jmin.uid() - m_offset + s),
-                           static_cast<int>(ddc::discrete_space<BSplines>().nbasis()));
+                           (int)ddc::discrete_space<BSplines>().nbasis());
             matrix->set_element(ix.uid() - start + s_nbc_xmin, j, values(s));
         }
     });

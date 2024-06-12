@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,77,108,102"/>
+<area shape="rect" id="Node000001" href="$structddc_1_1is__discrete__domain_3_01DiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html" title=" " alt="" coords="157,5,361,45"/>
+<area shape="poly" id="edge23_Node000000_Node000001" title=" " alt="" coords="109,70,155,55,193,43,195,48,157,60,110,75"/>
+<area shape="rect" id="Node000002" href="$structddc_1_1is__discrete__element_3_01DiscreteElement_3_01Tags_8_8_8_01_4_01_4.html" title=" " alt="" coords="156,69,363,109"/>
+<area shape="poly" id="edge24_Node000000_Node000002" title=" " alt="" coords="122,87,156,87,156,92,122,92"/>
+<area shape="rect" id="Node000003" href="$structddc_1_1is__discrete__vector_3_01DiscreteVector_3_01Tags_8_8_8_01_4_01_4.html" title=" " alt="" coords="161,133,357,173"/>
+<area shape="poly" id="edge25_Node000000_Node000003" title=" " alt="" coords="110,104,157,119,195,131,193,136,155,124,109,109"/>
+</map>

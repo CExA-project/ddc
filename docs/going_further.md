@@ -89,7 +89,7 @@ Then we handle the domains for the simulated time dimension. We first give the s
 The CFL conditions are more challenging to achieve for the case of non-uniform discretization. 
 Since the spatial steps are not uniform, we first need to find the maximum of the inverse of the square of the spatial step for the `X` and `Y` dimensions. And then we obtain the minimum value for `dt`.
 
-\snippet uniform_heat_equation.cpp CFL-condition
+\snippet non_uniform_heat_equation.cpp CFL-condition
 
 We can calculate the number of time steps and build the `DiscreteDomain` for the time dimension.
 

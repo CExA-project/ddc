@@ -54,7 +54,7 @@ And once again, now for the time dimension.
 ### Dimension X
 
 Once the types are defined, we can start the `main` function where we will define our various
-domains. Here for each dimension, the user needs to specify the starting and ending coordinates of the dimension of the domain, as well as the number of discretization points along each of these dimensions. Additionally, we specify here the physical characteristics specific to our study (the thermal diffusion coefficient).
+domains. Here for each dimension, the user needs to specify the starting and ending coordinates of the dimension of the domain, as well as the number of discretization points along each of these dimensions. Additionally, we specify here the physical characteristics specific to our equation (the thermal diffusion coefficient).
 
 \snippet uniform_heat_equation.cpp main-start-x-parameters
 
@@ -92,9 +92,7 @@ strong typing.
 Instead, for a coordinate in the `X` dimension, we use `Coordinate<X>` and --as already mentioned--
 for a number of elements in the discretization of `X`, we use `DiscreteVector<DDimX>`.
 
-Once this is done, we define two additional domains:
-+ our zone at the start of the domain that will be mirrored to the ghost.
-+ our zone at the end of the domain that will be mirrored to the ghost.
+Once this is done, we define two additional domains that will be mirrored to the ghost at the start and at the end of the domain.
 
 \snippet uniform_heat_equation.cpp X-domains
 
@@ -177,17 +175,23 @@ And we display the initial data.
 
 \snippet uniform_heat_equation.cpp initial-display
 
-# Time loop
 
 \snippet uniform_heat_equation.cpp time iteration
 
+To display the data, a chunk is created on the host.
 
-## Periodic conditions
+
+\snippet uniform_heat_equation.cpp host-chunk
+
+We deepcopy the data from the `ghosted_last_temp` chunk to `ghosted_temp` on the host.
 
 \snippet uniform_heat_equation.cpp boundary conditions
 
+\snippet uniform_heat_equation.cpp initial-deepcopy
 
-## Numerical scheme
+And we display the initial data.
+
+\snippet uniform_heat_equation.cpp initial-display
 
 For the numerical scheme, two chunkspans are created: 
 + `next_temp` a span excluding ghosts of the temperature at the time-step we will build.
@@ -198,18 +202,32 @@ For the numerical scheme, two chunkspans are created:
 We then solve the equation.
 
 \snippet uniform_heat_equation.cpp numerical scheme
+# Time loop
+
+\snippet uniform_heat_equation.cpp time iteration
 
 
-## Output
+## Periodic conditions
 
 \snippet uniform_heat_equation.cpp output
 
+\snippet uniform_heat_equation.cpp boundary conditions
 
-## Final swap
+
+## Numerical scheme
+
 
 \snippet uniform_heat_equation.cpp swap
 
+For the numerical scheme, two chunkspans are created: 
++ `next_temp` a span excluding ghosts of the temperature at the time-step we will build.
++ `last_temp` a read-only view of the temperature at the previous time-step.Note that *span_cview* returns a read-only ChunkSpan.
 
-# Final output
+\snippet uniform_heat_equation.cpp manipulated views
+
+We then solve the equation.
+
 
 \snippet uniform_heat_equation.cpp final output
+
+\snippet uniform_heat_equation.cpp numerical scheme

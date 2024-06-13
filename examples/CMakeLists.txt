@@ -10,6 +10,8 @@ add_executable(non_uniform_heat_equation non_uniform_heat_equation.cpp)
 
 target_link_libraries(uniform_heat_equation PUBLIC DDC::DDC)
 target_link_libraries(non_uniform_heat_equation PUBLIC DDC::DDC)
+target_link_libraries(uniform_heat_equation PUBLIC DDC::DDC)
+
 
 if("${DDC_BUILD_PDI_WRAPPER}")
   target_link_libraries(heat_equation PUBLIC DDC::PDI_Wrapper)

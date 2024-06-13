@@ -149,6 +149,7 @@ jobs:
           cmake \
               -DDDC_BUILD_DOCUMENTATION=ON \
               -DCMAKE_CXX_STANDARD=20 \
+              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
               -DMDSPAN_CXX_STANDARD=20 \
               -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
               -B build \

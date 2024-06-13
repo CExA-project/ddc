@@ -36,19 +36,7 @@ RUN chmod +x /bin/bash_run \
     git \
     graphviz \
     pkg-config \
-    texlive \
-    texlive-extra-utils \
-    texlive-font-utils \
-    texlive-fonts-recommended \
-    texlive-latex-extra \
-    texlive-latex-recommended \
-    texlive-plain-generic \
- && wget -q https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz \
- && tar -xf doxygen-1.10.0.linux.bin.tar.gz \
- && cd doxygen-1.10.0 \
- && make install \
- && cd .. \
- && rm -rf doxygen-1.10.0* \
+    doxygen-latex \
  && git clone -b v1.7.0 https://github.com/ginkgo-project/ginkgo.git \
  && cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGINKGO_BUILD_OMP=OFF -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B build-ginkgo -S ginkgo \
  && cmake --build build-ginkgo \

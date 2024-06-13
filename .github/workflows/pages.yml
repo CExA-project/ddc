@@ -148,6 +148,7 @@ jobs:
           export CXX=clang++
           cmake \
               -DDDC_BUILD_DOCUMENTATION=ON \
+              -DCMAKE_CXX_FLAGS="-Wno-unused-command-line-argument" \
               -DCMAKE_CXX_STANDARD=20 \
               -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
               -DMDSPAN_CXX_STANDARD=20 \

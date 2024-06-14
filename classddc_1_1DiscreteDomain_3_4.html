@@ -1,79 +1,34 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!--
+Copyright (C) The DDC development team, see COPYRIGHT.md file
+SPDX-License-Identifier: MIT
+-->
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<meta name="generator" content="Doxygen 1.10.0"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<!-- BEGIN opengraph metadata -->
-<meta property="og:title" content="Doxygen Awesome" />
-<meta property="og:image" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
-<meta property="og:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
-<meta property="og:url" content="https://jothepro.github.io/doxygen-awesome-css/" />
-<!-- END opengraph metadata -->
-<!-- BEGIN twitter metadata -->
-<meta name="twitter:image:src" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
-<meta name="twitter:title" content="Doxygen Awesome" />
-<meta name="twitter:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
-<!-- END twitter metadata -->
-<title>DDC: ddc::DiscreteDomain&lt;&gt; Class Reference</title>
-<link href="tabs.css" rel="stylesheet" type="text/css"/>
-<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
-<script type="text/javascript" src="jquery.js"></script>
-<script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
-<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
-<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
-<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
-<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
-<script type="text/javascript" src="toggle-alternative-theme.js"></script>
-<script type="text/javascript">
-    DoxygenAwesomeFragmentCopyButton.init()
-    DoxygenAwesomeDarkModeToggle.init()
-    DoxygenAwesomeParagraphLink.init()
-    DoxygenAwesomeInteractiveToc.init()
-    DoxygenAwesomeTabs.init()
-</script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
-<script type="text/javascript" src="cookie.js"></script>
-<link href="custom.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+	<meta charset="UTF-8">
+	<meta name="generator" content="Doxygen 1.9.8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>DDC: ddc::DiscreteDomain&lt;&gt; Class Reference</title>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="dynsections.js"></script>
+	<script type="text/javascript" src="navtreedata.js"></script>
+	<script type="text/javascript" src="navtree.js"></script>
+	<link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<!-- https://tholman.com/github-corners/ -->
-<a href="https://github.com/jothepro/doxygen-awesome-css" class="github-corner" title="View source on GitHub" target="_blank" rel="noopener noreferrer">
-    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
-    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
-<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
-<div id="titlearea">
-<table cellspacing="0" cellpadding="0">
- <tbody>
- <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">DDC
-   &#160;<span id="projectnumber">0.0.0</span>
-   </div>
-  </td>
- </tr>
- </tbody>
-</table>
-</div>
-<!-- end header part -->
-<!-- Generated by Doxygen 1.10.0 -->
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('',false,false,'search.php','Search');
-});
-/* @license-end */
-</script>
-<div id="main-nav"></div>
+<div>
+<header id="titlearea">
+	<div id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></div>
+	<h1 id="projectname">DDC&nbsp;<span id="projectnumber">0.0.0</span></h1>
+	<h2 id="projectbrief">a <span class="acronym">d</span>iscrete <span class="acronym">d</span>omain <span class="acronym">c</span>omputation library</h2>
+</header>
+<nav id="tabs"><ul>
+	<li><a href="index.html">About</a>
+	<li><a href="first_steps.html">Commented example</a>
+	<li><a href="annotated.html">API reference</a>
+	<li id="gitlab-ribbon"><a rel="noopener" href="https://github.com/CExA-project/ddc" target="_blank">Contribute on Github</a></li>
+</ul></nav>
+<!-- Generated by Doxygen 1.9.8 -->
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -87,7 +42,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('classddc_1_1DiscreteDomain_3_4.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classddc_1_1DiscreteDomain_3_4.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -101,83 +56,73 @@ $(function(){initNavTree('classddc_1_1DiscreteDomain_3_4.html',''); initResizabl
   <div class="headertitle"><div class="title">ddc::DiscreteDomain&lt;&gt; Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>&gt;</code></p>
-<div class="dynheader">
-Collaboration diagram for ddc::DiscreteDomain&lt;&gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="classddc_1_1DiscreteDomain_3_4__coll__graph.png" border="0" usemap="#addc_1_1DiscreteDomain_3_4_coll__map" alt="Collaboration graph"/></div>
-<map name="addc_1_1DiscreteDomain_3_4_coll__map" id="addc_1_1DiscreteDomain_3_4_coll__map">
-<area shape="rect" title=" " alt="" coords="5,5,159,511"/>
-</map>
-</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ac6f1a7e713905c16e7e0ffd150b880db" id="r_ac6f1a7e713905c16e7e0ffd150b880db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a> = <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;&gt;</td></tr>
+<tr class="memitem:ac6f1a7e713905c16e7e0ffd150b880db" id="r_ac6f1a7e713905c16e7e0ffd150b880db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a> = <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;&gt;</td></tr>
 <tr class="separator:ac6f1a7e713905c16e7e0ffd150b880db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a254265885d85f90a7ebe0f6747ec73c1" id="r_a254265885d85f90a7ebe0f6747ec73c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> = <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;&gt;</td></tr>
+<tr class="memitem:a254265885d85f90a7ebe0f6747ec73c1" id="r_a254265885d85f90a7ebe0f6747ec73c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> = <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;&gt;</td></tr>
 <tr class="separator:a254265885d85f90a7ebe0f6747ec73c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a69b586355263da95e58f66aca6af8189" id="r_a69b586355263da95e58f66aca6af8189"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69b586355263da95e58f66aca6af8189">DiscreteDomain</a> ()=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">default</a></td></tr>
+<tr class="memitem:a69b586355263da95e58f66aca6af8189" id="r_a69b586355263da95e58f66aca6af8189"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a69b586355263da95e58f66aca6af8189">DiscreteDomain</a> ()=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="separator:a69b586355263da95e58f66aca6af8189"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac795d5473e93b3b62eb4ad092db407cf" id="r_ac795d5473e93b3b62eb4ad092db407cf"><td class="memTemplParams" colspan="2">template&lt;class... ODDims&gt; </td></tr>
-<tr class="memitem:ac795d5473e93b3b62eb4ad092db407cf"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ac795d5473e93b3b62eb4ad092db407cf">DiscreteDomain</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;domain)</td></tr>
+<tr class="memitem:ac795d5473e93b3b62eb4ad092db407cf"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ac795d5473e93b3b62eb4ad092db407cf">DiscreteDomain</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain)</td></tr>
 <tr class="separator:ac795d5473e93b3b62eb4ad092db407cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6952f0ba62d1fe2e4f4975d2a0673b5" id="r_ae6952f0ba62d1fe2e4f4975d2a0673b5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6952f0ba62d1fe2e4f4975d2a0673b5">DiscreteDomain</a> (<a class="el" href="#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">element_begin</a>, <a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="#aa4e6da70fb42b6f27f281721c39b60f9">size</a>)</td></tr>
+<tr class="memitem:ae6952f0ba62d1fe2e4f4975d2a0673b5" id="r_ae6952f0ba62d1fe2e4f4975d2a0673b5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ae6952f0ba62d1fe2e4f4975d2a0673b5">DiscreteDomain</a> (<a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">element_begin</a>, <a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="classddc_1_1DiscreteDomain_3_4.html#aa4e6da70fb42b6f27f281721c39b60f9">size</a>)</td></tr>
 <tr class="memdesc:ae6952f0ba62d1fe2e4f4975d2a0673b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> starting from element_begin with size points.  <br /></td></tr>
 <tr class="separator:ae6952f0ba62d1fe2e4f4975d2a0673b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a547922efbd0952867dd7fec9d88f1a5a" id="r_a547922efbd0952867dd7fec9d88f1a5a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a547922efbd0952867dd7fec9d88f1a5a">DiscreteDomain</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">x</a>)=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">default</a></td></tr>
+<tr class="memitem:a547922efbd0952867dd7fec9d88f1a5a" id="r_a547922efbd0952867dd7fec9d88f1a5a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a547922efbd0952867dd7fec9d88f1a5a">DiscreteDomain</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="separator:a547922efbd0952867dd7fec9d88f1a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5710d4f4862426cec41d3f74ae0c7cf" id="r_af5710d4f4862426cec41d3f74ae0c7cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5710d4f4862426cec41d3f74ae0c7cf">DiscreteDomain</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;&amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">x</a>)=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">default</a></td></tr>
+<tr class="memitem:af5710d4f4862426cec41d3f74ae0c7cf" id="r_af5710d4f4862426cec41d3f74ae0c7cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#af5710d4f4862426cec41d3f74ae0c7cf">DiscreteDomain</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="separator:af5710d4f4862426cec41d3f74ae0c7cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1adeb0b1b2ba40d66b0b5725cb2a8d56" id="r_a1adeb0b1b2ba40d66b0b5725cb2a8d56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1adeb0b1b2ba40d66b0b5725cb2a8d56">~DiscreteDomain</a> ()=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">default</a></td></tr>
+<tr class="memitem:a1adeb0b1b2ba40d66b0b5725cb2a8d56" id="r_a1adeb0b1b2ba40d66b0b5725cb2a8d56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a1adeb0b1b2ba40d66b0b5725cb2a8d56">~DiscreteDomain</a> ()=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="separator:a1adeb0b1b2ba40d66b0b5725cb2a8d56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac25d56b27c3bfa85acc21a8eb47c516c" id="r_ac25d56b27c3bfa85acc21a8eb47c516c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac25d56b27c3bfa85acc21a8eb47c516c">operator=</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">x</a>)=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">default</a></td></tr>
+<tr class="memitem:ac25d56b27c3bfa85acc21a8eb47c516c" id="r_ac25d56b27c3bfa85acc21a8eb47c516c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ac25d56b27c3bfa85acc21a8eb47c516c">operator=</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="separator:ac25d56b27c3bfa85acc21a8eb47c516c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a167dd5bbee615b86415e7405704137" id="r_a6a167dd5bbee615b86415e7405704137"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a167dd5bbee615b86415e7405704137">operator=</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;&amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">x</a>)=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">default</a></td></tr>
+<tr class="memitem:a6a167dd5bbee615b86415e7405704137" id="r_a6a167dd5bbee615b86415e7405704137"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a6a167dd5bbee615b86415e7405704137">operator=</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="separator:a6a167dd5bbee615b86415e7405704137"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1d3ff59248f955e150f835b8840444b" id="r_ad1d3ff59248f955e150f835b8840444b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1d3ff59248f955e150f835b8840444b">operator==</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;other) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:ad1d3ff59248f955e150f835b8840444b" id="r_ad1d3ff59248f955e150f835b8840444b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ad1d3ff59248f955e150f835b8840444b">operator==</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;other) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:ad1d3ff59248f955e150f835b8840444b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5678f3ad8565423bbb00e169ec9b1415" id="r_a5678f3ad8565423bbb00e169ec9b1415"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5678f3ad8565423bbb00e169ec9b1415">operator!=</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;other) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:a5678f3ad8565423bbb00e169ec9b1415" id="r_a5678f3ad8565423bbb00e169ec9b1415"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a5678f3ad8565423bbb00e169ec9b1415">operator!=</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;other) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:a5678f3ad8565423bbb00e169ec9b1415"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4e6da70fb42b6f27f281721c39b60f9" id="r_aa4e6da70fb42b6f27f281721c39b60f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4e6da70fb42b6f27f281721c39b60f9">size</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:aa4e6da70fb42b6f27f281721c39b60f9" id="r_aa4e6da70fb42b6f27f281721c39b60f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#aa4e6da70fb42b6f27f281721c39b60f9">size</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:aa4e6da70fb42b6f27f281721c39b60f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bf83f59be475ccfb3a3ca2699a05917" id="r_a5bf83f59be475ccfb3a3ca2699a05917"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5bf83f59be475ccfb3a3ca2699a05917">extents</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
+<tr class="memitem:a5bf83f59be475ccfb3a3ca2699a05917" id="r_a5bf83f59be475ccfb3a3ca2699a05917"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a5bf83f59be475ccfb3a3ca2699a05917">extents</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="separator:a5bf83f59be475ccfb3a3ca2699a05917"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc8904c1d3a34d6b4148d19f6e770fe9" id="r_afc8904c1d3a34d6b4148d19f6e770fe9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc8904c1d3a34d6b4148d19f6e770fe9">front</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
+<tr class="memitem:afc8904c1d3a34d6b4148d19f6e770fe9" id="r_afc8904c1d3a34d6b4148d19f6e770fe9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#afc8904c1d3a34d6b4148d19f6e770fe9">front</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="separator:afc8904c1d3a34d6b4148d19f6e770fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a147f3403147a132bf2a43f609cf2fae5" id="r_a147f3403147a132bf2a43f609cf2fae5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a147f3403147a132bf2a43f609cf2fae5">back</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
+<tr class="memitem:a147f3403147a132bf2a43f609cf2fae5" id="r_a147f3403147a132bf2a43f609cf2fae5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a147f3403147a132bf2a43f609cf2fae5">back</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="separator:a147f3403147a132bf2a43f609cf2fae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a378eda91c9bfb611454212a7233d5dea" id="r_a378eda91c9bfb611454212a7233d5dea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a378eda91c9bfb611454212a7233d5dea">take_first</a> (<a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:a378eda91c9bfb611454212a7233d5dea" id="r_a378eda91c9bfb611454212a7233d5dea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a378eda91c9bfb611454212a7233d5dea">take_first</a> (<a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:a378eda91c9bfb611454212a7233d5dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade012d627128e941c1ae7a7e3f58fffb" id="r_ade012d627128e941c1ae7a7e3f58fffb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade012d627128e941c1ae7a7e3f58fffb">take_last</a> (<a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:ade012d627128e941c1ae7a7e3f58fffb" id="r_ade012d627128e941c1ae7a7e3f58fffb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ade012d627128e941c1ae7a7e3f58fffb">take_last</a> (<a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:ade012d627128e941c1ae7a7e3f58fffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89d6a3084909d425e4be6aa31733101e" id="r_a89d6a3084909d425e4be6aa31733101e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a89d6a3084909d425e4be6aa31733101e">remove_first</a> (<a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:a89d6a3084909d425e4be6aa31733101e" id="r_a89d6a3084909d425e4be6aa31733101e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a89d6a3084909d425e4be6aa31733101e">remove_first</a> (<a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:a89d6a3084909d425e4be6aa31733101e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e48cfe27d39f868e37c8d37a1709998" id="r_a8e48cfe27d39f868e37c8d37a1709998"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e48cfe27d39f868e37c8d37a1709998">remove_last</a> (<a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:a8e48cfe27d39f868e37c8d37a1709998" id="r_a8e48cfe27d39f868e37c8d37a1709998"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a8e48cfe27d39f868e37c8d37a1709998">remove_last</a> (<a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:a8e48cfe27d39f868e37c8d37a1709998"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf8e7989b93bf4c93444628bc59d25ba" id="r_acf8e7989b93bf4c93444628bc59d25ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf8e7989b93bf4c93444628bc59d25ba">remove</a> (<a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n1</a>, <a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n2</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:acf8e7989b93bf4c93444628bc59d25ba" id="r_acf8e7989b93bf4c93444628bc59d25ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#acf8e7989b93bf4c93444628bc59d25ba">remove</a> (<a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n1</a>, <a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n2</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:acf8e7989b93bf4c93444628bc59d25ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd1bdfddaa4bd04f8c3e41d5244d22e5" id="r_acd1bdfddaa4bd04f8c3e41d5244d22e5"><td class="memTemplParams" colspan="2">template&lt;class... ODims&gt; </td></tr>
-<tr class="memitem:acd1bdfddaa4bd04f8c3e41d5244d22e5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#acd1bdfddaa4bd04f8c3e41d5244d22e5">restrict</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:acd1bdfddaa4bd04f8c3e41d5244d22e5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#acd1bdfddaa4bd04f8c3e41d5244d22e5">restrict</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:acd1bdfddaa4bd04f8c3e41d5244d22e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c323eb8bd7c20baa705593d97f1c9d7" id="r_a7c323eb8bd7c20baa705593d97f1c9d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c323eb8bd7c20baa705593d97f1c9d7">empty</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
+<tr class="memitem:a7c323eb8bd7c20baa705593d97f1c9d7" id="r_a7c323eb8bd7c20baa705593d97f1c9d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a7c323eb8bd7c20baa705593d97f1c9d7">empty</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="separator:a7c323eb8bd7c20baa705593d97f1c9d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c35d71dd28805fa4b1c99d9db306297" id="r_a6c35d71dd28805fa4b1c99d9db306297"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c35d71dd28805fa4b1c99d9db306297">operator bool</a> ()</td></tr>
+<tr class="memitem:a6c35d71dd28805fa4b1c99d9db306297" id="r_a6c35d71dd28805fa4b1c99d9db306297"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a6c35d71dd28805fa4b1c99d9db306297">operator bool</a> ()</td></tr>
 <tr class="separator:a6c35d71dd28805fa4b1c99d9db306297"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a455ba37a9b7adb25cbeca8df3e40b9dc" id="r_a455ba37a9b7adb25cbeca8df3e40b9dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">static</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a455ba37a9b7adb25cbeca8df3e40b9dc">rank</a> ()</td></tr>
+<tr class="memitem:a455ba37a9b7adb25cbeca8df3e40b9dc" id="r_a455ba37a9b7adb25cbeca8df3e40b9dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a455ba37a9b7adb25cbeca8df3e40b9dc">rank</a> ()</td></tr>
 <tr class="separator:a455ba37a9b7adb25cbeca8df3e40b9dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:a5cdbd7cda4dd9c4369a8810c88cf3bed" id="r_a5cdbd7cda4dd9c4369a8810c88cf3bed"><td class="memTemplParams" colspan="2">template&lt;class... &gt; </td></tr>
-<tr class="memitem:a5cdbd7cda4dd9c4369a8810c88cf3bed"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a></td></tr>
+<tr class="memitem:a5cdbd7cda4dd9c4369a8810c88cf3bed"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a></td></tr>
 <tr class="separator:a5cdbd7cda4dd9c4369a8810c88cf3bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
@@ -188,7 +133,7 @@ Friends</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::discrete_element_type = <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;&gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::discrete_element_type =  <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -202,7 +147,7 @@ Friends</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::mlength_type = <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;&gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::mlength_type =  <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -220,9 +165,9 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::DiscreteDomain </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::DiscreteDomain </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -247,9 +192,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::DiscreteDomain </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::DiscreteDomain </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>domain</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>domain</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -272,14 +218,21 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::DiscreteDomain </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::DiscreteDomain </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>element_begin</em>, </span></td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>element_begin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>size</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -310,9 +263,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::DiscreteDomain </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::DiscreteDomain </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -335,9 +289,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::DiscreteDomain </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::DiscreteDomain </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -360,9 +315,9 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::~<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::~<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -386,9 +341,9 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">static</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> std::size_t <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::rank </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::rank </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -411,9 +366,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp; <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>= </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp; <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>= </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -436,9 +392,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp; <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>= </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> &amp; <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>= </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -461,9 +418,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>== </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>== </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -486,9 +444,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator!</a>= </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator!</a>= </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;&gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -511,9 +470,9 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> std::size_t <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::size </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::size </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -536,9 +495,9 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::extents </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::extents </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -561,9 +520,9 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::front </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::front </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -586,9 +545,9 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::back </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain_3_4.html#ac6f1a7e713905c16e7e0ffd150b880db">discrete_element_type</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::back </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -611,9 +570,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::take_first </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::take_first </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -636,9 +596,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::take_last </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::take_last </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -661,9 +622,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::remove_first </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::remove_first </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -686,9 +648,10 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::remove_last </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::remove_last </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -711,14 +674,21 @@ template&lt;class... ODDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::remove </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::remove </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a></td>          <td class="paramname"><span class="paramname"><em>n1</em>, </span></td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a></td>          <td class="paramname"><span class="paramname"><em>n2</em></span>&#160;) const</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html#a254265885d85f90a7ebe0f6747ec73c1">mlength_type</a>&#160;</td>
+          <td class="paramname"><em>n2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
   </td>
@@ -742,9 +712,10 @@ template&lt;class... ODims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::restrict </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::restrict </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; ODims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -767,9 +738,9 @@ template&lt;class... ODims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::empty </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;::empty </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -792,9 +763,9 @@ template&lt;class... ODims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a> </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;&gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -820,7 +791,7 @@ template&lt;class... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">friend</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">friend</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></td>
         </tr>
       </table>
   </td>
@@ -837,12 +808,9 @@ template&lt;class... &gt; </div>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="namespaceddc.html">ddc</a></li><li class="navelem"><a class="el" href="classddc_1_1DiscreteDomain_3_4.html">DiscreteDomain&lt;&gt;</a></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.10.0 </li>
-  </ul>
-</div>
+<!--
+Copyright (C) The DDC development team, see COPYRIGHT.md file
+SPDX-License-Identifier: MIT
+-->
 </body>
 </html>

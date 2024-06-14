@@ -1,84 +1,34 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!--
+Copyright (C) The DDC development team, see COPYRIGHT.md file
+SPDX-License-Identifier: MIT
+-->
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<meta name="generator" content="Doxygen 1.10.0"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<!-- BEGIN opengraph metadata -->
-<meta property="og:title" content="Doxygen Awesome" />
-<meta property="og:image" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
-<meta property="og:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
-<meta property="og:url" content="https://jothepro.github.io/doxygen-awesome-css/" />
-<!-- END opengraph metadata -->
-<!-- BEGIN twitter metadata -->
-<meta name="twitter:image:src" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
-<meta name="twitter:title" content="Doxygen Awesome" />
-<meta name="twitter:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
-<!-- END twitter metadata -->
-<title>DDC: constant_extrapolation_rule.hpp Source File</title>
-<link href="tabs.css" rel="stylesheet" type="text/css"/>
-<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
-<script type="text/javascript" src="jquery.js"></script>
-<script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
-<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
-<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
-<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
-<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
-<script type="text/javascript" src="toggle-alternative-theme.js"></script>
-<script type="text/javascript">
-    DoxygenAwesomeFragmentCopyButton.init()
-    DoxygenAwesomeDarkModeToggle.init()
-    DoxygenAwesomeParagraphLink.init()
-    DoxygenAwesomeInteractiveToc.init()
-    DoxygenAwesomeTabs.init()
-</script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
-<script type="text/javascript" src="cookie.js"></script>
-<link href="custom.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+	<meta charset="UTF-8">
+	<meta name="generator" content="Doxygen 1.9.8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>DDC: constant_extrapolation_rule.hpp Source File</title>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="dynsections.js"></script>
+	<script type="text/javascript" src="navtreedata.js"></script>
+	<script type="text/javascript" src="navtree.js"></script>
+	<link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<!-- https://tholman.com/github-corners/ -->
-<a href="https://github.com/jothepro/doxygen-awesome-css" class="github-corner" title="View source on GitHub" target="_blank" rel="noopener noreferrer">
-    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
-    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
-<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
-<div id="titlearea">
-<table cellspacing="0" cellpadding="0">
- <tbody>
- <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">DDC
-   &#160;<span id="projectnumber">0.0.0</span>
-   </div>
-  </td>
- </tr>
- </tbody>
-</table>
-</div>
-<!-- end header part -->
-<!-- Generated by Doxygen 1.10.0 -->
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('',false,false,'search.php','Search');
-});
-/* @license-end */
-</script>
-<div id="main-nav"></div>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() { codefold.init(0); });
-/* @license-end */
-</script>
+<div>
+<header id="titlearea">
+	<div id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></div>
+	<h1 id="projectname">DDC&nbsp;<span id="projectnumber">0.0.0</span></h1>
+	<h2 id="projectbrief">a <span class="acronym">d</span>iscrete <span class="acronym">d</span>omain <span class="acronym">c</span>omputation library</h2>
+</header>
+<nav id="tabs"><ul>
+	<li><a href="index.html">About</a>
+	<li><a href="first_steps.html">Commented example</a>
+	<li><a href="annotated.html">API reference</a>
+	<li id="gitlab-ribbon"><a rel="noopener" href="https://github.com/CExA-project/ddc" target="_blank">Contribute on Github</a></li>
+</ul></nav>
+<!-- Generated by Doxygen 1.9.8 -->
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -92,7 +42,7 @@ $(function() { codefold.init(0); });
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('constant__extrapolation__rule_8hpp_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('constant__extrapolation__rule_8hpp_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -104,167 +54,227 @@ $(function(){initNavTree('constant__extrapolation__rule_8hpp_source.html',''); i
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// SPDX-License-Identifier: MIT</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#</span><span class="preprocessor">pragma</span> <span class="preprocessor">once</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;view.hpp&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">ddc</span><span class="preprocessor">/</span><span class="preprocessor">ddc</span><span class="preprocessor">.</span><span class="preprocessor">hpp</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">Kokkos_Core</span><span class="preprocessor">.</span><span class="preprocessor">hpp</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">template</span> &lt;<span class="keyword">class </span><a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DimI</a>, <span class="keyword">class</span>... <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Dim</a>&gt;</div>
-<div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="namespaceddc.html">   12</a></span><span class="keyword">struct </span><a class="code hl_struct" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>{</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>};</div>
-</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DimI&gt;</div>
-<div class="foldopen" id="foldopen00023" data-start="{" data-end="};">
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html">   23</a></span><span class="keyword">struct </span><a class="code hl_struct" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a>&lt;<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DimI</a>&gt;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;DimI&gt;</a> m_eval_pos;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#ac07df9edae807f3878c94a41d819d345">   37</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#ac07df9edae807f3878c94a41d819d345">ConstantExtrapolationRule</a>(<a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;DimI&gt;</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a>) : m_eval_pos(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a>) {}</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> CoordType, <span class="keyword">class</span> BSplines, <span class="keyword">class</span> Layout, <span class="keyword">class</span> MemorySpace&gt;</div>
-<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#a3529670824c45dd7e75e2237254368fc">   50</a></span>    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <span class="keywordtype">double</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#a3529670824c45dd7e75e2237254368fc">operator()</a>(</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            [[<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">maybe_unused</a>]] <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">CoordType</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">pos</a>,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;BSplines&gt;</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Layout</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a>&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">spline_coef</a>)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keyword">static_assert</span>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">in_tags_v&lt;DimI, to_type_seq_t&lt;CoordType&gt;</a>&gt;);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        std::array&lt;<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>, BSplines::degree() + 1&gt; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals_ptr</a>;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        std::experimental::mdspan&lt;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>,</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                std::experimental::extents&lt;std::size_t, BSplines::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals_ptr</a>.data());</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;BSplines&gt;</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">idx</a></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::discrete_space&lt;BSplines&gt;</a>().eval_basis(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals</a>, m_eval_pos);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="keywordtype">double</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">y</a> = 0.0;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordflow">for</span> (std::size_t <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a> = 0; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a> &lt; BSplines::degree() + 1; ++<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>) {</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">y</a> += <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">spline_coef</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">idx</a> + <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>) * <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals</a>[<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>];</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        }</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">y</a>;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    }</div>
-</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>};</div>
-</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DimI, <span class="keyword">class</span> DimNI&gt;</div>
-<div class="foldopen" id="foldopen00081" data-start="{" data-end="};">
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html">   81</a></span><span class="keyword">struct </span><a class="code hl_struct" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a>&lt;<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DimI</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DimNI</a>&gt;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>{</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;DimI&gt;</a> m_eval_pos;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;DimNI&gt;</a> m_eval_pos_not_interest_min;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;DimNI&gt;</a> m_eval_pos_not_interest_max;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00106" data-start="{" data-end="}">
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a048675e8020f8ec2e3bf88bb43c37cf8">  106</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a048675e8020f8ec2e3bf88bb43c37cf8">ConstantExtrapolationRule</a>(</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;DimI&gt;</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a>,</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;DimNI&gt;</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos_not_interest_min</a>,</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;DimNI&gt;</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos_not_interest_max</a>)</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        : m_eval_pos(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a>)</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        , m_eval_pos_not_interest_min(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos_not_interest_min</a>)</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        , m_eval_pos_not_interest_max(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos_not_interest_max</a>)</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    {</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    }</div>
-</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> DimNI_sfinae = DimNI, std::enable_if_t&lt;DimNI_sfinae::PERIODIC, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="foldopen" id="foldopen00129" data-start="{" data-end="}">
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno"><a class="line" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a60c0c81e29ae0f43e6d1a21ff81106ec">  129</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a60c0c81e29ae0f43e6d1a21ff81106ec">ConstantExtrapolationRule</a>(<a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;DimI&gt;</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a>)</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        : m_eval_pos(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a>)</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        , m_eval_pos_not_interest_min(0.)</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        , m_eval_pos_not_interest_max(0.)</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    {</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    }</div>
-</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> CoordType, <span class="keyword">class</span> BSplines1, <span class="keyword">class</span> BSplines2, <span class="keyword">class</span> Layout, <span class="keyword">class</span> MemorySpace&gt;</div>
-<div class="foldopen" id="foldopen00154" data-start="{" data-end="}">
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a2d306b0aad7a36a588a901d67c4539ff">  154</a></span>    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <span class="keywordtype">double</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a2d306b0aad7a36a588a901d67c4539ff">operator()</a>(</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">CoordType</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">coord_extrap</a>,</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt;</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                    <span class="keywordtype">double</span> <span class="keyword">const</span>,</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;BSplines1, BSplines2&gt;</a>,</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Layout</a>,</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a>&gt; <span class="keyword">const</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">spline_coef</a>)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        <span class="keyword">static_assert</span>(</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">in_tags_v</a>&lt;</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                        <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DimI</a>,</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                        <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">to_type_seq_t&lt;CoordType&gt;</a>&gt; &amp;&amp; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">in_tags_v&lt;DimNI, to_type_seq_t&lt;CoordType&gt;</a>&gt;);</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        <a class="code hl_typedef" href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate&lt;DimI, DimNI&gt;</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a>;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (DimNI::PERIODIC) {</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a> = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::Coordinate&lt;DimI, DimNI&gt;</a>(m_eval_pos, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::select&lt;DimNI&gt;</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">coord_extrap</a>));</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a> = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::Coordinate&lt;DimI, DimNI&gt;</a>(</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                    m_eval_pos,</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Kokkos</a>::</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">clamp</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::select&lt;DimNI&gt;</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">coord_extrap</a>),</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                                  m_eval_pos_not_interest_min,</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                                  m_eval_pos_not_interest_max));</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        }</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        std::array&lt;<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>, BSplines1::degree() + 1&gt; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals1_ptr</a>;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        std::experimental::mdspan&lt;</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>,</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                std::experimental::extents&lt;std::size_t, BSplines1::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals1</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals1_ptr</a>.data());</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        std::array&lt;<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>, BSplines2::degree() + 1&gt; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals2_ptr</a>;</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        std::experimental::mdspan&lt;</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">double</a>,</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                std::experimental::extents&lt;std::size_t, BSplines2::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals2</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals2_ptr</a>.data());</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;BSplines1&gt;</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">idx1</a></div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::discrete_space&lt;BSplines1&gt;</a>()</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                          .eval_basis(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals1</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::select&lt;typename BSplines1::tag_type&gt;</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a>));</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;BSplines2&gt;</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">idx2</a></div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::discrete_space&lt;BSplines2&gt;</a>()</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                          .eval_basis(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals2</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::select&lt;typename BSplines2::tag_type&gt;</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">eval_pos</a>));</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="keywordtype">double</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">y</a> = 0.0;</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        <span class="keywordflow">for</span> (std::size_t <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a> = 0; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a> &lt; BSplines1::degree() + 1; ++<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>) {</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            <span class="keywordflow">for</span> (std::size_t <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">j</a> = 0; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">j</a> &lt; BSplines2::degree() + 1; ++<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">j</a>) {</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">y</a> += <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">spline_coef</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">idx1</a> + <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">idx2</a> + <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">j</a>) * <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals1</a>[<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>] * <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">vals2</a>[<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">j</a>];</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            }</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        }</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">y</a>;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    }</div>
-</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>};</div>
-</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>} <span class="comment">// namespace ddc</span></div>
-<div class="ttc" id="aclassddc_1_1DiscreteDomain_html"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a></div><div class="ttdef"><b>Definition</b> discrete_domain.hpp:51</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html"><div class="ttname"><a href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:146</div></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;view.hpp&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DimI, <span class="keyword">class</span>... Dim&gt;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">struct</span> <a class="code hl_struct" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>{</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>};</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   21</span><span class="comment"> * @brief A functor for describing a spline boundary value by a constant extrapolation for 1D evaluator.</span></div>
+<div class="line"><span class="lineno">   22</span><span class="comment"> *</span></div>
+<div class="line"><span class="lineno">   23</span><span class="comment"> * To define the value of a function on B-splines out of the domain, we here use a constant</span></div>
+<div class="line"><span class="lineno">   24</span><span class="comment"> * extrapolation on the edge.</span></div>
+<div class="line"><span class="lineno">   25</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DimI&gt;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">struct</span> <a class="code hl_struct" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a>&lt;DimI&gt;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>{</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; m_eval_pos;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   34</span><span class="comment">     * @brief Instantiate a ConstantExtrapolationRule.</span></div>
+<div class="line"><span class="lineno">   35</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   36</span><span class="comment">     * The boundary value will be the same as at the coordinate eval_pos given.</span></div>
+<div class="line"><span class="lineno">   37</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   38</span><span class="comment">     * @param[in] eval_pos</span></div>
+<div class="line"><span class="lineno">   39</span><span class="comment">     *          Coordinate inside the domain where we will evaluate each points outside the domain.</span></div>
+<div class="line"><span class="lineno">   40</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#ac07df9edae807f3878c94a41d819d345">ConstantExtrapolationRule</a>(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; eval_pos) : m_eval_pos(eval_pos) {}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   44</span><span class="comment">     * @brief Get the value of the function on B-splines at a coordinate outside the domain.</span></div>
+<div class="line"><span class="lineno">   45</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   46</span><span class="comment">     * @param[in] pos</span></div>
+<div class="line"><span class="lineno">   47</span><span class="comment">     *          The coordinate where we want to evaluate the function on B-splines.</span></div>
+<div class="line"><span class="lineno">   48</span><span class="comment">     * @param[in] spline_coef</span></div>
+<div class="line"><span class="lineno">   49</span><span class="comment">     *          The coefficients of the function on B-splines.</span></div>
+<div class="line"><span class="lineno">   50</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   51</span><span class="comment">     * @return A double with the value of the function on B-splines evaluated at the coordinate.</span></div>
+<div class="line"><span class="lineno">   52</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> CoordType, <span class="keyword">class</span> BSplines, <span class="keyword">class</span> Layout, <span class="keyword">class</span> MemorySpace&gt;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#a3529670824c45dd7e75e2237254368fc">KOKKOS_FUNCTION</a> <span class="keywordtype">double</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#a3529670824c45dd7e75e2237254368fc">operator</a>()(</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            [[<a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#a3529670824c45dd7e75e2237254368fc">maybe_unused</a>]] CoordType pos,</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;BSplines&gt;, Layout, MemorySpace&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                    spline_coef) <span class="keyword">const</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">static_assert</span>(in_tags_v&lt;DimI, to_type_seq_t&lt;CoordType&gt;&gt;);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        std::array&lt;<span class="keywordtype">double</span>, BSplines::degree() + 1&gt; vals_ptr;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        std::experimental::mdspan&lt;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                <span class="keywordtype">double</span>,</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                std::experimental::extents&lt;std::size_t, BSplines::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                vals(vals_ptr.data());</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines&gt; idx</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().eval_basis(vals, m_eval_pos);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keywordtype">double</span> y = 0.0;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; BSplines::degree() + 1; ++i) {</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            y += spline_coef(idx + i) * vals[i];</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        }</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keywordflow">return</span> y;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    }</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>};</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   79</span><span class="comment"> * @brief A functor for describing a spline boundary value by a constant extrapolation for 2D evaluator.</span></div>
+<div class="line"><span class="lineno">   80</span><span class="comment"> *</span></div>
+<div class="line"><span class="lineno">   81</span><span class="comment"> * To define the value of a function on B-splines out of the domain, we here use a constant</span></div>
+<div class="line"><span class="lineno">   82</span><span class="comment"> * extrapolation on the edge.</span></div>
+<div class="line"><span class="lineno">   83</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DimI, <span class="keyword">class</span> DimNI&gt;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">struct</span> <a class="code hl_struct" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a>&lt;DimI, DimNI&gt;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>{</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; m_eval_pos;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimNI&gt; m_eval_pos_not_interest_min;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimNI&gt; m_eval_pos_not_interest_max;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   94</span><span class="comment">     * @brief Instantiate a ConstantExtrapolationRule.</span></div>
+<div class="line"><span class="lineno">   95</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   96</span><span class="comment">     * The boundary value will be the same as at the coordinate given in a dimension given.</span></div>
+<div class="line"><span class="lineno">   97</span><span class="comment">     * The dimension of the input defines the dimension of the boundary condition.</span></div>
+<div class="line"><span class="lineno">   98</span><span class="comment">     * The second and the third parameters are needed in case of non-periodic splines on the</span></div>
+<div class="line"><span class="lineno">   99</span><span class="comment">     * dimension off-interest (the complementary dimension of the boundary condition),</span></div>
+<div class="line"><span class="lineno">  100</span><span class="comment">     * because the evaluator can receive coordinates outside the domain in both dimension.</span></div>
+<div class="line"><span class="lineno">  101</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  102</span><span class="comment">     * @param[in] eval_pos</span></div>
+<div class="line"><span class="lineno">  103</span><span class="comment">     *          Coordinate in the dimension given inside the domain where we will evaluate</span></div>
+<div class="line"><span class="lineno">  104</span><span class="comment">     *          each points outside the domain.</span></div>
+<div class="line"><span class="lineno">  105</span><span class="comment">     * @param[in] eval_pos_not_interest_min</span></div>
+<div class="line"><span class="lineno">  106</span><span class="comment">     *          The minimum coordinate inside the domain on the complementary dimension of the boundary condition.</span></div>
+<div class="line"><span class="lineno">  107</span><span class="comment">     * @param[in] eval_pos_not_interest_max</span></div>
+<div class="line"><span class="lineno">  108</span><span class="comment">     *          The maximum coordinate inside the domain on the complementary dimension of the boundary condition.</span></div>
+<div class="line"><span class="lineno">  109</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a048675e8020f8ec2e3bf88bb43c37cf8">ConstantExtrapolationRule</a>(</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; eval_pos,</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimNI&gt; eval_pos_not_interest_min,</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimNI&gt; eval_pos_not_interest_max)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        : m_eval_pos(eval_pos)</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        , m_eval_pos_not_interest_min(eval_pos_not_interest_min)</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        , m_eval_pos_not_interest_max(eval_pos_not_interest_max)</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    {</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    }</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  121</span><span class="comment">     * @brief Instantiate a ConstantExtrapolationRule.</span></div>
+<div class="line"><span class="lineno">  122</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  123</span><span class="comment">     * The boundary value will be the same as at the coordinate given in a dimension given.</span></div>
+<div class="line"><span class="lineno">  124</span><span class="comment">     * The dimension of the input defines the dimension of the boundary condition.</span></div>
+<div class="line"><span class="lineno">  125</span><span class="comment">     * No second and third parameters are needed in case of periodic splines on the</span></div>
+<div class="line"><span class="lineno">  126</span><span class="comment">     * dimension off-interest (the complementary dimension of the boundary condition).</span></div>
+<div class="line"><span class="lineno">  127</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  128</span><span class="comment">     * @param[in] eval_pos</span></div>
+<div class="line"><span class="lineno">  129</span><span class="comment">     *          Coordinate in the dimension given inside the domain where we will evaluate</span></div>
+<div class="line"><span class="lineno">  130</span><span class="comment">     *          each points outside the domain.</span></div>
+<div class="line"><span class="lineno">  131</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> DimNI_sfinae = DimNI, std::enable_if_t&lt;DimNI_sfinae::PERIODIC, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a60c0c81e29ae0f43e6d1a21ff81106ec">ConstantExtrapolationRule</a>(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; eval_pos)</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        : m_eval_pos(eval_pos)</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        , m_eval_pos_not_interest_min(0.)</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        , m_eval_pos_not_interest_max(0.)</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    {</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    }</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  141</span><span class="comment">     * @brief Get the value of the function on B-splines at a coordinate outside the domain.</span></div>
+<div class="line"><span class="lineno">  142</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  143</span><span class="comment">     * In the dimension defined in the constructor Dim1 (or Dim2), it sets the coordinate pos_1 (or pos_2)</span></div>
+<div class="line"><span class="lineno">  144</span><span class="comment">     * given at the m_eval_pos coordinate if it is outside the domain.</span></div>
+<div class="line"><span class="lineno">  145</span><span class="comment">     * If the coordinate on the complementary dimension of the boundary condition dimension ddc::select&lt;DimNI&gt;(coord_extrap) is</span></div>
+<div class="line"><span class="lineno">  146</span><span class="comment">     * outside the domain, then it also sets the coordinate at eval_pos_not_interest_min</span></div>
+<div class="line"><span class="lineno">  147</span><span class="comment">     * (if ddc::select&lt;DimNI&gt;(coord_extrap) @f$ &lt; @f$ eval_pos_not_interest_min) or</span></div>
+<div class="line"><span class="lineno">  148</span><span class="comment">     * at eval_pos_not_interest_max (if ddc::select&lt;DimNI&gt;(coord_extrap) @f$ &gt; @f$ eval_pos_not_interest_max).</span></div>
+<div class="line"><span class="lineno">  149</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  150</span><span class="comment">     * @param[in] coord_extrap</span></div>
+<div class="line"><span class="lineno">  151</span><span class="comment">     *          The coordinates where we want to evaluate the function on B-splines</span></div>
+<div class="line"><span class="lineno">  152</span><span class="comment">     * @param[in] spline_coef</span></div>
+<div class="line"><span class="lineno">  153</span><span class="comment">     *          The coefficients of the function on B-splines.</span></div>
+<div class="line"><span class="lineno">  154</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  155</span><span class="comment">     *@return A double with the value of the function on B-splines evaluated at the coordinate.</span></div>
+<div class="line"><span class="lineno">  156</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> CoordType, <span class="keyword">class</span> BSplines1, <span class="keyword">class</span> BSplines2, <span class="keyword">class</span> Layout, <span class="keyword">class</span> MemorySpace&gt;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a2d306b0aad7a36a588a901d67c4539ff">KOKKOS_FUNCTION</a> <span class="keywordtype">double</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a2d306b0aad7a36a588a901d67c4539ff">operator</a>()(</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            CoordType coord_extrap,</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                    <span class="keywordtype">double</span> <span class="keyword">const</span>,</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;BSplines1, BSplines2&gt;,</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                    Layout,</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                    MemorySpace&gt; <span class="keyword">const</span> spline_coef) <span class="keyword">const</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    {</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                in_tags_v&lt;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                        DimI,</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                        to_type_seq_t&lt;CoordType&gt;&gt; &amp;&amp; in_tags_v&lt;DimNI, to_type_seq_t&lt;CoordType&gt;&gt;);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI, DimNI&gt; eval_pos;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (DimNI::PERIODIC) {</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            eval_pos = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI, DimNI&gt;(m_eval_pos, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;DimNI&gt;(coord_extrap));</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            eval_pos = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI, DimNI&gt;(</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                    m_eval_pos,</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                    Kokkos::</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                            clamp(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;DimNI&gt;(coord_extrap),</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                                  m_eval_pos_not_interest_min,</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                                  m_eval_pos_not_interest_max));</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        }</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        std::array&lt;<span class="keywordtype">double</span>, BSplines1::degree() + 1&gt; vals1_ptr;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        std::experimental::mdspan&lt;</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                <span class="keywordtype">double</span>,</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                std::experimental::extents&lt;std::size_t, BSplines1::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                vals1(vals1_ptr.data());</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        std::array&lt;<span class="keywordtype">double</span>, BSplines2::degree() + 1&gt; vals2_ptr;</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        std::experimental::mdspan&lt;</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                <span class="keywordtype">double</span>,</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                std::experimental::extents&lt;std::size_t, BSplines2::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                vals2(vals2_ptr.data());</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines1&gt; idx1</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines1&gt;()</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                          .eval_basis(vals1, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> BSplines1::tag_type&gt;(eval_pos));</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines2&gt; idx2</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines2&gt;()</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                          .eval_basis(vals2, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> BSplines2::tag_type&gt;(eval_pos));</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="keywordtype">double</span> y = 0.0;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; BSplines1::degree() + 1; ++i) {</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            <span class="keywordflow">for</span> (std::size_t j = 0; j &lt; BSplines2::degree() + 1; ++j) {</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                y += spline_coef(idx1 + i, idx2 + j) * vals1[i] * vals2[j];</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            }</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        }</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <span class="keywordflow">return</span> y;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    }</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>};</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>} <span class="comment">// namespace ddc</span></div>
+<div class="ttc" id="aclassddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4_html_a0214c802aca8ce0770988bb2784f104a"><div class="ttname"><a href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ddc::ChunkCommon&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy &gt;::ChunkSpan</a></div><div class="ttdeci">friend class ChunkSpan</div><div class="ttdef"><b>Definition</b> chunk_common.hpp:85</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> discrete_domain.hpp:53</div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> aligned_allocator.hpp:11</div></div>
-<div class="ttc" id="anamespaceddc_html_a0d8d6125787befc59862bed182ea1717"><div class="ttname"><a href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::enable_chunk</a></div><div class="ttdeci">constexpr bool enable_chunk</div><div class="ttdef"><b>Definition</b> chunk_traits.hpp:16</div></div>
-<div class="ttc" id="anamespaceddc_html_ad8a6cd9c6c37f608b9897fbaa21de620"><div class="ttname"><a href="namespaceddc.html#ad8a6cd9c6c37f608b9897fbaa21de620">ddc::Coordinate</a></div><div class="ttdeci">detail::TaggedVector&lt; CoordinateElement, CDims... &gt; Coordinate</div><div class="ttdoc">A Coordinate represents a coordinate in the continuous space.</div><div class="ttdef"><b>Definition</b> coordinate.hpp:26</div></div>
-<div class="ttc" id="anamespaceddc_html_classddc_1_1ChunkSpan"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition</b> chunk_span.hpp:30</div></div>
-<div class="ttc" id="anamespaceddc_html_structddc_1_1ConstantExtrapolationRule"><div class="ttname"><a href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ddc::ConstantExtrapolationRule</a></div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:13</div></div>
-<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4_html_a048675e8020f8ec2e3bf88bb43c37cf8"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a048675e8020f8ec2e3bf88bb43c37cf8">ddc::ConstantExtrapolationRule&lt; DimI, DimNI &gt;::ConstantExtrapolationRule</a></div><div class="ttdeci">ConstantExtrapolationRule(ddc::Coordinate&lt; DimI &gt; eval_pos, ddc::Coordinate&lt; DimNI &gt; eval_pos_not_interest_min, ddc::Coordinate&lt; DimNI &gt; eval_pos_not_interest_max)</div><div class="ttdoc">Instantiate a ConstantExtrapolationRule.</div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:106</div></div>
-<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4_html_a2d306b0aad7a36a588a901d67c4539ff"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a2d306b0aad7a36a588a901d67c4539ff">ddc::ConstantExtrapolationRule&lt; DimI, DimNI &gt;::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION double operator()(CoordType coord_extrap, ddc::ChunkSpan&lt; double const, ddc::DiscreteDomain&lt; BSplines1, BSplines2 &gt;, Layout, MemorySpace &gt; const spline_coef) const</div><div class="ttdoc">Get the value of the function on B-splines at a coordinate outside the domain.</div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:154</div></div>
-<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4_html_a60c0c81e29ae0f43e6d1a21ff81106ec"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a60c0c81e29ae0f43e6d1a21ff81106ec">ddc::ConstantExtrapolationRule&lt; DimI, DimNI &gt;::ConstantExtrapolationRule</a></div><div class="ttdeci">ConstantExtrapolationRule(ddc::Coordinate&lt; DimI &gt; eval_pos)</div><div class="ttdoc">Instantiate a ConstantExtrapolationRule.</div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:129</div></div>
-<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_3_01DimI_01_4_html_a3529670824c45dd7e75e2237254368fc"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#a3529670824c45dd7e75e2237254368fc">ddc::ConstantExtrapolationRule&lt; DimI &gt;::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION double operator()(CoordType pos, ddc::ChunkSpan&lt; double const, ddc::DiscreteDomain&lt; BSplines &gt;, Layout, MemorySpace &gt; const spline_coef) const</div><div class="ttdoc">Get the value of the function on B-splines at a coordinate outside the domain.</div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:50</div></div>
-<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_3_01DimI_01_4_html_ac07df9edae807f3878c94a41d819d345"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#ac07df9edae807f3878c94a41d819d345">ddc::ConstantExtrapolationRule&lt; DimI &gt;::ConstantExtrapolationRule</a></div><div class="ttdeci">ConstantExtrapolationRule(ddc::Coordinate&lt; DimI &gt; eval_pos)</div><div class="ttdoc">Instantiate a ConstantExtrapolationRule.</div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:37</div></div>
+<div class="ttc" id="anamespaceddc_html_structddc_1_1ConstantExtrapolationRule"><div class="ttname"><a href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ddc::ConstantExtrapolationRule</a></div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:17</div></div>
+<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4_html_a048675e8020f8ec2e3bf88bb43c37cf8"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a048675e8020f8ec2e3bf88bb43c37cf8">ddc::ConstantExtrapolationRule&lt; DimI, DimNI &gt;::ConstantExtrapolationRule</a></div><div class="ttdeci">ConstantExtrapolationRule(ddc::Coordinate&lt; DimI &gt; eval_pos, ddc::Coordinate&lt; DimNI &gt; eval_pos_not_interest_min, ddc::Coordinate&lt; DimNI &gt; eval_pos_not_interest_max)</div><div class="ttdoc">Instantiate a ConstantExtrapolationRule.</div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:110</div></div>
+<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4_html_a2d306b0aad7a36a588a901d67c4539ff"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a2d306b0aad7a36a588a901d67c4539ff">ddc::ConstantExtrapolationRule&lt; DimI, DimNI &gt;::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION double operator()(CoordType coord_extrap, ddc::ChunkSpan&lt; double const, ddc::DiscreteDomain&lt; BSplines1, BSplines2 &gt;, Layout, MemorySpace &gt; const spline_coef) const</div><div class="ttdoc">Get the value of the function on B-splines at a coordinate outside the domain.</div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:158</div></div>
+<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4_html_a60c0c81e29ae0f43e6d1a21ff81106ec"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a60c0c81e29ae0f43e6d1a21ff81106ec">ddc::ConstantExtrapolationRule&lt; DimI, DimNI &gt;::ConstantExtrapolationRule</a></div><div class="ttdeci">ConstantExtrapolationRule(ddc::Coordinate&lt; DimI &gt; eval_pos)</div><div class="ttdoc">Instantiate a ConstantExtrapolationRule.</div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:133</div></div>
+<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_3_01DimI_01_4_html_a3529670824c45dd7e75e2237254368fc"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#a3529670824c45dd7e75e2237254368fc">ddc::ConstantExtrapolationRule&lt; DimI &gt;::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION double operator()(CoordType pos, ddc::ChunkSpan&lt; double const, ddc::DiscreteDomain&lt; BSplines &gt;, Layout, MemorySpace &gt; const spline_coef) const</div><div class="ttdoc">Get the value of the function on B-splines at a coordinate outside the domain.</div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:54</div></div>
+<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_3_01DimI_01_4_html_ac07df9edae807f3878c94a41d819d345"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule_3_01DimI_01_4.html#ac07df9edae807f3878c94a41d819d345">ddc::ConstantExtrapolationRule&lt; DimI &gt;::ConstantExtrapolationRule</a></div><div class="ttdeci">ConstantExtrapolationRule(ddc::Coordinate&lt; DimI &gt; eval_pos)</div><div class="ttdoc">Instantiate a ConstantExtrapolationRule.</div><div class="ttdef"><b>Definition</b> constant_extrapolation_rule.hpp:41</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_5207078cb8d41128e6db12b03ca44199.html">ddc</a></li><li class="navelem"><a class="el" href="dir_74cc8a1b243e85999f3f3b8a0a21720f.html">kernels</a></li><li class="navelem"><a class="el" href="dir_5c3d3d658754760ab0af08a5f432efa2.html">splines</a></li><li class="navelem"><b>constant_extrapolation_rule.hpp</b></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.10.0 </li>
-  </ul>
-</div>
+<!--
+Copyright (C) The DDC development team, see COPYRIGHT.md file
+SPDX-License-Identifier: MIT
+-->
 </body>
 </html>

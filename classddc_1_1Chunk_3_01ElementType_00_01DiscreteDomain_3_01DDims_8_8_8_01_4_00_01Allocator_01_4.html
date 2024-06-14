@@ -1,79 +1,34 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!--
+Copyright (C) The DDC development team, see COPYRIGHT.md file
+SPDX-License-Identifier: MIT
+-->
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<meta name="generator" content="Doxygen 1.10.0"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<!-- BEGIN opengraph metadata -->
-<meta property="og:title" content="Doxygen Awesome" />
-<meta property="og:image" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
-<meta property="og:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
-<meta property="og:url" content="https://jothepro.github.io/doxygen-awesome-css/" />
-<!-- END opengraph metadata -->
-<!-- BEGIN twitter metadata -->
-<meta name="twitter:image:src" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
-<meta name="twitter:title" content="Doxygen Awesome" />
-<meta name="twitter:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
-<!-- END twitter metadata -->
-<title>DDC: ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt; Class Template Reference</title>
-<link href="tabs.css" rel="stylesheet" type="text/css"/>
-<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
-<script type="text/javascript" src="jquery.js"></script>
-<script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
-<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
-<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
-<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
-<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
-<script type="text/javascript" src="toggle-alternative-theme.js"></script>
-<script type="text/javascript">
-    DoxygenAwesomeFragmentCopyButton.init()
-    DoxygenAwesomeDarkModeToggle.init()
-    DoxygenAwesomeParagraphLink.init()
-    DoxygenAwesomeInteractiveToc.init()
-    DoxygenAwesomeTabs.init()
-</script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
-<script type="text/javascript" src="cookie.js"></script>
-<link href="custom.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+	<meta charset="UTF-8">
+	<meta name="generator" content="Doxygen 1.9.8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>DDC: ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt; Class Template Reference</title>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="dynsections.js"></script>
+	<script type="text/javascript" src="navtreedata.js"></script>
+	<script type="text/javascript" src="navtree.js"></script>
+	<link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<!-- https://tholman.com/github-corners/ -->
-<a href="https://github.com/jothepro/doxygen-awesome-css" class="github-corner" title="View source on GitHub" target="_blank" rel="noopener noreferrer">
-    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
-    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
-<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
-<div id="titlearea">
-<table cellspacing="0" cellpadding="0">
- <tbody>
- <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">DDC
-   &#160;<span id="projectnumber">0.0.0</span>
-   </div>
-  </td>
- </tr>
- </tbody>
-</table>
-</div>
-<!-- end header part -->
-<!-- Generated by Doxygen 1.10.0 -->
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('',false,false,'search.php','Search');
-});
-/* @license-end */
-</script>
-<div id="main-nav"></div>
+<div>
+<header id="titlearea">
+	<div id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></div>
+	<h1 id="projectname">DDC&nbsp;<span id="projectnumber">0.0.0</span></h1>
+	<h2 id="projectbrief">a <span class="acronym">d</span>iscrete <span class="acronym">d</span>omain <span class="acronym">c</span>omputation library</h2>
+</header>
+<nav id="tabs"><ul>
+	<li><a href="index.html">About</a>
+	<li><a href="first_steps.html">Commented example</a>
+	<li><a href="annotated.html">API reference</a>
+	<li id="gitlab-ribbon"><a rel="noopener" href="https://github.com/CExA-project/ddc" target="_blank">Contribute on Github</a></li>
+</ul></nav>
+<!-- Generated by Doxygen 1.9.8 -->
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -87,7 +42,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -101,154 +56,142 @@ $(function(){initNavTree('classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_
   <div class="headertitle"><div class="title">ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="chunk_8hpp_source.html">chunk.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4__inherit__graph.png" border="0" usemap="#addc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="addc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4_inherit__map" id="addc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4_inherit__map">
-<area shape="rect" title=" " alt="" coords="27,148,204,703"/>
-<area shape="rect" href="namespaceddc.html" title=" " alt="" coords="5,5,225,100"/>
-<area shape="poly" title=" " alt="" coords="118,114,118,148,113,148,113,114"/>
-</map>
-</div>
-<div class="dynheader">
-Collaboration diagram for ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4__coll__graph.png" border="0" usemap="#addc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="addc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4_coll__map" id="addc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4_coll__map">
-<area shape="rect" title=" " alt="" coords="27,148,204,703"/>
-<area shape="rect" href="namespaceddc.html" title=" " alt="" coords="5,5,225,100"/>
-<area shape="poly" title=" " alt="" coords="118,114,118,148,113,148,113,114"/>
+<area shape="rect" title=" " alt="" coords="35,148,229,703"/>
+<area shape="rect" href="namespaceddc.html" title=" " alt="" coords="5,5,259,100"/>
+<area shape="poly" title=" " alt="" coords="135,114,135,148,129,148,129,114"/>
 </map>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a1404cf11ecc00a0a618995494a1e2d82" id="r_a1404cf11ecc00a0a618995494a1e2d82"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1404cf11ecc00a0a618995494a1e2d82">span_type</a></td></tr>
-<tr class="memdesc:a1404cf11ecc00a0a618995494a1e2d82"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of a span of this full chunk  <br /></td></tr>
-<tr class="separator:a1404cf11ecc00a0a618995494a1e2d82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a947685070984282a98f754b94d0db066" id="r_a947685070984282a98f754b94d0db066"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a947685070984282a98f754b94d0db066">view_type</a></td></tr>
-<tr class="memdesc:a947685070984282a98f754b94d0db066"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of a view of this full chunk  <br /></td></tr>
-<tr class="separator:a947685070984282a98f754b94d0db066"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44a07a59145e8c0056f8b6dd462c3435" id="r_a44a07a59145e8c0056f8b6dd462c3435"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44a07a59145e8c0056f8b6dd462c3435">allocation_mdspan_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::allocation_mdspan_type</td></tr>
+<tr class="memitem:a5b9cf50b97ceed1a619ff2b7bbc57e54" id="r_a5b9cf50b97ceed1a619ff2b7bbc57e54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a5b9cf50b97ceed1a619ff2b7bbc57e54">span_type</a> = <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, std::experimental::layout_right, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> Allocator::memory_space &gt;</td></tr>
+<tr class="memdesc:a5b9cf50b97ceed1a619ff2b7bbc57e54"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of a span of this full chunk  <br /></td></tr>
+<tr class="separator:a5b9cf50b97ceed1a619ff2b7bbc57e54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1fa22c74b08f0a1298c3fffdcdbfa7e" id="r_ad1fa22c74b08f0a1298c3fffdcdbfa7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ad1fa22c74b08f0a1298c3fffdcdbfa7e">view_type</a> = <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, std::experimental::layout_right, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> Allocator::memory_space &gt;</td></tr>
+<tr class="memdesc:ad1fa22c74b08f0a1298c3fffdcdbfa7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of a view of this full chunk  <br /></td></tr>
+<tr class="separator:ad1fa22c74b08f0a1298c3fffdcdbfa7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44a07a59145e8c0056f8b6dd462c3435" id="r_a44a07a59145e8c0056f8b6dd462c3435"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a44a07a59145e8c0056f8b6dd462c3435">allocation_mdspan_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::allocation_mdspan_type</td></tr>
 <tr class="memdesc:a44a07a59145e8c0056f8b6dd462c3435"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dereferenceable part of the co-domain but with indexing starting at 0.  <br /></td></tr>
 <tr class="separator:a44a07a59145e8c0056f8b6dd462c3435"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a360ab865a8dbb427b6e30555ac0ba79d" id="r_a360ab865a8dbb427b6e30555ac0ba79d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a360ab865a8dbb427b6e30555ac0ba79d">const_allocation_mdspan_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::const_allocation_mdspan_type</td></tr>
+<tr class="memitem:a360ab865a8dbb427b6e30555ac0ba79d" id="r_a360ab865a8dbb427b6e30555ac0ba79d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a360ab865a8dbb427b6e30555ac0ba79d">const_allocation_mdspan_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::const_allocation_mdspan_type</td></tr>
 <tr class="separator:a360ab865a8dbb427b6e30555ac0ba79d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1963dd8eb87472d674e33315a1a22742" id="r_a1963dd8eb87472d674e33315a1a22742"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1963dd8eb87472d674e33315a1a22742">mdomain_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::mdomain_type</td></tr>
+<tr class="memitem:a1963dd8eb87472d674e33315a1a22742" id="r_a1963dd8eb87472d674e33315a1a22742"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a1963dd8eb87472d674e33315a1a22742">mdomain_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::mdomain_type</td></tr>
 <tr class="separator:a1963dd8eb87472d674e33315a1a22742"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6de2c5763408dfea17c03d7d52920a68" id="r_a6de2c5763408dfea17c03d7d52920a68"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6de2c5763408dfea17c03d7d52920a68">memory_space</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> Allocator::memory_space</td></tr>
+<tr class="memitem:a6de2c5763408dfea17c03d7d52920a68" id="r_a6de2c5763408dfea17c03d7d52920a68"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a6de2c5763408dfea17c03d7d52920a68">memory_space</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> Allocator::memory_space</td></tr>
 <tr class="separator:a6de2c5763408dfea17c03d7d52920a68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2e30b803cc4fa5e0c2305b4b73f3f4d" id="r_ac2e30b803cc4fa5e0c2305b4b73f3f4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac2e30b803cc4fa5e0c2305b4b73f3f4d">discrete_element_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::discrete_element_type</td></tr>
+<tr class="memitem:ac2e30b803cc4fa5e0c2305b4b73f3f4d" id="r_ac2e30b803cc4fa5e0c2305b4b73f3f4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ac2e30b803cc4fa5e0c2305b4b73f3f4d">discrete_element_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::discrete_element_type</td></tr>
 <tr class="separator:ac2e30b803cc4fa5e0c2305b4b73f3f4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82025a6731665ac59733c93ec50f560b" id="r_a82025a6731665ac59733c93ec50f560b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82025a6731665ac59733c93ec50f560b">extents_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::extents_type</td></tr>
+<tr class="memitem:a82025a6731665ac59733c93ec50f560b" id="r_a82025a6731665ac59733c93ec50f560b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a82025a6731665ac59733c93ec50f560b">extents_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::extents_type</td></tr>
 <tr class="separator:a82025a6731665ac59733c93ec50f560b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae743407b73c892badfe181838f6f089d" id="r_ae743407b73c892badfe181838f6f089d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae743407b73c892badfe181838f6f089d">layout_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::layout_type</td></tr>
+<tr class="memitem:ae743407b73c892badfe181838f6f089d" id="r_ae743407b73c892badfe181838f6f089d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ae743407b73c892badfe181838f6f089d">layout_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::layout_type</td></tr>
 <tr class="separator:ae743407b73c892badfe181838f6f089d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a775265cfb0346957568890f722196f0d" id="r_a775265cfb0346957568890f722196f0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a775265cfb0346957568890f722196f0d">mapping_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::mapping_type</td></tr>
+<tr class="memitem:a775265cfb0346957568890f722196f0d" id="r_a775265cfb0346957568890f722196f0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a775265cfb0346957568890f722196f0d">mapping_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::mapping_type</td></tr>
 <tr class="separator:a775265cfb0346957568890f722196f0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a9c9a52b66d51d0d6bbd278e97206c6" id="r_a0a9c9a52b66d51d0d6bbd278e97206c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a9c9a52b66d51d0d6bbd278e97206c6">element_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::element_type</td></tr>
+<tr class="memitem:a0a9c9a52b66d51d0d6bbd278e97206c6" id="r_a0a9c9a52b66d51d0d6bbd278e97206c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a0a9c9a52b66d51d0d6bbd278e97206c6">element_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::element_type</td></tr>
 <tr class="separator:a0a9c9a52b66d51d0d6bbd278e97206c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f136133b73bafda0b8c4ff181f2ca42" id="r_a9f136133b73bafda0b8c4ff181f2ca42"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f136133b73bafda0b8c4ff181f2ca42">value_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::value_type</td></tr>
+<tr class="memitem:a9f136133b73bafda0b8c4ff181f2ca42" id="r_a9f136133b73bafda0b8c4ff181f2ca42"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a9f136133b73bafda0b8c4ff181f2ca42">value_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::value_type</td></tr>
 <tr class="separator:a9f136133b73bafda0b8c4ff181f2ca42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46473e967956d49500e34e617b81dd67" id="r_a46473e967956d49500e34e617b81dd67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46473e967956d49500e34e617b81dd67">size_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::size_type</td></tr>
+<tr class="memitem:a46473e967956d49500e34e617b81dd67" id="r_a46473e967956d49500e34e617b81dd67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a46473e967956d49500e34e617b81dd67">size_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::size_type</td></tr>
 <tr class="separator:a46473e967956d49500e34e617b81dd67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60faccb41c4bde23d2c61329e10de17b" id="r_a60faccb41c4bde23d2c61329e10de17b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60faccb41c4bde23d2c61329e10de17b">data_handle_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::data_handle_type</td></tr>
+<tr class="memitem:a60faccb41c4bde23d2c61329e10de17b" id="r_a60faccb41c4bde23d2c61329e10de17b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a60faccb41c4bde23d2c61329e10de17b">data_handle_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::data_handle_type</td></tr>
 <tr class="separator:a60faccb41c4bde23d2c61329e10de17b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b45eb6896b7cb213cb526e17b0db0af" id="r_a6b45eb6896b7cb213cb526e17b0db0af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b45eb6896b7cb213cb526e17b0db0af">reference</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::reference</td></tr>
+<tr class="memitem:a6b45eb6896b7cb213cb526e17b0db0af" id="r_a6b45eb6896b7cb213cb526e17b0db0af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a6b45eb6896b7cb213cb526e17b0db0af">reference</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::reference</td></tr>
 <tr class="separator:a6b45eb6896b7cb213cb526e17b0db0af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac6b8e5dde5c343f199585b72b59b33af" id="r_ac6b8e5dde5c343f199585b72b59b33af"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6b8e5dde5c343f199585b72b59b33af">Chunk</a> ()=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">default</a></td></tr>
+<tr class="memitem:ac6b8e5dde5c343f199585b72b59b33af" id="r_ac6b8e5dde5c343f199585b72b59b33af"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ac6b8e5dde5c343f199585b72b59b33af">Chunk</a> ()=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="memdesc:ac6b8e5dde5c343f199585b72b59b33af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>.  <br /></td></tr>
 <tr class="separator:ac6b8e5dde5c343f199585b72b59b33af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7df229943f44c2b6c64e8742e82fe59" id="r_ae7df229943f44c2b6c64e8742e82fe59"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae7df229943f44c2b6c64e8742e82fe59">Chunk</a> (std::string <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="#ac6d560e2ab709498045b4e7350111046">label</a>, <a class="el" href="#a1963dd8eb87472d674e33315a1a22742">mdomain_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> allocator=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a>())</td></tr>
+<tr class="memitem:ae7df229943f44c2b6c64e8742e82fe59" id="r_ae7df229943f44c2b6c64e8742e82fe59"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ae7df229943f44c2b6c64e8742e82fe59">Chunk</a> (std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ac6d560e2ab709498045b4e7350111046">label</a>, <a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a1963dd8eb87472d674e33315a1a22742">mdomain_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> allocator=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a>())</td></tr>
 <tr class="memdesc:ae7df229943f44c2b6c64e8742e82fe59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a labeled <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> on a domain with uninitialized values.  <br /></td></tr>
 <tr class="separator:ae7df229943f44c2b6c64e8742e82fe59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4fe28d6465359d212fcb08e30e9ab5d" id="r_aa4fe28d6465359d212fcb08e30e9ab5d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4fe28d6465359d212fcb08e30e9ab5d">Chunk</a> (<a class="el" href="#a1963dd8eb87472d674e33315a1a22742">mdomain_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> allocator=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a>())</td></tr>
+<tr class="memitem:aa4fe28d6465359d212fcb08e30e9ab5d" id="r_aa4fe28d6465359d212fcb08e30e9ab5d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#aa4fe28d6465359d212fcb08e30e9ab5d">Chunk</a> (<a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a1963dd8eb87472d674e33315a1a22742">mdomain_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> allocator=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a>())</td></tr>
 <tr class="memdesc:aa4fe28d6465359d212fcb08e30e9ab5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> on a domain with uninitialized values.  <br /></td></tr>
 <tr class="separator:aa4fe28d6465359d212fcb08e30e9ab5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab58b09de06a79094c231346a421d8c67" id="r_ab58b09de06a79094c231346a421d8c67"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab58b09de06a79094c231346a421d8c67">Chunk</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;other)=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">delete</a></td></tr>
+<tr class="memitem:ab58b09de06a79094c231346a421d8c67" id="r_ab58b09de06a79094c231346a421d8c67"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ab58b09de06a79094c231346a421d8c67">Chunk</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;other)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">delete</a></td></tr>
 <tr class="memdesc:ab58b09de06a79094c231346a421d8c67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deleted: use deepcopy instead.  <br /></td></tr>
 <tr class="separator:ab58b09de06a79094c231346a421d8c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfb2a68ce81efb3c9485e8028232cdec" id="r_abfb2a68ce81efb3c9485e8028232cdec"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfb2a68ce81efb3c9485e8028232cdec">Chunk</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp;&amp;other)</td></tr>
+<tr class="memitem:abfb2a68ce81efb3c9485e8028232cdec" id="r_abfb2a68ce81efb3c9485e8028232cdec"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#abfb2a68ce81efb3c9485e8028232cdec">Chunk</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp;&amp;other)</td></tr>
 <tr class="memdesc:abfb2a68ce81efb3c9485e8028232cdec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> by move.  <br /></td></tr>
 <tr class="separator:abfb2a68ce81efb3c9485e8028232cdec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a943b22693810dde1dd3c76a643ebeabd" id="r_a943b22693810dde1dd3c76a643ebeabd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a943b22693810dde1dd3c76a643ebeabd">~Chunk</a> ()</td></tr>
+<tr class="memitem:a943b22693810dde1dd3c76a643ebeabd" id="r_a943b22693810dde1dd3c76a643ebeabd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a943b22693810dde1dd3c76a643ebeabd">~Chunk</a> ()</td></tr>
 <tr class="separator:a943b22693810dde1dd3c76a643ebeabd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fe4e27e1a471c6b4fd572ba6260736e" id="r_a3fe4e27e1a471c6b4fd572ba6260736e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fe4e27e1a471c6b4fd572ba6260736e">operator=</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;other)=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">delete</a></td></tr>
+<tr class="memitem:a3fe4e27e1a471c6b4fd572ba6260736e" id="r_a3fe4e27e1a471c6b4fd572ba6260736e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a3fe4e27e1a471c6b4fd572ba6260736e">operator=</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;other)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">delete</a></td></tr>
 <tr class="memdesc:a3fe4e27e1a471c6b4fd572ba6260736e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deleted: use deepcopy instead.  <br /></td></tr>
 <tr class="separator:a3fe4e27e1a471c6b4fd572ba6260736e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5f47a2690687e399535ecad8b3d4625" id="r_af5f47a2690687e399535ecad8b3d4625"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5f47a2690687e399535ecad8b3d4625">operator=</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp;&amp;other)</td></tr>
+<tr class="memitem:af5f47a2690687e399535ecad8b3d4625" id="r_af5f47a2690687e399535ecad8b3d4625"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#af5f47a2690687e399535ecad8b3d4625">operator=</a> (<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp;&amp;other)</td></tr>
 <tr class="memdesc:af5f47a2690687e399535ecad8b3d4625"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move-assigns a new value to this field.  <br /></td></tr>
 <tr class="separator:af5f47a2690687e399535ecad8b3d4625"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e86d075ae37c7a63f3fcb2c99677017" id="r_a3e86d075ae37c7a63f3fcb2c99677017"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims&gt; </td></tr>
-<tr class="memitem:a3e86d075ae37c7a63f3fcb2c99677017"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a3e86d075ae37c7a63f3fcb2c99677017">operator[]</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">slice_spec</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:a3e86d075ae37c7a63f3fcb2c99677017"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a3e86d075ae37c7a63f3fcb2c99677017">operator[]</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">slice_spec</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a3e86d075ae37c7a63f3fcb2c99677017"><td class="mdescLeft">&#160;</td><td class="mdescRight">Slice out some dimensions.  <br /></td></tr>
 <tr class="separator:a3e86d075ae37c7a63f3fcb2c99677017"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec54676a19bc468ce6cb7154172a9e93" id="r_aec54676a19bc468ce6cb7154172a9e93"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims&gt; </td></tr>
-<tr class="memitem:aec54676a19bc468ce6cb7154172a9e93"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aec54676a19bc468ce6cb7154172a9e93">operator[]</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">slice_spec</a>)</td></tr>
+<tr class="memitem:aec54676a19bc468ce6cb7154172a9e93"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#aec54676a19bc468ce6cb7154172a9e93">operator[]</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">slice_spec</a>)</td></tr>
 <tr class="memdesc:aec54676a19bc468ce6cb7154172a9e93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Slice out some dimensions.  <br /></td></tr>
 <tr class="separator:aec54676a19bc468ce6cb7154172a9e93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e6f8a28dcbd61ec1f39cc22f64678e1" id="r_a0e6f8a28dcbd61ec1f39cc22f64678e1"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims&gt; </td></tr>
-<tr class="memitem:a0e6f8a28dcbd61ec1f39cc22f64678e1"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0e6f8a28dcbd61ec1f39cc22f64678e1">operator[]</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">odomain</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:a0e6f8a28dcbd61ec1f39cc22f64678e1"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a0e6f8a28dcbd61ec1f39cc22f64678e1">operator[]</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">odomain</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a0e6f8a28dcbd61ec1f39cc22f64678e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Slice out some dimensions.  <br /></td></tr>
 <tr class="separator:a0e6f8a28dcbd61ec1f39cc22f64678e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09d66bbd5781da4748d6880947835839" id="r_a09d66bbd5781da4748d6880947835839"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims&gt; </td></tr>
-<tr class="memitem:a09d66bbd5781da4748d6880947835839"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a09d66bbd5781da4748d6880947835839">operator[]</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">odomain</a>)</td></tr>
+<tr class="memitem:a09d66bbd5781da4748d6880947835839"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a09d66bbd5781da4748d6880947835839">operator[]</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">odomain</a>)</td></tr>
 <tr class="memdesc:a09d66bbd5781da4748d6880947835839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Slice out some dimensions.  <br /></td></tr>
 <tr class="separator:a09d66bbd5781da4748d6880947835839"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36e276e1063ec83bbeeb830afb3437f0" id="r_a36e276e1063ec83bbeeb830afb3437f0"><td class="memTemplParams" colspan="2">template&lt;class... DElems&gt; </td></tr>
-<tr class="memitem:a36e276e1063ec83bbeeb830afb3437f0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="#a0a9c9a52b66d51d0d6bbd278e97206c6">element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a36e276e1063ec83bbeeb830afb3437f0">operator()</a> (<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DElems</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;... <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">delems</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
+<tr class="memitem:a36e276e1063ec83bbeeb830afb3437f0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a0a9c9a52b66d51d0d6bbd278e97206c6">element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a36e276e1063ec83bbeeb830afb3437f0">operator()</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DElems</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;... <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">delems</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="memdesc:a36e276e1063ec83bbeeb830afb3437f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Element access using a list of <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a>.  <br /></td></tr>
 <tr class="separator:a36e276e1063ec83bbeeb830afb3437f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe2a4449102b723d135c9c0daada0a8c" id="r_afe2a4449102b723d135c9c0daada0a8c"><td class="memTemplParams" colspan="2">template&lt;class... DElems&gt; </td></tr>
-<tr class="memitem:afe2a4449102b723d135c9c0daada0a8c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="#a0a9c9a52b66d51d0d6bbd278e97206c6">element_type</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#afe2a4449102b723d135c9c0daada0a8c">operator()</a> (<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DElems</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;... <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">delems</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
+<tr class="memitem:afe2a4449102b723d135c9c0daada0a8c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a0a9c9a52b66d51d0d6bbd278e97206c6">element_type</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#afe2a4449102b723d135c9c0daada0a8c">operator()</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DElems</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;... <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">delems</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="memdesc:afe2a4449102b723d135c9c0daada0a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Element access using a list of <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a>.  <br /></td></tr>
 <tr class="separator:afe2a4449102b723d135c9c0daada0a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6d560e2ab709498045b4e7350111046" id="r_ac6d560e2ab709498045b4e7350111046"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">char</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6d560e2ab709498045b4e7350111046">label</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:ac6d560e2ab709498045b4e7350111046" id="r_ac6d560e2ab709498045b4e7350111046"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">char</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ac6d560e2ab709498045b4e7350111046">label</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:ac6d560e2ab709498045b4e7350111046"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the label of the <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>.  <br /></td></tr>
 <tr class="separator:ac6d560e2ab709498045b4e7350111046"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9560083192c223a3c3ca564500b0d820" id="r_a9560083192c223a3c3ca564500b0d820"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9560083192c223a3c3ca564500b0d820">data_handle</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:a9560083192c223a3c3ca564500b0d820" id="r_a9560083192c223a3c3ca564500b0d820"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a9560083192c223a3c3ca564500b0d820">data_handle</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a9560083192c223a3c3ca564500b0d820"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access to the underlying allocation pointer.  <br /></td></tr>
 <tr class="separator:a9560083192c223a3c3ca564500b0d820"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38fd15703f289c3b1185de2effab53f7" id="r_a38fd15703f289c3b1185de2effab53f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38fd15703f289c3b1185de2effab53f7">data_handle</a> ()</td></tr>
+<tr class="memitem:a38fd15703f289c3b1185de2effab53f7" id="r_a38fd15703f289c3b1185de2effab53f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a38fd15703f289c3b1185de2effab53f7">data_handle</a> ()</td></tr>
 <tr class="memdesc:a38fd15703f289c3b1185de2effab53f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access to the underlying allocation pointer.  <br /></td></tr>
 <tr class="separator:a38fd15703f289c3b1185de2effab53f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42479f917e93ceb13a89e55696a9db4d" id="r_a42479f917e93ceb13a89e55696a9db4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a360ab865a8dbb427b6e30555ac0ba79d">const_allocation_mdspan_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a42479f917e93ceb13a89e55696a9db4d">allocation_mdspan</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:a42479f917e93ceb13a89e55696a9db4d" id="r_a42479f917e93ceb13a89e55696a9db4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a360ab865a8dbb427b6e30555ac0ba79d">const_allocation_mdspan_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a42479f917e93ceb13a89e55696a9db4d">allocation_mdspan</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a42479f917e93ceb13a89e55696a9db4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provide a mdspan on the memory allocation.  <br /></td></tr>
 <tr class="separator:a42479f917e93ceb13a89e55696a9db4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a380016c30cac73aed0be01f99985a92c" id="r_a380016c30cac73aed0be01f99985a92c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a44a07a59145e8c0056f8b6dd462c3435">allocation_mdspan_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a380016c30cac73aed0be01f99985a92c">allocation_mdspan</a> ()</td></tr>
+<tr class="memitem:a380016c30cac73aed0be01f99985a92c" id="r_a380016c30cac73aed0be01f99985a92c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a44a07a59145e8c0056f8b6dd462c3435">allocation_mdspan_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a380016c30cac73aed0be01f99985a92c">allocation_mdspan</a> ()</td></tr>
 <tr class="memdesc:a380016c30cac73aed0be01f99985a92c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provide a mdspan on the memory allocation.  <br /></td></tr>
 <tr class="separator:a380016c30cac73aed0be01f99985a92c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa70c391d731552f8b5cdf6ecab0abe6b" id="r_aa70c391d731552f8b5cdf6ecab0abe6b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa70c391d731552f8b5cdf6ecab0abe6b">allocation_kokkos_view</a> ()</td></tr>
+<tr class="memitem:aa70c391d731552f8b5cdf6ecab0abe6b" id="r_aa70c391d731552f8b5cdf6ecab0abe6b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#aa70c391d731552f8b5cdf6ecab0abe6b">allocation_kokkos_view</a> ()</td></tr>
 <tr class="memdesc:aa70c391d731552f8b5cdf6ecab0abe6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provide an unmanaged <code>Kokkos::View</code> on the memory allocation.  <br /></td></tr>
 <tr class="separator:aa70c391d731552f8b5cdf6ecab0abe6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a538074c4a8832e5c70a51481eca9ce02" id="r_a538074c4a8832e5c70a51481eca9ce02"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a538074c4a8832e5c70a51481eca9ce02">allocation_kokkos_view</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:a538074c4a8832e5c70a51481eca9ce02" id="r_a538074c4a8832e5c70a51481eca9ce02"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a538074c4a8832e5c70a51481eca9ce02">allocation_kokkos_view</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a538074c4a8832e5c70a51481eca9ce02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provide an unmanaged <code>Kokkos::View</code> on the memory allocation.  <br /></td></tr>
 <tr class="separator:a538074c4a8832e5c70a51481eca9ce02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa3ac9ac5d4357e41469c413ad28ff54" id="r_afa3ac9ac5d4357e41469c413ad28ff54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a947685070984282a98f754b94d0db066">view_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa3ac9ac5d4357e41469c413ad28ff54">span_cview</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:afa3ac9ac5d4357e41469c413ad28ff54" id="r_afa3ac9ac5d4357e41469c413ad28ff54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ad1fa22c74b08f0a1298c3fffdcdbfa7e">view_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#afa3ac9ac5d4357e41469c413ad28ff54">span_cview</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:afa3ac9ac5d4357e41469c413ad28ff54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac88135df375b9f8d4338bccbbfb784d7" id="r_ac88135df375b9f8d4338bccbbfb784d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a947685070984282a98f754b94d0db066">view_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac88135df375b9f8d4338bccbbfb784d7">span_view</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:ac88135df375b9f8d4338bccbbfb784d7" id="r_ac88135df375b9f8d4338bccbbfb784d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ad1fa22c74b08f0a1298c3fffdcdbfa7e">view_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ac88135df375b9f8d4338bccbbfb784d7">span_view</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:ac88135df375b9f8d4338bccbbfb784d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9a0f3ab2b6eb82ecc65fe7a3992ccb7" id="r_aa9a0f3ab2b6eb82ecc65fe7a3992ccb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1404cf11ecc00a0a618995494a1e2d82">span_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9a0f3ab2b6eb82ecc65fe7a3992ccb7">span_view</a> ()</td></tr>
+<tr class="memitem:aa9a0f3ab2b6eb82ecc65fe7a3992ccb7" id="r_aa9a0f3ab2b6eb82ecc65fe7a3992ccb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a5b9cf50b97ceed1a619ff2b7bbc57e54">span_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#aa9a0f3ab2b6eb82ecc65fe7a3992ccb7">span_view</a> ()</td></tr>
 <tr class="separator:aa9a0f3ab2b6eb82ecc65fe7a3992ccb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-types" name="pro-types"></a>
 Protected Types</h2></td></tr>
-<tr class="memitem:a57171167d4cec2c2d411ee0dc0f9c081" id="r_a57171167d4cec2c2d411ee0dc0f9c081"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57171167d4cec2c2d411ee0dc0f9c081">base_type</a> = <a class="el" href="namespaceddc.html#classddc_1_1ChunkCommon">ChunkCommon</a>&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;DDims...&gt;, std::experimental::layout_right&gt;</td></tr>
+<tr class="memitem:a57171167d4cec2c2d411ee0dc0f9c081" id="r_a57171167d4cec2c2d411ee0dc0f9c081"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a57171167d4cec2c2d411ee0dc0f9c081">base_type</a> = <a class="el" href="namespaceddc.html#classddc_1_1ChunkCommon">ChunkCommon</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, std::experimental::layout_right &gt;</td></tr>
 <tr class="separator:a57171167d4cec2c2d411ee0dc0f9c081"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7d42ab23b483fa53d3da5bc566bf434" id="r_ab7d42ab23b483fa53d3da5bc566bf434"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7d42ab23b483fa53d3da5bc566bf434">internal_mdspan_type</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::internal_mdspan_type</td></tr>
+<tr class="memitem:ab7d42ab23b483fa53d3da5bc566bf434" id="r_ab7d42ab23b483fa53d3da5bc566bf434"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ab7d42ab23b483fa53d3da5bc566bf434">internal_mdspan_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::internal_mdspan_type</td></tr>
 <tr class="memdesc:ab7d42ab23b483fa53d3da5bc566bf434"><td class="mdescLeft">&#160;</td><td class="mdescRight">ND memory view.  <br /></td></tr>
 <tr class="separator:ab7d42ab23b483fa53d3da5bc566bf434"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:aa299fb96adef4e448d8d35a354e71806" id="r_aa299fb96adef4e448d8d35a354e71806"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> &gt; </td></tr>
-<tr class="memitem:aa299fb96adef4e448d8d35a354e71806"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa299fb96adef4e448d8d35a354e71806">Chunk</a></td></tr>
+<tr class="memitem:aa299fb96adef4e448d8d35a354e71806" id="r_aa299fb96adef4e448d8d35a354e71806"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> &gt; </td></tr>
+<tr class="memitem:aa299fb96adef4e448d8d35a354e71806"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a></td></tr>
 <tr class="separator:aa299fb96adef4e448d8d35a354e71806"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
@@ -258,13 +201,13 @@ Friends</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::base_type = <a class="el" href="namespaceddc.html#classddc_1_1ChunkCommon">ChunkCommon</a>&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;DDims...&gt;, std::experimental::layout_right&gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::base_type =  <a class="el" href="namespaceddc.html#classddc_1_1ChunkCommon">ChunkCommon</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;DDims...&gt;, std::experimental::layout_right&gt;</td>
         </tr>
       </table>
   </td>
@@ -282,13 +225,13 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::internal_mdspan_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::internal_mdspan_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::internal_mdspan_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::internal_mdspan_type</td>
         </tr>
       </table>
   </td>
@@ -302,50 +245,38 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 
 </div>
 </div>
-<a id="a1404cf11ecc00a0a618995494a1e2d82" name="a1404cf11ecc00a0a618995494a1e2d82"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1404cf11ecc00a0a618995494a1e2d82">&#9670;&#160;</a></span>span_type</h2>
+<a id="a5b9cf50b97ceed1a619ff2b7bbc57e54" name="a5b9cf50b97ceed1a619ff2b7bbc57e54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b9cf50b97ceed1a619ff2b7bbc57e54">&#9670;&#160;</a></span>span_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::span_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::span_type =  <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;DDims...&gt;, std::experimental::layout_right, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> Allocator::memory_space&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line"> <a class="code hl_function" href="namespaceddc.html#a25bdb64cb80790c6e3509834f159d65d">ChunkSpan</a>&lt;</div>
-<div class="line">            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>,</div>
-<div class="line">            DiscreteDomain&lt;<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDims</a>...&gt;,</div>
-<div class="line">            std::experimental::layout_right,</div>
-<div class="line">            <span class="keyword">typename</span> Allocator::memory_space&gt;</div>
-<div class="ttc" id="anamespaceddc_html_a0d8d6125787befc59862bed182ea1717"><div class="ttname"><a href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::enable_chunk</a></div><div class="ttdeci">constexpr bool enable_chunk</div><div class="ttdef"><b>Definition</b> chunk_traits.hpp:16</div></div>
-<div class="ttc" id="anamespaceddc_html_a25bdb64cb80790c6e3509834f159d65d"><div class="ttname"><a href="namespaceddc.html#a25bdb64cb80790c6e3509834f159d65d">ddc::ChunkSpan</a></div><div class="ttdeci">ChunkSpan(KokkosView const &amp;view, DiscreteDomain&lt; DDims... &gt; domain) -&gt; ChunkSpan&lt; detail::kokkos_to_mdspan_element_t&lt; typename KokkosView::data_type &gt;, DiscreteDomain&lt; DDims... &gt;, detail::kokkos_to_mdspan_layout_t&lt; typename KokkosView::array_layout &gt;, typename KokkosView::memory_space &gt;</div></div>
-</div><!-- fragment -->
+
 <p>type of a span of this full chunk </p>
 
 </div>
 </div>
-<a id="a947685070984282a98f754b94d0db066" name="a947685070984282a98f754b94d0db066"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a947685070984282a98f754b94d0db066">&#9670;&#160;</a></span>view_type</h2>
+<a id="ad1fa22c74b08f0a1298c3fffdcdbfa7e" name="ad1fa22c74b08f0a1298c3fffdcdbfa7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1fa22c74b08f0a1298c3fffdcdbfa7e">&#9670;&#160;</a></span>view_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::view_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::view_type =  <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;DDims...&gt;, std::experimental::layout_right, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> Allocator::memory_space&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line"> <a class="code hl_function" href="namespaceddc.html#a25bdb64cb80790c6e3509834f159d65d">ChunkSpan</a>&lt;</div>
-<div class="line">            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> <span class="keyword">const</span>,</div>
-<div class="line">            DiscreteDomain&lt;<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDims</a>...&gt;,</div>
-<div class="line">            std::experimental::layout_right,</div>
-<div class="line">            <span class="keyword">typename</span> Allocator::memory_space&gt;</div>
-</div><!-- fragment -->
+
 <p>type of a view of this full chunk </p>
 
 </div>
@@ -356,10 +287,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::allocation_mdspan_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::allocation_mdspan_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::allocation_mdspan_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::allocation_mdspan_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -374,10 +305,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::const_allocation_mdspan_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::const_allocation_mdspan_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::const_allocation_mdspan_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::const_allocation_mdspan_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -390,10 +321,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::mdomain_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::mdomain_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::mdomain_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::mdomain_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -406,10 +337,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::memory_space = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> Allocator::memory_space</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::memory_space =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> Allocator::memory_space</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -422,10 +353,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::discrete_element_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::discrete_element_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::discrete_element_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::discrete_element_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -438,10 +369,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::extents_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::extents_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::extents_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::extents_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -454,10 +385,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::layout_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::layout_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::layout_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::layout_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -470,10 +401,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::mapping_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::mapping_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::mapping_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::mapping_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -486,10 +417,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::element_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::element_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::element_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::element_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -502,10 +433,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::value_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::value_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::value_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::value_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -518,10 +449,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::size_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::size_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::size_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::size_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -534,10 +465,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::data_handle_type = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::data_handle_type</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::data_handle_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::data_handle_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -550,10 +481,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::reference = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> base_type::reference</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::reference =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> base_type::reference</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -567,15 +498,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::Chunk </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::Chunk </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -596,25 +527,33 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::Chunk </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::Chunk </td>
           <td>(</td>
-          <td class="paramtype">std::string <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>label</em>, </span></td>
+          <td class="paramtype">std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>label</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a1963dd8eb87472d674e33315a1a22742">mdomain_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>domain</em>, </span></td>
+          <td class="paramtype"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a1963dd8eb87472d674e33315a1a22742">mdomain_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a></td>          <td class="paramname"><span class="paramname"><em>allocator</em><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a>()</span></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a>&#160;</td>
+          <td class="paramname"><em>allocator</em> = <code><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -634,20 +573,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::Chunk </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::Chunk </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a1963dd8eb87472d674e33315a1a22742">mdomain_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>domain</em>, </span></td>
+          <td class="paramtype"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a1963dd8eb87472d674e33315a1a22742">mdomain_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a></td>          <td class="paramname"><span class="paramname"><em>allocator</em><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a>()</span></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a>&#160;</td>
+          <td class="paramname"><em>allocator</em> = <code><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -667,15 +613,16 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::Chunk </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::Chunk </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -696,15 +643,16 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::Chunk </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::Chunk </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -731,15 +679,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::~<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::~<a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -759,15 +707,16 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>= </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>= </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -788,15 +737,16 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>= </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a> &amp; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>= </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -824,7 +774,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <div class="memtemplate">
 template&lt;class... QueryDDims&gt; </div>
 <table class="mlabels">
@@ -832,9 +782,10 @@ template&lt;class... QueryDDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>[] </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>[] </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>slice_spec</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>slice_spec</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -855,7 +806,7 @@ template&lt;class... QueryDDims&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <div class="memtemplate">
 template&lt;class... QueryDDims&gt; </div>
 <table class="mlabels">
@@ -863,9 +814,10 @@ template&lt;class... QueryDDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>[] </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>[] </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>slice_spec</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>slice_spec</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -886,7 +838,7 @@ template&lt;class... QueryDDims&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <div class="memtemplate">
 template&lt;class... QueryDDims&gt; </div>
 <table class="mlabels">
@@ -894,9 +846,10 @@ template&lt;class... QueryDDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>[] </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>[] </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>odomain</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>odomain</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -917,7 +870,7 @@ template&lt;class... QueryDDims&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <div class="memtemplate">
 template&lt;class... QueryDDims&gt; </div>
 <table class="mlabels">
@@ -925,9 +878,10 @@ template&lt;class... QueryDDims&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>[] </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>[] </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>odomain</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>odomain</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -948,7 +902,7 @@ template&lt;class... QueryDDims&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <div class="memtemplate">
 template&lt;class... DElems&gt; </div>
 <table class="mlabels">
@@ -956,9 +910,10 @@ template&lt;class... DElems&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a0a9c9a52b66d51d0d6bbd278e97206c6">element_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a>  &amp; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>() </td>
+          <td class="memname"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a0a9c9a52b66d51d0d6bbd278e97206c6">element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>  &amp; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>() </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DElems</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;...</td>          <td class="paramname"><span class="paramname"><em>delems</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DElems</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;...&#160;</td>
+          <td class="paramname"><em>delems</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -986,7 +941,7 @@ template&lt;class... DElems&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <div class="memtemplate">
 template&lt;class... DElems&gt; </div>
 <table class="mlabels">
@@ -994,9 +949,10 @@ template&lt;class... DElems&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a0a9c9a52b66d51d0d6bbd278e97206c6">element_type</a> &amp; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>() </td>
+          <td class="memname"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a0a9c9a52b66d51d0d6bbd278e97206c6">element_type</a> &amp; <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>() </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DElems</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;...</td>          <td class="paramname"><span class="paramname"><em>delems</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DElems</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;...&#160;</td>
+          <td class="paramname"><em>delems</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1024,15 +980,15 @@ template&lt;class... DElems&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">char</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a>  * <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::label </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">char</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>  * <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::label </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1054,15 +1010,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a>  * <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::data_handle </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>  * <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::data_handle </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1084,15 +1040,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> * <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::data_handle </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> * <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::data_handle </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1114,15 +1070,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a360ab865a8dbb427b6e30555ac0ba79d">const_allocation_mdspan_type</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::allocation_mdspan </td>
+          <td class="memname"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a360ab865a8dbb427b6e30555ac0ba79d">const_allocation_mdspan_type</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::allocation_mdspan </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1144,15 +1100,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a44a07a59145e8c0056f8b6dd462c3435">allocation_mdspan_type</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::allocation_mdspan </td>
+          <td class="memname"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a44a07a59145e8c0056f8b6dd462c3435">allocation_mdspan_type</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::allocation_mdspan </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1174,15 +1130,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::allocation_kokkos_view </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::allocation_kokkos_view </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1204,15 +1160,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::allocation_kokkos_view </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::allocation_kokkos_view </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1234,15 +1190,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a947685070984282a98f754b94d0db066">view_type</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::span_cview </td>
+          <td class="memname"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ad1fa22c74b08f0a1298c3fffdcdbfa7e">view_type</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::span_cview </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1261,15 +1217,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a947685070984282a98f754b94d0db066">view_type</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::span_view </td>
+          <td class="memname"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ad1fa22c74b08f0a1298c3fffdcdbfa7e">view_type</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::span_view </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1288,15 +1244,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a1404cf11ecc00a0a618995494a1e2d82">span_type</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt;::span_view </td>
+          <td class="memname"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a5b9cf50b97ceed1a619ff2b7bbc57e54">span_type</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt;::span_view </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1316,15 +1272,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Allocator</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> &gt; </div>
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">friend</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">friend</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></td>
         </tr>
       </table>
   </td>
@@ -1341,12 +1297,9 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="namespaceddc.html">ddc</a></li><li class="navelem"><a class="el" href="classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html">Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt;</a></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.10.0 </li>
-  </ul>
-</div>
+<!--
+Copyright (C) The DDC development team, see COPYRIGHT.md file
+SPDX-License-Identifier: MIT
+-->
 </body>
 </html>

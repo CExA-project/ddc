@@ -1,79 +1,34 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!--
+Copyright (C) The DDC development team, see COPYRIGHT.md file
+SPDX-License-Identifier: MIT
+-->
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<meta name="generator" content="Doxygen 1.10.0"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<!-- BEGIN opengraph metadata -->
-<meta property="og:title" content="Doxygen Awesome" />
-<meta property="og:image" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
-<meta property="og:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
-<meta property="og:url" content="https://jothepro.github.io/doxygen-awesome-css/" />
-<!-- END opengraph metadata -->
-<!-- BEGIN twitter metadata -->
-<meta name="twitter:image:src" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
-<meta name="twitter:title" content="Doxygen Awesome" />
-<meta name="twitter:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
-<!-- END twitter metadata -->
-<title>DDC: ddc::DiscreteDomainIterator&lt; DDim &gt; Struct Template Reference</title>
-<link href="tabs.css" rel="stylesheet" type="text/css"/>
-<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
-<script type="text/javascript" src="jquery.js"></script>
-<script type="text/javascript" src="dynsections.js"></script>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
-<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
-<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
-<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
-<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
-<script type="text/javascript" src="toggle-alternative-theme.js"></script>
-<script type="text/javascript">
-    DoxygenAwesomeFragmentCopyButton.init()
-    DoxygenAwesomeDarkModeToggle.init()
-    DoxygenAwesomeParagraphLink.init()
-    DoxygenAwesomeInteractiveToc.init()
-    DoxygenAwesomeTabs.init()
-</script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
-<script type="text/javascript" src="cookie.js"></script>
-<link href="custom.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+	<meta charset="UTF-8">
+	<meta name="generator" content="Doxygen 1.9.8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>DDC: ddc::DiscreteDomainIterator&lt; DDim &gt; Struct Template Reference</title>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="dynsections.js"></script>
+	<script type="text/javascript" src="navtreedata.js"></script>
+	<script type="text/javascript" src="navtree.js"></script>
+	<link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<!-- https://tholman.com/github-corners/ -->
-<a href="https://github.com/jothepro/doxygen-awesome-css" class="github-corner" title="View source on GitHub" target="_blank" rel="noopener noreferrer">
-    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
-    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
-<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
-<div id="titlearea">
-<table cellspacing="0" cellpadding="0">
- <tbody>
- <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
-  <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">DDC
-   &#160;<span id="projectnumber">0.0.0</span>
-   </div>
-  </td>
- </tr>
- </tbody>
-</table>
-</div>
-<!-- end header part -->
-<!-- Generated by Doxygen 1.10.0 -->
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('',false,false,'search.php','Search');
-});
-/* @license-end */
-</script>
-<div id="main-nav"></div>
+<div>
+<header id="titlearea">
+	<div id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></div>
+	<h1 id="projectname">DDC&nbsp;<span id="projectnumber">0.0.0</span></h1>
+	<h2 id="projectbrief">a <span class="acronym">d</span>iscrete <span class="acronym">d</span>omain <span class="acronym">c</span>omputation library</h2>
+</header>
+<nav id="tabs"><ul>
+	<li><a href="index.html">About</a>
+	<li><a href="first_steps.html">Commented example</a>
+	<li><a href="annotated.html">API reference</a>
+	<li id="gitlab-ribbon"><a rel="noopener" href="https://github.com/CExA-project/ddc" target="_blank">Contribute on Github</a></li>
+</ul></nav>
+<!-- Generated by Doxygen 1.9.8 -->
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -87,7 +42,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('structddc_1_1DiscreteDomainIterator.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structddc_1_1DiscreteDomainIterator.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -100,70 +55,60 @@ $(function(){initNavTree('structddc_1_1DiscreteDomainIterator.html',''); initRes
   <div class="headertitle"><div class="title">ddc::DiscreteDomainIterator&lt; DDim &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>&gt;</code></p>
-<div class="dynheader">
-Collaboration diagram for ddc::DiscreteDomainIterator&lt; DDim &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="structddc_1_1DiscreteDomainIterator__coll__graph.png" border="0" usemap="#addc_1_1DiscreteDomainIterator_3_01DDim_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="addc_1_1DiscreteDomainIterator_3_01DDim_01_4_coll__map" id="addc_1_1DiscreteDomainIterator_3_01DDim_01_4_coll__map">
-<area shape="rect" title=" " alt="" coords="5,5,184,265"/>
-</map>
-</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ad0853d95f2b1d52b9252aaf6f837dd0f" id="r_ad0853d95f2b1d52b9252aaf6f837dd0f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0853d95f2b1d52b9252aaf6f837dd0f">iterator_category</a> = std::random_access_iterator_tag</td></tr>
+<tr class="memitem:ad0853d95f2b1d52b9252aaf6f837dd0f" id="r_ad0853d95f2b1d52b9252aaf6f837dd0f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#ad0853d95f2b1d52b9252aaf6f837dd0f">iterator_category</a> = std::random_access_iterator_tag</td></tr>
 <tr class="separator:ad0853d95f2b1d52b9252aaf6f837dd0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc7cc46e07082bd842930341f2e71543" id="r_adc7cc46e07082bd842930341f2e71543"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc7cc46e07082bd842930341f2e71543">value_type</a> = <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;DDim&gt;</td></tr>
+<tr class="memitem:adc7cc46e07082bd842930341f2e71543" id="r_adc7cc46e07082bd842930341f2e71543"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#adc7cc46e07082bd842930341f2e71543">value_type</a> = <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;</td></tr>
 <tr class="separator:adc7cc46e07082bd842930341f2e71543"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa628f55f4f3fd7466f94e50302623f51" id="r_aa628f55f4f3fd7466f94e50302623f51"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> = std::ptrdiff_t</td></tr>
+<tr class="memitem:aa628f55f4f3fd7466f94e50302623f51" id="r_aa628f55f4f3fd7466f94e50302623f51"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> = std::ptrdiff_t</td></tr>
 <tr class="separator:aa628f55f4f3fd7466f94e50302623f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a36b52ce71b95d5eeeabf83c9dd60575a" id="r_a36b52ce71b95d5eeeabf83c9dd60575a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36b52ce71b95d5eeeabf83c9dd60575a">DiscreteDomainIterator</a> ()=<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">default</a></td></tr>
+<tr class="memitem:a36b52ce71b95d5eeeabf83c9dd60575a" id="r_a36b52ce71b95d5eeeabf83c9dd60575a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a36b52ce71b95d5eeeabf83c9dd60575a">DiscreteDomainIterator</a> ()=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="separator:a36b52ce71b95d5eeeabf83c9dd60575a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7cd3cedc53cf2f8a629f87664dc37d7" id="r_ad7cd3cedc53cf2f8a629f87664dc37d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7cd3cedc53cf2f8a629f87664dc37d7">DiscreteDomainIterator</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; value)</td></tr>
+<tr class="memitem:ad7cd3cedc53cf2f8a629f87664dc37d7" id="r_ad7cd3cedc53cf2f8a629f87664dc37d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#ad7cd3cedc53cf2f8a629f87664dc37d7">DiscreteDomainIterator</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; value)</td></tr>
 <tr class="separator:ad7cd3cedc53cf2f8a629f87664dc37d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14bd183eec71df99a556a4a202444f84" id="r_a14bd183eec71df99a556a4a202444f84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14bd183eec71df99a556a4a202444f84">operator*</a> () <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
+<tr class="memitem:a14bd183eec71df99a556a4a202444f84" id="r_a14bd183eec71df99a556a4a202444f84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a14bd183eec71df99a556a4a202444f84">operator*</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="separator:a14bd183eec71df99a556a4a202444f84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa728327d43534207fc926384cb378daa" id="r_aa728327d43534207fc926384cb378daa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa728327d43534207fc926384cb378daa">operator++</a> ()</td></tr>
+<tr class="memitem:aa728327d43534207fc926384cb378daa" id="r_aa728327d43534207fc926384cb378daa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa728327d43534207fc926384cb378daa">operator++</a> ()</td></tr>
 <tr class="separator:aa728327d43534207fc926384cb378daa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4975cff20337ff9f45fe4d06109bc35f" id="r_a4975cff20337ff9f45fe4d06109bc35f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4975cff20337ff9f45fe4d06109bc35f">operator++</a> (<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a>)</td></tr>
+<tr class="memitem:a4975cff20337ff9f45fe4d06109bc35f" id="r_a4975cff20337ff9f45fe4d06109bc35f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a4975cff20337ff9f45fe4d06109bc35f">operator++</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>)</td></tr>
 <tr class="separator:a4975cff20337ff9f45fe4d06109bc35f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4384a41a68c485bbb7628034b355734f" id="r_a4384a41a68c485bbb7628034b355734f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4384a41a68c485bbb7628034b355734f">operator--</a> ()</td></tr>
+<tr class="memitem:a4384a41a68c485bbb7628034b355734f" id="r_a4384a41a68c485bbb7628034b355734f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a4384a41a68c485bbb7628034b355734f">operator--</a> ()</td></tr>
 <tr class="separator:a4384a41a68c485bbb7628034b355734f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00bdcec06a59570022ab56945945bcef" id="r_a00bdcec06a59570022ab56945945bcef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00bdcec06a59570022ab56945945bcef">operator--</a> (<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a>)</td></tr>
+<tr class="memitem:a00bdcec06a59570022ab56945945bcef" id="r_a00bdcec06a59570022ab56945945bcef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a00bdcec06a59570022ab56945945bcef">operator--</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>)</td></tr>
 <tr class="separator:a00bdcec06a59570022ab56945945bcef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa36964789d38fad298d0e60c7fb1b876" id="r_aa36964789d38fad298d0e60c7fb1b876"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa36964789d38fad298d0e60c7fb1b876">operator+=</a> (<a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>)</td></tr>
+<tr class="memitem:aa36964789d38fad298d0e60c7fb1b876" id="r_aa36964789d38fad298d0e60c7fb1b876"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa36964789d38fad298d0e60c7fb1b876">operator+=</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>)</td></tr>
 <tr class="separator:aa36964789d38fad298d0e60c7fb1b876"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af07bb129a8964bb2e978740a615d9b92" id="r_af07bb129a8964bb2e978740a615d9b92"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af07bb129a8964bb2e978740a615d9b92">operator-=</a> (<a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>)</td></tr>
+<tr class="memitem:af07bb129a8964bb2e978740a615d9b92" id="r_af07bb129a8964bb2e978740a615d9b92"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#af07bb129a8964bb2e978740a615d9b92">operator-=</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>)</td></tr>
 <tr class="separator:af07bb129a8964bb2e978740a615d9b92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f73896fe3a5a2d691c6feb6392020a9" id="r_a3f73896fe3a5a2d691c6feb6392020a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f73896fe3a5a2d691c6feb6392020a9">operator[]</a> (<a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a></td></tr>
+<tr class="memitem:a3f73896fe3a5a2d691c6feb6392020a9" id="r_a3f73896fe3a5a2d691c6feb6392020a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a3f73896fe3a5a2d691c6feb6392020a9">operator[]</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:a3f73896fe3a5a2d691c6feb6392020a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:acc59ec260b688a2a72faf3e8e28c84da" id="r_acc59ec260b688a2a72faf3e8e28c84da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc59ec260b688a2a72faf3e8e28c84da">operator==</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">yy</a>)</td></tr>
+<tr class="memitem:acc59ec260b688a2a72faf3e8e28c84da" id="r_acc59ec260b688a2a72faf3e8e28c84da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#acc59ec260b688a2a72faf3e8e28c84da">operator==</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">yy</a>)</td></tr>
 <tr class="separator:acc59ec260b688a2a72faf3e8e28c84da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f6e25808499026840dbb113394b7505" id="r_a6f6e25808499026840dbb113394b7505"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f6e25808499026840dbb113394b7505">operator!=</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">yy</a>)</td></tr>
+<tr class="memitem:a6f6e25808499026840dbb113394b7505" id="r_a6f6e25808499026840dbb113394b7505"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a6f6e25808499026840dbb113394b7505">operator!=</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">yy</a>)</td></tr>
 <tr class="separator:a6f6e25808499026840dbb113394b7505"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c1dcb8065ea018da83b6e34c60adee7" id="r_a9c1dcb8065ea018da83b6e34c60adee7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c1dcb8065ea018da83b6e34c60adee7">operator&lt;</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">yy</a>)</td></tr>
+<tr class="memitem:a9c1dcb8065ea018da83b6e34c60adee7" id="r_a9c1dcb8065ea018da83b6e34c60adee7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a9c1dcb8065ea018da83b6e34c60adee7">operator&lt;</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">yy</a>)</td></tr>
 <tr class="separator:a9c1dcb8065ea018da83b6e34c60adee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ad763951e7fc435f988ee98a7a18867" id="r_a6ad763951e7fc435f988ee98a7a18867"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ad763951e7fc435f988ee98a7a18867">operator&gt;</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">yy</a>)</td></tr>
+<tr class="memitem:a6ad763951e7fc435f988ee98a7a18867" id="r_a6ad763951e7fc435f988ee98a7a18867"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a6ad763951e7fc435f988ee98a7a18867">operator&gt;</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">yy</a>)</td></tr>
 <tr class="separator:a6ad763951e7fc435f988ee98a7a18867"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fa1c5d0601a71295339733b0fff5342" id="r_a0fa1c5d0601a71295339733b0fff5342"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0fa1c5d0601a71295339733b0fff5342">operator&lt;=</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">yy</a>)</td></tr>
+<tr class="memitem:a0fa1c5d0601a71295339733b0fff5342" id="r_a0fa1c5d0601a71295339733b0fff5342"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a0fa1c5d0601a71295339733b0fff5342">operator&lt;=</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">yy</a>)</td></tr>
 <tr class="separator:a0fa1c5d0601a71295339733b0fff5342"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29d481fd5b31d246e9d79343754481b7" id="r_a29d481fd5b31d246e9d79343754481b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29d481fd5b31d246e9d79343754481b7">operator&gt;=</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">yy</a>)</td></tr>
+<tr class="memitem:a29d481fd5b31d246e9d79343754481b7" id="r_a29d481fd5b31d246e9d79343754481b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a29d481fd5b31d246e9d79343754481b7">operator&gt;=</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">yy</a>)</td></tr>
 <tr class="separator:a29d481fd5b31d246e9d79343754481b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a673e7edf74af3b72d0498c3027929db0" id="r_a673e7edf74af3b72d0498c3027929db0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a673e7edf74af3b72d0498c3027929db0">operator+</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>, <a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>)</td></tr>
+<tr class="memitem:a673e7edf74af3b72d0498c3027929db0" id="r_a673e7edf74af3b72d0498c3027929db0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a673e7edf74af3b72d0498c3027929db0">operator+</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">i</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>)</td></tr>
 <tr class="separator:a673e7edf74af3b72d0498c3027929db0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcbed2f5df962a25e6abb5fd29ddd849" id="r_abcbed2f5df962a25e6abb5fd29ddd849"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abcbed2f5df962a25e6abb5fd29ddd849">operator+</a> (<a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>)</td></tr>
+<tr class="memitem:abcbed2f5df962a25e6abb5fd29ddd849" id="r_abcbed2f5df962a25e6abb5fd29ddd849"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#abcbed2f5df962a25e6abb5fd29ddd849">operator+</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">i</a>)</td></tr>
 <tr class="separator:abcbed2f5df962a25e6abb5fd29ddd849"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a583bb66d82d1fef473f36a1fdede1137" id="r_a583bb66d82d1fef473f36a1fdede1137"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a583bb66d82d1fef473f36a1fdede1137">operator-</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>, <a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">n</a>)</td></tr>
+<tr class="memitem:a583bb66d82d1fef473f36a1fdede1137" id="r_a583bb66d82d1fef473f36a1fdede1137"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#a583bb66d82d1fef473f36a1fdede1137">operator-</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">i</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>)</td></tr>
 <tr class="separator:a583bb66d82d1fef473f36a1fdede1137"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af61414e9c48f372545341d8e8ca546ab" id="r_af61414e9c48f372545341d8e8ca546ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af61414e9c48f372545341d8e8ca546ab">operator-</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">yy</a>)</td></tr>
+<tr class="memitem:af61414e9c48f372545341d8e8ca546ab" id="r_af61414e9c48f372545341d8e8ca546ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#af61414e9c48f372545341d8e8ca546ab">operator-</a> (<a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">xx</a>, <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">yy</a>)</td></tr>
 <tr class="separator:af61414e9c48f372545341d8e8ca546ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
@@ -173,10 +118,10 @@ Friends</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;::iterator_category = std::random_access_iterator_tag</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;::iterator_category =  std::random_access_iterator_tag</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -189,10 +134,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;::value_type = <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;DDim&gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;::value_type =  <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -205,10 +150,10 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;::difference_type = std::ptrdiff_t</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;::difference_type =  std::ptrdiff_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -222,15 +167,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;::DiscreteDomainIterator </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;::DiscreteDomainIterator </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -249,15 +194,16 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;::DiscreteDomainIterator </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;::DiscreteDomainIterator </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt;</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -277,15 +223,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>* </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>* </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -304,15 +250,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>++ </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>++ </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -331,15 +277,16 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>++ </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>++ </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a></td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -358,15 +305,15 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>-- </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>-- </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -385,15 +332,16 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>-- </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>-- </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">int</a></td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -412,15 +360,16 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>+= </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>+= </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -439,15 +388,16 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>-= </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> &amp; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>-= </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -466,15 +416,16 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; DDim &gt; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; DDim &gt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">::operator</a>[] </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="structddc_1_1DiscreteDomainIterator.html">ddc::DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>[] </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a>&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -494,20 +445,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">operator</a>== </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">operator</a>== </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>xx</em>, </span></td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>xx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>yy</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>yy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -525,20 +483,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">operator!</a>= </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">operator!</a>= </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>xx</em>, </span></td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>xx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>yy</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>yy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -556,20 +521,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">operator</a>&lt; </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">operator</a>&lt; </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>xx</em>, </span></td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>xx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>yy</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>yy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -587,20 +559,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">operator</a>&gt; </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">operator</a>&gt; </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>xx</em>, </span></td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>xx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>yy</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>yy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -618,20 +597,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">operator</a>&lt;= </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">operator</a>&lt;= </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>xx</em>, </span></td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>xx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>yy</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>yy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -649,20 +635,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">bool</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">operator</a>&gt;= </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">operator</a>&gt;= </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>xx</em>, </span></td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>xx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>yy</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>yy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -680,20 +673,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">operator</a>+ </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">operator</a>+ </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt;</td>          <td class="paramname"><span class="paramname"><em>i</em>, </span></td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a>&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -711,20 +711,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">operator</a>+ </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">operator</a>+ </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em>, </span></td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a>&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt;</td>          <td class="paramname"><span class="paramname"><em>i</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;&#160;</td>
+          <td class="paramname"><em>i</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -742,20 +749,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">operator</a>- </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">operator</a>- </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt;</td>          <td class="paramname"><span class="paramname"><em>i</em>, </span></td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a>&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -773,20 +787,27 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">class</a> DDim &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">operator</a>- </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51">difference_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">operator</a>- </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>xx</em>, </span></td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>xx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; DDim &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>yy</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>yy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -803,12 +824,9 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="namespaceddc.html">ddc</a></li><li class="navelem"><a class="el" href="structddc_1_1DiscreteDomainIterator.html">DiscreteDomainIterator</a></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.10.0 </li>
-  </ul>
-</div>
+<!--
+Copyright (C) The DDC development team, see COPYRIGHT.md file
+SPDX-License-Identifier: MIT
+-->
 </body>
 </html>

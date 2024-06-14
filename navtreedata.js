@@ -26,41 +26,33 @@ var NAVTREE =
 [
   [ "DDC", "index.html", [
     [ "About", "index.html", "index" ],
-    [ "Commented example: the uniform heat equation", "first_steps.html", "first_steps" ],
-    [ "examples/uniform_heat_equation.cpp", "uniform_heat_equation.html", null ],
-    [ "Namespaces", "namespaces.html", [
-      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
-      [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ],
-        [ "Variables", "namespacemembers_vars.html", null ],
-        [ "Typedefs", "namespacemembers_type.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ]
-      ] ]
+    [ "Commented example: the uniform heat equation", "first_steps.html", [
+      [ "Definition of the discretization", "first_steps.html#autotoc_md2", [
+        [ "Dimensions naming", "first_steps.html#autotoc_md3", null ],
+        [ "Domains", "first_steps.html#autotoc_md4", [
+          [ "Dimension X", "first_steps.html#autotoc_md5", null ],
+          [ "Dimension Y", "first_steps.html#autotoc_md6", null ],
+          [ "Time dimension", "first_steps.html#autotoc_md7", null ]
+        ] ]
+      ] ],
+      [ "Data allocation", "first_steps.html#autotoc_md8", null ],
+      [ "Initial conditions", "first_steps.html#autotoc_md9", null ],
+      [ "Time loop", "first_steps.html#autotoc_md10", [
+        [ "Periodic conditions", "first_steps.html#autotoc_md11", null ],
+        [ "Numerical scheme", "first_steps.html#autotoc_md12", null ]
+      ] ],
+      [ "examples/heat_equation.cpp", "heat_equation.html", null ]
     ] ],
-    [ "Classes", "annotated.html", [
-      [ "Class List", "annotated.html", "annotated_dup" ],
-      [ "Class Index", "classes.html", null ],
-      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
-      [ "Class Members", "functions.html", [
-        [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", null ],
-        [ "Typedefs", "functions_type.html", null ],
-        [ "Related Symbols", "functions_rela.html", null ]
-      ] ]
-    ] ]
+    [ "examples/uniform_heat_equation.cpp", "uniform_heat_equation.html", null ],
+    [ "API reference", "annotated.html", "annotated" ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#aa299fb96adef4e448d8d35a354e71806",
 "classddc_1_1KnotsAsInterpolationPoints.html",
-"classddc_1_1SplineBuilder.html#a594c85b1dd05d14b1f461bdf32f7a388",
-"classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104",
-"namespaceddc.html#a8c5099ed1365bf973383b84302b8228b"
+"classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

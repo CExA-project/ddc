@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ddc/ddc.hpp>
+
 #include "spline_builder.hpp"
 
 namespace ddc {

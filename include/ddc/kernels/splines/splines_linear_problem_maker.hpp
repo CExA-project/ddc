@@ -116,8 +116,10 @@ public:
             int const ku,
             bool const pds)
     {
+        assert(kl <= n);
+        assert(ku <= n);
         int const bottom_size = std::max(kl, ku);
-        int const top_size = std::max(0, n - bottom_size);
+        int const top_size = n - bottom_size;
 
         if (bottom_size * (n + top_size) + (2 * kl + ku + 1) * top_size >= n * n) {
             return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);

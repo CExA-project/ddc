@@ -158,16 +158,16 @@ public:
     }
 
     /**
-     * @brief Copy-constructs
+     * @brief Copy-constructs.
      *
-     * @param x A reference to another SplineEvaluator
+     * @param x A reference to another SplineEvaluator.
      */
     SplineEvaluator(SplineEvaluator const& x) = default;
 
     /**
-     * @brief Move-constructs
+     * @brief Move-constructs.
      *
-     * @param x An rvalue to another SplineEvaluator
+     * @param x An rvalue to another SplineEvaluator.
      */
     SplineEvaluator(SplineEvaluator&& x) = default;
 
@@ -175,18 +175,18 @@ public:
     ~SplineEvaluator() = default;
 
     /**
-     * @brief Copy-assigns
+     * @brief Copy-assigns.
      *
-     * @param x A reference to another SplineEvaluator
-     * @return A reference to the copied SplineEvaluator
+     * @param x A reference to another SplineEvaluator.
+     * @return A reference to the copied SplineEvaluator.
      */
     SplineEvaluator& operator=(SplineEvaluator const& x) = default;
 
     /**
-     * @brief Move-assigns
+     * @brief Move-assigns.
      *
-     * @param x An rvalue to another SplineEvaluator
-     * @return A reference to the moved SplineEvaluator
+     * @param x An rvalue to another SplineEvaluator.
+     * @return A reference to this object.
      */
     SplineEvaluator& operator=(SplineEvaluator&& x) = default;
 

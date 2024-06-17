@@ -235,35 +235,35 @@ public:
     }
 
     /**
-     * @brief Copy-constructs
+     * @brief Copy-constructs.
      *
-     * @param x A reference to another SplineEvaluator
+     * @param x A reference to another SplineEvaluator.
      */
     SplineEvaluator2D(SplineEvaluator2D const& x) = default;
 
     /**
-     * @brief Move-constructs
+     * @brief Move-constructs.
      *
-     * @param x An rvalue to another SplineEvaluator
+     * @param x An rvalue to another SplineEvaluator.
      */
     SplineEvaluator2D(SplineEvaluator2D&& x) = default;
 
-    /// @brief Destructs
+    /// @brief Destructs.
     ~SplineEvaluator2D() = default;
 
     /**
-     * @brief Copy-assigns
+     * @brief Copy-assigns.
      *
-     * @param x A reference to another SplineEvaluator
-     * @return A reference to the copied SplineEvaluator
+     * @param x A reference to another SplineEvaluator.
+     * @return A reference to the copied SplineEvaluator.
      */
     SplineEvaluator2D& operator=(SplineEvaluator2D const& x) = default;
 
     /**
-     * @brief Move-assigns
+     * @brief Move-assigns.
      *
-     * @param x An rvalue to another SplineEvaluator
-     * @return A reference to the moved SplineEvaluator
+     * @param x An rvalue to another SplineEvaluator.
+     * @return A reference to this object.
      */
     SplineEvaluator2D& operator=(SplineEvaluator2D&& x) = default;
 

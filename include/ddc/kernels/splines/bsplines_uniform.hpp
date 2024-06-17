@@ -113,9 +113,9 @@ public:
 
         /** Constructs a spline basis (B-splines) with n equidistant knots over \f$[a, b]\f$.
          *
-         * @param rmin    the real ddc::coordinate of the first knot.
-         * @param rmax    the real ddc::coordinate of the last knot.
-         * @param ncells the number of cells in the range [rmin, rmax].
+         * @param rmin    The real ddc::coordinate of the first knot.
+         * @param rmax    The real ddc::coordinate of the last knot.
+         * @param ncells The number of cells in the range [rmin, rmax].
          */
         explicit Impl(ddc::Coordinate<Tag> rmin, ddc::Coordinate<Tag> rmax, std::size_t ncells)
         {

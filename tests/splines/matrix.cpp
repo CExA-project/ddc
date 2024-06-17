@@ -427,7 +427,9 @@ TEST_P(MatrixSizesFixture, Sparse)
         for (std::size_t j(0); j < N; ++j) {
             if (i == j) {
                 matrix->set_element(i, j, 3. / 4);
-            } else if (std::abs((std::ptrdiff_t)(j - i)) <= (std::ptrdiff_t)k) {
+            } else if (
+                    std::abs(static_cast<std::ptrdiff_t>(j - i))
+                    <= static_cast<std::ptrdiff_t>(k)) {
                 matrix->set_element(i, j, -(1. / 4) / k);
             }
         }

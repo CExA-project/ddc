@@ -105,11 +105,12 @@ public:
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
     /**
-	 * @brief The type of the batch domain (obtained by removing the dimension of interest
-	 * from the whole domain).
-	 *
-	 * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y, this is DiscreteDomain<X,Z>
-	 */
+     * @brief The type of the batch domain (obtained by removing the dimension of interest
+     * from the whole domain).
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
+     * this is DiscreteDomain<X,Z>
+     */
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
@@ -146,7 +147,8 @@ public:
      * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain 
      * and batch domain) preserving the underlying memory layout (order of dimensions).
      *
-     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y, this is DiscreteDomain<X,Deriv<Y>,Z>
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
+     * this is DiscreteDomain<X,Deriv<Y>,Z>
      */
     using batched_derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
@@ -187,14 +189,14 @@ public:
      * @brief Build a SplineBuilder acting on batched_interpolation_domain.
      * 
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
-     * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size
+     *
+     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
      * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
      * by the linear solver one-after-the-other).
-     *
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
-     * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to
-     * define the size of a block used by the Block-Jacobi preconditioner.
      *
+     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * define the size of a block used by the Block-Jacobi preconditioner.
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
      * @see MatrixSparse
@@ -275,7 +277,7 @@ public:
 
     /**
      * @brief Get the batch domain.
-	 *
+     *
      * Obtained by removing the dimension of interest from the whole interpolation domain.
      *
      * @return The batch domain.
@@ -314,7 +316,7 @@ public:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest being the leading dimension.
      *
-     * This is used internally because of solvers limitation and because it may be beneficial to computation performance.
+     * This is used internally due to solver limitation and because it may be beneficial to computation performance.
      *
      * @return The (transposed) domain for the spline coefficients.
      */

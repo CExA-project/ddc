@@ -100,13 +100,13 @@ public:
     /// @brief The type of the interpolation mesh in the second dimension.
     using interpolation_mesh_type2 = typename builder_type2::interpolation_mesh_type;
 
-    /// @brief The type of the domain for the interpolation mesh is the first dimension.
+    /// @brief The type of the domain for the interpolation mesh in the first dimension.
     using interpolation_domain_type1 = typename builder_type1::interpolation_mesh_type;
 
-    /// @brief The type of the domain for the interpolation mesh is the second dimension.
+    /// @brief The type of the domain for the interpolation mesh in the second dimension.
     using interpolation_domain_type2 = typename builder_type2::interpolation_mesh_type;
 
-    /// @brief The type of the domain for the interpolation mesh is the 2D dimension.
+    /// @brief The type of the domain for the interpolation mesh in the 2D dimension.
     using interpolation_domain_type
             = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
 
@@ -183,18 +183,18 @@ private:
 
 public:
     /**
-     * @brief Create a new SplineBuilder2D.
-     *
+     * @brief Build a SplineBuilder2D acting on batched_interpolation_domain.
+     * 
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
-	 * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size
-	 * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
-	 * by the linear solver one-after-the-other).
-	 *
-	 * This value is optional. If no value is provided then the default value is chosen by the requested solver.
-     * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to
-	 * define the size of a block used by the Block-Jacobi preconditioner.
-	 *
-	 * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
+     * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
+     * by the linear solver one-after-the-other).
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * define the size of a block used by the Block-Jacobi preconditioner.
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
      * @see MatrixSparse
      */
@@ -316,8 +316,8 @@ public:
      * Use the values of a function (defined on
      * SplineBuilder2D::batched_interpolation_domain) and the derivatives of the
      * function at the boundaries (in the case of BoundCond::HERMITE only)
-	 * to calculate a 2D spline approximation of this function.
-	 *
+     * to calculate a 2D spline approximation of this function.
+     *
      * The spline approximation is stored as a ChunkSpan of coefficients
      * associated with B-splines.
      *

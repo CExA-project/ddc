@@ -26,6 +26,5 @@
 #include "splines/splines_linear_problem_maker.hpp"
 #include "splines/splines_linear_problem_pds_band.hpp"
 #include "splines/splines_linear_problem_pds_tridiag.hpp"
-#include "splines/splines_linear_problem_periodic_band.hpp"
 #include "splines/splines_linear_problem_sparse.hpp"
 #include "splines/view.hpp"

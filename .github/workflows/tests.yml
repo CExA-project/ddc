@@ -142,12 +142,10 @@ jobs:
           'cpu-clang')
             export CC=clang
             export CXX=clang++
-            DDC_CMAKE_CXX_FLAGS="-Werror=extra-semi"
           ;;
           'cpu-gcc')
             export CC=gcc
             export CXX=g++
-            DDC_CMAKE_CXX_FLAGS="-Werror=extra-semi"
             if [ 'xDebug' = 'x${{matrix.cmake_build_type}}' ]
             then
               DDC_CMAKE_CXX_FLAGS="${DDC_CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=address"

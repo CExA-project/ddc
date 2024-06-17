@@ -466,10 +466,10 @@ static void Batched2dSplineTest()
         ddc::ChunkSpan Sderiv_mixed_rhs_rhs1_cpu = Sderiv_mixed_rhs_rhs1_cpu_alloc.span_view();
 
         for (std::size_t ii = 1;
-             ii < (std::size_t)derivs_domain.template extent<ddc::Deriv<I1>>() + 1;
+             ii < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I1>>()) + 1;
              ++ii) {
             for (std::size_t jj = 1;
-                 jj < (std::size_t)derivs_domain.template extent<ddc::Deriv<I2>>() + 1;
+                 jj < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I2>>()) + 1;
                  ++jj) {
                 Sderiv_mixed_lhs_lhs1_cpu(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))

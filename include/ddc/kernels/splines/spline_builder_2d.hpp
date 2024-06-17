@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ddc/ddc.hpp>
+
 #include "spline_builder.hpp"
 
 namespace ddc {
@@ -100,13 +102,13 @@ public:
     /// @brief The type of the interpolation mesh in the second dimension.
     using interpolation_mesh_type2 = typename builder_type2::interpolation_mesh_type;
 
-    /// @brief The type of the domain for the interpolation mesh is the first dimension.
+    /// @brief The type of the domain for the interpolation mesh in the first dimension.
     using interpolation_domain_type1 = typename builder_type1::interpolation_mesh_type;
 
-    /// @brief The type of the domain for the interpolation mesh is the second dimension.
+    /// @brief The type of the domain for the interpolation mesh in the second dimension.
     using interpolation_domain_type2 = typename builder_type2::interpolation_mesh_type;
 
-    /// @brief The type of the domain for the interpolation mesh is the 2D dimension.
+    /// @brief The type of the domain for the interpolation mesh in the 2D dimension.
     using interpolation_domain_type
             = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
 
@@ -127,7 +129,7 @@ public:
 
     /** 
      * @brief The type of the whole spline domain (cartesian product of 2D spline domain
-     * and batch domain) preserving the underlying memory layout (order of dimensions).
+     * and batch domain) preserving the order of dimensions.
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y
      * (associated to B-splines tags BSplinesX and BSplinesY), this is DiscreteDomain<BSplinesX, BSplinesY, Z>
@@ -140,8 +142,7 @@ public:
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
-     * and the associated batch domain) in the first dimension, preserving the underlying
-     * memory layout (order of dimensions).
+     * and the associated batch domain) in the first dimension, preserving the order of dimensions.
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
      * this is DiscreteDomain<Deriv<X>, Y, Z>.
@@ -150,8 +151,7 @@ public:
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
-     * and the associated batch domain) in the second dimension, preserving the underlying
-     * memory layout (order of dimensions).
+     * and the associated batch domain) in the second dimension, preserving the order of dimensions.
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
      * this is DiscreteDomain<X, Deriv<Y>, Z>.
@@ -164,8 +164,7 @@ public:
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
-     * and the batch domain) in the second dimension, preserving the underlying
-     * memory layout (order of dimensions).
+     * and the batch domain) in the second dimension, preserving the order of dimensions.
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
      * this is DiscreteDomain<Deriv<X>, Deriv<Y>, Z>.
@@ -183,24 +182,24 @@ private:
 
 public:
     /**
-     * @brief Create a new SplineBuilder2D.
-     *
+     * @brief Build a SplineBuilder2D acting on batched_interpolation_domain.
+     * 
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
-	 * @param cols_per_chunk A hyperparameter used by the slicer (internal to the solver) to define the size
-	 * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
-	 * by the linear solver one-after-the-other).
-	 *
-	 * This value is optional. If no value is provided then the default value is chosen by the requested solver.
-     * @param preconditionner_max_block_size A hyperparameter used by the slicer (internal to the solver) to
-	 * define the size of a block used by the Block-Jacobi preconditioner.
-	 *
-	 * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
-     * @see MatrixSparse
+     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
+     * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
+     * by the linear solver one-after-the-other).
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * define the size of a block used by the Block-Jacobi preconditioner.
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @see SplinesLinearProblemSparse
      */
     explicit SplineBuilder2D(
             batched_interpolation_domain_type const& batched_interpolation_domain,
-            std::optional<int> cols_per_chunk = std::nullopt,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : m_spline_builder1(
                 batched_interpolation_domain,
@@ -237,7 +236,7 @@ public:
     /** @brief Move-assigns
      *
      * @param x An rvalue to another SplineBuilder.
-     * @return A reference to the moved SplineBuilder
+     * @return A reference to this object.
      */
     SplineBuilder2D& operator=(SplineBuilder2D&& x) = default;
 
@@ -295,7 +294,7 @@ public:
     }
 
     /**
-     * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
+     * @brief Get the whole domain on which spline coefficients are defined.
      *
      * Spline approximations (spline-transformed functions) are computed on this domain.
      *
@@ -316,8 +315,8 @@ public:
      * Use the values of a function (defined on
      * SplineBuilder2D::batched_interpolation_domain) and the derivatives of the
      * function at the boundaries (in the case of BoundCond::HERMITE only)
-	 * to calculate a 2D spline approximation of this function.
-	 *
+     * to calculate a 2D spline approximation of this function.
+     *
      * The spline approximation is stored as a ChunkSpan of coefficients
      * associated with B-splines.
      *

@@ -100,35 +100,20 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION DiscreteDomain& operator=(DiscreteDomain&& x) = default;
 
-    /**
-     * @brief Copy a DiscreteDomain by reordering and slicing.
-     *
-     * An assign operator to build a DiscreteDomain from another compatible domain.
-     * A domain is compatible if it either contains the same dimensions as this
-     * domain (even if they are in a different order) or if it contains at
-     * the dimensions of this domain plus some additional dimensions which will
-     * be unused here.
-     *
-     * @param domain A compatible domain.
-     */
-    template <class... ODDims>
-    DiscreteDomain& KOKKOS_FUNCTION operator=(DiscreteDomain<ODDims...> const& domain)
-    {
-        m_element_begin = DiscreteElement<DDims...>(domain.front());
-        m_element_end = m_element_begin + DiscreteVector<DDims...>(domain.extents());
-        return *this;
-    }
-
     template <class... ODims>
     KOKKOS_FUNCTION constexpr bool operator==(DiscreteDomain<ODims...> const& other) const
     {
+        if (empty() && other.empty()) {
+            return true;
+        }
         return m_element_begin == other.m_element_begin && m_element_end == other.m_element_end;
     }
 
 #if __cplusplus <= 201703L
     // Shall not be necessary anymore in C++20
     // `a!=b` shall be translated by the compiler to `!(a==b)`
-    KOKKOS_FUNCTION constexpr bool operator!=(DiscreteDomain const& other) const
+    template <class... ODims>
+    KOKKOS_FUNCTION constexpr bool operator!=(DiscreteDomain<ODims...> const& other) const
     {
         return !(*this == other);
     }

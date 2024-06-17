@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <Kokkos_Core.hpp>
+
 namespace ddc {
 
 /**

@@ -9,6 +9,8 @@
 #include <ddc/ddc.hpp>
 
 #include "Kokkos_Macros.hpp"
+#include "periodic_extrapolation_rule.hpp"
+#include "spline_boundary_conditions.hpp"
 #include "view.hpp"
 
 namespace ddc {

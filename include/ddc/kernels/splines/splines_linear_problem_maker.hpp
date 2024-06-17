@@ -116,8 +116,8 @@ public:
             int const ku,
             bool const pds)
     {
-        assert(kl <= n);
-        assert(ku <= n);
+        assert(kl < n);
+        assert(ku < n);
         int const bottom_size = std::max(kl, ku);
         int const top_size = n - bottom_size;
 

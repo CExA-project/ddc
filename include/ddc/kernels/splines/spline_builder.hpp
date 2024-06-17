@@ -3,11 +3,15 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
+#include <ddc/ddc.hpp>
+
 #include "ddc/chunk_span.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
 #include "deriv.hpp"
+#include "math_tools.hpp"
+#include "spline_boundary_conditions.hpp"
 #include "splines_linear_problem_maker.hpp"
 
 namespace ddc {
@@ -249,7 +253,7 @@ public:
     /** @brief Move-assigns
      *
      * @param x An rvalue to another SplineBuilder.
-     * @return A reference to the moved SplineBuilder
+     * @return A reference to this object.
      */
     SplineBuilder& operator=(SplineBuilder&& x) = default;
 

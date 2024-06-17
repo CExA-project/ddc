@@ -106,7 +106,7 @@ public:
      * a periodic band matrix.
      *
      * It simply calls make_new_block_matrix_with_band_main_block with bottom_size being
-     * max(kl, ku) (except if the alloation would be higher than instantiating a SplinesLinearProblemDense).
+     * max(kl, ku) (except if the allocation would be higher than instantiating a SplinesLinearProblemDense).
      *
      * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.
      * @param n The size of one of the dimensions of the whole square matrix.
@@ -123,8 +123,10 @@ public:
             int const ku,
             bool const pds)
     {
+        assert(kl < n);
+        assert(ku < n);
         int const bottom_size = std::max(kl, ku);
-        int const top_size = std::max(0, n - bottom_size);
+        int const top_size = n - bottom_size;
 
         if (bottom_size * (n + top_size) + (2 * kl + ku + 1) * top_size >= n * n) {
             return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);

@@ -703,7 +703,7 @@ void SplineBuilder<
         for (std::size_t s = 0; s < bsplines_type::degree() + 1; ++s) {
             int const j = ddc::detail::
                     modulo(int(jmin.uid() - m_offset + s),
-                           (int)ddc::discrete_space<BSplines>().nbasis());
+                           static_cast<int>(ddc::discrete_space<BSplines>().nbasis()));
             matrix->set_element(ix.uid() - start + s_nbc_xmin, j, values(s));
         }
     });

@@ -99,7 +99,7 @@ public:
      * a periodic band matrix.
      *
      * It simply calls make_new_block_matrix_with_band_main_block with bottom_size being
-     * max(kl, ku) (except if the alloation would be higher than instantiating a SplinesLinearProblemDense).
+     * max(kl, ku) (except if the allocation would be higher than instantiating a SplinesLinearProblemDense).
      *
      * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.
      * @param n The size of one of the dimensions of the whole square matrix.

@@ -90,7 +90,9 @@ public:
          * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of 
          * the matrix itself but required for the storage of its LU factorization.
          */
-        if (i >= std::max((std::ptrdiff_t)0, (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku)
+        if (i >= std::
+                            max(static_cast<std::ptrdiff_t>(0),
+                                static_cast<std::ptrdiff_t>(j) - static_cast<std::ptrdiff_t>(m_ku))
             && i < std::min(size(), j + m_kl + 1)) {
             return m_q(band_storage_row_index(i, j), j);
         } else {
@@ -108,7 +110,9 @@ public:
          * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of 
          * the matrix itself but required for the storage of its LU factorization.
          */
-        if (i >= std::max((std::ptrdiff_t)0, (std::ptrdiff_t)j - (std::ptrdiff_t)m_ku)
+        if (i >= std::
+                            max(static_cast<std::ptrdiff_t>(0),
+                                static_cast<std::ptrdiff_t>(j) - static_cast<std::ptrdiff_t>(m_ku))
             && i < std::min(size(), j + m_kl + 1)) {
             m_q(band_storage_row_index(i, j), j) = aij;
         } else {

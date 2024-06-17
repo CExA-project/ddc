@@ -379,7 +379,7 @@ void core(
             (is_uniform_point_sampling_v<DDimX> && ...),
             "DDimX dimensions should derive from UniformPointSampling");
 
-    std::array<int, sizeof...(DDimX)> n = {(int)ddc::get<DDimX>(mesh.extents())...};
+    std::array<int, sizeof...(DDimX)> n = {static_cast<int>(ddc::get<DDimX>(mesh.extents()))...};
     int idist = 1;
     int odist = 1;
     for (std::size_t i = 0; i < sizeof...(DDimX); i++) {
@@ -398,15 +398,15 @@ void core(
         _fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin, Tout>(
                 kwargs.direction == ddc::FFT_Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
                 FFTW_ESTIMATE,
-                (int)sizeof...(DDimX),
+                static_cast<int>(sizeof...(DDimX)),
                 n.data(),
                 1,
                 reinterpret_cast<typename _fftw_type<Tin>::type*>(in_data),
-                (int*)NULL,
+                static_cast<int*>(nullptr),
                 1,
                 idist,
                 reinterpret_cast<typename _fftw_type<Tout>::type*>(out_data),
-                (int*)NULL,
+                static_cast<int*>(nullptr),
                 1,
                 odist);
         if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
@@ -430,15 +430,15 @@ void core(
         _fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin, Tout>(
                 kwargs.direction == ddc::FFT_Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
                 FFTW_ESTIMATE,
-                (int)sizeof...(DDimX),
+                static_cast<int>(sizeof...(DDimX)),
                 n.data(),
                 1,
                 reinterpret_cast<typename _fftw_type<Tin>::type*>(in_data),
-                (int*)NULL,
+                static_cast<int*>(nullptr),
                 1,
                 idist,
                 reinterpret_cast<typename _fftw_type<Tout>::type*>(out_data),
-                (int*)NULL,
+                static_cast<int*>(nullptr),
                 1,
                 odist);
         if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
@@ -468,10 +468,10 @@ void core(
                 &unmanaged_plan, // plan handle
                 sizeof...(DDimX),
                 n.data(), // Nx, Ny...
-                NULL,
+                nullptr,
                 1,
                 idist,
-                NULL,
+                nullptr,
                 1,
                 odist,
                 cufft_transform_type<Tin, Tout>(),
@@ -507,10 +507,10 @@ void core(
                 &unmanaged_plan, // plan handle
                 sizeof...(DDimX),
                 n.data(), // Nx, Ny...
-                NULL,
+                nullptr,
                 1,
                 idist,
-                NULL,
+                nullptr,
                 1,
                 odist,
                 hipfft_transform_type<Tin, Tout>(),

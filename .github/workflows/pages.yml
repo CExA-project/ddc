@@ -97,9 +97,10 @@ jobs:
               -DDOXYGEN_WARN_AS_ERROR=NO \
               -DMDSPAN_CXX_STANDARD=20 \
               -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-              /src
-          cmake --build . --verbose --target doc
-          mv docs/doxygen.log /src/docs_out/doxygen.log
+              -B build \
+              -S /src
+          cmake --build build --verbose --target doc
+          mv build/docs/doxygen.log /src/docs_out/doxygen.log
         EOF
         mkdir docs_out
         chmod a+rwx docs_out
@@ -147,12 +148,15 @@ jobs:
           export CXX=clang++
           cmake \
               -DDDC_BUILD_DOCUMENTATION=ON \
+              -DCMAKE_CXX_FLAGS="-Wno-unused-command-line-argument" \
               -DCMAKE_CXX_STANDARD=20 \
+              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
               -DMDSPAN_CXX_STANDARD=20 \
               -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-              /src
-          cmake --build . --verbose --target doc
-          mv docs/html /src/docs_out
+              -B build \
+              -S /src
+          cmake --build build --verbose --target doc
+          mv build/docs/html /src/docs_out
         EOF
         mkdir docs_out
         chmod a+rwx docs_out

@@ -3,19 +3,23 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
+#include <ddc/ddc.hpp>
+
 #include "ddc/chunk_span.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
 #include "deriv.hpp"
+#include "math_tools.hpp"
+#include "spline_boundary_conditions.hpp"
+#include "splines_linear_problem_maker.hpp"
 
 namespace ddc {
 
 /**
  * @brief An enum determining the backend solver of a SplineBuilder or SplineBuilder2d.
  *
- * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d. Only GINKGO is available at the moment,
- * other solvers will be implemented in the future.
+ * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d.
  */
 enum class SplineSolver {
     GINKGO ///< Enum member to identify the Ginkgo-based solver (iterative method)
@@ -129,6 +133,7 @@ public:
                     ddc::detail::TypeSeq<interpolation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
+private:
     /**
      * @brief The type of the whole spline domain (cartesian product of the 1D spline domain
      * and the batch domain) with 1D spline dimension being the leading dimension.
@@ -143,6 +148,7 @@ public:
                             ddc::detail::TypeSeq<IDimX...>,
                             ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
 
+public:
     /**
      * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain 
      * and batch domain) preserving the underlying memory layout (order of dimensions).
@@ -179,7 +185,7 @@ private:
     double m_dx; // average cell size for normalization of derivatives
 
     // interpolator specific
-    std::unique_ptr<ddc::detail::Matrix> matrix;
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> matrix;
 
     /// Calculate offset so that the matrix is diagonally dominant
     int compute_offset(interpolation_domain_type const& interpolation_domain);
@@ -191,7 +197,7 @@ public:
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
      *
      * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
-     * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
+     * of a chunk of right-hand sides of the linear problem to be computed in parallel (chunks are treated
      * by the linear solver one-after-the-other).
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
@@ -203,7 +209,7 @@ public:
      */
     explicit SplineBuilder(
             batched_interpolation_domain_type const& batched_interpolation_domain,
-            std::optional<int> cols_per_chunk = std::nullopt,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : m_batched_interpolation_domain(batched_interpolation_domain)
         , m_offset(compute_offset(interpolation_domain()))
@@ -246,7 +252,7 @@ public:
     /** @brief Move-assigns
      *
      * @param x An rvalue to another SplineBuilder.
-     * @return A reference to the moved SplineBuilder
+     * @return A reference to this object.
      */
     SplineBuilder& operator=(SplineBuilder&& x) = default;
 
@@ -300,7 +306,7 @@ public:
     }
 
     /**
-     * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
+     * @brief Get the whole domain on which spline coefficients are defined.
      *
      * Spline approximations (spline-transformed functions) are computed on this domain.
      *
@@ -313,6 +319,7 @@ public:
                 bsplines_type>(batched_interpolation_domain(), spline_domain());
     }
 
+private:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest being the leading dimension.
      *
@@ -325,6 +332,7 @@ public:
         return batched_spline_tr_domain_type(spline_domain(), batch_domain());
     }
 
+public:
     /**
      * @brief Get the whole domain on which derivatives on lower boundary are defined.
      *
@@ -369,7 +377,7 @@ public:
      *
      * @return A reference to the interpolation matrix.
      */
-    const ddc::detail::Matrix& get_interpolation_matrix() const noexcept
+    const ddc::detail::SplinesLinearProblem<exec_space>& get_interpolation_matrix() const noexcept
     {
         return *matrix;
     }
@@ -419,7 +427,7 @@ private:
     void allocate_matrix(
             int lower_block_size,
             int upper_block_size,
-            std::optional<int> cols_per_chunk = std::nullopt,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt);
 
     void build_matrix_system();
@@ -584,7 +592,7 @@ void SplineBuilder<
         allocate_matrix(
                 [[maybe_unused]] int lower_block_size,
                 [[maybe_unused]] int upper_block_size,
-                std::optional<int> cols_per_chunk,
+                std::optional<std::size_t> cols_per_chunk,
                 std::optional<unsigned int> preconditionner_max_block_size)
 {
     // Special case: linear spline
@@ -595,14 +603,14 @@ void SplineBuilder<
         return;
 	*/
 
-    matrix = ddc::detail::MatrixMaker::make_new_sparse<ExecSpace>(
+    matrix = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<ExecSpace>(
             ddc::discrete_space<BSplines>().nbasis(),
             cols_per_chunk,
             preconditionner_max_block_size);
 
     build_matrix_system();
 
-    matrix->factorize();
+    matrix->setup_solver();
 }
 
 template <
@@ -668,7 +676,7 @@ void SplineBuilder<
         for (std::size_t s = 0; s < bsplines_type::degree() + 1; ++s) {
             int const j = ddc::detail::
                     modulo(int(jmin.uid() - m_offset + s),
-                           (int)ddc::discrete_space<BSplines>().nbasis());
+                           static_cast<int>(ddc::discrete_space<BSplines>().nbasis()));
             matrix->set_element(ix.uid() - start + s_nbc_xmin, j, values(s));
         }
     });
@@ -832,7 +840,7 @@ operator()(
             ddc::discrete_space<bsplines_type>().nbasis(),
             batch_domain().size());
     // Compute spline coef
-    matrix->solve_batch_inplace(bcoef_section);
+    matrix->solve(bcoef_section);
     // Transpose back spline_tr in spline
     ddc::parallel_for_each(
             exec_space(),

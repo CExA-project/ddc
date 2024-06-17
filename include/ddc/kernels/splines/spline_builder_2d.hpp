@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ddc/ddc.hpp>
+
 #include "spline_builder.hpp"
 
 namespace ddc {
@@ -127,7 +129,7 @@ public:
 
     /** 
      * @brief The type of the whole spline domain (cartesian product of 2D spline domain
-     * and batch domain) preserving the underlying memory layout (order of dimensions).
+     * and batch domain) preserving the order of dimensions.
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y
      * (associated to B-splines tags BSplinesX and BSplinesY), this is DiscreteDomain<BSplinesX, BSplinesY, Z>
@@ -140,8 +142,7 @@ public:
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
-     * and the associated batch domain) in the first dimension, preserving the underlying
-     * memory layout (order of dimensions).
+     * and the associated batch domain) in the first dimension, preserving the order of dimensions.
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
      * this is DiscreteDomain<Deriv<X>, Y, Z>.
@@ -150,8 +151,7 @@ public:
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
-     * and the associated batch domain) in the second dimension, preserving the underlying
-     * memory layout (order of dimensions).
+     * and the associated batch domain) in the second dimension, preserving the order of dimensions.
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
      * this is DiscreteDomain<X, Deriv<Y>, Z>.
@@ -164,8 +164,7 @@ public:
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
-     * and the batch domain) in the second dimension, preserving the underlying
-     * memory layout (order of dimensions).
+     * and the batch domain) in the second dimension, preserving the order of dimensions.
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
      * this is DiscreteDomain<Deriv<X>, Deriv<Y>, Z>.
@@ -196,11 +195,11 @@ public:
      * define the size of a block used by the Block-Jacobi preconditioner.
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
-     * @see MatrixSparse
+     * @see SplinesLinearProblemSparse
      */
     explicit SplineBuilder2D(
             batched_interpolation_domain_type const& batched_interpolation_domain,
-            std::optional<int> cols_per_chunk = std::nullopt,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
         : m_spline_builder1(
                 batched_interpolation_domain,
@@ -237,7 +236,7 @@ public:
     /** @brief Move-assigns
      *
      * @param x An rvalue to another SplineBuilder.
-     * @return A reference to the moved SplineBuilder
+     * @return A reference to this object.
      */
     SplineBuilder2D& operator=(SplineBuilder2D&& x) = default;
 
@@ -295,7 +294,7 @@ public:
     }
 
     /**
-     * @brief Get the whole domain on which spline coefficients are defined, preserving memory layout.
+     * @brief Get the whole domain on which spline coefficients are defined.
      *
      * Spline approximations (spline-transformed functions) are computed on this domain.
      *

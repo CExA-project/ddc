@@ -13,6 +13,7 @@
 #include "splines_linear_problem_dense.hpp"
 #include "splines_linear_problem_pds_band.hpp"
 #include "splines_linear_problem_pds_tridiag.hpp"
+#include "splines_linear_problem_periodic_band.hpp"
 #include "splines_linear_problem_sparse.hpp"
 
 namespace ddc::detail {
@@ -131,6 +132,44 @@ public:
         }
 
         return make_new_block_matrix_with_band_main_block<ExecSpace>(n, kl, ku, pds, bottom_size);
+    }
+
+    /**
+     * @brief Construct a 2x2-blocks linear problem with band "main" block (the one called
+     * Q in SplinesLinearProblem2x2Blocks).
+     *
+     * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.
+     * @param n The size of one of the dimensions of the whole square matrix.
+     * @param kl The number of subdiagonals in the band block.
+     * @param ku The number of superdiagonals in the band block.
+     * @param pds A boolean indicating if the band block is positive-definite symetric or not.
+     * @param bottom_right_size The size of one of the dimensions of the bottom-right block.
+     *
+     * @return The SplinesLinearProblem instance.
+     */
+    template <typename ExecSpace>
+    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_periodic_band_matrix(
+            int const n,
+            int const kl,
+            int const ku,
+            bool const pds)
+    {
+        int const bottom_size = std::max(kl, ku);
+        int const top_size = n - bottom_size;
+        std::unique_ptr<SplinesLinearProblem<ExecSpace>> top_left_block;
+        if (bottom_size * n + bottom_size * (bottom_size + 1) + (2 * kl + 1 + ku) * top_size
+            >= n * n) {
+            return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+        } else if (pds && kl == ku && kl == 1) {
+            top_left_block = std::make_unique<SplinesLinearProblemPDSTridiag<ExecSpace>>(top_size);
+        } else if (kl == ku && pds) {
+            top_left_block = std::make_unique<SplinesLinearProblemPDSBand<ExecSpace>>(top_size, kl);
+        } else {
+            top_left_block
+                    = std::make_unique<SplinesLinearProblemBand<ExecSpace>>(top_size, kl, ku);
+        }
+        return std::make_unique<
+                SplinesLinearProblemPeriodicBand<ExecSpace>>(n, kl, ku, std::move(top_left_block));
     }
 
     /**

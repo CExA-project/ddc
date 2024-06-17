@@ -121,6 +121,39 @@ public:
         m_q.sync_device();
     }
 
+private:
+    KOKKOS_FUNCTION int tbsv(
+            [[maybe_unused]] char const uplo,
+            [[maybe_unused]] char const trans,
+            [[maybe_unused]] char const diag,
+            int const n,
+            int const k,
+            Kokkos::View<double**, Kokkos::LayoutStride, typename ExecSpace::memory_space> const a,
+            [[maybe_unused]] int const lda,
+            Kokkos::View<double*, Kokkos::LayoutStride, typename ExecSpace::memory_space> const x,
+            [[maybe_unused]] int const incx) const
+    {
+        if (trans == 'N') {
+            for (int j = 0; j < n; ++j) {
+                if (x(j) != 0) {
+                    x(j) /= a(0, j);
+                    for (int i = j + 1; i <= Kokkos::min(n, j + k); ++i) {
+                        x(i) -= a(i - j, j) * x(j);
+                    }
+                }
+            }
+        } else if (trans == 'T') {
+            for (int j = n - 1; j >= 0; --j) {
+                for (int i = Kokkos::min(n, j + k); i >= j + 1; --i) {
+                    x(j) -= a(i - j, j) * x(i);
+                }
+                x(j) /= a(0, j);
+            }
+        }
+        return 0;
+    }
+
+public:
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *

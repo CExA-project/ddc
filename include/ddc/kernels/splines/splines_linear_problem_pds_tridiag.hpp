@@ -8,6 +8,8 @@
 #include <memory>
 #include <string>
 
+#include <Kokkos_DualView.hpp>
+
 #if __has_include(<mkl_lapacke.h>)
 #include <mkl_lapacke.h>
 #else

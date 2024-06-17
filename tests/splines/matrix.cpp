@@ -344,7 +344,7 @@ TEST_P(MatrixSizesFixture, PeriodicBand)
     auto const [N, k] = GetParam();
 
     // Build a full-rank periodic band matrix permuted in such a way the band is shifted
-    for (std::ptrdiff_t s(-k); s < (std::ptrdiff_t)k + 1; ++s) {
+    for (std::ptrdiff_t s(-k + k / 2); s < (std::ptrdiff_t)k - k / 2 + 1; ++s) {
         std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
                 = ddc::detail::SplinesLinearProblemMaker::make_new_periodic_band_matrix<
                         Kokkos::DefaultExecutionSpace>(
@@ -357,9 +357,9 @@ TEST_P(MatrixSizesFixture, PeriodicBand)
                 std::ptrdiff_t diag
                         = ddc::detail::modulo((std::ptrdiff_t)(j - i), (std::ptrdiff_t)N);
                 if (diag == s || diag == N + s) {
-                    matrix->set_element(i, j, .5);
+                    matrix->set_element(i, j, 2.0 * k + 1);
                 } else if (diag <= s + k || diag >= N + s - k) {
-                    matrix->set_element(i, j, -1. / k);
+                    matrix->set_element(i, j, -1.);
                 }
             }
         }

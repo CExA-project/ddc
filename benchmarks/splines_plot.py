@@ -57,8 +57,7 @@ plt.figure(figsize=(16, 6))
 
 plt.subplot(1, 2, 1)
 for nx in nx_values:
-	filter = lambda item : item["nx"]==nx and not item["on_gpu"]
-	plotter(plt, "ny", "bytes_per_second", data_dict_sorted, filter)
+	plotter(plt, "ny", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and not item["on_gpu"])
 
 ny_min = min([item["ny"] for item in data_dict_sorted if item["on_gpu"]])
 x = np.linspace(ny_min, 20*ny_min)
@@ -68,14 +67,13 @@ plt.grid()
 plt.xscale("log")
 plt.xlabel("ny")
 plt.ylabel("Throughput [B/s]")
-plt.title("Throughput on CPU");
+plt.title("Throughput on CPU")
 plt.legend()
 plt.savefig("throughput_ny.png")
 
 plt.subplot(1, 2, 2)
 for nx in nx_values:
-	filter = lambda item : item["nx"]==nx and item["on_gpu"]
-	plotter(plt, "ny", "bytes_per_second", data_dict_sorted, filter)
+	plotter(plt, "ny", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["on_gpu"])
 
 ny_min = min([item["ny"] for item in data_dict_sorted if item["on_gpu"]])
 x = np.linspace(ny_min, 20*ny_min)
@@ -85,7 +83,7 @@ plt.grid()
 plt.xscale("log")
 plt.xlabel("ny")
 plt.ylabel("Throughput [B/s]")
-plt.title("Throughput on GPU");
+plt.title("Throughput on GPU")
 plt.legend()
 plt.savefig("throughput_ny.png")
 
@@ -111,22 +109,19 @@ plt.savefig("gpu_mem_occupancy.png")
 ## cols_per_chunk ##
 ########################
 
-# Plotting the data for each group
-plt.figure(figsize=(8, 6))
-for nx, group_data in data_groups["nx"].items():
-    cols_per_chunk = group_data["cols_per_chunk"]
-    throughput = [group_data["bytes_per_second"][i] for i in range(len(cols_per_chunk))]
-    plt.plot(cols_per_chunk, throughput, marker='o', markersize=5, label=f'nx={nx}')
+data_dict_sorted = sorted(data_dict, key=itemgetter("nx","cols_per_chunk"))
+plt.figure(figsize=(16, 6))
 
-x = [(int)(data["context"]["cols_per_chunk_ref"]), (int)(data["context"]["cols_per_chunk_ref"])*1.001];
-plt.plot(x, [0.99*min([min(group_data["bytes_per_second"]) for nx, group_data in data_groups["nx"].items()]), 1.01*max([max(group_data["bytes_per_second"]) for nx, group_data in data_groups["nx"].items()])], linestyle='dotted', color='black', label='reference config')
+plt.subplot(1, 2, 1)
+for nx in nx_values:
+	plotter(plt, "ny", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and not item["on_gpu"])
 
 # Plotting the data
 plt.grid()
 plt.xscale("log")
 plt.xlabel("cols_per_chunk")
 plt.ylabel("Throughput [B/s]")
-plt.title("Throughput on "+str.upper(data["context"]["chip"])+" (with ny=100000)");
+plt.title("Throughput on CPU (with ny="+[item["ny"] for item in data_dict_sorted if item["on_gpu"]][0]+")");
 plt.legend()
 plt.savefig("throughput_cols.png")
 

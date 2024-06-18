@@ -284,6 +284,7 @@ BENCHMARK(characteristics_advection)
         ->MinTime(3)
         ->UseRealTime();
 */
+/*
 // Sweep on nx and ny
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
@@ -298,7 +299,7 @@ BENCHMARK(characteristics_advection)
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
-/*
+*/
 // Sweep on nx and cols_per_chunk
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
@@ -308,11 +309,11 @@ BENCHMARK(characteristics_advection)
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {ny_ref, ny_ref},
-                 {64, 65535},
+                 // {64, 65535},
+                 {64, 200},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
-*/
 /*
 // Sweep on nx and preconditionner_max_block_size
 BENCHMARK(characteristics_advection)

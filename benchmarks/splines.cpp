@@ -267,7 +267,8 @@ std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;
 unsigned int preconditionner_max_block_size_ref = 32u;
 #endif
-std::size_t ny_ref = 100000;
+// std::size_t ny_ref = 100000;
+std::size_t ny_ref = 1000;
 
 // Sweep on uniform/non-uniform and spline order
 /*
@@ -293,13 +294,13 @@ BENCHMARK(characteristics_advection)
                  {non_uniform_ref, non_uniform_ref},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
-                 // {100, 200000},
-                 {100, 2000},
+                 {100, 200000},
                  {cols_per_chunk_ref, cols_per_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
 */
+/*
 // Sweep on nx and cols_per_chunk
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
@@ -309,12 +310,11 @@ BENCHMARK(characteristics_advection)
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {ny_ref, ny_ref},
-                 // {64, 65535},
-                 {64, 200},
+                 {64, 65535},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
-/*
+*/
 // Sweep on nx and preconditionner_max_block_size
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
@@ -328,7 +328,6 @@ BENCHMARK(characteristics_advection)
                  {1, 32}})
         ->MinTime(3)
         ->UseRealTime();
-*/
 
 int main(int argc, char** argv)
 {

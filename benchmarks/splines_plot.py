@@ -33,7 +33,7 @@ data_dict = [{
 "gpu_mem_occupancy": benchmark["gpu_mem_occupancy"]
 } for benchmark in data["benchmarks"]]
 
-plotter = lambda plt, x_name, y_name, data_dict_sorted, filter : plt.plot([item[x_name] for item in data_dict_sorted if filter(item)], [item[y_name] for item in data_dict_sorted if filter(item)], marker='o', markersize=5, label=f"{'non_uniform' if any(filter(item) and item['non_uniform'] for item in data_dict_sorted) else 'uniform'} nx={nx}")
+plotter = lambda plt, x_name, y_name, data_dict_sorted, filter : plt.plot([item[x_name] for item in data_dict_sorted if filter(item)], [item[y_name] for item in data_dict_sorted if filter(item)], marker='o', markersize=5, label=f"{'non uniform' if any(filter(item) and item['non_uniform'] for item in data_dict_sorted) else 'uniform'} nx={nx}")
 
 #############################
 ## non_uniform && degree_x ##
@@ -48,8 +48,8 @@ for non_uniform in (False,True):
 	    plotter(plt, "degree_x", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
 
 plt.grid()
-plt.xscale("log")
-plt.xlabel("degree_x")
+plt.xscale("linear")
+plt.xlabel("Splines degree")
 plt.ylabel("Throughput [B/s]")
 plt.title("Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
 plt.legend()
@@ -60,8 +60,8 @@ for non_uniform in (False,True):
     	plotter(plt, "degree_x", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
 
 plt.grid()
-plt.xscale("log")
-plt.xlabel("degree_x")
+plt.xscale("linear")
+plt.xlabel("Splines degree")
 plt.ylabel("Throughput [B/s]")
 plt.title("Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
 plt.legend()
@@ -85,7 +85,7 @@ if len([item for item in data_dict_sorted if item["ny"]==ny_min and not item["on
 
 plt.grid()
 plt.xscale("log")
-plt.xlabel("ny")
+plt.xlabel("Batch size")
 plt.ylabel("Throughput [B/s]")
 plt.title("Throughput on CPU")
 plt.legend()
@@ -101,7 +101,7 @@ if len([item for item in data_dict_sorted if item["ny"]==ny_min and item["on_gpu
 
 plt.grid()
 plt.xscale("log")
-plt.xlabel("ny")
+plt.xlabel("Batch size")
 plt.ylabel("Throughput [B/s]")
 plt.title("Throughput on GPU")
 plt.legend()
@@ -119,7 +119,7 @@ for nx in nx_values:
 
 plt.grid()
 plt.xscale("log")
-plt.xlabel("ny")
+plt.xlabel("Batch size")
 plt.ylabel("Relative memory overhead [%]")
 plt.title("Relative memory occupancy overhead")
 plt.legend()
@@ -138,7 +138,7 @@ for nx in nx_values:
 
 plt.grid()
 plt.xscale("log")
-plt.xlabel("cols_per_chunk")
+plt.xlabel("Number of right_hand sides per chunk")
 plt.ylabel("Throughput [B/s]")
 plt.title("Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
 plt.legend()
@@ -149,7 +149,7 @@ for nx in nx_values:
 
 plt.grid()
 plt.xscale("log")
-plt.xlabel("cols_per_chunk")
+plt.xlabel("Number of right_hand sides per chunk")
 plt.ylabel("Throughput [B/s]")
 plt.title("Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
 plt.legend()
@@ -168,7 +168,7 @@ for nx in nx_values:
 
 plt.grid()
 plt.xscale("log")
-plt.xlabel("preconditionner_max_block_size")
+plt.xlabel("Max block size of preconditioner")
 plt.ylabel("Throughput [B/s]")
 plt.title("Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
 plt.legend()
@@ -179,10 +179,10 @@ for nx in nx_values:
 
 plt.grid()
 plt.xscale("log")
-plt.xlabel("cols_per_chunk")
+plt.xlabel("Max block size of preconditioner")
 plt.ylabel("Throughput [B/s]")
 plt.title("Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
 plt.legend()
-plt.savefig("throughput_cols.png")
+plt.savefig("throughput_precond.png")
 
 plt.close();

@@ -21,17 +21,21 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
         static constexpr bool PERIODIC = true;
     };
 
-    template <std::size_t s_degree_x>
-    struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
+    template <typename NonUniform, std::size_t s_degree_x>
+    struct BSplinesX
+        : std::conditional_t<
+                  NonUniform::value,
+                  ddc::NonUniformBSplines<X, s_degree_x>,
+                  ddc::UniformBSplines<X, s_degree_x>>
     {
     };
-    template <std::size_t s_degree_x>
+    template <typename NonUniform, std::size_t s_degree_x>
     using GrevillePoints = ddc::GrevilleInterpolationPoints<
-            BSplinesX<s_degree_x>,
+            BSplinesX<NonUniform, s_degree_x>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC>;
-    template <std::size_t s_degree_x>
-    struct DDimX : GrevillePoints<s_degree_x>::interpolation_mesh_type
+    template <typename NonUniform, std::size_t s_degree_x>
+    struct DDimX : GrevillePoints<NonUniform, s_degree_x>::interpolation_mesh_type
     {
     };
 
@@ -60,8 +64,8 @@ void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem
     }
 }
 
-template <std::size_t s_degree_x>
-static void characteristics_advection(benchmark::State& state)
+template <typename NonUniform, std::size_t s_degree_x>
+static void characteristics_advection_unitary(benchmark::State& state)
 {
     size_t freeMem = 0;
     size_t totalMem = 0;
@@ -82,33 +86,43 @@ static void characteristics_advection(benchmark::State& state)
             std::ref(monitorFlag),
             std::ref(maxUsedMem));
 
-    ddc::init_discrete_space<
-            BSplinesX<s_degree_x>>(ddc::Coordinate<X>(-1.), ddc::Coordinate<X>(1.), state.range(1));
-    ddc::init_discrete_space<DDimX<s_degree_x>>(
+    if constexpr (!NonUniform::value) {
+        ddc::init_discrete_space<BSplinesX<
+                NonUniform,
+                s_degree_x>>(ddc::Coordinate<X>(0.), ddc::Coordinate<X>(1.), state.range(1));
+    } else {
+        std::vector<ddc::Coordinate<X>> breaks(state.range(1) + 1);
+        for (std::size_t i(0); i < state.range(1) + 1; ++i) {
+            breaks[i] = ddc::Coordinate<X>(static_cast<double>(i) / state.range(1));
+        }
+        ddc::init_discrete_space<BSplinesX<NonUniform, s_degree_x>>(breaks);
+    }
+    ddc::init_discrete_space<DDimX<NonUniform, s_degree_x>>(
             ddc::GrevilleInterpolationPoints<
-                    BSplinesX<s_degree_x>,
+                    BSplinesX<NonUniform, s_degree_x>,
                     ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC>::template get_sampling<DDimX<s_degree_x>>());
+                    ddc::BoundCond::PERIODIC>::
+                    template get_sampling<DDimX<NonUniform, s_degree_x>>());
     ddc::DiscreteDomain<DDimY> y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
             ddc::Coordinate<Y>(-1.),
             ddc::Coordinate<Y>(1.),
             ddc::DiscreteVector<DDimY>(state.range(2))));
 
     auto const x_domain = ddc::GrevilleInterpolationPoints<
-            BSplinesX<s_degree_x>,
+            BSplinesX<NonUniform, s_degree_x>,
             ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC>::template get_domain<DDimX<s_degree_x>>();
+            ddc::BoundCond::PERIODIC>::template get_domain<DDimX<NonUniform, s_degree_x>>();
     ddc::Chunk density_alloc(
-            ddc::DiscreteDomain<DDimX<s_degree_x>, DDimY>(x_domain, y_domain),
+            ddc::DiscreteDomain<DDimX<NonUniform, s_degree_x>, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
     ddc::ChunkSpan const density = density_alloc.span_view();
     // Initialize the density on the main domain
-    ddc::DiscreteDomain<DDimX<s_degree_x>, DDimY> x_mesh
-            = ddc::DiscreteDomain<DDimX<s_degree_x>, DDimY>(x_domain, y_domain);
+    ddc::DiscreteDomain<DDimX<NonUniform, s_degree_x>, DDimY> x_mesh
+            = ddc::DiscreteDomain<DDimX<NonUniform, s_degree_x>, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
             x_mesh,
-            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<s_degree_x>, DDimY> const ixy) {
-                double const x = ddc::coordinate(ddc::select<DDimX<s_degree_x>>(ixy));
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<NonUniform, s_degree_x>, DDimY> const ixy) {
+                double const x = ddc::coordinate(ddc::select<DDimX<NonUniform, s_degree_x>>(ixy));
                 double const y = ddc::coordinate(ddc::select<DDimY>(ixy));
                 density(ixy) = 9.999 * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
                 // initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
@@ -116,23 +130,23 @@ static void characteristics_advection(benchmark::State& state)
     ddc::SplineBuilder<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
-            BSplinesX<s_degree_x>,
-            DDimX<s_degree_x>,
+            BSplinesX<NonUniform, s_degree_x>,
+            DDimX<NonUniform, s_degree_x>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
             ddc::SplineSolver::GINKGO,
-            DDimX<s_degree_x>,
+            DDimX<NonUniform, s_degree_x>,
             DDimY>
             spline_builder(x_mesh, state.range(3), state.range(4));
     ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
-            BSplinesX<s_degree_x>,
-            DDimX<s_degree_x>,
+            BSplinesX<NonUniform, s_degree_x>,
+            DDimX<NonUniform, s_degree_x>,
             ddc::PeriodicExtrapolationRule<X>,
             ddc::PeriodicExtrapolationRule<X>,
-            DDimX<s_degree_x>,
+            DDimX<NonUniform, s_degree_x>,
             DDimY>
             spline_evaluator(periodic_extrapolation, periodic_extrapolation);
     ddc::Chunk coef_alloc(
@@ -150,9 +164,9 @@ static void characteristics_advection(benchmark::State& state)
         Kokkos::Profiling::pushRegion("FeetCharacteristics");
         ddc::parallel_for_each(
                 feet_coords.domain(),
-                KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<s_degree_x>, DDimY> const e) {
+                KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<NonUniform, s_degree_x>, DDimY> const e) {
                     feet_coords(e) = ddc::Coordinate<X, Y>(
-                            ddc::coordinate(ddc::select<DDimX<s_degree_x>>(e))
+                            ddc::coordinate(ddc::select<DDimX<NonUniform, s_degree_x>>(e))
                                     - ddc::Coordinate<X>(0.0176429863),
                             ddc::coordinate(ddc::select<DDimY>(e)));
                 });
@@ -178,23 +192,26 @@ static void characteristics_advection(benchmark::State& state)
     /// The reason is it acts on underlying global   ///
     /// variables, which is always a bad idea.       ///
     ////////////////////////////////////////////////////
-    ddc::detail::g_discrete_space_dual<BSplinesX<s_degree_x>>.reset();
-    ddc::detail::g_discrete_space_dual<ddc::UniformBsplinesKnots<BSplinesX<s_degree_x>>>.reset();
-    ddc::detail::g_discrete_space_dual<DDimX<s_degree_x>>.reset();
+    ddc::detail::g_discrete_space_dual<BSplinesX<NonUniform, s_degree_x>>.reset();
+    ddc::detail::g_discrete_space_dual<ddc::UniformBsplinesKnots<BSplinesX<NonUniform, s_degree_x>>>.reset();
+    ddc::detail::g_discrete_space_dual<DDimX<NonUniform, s_degree_x>>.reset();
     ddc::detail::g_discrete_space_dual<DDimY>.reset();
     ////////////////////////////////////////////////////
 }
 
-static void run(benchmark::State& state)
+static void characteristics_advection(benchmark::State& state)
 {
-    // Preallocate 3 benchs for each spline degree to benchmark (determined at compile-time, that's why we need to build explicitely 3 variants of the bench)
-    std::array<std::function<void(benchmark::State&)>, 3> benchs;
-    benchs[0] = (characteristics_advection<3>);
-    benchs[1] = (characteristics_advection<4>);
-    benchs[2] = (characteristics_advection<5>);
+    // Preallocate 6 unitary benchs for each combination of uniform/non-uniform and spline degree we may want to benchmark (those are determined at compile-time, that's why we need to build explicitely 6 variants of the bench even if we call only one of them)
+    std::array<std::function<void(benchmark::State&)>, 6> benchs;
+    benchs[0] = characteristics_advection_unitary<std::false_type, 3>;
+    benchs[1] = characteristics_advection_unitary<std::false_type, 4>;
+    benchs[2] = characteristics_advection_unitary<std::false_type, 5>;
+    benchs[3] = characteristics_advection_unitary<std::true_type, 3>;
+    benchs[4] = characteristics_advection_unitary<std::true_type, 4>;
+    benchs[5] = characteristics_advection_unitary<std::true_type, 5>;
 
-    // Run the required bench
-    benchs[state.range(0) - 3](state);
+    // Run the desired bench
+    benchs[state.range(0) * 3 + state.range(1) - 3](state);
 }
 
 // Tuning : 512 cols and 8 precond on CPU, 16384 cols and 1 precond on GPU
@@ -213,10 +230,11 @@ std::size_t cols_per_chunk_ref = 8192;
 unsigned int preconditionner_max_block_size_ref = 32u;
 #endif
 
-BENCHMARK(run)
+BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
-                {{3, 5},
+                {{0, 1},
+                 {3, 5},
                  {64, 1024},
                  {100000, 100000},
                  {cols_per_chunk_ref, cols_per_chunk_ref},

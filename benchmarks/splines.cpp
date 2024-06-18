@@ -187,8 +187,9 @@ static void characteristics_advection(benchmark::State& state)
 
 static void run(benchmark::State& state)
 {
-    static std::function<void(benchmark::State&)> benchs = characteristics_advection<3>;
-	benchs(state);
+    std::array<std::function<void(benchmark::State&)>, 1> benchs;
+	benchs[0] = (characteristics_advection<3>);
+	benchs[0](state);
 }
 
 // Tuning : 512 cols and 8 precond on CPU, 16384 cols and 1 precond on GPU

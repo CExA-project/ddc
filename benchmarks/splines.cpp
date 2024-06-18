@@ -83,7 +83,7 @@ static void characteristics_advection(benchmark::State& state)
             std::ref(maxUsedMem));
 
     ddc::init_discrete_space<
-            BSplinesX<s_degree_x>>(ddc::Coordinate<X>(-1.), ddc::Coordinate<X>(1.), state.range(0));
+            BSplinesX<s_degree_x>>(ddc::Coordinate<X>(-1.), ddc::Coordinate<X>(1.), state.range(1));
     ddc::init_discrete_space<DDimX<s_degree_x>>(
             ddc::GrevilleInterpolationPoints<
                     BSplinesX<s_degree_x>,
@@ -92,7 +92,7 @@ static void characteristics_advection(benchmark::State& state)
     ddc::DiscreteDomain<DDimY> y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
             ddc::Coordinate<Y>(-1.),
             ddc::Coordinate<Y>(1.),
-            ddc::DiscreteVector<DDimY>(state.range(1))));
+            ddc::DiscreteVector<DDimY>(state.range(2))));
 
     auto const x_domain = ddc::GrevilleInterpolationPoints<
             BSplinesX<s_degree_x>,
@@ -123,7 +123,7 @@ static void characteristics_advection(benchmark::State& state)
             ddc::SplineSolver::GINKGO,
             DDimX<s_degree_x>,
             DDimY>
-            spline_builder(x_mesh, state.range(2), state.range(3));
+            spline_builder(x_mesh, state.range(3), state.range(4));
     ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
@@ -168,7 +168,7 @@ static void characteristics_advection(benchmark::State& state)
     monitorThread.join();
     state.SetBytesProcessed(
             int64_t(state.iterations())
-            * int64_t(state.range(0) * state.range(1) * sizeof(double)));
+            * int64_t(state.range(1) * state.range(2) * sizeof(double)));
     state.counters["gpu_mem_occupancy"] = maxUsedMem - initUsedMem;
     ////////////////////////////////////////////////////
     /// --------------- HUGE WARNING --------------- ///
@@ -187,7 +187,8 @@ static void characteristics_advection(benchmark::State& state)
 
 static void run(benchmark::State& state)
 {
-    characteristics_advection<3>(state);
+    static std::function<void(benchmark::State&)> benchs = characteristics_advection<3>;
+	benchs(state);
 }
 
 // Tuning : 512 cols and 8 precond on CPU, 16384 cols and 1 precond on GPU
@@ -209,12 +210,24 @@ unsigned int preconditionner_max_block_size_ref = 32u;
 BENCHMARK(run)
         ->RangeMultiplier(2)
         ->Ranges(
+                {{3, 5},
+				 {64, 1024},
+				 {100000, 100000},
+                 {cols_per_chunk_ref, cols_per_chunk_ref},
+                 {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->MinTime(3)
+        ->UseRealTime();
+/*
+BENCHMARK(run)
+        ->RangeMultiplier(2)
+        ->Ranges(
                 {{64, 1024},
                  {100, 200000},
                  {cols_per_chunk_ref, cols_per_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
+*/
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)

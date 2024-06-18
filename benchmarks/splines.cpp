@@ -221,8 +221,9 @@ static void characteristics_advection(benchmark::State& state)
     benchs[state.range(0) * 3 + state.range(1) - 3](state);
 }
 
-// Tuning : 512 cols and 8 precond on CPU, 16384 cols and 1 precond on GPU
-
+// Reference parameters: the benchmarks sweep on two parameters and fix all the others according to those reference parameters.
+bool non_uniform_ref = false;
+std::size_t degree_x_ref = 3;
 #ifdef KOKKOS_ENABLE_CUDA
 std::string chip = "gpu";
 std::size_t cols_per_chunk_ref = 65535;
@@ -236,23 +237,28 @@ std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;
 unsigned int preconditionner_max_block_size_ref = 32u;
 #endif
+std::size_t ny_ref = 100000;
 
+// Sweep on uniform/non-uniform and spline order
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{0, 1},
                  {3, 5},
                  {64, 1024},
-                 {100000, 100000},
+                 {ny_ref, ny_ref},
                  {cols_per_chunk_ref, cols_per_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
 /*
+// Sweep on nx and ny
 BENCHMARK(run)
         ->RangeMultiplier(2)
         ->Ranges(
-                {{64, 1024},
+                {{non_uniform_ref, non_uniform_ref},
+                 {degree_x_ref, degree_x_ref},
+                 {64, 1024},
                  {100, 200000},
                  {cols_per_chunk_ref, cols_per_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
@@ -260,16 +266,32 @@ BENCHMARK(run)
         ->UseRealTime();
 */
 /*
+// Sweep on nx and cols_per_chunk
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{64, 1024}, {100000, 100000}, {64,65535}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
-        ->MinTime(3)->UseRealTime();
+        ->Ranges(
+                {{non_uniform_ref, non_uniform_ref},
+                 {degree_x_ref, degree_x_ref},
+                 {64, 1024},
+                 {ny_ref, ny_ref},
+                 {64, 65535},
+                 {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->MinTime(3)
+        ->UseRealTime();
 */
 /*
+// Sweep on nx and preconditionne_max_block_size
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{64, 1024}, {100000, 100000}, {cols_per_chunk_ref, cols_per_chunk_ref}, {1, 32}})
-        ->MinTime(3)->UseRealTime();
+        ->Ranges(
+                {{non_uniform_ref, non_uniform_ref},
+                 {degree_x_ref, degree_x_ref},
+                 {64, 1024},
+                 {ny_ref, ny_ref},
+                 {cols_per_chunk_ref, cols_per_chunk_ref},
+                 {1, 32}})
+        ->MinTime(3)
+        ->UseRealTime();
 */
 
 int main(int argc, char** argv)

@@ -53,8 +53,26 @@ plotter = lambda plt, x_name, y_name, data_dict_sorted, filter : plt.plot([item[
 ########
 
 data_dict_sorted = sorted(data_dict, key=itemgetter("nx","ny"))
-plt.figure(figsize=(8, 6))
- 
+plt.figure(figsize=(16, 6))
+
+plt.subplot(1, 2, 1)
+for nx in nx_values:
+	filter = lambda item : item["nx"]==nx and not item["on_gpu"]
+	plotter(plt, "ny", "bytes_per_second", data_dict_sorted, filter)
+
+ny_min = min([item["ny"] for item in data_dict_sorted if item["on_gpu"]])
+x = np.linspace(ny_min, 20*ny_min)
+plt.plot(x, np.mean([item["bytes_per_second"] for item in data_dict_sorted if item["ny"]==ny_min and not item["on_gpu"]])/ny_min*x, linestyle='--', color='black', label='perfect scaling')
+
+plt.grid()
+plt.xscale("log")
+plt.xlabel("ny")
+plt.ylabel("Throughput [B/s]")
+plt.title("Throughput on CPU");
+plt.legend()
+plt.savefig("throughput_ny.png")
+
+plt.subplot(1, 2, 2)
 for nx in nx_values:
 	filter = lambda item : item["nx"]==nx and item["on_gpu"]
 	plotter(plt, "ny", "bytes_per_second", data_dict_sorted, filter)
@@ -67,7 +85,7 @@ plt.grid()
 plt.xscale("log")
 plt.xlabel("ny")
 plt.ylabel("Throughput [B/s]")
-plt.title("Throughput on "+str.upper(data["context"]["chip"]));
+plt.title("Throughput on GPU");
 plt.legend()
 plt.savefig("throughput_ny.png")
 

@@ -191,7 +191,7 @@ unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_OPENMP)
 std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;
-unsigned int preconditionner_max_block_size_ref = 32u;
+unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_SERIAL)
 std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;

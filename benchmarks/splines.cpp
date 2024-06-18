@@ -270,6 +270,7 @@ unsigned int preconditionner_max_block_size_ref = 32u;
 std::size_t ny_ref = 100000;
 
 // Sweep on uniform/non-uniform and spline order
+/*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -282,21 +283,21 @@ BENCHMARK(characteristics_advection)
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
-/*
+*/
 // Sweep on nx and ny
-BENCHMARK(run)
+BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{false, true},
                  {non_uniform_ref, non_uniform_ref},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
-                 {100, 200000},
+                 // {100, 200000},
+                 {100, 2000},
                  {cols_per_chunk_ref, cols_per_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
-*/
 /*
 // Sweep on nx and cols_per_chunk
 BENCHMARK(characteristics_advection)

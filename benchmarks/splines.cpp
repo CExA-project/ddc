@@ -67,6 +67,11 @@ void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem
 template <typename NonUniform, std::size_t s_degree_x>
 static void characteristics_advection_unitary(benchmark::State& state)
 {
+    std::size_t nx = state.range(2);
+    std::size_t ny = state.range(3);
+    int cols_per_chunk = state.range(4);
+    int preconditionner_max_block_size = state.range(5);
+
     size_t freeMem = 0;
     size_t totalMem = 0;
 #if defined(__CUDACC__)
@@ -89,11 +94,11 @@ static void characteristics_advection_unitary(benchmark::State& state)
     if constexpr (!NonUniform::value) {
         ddc::init_discrete_space<BSplinesX<
                 NonUniform,
-                s_degree_x>>(ddc::Coordinate<X>(0.), ddc::Coordinate<X>(1.), state.range(1));
+                s_degree_x>>(ddc::Coordinate<X>(0.), ddc::Coordinate<X>(1.), nx);
     } else {
-        std::vector<ddc::Coordinate<X>> breaks(state.range(1) + 1);
-        for (std::size_t i(0); i < state.range(1) + 1; ++i) {
-            breaks[i] = ddc::Coordinate<X>(static_cast<double>(i) / state.range(1));
+        std::vector<ddc::Coordinate<X>> breaks(nx + 1);
+        for (std::size_t i(0); i < nx + 1; ++i) {
+            breaks[i] = ddc::Coordinate<X>(static_cast<double>(i) / nx);
         }
         ddc::init_discrete_space<BSplinesX<NonUniform, s_degree_x>>(breaks);
     }
@@ -106,7 +111,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
     ddc::DiscreteDomain<DDimY> y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
             ddc::Coordinate<Y>(-1.),
             ddc::Coordinate<Y>(1.),
-            ddc::DiscreteVector<DDimY>(state.range(2))));
+            ddc::DiscreteVector<DDimY>(ny)));
 
     auto const x_domain = ddc::GrevilleInterpolationPoints<
             BSplinesX<NonUniform, s_degree_x>,
@@ -137,7 +142,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
             ddc::SplineSolver::GINKGO,
             DDimX<NonUniform, s_degree_x>,
             DDimY>
-            spline_builder(x_mesh, state.range(3), state.range(4));
+            spline_builder(x_mesh, cols_per_chunk, preconditionner_max_block_size);
     ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
@@ -180,9 +185,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
     }
     monitorFlag = false;
     monitorThread.join();
-    state.SetBytesProcessed(
-            int64_t(state.iterations())
-            * int64_t(state.range(1) * state.range(2) * sizeof(double)));
+    state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(nx * ny * sizeof(double)));
     state.counters["gpu_mem_occupancy"] = maxUsedMem - initUsedMem;
     ////////////////////////////////////////////////////
     /// --------------- HUGE WARNING --------------- ///
@@ -193,7 +196,11 @@ static void characteristics_advection_unitary(benchmark::State& state)
     /// variables, which is always a bad idea.       ///
     ////////////////////////////////////////////////////
     ddc::detail::g_discrete_space_dual<BSplinesX<NonUniform, s_degree_x>>.reset();
-    ddc::detail::g_discrete_space_dual<ddc::UniformBsplinesKnots<BSplinesX<NonUniform, s_degree_x>>>.reset();
+    if constexpr (!NonUniform::value) {
+        ddc::detail::g_discrete_space_dual<ddc::UniformBsplinesKnots<BSplinesX<NonUniform, s_degree_x>>>.reset();
+    } else {
+        ddc::detail::g_discrete_space_dual<ddc::NonUniformBsplinesKnots<BSplinesX<NonUniform, s_degree_x>>>.reset();
+    }
     ddc::detail::g_discrete_space_dual<DDimX<NonUniform, s_degree_x>>.reset();
     ddc::detail::g_discrete_space_dual<DDimY>.reset();
     ////////////////////////////////////////////////////

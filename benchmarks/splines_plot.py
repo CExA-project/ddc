@@ -114,14 +114,27 @@ plt.figure(figsize=(16, 6))
 
 plt.subplot(1, 2, 1)
 for nx in nx_values:
-	plotter(plt, "ny", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and not item["on_gpu"])
+	plotter(plt, "cols_per_chunk", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and not item["on_gpu"])
 
 # Plotting the data
 plt.grid()
 plt.xscale("log")
 plt.xlabel("cols_per_chunk")
 plt.ylabel("Throughput [B/s]")
-plt.title("Throughput on CPU (with ny="+[item["ny"] for item in data_dict_sorted if item["on_gpu"]][0]+")");
+plt.title("Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted if not item["on_gpu"]][0])+")");
+plt.legend()
+plt.savefig("throughput_cols.png")
+
+plt.subplot(1, 2, 2)
+for nx in nx_values:
+	plotter(plt, "cols_per_chunk", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["on_gpu"])
+
+# Plotting the data
+plt.grid()
+plt.xscale("log")
+plt.xlabel("cols_per_chunk")
+plt.ylabel("Throughput [B/s]")
+plt.title("Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted if item["on_gpu"]][0])+")");
 plt.legend()
 plt.savefig("throughput_cols.png")
 

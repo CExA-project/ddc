@@ -187,9 +187,14 @@ static void characteristics_advection(benchmark::State& state)
 
 static void run(benchmark::State& state)
 {
-    std::array<std::function<void(benchmark::State&)>, 1> benchs;
-	benchs[0] = (characteristics_advection<3>);
-	benchs[0](state);
+    // Preallocate 3 benchs for each spline degree to benchmark (determined at compile-time, that's why we need to build explicitely 3 variants of the bench)
+    std::array<std::function<void(benchmark::State&)>, 3> benchs;
+    benchs[0] = (characteristics_advection<3>);
+    benchs[1] = (characteristics_advection<4>);
+    benchs[2] = (characteristics_advection<5>);
+
+    // Run the required bench
+    benchs[state.range(0) - 3](state);
 }
 
 // Tuning : 512 cols and 8 precond on CPU, 16384 cols and 1 precond on GPU
@@ -212,8 +217,8 @@ BENCHMARK(run)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{3, 5},
-				 {64, 1024},
-				 {100000, 100000},
+                 {64, 1024},
+                 {100000, 100000},
                  {cols_per_chunk_ref, cols_per_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)

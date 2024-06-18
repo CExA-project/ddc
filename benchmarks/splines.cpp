@@ -64,13 +64,13 @@ void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem
     }
 }
 
-template <typename NonUniform, std::size_t s_degree_x>
+template <typename ExecSpace, typename NonUniform, std::size_t s_degree_x>
 static void characteristics_advection_unitary(benchmark::State& state)
 {
-    std::size_t nx = state.range(2);
-    std::size_t ny = state.range(3);
-    int cols_per_chunk = state.range(4);
-    int preconditionner_max_block_size = state.range(5);
+    std::size_t nx = state.range(3);
+    std::size_t ny = state.range(4);
+    int cols_per_chunk = state.range(5);
+    int preconditionner_max_block_size = state.range(6);
 
     size_t freeMem = 0;
     size_t totalMem = 0;
@@ -119,12 +119,13 @@ static void characteristics_advection_unitary(benchmark::State& state)
             ddc::BoundCond::PERIODIC>::template get_domain<DDimX<NonUniform, s_degree_x>>();
     ddc::Chunk density_alloc(
             ddc::DiscreteDomain<DDimX<NonUniform, s_degree_x>, DDimY>(x_domain, y_domain),
-            ddc::DeviceAllocator<double>());
+            ddc::KokkosAllocator<double, typename ExecSpace::memory_space>());
     ddc::ChunkSpan const density = density_alloc.span_view();
     // Initialize the density on the main domain
     ddc::DiscreteDomain<DDimX<NonUniform, s_degree_x>, DDimY> x_mesh
             = ddc::DiscreteDomain<DDimX<NonUniform, s_degree_x>, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
+            ExecSpace(),
             x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<NonUniform, s_degree_x>, DDimY> const ixy) {
                 double const x = ddc::coordinate(ddc::select<DDimX<NonUniform, s_degree_x>>(ixy));
@@ -133,8 +134,8 @@ static void characteristics_advection_unitary(benchmark::State& state)
                 // initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
     ddc::SplineBuilder<
-            Kokkos::DefaultExecutionSpace,
-            Kokkos::DefaultExecutionSpace::memory_space,
+            ExecSpace,
+            typename ExecSpace::memory_space,
             BSplinesX<NonUniform, s_degree_x>,
             DDimX<NonUniform, s_degree_x>,
             ddc::BoundCond::PERIODIC,
@@ -145,8 +146,8 @@ static void characteristics_advection_unitary(benchmark::State& state)
             spline_builder(x_mesh, cols_per_chunk, preconditionner_max_block_size);
     ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
     ddc::SplineEvaluator<
-            Kokkos::DefaultExecutionSpace,
-            Kokkos::DefaultExecutionSpace::memory_space,
+            ExecSpace,
+            typename ExecSpace::memory_space,
             BSplinesX<NonUniform, s_degree_x>,
             DDimX<NonUniform, s_degree_x>,
             ddc::PeriodicExtrapolationRule<X>,
@@ -156,18 +157,17 @@ static void characteristics_advection_unitary(benchmark::State& state)
             spline_evaluator(periodic_extrapolation, periodic_extrapolation);
     ddc::Chunk coef_alloc(
             spline_builder.batched_spline_domain(),
-            ddc::KokkosAllocator<double, Kokkos::DefaultExecutionSpace::memory_space>());
+            ddc::KokkosAllocator<double, typename ExecSpace::memory_space>());
     ddc::ChunkSpan coef = coef_alloc.span_view();
     ddc::Chunk feet_coords_alloc(
             spline_builder.batched_interpolation_domain(),
-            ddc::KokkosAllocator<
-                    ddc::Coordinate<X, Y>,
-                    Kokkos::DefaultExecutionSpace::memory_space>());
+            ddc::KokkosAllocator<ddc::Coordinate<X, Y>, typename ExecSpace::memory_space>());
     ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
 
     for (auto _ : state) {
         Kokkos::Profiling::pushRegion("FeetCharacteristics");
         ddc::parallel_for_each(
+                ExecSpace(),
                 feet_coords.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<NonUniform, s_degree_x>, DDimY> const e) {
                     feet_coords(e) = ddc::Coordinate<X, Y>(
@@ -208,20 +208,50 @@ static void characteristics_advection_unitary(benchmark::State& state)
 
 static void characteristics_advection(benchmark::State& state)
 {
-    // Preallocate 6 unitary benchs for each combination of uniform/non-uniform and spline degree we may want to benchmark (those are determined at compile-time, that's why we need to build explicitely 6 variants of the bench even if we call only one of them)
-    std::array<std::function<void(benchmark::State&)>, 6> benchs;
-    benchs[0] = characteristics_advection_unitary<std::false_type, 3>;
-    benchs[1] = characteristics_advection_unitary<std::false_type, 4>;
-    benchs[2] = characteristics_advection_unitary<std::false_type, 5>;
-    benchs[3] = characteristics_advection_unitary<std::true_type, 3>;
-    benchs[4] = characteristics_advection_unitary<std::true_type, 4>;
-    benchs[5] = characteristics_advection_unitary<std::true_type, 5>;
+    // Preallocate 12 unitary benchs for each combination of cpu/gpu execution space, uniform/non-uniform and spline degree we may want to benchmark (those are determined at compile-time, that's why we need to build explicitely 12 variants of the bench even if we call only one of them)
+    std::array<std::function<void(benchmark::State&)>, 12> benchs;
+    benchs[0] = characteristics_advection_unitary<
+            Kokkos::DefaultHostExecutionSpace,
+            std::false_type,
+            3>;
+    benchs[1] = characteristics_advection_unitary<
+            Kokkos::DefaultHostExecutionSpace,
+            std::false_type,
+            4>;
+    benchs[2] = characteristics_advection_unitary<
+            Kokkos::DefaultHostExecutionSpace,
+            std::false_type,
+            5>;
+    benchs[3] = characteristics_advection_unitary<
+            Kokkos::DefaultHostExecutionSpace,
+            std::true_type,
+            3>;
+    benchs[4] = characteristics_advection_unitary<
+            Kokkos::DefaultHostExecutionSpace,
+            std::true_type,
+            4>;
+    benchs[5] = characteristics_advection_unitary<
+            Kokkos::DefaultHostExecutionSpace,
+            std::true_type,
+            5>;
+    benchs[6]
+            = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::false_type, 3>;
+    benchs[7]
+            = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::false_type, 4>;
+    benchs[8]
+            = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::false_type, 5>;
+    benchs[9] = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::true_type, 3>;
+    benchs[10]
+            = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::true_type, 4>;
+    benchs[11]
+            = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::true_type, 5>;
 
     // Run the desired bench
-    benchs[state.range(0) * 3 + state.range(1) - 3](state);
+    benchs[state.range(0) * 6 + state.range(1) * 3 + state.range(2) - 3](state);
 }
 
 // Reference parameters: the benchmarks sweep on two parameters and fix all the others according to those reference parameters.
+bool on_gpu_ref = true;
 bool non_uniform_ref = false;
 std::size_t degree_x_ref = 3;
 #ifdef KOKKOS_ENABLE_CUDA
@@ -243,7 +273,8 @@ std::size_t ny_ref = 100000;
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
-                {{0, 1},
+                {{false, true},
+                 {false, true},
                  {3, 5},
                  {64, 1024},
                  {ny_ref, ny_ref},
@@ -256,7 +287,8 @@ BENCHMARK(characteristics_advection)
 BENCHMARK(run)
         ->RangeMultiplier(2)
         ->Ranges(
-                {{non_uniform_ref, non_uniform_ref},
+                {{false, true},
+                 {non_uniform_ref, non_uniform_ref},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {100, 200000},
@@ -270,7 +302,8 @@ BENCHMARK(run)
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
-                {{non_uniform_ref, non_uniform_ref},
+                {{false, true},
+                 {non_uniform_ref, non_uniform_ref},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {ny_ref, ny_ref},
@@ -280,11 +313,12 @@ BENCHMARK(characteristics_advection)
         ->UseRealTime();
 */
 /*
-// Sweep on nx and preconditionne_max_block_size
+// Sweep on nx and preconditionner_max_block_size
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
-                {{non_uniform_ref, non_uniform_ref},
+                {{on_gpu_ref, on_gpu_ref},
+                 {non_uniform_ref, non_uniform_ref},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {ny_ref, ny_ref},

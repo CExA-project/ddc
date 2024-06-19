@@ -85,7 +85,7 @@ if len([item for item in data_dict_sorted if item["ny"]==ny_min and not item["on
 
 plt.grid()
 plt.xscale("log")
-plt.xlabel("Batch size")
+plt.xlabel("ny (batch size)")
 plt.ylabel("Throughput [B/s]")
 plt.title("Throughput on CPU")
 plt.legend()
@@ -101,7 +101,7 @@ if len([item for item in data_dict_sorted if item["ny"]==ny_min and item["on_gpu
 
 plt.grid()
 plt.xscale("log")
-plt.xlabel("Batch size")
+plt.xlabel("ny (batch size)")
 plt.ylabel("Throughput [B/s]")
 plt.title("Throughput on GPU")
 plt.legend()
@@ -119,7 +119,7 @@ for nx in nx_values:
 
 plt.grid()
 plt.xscale("log")
-plt.xlabel("Batch size")
+plt.xlabel("ny (batch size)")
 plt.ylabel("Relative memory overhead [%]")
 plt.title("Relative memory occupancy overhead")
 plt.legend()

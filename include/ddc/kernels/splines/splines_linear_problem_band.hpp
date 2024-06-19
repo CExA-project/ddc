@@ -46,8 +46,9 @@ public:
 protected:
     std::size_t m_kl; // no. of subdiagonals
     std::size_t m_ku; // no. of superdiagonals
+    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+            m_q; // band matrix representation
     Kokkos::DualView<int*, typename ExecSpace::memory_space> m_ipiv; // pivot indices
-    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_q; // band matrix representation
 
 public:
     /**
@@ -146,7 +147,12 @@ public:
                     "LAPACKE_dgbtrf failed with error code " + std::to_string(info));
         }
 
-		// Push on device
+        // Convert 1-based index to 0-based index
+        for (int i = 0; i < size(); ++i) {
+            m_ipiv.h_view(i) -= 1;
+        }
+
+        // Push on device
         m_q.modify_host();
         m_q.sync_device();
         m_ipiv.modify_host();
@@ -165,19 +171,34 @@ public:
     {
         assert(b.extent(0) == size());
 
-		auto q_device = m_q.d_view;
-		auto ipiv_device = m_ipiv.d_view;
+        auto q_device = m_q.d_view;
+        auto ipiv_device = m_ipiv.d_view;
 
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
-        Kokkos::parallel_for(
-                "gbtrs",
-                policy,
-                KOKKOS_CLASS_LAMBDA(const int i) {
-                    auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
-                    KokkosBatched::SerialGbtrs<
-                            KokkosBatched::Trans::NoTranspose,
-                            KokkosBatched::Algo::Gbtrs::Unblocked>::invoke(q_device, sub_b, ipiv_device, m_kl, m_ku);
-                });
+
+        if (transpose) {
+            Kokkos::parallel_for(
+                    "gbtrs",
+                    policy,
+                    KOKKOS_CLASS_LAMBDA(const int i) {
+                        auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
+                        KokkosBatched::SerialGbtrs<
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Algo::Gbtrs::Unblocked>::
+                                invoke(q_device, sub_b, ipiv_device, m_kl, m_ku);
+                    });
+        } else {
+            Kokkos::parallel_for(
+                    "gbtrs",
+                    policy,
+                    KOKKOS_CLASS_LAMBDA(const int i) {
+                        auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
+                        KokkosBatched::SerialGbtrs<
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Algo::Gbtrs::Unblocked>::
+                                invoke(q_device, sub_b, ipiv_device, m_kl, m_ku);
+                    });
+        }
     }
 };
 

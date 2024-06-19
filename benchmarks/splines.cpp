@@ -267,8 +267,7 @@ std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;
 unsigned int preconditionner_max_block_size_ref = 32u;
 #endif
-// std::size_t ny_ref = 100000;
-std::size_t ny_ref = 1000;
+std::size_t ny_ref = 100000;
 
 // Sweep on uniform/non-uniform and spline order
 BENCHMARK(characteristics_advection)

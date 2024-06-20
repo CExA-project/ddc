@@ -57,7 +57,8 @@ void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem
     size_t freeMem = 0;
     size_t totalMem = 0;
     while (monitorFlag) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Adjust the interval as needed
+        std::this_thread::sleep_for(
+                std::chrono::microseconds(100)); // Adjust the interval as needed
 
         // Acquire a lock to ensure thread safety when accessing CUDA functions
         std::lock_guard<std::mutex> lock(mutex);
@@ -292,7 +293,7 @@ BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{false, true},
-                 {non_uniform_ref, non_uniform_ref},
+                 {false, true},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {100, 200000},
@@ -306,7 +307,7 @@ BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{false, true},
-                 {non_uniform_ref, non_uniform_ref},
+                 {false, true},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {ny_ref, ny_ref},
@@ -321,7 +322,7 @@ BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{on_gpu_ref, on_gpu_ref},
-                 {non_uniform_ref, non_uniform_ref},
+                 {false, true},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {ny_ref, ny_ref},

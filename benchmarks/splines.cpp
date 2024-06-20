@@ -274,7 +274,8 @@ unsigned int preconditionner_max_block_size_ref = 32u;
 std::size_t ny_ref = 1000;
 
 /*
-// Sweep on uniform/non-uniform and spline order
+// Sweep on spline order
+name = "degree"
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -288,21 +289,22 @@ BENCHMARK(characteristics_advection)
         ->MinTime(3)
         ->UseRealTime();
 */
-// Sweep on nx and ny
-BENCHMARK(characteristics_advection)
-        ->RangeMultiplier(2)
-        ->Ranges(
-                {{false, true},
-                 {false, true},
-                 {degree_x_ref, degree_x_ref},
-                 {64, 1024},
-                 {100, 200000},
-                 {cols_per_chunk_ref, cols_per_chunk_ref},
-                 {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
-        ->MinTime(3)
-        ->UseRealTime();
+// Sweep on ny
+name = "ny" BENCHMARK(characteristics_advection)
+               ->RangeMultiplier(2)
+               ->Ranges(
+                       {{false, true},
+                        {false, true},
+                        {degree_x_ref, degree_x_ref},
+                        {64, 1024},
+                        {100, 200000},
+                        {cols_per_chunk_ref, cols_per_chunk_ref},
+                        {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+               ->MinTime(3)
+               ->UseRealTime();
 /*
-// Sweep on nx and cols_per_chunk
+// Sweep on cols_per_chunk
+name = "cols_per_chunk"
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -317,7 +319,8 @@ BENCHMARK(characteristics_advection)
         ->UseRealTime();
 */
 /*
-// Sweep on nx and preconditionner_max_block_size
+// Sweep on preconditionner_max_block_size
+name = "preconditionner_max_block_size"
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -335,6 +338,7 @@ BENCHMARK(characteristics_advection)
 int main(int argc, char** argv)
 {
     ::benchmark::Initialize(&argc, argv);
+    ::benchmark::AddCustomContext("name", name);
     ::benchmark::AddCustomContext("backend", "Ginkgo");
     ::benchmark::AddCustomContext("cols_per_chunk_ref", std::to_string(cols_per_chunk_ref));
     ::benchmark::AddCustomContext(

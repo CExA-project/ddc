@@ -37,152 +37,161 @@ data_dict = [{
 
 plotter = lambda plt, x_name, y_name, data_dict_sorted, filter : plt.plot([item[x_name] for item in data_dict_sorted if filter(item)], [item[y_name] for item in data_dict_sorted if filter(item)], marker='o', markersize=5, label=f"{'non uniform' if any(filter(item) and item['non_uniform'] for item in data_dict_sorted) else 'uniform'} nx={nx}")
 
-#############################
-## non_uniform && degree_x ##
-#############################
+##############
+## degree_x ##
+##############
 
-data_dict_sorted = sorted(data_dict, key=itemgetter("nx", "non_uniform", "degree_x"))
-plt.figure(figsize=(16, 6))
+if name=="degree_x":
+    data_dict_sorted = sorted(data_dict, key=itemgetter("nx", "non_uniform", "degree_x"))
+    plt.figure(figsize=(16, 6))
 
-plt.subplot(1, 2, 1)
-for (non_uniform, nx) in itertools.product((False,True), nx_values):
-	    plotter(plt, "degree_x", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
+    plt.subplot(1, 2, 1)
+    for (non_uniform, nx) in itertools.product((False,True), nx_values):
+            plotter(plt, "degree_x", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
 
-plt.grid()
-plt.xscale("linear")
-plt.xlabel("Splines degree")
-plt.ylabel("Throughput [B/s]")
-plt.title(str(backend)+": Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
-plt.legend()
+    plt.grid()
+    plt.xscale("linear")
+    plt.xlabel("Splines degree")
+    plt.ylabel("Throughput [B/s]")
+    plt.title(str(backend)+": Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
+    plt.legend()
 
-plt.subplot(1, 2, 2)
-for (non_uniform, nx) in itertools.product((False,True), nx_values):
-    	plotter(plt, "degree_x", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
+    plt.subplot(1, 2, 2)
+    for (non_uniform, nx) in itertools.product((False,True), nx_values):
+            plotter(plt, "degree_x", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
 
-plt.grid()
-plt.xscale("linear")
-plt.xlabel("Splines degree")
-plt.ylabel("Throughput [B/s]")
-plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
-plt.legend()
-plt.savefig("throughput_uniformity_degree_x_.png")
+    plt.grid()
+    plt.xscale("linear")
+    plt.xlabel("Splines degree")
+    plt.ylabel("Throughput [B/s]")
+    plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
+    plt.legend()
+    plt.savefig("throughput_uniformity_degree_x.png")
 
 ########
 ## ny ##
 ########
 
-data_dict_sorted = sorted(data_dict, key=itemgetter("nx","ny"))
-plt.figure(figsize=(16, 6))
+if name=="ny":
+    data_dict_sorted = sorted(data_dict, key=itemgetter("nx","ny"))
+    plt.figure(figsize=(16, 6))
 
-plt.subplot(1, 2, 1)
-for (non_uniform, nx) in itertools.product((False,True), nx_values):
-	plotter(plt, "ny", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
+    plt.subplot(1, 2, 1)
+    for (non_uniform, nx) in itertools.product((False,True), nx_values):
+        plotter(plt, "ny", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
 
-ny_min = min([item["ny"] for item in data_dict_sorted if item["on_gpu"]])
-if len([item for item in data_dict_sorted if item["ny"]==ny_min and not item["on_gpu"]]) != 0:
-    x = np.linspace(ny_min, 20*ny_min)
-    plt.plot(x, np.mean([item["bytes_per_second"] for item in data_dict_sorted if item["ny"]==ny_min and not item["on_gpu"]])/ny_min*x, linestyle='--', color='black', label='perfect scaling')
+    """
+    ny_min = min([item["ny"] for item in data_dict_sorted if item["on_gpu"]])
+    if len([item for item in data_dict_sorted if item["ny"]==ny_min and not item["on_gpu"]]) != 0:
+        x = np.linspace(ny_min, 20*ny_min)
+        plt.plot(x, np.mean([item["bytes_per_second"] for item in data_dict_sorted if item["ny"]==ny_min and not item["on_gpu"]])/ny_min*x, linestyle='--', color='black', label='perfect scaling')
+    """
 
-plt.grid()
-plt.xscale("log")
-plt.xlabel("ny (batch size)")
-plt.ylabel("Throughput [B/s]")
-plt.title(str(backend)+": Throughput on CPU")
-plt.legend()
+    plt.grid()
+    plt.xscale("log")
+    plt.xlabel("ny (batch size)")
+    plt.ylabel("Throughput [B/s]")
+    plt.title(str(backend)+": Throughput on CPU")
+    plt.legend()
 
-plt.subplot(1, 2, 2)
-for (non_uniform, nx) in itertools.product((False,True), nx_values):
-	plotter(plt, "ny", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
+    plt.subplot(1, 2, 2)
+    for (non_uniform, nx) in itertools.product((False,True), nx_values):
+        plotter(plt, "ny", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
 
-ny_min = min([item["ny"] for item in data_dict_sorted if item["on_gpu"]])
-if len([item for item in data_dict_sorted if item["ny"]==ny_min and item["on_gpu"]]) != 0:
-    x = np.linspace(ny_min, 20*ny_min)
-    plt.plot(x, np.mean([item["bytes_per_second"] for item in data_dict_sorted if item["ny"]==ny_min and item["on_gpu"]])/ny_min*x, linestyle='--', color='black', label='perfect scaling')
+    """
+    ny_min = min([item["ny"] for item in data_dict_sorted if item["on_gpu"]])
+    if len([item for item in data_dict_sorted if item["ny"]==ny_min and item["on_gpu"]]) != 0:
+        x = np.linspace(ny_min, 20*ny_min)
+        plt.plot(x, np.mean([item["bytes_per_second"] for item in data_dict_sorted if item["ny"]==ny_min and item["on_gpu"]])/ny_min*x, linestyle='--', color='black', label='perfect scaling')
+    """
 
-plt.grid()
-plt.xscale("log")
-plt.xlabel("ny (batch size)")
-plt.ylabel("Throughput [B/s]")
-plt.title(str(backend)+": Throughput on GPU")
-plt.legend()
-plt.savefig("throughput_ny_.png")
+    plt.grid()
+    plt.xscale("log")
+    plt.xlabel("ny (batch size)")
+    plt.ylabel("Throughput [B/s]")
+    plt.title(str(backend)+": Throughput on GPU")
+    plt.legend()
+    plt.savefig("throughput_ny.png")
 
 #############
 ## gpu_mem ##
 #############
 
-plt.figure(figsize=(8, 6))
+if name=="ny":
+    plt.figure(figsize=(8, 6))
 
-for (non_uniform, nx) in itertools.product((False,True), nx_values):
-	filter = lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"] and item["ny"]>=8e3
-	plt.plot([item["ny"] for item in data_dict_sorted if filter(item)], [(item["gpu_mem_occupancy"]-nx*item["ny"]*8)/(nx*item["ny"]*8)*100 for item in data_dict_sorted if filter(item)], marker='o', markersize=5, label=f"{'non uniform' if any(filter(item) and item['non_uniform'] for item in data_dict_sorted) else 'uniform'} nx={nx}")
+    for (non_uniform, nx) in itertools.product((False,True), nx_values):
+        filter = lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"] and item["ny"]>=8e3
+        plt.plot([item["ny"] for item in data_dict_sorted if filter(item)], [(item["gpu_mem_occupancy"]-nx*item["ny"]*8)/(nx*item["ny"]*8)*100 for item in data_dict_sorted if filter(item)], marker='o', markersize=5, label=f"{'non uniform' if any(filter(item) and item['non_uniform'] for item in data_dict_sorted) else 'uniform'} nx={nx}")
 
-plt.grid()
-plt.xscale("log")
-plt.xlabel("ny (batch size)")
-plt.ylabel("Relative GPU memory overhead [%]")
-plt.title(str(backend)+": Relative GPU memory occupancy overhead (100%=nx*ny*8 Bytes)")
-plt.legend()
-plt.savefig("gpu_mem_occupancy_.png")
+    plt.grid()
+    plt.xscale("log")
+    plt.xlabel("ny (batch size)")
+    plt.ylabel("Relative GPU memory overhead [%]")
+    plt.title(str(backend)+": Relative GPU memory occupancy overhead (100%=nx*ny*8 Bytes)")
+    plt.legend()
+    plt.savefig("gpu_mem_occupancy.png")
 
 ########################
 ## cols_per_chunk ##
 ########################
 
-data_dict_sorted = sorted(data_dict, key=itemgetter("nx","cols_per_chunk"))
-plt.figure(figsize=(16, 6))
+if name=="cols_per_chunk":
+    data_dict_sorted = sorted(data_dict, key=itemgetter("nx","cols_per_chunk"))
+    plt.figure(figsize=(16, 6))
 
-plt.subplot(1, 2, 1)
-for (non_uniform, nx) in itertools.product((False,True), nx_values):
-	plotter(plt, "cols_per_chunk", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
+    plt.subplot(1, 2, 1)
+    for (non_uniform, nx) in itertools.product((False,True), nx_values):
+        plotter(plt, "cols_per_chunk", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
 
-plt.grid()
-plt.xscale("log")
-plt.xlabel("Number of right_hand sides per chunk")
-plt.ylabel("Throughput [B/s]")
-plt.title(str(backend)+": Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
-plt.legend()
+    plt.grid()
+    plt.xscale("log")
+    plt.xlabel("Number of right_hand sides per chunk")
+    plt.ylabel("Throughput [B/s]")
+    plt.title(str(backend)+": Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
+    plt.legend()
 
-plt.subplot(1, 2, 2)
-for (non_uniform, nx) in itertools.product((False,True), nx_values):
-	plotter(plt, "cols_per_chunk", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
+    plt.subplot(1, 2, 2)
+    for (non_uniform, nx) in itertools.product((False,True), nx_values):
+        plotter(plt, "cols_per_chunk", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
 
-plt.grid()
-plt.xscale("log")
-plt.xlabel("Number of right_hand sides per chunk")
-plt.ylabel("Throughput [B/s]")
-plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
-plt.legend()
-plt.savefig("throughput_cols_.png")
+    plt.grid()
+    plt.xscale("log")
+    plt.xlabel("Number of right_hand sides per chunk")
+    plt.ylabel("Throughput [B/s]")
+    plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
+    plt.legend()
+    plt.savefig("throughput_cols.png")
 
 #####################
 ## preconditionner ##
 #####################
 
-data_dict_sorted = sorted(data_dict, key=itemgetter("nx","cols_per_chunk"))
-plt.figure(figsize=(16, 6))
+if name=="preconditionner_max_block_size":
+    data_dict_sorted = sorted(data_dict, key=itemgetter("nx","cols_per_chunk"))
+    plt.figure(figsize=(16, 6))
 
-plt.subplot(1, 2, 1)
-for (non_uniform, nx) in itertools.product((False,True), nx_values):
-	plotter(plt, "preconditionner_max_block_size", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
+    plt.subplot(1, 2, 1)
+    for (non_uniform, nx) in itertools.product((False,True), nx_values):
+        plotter(plt, "preconditionner_max_block_size", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
 
-plt.grid()
-plt.xscale("log")
-plt.xlabel("Max block size of preconditioner")
-plt.ylabel("Throughput [B/s]")
-plt.title(str(backend)+": Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
-plt.legend()
+    plt.grid()
+    plt.xscale("log")
+    plt.xlabel("Max block size of preconditioner")
+    plt.ylabel("Throughput [B/s]")
+    plt.title(str(backend)+": Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
+    plt.legend()
 
-plt.subplot(1, 2, 2)
-for (non_uniform, nx) in itertools.product((False,True), nx_values):
-	plotter(plt, "preconditionner_max_block_size", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
+    plt.subplot(1, 2, 2)
+    for (non_uniform, nx) in itertools.product((False,True), nx_values):
+        plotter(plt, "preconditionner_max_block_size", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
 
-plt.grid()
-plt.xscale("log")
-plt.xlabel("Max block size of preconditioner")
-plt.ylabel("Throughput [B/s]")
-plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
-plt.legend()
-plt.savefig("throughput_precond_.png")
+    plt.grid()
+    plt.xscale("log")
+    plt.xlabel("Max block size of preconditioner")
+    plt.ylabel("Throughput [B/s]")
+    plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
+    plt.legend()
+    plt.savefig("throughput_precond.png")
 
 plt.close();

@@ -272,8 +272,8 @@ unsigned int preconditionner_max_block_size_ref = 32u;
 #endif
 std::size_t ny_ref = 100000;
 
-/*
-// Sweep on uniform/non-uniform and spline order
+// Sweep on spline order
+std::string name = "degree_x";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -286,8 +286,9 @@ BENCHMARK(characteristics_advection)
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
-*/
-// Sweep on nx and ny
+/*
+// Sweep on ny
+std::string name = "ny";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -300,8 +301,10 @@ BENCHMARK(characteristics_advection)
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
+*/
 /*
-// Sweep on nx and cols_per_chunk
+// Sweep on cols_per_chunk
+std::string name = "cols_per_chunk";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -316,7 +319,8 @@ BENCHMARK(characteristics_advection)
         ->UseRealTime();
 */
 /*
-// Sweep on nx and preconditionner_max_block_size
+// Sweep on preconditionner_max_block_size
+std::string name = "preconditionner_max_block_size"
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -334,6 +338,7 @@ BENCHMARK(characteristics_advection)
 int main(int argc, char** argv)
 {
     ::benchmark::Initialize(&argc, argv);
+    ::benchmark::AddCustomContext("name", name);
     ::benchmark::AddCustomContext("backend", "Ginkgo");
     ::benchmark::AddCustomContext("cols_per_chunk_ref", std::to_string(cols_per_chunk_ref));
     ::benchmark::AddCustomContext(

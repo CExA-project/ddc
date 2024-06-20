@@ -340,7 +340,9 @@ int main(int argc, char** argv)
 {
     ::benchmark::Initialize(&argc, argv);
     ::benchmark::AddCustomContext("name", name);
-    ::benchmark::AddCustomContext("backend", "Ginkgo");
+    ::benchmark::AddCustomContext(
+            "backend",
+            std::is_same_v<backend, ddc::SplineSolver::GINKGO> ? "GINKGO" : "LAPACK");
     ::benchmark::AddCustomContext("cols_per_chunk_ref", std::to_string(cols_per_chunk_ref));
     ::benchmark::AddCustomContext(
             "preconditionner_max_block_size_ref",

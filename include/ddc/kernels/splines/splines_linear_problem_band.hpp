@@ -65,12 +65,12 @@ public:
         : SplinesLinearProblem<ExecSpace>(mat_size)
         , m_kl(kl)
         , m_ku(ku)
-        , m_ipiv("ipiv", mat_size)
         /*
          * The matrix itself stored in band format requires a (kl + ku + 1)*mat_size 
          * allocation, but the LU-factorization requires an additional kl*mat_size block
          */
         , m_q("q", 2 * kl + ku + 1, mat_size)
+        , m_ipiv("ipiv", mat_size)
     {
         assert(m_kl <= mat_size);
         assert(m_ku <= mat_size);

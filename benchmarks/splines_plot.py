@@ -65,7 +65,7 @@ plt.xlabel("Splines degree")
 plt.ylabel("Throughput [B/s]")
 plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
 plt.legend()
-plt.savefig("throughput_uniformity_degree_x.png")
+plt.savefig("throughput_uniformity_degree_x_.png")
 
 ########
 ## ny ##
@@ -105,7 +105,7 @@ plt.xlabel("ny (batch size)")
 plt.ylabel("Throughput [B/s]")
 plt.title(str(backend)+": Throughput on GPU")
 plt.legend()
-plt.savefig("throughput_ny.png")
+plt.savefig("throughput_ny_.png")
 
 #############
 ## gpu_mem ##
@@ -123,7 +123,7 @@ plt.xlabel("ny (batch size)")
 plt.ylabel("Relative GPU memory overhead [%]")
 plt.title(str(backend)+": Relative GPU memory occupancy overhead (100%=nx*ny*8 Bytes)")
 plt.legend()
-plt.savefig("gpu_mem_occupancy.png")
+plt.savefig("gpu_mem_occupancy_.png")
 
 ########################
 ## cols_per_chunk ##
@@ -153,7 +153,7 @@ plt.xlabel("Number of right_hand sides per chunk")
 plt.ylabel("Throughput [B/s]")
 plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
 plt.legend()
-plt.savefig("throughput_cols.png")
+plt.savefig("throughput_cols_.png")
 
 #####################
 ## preconditionner ##
@@ -183,6 +183,6 @@ plt.xlabel("Max block size of preconditioner")
 plt.ylabel("Throughput [B/s]")
 plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
 plt.legend()
-plt.savefig("throughput_precond.png")
+plt.savefig("throughput_precond_.png")
 
 plt.close();

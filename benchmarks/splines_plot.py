@@ -21,6 +21,7 @@ args = parser.parse_args()
 with open(args.json_file, 'r') as file:
         data = json.load(file);
 
+name = data["context"]["name"]
 backend = data["context"]["backend"]
 nx_values = sorted(set(int(benchmark["name"].split("/")[4]) for benchmark in data["benchmarks"]))
 data_dict = [{

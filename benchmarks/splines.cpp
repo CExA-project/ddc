@@ -14,6 +14,8 @@
 
 #include <benchmark/benchmark.h>
 
+static const ddc::SplineSolver Backend = ddc::SplineSolver::GINKGO;
+
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
 {
     struct X
@@ -29,17 +31,20 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
                   ddc::UniformBSplines<X, s_degree_x>>
     {
     };
+
     template <typename NonUniform, std::size_t s_degree_x>
     using GrevillePoints = ddc::GrevilleInterpolationPoints<
             BSplinesX<NonUniform, s_degree_x>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC>;
+
     template <typename NonUniform, std::size_t s_degree_x>
     struct DDimX : GrevillePoints<NonUniform, s_degree_x>::interpolation_mesh_type
     {
     };
 
     struct Y;
+
     struct DDimY : ddc::UniformPointSampling<Y>
     {
     };
@@ -140,7 +145,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
             DDimX<NonUniform, s_degree_x>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::GINKGO,
+            Backend,
             DDimX<NonUniform, s_degree_x>,
             DDimY>
             spline_builder(x_mesh, cols_per_chunk, preconditionner_max_block_size);
@@ -255,15 +260,12 @@ bool on_gpu_ref = true;
 bool non_uniform_ref = false;
 std::size_t degree_x_ref = 3;
 #ifdef KOKKOS_ENABLE_CUDA
-std::string chip = "gpu";
 std::size_t cols_per_chunk_ref = 65535;
 unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_OPENMP)
-std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;
 unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_SERIAL)
-std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;
 unsigned int preconditionner_max_block_size_ref = 32u;
 #endif
@@ -332,7 +334,7 @@ BENCHMARK(characteristics_advection)
 int main(int argc, char** argv)
 {
     ::benchmark::Initialize(&argc, argv);
-    ::benchmark::AddCustomContext("chip", chip);
+    ::benchmark::AddCustomContext("backend", "Ginkgo");
     ::benchmark::AddCustomContext("cols_per_chunk_ref", std::to_string(cols_per_chunk_ref));
     ::benchmark::AddCustomContext(
             "preconditionner_max_block_size_ref",

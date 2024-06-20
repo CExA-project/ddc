@@ -14,6 +14,8 @@
 
 #include <benchmark/benchmark.h>
 
+static const ddc::SplineSolver Backend = ddc::SplineSolver::LAPACK;
+
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
 {
     struct X
@@ -29,17 +31,20 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
                   ddc::UniformBSplines<X, s_degree_x>>
     {
     };
+
     template <typename NonUniform, std::size_t s_degree_x>
     using GrevillePoints = ddc::GrevilleInterpolationPoints<
             BSplinesX<NonUniform, s_degree_x>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC>;
+
     template <typename NonUniform, std::size_t s_degree_x>
     struct DDimX : GrevillePoints<NonUniform, s_degree_x>::interpolation_mesh_type
     {
     };
 
     struct Y;
+
     struct DDimY : ddc::UniformPointSampling<Y>
     {
     };
@@ -52,7 +57,8 @@ void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem
     size_t freeMem = 0;
     size_t totalMem = 0;
     while (monitorFlag) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Adjust the interval as needed
+        std::this_thread::sleep_for(
+                std::chrono::microseconds(100)); // Adjust the interval as needed
 
         // Acquire a lock to ensure thread safety when accessing CUDA functions
         std::lock_guard<std::mutex> lock(mutex);
@@ -140,7 +146,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
             DDimX<NonUniform, s_degree_x>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::LAPACK,
+            Backend,
             DDimX<NonUniform, s_degree_x>,
             DDimY>
             spline_builder(x_mesh, cols_per_chunk, preconditionner_max_block_size);
@@ -255,20 +261,18 @@ bool on_gpu_ref = true;
 bool non_uniform_ref = false;
 std::size_t degree_x_ref = 3;
 #ifdef KOKKOS_ENABLE_CUDA
-std::string chip = "gpu";
 std::size_t cols_per_chunk_ref = 65535;
 unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_OPENMP)
-std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;
 unsigned int preconditionner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_SERIAL)
-std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;
 unsigned int preconditionner_max_block_size_ref = 32u;
 #endif
 std::size_t ny_ref = 100000;
 
+/*
 // Sweep on uniform/non-uniform and spline order
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
@@ -282,13 +286,13 @@ BENCHMARK(characteristics_advection)
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
-/*
+*/
 // Sweep on nx and ny
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{false, true},
-                 {non_uniform_ref, non_uniform_ref},
+                 {false, true},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {100, 200000},
@@ -296,14 +300,13 @@ BENCHMARK(characteristics_advection)
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
-*/
 /*
 // Sweep on nx and cols_per_chunk
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{false, true},
-                 {non_uniform_ref, non_uniform_ref},
+                 {false, true},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {ny_ref, ny_ref},
@@ -318,7 +321,7 @@ BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{on_gpu_ref, on_gpu_ref},
-                 {non_uniform_ref, non_uniform_ref},
+                 {false, true},
                  {degree_x_ref, degree_x_ref},
                  {64, 1024},
                  {ny_ref, ny_ref},
@@ -331,7 +334,7 @@ BENCHMARK(characteristics_advection)
 int main(int argc, char** argv)
 {
     ::benchmark::Initialize(&argc, argv);
-    ::benchmark::AddCustomContext("chip", chip);
+    ::benchmark::AddCustomContext("backend", "Ginkgo");
     ::benchmark::AddCustomContext("cols_per_chunk_ref", std::to_string(cols_per_chunk_ref));
     ::benchmark::AddCustomContext(
             "preconditionner_max_block_size_ref",

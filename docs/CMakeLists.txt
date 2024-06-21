@@ -61,5 +61,6 @@ doxygen_add_docs(doc
         "${CMAKE_CURRENT_SOURCE_DIR}/first_steps.md"
         "${CMAKE_CURRENT_SOURCE_DIR}/uniform_heat_equation.md"
         "${CMAKE_CURRENT_SOURCE_DIR}/heat_equation.md"
+        "${CMAKE_CURRENT_SOURCE_DIR}/transformations.md"
         "${DDC_SOURCE_DIR}/include/ddc/"
         ALL)

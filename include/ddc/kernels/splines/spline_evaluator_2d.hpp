@@ -23,8 +23,8 @@ template <
         class MemorySpace,
         class BSplinesType1,
         class BSplinesType2,
-        class interpolation_mesh_type1,
-        class interpolation_mesh_type2,
+        class evaluation_mesh_type1,
+        class evaluation_mesh_type2,
         class LeftExtrapolationRule1,
         class RightExtrapolationRule1,
         class LeftExtrapolationRule2,
@@ -63,12 +63,12 @@ public:
     using left_extrapolation_rule_2_type = LeftExtrapolationRule2;
     using right_extrapolation_rule_2_type = RightExtrapolationRule2;
 
-    using interpolation_domain_type1 = ddc::DiscreteDomain<interpolation_mesh_type1>;
-    using interpolation_domain_type2 = ddc::DiscreteDomain<interpolation_mesh_type2>;
-    using interpolation_domain_type
-            = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
+    using evaluation_domain_type1 = ddc::DiscreteDomain<evaluation_mesh_type1>;
+    using evaluation_domain_type2 = ddc::DiscreteDomain<evaluation_mesh_type2>;
+    using evaluation_domain_type
+            = ddc::DiscreteDomain<evaluation_mesh_type1, evaluation_mesh_type2>;
 
-    using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
+    using batched_evaluation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
     using spline_domain_type1 = ddc::DiscreteDomain<bsplines_type1>;
     using spline_domain_type2 = ddc::DiscreteDomain<bsplines_type2>;
@@ -77,12 +77,12 @@ public:
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>>>;
+                    ddc::detail::TypeSeq<evaluation_mesh_type1, evaluation_mesh_type2>>>;
 
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>,
+                    ddc::detail::TypeSeq<evaluation_mesh_type1, evaluation_mesh_type2>,
                     ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
 
@@ -275,19 +275,19 @@ public:
 
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void operator()(
-            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_interpolation_domain_type,
+                    batched_evaluation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
-        interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
-        interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
+        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
+        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
                 exec_space(),
                 batch_domain,
@@ -295,8 +295,8 @@ public:
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i1 : interpolation_domain1) {
-                        for (auto const i2 : interpolation_domain2) {
+                    for (auto const i1 : evaluation_domain1) {
+                        for (auto const i2 : evaluation_domain2) {
                             spline_eval_2D(i1, i2) = eval(coords_eval_2D(i1, i2), spline_coef_2D);
                         }
                     }
@@ -369,16 +369,15 @@ public:
         static_assert(
                 std::is_same_v<
                         InterestDim,
-                        typename interpolation_mesh_type1::
-                                continuous_dimension_type> || std::is_same_v<InterestDim, typename interpolation_mesh_type2::continuous_dimension_type>);
+                        typename evaluation_mesh_type1::
+                                continuous_dimension_type> || std::is_same_v<InterestDim, typename evaluation_mesh_type2::continuous_dimension_type>);
         if constexpr (std::is_same_v<
                               InterestDim,
-                              typename interpolation_mesh_type1::continuous_dimension_type>) {
+                              typename evaluation_mesh_type1::continuous_dimension_type>) {
             return deriv_dim_1(coord_eval, spline_coef);
         } else if constexpr (std::is_same_v<
                                      InterestDim,
-                                     typename interpolation_mesh_type2::
-                                             continuous_dimension_type>) {
+                                     typename evaluation_mesh_type2::continuous_dimension_type>) {
             return deriv_dim_2(coord_eval, spline_coef);
         }
     }
@@ -392,12 +391,12 @@ public:
         static_assert(
                 (std::is_same_v<
                          InterestDim1,
-                         typename interpolation_mesh_type1::
-                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename interpolation_mesh_type2::continuous_dimension_type>)
+                         typename evaluation_mesh_type1::
+                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename evaluation_mesh_type2::continuous_dimension_type>)
                 || (std::is_same_v<
                             InterestDim2,
-                            typename interpolation_mesh_type1::
-                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename interpolation_mesh_type2::continuous_dimension_type>));
+                            typename evaluation_mesh_type1::
+                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename evaluation_mesh_type2::continuous_dimension_type>));
         return deriv_1_and_2(coord_eval, spline_coef);
     }
 
@@ -413,19 +412,19 @@ public:
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_dim_1(
-            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_interpolation_domain_type,
+                    batched_evaluation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
-        interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
-        interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
+        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
+        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
                 exec_space(),
                 batch_domain,
@@ -433,8 +432,8 @@ public:
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i1 : interpolation_domain1) {
-                        for (auto const i2 : interpolation_domain2) {
+                    for (auto const i1 : evaluation_domain1) {
+                        for (auto const i2 : evaluation_domain2) {
                             spline_eval_2D(i1, i2) = eval_no_bc<
                                     eval_deriv_type,
                                     eval_type>(coords_eval_2D(i1, i2), spline_coef_2D);
@@ -455,19 +454,19 @@ public:
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_dim_2(
-            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_interpolation_domain_type,
+                    batched_evaluation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
-        interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
-        interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
+        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
+        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
                 exec_space(),
                 batch_domain,
@@ -475,8 +474,8 @@ public:
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i1 : interpolation_domain1) {
-                        for (auto const i2 : interpolation_domain2) {
+                    for (auto const i1 : evaluation_domain1) {
+                        for (auto const i2 : evaluation_domain2) {
                             spline_eval_2D(i1, i2) = eval_no_bc<
                                     eval_type,
                                     eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
@@ -497,19 +496,19 @@ public:
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv_1_and_2(
-            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_interpolation_domain_type,
+                    batched_evaluation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
         batch_domain_type batch_domain(coords_eval.domain());
-        interpolation_domain_type1 const interpolation_domain1(spline_eval.domain());
-        interpolation_domain_type2 const interpolation_domain2(spline_eval.domain());
+        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
+        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
                 exec_space(),
                 batch_domain,
@@ -517,8 +516,8 @@ public:
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
-                    for (auto const i1 : interpolation_domain1) {
-                        for (auto const i2 : interpolation_domain2) {
+                    for (auto const i1 : evaluation_domain1) {
+                        for (auto const i2 : evaluation_domain2) {
                             spline_eval_2D(i1, i2) = eval_no_bc<
                                     eval_deriv_type,
                                     eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
@@ -529,11 +528,11 @@ public:
 
     template <class InterestDim, class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv(
-            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_interpolation_domain_type,
+                    batched_evaluation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
@@ -542,16 +541,15 @@ public:
         static_assert(
                 std::is_same_v<
                         InterestDim,
-                        typename interpolation_mesh_type1::
-                                continuous_dimension_type> || std::is_same_v<InterestDim, typename interpolation_mesh_type2::continuous_dimension_type>);
+                        typename evaluation_mesh_type1::
+                                continuous_dimension_type> || std::is_same_v<InterestDim, typename evaluation_mesh_type2::continuous_dimension_type>);
         if constexpr (std::is_same_v<
                               InterestDim,
-                              typename interpolation_mesh_type1::continuous_dimension_type>) {
+                              typename evaluation_mesh_type1::continuous_dimension_type>) {
             return deriv_dim_1(spline_eval, coords_eval, spline_coef);
         } else if constexpr (std::is_same_v<
                                      InterestDim,
-                                     typename interpolation_mesh_type2::
-                                             continuous_dimension_type>) {
+                                     typename evaluation_mesh_type2::continuous_dimension_type>) {
             return deriv_dim_2(spline_eval, coords_eval, spline_coef);
         }
     }
@@ -564,11 +562,11 @@ public:
             class Layout3,
             class... CoordsDims>
     void deriv2(
-            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_interpolation_domain_type,
+                    batched_evaluation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
@@ -577,12 +575,12 @@ public:
         static_assert(
                 (std::is_same_v<
                          InterestDim1,
-                         typename interpolation_mesh_type1::
-                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename interpolation_mesh_type2::continuous_dimension_type>)
+                         typename evaluation_mesh_type1::
+                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename evaluation_mesh_type2::continuous_dimension_type>)
                 || (std::is_same_v<
                             InterestDim2,
-                            typename interpolation_mesh_type1::
-                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename interpolation_mesh_type2::continuous_dimension_type>));
+                            typename evaluation_mesh_type1::
+                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename evaluation_mesh_type2::continuous_dimension_type>));
         return deriv_1_and_2(spline_eval, coords_eval, spline_coef);
     }
 
@@ -656,8 +654,8 @@ private:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        using Dim1 = typename interpolation_mesh_type1::continuous_dimension_type;
-        using Dim2 = typename interpolation_mesh_type2::continuous_dimension_type;
+        using Dim1 = typename evaluation_mesh_type1::continuous_dimension_type;
+        using Dim2 = typename evaluation_mesh_type2::continuous_dimension_type;
         if constexpr (bsplines_type1::is_periodic()) {
             if (ddc::get<Dim1>(coord_eval) < ddc::discrete_space<bsplines_type1>().rmin()
                 || ddc::get<Dim1>(coord_eval) > ddc::discrete_space<bsplines_type1>().rmax()) {
@@ -698,8 +696,8 @@ private:
         }
         return eval_no_bc<eval_type, eval_type>(
                 ddc::Coordinate<
-                        typename interpolation_mesh_type1::continuous_dimension_type,
-                        typename interpolation_mesh_type2::continuous_dimension_type>(
+                        typename evaluation_mesh_type1::continuous_dimension_type,
+                        typename evaluation_mesh_type2::continuous_dimension_type>(
                         ddc::get<Dim1>(coord_eval),
                         ddc::get<Dim2>(coord_eval)),
                 spline_coef);
@@ -742,28 +740,24 @@ private:
                 double,
                 std::experimental::extents<std::size_t, bsplines_type2::degree() + 1>> const
                 vals2(vals2_ptr.data());
-        ddc::Coordinate<typename interpolation_mesh_type1::continuous_dimension_type>
-                coord_eval_interpolation1
-                = ddc::select<typename interpolation_mesh_type1::continuous_dimension_type>(
+        ddc::Coordinate<typename evaluation_mesh_type1::continuous_dimension_type>
+                coord_eval_interest1
+                = ddc::select<typename evaluation_mesh_type1::continuous_dimension_type>(
                         coord_eval);
-        ddc::Coordinate<typename interpolation_mesh_type2::continuous_dimension_type>
-                coord_eval_interpolation2
-                = ddc::select<typename interpolation_mesh_type2::continuous_dimension_type>(
+        ddc::Coordinate<typename evaluation_mesh_type2::continuous_dimension_type>
+                coord_eval_interest2
+                = ddc::select<typename evaluation_mesh_type2::continuous_dimension_type>(
                         coord_eval);
 
         if constexpr (std::is_same_v<EvalType1, eval_type>) {
-            jmin1 = ddc::discrete_space<bsplines_type1>()
-                            .eval_basis(vals1, coord_eval_interpolation1);
+            jmin1 = ddc::discrete_space<bsplines_type1>().eval_basis(vals1, coord_eval_interest1);
         } else if constexpr (std::is_same_v<EvalType1, eval_deriv_type>) {
-            jmin1 = ddc::discrete_space<bsplines_type1>()
-                            .eval_deriv(vals1, coord_eval_interpolation1);
+            jmin1 = ddc::discrete_space<bsplines_type1>().eval_deriv(vals1, coord_eval_interest1);
         }
         if constexpr (std::is_same_v<EvalType2, eval_type>) {
-            jmin2 = ddc::discrete_space<bsplines_type2>()
-                            .eval_basis(vals2, coord_eval_interpolation2);
+            jmin2 = ddc::discrete_space<bsplines_type2>().eval_basis(vals2, coord_eval_interest2);
         } else if constexpr (std::is_same_v<EvalType2, eval_deriv_type>) {
-            jmin2 = ddc::discrete_space<bsplines_type2>()
-                            .eval_deriv(vals2, coord_eval_interpolation2);
+            jmin2 = ddc::discrete_space<bsplines_type2>().eval_deriv(vals2, coord_eval_interest2);
         }
 
         double y = 0.0;

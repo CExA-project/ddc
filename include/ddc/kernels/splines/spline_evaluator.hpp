@@ -9,6 +9,8 @@
 #include <ddc/ddc.hpp>
 
 #include "Kokkos_Macros.hpp"
+#include "periodic_extrapolation_rule.hpp"
+#include "spline_boundary_conditions.hpp"
 #include "view.hpp"
 
 namespace ddc {
@@ -17,7 +19,7 @@ template <
         class ExecSpace,
         class MemorySpace,
         class BSplinesType,
-        class InterpolationMesh,
+        class EvaluationMesh,
         class LeftExtrapolationRule,
         class RightExtrapolationRule,
         class... IDimX>
@@ -45,23 +47,23 @@ public:
     using left_extrapolation_rule_type = LeftExtrapolationRule;
     using right_extrapolation_rule_type = RightExtrapolationRule;
 
-    using interpolation_mesh_type = InterpolationMesh;
+    using evaluation_mesh_type = EvaluationMesh;
 
-    using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
+    using evaluation_domain_type = ddc::DiscreteDomain<evaluation_mesh_type>;
 
-    using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
+    using batched_evaluation_domain_type = ddc::DiscreteDomain<IDimX...>;
 
     using spline_domain_type = ddc::DiscreteDomain<bsplines_type>;
 
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type>>>;
+                    ddc::detail::TypeSeq<evaluation_mesh_type>>>;
 
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type>,
+                    ddc::detail::TypeSeq<evaluation_mesh_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
 
@@ -142,17 +144,17 @@ public:
 
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void operator()(
-            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_interpolation_domain_type,
+                    batched_evaluation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        interpolation_domain_type const interpolation_domain(spline_eval.domain());
+        evaluation_domain_type const evaluation_domain(spline_eval.domain());
         batch_domain_type const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
@@ -162,7 +164,7 @@ public:
                     const auto spline_eval_1D = spline_eval[j];
                     const auto coords_eval_1D = coords_eval[j];
                     const auto spline_coef_1D = spline_coef[j];
-                    for (auto const i : interpolation_domain) {
+                    for (auto const i : evaluation_domain) {
                         spline_eval_1D(i) = eval(coords_eval_1D(i), spline_coef_1D);
                     }
                 });
@@ -179,17 +181,17 @@ public:
 
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
     void deriv(
-            ddc::ChunkSpan<double, batched_interpolation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_interpolation_domain_type,
+                    batched_evaluation_domain_type,
                     Layout2,
                     memory_space> const coords_eval,
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        interpolation_domain_type const interpolation_domain(spline_eval.domain());
+        evaluation_domain_type const evaluation_domain(spline_eval.domain());
         batch_domain_type const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
@@ -199,7 +201,7 @@ public:
                     const auto spline_eval_1D = spline_eval[j];
                     const auto coords_eval_1D = coords_eval[j];
                     const auto spline_coef_1D = spline_coef[j];
-                    for (auto const i : interpolation_domain) {
+                    for (auto const i : evaluation_domain) {
                         spline_eval_1D(i)
                                 = eval_no_bc<eval_deriv_type>(coords_eval_1D(i), spline_coef_1D);
                     }
@@ -240,28 +242,27 @@ private:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        ddc::Coordinate<typename interpolation_mesh_type::continuous_dimension_type>
-                coord_eval_interpolation
-                = ddc::select<typename interpolation_mesh_type::continuous_dimension_type>(
-                        coord_eval);
+        ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
+                coord_eval_interest
+                = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
         if constexpr (bsplines_type::is_periodic()) {
-            if (coord_eval_interpolation < ddc::discrete_space<bsplines_type>().rmin()
-                || coord_eval_interpolation > ddc::discrete_space<bsplines_type>().rmax()) {
-                coord_eval_interpolation -= Kokkos::floor(
-                                                    (coord_eval_interpolation
-                                                     - ddc::discrete_space<bsplines_type>().rmin())
-                                                    / ddc::discrete_space<bsplines_type>().length())
-                                            * ddc::discrete_space<bsplines_type>().length();
+            if (coord_eval_interest < ddc::discrete_space<bsplines_type>().rmin()
+                || coord_eval_interest > ddc::discrete_space<bsplines_type>().rmax()) {
+                coord_eval_interest -= Kokkos::floor(
+                                               (coord_eval_interest
+                                                - ddc::discrete_space<bsplines_type>().rmin())
+                                               / ddc::discrete_space<bsplines_type>().length())
+                                       * ddc::discrete_space<bsplines_type>().length();
             }
         } else {
-            if (coord_eval_interpolation < ddc::discrete_space<bsplines_type>().rmin()) {
-                return m_left_extrap_rule(coord_eval_interpolation, spline_coef);
+            if (coord_eval_interest < ddc::discrete_space<bsplines_type>().rmin()) {
+                return m_left_extrap_rule(coord_eval_interest, spline_coef);
             }
-            if (coord_eval_interpolation > ddc::discrete_space<bsplines_type>().rmax()) {
-                return m_right_extrap_rule(coord_eval_interpolation, spline_coef);
+            if (coord_eval_interest > ddc::discrete_space<bsplines_type>().rmax()) {
+                return m_right_extrap_rule(coord_eval_interest, spline_coef);
             }
         }
-        return eval_no_bc<eval_type>(coord_eval_interpolation, spline_coef);
+        return eval_no_bc<eval_type>(coord_eval_interest, spline_coef);
     }
 
     template <class EvalType, class Layout, class... CoordsDims>
@@ -278,14 +279,13 @@ private:
                 double,
                 std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
                 vals(vals_ptr.data());
-        ddc::Coordinate<typename interpolation_mesh_type::continuous_dimension_type>
-                coord_eval_interpolation
-                = ddc::select<typename interpolation_mesh_type::continuous_dimension_type>(
-                        coord_eval);
+        ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
+                coord_eval_interest
+                = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
         if constexpr (std::is_same_v<EvalType, eval_type>) {
-            jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interpolation);
+            jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
         } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {
-            jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interpolation);
+            jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interest);
         }
         double y = 0.0;
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {

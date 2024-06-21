@@ -10,6 +10,8 @@
 
 #include <ddc/ddc.hpp>
 
+#include "bsplines_non_uniform.hpp"
+#include "bsplines_uniform.hpp"
 #include "spline_boundary_conditions.hpp"
 
 namespace ddc {
@@ -168,11 +170,17 @@ public:
                 for (std::size_t i(0); i < BSplines::degree() / 2 + 1; ++i) {
                     points_with_bcs[i]
                             = (BSplines::degree() - i) * ddc::discrete_space<BSplines>().rmin();
-                    for (std::size_t j(0); j < i; ++j) {
-                        points_with_bcs[i] += ddc::discrete_space<BSplines>().get_support_knot_n(
-                                ddc::DiscreteElement<BSplines>(i),
-                                BSplines::degree() - j);
-                    }
+                    ddc::DiscreteElement<BSplines> spline_idx(i);
+                    ddc::DiscreteVector<UniformBsplinesKnots<BSplines>> n_knots_in_domain(i);
+                    ddc::DiscreteDomain<UniformBsplinesKnots<BSplines>> sub_domain(
+                            ddc::discrete_space<BSplines>().get_last_support_knot(spline_idx)
+                                    - n_knots_in_domain,
+                            n_knots_in_domain);
+                    ddc::for_each(
+                            sub_domain,
+                            [&](DiscreteElement<UniformBsplinesKnots<BSplines>> ik) {
+                                points_with_bcs[i] += ddc::coordinate(ik);
+                            });
                     points_with_bcs[i] /= BSplines::degree();
                 }
             } else {
@@ -197,13 +205,17 @@ public:
                 for (std::size_t i(0); i < BSplines::degree() / 2 + 1; ++i) {
                     points_with_bcs[npoints - 1 - i]
                             = (BSplines::degree() - i) * ddc::discrete_space<BSplines>().rmax();
-                    for (std::size_t j(0); j < i; ++j) {
-                        points_with_bcs[npoints - 1 - i]
-                                += ddc::discrete_space<BSplines>().get_support_knot_n(
-                                        ddc::DiscreteElement<BSplines>(
-                                                ddc::discrete_space<BSplines>().nbasis() - 1 - i),
-                                        j + 1);
-                    }
+                    ddc::DiscreteElement<BSplines> spline_idx(
+                            ddc::discrete_space<BSplines>().nbasis() - 1 - i);
+                    ddc::DiscreteVector<UniformBsplinesKnots<BSplines>> n_knots_in_domain(i);
+                    ddc::DiscreteDomain<UniformBsplinesKnots<BSplines>> sub_domain(
+                            ddc::discrete_space<BSplines>().get_first_support_knot(spline_idx) + 1,
+                            n_knots_in_domain);
+                    ddc::for_each(
+                            sub_domain,
+                            [&](DiscreteElement<UniformBsplinesKnots<BSplines>> ik) {
+                                points_with_bcs[npoints - 1 - i] += ddc::coordinate(ik);
+                            });
                     points_with_bcs[npoints - 1 - i] /= BSplines::degree();
                 }
             } else {

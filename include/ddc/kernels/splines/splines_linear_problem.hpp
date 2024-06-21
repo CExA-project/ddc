@@ -78,25 +78,28 @@ public:
     {
         return m_size;
     }
-
-    /**
-     * @brief Prints a Matrix in a std::ostream. It must not be called after `setup_solver`.
-     *
-     * @param out The stream in which the matrix is printed.
-     *
-     * @return The stream in which the matrix is printed.
-     **/
-    std::ostream& operator<<(std::ostream& os)
-    {
-        std::size_t const n = size();
-        for (std::size_t i = 0; i < n; ++i) {
-            for (std::size_t j = 0; j < n; ++j) {
-                os << std::fixed << std::setprecision(3) << std::setw(10) << get_element(i, j);
-            }
-            os << std::endl;
-        }
-        return os;
-    }
 };
+
+/**
+ * @brief Prints the matrix of a SplinesLinearProblem in a std::ostream. It must not be called after `setup_solver`.
+ *
+ * @param[out] os The stream in which the matrix is printed.
+ * @param[in] linear_problem The SplinesLinearProblem of the matrix to print.
+ *
+ * @return The stream in which the matrix is printed.
+**/
+template <class ExecSpace>
+std::ostream& operator<<(std::ostream& os, SplinesLinearProblem<ExecSpace> const& linear_problem)
+{
+    std::size_t const n = linear_problem.size();
+    for (std::size_t i = 0; i < n; ++i) {
+        for (std::size_t j = 0; j < n; ++j) {
+            os << std::fixed << std::setprecision(3) << std::setw(10)
+               << linear_problem.get_element(i, j);
+        }
+        os << std::endl;
+    }
+    return os;
+}
 
 } // namespace ddc::detail

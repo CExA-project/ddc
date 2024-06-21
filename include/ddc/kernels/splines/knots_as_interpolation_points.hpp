@@ -8,6 +8,8 @@
 
 #include <ddc/ddc.hpp>
 
+#include "bsplines_non_uniform.hpp"
+#include "bsplines_uniform.hpp"
 #include "spline_boundary_conditions.hpp"
 
 namespace ddc {
@@ -49,9 +51,13 @@ public:
         } else {
             using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
             std::vector<double> knots(ddc::discrete_space<BSplines>().npoints());
-            for (int i(0); i < ddc::discrete_space<BSplines>().npoints(); ++i) {
-                knots[i] = ddc::discrete_space<BSplines>().get_knot(i);
-            }
+            ddc::DiscreteDomain<typename BSplines::knot_mesh_type> break_point_domain(
+                    ddc::discrete_space<BSplines>().break_point_domain());
+            ddc::for_each(
+                    break_point_domain,
+                    [&](ddc::DiscreteElement<typename BSplines::knot_mesh_type> ik) {
+                        knots[ik - break_point_domain.front()] = ddc::coordinate(ik);
+                    });
             return SamplingImpl(knots);
         }
     }

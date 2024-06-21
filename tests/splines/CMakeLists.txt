@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.22)
 
 include(GoogleTest)
 
@@ -20,7 +20,7 @@ target_link_libraries(splines_tests
         GTest::gtest
 		DDC::DDC
 )
-gtest_discover_tests(splines_tests)
+gtest_discover_tests(splines_tests DISCOVERY_MODE PRE_TEST)
 
 add_executable(bsplines_tests
 	../main.cpp
@@ -43,7 +43,7 @@ target_link_libraries(matrix_tests
         GTest::gtest
         DDC::DDC
 )
-gtest_discover_tests(matrix_tests)
+gtest_discover_tests(matrix_tests DISCOVERY_MODE PRE_TEST)
 
 foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
   foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
@@ -95,7 +95,7 @@ foreach(BC "BC_PERIODIC" "BC_GREVILLE")
         )
 	    target_compile_definitions("${test_name}" PUBLIC -DDEGREE=${DEGREE_X} -D${BSPLINES_TYPE} -D${EVALUATOR} -D${BC} -D${ER})
         # add_test("${test_name}" "${test_name}")
-        gtest_discover_tests("${test_name}")
+        gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
       endforeach()
     endforeach()
   endforeach()
@@ -114,7 +114,7 @@ foreach(BC "BC_PERIODIC" "BC_GREVILLE" "BC_HERMITE")
       )
       target_compile_definitions("${test_name}" PUBLIC -DDEGREE_X=${DEGREE_X} -D${BSPLINES_TYPE} -D${BC})
       # add_test("${test_name}" "${test_name}")
-      gtest_discover_tests("${test_name}")
+      gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
     endforeach()
   endforeach()
 endforeach()
@@ -144,7 +144,7 @@ foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}"
     )
 	target_compile_definitions("${test_name}" PUBLIC -DDEGREE_X=${DEGREE_X} -D${BSPLINES_TYPE})
 	# add_test("${test_name}" "${test_name}")
-	gtest_discover_tests("${test_name}")
+	gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
   endforeach()
 endforeach()
 
@@ -162,7 +162,7 @@ foreach(BC "BC_PERIODIC" "BC_GREVILLE" "BC_HERMITE")
             )
             target_compile_definitions("${test_name}" PUBLIC -DDEGREE=${DEGREE} -D${BSPLINES_TYPE} -D${EVALUATOR} -D${BC})
 			# add_test("${test_name}" "${test_name}")
-			gtest_discover_tests("${test_name}")
+			gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
           endforeach()
         endforeach()
       endforeach()

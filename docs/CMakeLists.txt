@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.22)
 
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html")
 set(DOXYGEN_AUTOLINK_SUPPORT YES)

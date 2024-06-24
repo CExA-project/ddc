@@ -192,7 +192,7 @@ public:
      *
      * Removes the zeros from the CSR object and instantiate a Ginkgo solver. It also constructs a transposed version of the solver.
      *
-     * The stopping criterion is a reduction factor ||x||/||b||<1e-15 with 1000 maximum iterations.
+     * The stopping criterion is a reduction factor ||Ax-b||/||b||<1e-15 with 1000 maximum iterations.
      */
     void setup_solver() override
     {

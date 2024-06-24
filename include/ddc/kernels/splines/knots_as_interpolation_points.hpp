@@ -8,6 +8,8 @@
 
 #include <ddc/ddc.hpp>
 
+#include "bsplines_non_uniform.hpp"
+#include "bsplines_uniform.hpp"
 #include "spline_boundary_conditions.hpp"
 
 namespace ddc {

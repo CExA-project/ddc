@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ddc/ddc.hpp>
+
 #include "spline_builder.hpp"
 
 namespace ddc {
@@ -215,23 +217,23 @@ public:
     {
     }
 
-    /// @brief Copy-constructor is deleted
+    /// @brief Copy-constructor is deleted.
     SplineBuilder2D(SplineBuilder2D const& x) = delete;
 
     /**
-     * @brief Move-constructs
+     * @brief Move-constructs.
      *
      * @param x An rvalue to another SplineBuilder2D.
      */
     SplineBuilder2D(SplineBuilder2D&& x) = default;
 
-    /// @brief Destructs
+    /// @brief Destructs.
     ~SplineBuilder2D() = default;
 
-    /// @brief Copy-assignment is deleted
+    /// @brief Copy-assignment is deleted.
     SplineBuilder2D& operator=(SplineBuilder2D const& x) = delete;
 
-    /** @brief Move-assigns
+    /** @brief Move-assigns.
      *
      * @param x An rvalue to another SplineBuilder.
      * @return A reference to this object.

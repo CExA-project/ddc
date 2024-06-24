@@ -155,9 +155,9 @@ public:
         template <class RandomIt>
         Impl(RandomIt breaks_begin, RandomIt breaks_end);
 
-        /** @brief Copy-constructs from another Impl with a different Kokkos memory space
+        /** @brief Copy-constructs from another Impl with a different Kokkos memory space.
          *
-         * @param impl A reference to the other Impl
+         * @param impl A reference to the other Impl.
          */
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
@@ -166,32 +166,32 @@ public:
         {
         }
 
-        /** @brief Copy-constructs
+        /** @brief Copy-constructs.
          *
-         * @param x A reference to another Impl
+         * @param x A reference to another Impl.
          */
         Impl(Impl const& x) = default;
 
-        /** @brief Move-constructs
+        /** @brief Move-constructs.
          *
-         * @param x An rvalue to another Impl
+         * @param x An rvalue to another Impl.
          */
         Impl(Impl&& x) = default;
 
-        /// @brief Destructs
+        /// @brief Destructs.
         ~Impl() = default;
 
-        /** @brief Copy-assigns
+        /** @brief Copy-assigns.
          *
-         * @param x A reference to another Impl
-         * @return A reference to the copied Impl
+         * @param x A reference to another Impl.
+         * @return A reference to the copied Impl.
          */
         Impl& operator=(Impl const& x) = default;
 
-        /** @brief Move-assigns
+        /** @brief Move-assigns.
          *
-         * @param x An rvalue to another Impl
-         * @return A reference to the moved Impl
+         * @param x An rvalue to another Impl.
+         * @return A reference to this object.
          */
         Impl& operator=(Impl&& x) = default;
 

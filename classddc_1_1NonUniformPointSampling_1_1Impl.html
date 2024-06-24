@@ -93,6 +93,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4a162747887cf212fcc65b23a395a675"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03857c4aad5d45351ac321b0e6d9443e" id="r_a03857c4aad5d45351ac321b0e6d9443e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#a03857c4aad5d45351ac321b0e6d9443e">size</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="separator:a03857c4aad5d45351ac321b0e6d9443e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a774e5cb9ac4f6d6739c105f4848a8658" id="r_a774e5cb9ac4f6d6739c105f4848a8658"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#adb7ac6b1fce31242514c4e8420a46571">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#a774e5cb9ac4f6d6739c105f4848a8658">front</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a774e5cb9ac4f6d6739c105f4848a8658"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lower bound index of the mesh.  <br /></td></tr>
+<tr class="separator:a774e5cb9ac4f6d6739c105f4848a8658"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12850761ffb35df7c319119dac8dd4e4" id="r_a12850761ffb35df7c319119dac8dd4e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="classddc_1_1NonUniformPointSampling.html#a6f8ca7023571e80f0a8fa2305cffb28c">continuous_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#a12850761ffb35df7c319119dac8dd4e4">coordinate</a> (<a class="el" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#adb7ac6b1fce31242514c4e8420a46571">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">icoord</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="memdesc:a12850761ffb35df7c319119dac8dd4e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a mesh index into a position in <code>CDim</code>  <br /></td></tr>
 <tr class="separator:a12850761ffb35df7c319119dac8dd4e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -464,6 +467,37 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a774e5cb9ac4f6d6739c105f4848a8658" name="a774e5cb9ac4f6d6739c105f4848a8658"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a774e5cb9ac4f6d6739c105f4848a8658">&#9670;&#160;</a></span>front()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#adb7ac6b1fce31242514c4e8420a46571">discrete_element_type</a> <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt;<a class="el" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::front </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Lower bound index of the mesh. </p>
 
 </div>
 </div>

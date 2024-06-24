@@ -244,7 +244,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__sparse_8hpp_
 <div class="line"><span class="lineno">  192</span><span class="comment">     *</span></div>
 <div class="line"><span class="lineno">  193</span><span class="comment">     * Removes the zeros from the CSR object and instantiate a Ginkgo solver. It also constructs a transposed version of the solver.</span></div>
 <div class="line"><span class="lineno">  194</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  195</span><span class="comment">     * The stopping criterion is a reduction factor ||x||/||b||&lt;1e-15 with 1000 maximum iterations.</span></div>
+<div class="line"><span class="lineno">  195</span><span class="comment">     * The stopping criterion is a reduction factor ||Ax-b||/||b||&lt;1e-15 with 1000 maximum iterations.</span></div>
 <div class="line"><span class="lineno">  196</span><span class="comment">     */</span></div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">void</span> setup_solver() <span class="keyword">override</span></div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    {</div>

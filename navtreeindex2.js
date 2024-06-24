@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classddc_1_1UniformBSplines_1_1Impl.html#a4eb5520c30b6ca33f4ef2bd9e277ec3e":[3,0,51,0,25],
 "classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104":[3,0,51,0,0],
 "classddc_1_1UniformBSplines_1_1Impl.html#a5674c2f0c7818d6ff156cb2a90df5fee":[3,0,51,0,2],
 "classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322":[3,0,51,0,3],
@@ -56,11 +57,19 @@ var NAVTREEINDEX2 =
 "first_steps.html#autotoc_md7":[1,0,1,2],
 "first_steps.html#autotoc_md8":[1,1],
 "first_steps.html#autotoc_md9":[1,2],
-"heat_equation.html":[1,4],
-"index.html":[],
+"going_further.html":[2],
+"going_further.html#autotoc_md13":[2,0],
+"going_further.html#autotoc_md14":[2,0,0],
+"going_further.html#autotoc_md15":[2,0,1],
+"going_further.html#autotoc_md16":[2,0,1,0],
+"going_further.html#autotoc_md17":[2,0,1,1],
+"going_further.html#autotoc_md18":[2,0,1,2],
+"going_further.html#autotoc_md19":[2,0,2],
 "index.html":[0],
+"index.html":[],
 "index.html#autotoc_md0":[0,0],
 "index.html#autotoc_md1":[0,1],
+"non_uniform_heat_equation.html":[2,1],
 "pages.html":[],
 "structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html":[3,0,15],
 "structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a048675e8020f8ec2e3bf88bb43c37cf8":[3,0,15,0],
@@ -140,5 +149,5 @@ var NAVTREEINDEX2 =
 "structddc_1_1reducer_1_1sum.html":[3,0,0,9],
 "structddc_1_1reducer_1_1sum.html#ab2ff74bfa250d3f1328a3b1110efeb0e":[3,0,0,9,1],
 "structddc_1_1reducer_1_1sum.html#abfe427189903bf763f36c59cd7d141ad":[3,0,0,9,0],
-"uniform_heat_equation.html":[2]
+"uniform_heat_equation.html":[1,4]
 };

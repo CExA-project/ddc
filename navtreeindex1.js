@@ -59,12 +59,13 @@ var NAVTREEINDEX1 =
 "classddc_1_1NonUniformPointSampling.html#aa260eec6cdea4cf01217526ec3356e7b":[3,0,41,3],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html":[3,0,41,0],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#a03857c4aad5d45351ac321b0e6d9443e":[3,0,41,0,12],
-"classddc_1_1NonUniformPointSampling_1_1Impl.html#a12850761ffb35df7c319119dac8dd4e4":[3,0,41,0,13],
+"classddc_1_1NonUniformPointSampling_1_1Impl.html#a12850761ffb35df7c319119dac8dd4e4":[3,0,41,0,14],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#a290dbdbd06bfcf85cc6f050fdce7ec60":[3,0,41,0,8],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#a303cc88f434dd361877b568c23f93203":[3,0,41,0,4],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#a35b0a732c16671c3d2b859d8def71ac6":[3,0,41,0,0],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#a4a162747887cf212fcc65b23a395a675":[3,0,41,0,11],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#a6a33ce6446783b6e57a9953f03ac23ca":[3,0,41,0,5],
+"classddc_1_1NonUniformPointSampling_1_1Impl.html#a774e5cb9ac4f6d6739c105f4848a8658":[3,0,41,0,13],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#a89c42a7b2ddd60d43641a9cf1e6c637c":[3,0,41,0,10],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#a96853c6623a625a050ade5a603be6350":[3,0,41,0,3],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#aa31034a9da59ee6eecbd14cca6e31dae":[3,0,41,0,6],
@@ -72,7 +73,7 @@ var NAVTREEINDEX1 =
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#abbdccd2184f9417f01ad5ceabd7f0940":[3,0,41,0,1],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#ad19606ba0ced3eb76213182b26f0bf57":[3,0,41,0,7],
 "classddc_1_1NonUniformPointSampling_1_1Impl.html#adb7ac6b1fce31242514c4e8420a46571":[3,0,41,0,2],
-"classddc_1_1NonUniformPointSampling_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56":[3,0,41,0,14],
+"classddc_1_1NonUniformPointSampling_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56":[3,0,41,0,15],
 "classddc_1_1PdiEvent.html":[3,0,43],
 "classddc_1_1PdiEvent.html#a1e12cf2d5971fa856d8abda63f9c56f8":[3,0,43,1],
 "classddc_1_1PdiEvent.html#a2ccd8ca0c860ee77f9a62ce17354bbcd":[3,0,43,11],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "classddc_1_1UniformBSplines_1_1Impl.html":[3,0,51,0],
 "classddc_1_1UniformBSplines_1_1Impl.html#a061d9d1cf3a68ff427589a7b3245bbb4":[3,0,51,0,11],
 "classddc_1_1UniformBSplines_1_1Impl.html#a1487eaa45eb12cb82684abc06bd52048":[3,0,51,0,6],
-"classddc_1_1UniformBSplines_1_1Impl.html#a20223a26726ded2d7a47a2395b233975":[3,0,51,0,23],
-"classddc_1_1UniformBSplines_1_1Impl.html#a4eb5520c30b6ca33f4ef2bd9e277ec3e":[3,0,51,0,25]
+"classddc_1_1UniformBSplines_1_1Impl.html#a20223a26726ded2d7a47a2395b233975":[3,0,51,0,23]
 };

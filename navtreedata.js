@@ -41,9 +41,20 @@ var NAVTREE =
         [ "Periodic conditions", "first_steps.html#autotoc_md11", null ],
         [ "Numerical scheme", "first_steps.html#autotoc_md12", null ]
       ] ],
-      [ "examples/heat_equation.cpp", "heat_equation.html", null ]
+      [ "examples/uniform_heat_equation.cpp", "uniform_heat_equation.html", null ]
     ] ],
-    [ "examples/uniform_heat_equation.cpp", "uniform_heat_equation.html", null ],
+    [ "Commented example: the non uniform heat equation", "going_further.html", [
+      [ "Differences with the uniform problem resolution", "going_further.html#autotoc_md13", [
+        [ "Dimensions naming", "going_further.html#autotoc_md14", null ],
+        [ "Domains", "going_further.html#autotoc_md15", [
+          [ "Dimension X", "going_further.html#autotoc_md16", null ],
+          [ "Dimension Y", "going_further.html#autotoc_md17", null ],
+          [ "Time dimension", "going_further.html#autotoc_md18", null ]
+        ] ],
+        [ "Time loop", "going_further.html#autotoc_md19", null ]
+      ] ],
+      [ "examples/non_uniform_heat_equation.cpp", "non_uniform_heat_equation.html", null ]
+    ] ],
     [ "API reference", "annotated.html", "annotated" ]
   ] ]
 ];
@@ -52,7 +63,7 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classddc_1_1KnotsAsInterpolationPoints.html",
-"classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104"
+"classddc_1_1UniformBSplines_1_1Impl.html#a4eb5520c30b6ca33f4ef2bd9e277ec3e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -3,11 +3,15 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
+#include <ddc/ddc.hpp>
+
 #include "ddc/chunk_span.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
 #include "deriv.hpp"
+#include "math_tools.hpp"
+#include "spline_boundary_conditions.hpp"
 #include "splines_linear_problem_maker.hpp"
 
 namespace ddc {
@@ -230,22 +234,22 @@ public:
                 preconditionner_max_block_size);
     }
 
-    /// @brief Copy-constructor is deleted
+    /// @brief Copy-constructor is deleted.
     SplineBuilder(SplineBuilder const& x) = delete;
 
-    /** @brief Move-constructs
+    /** @brief Move-constructs.
      *
      * @param x An rvalue to another SplineBuilder.
      */
     SplineBuilder(SplineBuilder&& x) = default;
 
-    /// @brief Destructs
+    /// @brief Destructs.
     ~SplineBuilder() = default;
 
-    /// @brief Copy-assignment is deleted
+    /// @brief Copy-assignment is deleted.
     SplineBuilder& operator=(SplineBuilder const& x) = delete;
 
-    /** @brief Move-assigns
+    /** @brief Move-assigns.
      *
      * @param x An rvalue to another SplineBuilder.
      * @return A reference to this object.

@@ -165,11 +165,9 @@ public:
             InputRange const& post_ghost_r)
     {
         using discrete_domain_type = DiscreteDomain<DDim>;
-        auto a = domain_r.begin();
-        auto b = domain_r.end();
         auto n = DiscreteVector<DDim> {std::distance(domain_r.begin(), domain_r.end())};
 
-        assert(a < b);
+        assert(domain_r.begin() < domain_r.end());
         assert(n > 1);
 
         auto n_ghosts_before

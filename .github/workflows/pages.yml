@@ -161,6 +161,7 @@ jobs:
         mkdir docs_out
         chmod a+rwx docs_out
         docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
+        cat docs_out/doxygen.log
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |

@@ -141,9 +141,8 @@ public:
         auto n = std::distance(non_uniform_points.begin(), non_uniform_points.end());
         assert(a < b);
         assert(n > 0);
-        typename DDim::template Impl<DDim, Kokkos::HostSpace>
-                disc(non_uniform_points);
-        DiscreteDomain<DDim> domain {disc.front(), DiscreteVector<DDim> {n} };
+        typename DDim::template Impl<DDim, Kokkos::HostSpace> disc(non_uniform_points);
+        DiscreteDomain<DDim> domain {disc.front(), DiscreteVector<DDim> {n}};
         return std::make_tuple(std::move(disc), std::move(domain));
     }
 
@@ -161,18 +160,22 @@ public:
             DiscreteDomain<DDim>,
             DiscreteDomain<DDim>>
     init_ghosted(
-            InputRange const& domain_r, InputRange const& pre_ghost_r, InputRange const& post_ghost_r)
+            InputRange const& domain_r,
+            InputRange const& pre_ghost_r,
+            InputRange const& post_ghost_r)
     {
         using discrete_domain_type = DiscreteDomain<DDim>;
         auto a = domain_r.begin();
         auto b = domain_r.end();
-        auto n = DiscreteVector<DDim>{std::distance(domain_r.begin(), domain_r.end())};
+        auto n = DiscreteVector<DDim> {std::distance(domain_r.begin(), domain_r.end())};
 
         assert(a < b);
         assert(n > 1);
 
-        auto n_ghosts_before = DiscreteVector<DDim>{std::distance(pre_ghost_r.begin(), pre_ghost_r.end())};
-        auto n_ghosts_after = DiscreteVector<DDim>{std::distance(post_ghost_r.begin(), post_ghost_r.end())};
+        auto n_ghosts_before
+                = DiscreteVector<DDim> {std::distance(pre_ghost_r.begin(), pre_ghost_r.end())};
+        auto n_ghosts_after
+                = DiscreteVector<DDim> {std::distance(post_ghost_r.begin(), post_ghost_r.end())};
 
         std::vector<typename InputRange::value_type> full_domain;
 
@@ -197,7 +200,6 @@ public:
                 std::move(pre_ghost),
                 std::move(post_ghost));
     }
-
 };
 
 template <class DDim>

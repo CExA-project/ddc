@@ -143,9 +143,12 @@ int main(int argc, char** argv)
 
     //! [ghost_points_x]
     std::vector<double> x_pre_ghost_vect {
-            x_domain_vect.front()-(x_domain_vect.back()-x_domain_vect[size_x-2])};
+            x_domain_vect.front()
+            - (x_domain_vect.back() - x_domain_vect[size_x - 2])};
 
-    std::vector<double> x_post_ghost_vect {x_domain_vect.back()+(x_domain_vect[1]-x_domain_vect.front())};
+    std::vector<double> x_post_ghost_vect {
+            x_domain_vect.back()
+            + (x_domain_vect[1] - x_domain_vect.front())};
     //! [ghost_points_x]
 
     //! [build-domains]
@@ -170,8 +173,11 @@ int main(int argc, char** argv)
 
     //! [ghost_points_y]
     std::vector<double> y_pre_ghost_vect {
-            y_domain_vect.front()-(y_domain_vect.back()-y_domain_vect[size_y-2])};
-    std::vector<double> y_post_ghost_vect {y_domain_vect.back()+(y_domain_vect[1]-y_domain_vect.front())};
+            y_domain_vect.front()
+            - (y_domain_vect.back() - y_domain_vect[size_y - 2])};
+    std::vector<double> y_post_ghost_vect {
+            y_domain_vect.back()
+            + (y_domain_vect[1] - y_domain_vect.front())};
     //! [ghost_points_y]
 
     //! [Y-vectors]

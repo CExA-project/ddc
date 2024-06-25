@@ -60,18 +60,26 @@ $(document).ready(function(){initNavTree('null__extrapolation__rule_8hpp_source.
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">struct</span> <a class="code hl_struct" href="structddc_1_1NullExtrapolationRule.html">NullExtrapolationRule</a></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>{</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> CoordType, <span class="keyword">class</span> ChunkSpan&gt;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <a class="code hl_function" href="structddc_1_1NullExtrapolationRule.html#a934bc3b47542dfe28d4df357f25143b4">KOKKOS_FUNCTION</a> <span class="keywordtype">double</span> <a class="code hl_function" href="structddc_1_1NullExtrapolationRule.html#a934bc3b47542dfe28d4df357f25143b4">operator</a>()(CoordType, ChunkSpan) <span class="keyword">const</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keywordflow">return</span> 0.0;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    }</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>};</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   12</span><span class="comment"> * @brief A functor describing a null extrapolation boundary value for 1D spline evaluator.</span></div>
+<div class="line"><span class="lineno">   13</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">struct</span> <a class="code hl_struct" href="structddc_1_1NullExtrapolationRule.html">NullExtrapolationRule</a></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   17</span><span class="comment">     * @brief Evaluates the spline at a coordinate outside of the domain.</span></div>
+<div class="line"><span class="lineno">   18</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   19</span><span class="comment">     * @return A double with the value of the function outside the domain (here, 0.).</span></div>
+<div class="line"><span class="lineno">   20</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> CoordType, <span class="keyword">class</span> ChunkSpan&gt;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <a class="code hl_function" href="structddc_1_1NullExtrapolationRule.html#a934bc3b47542dfe28d4df357f25143b4">KOKKOS_FUNCTION</a> <span class="keywordtype">double</span> <a class="code hl_function" href="structddc_1_1NullExtrapolationRule.html#a934bc3b47542dfe28d4df357f25143b4">operator</a>()(CoordType, ChunkSpan) <span class="keyword">const</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    {</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keywordflow">return</span> 0.0;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    }</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>};</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> aligned_allocator.hpp:11</div></div>
-<div class="ttc" id="astructddc_1_1NullExtrapolationRule_html"><div class="ttname"><a href="structddc_1_1NullExtrapolationRule.html">ddc::NullExtrapolationRule</a></div><div class="ttdef"><b>Definition</b> null_extrapolation_rule.hpp:12</div></div>
-<div class="ttc" id="astructddc_1_1NullExtrapolationRule_html_a934bc3b47542dfe28d4df357f25143b4"><div class="ttname"><a href="structddc_1_1NullExtrapolationRule.html#a934bc3b47542dfe28d4df357f25143b4">ddc::NullExtrapolationRule::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION double operator()(CoordType, ChunkSpan) const</div><div class="ttdef"><b>Definition</b> null_extrapolation_rule.hpp:14</div></div>
+<div class="ttc" id="astructddc_1_1NullExtrapolationRule_html"><div class="ttname"><a href="structddc_1_1NullExtrapolationRule.html">ddc::NullExtrapolationRule</a></div><div class="ttdoc">A functor describing a null extrapolation boundary value for 1D spline evaluator.</div><div class="ttdef"><b>Definition</b> null_extrapolation_rule.hpp:15</div></div>
+<div class="ttc" id="astructddc_1_1NullExtrapolationRule_html_a934bc3b47542dfe28d4df357f25143b4"><div class="ttname"><a href="structddc_1_1NullExtrapolationRule.html#a934bc3b47542dfe28d4df357f25143b4">ddc::NullExtrapolationRule::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION double operator()(CoordType, ChunkSpan) const</div><div class="ttdoc">Evaluates the spline at a coordinate outside of the domain.</div><div class="ttdef"><b>Definition</b> null_extrapolation_rule.hpp:22</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!--

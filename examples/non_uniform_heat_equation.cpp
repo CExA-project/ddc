@@ -3,28 +3,54 @@
 // SPDX-License-Identifier: MIT
 
 //! [includes]
+#include <algorithm>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <numeric>
+#include <random>
+#include <vector>
 
 #include <ddc/ddc.hpp>
 //! [includes]
 
+//! [vector_generator]
+std::vector<double> generate_random_vector(
+        int n,
+        int lower_bound,
+        int higher_bound)
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double>
+            dis(lower_bound, higher_bound);
+
+    std::vector<double> vec(n);
+    vec[0] = lower_bound;
+    vec[n - 1] = higher_bound;
+
+    for (int i = 1; i < vec.size() - 1; ++i) {
+        vec[i] = dis(gen);
+    }
+
+    std::sort(vec.begin(), vec.end());
+    return vec;
+}
+//! [vector_generator]
 
 //! [X-dimension]
 struct X;
 //! [X-dimension]
 
 //! [X-discretization]
-struct DDimX : ddc::UniformPointSampling<X>
+struct DDimX : ddc::NonUniformPointSampling<X>
 {
 };
 //! [X-discretization]
 
 //! [Y-space]
 struct Y;
-struct DDimY : ddc::UniformPointSampling<Y>
+struct DDimY : ddc::NonUniformPointSampling<Y>
 {
 };
 //! [Y-space]
@@ -37,16 +63,12 @@ struct DDimT : ddc::UniformPointSampling<T>
 //! [time-space]
 
 //! [display]
-
 /** A function to pretty print the temperature
  * @tparam ChunkType The type of chunk span. This way the template parameters are avoided,
  *                   should be deduced by the compiler.
  * @param time The time at which the output is made.
  * @param temp The temperature at this time-step.
  */
-
-//! [display]
-
 template <class ChunkType>
 void display(double time, ChunkType temp)
 {
@@ -112,38 +134,61 @@ int main(int argc, char** argv)
     std::ptrdiff_t const t_output_period = 10;
     //! [parameters]
 
-    //! [main-start]
+    //! [iterator_main-domain]
+    std::vector<double> x_domain_vect
+            = generate_random_vector(nb_x_points, x_start, x_end);
+    //! [iterator_main-domain]
 
-    //! [X-parameters]
-    ddc::DiscreteVector<DDimX> const gwx(1);
-    //! [X-parameters]
+    std::size_t size_x = x_domain_vect.size();
 
-    //! [X-global-domain]
+    //! [ghost_points_x]
+    std::vector<double> x_pre_ghost_vect {
+            x_domain_vect.front()
+            - (x_domain_vect.back() - x_domain_vect[size_x - 2])};
+
+    std::vector<double> x_post_ghost_vect {
+            x_domain_vect.back()
+            + (x_domain_vect[1] - x_domain_vect.front())};
+    //! [ghost_points_x]
+
+    //! [build-domains]
     auto const [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]
             = ddc::init_discrete_space<DDimX>(DDimX::init_ghosted<DDimX>(
-                    ddc::Coordinate<X>(x_start),
-                    ddc::Coordinate<X>(x_end),
-                    ddc::DiscreteVector<DDimX>(nb_x_points),
-                    gwx));
-    //! [X-global-domain]
+                    x_domain_vect,
+                    x_pre_ghost_vect,
+                    x_post_ghost_vect));
+    //! [build-domains]
 
-    //! [X-domains]
     ddc::DiscreteDomain<DDimX> const
             x_domain_begin(x_domain.front(), x_post_ghost.extents());
     ddc::DiscreteDomain<DDimX> const x_domain_end(
             x_domain.back() - x_pre_ghost.extents() + 1,
             x_pre_ghost.extents());
-    //! [X-domains]
 
-    //! [Y-domains]
-    ddc::DiscreteVector<DDimY> const gwy(1);
+    //! [Y-vectors]
+    std::vector<double> y_domain_vect
+            = generate_random_vector(nb_y_points, y_start, y_end);
 
+    std::size_t size_y = y_domain_vect.size();
+
+    //! [ghost_points_y]
+    std::vector<double> y_pre_ghost_vect {
+            y_domain_vect.front()
+            - (y_domain_vect.back() - y_domain_vect[size_y - 2])};
+    std::vector<double> y_post_ghost_vect {
+            y_domain_vect.back()
+            + (y_domain_vect[1] - y_domain_vect.front())};
+    //! [ghost_points_y]
+
+    //! [Y-vectors]
+
+    //! [build-Y-domain]
     auto const [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]
             = ddc::init_discrete_space<DDimY>(DDimY::init_ghosted<DDimY>(
-                    ddc::Coordinate<Y>(y_start),
-                    ddc::Coordinate<Y>(y_end),
-                    ddc::DiscreteVector<DDimY>(nb_y_points),
-                    gwy));
+                    y_domain_vect,
+                    y_pre_ghost_vect,
+                    y_post_ghost_vect));
+    //! [build-Y-domain]
 
     ddc::DiscreteDomain<DDimY> const
             y_domain_begin(y_domain.front(), y_post_ghost.extents());
@@ -151,22 +196,37 @@ int main(int argc, char** argv)
     ddc::DiscreteDomain<DDimY> const y_domain_end(
             y_domain.back() - y_pre_ghost.extents() + 1,
             y_pre_ghost.extents());
-    //! [Y-domains]
 
     //! [CFL-condition]
 
-    double const dx = ddc::step<DDimX>();
-    double const dy = ddc::step<DDimY>();
-    double const invdx2 = 1. / (dx * dx);
-    double const invdy2 = 1. / (dy * dy);
+    double const invdx2_max = ddc::transform_reduce(
+            x_domain,
+            0.,
+            ddc::reducer::max<double>(),
+            [](ddc::DiscreteElement<DDimX> ix) {
+                return 1.
+                       / (ddc::distance_at_left(ix)
+                          * ddc::distance_at_right(ix));
+            });
 
-    ddc::Coordinate<T> const dt(.5 / (kx * invdx2 + ky * invdy2));
+    double const invdy2_max = ddc::transform_reduce(
+            y_domain,
+            0.,
+            ddc::reducer::max<double>(),
+            [](ddc::DiscreteElement<DDimY> iy) {
+                return 1.
+                       / (ddc::distance_at_left(iy)
+                          * ddc::distance_at_right(iy));
+            });
+
+    ddc::Coordinate<T> const max_dt {
+            .5 / (kx * invdx2_max + ky * invdy2_max)};
 
     //! [CFL-condition]
 
     //! [time-domain]
     ddc::DiscreteVector<DDimT> const nb_time_steps(
-            std::ceil((end_time - start_time) / dt) + .2);
+            std::ceil((end_time - start_time) / max_dt) + .2);
 
     ddc::DiscreteDomain<DDimT> const time_domain
             = ddc::init_discrete_space<DDimT>(DDimT::init<DDimT>(
@@ -281,22 +341,29 @@ int main(int argc, char** argv)
                 next_temp.domain(),
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                    ddc::DiscreteElement<DDimX> const ix(ixy);
-                    ddc::DiscreteElement<DDimY> const iy(ixy);
-                    double const dt = ddc::step<DDimT>();
-
+                    ddc::DiscreteElement<DDimX> const ix
+                            = ddc::select<DDimX>(ixy);
+                    ddc::DiscreteElement<DDimY> const iy
+                            = ddc::select<DDimY>(ixy);
+                    double const dx_l = ddc::distance_at_left(ix);
+                    double const dx_r = ddc::distance_at_right(ix);
+                    double const dx_m = 0.5 * (dx_l + dx_r);
+                    double const dy_l = ddc::distance_at_left(iy);
+                    double const dy_r = ddc::distance_at_right(iy);
+                    double const dy_m = 0.5 * (dy_l + dy_r);
                     next_temp(ix, iy) = last_temp(ix, iy);
-                    next_temp(ix, iy) += kx * dt
-                                         * (last_temp(ix + 1, iy)
-                                            - 2.0 * last_temp(ix, iy)
-                                            + last_temp(ix - 1, iy))
-                                         * invdx2;
-
-                    next_temp(ix, iy) += ky * dt
-                                         * (last_temp(ix, iy + 1)
-                                            - 2.0 * last_temp(ix, iy)
-                                            + last_temp(ix, iy - 1))
-                                         * invdy2;
+                    next_temp(ix, iy)
+                            += kx * ddc::step<DDimT>()
+                               * (dx_l * last_temp(ix + 1, iy)
+                                  - 2.0 * dx_m * last_temp(ix, iy)
+                                  + dx_r * last_temp(ix - 1, iy))
+                               / (dx_l * dx_m * dx_r);
+                    next_temp(ix, iy)
+                            += ky * ddc::step<DDimT>()
+                               * (dy_l * last_temp(ix, iy + 1)
+                                  - 2.0 * dy_m * last_temp(ix, iy)
+                                  + dy_r * last_temp(ix, iy - 1))
+                               / (dy_l * dy_m * dy_r);
                 });
         //! [numerical scheme]
 

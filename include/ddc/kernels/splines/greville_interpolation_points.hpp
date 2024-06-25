@@ -127,6 +127,8 @@ public:
      * when uniform splines are used with an odd degree and with boundary conditions which
      * do not introduce additional interpolation points.
      *
+     * @tparam Sampling The discrete dimension supporting the Greville points.
+     *
      * @returns The mesh of uniform Greville points.
      */
     template <
@@ -142,6 +144,8 @@ public:
 
     /**
      * Get the NonUniformPointSampling defining the Greville points.
+     *
+     * @tparam Sampling The discrete dimension supporting the Greville points.
      *
      * @returns The mesh of non-uniform Greville points.
      */
@@ -261,6 +265,8 @@ public:
 
     /**
      * Get the domain which gives us access to all of the Greville points.
+     *
+     * @tparam Sampling The discrete dimension supporting the Greville points.
      *
      * @returns The domain of the Greville points.
      */

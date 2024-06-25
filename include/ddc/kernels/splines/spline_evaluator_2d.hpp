@@ -255,7 +255,7 @@ public:
      * @brief Copy-assigns.
      *
      * @param x A reference to another SplineEvaluator.
-     * @return A reference to the copied SplineEvaluator.
+     * @return A reference to this object.
      */
     SplineEvaluator2D& operator=(SplineEvaluator2D const& x) = default;
 
@@ -357,9 +357,7 @@ public:
      * Remark: calling SplineBuilder2D then SplineEvaluator2D corresponds to a 2D spline interpolation.
      *
      * @param[out] spline_eval The values of the 2D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 2D spline coefficients retained to perform the evaluation).
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
      * @param[in] coords_eval The coordinates where the spline is evaluated. Those are
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
@@ -588,9 +586,7 @@ public:
      * the differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 2D spline coefficients retained to perform the evaluation).
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
      * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
@@ -640,9 +636,7 @@ public:
      * the cross-differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * @param[out] spline_eval The cross-derivatives of the 2D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 2D spline coefficients retained to perform the evaluation).
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
      * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
@@ -693,9 +687,7 @@ public:
      *
      * @tparam InterestDim Dimension along which differentiation is performed.
      * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 2D spline coefficients retained to perform the evaluation).
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
      * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
@@ -746,9 +738,7 @@ public:
      * @tparam InterestDim2 Second dimension along which differentiation is performed.
      *
      * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 2D spline coefficients retained to perform the evaluation).
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
      * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
      * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select

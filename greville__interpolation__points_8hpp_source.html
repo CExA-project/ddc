@@ -179,157 +179,163 @@ $(document).ready(function(){initNavTree('greville__interpolation__points_8hpp_s
 <div class="line"><span class="lineno">  127</span><span class="comment">     * when uniform splines are used with an odd degree and with boundary conditions which</span></div>
 <div class="line"><span class="lineno">  128</span><span class="comment">     * do not introduce additional interpolation points.</span></div>
 <div class="line"><span class="lineno">  129</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  130</span><span class="comment">     * @returns The mesh of uniform Greville points.</span></div>
-<div class="line"><span class="lineno">  131</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keyword">template</span> &lt;</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            <span class="keyword">class</span> Sampling,</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            <span class="keyword">typename</span> U = BSplines,</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            std::enable_if_t&lt;</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                    is_uniform_mesh_v&lt;U&gt;,</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                    <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt; <span class="comment">// U must be in condition for SFINAE</span></div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_function" href="classddc_1_1GrevilleInterpolationPoints.html#ac8b8f3914b727b4032e4f655017f10e8">get_sampling</a>()</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    {</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        <span class="keywordflow">return</span> uniform_greville_points&lt;Sampling&gt;();</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    }</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  144</span><span class="comment">     * Get the NonUniformPointSampling defining the Greville points.</span></div>
-<div class="line"><span class="lineno">  145</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  146</span><span class="comment">     * @returns The mesh of non-uniform Greville points.</span></div>
-<div class="line"><span class="lineno">  147</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keyword">template</span> &lt;</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            <span class="keyword">class</span> Sampling,</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            <span class="keyword">typename</span> U = BSplines,</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            std::enable_if_t&lt;</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                    !is_uniform_mesh_v&lt;U&gt;,</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                    <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt; <span class="comment">// U must be in condition for SFINAE</span></div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_function" href="classddc_1_1GrevilleInterpolationPoints.html#ac8b8f3914b727b4032e4f655017f10e8">get_sampling</a>()</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    {</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        <span class="keyword">using</span> SamplingImpl = <span class="keyword">typename</span> Sampling::<span class="keyword">template</span> Impl&lt;Sampling, Kokkos::HostSpace&gt;;</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (U::is_uniform()) {</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            <span class="keyword">using</span> IntermediateSampling = IntermediateUniformSampling&lt;Sampling&gt;;</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="keyword">auto</span> points_wo_bcs = uniform_greville_points&lt;IntermediateSampling&gt;();</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> n_break_points = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().ncells() + 1;</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> npoints = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().nbasis() - N_BE_MIN - N_BE_MAX;</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            std::vector&lt;<span class="keywordtype">double</span>&gt; points_with_bcs(npoints);</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            <span class="comment">// Construct Greville-like points at the edge</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcXmin == <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumeration" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">BoundCond</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">GREVILLE</a>) {</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                <span class="keywordflow">for</span> (std::size_t i(0); i &lt; BSplines::degree() / 2 + 1; ++i) {</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                    points_with_bcs[i]</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                            = (BSplines::degree() - i) * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().rmin();</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines&gt; spline_idx(i);</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; n_knots_in_domain(i);</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; sub_domain(</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().get_last_support_knot(spline_idx)</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                                    - n_knots_in_domain,</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                            n_knots_in_domain);</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::for_each(</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                            sub_domain,</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                            [&amp;](DiscreteElement&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; ik) {</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                                points_with_bcs[i] += <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::coordinate(ik);</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                            });</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                    points_with_bcs[i] /= BSplines::degree();</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                }</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                points_with_bcs[0]</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                        = points_wo_bcs.coordinate(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;IntermediateSampling&gt;(0));</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>            }</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> n_start</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                    = (BcXmin == <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumeration" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">BoundCond</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">GREVILLE</a>) ? BSplines::degree() / 2 + 1 : 1;</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> domain_size = n_break_points - 2;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;IntermediateSampling&gt; domain_start(1);</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;IntermediateSampling&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                    domain(domain_start, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;IntermediateSampling&gt;(domain_size));</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            <span class="comment">// Copy central points</span></div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::for_each(domain, [&amp;](<span class="keyword">auto</span> ip) {</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                points_with_bcs[ip - domain_start + n_start] = points_wo_bcs.coordinate(ip);</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>            });</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            <span class="comment">// Construct Greville-like points at the edge</span></div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcXmax == <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumeration" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">BoundCond</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">GREVILLE</a>) {</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                <span class="keywordflow">for</span> (std::size_t i(0); i &lt; BSplines::degree() / 2 + 1; ++i) {</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                    points_with_bcs[npoints - 1 - i]</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                            = (BSplines::degree() - i) * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().rmax();</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines&gt; spline_idx(</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().nbasis() - 1 - i);</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; n_knots_in_domain(i);</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; sub_domain(</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().get_first_support_knot(spline_idx) + 1,</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                            n_knots_in_domain);</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::for_each(</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                            sub_domain,</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                            [&amp;](DiscreteElement&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; ik) {</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                                points_with_bcs[npoints - 1 - i] += <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::coordinate(ik);</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                            });</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                    points_with_bcs[npoints - 1 - i] /= BSplines::degree();</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                }</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                points_with_bcs[npoints - 1]</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                        = points_wo_bcs.coordinate(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;IntermediateSampling&gt;(</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().ncells() - 1</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                                + BSplines::degree() % 2));</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>            }</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>            <span class="keywordflow">return</span> SamplingImpl(points_with_bcs);</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            <span class="keyword">using</span> IntermediateSampling = IntermediateNonUniformSampling&lt;Sampling&gt;;</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (N_BE_MIN == 0 &amp;&amp; N_BE_MAX == 0) {</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                <span class="keywordflow">return</span> non_uniform_greville_points&lt;Sampling&gt;();</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                <span class="keyword">auto</span> points_wo_bcs = non_uniform_greville_points&lt;IntermediateSampling&gt;();</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                <span class="comment">// All points are Greville points. Extract unnecessary points near the boundary</span></div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                std::vector&lt;<span class="keywordtype">double</span>&gt; points_with_bcs(points_wo_bcs.size() - N_BE_MIN - N_BE_MAX);</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                <span class="keywordtype">int</span> <span class="keyword">constexpr</span> n_start = N_BE_MIN;</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                <span class="keyword">using</span> length = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;IntermediateSampling&gt;;</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;IntermediateSampling&gt; domain_start(n_start);</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;IntermediateSampling&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                        domain(domain_start, length(points_with_bcs.size()));</div>
+<div class="line"><span class="lineno">  130</span><span class="comment">     * @tparam Sampling The discrete dimension supporting the Greville points.</span></div>
+<div class="line"><span class="lineno">  131</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  132</span><span class="comment">     * @returns The mesh of uniform Greville points.</span></div>
+<div class="line"><span class="lineno">  133</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            <span class="keyword">class</span> Sampling,</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            <span class="keyword">typename</span> U = BSplines,</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            std::enable_if_t&lt;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                    is_uniform_mesh_v&lt;U&gt;,</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                    <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt; <span class="comment">// U must be in condition for SFINAE</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_function" href="classddc_1_1GrevilleInterpolationPoints.html#ac8b8f3914b727b4032e4f655017f10e8">get_sampling</a>()</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    {</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        <span class="keywordflow">return</span> uniform_greville_points&lt;Sampling&gt;();</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    }</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  146</span><span class="comment">     * Get the NonUniformPointSampling defining the Greville points.</span></div>
+<div class="line"><span class="lineno">  147</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  148</span><span class="comment">     * @tparam Sampling The discrete dimension supporting the Greville points.</span></div>
+<div class="line"><span class="lineno">  149</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  150</span><span class="comment">     * @returns The mesh of non-uniform Greville points.</span></div>
+<div class="line"><span class="lineno">  151</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            <span class="keyword">class</span> Sampling,</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            <span class="keyword">typename</span> U = BSplines,</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            std::enable_if_t&lt;</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                    !is_uniform_mesh_v&lt;U&gt;,</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                    <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt; <span class="comment">// U must be in condition for SFINAE</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_function" href="classddc_1_1GrevilleInterpolationPoints.html#ac8b8f3914b727b4032e4f655017f10e8">get_sampling</a>()</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    {</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="keyword">using</span> SamplingImpl = <span class="keyword">typename</span> Sampling::<span class="keyword">template</span> Impl&lt;Sampling, Kokkos::HostSpace&gt;;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (U::is_uniform()) {</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            <span class="keyword">using</span> IntermediateSampling = IntermediateUniformSampling&lt;Sampling&gt;;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            <span class="keyword">auto</span> points_wo_bcs = uniform_greville_points&lt;IntermediateSampling&gt;();</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> n_break_points = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().ncells() + 1;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> npoints = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().nbasis() - N_BE_MIN - N_BE_MAX;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            std::vector&lt;<span class="keywordtype">double</span>&gt; points_with_bcs(npoints);</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            <span class="comment">// Construct Greville-like points at the edge</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcXmin == <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumeration" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">BoundCond</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">GREVILLE</a>) {</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                <span class="keywordflow">for</span> (std::size_t i(0); i &lt; BSplines::degree() / 2 + 1; ++i) {</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                    points_with_bcs[i]</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                            = (BSplines::degree() - i) * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().rmin();</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines&gt; spline_idx(i);</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; n_knots_in_domain(i);</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; sub_domain(</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().get_last_support_knot(spline_idx)</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                                    - n_knots_in_domain,</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                            n_knots_in_domain);</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::for_each(</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                            sub_domain,</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                            [&amp;](DiscreteElement&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; ik) {</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                                points_with_bcs[i] += <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::coordinate(ik);</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                            });</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                    points_with_bcs[i] /= BSplines::degree();</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                }</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                points_with_bcs[0]</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                        = points_wo_bcs.coordinate(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;IntermediateSampling&gt;(0));</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>            }</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> n_start</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                    = (BcXmin == <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumeration" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">BoundCond</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">GREVILLE</a>) ? BSplines::degree() / 2 + 1 : 1;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> domain_size = n_break_points - 2;</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;IntermediateSampling&gt; domain_start(1);</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;IntermediateSampling&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                    domain(domain_start, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;IntermediateSampling&gt;(domain_size));</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            <span class="comment">// Copy central points</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::for_each(domain, [&amp;](<span class="keyword">auto</span> ip) {</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                points_with_bcs[ip - domain_start + n_start] = points_wo_bcs.coordinate(ip);</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            });</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            <span class="comment">// Construct Greville-like points at the edge</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcXmax == <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumeration" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">BoundCond</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">::</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9">GREVILLE</a>) {</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                <span class="keywordflow">for</span> (std::size_t i(0); i &lt; BSplines::degree() / 2 + 1; ++i) {</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                    points_with_bcs[npoints - 1 - i]</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                            = (BSplines::degree() - i) * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().rmax();</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines&gt; spline_idx(</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().nbasis() - 1 - i);</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; n_knots_in_domain(i);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; sub_domain(</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().get_first_support_knot(spline_idx) + 1,</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                            n_knots_in_domain);</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::for_each(</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                            sub_domain,</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                            [&amp;](DiscreteElement&lt;<a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;BSplines&gt;&gt; ik) {</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                                points_with_bcs[npoints - 1 - i] += <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::coordinate(ik);</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                            });</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                    points_with_bcs[npoints - 1 - i] /= BSplines::degree();</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                }</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                points_with_bcs[npoints - 1]</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                        = points_wo_bcs.coordinate(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;IntermediateSampling&gt;(</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().ncells() - 1</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                                + BSplines::degree() % 2));</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            }</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            <span class="keywordflow">return</span> SamplingImpl(points_with_bcs);</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>            <span class="keyword">using</span> IntermediateSampling = IntermediateNonUniformSampling&lt;Sampling&gt;;</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (N_BE_MIN == 0 &amp;&amp; N_BE_MAX == 0) {</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                <span class="keywordflow">return</span> non_uniform_greville_points&lt;Sampling&gt;();</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                <span class="keyword">auto</span> points_wo_bcs = non_uniform_greville_points&lt;IntermediateSampling&gt;();</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                <span class="comment">// All points are Greville points. Extract unnecessary points near the boundary</span></div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                std::vector&lt;<span class="keywordtype">double</span>&gt; points_with_bcs(points_wo_bcs.size() - N_BE_MIN - N_BE_MAX);</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                <span class="keywordtype">int</span> <span class="keyword">constexpr</span> n_start = N_BE_MIN;</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                <span class="keyword">using</span> length = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;IntermediateSampling&gt;;</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                points_with_bcs[0] = points_wo_bcs.coordinate(domain.front());</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::for_each(domain.remove(length(1), length(1)), [&amp;](<span class="keyword">auto</span> ip) {</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                    points_with_bcs[ip - domain_start] = points_wo_bcs.coordinate(ip);</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>                });</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                points_with_bcs[points_with_bcs.size() - 1]</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                        = points_wo_bcs.coordinate(domain.back());</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                <span class="keywordflow">return</span> SamplingImpl(points_with_bcs);</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            }</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        }</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    }</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  253</span><span class="comment">     * The type of the mesh.</span></div>
-<div class="line"><span class="lineno">  254</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  255</span><span class="comment">     * This is either NonUniformPointSampling or UniformPointSampling.</span></div>
-<div class="line"><span class="lineno">  256</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keyword">using</span> interpolation_mesh_type = std::conditional_t&lt;</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            is_uniform_mesh_v&lt;BSplines&gt;,</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt;tag_type&gt;,</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1NonUniformPointSampling.html">NonUniformPointSampling</a>&lt;tag_type&gt;&gt;;</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  263</span><span class="comment">     * Get the domain which gives us access to all of the Greville points.</span></div>
-<div class="line"><span class="lineno">  264</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  265</span><span class="comment">     * @returns The domain of the Greville points.</span></div>
-<div class="line"><span class="lineno">  266</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> Sampling&gt;</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="keyword">static</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;Sampling&gt; <a class="code hl_function" href="classddc_1_1GrevilleInterpolationPoints.html#a43b0872ca01bb5d4fd7e549be8a2ef27">get_domain</a>()</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    {</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        <span class="keywordtype">int</span> <span class="keyword">const</span> npoints = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().nbasis() - N_BE_MIN - N_BE_MAX;</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;Sampling&gt;(</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;Sampling&gt;(0),</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;Sampling&gt;(npoints));</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    }</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>};</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;IntermediateSampling&gt; domain_start(n_start);</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;IntermediateSampling&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                        domain(domain_start, length(points_with_bcs.size()));</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                points_with_bcs[0] = points_wo_bcs.coordinate(domain.front());</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::for_each(domain.remove(length(1), length(1)), [&amp;](<span class="keyword">auto</span> ip) {</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                    points_with_bcs[ip - domain_start] = points_wo_bcs.coordinate(ip);</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                });</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                points_with_bcs[points_with_bcs.size() - 1]</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                        = points_wo_bcs.coordinate(domain.back());</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                <span class="keywordflow">return</span> SamplingImpl(points_with_bcs);</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            }</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        }</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    }</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  257</span><span class="comment">     * The type of the mesh.</span></div>
+<div class="line"><span class="lineno">  258</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  259</span><span class="comment">     * This is either NonUniformPointSampling or UniformPointSampling.</span></div>
+<div class="line"><span class="lineno">  260</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keyword">using</span> interpolation_mesh_type = std::conditional_t&lt;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            is_uniform_mesh_v&lt;BSplines&gt;,</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1UniformPointSampling.html">UniformPointSampling</a>&lt;tag_type&gt;,</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1NonUniformPointSampling.html">NonUniformPointSampling</a>&lt;tag_type&gt;&gt;;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  267</span><span class="comment">     * Get the domain which gives us access to all of the Greville points.</span></div>
+<div class="line"><span class="lineno">  268</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  269</span><span class="comment">     * @tparam Sampling The discrete dimension supporting the Greville points.</span></div>
+<div class="line"><span class="lineno">  270</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  271</span><span class="comment">     * @returns The domain of the Greville points.</span></div>
+<div class="line"><span class="lineno">  272</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> Sampling&gt;</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keyword">static</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;Sampling&gt; <a class="code hl_function" href="classddc_1_1GrevilleInterpolationPoints.html#a43b0872ca01bb5d4fd7e549be8a2ef27">get_domain</a>()</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    {</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <span class="keywordtype">int</span> <span class="keyword">const</span> npoints = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().nbasis() - N_BE_MIN - N_BE_MAX;</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;Sampling&gt;(</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;Sampling&gt;(0),</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;Sampling&gt;(npoints));</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    }</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>};</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> discrete_domain.hpp:53</div></div>
 <div class="ttc" id="aclassddc_1_1GrevilleInterpolationPoints_html"><div class="ttname"><a href="classddc_1_1GrevilleInterpolationPoints.html">ddc::GrevilleInterpolationPoints</a></div><div class="ttdoc">A class which provides helper functions to initialise the Greville points from a B-Spline definition.</div><div class="ttdef"><b>Definition</b> greville_interpolation_points.hpp:28</div></div>
-<div class="ttc" id="aclassddc_1_1GrevilleInterpolationPoints_html_a43b0872ca01bb5d4fd7e549be8a2ef27"><div class="ttname"><a href="classddc_1_1GrevilleInterpolationPoints.html#a43b0872ca01bb5d4fd7e549be8a2ef27">ddc::GrevilleInterpolationPoints::get_domain</a></div><div class="ttdeci">static ddc::DiscreteDomain&lt; Sampling &gt; get_domain()</div><div class="ttdoc">Get the domain which gives us access to all of the Greville points.</div><div class="ttdef"><b>Definition</b> greville_interpolation_points.hpp:268</div></div>
-<div class="ttc" id="aclassddc_1_1GrevilleInterpolationPoints_html_ac8b8f3914b727b4032e4f655017f10e8"><div class="ttname"><a href="classddc_1_1GrevilleInterpolationPoints.html#ac8b8f3914b727b4032e4f655017f10e8">ddc::GrevilleInterpolationPoints::get_sampling</a></div><div class="ttdeci">static auto get_sampling()</div><div class="ttdoc">Get the UniformPointSampling defining the Greville points.</div><div class="ttdef"><b>Definition</b> greville_interpolation_points.hpp:138</div></div>
+<div class="ttc" id="aclassddc_1_1GrevilleInterpolationPoints_html_a43b0872ca01bb5d4fd7e549be8a2ef27"><div class="ttname"><a href="classddc_1_1GrevilleInterpolationPoints.html#a43b0872ca01bb5d4fd7e549be8a2ef27">ddc::GrevilleInterpolationPoints::get_domain</a></div><div class="ttdeci">static ddc::DiscreteDomain&lt; Sampling &gt; get_domain()</div><div class="ttdoc">Get the domain which gives us access to all of the Greville points.</div><div class="ttdef"><b>Definition</b> greville_interpolation_points.hpp:274</div></div>
+<div class="ttc" id="aclassddc_1_1GrevilleInterpolationPoints_html_ac8b8f3914b727b4032e4f655017f10e8"><div class="ttname"><a href="classddc_1_1GrevilleInterpolationPoints.html#ac8b8f3914b727b4032e4f655017f10e8">ddc::GrevilleInterpolationPoints::get_sampling</a></div><div class="ttdeci">static auto get_sampling()</div><div class="ttdoc">Get the UniformPointSampling defining the Greville points.</div><div class="ttdef"><b>Definition</b> greville_interpolation_points.hpp:140</div></div>
 <div class="ttc" id="aclassddc_1_1NonUniformPointSampling_html"><div class="ttname"><a href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a></div><div class="ttdoc">NonUniformPointSampling models a non-uniform discretization of the CDim segment .</div><div class="ttdef"><b>Definition</b> non_uniform_point_sampling.hpp:34</div></div>
 <div class="ttc" id="aclassddc_1_1UniformPointSampling_html"><div class="ttname"><a href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a></div><div class="ttdoc">UniformPointSampling models a uniform discretization of the provided continuous dimension.</div><div class="ttdef"><b>Definition</b> uniform_point_sampling.hpp:36</div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> aligned_allocator.hpp:11</div></div>

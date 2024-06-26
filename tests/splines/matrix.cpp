@@ -229,7 +229,7 @@ TEST(Matrix, 2x2Blocks)
     std::size_t const k = 10;
     std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> top_left_block
             = std::make_unique<
-                    ddc::detail::SplinesLinearProblemDense<Kokkos::DefaultExecutionSpace>>(3);
+                    ddc::detail::SplinesLinearProblemDense<Kokkos::DefaultExecutionSpace>>(7);
     std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
             = std::make_unique<ddc::detail::SplinesLinearProblem2x2Blocks<
                     Kokkos::DefaultExecutionSpace>>(N, std::move(top_left_block));
@@ -248,6 +248,31 @@ TEST(Matrix, 2x2Blocks)
     solve_and_validate(*matrix);
 }
 
+TEST(Matrix, 3x3Blocks)
+{
+    std::size_t const N = 10;
+    std::size_t const k = 10;
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> center_block
+            = std::make_unique<
+                    ddc::detail::SplinesLinearProblemDense<Kokkos::DefaultExecutionSpace>>(N - 5);
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = std::make_unique<ddc::detail::SplinesLinearProblem3x3Blocks<
+                    Kokkos::DefaultExecutionSpace>>(N, 2, std::move(center_block));
+
+    // Build a non-symmetric full-rank matrix (without zero)
+    for (std::size_t i(0); i < N; ++i) {
+        std::cout << i;
+        matrix->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+    }
+
+    solve_and_validate(*matrix);
+}
 
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
 {
@@ -324,6 +349,27 @@ TEST_P(MatrixSizesFixture, 2x2Blocks)
     std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
             = ddc::detail::SplinesLinearProblemMaker::make_new_block_matrix_with_band_main_block<
                     Kokkos::DefaultExecutionSpace>(N, k, k, false, 3);
+
+    // Build a non-symmetric full-rank band matrix
+    for (std::size_t i(0); i < N; ++i) {
+        matrix->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
+        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+        for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
+            matrix->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
+        }
+    }
+
+    solve_and_validate(*matrix);
+}
+
+TEST_P(MatrixSizesFixture, 3x3Blocks)
+{
+    auto const [N, k] = GetParam();
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> matrix
+            = ddc::detail::SplinesLinearProblemMaker::make_new_block_matrix_with_band_main_block<
+                    Kokkos::DefaultExecutionSpace>(N, k, k, false, 3, 2);
 
     // Build a non-symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {

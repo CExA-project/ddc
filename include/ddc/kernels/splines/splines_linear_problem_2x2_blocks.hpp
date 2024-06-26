@@ -50,7 +50,7 @@ public:
      * @brief SplinesLinearProblem2x2Blocks constructor.
      *
      * @param mat_size The size of one of the dimensions of the square matrix.
-     * @param top_left_block A pointer toward the top-left SplinesLinearProblem. `setup_solver` must not have been called on `q`.
+     * @param top_left_block A pointer toward the top-left SplinesLinearProblem. `setup_solver` must not have been called on `it`.
      */
     explicit SplinesLinearProblem2x2Blocks(
             std::size_t const mat_size,

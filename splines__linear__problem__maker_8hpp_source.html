@@ -146,33 +146,68 @@ $(document).ready(function(){initNavTree('splines__linear__problem__maker_8hpp_s
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    }</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   97</span><span class="comment">     * @brief Construct a sparse matrix</span></div>
-<div class="line"><span class="lineno">   98</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   99</span><span class="comment">     * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.</span></div>
-<div class="line"><span class="lineno">  100</span><span class="comment">     * @param n The size of one of the dimensions of the square matrix.</span></div>
-<div class="line"><span class="lineno">  101</span><span class="comment">     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size</span></div>
-<div class="line"><span class="lineno">  102</span><span class="comment">     * of a chunk of right-hand sides of the linear problem to be computed in parallel (chunks are treated</span></div>
-<div class="line"><span class="lineno">  103</span><span class="comment">     * by the linear solver one-after-the-other).</span></div>
-<div class="line"><span class="lineno">  104</span><span class="comment">     * This value is optional. If no value is provided then the default value is chosen by the requested solver.</span></div>
-<div class="line"><span class="lineno">  105</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  106</span><span class="comment">     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to</span></div>
-<div class="line"><span class="lineno">  107</span><span class="comment">     * define the size of a block used by the Block-Jacobi preconditioner.</span></div>
-<div class="line"><span class="lineno">  108</span><span class="comment">     * This value is optional. If no value is provided then the default value is chosen by the requested solver.</span></div>
+<div class="line"><span class="lineno">   97</span><span class="comment">     * @brief Construct a 2x2-blocks linear problem with band &quot;main&quot; block (the one called</span></div>
+<div class="line"><span class="lineno">   98</span><span class="comment">     * Q in SplinesLinearProblem2x2Blocks) and other blocks containing the &quot;periodic parts&quot; of</span></div>
+<div class="line"><span class="lineno">   99</span><span class="comment">     * a periodic band matrix.</span></div>
+<div class="line"><span class="lineno">  100</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  101</span><span class="comment">     * It simply calls make_new_block_matrix_with_band_main_block with bottom_size being</span></div>
+<div class="line"><span class="lineno">  102</span><span class="comment">     * max(kl, ku) (except if the allocation would be higher than instantiating a SplinesLinearProblemDense).</span></div>
+<div class="line"><span class="lineno">  103</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  104</span><span class="comment">     * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.</span></div>
+<div class="line"><span class="lineno">  105</span><span class="comment">     * @param n The size of one of the dimensions of the whole square matrix.</span></div>
+<div class="line"><span class="lineno">  106</span><span class="comment">     * @param kl The number of subdiagonals in the band block.</span></div>
+<div class="line"><span class="lineno">  107</span><span class="comment">     * @param ku The number of superdiagonals in the band block.</span></div>
+<div class="line"><span class="lineno">  108</span><span class="comment">     * @param pds A boolean indicating if the band block is positive-definite symetric or not.</span></div>
 <div class="line"><span class="lineno">  109</span><span class="comment">     *</span></div>
 <div class="line"><span class="lineno">  110</span><span class="comment">     * @return The SplinesLinearProblem instance.</span></div>
 <div class="line"><span class="lineno">  111</span><span class="comment">     */</span></div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ExecSpace&gt;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keyword">static</span> std::unique_ptr&lt;SplinesLinearProblem&lt;ExecSpace&gt;&gt; make_new_sparse(</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keyword">static</span> std::unique_ptr&lt;SplinesLinearProblem&lt;ExecSpace&gt;&gt; make_new_periodic_band_matrix(</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> n,</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            std::optional&lt;std::size_t&gt; cols_per_chunk = std::nullopt,</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            std::optional&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&gt; preconditionner_max_block_size = std::nullopt)</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    {</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemSparse&lt;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                ExecSpace&gt;&gt;(n, cols_per_chunk, preconditionner_max_block_size);</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    }</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>};</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>} <span class="comment">// namespace ddc::detail</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> kl,</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> ku,</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            <span class="keywordtype">bool</span> <span class="keyword">const</span> pds)</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    {</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        assert(kl &lt; n);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        assert(ku &lt; n);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keywordtype">int</span> <span class="keyword">const</span> bottom_size = std::max(kl, ku);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        <span class="keywordtype">int</span> <span class="keyword">const</span> top_size = n - bottom_size;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">if</span> (bottom_size * (n + top_size) + (2 * kl + ku + 1) * top_size &gt;= n * n) {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemDense&lt;ExecSpace&gt;&gt;(n);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        }</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordflow">return</span> make_new_block_matrix_with_band_main_block&lt;ExecSpace&gt;(n, kl, ku, pds, bottom_size);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    }</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  132</span><span class="comment">     * @brief Construct a sparse matrix</span></div>
+<div class="line"><span class="lineno">  133</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  134</span><span class="comment">     * @tparam the Kokkos::ExecutionSpace on which matrix-related operation will be performed.</span></div>
+<div class="line"><span class="lineno">  135</span><span class="comment">     * @param n The size of one of the dimensions of the square matrix.</span></div>
+<div class="line"><span class="lineno">  136</span><span class="comment">     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size</span></div>
+<div class="line"><span class="lineno">  137</span><span class="comment">     * of a chunk of right-hand sides of the linear problem to be computed in parallel (chunks are treated</span></div>
+<div class="line"><span class="lineno">  138</span><span class="comment">     * by the linear solver one-after-the-other).</span></div>
+<div class="line"><span class="lineno">  139</span><span class="comment">     * This value is optional. If no value is provided then the default value is chosen by the requested solver.</span></div>
+<div class="line"><span class="lineno">  140</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  141</span><span class="comment">     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to</span></div>
+<div class="line"><span class="lineno">  142</span><span class="comment">     * define the size of a block used by the Block-Jacobi preconditioner.</span></div>
+<div class="line"><span class="lineno">  143</span><span class="comment">     * This value is optional. If no value is provided then the default value is chosen by the requested solver.</span></div>
+<div class="line"><span class="lineno">  144</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  145</span><span class="comment">     * @return The SplinesLinearProblem instance.</span></div>
+<div class="line"><span class="lineno">  146</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ExecSpace&gt;</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keyword">static</span> std::unique_ptr&lt;SplinesLinearProblem&lt;ExecSpace&gt;&gt; make_new_sparse(</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> n,</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            std::optional&lt;std::size_t&gt; cols_per_chunk = std::nullopt,</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            std::optional&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&gt; preconditionner_max_block_size = std::nullopt)</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    {</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemSparse&lt;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                ExecSpace&gt;&gt;(n, cols_per_chunk, preconditionner_max_block_size);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    }</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>};</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>} <span class="comment">// namespace ddc::detail</span></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> aligned_allocator.hpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

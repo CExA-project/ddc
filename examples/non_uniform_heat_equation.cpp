@@ -17,8 +17,8 @@
 //! [vector_generator]
 std::vector<double> generate_random_vector(
         int n,
-        int lower_bound,
-        int higher_bound)
+        double lower_bound,
+        double higher_bound)
 {
     std::random_device rd;
     std::mt19937 gen(rd());

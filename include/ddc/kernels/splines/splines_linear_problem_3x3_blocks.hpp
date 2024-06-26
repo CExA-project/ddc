@@ -65,15 +65,17 @@ private:
     {
         std::size_t const nq = m_top_left_block->size(); // size of the center block
 
-        if (i < m_top_size)
+        if (i < m_top_size) {
             i += nq;
-        else if (i < m_top_size + nq)
+        } else if (i < m_top_size + nq) {
             i -= m_top_size;
+        }
 
-        if (j < m_top_size)
+        if (j < m_top_size) {
             j += nq;
-        else if (j < m_top_size + nq)
+        } else if (j < m_top_size + nq) {
             j -= m_top_size;
+        }
     }
 
 public:

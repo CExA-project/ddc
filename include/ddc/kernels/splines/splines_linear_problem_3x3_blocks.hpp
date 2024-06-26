@@ -159,7 +159,7 @@ public:
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
-     * Perform row interchanges on multiple right-hand sides to obtain a 2x2-blocks linear problem and call the SplinesLinearProblem2x2Blocks solver.  
+     * Perform row interchanges on multiple right-hand sides to obtain a 2x2-blocks linear problem and call the SplinesLinearProblem2x2Blocks solver.
      *
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.

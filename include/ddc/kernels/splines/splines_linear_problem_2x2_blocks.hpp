@@ -50,7 +50,7 @@ public:
      * @brief SplinesLinearProblem2x2Blocks constructor.
      *
      * @param mat_size The size of one of the dimensions of the square matrix.
-     * @param top_left_block A pointer toward the top-left SplinesLinearProblem. `setup_solver` must not have been called on it.
+     * @param top_left_block A pointer toward the top-left SplinesLinearProblem. `setup_solver` must not have been called on `q`.
      */
     explicit SplinesLinearProblem2x2Blocks(
             std::size_t const mat_size,
@@ -65,34 +65,6 @@ public:
                   "bottom_left_block",
                   mat_size - m_top_left_block->size(),
                   m_top_left_block->size())
-        , m_bottom_right_block(
-                  new SplinesLinearProblemDense<ExecSpace>(mat_size - m_top_left_block->size()))
-    {
-        assert(m_top_left_block->size() <= mat_size);
-
-        Kokkos::deep_copy(m_top_right_block.h_view, 0.);
-        Kokkos::deep_copy(m_bottom_left_block.h_view, 0.);
-    }
-
-protected:
-    /**
-     * @brief SplinesLinearProblem2x2Blocks constructor.
-     *
-     * @param mat_size The size of one of the dimensions of the square matrix.
-     * @param q A pointer toward the top-left SplinesLinearProblem.
-     */
-    explicit SplinesLinearProblem2x2Blocks(
-            std::size_t const mat_size,
-            std::unique_ptr<SplinesLinearProblem<ExecSpace>> top_left_block,
-            std::size_t const lambda_size1,
-            std::size_t const lambda_size2)
-        : SplinesLinearProblem<ExecSpace>(mat_size)
-        , m_top_left_block(std::move(top_left_block))
-        , m_top_right_block(
-                  "top_right_block",
-                  m_top_left_block->size(),
-                  mat_size - m_top_left_block->size())
-        , m_bottom_left_block("bottom_left_block", lambda_size1, lambda_size2)
         , m_bottom_right_block(
                   new SplinesLinearProblemDense<ExecSpace>(mat_size - m_top_left_block->size()))
     {
@@ -201,7 +173,7 @@ public:
      * @param LinOp
      * @param transpose
      */
-    virtual void gemv_minus1_1(
+    void gemv_minus1_1(
             MultiRHS const x,
             MultiRHS const y,
             Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> const

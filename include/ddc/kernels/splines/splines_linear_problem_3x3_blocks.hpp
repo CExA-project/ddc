@@ -132,7 +132,7 @@ private:
      *
      * @param b The multiple right-hand sides.
      */
-    void interchange_rows_from_2_to_3_blocks_rhs(MultiRHS b) const
+    void interchange_rows_from_2_to_3_blocks_rhs(MultiRHS const b) const
     {
         std::size_t const nq = m_top_left_block->size(); // size of the center block
 

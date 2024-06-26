@@ -406,17 +406,13 @@ public:
             ddc::ChunkSpan<double, batched_spline_domain_type, Layout, memory_space> spline,
             ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space>
                     vals,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type,
-                    Layout,
-                    memory_space>> const derivs_xmin
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type, Layout, memory_space>>
+                    derivs_xmin
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type,
-                    Layout,
-                    memory_space>> const derivs_xmax
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type, Layout, memory_space>>
+                    derivs_xmax
             = std::nullopt) const;
 
 private:

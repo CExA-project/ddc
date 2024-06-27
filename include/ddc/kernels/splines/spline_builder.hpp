@@ -772,6 +772,7 @@ operator()(
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
+                "ddc_splines_hermite_compute_lower_coefficients",
                 exec_space(),
                 batch_domain(),
                 KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
@@ -808,6 +809,7 @@ operator()(
         auto derivs_xmax_values = *derivs_xmax;
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
+                "ddc_splines_hermite_compute_upper_coefficients",
                 exec_space(),
                 batch_domain(),
                 KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
@@ -895,6 +897,7 @@ operator()(
     matrix->solve(spline_tr_view);
     // Transpose back spline_tr into spline_tr_src_view
     ddc::parallel_for_each(
+            "ddc_splines_transpose_back_rhs",
             exec_space(),
             batch_domain(),
             KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
@@ -904,9 +907,10 @@ operator()(
                 }
             });
 
-    // Not sure yet of what this part do
+    // Duplicate the lower spline coefficients to the upper side in case of periodic boundaries
     if (bsplines_type::is_periodic()) {
         ddc::parallel_for_each(
+                "ddc_splines_periodic_rows_duplicate_rhs",
                 exec_space(),
                 batch_domain(),
                 KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {

@@ -195,19 +195,19 @@ private:
     /// Build a LayoutStride to be used by SplineBuilder::operator() for internal transposition
     std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> build_spline_tr_src_layouts();
 
-    Kokkos::LayoutStride spline_tr_src_layout(Kokkos::LayoutLeft arg_layout) const
+    Kokkos::LayoutStride spline_tr_src_layout([[maybe_unused]] Kokkos::LayoutLeft layout) const
     {
         return std::get<0>(m_spline_tr_src_layouts);
     }
 
-    Kokkos::LayoutStride spline_tr_src_layout(Kokkos::LayoutRight arg_layout) const
+    Kokkos::LayoutStride spline_tr_src_layout([[maybe_unused]] Kokkos::LayoutRight layout) const
     {
         return std::get<1>(m_spline_tr_src_layouts);
     }
 
-    Kokkos::LayoutStride spline_tr_src_layout(Kokkos::LayoutStride arg_layout) const
+    Kokkos::LayoutStride spline_tr_src_layout(Kokkos::LayoutStride layout) const
     {
-        return arg_layout;
+        return layout;
     }
 
 public:

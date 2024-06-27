@@ -831,39 +831,40 @@ operator()(
             ddc::DiscreteElement<bsplines_type>(m_offset),
             ddc::DiscreteVector<bsplines_type>(ddc::discrete_space<bsplines_type>().nbasis()))];
 
-    // Create a Kokkos::View of spline_tr_src
-    auto spline_tr_src_view = spline_tr_src.allocation_kokkos_view();
-
     // Reorder dimensions of spline_tr_src_view to allow the deep copies between splines_tr_src and splines_tr (layout may not be preserved).
     Kokkos::View<
             ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
             Kokkos::LayoutStride,
             exec_space>
-            spline_tr_src_view_strided;
+            spline_tr_src_view;
     // Create a LayoutStride view if it is not already the case, we need the stride to be defined to perform the transposition
-    if constexpr (!std::is_same_v<decltype(spline_tr_src_view.layout()), Kokkos::LayoutStride>) {
+    if constexpr (!std::is_same_v<
+                          decltype(spline_tr_src.allocation_kokkos_view().layout()),
+                          Kokkos::LayoutStride>) {
         std::size_t dims_order[sizeof...(IDimX)];
         for (int i = 0; i < sizeof...(IDimX); ++i) {
-            dims_order[i]
-                    = std::is_same_v<decltype(spline_tr_src_view.layout()), Kokkos::LayoutLeft>
-                              ? i
-                              : sizeof...(IDimX) - i - 1;
+            dims_order[i] = std::is_same_v<
+                                    decltype(spline_tr_src.allocation_kokkos_view()
+                                                     .spline_tr_src_view.layout()),
+                                    Kokkos::LayoutLeft>
+                                    ? i
+                                    : sizeof...(IDimX) - i - 1;
         }
 
-        spline_tr_src_view_strided = Kokkos::View<
+        spline_tr_src_view = Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
                 Kokkos::LayoutStride,
                 exec_space>(
-                spline_tr_src_view.data(),
+                spline_tr_src.data_handle(),
                 Kokkos::LayoutStride::order_dimensions(
                         sizeof...(IDimX),
                         dims_order,
-                        spline_tr_src_view.layout().dimension));
+                        spline_tr_src.allocation_kokkos_view().layout().dimension));
     } else {
-        spline_tr_src_view_strided = spline_tr_src_view;
+        spline_tr_src_view = spline_tr_src.allocation_kokkos_view();
     }
     // Swap extents and strides to allow the deep copies between spline_tr_src_view and spline_tr
-    Kokkos::LayoutStride layout = spline_tr_src_view_strided.layout();
+    Kokkos::LayoutStride layout = spline_tr_src_view.layout();
     std::
             swap(layout.dimension[ddc::type_seq_rank_v<
                          bsplines_type,
@@ -878,13 +879,13 @@ operator()(
                  layout.stride[ddc::type_seq_rank_v<
                          bsplines_type,
                          ddc::to_type_seq_t<batched_spline_tr_domain_type>>]);
-    spline_tr_src_view_strided = Kokkos::View<
+    spline_tr_src_view = Kokkos::View<
             ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
             Kokkos::LayoutStride,
-            exec_space>(spline_tr_src_view_strided.data(), layout);
+            exec_space>(spline_tr_src_view.data(), layout);
 
     // Transpose spline_tr_src_view into spline_tr
-    Kokkos::deep_copy(spline_tr.allocation_kokkos_view(), spline_tr_src_view_strided);
+    Kokkos::deep_copy(spline_tr.allocation_kokkos_view(), spline_tr_src_view);
 
     // Create a 2D Kokkos::View to see spline_tr as a matrix
     Kokkos::View<double**, Kokkos::LayoutRight, exec_space> spline_tr_view(
@@ -895,7 +896,7 @@ operator()(
     matrix->solve(spline_tr_view);
 
     // Transpose back spline_tr into spline_tr_src_view
-    Kokkos::deep_copy(spline_tr_src_view_strided, spline_tr.allocation_kokkos_view());
+    Kokkos::deep_copy(spline_tr_src_view, spline_tr.allocation_kokkos_view());
 
     // Duplicate the lower spline coefficients to the upper side in case of periodic boundaries
     auto const& offset_proxy = m_offset;

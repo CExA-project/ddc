@@ -777,27 +777,26 @@ operator()(
                 });
     }
 
-    // TODO : Consider optimizing
     // Fill spline with vals (to work in spline afterward and preserve vals)
-    auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
-    auto const& offset_proxy = m_offset;
-    auto const& interp_size_proxy = interpolation_domain().extents();
     ddc::parallel_fill(
             spline[ddc::DiscreteDomain<bsplines_type>(
                     ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
                     ddc::DiscreteVector<bsplines_type>(m_offset))],
             0.);
+    // Rely on Kokkos::deep_copy because ddc::parallel_deepcopy do not support
+    // different domain-typed Chunks.
     Kokkos::deep_copy(
-            spline[batched_spline_domain().restrict(ddc::DiscreteDomain<bsplines_type>(
+            spline[ddc::DiscreteDomain<bsplines_type>(
                            ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + m_offset),
                            ddc::DiscreteVector<bsplines_type>(static_cast<std::size_t>(
-                                   vals.domain().template extent<interpolation_mesh_type>()))))]
+                                   vals.domain().template extent<interpolation_mesh_type>())))]
                     .allocation_kokkos_view(),
-            vals.allocation_kokkos_view());
+            vals.allocation_kokkos_view()); //
 
     // Hermite boundary conditions at xmax, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
+    auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     if constexpr (BcXmax == BoundCond::HERMITE) {
         assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
         auto derivs_xmax_values = *derivs_xmax;
@@ -817,6 +816,8 @@ operator()(
 
     // TODO : Consider optimizing
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
+    auto const& offset_proxy = m_offset;
+    auto const& interp_size_proxy = interpolation_domain().extents();
     ddc::Chunk spline_tr_alloc(
             batched_spline_tr_domain(),
             ddc::KokkosAllocator<double, memory_space>());

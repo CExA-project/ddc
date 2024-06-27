@@ -325,8 +325,6 @@ private:
      *
      * This is used internally due to solver limitation and because it may be beneficial to computation performance.
      *
-     * It also ignores the nbc_xmin + nbc_xmax lines related to boundaries. 
-     *
      * @return The (transposed) domain for the spline coefficients.
      */
     batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
@@ -823,8 +821,6 @@ operator()(
     }
 
     // Allocate a Chunk to receive a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
-    auto const& offset_proxy = m_offset;
-    auto const& interp_size_proxy = interpolation_domain().extents();
     ddc::Chunk spline_tr_alloc(
             batched_spline_tr_domain(),
             ddc::KokkosAllocator<double, memory_space>());
@@ -902,6 +898,7 @@ operator()(
     Kokkos::deep_copy(spline_tr_src_view_strided, spline_tr.allocation_kokkos_view());
 
     // Duplicate the lower spline coefficients to the upper side in case of periodic boundaries
+    auto const& offset_proxy = m_offset;
     if (bsplines_type::is_periodic()) {
         ddc::parallel_for_each(
                 "ddc_splines_periodic_rows_duplicate_rhs",

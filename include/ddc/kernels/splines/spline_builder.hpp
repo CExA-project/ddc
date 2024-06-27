@@ -886,7 +886,8 @@ operator()(
                 });
     }
 
-    // Allocate a Chunk to receive a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
+    // Allocate a Chunk to receive a transposed version of spline in order to get dimension of interest
+    // as last dimension (optimal for GPU, necessary for Ginkgo)
     ddc::Chunk spline_tr_alloc(
             batched_spline_tr_domain(),
             ddc::KokkosAllocator<double, memory_space>());
@@ -897,26 +898,16 @@ operator()(
             ddc::DiscreteElement<bsplines_type>(m_offset),
             ddc::DiscreteVector<bsplines_type>(ddc::discrete_space<bsplines_type>().nbasis()))];
 
-    // Reorder dimensions of spline_tr_src_view to allow the deep copies between splines_tr_src and splines_tr (layout may not be preserved).
+    // Define a Kokkos::View to represent a dimensions-reordered version of spline_tr_src and permit the deep copies
+    // between spline_tr_src and spline_tr
     Kokkos::View<
             ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
             Kokkos::LayoutStride,
             exec_space>
-            spline_tr_src_view;
-    // Create a LayoutStride view if it is not already the case, we need the stride to be defined to perform the transposition
-    if constexpr (!std::is_same_v<
-                          decltype(spline_tr_src.allocation_kokkos_view().layout()),
-                          Kokkos::LayoutStride>) {
-        spline_tr_src_view = Kokkos::View<
-                ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
-                Kokkos::LayoutStride,
-                exec_space>(
-                spline_tr_src.data_handle(),
-                spline_tr_src_layout(spline_tr_src.allocation_kokkos_view().layout()));
-    } else {
-        spline_tr_src_view = spline_tr_src.allocation_kokkos_view();
-    }
-    // Swap extents and strides to allow the deep copies between spline_tr_src_view and spline_tr
+            spline_tr_src_view(
+                    spline_tr_src.data_handle(),
+                    spline_tr_src_layout(spline_tr_src.allocation_kokkos_view().layout()));
+    // Swap extents and strides
     Kokkos::LayoutStride layout = spline_tr_src_view.layout();
     int const index
             = ddc::type_seq_rank_v<bsplines_type, ddc::to_type_seq_t<batched_spline_domain_type>>;

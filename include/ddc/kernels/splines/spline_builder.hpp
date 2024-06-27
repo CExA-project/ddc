@@ -779,9 +779,28 @@ operator()(
 
     // TODO : Consider optimizing
     // Fill spline with vals (to work in spline afterward and preserve vals)
-    auto const& offset_proxy = m_offset;
-    auto const& interp_size_proxy = interpolation_domain().extents();
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
+    ddc::parallel_fill(
+            spline[batched_spline_domain_type(
+                    ddc::DiscreteDomain<bsplines_type>(
+                            ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
+                            ddc::DiscreteVector<bsplines_type>(m_offset)),
+                    batch_domain())],
+            0.);
+    ddc::parallel_deepcopy(
+            spline[batched_spline_domain_type(
+                    ddc::DiscreteDomain<bsplines_type>(
+                            ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + m_offset),
+                            ddc::DiscreteVector<bsplines_type>(
+                                    interpolation_domain().extents().size())),
+                    batch_domain())],
+            vals[batched_interpolation_domain_type(
+                    ddc::DiscreteDomain<interpolation_mesh_type>(
+                            ddc::DiscreteElement<interpolation_mesh_type>(0),
+                            ddc::DiscreteVector<interpolation_mesh_type>(
+                                    interpolation_domain().extents().size())),
+                    batch_domain())]);
+    /*
     ddc::parallel_for_each(
             exec_space(),
             batch_domain(),
@@ -794,10 +813,13 @@ operator()(
                             = vals(ddc::DiscreteElement<interpolation_mesh_type>(i), j);
                 }
             });
+            */
 
     // Hermite boundary conditions at xmax, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
+    auto const& offset_proxy = m_offset;
+    auto const& interp_size_proxy = interpolation_domain().extents();
     if constexpr (BcXmax == BoundCond::HERMITE) {
         assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
         auto derivs_xmax_values = *derivs_xmax;

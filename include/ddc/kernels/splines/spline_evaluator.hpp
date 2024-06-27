@@ -342,7 +342,7 @@ public:
         batch_domain_type const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
-                "ddc_splines_derivate",
+                "ddc_splines_differentiate",
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {

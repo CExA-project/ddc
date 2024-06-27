@@ -791,7 +791,7 @@ operator()(
                            ddc::DiscreteVector<bsplines_type>(static_cast<std::size_t>(
                                    vals.domain().template extent<interpolation_mesh_type>())))]
                     .allocation_kokkos_view(),
-            vals.allocation_kokkos_view()); //
+            vals.allocation_kokkos_view());
 
     // Hermite boundary conditions at xmax, if any
     // NOTE: For consistency with the linear system, the i-th derivative

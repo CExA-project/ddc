@@ -123,18 +123,9 @@ private:
 
         MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_center);
 
-        Kokkos::deep_copy(
-                "ddc_splines_interchange_rows_from_3_to_2_blocks_rhs_step_1",
-                buffer,
-                b_center);
-        Kokkos::deep_copy(
-                "ddc_splines_interchange_rows_from_3_to_2_blocks_rhs_step_2",
-                b_top_dst,
-                b_top);
-        Kokkos::deep_copy(
-                "ddc_splines_interchange_rows_from_3_to_2_blocks_rhs_step_3",
-                b_center_dst,
-                buffer);
+        Kokkos::deep_copy(buffer, b_center);
+        Kokkos::deep_copy(b_top_dst, b_top);
+        Kokkos::deep_copy(b_center_dst, buffer);
     }
 
     /**
@@ -167,18 +158,9 @@ private:
 
         MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_center);
 
-        Kokkos::deep_copy(
-                "ddc_splines_interchange_rows_from_2_to_3_blocks_rhs_step_1",
-                buffer,
-                b_center_src);
-        Kokkos::deep_copy(
-                "ddc_splines_interchange_rows_from_2_to_3_blocks_rhs_step_2",
-                b_top,
-                b_top_src);
-        Kokkos::deep_copy(
-                "ddc_splines_interchange_rows_from_2_to_3_blocks_rhs_step_3",
-                b_center,
-                buffer);
+        Kokkos::deep_copy(buffer, b_center_src);
+        Kokkos::deep_copy(b_top, b_top_src);
+        Kokkos::deep_copy(b_center, buffer);
     }
 
 public:

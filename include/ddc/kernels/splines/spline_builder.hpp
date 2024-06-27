@@ -864,20 +864,10 @@ operator()(
     }
     // Swap extents and strides to allow the deep copies between spline_tr_src_view and spline_tr
     Kokkos::LayoutStride layout = spline_tr_src_view.layout();
-    std::
-            swap(layout.dimension[ddc::type_seq_rank_v<
-                         bsplines_type,
-                         ddc::to_type_seq_t<batched_spline_domain_type>>],
-                 layout.dimension[ddc::type_seq_rank_v<
-                         bsplines_type,
-                         ddc::to_type_seq_t<batched_spline_tr_domain_type>>]);
-    std::
-            swap(layout.stride[ddc::type_seq_rank_v<
-                         bsplines_type,
-                         ddc::to_type_seq_t<batched_spline_domain_type>>],
-                 layout.stride[ddc::type_seq_rank_v<
-                         bsplines_type,
-                         ddc::to_type_seq_t<batched_spline_tr_domain_type>>]);
+    int const index
+            = ddc::type_seq_rank_v<bsplines_type, ddc::to_type_seq_t<batched_spline_domain_type>>;
+    std::rotate(layout.dimension, layout.dimension + index, layout.dimension + index + 1);
+    std::rotate(layout.stride, layout.stride + index, layout.stride + index + 1);
     spline_tr_src_view = Kokkos::View<
             ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
             Kokkos::LayoutStride,

@@ -262,7 +262,7 @@ public:
                             Kokkos::ALL,
                             Kokkos::pair(std::size_t(0), subview_end - subview_begin));
 
-            Kokkos::deep_copy(x_chunk, b_chunk);
+            Kokkos::deep_copy("ddc_splines_copy_to_chunk_of_cols", x_chunk, b_chunk);
 
             if (!transpose) {
                 m_solver->add_logger(convergence_logger);
@@ -280,7 +280,7 @@ public:
                         "Ginkgo did not converged in ddc::detail::SplinesLinearProblemSparse");
             }
 
-            Kokkos::deep_copy(b_chunk, x_chunk);
+            Kokkos::deep_copy("ddc_splines_copy_back_from_chunk_of_cols", b_chunk, x_chunk);
         }
     }
 };

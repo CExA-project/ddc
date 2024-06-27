@@ -818,7 +818,7 @@ operator()(
                 });
     }
 
-    // TODO : Consider optimizing. I think it could be written with deepcopy and subview.
+    // TODO : Consider optimizing.
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo). Also select only relevant rows in case of periodic boundaries
     ddc::Chunk spline_tr_alloc(
             batched_spline_tr_domain(),

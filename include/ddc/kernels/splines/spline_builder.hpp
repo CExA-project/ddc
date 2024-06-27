@@ -325,11 +325,17 @@ private:
      *
      * This is used internally due to solver limitation and because it may be beneficial to computation performance.
      *
+     * It also ignores the nbc_xmin + nbc_xmax lines related to boundaries. 
+     *
      * @return The (transposed) domain for the spline coefficients.
      */
     batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
     {
-        return batched_spline_tr_domain_type(spline_domain(), batch_domain());
+        return batched_spline_tr_domain_type(
+                batched_spline_domain().restrict(ddc::DiscreteDomain<bsplines_type>(
+                        ddc::DiscreteElement<bsplines_type>(0),
+                        ddc::DiscreteVector<bsplines_type>(
+                                ddc::discrete_space<bsplines_type>().nbasis()))));
     }
 
 public:
@@ -822,22 +828,29 @@ operator()(
             batched_spline_tr_domain(),
             ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
-    ddc::parallel_for_each(
-            exec_space(),
-            batch_domain(),
-            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                for (std::size_t i = 0; i < nbasis_proxy; i++) {
-                    spline_tr(ddc::DiscreteElement<bsplines_type>(i), j)
-                            = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
-                }
-            });
+
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
-    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
+    ddc::ChunkSpan subspline_to_transpose = spline[ddc::DiscreteDomain<bsplines_type>(
+                                   ddc::DiscreteElement<bsplines_type>(m_offset),
+                                   ddc::DiscreteVector<bsplines_type>(
+                                           ddc::discrete_space<bsplines_type>().nbasis()))];
+    Kokkos::View<
+            ddc::detail::
+                    mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
+            decltype(subspline_to_transpose.allocation_kokkos_view().layout()),
+            exec_space>
+            spline_view_to_transpose(
+                    spline.data_handle(),
+                   subspline_to_transpose 
+                            .allocation_kokkos_view()
+                            .layout());
+    Kokkos::deep_copy(spline_tr.allocation_kokkos_view(), spline_view_to_transpose);
+    // Compute spline coef
+    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> spline_tr_view(
             spline_tr.data_handle(),
             ddc::discrete_space<bsplines_type>().nbasis(),
             batch_domain().size());
-    // Compute spline coef
-    matrix->solve(bcoef_section);
+    matrix->solve(spline_tr_view);
     // Transpose back spline_tr in spline
     ddc::parallel_for_each(
             exec_space(),

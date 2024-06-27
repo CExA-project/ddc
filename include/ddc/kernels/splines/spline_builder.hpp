@@ -478,7 +478,7 @@ std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> SplineBuilder<
 
     std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> layouts;
 
-    // Create a LayoutStride view if it is not already the case, we need the stride to be defined to perform the transposition
+    // Convert LayoutRight and LayoutLeft to LayoutStride
     std::size_t dims_order_left[sizeof...(IDimX)];
     std::size_t dims_order_right[sizeof...(IDimX)];
     for (int i = 0; i < sizeof...(IDimX); ++i) {
@@ -490,7 +490,6 @@ std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> SplineBuilder<
                                              std::is_same_v<IDimX, interpolation_mesh_type>,
                                              bsplines_type,
                                              IDimX>>())...};
-
     std::get<0>(layouts)
             = Kokkos::LayoutStride::order_dimensions(sizeof...(IDimX), dims_order_left, extents);
     std::get<1>(layouts)

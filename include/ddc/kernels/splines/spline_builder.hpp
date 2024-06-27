@@ -184,11 +184,16 @@ private:
 
     double m_dx; // average cell size for normalization of derivatives
 
+    std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> m_spline_tr_src_layouts;
+
     // interpolator specific
     std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> matrix;
 
     /// Calculate offset so that the matrix is diagonally dominant
     int compute_offset(interpolation_domain_type const& interpolation_domain);
+
+    /// Build a LayoutStride to be used by SplineBuilder::operator() for internal transposition
+    std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> build_spline_tr_src_layouts();
 
 public:
     /**
@@ -215,6 +220,7 @@ public:
         , m_offset(compute_offset(interpolation_domain()))
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                / ddc::discrete_space<BSplines>().ncells())
+        , m_spline_tr_src_layouts(build_spline_tr_src_layouts())
     {
         static_assert(
                 ((BcXmin == BoundCond::PERIODIC) == (BcXmax == BoundCond::PERIODIC)),
@@ -432,6 +438,51 @@ private:
 
     void build_matrix_system();
 };
+
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class InterpolationMesh,
+        ddc::BoundCond BcXmin,
+        ddc::BoundCond BcXmax,
+        SplineSolver Solver,
+        class... IDimX>
+std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationMesh,
+        BcXmin,
+        BcXmax,
+        Solver,
+        IDimX...>::build_spline_tr_src_layouts()
+{
+    // Build the domain on which spline_tr_src is defined
+    batched_spline_domain_type spline_tr_src_domain(batched_spline_tr_domain());
+
+    std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> layouts;
+
+    // Create a LayoutStride view if it is not already the case, we need the stride to be defined to perform the transposition
+    std::size_t dims_order_left[sizeof...(IDimX)];
+    std::size_t dims_order_right[sizeof...(IDimX)];
+    for (int i = 0; i < sizeof...(IDimX); ++i) {
+        dims_order_left[i] = i;
+        dims_order_right[i] = sizeof...(IDimX) - i - 1;
+    }
+    std::size_t extents[sizeof...(IDimX)] {
+            static_cast<std::size_t>(spline_tr_src_domain.template extent<std::conditional_t<
+                                             std::is_same_v<IDimX, interpolation_mesh_type>,
+                                             bsplines_type,
+                                             IDimX>>())...};
+
+    std::get<0>(layouts)
+            = Kokkos::LayoutStride::order_dimensions(sizeof...(IDimX), dims_order_left, extents);
+    std::get<1>(layouts)
+            = Kokkos::LayoutStride::order_dimensions(sizeof...(IDimX), dims_order_right, extents);
+
+    return layouts;
+}
 
 template <
         class ExecSpace,
@@ -841,24 +892,17 @@ operator()(
     if constexpr (!std::is_same_v<
                           decltype(spline_tr_src.allocation_kokkos_view().layout()),
                           Kokkos::LayoutStride>) {
-        std::size_t dims_order[sizeof...(IDimX)];
-        for (int i = 0; i < sizeof...(IDimX); ++i) {
-            dims_order[i] = std::is_same_v<
-                                    decltype(spline_tr_src.allocation_kokkos_view().layout()),
-                                    Kokkos::LayoutLeft>
-                                    ? i
-                                    : sizeof...(IDimX) - i - 1;
-        }
-
         spline_tr_src_view = Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
                 Kokkos::LayoutStride,
                 exec_space>(
                 spline_tr_src.data_handle(),
-                Kokkos::LayoutStride::order_dimensions(
-                        sizeof...(IDimX),
-                        dims_order,
-                        spline_tr_src.allocation_kokkos_view().layout().dimension));
+                std::get<std::conditional_t<
+                        std::is_same_v<
+                                decltype(spline_tr_src.allocation_kokkos_view().layout()),
+                                Kokkos::LayoutLeft>,
+                        std::integral_constant<size_t, 0>,
+                        std::integral_constant<size_t, 1>>::value>(m_spline_tr_src_layouts));
     } else {
         spline_tr_src_view = spline_tr_src.allocation_kokkos_view();
     }

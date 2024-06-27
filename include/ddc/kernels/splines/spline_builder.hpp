@@ -195,6 +195,21 @@ private:
     /// Build a LayoutStride to be used by SplineBuilder::operator() for internal transposition
     std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> build_spline_tr_src_layouts();
 
+    Kokkos::LayoutStride spline_tr_src_layout(Kokkos::LayoutLeft arg_layout) const
+    {
+        return std::get<0>(m_spline_tr_src_layouts);
+    }
+
+    Kokkos::LayoutStride spline_tr_src_layout(Kokkos::LayoutRight arg_layout) const
+    {
+        return std::get<1>(m_spline_tr_src_layouts);
+    }
+
+    Kokkos::LayoutStride spline_tr_src_layout(Kokkos::LayoutStride arg_layout) const
+    {
+        return arg_layout;
+    }
+
 public:
     /**
      * @brief Build a SplineBuilder acting on batched_interpolation_domain.
@@ -897,12 +912,7 @@ operator()(
                 Kokkos::LayoutStride,
                 exec_space>(
                 spline_tr_src.data_handle(),
-                std::get<std::conditional_t<
-                        std::is_same_v<
-                                decltype(spline_tr_src.allocation_kokkos_view().layout()),
-                                Kokkos::LayoutLeft>,
-                        std::integral_constant<size_t, 0>,
-                        std::integral_constant<size_t, 1>>::value>(m_spline_tr_src_layouts));
+                spline_tr_src_layout(spline_tr_src.allocation_kokkos_view().layout()));
     } else {
         spline_tr_src_view = spline_tr_src.allocation_kokkos_view();
     }

@@ -897,17 +897,9 @@ operator()(
             batch_domain().size());
     // Compute spline coef
     matrix->solve(spline_tr_view);
+
     // Transpose back spline_tr into spline_tr_src_view
-    ddc::parallel_for_each(
-            "ddc_splines_transpose_back_rhs",
-            exec_space(),
-            batch_domain(),
-            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                for (std::size_t i = 0; i < nbasis_proxy; i++) {
-                    spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j)
-                            = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
-                }
-            });
+    Kokkos::deep_copy(spline_tr_src_view_strided, spline_tr.allocation_kokkos_view());
 
     // Duplicate the lower spline coefficients to the upper side in case of periodic boundaries
     if (bsplines_type::is_periodic()) {

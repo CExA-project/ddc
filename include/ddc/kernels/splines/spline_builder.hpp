@@ -844,8 +844,7 @@ operator()(
         std::size_t dims_order[sizeof...(IDimX)];
         for (int i = 0; i < sizeof...(IDimX); ++i) {
             dims_order[i] = std::is_same_v<
-                                    decltype(spline_tr_src.allocation_kokkos_view()
-                                                     .spline_tr_src_view.layout()),
+                                    decltype(spline_tr_src.allocation_kokkos_view().layout()),
                                     Kokkos::LayoutLeft>
                                     ? i
                                     : sizeof...(IDimX) - i - 1;

@@ -24,5 +24,5 @@ var classddc_1_1SplineBuilder =
     [ "batched_derivs_xmin_domain", "classddc_1_1SplineBuilder.html#acde387c13477d88514e623420657ae3a", null ],
     [ "batched_derivs_xmax_domain", "classddc_1_1SplineBuilder.html#a650ba48e9b73b03abe3bb6c0cafdd9f3", null ],
     [ "get_interpolation_matrix", "classddc_1_1SplineBuilder.html#a76c7f7d2a53f99c1c61d8920d3c73dbc", null ],
-    [ "operator()", "classddc_1_1SplineBuilder.html#a46f174a8521f54d1e3926aaab47274e9", null ]
+    [ "operator()", "classddc_1_1SplineBuilder.html#aded12be28526a0c1e023c1b2cca80028", null ]
 ];

@@ -830,7 +830,7 @@ operator()(
             ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
 
-    // Select the source ChunkSpan to copy, ignore nbc_xmin + nbc_xmax rows not involved in linear problem
+    // Select the source ChunkSpan to copy, ignore m_offset rows which should not be passed to linear solver
     ddc::ChunkSpan spline_tr_src = spline[ddc::DiscreteDomain<bsplines_type>(
             ddc::DiscreteElement<bsplines_type>(m_offset),
             ddc::DiscreteVector<bsplines_type>(ddc::discrete_space<bsplines_type>().nbasis()))];
@@ -838,7 +838,7 @@ operator()(
     // Create a Kokkos::View of spline_tr_src
     auto spline_tr_src_view = spline_tr_src.allocation_kokkos_view();
 
-    // Reorder dimensions of spline_tr_src_view to allow the deepcopy from splines_tr_src to splines_tr (no data transfert but layout may not be preserved).
+    // Reorder dimensions of spline_tr_src_view to allow the deep copies between splines_tr_src and splines_tr (layout may not be preserved).
     Kokkos::View<
             ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
             Kokkos::LayoutStride,

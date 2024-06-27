@@ -43,9 +43,10 @@ constexpr bool is_spline_interpolation_mesh_uniform(
         ddc::BoundCond const BcXmax,
         int degree)
 {
-    int N_BE_MIN = n_boundary_equations(BcXmin, degree);
-    int N_BE_MAX = n_boundary_equations(BcXmax, degree);
-    bool is_periodic = (BcXmin == ddc::BoundCond::PERIODIC) && (BcXmax == ddc::BoundCond::PERIODIC);
+    int const N_BE_MIN = n_boundary_equations(BcXmin, degree);
+    int const N_BE_MAX = n_boundary_equations(BcXmax, degree);
+    bool const is_periodic
+            = (BcXmin == ddc::BoundCond::PERIODIC) && (BcXmax == ddc::BoundCond::PERIODIC);
     return is_uniform && ((N_BE_MIN != 0 && N_BE_MAX != 0) || is_periodic);
 }
 
@@ -632,7 +633,7 @@ void SplineBuilder<
     if constexpr (BcXmin == ddc::BoundCond::HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
-        ddc::DSpan2D
+        ddc::DSpan2D const
                 derivs(derivs_ptr.data(),
                        bsplines_type::degree() + 1,
                        bsplines_type::degree() / 2 + 1);
@@ -820,7 +821,7 @@ operator()(
     ddc::Chunk spline_tr_alloc(
             batched_spline_tr_domain(),
             ddc::KokkosAllocator<double, memory_space>());
-    ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
+    ddc::ChunkSpan const spline_tr = spline_tr_alloc.span_view();
     ddc::parallel_for_each(
             exec_space(),
             batch_domain(),
@@ -831,7 +832,7 @@ operator()(
                 }
             });
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
-    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
+    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> const bcoef_section(
             spline_tr.data_handle(),
             ddc::discrete_space<bsplines_type>().nbasis(),
             batch_domain().size());

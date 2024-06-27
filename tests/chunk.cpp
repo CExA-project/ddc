@@ -258,7 +258,7 @@ TEST(Chunk1DTest, View)
 
 TEST(Chunk1DTest, Label)
 {
-    ChunkX<double> chunk("label-test", dom_x);
+    ChunkX<double> const chunk("label-test", dom_x);
     EXPECT_EQ(chunk.label(), std::string_view("label-test"));
 }
 
@@ -289,14 +289,14 @@ TEST(Chunk1DTest, RankDynamic)
 
 TEST(Chunk1DTest, NullExtents)
 {
-    DDomX dom(lbound_x, DVectX(0));
+    DDomX const dom(lbound_x, DVectX(0));
     ChunkX<double> const chunk(dom);
     EXPECT_EQ(chunk.extents(), DVectX(0));
 }
 
 TEST(Chunk1DTest, NullExtent)
 {
-    DDomX dom(lbound_x, DVectX(0));
+    DDomX const dom(lbound_x, DVectX(0));
     ChunkX<double> const chunk(dom);
     EXPECT_EQ(chunk.extent<DDimX>(), DVectX(0));
 }
@@ -586,7 +586,7 @@ TEST(Chunk2DTest, DeepcopyReordered)
 TEST(Chunk3DTest, AccessFromDiscreteElements)
 {
     using DDomXYZ = ddc::DiscreteDomain<DDimX, DDimY, DDimZ>;
-    DDomZ dom_z(ddc::DiscreteElement<DDimZ>(2), ddc::DiscreteVector<DDimZ>(4));
+    DDomZ const dom_z(ddc::DiscreteElement<DDimZ>(2), ddc::DiscreteVector<DDimZ>(4));
     ddc::Chunk<double, DDomXYZ> chunk(DDomXYZ(dom_x_y, dom_z));
     ddc::ChunkSpan const chunk_span = chunk.span_cview();
     for (auto&& ix : chunk.domain<DDimX>()) {

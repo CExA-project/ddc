@@ -376,7 +376,7 @@ public:
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        batch_domain_type batch_domain(coords_eval.domain());
+        batch_domain_type const batch_domain(coords_eval.domain());
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
@@ -555,7 +555,7 @@ public:
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        batch_domain_type batch_domain(coords_eval.domain());
+        batch_domain_type const batch_domain(coords_eval.domain());
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
@@ -605,7 +605,7 @@ public:
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        batch_domain_type batch_domain(coords_eval.domain());
+        batch_domain_type const batch_domain(coords_eval.domain());
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
@@ -655,7 +655,7 @@ public:
             ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
                     spline_coef) const
     {
-        batch_domain_type batch_domain(coords_eval.domain());
+        batch_domain_type const batch_domain(coords_eval.domain());
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
@@ -937,11 +937,11 @@ private:
                 double,
                 std::experimental::extents<std::size_t, bsplines_type2::degree() + 1>> const
                 vals2(vals2_ptr.data());
-        ddc::Coordinate<typename evaluation_mesh_type1::continuous_dimension_type>
+        ddc::Coordinate<typename evaluation_mesh_type1::continuous_dimension_type> const
                 coord_eval_interest1
                 = ddc::select<typename evaluation_mesh_type1::continuous_dimension_type>(
                         coord_eval);
-        ddc::Coordinate<typename evaluation_mesh_type2::continuous_dimension_type>
+        ddc::Coordinate<typename evaluation_mesh_type2::continuous_dimension_type> const
                 coord_eval_interest2
                 = ddc::select<typename evaluation_mesh_type2::continuous_dimension_type>(
                         coord_eval);

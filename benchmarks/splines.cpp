@@ -44,13 +44,13 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
 // Function to monitor GPU memory asynchronously
 void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem)
 {
-    size_t freeMem = 0;
-    size_t totalMem = 0;
+    size_t const freeMem = 0;
+    size_t const totalMem = 0;
     while (monitorFlag) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Adjust the interval as needed
 
         // Acquire a lock to ensure thread safety when accessing CUDA functions
-        std::lock_guard<std::mutex> lock(mutex);
+        std::lock_guard<std::mutex> const lock(mutex);
 
 #if defined(__CUDACC__)
         cudaMemGetInfo(&freeMem, &totalMem);
@@ -61,12 +61,12 @@ void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem
 
 static void characteristics_advection(benchmark::State& state)
 {
-    size_t freeMem = 0;
-    size_t totalMem = 0;
+    size_t const freeMem = 0;
+    size_t const totalMem = 0;
 #if defined(__CUDACC__)
     cudaMemGetInfo(&freeMem, &totalMem);
 #endif
-    size_t initUsedMem
+    size_t const initUsedMem
             = totalMem
               - freeMem; // cudaMemGetInfo gives GPU total memory occupation, we consider that other users of the GPU have constant occupancy and substract it.
     size_t maxUsedMem = initUsedMem;
@@ -86,7 +86,7 @@ static void characteristics_advection(benchmark::State& state)
                                     BSplinesX,
                                     ddc::BoundCond::PERIODIC,
                                     ddc::BoundCond::PERIODIC>::get_sampling<DDimX>());
-    ddc::DiscreteDomain<DDimY> y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
+    ddc::DiscreteDomain<DDimY> const y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
             ddc::Coordinate<Y>(-1.),
             ddc::Coordinate<Y>(1.),
             ddc::DiscreteVector<DDimY>(state.range(1))));
@@ -100,7 +100,7 @@ static void characteristics_advection(benchmark::State& state)
             ddc::DeviceAllocator<double>());
     ddc::ChunkSpan const density = density_alloc.span_view();
     // Initialize the density on the main domain
-    ddc::DiscreteDomain<DDimX, DDimY> x_mesh
+    ddc::DiscreteDomain<DDimX, DDimY> const x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
             x_mesh,
@@ -119,9 +119,8 @@ static void characteristics_advection(benchmark::State& state)
             ddc::BoundCond::PERIODIC,
             ddc::SplineSolver::GINKGO,
             DDimX,
-            DDimY>
-            spline_builder(x_mesh, state.range(2), state.range(3));
-    ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
+            DDimY> const spline_builder(x_mesh, state.range(2), state.range(3));
+    ddc::PeriodicExtrapolationRule<X> const periodic_extrapolation;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
@@ -130,18 +129,17 @@ static void characteristics_advection(benchmark::State& state)
             ddc::PeriodicExtrapolationRule<X>,
             ddc::PeriodicExtrapolationRule<X>,
             DDimX,
-            DDimY>
-            spline_evaluator(periodic_extrapolation, periodic_extrapolation);
+            DDimY> const spline_evaluator(periodic_extrapolation, periodic_extrapolation);
     ddc::Chunk coef_alloc(
             spline_builder.batched_spline_domain(),
             ddc::KokkosAllocator<double, Kokkos::DefaultExecutionSpace::memory_space>());
-    ddc::ChunkSpan coef = coef_alloc.span_view();
+    ddc::ChunkSpan const coef = coef_alloc.span_view();
     ddc::Chunk feet_coords_alloc(
             spline_builder.batched_interpolation_domain(),
             ddc::KokkosAllocator<
                     ddc::Coordinate<X, Y>,
                     Kokkos::DefaultExecutionSpace::memory_space>());
-    ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
+    ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
 
     for (auto _ : state) {
         Kokkos::Profiling::pushRegion("FeetCharacteristics");

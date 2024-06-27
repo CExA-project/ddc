@@ -377,7 +377,7 @@ public:
         ddc::Chunk values_alloc(
                 ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()),
                 ddc::KokkosAllocator<double, memory_space>());
-        ddc::ChunkSpan values = values_alloc.span_view();
+        ddc::ChunkSpan const values = values_alloc.span_view();
         Kokkos::parallel_for(
                 Kokkos::RangePolicy<exec_space>(0, 1),
                 KOKKOS_LAMBDA(int) { ddc::discrete_space<bsplines_type>().integrals(values); });
@@ -438,7 +438,7 @@ private:
                 double,
                 std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
                 vals(vals_ptr.data());
-        ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
+        ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type> const
                 coord_eval_interest
                 = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
         if constexpr (std::is_same_v<EvalType, eval_type>) {

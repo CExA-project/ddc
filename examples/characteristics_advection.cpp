@@ -73,7 +73,7 @@ void display(double time, ChunkType density)
     std::cout << "At t = " << time << ",\n";
     std::cout << "  * mean density  = " << mean_density << "\n";
     // take a slice in the middle of the box
-    ddc::ChunkSpan density_slice = density
+    ddc::ChunkSpan const density_slice = density
             [ddc::get_domain<DDimY>(density).front()
              + ddc::get_domain<DDimY>(density).size() / 2];
     std::cout << "  * density[y:"
@@ -179,7 +179,7 @@ int main(int argc, char** argv)
     ddc::ChunkSpan const initial_density
             = last_density_alloc.span_view();
     // Initialize the density on the main domain
-    ddc::DiscreteDomain<DDimX, DDimY> x_mesh
+    ddc::DiscreteDomain<DDimX, DDimY> const x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
             x_mesh,
@@ -219,9 +219,8 @@ int main(int argc, char** argv)
             ddc::BoundCond::PERIODIC,
             ddc::SplineSolver::GINKGO,
             DDimX,
-            DDimY>
-            spline_builder(x_mesh);
-    ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
+            DDimY> const spline_builder(x_mesh);
+    ddc::PeriodicExtrapolationRule<X> const periodic_extrapolation;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
@@ -230,7 +229,7 @@ int main(int argc, char** argv)
             ddc::PeriodicExtrapolationRule<X>,
             ddc::PeriodicExtrapolationRule<X>,
             DDimX,
-            DDimY>
+            DDimY> const
             spline_evaluator(
                     periodic_extrapolation,
                     periodic_extrapolation);
@@ -241,13 +240,13 @@ int main(int argc, char** argv)
     ddc::Chunk coef_alloc(
             spline_builder.batched_spline_domain(),
             ddc::DeviceAllocator<double>());
-    ddc::ChunkSpan coef = coef_alloc.span_view();
+    ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Instantiate chunk to receive feet coords
     ddc::Chunk feet_coords_alloc(
             spline_builder.batched_interpolation_domain(),
             ddc::DeviceAllocator<ddc::Coordinate<X>>());
-    ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
+    ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
     //! [instantiate intermediate chunks]
 
 

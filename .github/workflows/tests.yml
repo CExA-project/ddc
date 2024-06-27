@@ -315,12 +315,12 @@ jobs:
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'
       uses: actions/download-artifact@v3
-      with: { name: 'oldest_cpu-artifact' }
+      with: { name: 'latest_cpu-artifact' }
     - name: Load image artifact into docker
       if: needs.id_repo.outputs.in_base_repo == 'false'
       run: |
-        docker load < oldest_cpu-artifact.tar
-        rm oldest_cpu-artifact.tar
+        docker load < latest_cpu-artifact.tar
+        rm latest_cpu-artifact.tar
     - name: clang-tidy
       run: |
         cat<<-'EOF' > run.sh
@@ -341,5 +341,5 @@ jobs:
         find /src/benchmarks /src/examples /src/tests -name '*.cpp' -exec clang-tidy-14 -p build -header-filter="(/src/include/ddc/.*|/src/tests/.*)" '{}' '+'
         EOF
         docker run \
-          -v ${PWD}:/src:ro ghcr.io/cexa-project/ddc/oldest_cpu:${GITHUB_SHA:0:7} \
+          -v ${PWD}:/src:ro ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} \
           bash /src/run.sh

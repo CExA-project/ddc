@@ -90,8 +90,8 @@ int main()
             domain_xy,
             ddc::DeviceAllocator<cell>());
 
-    ddc::ChunkSpan cells_in = cells_in_dev_alloc.span_view();
-    ddc::ChunkSpan cells_out = cells_out_dev_alloc.span_view();
+    ddc::ChunkSpan const cells_in = cells_in_dev_alloc.span_view();
+    ddc::ChunkSpan const cells_out = cells_out_dev_alloc.span_view();
 
     // Initialize the whole domain
     blinker_init(domain_xy, cells_in);

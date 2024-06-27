@@ -70,7 +70,7 @@ void display(double time, ChunkType temp)
     std::cout << "At t = " << time << ",\n";
     std::cout << "  * mean temperature  = " << mean_temp << "\n";
     // take a slice in the middle of the box
-    ddc::ChunkSpan temp_slice
+    ddc::ChunkSpan const temp_slice
             = temp[ddc::get_domain<DDimY>(temp).front()
                    + ddc::get_domain<DDimY>(temp).size() / 2];
     std::cout << "  * temperature[y:"
@@ -195,7 +195,7 @@ int main(int argc, char** argv)
     //! [initial-conditions]
     ddc::ChunkSpan const initial_temp = _last_temp.span_view();
     // Initialize the temperature on the main domain
-    ddc::DiscreteDomain<DDimX, DDimY> x_mesh
+    ddc::DiscreteDomain<DDimX, DDimY> const x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
             x_mesh,
@@ -233,7 +233,7 @@ int main(int argc, char** argv)
             Chunk("Ff_allocation",
                   k_mesh,
                   ddc::DeviceAllocator<Kokkos::complex<double>>());
-    ddc::ChunkSpan Ff = Ff_allocation.span_view();
+    ddc::ChunkSpan const Ff = Ff_allocation.span_view();
 
     //! [time iteration]
     for (auto const iter :
@@ -253,7 +253,8 @@ int main(int argc, char** argv)
 
         //! [numerical scheme]
         // Stencil computation on the main domain
-        ddc::FFT_Normalization norm = ddc::FFT_Normalization::BACKWARD;
+        ddc::FFT_Normalization const norm
+                = ddc::FFT_Normalization::BACKWARD;
         ddc::fft(Kokkos::DefaultExecutionSpace(), Ff, last_temp, {norm});
         ddc::parallel_for_each(
                 k_mesh,

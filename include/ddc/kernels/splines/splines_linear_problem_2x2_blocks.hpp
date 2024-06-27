@@ -251,11 +251,11 @@ public:
     {
         assert(b.extent(0) == size());
 
-        MultiRHS b1 = Kokkos::
+        MultiRHS const b1 = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
                         Kokkos::ALL);
-        MultiRHS b2 = Kokkos::
+        MultiRHS const b2 = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
                         Kokkos::ALL);

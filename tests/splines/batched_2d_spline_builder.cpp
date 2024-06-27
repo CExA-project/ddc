@@ -281,8 +281,7 @@ static void Batched2dSplineTest()
             s_bcl,
             s_bcr,
             ddc::SplineSolver::GINKGO,
-            IDim<X, I1, I2>...>
-            spline_builder(dom_vals);
+            IDim<X, I1, I2>...> const spline_builder(dom_vals);
 
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>> const dom_interpolation
@@ -293,15 +292,15 @@ static void Batched2dSplineTest()
     ddc::Chunk vals1_cpu_alloc(
             dom_interpolation,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();
-    evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>> evaluator(dom_interpolation);
+    ddc::ChunkSpan const vals1_cpu = vals1_cpu_alloc.span_view();
+    evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>> const evaluator(dom_interpolation);
     evaluator(vals1_cpu);
     ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan vals1 = vals1_alloc.span_view();
+    ddc::ChunkSpan const vals1 = vals1_alloc.span_view();
     ddc::parallel_deepcopy(vals1, vals1_cpu);
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan vals = vals_alloc.span_view();
+    ddc::ChunkSpan const vals = vals_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
             vals.domain(),
@@ -313,14 +312,14 @@ static void Batched2dSplineTest()
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
     int constexpr shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk Sderiv1_lhs_alloc(dom_derivs1, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv1_lhs = Sderiv1_lhs_alloc.span_view();
+    ddc::ChunkSpan const Sderiv1_lhs = Sderiv1_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk Sderiv1_lhs1_cpu_alloc(
                 ddc::DiscreteDomain<
                         ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv1_lhs1_cpu = Sderiv1_lhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan const Sderiv1_lhs1_cpu = Sderiv1_lhs1_cpu_alloc.span_view();
         ddc::for_each(
                 Sderiv1_lhs1_cpu.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, IDim<I2, I1, I2>> const e) {
@@ -333,7 +332,7 @@ static void Batched2dSplineTest()
                         ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv1_lhs1 = Sderiv1_lhs1_alloc.span_view();
+        ddc::ChunkSpan const Sderiv1_lhs1 = Sderiv1_lhs1_alloc.span_view();
         ddc::parallel_deepcopy(Sderiv1_lhs1, Sderiv1_lhs1_cpu);
 
         ddc::parallel_for_each(
@@ -346,14 +345,14 @@ static void Batched2dSplineTest()
     }
 
     ddc::Chunk Sderiv1_rhs_alloc(dom_derivs1, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv1_rhs = Sderiv1_rhs_alloc.span_view();
+    ddc::ChunkSpan const Sderiv1_rhs = Sderiv1_rhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk Sderiv1_rhs1_cpu_alloc(
                 ddc::DiscreteDomain<
                         ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv1_rhs1_cpu = Sderiv1_rhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan const Sderiv1_rhs1_cpu = Sderiv1_rhs1_cpu_alloc.span_view();
         ddc::for_each(
                 Sderiv1_rhs1_cpu.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, IDim<I2, I1, I2>> const e) {
@@ -366,7 +365,7 @@ static void Batched2dSplineTest()
                         ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv1_rhs1 = Sderiv1_rhs1_alloc.span_view();
+        ddc::ChunkSpan const Sderiv1_rhs1 = Sderiv1_rhs1_alloc.span_view();
         ddc::parallel_deepcopy(Sderiv1_rhs1, Sderiv1_rhs1_cpu);
 
         ddc::parallel_for_each(
@@ -379,14 +378,14 @@ static void Batched2dSplineTest()
     }
 
     ddc::Chunk Sderiv2_lhs_alloc(dom_derivs2, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv2_lhs = Sderiv2_lhs_alloc.span_view();
+    ddc::ChunkSpan const Sderiv2_lhs = Sderiv2_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk Sderiv2_lhs1_cpu_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
                         ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv2_lhs1_cpu = Sderiv2_lhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan const Sderiv2_lhs1_cpu = Sderiv2_lhs1_cpu_alloc.span_view();
         ddc::for_each(
                 Sderiv2_lhs1_cpu.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, ddc::Deriv<I2>> const e) {
@@ -400,7 +399,7 @@ static void Batched2dSplineTest()
                         IDim<I1, I1, I2>,
                         ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv2_lhs1 = Sderiv2_lhs1_alloc.span_view();
+        ddc::ChunkSpan const Sderiv2_lhs1 = Sderiv2_lhs1_alloc.span_view();
         ddc::parallel_deepcopy(Sderiv2_lhs1, Sderiv2_lhs1_cpu);
 
         ddc::parallel_for_each(
@@ -413,14 +412,14 @@ static void Batched2dSplineTest()
     }
 
     ddc::Chunk Sderiv2_rhs_alloc(dom_derivs2, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv2_rhs = Sderiv2_rhs_alloc.span_view();
+    ddc::ChunkSpan const Sderiv2_rhs = Sderiv2_rhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk Sderiv2_rhs1_cpu_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
                         ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv2_rhs1_cpu = Sderiv2_rhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan const Sderiv2_rhs1_cpu = Sderiv2_rhs1_cpu_alloc.span_view();
         ddc::for_each(
                 Sderiv2_rhs1_cpu.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, ddc::Deriv<I2>> const e) {
@@ -434,7 +433,7 @@ static void Batched2dSplineTest()
                         IDim<I1, I1, I2>,
                         ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv2_rhs1 = Sderiv2_rhs1_alloc.span_view();
+        ddc::ChunkSpan const Sderiv2_rhs1 = Sderiv2_rhs1_alloc.span_view();
         ddc::parallel_deepcopy(Sderiv2_rhs1, Sderiv2_rhs1_cpu);
 
         ddc::parallel_for_each(
@@ -447,23 +446,27 @@ static void Batched2dSplineTest()
     }
 
     ddc::Chunk Sderiv_mixed_lhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv_mixed_lhs_lhs = Sderiv_mixed_lhs_lhs_alloc.span_view();
+    ddc::ChunkSpan const Sderiv_mixed_lhs_lhs = Sderiv_mixed_lhs_lhs_alloc.span_view();
     ddc::Chunk Sderiv_mixed_rhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv_mixed_rhs_lhs = Sderiv_mixed_rhs_lhs_alloc.span_view();
+    ddc::ChunkSpan const Sderiv_mixed_rhs_lhs = Sderiv_mixed_rhs_lhs_alloc.span_view();
     ddc::Chunk Sderiv_mixed_lhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv_mixed_lhs_rhs = Sderiv_mixed_lhs_rhs_alloc.span_view();
+    ddc::ChunkSpan const Sderiv_mixed_lhs_rhs = Sderiv_mixed_lhs_rhs_alloc.span_view();
     ddc::Chunk Sderiv_mixed_rhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv_mixed_rhs_rhs = Sderiv_mixed_rhs_rhs_alloc.span_view();
+    ddc::ChunkSpan const Sderiv_mixed_rhs_rhs = Sderiv_mixed_rhs_rhs_alloc.span_view();
 
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk Sderiv_mixed_lhs_lhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv_mixed_lhs_lhs1_cpu = Sderiv_mixed_lhs_lhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan const Sderiv_mixed_lhs_lhs1_cpu
+                = Sderiv_mixed_lhs_lhs1_cpu_alloc.span_view();
         ddc::Chunk Sderiv_mixed_rhs_lhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv_mixed_rhs_lhs1_cpu = Sderiv_mixed_rhs_lhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan const Sderiv_mixed_rhs_lhs1_cpu
+                = Sderiv_mixed_rhs_lhs1_cpu_alloc.span_view();
         ddc::Chunk Sderiv_mixed_lhs_rhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv_mixed_lhs_rhs1_cpu = Sderiv_mixed_lhs_rhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan const Sderiv_mixed_lhs_rhs1_cpu
+                = Sderiv_mixed_lhs_rhs1_cpu_alloc.span_view();
         ddc::Chunk Sderiv_mixed_rhs_rhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv_mixed_rhs_rhs1_cpu = Sderiv_mixed_rhs_rhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan const Sderiv_mixed_rhs_rhs1_cpu
+                = Sderiv_mixed_rhs_rhs1_cpu_alloc.span_view();
 
         for (std::size_t ii = 1;
              ii < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I1>>()) + 1;
@@ -488,22 +491,22 @@ static void Batched2dSplineTest()
         ddc::Chunk Sderiv_mixed_lhs_lhs1_alloc(
                 derivs_domain,
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv_mixed_lhs_lhs1 = Sderiv_mixed_lhs_lhs1_alloc.span_view();
+        ddc::ChunkSpan const Sderiv_mixed_lhs_lhs1 = Sderiv_mixed_lhs_lhs1_alloc.span_view();
         ddc::parallel_deepcopy(Sderiv_mixed_lhs_lhs1, Sderiv_mixed_lhs_lhs1_cpu);
         ddc::Chunk Sderiv_mixed_rhs_lhs1_alloc(
                 derivs_domain,
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv_mixed_rhs_lhs1 = Sderiv_mixed_rhs_lhs1_alloc.span_view();
+        ddc::ChunkSpan const Sderiv_mixed_rhs_lhs1 = Sderiv_mixed_rhs_lhs1_alloc.span_view();
         ddc::parallel_deepcopy(Sderiv_mixed_rhs_lhs1, Sderiv_mixed_rhs_lhs1_cpu);
         ddc::Chunk Sderiv_mixed_lhs_rhs1_alloc(
                 derivs_domain,
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv_mixed_lhs_rhs1 = Sderiv_mixed_lhs_rhs1_alloc.span_view();
+        ddc::ChunkSpan const Sderiv_mixed_lhs_rhs1 = Sderiv_mixed_lhs_rhs1_alloc.span_view();
         ddc::parallel_deepcopy(Sderiv_mixed_lhs_rhs1, Sderiv_mixed_lhs_rhs1_cpu);
         ddc::Chunk Sderiv_mixed_rhs_rhs1_alloc(
                 derivs_domain,
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv_mixed_rhs_rhs1 = Sderiv_mixed_rhs_rhs1_alloc.span_view();
+        ddc::ChunkSpan const Sderiv_mixed_rhs_rhs1 = Sderiv_mixed_rhs_rhs1_alloc.span_view();
         ddc::parallel_deepcopy(Sderiv_mixed_rhs_rhs1, Sderiv_mixed_rhs_rhs1_cpu);
 
         ddc::parallel_for_each(
@@ -524,7 +527,7 @@ static void Batched2dSplineTest()
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan coef = coef_alloc.span_view();
+    ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
 #if defined(BC_HERMITE)
@@ -544,11 +547,11 @@ static void Batched2dSplineTest()
 #endif
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
 #if defined(BC_PERIODIC)
-    ddc::PeriodicExtrapolationRule<I1> extrapolation_rule_1;
-    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_2;
+    ddc::PeriodicExtrapolationRule<I1> const extrapolation_rule_1;
+    ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_2;
 #else
-    ddc::NullExtrapolationRule extrapolation_rule_1;
-    ddc::NullExtrapolationRule extrapolation_rule_2;
+    ddc::NullExtrapolationRule const extrapolation_rule_1;
+    ddc::NullExtrapolationRule const extrapolation_rule_2;
 #endif
     ddc::SplineEvaluator2D<
             ExecSpace,
@@ -568,7 +571,7 @@ static void Batched2dSplineTest()
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
 #endif
-            IDim<X, I1, I2>...>
+            IDim<X, I1, I2>...> const
             spline_evaluator(
                     extrapolation_rule_1,
                     extrapolation_rule_1,
@@ -577,7 +580,7 @@ static void Batched2dSplineTest()
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
-    ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
+    ddc::ChunkSpan const coords_eval = coords_eval_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
@@ -588,13 +591,13 @@ static void Batched2dSplineTest()
 
     // Instantiate chunks to receive outputs of spline_evaluator
     ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
+    ddc::ChunkSpan const spline_eval = spline_eval_alloc.span_view();
     ddc::Chunk spline_eval_deriv1_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan spline_eval_deriv1 = spline_eval_deriv1_alloc.span_view();
+    ddc::ChunkSpan const spline_eval_deriv1 = spline_eval_deriv1_alloc.span_view();
     ddc::Chunk spline_eval_deriv2_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan spline_eval_deriv2 = spline_eval_deriv2_alloc.span_view();
+    ddc::ChunkSpan const spline_eval_deriv2 = spline_eval_deriv2_alloc.span_view();
     ddc::Chunk spline_eval_deriv12_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan spline_eval_deriv12 = spline_eval_deriv12_alloc.span_view();
+    ddc::ChunkSpan const spline_eval_deriv12 = spline_eval_deriv12_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
@@ -607,7 +610,7 @@ static void Batched2dSplineTest()
             I2>(spline_eval_deriv12, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors (we recover the initial values)
-    double max_norm_error = ddc::parallel_transform_reduce(
+    double const max_norm_error = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval.domain(),
             0.,
@@ -615,7 +618,7 @@ static void Batched2dSplineTest()
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
-    double max_norm_error_diff1 = ddc::parallel_transform_reduce(
+    double const max_norm_error_diff1 = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_deriv1.domain(),
             0.,
@@ -625,7 +628,7 @@ static void Batched2dSplineTest()
                 Coord<I2> const y = ddc::coordinate(ddc::select<IDim<I2, I1, I2>>(e));
                 return Kokkos::abs(spline_eval_deriv1(e) - evaluator.deriv(x, y, 1, 0));
             });
-    double max_norm_error_diff2 = ddc::parallel_transform_reduce(
+    double const max_norm_error_diff2 = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_deriv2.domain(),
             0.,
@@ -635,7 +638,7 @@ static void Batched2dSplineTest()
                 Coord<I2> const y = ddc::coordinate(ddc::select<IDim<I2, I1, I2>>(e));
                 return Kokkos::abs(spline_eval_deriv2(e) - evaluator.deriv(x, y, 0, 1));
             });
-    double max_norm_error_diff12 = ddc::parallel_transform_reduce(
+    double const max_norm_error_diff12 = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_deriv1.domain(),
             0.,

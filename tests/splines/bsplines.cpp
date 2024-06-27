@@ -63,7 +63,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnity_Uniform)
     double const dx = (xmax - xmin) / (n_test_points - 1);
 
     for (std::size_t i(0); i < n_test_points; ++i) {
-        CoordX test_point(xmin + dx * i);
+        CoordX const test_point(xmin + dx * i);
         ddc::discrete_space<BSplinesX>().eval_basis(values, test_point);
         double sum = 0.0;
         for (std::size_t j(0); j < degree + 1; ++j) {
@@ -94,11 +94,11 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnity_NonUniform)
             values(values_ptr.data());
 
 
-    std::size_t n_test_points = ncells * 30;
+    std::size_t const n_test_points = ncells * 30;
     dx = (xmax - xmin) / (n_test_points - 1);
 
     for (std::size_t i(0); i < n_test_points; ++i) {
-        CoordX test_point(xmin + dx * i);
+        CoordX const test_point(xmin + dx * i);
         ddc::discrete_space<BSplinesX>().eval_basis(values, test_point);
         double sum = 0.0;
         for (std::size_t j(0); j < degree + 1; ++j) {

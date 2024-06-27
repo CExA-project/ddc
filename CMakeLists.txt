@@ -245,7 +245,7 @@ endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
   # Ginkgo
-  find_package(Ginkgo 1.7.0 EXACT REQUIRED)
+  find_package(Ginkgo 1.8.0 EXACT REQUIRED)
   target_link_libraries(DDC INTERFACE Ginkgo::ginkgo)
   target_compile_definitions(DDC INTERFACE ginkgo_AVAIL)
 

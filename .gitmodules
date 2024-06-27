@@ -15,3 +15,6 @@
 [submodule "vendor/kokkos"]
 	path = vendor/kokkos
 	url = https://github.com/kokkos/kokkos.git
+[submodule "vendor/doxygen-awesome-css"]
+	path = vendor/doxygen-awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git

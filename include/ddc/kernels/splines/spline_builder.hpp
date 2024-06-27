@@ -830,7 +830,7 @@ operator()(
             ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
 
-    // Ignore nbc_xmin + nbc_xmax rows not involved in linear problem
+    // Select the source ChunkSpan to copy, ignore nbc_xmin + nbc_xmax rows not involved in linear problem
     ddc::ChunkSpan spline_tr_src = spline[ddc::DiscreteDomain<bsplines_type>(
             ddc::DiscreteElement<bsplines_type>(m_offset),
             ddc::DiscreteVector<bsplines_type>(ddc::discrete_space<bsplines_type>().nbasis()))];
@@ -839,56 +839,58 @@ operator()(
     auto spline_tr_src_view = spline_tr_src.allocation_kokkos_view();
 
     // Reorder dimensions of spline_tr_src_view to allow the deepcopy from splines_tr_src to splines_tr (no data transfert but layout may not be preserved).
+    Kokkos::View<
+            ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
+            Kokkos::LayoutStride,
+            exec_space>
+            spline_tr_src_view_strided;
+    // Create a LayoutStride view if it is not already the case, we need the stride to be defined to perform the transposition
+    if constexpr (!std::is_same_v<decltype(spline_tr_src_view.layout()), Kokkos::LayoutStride>) {
+        std::size_t dims_order[sizeof...(IDimX)];
+        for (int i = 0; i < sizeof...(IDimX); ++i) {
+            dims_order[i]
+                    = std::is_same_v<decltype(spline_tr_src_view.layout()), Kokkos::LayoutLeft>
+                              ? i
+                              : sizeof...(IDimX) - i - 1;
+        }
 
-    if constexpr (std::is_same_v<decltype(spline_tr_src_view.layout()), Kokkos::LayoutStride>) {
-        // For LayoutStride, the stride is already defined and we can just swap the two strides concerned by transposition
-        std::size_t* extents = spline_tr_src_view.layout().dimension;
-        std::
-                swap(extents[ddc::type_seq_rank_v<
-                             bsplines_type,
-                             ddc::to_type_seq_t<batched_spline_domain_type>>],
-                     extents[ddc::type_seq_rank_v<
-                             bsplines_type,
-                             ddc::to_type_seq_t<batched_spline_tr_domain_type>>]);
-        std::size_t* strides = spline_tr_src_view.layout().stride;
-        std::
-                swap(extents[ddc::type_seq_rank_v<
-                             bsplines_type,
-                             ddc::to_type_seq_t<batched_spline_domain_type>>],
-                     extents[ddc::type_seq_rank_v<
-                             bsplines_type,
-                             ddc::to_type_seq_t<batched_spline_tr_domain_type>>]);
-
-        // Transpose spline_tr_src_view into spline_tr
-        Kokkos::deep_copy(spline_tr.allocation_kokkos_view(), spline_tr_src_view);
-    } else {
-        // For LayoutLeft and LayoutRight, stride array does not exist so we have to build the LayoutStride (using LayoutStride::order_dimensions)
-        std::size_t* extents = spline_tr_src_view.layout().dimension;
-        std::size_t dims_order[sizeof...(IDimX)] = {ddc::type_seq_rank_v<
-                IDimX,
-                ddc::to_type_seq_t<batched_interpolation_domain_type>>...};
-        std::
-                swap(dims_order[ddc::type_seq_rank_v<
-                             bsplines_type,
-                             ddc::to_type_seq_t<batched_spline_domain_type>>],
-                     dims_order[ddc::type_seq_rank_v<
-                             bsplines_type,
-                             ddc::to_type_seq_t<batched_spline_tr_domain_type>>]);
-
-        Kokkos::View<
+        spline_tr_src_view_strided = Kokkos::View<
                 ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
                 Kokkos::LayoutStride,
-                exec_space>
-                spline_tr_src_view_strided(
-                        spline_tr_src_view.data(),
-                        Kokkos::LayoutStride::
-                                order_dimensions(sizeof...(IDimX), dims_order, extents));
-
-        // Transpose spline_tr_src_view_strided into spline_tr
-        Kokkos::deep_copy(spline_tr.allocation_kokkos_view(), spline_tr_src_view_strided);
+                exec_space>(
+                spline_tr_src_view.data(),
+                Kokkos::LayoutStride::order_dimensions(
+                        sizeof...(IDimX),
+                        dims_order,
+                        spline_tr_src_view.layout().dimension));
+    } else {
+        spline_tr_src_view_strided = spline_tr_src_view;
     }
+    // Swap extents and strides to allow the deep copies between spline_tr_src_view and spline_tr
+    Kokkos::LayoutStride layout = spline_tr_src_view_strided.layout();
+    std::
+            swap(layout.dimension[ddc::type_seq_rank_v<
+                         bsplines_type,
+                         ddc::to_type_seq_t<batched_spline_domain_type>>],
+                 layout.dimension[ddc::type_seq_rank_v<
+                         bsplines_type,
+                         ddc::to_type_seq_t<batched_spline_tr_domain_type>>]);
+    std::
+            swap(layout.stride[ddc::type_seq_rank_v<
+                         bsplines_type,
+                         ddc::to_type_seq_t<batched_spline_domain_type>>],
+                 layout.stride[ddc::type_seq_rank_v<
+                         bsplines_type,
+                         ddc::to_type_seq_t<batched_spline_tr_domain_type>>]);
+    spline_tr_src_view_strided = Kokkos::View<
+            ddc::detail::mdspan_to_kokkos_element_t<double, sizeof...(IDimX)>,
+            Kokkos::LayoutStride,
+            exec_space>(spline_tr_src_view_strided.data(), layout);
 
-    // Create a 2D Kokkos::View to manage spline_tr as a matrix
+    // Transpose spline_tr_src_view into spline_tr
+    Kokkos::deep_copy(spline_tr.allocation_kokkos_view(), spline_tr_src_view_strided);
+
+    // Create a 2D Kokkos::View to see spline_tr as a matrix
     Kokkos::View<double**, Kokkos::LayoutRight, exec_space> spline_tr_view(
             spline_tr.data_handle(),
             ddc::discrete_space<bsplines_type>().nbasis(),

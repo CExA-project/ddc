@@ -479,21 +479,21 @@ std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> SplineBuilder<
     std::pair<Kokkos::LayoutStride, Kokkos::LayoutStride> layouts;
 
     // Convert LayoutRight and LayoutLeft to LayoutStride
-    std::size_t dims_order_left[sizeof...(IDimX)];
-    std::size_t dims_order_right[sizeof...(IDimX)];
+    std::array<std::size_t, sizeof...(IDimX)> dims_order_left {};
+    std::array<std::size_t, sizeof...(IDimX)> dims_order_right {};
     for (int i = 0; i < sizeof...(IDimX); ++i) {
         dims_order_left[i] = i;
         dims_order_right[i] = sizeof...(IDimX) - i - 1;
     }
-    std::size_t extents[sizeof...(IDimX)] {
+    std::array<std::size_t, sizeof...(IDimX)> extents {
             static_cast<std::size_t>(spline_tr_src_domain.template extent<std::conditional_t<
                                              std::is_same_v<IDimX, interpolation_mesh_type>,
                                              bsplines_type,
                                              IDimX>>())...};
-    std::get<0>(layouts)
-            = Kokkos::LayoutStride::order_dimensions(sizeof...(IDimX), dims_order_left, extents);
-    std::get<1>(layouts)
-            = Kokkos::LayoutStride::order_dimensions(sizeof...(IDimX), dims_order_right, extents);
+    std::get<0>(layouts) = Kokkos::LayoutStride::
+            order_dimensions(sizeof...(IDimX), dims_order_left.data(), extents.data());
+    std::get<1>(layouts) = Kokkos::LayoutStride::
+            order_dimensions(sizeof...(IDimX), dims_order_right.data(), extents.data());
 
     return layouts;
 }

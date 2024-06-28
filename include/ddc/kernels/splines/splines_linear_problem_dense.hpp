@@ -115,11 +115,12 @@ public:
         auto a_device = m_a.d_view;
         auto ipiv_device = m_ipiv.d_view;
 
+        std::string name = "getrs";
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
-
+        Kokkos::Profiling::pushRegion(name);
         if (transpose) {
             Kokkos::parallel_for(
-                    "gerts",
+                    name,
                     policy,
                     KOKKOS_LAMBDA(const int i) {
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
@@ -130,7 +131,7 @@ public:
                     });
         } else {
             Kokkos::parallel_for(
-                    "gerts",
+                    name,
                     policy,
                     KOKKOS_LAMBDA(const int i) {
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
@@ -140,6 +141,7 @@ public:
                                 invoke(a_device, ipiv_device, sub_b);
                     });
         }
+        Kokkos::Profiling::popRegion();
     }
 };
 

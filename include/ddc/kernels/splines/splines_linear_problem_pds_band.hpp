@@ -134,9 +134,11 @@ public:
         assert(b.extent(0) == size());
 
         auto q_device = m_q.d_view;
+        std::string name = "pbtrs";
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
+        Kokkos::Profiling::pushRegion(name);
         Kokkos::parallel_for(
-                "pbtrs",
+                name,
                 policy,
                 KOKKOS_CLASS_LAMBDA(const int i) {
                     auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
@@ -144,6 +146,7 @@ public:
                             KokkosBatched::Uplo::Lower,
                             KokkosBatched::Algo::Pbtrs::Unblocked>::invoke(q_device, sub_b);
                 });
+        Kokkos::Profiling::popRegion();
     }
 };
 

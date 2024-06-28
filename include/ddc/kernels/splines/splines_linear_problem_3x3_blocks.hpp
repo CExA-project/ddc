@@ -65,15 +65,17 @@ private:
     {
         std::size_t const nq = m_top_left_block->size(); // size of the center block
 
-        if (i < m_top_size)
+        if (i < m_top_size) {
             i += nq;
-        else if (i < m_top_size + nq)
+        } else if (i < m_top_size + nq) {
             i -= m_top_size;
+        }
 
-        if (j < m_top_size)
+        if (j < m_top_size) {
             j += nq;
-        else if (j < m_top_size + nq)
+        } else if (j < m_top_size + nq) {
             j -= m_top_size;
+        }
     }
 
 public:
@@ -95,24 +97,23 @@ private:
      * of the SplinesLinearProblem2x2Blocks solver).
      *
      * |  b_top   |    | b_center |
-     * | b_center | -> |  b_top   | -- Considered as a 
+     * | b_center | -> |  b_top   | -- Considered as a
      * | b_bottom |    | b_bottom | -- single bottom block
      *
      * @param b The multiple right-hand sides.
      */
-    void interchange_rows_from_3_to_2_blocks_rhs(MultiRHS b) const
+    void interchange_rows_from_3_to_2_blocks_rhs(MultiRHS const b) const
     {
         std::size_t const nq = m_top_left_block->size(); // size of the center block
+
+        // prevent Kokkos::deep_copy(b_top_dst, b_top) to be a deep_copy between overlapping allocations
+        assert(nq >= m_top_size);
 
         MultiRHS const b_top = Kokkos::
                 subview(b, std::pair<std::size_t, std::size_t> {0, m_top_size}, Kokkos::ALL);
         MultiRHS const b_center = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t> {m_top_size, m_top_size + nq},
-                        Kokkos::ALL);
-        MultiRHS const b_bottom = Kokkos::
-                subview(b,
-                        std::pair<std::size_t, std::size_t> {m_top_size + nq, size()},
                         Kokkos::ALL);
 
         MultiRHS const b_center_dst
@@ -136,9 +137,12 @@ private:
      *
      * @param b The multiple right-hand sides.
      */
-    void interchange_rows_from_2_to_3_blocks_rhs(MultiRHS b) const
+    void interchange_rows_from_2_to_3_blocks_rhs(MultiRHS const b) const
     {
         std::size_t const nq = m_top_left_block->size(); // size of the center block
+
+        // prevent Kokkos::deep_copy(b_top, b_top_src) to be a deep_copy between overlapping allocations
+        assert(nq >= m_top_size);
 
         MultiRHS const b_center_src
                 = Kokkos::subview(b, std::pair<std::size_t, std::size_t> {0, nq}, Kokkos::ALL);
@@ -150,10 +154,6 @@ private:
         MultiRHS const b_center = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t> {m_top_size, m_top_size + nq},
-                        Kokkos::ALL);
-        MultiRHS const b_bottom = Kokkos::
-                subview(b,
-                        std::pair<std::size_t, std::size_t> {m_top_size + nq, size()},
                         Kokkos::ALL);
 
         MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_center);
@@ -167,12 +167,12 @@ public:
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
-     * Perform row interchanges on multiple right-hand sides to obtain a 2x2-blocks linear problem and call the SplinesLinearProblem2x2Blocks solver.  
+     * Perform row interchanges on multiple right-hand sides to obtain a 2x2-blocks linear problem and call the SplinesLinearProblem2x2Blocks solver.
      *
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.
      */
-    void solve(MultiRHS b, bool const transpose) const override
+    void solve(MultiRHS const b, bool const transpose) const override
     {
         assert(b.extent(0) == size());
 

@@ -217,23 +217,23 @@ public:
     {
     }
 
-    /// @brief Copy-constructor is deleted
+    /// @brief Copy-constructor is deleted.
     SplineBuilder2D(SplineBuilder2D const& x) = delete;
 
     /**
-     * @brief Move-constructs
+     * @brief Move-constructs.
      *
      * @param x An rvalue to another SplineBuilder2D.
      */
     SplineBuilder2D(SplineBuilder2D&& x) = default;
 
-    /// @brief Destructs
+    /// @brief Destructs.
     ~SplineBuilder2D() = default;
 
-    /// @brief Copy-assignment is deleted
+    /// @brief Copy-assignment is deleted.
     SplineBuilder2D& operator=(SplineBuilder2D const& x) = delete;
 
-    /** @brief Move-assigns
+    /** @brief Move-assigns.
      *
      * @param x An rvalue to another SplineBuilder.
      * @return A reference to this object.
@@ -350,53 +350,37 @@ public:
             ddc::ChunkSpan<double, batched_spline_domain_type, Layout, memory_space> spline,
             ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space>
                     vals,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type1,
-                    Layout,
-                    memory_space>> const derivs_min1
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type1, Layout, memory_space>>
+                    derivs_min1
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type1,
-                    Layout,
-                    memory_space>> const derivs_max1
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type1, Layout, memory_space>>
+                    derivs_max1
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type2,
-                    Layout,
-                    memory_space>> const derivs_min2
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type2, Layout, memory_space>>
+                    derivs_min2
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type2,
-                    Layout,
-                    memory_space>> const derivs_max2
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type2, Layout, memory_space>>
+                    derivs_max2
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type,
-                    Layout,
-                    memory_space>> const mixed_derivs_min1_min2
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type, Layout, memory_space>>
+                    mixed_derivs_min1_min2
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type,
-                    Layout,
-                    memory_space>> const mixed_derivs_max1_min2
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type, Layout, memory_space>>
+                    mixed_derivs_max1_min2
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type,
-                    Layout,
-                    memory_space>> const mixed_derivs_min1_max2
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type, Layout, memory_space>>
+                    mixed_derivs_min1_max2
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type,
-                    Layout,
-                    memory_space>> const mixed_derivs_max1_max2
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type, Layout, memory_space>>
+                    mixed_derivs_max1_max2
             = std::nullopt) const;
 };
 

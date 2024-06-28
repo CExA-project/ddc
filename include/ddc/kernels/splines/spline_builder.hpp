@@ -406,17 +406,13 @@ public:
             ddc::ChunkSpan<double, batched_spline_domain_type, Layout, memory_space> spline,
             ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space>
                     vals,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type,
-                    Layout,
-                    memory_space>> const derivs_xmin
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type, Layout, memory_space>>
+                    derivs_xmin
             = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type,
-                    Layout,
-                    memory_space>> const derivs_xmax
+            std::optional<
+                    ddc::ChunkSpan<double const, batched_derivs_domain_type, Layout, memory_space>>
+                    derivs_xmax
             = std::nullopt) const;
 
 private:
@@ -770,6 +766,7 @@ operator()(
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
+                "ddc_splines_hermite_compute_lower_coefficients",
                 exec_space(),
                 batch_domain(),
                 KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
@@ -787,6 +784,7 @@ operator()(
     auto const& interp_size_proxy = interpolation_domain().extents();
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     ddc::parallel_for_each(
+            "ddc_splines_fill_rhs",
             exec_space(),
             batch_domain(),
             KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
@@ -807,6 +805,7 @@ operator()(
         auto derivs_xmax_values = *derivs_xmax;
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
+                "ddc_splines_hermite_compute_upper_coefficients",
                 exec_space(),
                 batch_domain(),
                 KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
@@ -820,12 +819,13 @@ operator()(
     }
 
     // TODO : Consider optimizing
-    // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo)
+    // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo). Also select only relevant rows in case of periodic boundaries
     ddc::Chunk spline_tr_alloc(
             batched_spline_tr_domain(),
             ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
     ddc::parallel_for_each(
+            "ddc_splines_transpose_rhs",
             exec_space(),
             batch_domain(),
             KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
@@ -841,8 +841,9 @@ operator()(
             batch_domain().size());
     // Compute spline coef
     matrix->solve(bcoef_section);
-    // Transpose back spline_tr in spline
+    // Transpose back spline_tr into spline.
     ddc::parallel_for_each(
+            "ddc_splines_transpose_back_rhs",
             exec_space(),
             batch_domain(),
             KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
@@ -852,9 +853,10 @@ operator()(
                 }
             });
 
-    // Not sure yet of what this part do
+    // Duplicate the lower spline coefficients to the upper side in case of periodic boundaries
     if (bsplines_type::is_periodic()) {
         ddc::parallel_for_each(
+                "ddc_splines_periodic_rows_duplicate_rhs",
                 exec_space(),
                 batch_domain(),
                 KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {

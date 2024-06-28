@@ -380,6 +380,7 @@ public:
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
+                "ddc_splines_evaluate_2d",
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
@@ -559,6 +560,7 @@ public:
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
+                "ddc_splines_differentiate_2d_dim_1",
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
@@ -609,6 +611,7 @@ public:
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
+                "ddc_splines_differentiate_2d_dim_2",
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
@@ -659,6 +662,7 @@ public:
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
+                "ddc_splines_cross_differentiate",
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
@@ -804,6 +808,7 @@ public:
                 ddc::KokkosAllocator<double, memory_space>());
         ddc::ChunkSpan values2 = values2_alloc.span_view();
         Kokkos::parallel_for(
+                "ddc_splines_integrate_bsplines_2d",
                 Kokkos::RangePolicy<exec_space>(0, 1),
                 KOKKOS_LAMBDA(int) {
                     ddc::discrete_space<bsplines_type1>().integrals(values1);
@@ -811,6 +816,7 @@ public:
                 });
 
         ddc::parallel_for_each(
+                "ddc_splines_integrate_bsplines",
                 exec_space(),
                 batch_domain,
                 KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {

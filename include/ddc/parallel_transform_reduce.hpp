@@ -329,7 +329,7 @@ T parallel_transform_reduce(
  *            range. The return type must be acceptable as input to reduce
  */
 template <class ExecSpace, class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
-T parallel_transform_reduce(
+std::enable_if_t<Kokkos::is_execution_space_v<ExecSpace>, T> parallel_transform_reduce(
         ExecSpace const& execution_space,
         DiscreteDomain<DDims...> const& domain,
         T neutral,

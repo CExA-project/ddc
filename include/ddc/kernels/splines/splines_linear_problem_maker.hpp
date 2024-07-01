@@ -126,11 +126,6 @@ public:
         assert(kl < n);
         assert(ku < n);
         int const bottom_size = std::max(kl, ku);
-        int const top_size = n - bottom_size;
-
-        if (bottom_size * (n + top_size) + (2 * kl + ku + 1) * top_size >= n * n) {
-            return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
-        }
 
         return make_new_block_matrix_with_band_main_block<ExecSpace>(n, kl, ku, pds, bottom_size);
     }

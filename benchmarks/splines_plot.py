@@ -158,7 +158,7 @@ if name=="cols_per_chunk":
 
     plt.grid()
     plt.xscale("log")
-    plt.xlabel("Number of right_hand sides per chunk")
+    plt.xlabel("Number of right-hand sides per chunk")
     plt.ylabel("Throughput [B/s]")
     plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
     plt.legend()

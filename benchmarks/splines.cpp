@@ -321,7 +321,7 @@ BENCHMARK(characteristics_advection)
 */
 /*
 // Sweep on preconditionner_max_block_size
-std::string name = "preconditionner_max_block_size"
+std::string name = "preconditionner_max_block_size";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(

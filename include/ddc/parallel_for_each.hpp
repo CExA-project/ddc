@@ -167,7 +167,7 @@ void parallel_for_each(
  * @param[in] f      a functor taking an index as parameter
  */
 template <class ExecSpace, class... DDims, class Functor>
-void parallel_for_each(
+std::enable_if_t<Kokkos::is_execution_space_v<ExecSpace>> parallel_for_each(
         ExecSpace const& execution_space,
         DiscreteDomain<DDims...> const& domain,
         Functor&& f) noexcept

@@ -564,6 +564,7 @@ void core(
         }
 
         Kokkos::parallel_for(
+                "ddc_fft_normalization",
                 Kokkos::RangePolicy<ExecSpace>(
                         execSpace,
                         0,

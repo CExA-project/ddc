@@ -106,12 +106,12 @@ $(document).ready(function(){initNavTree('splines__linear__problem__maker_8hpp_s
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> ku,</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            <span class="keywordtype">bool</span> <span class="keyword">const</span> pds)</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">if</span> (2 * kl + ku + 1 &gt;= n) {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemDense&lt;ExecSpace&gt;&gt;(n);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (kl == ku &amp;&amp; kl == 1 &amp;&amp; pds) {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemPDSTridiag&lt;ExecSpace&gt;&gt;(n);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (kl == ku &amp;&amp; pds) {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemPDSBand&lt;ExecSpace&gt;&gt;(n, kl);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">if</span> (kl == ku &amp;&amp; kl == 1 &amp;&amp; pds) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemPDSTridiag&lt;ExecSpace&gt;&gt;(n);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (kl == ku &amp;&amp; pds) {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemPDSBand&lt;ExecSpace&gt;&gt;(n, kl);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (2 * kl + ku + 1 &gt;= n) {</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemDense&lt;ExecSpace&gt;&gt;(n);</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemBand&lt;ExecSpace&gt;&gt;(n, kl, ku);</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        }</div>

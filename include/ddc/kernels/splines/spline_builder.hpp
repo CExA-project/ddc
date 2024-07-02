@@ -784,6 +784,7 @@ operator()(
 
     // Fill spline with vals (to work in spline afterward and preserve vals)
     ddc::parallel_fill(
+            exec_space(),
             spline[ddc::DiscreteDomain<bsplines_type>(
                     ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
                     ddc::DiscreteVector<bsplines_type>(m_offset))],
@@ -791,6 +792,7 @@ operator()(
     // NOTE: We rely on Kokkos::deep_copy because ddc::parallel_deepcopy do not support
     //       different domain-typed Chunks.
     Kokkos::deep_copy(
+            exec_space(),
             spline[ddc::DiscreteDomain<bsplines_type>(
                            ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + m_offset),
                            ddc::DiscreteVector<bsplines_type>(static_cast<std::size_t>(

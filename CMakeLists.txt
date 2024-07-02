@@ -251,8 +251,8 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
   # Lapacke
   find_package(LAPACKE REQUIRED)
-  target_link_libraries(DDC INTERFACE "${LAPACKE_LIBRARIES}")
-  target_include_directories(DDC INTERFACE "${LAPACKE_INCLUDE_DIRS}")
+  target_link_libraries(DDC INTERFACE ${LAPACKE_LIBRARIES})
+  target_include_directories(DDC INTERFACE ${LAPACKE_INCLUDE_DIRS})
 
   # Kokkos-kernels
   find_package(KokkosKernels)

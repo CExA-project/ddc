@@ -329,7 +329,11 @@ private:
      */
     batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
     {
-        return batched_spline_tr_domain_type(spline_domain(), batch_domain());
+        return batched_spline_tr_domain_type(
+                batched_spline_domain().restrict(ddc::DiscreteDomain<bsplines_type>(
+                        ddc::DiscreteElement<bsplines_type>(0),
+                        ddc::DiscreteVector<bsplines_type>(
+                                ddc::discrete_space<bsplines_type>().nbasis()))));
     }
 
 public:
@@ -778,28 +782,28 @@ operator()(
                 });
     }
 
-    // TODO : Consider optimizing
     // Fill spline with vals (to work in spline afterward and preserve vals)
-    auto const& offset_proxy = m_offset;
-    auto const& interp_size_proxy = interpolation_domain().extents();
-    auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
-    ddc::parallel_for_each(
-            "ddc_splines_fill_rhs",
-            exec_space(),
-            batch_domain(),
-            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
-                for (int i = s_nbc_xmin; i < s_nbc_xmin + offset_proxy; ++i) {
-                    spline(ddc::DiscreteElement<bsplines_type>(i), j) = 0.0;
-                }
-                for (int i = 0; i < interp_size_proxy; ++i) {
-                    spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + i + offset_proxy), j)
-                            = vals(ddc::DiscreteElement<interpolation_mesh_type>(i), j);
-                }
-            });
+    ddc::parallel_fill(
+            spline[ddc::DiscreteDomain<bsplines_type>(
+                    ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
+                    ddc::DiscreteVector<bsplines_type>(m_offset))],
+            0.);
+    // NOTE: We rely on Kokkos::deep_copy because ddc::parallel_deepcopy do not support
+    //       different domain-typed Chunks.
+    Kokkos::deep_copy(
+            spline[ddc::DiscreteDomain<bsplines_type>(
+                           ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + m_offset),
+                           ddc::DiscreteVector<bsplines_type>(static_cast<std::size_t>(
+                                   vals.domain().template extent<interpolation_mesh_type>())))]
+                    .allocation_kokkos_view(),
+            vals.allocation_kokkos_view());
+
+
 
     // Hermite boundary conditions at xmax, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
+    auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     if constexpr (BcXmax == BoundCond::HERMITE) {
         assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
         auto derivs_xmax_values = *derivs_xmax;
@@ -818,8 +822,8 @@ operator()(
                 });
     }
 
-    // TODO : Consider optimizing
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo). Also select only relevant rows in case of periodic boundaries
+    auto const& offset_proxy = m_offset;
     ddc::Chunk spline_tr_alloc(
             batched_spline_tr_domain(),
             ddc::KokkosAllocator<double, memory_space>());

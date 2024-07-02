@@ -217,7 +217,7 @@ int main(int argc, char** argv)
             DDimX,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::GINKGO,
+            ddc::SplineSolver::LAPACK,
             DDimX,
             DDimY>
             spline_builder(x_mesh);

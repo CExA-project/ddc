@@ -174,12 +174,11 @@ public:
         auto q_device = m_q.d_view;
         auto ipiv_device = m_ipiv.d_view;
 
-        std::string name = "gbtrs";
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
-        Kokkos::Profiling::pushRegion(name);
+
         if (transpose) {
             Kokkos::parallel_for(
-                    name,
+                    "gbtrs",
                     policy,
                     KOKKOS_CLASS_LAMBDA(const int i) {
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
@@ -190,7 +189,7 @@ public:
                     });
         } else {
             Kokkos::parallel_for(
-                    name,
+                    "gbtrs",
                     policy,
                     KOKKOS_CLASS_LAMBDA(const int i) {
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
@@ -200,7 +199,6 @@ public:
                                 invoke(q_device, sub_b, ipiv_device, m_kl, m_ku);
                     });
         }
-        Kokkos::Profiling::popRegion();
     }
 };
 

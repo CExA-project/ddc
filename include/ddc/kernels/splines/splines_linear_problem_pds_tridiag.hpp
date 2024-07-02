@@ -127,18 +127,15 @@ public:
         auto q_device = m_q.d_view;
         auto d = Kokkos::subview(q_device, 0, Kokkos::ALL);
         auto e = Kokkos::subview(q_device, 1, Kokkos::pair<int, int>(0, q_device.extent(1) - 1));
-        std::string name = "pttrs";
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
-        Kokkos::Profiling::pushRegion(name);
         Kokkos::parallel_for(
-                name,
+                "pttrs",
                 policy,
                 KOKKOS_CLASS_LAMBDA(const int i) {
                     auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                     KokkosBatched::SerialPttrs<
                             KokkosBatched::Algo::Pttrs::Unblocked>::invoke(d, e, sub_b);
                 });
-        Kokkos::Profiling::popRegion();
     }
 };
 

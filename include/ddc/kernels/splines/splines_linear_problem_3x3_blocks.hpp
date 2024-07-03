@@ -102,30 +102,41 @@ private:
      *
      * @param b The multiple right-hand sides.
      */
-    void interchange_rows_from_3_to_2_blocks_rhs(MultiRHS const b) const
+    void interchange_rows_from_3_to_2_blocks_rhs(MultiRHS b) const
     {
         std::size_t const nq = m_top_left_block->size(); // size of the center block
 
-        // prevent Kokkos::deep_copy(b_top_dst, b_top) to be a deep_copy between overlapping allocations
-        assert(nq >= m_top_size);
+        Kokkos::realloc(b, b.extent(0) + m_top_size, b.extent(1));
 
         MultiRHS const b_top = Kokkos::
                 subview(b, std::pair<std::size_t, std::size_t> {0, m_top_size}, Kokkos::ALL);
-        MultiRHS const b_center = Kokkos::
+        MultiRHS const b_bottom = Kokkos::
                 subview(b,
-                        std::pair<std::size_t, std::size_t> {m_top_size, m_top_size + nq},
+                        std::pair<std::size_t, std::size_t> {m_top_size + nq, size()},
                         Kokkos::ALL);
 
-        MultiRHS const b_center_dst
-                = Kokkos::subview(b, std::pair<std::size_t, std::size_t> {0, nq}, Kokkos::ALL);
         MultiRHS const b_top_dst = Kokkos::
-                subview(b, std::pair<std::size_t, std::size_t> {nq, nq + m_top_size}, Kokkos::ALL);
+                subview(b,
+                        std::pair<std::size_t, std::size_t> {m_top_size + nq, 2 * m_top_size + nq},
+                        Kokkos::ALL);
+        MultiRHS const b_bottom_dst = Kokkos::
+                subview(b,
+                        std::pair<
+                                std::size_t,
+                                std::size_t> {2 * m_top_size + nq, m_top_size + size()},
+                        Kokkos::ALL);
 
-        MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_center);
+        // Need a buffer to prevent overlapping
+        MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_bottom);
 
-        Kokkos::deep_copy(buffer, b_center);
+        Kokkos::deep_copy(buffer, b_bottom);
+        Kokkos::deep_copy(b_bottom_dst, buffer);
         Kokkos::deep_copy(b_top_dst, b_top);
-        Kokkos::deep_copy(b_center_dst, buffer);
+
+        b = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t> {m_top_size, m_top_size + size()},
+                        Kokkos::ALL);
     }
 
     /**
@@ -140,9 +151,6 @@ private:
     void interchange_rows_from_2_to_3_blocks_rhs(MultiRHS const b) const
     {
         std::size_t const nq = m_top_left_block->size(); // size of the center block
-
-        // prevent Kokkos::deep_copy(b_top, b_top_src) to be a deep_copy between overlapping allocations
-        assert(nq >= m_top_size);
 
         MultiRHS const b_center_src
                 = Kokkos::subview(b, std::pair<std::size_t, std::size_t> {0, nq}, Kokkos::ALL);

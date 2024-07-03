@@ -266,8 +266,8 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
       set(KokkosKernels_ENABLE_TPL_LAPACK OFF)
       add_subdirectory(vendor/kokkos-kernels)
     endif()
-    target_link_libraries(DDC INTERFACE Kokkos::kokkoskernels)
   endif()
+  target_link_libraries(DDC INTERFACE Kokkos::kokkoskernels)
 endif()
 
 ## The PDI wrapper

@@ -158,7 +158,7 @@ if name=="cols_per_chunk":
 
     plt.grid()
     plt.xscale("log")
-    plt.xlabel("Number of right_hand sides per chunk")
+    plt.xlabel("Number of right-hand sides per chunk")
     plt.ylabel("Throughput [B/s]")
     plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
     plt.legend()
@@ -177,7 +177,6 @@ if name=="preconditionner_max_block_size":
         plotter(plt, "preconditionner_max_block_size", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
 
     plt.grid()
-    plt.xscale("log")
     plt.xlabel("Max block size of preconditioner")
     plt.ylabel("Throughput [B/s]")
     plt.title(str(backend)+": Throughput on CPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")
@@ -188,7 +187,6 @@ if name=="preconditionner_max_block_size":
         plotter(plt, "preconditionner_max_block_size", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
 
     plt.grid()
-    plt.xscale("log")
     plt.xlabel("Max block size of preconditioner")
     plt.ylabel("Throughput [B/s]")
     plt.title(str(backend)+": Throughput on GPU (with ny="+str([item["ny"] for item in data_dict_sorted][0])+")")

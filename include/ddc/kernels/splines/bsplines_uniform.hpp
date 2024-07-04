@@ -474,8 +474,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<
     double offset;
     int jmin;
 
-    assert(x + Kokkos::abs(rmin()) * 1e-14 >= rmin());
-    assert(x - Kokkos::abs(rmax()) * 1e-14 <= rmax());
+    assert(x - rmin() >= -Kokkos::abs(length()) * 1e-14);
+    assert(rmax() - x >= -Kokkos::abs(length()) * 1e-14);
     // assert(n >= 0); as long as n is unsigned
     assert(n <= degree());
     assert(derivs.extent(0) == 1 + degree());
@@ -554,8 +554,8 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::ge
         double& offset,
         ddc::Coordinate<Tag> const& x) const
 {
-    assert(x + Kokkos::abs(rmin()) * 1e-14 >= rmin());
-    assert(x - Kokkos::abs(rmax()) * 1e-14 <= rmax());
+    assert(x - rmin() >= -Kokkos::abs(length()) * 1e-14);
+    assert(rmax() - x >= -Kokkos::abs(length()) * 1e-14);
 
     double const inv_dx = inv_step();
     if (x == rmin()) {

@@ -554,8 +554,8 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::ge
         double& offset,
         ddc::Coordinate<Tag> const& x) const
 {
-    assert(x - rmin() * 1e-14 >= rmin());
-    assert(x - rmax() * 1e-14 <= rmax());
+    assert(x + Kokkos::abs(rmin()) * 1e-14 >= rmin());
+    assert(x - Kokkos::abs(rmax()) * 1e-14 <= rmax());
 
     double const inv_dx = inv_step();
     if (x == rmin()) {

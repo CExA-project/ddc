@@ -126,7 +126,7 @@ public:
         assert(b.extent(0) == size());
         auto q_device = m_q.d_view;
         auto d = Kokkos::subview(q_device, 0, Kokkos::ALL);
-        auto e = Kokkos::subview(q_device, 1, Kokkos::pair<int, int>(0, q_device.extent(1) - 1));
+        auto e = Kokkos::subview(q_device, 1, Kokkos::pair<int, int>(0, q_device.extent_int(1) - 1));
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
         Kokkos::parallel_for(
                 "pttrs",

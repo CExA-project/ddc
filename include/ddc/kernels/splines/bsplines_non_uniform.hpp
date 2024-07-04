@@ -462,8 +462,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     std::array<double, degree()> left;
     std::array<double, degree()> right;
 
-    assert(x - rmin() * 1e-14 >= rmin());
-    assert(x - rmax() * 1e-14 <= rmax());
+    assert(x + Kokkos::abs(rmin()) * 1e-14 >= rmin());
+    assert(x - Kokkos::abs(rmax()) * 1e-14 <= rmax());
     assert(values.size() == degree() + 1);
 
     // 1. Compute cell index 'icell'
@@ -500,8 +500,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     std::array<double, degree()> left;
     std::array<double, degree()> right;
 
-    assert(x - rmin() * 1e-14 >= rmin());
-    assert(x - rmax() * 1e-14 <= rmax());
+    assert(x + Kokkos::abs(rmin()) * 1e-14 >= rmin());
+    assert(x - Kokkos::abs(rmax()) * 1e-14 <= rmax());
     assert(derivs.size() == degree() + 1);
 
     // 1. Compute cell index 'icell'
@@ -573,8 +573,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
             std::experimental::extents<std::size_t, degree() + 1, degree() + 1>> const
             ndu(ndu_ptr.data());
 
-    assert(x - rmin() * 1e-14 >= rmin());
-    assert(x - rmax() * 1e-14 <= rmax());
+    assert(x + Kokkos::abs(rmin()) * 1e-14 >= rmin());
+    assert(x - Kokkos::abs(rmax()) * 1e-14 <= rmax());
     // assert(n >= 0); as long as n is unsigned
     assert(n <= degree());
     assert(derivs.extent(0) == 1 + degree());

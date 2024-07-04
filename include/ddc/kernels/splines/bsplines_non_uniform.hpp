@@ -663,8 +663,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUn
         Tag,
         D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<Tag> const& x) const
 {
-    assert(x - rmin() * 1e-14 >= rmin());
-    assert(x - rmax() * 1e-14 <= rmax());
+    assert(x + Kokkos::abs(rmin()) * 1e-14 >= rmin());
+    assert(x - Kokkos::abs(rmax()) * 1e-14 <= rmax());
 
     if (x == rmin())
         return m_break_point_domain.front();

@@ -171,32 +171,32 @@ public:
     {
         assert(b.extent(0) == size());
 
+        std::size_t kl_proxy = m_kl;
+        std::size_t ku_proxy = m_ku;
         auto q_device = m_q.d_view;
         auto ipiv_device = m_ipiv.d_view;
-
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
-
         if (transpose) {
             Kokkos::parallel_for(
                     "gbtrs",
                     policy,
-                    KOKKOS_CLASS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(const int i) {
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                         KokkosBatched::SerialGbtrs<
                                 KokkosBatched::Trans::Transpose,
                                 KokkosBatched::Algo::Gbtrs::Unblocked>::
-                                invoke(q_device, sub_b, ipiv_device, m_kl, m_ku);
+                                invoke(q_device, sub_b, ipiv_device, kl_proxy, ku_proxy);
                     });
         } else {
             Kokkos::parallel_for(
                     "gbtrs",
                     policy,
-                    KOKKOS_CLASS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(const int i) {
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                         KokkosBatched::SerialGbtrs<
                                 KokkosBatched::Trans::NoTranspose,
                                 KokkosBatched::Algo::Gbtrs::Unblocked>::
-                                invoke(q_device, sub_b, ipiv_device, m_kl, m_ku);
+                                invoke(q_device, sub_b, ipiv_device, kl_proxy, ku_proxy);
                     });
         }
     }

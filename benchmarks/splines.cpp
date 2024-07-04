@@ -58,7 +58,7 @@ void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem
     size_t totalMem = 0;
     while (monitorFlag) {
         std::this_thread::sleep_for(
-                std::chrono::microseconds(100)); // Adjust the interval as needed
+                std::chrono::microseconds(10)); // Adjust the interval as needed
 
         // Acquire a lock to ensure thread safety when accessing CUDA functions
         std::lock_guard<std::mutex> lock(mutex);

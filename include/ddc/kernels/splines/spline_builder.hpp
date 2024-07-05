@@ -330,11 +330,20 @@ private:
      */
     batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
     {
-        return batched_spline_tr_domain_type(
-                batched_spline_domain().restrict(ddc::DiscreteDomain<bsplines_type>(
+        int lower_block_size, upper_block_size;
+        if constexpr (bsplines_type::is_uniform()) {
+            compute_block_sizes_uniform(lower_block_size, upper_block_size);
+        } else {
+            compute_block_sizes_non_uniform(lower_block_size, upper_block_size);
+        }
+
+        return batched_spline_tr_domain_type(ddc::replace_dim_of<bsplines_type, bsplines_type>(
+                batched_spline_domain(),
+                ddc::DiscreteDomain<bsplines_type>(
                         ddc::DiscreteElement<bsplines_type>(0),
                         ddc::DiscreteVector<bsplines_type>(
-                                ddc::discrete_space<bsplines_type>().nbasis()))));
+                                ddc::discrete_space<bsplines_type>().nbasis()
+                                + upper_block_size))));
     }
 
 public:
@@ -870,7 +879,7 @@ operator()(
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
     Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
             spline_tr.data_handle(),
-            ddc::discrete_space<bsplines_type>().nbasis(),
+            static_cast<std::size_t>(spline_tr.template extent<bsplines_type>()),
             batch_domain().size());
     // Compute spline coef
     matrix->solve(bcoef_section);

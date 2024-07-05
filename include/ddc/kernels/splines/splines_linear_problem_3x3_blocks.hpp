@@ -182,9 +182,7 @@ public:
      */
     void solve(MultiRHS b, bool const transpose) const override
     {
-        assert(b.extent(0) == size());
-
-        Kokkos::resize(b, size() + m_top_size, b.extent(1));
+        assert(b.extent(0) == size() + m_top_size);
 
         interchange_rows_from_3_to_2_blocks_rhs(b);
         SplinesLinearProblem2x2Blocks<ExecSpace>::
@@ -196,8 +194,6 @@ public:
                                       Kokkos::ALL),
                       transpose);
         interchange_rows_from_2_to_3_blocks_rhs(b);
-
-        Kokkos::resize(b, size(), b.extent(1));
     }
 };
 

@@ -84,8 +84,6 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
     {
         const std::size_t N = matrix.size();
 
-        std::cout << "lul " << additional_rows;
-
         std::vector<double> val_ptr(N * N);
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
                 val(val_ptr.data(), N, N);

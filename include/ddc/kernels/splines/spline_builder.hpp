@@ -324,7 +324,7 @@ private:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest being the leading dimension.
      *
-     * This is used internally due to solver limitation and because it may be beneficial to computation performance.
+     * This is used internally due to solver limitation and because it may be beneficial to computation performance. For LAPACK backend and non-periodic upper boundary condition, we are using SplinesLinearSolver3x3Blocks which requires upper_block_size additional rows for internal operations.
      *
      * @return The (transposed) domain for the spline coefficients.
      */

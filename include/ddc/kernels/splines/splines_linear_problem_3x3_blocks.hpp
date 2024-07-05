@@ -190,7 +190,9 @@ public:
      *
      * Perform row interchanges on multiple right-hand sides to obtain a 2x2-blocks linear problem and call the SplinesLinearProblem2x2Blocks solver.
      *
-     * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
+     * This class requires an additional allocation corresponding to top_size rows for internal operation.
+     *
+     * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides (+ additional garbage allocation) of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.
      */
     void solve(MultiRHS const b, bool const transpose) const override

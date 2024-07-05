@@ -96,9 +96,10 @@ private:
      * @brief Perform row interchanges on multiple right-hand sides to get a 2-blocks structure (matching the requirements
      * of the SplinesLinearProblem2x2Blocks solver).
      *
-     * |  b_top   |    | b_center |
-     * | b_center | -> |  b_top   | -- Considered as a
-     * | b_bottom |    | b_bottom | -- single bottom block
+     * |  b_top   |    |    -     |
+     * | b_center | -> | b_center |
+     * | b_bottom |    |  b_top   | -- Considered as a
+     * |    -     |    | b_bottom | -- single bottom block
      *
      * @param b The multiple right-hand sides.
      */
@@ -135,9 +136,10 @@ private:
     /**
      * @brief Perform row interchanges on multiple right-hand sides to restore its 3-blocks structure.
      *
-     * | b_center |    |  b_top   |
-     * |  b_top   | -> | b_center |
-     * | b_bottom |    | b_bottom |
+     * |    -     |    |  b_top   |
+     * | b_center | -> | b_center |
+     * |  b_top   |    | b_bottom |
+     * | b_bottom |    |    -     |
      *
      * @param b The multiple right-hand sides.
      */

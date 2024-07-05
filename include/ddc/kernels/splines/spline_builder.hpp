@@ -324,14 +324,14 @@ private:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest being the leading dimension.
      *
-     * This is used internally due to solver limitation and because it may be beneficial to computation performance. For LAPACK backend and non-periodic upper boundary condition, we are using SplinesLinearSolver3x3Blocks which requires upper_block_size additional rows for internal operations.
+     * This is used internally due to solver limitation and because it may be beneficial to computation performance. For LAPACK backend and non-periodic boundary condition, we are using SplinesLinearSolver3x3Blocks which requires upper_block_size additional rows for internal operations.
      *
      * @return The (transposed) domain for the spline coefficients.
      */
     batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
     {
         int upper_block_size;
-        if constexpr (Solver == ddc::SplineSolver::LAPACK) {
+        if constexpr (Solver == ddc::SplineSolver::LAPACK && !bsplines_type::is_periodic()) {
             int lower_block_size;
             if constexpr (bsplines_type::is_uniform()) {
                 compute_block_sizes_uniform(lower_block_size, upper_block_size);

@@ -125,11 +125,15 @@ private:
                                 std::size_t> {2 * m_top_size + nq, m_top_size + size()},
                         Kokkos::ALL);
 
-        // Need a buffer to prevent overlapping
-        MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_bottom);
+        if (b_bottom.extent(0) > b_top.extent(0)) {
+            // Need a buffer to prevent overlapping
+            MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_bottom);
 
-        Kokkos::deep_copy(buffer, b_bottom);
-        Kokkos::deep_copy(b_bottom_dst, buffer);
+            Kokkos::deep_copy(buffer, b_bottom);
+            Kokkos::deep_copy(b_bottom_dst, buffer);
+        } else {
+            Kokkos::deep_copy(b_bottom_dst, b_bottom);
+        }
         Kokkos::deep_copy(b_top_dst, b_top);
     }
 
@@ -169,8 +173,15 @@ private:
         MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_bottom);
 
         Kokkos::deep_copy(b_top, b_top_src);
-        Kokkos::deep_copy(buffer, b_bottom_src);
-        Kokkos::deep_copy(b_bottom, buffer);
+        if (b_bottom.extent(0) > b_top.extent(0)) {
+            // Need a buffer to prevent overlapping
+            MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_bottom);
+
+            Kokkos::deep_copy(buffer, b_bottom_src);
+            Kokkos::deep_copy(b_bottom, buffer);
+        } else {
+            Kokkos::deep_copy(b_bottom, b_bottom_src);
+        }
     }
 
 public:

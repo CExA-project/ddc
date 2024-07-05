@@ -526,8 +526,8 @@ $(document).ready(function(){initNavTree('bsplines__uniform_8hpp_source.html',''
 <div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>    <span class="keywordtype">double</span> offset;</div>
 <div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>    <span class="keywordtype">int</span> jmin;</div>
 <div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span> </div>
-<div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>    assert(x &gt;= rmin());</div>
-<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span>    assert(x &lt;= rmax());</div>
+<div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>    assert(x - rmin() &gt;= -length() * 1e-14);</div>
+<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span>    assert(rmax() - x &gt;= -length() * 1e-14);</div>
 <div class="line"><a id="l00479" name="l00479"></a><span class="lineno">  479</span>    <span class="comment">// assert(n &gt;= 0); as long as n is unsigned</span></div>
 <div class="line"><a id="l00480" name="l00480"></a><span class="lineno">  480</span>    assert(n &lt;= degree());</div>
 <div class="line"><a id="l00481" name="l00481"></a><span class="lineno">  481</span>    assert(derivs.extent(0) == 1 + degree());</div>
@@ -606,8 +606,8 @@ $(document).ready(function(){initNavTree('bsplines__uniform_8hpp_source.html',''
 <div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>        <span class="keywordtype">double</span>&amp; offset,</div>
 <div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;Tag&gt; <span class="keyword">const</span>&amp; x) <span class="keyword">const</span></div>
 <div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>{</div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>    assert(x &gt;= rmin());</div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>    assert(x &lt;= rmax());</div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>    assert(x - rmin() &gt;= -length() * 1e-14);</div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>    assert(rmax() - x &gt;= -length() * 1e-14);</div>
 <div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span> </div>
 <div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>    <span class="keywordtype">double</span> <span class="keyword">const</span> inv_dx = inv_step();</div>
 <div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>    <span class="keywordflow">if</span> (x == <a class="code hl_function" href="classddc_1_1UniformBSplines_1_1Impl.html#aaeed188e20d6d65bd5d9ca3c8b44e01d">rmin</a><a class="code hl_function" href="classddc_1_1UniformBSplines_1_1Impl.html#aaeed188e20d6d65bd5d9ca3c8b44e01d">(</a><a class="code hl_function" href="classddc_1_1UniformBSplines_1_1Impl.html#aaeed188e20d6d65bd5d9ca3c8b44e01d">)</a>) {</div>

@@ -330,7 +330,7 @@ private:
      */
     batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
     {
-        int upper_block_size;
+        int upper_block_size = 0;
         if constexpr (Solver == ddc::SplineSolver::LAPACK && !bsplines_type::is_periodic()) {
             int lower_block_size;
             if constexpr (bsplines_type::is_uniform()) {
@@ -338,8 +338,6 @@ private:
             } else {
                 compute_block_sizes_non_uniform(lower_block_size, upper_block_size);
             }
-        } else if constexpr (Solver == ddc::SplineSolver::GINKGO) {
-            upper_block_size = 0;
         }
 
         return batched_spline_tr_domain_type(ddc::replace_dim_of<bsplines_type, bsplines_type>(

@@ -12,6 +12,9 @@
 #include <ddc/kernels/splines.hpp>
 
 #include <Kokkos_Core.hpp>
+
+#define PERIODIC_DOMAIN // Comment this to run non-periodic simulation
+
 //! [includes]
 static constexpr std::size_t s_degree_x = 3;
 
@@ -19,19 +22,31 @@ static constexpr std::size_t s_degree_x = 3;
 /// Our first continuous dimension
 struct X
 {
+#ifdef PERIODIC_DOMAIN
     static constexpr bool PERIODIC = true;
+#else
+    static constexpr bool PERIODIC = false;
+#endif
 };
 //! [X-dimension]
+
+//! [boundary-condition]
+#ifdef PERIODIC_DOMAIN
+static constexpr ddc::BoundCond BoundCond = ddc::BoundCond::PERIODIC;
+using ExtrapolationRule = ddc::PeriodicExtrapolationRule<X>;
+#else
+static constexpr ddc::BoundCond BoundCond = ddc::BoundCond::GREVILLE;
+using ExtrapolationRule = ddc::NullExtrapolationRule;
+#endif
+//! [boundary-condition]
 
 //! [X-discretization]
 /// A uniform discretization of X
 struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
 {
 };
-using GrevillePoints = ddc::GrevilleInterpolationPoints<
-        BSplinesX,
-        ddc::BoundCond::PERIODIC,
-        ddc::BoundCond::PERIODIC>;
+using GrevillePoints = ddc::
+        GrevilleInterpolationPoints<BSplinesX, BoundCond, BoundCond>;
 struct DDimX : GrevillePoints::interpolation_mesh_type
 {
 };
@@ -129,16 +144,15 @@ int main(int argc, char** argv)
             ddc::Coordinate<X>(x_start),
             ddc::Coordinate<X>(x_end),
             nb_x_points);
-    ddc::init_discrete_space<DDimX>(
-            ddc::GrevilleInterpolationPoints<
-                    BSplinesX,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC>::get_sampling<DDimX>());
+    ddc::init_discrete_space<DDimX>(ddc::GrevilleInterpolationPoints<
+                                    BSplinesX,
+                                    BoundCond,
+                                    BoundCond>::get_sampling<DDimX>());
 
     auto const x_domain = ddc::GrevilleInterpolationPoints<
             BSplinesX,
-            ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC>::get_domain<DDimX>();
+            BoundCond,
+            BoundCond>::get_domain<DDimX>();
     //! [X-global-domain]
     // Initialization of the global domain in Y
     auto const y_domain
@@ -215,25 +229,23 @@ int main(int argc, char** argv)
             Kokkos::DefaultExecutionSpace::memory_space,
             BSplinesX,
             DDimX,
-            ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC,
+            BoundCond,
+            BoundCond,
             ddc::SplineSolver::LAPACK,
             DDimX,
             DDimY>
             spline_builder(x_mesh);
-    ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
+    ExtrapolationRule extrapolation_rule;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             BSplinesX,
             DDimX,
-            ddc::PeriodicExtrapolationRule<X>,
-            ddc::PeriodicExtrapolationRule<X>,
+            ExtrapolationRule,
+            ExtrapolationRule,
             DDimX,
             DDimY>
-            spline_evaluator(
-                    periodic_extrapolation,
-                    periodic_extrapolation);
+            spline_evaluator(extrapolation_rule, extrapolation_rule);
     //! [instantiate solver]
 
     //! [instantiate intermediate chunks]

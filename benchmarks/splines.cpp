@@ -14,6 +14,7 @@
 
 #include <benchmark/benchmark.h>
 
+//static const ddc::SplineSolver Backend = ddc::SplineSolver::GINKGO;
 static const ddc::SplineSolver Backend = ddc::SplineSolver::LAPACK;
 
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
@@ -280,8 +281,8 @@ BENCHMARK(characteristics_advection)
                 {{false, true},
                  {false, true},
                  {3, 5},
-                 {64, 1024},
-                 {ny_ref, ny_ref},
+                 {1024, 1024},
+                 {2000, 200000},
                  {cols_per_chunk_ref, cols_per_chunk_ref},
                  {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
         ->MinTime(3)

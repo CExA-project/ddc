@@ -26,11 +26,17 @@ class SplinesLinearProblem
 public:
     /// @brief The type of a Kokkos::View storing multiple right-hand sides.
     using MultiRHS = Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>;
+    using AViewType
+            = Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>;
+    using PivViewType = Kokkos::DualView<int*, typename ExecSpace::memory_space>;
 
 private:
     std::size_t m_size;
 
 protected:
+    AViewType m_a;
+    PivViewType m_ipiv;
+
     explicit SplinesLinearProblem(const std::size_t size) : m_size(size) {}
 
 public:
@@ -69,6 +75,14 @@ public:
      */
     virtual void solve(MultiRHS b, bool transpose = false) const = 0;
 
+    virtual void solve(
+            typename AViewType::t_dev top_right_block,
+            typename AViewType::t_dev bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool transpose = false) const = 0;
+
     /**
      * @brief Get the size of the square matrix in one of its dimensions.
      *
@@ -77,6 +91,16 @@ public:
     std::size_t size() const
     {
         return m_size;
+    }
+
+    auto get_matrix() const
+    {
+        return m_a.d_view;
+    }
+
+    auto get_pivot() const
+    {
+        return m_ipiv.d_view;
     }
 };
 

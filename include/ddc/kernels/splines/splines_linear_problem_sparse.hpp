@@ -125,6 +125,9 @@ class SplinesLinearProblemSparse : public SplinesLinearProblem<ExecSpace>
 {
 public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
+    using typename SplinesLinearProblem<ExecSpace>::AViewType;
+    using typename SplinesLinearProblem<ExecSpace>::PivViewType;
+
     using SplinesLinearProblem<ExecSpace>::size;
 
 private:
@@ -282,6 +285,16 @@ public:
 
             Kokkos::deep_copy(b_chunk, x_chunk);
         }
+    }
+
+    void solve(
+            typename AViewType::t_dev top_right_block,
+            typename AViewType::t_dev bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool const transpose) const override
+    {
     }
 };
 

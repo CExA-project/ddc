@@ -16,6 +16,7 @@
 #include <lapacke.h>
 #endif
 
+#include <KokkosBatched_Gemm_Decl.hpp>
 #include <KokkosBatched_Getrs.hpp>
 #include <KokkosBatched_Util.hpp>
 
@@ -35,11 +36,13 @@ class SplinesLinearProblemDense : public SplinesLinearProblem<ExecSpace>
 {
 public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
+    using typename SplinesLinearProblem<ExecSpace>::AViewType;
+    using typename SplinesLinearProblem<ExecSpace>::PivViewType;
     using SplinesLinearProblem<ExecSpace>::size;
 
-protected:
-    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_a;
-    Kokkos::DualView<int*, typename ExecSpace::memory_space> m_ipiv;
+    //protected:
+    //    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_a;
+    //    Kokkos::DualView<int*, typename ExecSpace::memory_space> m_ipiv;
 
 public:
     /**
@@ -49,24 +52,24 @@ public:
      */
     explicit SplinesLinearProblemDense(std::size_t const mat_size)
         : SplinesLinearProblem<ExecSpace>(mat_size)
-        , m_a("a", mat_size, mat_size)
-        , m_ipiv("ipiv", mat_size)
     {
-        Kokkos::deep_copy(m_a.h_view, 0.);
+        this->m_a = AViewType("a", mat_size, mat_size);
+        this->m_ipiv = PivViewType("ipiv", mat_size);
+        Kokkos::deep_copy(this->m_a.h_view, 0.);
     }
 
     double get_element(std::size_t const i, std::size_t const j) const override
     {
         assert(i < size());
         assert(j < size());
-        return m_a.h_view(i, j);
+        return this->m_a.h_view(i, j);
     }
 
     void set_element(std::size_t const i, std::size_t const j, double const aij) override
     {
         assert(i < size());
         assert(j < size());
-        m_a.h_view(i, j) = aij;
+        this->m_a.h_view(i, j) = aij;
     }
 
     /**
@@ -80,9 +83,9 @@ public:
                 LAPACK_ROW_MAJOR,
                 size(),
                 size(),
-                m_a.h_view.data(),
+                this->m_a.h_view.data(),
                 size(),
-                m_ipiv.h_view.data());
+                this->m_ipiv.h_view.data());
         if (info != 0) {
             throw std::runtime_error(
                     "LAPACKE_dgetrf failed with error code " + std::to_string(info));
@@ -90,14 +93,14 @@ public:
 
         // Convert 1-based index to 0-based index
         for (int i = 0; i < size(); ++i) {
-            m_ipiv.h_view(i) -= 1;
+            this->m_ipiv.h_view(i) -= 1;
         }
 
         // Push on device
-        m_a.modify_host();
-        m_a.sync_device();
-        m_ipiv.modify_host();
-        m_ipiv.sync_device();
+        this->m_a.modify_host();
+        this->m_a.sync_device();
+        this->m_ipiv.modify_host();
+        this->m_ipiv.sync_device();
     }
 
     /**
@@ -112,8 +115,8 @@ public:
     {
         assert(b.extent(0) == size());
 
-        auto a_device = m_a.d_view;
-        auto ipiv_device = m_ipiv.d_view;
+        auto a_device = this->m_a.d_view;
+        auto ipiv_device = this->m_ipiv.d_view;
 
         std::string name = "getrs";
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
@@ -139,6 +142,87 @@ public:
                                 KokkosBatched::Trans::NoTranspose,
                                 KokkosBatched::Algo::Getrs::Unblocked>::
                                 invoke(a_device, ipiv_device, sub_b);
+                    });
+        }
+        Kokkos::Profiling::popRegion();
+    }
+
+    void solve(
+            typename AViewType::t_dev top_right_block,
+            typename AViewType::t_dev bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool const transpose) const override
+    {
+        auto Q = this->m_a.d_view;
+        auto piv = this->m_ipiv.d_view;
+        MultiRHS b1 = Kokkos::
+                subview(b, std::pair<std::size_t, std::size_t>(0, this->size()), Kokkos::ALL);
+        MultiRHS b2 = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(this->size(), b.extent(0)),
+                        Kokkos::ALL);
+        std::string name = "getrs";
+        Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
+        Kokkos::Profiling::pushRegion(name);
+        if (transpose) {
+            Kokkos::parallel_for(
+                    name,
+                    policy,
+                    KOKKOS_LAMBDA(const int i) {
+                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
+                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
+
+                        KokkosBatched::SerialGemm<
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Algo::Gemm::Unblocked>::
+                                invoke(-1.0, top_right_block, sub_b1, 1.0, sub_b2);
+
+                        KokkosBatched::SerialGetrs<
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Algo::Getrs::Unblocked>::
+                                invoke(bottom_right_block, bottom_right_piv, sub_b2);
+
+                        KokkosBatched::SerialGemm<
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Algo::Gemm::Unblocked>::
+                                invoke(-1.0, bottom_left_block, sub_b2, 1.0, sub_b1);
+
+                        KokkosBatched::SerialGetrs<
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Algo::Getrs::Unblocked>::invoke(Q, piv, sub_b1);
+                    });
+        } else {
+            Kokkos::parallel_for(
+                    name,
+                    policy,
+                    KOKKOS_LAMBDA(const int i) {
+                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
+                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
+
+                        KokkosBatched::SerialGetrs<
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Algo::Gbtrs::Unblocked>::invoke(Q, piv, sub_b1);
+
+                        KokkosBatched::SerialGemm<
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Algo::Gemm::Unblocked>::
+                                invoke(-1.0, bottom_left_block, sub_b1, 1.0, sub_b2);
+
+                        KokkosBatched::SerialGetrs<
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Algo::Getrs::Unblocked>::
+                                invoke(bottom_right_block, bottom_right_piv, sub_b2);
+
+                        KokkosBatched::SerialGemm<
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Algo::Gemm::Unblocked>::
+                                invoke(-1.0, top_right_block, sub_b2, 1.0, sub_b1);
                     });
         }
         Kokkos::Profiling::popRegion();

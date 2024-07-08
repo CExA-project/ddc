@@ -36,6 +36,8 @@ class SplinesLinearProblem2x2Blocks : public SplinesLinearProblem<ExecSpace>
 {
 public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
+    using typename SplinesLinearProblem<ExecSpace>::AViewType;
+    using typename SplinesLinearProblem<ExecSpace>::PivViewType;
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
@@ -185,26 +187,23 @@ public:
     void solve(MultiRHS b, bool const transpose) const override
     {
         assert(b.extent(0) == size());
+        m_top_left_block
+                ->solve(m_top_right_block.d_view,
+                        m_bottom_left_block.d_view,
+                        m_bottom_right_block->get_matrix(),
+                        m_bottom_right_block->get_pivot(),
+                        b,
+                        transpose);
+    }
 
-        MultiRHS b1 = Kokkos::
-                subview(b,
-                        std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
-                        Kokkos::ALL);
-        MultiRHS b2 = Kokkos::
-                subview(b,
-                        std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
-                        Kokkos::ALL);
-        if (!transpose) {
-            m_top_left_block->solve(b1);
-            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., m_bottom_left_block.d_view, b1, 1., b2);
-            m_bottom_right_block->solve(b2);
-            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., m_top_right_block.d_view, b2, 1., b1);
-        } else {
-            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., m_top_right_block.d_view, b1, 1., b2);
-            m_bottom_right_block->solve(b2, true);
-            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., m_bottom_left_block.d_view, b2, 1., b1);
-            m_top_left_block->solve(b1, true);
-        }
+    void solve(
+            typename AViewType::t_dev top_right_block,
+            typename AViewType::t_dev bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool const transpose) const override
+    {
     }
 };
 

@@ -8,7 +8,9 @@
 #include <memory>
 #include <string>
 
-#include <KokkosBlas3_gemm.hpp>
+#include <KokkosSparse_CooMatrix.hpp>
+#include <KokkosSparse_coo2crs.hpp>
+#include <KokkosSparse_spmv.hpp>
 #include <Kokkos_DualView.hpp>
 
 #include "splines_linear_problem.hpp"
@@ -42,8 +44,10 @@ protected:
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_top_right_block;
+    KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space> m_top_right_block_sp;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_bottom_left_block;
+    KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space> m_bottom_left_block_sp;
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
 
 public:
@@ -109,6 +113,66 @@ public:
         }
     }
 
+    /**
+     * @brief Fill a CRS version of a Dense matrix (remove zeros).
+     *
+     * /!\ Should be private, it is public due to CUDA limitation.
+     *
+     * Runs on a single thread to garantee ordering.
+     *
+     * @param dense_matrix The dense storage matrix whose non-zeros are extracted to fill the CRS matrix.
+     *
+     * @return The CRS storage matrix fill with the non-zeros from dense_matrix.
+     */
+    KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space> dense2crs(
+            Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                    dense_matrix)
+    {
+        Kokkos::DualView<std::size_t, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                n_nonzeros("ddc_splines_n_nonzeros");
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx(
+                "ddc_splines_coo_rows_idx",
+                dense_matrix.extent(0) * dense_matrix.extent(1));
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx(
+                "ddc_splines_coo_cols_idx",
+                dense_matrix.extent(0) * dense_matrix.extent(1));
+        Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                values("ddc_splines_coo_values", dense_matrix.extent(0) * dense_matrix.extent(1));
+        Kokkos::parallel_for(
+                "dense2coo",
+                Kokkos::RangePolicy(ExecSpace(), 0, 1),
+                KOKKOS_LAMBDA(const int) {
+                    for (int i = 0; i < dense_matrix.extent(0); i++) {
+                        for (int j = 0; j < dense_matrix.extent(1); j++) {
+                            double aij = dense_matrix(i, j);
+                            if (Kokkos::abs(aij) >= 1e-14) {
+                                rows_idx(n_nonzeros.d_view()) = i;
+                                cols_idx(n_nonzeros.d_view()) = j;
+                                values(n_nonzeros.d_view()++) = aij;
+                            }
+                        }
+                    }
+                });
+        n_nonzeros.modify_device();
+        n_nonzeros.sync_host();
+        Kokkos::resize(rows_idx, n_nonzeros.h_view());
+        Kokkos::resize(cols_idx, n_nonzeros.h_view());
+        Kokkos::resize(values, n_nonzeros.h_view());
+
+        KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> coo_matrix(
+                dense_matrix.extent(0),
+                dense_matrix.extent(1),
+                rows_idx,
+                cols_idx,
+                values);
+        return KokkosSparse::
+                coo2crs(coo_matrix.numRows(),
+                        coo_matrix.numCols(),
+                        coo_matrix.row(),
+                        coo_matrix.col(),
+                        coo_matrix.data());
+    }
+
 private:
     /// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.
     void compute_schur_complement()
@@ -152,12 +216,14 @@ public:
         m_top_right_block.modify_host();
         m_top_right_block.sync_device();
         m_top_left_block->solve(m_top_right_block.d_view);
+        m_top_right_block_sp = dense2crs(m_top_right_block.d_view);
         m_top_right_block.modify_device();
         m_top_right_block.sync_host();
 
         // Push lambda on device in bottom-left block
         m_bottom_left_block.modify_host();
         m_bottom_left_block.sync_device();
+        m_bottom_left_block_sp = dense2crs(m_bottom_left_block.d_view);
 
         // Compute delta - lambda*Q^-1*gamma in bottom-right block & setup the bottom-right solver
         compute_schur_complement();
@@ -186,6 +252,13 @@ public:
     {
         assert(b.extent(0) == size());
 
+        KokkosSparse::SPMVHandle<
+                ExecSpace,
+                KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space>,
+                MultiRHS,
+                MultiRHS>
+                spmv_handle(KokkosSparse::SPMVAlgorithm::SPMV_DEFAULT);
+
         MultiRHS b1 = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
@@ -196,13 +269,17 @@ public:
                         Kokkos::ALL);
         if (!transpose) {
             m_top_left_block->solve(b1);
-            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., m_bottom_left_block.d_view, b1, 1., b2);
+            KokkosSparse::
+                    spmv(ExecSpace(), &spmv_handle, "N", -1., m_bottom_left_block_sp, b1, 1., b2);
             m_bottom_right_block->solve(b2);
-            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., m_top_right_block.d_view, b2, 1., b1);
+            KokkosSparse::
+                    spmv(ExecSpace(), &spmv_handle, "N", -1., m_top_right_block_sp, b2, 1., b1);
         } else {
-            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., m_top_right_block.d_view, b1, 1., b2);
+            KokkosSparse::
+                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_top_right_block_sp, b1, 1., b2);
             m_bottom_right_block->solve(b2, true);
-            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., m_bottom_left_block.d_view, b2, 1., b1);
+            KokkosSparse::
+                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_bottom_left_block_sp, b2, 1., b1);
             m_top_left_block->solve(b1, true);
         }
     }

@@ -18,7 +18,7 @@ Julien Bigot - CEA (julien.bigot@cea.fr)
 * Participation to DDC-based redisign of splines
 
 Emily Bourne - CEA (emily.bourne@cea.fr)
-* Work on splines and matrices
+* Work on splines and linear algebra
 * Work on documentation requirements in CI
 
 Thomas Padioleau - CEA (thomas.padioleau@cea.fr)
@@ -28,7 +28,9 @@ Thomas Padioleau - CEA (thomas.padioleau@cea.fr)
 * Redesign and reimplementation of splines using DCC
 
 Baptiste Legouix - CEA (baptiste.legouix@cea.fr)
-* GPU port (batching & call to Ginkgo backend)
+* FFT kernel
+* Performance portability of splines kernel, batching
+* Ginkgo and KokkosKernels backends for splines linear algebra
 
 Thierry Antoun - CEA (thierry.antoun@cea.fr)
 * Work on Documentation

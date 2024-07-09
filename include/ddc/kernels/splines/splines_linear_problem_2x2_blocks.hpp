@@ -8,10 +8,7 @@
 #include <memory>
 #include <string>
 
-#include <KokkosSparse_CrsMatrix.hpp>
-#include <KokkosSparse_crs2coo.hpp>
-#include <KokkosSparse_spmv.hpp>
-#include <KokkosSparse_spmv_team.hpp>
+#include <KokkosSparse_CooMatrix.hpp>
 #include <Kokkos_DualView.hpp>
 
 #include "splines_linear_problem.hpp"
@@ -117,13 +114,13 @@ public:
     /**
      * @brief Fill a COO version of a Dense matrix (remove zeros).
      *
-     * /!\ Should be private, it is public due to CUDA limitation.
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
      *
      * Runs on a single thread to garantee ordering.
      *
      * @param dense_matrix The dense storage matrix whose non-zeros are extracted to fill the COO matrix.
      *
-     * @return The COO storage matrix fill with the non-zeros from dense_matrix.
+     * @return The COO storage matrix filled with the non-zeros from dense_matrix.
      */
     KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> dense2coo(
             Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
@@ -235,17 +232,18 @@ public:
      *
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      *
-     * Perform a spmm operation with parameters alpha=-1 and beta=1 between a sparse matrix stored in COO format and a dense matrix x.
+     * Perform a spdm operation (sparse-dense matrix multiplication) with parameters alpha=-1 and beta=1 between
+     * a sparse matrix stored in COO format and a dense matrix x.
      *
      * @param y The dense matrix to be altered by the operation.
      * @param LinOp The sparse matrix, left side of the matrix multiplication.
-     * @param x The dense matrix, right side of the matrix multiplication. Also receives
+     * @param x The dense matrix, right side of the matrix multiplication.
      * @param transpose A flag to indicate if the direct or transposed version of the operation is performed. 
      */
     void spdm_minus1_1(
-            MultiRHS const y,
-            MultiRHS const x,
             KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> LinOp,
+            MultiRHS const x,
+            MultiRHS const y,
             bool const transpose = false) const
     {
         assert((!transpose && LinOp.numRows() == y.extent(0))
@@ -311,13 +309,13 @@ public:
                         Kokkos::ALL);
         if (!transpose) {
             m_top_left_block->solve(b1);
-            spdm_minus1_1(b2, b1, m_bottom_left_block_coo);
+            spdm_minus1_1(m_bottom_left_block_coo, b1, b2);
             m_bottom_right_block->solve(b2);
-            spdm_minus1_1(b1, b2, m_top_right_block_coo);
+            spdm_minus1_1(m_top_right_block_coo, b2, b1);
         } else {
-            spdm_minus1_1(b2, b1, m_top_right_block_coo, true);
+            spdm_minus1_1(m_top_right_block_coo, b1, b2, true);
             m_bottom_right_block->solve(b2, true);
-            spdm_minus1_1(b1, b2, m_bottom_left_block_coo, true);
+            spdm_minus1_1(m_bottom_left_block_coo, b2, b1, true);
             m_top_left_block->solve(b1, true);
         }
     }

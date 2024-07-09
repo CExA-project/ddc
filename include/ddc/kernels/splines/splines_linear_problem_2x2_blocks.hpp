@@ -45,12 +45,10 @@ protected:
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_top_right_block;
-    KokkosSparse::CooMatrix<double, int, ExecSpace> m_top_right_block_coo;
-    KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space> m_top_right_block_crs;
+    KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> m_top_right_block_coo;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_bottom_left_block;
-    KokkosSparse::CooMatrix<double, int, ExecSpace> m_bottom_left_block_coo;
-    KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space> m_bottom_left_block_crs;
+    KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> m_bottom_left_block_coo;
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
 
 public:
@@ -117,27 +115,28 @@ public:
     }
 
     /**
-     * @brief Fill a CRS version of a Dense matrix (remove zeros).
+     * @brief Fill a COO version of a Dense matrix (remove zeros).
      *
      * /!\ Should be private, it is public due to CUDA limitation.
      *
      * Runs on a single thread to garantee ordering.
      *
-     * @param dense_matrix The dense storage matrix whose non-zeros are extracted to fill the CRS matrix.
+     * @param dense_matrix The dense storage matrix whose non-zeros are extracted to fill the COO matrix.
      *
-     * @return The CRS storage matrix fill with the non-zeros from dense_matrix.
+     * @return The COO storage matrix fill with the non-zeros from dense_matrix.
      */
-    KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space> dense2crs(
+    KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> dense2coo(
             Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
                     dense_matrix)
     {
-        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                rows_idx("ddc_splines_crs_rows_idx", dense_matrix.extent(0) + 1);
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx(
+                "ddc_splines_coo_rows_idx",
+                dense_matrix.extent(0) * dense_matrix.extent(1));
         Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx(
-                "ddc_splines_crs_cols_idx",
+                "ddc_splines_coo_cols_idx",
                 dense_matrix.extent(0) * dense_matrix.extent(1));
         Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                values("ddc_splines_crs_values", dense_matrix.extent(0) * dense_matrix.extent(1));
+                values("ddc_splines_coo_values", dense_matrix.extent(0) * dense_matrix.extent(1));
 
         Kokkos::DualView<std::size_t, Kokkos::LayoutRight, typename ExecSpace::memory_space>
                 n_nonzeros("ddc_splines_n_nonzeros");
@@ -146,72 +145,32 @@ public:
         n_nonzeros.sync_device();
 
         Kokkos::parallel_for(
-                "dense2crs",
+                "dense2coo",
                 Kokkos::RangePolicy(ExecSpace(), 0, 1),
                 KOKKOS_LAMBDA(const int) {
-                    int nnz = 0;
-                    rows_idx(0) = nnz;
                     for (int i = 0; i < dense_matrix.extent(0); i++) {
                         for (int j = 0; j < dense_matrix.extent(1); j++) {
                             double aij = dense_matrix(i, j);
                             if (Kokkos::abs(aij) >= 1e-14) {
+                                rows_idx(n_nonzeros.d_view()) = i;
                                 cols_idx(n_nonzeros.d_view()) = j;
                                 values(n_nonzeros.d_view()++) = aij;
-                                nnz++;
                             }
                         }
-                        rows_idx(i + 1) = nnz;
                     }
                 });
         n_nonzeros.modify_device();
         n_nonzeros.sync_host();
+        Kokkos::resize(rows_idx, n_nonzeros.h_view());
         Kokkos::resize(cols_idx, n_nonzeros.h_view());
         Kokkos::resize(values, n_nonzeros.h_view());
 
-        return KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space>(
-                "ddc_splines_crs",
+        return KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space>(
                 dense_matrix.extent(0),
                 dense_matrix.extent(1),
-                n_nonzeros.h_view(),
-                values,
                 rows_idx,
-                cols_idx);
-    }
-
-    /**
-     * @brief Compute y <- y - LinOp*x or y <- y - LinOp^t*x with a sparse LinOp.
-     *
-     * [SHOULD BE PRIVATE (GPU programming limitation)]
-     *
-     * Perform a spmm operation with parameters alpha=-1 and beta=1 between a sparse matrix stored in COO format and a dense matrix x.
-     *
-     * @param y The dense matrix to be altered by the operation.
-     * @param LinOp The sparse matrix, left side of the matrix multiplication.
-     * @param x The dense matrix, right side of the matrix multiplication. Also receives
-     * @param transpose A flag to indicate if the direct or transposed version of the operation is performed. 
-     */
-    void spdm_minus1_1(
-            MultiRHS const y,
-            MultiRHS const x,
-            KokkosSparse::CooMatrix<double, int, ExecSpace> LinOp,
-            bool const transpose = false) const
-    {
-        assert((!transpose && LinOp.numRows() == y.extent(0))
-               || (transpose && LinOp.numCols() == y.extent(0)));
-        assert((!transpose && LinOp.numCols() == x.extent(0))
-               || (transpose && LinOp.numRows() == x.extent(0)));
-        assert(x.extent(1) == y.extent(1));
-
-        Kokkos::parallel_for(
-                "ddc_splines_spdm_minus1_1",
-                Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
-                KOKKOS_LAMBDA(const int j) {
-                    for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
-                        const int i = LinOp.row()(nz_idx);
-                        const int k = LinOp.col()(nz_idx);
-                        y(i, j) -= LinOp.data()(nz_idx) * x(k, j);
-                    }
-                });
+                cols_idx,
+                values);
     }
 
 private:
@@ -257,22 +216,55 @@ public:
         m_top_right_block.modify_host();
         m_top_right_block.sync_device();
         m_top_left_block->solve(m_top_right_block.d_view);
-        m_top_right_block_crs = dense2crs(m_top_right_block.d_view);
-        m_top_right_block_coo = KokkosSparse::crs2coo(m_top_right_block_crs);
+        m_top_right_block_coo = dense2coo(m_top_right_block.d_view);
         m_top_right_block.modify_device();
         m_top_right_block.sync_host();
 
         // Push lambda on device in bottom-left block
         m_bottom_left_block.modify_host();
         m_bottom_left_block.sync_device();
-        m_bottom_left_block_crs = dense2crs(m_bottom_left_block.d_view);
-        m_bottom_left_block_coo = KokkosSparse::crs2coo(m_bottom_left_block_crs);
+        m_bottom_left_block_coo = dense2coo(m_bottom_left_block.d_view);
 
         // Compute delta - lambda*Q^-1*gamma in bottom-right block & setup the bottom-right solver
         compute_schur_complement();
         m_bottom_right_block->setup_solver();
     }
 
+    /**
+     * @brief Compute y <- y - LinOp*x or y <- y - LinOp^t*x with a sparse LinOp.
+     *
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     *
+     * Perform a spmm operation with parameters alpha=-1 and beta=1 between a sparse matrix stored in COO format and a dense matrix x.
+     *
+     * @param y The dense matrix to be altered by the operation.
+     * @param LinOp The sparse matrix, left side of the matrix multiplication.
+     * @param x The dense matrix, right side of the matrix multiplication. Also receives
+     * @param transpose A flag to indicate if the direct or transposed version of the operation is performed. 
+     */
+    void spdm_minus1_1(
+            MultiRHS const y,
+            MultiRHS const x,
+            KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> LinOp,
+            bool const transpose = false) const
+    {
+        assert((!transpose && LinOp.numRows() == y.extent(0))
+               || (transpose && LinOp.numCols() == y.extent(0)));
+        assert((!transpose && LinOp.numCols() == x.extent(0))
+               || (transpose && LinOp.numRows() == x.extent(0)));
+        assert(x.extent(1) == y.extent(1));
+
+        Kokkos::parallel_for(
+                "ddc_splines_spdm_minus1_1",
+                Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
+                KOKKOS_LAMBDA(const int j) {
+                    for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
+                        const int i = LinOp.row()(nz_idx);
+                        const int k = LinOp.col()(nz_idx);
+                        y(i, j) -= LinOp.data()(nz_idx) * x(k, j);
+                    }
+                });
+    }
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
@@ -312,20 +304,20 @@ public:
                         Kokkos::ALL);
         auto bottom_left_block_coo_proxy = m_bottom_left_block_coo;
         auto top_right_block_coo_proxy = m_top_right_block_coo;
-        auto bottom_left_block_crs_proxy = m_bottom_left_block_crs;
-        auto top_right_block_crs_proxy = m_top_right_block_crs;
         if (!transpose) {
             m_top_left_block->solve(b1);
             spdm_minus1_1(b2, b1, m_bottom_left_block_coo);
             m_bottom_right_block->solve(b2);
             spdm_minus1_1(b1, b2, m_top_right_block_coo);
         } else {
+            /*
             KokkosSparse::
-                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_top_right_block_crs, b1, 1., b2);
+                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_top_right_block_coo, b1, 1., b2);
             m_bottom_right_block->solve(b2, true);
             KokkosSparse::
-                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_bottom_left_block_crs, b2, 1., b1);
+                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_bottom_left_block_coo, b2, 1., b1);
             m_top_left_block->solve(b1, true);
+*/
         }
     }
 };

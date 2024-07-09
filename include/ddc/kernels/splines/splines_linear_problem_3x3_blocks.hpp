@@ -169,9 +169,6 @@ private:
                                 std::size_t> {2 * m_top_size + nq, m_top_size + size()},
                         Kokkos::ALL);
 
-        // Need a buffer to prevent overlapping
-        MultiRHS const buffer = Kokkos::create_mirror(ExecSpace(), b_bottom);
-
         Kokkos::deep_copy(b_top, b_top_src);
         if (b_bottom.extent(0) > b_top.extent(0)) {
             // Need a buffer to prevent overlapping

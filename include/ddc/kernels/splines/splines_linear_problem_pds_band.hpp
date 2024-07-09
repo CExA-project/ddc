@@ -16,8 +16,11 @@
 #include <lapacke.h>
 #endif
 
+// FIXME cannot find appropriate header file for Serial Gemv
 #include <KokkosBatched_Pbtrs.hpp>
 #include <KokkosBatched_Util.hpp>
+#include <KokkosBlas2_serial_gemv_impl.hpp>
+#include <KokkosBlas2_serial_gemv_internal.hpp>
 
 #include "splines_linear_problem.hpp"
 
@@ -44,10 +47,6 @@ public:
     using typename SplinesLinearProblem<ExecSpace>::AViewType;
     using typename SplinesLinearProblem<ExecSpace>::PivViewType;
     using SplinesLinearProblem<ExecSpace>::size;
-
-    //protected:
-    //    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-    //            m_q; // pds band matrix representation
 
 public:
     /**
@@ -177,10 +176,9 @@ public:
                         auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
 
-                        KokkosBatched::SerialGemm<
-                                KokkosBatched::Trans::Transpose,
-                                KokkosBatched::Trans::NoTranspose,
-                                KokkosBatched::Algo::Gemm::Unblocked>::
+                        KokkosBlas::SerialGemv<
+                                KokkosBlas::Trans::Transpose,
+                                KokkosBlas::Algo::Gemv::Unblocked>::
                                 invoke(-1.0, top_right_block, sub_b1, 1.0, sub_b2);
 
                         KokkosBatched::SerialGetrs<
@@ -188,10 +186,9 @@ public:
                                 KokkosBatched::Algo::Getrs::Unblocked>::
                                 invoke(bottom_right_block, bottom_right_piv, sub_b2);
 
-                        KokkosBatched::SerialGemm<
-                                KokkosBatched::Trans::Transpose,
-                                KokkosBatched::Trans::NoTranspose,
-                                KokkosBatched::Algo::Gemm::Unblocked>::
+                        KokkosBlas::SerialGemv<
+                                KokkosBlas::Trans::Transpose,
+                                KokkosBlas::Algo::Gemv::Unblocked>::
                                 invoke(-1.0, bottom_left_block, sub_b2, 1.0, sub_b1);
 
                         KokkosBatched::SerialPbtrs<
@@ -209,10 +206,9 @@ public:
                                 KokkosBatched::Uplo::Lower,
                                 KokkosBatched::Algo::Pbtrs::Unblocked>::invoke(Q, sub_b1);
 
-                        KokkosBatched::SerialGemm<
-                                KokkosBatched::Trans::NoTranspose,
-                                KokkosBatched::Trans::NoTranspose,
-                                KokkosBatched::Algo::Gemm::Unblocked>::
+                        KokkosBlas::SerialGemv<
+                                KokkosBlas::Trans::NoTranspose,
+                                KokkosBlas::Algo::Gemv::Unblocked>::
                                 invoke(-1.0, bottom_left_block, sub_b1, 1.0, sub_b2);
 
                         KokkosBatched::SerialGetrs<
@@ -220,10 +216,9 @@ public:
                                 KokkosBatched::Algo::Getrs::Unblocked>::
                                 invoke(bottom_right_block, bottom_right_piv, sub_b2);
 
-                        KokkosBatched::SerialGemm<
-                                KokkosBatched::Trans::NoTranspose,
-                                KokkosBatched::Trans::NoTranspose,
-                                KokkosBatched::Algo::Gemm::Unblocked>::
+                        KokkosBlas::SerialGemv<
+                                KokkosBlas::Trans::NoTranspose,
+                                KokkosBlas::Algo::Gemv::Unblocked>::
                                 invoke(-1.0, top_right_block, sub_b2, 1.0, sub_b1);
                     });
         }

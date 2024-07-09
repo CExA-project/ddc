@@ -164,7 +164,6 @@ public:
         n_nonzeros.sync_host();
         Kokkos::resize(cols_idx, n_nonzeros.h_view());
         Kokkos::resize(values, n_nonzeros.h_view());
-        std::cout << rows_idx.extent(0) << " ";
 
         return KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space>(
                 "ddc_splines_crs",

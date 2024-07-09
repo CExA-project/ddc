@@ -146,8 +146,9 @@ public:
                 "dense2crs",
                 Kokkos::RangePolicy(ExecSpace(), 0, 1),
                 KOKKOS_LAMBDA(const int) {
+                    int nnz = 0;
+                    rows_idx(0) = nnz;
                     for (int i = 0; i < dense_matrix.extent(0); i++) {
-                        int nnz = 0;
                         for (int j = 0; j < dense_matrix.extent(1); j++) {
                             double aij = dense_matrix(i, j);
                             if (Kokkos::abs(aij) >= 1e-14) {

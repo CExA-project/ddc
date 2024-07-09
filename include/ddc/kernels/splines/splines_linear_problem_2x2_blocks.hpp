@@ -278,10 +278,10 @@ public:
                     Kokkos::TeamPolicy<ExecSpace>(b2.extent(1), b2.extent(0)),
                     KOKKOS_LAMBDA(
                             const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                        const int i = teamMember.league_rank();
+                        const int j = teamMember.league_rank();
 
-                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
-                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
+                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, j);
+                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, j);
                         KokkosSparse::Experimental::team_spmv(
                                 teamMember,
                                 -1.,
@@ -306,15 +306,39 @@ public:
                     spmv(ExecSpace(), &spmv_handle, "N", -1., m_bottom_left_block_sp, b1, 1., b2);
 			*/
             m_bottom_right_block->solve(b2);
+            /*
+            Kokkos::parallel_for(
+                    "ddc_splines_spmv2",
+                    Kokkos::RangePolicy(ExecSpace(), 0, b1.extent(1)),
+                    KOKKOS_LAMBDA(const int j) {
+                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, j);
+                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, j);
+
+						// inlined serial_spmv
+                        for (int i = 0; i < top_right_block_sp_proxy.graph.row_map.extent(0)-1; ++i) {
+                            int sum = 0;
+                            const int rowLength = top_right_block_sp_proxy.graph.row_map(i + 1)
+                                                  - top_right_block_sp_proxy.graph.row_map(i);
+                            for (int k = 0; k < rowLength; ++k) {
+                                sum += top_right_block_sp_proxy.values(
+                                               top_right_block_sp_proxy.graph.row_map(i) + k)
+                                       * sub_b2(top_right_block_sp_proxy.graph.entries(
+                                               top_right_block_sp_proxy.graph.row_map(i) + k));
+                            }
+                            sum *= -1.;
+                            sub_b1(i) = 1. * sub_b1(i) + sum;
+                        }
+                    });
+*/
             Kokkos::parallel_for(
                     "ddc_splines_spmv2",
                     Kokkos::TeamPolicy<ExecSpace>(b1.extent(1), b1.extent(0)),
                     KOKKOS_LAMBDA(
                             const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                        const int i = teamMember.league_rank();
+                        const int j = teamMember.league_rank();
 
-                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
-                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
+                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, j);
+                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, j);
                         KokkosSparse::Experimental::team_spmv(
                                 teamMember,
                                 -1.,

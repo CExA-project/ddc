@@ -271,15 +271,15 @@ public:
                         std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
                         Kokkos::ALL);
         auto bottom_left_block_sp_proxy = m_bottom_left_block_sp;
-        std::cout << bottom_left_block_sp_proxy.graph.row_map.extent(0) << " ";
+        auto top_right_block_sp_proxy = m_top_right_block_sp;
         if (!transpose) {
             m_top_left_block->solve(b1);
-            /*
+			Kokkos::fence();
             Kokkos::parallel_for(
                     "ddc_splines_spmv1",
-                    Kokkos::TeamPolicy<ExecSpace>(b1.extent(0)*b1.extent(1), Kokkos::AUTO),
+                    Kokkos::TeamPolicy<ExecSpace>(b2.extent(1), b2.extent(0)),
                     KOKKOS_LAMBDA(const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-						const int i = teamMember.league_rank()/b1.extent(0);
+						const int i = teamMember.league_rank();
 
                         auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
@@ -289,14 +289,36 @@ public:
                                        Kokkos::View<const int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>(bottom_left_block_sp_proxy.graph.entries),
                                        sub_b1,
                                        1.,
-                                       sub_b2, 0);
+                                       sub_b2, 1);
                     });
-			*/
+			Kokkos::fence();
+            /*
             KokkosSparse::
                     spmv(ExecSpace(), &spmv_handle, "N", -1., m_bottom_left_block_sp, b1, 1., b2);
+			*/
             m_bottom_right_block->solve(b2);
+			Kokkos::fence();
+			Kokkos::parallel_for(
+                    "ddc_splines_spmv2",
+                    Kokkos::TeamPolicy<ExecSpace>(b1.extent(1), b1.extent(0)),
+                    KOKKOS_LAMBDA(const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+						const int i = teamMember.league_rank();
+
+                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
+                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
+                        KokkosSparse::Experimental::team_spmv(teamMember, -1.,
+                                       top_right_block_sp_proxy.values,
+                                       Kokkos::View<const int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>(top_right_block_sp_proxy.graph.row_map),
+                                       Kokkos::View<const int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>(top_right_block_sp_proxy.graph.entries),
+                                       sub_b2,
+                                       1.,
+                                       sub_b1, 1);
+                    });
+			Kokkos::fence();
+/*
             KokkosSparse::
                     spmv(ExecSpace(), &spmv_handle, "N", -1., m_top_right_block_sp, b2, 1., b1);
+*/
         } else {
             KokkosSparse::
                     spmv(ExecSpace(), &spmv_handle, "T", -1., m_top_right_block_sp, b1, 1., b2);

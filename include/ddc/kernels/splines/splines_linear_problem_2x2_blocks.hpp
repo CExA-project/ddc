@@ -9,6 +9,7 @@
 #include <string>
 
 #include <KokkosSparse_CrsMatrix.hpp>
+#include <KokkosSparse_crs2coo.hpp>
 #include <KokkosSparse_spmv.hpp>
 #include <KokkosSparse_spmv_team.hpp>
 #include <Kokkos_DualView.hpp>
@@ -44,10 +45,12 @@ protected:
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_top_right_block;
-    KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space> m_top_right_block_sp;
+    KokkosSparse::CooMatrix<double, int, ExecSpace> m_top_right_block_coo;
+    KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space> m_top_right_block_crs;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_bottom_left_block;
-    KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space> m_bottom_left_block_sp;
+    KokkosSparse::CooMatrix<double, int, ExecSpace> m_bottom_left_block_coo;
+    KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space> m_bottom_left_block_crs;
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
 
 public:
@@ -218,14 +221,16 @@ public:
         m_top_right_block.modify_host();
         m_top_right_block.sync_device();
         m_top_left_block->solve(m_top_right_block.d_view);
-        m_top_right_block_sp = dense2crs(m_top_right_block.d_view);
+        m_top_right_block_crs = dense2crs(m_top_right_block.d_view);
+        m_top_right_block_coo = KokkosSparse::crs2coo(m_top_right_block_crs);
         m_top_right_block.modify_device();
         m_top_right_block.sync_host();
 
         // Push lambda on device in bottom-left block
         m_bottom_left_block.modify_host();
         m_bottom_left_block.sync_device();
-        m_bottom_left_block_sp = dense2crs(m_bottom_left_block.d_view);
+        m_bottom_left_block_crs = dense2crs(m_bottom_left_block.d_view);
+        m_bottom_left_block_coo = KokkosSparse::crs2coo(m_bottom_left_block_crs);
 
         // Compute delta - lambda*Q^-1*gamma in bottom-right block & setup the bottom-right solver
         compute_schur_complement();
@@ -269,8 +274,10 @@ public:
                 subview(b,
                         std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
                         Kokkos::ALL);
-        auto bottom_left_block_sp_proxy = m_bottom_left_block_sp;
-        auto top_right_block_sp_proxy = m_top_right_block_sp;
+        auto bottom_left_block_coo_proxy = m_bottom_left_block_coo;
+        auto top_right_block_coo_proxy = m_top_right_block_coo;
+        auto bottom_left_block_crs_proxy = m_bottom_left_block_crs;
+        auto top_right_block_crs_proxy = m_top_right_block_crs;
         if (!transpose) {
             m_top_left_block->solve(b1);
             Kokkos::parallel_for(
@@ -285,17 +292,17 @@ public:
                         KokkosSparse::Experimental::team_spmv(
                                 teamMember,
                                 -1.,
-                                bottom_left_block_sp_proxy.values,
+                                bottom_left_block_crs_proxy.values,
                                 Kokkos::View<
                                         const int*,
                                         Kokkos::LayoutRight,
                                         typename ExecSpace::memory_space>(
-                                        bottom_left_block_sp_proxy.graph.row_map),
+                                        bottom_left_block_crs_proxy.graph.row_map),
                                 Kokkos::View<
                                         const int*,
                                         Kokkos::LayoutRight,
                                         typename ExecSpace::memory_space>(
-                                        bottom_left_block_sp_proxy.graph.entries),
+                                        bottom_left_block_crs_proxy.graph.entries),
                                 sub_b1,
                                 1.,
                                 sub_b2,
@@ -303,9 +310,23 @@ public:
                     });
             /*
             KokkosSparse::
-                    spmv(ExecSpace(), &spmv_handle, "N", -1., m_bottom_left_block_sp, b1, 1., b2);
+                    spmv(ExecSpace(), &spmv_handle, "N", -1., m_bottom_left_block_crs, b1, 1., b2);
 			*/
             m_bottom_right_block->solve(b2);
+            Kokkos::parallel_for(
+                    "ddc_splines_spmv2",
+                    Kokkos::RangePolicy(ExecSpace(), 0, b1.extent(1)),
+                    KOKKOS_LAMBDA(const int j) {
+                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, j);
+                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, j);
+
+                        // inlined serial_spmv
+                        for (int nz_idx = 0; nz_idx < top_right_block_coo_proxy.nnz(); ++nz_idx) {
+                            const int i = top_right_block_coo_proxy.row()(nz_idx);
+                            const int k = top_right_block_coo_proxy.col()(nz_idx);
+                            sub_b1(i) -= top_right_block_coo_proxy.data()(nz_idx) * sub_b2(k);
+                        }
+                    });
             /*
             Kokkos::parallel_for(
                     "ddc_splines_spmv2",
@@ -315,21 +336,20 @@ public:
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, j);
 
 						// inlined serial_spmv
-                        for (int i = 0; i < top_right_block_sp_proxy.graph.row_map.extent(0)-1; ++i) {
+                        for (int i = 0; i < top_right_block_crs_proxy.graph.row_map.extent(0)-1; ++i) {
                             int sum = 0;
-                            const int rowLength = top_right_block_sp_proxy.graph.row_map(i + 1)
-                                                  - top_right_block_sp_proxy.graph.row_map(i);
+                            const int rowLength = top_right_block_crs_proxy.graph.row_map(i + 1)
+                                                  - top_right_block_crs_proxy.graph.row_map(i);
                             for (int k = 0; k < rowLength; ++k) {
-                                sum += top_right_block_sp_proxy.values(
-                                               top_right_block_sp_proxy.graph.row_map(i) + k)
-                                       * sub_b2(top_right_block_sp_proxy.graph.entries(
-                                               top_right_block_sp_proxy.graph.row_map(i) + k));
+                                sum += top_right_block_crs_proxy.values(
+                                               top_right_block_crs_proxy.graph.row_map(i) + k)
+                                       * sub_b2(top_right_block_crs_proxy.graph.entries(
+                                               top_right_block_crs_proxy.graph.row_map(i) + k));
                             }
                             sum *= -1.;
                             sub_b1(i) = 1. * sub_b1(i) + sum;
                         }
                     });
-*/
             Kokkos::parallel_for(
                     "ddc_splines_spmv2",
                     Kokkos::TeamPolicy<ExecSpace>(b1.extent(1), b1.extent(0)),
@@ -342,32 +362,33 @@ public:
                         KokkosSparse::Experimental::team_spmv(
                                 teamMember,
                                 -1.,
-                                top_right_block_sp_proxy.values,
+                                top_right_block_crs_proxy.values,
                                 Kokkos::View<
                                         const int*,
                                         Kokkos::LayoutRight,
                                         typename ExecSpace::memory_space>(
-                                        top_right_block_sp_proxy.graph.row_map),
+                                        top_right_block_crs_proxy.graph.row_map),
                                 Kokkos::View<
                                         const int*,
                                         Kokkos::LayoutRight,
                                         typename ExecSpace::memory_space>(
-                                        top_right_block_sp_proxy.graph.entries),
+                                        top_right_block_crs_proxy.graph.entries),
                                 sub_b2,
                                 1.,
                                 sub_b1,
                                 1);
                     });
+*/
             /*
             KokkosSparse::
-                    spmv(ExecSpace(), &spmv_handle, "N", -1., m_top_right_block_sp, b2, 1., b1);
+                    spmv(ExecSpace(), &spmv_handle, "N", -1., m_top_right_block_crs, b2, 1., b1);
 */
         } else {
             KokkosSparse::
-                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_top_right_block_sp, b1, 1., b2);
+                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_top_right_block_crs, b1, 1., b2);
             m_bottom_right_block->solve(b2, true);
             KokkosSparse::
-                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_bottom_left_block_sp, b2, 1., b1);
+                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_bottom_left_block_crs, b2, 1., b1);
             m_top_left_block->solve(b1, true);
         }
     }

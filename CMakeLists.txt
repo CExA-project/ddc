@@ -279,7 +279,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     set(KokkosKernels_ENABLE_TPL_LAPACK OFF)
     add_subdirectory(vendor/kokkos-kernels)
   elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-    find_package(KokkosKernels)
+    find_package(KokkosKernels REQUIRED)
   endif()
 
   target_link_libraries(DDC INTERFACE Kokkos::kokkoskernels)

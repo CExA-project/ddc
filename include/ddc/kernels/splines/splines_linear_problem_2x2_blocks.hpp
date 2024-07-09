@@ -178,6 +178,42 @@ public:
                 cols_idx);
     }
 
+    /**
+     * @brief Compute y <- y - LinOp*x or y <- y - LinOp^t*x with a sparse LinOp.
+     *
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     *
+     * Perform a spmm operation with parameters alpha=-1 and beta=1 between a sparse matrix stored in COO format and a dense matrix x.
+     *
+     * @param y The dense matrix to be altered by the operation.
+     * @param LinOp The sparse matrix, left side of the matrix multiplication.
+     * @param x The dense matrix, right side of the matrix multiplication. Also receives
+     * @param transpose A flag to indicate if the direct or transposed version of the operation is performed. 
+     */
+    void spdm_minus1_1(
+            MultiRHS const y,
+            MultiRHS const x,
+            KokkosSparse::CooMatrix<double, int, ExecSpace> LinOp,
+            bool const transpose = false) const
+    {
+        assert((!transpose && LinOp.numRows() == y.extent(0))
+               || (transpose && LinOp.numCols() == y.extent(0)));
+        assert((!transpose && LinOp.numCols() == x.extent(0))
+               || (transpose && LinOp.numRows() == x.extent(0)));
+        assert(x.extent(1) == y.extent(1));
+
+        Kokkos::parallel_for(
+                "ddc_splines_spdm_minus1_1",
+                Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
+                KOKKOS_LAMBDA(const int j) {
+                    for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
+                        const int i = LinOp.row()(nz_idx);
+                        const int k = LinOp.col()(nz_idx);
+                        y(i, j) -= LinOp.data()(nz_idx) * x(k, j);
+                    }
+                });
+    }
+
 private:
     /// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.
     void compute_schur_complement()
@@ -280,6 +316,8 @@ public:
         auto top_right_block_crs_proxy = m_top_right_block_crs;
         if (!transpose) {
             m_top_left_block->solve(b1);
+            spdm_minus1_1(b2, b1, m_bottom_left_block_coo);
+            /*
             Kokkos::parallel_for(
                     "ddc_splines_spmv1",
                     Kokkos::TeamPolicy<ExecSpace>(b2.extent(1), b2.extent(0)),
@@ -308,11 +346,12 @@ public:
                                 sub_b2,
                                 1);
                     });
-            /*
             KokkosSparse::
                     spmv(ExecSpace(), &spmv_handle, "N", -1., m_bottom_left_block_crs, b1, 1., b2);
 			*/
             m_bottom_right_block->solve(b2);
+            spdm_minus1_1(b1, b2, m_top_right_block_coo);
+            /*
             Kokkos::parallel_for(
                     "ddc_splines_spmv2",
                     Kokkos::RangePolicy(ExecSpace(), 0, b1.extent(1)),
@@ -327,7 +366,6 @@ public:
                             sub_b1(i) -= top_right_block_coo_proxy.data()(nz_idx) * sub_b2(k);
                         }
                     });
-            /*
             Kokkos::parallel_for(
                     "ddc_splines_spmv2",
                     Kokkos::RangePolicy(ExecSpace(), 0, b1.extent(1)),

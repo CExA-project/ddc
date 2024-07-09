@@ -171,6 +171,27 @@ static void characteristics_advection_unitary(benchmark::State& state)
             ddc::KokkosAllocator<ddc::Coordinate<X, Y>, typename ExecSpace::memory_space>());
     ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
 
+    Kokkos::Profiling::pushRegion("FeetCharacteristics");
+    ddc::parallel_for_each(
+            ExecSpace(),
+            feet_coords.domain(),
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<NonUniform, s_degree_x>, DDimY> const e) {
+                feet_coords(e) = ddc::Coordinate<X, Y>(
+                        ddc::coordinate(ddc::select<DDimX<NonUniform, s_degree_x>>(e))
+                                - ddc::Coordinate<X>(0.0176429863),
+                        ddc::coordinate(ddc::select<DDimY>(e)));
+            });
+    Kokkos::Profiling::popRegion();
+    for (auto _ : state) {
+        Kokkos::Profiling::pushRegion("SplineBuilder");
+        spline_builder(coef, density.span_cview());
+        Kokkos::Profiling::popRegion();
+    }
+    Kokkos::Profiling::pushRegion("SplineEvaluator");
+    spline_evaluator(density, feet_coords.span_cview(), coef.span_cview());
+    Kokkos::Profiling::popRegion();
+
+    /*
     for (auto _ : state) {
         Kokkos::Profiling::pushRegion("FeetCharacteristics");
         ddc::parallel_for_each(
@@ -190,6 +211,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
         spline_evaluator(density, feet_coords.span_cview(), coef.span_cview());
         Kokkos::Profiling::popRegion();
     }
+    */
     monitorFlag = false;
     monitorThread.join();
     state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(nx * ny * sizeof(double)));

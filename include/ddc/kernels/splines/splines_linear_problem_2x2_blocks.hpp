@@ -8,9 +8,9 @@
 #include <memory>
 #include <string>
 
-#include <KokkosSparse_CooMatrix.hpp>
-#include <KokkosSparse_coo2crs.hpp>
+#include <KokkosSparse_CrsMatrix.hpp>
 #include <KokkosSparse_spmv.hpp>
+#include <KokkosSparse_spmv_team.hpp>
 #include <Kokkos_DualView.hpp>
 
 #include "splines_linear_problem.hpp"
@@ -128,49 +128,51 @@ public:
             Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
                     dense_matrix)
     {
-        Kokkos::DualView<std::size_t, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                n_nonzeros("ddc_splines_n_nonzeros");
-        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx(
-                "ddc_splines_coo_rows_idx",
-                dense_matrix.extent(0) * dense_matrix.extent(1));
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                rows_idx("ddc_splines_crs_rows_idx", dense_matrix.extent(0) + 1);
         Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx(
-                "ddc_splines_coo_cols_idx",
+                "ddc_splines_crs_cols_idx",
                 dense_matrix.extent(0) * dense_matrix.extent(1));
         Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                values("ddc_splines_coo_values", dense_matrix.extent(0) * dense_matrix.extent(1));
+                values("ddc_splines_crs_values", dense_matrix.extent(0) * dense_matrix.extent(1));
+
+        Kokkos::DualView<std::size_t, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                n_nonzeros("ddc_splines_n_nonzeros");
+        n_nonzeros.h_view() = 0;
+        n_nonzeros.modify_host();
+        n_nonzeros.sync_device();
+
         Kokkos::parallel_for(
-                "dense2coo",
+                "dense2crs",
                 Kokkos::RangePolicy(ExecSpace(), 0, 1),
                 KOKKOS_LAMBDA(const int) {
                     for (int i = 0; i < dense_matrix.extent(0); i++) {
+                        int nnz = 0;
                         for (int j = 0; j < dense_matrix.extent(1); j++) {
                             double aij = dense_matrix(i, j);
                             if (Kokkos::abs(aij) >= 1e-14) {
-                                rows_idx(n_nonzeros.d_view()) = i;
                                 cols_idx(n_nonzeros.d_view()) = j;
                                 values(n_nonzeros.d_view()++) = aij;
+                                nnz++;
                             }
                         }
+                        rows_idx(i + 1) = nnz;
                     }
                 });
         n_nonzeros.modify_device();
         n_nonzeros.sync_host();
-        Kokkos::resize(rows_idx, n_nonzeros.h_view());
         Kokkos::resize(cols_idx, n_nonzeros.h_view());
         Kokkos::resize(values, n_nonzeros.h_view());
+        std::cout << rows_idx.extent(0) << " ";
 
-        KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> coo_matrix(
+        return KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space>(
+                "ddc_splines_crs",
                 dense_matrix.extent(0),
                 dense_matrix.extent(1),
+                n_nonzeros.h_view(),
+                values,
                 rows_idx,
-                cols_idx,
-                values);
-        return KokkosSparse::
-                coo2crs(coo_matrix.numRows(),
-                        coo_matrix.numCols(),
-                        coo_matrix.row(),
-                        coo_matrix.col(),
-                        coo_matrix.data());
+                cols_idx);
     }
 
 private:
@@ -257,7 +259,7 @@ public:
                 KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space>,
                 MultiRHS,
                 MultiRHS>
-                spmv_handle(KokkosSparse::SPMVAlgorithm::SPMV_DEFAULT);
+                spmv_handle(KokkosSparse::SPMVAlgorithm::SPMV_NATIVE);
 
         MultiRHS b1 = Kokkos::
                 subview(b,
@@ -267,8 +269,28 @@ public:
                 subview(b,
                         std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
                         Kokkos::ALL);
+        auto bottom_left_block_sp_proxy = m_bottom_left_block_sp;
+        std::cout << bottom_left_block_sp_proxy.graph.row_map.extent(0) << " ";
         if (!transpose) {
             m_top_left_block->solve(b1);
+            /*
+            Kokkos::parallel_for(
+                    "ddc_splines_spmv1",
+                    Kokkos::TeamPolicy<ExecSpace>(b1.extent(0)*b1.extent(1), Kokkos::AUTO),
+                    KOKKOS_LAMBDA(const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
+						const int i = teamMember.league_rank()/b1.extent(0);
+
+                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
+                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
+                        KokkosSparse::Experimental::team_spmv(teamMember, -1.,
+                                       bottom_left_block_sp_proxy.values,
+                                       Kokkos::View<const int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>(bottom_left_block_sp_proxy.graph.row_map),
+                                       Kokkos::View<const int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>(bottom_left_block_sp_proxy.graph.entries),
+                                       sub_b1,
+                                       1.,
+                                       sub_b2, 0);
+                    });
+			*/
             KokkosSparse::
                     spmv(ExecSpace(), &spmv_handle, "N", -1., m_bottom_left_block_sp, b1, 1., b2);
             m_bottom_right_block->solve(b2);

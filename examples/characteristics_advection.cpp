@@ -117,7 +117,7 @@ int main(int argc, char** argv)
     // End of the domain of interest in the X dimension
     double const x_end = 1.;
     // Number of discretization points in the X dimension
-    size_t const nb_x_points = 100;
+    size_t const nb_x_points = 1000;
     // Velocity along x dimension
     double const vx = .2;
     // Start of the domain of interest in the Y dimension
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
     // End of the domain of interest in the Y dimension
     double const y_end = 1.;
     // Number of discretization points in the Y dimension
-    size_t const nb_y_points = 100;
+    size_t const nb_y_points = 100000;
     // Simulated time at which to start simulation
     double const start_time = 0.;
     // Simulated time to reach as target of the simulation
@@ -216,9 +216,11 @@ int main(int argc, char** argv)
 
     //! [initial output]
     // display the initial data
+    /*
     ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
     display(ddc::coordinate(time_domain.front()),
             host_density_alloc[x_domain][y_domain]);
+    */
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
@@ -299,6 +301,7 @@ int main(int argc, char** argv)
         //! [numerical scheme]
 
         //! [output]
+        /*
         if (iter - last_output >= t_output_period) {
             last_output = iter;
             ddc::parallel_deepcopy(
@@ -307,6 +310,7 @@ int main(int argc, char** argv)
             display(ddc::coordinate(iter),
                     host_density_alloc[x_domain][y_domain]);
         }
+        */
         //! [output]
 
         //! [swap]
@@ -316,10 +320,12 @@ int main(int argc, char** argv)
     }
 
     //! [final output]
+    /*
     if (last_output < time_domain.back()) {
         ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
         display(ddc::coordinate(time_domain.back()),
                 host_density_alloc[x_domain][y_domain]);
     }
+    */
     //! [final output]
 }

@@ -254,17 +254,31 @@ public:
                || (transpose && LinOp.numRows() == x.extent(0)));
         assert(x.extent(1) == y.extent(1));
 
-        Kokkos::parallel_for(
-                "ddc_splines_spdm_minus1_1",
-                Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
-                KOKKOS_LAMBDA(const int j) {
-                    for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
-                        const int i = LinOp.row()(nz_idx);
-                        const int k = LinOp.col()(nz_idx);
-                        y(i, j) -= LinOp.data()(nz_idx) * x(k, j);
-                    }
-                });
+        if (!transpose) {
+            Kokkos::parallel_for(
+                    "ddc_splines_spdm_minus1_1",
+                    Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
+                    KOKKOS_LAMBDA(const int j) {
+                        for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
+                            const int i = LinOp.row()(nz_idx);
+                            const int k = LinOp.col()(nz_idx);
+                            y(i, j) -= LinOp.data()(nz_idx) * x(k, j);
+                        }
+                    });
+        } else {
+            Kokkos::parallel_for(
+                    "ddc_splines_spdm_minus1_1_tr",
+                    Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
+                    KOKKOS_LAMBDA(const int j) {
+                        for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
+                            const int i = LinOp.row()(nz_idx);
+                            const int k = LinOp.col()(nz_idx);
+                            y(k, j) -= LinOp.data()(nz_idx) * x(i, j);
+                        }
+                    });
+        }
     }
+
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
@@ -287,13 +301,6 @@ public:
     {
         assert(b.extent(0) == size());
 
-        KokkosSparse::SPMVHandle<
-                ExecSpace,
-                KokkosSparse::CrsMatrix<double, int, typename ExecSpace::memory_space>,
-                MultiRHS,
-                MultiRHS>
-                spmv_handle(KokkosSparse::SPMVAlgorithm::SPMV_DEFAULT);
-
         MultiRHS b1 = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
@@ -302,22 +309,16 @@ public:
                 subview(b,
                         std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
                         Kokkos::ALL);
-        auto bottom_left_block_coo_proxy = m_bottom_left_block_coo;
-        auto top_right_block_coo_proxy = m_top_right_block_coo;
         if (!transpose) {
             m_top_left_block->solve(b1);
             spdm_minus1_1(b2, b1, m_bottom_left_block_coo);
             m_bottom_right_block->solve(b2);
             spdm_minus1_1(b1, b2, m_top_right_block_coo);
         } else {
-            /*
-            KokkosSparse::
-                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_top_right_block_coo, b1, 1., b2);
+            spdm_minus1_1(b2, b1, m_top_right_block_coo, true);
             m_bottom_right_block->solve(b2, true);
-            KokkosSparse::
-                    spmv(ExecSpace(), &spmv_handle, "T", -1., m_bottom_left_block_coo, b2, 1., b1);
+            spdm_minus1_1(b1, b2, m_bottom_left_block_coo, true);
             m_top_left_block->solve(b1, true);
-*/
         }
     }
 };

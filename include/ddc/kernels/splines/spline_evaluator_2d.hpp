@@ -61,8 +61,8 @@ private:
     {
     };
 
-    using tag_type1 = typename BSplines1::tag_type;
-    using tag_type2 = typename BSplines2::tag_type;
+    using continuous_dimension_type1 = typename BSplines1::continuous_dimension_type;
+    using continuous_dimension_type2 = typename BSplines2::continuous_dimension_type;
 
 public:
     /// @brief The type of the Kokkos execution space used by this class.
@@ -149,25 +149,25 @@ public:
     static_assert(
             std::is_same_v<LeftExtrapolationRule1,
                             typename ddc::PeriodicExtrapolationRule<
-                                    tag_type1>> == bsplines_type1::is_periodic()
+                                    continuous_dimension_type1>> == bsplines_type1::is_periodic()
                     && std::is_same_v<
                                RightExtrapolationRule1,
                                typename ddc::PeriodicExtrapolationRule<
-                                       tag_type1>> == bsplines_type1::is_periodic()
+                                       continuous_dimension_type1>> == bsplines_type1::is_periodic()
                     && std::is_same_v<
                                LeftExtrapolationRule2,
                                typename ddc::PeriodicExtrapolationRule<
-                                       tag_type2>> == bsplines_type2::is_periodic()
+                                       continuous_dimension_type2>> == bsplines_type2::is_periodic()
                     && std::is_same_v<
                                RightExtrapolationRule2,
                                typename ddc::PeriodicExtrapolationRule<
-                                       tag_type2>> == bsplines_type2::is_periodic(),
+                                       continuous_dimension_type2>> == bsplines_type2::is_periodic(),
             "PeriodicExtrapolationRule has to be used if and only if dimension is periodic");
     static_assert(
             std::is_invocable_r_v<
                     double,
                     LeftExtrapolationRule1,
-                    ddc::Coordinate<tag_type1>,
+                    ddc::Coordinate<continuous_dimension_type1>,
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
@@ -179,7 +179,7 @@ public:
             std::is_invocable_r_v<
                     double,
                     RightExtrapolationRule1,
-                    ddc::Coordinate<tag_type1>,
+                    ddc::Coordinate<continuous_dimension_type1>,
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
@@ -191,7 +191,7 @@ public:
             std::is_invocable_r_v<
                     double,
                     LeftExtrapolationRule2,
-                    ddc::Coordinate<tag_type2>,
+                    ddc::Coordinate<continuous_dimension_type2>,
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
@@ -203,7 +203,7 @@ public:
             std::is_invocable_r_v<
                     double,
                     RightExtrapolationRule2,
-                    ddc::Coordinate<tag_type2>,
+                    ddc::Coordinate<continuous_dimension_type2>,
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,

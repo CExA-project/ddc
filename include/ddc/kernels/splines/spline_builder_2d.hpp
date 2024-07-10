@@ -77,11 +77,13 @@ public:
                     IDimX>...>;
 
 private:
-    /// @brief Tag the dimension of the first 1D SplineBuilder.
-    using tag_type1 = typename builder_type1::bsplines_type::tag_type;
+    /// @brief The tag of the dimension of the first 1D SplineBuilder.
+    using continuous_dimension_type1 =
+            typename builder_type1::bsplines_type::continuous_dimension_type;
 
-    /// @brief Tag the dimension of the second 1D SplineBuilder.
-    using tag_type2 = typename builder_type2::bsplines_type::tag_type;
+    /// @brief The tag of the dimension of the second 1D SplineBuilder.
+    using continuous_dimension_type2 =
+            typename builder_type2::bsplines_type::continuous_dimension_type;
 
 public:
     /// @brief The type of the B-splines in the first dimension.

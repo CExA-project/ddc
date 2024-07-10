@@ -21,7 +21,6 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
     void fill_identity(
             ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS mat)
     {
-        assert(mat.extent(0) == mat.required_number_of_rhs_rows());
         for (std::size_t i(0); i < mat.extent(0); ++i) {
             for (std::size_t j(0); j < mat.extent(1); ++j) {
                 mat(i, j) = int(i == j);

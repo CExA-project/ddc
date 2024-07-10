@@ -52,8 +52,8 @@ public:
 
         Coo() = default;
 
-        Coo(std::size_t nrows_,
-            std::size_t ncols_,
+        Coo(std::size_t const nrows_,
+            std::size_t const ncols_,
             Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx_,
             Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx_,
             Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> values_)

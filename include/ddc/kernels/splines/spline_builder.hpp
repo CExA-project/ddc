@@ -202,7 +202,7 @@ public:
      * by the linear solver one-after-the-other).
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
-     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * @param preconditioner_max_block_size A parameter used by the slicer (internal to the solver) to
      * define the size of a block used by the Block-Jacobi preconditioner.
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
@@ -211,7 +211,7 @@ public:
     explicit SplineBuilder(
             batched_interpolation_domain_type const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_batched_interpolation_domain(batched_interpolation_domain)
         , m_offset(compute_offset(interpolation_domain()))
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
@@ -232,7 +232,7 @@ public:
                 lower_block_size,
                 upper_block_size,
                 cols_per_chunk,
-                preconditionner_max_block_size);
+                preconditioner_max_block_size);
     }
 
     /// @brief Copy-constructor is deleted.
@@ -429,7 +429,7 @@ private:
             int lower_block_size,
             int upper_block_size,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt);
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt);
 
     void build_matrix_system();
 };
@@ -594,7 +594,7 @@ void SplineBuilder<
                 [[maybe_unused]] int lower_block_size,
                 [[maybe_unused]] int upper_block_size,
                 std::optional<std::size_t> cols_per_chunk,
-                std::optional<unsigned int> preconditionner_max_block_size)
+                std::optional<unsigned int> preconditioner_max_block_size)
 {
     // Special case: linear spline
     // No need for matrix assembly
@@ -632,7 +632,7 @@ void SplineBuilder<
         matrix = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<ExecSpace>(
                 ddc::discrete_space<BSplines>().nbasis(),
                 cols_per_chunk,
-                preconditionner_max_block_size);
+                preconditioner_max_block_size);
     }
 
     build_matrix_system();

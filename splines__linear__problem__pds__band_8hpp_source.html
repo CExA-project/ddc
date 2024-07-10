@@ -171,7 +171,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__pds__band_8h
 <div class="line"><span class="lineno">  119</span><span class="comment">     * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.</span></div>
 <div class="line"><span class="lineno">  120</span><span class="comment">     * @param transpose Choose between the direct or transposed version of the linear problem (unused for a symmetric problem).</span></div>
 <div class="line"><span class="lineno">  121</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordtype">void</span> solve(MultiRHS b, <span class="keywordtype">bool</span> <span class="keyword">const</span>) <span class="keyword">const</span> <span class="keyword">override</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordtype">void</span> solve(MultiRHS <span class="keyword">const</span> b, <span class="keywordtype">bool</span> <span class="keyword">const</span>) <span class="keyword">const</span> <span class="keyword">override</span></div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    {</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        assert(b.extent(0) == size());</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>

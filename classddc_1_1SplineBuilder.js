@@ -4,7 +4,7 @@ var classddc_1_1SplineBuilder =
     [ "memory_space", "classddc_1_1SplineBuilder.html#a71ca02a067e0b0ff37176836db8273d9", null ],
     [ "interpolation_mesh_type", "classddc_1_1SplineBuilder.html#a8bf36196da03d7f8b4121949ecc2c33e", null ],
     [ "bsplines_type", "classddc_1_1SplineBuilder.html#ab931d6584b40150a3bc698ac63b1110f", null ],
-    [ "deriv_type", "classddc_1_1SplineBuilder.html#a9a88d7fd0097b862615f855d42b6c38b", null ],
+    [ "deriv_type", "classddc_1_1SplineBuilder.html#ab0064e3dcd90189ec188f356a23eb62c", null ],
     [ "interpolation_domain_type", "classddc_1_1SplineBuilder.html#a0e425fe73429c478949bba51ca0fcf1e", null ],
     [ "batched_interpolation_domain_type", "classddc_1_1SplineBuilder.html#a7337a7e59f55ad4d27fc16764fe7ac27", null ],
     [ "batch_domain_type", "classddc_1_1SplineBuilder.html#a5d805244c41eeb685b8ad67e90869547", null ],

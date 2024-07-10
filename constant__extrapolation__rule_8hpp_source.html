@@ -243,12 +243,12 @@ $(document).ready(function(){initNavTree('constant__extrapolation__rule_8hpp_sou
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                std::experimental::extents&lt;std::size_t, BSplines2::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                vals2(vals2_ptr.data());</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines1&gt; idx1</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines1&gt;()</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                          .eval_basis(vals1, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> BSplines1::tag_type&gt;(eval_pos));</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines2&gt; idx2</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines2&gt;()</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                          .eval_basis(vals2, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> BSplines2::tag_type&gt;(eval_pos));</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines1&gt; idx1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines1&gt;().eval_basis(</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                vals1,</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> BSplines1::continuous_dimension_type&gt;(eval_pos));</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines2&gt; idx2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines2&gt;().eval_basis(</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                vals2,</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> BSplines2::continuous_dimension_type&gt;(eval_pos));</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="keywordtype">double</span> y = 0.0;</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; BSplines1::degree() + 1; ++i) {</div>

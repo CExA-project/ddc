@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 	<meta charset="UTF-8">
 	<meta name="generator" content="Doxygen 1.9.8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<title>DDC: ddc::UniformBSplines&lt; Tag, D &gt;::Impl&lt; DDim, MemorySpace &gt; Class Template Reference</title>
+	<title>DDC: ddc::UniformBSplines&lt; CDim, D &gt;::Impl&lt; DDim, MemorySpace &gt; Class Template Reference</title>
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="dynsections.js"></script>
 	<script type="text/javascript" src="navtreedata.js"></script>
@@ -52,7 +52,7 @@ $(document).ready(function(){initNavTree('classddc_1_1UniformBSplines_1_1Impl.ht
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classddc_1_1UniformBSplines_1_1Impl-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">ddc::UniformBSplines&lt; Tag, D &gt;::Impl&lt; DDim, MemorySpace &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">ddc::UniformBSplines&lt; CDim, D &gt;::Impl&lt; DDim, MemorySpace &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -61,91 +61,91 @@ $(document).ready(function(){initNavTree('classddc_1_1UniformBSplines_1_1Impl.ht
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a54a8cc990ae15aaf6f89580792e5d104" id="r_a54a8cc990ae15aaf6f89580792e5d104"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> = <a class="el" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;</td></tr>
-<tr class="memdesc:a54a8cc990ae15aaf6f89580792e5d104"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the knots defining the B-splines.  <br /></td></tr>
-<tr class="separator:a54a8cc990ae15aaf6f89580792e5d104"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4c5c00ec28881d5118ac1759ea8f759" id="r_ab4c5c00ec28881d5118ac1759ea8f759"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ab4c5c00ec28881d5118ac1759ea8f759">discrete_dimension_type</a> = <a class="el" href="classddc_1_1UniformBSplines.html">UniformBSplines</a></td></tr>
-<tr class="memdesc:ab4c5c00ec28881d5118ac1759ea8f759"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the discrete dimension representing the B-splines.  <br /></td></tr>
-<tr class="separator:ab4c5c00ec28881d5118ac1759ea8f759"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5674c2f0c7818d6ff156cb2a90df5fee" id="r_a5674c2f0c7818d6ff156cb2a90df5fee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5674c2f0c7818d6ff156cb2a90df5fee">discrete_domain_type</a> = <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;</td></tr>
-<tr class="memdesc:a5674c2f0c7818d6ff156cb2a90df5fee"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of a <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> whose elements identify the B-splines.  <br /></td></tr>
-<tr class="separator:a5674c2f0c7818d6ff156cb2a90df5fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ce2de2abdccab7c45c76d67757e5322" id="r_a5ce2de2abdccab7c45c76d67757e5322"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> = <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;</td></tr>
-<tr class="memdesc:a5ce2de2abdccab7c45c76d67757e5322"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of a <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying a B-spline.  <br /></td></tr>
-<tr class="separator:a5ce2de2abdccab7c45c76d67757e5322"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84416b81e8fec40f365e99e746226a59" id="r_a84416b81e8fec40f365e99e746226a59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a84416b81e8fec40f365e99e746226a59">discrete_vector_type</a> = <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;</td></tr>
-<tr class="memdesc:a84416b81e8fec40f365e99e746226a59"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of a <a class="el" href="classddc_1_1DiscreteVector.html" title="A DiscreteVector is a vector in the discrete dimension.">DiscreteVector</a> representing an "index displacement" between two B-splines.  <br /></td></tr>
-<tr class="separator:a84416b81e8fec40f365e99e746226a59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1962423379170a62fb8a28d5f20d86a3" id="r_a1962423379170a62fb8a28d5f20d86a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a1962423379170a62fb8a28d5f20d86a3">knot_mesh_type</a> = <a class="el" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;</td></tr>
+<tr class="memdesc:a1962423379170a62fb8a28d5f20d86a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the knots defining the B-splines.  <br /></td></tr>
+<tr class="separator:a1962423379170a62fb8a28d5f20d86a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6915b5317ef5b179f8936c9d19b1ba53" id="r_a6915b5317ef5b179f8936c9d19b1ba53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a6915b5317ef5b179f8936c9d19b1ba53">discrete_dimension_type</a> = <a class="el" href="classddc_1_1UniformBSplines.html">UniformBSplines</a></td></tr>
+<tr class="memdesc:a6915b5317ef5b179f8936c9d19b1ba53"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the discrete dimension representing the B-splines.  <br /></td></tr>
+<tr class="separator:a6915b5317ef5b179f8936c9d19b1ba53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3a1d53a1dcfef6283d3719c81cb8086" id="r_ac3a1d53a1dcfef6283d3719c81cb8086"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ac3a1d53a1dcfef6283d3719c81cb8086">discrete_domain_type</a> = <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;</td></tr>
+<tr class="memdesc:ac3a1d53a1dcfef6283d3719c81cb8086"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of a <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a> whose elements identify the B-splines.  <br /></td></tr>
+<tr class="separator:ac3a1d53a1dcfef6283d3719c81cb8086"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40899a0c360e208a67ce83a3f397fbcd" id="r_a40899a0c360e208a67ce83a3f397fbcd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a40899a0c360e208a67ce83a3f397fbcd">discrete_element_type</a> = <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;</td></tr>
+<tr class="memdesc:a40899a0c360e208a67ce83a3f397fbcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of a <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying a B-spline.  <br /></td></tr>
+<tr class="separator:a40899a0c360e208a67ce83a3f397fbcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c23209a0bb9af5c7b7ca3a2eaa3c1ba" id="r_a2c23209a0bb9af5c7b7ca3a2eaa3c1ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a2c23209a0bb9af5c7b7ca3a2eaa3c1ba">discrete_vector_type</a> = <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;</td></tr>
+<tr class="memdesc:a2c23209a0bb9af5c7b7ca3a2eaa3c1ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of a <a class="el" href="classddc_1_1DiscreteVector.html" title="A DiscreteVector is a vector in the discrete dimension.">DiscreteVector</a> representing an "index displacement" between two B-splines.  <br /></td></tr>
+<tr class="separator:a2c23209a0bb9af5c7b7ca3a2eaa3c1ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af712602b0c637221b7df33bdebb1cf86" id="r_af712602b0c637221b7df33bdebb1cf86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#af712602b0c637221b7df33bdebb1cf86">Impl</a> ()=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
-<tr class="separator:af712602b0c637221b7df33bdebb1cf86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1487eaa45eb12cb82684abc06bd52048" id="r_a1487eaa45eb12cb82684abc06bd52048"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a1487eaa45eb12cb82684abc06bd52048">Impl</a> (<a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#aaeed188e20d6d65bd5d9ca3c8b44e01d">rmin</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a8dd078f7661224a3f0118830108744bd">rmax</a>, std::size_t <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a779a3744f1c4889f418447e345ba515a">ncells</a>)</td></tr>
-<tr class="memdesc:a1487eaa45eb12cb82684abc06bd52048"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a spline basis (B-splines) with n equidistant knots over <picture><source srcset="form_9_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$[a, b]$" src="form_9.png" width="24" height="14"/></picture>.  <br /></td></tr>
-<tr class="separator:a1487eaa45eb12cb82684abc06bd52048"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7b83f890743b6c5653c0e2c6f480215" id="r_aa7b83f890743b6c5653c0e2c6f480215"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OriginMemorySpace</a> &gt; </td></tr>
-<tr class="memitem:aa7b83f890743b6c5653c0e2c6f480215"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#aa7b83f890743b6c5653c0e2c6f480215">Impl</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OriginMemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">impl</a>)</td></tr>
-<tr class="memdesc:aa7b83f890743b6c5653c0e2c6f480215"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy-constructs from another <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html" title="Storage class of the static attributes of the discrete dimension.">Impl</a> with a different Kokkos memory space.  <br /></td></tr>
-<tr class="separator:aa7b83f890743b6c5653c0e2c6f480215"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3cd2dcdebc80275ec931547287b7067" id="r_aa3cd2dcdebc80275ec931547287b7067"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#aa3cd2dcdebc80275ec931547287b7067">Impl</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
-<tr class="memdesc:aa3cd2dcdebc80275ec931547287b7067"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy-constructs.  <br /></td></tr>
-<tr class="separator:aa3cd2dcdebc80275ec931547287b7067"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70a7771aee8e34b30af42be8bbe8e4b1" id="r_a70a7771aee8e34b30af42be8bbe8e4b1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a70a7771aee8e34b30af42be8bbe8e4b1">Impl</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
-<tr class="memdesc:a70a7771aee8e34b30af42be8bbe8e4b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move-constructs.  <br /></td></tr>
-<tr class="separator:a70a7771aee8e34b30af42be8bbe8e4b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb7daf3628617181f26c86e0ba4abe13" id="r_aeb7daf3628617181f26c86e0ba4abe13"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#aeb7daf3628617181f26c86e0ba4abe13">~Impl</a> ()=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
-<tr class="memdesc:aeb7daf3628617181f26c86e0ba4abe13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructs.  <br /></td></tr>
-<tr class="separator:aeb7daf3628617181f26c86e0ba4abe13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a061d9d1cf3a68ff427589a7b3245bbb4" id="r_a061d9d1cf3a68ff427589a7b3245bbb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a061d9d1cf3a68ff427589a7b3245bbb4">operator=</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
-<tr class="memdesc:a061d9d1cf3a68ff427589a7b3245bbb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy-assigns.  <br /></td></tr>
-<tr class="separator:a061d9d1cf3a68ff427589a7b3245bbb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa02285403bfc93797d2bf0266c46fa40" id="r_aa02285403bfc93797d2bf0266c46fa40"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#aa02285403bfc93797d2bf0266c46fa40">operator=</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
-<tr class="memdesc:aa02285403bfc93797d2bf0266c46fa40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move-assigns.  <br /></td></tr>
-<tr class="separator:aa02285403bfc93797d2bf0266c46fa40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8df189e6c60bed358726b47cbdb8afa0" id="r_a8df189e6c60bed358726b47cbdb8afa0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a8df189e6c60bed358726b47cbdb8afa0">eval_basis</a> (<a class="el" href="namespaceddc.html#a47eb1655f14f6e8e40ce0e7507754cbc">DSpan1D</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">values</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="memdesc:a8df189e6c60bed358726b47cbdb8afa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates non-zero B-splines at a given coordinate.  <br /></td></tr>
-<tr class="separator:a8df189e6c60bed358726b47cbdb8afa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a626eef1628492d2b2a28d4521f8755c9" id="r_a626eef1628492d2b2a28d4521f8755c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a626eef1628492d2b2a28d4521f8755c9">eval_deriv</a> (<a class="el" href="namespaceddc.html#a47eb1655f14f6e8e40ce0e7507754cbc">DSpan1D</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">derivs</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="memdesc:a626eef1628492d2b2a28d4521f8755c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates non-zero B-spline derivatives at a given coordinate.  <br /></td></tr>
-<tr class="separator:a626eef1628492d2b2a28d4521f8755c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab44f2dc3f5ec21536194605296eb73fa" id="r_ab44f2dc3f5ec21536194605296eb73fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ab44f2dc3f5ec21536194605296eb73fa">eval_basis_and_n_derivs</a> (<a class="el" href="namespaceddc.html#a5d5196bd6303219e1c7de8a9d2a8564b">ddc::DSpan2D</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">derivs</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>, std::size_t <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="memdesc:ab44f2dc3f5ec21536194605296eb73fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates non-zero B-spline values and <picture><source srcset="form_8_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$n$" src="form_8.png" width="9" height="6"/></picture> derivatives at a given coordinate.  <br /></td></tr>
-<tr class="separator:ab44f2dc3f5ec21536194605296eb73fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64159785723d23970d37f70ccc14d929" id="r_a64159785723d23970d37f70ccc14d929"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt; </td></tr>
-<tr class="memitem:a64159785723d23970d37f70ccc14d929"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a64159785723d23970d37f70ccc14d929">integrals</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5674c2f0c7818d6ff156cb2a90df5fee">discrete_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int_vals</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="memdesc:a64159785723d23970d37f70ccc14d929"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the integrals of the B-splines.  <br /></td></tr>
-<tr class="separator:a64159785723d23970d37f70ccc14d929"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9664bd4f58741f0ac5a3475045428e9d" id="r_a9664bd4f58741f0ac5a3475045428e9d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a9664bd4f58741f0ac5a3475045428e9d">get_first_support_knot</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ix</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="memdesc:a9664bd4f58741f0ac5a3475045428e9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the first support knot associated to a <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying a B-spline.  <br /></td></tr>
-<tr class="separator:a9664bd4f58741f0ac5a3475045428e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fccdf6c47afc8f7bb9bb58353ef7087" id="r_a7fccdf6c47afc8f7bb9bb58353ef7087"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a7fccdf6c47afc8f7bb9bb58353ef7087">get_last_support_knot</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ix</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="memdesc:a7fccdf6c47afc8f7bb9bb58353ef7087"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the last support knot associated to a <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying a B-spline.  <br /></td></tr>
-<tr class="separator:a7fccdf6c47afc8f7bb9bb58353ef7087"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaeed188e20d6d65bd5d9ca3c8b44e01d" id="r_aaeed188e20d6d65bd5d9ca3c8b44e01d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#aaeed188e20d6d65bd5d9ca3c8b44e01d">rmin</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
-<tr class="memdesc:aaeed188e20d6d65bd5d9ca3c8b44e01d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the lower bound of the domain on which the B-splines are defined.  <br /></td></tr>
-<tr class="separator:aaeed188e20d6d65bd5d9ca3c8b44e01d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8dd078f7661224a3f0118830108744bd" id="r_a8dd078f7661224a3f0118830108744bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a8dd078f7661224a3f0118830108744bd">rmax</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
-<tr class="memdesc:a8dd078f7661224a3f0118830108744bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the upper bound of the domain on which the B-splines are defined.  <br /></td></tr>
-<tr class="separator:a8dd078f7661224a3f0118830108744bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae13684f5af844a7ed50ed29599ed703c" id="r_ae13684f5af844a7ed50ed29599ed703c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ae13684f5af844a7ed50ed29599ed703c">length</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
-<tr class="memdesc:ae13684f5af844a7ed50ed29599ed703c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the domain.  <br /></td></tr>
-<tr class="separator:ae13684f5af844a7ed50ed29599ed703c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd406e1695c60435beabce2ca9f6500f" id="r_abd406e1695c60435beabce2ca9f6500f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#abd406e1695c60435beabce2ca9f6500f">size</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
-<tr class="memdesc:abd406e1695c60435beabce2ca9f6500f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of elements necessary to construct a spline representation of a function.  <br /></td></tr>
-<tr class="separator:abd406e1695c60435beabce2ca9f6500f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20223a26726ded2d7a47a2395b233975" id="r_a20223a26726ded2d7a47a2395b233975"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5674c2f0c7818d6ff156cb2a90df5fee">discrete_domain_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a20223a26726ded2d7a47a2395b233975">full_domain</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="memdesc:a20223a26726ded2d7a47a2395b233975"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the discrete domain including eventual additional B-splines in the periodic case.  <br /></td></tr>
-<tr class="separator:a20223a26726ded2d7a47a2395b233975"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8427f6d5594e286e0925edb534cc90f2" id="r_a8427f6d5594e286e0925edb534cc90f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a8427f6d5594e286e0925edb534cc90f2">break_point_domain</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="memdesc:a8427f6d5594e286e0925edb534cc90f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the discrete domain which describes the break points.  <br /></td></tr>
-<tr class="separator:a8427f6d5594e286e0925edb534cc90f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4eb5520c30b6ca33f4ef2bd9e277ec3e" id="r_a4eb5520c30b6ca33f4ef2bd9e277ec3e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a4eb5520c30b6ca33f4ef2bd9e277ec3e">nbasis</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
-<tr class="memdesc:a4eb5520c30b6ca33f4ef2bd9e277ec3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of basis functions.  <br /></td></tr>
-<tr class="separator:a4eb5520c30b6ca33f4ef2bd9e277ec3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a779a3744f1c4889f418447e345ba515a" id="r_a779a3744f1c4889f418447e345ba515a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a779a3744f1c4889f418447e345ba515a">ncells</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
-<tr class="memdesc:a779a3744f1c4889f418447e345ba515a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of cells over which the B-splines are defined.  <br /></td></tr>
-<tr class="separator:a779a3744f1c4889f418447e345ba515a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d147de02f56a214e31d3bfc45b2b779" id="r_a5d147de02f56a214e31d3bfc45b2b779"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5d147de02f56a214e31d3bfc45b2b779">Impl</a> ()=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
+<tr class="separator:a5d147de02f56a214e31d3bfc45b2b779"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1027ba57ec532f30acea8614c4b016bd" id="r_a1027ba57ec532f30acea8614c4b016bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a1027ba57ec532f30acea8614c4b016bd">Impl</a> (<a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a3aaff28144f0724ec6d22be0aa3407b5">rmin</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a24b9621c7a03174130420452ea0934c7">rmax</a>, std::size_t <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#abb65a2002d5793cee2489d917bab7a1b">ncells</a>)</td></tr>
+<tr class="memdesc:a1027ba57ec532f30acea8614c4b016bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a spline basis (B-splines) with n equidistant knots over <picture><source srcset="form_9_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$[a, b]$" src="form_9.png" width="24" height="14"/></picture>.  <br /></td></tr>
+<tr class="separator:a1027ba57ec532f30acea8614c4b016bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad14ec609c7f8fa7a92559cc9c442d7e" id="r_aad14ec609c7f8fa7a92559cc9c442d7e"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OriginMemorySpace</a> &gt; </td></tr>
+<tr class="memitem:aad14ec609c7f8fa7a92559cc9c442d7e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#aad14ec609c7f8fa7a92559cc9c442d7e">Impl</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OriginMemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">impl</a>)</td></tr>
+<tr class="memdesc:aad14ec609c7f8fa7a92559cc9c442d7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy-constructs from another <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html" title="Storage class of the static attributes of the discrete dimension.">Impl</a> with a different Kokkos memory space.  <br /></td></tr>
+<tr class="separator:aad14ec609c7f8fa7a92559cc9c442d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a669cca92a0ef2eb8ad79668c59bacaa5" id="r_a669cca92a0ef2eb8ad79668c59bacaa5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a669cca92a0ef2eb8ad79668c59bacaa5">Impl</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
+<tr class="memdesc:a669cca92a0ef2eb8ad79668c59bacaa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy-constructs.  <br /></td></tr>
+<tr class="separator:a669cca92a0ef2eb8ad79668c59bacaa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72335eea98a83b669ed3eadb4ea52cf4" id="r_a72335eea98a83b669ed3eadb4ea52cf4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a72335eea98a83b669ed3eadb4ea52cf4">Impl</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
+<tr class="memdesc:a72335eea98a83b669ed3eadb4ea52cf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move-constructs.  <br /></td></tr>
+<tr class="separator:a72335eea98a83b669ed3eadb4ea52cf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cbaaeda38914cf7a06e107a300d37e8" id="r_a3cbaaeda38914cf7a06e107a300d37e8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a3cbaaeda38914cf7a06e107a300d37e8">~Impl</a> ()=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
+<tr class="memdesc:a3cbaaeda38914cf7a06e107a300d37e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructs.  <br /></td></tr>
+<tr class="separator:a3cbaaeda38914cf7a06e107a300d37e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af03425ee2de04d8dd6cb266fb13fb4f5" id="r_af03425ee2de04d8dd6cb266fb13fb4f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#af03425ee2de04d8dd6cb266fb13fb4f5">operator=</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
+<tr class="memdesc:af03425ee2de04d8dd6cb266fb13fb4f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy-assigns.  <br /></td></tr>
+<tr class="separator:af03425ee2de04d8dd6cb266fb13fb4f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6ebb51020c5b8566b066ae2703613e4" id="r_ae6ebb51020c5b8566b066ae2703613e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ae6ebb51020c5b8566b066ae2703613e4">operator=</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>)=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
+<tr class="memdesc:ae6ebb51020c5b8566b066ae2703613e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move-assigns.  <br /></td></tr>
+<tr class="separator:ae6ebb51020c5b8566b066ae2703613e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b3b80a14c5d0bed1f4ea38e71188a71" id="r_a2b3b80a14c5d0bed1f4ea38e71188a71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a40899a0c360e208a67ce83a3f397fbcd">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a2b3b80a14c5d0bed1f4ea38e71188a71">eval_basis</a> (<a class="el" href="namespaceddc.html#a47eb1655f14f6e8e40ce0e7507754cbc">DSpan1D</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">values</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memdesc:a2b3b80a14c5d0bed1f4ea38e71188a71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates non-zero B-splines at a given coordinate.  <br /></td></tr>
+<tr class="separator:a2b3b80a14c5d0bed1f4ea38e71188a71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf451093e3c84862bd7028e7170cbe59" id="r_abf451093e3c84862bd7028e7170cbe59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a40899a0c360e208a67ce83a3f397fbcd">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#abf451093e3c84862bd7028e7170cbe59">eval_deriv</a> (<a class="el" href="namespaceddc.html#a47eb1655f14f6e8e40ce0e7507754cbc">DSpan1D</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">derivs</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memdesc:abf451093e3c84862bd7028e7170cbe59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates non-zero B-spline derivatives at a given coordinate.  <br /></td></tr>
+<tr class="separator:abf451093e3c84862bd7028e7170cbe59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b92747dfcd84480d78efb9c192dd333" id="r_a7b92747dfcd84480d78efb9c192dd333"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a40899a0c360e208a67ce83a3f397fbcd">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a7b92747dfcd84480d78efb9c192dd333">eval_basis_and_n_derivs</a> (<a class="el" href="namespaceddc.html#a5d5196bd6303219e1c7de8a9d2a8564b">ddc::DSpan2D</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">derivs</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>, std::size_t <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memdesc:a7b92747dfcd84480d78efb9c192dd333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates non-zero B-spline values and <picture><source srcset="form_8_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$n$" src="form_8.png" width="9" height="6"/></picture> derivatives at a given coordinate.  <br /></td></tr>
+<tr class="separator:a7b92747dfcd84480d78efb9c192dd333"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3c5fd2b94d4f99855450042566ee70a" id="r_ad3c5fd2b94d4f99855450042566ee70a"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt; </td></tr>
+<tr class="memitem:ad3c5fd2b94d4f99855450042566ee70a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ad3c5fd2b94d4f99855450042566ee70a">integrals</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ac3a1d53a1dcfef6283d3719c81cb8086">discrete_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int_vals</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memdesc:ad3c5fd2b94d4f99855450042566ee70a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the integrals of the B-splines.  <br /></td></tr>
+<tr class="separator:ad3c5fd2b94d4f99855450042566ee70a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c2e510e5360cb8cc61c13b858441561" id="r_a2c2e510e5360cb8cc61c13b858441561"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a1962423379170a62fb8a28d5f20d86a3">knot_mesh_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a2c2e510e5360cb8cc61c13b858441561">get_first_support_knot</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a40899a0c360e208a67ce83a3f397fbcd">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ix</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memdesc:a2c2e510e5360cb8cc61c13b858441561"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the first support knot associated to a <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying a B-spline.  <br /></td></tr>
+<tr class="separator:a2c2e510e5360cb8cc61c13b858441561"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9502ce8a7708593d18f96a6b6a93b03f" id="r_a9502ce8a7708593d18f96a6b6a93b03f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a1962423379170a62fb8a28d5f20d86a3">knot_mesh_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a9502ce8a7708593d18f96a6b6a93b03f">get_last_support_knot</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a40899a0c360e208a67ce83a3f397fbcd">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ix</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memdesc:a9502ce8a7708593d18f96a6b6a93b03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the last support knot associated to a <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifying a B-spline.  <br /></td></tr>
+<tr class="separator:a9502ce8a7708593d18f96a6b6a93b03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3aaff28144f0724ec6d22be0aa3407b5" id="r_a3aaff28144f0724ec6d22be0aa3407b5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a3aaff28144f0724ec6d22be0aa3407b5">rmin</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a3aaff28144f0724ec6d22be0aa3407b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the lower bound of the domain on which the B-splines are defined.  <br /></td></tr>
+<tr class="separator:a3aaff28144f0724ec6d22be0aa3407b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24b9621c7a03174130420452ea0934c7" id="r_a24b9621c7a03174130420452ea0934c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a24b9621c7a03174130420452ea0934c7">rmax</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a24b9621c7a03174130420452ea0934c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the coordinate of the upper bound of the domain on which the B-splines are defined.  <br /></td></tr>
+<tr class="separator:a24b9621c7a03174130420452ea0934c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b04bc695a0d386ab705fe8d7b7587bb" id="r_a8b04bc695a0d386ab705fe8d7b7587bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a8b04bc695a0d386ab705fe8d7b7587bb">length</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a8b04bc695a0d386ab705fe8d7b7587bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the domain.  <br /></td></tr>
+<tr class="separator:a8b04bc695a0d386ab705fe8d7b7587bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ead551a41fec0d3e5a400e9458e7c15" id="r_a6ead551a41fec0d3e5a400e9458e7c15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a6ead551a41fec0d3e5a400e9458e7c15">size</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a6ead551a41fec0d3e5a400e9458e7c15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of elements necessary to construct a spline representation of a function.  <br /></td></tr>
+<tr class="separator:a6ead551a41fec0d3e5a400e9458e7c15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefe1c34d1f6cb4d3544178a483395796" id="r_aefe1c34d1f6cb4d3544178a483395796"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ac3a1d53a1dcfef6283d3719c81cb8086">discrete_domain_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#aefe1c34d1f6cb4d3544178a483395796">full_domain</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memdesc:aefe1c34d1f6cb4d3544178a483395796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the discrete domain including eventual additional B-splines in the periodic case.  <br /></td></tr>
+<tr class="separator:aefe1c34d1f6cb4d3544178a483395796"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb08e682d9270e85a8fe83109ac2e478" id="r_abb08e682d9270e85a8fe83109ac2e478"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a1962423379170a62fb8a28d5f20d86a3">knot_mesh_type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#abb08e682d9270e85a8fe83109ac2e478">break_point_domain</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memdesc:abb08e682d9270e85a8fe83109ac2e478"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the discrete domain which describes the break points.  <br /></td></tr>
+<tr class="separator:abb08e682d9270e85a8fe83109ac2e478"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a564dc30c93068bcf9a772078893e38d2" id="r_a564dc30c93068bcf9a772078893e38d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a564dc30c93068bcf9a772078893e38d2">nbasis</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a564dc30c93068bcf9a772078893e38d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of basis functions.  <br /></td></tr>
+<tr class="separator:a564dc30c93068bcf9a772078893e38d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb65a2002d5793cee2489d917bab7a1b" id="r_abb65a2002d5793cee2489d917bab7a1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#abb65a2002d5793cee2489d917bab7a1b">ncells</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:abb65a2002d5793cee2489d917bab7a1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of cells over which the B-splines are defined.  <br /></td></tr>
+<tr class="separator:abb65a2002d5793cee2489d917bab7a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -154,9 +154,9 @@ Friends</h2></td></tr>
 <tr class="separator:adcaf2527acc2c7a0a18f741240082b56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, std::size_t D&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, std::size_t D&gt;<br />
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>&gt;<br />
-class ddc::UniformBSplines&lt; Tag, D &gt;::Impl&lt; DDim, MemorySpace &gt;</div><p>Storage class of the static attributes of the discrete dimension. </p>
+class ddc::UniformBSplines&lt; CDim, D &gt;::Impl&lt; DDim, MemorySpace &gt;</div><p>Storage class of the static attributes of the discrete dimension. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">DDim</td><td>The name of the discrete dimension. </td></tr>
@@ -165,18 +165,18 @@ class ddc::UniformBSplines&lt; Tag, D &gt;::Impl&lt; DDim, MemorySpace &gt;</div
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a54a8cc990ae15aaf6f89580792e5d104" name="a54a8cc990ae15aaf6f89580792e5d104"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54a8cc990ae15aaf6f89580792e5d104">&#9670;&#160;</a></span>knot_mesh_type</h2>
+<a id="a1962423379170a62fb8a28d5f20d86a3" name="a1962423379170a62fb8a28d5f20d86a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1962423379170a62fb8a28d5f20d86a3">&#9670;&#160;</a></span>knot_mesh_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::knot_mesh_type =  <a class="el" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::knot_mesh_type =  <a class="el" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -185,18 +185,18 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="ab4c5c00ec28881d5118ac1759ea8f759" name="ab4c5c00ec28881d5118ac1759ea8f759"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4c5c00ec28881d5118ac1759ea8f759">&#9670;&#160;</a></span>discrete_dimension_type</h2>
+<a id="a6915b5317ef5b179f8936c9d19b1ba53" name="a6915b5317ef5b179f8936c9d19b1ba53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6915b5317ef5b179f8936c9d19b1ba53">&#9670;&#160;</a></span>discrete_dimension_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::discrete_dimension_type =  <a class="el" href="classddc_1_1UniformBSplines.html">UniformBSplines</a></td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::discrete_dimension_type =  <a class="el" href="classddc_1_1UniformBSplines.html">UniformBSplines</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -205,18 +205,18 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a5674c2f0c7818d6ff156cb2a90df5fee" name="a5674c2f0c7818d6ff156cb2a90df5fee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5674c2f0c7818d6ff156cb2a90df5fee">&#9670;&#160;</a></span>discrete_domain_type</h2>
+<a id="ac3a1d53a1dcfef6283d3719c81cb8086" name="ac3a1d53a1dcfef6283d3719c81cb8086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3a1d53a1dcfef6283d3719c81cb8086">&#9670;&#160;</a></span>discrete_domain_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::discrete_domain_type =  <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::discrete_domain_type =  <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -225,18 +225,18 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a5ce2de2abdccab7c45c76d67757e5322" name="a5ce2de2abdccab7c45c76d67757e5322"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ce2de2abdccab7c45c76d67757e5322">&#9670;&#160;</a></span>discrete_element_type</h2>
+<a id="a40899a0c360e208a67ce83a3f397fbcd" name="a40899a0c360e208a67ce83a3f397fbcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40899a0c360e208a67ce83a3f397fbcd">&#9670;&#160;</a></span>discrete_element_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::discrete_element_type =  <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::discrete_element_type =  <a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -245,18 +245,18 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a84416b81e8fec40f365e99e746226a59" name="a84416b81e8fec40f365e99e746226a59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84416b81e8fec40f365e99e746226a59">&#9670;&#160;</a></span>discrete_vector_type</h2>
+<a id="a2c23209a0bb9af5c7b7ca3a2eaa3c1ba" name="a2c23209a0bb9af5c7b7ca3a2eaa3c1ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c23209a0bb9af5c7b7ca3a2eaa3c1ba">&#9670;&#160;</a></span>discrete_vector_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::discrete_vector_type =  <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::discrete_vector_type =  <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -266,13 +266,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="af712602b0c637221b7df33bdebb1cf86" name="af712602b0c637221b7df33bdebb1cf86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af712602b0c637221b7df33bdebb1cf86">&#9670;&#160;</a></span>Impl() <span class="overload">[1/5]</span></h2>
+<a id="a5d147de02f56a214e31d3bfc45b2b779" name="a5d147de02f56a214e31d3bfc45b2b779"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d147de02f56a214e31d3bfc45b2b779">&#9670;&#160;</a></span>Impl() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -280,7 +280,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::Impl&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::Impl </td>
+          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::Impl&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::Impl </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -295,13 +295,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a1487eaa45eb12cb82684abc06bd52048" name="a1487eaa45eb12cb82684abc06bd52048"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1487eaa45eb12cb82684abc06bd52048">&#9670;&#160;</a></span>Impl() <span class="overload">[2/5]</span></h2>
+<a id="a1027ba57ec532f30acea8614c4b016bd" name="a1027ba57ec532f30acea8614c4b016bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1027ba57ec532f30acea8614c4b016bd">&#9670;&#160;</a></span>Impl() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -309,15 +309,15 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::Impl&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::Impl </td>
+          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::Impl&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::Impl </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt;&#160;</td>
           <td class="paramname"><em>rmin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt;&#160;</td>
           <td class="paramname"><em>rmax</em>, </td>
         </tr>
         <tr>
@@ -351,13 +351,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="aa7b83f890743b6c5653c0e2c6f480215" name="aa7b83f890743b6c5653c0e2c6f480215"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7b83f890743b6c5653c0e2c6f480215">&#9670;&#160;</a></span>Impl() <span class="overload">[3/5]</span></h2>
+<a id="aad14ec609c7f8fa7a92559cc9c442d7e" name="aad14ec609c7f8fa7a92559cc9c442d7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad14ec609c7f8fa7a92559cc9c442d7e">&#9670;&#160;</a></span>Impl() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <div class="memtemplate">
@@ -367,7 +367,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::Impl&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::Impl </td>
+          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::Impl&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::Impl </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OriginMemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
           <td class="paramname"><em>impl</em></td><td>)</td>
@@ -391,13 +391,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="aa3cd2dcdebc80275ec931547287b7067" name="aa3cd2dcdebc80275ec931547287b7067"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3cd2dcdebc80275ec931547287b7067">&#9670;&#160;</a></span>Impl() <span class="overload">[4/5]</span></h2>
+<a id="a669cca92a0ef2eb8ad79668c59bacaa5" name="a669cca92a0ef2eb8ad79668c59bacaa5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a669cca92a0ef2eb8ad79668c59bacaa5">&#9670;&#160;</a></span>Impl() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -405,7 +405,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::Impl&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::Impl </td>
+          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::Impl&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::Impl </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
           <td class="paramname"><em>x</em></td><td>)</td>
@@ -429,13 +429,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a70a7771aee8e34b30af42be8bbe8e4b1" name="a70a7771aee8e34b30af42be8bbe8e4b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a70a7771aee8e34b30af42be8bbe8e4b1">&#9670;&#160;</a></span>Impl() <span class="overload">[5/5]</span></h2>
+<a id="a72335eea98a83b669ed3eadb4ea52cf4" name="a72335eea98a83b669ed3eadb4ea52cf4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72335eea98a83b669ed3eadb4ea52cf4">&#9670;&#160;</a></span>Impl() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -443,7 +443,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::Impl&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::Impl </td>
+          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::Impl&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::Impl </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; &amp;&amp;&#160;</td>
           <td class="paramname"><em>x</em></td><td>)</td>
@@ -467,13 +467,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="aeb7daf3628617181f26c86e0ba4abe13" name="aeb7daf3628617181f26c86e0ba4abe13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb7daf3628617181f26c86e0ba4abe13">&#9670;&#160;</a></span>~Impl()</h2>
+<a id="a3cbaaeda38914cf7a06e107a300d37e8" name="a3cbaaeda38914cf7a06e107a300d37e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cbaaeda38914cf7a06e107a300d37e8">&#9670;&#160;</a></span>~Impl()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -481,7 +481,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::~<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> </td>
+          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::~<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -499,13 +499,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a061d9d1cf3a68ff427589a7b3245bbb4" name="a061d9d1cf3a68ff427589a7b3245bbb4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a061d9d1cf3a68ff427589a7b3245bbb4">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+<a id="af03425ee2de04d8dd6cb266fb13fb4f5" name="af03425ee2de04d8dd6cb266fb13fb4f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af03425ee2de04d8dd6cb266fb13fb4f5">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -513,7 +513,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>= </td>
+          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>= </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
           <td class="paramname"><em>x</em></td><td>)</td>
@@ -538,13 +538,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="aa02285403bfc93797d2bf0266c46fa40" name="aa02285403bfc93797d2bf0266c46fa40"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa02285403bfc93797d2bf0266c46fa40">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+<a id="ae6ebb51020c5b8566b066ae2703613e4" name="ae6ebb51020c5b8566b066ae2703613e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6ebb51020c5b8566b066ae2703613e4">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -552,7 +552,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>= </td>
+          <td class="memname"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a> &amp; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>= </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; &amp;&amp;&#160;</td>
           <td class="paramname"><em>x</em></td><td>)</td>
@@ -577,13 +577,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a8df189e6c60bed358726b47cbdb8afa0" name="a8df189e6c60bed358726b47cbdb8afa0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8df189e6c60bed358726b47cbdb8afa0">&#9670;&#160;</a></span>eval_basis()</h2>
+<a id="a2b3b80a14c5d0bed1f4ea38e71188a71" name="a2b3b80a14c5d0bed1f4ea38e71188a71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b3b80a14c5d0bed1f4ea38e71188a71">&#9670;&#160;</a></span>eval_basis()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -591,7 +591,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::eval_basis </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a40899a0c360e208a67ce83a3f397fbcd">discrete_element_type</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::eval_basis </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceddc.html#a47eb1655f14f6e8e40ce0e7507754cbc">DSpan1D</a>&#160;</td>
           <td class="paramname"><em>values</em>, </td>
@@ -599,7 +599,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
           <td class="paramname"><em>x</em>&#160;</td>
         </tr>
         <tr>
@@ -628,18 +628,18 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a626eef1628492d2b2a28d4521f8755c9" name="a626eef1628492d2b2a28d4521f8755c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a626eef1628492d2b2a28d4521f8755c9">&#9670;&#160;</a></span>eval_deriv()</h2>
+<a id="abf451093e3c84862bd7028e7170cbe59" name="abf451093e3c84862bd7028e7170cbe59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf451093e3c84862bd7028e7170cbe59">&#9670;&#160;</a></span>eval_deriv()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::eval_deriv </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::eval_deriv </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceddc.html#a47eb1655f14f6e8e40ce0e7507754cbc">DSpan1D</a>&#160;</td>
           <td class="paramname"><em>derivs</em>, </td>
@@ -647,7 +647,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
           <td class="paramname"><em>x</em>&#160;</td>
         </tr>
         <tr>
@@ -671,18 +671,18 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="ab44f2dc3f5ec21536194605296eb73fa" name="ab44f2dc3f5ec21536194605296eb73fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab44f2dc3f5ec21536194605296eb73fa">&#9670;&#160;</a></span>eval_basis_and_n_derivs()</h2>
+<a id="a7b92747dfcd84480d78efb9c192dd333" name="a7b92747dfcd84480d78efb9c192dd333"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b92747dfcd84480d78efb9c192dd333">&#9670;&#160;</a></span>eval_basis_and_n_derivs()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::eval_basis_and_n_derivs </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::eval_basis_and_n_derivs </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceddc.html#a5d5196bd6303219e1c7de8a9d2a8564b">ddc::DSpan2D</a>&#160;</td>
           <td class="paramname"><em>derivs</em>, </td>
@@ -690,7 +690,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
           <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
@@ -721,22 +721,22 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a64159785723d23970d37f70ccc14d929" name="a64159785723d23970d37f70ccc14d929"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64159785723d23970d37f70ccc14d929">&#9670;&#160;</a></span>integrals()</h2>
+<a id="ad3c5fd2b94d4f99855450042566ee70a" name="ad3c5fd2b94d4f99855450042566ee70a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3c5fd2b94d4f99855450042566ee70a">&#9670;&#160;</a></span>integrals()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::integrals </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::integrals </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5674c2f0c7818d6ff156cb2a90df5fee">discrete_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ac3a1d53a1dcfef6283d3719c81cb8086">discrete_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt;&#160;</td>
           <td class="paramname"><em>int_vals</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -755,13 +755,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a9664bd4f58741f0ac5a3475045428e9d" name="a9664bd4f58741f0ac5a3475045428e9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9664bd4f58741f0ac5a3475045428e9d">&#9670;&#160;</a></span>get_first_support_knot()</h2>
+<a id="a2c2e510e5360cb8cc61c13b858441561" name="a2c2e510e5360cb8cc61c13b858441561"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c2e510e5360cb8cc61c13b858441561">&#9670;&#160;</a></span>get_first_support_knot()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -769,9 +769,9 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::get_first_support_knot </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a1962423379170a62fb8a28d5f20d86a3">knot_mesh_type</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::get_first_support_knot </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a40899a0c360e208a67ce83a3f397fbcd">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
           <td class="paramname"><em>ix</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -795,13 +795,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a7fccdf6c47afc8f7bb9bb58353ef7087" name="a7fccdf6c47afc8f7bb9bb58353ef7087"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7fccdf6c47afc8f7bb9bb58353ef7087">&#9670;&#160;</a></span>get_last_support_knot()</h2>
+<a id="a9502ce8a7708593d18f96a6b6a93b03f" name="a9502ce8a7708593d18f96a6b6a93b03f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9502ce8a7708593d18f96a6b6a93b03f">&#9670;&#160;</a></span>get_last_support_knot()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -809,9 +809,9 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::get_last_support_knot </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a1962423379170a62fb8a28d5f20d86a3">knot_mesh_type</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::get_last_support_knot </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5ce2de2abdccab7c45c76d67757e5322">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a40899a0c360e208a67ce83a3f397fbcd">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
           <td class="paramname"><em>ix</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -835,13 +835,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="aaeed188e20d6d65bd5d9ca3c8b44e01d" name="aaeed188e20d6d65bd5d9ca3c8b44e01d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaeed188e20d6d65bd5d9ca3c8b44e01d">&#9670;&#160;</a></span>rmin()</h2>
+<a id="a3aaff28144f0724ec6d22be0aa3407b5" name="a3aaff28144f0724ec6d22be0aa3407b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3aaff28144f0724ec6d22be0aa3407b5">&#9670;&#160;</a></span>rmin()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -849,7 +849,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::rmin </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::rmin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -867,13 +867,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a8dd078f7661224a3f0118830108744bd" name="a8dd078f7661224a3f0118830108744bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8dd078f7661224a3f0118830108744bd">&#9670;&#160;</a></span>rmax()</h2>
+<a id="a24b9621c7a03174130420452ea0934c7" name="a24b9621c7a03174130420452ea0934c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24b9621c7a03174130420452ea0934c7">&#9670;&#160;</a></span>rmax()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -881,7 +881,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::rmax </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::rmax </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -899,13 +899,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="ae13684f5af844a7ed50ed29599ed703c" name="ae13684f5af844a7ed50ed29599ed703c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae13684f5af844a7ed50ed29599ed703c">&#9670;&#160;</a></span>length()</h2>
+<a id="a8b04bc695a0d386ab705fe8d7b7587bb" name="a8b04bc695a0d386ab705fe8d7b7587bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b04bc695a0d386ab705fe8d7b7587bb">&#9670;&#160;</a></span>length()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -913,7 +913,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::length </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::length </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -931,13 +931,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="abd406e1695c60435beabce2ca9f6500f" name="abd406e1695c60435beabce2ca9f6500f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abd406e1695c60435beabce2ca9f6500f">&#9670;&#160;</a></span>size()</h2>
+<a id="a6ead551a41fec0d3e5a400e9458e7c15" name="a6ead551a41fec0d3e5a400e9458e7c15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ead551a41fec0d3e5a400e9458e7c15">&#9670;&#160;</a></span>size()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -945,7 +945,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::size </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::size </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -964,13 +964,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a20223a26726ded2d7a47a2395b233975" name="a20223a26726ded2d7a47a2395b233975"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20223a26726ded2d7a47a2395b233975">&#9670;&#160;</a></span>full_domain()</h2>
+<a id="aefe1c34d1f6cb4d3544178a483395796" name="aefe1c34d1f6cb4d3544178a483395796"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefe1c34d1f6cb4d3544178a483395796">&#9670;&#160;</a></span>full_domain()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -978,7 +978,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5674c2f0c7818d6ff156cb2a90df5fee">discrete_domain_type</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::full_domain </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ac3a1d53a1dcfef6283d3719c81cb8086">discrete_domain_type</a> <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::full_domain </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -992,18 +992,18 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>Returns the discrete domain including eventual additional B-splines in the periodic case. </p>
-<p>See <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#abd406e1695c60435beabce2ca9f6500f" title="Returns the number of elements necessary to construct a spline representation of a function.">size()</a>.</p>
+<p>See <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a6ead551a41fec0d3e5a400e9458e7c15" title="Returns the number of elements necessary to construct a spline representation of a function.">size()</a>.</p>
 <dl class="section return"><dt>Returns</dt><dd>The discrete domain including eventual additional B-splines. </dd></dl>
 
 </div>
 </div>
-<a id="a8427f6d5594e286e0925edb534cc90f2" name="a8427f6d5594e286e0925edb534cc90f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8427f6d5594e286e0925edb534cc90f2">&#9670;&#160;</a></span>break_point_domain()</h2>
+<a id="abb08e682d9270e85a8fe83109ac2e478" name="abb08e682d9270e85a8fe83109ac2e478"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb08e682d9270e85a8fe83109ac2e478">&#9670;&#160;</a></span>break_point_domain()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -1011,7 +1011,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a54a8cc990ae15aaf6f89580792e5d104">knot_mesh_type</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::break_point_domain </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a1962423379170a62fb8a28d5f20d86a3">knot_mesh_type</a> &gt; <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::break_point_domain </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -1029,13 +1029,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a4eb5520c30b6ca33f4ef2bd9e277ec3e" name="a4eb5520c30b6ca33f4ef2bd9e277ec3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4eb5520c30b6ca33f4ef2bd9e277ec3e">&#9670;&#160;</a></span>nbasis()</h2>
+<a id="a564dc30c93068bcf9a772078893e38d2" name="a564dc30c93068bcf9a772078893e38d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a564dc30c93068bcf9a772078893e38d2">&#9670;&#160;</a></span>nbasis()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -1043,7 +1043,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::nbasis </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::nbasis </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -1062,13 +1062,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a779a3744f1c4889f418447e345ba515a" name="a779a3744f1c4889f418447e345ba515a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a779a3744f1c4889f418447e345ba515a">&#9670;&#160;</a></span>ncells()</h2>
+<a id="abb65a2002d5793cee2489d917bab7a1b" name="abb65a2002d5793cee2489d917bab7a1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb65a2002d5793cee2489d917bab7a1b">&#9670;&#160;</a></span>ncells()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <table class="mlabels">
@@ -1076,7 +1076,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::ncells </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> std::size_t <a class="el" href="classddc_1_1UniformBSplines.html">ddc::UniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#adcaf2527acc2c7a0a18f741240082b56">::Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;::ncells </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -1102,7 +1102,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tag</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
 <div class="memtemplate">

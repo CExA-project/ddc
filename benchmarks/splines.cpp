@@ -160,6 +160,7 @@ static void characteristics_advection(benchmark::State& state)
         Kokkos::Profiling::pushRegion("SplineEvaluator");
         spline_evaluator(density, feet_coords.span_cview(), coef.span_cview());
         Kokkos::Profiling::popRegion();
+        Kokkos::fence("End of advection step");
     }
     monitorFlag = false;
     monitorThread.join();

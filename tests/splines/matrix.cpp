@@ -21,6 +21,7 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
     void fill_identity(
             ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS mat)
     {
+        assert(mat.extent(0) == mat.required_number_of_rhs_rows());
         for (std::size_t i(0); i < mat.extent(0); ++i) {
             for (std::size_t j(0); j < mat.extent(1); ++j) {
                 mat(i, j) = int(i == j);
@@ -79,8 +80,7 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
     }
 
     void solve_and_validate(
-            ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace> & matrix,
-            std::size_t const additional_rows = 0)
+            ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace> & matrix)
     {
         const std::size_t N = matrix.size();
 
@@ -92,26 +92,30 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
 
         matrix.setup_solver();
 
-        Kokkos::DualView<double*> inv_ptr("inv_ptr", (N + additional_rows) * N);
+        Kokkos::DualView<double*> inv_ptr("inv_ptr", matrix.required_number_of_rhs_rows() * N);
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-                inv(inv_ptr.h_view.data(), N + additional_rows, N);
+                inv(inv_ptr.h_view.data(), matrix.required_number_of_rhs_rows(), N);
         fill_identity(inv);
         inv_ptr.modify_host();
         inv_ptr.sync_device();
-        matrix.solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
-                             MultiRHS(inv_ptr.d_view.data(), N + additional_rows, N));
+        matrix.solve(
+                ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
+                        MultiRHS(inv_ptr.d_view.data(), matrix.required_number_of_rhs_rows(), N));
         inv_ptr.modify_device();
         inv_ptr.sync_host();
 
-        Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", (N + additional_rows) * N);
+        Kokkos::DualView<double*>
+                inv_tr_ptr("inv_tr_ptr", (matrix.required_number_of_rhs_rows()) * N);
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-                inv_tr(inv_tr_ptr.h_view.data(), N + additional_rows, N);
+                inv_tr(inv_tr_ptr.h_view.data(), matrix.required_number_of_rhs_rows(), N);
         fill_identity(inv_tr);
         inv_tr_ptr.modify_host();
         inv_tr_ptr.sync_device();
         matrix
-                .solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
-                               MultiRHS(inv_tr_ptr.d_view.data(), N + additional_rows, N),
+                .solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
+                               inv_tr_ptr.d_view.data(),
+                               matrix.required_number_of_rhs_rows(),
+                               N),
                        true);
         inv_tr_ptr.modify_device();
         inv_tr_ptr.sync_host();
@@ -276,7 +280,7 @@ TEST(Matrix, 3x3Blocks)
         }
     }
 
-    solve_and_validate(*matrix, top_size);
+    solve_and_validate(*matrix);
 }
 
 class MatrixSizesFixture : public testing::TestWithParam<std::tuple<std::size_t, std::size_t>>
@@ -390,7 +394,7 @@ TEST_P(MatrixSizesFixture, 3x3Blocks)
         }
     }
 
-    solve_and_validate(*matrix, top_size);
+    solve_and_validate(*matrix);
 }
 
 TEST_P(MatrixSizesFixture, PeriodicBand)

@@ -58,7 +58,7 @@ public:
             Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx_,
             Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> values_)
             : nrows(nrows_)
-            , ncols(ncols)
+            , ncols(ncols_)
             , rows_idx(rows_idx_)
             , cols_idx(cols_idx_)
             , values(values_)

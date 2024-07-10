@@ -85,7 +85,7 @@ class SplineBuilder
                 && (BcXmax != ddc::BoundCond::PERIODIC)));
 
 private:
-    using tag_type = typename InterpolationMesh::continuous_dimension_type;
+    using continuous_dimension_type = typename InterpolationMesh::continuous_dimension_type;
 
 public:
     /// @brief The type of the Kokkos execution space used by this class.
@@ -101,7 +101,7 @@ public:
     using bsplines_type = BSplines;
 
     /// @brief The type of the Deriv dimension at the boundaries.
-    using deriv_type = ddc::Deriv<tag_type>;
+    using deriv_type = ddc::Deriv<continuous_dimension_type>;
 
     /// @brief The type of the domain for the 1D interpolation mesh used by this class.
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;

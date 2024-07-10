@@ -139,7 +139,7 @@ static void characteristics_advection(benchmark::State& state)
     ddc::Chunk feet_coords_alloc(
             spline_builder.batched_interpolation_domain(),
             ddc::KokkosAllocator<
-                    ddc::Coordinate<X, Y>,
+                    ddc::Coordinate<X>,
                     Kokkos::DefaultExecutionSpace::memory_space>());
     ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
 
@@ -148,10 +148,9 @@ static void characteristics_advection(benchmark::State& state)
         ddc::parallel_for_each(
                 feet_coords.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const e) {
-                    feet_coords(e) = ddc::Coordinate<X, Y>(
-                            ddc::coordinate(ddc::select<DDimX>(e))
-                                    - ddc::Coordinate<X>(0.0176429863),
-                            ddc::coordinate(ddc::select<DDimY>(e)));
+                    feet_coords(e) = ddc::coordinate(ddc::select<DDimX>(e))
+                                     - ddc::Coordinate<X>(0.0176429863),
+                    ddc::coordinate(ddc::select<DDimY>(e));
                 });
         Kokkos::Profiling::popRegion();
         Kokkos::Profiling::pushRegion("SplineBuilder");

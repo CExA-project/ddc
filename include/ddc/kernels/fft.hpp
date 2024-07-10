@@ -67,8 +67,18 @@ namespace ddc {
 template <typename Dim>
 struct Fourier;
 
-// named arguments for FFT (and their default values)
+/**
+ * @brief A named argument too choose the direction of the FFT.
+ *
+ * @see kwArgs_core
+ */
 enum class FFT_Direction { FORWARD, BACKWARD };
+
+/**
+ * @brief A named argument too choose the type of normalization of the FFT.
+ *
+ * @see kwArgs_core
+ */
 enum class FFT_Normalization { OFF, FORWARD, BACKWARD, ORTHO, FULL };
 } // namespace ddc
 
@@ -115,7 +125,12 @@ KOKKOS_FUNCTION constexpr T LastSelector(const T a, const T b)
     return LastSelector<T, Dim, Second, Tail...>(a, b);
 }
 
-// transform_type : trait to determine the type of transformation (R2C, C2R, C2C...) <- no information about base type (float or double)
+// transform_type : 
+/**
+ * @brief A trait to identify the type of transformation (R2C, C2R, C2C...).
+ *
+ * It does not contain the information about the base type (float or double).
+ */
 enum class TransformType { R2R, R2C, C2R, C2C };
 
 template <typename T1, typename T2>
@@ -142,6 +157,14 @@ struct transform_type<Kokkos::complex<T1>, Kokkos::complex<T2>>
     static constexpr TransformType value = TransformType::C2C;
 };
 
+/**
+ * @brief A trait to get the TransformType for the input and output types.
+ *
+ * Rely on if T1 and T2 are Kokkos::complex<something> or not.
+ *
+ * @tparam T1 The input type.
+ * @tparam T2 The output type.
+ */
 template <typename T1, typename T2>
 constexpr TransformType transform_type_v = transform_type<T1, T2>::value;
 
@@ -318,6 +341,11 @@ hipfftResult _hipfftExec([[maybe_unused]] LastArg lastArg, Args... args)
 }
 #endif
 
+/* 
+ * @brief A structure embedding the configuration of the core FFT function, direction and type of normalization.
+ *
+ * @see FFT_core 
+ */
 struct kwArgs_core
 {
     ddc::FFT_Direction
@@ -326,15 +354,17 @@ struct kwArgs_core
 };
 
 // N,a,b from x_mesh
+/// @brief Mesh size in dimension of interest.
 template <typename DDim, typename... DDimX>
 int N(ddc::DiscreteDomain<DDimX...> x_mesh)
 {
     static_assert(
             (is_uniform_point_sampling_v<DDimX> && ...),
             "DDimX dimensions should derive from UniformPointSampling");
-    return ddc::get<DDim>(x_mesh.extents());
+    return static_cast<int>(x_mesh.template extent<DDim>());
 }
 
+/// @brief Lower cell of the domain along requested dimension.
 template <typename DDim, typename... DDimX>
 double a(ddc::DiscreteDomain<DDimX...> x_mesh)
 {
@@ -346,6 +376,7 @@ double a(ddc::DiscreteDomain<DDimX...> x_mesh)
            / 2 / (N<DDim>(x_mesh) - 1);
 }
 
+/// @brief Upper cell of the domain along requested dimension.
 template <typename DDim, typename... DDimX>
 double b(ddc::DiscreteDomain<DDimX...> x_mesh)
 {
@@ -357,7 +388,7 @@ double b(ddc::DiscreteDomain<DDimX...> x_mesh)
            / 2 / (N<DDim>(x_mesh) - 1);
 }
 
-// core
+/// @brief Core internal function to perform the FFT.
 template <typename Tin, typename Tout, typename ExecSpace, typename MemorySpace, typename... DDimX>
 void core(
         ExecSpace const& execSpace,
@@ -581,6 +612,19 @@ void core(
 
 namespace ddc {
 
+/**
+ * @brief Initialize a Fourier space.
+ *
+ * Initialize the (1D) discrete space representing the Fourier discrete dimension associated
+ * to the (1D) spatial mesh passed as argument.
+ *
+ * @tparam DDimFx A PeriodicSampling representing the Fourier discrete dimension.
+ * @tparam DDimX The type of the spatial discrete dimension.
+ *
+ * @param x_mesh The DiscreteDomain representing the (1D) spatial mesh.
+ *
+ * @see PeriodicSampling
+ */
 template <typename DDimFx, typename DDimX>
 typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
         ddc::DiscreteDomain<DDimX> x_mesh)
@@ -590,7 +634,7 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
             "DDimX dimensions should derive from UniformPointSampling");
     static_assert(
             is_periodic_sampling_v<DDimFx>,
-            "DDimFx dimensions should derive from PeriodicPointSampling");
+            "DDimFx dimensions should derive from PeriodicSampling");
     auto [impl, ddom] = DDimFx::template init<DDimFx>(
             ddc::Coordinate<typename DDimFx::continuous_dimension_type>(0),
             ddc::Coordinate<typename DDimFx::continuous_dimension_type>(
@@ -602,7 +646,18 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
     return std::move(impl);
 }
 
-// FourierMesh, first element corresponds to mode 0
+/**
+ * @brief Get the Fourier mesh.
+ *
+ * Compute the Fourier (or spectral) mesh on which the Discrete Fourier Transform of a
+ * spatial discrete function is defined.
+ *
+ * @param x_mesh The DiscreteDomain representing the spatial mesh.
+ * @param C2C A flag indicating if a complex-to-complex DFT is going to be performed. Indeed, 
+ * in this case the spatial and spectral meshes have same number of points, whereas for real-to-complex
+ * or complex-to-real DFT, each complex value of the Fourier-transformed function contains twice more
+ * information, and thus only N/2+1 points are needed.
+ */
 template <typename... DDimFx, typename... DDimX>
 ddc::DiscreteDomain<DDimFx...> FourierMesh(ddc::DiscreteDomain<DDimX...> x_mesh, bool C2C)
 {
@@ -621,12 +676,37 @@ ddc::DiscreteDomain<DDimFx...> FourierMesh(ddc::DiscreteDomain<DDimX...> x_mesh,
                                  ddc::detail::fft::N<DDimX>(x_mesh)))))...);
 }
 
+/* 
+ * @brief A structure embedding the configuration of the exposed FFT function with the type of normalization.
+ *
+ * @see fft, ifft
+ */
 struct kwArgs_fft
 {
     ddc::FFT_Normalization normalization;
 };
 
-// FFT
+/**
+ * @brief Perform a direct Fast Fourier Transform.
+ *
+ * Compute the discrete Fourier transform of a spatial function using the specialized implementation for the Kokkos::ExecutionSpace
+ * of the FFT algorithm.
+ *
+ * @tparam Tin The type of the input elements (float, Kokkos::complex<float>, double or Kokkos::complex<double>).
+ * @tparam Tout The type of the output elements (Kokkos::complex<float> or Kokkos::complex<double>).
+ * @tparam DDimFx... The parameter pack of the Fourier discrete dimensions.
+ * @tparam DDimX... The parameter pack of the spatial discrete dimensions.
+ * @tparam ExecSpace The type of the Kokkos::ExecutionSpace on which the FFT is performed. It determines which specialized
+ * backend is used (ie. fftw, cuFFT...).
+ * @tparam MemorySpace The type of the Kokkos::MemorySpace on which are stored the input and output discrete functions.
+ * @tparam layout_in The layout of the Chunkspan representing the input discrete function.
+ * @tparam layout_out The layout of the Chunkspan representing the output discrete function.
+ *
+ * @param execSpace The Kokkos::ExecutionSpace on which the FFT is performed.
+ * @param out The output discrete function, represented as a ChunkSpan storing values on a spectral mesh.
+ * @param in The input discrete function, represented as a ChunkSpan storing values on a spatial mesh.
+ * @param kwarg The kwArgs_fft configuring the FFT.
+ */
 template <
         typename Tin,
         typename Tout,
@@ -663,7 +743,27 @@ void fft(
             {ddc::FFT_Direction::FORWARD, kwargs.normalization});
 }
 
-// iFFT (deduced from the fact that "in" is identified as a function on the Fourier space)
+/**
+ * @brief Perform an inverse Fast Fourier Transform.
+ *
+ * Compute the inverse discrete Fourier transform of a spectral function using the specialized implementation for the Kokkos::ExecutionSpace
+ * of the iFFT algorithm.
+ *
+ * @tparam Tin The type of the input elements (Kokkos::complex<float> or Kokkos::complex<double>).
+ * @tparam Tout The type of the output elements (float, Kokkos::complex<float>, double or Kokkos::complex<double>).
+ * @tparam DDimX... The parameter pack of the spatial discrete dimensions.
+ * @tparam DDimFx... The parameter pack of the Fourier discrete dimensions.
+ * @tparam ExecSpace The type of the Kokkos::ExecutionSpace on which the iFFT is performed. It determines which specialized
+ * backend is used (ie. fftw, cuFFT...).
+ * @tparam MemorySpace The type of the Kokkos::MemorySpace on which are stored the input and output discrete functions.
+ * @tparam layout_in The layout of the Chunkspan representing the input discrete function.
+ * @tparam layout_out The layout of the Chunkspan representing the output discrete function.
+ *
+ * @param execSpace The Kokkos::ExecutionSpace on which the iFFT is performed.
+ * @param out The output discrete function, represented as a ChunkSpan storing values on a spatial mesh.
+ * @param in The input discrete function, represented as a ChunkSpan storing values on a spectral mesh.
+ * @param kwarg The kwArgs_fft configuring the iFFT.
+ */
 template <
         typename Tin,
         typename Tout,

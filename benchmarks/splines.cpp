@@ -148,9 +148,7 @@ static void characteristics_advection(benchmark::State& state)
         ddc::parallel_for_each(
                 feet_coords.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const e) {
-                    feet_coords(e) = ddc::coordinate(ddc::select<DDimX>(e))
-                                     - ddc::Coordinate<X>(0.0176429863),
-                    ddc::coordinate(ddc::select<DDimY>(e));
+                    feet_coords(e) = ddc::coordinate(ddc::select<DDimX>(e)) - ddc::Coordinate<X>(0.0176429863);
                 });
         Kokkos::Profiling::popRegion();
         Kokkos::Profiling::pushRegion("SplineBuilder");

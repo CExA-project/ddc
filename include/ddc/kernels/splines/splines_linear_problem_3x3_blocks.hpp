@@ -207,6 +207,18 @@ public:
                       transpose);
         interchange_rows_from_2_to_3_blocks_rhs(b);
     }
+
+    /**
+     * @brief Get the required number of rows of the multi-rhs view passed to solve().
+     *
+     * It returns size + top_size.
+     *
+     * @return The required number of rows of the multi-rhs view.
+     */
+    std::size_t required_number_of_rhs_rows() const override
+    {
+        return size() + m_top_size;
+    }
 };
 
 } // namespace ddc::detail

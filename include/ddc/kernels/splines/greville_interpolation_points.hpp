@@ -20,8 +20,8 @@ namespace ddc {
  * A class which provides helper functions to initialise the Greville points from a B-Spline definition.
  *
  * @tparam BSplines The bspline class relative to which the Greville points will be calculated.
- * @tparam BcXmin The (left) boundary condition that will be used to build the splines.
- * @tparam BcXmax The (right) boundary condition that will be used to build the splines.
+ * @tparam BcXmin The lower boundary condition that will be used to build the splines.
+ * @tparam BcXmax The upper boundary condition that will be used to build the splines.
  */
 template <class BSplines, ddc::BoundCond BcXmin, ddc::BoundCond BcXmax>
 class GrevilleInterpolationPoints

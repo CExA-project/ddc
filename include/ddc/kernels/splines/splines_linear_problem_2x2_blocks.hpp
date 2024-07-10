@@ -59,10 +59,12 @@ public:
             Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> values_)
             : nrows(nrows_)
             , ncols(ncols_)
-            , rows_idx(rows_idx_)
-            , cols_idx(cols_idx_)
-            , values(values_)
+            , rows_idx(std::move(rows_idx_))
+            , cols_idx(std::move(cols_idx_))
+            , values(std::move(values_))
         {
+            assert(rows_idx.extent(0) == cols_idx.extent(0));
+            assert(rows_idx.extent(0) == values.extent(0));
         }
 
         KOKKOS_FUNCTION std::size_t nnz() const
@@ -183,7 +185,8 @@ public:
                             if (Kokkos::abs(aij) >= 1e-14) {
                                 rows_idx(n_nonzeros.d_view()) = i;
                                 cols_idx(n_nonzeros.d_view()) = j;
-                                values(n_nonzeros.d_view()++) = aij;
+                                values(n_nonzeros.d_view()) = aij;
+                                n_nonzeros.d_view()++;
                             }
                         }
                     }

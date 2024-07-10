@@ -265,9 +265,9 @@ public:
      * Perform a spdm operation (sparse-dense matrix multiplication) with parameters alpha=-1 and beta=1 between
      * a sparse matrix stored in COO format and a dense matrix x.
      *
-     * @param y The dense matrix to be altered by the operation.
      * @param LinOp The sparse matrix, left side of the matrix multiplication.
      * @param x The dense matrix, right side of the matrix multiplication.
+     * @param y The dense matrix to be altered by the operation.
      * @param transpose A flag to indicate if the direct or transposed version of the operation is performed. 
      */
     void spdm_minus1_1(Coo LinOp, MultiRHS const x, MultiRHS const y, bool const transpose = false)

@@ -27,30 +27,6 @@ enum class SplineSolver {
 };
 
 /**
- * @brief A helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
- *
- * A helper giving the uniform/non_uniform status of a spline interpolation mesh according to its attributes.
- *
- * @param is_uniform A boolean giving the presumed status before considering boundary conditions.
- * @param BcXmin The lower boundary condition.
- * @param BcXmax The upper boundary condition.
- * @param degree The degree of the spline.
- *
- * @return A boolean giving the uniform/non_uniform status.
- */
-constexpr bool is_spline_interpolation_mesh_uniform(
-        bool const is_uniform,
-        ddc::BoundCond const BcXmin,
-        ddc::BoundCond const BcXmax,
-        int degree)
-{
-    int N_BE_MIN = n_boundary_equations(BcXmin, degree);
-    int N_BE_MAX = n_boundary_equations(BcXmax, degree);
-    bool is_periodic = (BcXmin == ddc::BoundCond::PERIODIC) && (BcXmax == ddc::BoundCond::PERIODIC);
-    return is_uniform && ((N_BE_MIN != 0 && N_BE_MAX != 0) || is_periodic);
-}
-
-/**
  * @brief A class for creating a spline approximation of a function.
  *
  * A class which contains an operator () which can be used to build a spline approximation

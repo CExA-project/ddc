@@ -64,18 +64,23 @@ static_assert(alignof(hipfftDoubleComplex) <= alignof(Kokkos::complex<double>));
 
 namespace ddc {
 // TODO : maybe transfert this somewhere else because Fourier space is not specific to FFT
+/**
+ * @brief A templated tag representing a continuous dimension in the Fourier space associated to a continuous spatial dimension.
+ *
+ * @tparam The tag representing the spatial dimensions.
+ */
 template <typename Dim>
 struct Fourier;
 
 /**
- * @brief A named argument too choose the direction of the FFT.
+ * @brief A named argument to choose the direction of the FFT.
  *
  * @see kwArgs_core
  */
 enum class FFT_Direction { FORWARD, BACKWARD };
 
 /**
- * @brief A named argument too choose the type of normalization of the FFT.
+ * @brief A named argument to choose the type of normalization of the FFT.
  *
  * @see kwArgs_core
  */
@@ -125,7 +130,7 @@ KOKKOS_FUNCTION constexpr T LastSelector(const T a, const T b)
     return LastSelector<T, Dim, Second, Tail...>(a, b);
 }
 
-// transform_type : 
+// transform_type :
 /**
  * @brief A trait to identify the type of transformation (R2C, C2R, C2C...).
  *
@@ -160,7 +165,7 @@ struct transform_type<Kokkos::complex<T1>, Kokkos::complex<T2>>
 /**
  * @brief A trait to get the TransformType for the input and output types.
  *
- * Rely on if T1 and T2 are Kokkos::complex<something> or not.
+ * Internally check if T1 and T2 are Kokkos::complex<something> or not.
  *
  * @tparam T1 The input type.
  * @tparam T2 The output type.
@@ -354,7 +359,14 @@ struct kwArgs_core
 };
 
 // N,a,b from x_mesh
-/// @brief Mesh size in dimension of interest.
+/**
+ * @brief Get the mesh size along a given dimension.
+ *
+ * @tparam DDim The dimension along which the mesh size is returned.
+ * @param x_mesh The mesh.
+ *
+ * @return The mesh size along the required dimension.
+ */
 template <typename DDim, typename... DDimX>
 int N(ddc::DiscreteDomain<DDimX...> x_mesh)
 {
@@ -364,7 +376,25 @@ int N(ddc::DiscreteDomain<DDimX...> x_mesh)
     return static_cast<int>(x_mesh.template extent<DDim>());
 }
 
-/// @brief Lower cell of the domain along requested dimension.
+/**
+ * @brief Get the lower boundary coordinate along a given dimension.
+ *
+ * The lower boundary of the spatial domain (which appears in Nyquist-Shannon theorem) is not
+ * xmin=ddc::coordinate(x_mesh.front()). Indeed, this coordinate identifies the lower cell, but
+ * the lower boundary is the left side of this lowest cell, which is a = xmin - cell_size/2, with
+ * cell_size = (xmax-xmin)/N. It leads to a = xmin-(b-a)/2N. The same derivation for the
+ * upper boundary coordinate gives b = xmax+(b-a)/2N. Inverting this linear system leads to:
+ *
+ * a = ((2N-1)*xmin-xmax)/2/(N-1)
+ * b = ((2N-1)*xmax-xmin)/2/(N-1)
+ *
+ * The current function implements the first equation.
+ *
+ * @tparam DDim The dimension along which the lower cell coordinate of the Fourier mesh is returned.
+ * @param x_mesh The spatial mesh.
+ *
+ * @return The mesh size along the required dimension.
+ */
 template <typename DDim, typename... DDimX>
 double a(ddc::DiscreteDomain<DDimX...> x_mesh)
 {
@@ -376,7 +406,25 @@ double a(ddc::DiscreteDomain<DDimX...> x_mesh)
            / 2 / (N<DDim>(x_mesh) - 1);
 }
 
-/// @brief Upper cell of the domain along requested dimension.
+/**
+ * @brief Get the upper boundary coordinate along a given dimension.
+ *
+ * The upper boundary of the spatial domain (which appears in Nyquist-Shannon theorem) is not
+ * xmax=ddc::coordinate(x_mesh.back()). Indeed, this coordinate identifies the upper cell, but
+ * the upper boundary is the right side of this upper cell, which is b = xmax + cell_size/2, with
+ * cell_size = (xmax-xmin)/N. It leads to b = xmax+(b-a)/2N. The same derivation for the
+ * lower boundary coordinate gives a = xmin-(b-a)/2N. Inverting this linear system leads to:
+ *
+ * a = ((2N-1)*xmin-xmax)/2/(N-1)
+ * b = ((2N-1)*xmax-xmin)/2/(N-1)
+ *
+ * The current function implements the second equation.
+ *
+ * @tparam DDim The dimension along which the upper cell coordinate of the Fourier mesh is returned.
+ * @param x_mesh The spatial mesh.
+ *
+ * @return The mesh size along the required dimension.
+ */
 template <typename DDim, typename... DDimX>
 double b(ddc::DiscreteDomain<DDimX...> x_mesh)
 {
@@ -617,6 +665,10 @@ namespace ddc {
  *
  * Initialize the (1D) discrete space representing the Fourier discrete dimension associated
  * to the (1D) spatial mesh passed as argument.
+ *
+ * The formula comes from the Nyquist-Shannon theorem: the lower bound of the spectral domain is kmin = -pi/lambda
+ * = -pi*N/(xmax-xmin). This is independent on the number of points in the spectral domain, which depends only on But in a discrete representation of a continous function, each   itself is discretized (because the spatial domain is bounded), thus
+ * the leftest cell center coordinate of the spectral domain is kmin + (kmax-kmin)/(2N) = pi*(1-N)/(xmax-xmin) .
  *
  * @tparam DDimFx A PeriodicSampling representing the Fourier discrete dimension.
  * @tparam DDimX The type of the spatial discrete dimension.

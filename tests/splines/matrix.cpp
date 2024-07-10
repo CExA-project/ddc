@@ -104,7 +104,7 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
         inv_ptr.sync_host();
 
         Kokkos::DualView<double*>
-                inv_tr_ptr("inv_tr_ptr", (matrix.required_number_of_rhs_rows()) * N);
+                inv_tr_ptr("inv_tr_ptr", matrix.required_number_of_rhs_rows() * N);
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
                 inv_tr(inv_tr_ptr.h_view.data(), matrix.required_number_of_rhs_rows(), N);
         fill_identity(inv_tr);

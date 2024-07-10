@@ -8,7 +8,6 @@
 #include <memory>
 #include <string>
 
-#include <KokkosSparse_CooMatrix.hpp>
 #include <Kokkos_DualView.hpp>
 
 #include "splines_linear_problem.hpp"
@@ -38,14 +37,48 @@ public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
 
+    /**
+     * @brief COO storage.
+     *
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     */
+    struct Coo
+    {
+        std::size_t nrows;
+        std::size_t ncols;
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx;
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx;
+        Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> values;
+
+        Coo() = default;
+
+        Coo(std::size_t nrows_,
+            std::size_t ncols_,
+            Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx_,
+            Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx_,
+            Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> values_)
+            : nrows(nrows_)
+            , ncols(ncols)
+            , rows_idx(rows_idx_)
+            , cols_idx(cols_idx_)
+            , values(values_)
+        {
+        }
+
+        KOKKOS_FUNCTION std::size_t nnz() const
+        {
+            return values.extent(0);
+        }
+    };
+
 protected:
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_top_right_block;
-    KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> m_top_right_block_coo;
+    Coo m_top_right_block_coo;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_bottom_left_block;
-    KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> m_bottom_left_block_coo;
+    Coo m_bottom_left_block_coo;
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
 
 public:
@@ -122,9 +155,8 @@ public:
      *
      * @return The COO storage matrix filled with the non-zeros from dense_matrix.
      */
-    KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> dense2coo(
-            Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                    dense_matrix)
+    Coo dense2coo(Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                          dense_matrix)
     {
         Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx(
                 "ddc_splines_coo_rows_idx",
@@ -162,12 +194,7 @@ public:
         Kokkos::resize(cols_idx, n_nonzeros.h_view());
         Kokkos::resize(values, n_nonzeros.h_view());
 
-        return KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space>(
-                dense_matrix.extent(0),
-                dense_matrix.extent(1),
-                rows_idx,
-                cols_idx,
-                values);
+        return Coo(dense_matrix.extent(0), dense_matrix.extent(1), rows_idx, cols_idx, values);
     }
 
 private:
@@ -240,16 +267,13 @@ public:
      * @param x The dense matrix, right side of the matrix multiplication.
      * @param transpose A flag to indicate if the direct or transposed version of the operation is performed. 
      */
-    void spdm_minus1_1(
-            KokkosSparse::CooMatrix<double, int, typename ExecSpace::memory_space> LinOp,
-            MultiRHS const x,
-            MultiRHS const y,
-            bool const transpose = false) const
+    void spdm_minus1_1(Coo LinOp, MultiRHS const x, MultiRHS const y, bool const transpose = false)
+            const
     {
-        assert((!transpose && LinOp.numRows() == y.extent(0))
-               || (transpose && LinOp.numCols() == y.extent(0)));
-        assert((!transpose && LinOp.numCols() == x.extent(0))
-               || (transpose && LinOp.numRows() == x.extent(0)));
+        assert((!transpose && LinOp.nrows == y.extent(0))
+               || (transpose && LinOp.ncols == y.extent(0)));
+        assert((!transpose && LinOp.ncols == x.extent(0))
+               || (transpose && LinOp.nrows == x.extent(0)));
         assert(x.extent(1) == y.extent(1));
 
         if (!transpose) {
@@ -258,9 +282,9 @@ public:
                     Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
                     KOKKOS_LAMBDA(const int j) {
                         for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
-                            const int i = LinOp.row()(nz_idx);
-                            const int k = LinOp.col()(nz_idx);
-                            y(i, j) -= LinOp.data()(nz_idx) * x(k, j);
+                            const int i = LinOp.rows_idx(nz_idx);
+                            const int k = LinOp.cols_idx(nz_idx);
+                            y(i, j) -= LinOp.values(nz_idx) * x(k, j);
                         }
                     });
         } else {
@@ -269,9 +293,9 @@ public:
                     Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
                     KOKKOS_LAMBDA(const int j) {
                         for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
-                            const int i = LinOp.row()(nz_idx);
-                            const int k = LinOp.col()(nz_idx);
-                            y(k, j) -= LinOp.data()(nz_idx) * x(i, j);
+                            const int i = LinOp.rows_idx(nz_idx);
+                            const int k = LinOp.cols_idx(nz_idx);
+                            y(k, j) -= LinOp.values(nz_idx) * x(i, j);
                         }
                     });
         }

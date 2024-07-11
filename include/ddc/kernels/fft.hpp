@@ -720,6 +720,8 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
  * Compute the Fourier (or spectral) mesh on which the Discrete Fourier Transform of a
  * spatial discrete function is defined.
  *
+ * The uid identifies the mode (ie. ddc::DiscreteElement<DDimFx>(0) corresponds to mode 0).
+ *
  * @param x_mesh The DiscreteDomain representing the spatial mesh.
  * @param C2C A flag indicating if a complex-to-complex DFT is going to be performed. Indeed, 
  * in this case the spatial and spectral meshes have same number of points, whereas for real-to-complex

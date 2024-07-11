@@ -25,10 +25,10 @@ template <
         class BSpline2,
         class IDimI1,
         class IDimI2,
-        ddc::BoundCond BcXmin1,
-        ddc::BoundCond BcXmax1,
-        ddc::BoundCond BcXmin2,
-        ddc::BoundCond BcXmax2,
+        ddc::BoundCond BcLower1,
+        ddc::BoundCond BcUpper1,
+        ddc::BoundCond BcLower2,
+        ddc::BoundCond BcUpper2,
         ddc::SplineSolver Solver,
         class... IDimX>
 class SplineBuilder2D
@@ -46,8 +46,8 @@ public:
             MemorySpace,
             BSpline1,
             IDimI1,
-            BcXmin1,
-            BcXmax1,
+            BcLower1,
+            BcUpper1,
             Solver,
             IDimX...>;
 
@@ -57,8 +57,8 @@ public:
             MemorySpace,
             BSpline2,
             IDimI2,
-            BcXmin2,
-            BcXmax2,
+            BcLower2,
+            BcUpper2,
             Solver,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
 
@@ -68,8 +68,8 @@ public:
             MemorySpace,
             BSpline1,
             IDimI1,
-            BcXmin1,
-            BcXmax1,
+            BcLower1,
+            BcUpper1,
             Solver,
             std::conditional_t<
                     std::is_same_v<IDimX, IDimI2>,
@@ -394,10 +394,10 @@ template <
         class BSpline2,
         class IDimI1,
         class IDimI2,
-        ddc::BoundCond BcXmin1,
-        ddc::BoundCond BcXmax1,
-        ddc::BoundCond BcXmin2,
-        ddc::BoundCond BcXmax2,
+        ddc::BoundCond BcLower1,
+        ddc::BoundCond BcUpper1,
+        ddc::BoundCond BcLower2,
+        ddc::BoundCond BcUpper2,
         ddc::SplineSolver Solver,
         class... IDimX>
 template <class Layout>
@@ -408,10 +408,10 @@ void SplineBuilder2D<
         BSpline2,
         IDimI1,
         IDimI2,
-        BcXmin1,
-        BcXmax1,
-        BcXmin2,
-        BcXmax2,
+        BcLower1,
+        BcUpper1,
+        BcLower2,
+        BcUpper2,
         Solver,
         IDimX...>::
 operator()(
@@ -465,7 +465,7 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline1_deriv_min = spline1_deriv_min_alloc.span_view();
     auto spline1_deriv_min_opt = std::optional(spline1_deriv_min.span_cview());
-    if constexpr (BcXmin2 == ddc::BoundCond::HERMITE) {
+    if constexpr (BcLower2 == ddc::BoundCond::HERMITE) {
         m_spline_builder_deriv1(
                 spline1_deriv_min,
                 *derivs_min2,
@@ -489,7 +489,7 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline1_deriv_max = spline1_deriv_max_alloc.span_view();
     auto spline1_deriv_max_opt = std::optional(spline1_deriv_max.span_cview());
-    if constexpr (BcXmax2 == ddc::BoundCond::HERMITE) {
+    if constexpr (BcUpper2 == ddc::BoundCond::HERMITE) {
         m_spline_builder_deriv1(
                 spline1_deriv_max,
                 *derivs_max2,

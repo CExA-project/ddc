@@ -26,14 +26,14 @@ namespace ddc {
  * with this choice of interpolation points.
  *
  * @tparam BSplines The type of the uniform or non-uniform spline basis whose knots are used as interpolation points.
- * @tparam BcXmin The lower boundary condition.
- * @tparam BcXmin The upper boundary condition.
+ * @tparam BcLower The lower boundary condition.
+ * @tparam BcLower The upper boundary condition.
  */
-template <class BSplines, ddc::BoundCond BcXmin, ddc::BoundCond BcXmax>
+template <class BSplines, ddc::BoundCond BcLower, ddc::BoundCond BcUpper>
 class KnotsAsInterpolationPoints
 {
-    static_assert(BcXmin != ddc::BoundCond::GREVILLE);
-    static_assert(BcXmax != ddc::BoundCond::GREVILLE);
+    static_assert(BcLower != ddc::BoundCond::GREVILLE);
+    static_assert(BcUpper != ddc::BoundCond::GREVILLE);
 
     using continuous_dimension_type = typename BSplines::continuous_dimension_type;
 

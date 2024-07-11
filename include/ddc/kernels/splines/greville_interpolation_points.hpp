@@ -117,7 +117,7 @@ class GrevilleInterpolationPoints
     static constexpr int N_BE_MIN = n_boundary_equations(BcLower, BSplines::degree());
     static constexpr int N_BE_MAX = n_boundary_equations(BcUpper, BSplines::degree());
     template <class U>
-    static constexpr bool is_uniform_mesh_v
+    static constexpr bool is_uniform_discrete_dimension_v
             = U::is_uniform() && ((N_BE_MIN != 0 && N_BE_MAX != 0) || U::is_periodic());
 
 public:
@@ -136,7 +136,7 @@ public:
             class Sampling,
             typename U = BSplines,
             std::enable_if_t<
-                    is_uniform_mesh_v<U>,
+                    is_uniform_discrete_dimension_v<U>,
                     bool> = true> // U must be in condition for SFINAE
     static auto get_sampling()
     {
@@ -154,7 +154,7 @@ public:
             class Sampling,
             typename U = BSplines,
             std::enable_if_t<
-                    !is_uniform_mesh_v<U>,
+                    !is_uniform_discrete_dimension_v<U>,
                     bool> = true> // U must be in condition for SFINAE
     static auto get_sampling()
     {
@@ -259,8 +259,8 @@ public:
      *
      * This is either NonUniformPointSampling or UniformPointSampling.
      */
-    using interpolation_mesh_type = std::conditional_t<
-            is_uniform_mesh_v<BSplines>,
+    using interpolation_discrete_dimension_type = std::conditional_t<
+            is_uniform_discrete_dimension_v<BSplines>,
             ddc::UniformPointSampling<continuous_dimension_type>,
             ddc::NonUniformPointSampling<continuous_dimension_type>>;
 

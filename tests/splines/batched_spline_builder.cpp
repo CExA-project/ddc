@@ -95,7 +95,7 @@ template <class X, bool B>
 struct IDim_
     : std::conditional_t<
               B,
-              typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
+              typename GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type,
               ddc::UniformPointSampling<X>>
 {
 };

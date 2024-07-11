@@ -99,20 +99,25 @@ public:
     using deriv_type2 = typename builder_type2::deriv_type;
 
     /// @brief The type of the interpolation mesh in the first dimension.
-    using interpolation_mesh_type1 = typename builder_type1::interpolation_mesh_type;
+    using interpolation_discrete_dimension_type1 =
+            typename builder_type1::interpolation_discrete_dimension_type;
 
     /// @brief The type of the interpolation mesh in the second dimension.
-    using interpolation_mesh_type2 = typename builder_type2::interpolation_mesh_type;
+    using interpolation_discrete_dimension_type2 =
+            typename builder_type2::interpolation_discrete_dimension_type;
 
     /// @brief The type of the domain for the interpolation mesh in the first dimension.
-    using interpolation_domain_type1 = typename builder_type1::interpolation_mesh_type;
+    using interpolation_domain_type1 =
+            typename builder_type1::interpolation_discrete_dimension_type;
 
     /// @brief The type of the domain for the interpolation mesh in the second dimension.
-    using interpolation_domain_type2 = typename builder_type2::interpolation_mesh_type;
+    using interpolation_domain_type2 =
+            typename builder_type2::interpolation_discrete_dimension_type;
 
     /// @brief The type of the domain for the interpolation mesh in the 2D dimension.
-    using interpolation_domain_type
-            = ddc::DiscreteDomain<interpolation_mesh_type1, interpolation_mesh_type2>;
+    using interpolation_domain_type = ddc::DiscreteDomain<
+            interpolation_discrete_dimension_type1,
+            interpolation_discrete_dimension_type2>;
 
     /// @brief The type of the whole domain representing interpolation points.
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
@@ -127,7 +132,9 @@ public:
     using batch_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>>>;
+                    ddc::detail::TypeSeq<
+                            interpolation_discrete_dimension_type1,
+                            interpolation_discrete_dimension_type2>>>;
 
     /** 
      * @brief The type of the whole spline domain (cartesian product of 2D spline domain
@@ -139,7 +146,9 @@ public:
     using batched_spline_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>,
+                    ddc::detail::TypeSeq<
+                            interpolation_discrete_dimension_type1,
+                            interpolation_discrete_dimension_type2>,
                     ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
     /**
@@ -161,7 +170,7 @@ public:
     using batched_derivs_domain_type2
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type2>,
+                    ddc::detail::TypeSeq<interpolation_discrete_dimension_type2>,
                     ddc::detail::TypeSeq<deriv_type2>>>;
 
     /**
@@ -174,7 +183,9 @@ public:
     using batched_derivs_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type1, interpolation_mesh_type2>,
+                    ddc::detail::TypeSeq<
+                            interpolation_discrete_dimension_type1,
+                            interpolation_discrete_dimension_type2>,
                     ddc::detail::TypeSeq<deriv_type1, deriv_type2>>>;
 
 private:
@@ -207,11 +218,12 @@ public:
                 batched_interpolation_domain,
                 cols_per_chunk,
                 preconditioner_max_block_size)
-        , m_spline_builder_deriv1(ddc::replace_dim_of<interpolation_mesh_type2, deriv_type2>(
-                  m_spline_builder1.batched_interpolation_domain(),
-                  ddc::DiscreteDomain<deriv_type2>(
-                          ddc::DiscreteElement<deriv_type2>(1),
-                          ddc::DiscreteVector<deriv_type2>(bsplines_type2::degree() / 2))))
+        , m_spline_builder_deriv1(
+                  ddc::replace_dim_of<interpolation_discrete_dimension_type2, deriv_type2>(
+                          m_spline_builder1.batched_interpolation_domain(),
+                          ddc::DiscreteDomain<deriv_type2>(
+                                  ddc::DiscreteElement<deriv_type2>(1),
+                                  ddc::DiscreteVector<deriv_type2>(bsplines_type2::degree() / 2))))
         , m_spline_builder2(
                   m_spline_builder1.batched_spline_domain(),
                   cols_per_chunk,
@@ -304,9 +316,9 @@ public:
      */
     batched_spline_domain_type batched_spline_domain() const noexcept
     {
-        return ddc::replace_dim_of<interpolation_mesh_type1, bsplines_type1>(
+        return ddc::replace_dim_of<interpolation_discrete_dimension_type1, bsplines_type1>(
                 ddc::replace_dim_of<
-                        interpolation_mesh_type2,
+                        interpolation_discrete_dimension_type2,
                         bsplines_type2>(batched_interpolation_domain(), spline_domain()),
                 spline_domain());
     }

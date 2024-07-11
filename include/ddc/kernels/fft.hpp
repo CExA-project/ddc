@@ -77,14 +77,27 @@ struct Fourier;
  *
  * @see kwArgs_core
  */
-enum class FFT_Direction { FORWARD, BACKWARD };
+enum class FFT_Direction {
+    FORWARD, ///< Forward, corresponds to direct FFT up to normalization
+    BACKWARD ///< Backward, corresponds to inverse FFT up to normalization
+};
 
 /**
  * @brief A named argument to choose the type of normalization of the FFT.
  *
  * @see kwArgs_core
  */
-enum class FFT_Normalization { OFF, FORWARD, BACKWARD, ORTHO, FULL };
+enum class FFT_Normalization {
+    OFF, ///< No normalization
+    FORWARD, ///< Multiply by 1/N for forward FFT, no normalization for backward FFT
+    BACKWARD, ///< No normalization for forward FFT, multiply by 1/N for backward FFT
+    ORTHO, ///< Multiply by 1/sqrt(N)
+    FULL /**< 
+          * Multiply by (b-a)/N/sqrt(2*pi) for forward FFT and sqrt(2*pi)/(b-a) for forward
+          * FFT. It is aligned with the usual definition of the (continuous) Fourier transform
+          * 1/sqrt(2*pi)*int f(x)*e^-ikx*dx, and thus preserves the gaussian function exp(-x^2/2) numerically.
+          */
+};
 } // namespace ddc
 
 namespace ddc::detail::fft {

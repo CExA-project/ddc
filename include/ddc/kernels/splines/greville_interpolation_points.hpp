@@ -26,7 +26,7 @@ namespace ddc {
 template <class BSplines, ddc::BoundCond BcLower, ddc::BoundCond BcUpper>
 class GrevilleInterpolationPoints
 {
-    using tag_type = typename BSplines::tag_type;
+    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
 
     template <class Sampling>
     struct IntermediateUniformSampling
@@ -50,8 +50,9 @@ class GrevilleInterpolationPoints
                 = (ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                   / ddc::discrete_space<BSplines>().ncells();
         return SamplingImpl(
-                ddc::Coordinate<tag_type>(ddc::discrete_space<BSplines>().rmin() + shift * dx),
-                ddc::Coordinate<tag_type>(dx));
+                ddc::Coordinate<continuous_dimension_type>(
+                        ddc::discrete_space<BSplines>().rmin() + shift * dx),
+                ddc::Coordinate<continuous_dimension_type>(dx));
     }
 
     template <class Sampling, typename U = BSplines, class = std::enable_if_t<!U::is_uniform()>>
@@ -260,8 +261,8 @@ public:
      */
     using interpolation_mesh_type = std::conditional_t<
             is_uniform_mesh_v<BSplines>,
-            ddc::UniformPointSampling<tag_type>,
-            ddc::NonUniformPointSampling<tag_type>>;
+            ddc::UniformPointSampling<continuous_dimension_type>,
+            ddc::NonUniformPointSampling<continuous_dimension_type>>;
 
     /**
      * Get the domain which gives us access to all of the Greville points.

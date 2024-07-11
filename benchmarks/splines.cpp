@@ -139,7 +139,7 @@ static void characteristics_advection(benchmark::State& state)
     ddc::Chunk feet_coords_alloc(
             spline_builder.batched_interpolation_domain(),
             ddc::KokkosAllocator<
-                    ddc::Coordinate<X, Y>,
+                    ddc::Coordinate<X>,
                     Kokkos::DefaultExecutionSpace::memory_space>());
     ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
 
@@ -148,10 +148,7 @@ static void characteristics_advection(benchmark::State& state)
         ddc::parallel_for_each(
                 feet_coords.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const e) {
-                    feet_coords(e) = ddc::Coordinate<X, Y>(
-                            ddc::coordinate(ddc::select<DDimX>(e))
-                                    - ddc::Coordinate<X>(0.0176429863),
-                            ddc::coordinate(ddc::select<DDimY>(e)));
+                    feet_coords(e) = ddc::coordinate(ddc::select<DDimX>(e)) - ddc::Coordinate<X>(0.0176429863);
                 });
         Kokkos::Profiling::popRegion();
         Kokkos::Profiling::pushRegion("SplineBuilder");
@@ -188,15 +185,15 @@ static void characteristics_advection(benchmark::State& state)
 #ifdef KOKKOS_ENABLE_CUDA
 std::string chip = "gpu";
 std::size_t cols_per_chunk_ref = 65535;
-unsigned int preconditionner_max_block_size_ref = 1u;
+unsigned int preconditioner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_OPENMP)
 std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;
-unsigned int preconditionner_max_block_size_ref = 32u;
+unsigned int preconditioner_max_block_size_ref = 32u;
 #elif defined(KOKKOS_ENABLE_SERIAL)
 std::string chip = "cpu";
 std::size_t cols_per_chunk_ref = 8192;
-unsigned int preconditionner_max_block_size_ref = 32u;
+unsigned int preconditioner_max_block_size_ref = 32u;
 #endif
 
 BENCHMARK(characteristics_advection)
@@ -205,13 +202,13 @@ BENCHMARK(characteristics_advection)
                 {{64, 1024},
                  {100, 200000},
                  {cols_per_chunk_ref, cols_per_chunk_ref},
-                 {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+                 {preconditioner_max_block_size_ref, preconditioner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
 /*
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
-        ->Ranges({{64, 1024}, {100000, 100000}, {64,65535}, {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+        ->Ranges({{64, 1024}, {100000, 100000}, {64,65535}, {preconditioner_max_block_size_ref, preconditioner_max_block_size_ref}})
         ->MinTime(3)->UseRealTime();
 */
 /*
@@ -227,8 +224,8 @@ int main(int argc, char** argv)
     ::benchmark::AddCustomContext("chip", chip);
     ::benchmark::AddCustomContext("cols_per_chunk_ref", std::to_string(cols_per_chunk_ref));
     ::benchmark::AddCustomContext(
-            "preconditionner_max_block_size_ref",
-            std::to_string(preconditionner_max_block_size_ref));
+            "preconditioner_max_block_size_ref",
+            std::to_string(preconditioner_max_block_size_ref));
     if (::benchmark::ReportUnrecognizedArguments(argc, argv)) {
         return 1;
     }

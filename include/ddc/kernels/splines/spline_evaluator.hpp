@@ -53,7 +53,7 @@ private:
     {
     };
 
-    using tag_type = typename BSplines::tag_type;
+    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
 
 public:
     /// @brief The type of the Kokkos execution space used by this class.
@@ -112,17 +112,17 @@ public:
     static_assert(
             std::is_same_v<LowerExtrapolationRule,
                             typename ddc::PeriodicExtrapolationRule<
-                                    tag_type>> == bsplines_type::is_periodic()
+                                    continuous_dimension_type>> == bsplines_type::is_periodic()
                     && std::is_same_v<
                                UpperExtrapolationRule,
                                typename ddc::PeriodicExtrapolationRule<
-                                       tag_type>> == bsplines_type::is_periodic(),
+                                       continuous_dimension_type>> == bsplines_type::is_periodic(),
             "PeriodicExtrapolationRule has to be used if and only if dimension is periodic");
     static_assert(
             std::is_invocable_r_v<
                     double,
                     LowerExtrapolationRule,
-                    ddc::Coordinate<tag_type>,
+                    ddc::Coordinate<continuous_dimension_type>,
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
@@ -133,7 +133,7 @@ public:
             std::is_invocable_r_v<
                     double,
                     UpperExtrapolationRule,
-                    ddc::Coordinate<tag_type>,
+                    ddc::Coordinate<continuous_dimension_type>,
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,

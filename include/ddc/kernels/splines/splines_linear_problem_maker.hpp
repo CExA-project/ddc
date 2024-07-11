@@ -145,7 +145,7 @@ public:
      * by the linear solver one-after-the-other).
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
-     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * @param preconditioner_max_block_size A parameter used by the slicer (internal to the solver) to
      * define the size of a block used by the Block-Jacobi preconditioner.
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
@@ -155,10 +155,10 @@ public:
     static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_sparse(
             int const n,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
     {
         return std::make_unique<SplinesLinearProblemSparse<
-                ExecSpace>>(n, cols_per_chunk, preconditionner_max_block_size);
+                ExecSpace>>(n, cols_per_chunk, preconditioner_max_block_size);
     }
 };
 

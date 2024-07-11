@@ -197,7 +197,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__maker_8hpp_s
 <div class="line"><span class="lineno">  145</span><span class="comment">     * by the linear solver one-after-the-other).</span></div>
 <div class="line"><span class="lineno">  146</span><span class="comment">     * This value is optional. If no value is provided then the default value is chosen by the requested solver.</span></div>
 <div class="line"><span class="lineno">  147</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  148</span><span class="comment">     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to</span></div>
+<div class="line"><span class="lineno">  148</span><span class="comment">     * @param preconditioner_max_block_size A parameter used by the slicer (internal to the solver) to</span></div>
 <div class="line"><span class="lineno">  149</span><span class="comment">     * define the size of a block used by the Block-Jacobi preconditioner.</span></div>
 <div class="line"><span class="lineno">  150</span><span class="comment">     * This value is optional. If no value is provided then the default value is chosen by the requested solver.</span></div>
 <div class="line"><span class="lineno">  151</span><span class="comment">     *</span></div>
@@ -207,10 +207,10 @@ $(document).ready(function(){initNavTree('splines__linear__problem__maker_8hpp_s
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keyword">static</span> std::unique_ptr&lt;SplinesLinearProblem&lt;ExecSpace&gt;&gt; make_new_sparse(</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> n,</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            std::optional&lt;std::size_t&gt; cols_per_chunk = std::nullopt,</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            std::optional&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&gt; preconditionner_max_block_size = std::nullopt)</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            std::optional&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&gt; preconditioner_max_block_size = std::nullopt)</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    {</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="keywordflow">return</span> std::make_unique&lt;SplinesLinearProblemSparse&lt;</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                ExecSpace&gt;&gt;(n, cols_per_chunk, preconditionner_max_block_size);</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                ExecSpace&gt;&gt;(n, cols_per_chunk, preconditioner_max_block_size);</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    }</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>};</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>

@@ -10,7 +10,7 @@ var classddc_1_1SplineBuilder =
     [ "batch_domain_type", "classddc_1_1SplineBuilder.html#a5d805244c41eeb685b8ad67e90869547", null ],
     [ "batched_spline_domain_type", "classddc_1_1SplineBuilder.html#ac9eb7c1241f13e9bc8ae2d98d6479797", null ],
     [ "batched_derivs_domain_type", "classddc_1_1SplineBuilder.html#a44a2596f54393ea6638c631562d1954f", null ],
-    [ "SplineBuilder", "classddc_1_1SplineBuilder.html#a7c74f6876b9541c3018495e9c57d1abb", null ],
+    [ "SplineBuilder", "classddc_1_1SplineBuilder.html#a456f3758a89f2d376303e1ee8eaa0c5d", null ],
     [ "SplineBuilder", "classddc_1_1SplineBuilder.html#a744aebd4fd12b94c0d484bdd66f8d293", null ],
     [ "SplineBuilder", "classddc_1_1SplineBuilder.html#a8e3166637e6eecd4de489c47d282f090", null ],
     [ "~SplineBuilder", "classddc_1_1SplineBuilder.html#a97d38a2252ec04d7d4ed9dd28384789a", null ],

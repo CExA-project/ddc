@@ -726,7 +726,8 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
  * @param C2C A flag indicating if a complex-to-complex DFT is going to be performed. Indeed, 
  * in this case the spatial and spectral meshes have same number of points, whereas for real-to-complex
  * or complex-to-real DFT, each complex value of the Fourier-transformed function contains twice more
- * information, and thus only N/2+1 points are needed.
+ * information, and thus only half (actually Nx*Ny*(Nz/2+1) for 3D R2C FFT to take in account mode 0)
+ * values are needed (cf. DFT conjugate symmetry property for more information about this).
  *
  * @return The domain representing the Fourier mesh.
  */
@@ -821,6 +822,8 @@ void fft(
  *
  * Compute the inverse discrete Fourier transform of a spectral function using the specialized implementation for the Kokkos::ExecutionSpace
  * of the iFFT algorithm.
+ *
+ * /!\ C2R iFFT does NOT preserve input !
  *
  * @tparam Tin The type of the input elements (Kokkos::complex<float> or Kokkos::complex<double>).
  * @tparam Tout The type of the output elements (float, Kokkos::complex<float>, double or Kokkos::complex<double>).

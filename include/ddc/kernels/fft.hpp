@@ -406,7 +406,7 @@ int N(ddc::DiscreteDomain<DDimX...> x_mesh)
  * @tparam DDim The dimension along which the lower cell coordinate of the Fourier mesh is returned.
  * @param x_mesh The spatial mesh.
  *
- * @return The mesh size along the required dimension.
+ * @return The lower boundary along the required dimension.
  */
 template <typename DDim, typename... DDimX>
 double a(ddc::DiscreteDomain<DDimX...> x_mesh)
@@ -436,7 +436,7 @@ double a(ddc::DiscreteDomain<DDimX...> x_mesh)
  * @tparam DDim The dimension along which the upper cell coordinate of the Fourier mesh is returned.
  * @param x_mesh The spatial mesh.
  *
- * @return The mesh size along the required dimension.
+ * @return The upper boundary along the required dimension.
  */
 template <typename DDim, typename... DDimX>
 double b(ddc::DiscreteDomain<DDimX...> x_mesh)

@@ -68,7 +68,7 @@ void display(double time, ChunkType temp)
                              / temp.domain().size();
     std::cout << std::fixed << std::setprecision(3);
     std::cout << "At t = " << time << ",\n";
-    printf("  * mean temperature  = %.15f \n", mean_temp);
+    std::cout << "  * mean temperature  = " << mean_temp << "\n";
     // take a slice in the middle of the box
     ddc::ChunkSpan temp_slice
             = temp[ddc::get_domain<DDimY>(temp).front()

@@ -664,12 +664,13 @@ namespace ddc {
  * @brief Initialize a Fourier space.
  *
  * Initialize the (1D) discrete space representing the Fourier discrete dimension associated
- * to the (1D) spatial mesh passed as argument.
+ * to the (1D) spatial mesh passed as argument. It is a N-periodic PeriodicSampling defined between
+ * ka=0 and kb=2*N/(b-a)*pi.
  *
- * The formula comes from the Nyquist-Shannon theorem: the lower bound of the spectral domain is kmin = -pi/lambda
- * = -pi*N/(xmax-xmin). This is independent on the number of points in the spectral domain, which depends only on But in a discrete representation of a continous function, each   itself is discretized (because the spatial domain is bounded), thus
- * the leftest cell center coordinate of the spectral domain is kmin + (kmax-kmin)/(2N) = pi*(1-N)/(xmax-xmin) .
- *
+ * This value for kb comes from the Nyquist-Shannon theorem: the period of the spectral domain
+ * is kb-ka = 2*pi/cell_size = 2*pi*N/(b-a). The PeriodicSampling then contains cells between coordinates
+ * k=0 and k=2*pi*(N-1)/(b-a), because the cell at coordinate k=2*pi*N/(b-a) is a periodic point (f(ka)=f(kb)).
+ *  
  * @tparam DDimFx A PeriodicSampling representing the Fourier discrete dimension.
  * @tparam DDimX The type of the spatial discrete dimension.
  *
@@ -735,7 +736,8 @@ ddc::DiscreteDomain<DDimFx...> FourierMesh(ddc::DiscreteDomain<DDimX...> x_mesh,
  */
 struct kwArgs_fft
 {
-    ddc::FFT_Normalization normalization;
+    ddc::FFT_Normalization
+            normalization; ///< Enum member to identify the type of normalization performed
 };
 
 /**

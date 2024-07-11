@@ -193,7 +193,7 @@ public:
      * by the linear solver one-after-the-other).
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
-     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * @param preconditioner_max_block_size A parameter used by the slicer (internal to the solver) to
      * define the size of a block used by the Block-Jacobi preconditioner.
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
@@ -202,11 +202,11 @@ public:
     explicit SplineBuilder2D(
             batched_interpolation_domain_type const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_spline_builder1(
                 batched_interpolation_domain,
                 cols_per_chunk,
-                preconditionner_max_block_size)
+                preconditioner_max_block_size)
         , m_spline_builder_deriv1(ddc::replace_dim_of<interpolation_mesh_type2, deriv_type2>(
                   m_spline_builder1.batched_interpolation_domain(),
                   ddc::DiscreteDomain<deriv_type2>(
@@ -215,7 +215,7 @@ public:
         , m_spline_builder2(
                   m_spline_builder1.batched_spline_domain(),
                   cols_per_chunk,
-                  preconditionner_max_block_size)
+                  preconditioner_max_block_size)
     {
     }
 

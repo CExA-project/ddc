@@ -394,7 +394,7 @@ int N(ddc::DiscreteDomain<DDimX...> x_mesh)
  *
  * The lower boundary of the spatial domain (which appears in Nyquist-Shannon theorem) is not
  * xmin=ddc::coordinate(x_mesh.front()). Indeed, this coordinate identifies the lower cell, but
- * the lower boundary is the left side of this lowest cell, which is a = xmin - cell_size/2, with
+ * the lower boundary is the left side of this lower cell, which is a = xmin - cell_size/2, with
  * cell_size = (b-a)/N. It leads to a = xmin-(b-a)/2N. The same derivation for the
  * upper boundary coordinate gives b = xmax+(b-a)/2N. Inverting this linear system leads to:
  *

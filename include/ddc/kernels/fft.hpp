@@ -143,7 +143,7 @@ KOKKOS_FUNCTION constexpr T LastSelector(const T a, const T b)
     return LastSelector<T, Dim, Second, Tail...>(a, b);
 }
 
-// transform_type :
+// transform_type:
 /**
  * @brief A trait to identify the type of transformation (R2C, C2R, C2C...).
  *

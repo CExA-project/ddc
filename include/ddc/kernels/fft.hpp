@@ -674,7 +674,7 @@ void core(
 namespace ddc {
 
 /**
- * @brief Initialize a Fourier space.
+ * @brief Initialize a discrete Fourier space.
  *
  * Initialize the (1D) discrete space representing the Fourier discrete dimension associated
  * to the (1D) spatial mesh passed as argument. It is a N-periodic PeriodicSampling defined between
@@ -688,6 +688,8 @@ namespace ddc {
  * @tparam DDimX The type of the spatial discrete dimension.
  *
  * @param x_mesh The DiscreteDomain representing the (1D) spatial mesh.
+ *
+ * @return The initialized Impl representing the discrete Fourier space.
  *
  * @see PeriodicSampling
  */
@@ -723,6 +725,8 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
  * in this case the spatial and spectral meshes have same number of points, whereas for real-to-complex
  * or complex-to-real DFT, each complex value of the Fourier-transformed function contains twice more
  * information, and thus only N/2+1 points are needed.
+ *
+ * @return The domain representing the Fourier mesh.
  */
 template <typename... DDimFx, typename... DDimX>
 ddc::DiscreteDomain<DDimFx...> FourierMesh(ddc::DiscreteDomain<DDimX...> x_mesh, bool C2C)
@@ -742,7 +746,7 @@ ddc::DiscreteDomain<DDimFx...> FourierMesh(ddc::DiscreteDomain<DDimX...> x_mesh,
                                  ddc::detail::fft::N<DDimX>(x_mesh)))))...);
 }
 
-/* 
+/** 
  * @brief A structure embedding the configuration of the exposed FFT function with the type of normalization.
  *
  * @see fft, ifft
@@ -772,7 +776,7 @@ struct kwArgs_fft
  * @param execSpace The Kokkos::ExecutionSpace on which the FFT is performed.
  * @param out The output discrete function, represented as a ChunkSpan storing values on a spectral mesh.
  * @param in The input discrete function, represented as a ChunkSpan storing values on a spatial mesh.
- * @param kwarg The kwArgs_fft configuring the FFT.
+ * @param kwargs The kwArgs_fft configuring the FFT.
  */
 template <
         typename Tin,
@@ -829,7 +833,7 @@ void fft(
  * @param execSpace The Kokkos::ExecutionSpace on which the iFFT is performed.
  * @param out The output discrete function, represented as a ChunkSpan storing values on a spatial mesh.
  * @param in The input discrete function, represented as a ChunkSpan storing values on a spectral mesh.
- * @param kwarg The kwArgs_fft configuring the iFFT.
+ * @param kwargs The kwArgs_fft configuring the iFFT.
  */
 template <
         typename Tin,

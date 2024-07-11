@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 	<meta charset="UTF-8">
 	<meta name="generator" content="Doxygen 1.9.8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<title>DDC: ddc::GrevilleInterpolationPoints&lt; BSplines, BcXmin, BcXmax &gt; Class Template Reference</title>
+	<title>DDC: ddc::GrevilleInterpolationPoints&lt; BSplines, BcLower, BcUpper &gt; Class Template Reference</title>
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="dynsections.js"></script>
 	<script type="text/javascript" src="navtreedata.js"></script>
@@ -52,7 +52,7 @@ $(document).ready(function(){initNavTree('classddc_1_1GrevilleInterpolationPoint
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classddc_1_1GrevilleInterpolationPoints-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">ddc::GrevilleInterpolationPoints&lt; BSplines, BcXmin, BcXmax &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">ddc::GrevilleInterpolationPoints&lt; BSplines, BcLower, BcUpper &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -61,47 +61,47 @@ $(document).ready(function(){initNavTree('classddc_1_1GrevilleInterpolationPoint
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ade5765c50f97fb22399d8a4eb885f761" id="r_ade5765c50f97fb22399d8a4eb885f761"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#ade5765c50f97fb22399d8a4eb885f761">interpolation_mesh_type</a> = std::conditional_t&lt; is_uniform_mesh_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; continuous_dimension_type &gt;, <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt; continuous_dimension_type &gt; &gt;</td></tr>
-<tr class="memdesc:ade5765c50f97fb22399d8a4eb885f761"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the mesh.  <br /></td></tr>
-<tr class="separator:ade5765c50f97fb22399d8a4eb885f761"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2d07953d8bccc9cff26d0d0ada68301" id="r_ad2d07953d8bccc9cff26d0d0ada68301"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#ad2d07953d8bccc9cff26d0d0ada68301">interpolation_mesh_type</a> = std::conditional_t&lt; is_uniform_mesh_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; continuous_dimension_type &gt;, <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt; continuous_dimension_type &gt; &gt;</td></tr>
+<tr class="memdesc:ad2d07953d8bccc9cff26d0d0ada68301"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the mesh.  <br /></td></tr>
+<tr class="separator:ad2d07953d8bccc9cff26d0d0ada68301"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac8b8f3914b727b4032e4f655017f10e8" id="r_ac8b8f3914b727b4032e4f655017f10e8"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>  = BSplines, std::enable_if_t&lt; is_uniform_mesh_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> &gt;  = true&gt; </td></tr>
-<tr class="memitem:ac8b8f3914b727b4032e4f655017f10e8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#ac8b8f3914b727b4032e4f655017f10e8">get_sampling</a> ()</td></tr>
-<tr class="memdesc:ac8b8f3914b727b4032e4f655017f10e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classddc_1_1UniformPointSampling.html" title="UniformPointSampling models a uniform discretization of the provided continuous dimension.">UniformPointSampling</a> defining the Greville points.  <br /></td></tr>
-<tr class="separator:ac8b8f3914b727b4032e4f655017f10e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8b8f3914b727b4032e4f655017f10e8" id="r_ac8b8f3914b727b4032e4f655017f10e8"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>  = BSplines, std::enable_if_t&lt; !is_uniform_mesh_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> &gt;  = true&gt; </td></tr>
-<tr class="memitem:ac8b8f3914b727b4032e4f655017f10e8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#ac8b8f3914b727b4032e4f655017f10e8">get_sampling</a> ()</td></tr>
-<tr class="memdesc:ac8b8f3914b727b4032e4f655017f10e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non-uniform discretization of the CDim segment .">NonUniformPointSampling</a> defining the Greville points.  <br /></td></tr>
-<tr class="separator:ac8b8f3914b727b4032e4f655017f10e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43b0872ca01bb5d4fd7e549be8a2ef27" id="r_a43b0872ca01bb5d4fd7e549be8a2ef27"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt; </td></tr>
-<tr class="memitem:a43b0872ca01bb5d4fd7e549be8a2ef27"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#a43b0872ca01bb5d4fd7e549be8a2ef27">get_domain</a> ()</td></tr>
-<tr class="memdesc:a43b0872ca01bb5d4fd7e549be8a2ef27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the domain which gives us access to all of the Greville points.  <br /></td></tr>
-<tr class="separator:a43b0872ca01bb5d4fd7e549be8a2ef27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5db23f8d9cb7cae226ab0917c7acf65f" id="r_a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>  = BSplines, std::enable_if_t&lt; is_uniform_mesh_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> &gt;  = true&gt; </td></tr>
+<tr class="memitem:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#a5db23f8d9cb7cae226ab0917c7acf65f">get_sampling</a> ()</td></tr>
+<tr class="memdesc:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classddc_1_1UniformPointSampling.html" title="UniformPointSampling models a uniform discretization of the provided continuous dimension.">UniformPointSampling</a> defining the Greville points.  <br /></td></tr>
+<tr class="separator:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5db23f8d9cb7cae226ab0917c7acf65f" id="r_a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>  = BSplines, std::enable_if_t&lt; !is_uniform_mesh_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> &gt;  = true&gt; </td></tr>
+<tr class="memitem:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#a5db23f8d9cb7cae226ab0917c7acf65f">get_sampling</a> ()</td></tr>
+<tr class="memdesc:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non-uniform discretization of the CDim segment .">NonUniformPointSampling</a> defining the Greville points.  <br /></td></tr>
+<tr class="separator:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a240f9ad5ec3ac1e8e295bd76e49de9fb" id="r_a240f9ad5ec3ac1e8e295bd76e49de9fb"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt; </td></tr>
+<tr class="memitem:a240f9ad5ec3ac1e8e295bd76e49de9fb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#a240f9ad5ec3ac1e8e295bd76e49de9fb">get_domain</a> ()</td></tr>
+<tr class="memdesc:a240f9ad5ec3ac1e8e295bd76e49de9fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the domain which gives us access to all of the Greville points.  <br /></td></tr>
+<tr class="separator:a240f9ad5ec3ac1e8e295bd76e49de9fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax&gt;<br />
-class ddc::GrevilleInterpolationPoints&lt; BSplines, BcXmin, BcXmax &gt;</div><p>A class which provides helper functions to initialise the Greville points from a B-Spline definition. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcLower, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcUpper&gt;<br />
+class ddc::GrevilleInterpolationPoints&lt; BSplines, BcLower, BcUpper &gt;</div><p>A class which provides helper functions to initialise the Greville points from a B-Spline definition. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">BSplines</td><td>The bspline class relative to which the Greville points will be calculated. </td></tr>
-    <tr><td class="paramname">BcXmin</td><td>The (left) boundary condition that will be used to build the splines. </td></tr>
-    <tr><td class="paramname">BcXmax</td><td>The (right) boundary condition that will be used to build the splines. </td></tr>
+    <tr><td class="paramname">BcLower</td><td>The lower boundary condition that will be used to build the splines. </td></tr>
+    <tr><td class="paramname">BcUpper</td><td>The upper boundary condition that will be used to build the splines. </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="ade5765c50f97fb22399d8a4eb885f761" name="ade5765c50f97fb22399d8a4eb885f761"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade5765c50f97fb22399d8a4eb885f761">&#9670;&#160;</a></span>interpolation_mesh_type</h2>
+<a id="ad2d07953d8bccc9cff26d0d0ada68301" name="ad2d07953d8bccc9cff26d0d0ada68301"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2d07953d8bccc9cff26d0d0ada68301">&#9670;&#160;</a></span>interpolation_mesh_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcLower, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcUpper&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1GrevilleInterpolationPoints.html">ddc::GrevilleInterpolationPoints</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcXmin</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcXmax</a> &gt;::interpolation_mesh_type =  std::conditional_t&lt; is_uniform_mesh_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>&gt;, <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;continuous_dimension_type&gt;, <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt;continuous_dimension_type&gt; &gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1GrevilleInterpolationPoints.html">ddc::GrevilleInterpolationPoints</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a> &gt;::interpolation_mesh_type =  std::conditional_t&lt; is_uniform_mesh_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>&gt;, <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;continuous_dimension_type&gt;, <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt;continuous_dimension_type&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -112,13 +112,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac8b8f3914b727b4032e4f655017f10e8" name="ac8b8f3914b727b4032e4f655017f10e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8b8f3914b727b4032e4f655017f10e8">&#9670;&#160;</a></span>get_sampling() <span class="overload">[1/2]</span></h2>
+<a id="a5db23f8d9cb7cae226ab0917c7acf65f" name="a5db23f8d9cb7cae226ab0917c7acf65f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5db23f8d9cb7cae226ab0917c7acf65f">&#9670;&#160;</a></span>get_sampling() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcLower, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcUpper&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>  = BSplines, std::enable_if_t&lt; is_uniform_mesh_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> &gt;  = true&gt; </div>
 <table class="mlabels">
@@ -126,7 +126,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="classddc_1_1GrevilleInterpolationPoints.html">ddc::GrevilleInterpolationPoints</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcXmin</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcXmax</a> &gt;::get_sampling </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="classddc_1_1GrevilleInterpolationPoints.html">ddc::GrevilleInterpolationPoints</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a> &gt;::get_sampling </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -151,13 +151,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="ac8b8f3914b727b4032e4f655017f10e8" name="ac8b8f3914b727b4032e4f655017f10e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8b8f3914b727b4032e4f655017f10e8">&#9670;&#160;</a></span>get_sampling() <span class="overload">[2/2]</span></h2>
+<a id="a5db23f8d9cb7cae226ab0917c7acf65f" name="a5db23f8d9cb7cae226ab0917c7acf65f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5db23f8d9cb7cae226ab0917c7acf65f">&#9670;&#160;</a></span>get_sampling() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcLower, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcUpper&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>  = BSplines, std::enable_if_t&lt; !is_uniform_mesh_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> &gt;  = true&gt; </div>
 <table class="mlabels">
@@ -165,7 +165,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="classddc_1_1GrevilleInterpolationPoints.html">ddc::GrevilleInterpolationPoints</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcXmin</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcXmax</a> &gt;::get_sampling </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="classddc_1_1GrevilleInterpolationPoints.html">ddc::GrevilleInterpolationPoints</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a> &gt;::get_sampling </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -189,13 +189,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a43b0872ca01bb5d4fd7e549be8a2ef27" name="a43b0872ca01bb5d4fd7e549be8a2ef27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43b0872ca01bb5d4fd7e549be8a2ef27">&#9670;&#160;</a></span>get_domain()</h2>
+<a id="a240f9ad5ec3ac1e8e295bd76e49de9fb" name="a240f9ad5ec3ac1e8e295bd76e49de9fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a240f9ad5ec3ac1e8e295bd76e49de9fb">&#9670;&#160;</a></span>get_domain()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmin, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcXmax&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcLower, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcUpper&gt; </div>
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt; </div>
 <table class="mlabels">
@@ -203,7 +203,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt; <a class="el" href="classddc_1_1GrevilleInterpolationPoints.html">ddc::GrevilleInterpolationPoints</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcXmin</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcXmax</a> &gt;::get_domain </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt; <a class="el" href="classddc_1_1GrevilleInterpolationPoints.html">ddc::GrevilleInterpolationPoints</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a> &gt;::get_domain </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>

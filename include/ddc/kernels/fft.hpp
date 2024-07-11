@@ -75,7 +75,7 @@ struct Fourier;
 /**
  * @brief A named argument to choose the direction of the FFT.
  *
- * @see kwArgs_core
+ * @see kwArgs_core, kwArgs_fft
  */
 enum class FFT_Direction {
     FORWARD, ///< Forward, corresponds to direct FFT up to normalization
@@ -85,7 +85,7 @@ enum class FFT_Direction {
 /**
  * @brief A named argument to choose the type of normalization of the FFT.
  *
- * @see kwArgs_core
+ * @see kwArgs_core, kwArgs_fft
  */
 enum class FFT_Normalization {
     OFF, ///< No normalization
@@ -360,7 +360,7 @@ hipfftResult _hipfftExec([[maybe_unused]] LastArg lastArg, Args... args)
 #endif
 
 /* 
- * @brief A structure embedding the configuration of the core FFT function, direction and type of normalization.
+ * @brief A structure embedding the configuration of the core FFT function: direction and type of normalization.
  *
  * @see FFT_core 
  */
@@ -395,7 +395,7 @@ int N(ddc::DiscreteDomain<DDimX...> x_mesh)
  * The lower boundary of the spatial domain (which appears in Nyquist-Shannon theorem) is not
  * xmin=ddc::coordinate(x_mesh.front()). Indeed, this coordinate identifies the lower cell, but
  * the lower boundary is the left side of this lowest cell, which is a = xmin - cell_size/2, with
- * cell_size = (xmax-xmin)/N. It leads to a = xmin-(b-a)/2N. The same derivation for the
+ * cell_size = (b-a)/N. It leads to a = xmin-(b-a)/2N. The same derivation for the
  * upper boundary coordinate gives b = xmax+(b-a)/2N. Inverting this linear system leads to:
  *
  * a = ((2N-1)*xmin-xmax)/2/(N-1)
@@ -425,7 +425,7 @@ double a(ddc::DiscreteDomain<DDimX...> x_mesh)
  * The upper boundary of the spatial domain (which appears in Nyquist-Shannon theorem) is not
  * xmax=ddc::coordinate(x_mesh.back()). Indeed, this coordinate identifies the upper cell, but
  * the upper boundary is the right side of this upper cell, which is b = xmax + cell_size/2, with
- * cell_size = (xmax-xmin)/N. It leads to b = xmax+(b-a)/2N. The same derivation for the
+ * cell_size = (b-a)/N. It leads to b = xmax+(b-a)/2N. The same derivation for the
  * lower boundary coordinate gives a = xmin-(b-a)/2N. Inverting this linear system leads to:
  *
  * a = ((2N-1)*xmin-xmax)/2/(N-1)

@@ -61,10 +61,13 @@ private:
     {
     };
 
+public:
+    /// @brief The type of the first evaluation continuous dimension used by this class.
     using continuous_dimension_type1 = typename BSplines1::continuous_dimension_type;
+
+    /// @brief The type of the second evaluation continuous dimension used by this class.
     using continuous_dimension_type2 = typename BSplines2::continuous_dimension_type;
 
-public:
     /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
 
@@ -482,8 +485,7 @@ public:
         static_assert(
                 std::is_same_v<
                         InterestDim,
-                        typename evaluation_discrete_dimension_type1::
-                                continuous_dimension_type> || std::is_same_v<InterestDim, typename evaluation_discrete_dimension_type2::continuous_dimension_type>);
+                        continuous_dimension_type1> || std::is_same_v<InterestDim, continuous_dimension_type2>);
         if constexpr (std::is_same_v<
                               InterestDim,
                               typename evaluation_discrete_dimension_type1::
@@ -523,11 +525,11 @@ public:
                 (std::is_same_v<
                          InterestDim1,
                          typename evaluation_discrete_dimension_type1::
-                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename evaluation_discrete_dimension_type2::continuous_dimension_type>)
+                                 continuous_dimension_type> && std::is_same_v<InterestDim2, continuous_dimension_type2>)
                 || (std::is_same_v<
                             InterestDim2,
                             typename evaluation_discrete_dimension_type1::
-                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename evaluation_discrete_dimension_type2::continuous_dimension_type>));
+                                    continuous_dimension_type> && std::is_same_v<InterestDim1, continuous_dimension_type2>));
         return deriv_1_and_2(coord_eval, spline_coef);
     }
 
@@ -721,7 +723,7 @@ public:
                 std::is_same_v<
                         InterestDim,
                         typename evaluation_discrete_dimension_type1::
-                                continuous_dimension_type> || std::is_same_v<InterestDim, typename evaluation_discrete_dimension_type2::continuous_dimension_type>);
+                                continuous_dimension_type> || std::is_same_v<InterestDim, continuous_dimension_type2>);
         if constexpr (std::is_same_v<
                               InterestDim,
                               typename evaluation_discrete_dimension_type1::
@@ -780,11 +782,11 @@ public:
                 (std::is_same_v<
                          InterestDim1,
                          typename evaluation_discrete_dimension_type1::
-                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename evaluation_discrete_dimension_type2::continuous_dimension_type>)
+                                 continuous_dimension_type> && std::is_same_v<InterestDim2, continuous_dimension_type2>)
                 || (std::is_same_v<
                             InterestDim2,
                             typename evaluation_discrete_dimension_type1::
-                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename evaluation_discrete_dimension_type2::continuous_dimension_type>));
+                                    continuous_dimension_type> && std::is_same_v<InterestDim1, continuous_dimension_type2>));
         return deriv_1_and_2(spline_eval, coords_eval, spline_coef);
     }
 
@@ -866,8 +868,8 @@ private:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        using Dim1 = typename evaluation_discrete_dimension_type1::continuous_dimension_type;
-        using Dim2 = typename evaluation_discrete_dimension_type2::continuous_dimension_type;
+        using Dim1 = continuous_dimension_type1;
+        using Dim2 = continuous_dimension_type2;
         if constexpr (bsplines_type1::is_periodic()) {
             if (ddc::get<Dim1>(coord_eval) < ddc::discrete_space<bsplines_type1>().rmin()
                 || ddc::get<Dim1>(coord_eval) > ddc::discrete_space<bsplines_type1>().rmax()) {
@@ -907,9 +909,7 @@ private:
             }
         }
         return eval_no_bc<eval_type, eval_type>(
-                ddc::Coordinate<
-                        typename evaluation_discrete_dimension_type1::continuous_dimension_type,
-                        typename evaluation_discrete_dimension_type2::continuous_dimension_type>(
+                ddc::Coordinate<continuous_dimension_type1, continuous_dimension_type2>(
                         ddc::get<Dim1>(coord_eval),
                         ddc::get<Dim2>(coord_eval)),
                 spline_coef);
@@ -952,14 +952,10 @@ private:
                 double,
                 std::experimental::extents<std::size_t, bsplines_type2::degree() + 1>> const
                 vals2(vals2_ptr.data());
-        ddc::Coordinate<typename evaluation_discrete_dimension_type1::continuous_dimension_type>
-                coord_eval_interest1 = ddc::select<
-                        typename evaluation_discrete_dimension_type1::continuous_dimension_type>(
-                        coord_eval);
-        ddc::Coordinate<typename evaluation_discrete_dimension_type2::continuous_dimension_type>
-                coord_eval_interest2 = ddc::select<
-                        typename evaluation_discrete_dimension_type2::continuous_dimension_type>(
-                        coord_eval);
+        ddc::Coordinate<continuous_dimension_type1> coord_eval_interest1
+                = ddc::select<continuous_dimension_type1>(coord_eval);
+        ddc::Coordinate<continuous_dimension_type2> coord_eval_interest2
+                = ddc::select<continuous_dimension_type2>(coord_eval);
 
         if constexpr (std::is_same_v<EvalType1, eval_type>) {
             jmin1 = ddc::discrete_space<bsplines_type1>().eval_basis(vals1, coord_eval_interest1);

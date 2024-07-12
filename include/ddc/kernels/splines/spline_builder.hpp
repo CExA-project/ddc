@@ -60,15 +60,15 @@ class SplineBuilder
             || (!BSplines::is_periodic() && (BcLower != ddc::BoundCond::PERIODIC)
                 && (BcUpper != ddc::BoundCond::PERIODIC)));
 
-private:
-    using continuous_dimension_type = typename InterpolationDDim::continuous_dimension_type;
-
 public:
     /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
 
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
+
+    /// @brief The type of the interpolation continuous dimension (continuous dimension of interest) used by this class.
+    using continuous_dimension_type = typename InterpolationDDim::continuous_dimension_type;
 
     /// @brief The type of the interpolation discrete dimension (discrete dimension of interest) used by this class.
     using interpolation_discrete_dimension_type = InterpolationDDim;

@@ -76,16 +76,20 @@ public:
                     typename builder_type2::deriv_type,
                     IDimX>...>;
 
-private:
-    /// @brief The tag of the dimension of the first 1D SplineBuilder.
-    using continuous_dimension_type1 =
-            typename builder_type1::bsplines_type::continuous_dimension_type;
+    /// @brief The type of the first interpolation continuous dimension.
+    using continuous_dimension_type1 = typename builder_type1::continuous_dimension_type;
 
-    /// @brief The tag of the dimension of the second 1D SplineBuilder.
-    using continuous_dimension_type2 =
-            typename builder_type2::bsplines_type::continuous_dimension_type;
+    /// @brief The type of the second interpolation continuous dimension.
+    using continuous_dimension_type2 = typename builder_type2::continuous_dimension_type;
 
-public:
+    /// @brief The type of the first interpolation discrete dimension.
+    using interpolation_discrete_dimension_type1 =
+            typename builder_type1::interpolation_discrete_dimension_type;
+
+    /// @brief The type of the second interpolation discrete dimension.
+    using interpolation_discrete_dimension_type2 =
+            typename builder_type2::interpolation_discrete_dimension_type;
+
     /// @brief The type of the B-splines in the first dimension.
     using bsplines_type1 = typename builder_type1::bsplines_type;
 
@@ -97,14 +101,6 @@ public:
 
     /// @brief The type of the Deriv domain on boundaries in the second dimension.
     using deriv_type2 = typename builder_type2::deriv_type;
-
-    /// @brief The type of the interpolation mesh in the first dimension.
-    using interpolation_discrete_dimension_type1 =
-            typename builder_type1::interpolation_discrete_dimension_type;
-
-    /// @brief The type of the interpolation mesh in the second dimension.
-    using interpolation_discrete_dimension_type2 =
-            typename builder_type2::interpolation_discrete_dimension_type;
 
     /// @brief The type of the domain for the interpolation mesh in the first dimension.
     using interpolation_domain_type1 =

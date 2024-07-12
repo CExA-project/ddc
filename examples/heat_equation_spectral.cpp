@@ -227,13 +227,11 @@ int main(int argc, char** argv)
             ddc::DiscreteDomain<DDimX>(initial_temp.domain())));
     ddc::init_discrete_space<DDimFy>(ddc::init_fourier_space<DDimFy>(
             ddc::DiscreteDomain<DDimY>(initial_temp.domain())));
-    ddc::DiscreteDomain<DDimFx, DDimFy> const k_discrete_dimension
-            = ddc::FourierMesh<
-                    DDimFx,
-                    DDimFy>(initial_temp.domain(), false);
+    ddc::DiscreteDomain<DDimFx, DDimFy> const k_mesh = ddc::
+            FourierMesh<DDimFx, DDimFy>(initial_temp.domain(), false);
     ddc::Chunk Ff_allocation = ddc::
             Chunk("Ff_allocation",
-                  k_discrete_dimension,
+                  k_mesh,
                   ddc::DeviceAllocator<Kokkos::complex<double>>());
     ddc::ChunkSpan Ff = Ff_allocation.span_view();
 
@@ -258,7 +256,7 @@ int main(int argc, char** argv)
         ddc::FFT_Normalization norm = ddc::FFT_Normalization::BACKWARD;
         ddc::fft(Kokkos::DefaultExecutionSpace(), Ff, last_temp, {norm});
         ddc::parallel_for_each(
-                k_discrete_dimension,
+                k_mesh,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimFx, DDimFy> const
                                       ikxky) {
                     ddc::DiscreteElement<DDimFx> const ikx

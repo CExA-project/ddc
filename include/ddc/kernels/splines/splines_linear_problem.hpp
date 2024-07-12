@@ -82,11 +82,19 @@ public:
     /**
      * @brief Get the required number of rows of the multi-rhs view passed to solve().
      *
-     * It is useful because SplinesLinearSolver3x3Blocks requires additional rows for internal operation.
+     * Implementations may require a number of rows larger than what `size` returns for optimization purposes.
      *
-     * @return The required number of rows of the multi-rhs view.
+     * @return The required number of rows of the multi-rhs view. It is guaranteed to be greater or equal to `size`.
      */
-    virtual std::size_t required_number_of_rhs_rows() const
+    std::size_t required_number_of_rhs_rows() const
+    {
+        std::size_t const nrows = impl_required_number_of_rhs_rows();
+        assert(nrows >= size());
+        return nrows;
+    }
+
+    // in private
+    virtual std::size_t impl_required_number_of_rhs_rows() const
     {
         return m_size;
     }

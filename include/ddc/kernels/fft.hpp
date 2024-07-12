@@ -389,7 +389,7 @@ int N(ddc::DiscreteDomain<DDimX...> x_mesh)
 /**
  * @brief Get the lower boundary coordinate along a given dimension.
  *
- * The lower boundary of the spatial domain (which appears in Nyquist-Shannon theorem) is not
+ * The lower boundary of the domain (which appears in Nyquist-Shannon theorem) is not
  * xmin=ddc::coordinate(x_mesh.front()). Indeed, this coordinate identifies the lower cell, but
  * the lower boundary is the left side of this lower cell, which is a = xmin - cell_size/2, with
  * cell_size = (b-a)/N. It leads to a = xmin-(b-a)/2N. The same derivation for the
@@ -401,7 +401,7 @@ int N(ddc::DiscreteDomain<DDimX...> x_mesh)
  * The current function implements the first equation.
  *
  * @tparam DDim The dimension along which the lower cell coordinate of the Fourier mesh is returned.
- * @param x_mesh The spatial mesh.
+ * @param x_mesh The mesh.
  *
  * @return The lower boundary along the required dimension.
  */
@@ -419,7 +419,7 @@ double a(ddc::DiscreteDomain<DDimX...> x_mesh)
 /**
  * @brief Get the upper boundary coordinate along a given dimension.
  *
- * The upper boundary of the spatial domain (which appears in Nyquist-Shannon theorem) is not
+ * The upper boundary of the domain (which appears in Nyquist-Shannon theorem) is not
  * xmax=ddc::coordinate(x_mesh.back()). Indeed, this coordinate identifies the upper cell, but
  * the upper boundary is the right side of this upper cell, which is b = xmax + cell_size/2, with
  * cell_size = (b-a)/N. It leads to b = xmax+(b-a)/2N. The same derivation for the
@@ -431,7 +431,7 @@ double a(ddc::DiscreteDomain<DDimX...> x_mesh)
  * The current function implements the second equation.
  *
  * @tparam DDim The dimension along which the upper cell coordinate of the Fourier mesh is returned.
- * @param x_mesh The spatial mesh.
+ * @param x_mesh The mesh.
  *
  * @return The upper boundary along the required dimension.
  */
@@ -674,7 +674,7 @@ namespace ddc {
  * @brief Initialize a Fourier discrete dimension.
  *
  * Initialize the (1D) discrete space representing the Fourier discrete dimension associated
- * to the (1D) spatial mesh passed as argument. It is a N-periodic PeriodicSampling defined between
+ * to the (1D) mesh passed as argument. It is a N-periodic PeriodicSampling defined between
  * ka=0 and kb=2*N/(b-a)*pi.
  *
  * This value for kb comes from the Nyquist-Shannon theorem: the period of the spectral domain
@@ -682,9 +682,9 @@ namespace ddc {
  * k=0 and k=2*pi*(N-1)/(b-a), because the cell at coordinate k=2*pi*N/(b-a) is a periodic point (f(ka)=f(kb)).
  *  
  * @tparam DDimFx A PeriodicSampling representing the Fourier discrete dimension.
- * @tparam DDimX The type of the spatial discrete dimension.
+ * @tparam DDimX The type of the original discrete dimension.
  *
- * @param x_mesh The DiscreteDomain representing the (1D) spatial mesh.
+ * @param x_mesh The DiscreteDomain representing the (1D) original mesh.
  *
  * @return The initialized Impl representing the discrete Fourier space.
  *
@@ -715,13 +715,13 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
  * @brief Get the Fourier mesh.
  *
  * Compute the Fourier (or spectral) mesh on which the Discrete Fourier Transform of a
- * spatial discrete function is defined.
+ * discrete function is defined.
  *
  * The uid identifies the mode (ie. ddc::DiscreteElement<DDimFx>(0) corresponds to mode 0).
  *
- * @param x_mesh The DiscreteDomain representing the spatial mesh.
+ * @param x_mesh The DiscreteDomain representing the original mesh.
  * @param C2C A flag indicating if a complex-to-complex DFT is going to be performed. Indeed, 
- * in this case the spatial and spectral meshes have same number of points, whereas for real-to-complex
+ * in this case the two meshes have same number of points, whereas for real-to-complex
  * or complex-to-real DFT, each complex value of the Fourier-transformed function contains twice more
  * information, and thus only half (actually Nx*Ny*(Nz/2+1) for 3D R2C FFT to take in account mode 0)
  * values are needed (cf. DFT conjugate symmetry property for more information about this).
@@ -760,13 +760,13 @@ struct kwArgs_fft
 /**
  * @brief Perform a direct Fast Fourier Transform.
  *
- * Compute the discrete Fourier transform of a spatial function using the specialized implementation for the Kokkos::ExecutionSpace
+ * Compute the discrete Fourier transform of a function using the specialized implementation for the Kokkos::ExecutionSpace
  * of the FFT algorithm.
  *
  * @tparam Tin The type of the input elements (float, Kokkos::complex<float>, double or Kokkos::complex<double>).
  * @tparam Tout The type of the output elements (Kokkos::complex<float> or Kokkos::complex<double>).
  * @tparam DDimFx... The parameter pack of the Fourier discrete dimensions.
- * @tparam DDimX... The parameter pack of the spatial discrete dimensions.
+ * @tparam DDimX... The parameter pack of the original discrete dimensions.
  * @tparam ExecSpace The type of the Kokkos::ExecutionSpace on which the FFT is performed. It determines which specialized
  * backend is used (ie. fftw, cuFFT...).
  * @tparam MemorySpace The type of the Kokkos::MemorySpace on which are stored the input and output discrete functions.
@@ -775,7 +775,7 @@ struct kwArgs_fft
  *
  * @param execSpace The Kokkos::ExecutionSpace on which the FFT is performed.
  * @param out The output discrete function, represented as a ChunkSpan storing values on a spectral mesh.
- * @param in The input discrete function, represented as a ChunkSpan storing values on a spatial mesh.
+ * @param in The input discrete function, represented as a ChunkSpan storing values on a mesh.
  * @param kwargs The kwArgs_fft configuring the FFT.
  */
 template <
@@ -824,7 +824,7 @@ void fft(
  *
  * @tparam Tin The type of the input elements (Kokkos::complex<float> or Kokkos::complex<double>).
  * @tparam Tout The type of the output elements (float, Kokkos::complex<float>, double or Kokkos::complex<double>).
- * @tparam DDimX... The parameter pack of the spatial discrete dimensions.
+ * @tparam DDimX... The parameter pack of the original discrete dimensions.
  * @tparam DDimFx... The parameter pack of the Fourier discrete dimensions.
  * @tparam ExecSpace The type of the Kokkos::ExecutionSpace on which the iFFT is performed. It determines which specialized
  * backend is used (ie. fftw, cuFFT...).
@@ -833,7 +833,7 @@ void fft(
  * @tparam layout_out The layout of the Chunkspan representing the output discrete function.
  *
  * @param execSpace The Kokkos::ExecutionSpace on which the iFFT is performed.
- * @param out The output discrete function, represented as a ChunkSpan storing values on a spatial mesh.
+ * @param out The output discrete function, represented as a ChunkSpan storing values on a mesh.
  * @param in The input discrete function, represented as a ChunkSpan storing values on a spectral mesh.
  * @param kwargs The kwArgs_fft configuring the iFFT.
  */

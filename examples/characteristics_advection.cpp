@@ -47,7 +47,7 @@ struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
 };
 using GrevillePoints = ddc::
         GrevilleInterpolationPoints<BSplinesX, BoundCond, BoundCond>;
-struct DDimX : GrevillePoints::interpolation_mesh_type
+struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
 //! [X-discretization]
@@ -188,10 +188,10 @@ int main(int argc, char** argv)
     ddc::ChunkSpan const initial_density
             = last_density_alloc.span_view();
     // Initialize the density on the main domain
-    ddc::DiscreteDomain<DDimX, DDimY> x_mesh
+    ddc::DiscreteDomain<DDimX, DDimY> x_discrete_dimension
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
-            x_mesh,
+            x_discrete_dimension,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
                         = ddc::coordinate(ddc::select<DDimX>(ixy));
@@ -229,7 +229,7 @@ int main(int argc, char** argv)
             ddc::SplineSolver::GINKGO,
             DDimX,
             DDimY>
-            spline_builder(x_mesh);
+            spline_builder(x_discrete_dimension);
     ExtrapolationRule extrapolation_rule;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,

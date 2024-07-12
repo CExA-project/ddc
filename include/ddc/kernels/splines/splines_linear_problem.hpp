@@ -93,7 +93,7 @@ public:
         return nrows;
     }
 
-    // in private
+private:
     virtual std::size_t impl_required_number_of_rhs_rows() const
     {
         return m_size;

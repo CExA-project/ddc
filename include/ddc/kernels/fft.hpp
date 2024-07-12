@@ -63,11 +63,10 @@ static_assert(alignof(hipfftDoubleComplex) <= alignof(Kokkos::complex<double>));
 #endif
 
 namespace ddc {
-// TODO : maybe transfert this somewhere else because Fourier space is not specific to FFT
 /**
- * @brief A templated tag representing a continuous dimension in the Fourier space associated to a continuous spatial dimension.
+ * @brief A templated tag representing a continuous dimension in the Fourier space associated to the original continuous dimension.
  *
- * @tparam The tag representing the spatial dimensions.
+ * @tparam The tag representing the original dimension.
  */
 template <typename Dim>
 struct Fourier;
@@ -143,7 +142,6 @@ KOKKOS_FUNCTION constexpr T LastSelector(const T a, const T b)
     return LastSelector<T, Dim, Second, Tail...>(a, b);
 }
 
-// transform_type:
 /**
  * @brief A trait to identify the type of transformation (R2C, C2R, C2C...).
  *
@@ -371,7 +369,6 @@ struct kwArgs_core
     ddc::FFT_Normalization normalization;
 };
 
-// N,a,b from x_mesh
 /**
  * @brief Get the mesh size along a given dimension.
  *
@@ -674,7 +671,7 @@ void core(
 namespace ddc {
 
 /**
- * @brief Initialize a discrete Fourier space.
+ * @brief Initialize a Fourier discrete dimension.
  *
  * Initialize the (1D) discrete space representing the Fourier discrete dimension associated
  * to the (1D) spatial mesh passed as argument. It is a N-periodic PeriodicSampling defined between

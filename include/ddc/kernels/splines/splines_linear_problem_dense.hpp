@@ -112,6 +112,10 @@ public:
     {
         assert(b.extent(0) == size());
 
+        // For order 1 splines, size() can be 0 then we bypass the solver call.
+        if (size() == 0)
+            return;
+
         auto a_device = m_a.d_view;
         auto ipiv_device = m_ipiv.d_view;
 

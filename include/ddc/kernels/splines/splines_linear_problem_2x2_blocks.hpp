@@ -82,17 +82,20 @@ public:
             return m_ncols;
         }
 
-        std::size_t rows_idx() const
+        KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+        rows_idx() const
         {
             return m_rows_idx;
         }
 
-        std::size_t cols_idx() const
+        KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+        cols_idx() const
         {
             return m_cols_idx;
         }
 
-        std::size_t values() const
+        KOKKOS_FUNCTION Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+        values() const
         {
             return m_values;
         }

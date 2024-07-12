@@ -195,10 +195,10 @@ int main(int argc, char** argv)
     //! [initial-conditions]
     ddc::ChunkSpan const initial_temp = _last_temp.span_view();
     // Initialize the temperature on the main domain
-    ddc::DiscreteDomain<DDimX, DDimY> x_discrete_dimension
+    ddc::DiscreteDomain<DDimX, DDimY> x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
-            x_discrete_dimension,
+            x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
                         = ddc::coordinate(ddc::select<DDimX>(ixy));

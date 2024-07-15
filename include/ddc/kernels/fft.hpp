@@ -137,13 +137,10 @@ double b(ddc::DiscreteDomain<DDimX...> x_mesh)
 }
 
 template <typename... DDimX>
-KokkosFFT::axis_type<sizeof...(DDimX)> axes()
+static constexpr KokkosFFT::axis_type<sizeof...(DDimX)> axes()
 {
-    KokkosFFT::axis_type<sizeof...(DDimX)> out;
-    for (int i = 0; i < out.size(); ++i) {
-        out[i] = i;
-    }
-    return out;
+    return KokkosFFT::axis_type<sizeof...(DDimX)> {
+            static_cast<int>(ddc::type_seq_rank_v<DDimX, ddc::detail::TypeSeq<DDimX...>> + 1)...};
 }
 
 KokkosFFT::Normalization ddc_fft_normalization_to_kokkos_fft(

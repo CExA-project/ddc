@@ -15,3 +15,6 @@
 [submodule "vendor/kokkos"]
 	path = vendor/kokkos
 	url = https://github.com/kokkos/kokkos.git
+[submodule "vendor/kokkos-fft"]
+	path = vendor/kokkos-fft
+	url = git@github.com:kokkos/kokkos-fft.git

@@ -96,6 +96,28 @@ endif()
 # Custom cmake modules
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
 
+# Kokkos-fft
+if("${DDC_BUILD_KERNELS_FFT}")
+  set(DDC_KokkosFFT_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `Kokkos-fft` package. Options: ${DDC_DEPENDENCY_POLICIES}")
+  set_property(CACHE DDC_KokkosFFT_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
+  if("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "AUTO")
+    if(NOT TARGET KokkosFFT::fft)
+      find_package(KokkosFFT::fft CONFIG)
+      if(NOT KokkosFFT_FOUND)
+        set(KokkosFFT_ENABLE_HOST_AND_DEVICE ON)
+        add_subdirectory(vendor/kokkos-fft)
+      endif()
+    endif()
+  elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
+    set(KokkosFFT_ENABLE_HOST_AND_DEVICE ON)
+    add_subdirectory(vendor/kokkos-fft)
+  elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
+    find_package(KokkosFFT CONFIG REQUIRED)
+  endif()
+
+  target_link_libraries(DDC INTERFACE KokkosFFT::fft)
+endif()
+
 # FFTW
 if("${DDC_BUILD_KERNELS_FFT}" AND NOT FFTW_FOUND)
 	find_package( FFTW MODULE REQUIRED )

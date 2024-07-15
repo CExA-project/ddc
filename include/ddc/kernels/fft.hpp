@@ -204,17 +204,14 @@ void impl(
             mdspan_to_kokkos_layout_t<layout_out>,
             ExecSpace>
             out_view(out.allocation_kokkos_view());
-    KokkosFFT::Normalization kokkos_fft_normalization(ddc_fft_normalization_to_kokkos_fft(kwargs.normalization));
+    KokkosFFT::Normalization kokkos_fft_normalization(
+            ddc_fft_normalization_to_kokkos_fft(kwargs.normalization));
 
     // C2C
     if constexpr (std::is_same_v<Tin, Tout>) {
         if (kwargs.direction == ddc::FFT_Direction::FORWARD) {
             KokkosFFT::
-                    fftn(execSpace,
-                         in_view,
-                         out_view,
-                         axes<DDimIn...>(),
-                         kokkos_fft_normalization);
+                    fftn(execSpace, in_view, out_view, axes<DDimIn...>(), kokkos_fft_normalization);
         } else {
             KokkosFFT::
                     ifftn(execSpace,
@@ -223,9 +220,9 @@ void impl(
                           axes<DDimIn...>(),
                           kokkos_fft_normalization);
         }
-    // R2C & C2R
+        // R2C & C2R
     } else {
-        if constexpr(is_complex_v<Tout>) {
+        if constexpr (is_complex_v<Tout>) {
             assert(kwargs.direction == ddc::FFT_Direction::FORWARD);
             KokkosFFT::
                     rfftn(execSpace,
@@ -247,16 +244,17 @@ void impl(
 
     // The FULL normalization is mesh-dependant and thus handled by DDC
     if (kwargs.normalization == ddc::FFT_Normalization::FULL) {
-        const real_type_t<Tout> norm_coef
-                = ((rlength(ddc::select<DDimIn>(in.domain()))
-                              / (ddc::get<DDimIn>(in.domain().extents()) - 1)
-                              / Kokkos::sqrt(2 * Kokkos::numbers::pi))
-                             * ...);
+        const real_type_t<Tout> norm_coef = ((rlength(ddc::select<DDimIn>(in.domain()))
+                                              / (ddc::get<DDimIn>(in.domain().extents()) - 1))
+                                             * ...)
+                                            / Kokkos::sqrt(2 * Kokkos::numbers::pi);
         ddc::parallel_for_each(
                 "ddc_fft_normalization",
                 execSpace,
                 out.domain(),
-                KOKKOS_LAMBDA(typename DomainOut::discrete_element_type const i) { out(i) = out(i) * norm_coef; });
+                KOKKOS_LAMBDA(typename DomainOut::discrete_element_type const i) {
+                    out(i) = out(i) * norm_coef;
+                });
     }
 }
 } // namespace ddc::detail::fft

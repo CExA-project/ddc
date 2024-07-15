@@ -141,7 +141,7 @@ KokkosFFT::axis_type<sizeof...(DDimX)> axes()
 {
     KokkosFFT::axis_type<sizeof...(DDimX)> out;
     for (int i = 0; i < out.size(); ++i) {
-        out[i] = -out.size() + i;
+        out[i] = i;
     }
     return out;
 }

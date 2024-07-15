@@ -100,10 +100,10 @@ static void characteristics_advection(benchmark::State& state)
             ddc::DeviceAllocator<double>());
     ddc::ChunkSpan const density = density_alloc.span_view();
     // Initialize the density on the main domain
-    ddc::DiscreteDomain<DDimX, DDimY> x_discrete_dimension
+    ddc::DiscreteDomain<DDimX, DDimY> x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
-            x_discrete_dimension,
+            x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x = ddc::coordinate(ddc::select<DDimX>(ixy));
                 double const y = ddc::coordinate(ddc::select<DDimY>(ixy));
@@ -120,7 +120,7 @@ static void characteristics_advection(benchmark::State& state)
             ddc::SplineSolver::GINKGO,
             DDimX,
             DDimY>
-            spline_builder(x_discrete_dimension, state.range(2), state.range(3));
+            spline_builder(x_mesh, state.range(2), state.range(3));
     ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,

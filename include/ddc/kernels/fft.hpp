@@ -244,10 +244,13 @@ void impl(
 
     // The FULL normalization is mesh-dependant and thus handled by DDC
     if (kwargs.normalization == ddc::FFT_Normalization::FULL) {
-        const real_type_t<Tout> norm_coef = ((rlength(ddc::select<DDimIn>(in.domain()))
-                                              / (ddc::get<DDimIn>(in.domain().extents()) - 1))
-                                             * ...)
-                                            / Kokkos::sqrt(2 * Kokkos::numbers::pi);
+        const real_type_t<Tout> norm_coef
+                = ((rlength(ddc::select<DDimIn>(in.domain()))
+                    / (ddc::get<DDimIn>(in.domain().extents()) - 1))
+                   * ...)
+                  / Kokkos::
+                          pow(2 * Kokkos::numbers::pi,
+                              static_cast<real_type_t<Tout>>(sizeof...(DDimIn)) / 2);
         ddc::parallel_for_each(
                 "ddc_fft_normalization",
                 execSpace,

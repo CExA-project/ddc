@@ -300,17 +300,18 @@ private:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest being the leading dimension.
      *
-     * This is used internally due to solver limitation and because it may be beneficial to computation performance.
+     * This is used internally due to solver limitation and because it may be beneficial to computation performance. For LAPACK backend and non-periodic boundary condition, we are using SplinesLinearSolver3x3Blocks which requires upper_block_size additional rows for internal operations.
      *
      * @return The (transposed) domain for the spline coefficients.
      */
     batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
     {
-        return batched_spline_tr_domain_type(
-                batched_spline_domain().restrict(ddc::DiscreteDomain<bsplines_type>(
+        return batched_spline_tr_domain_type(ddc::replace_dim_of<bsplines_type, bsplines_type>(
+                batched_spline_domain(),
+                ddc::DiscreteDomain<bsplines_type>(
                         ddc::DiscreteElement<bsplines_type>(0),
                         ddc::DiscreteVector<bsplines_type>(
-                                ddc::discrete_space<bsplines_type>().nbasis()))));
+                                matrix->required_number_of_rhs_rows()))));
     }
 
 public:
@@ -846,7 +847,7 @@ operator()(
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
     Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
             spline_tr.data_handle(),
-            ddc::discrete_space<bsplines_type>().nbasis(),
+            static_cast<std::size_t>(spline_tr.template extent<bsplines_type>()),
             batch_domain().size());
     // Compute spline coef
     matrix->solve(bcoef_section);

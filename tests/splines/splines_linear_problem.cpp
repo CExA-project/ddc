@@ -21,7 +21,6 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
     void fill_identity(
             ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS mat)
     {
-        assert(mat.extent(0) == mat.extent(1));
         for (std::size_t i(0); i < mat.extent(0); ++i) {
             for (std::size_t j(0); j < mat.extent(1); ++j) {
                 mat(i, j) = int(i == j);
@@ -93,33 +92,45 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
 
         splines_linear_problem.setup_solver();
 
-        Kokkos::DualView<double*> inv_ptr("inv_ptr", N * N);
+        Kokkos::DualView<double*>
+                inv_ptr("inv_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-                inv(inv_ptr.h_view.data(), N, N);
+                inv(inv_ptr.h_view.data(), splines_linear_problem.required_number_of_rhs_rows(), N);
         fill_identity(inv);
         inv_ptr.modify_host();
         inv_ptr.sync_device();
         splines_linear_problem.solve(
-                ddc::detail::SplinesLinearProblem<
-                        Kokkos::DefaultExecutionSpace>::MultiRHS(inv_ptr.d_view.data(), N, N));
+                ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
+                        inv_ptr.d_view.data(),
+                        splines_linear_problem.required_number_of_rhs_rows(),
+                        N));
         inv_ptr.modify_device();
         inv_ptr.sync_host();
 
-        Kokkos::DualView<double*> inv_tr_ptr("inv_tr_ptr", N * N);
+        Kokkos::DualView<double*>
+                inv_tr_ptr("inv_tr_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
-                inv_tr(inv_tr_ptr.h_view.data(), N, N);
+                inv_tr(inv_tr_ptr.h_view.data(),
+                       splines_linear_problem.required_number_of_rhs_rows(),
+                       N);
         fill_identity(inv_tr);
         inv_tr_ptr.modify_host();
         inv_tr_ptr.sync_device();
         splines_linear_problem
-                .solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::
-                               MultiRHS(inv_tr_ptr.d_view.data(), N, N),
+                .solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
+                               inv_tr_ptr.d_view.data(),
+                               splines_linear_problem.required_number_of_rhs_rows(),
+                               N),
                        true);
         inv_tr_ptr.modify_device();
         inv_tr_ptr.sync_host();
 
-        check_inverse(val, inv);
-        check_inverse_transpose(val, inv_tr);
+        check_inverse(
+                val,
+                Kokkos::subview(inv, std::pair<std::size_t, std::size_t> {0, N}, Kokkos::ALL));
+        check_inverse_transpose(
+                val,
+                Kokkos::subview(inv_tr, std::pair<std::size_t, std::size_t> {0, N}, Kokkos::ALL));
     }
 
 } // namespace )
@@ -255,12 +266,13 @@ TEST(SplinesLinearProblem, 3x3Blocks)
 {
     std::size_t const N = 10;
     std::size_t const k = 10;
+    std::size_t const top_size = 2;
     std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>> center_block
             = std::make_unique<
                     ddc::detail::SplinesLinearProblemDense<Kokkos::DefaultExecutionSpace>>(N - 5);
     std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>>
             splines_linear_problem = std::make_unique<ddc::detail::SplinesLinearProblem3x3Blocks<
-                    Kokkos::DefaultExecutionSpace>>(N, 2, std::move(center_block));
+                    Kokkos::DefaultExecutionSpace>>(N, top_size, std::move(center_block));
 
     // Build a non-symmetric full-rank matrix (without zero)
     for (std::size_t i(0); i < N; ++i) {
@@ -350,10 +362,11 @@ TEST_P(SplinesLinearProblemSizesFixture, OffsetBanded)
 TEST_P(SplinesLinearProblemSizesFixture, 2x2Blocks)
 {
     auto const [N, k] = GetParam();
+    std::size_t const bottom_size = 3;
     std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>>
             splines_linear_problem
             = ddc::detail::SplinesLinearProblemMaker::make_new_block_matrix_with_band_main_block<
-                    Kokkos::DefaultExecutionSpace>(N, k, k, false, 3);
+                    Kokkos::DefaultExecutionSpace>(N, k, k, false, bottom_size);
 
     // Build a non-symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {
@@ -372,10 +385,12 @@ TEST_P(SplinesLinearProblemSizesFixture, 2x2Blocks)
 TEST_P(SplinesLinearProblemSizesFixture, 3x3Blocks)
 {
     auto const [N, k] = GetParam();
+    std::size_t const bottom_size = 3;
+    std::size_t const top_size = 2;
     std::unique_ptr<ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>>
             splines_linear_problem
             = ddc::detail::SplinesLinearProblemMaker::make_new_block_matrix_with_band_main_block<
-                    Kokkos::DefaultExecutionSpace>(N, k, k, false, 3, 2);
+                    Kokkos::DefaultExecutionSpace>(N, k, k, false, bottom_size, top_size);
 
     // Build a non-symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {

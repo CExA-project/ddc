@@ -248,17 +248,9 @@ void impl(
     // The FULL normalization is mesh-dependant and thus handled by DDC
     if (kwargs.normalization == ddc::FFT_Normalization::FULL) {
         const real_type_t<Tout> norm_coef
-                = kwargs.direction == ddc::FFT_Direction::FORWARD
-                          ? (((coordinate(ddc::select<DDimIn>(in.domain()).back())
-                               - coordinate(ddc::select<DDimIn>(in.domain()).front()))
+                = ((rlength(ddc::select<DDimIn>(in.domain()))
                               / (ddc::get<DDimIn>(in.domain().extents()) - 1)
                               / Kokkos::sqrt(2 * Kokkos::numbers::pi))
-                             * ...)
-                          : ((Kokkos::sqrt(2 * Kokkos::numbers::pi)
-                              / (coordinate(ddc::select<DDimIn>(in.domain()).back())
-                                 - coordinate(ddc::select<DDimIn>(in.domain()).front()))
-                              * (ddc::get<DDimIn>(in.domain().extents()) - 1)
-                              / ddc::get<DDimIn>(in.domain().extents()))
                              * ...);
         ddc::parallel_for_each(
                 "ddc_fft_normalization",

@@ -131,6 +131,13 @@ public:
                              - static_cast<int>(m_n_period / 2 - 1))
                              * m_step;
         }
+
+        /// @brief Convert a mesh index into a position in `CDim`, but do not take in account periodicity
+        KOKKOS_FUNCTION continuous_element_type
+        coordinate_without_periodicity(discrete_element_type const& icoord) const noexcept
+        {
+            return m_origin + continuous_element_type(icoord.uid()) * m_step;
+        }
     };
 
     /** Construct a Impl<Kokkos::HostSpace> and associated discrete_domain_type from a segment
@@ -285,6 +292,13 @@ KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> coordinate(
 }
 
 template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> coordinate_without_periodicity(
+        DiscreteElement<DDim> const& c)
+{
+    return discrete_space<DDim>().coordinate_without_periodicity(c);
+}
+
+template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> distance_at_left(
         DiscreteElement<DDim>)
 {
@@ -302,14 +316,14 @@ template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> rmin(
         DiscreteDomain<DDim> const& d)
 {
-    return coordinate(d.front());
+    return coordinate_without_periodicity(d.front());
 }
 
 template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> rmax(
         DiscreteDomain<DDim> const& d)
 {
-    return coordinate(d.back());
+    return coordinate_without_periodicity(d.back());
 }
 
 template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>

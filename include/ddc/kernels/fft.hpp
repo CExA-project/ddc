@@ -11,6 +11,7 @@
 
 #include <ddc/ddc.hpp>
 
+#include <KokkosFFT.hpp>
 #include <Kokkos_Core.hpp>
 
 #if fftw_serial_AVAIL || fftw_omp_AVAIL
@@ -357,12 +358,35 @@ double b(ddc::DiscreteDomain<DDimX...> x_mesh)
            / 2 / (N<DDim>(x_mesh) - 1);
 }
 
+template <typename... DDimX>
+KokkosFFT::axis_type<sizeof...(DDimX)> axes()
+{
+    KokkosFFT::axis_type<sizeof...(DDimX)> out;
+    for (int i = 0; i < out.size(); ++i) {
+        out[i] = -out.size() + i;
+    }
+    return out;
+}
+
 // core
-template <typename Tin, typename Tout, typename ExecSpace, typename MemorySpace, typename... DDimX>
+template <
+        typename Tin,
+        typename Tout,
+        typename ExecSpace,
+        typename MemorySpace,
+        typename layout_in,
+        typename layout_out,
+        typename... DDimX>
 void core(
         ExecSpace const& execSpace,
-        Tout* out_data,
-        Tin* in_data,
+        Kokkos::View<
+                typename ddc::detail::mdspan_to_kokkos_element_t<Tout, sizeof...(DDimX)>,
+                layout_out,
+                MemorySpace> out_data,
+        Kokkos::View<
+                typename ddc::detail::mdspan_to_kokkos_element_t<Tin, sizeof...(DDimX)>,
+                layout_in,
+                MemorySpace> in_data,
         ddc::DiscreteDomain<DDimX...> mesh,
         const kwArgs_core& kwargs)
 {
@@ -379,6 +403,7 @@ void core(
             (is_uniform_point_sampling_v<DDimX> && ...),
             "DDimX dimensions should derive from UniformPointSampling");
 
+    /*
     std::array<int, sizeof...(DDimX)> n = {static_cast<int>(ddc::get<DDimX>(mesh.extents()))...};
     int idist = 1;
     int odist = 1;
@@ -390,7 +415,25 @@ void core(
                         ? odist * (n[i] / 2 + 1)
                         : odist * n[i];
     }
+		*/
 
+    if (kwargs.direction == ddc::FFT_Direction::FORWARD) {
+        KokkosFFT::
+                fftn(execSpace,
+                     in_data,
+                     out_data,
+                     axes<DDimX...>(),
+                     KokkosFFT::Normalization::none);
+    } else {
+        KokkosFFT::
+                ifftn(execSpace,
+                      in_data,
+                      out_data,
+                      axes<DDimX...>(),
+                      KokkosFFT::Normalization::none);
+    }
+    execSpace.fence();
+    /*
     if constexpr (false) {
     } // Trick to get only else if
 #if fftw_serial_AVAIL
@@ -528,6 +571,7 @@ void core(
             throw std::runtime_error("hipfftExec failed");
     }
 #endif
+		*/
 
     if (kwargs.normalization != ddc::FFT_Normalization::OFF) {
         real_type_t<Tout> norm_coef = 1;
@@ -574,7 +618,9 @@ void core(
                                            ddc::get<DDimX>(mesh.extents()))
                                    * ...)
                                 : (ddc::get<DDimX>(mesh.extents()) * ...)),
-                KOKKOS_LAMBDA(const int& i) { out_data[i] = out_data[i] * norm_coef; });
+                KOKKOS_LAMBDA(const int& i) {
+                    out_data.data()[i] = out_data.data()[i] * norm_coef;
+                });
     }
 }
 } // namespace ddc::detail::fft
@@ -655,10 +701,17 @@ void fft(
             (is_periodic_sampling_v<DDimFx> && ...),
             "DDimFx dimensions should derive from PeriodicPointSampling");
 
-    ddc::detail::fft::core<Tin, Tout, ExecSpace, MemorySpace, DDimX...>(
+    ddc::detail::fft::core<
+            Tin,
+            Tout,
+            ExecSpace,
+            MemorySpace,
+            typename ddc::detail::mdspan_to_kokkos_layout_t<layout_in>,
+            typename ddc::detail::mdspan_to_kokkos_layout_t<layout_out>,
+            DDimX...>(
             execSpace,
-            out.data_handle(),
-            in.data_handle(),
+            out.allocation_kokkos_view(),
+            in.allocation_kokkos_view(),
             in.domain(),
             {ddc::FFT_Direction::FORWARD, kwargs.normalization});
 }
@@ -692,10 +745,17 @@ void ifft(
             (is_periodic_sampling_v<DDimFx> && ...),
             "DDimFx dimensions should derive from PeriodicPointSampling");
 
-    ddc::detail::fft::core<Tin, Tout, ExecSpace, MemorySpace, DDimX...>(
+    ddc::detail::fft::core<
+            Tin,
+            Tout,
+            ExecSpace,
+            MemorySpace,
+            typename ddc::detail::mdspan_to_kokkos_layout_t<layout_in>,
+            typename ddc::detail::mdspan_to_kokkos_layout_t<layout_out>,
+            DDimX...>(
             execSpace,
-            out.data_handle(),
-            in.data_handle(),
+            out.allocation_kokkos_view(),
+            in.allocation_kokkos_view(),
             out.domain(),
             {ddc::FFT_Direction::BACKWARD, kwargs.normalization});
 }

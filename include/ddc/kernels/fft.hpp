@@ -140,7 +140,7 @@ template <typename... DDimX>
 static constexpr KokkosFFT::axis_type<sizeof...(DDimX)> axes()
 {
     return KokkosFFT::axis_type<sizeof...(DDimX)> {
-            static_cast<int>(ddc::type_seq_rank_v<DDimX, ddc::detail::TypeSeq<DDimX...>> + 1)...};
+            static_cast<int>(ddc::type_seq_rank_v<DDimX, ddc::detail::TypeSeq<DDimX...>>)...};
 }
 
 KokkosFFT::Normalization ddc_fft_normalization_to_kokkos_fft(
@@ -180,13 +180,13 @@ template <
         typename... DDimIn>
 void impl(
         ExecSpace execSpace,
-        ddc::ChunkSpan<Tin, ddc::DiscreteDomain<DDimIn...>, layout_in, MemorySpace> in,
+        ddc::ChunkSpan<Tin, ddc::DiscreteDomain<DDimIn...>, layout_in, MemorySpace> const in,
         ddc::ChunkSpan<Tout, DomainOut, layout_out, MemorySpace> out,
         const kwArgs_impl& kwargs)
 {
     static_assert(
             std::is_same_v<real_type_t<Tin>, float> || std::is_same_v<real_type_t<Tin>, double>,
-            "Base type of Tin and Tout must be float or double.");
+            "Base type of Tin (and Tout) must be float or double.");
     static_assert(
             std::is_same_v<real_type_t<Tin>, real_type_t<Tout>>,
             "Types Tin and Tout must be based on same type (float or double)");
@@ -195,13 +195,13 @@ void impl(
             "MemorySpace has to be accessible for ExecutionSpace.");
 
     Kokkos::View<
-            typename ddc::detail::mdspan_to_kokkos_element_t<Tin, sizeof...(DDimIn)>,
-            mdspan_to_kokkos_layout_t<layout_in>,
+            ddc::detail::mdspan_to_kokkos_element_t<Tin, sizeof...(DDimIn)>,
+            ddc::detail::mdspan_to_kokkos_layout_t<layout_in>,
             ExecSpace>
             in_view(in.allocation_kokkos_view());
     Kokkos::View<
-            typename ddc::detail::mdspan_to_kokkos_element_t<Tout, sizeof...(DDimIn)>,
-            mdspan_to_kokkos_layout_t<layout_out>,
+            ddc::detail::mdspan_to_kokkos_element_t<Tout, sizeof...(DDimIn)>,
+            ddc::detail::mdspan_to_kokkos_layout_t<layout_out>,
             ExecSpace>
             out_view(out.allocation_kokkos_view());
     KokkosFFT::Normalization kokkos_fft_normalization(

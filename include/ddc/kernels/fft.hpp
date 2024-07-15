@@ -146,6 +146,31 @@ KokkosFFT::axis_type<sizeof...(DDimX)> axes()
     return out;
 }
 
+KokkosFFT::Normalization ddc_fft_normalization_to_kokkos_fft(
+        FFT_Normalization const ddc_fft_normalization)
+{
+    KokkosFFT::Normalization kokkos_fft_normalization;
+    switch (ddc_fft_normalization) {
+    case ddc::FFT_Normalization::OFF:
+        kokkos_fft_normalization = KokkosFFT::Normalization::none;
+        break;
+    case ddc::FFT_Normalization::FORWARD:
+        kokkos_fft_normalization = KokkosFFT::Normalization::forward;
+        break;
+    case ddc::FFT_Normalization::BACKWARD:
+        kokkos_fft_normalization = KokkosFFT::Normalization::backward;
+        break;
+    case ddc::FFT_Normalization::ORTHO:
+        kokkos_fft_normalization = KokkosFFT::Normalization::ortho;
+        break;
+    // Last case is FULL which is mesh-dependant and thus handled by DDC.
+    default:
+        kokkos_fft_normalization = KokkosFFT::Normalization::none;
+    }
+
+    return kokkos_fft_normalization;
+};
+
 // core
 template <
         typename Tin,
@@ -187,51 +212,32 @@ void core(
                      in_data,
                      out_data,
                      axes<DDimX...>(),
-                     KokkosFFT::Normalization::none);
+                     ddc_fft_normalization_to_kokkos_fft(kwargs.normalization));
     } else {
         KokkosFFT::
                 ifftn(execSpace,
                       in_data,
                       out_data,
                       axes<DDimX...>(),
-                      KokkosFFT::Normalization::none);
+                      ddc_fft_normalization_to_kokkos_fft(kwargs.normalization));
     }
     execSpace.fence();
 
-    if (kwargs.normalization != ddc::FFT_Normalization::OFF) {
-        real_type_t<Tout> norm_coef = 1;
-        switch (kwargs.normalization) {
-        case ddc::FFT_Normalization::OFF:
-            break;
-        case ddc::FFT_Normalization::FORWARD:
-            norm_coef = kwargs.direction == ddc::FFT_Direction::FORWARD
-                                ? 1. / (ddc::get<DDimX>(mesh.extents()) * ...)
-                                : 1.;
-            break;
-        case ddc::FFT_Normalization::BACKWARD:
-            norm_coef = kwargs.direction == ddc::FFT_Direction::BACKWARD
-                                ? 1. / (ddc::get<DDimX>(mesh.extents()) * ...)
-                                : 1.;
-            break;
-        case ddc::FFT_Normalization::ORTHO:
-            norm_coef = 1. / Kokkos::sqrt((ddc::get<DDimX>(mesh.extents()) * ...));
-            break;
-        case ddc::FFT_Normalization::FULL:
-            norm_coef = kwargs.direction == ddc::FFT_Direction::FORWARD
-                                ? (((coordinate(ddc::select<DDimX>(mesh).back())
-                                     - coordinate(ddc::select<DDimX>(mesh).front()))
-                                    / (ddc::get<DDimX>(mesh.extents()) - 1)
-                                    / Kokkos::sqrt(2 * Kokkos::numbers::pi))
-                                   * ...)
-                                : ((Kokkos::sqrt(2 * Kokkos::numbers::pi)
-                                    / (coordinate(ddc::select<DDimX>(mesh).back())
-                                       - coordinate(ddc::select<DDimX>(mesh).front()))
-                                    * (ddc::get<DDimX>(mesh.extents()) - 1)
-                                    / ddc::get<DDimX>(mesh.extents()))
-                                   * ...);
-            break;
-        }
-
+    // The FULL normalization is mesh-dependant and thus handled by DDC
+    if (kwargs.normalization == ddc::FFT_Normalization::FULL) {
+        const real_type_t<Tout> norm_coef
+                = kwargs.direction == ddc::FFT_Direction::FORWARD
+                          ? (((coordinate(ddc::select<DDimX>(mesh).back())
+                               - coordinate(ddc::select<DDimX>(mesh).front()))
+                              / (ddc::get<DDimX>(mesh.extents()) - 1)
+                              / Kokkos::sqrt(2 * Kokkos::numbers::pi))
+                             * ...)
+                          : ((Kokkos::sqrt(2 * Kokkos::numbers::pi)
+                              / (coordinate(ddc::select<DDimX>(mesh).back())
+                                 - coordinate(ddc::select<DDimX>(mesh).front()))
+                              * (ddc::get<DDimX>(mesh.extents()) - 1)
+                              / ddc::get<DDimX>(mesh.extents()))
+                             * ...);
         Kokkos::parallel_for(
                 "ddc_fft_normalization",
                 Kokkos::RangePolicy<ExecSpace>(

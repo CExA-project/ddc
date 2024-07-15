@@ -96,15 +96,6 @@ endif()
 # Custom cmake modules
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
 
-## CUDA + CUDAToolkit
-if("${DDC_BUILD_KERNELS_FFT}" AND "${Kokkos_ENABLE_CUDA}")
-	find_package( CUDAToolkit MODULE REQUIRED )
-	if( NOT(CUDAToolkit_FOUND) )
-	  message(FATAL_ERROR "CUDAToolkit not found." )
-	endif()
-endif()
-
-
 ## PDI
 
 if("${DDC_BUILD_PDI_WRAPPER}")

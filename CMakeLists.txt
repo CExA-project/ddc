@@ -203,17 +203,6 @@ install(
 
 # Link library to DDC
 
-if( CUDAToolkit_FOUND AND "${Kokkos_ENABLE_CUDA}")
-	target_link_libraries( DDC INTERFACE CUDA::cufft )
-	target_compile_definitions(DDC INTERFACE cufft_AVAIL)
-endif()
-
-if("${Kokkos_ENABLE_HIP}")
-	find_package( hipfft REQUIRED ) # Not compatible with nvidia
-	target_link_libraries( DDC INTERFACE hip::hipfft )
-	target_compile_definitions(DDC INTERFACE hipfft_AVAIL)
-endif()
-
 if("${DDC_BUILD_KERNELS_FFT}")
   # Kokkos-fft
   set(DDC_KokkosFFT_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `Kokkos-fft` package. Options: ${DDC_DEPENDENCY_POLICIES}")

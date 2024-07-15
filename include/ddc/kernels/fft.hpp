@@ -170,77 +170,76 @@ KokkosFFT::Normalization ddc_fft_normalization_to_kokkos_fft(
 
 // impl
 template <
-        typename TX,
-        typename TFx,
+        typename Tin,
+        typename Tout,
         typename ExecSpace,
         typename MemorySpace,
-        typename layout_x,
-        typename layout_Fx,
-        typename... DDimX,
-        typename... DDimFx>
+        typename layout_in,
+        typename layout_out,
+        typename DomainOut,
+        typename... DDimIn>
 void impl(
         ExecSpace execSpace,
-        ddc::ChunkSpan<TX, ddc::DiscreteDomain<DDimX...>, layout_x, MemorySpace> x_span,
-        ddc::ChunkSpan<TFx, ddc::DiscreteDomain<DDimFx...>, layout_Fx, MemorySpace> fx_span,
+        ddc::ChunkSpan<Tin, ddc::DiscreteDomain<DDimIn...>, layout_in, MemorySpace> in,
+        ddc::ChunkSpan<Tout, DomainOut, layout_out, MemorySpace> out,
         const kwArgs_impl& kwargs)
 {
     static_assert(
-            std::is_same_v<real_type_t<TX>, float> || std::is_same_v<real_type_t<TX>, double>,
+            std::is_same_v<real_type_t<Tin>, float> || std::is_same_v<real_type_t<Tin>, double>,
             "Base type of Tin and Tout must be float or double.");
     static_assert(
-            std::is_same_v<real_type_t<TX>, real_type_t<TFx>>,
+            std::is_same_v<real_type_t<Tin>, real_type_t<Tout>>,
             "Types Tin and Tout must be based on same type (float or double)");
     static_assert(
             Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,
             "MemorySpace has to be accessible for ExecutionSpace.");
-    static_assert(
-            (is_uniform_point_sampling_v<DDimX> && ...),
-            "DDimX dimensions should derive from UniformPointSampling");
 
     Kokkos::View<
-            typename ddc::detail::mdspan_to_kokkos_element_t<TX, sizeof...(DDimX)>,
-            mdspan_to_kokkos_layout_t<layout_x>,
+            typename ddc::detail::mdspan_to_kokkos_element_t<Tin, sizeof...(DDimIn)>,
+            mdspan_to_kokkos_layout_t<layout_in>,
             ExecSpace>
-            x_view(x_span.allocation_kokkos_view());
+            in_view(in.allocation_kokkos_view());
     Kokkos::View<
-            typename ddc::detail::mdspan_to_kokkos_element_t<TFx, sizeof...(DDimFx)>,
-            mdspan_to_kokkos_layout_t<layout_Fx>,
+            typename ddc::detail::mdspan_to_kokkos_element_t<Tout, sizeof...(DDimIn)>,
+            mdspan_to_kokkos_layout_t<layout_out>,
             ExecSpace>
-            fx_view(fx_span.allocation_kokkos_view());
+            out_view(out.allocation_kokkos_view());
     KokkosFFT::Normalization kokkos_fft_normalization(ddc_fft_normalization_to_kokkos_fft(kwargs.normalization));
 
     // C2C
-    if constexpr (std::is_same_v<TX, TFx>) {
+    if constexpr (std::is_same_v<Tin, Tout>) {
         if (kwargs.direction == ddc::FFT_Direction::FORWARD) {
             KokkosFFT::
                     fftn(execSpace,
-                         x_view,
-                         fx_view,
-                         axes<DDimX...>(),
+                         in_view,
+                         out_view,
+                         axes<DDimIn...>(),
                          kokkos_fft_normalization);
         } else {
             KokkosFFT::
                     ifftn(execSpace,
-                          fx_view,
-                          x_view,
-                          axes<DDimX...>(),
+                          in_view,
+                          out_view,
+                          axes<DDimIn...>(),
                           kokkos_fft_normalization);
         }
-        // R2C & C2R
+    // R2C & C2R
     } else {
-        if (kwargs.direction == ddc::FFT_Direction::FORWARD) {
+        if constexpr(is_complex_v<Tout>) {
+            assert(kwargs.direction == ddc::FFT_Direction::FORWARD);
             KokkosFFT::
                     rfftn(execSpace,
-                          x_view,
-                          fx_view,
-                          axes<DDimX...>(),
+                          in_view,
+                          out_view,
+                          axes<DDimIn...>(),
                           kokkos_fft_normalization);
         } else {
+            assert(kwargs.direction == ddc::FFT_Direction::BACKWARD);
             KokkosFFT::
                     irfftn(execSpace,
-                           fx_view,
-                           x_view,
-                           axes<DDimX...>(),
+                           in_view,
+                           out_view,
+                           axes<DDimIn...>(),
                            kokkos_fft_normalization);
         }
     }
@@ -248,25 +247,24 @@ void impl(
 
     // The FULL normalization is mesh-dependant and thus handled by DDC
     if (kwargs.normalization == ddc::FFT_Normalization::FULL) {
-        ddc::ChunkSpan in_span = kwargs.direction==ddc::FFT_Direction::FORWARD ? x_span : fx_span;
-        ddc::ChunkSpan out_span = kwargs.direction==ddc::FFT_Direction::FORWARD ? fx_span : x_span;
-        const real_type_t<TFx> norm_coef
+        const real_type_t<Tout> norm_coef
                 = kwargs.direction == ddc::FFT_Direction::FORWARD
-                          ? (((coordinate(ddc::select<DDimX>(in_span.domain()).back())
-                               - coordinate(ddc::select<DDimX>(in_span.domain()).front()))
-                              / (ddc::get<DDimX>(in_span.domain().extents()) - 1)
+                          ? (((coordinate(ddc::select<DDimIn>(in.domain()).back())
+                               - coordinate(ddc::select<DDimIn>(in.domain()).front()))
+                              / (ddc::get<DDimIn>(in.domain().extents()) - 1)
                               / Kokkos::sqrt(2 * Kokkos::numbers::pi))
                              * ...)
                           : ((Kokkos::sqrt(2 * Kokkos::numbers::pi)
-                              / (coordinate(ddc::select<DDimX>(in_span.domain()).back())
-                                 - coordinate(ddc::select<DDimX>(in_span.domain()).front()))
-                              * (ddc::get<DDimX>(in_span.domain().extents()) - 1)
-                              / ddc::get<DDimX>(in_span.domain()))
+                              / (coordinate(ddc::select<DDimIn>(in.domain()).back())
+                                 - coordinate(ddc::select<DDimIn>(in.domain()).front()))
+                              * (ddc::get<DDimIn>(in.domain().extents()) - 1)
+                              / ddc::get<DDimIn>(in.domain().extents()))
                              * ...);
         ddc::parallel_for_each(
+                "ddc_fft_normalization",
                 execSpace,
-                out_span.domain(),
-                KOKKOS_LAMBDA(const auto i) { out_span(i) = out_span(i) * norm_coef; });
+                out.domain(),
+                KOKKOS_LAMBDA(typename DomainOut::discrete_element_type const i) { out(i) = out(i) * norm_coef; });
     }
 }
 } // namespace ddc::detail::fft
@@ -380,6 +378,6 @@ void ifft(
             "DDimFx dimensions should derive from PeriodicPointSampling");
 
     ddc::detail::fft::
-            impl(execSpace, out, in, {ddc::FFT_Direction::BACKWARD, kwargs.normalization});
+            impl(execSpace, in, out, {ddc::FFT_Direction::BACKWARD, kwargs.normalization});
 }
 } // namespace ddc

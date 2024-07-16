@@ -1,4 +1,4 @@
 var classddc_1_1GrevilleInterpolationPoints =
 [
-    [ "interpolation_mesh_type", "classddc_1_1GrevilleInterpolationPoints.html#ad2d07953d8bccc9cff26d0d0ada68301", null ]
+    [ "interpolation_discrete_dimension_type", "classddc_1_1GrevilleInterpolationPoints.html#a3aabc690bfdb30f7edb997cc16dd27ff", null ]
 ];

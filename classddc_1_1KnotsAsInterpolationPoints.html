@@ -60,9 +60,9 @@ $(document).ready(function(){initNavTree('classddc_1_1KnotsAsInterpolationPoints
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ab6c2e86ede89bae694bfce33739d19dd" id="r_ab6c2e86ede89bae694bfce33739d19dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#ab6c2e86ede89bae694bfce33739d19dd">interpolation_mesh_type</a> = std::conditional_t&lt; <a class="el" href="namespaceddc.html#a20d13e258d90b019d44b38be91885f35">is_uniform_bsplines_v</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; continuous_dimension_type &gt;, <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt; continuous_dimension_type &gt; &gt;</td></tr>
-<tr class="memdesc:ab6c2e86ede89bae694bfce33739d19dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DDC type of the sampling for the interpolation points.  <br /></td></tr>
-<tr class="separator:ab6c2e86ede89bae694bfce33739d19dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a284ded7e85d17eebffd68e7f72d64e4d" id="r_a284ded7e85d17eebffd68e7f72d64e4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html#a284ded7e85d17eebffd68e7f72d64e4d">interpolation_discrete_dimension_type</a> = std::conditional_t&lt; <a class="el" href="namespaceddc.html#a20d13e258d90b019d44b38be91885f35">is_uniform_bsplines_v</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> &gt;, <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt; continuous_dimension_type &gt;, <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt; continuous_dimension_type &gt; &gt;</td></tr>
+<tr class="memdesc:a284ded7e85d17eebffd68e7f72d64e4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DDC type of the sampling for the interpolation points.  <br /></td></tr>
+<tr class="separator:a284ded7e85d17eebffd68e7f72d64e4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -88,8 +88,8 @@ class ddc::KnotsAsInterpolationPoints&lt; BSplines, BcLower, BcUpper &gt;</div><
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="ab6c2e86ede89bae694bfce33739d19dd" name="ab6c2e86ede89bae694bfce33739d19dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab6c2e86ede89bae694bfce33739d19dd">&#9670;&#160;</a></span>interpolation_mesh_type</h2>
+<a id="a284ded7e85d17eebffd68e7f72d64e4d" name="a284ded7e85d17eebffd68e7f72d64e4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a284ded7e85d17eebffd68e7f72d64e4d">&#9670;&#160;</a></span>interpolation_discrete_dimension_type</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -97,7 +97,7 @@ class ddc::KnotsAsInterpolationPoints&lt; BSplines, BcLower, BcUpper &gt;</div><
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcLower, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcUpper&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html">ddc::KnotsAsInterpolationPoints</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a> &gt;::interpolation_mesh_type =  std::conditional_t&lt; <a class="el" href="namespaceddc.html#a20d13e258d90b019d44b38be91885f35">is_uniform_bsplines_v</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>&gt;, <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;continuous_dimension_type&gt;, <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt;continuous_dimension_type&gt; &gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html">ddc::KnotsAsInterpolationPoints</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a> &gt;::interpolation_discrete_dimension_type =  std::conditional_t&lt; <a class="el" href="namespaceddc.html#a20d13e258d90b019d44b38be91885f35">is_uniform_bsplines_v</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>&gt;, <a class="el" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;continuous_dimension_type&gt;, <a class="el" href="classddc_1_1NonUniformPointSampling.html">ddc::NonUniformPointSampling</a>&lt;continuous_dimension_type&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

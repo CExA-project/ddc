@@ -67,6 +67,9 @@ Public Types</h2></td></tr>
 <tr class="memitem:a084c3d1cca8da7d83671ce53f29ad7ed" id="r_a084c3d1cca8da7d83671ce53f29ad7ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator.html#a084c3d1cca8da7d83671ce53f29ad7ed">memory_space</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a></td></tr>
 <tr class="memdesc:a084c3d1cca8da7d83671ce53f29ad7ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the Kokkos memory space used by this class.  <br /></td></tr>
 <tr class="separator:a084c3d1cca8da7d83671ce53f29ad7ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b11083a484e53a44f8e25bebcd510a4" id="r_a7b11083a484e53a44f8e25bebcd510a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator.html#a7b11083a484e53a44f8e25bebcd510a4">continuous_dimension_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> BSplines::continuous_dimension_type</td></tr>
+<tr class="memdesc:a7b11083a484e53a44f8e25bebcd510a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the evaluation continuous dimension (continuous dimension of interest) used by this class.  <br /></td></tr>
+<tr class="separator:a7b11083a484e53a44f8e25bebcd510a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd44fad6f330b80acbaa0d811efea081" id="r_acd44fad6f330b80acbaa0d811efea081"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator.html#acd44fad6f330b80acbaa0d811efea081">evaluation_discrete_dimension_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">EvaluationDDim</a></td></tr>
 <tr class="memdesc:acd44fad6f330b80acbaa0d811efea081"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the evaluation discrete dimension (discrete dimension of interest) used by this class.  <br /></td></tr>
 <tr class="separator:acd44fad6f330b80acbaa0d811efea081"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,6 +195,24 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The type of the Kokkos memory space used by this class. </p>
+
+</div>
+</div>
+<a id="a7b11083a484e53a44f8e25bebcd510a4" name="a7b11083a484e53a44f8e25bebcd510a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b11083a484e53a44f8e25bebcd510a4">&#9670;&#160;</a></span>continuous_dimension_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">EvaluationDDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LowerExtrapolationRule</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UpperExtrapolationRule</a> , class... IDimX&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1SplineEvaluator.html">ddc::SplineEvaluator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">EvaluationDDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LowerExtrapolationRule</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UpperExtrapolationRule</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">IDimX</a> &gt;::continuous_dimension_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> BSplines::continuous_dimension_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The type of the evaluation continuous dimension (continuous dimension of interest) used by this class. </p>
 
 </div>
 </div>

@@ -63,7 +63,7 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classddc_1_1KnotsAsInterpolationPoints.html",
-"classddc_1_1UniformBSplines_1_1Impl.html#a1027ba57ec532f30acea8614c4b016bd"
+"classddc_1_1SplineEvaluator2D.html#affaa48699a4aec8ad995cf73cc41cc37"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

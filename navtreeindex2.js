@@ -1,5 +1,11 @@
 var NAVTREEINDEX2 =
 {
+"classddc_1_1SplineEvaluator2D.html#affaa48699a4aec8ad995cf73cc41cc37":[3,0,50,20],
+"classddc_1_1UniformBSplines.html":[3,0,51],
+"classddc_1_1UniformBSplines.html#a002aee489309d7c95422c66304ae8bcb":[3,0,51,2],
+"classddc_1_1UniformBSplines.html#a150fd07672395d35efaeae1d40acd1df":[3,0,51,1],
+"classddc_1_1UniformBSplines_1_1Impl.html":[3,0,51,0],
+"classddc_1_1UniformBSplines_1_1Impl.html#a0fab685cf839a412f6425ef48b10de53":[3,0,51,0,18],
 "classddc_1_1UniformBSplines_1_1Impl.html#a1027ba57ec532f30acea8614c4b016bd":[3,0,51,0,6],
 "classddc_1_1UniformBSplines_1_1Impl.html#a24b9621c7a03174130420452ea0934c7":[3,0,51,0,20],
 "classddc_1_1UniformBSplines_1_1Impl.html#a2b3b80a14c5d0bed1f4ea38e71188a71":[3,0,51,0,13],

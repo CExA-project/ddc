@@ -1,5 +1,7 @@
 var classddc_1_1SplineEvaluator2D =
 [
+    [ "continuous_dimension_type1", "classddc_1_1SplineEvaluator2D.html#aa55c51cd13ac919507cb6a2f540e348a", null ],
+    [ "continuous_dimension_type2", "classddc_1_1SplineEvaluator2D.html#a2a6f822ff56ab3715c0620b456e6b2be", null ],
     [ "exec_space", "classddc_1_1SplineEvaluator2D.html#aad8bc29e660d3e82991431179f1236f1", null ],
     [ "memory_space", "classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd", null ],
     [ "evaluation_discrete_dimension_type1", "classddc_1_1SplineEvaluator2D.html#a8b16838f697cd333951ffe1829320b10", null ],

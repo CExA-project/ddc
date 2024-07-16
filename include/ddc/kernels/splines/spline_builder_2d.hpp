@@ -25,10 +25,10 @@ template <
         class BSpline2,
         class IDimI1,
         class IDimI2,
-        ddc::BoundCond BcXmin1,
-        ddc::BoundCond BcXmax1,
-        ddc::BoundCond BcXmin2,
-        ddc::BoundCond BcXmax2,
+        ddc::BoundCond BcLower1,
+        ddc::BoundCond BcUpper1,
+        ddc::BoundCond BcLower2,
+        ddc::BoundCond BcUpper2,
         ddc::SplineSolver Solver,
         class... IDimX>
 class SplineBuilder2D
@@ -46,8 +46,8 @@ public:
             MemorySpace,
             BSpline1,
             IDimI1,
-            BcXmin1,
-            BcXmax1,
+            BcLower1,
+            BcUpper1,
             Solver,
             IDimX...>;
 
@@ -57,8 +57,8 @@ public:
             MemorySpace,
             BSpline2,
             IDimI2,
-            BcXmin2,
-            BcXmax2,
+            BcLower2,
+            BcUpper2,
             Solver,
             std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
 
@@ -68,8 +68,8 @@ public:
             MemorySpace,
             BSpline1,
             IDimI1,
-            BcXmin1,
-            BcXmax1,
+            BcLower1,
+            BcUpper1,
             Solver,
             std::conditional_t<
                     std::is_same_v<IDimX, IDimI2>,
@@ -77,11 +77,13 @@ public:
                     IDimX>...>;
 
 private:
-    /// @brief Tag the dimension of the first 1D SplineBuilder.
-    using tag_type1 = typename builder_type1::bsplines_type::tag_type;
+    /// @brief The tag of the dimension of the first 1D SplineBuilder.
+    using continuous_dimension_type1 =
+            typename builder_type1::bsplines_type::continuous_dimension_type;
 
-    /// @brief Tag the dimension of the second 1D SplineBuilder.
-    using tag_type2 = typename builder_type2::bsplines_type::tag_type;
+    /// @brief The tag of the dimension of the second 1D SplineBuilder.
+    using continuous_dimension_type2 =
+            typename builder_type2::bsplines_type::continuous_dimension_type;
 
 public:
     /// @brief The type of the B-splines in the first dimension.
@@ -191,7 +193,7 @@ public:
      * by the linear solver one-after-the-other).
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
-     * @param preconditionner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * @param preconditioner_max_block_size A parameter used by the slicer (internal to the solver) to
      * define the size of a block used by the Block-Jacobi preconditioner.
      * This value is optional. If no value is provided then the default value is chosen by the requested solver.
      *
@@ -200,11 +202,11 @@ public:
     explicit SplineBuilder2D(
             batched_interpolation_domain_type const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_spline_builder1(
                 batched_interpolation_domain,
                 cols_per_chunk,
-                preconditionner_max_block_size)
+                preconditioner_max_block_size)
         , m_spline_builder_deriv1(ddc::replace_dim_of<interpolation_mesh_type2, deriv_type2>(
                   m_spline_builder1.batched_interpolation_domain(),
                   ddc::DiscreteDomain<deriv_type2>(
@@ -213,7 +215,7 @@ public:
         , m_spline_builder2(
                   m_spline_builder1.batched_spline_domain(),
                   cols_per_chunk,
-                  preconditionner_max_block_size)
+                  preconditioner_max_block_size)
     {
     }
 
@@ -392,10 +394,10 @@ template <
         class BSpline2,
         class IDimI1,
         class IDimI2,
-        ddc::BoundCond BcXmin1,
-        ddc::BoundCond BcXmax1,
-        ddc::BoundCond BcXmin2,
-        ddc::BoundCond BcXmax2,
+        ddc::BoundCond BcLower1,
+        ddc::BoundCond BcUpper1,
+        ddc::BoundCond BcLower2,
+        ddc::BoundCond BcUpper2,
         ddc::SplineSolver Solver,
         class... IDimX>
 template <class Layout>
@@ -406,10 +408,10 @@ void SplineBuilder2D<
         BSpline2,
         IDimI1,
         IDimI2,
-        BcXmin1,
-        BcXmax1,
-        BcXmin2,
-        BcXmax2,
+        BcLower1,
+        BcUpper1,
+        BcLower2,
+        BcUpper2,
         Solver,
         IDimX...>::
 operator()(
@@ -463,7 +465,7 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline1_deriv_min = spline1_deriv_min_alloc.span_view();
     auto spline1_deriv_min_opt = std::optional(spline1_deriv_min.span_cview());
-    if constexpr (BcXmin2 == ddc::BoundCond::HERMITE) {
+    if constexpr (BcLower2 == ddc::BoundCond::HERMITE) {
         m_spline_builder_deriv1(
                 spline1_deriv_min,
                 *derivs_min2,
@@ -487,7 +489,7 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline1_deriv_max = spline1_deriv_max_alloc.span_view();
     auto spline1_deriv_max_opt = std::optional(spline1_deriv_max.span_cview());
-    if constexpr (BcXmax2 == ddc::BoundCond::HERMITE) {
+    if constexpr (BcUpper2 == ddc::BoundCond::HERMITE) {
         m_spline_builder_deriv1(
                 spline1_deriv_max,
                 *derivs_max2,

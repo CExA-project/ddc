@@ -26,16 +26,16 @@ namespace ddc {
  * with this choice of interpolation points.
  *
  * @tparam BSplines The type of the uniform or non-uniform spline basis whose knots are used as interpolation points.
- * @tparam BcXmin The lower boundary condition.
- * @tparam BcXmin The upper boundary condition.
+ * @tparam BcLower The lower boundary condition.
+ * @tparam BcLower The upper boundary condition.
  */
-template <class BSplines, ddc::BoundCond BcXmin, ddc::BoundCond BcXmax>
+template <class BSplines, ddc::BoundCond BcLower, ddc::BoundCond BcUpper>
 class KnotsAsInterpolationPoints
 {
-    static_assert(BcXmin != ddc::BoundCond::GREVILLE);
-    static_assert(BcXmax != ddc::BoundCond::GREVILLE);
+    static_assert(BcLower != ddc::BoundCond::GREVILLE);
+    static_assert(BcUpper != ddc::BoundCond::GREVILLE);
 
-    using tag_type = typename BSplines::tag_type;
+    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
 
 public:
     /**
@@ -69,8 +69,8 @@ public:
     /// The DDC type of the sampling for the interpolation points.
     using interpolation_mesh_type = std::conditional_t<
             is_uniform_bsplines_v<BSplines>,
-            ddc::UniformPointSampling<tag_type>,
-            ddc::NonUniformPointSampling<tag_type>>;
+            ddc::UniformPointSampling<continuous_dimension_type>,
+            ddc::NonUniformPointSampling<continuous_dimension_type>>;
 
     /**
      * Get the domain which can be used to access the interpolation points in the sampling.

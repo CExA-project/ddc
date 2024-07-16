@@ -121,7 +121,7 @@ public:
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem (unused for a symmetric problem).
      */
-    void solve(MultiRHS b, bool const) const override
+    void solve(MultiRHS const b, bool const) const override
     {
         assert(b.extent(0) == size());
         auto q_device = m_q.d_view;

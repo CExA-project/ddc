@@ -33,17 +33,17 @@ target_link_libraries(bsplines_tests
 		DDC::DDC
 )
 
-add_executable(matrix_tests
+add_executable(splines_linear_problem_tests
     ../main.cpp
-	matrix.cpp
+	splines_linear_problem.cpp
 )
-target_compile_features(matrix_tests PUBLIC cxx_std_17)
-target_link_libraries(matrix_tests
+target_compile_features(splines_linear_problem_tests PUBLIC cxx_std_17)
+target_link_libraries(splines_linear_problem_tests
     PUBLIC
         GTest::gtest
         DDC::DDC
 )
-gtest_discover_tests(matrix_tests DISCOVERY_MODE PRE_TEST)
+gtest_discover_tests(splines_linear_problem_tests DISCOVERY_MODE PRE_TEST)
 
 foreach(DEGREE_X RANGE "${SPLINES_TEST_DEGREE_MIN}" "${SPLINES_TEST_DEGREE_MAX}")
   foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")

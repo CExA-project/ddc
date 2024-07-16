@@ -122,5 +122,5 @@ TEST(KnotDiscreteDimension, Type)
     };
     EXPECT_TRUE((std::is_same_v<
                  ddc::knot_discrete_dimension_t<DDim2>,
-                 ddc::UniformBsplinesKnots<DDim2>>));
+                 ddc::NonUniformBsplinesKnots<DDim2>>));
 }

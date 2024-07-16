@@ -53,14 +53,15 @@ private:
     {
     };
 
-    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
-
 public:
     /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
 
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
+
+    /// @brief The type of the evaluation continuous dimension (continuous dimension of interest) used by this class.
+    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
 
     /// @brief The type of the evaluation discrete dimension (discrete dimension of interest) used by this class.
     using evaluation_discrete_dimension_type = EvaluationDDim;
@@ -405,10 +406,8 @@ private:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        ddc::Coordinate<typename evaluation_discrete_dimension_type::continuous_dimension_type>
-                coord_eval_interest = ddc::select<
-                        typename evaluation_discrete_dimension_type::continuous_dimension_type>(
-                        coord_eval);
+        ddc::Coordinate<continuous_dimension_type> coord_eval_interest
+                = ddc::select<continuous_dimension_type>(coord_eval);
         if constexpr (bsplines_type::is_periodic()) {
             if (coord_eval_interest < ddc::discrete_space<bsplines_type>().rmin()
                 || coord_eval_interest > ddc::discrete_space<bsplines_type>().rmax()) {
@@ -443,10 +442,8 @@ private:
                 double,
                 std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
                 vals(vals_ptr.data());
-        ddc::Coordinate<typename evaluation_discrete_dimension_type::continuous_dimension_type>
-                coord_eval_interest = ddc::select<
-                        typename evaluation_discrete_dimension_type::continuous_dimension_type>(
-                        coord_eval);
+        ddc::Coordinate<continuous_dimension_type> coord_eval_interest
+                = ddc::select<continuous_dimension_type>(coord_eval);
         if constexpr (std::is_same_v<EvalType, eval_type>) {
             jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
         } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {

@@ -55,11 +55,11 @@ public:
         } else {
             using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
             std::vector<double> knots(ddc::discrete_space<BSplines>().npoints());
-            ddc::DiscreteDomain<typename BSplines::knot_mesh_type> break_point_domain(
+            ddc::DiscreteDomain<typename BSplines::knot_discrete_dimension_type> break_point_domain(
                     ddc::discrete_space<BSplines>().break_point_domain());
             ddc::for_each(
                     break_point_domain,
-                    [&](ddc::DiscreteElement<typename BSplines::knot_mesh_type> ik) {
+                    [&](ddc::DiscreteElement<typename BSplines::knot_discrete_dimension_type> ik) {
                         knots[ik - break_point_domain.front()] = ddc::coordinate(ik);
                     });
             return SamplingImpl(knots);
@@ -67,7 +67,7 @@ public:
     }
 
     /// The DDC type of the sampling for the interpolation points.
-    using interpolation_mesh_type = std::conditional_t<
+    using interpolation_discrete_dimension_type = std::conditional_t<
             is_uniform_bsplines_v<BSplines>,
             ddc::UniformPointSampling<continuous_dimension_type>,
             ddc::NonUniformPointSampling<continuous_dimension_type>>;

@@ -24,21 +24,21 @@ namespace ddc {
  * @tparam MemorySpace The Kokkos memory space on which the data (spline coefficients and evaluation) is stored.
  * @tparam BSplines1 The discrete dimension representing the B-splines along the first dimension of interest.
  * @tparam BSplines2 The discrete dimension representing the B-splines along the second dimension of interest.
- * @tparam EvaluationMesh1 The first discrete dimension on which evaluation points are defined.
- * @tparam EvaluationMesh2 The second discrete dimension on which evaluation points are defined.
+ * @tparam EvaluationDDim1 The first discrete dimension on which evaluation points are defined.
+ * @tparam EvaluationDDim2 The second discrete dimension on which evaluation points are defined.
  * @tparam LowerExtrapolationRule1 The lower extrapolation rule type along first dimension of interest.
  * @tparam UpperExtrapolationRule1 The upper extrapolation rule type along first dimension of interest.
  * @tparam LowerExtrapolationRule2 The lower extrapolation rule type along second dimension of interest.
  * @tparam UpperExtrapolationRule2 The upper extrapolation rule type along second dimension of interest.
- * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (EvaluationMesh1 + EvaluationMesh2 + batched dimensions).
+ * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (EvaluationDDim1 + EvaluationDDim2 + batched dimensions).
  */
 template <
         class ExecSpace,
         class MemorySpace,
         class BSplines1,
         class BSplines2,
-        class EvaluationMesh1,
-        class EvaluationMesh2,
+        class EvaluationDDim1,
+        class EvaluationDDim2,
         class LowerExtrapolationRule1,
         class UpperExtrapolationRule1,
         class LowerExtrapolationRule2,
@@ -72,10 +72,10 @@ public:
     using memory_space = MemorySpace;
 
     /// @brief The type of the first discrete dimension of interest used by this class.
-    using evaluation_mesh_type1 = EvaluationMesh1;
+    using evaluation_discrete_dimension_type1 = EvaluationDDim1;
 
     /// @brief The type of the second discrete dimension of interest used by this class.
-    using evaluation_mesh_type2 = EvaluationMesh2;
+    using evaluation_discrete_dimension_type2 = EvaluationDDim2;
 
     /// @brief The discrete dimension representing the B-splines along first dimension.
     using bsplines_type1 = BSplines1;
@@ -84,14 +84,15 @@ public:
     using bsplines_type2 = BSplines2;
 
     /// @brief The type of the domain for the 1D evaluation mesh along first dimension used by this class.
-    using evaluation_domain_type1 = ddc::DiscreteDomain<evaluation_mesh_type1>;
+    using evaluation_domain_type1 = ddc::DiscreteDomain<evaluation_discrete_dimension_type1>;
 
     /// @brief The type of the domain for the 1D evaluation mesh along second dimension used by this class.
-    using evaluation_domain_type2 = ddc::DiscreteDomain<evaluation_mesh_type2>;
+    using evaluation_domain_type2 = ddc::DiscreteDomain<evaluation_discrete_dimension_type2>;
 
     /// @brief The type of the domain for the 2D evaluation mesh used by this class.
-    using evaluation_domain_type
-            = ddc::DiscreteDomain<evaluation_mesh_type1, evaluation_mesh_type2>;
+    using evaluation_domain_type = ddc::DiscreteDomain<
+            evaluation_discrete_dimension_type1,
+            evaluation_discrete_dimension_type2>;
 
     /// @brief The type of the whole domain representing evaluation points.
     using batched_evaluation_domain_type = ddc::DiscreteDomain<IDimX...>;
@@ -112,7 +113,9 @@ public:
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<evaluation_mesh_type1, evaluation_mesh_type2>>>;
+                    ddc::detail::TypeSeq<
+                            evaluation_discrete_dimension_type1,
+                            evaluation_discrete_dimension_type2>>>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 2D spline domain
@@ -121,7 +124,9 @@ public:
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<evaluation_mesh_type1, evaluation_mesh_type2>,
+                    ddc::detail::TypeSeq<
+                            evaluation_discrete_dimension_type1,
+                            evaluation_discrete_dimension_type2>,
                     ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
     /// @brief The type of the extrapolation rule at the lower boundary along the first dimension.
@@ -477,15 +482,17 @@ public:
         static_assert(
                 std::is_same_v<
                         InterestDim,
-                        typename evaluation_mesh_type1::
-                                continuous_dimension_type> || std::is_same_v<InterestDim, typename evaluation_mesh_type2::continuous_dimension_type>);
+                        typename evaluation_discrete_dimension_type1::
+                                continuous_dimension_type> || std::is_same_v<InterestDim, typename evaluation_discrete_dimension_type2::continuous_dimension_type>);
         if constexpr (std::is_same_v<
                               InterestDim,
-                              typename evaluation_mesh_type1::continuous_dimension_type>) {
+                              typename evaluation_discrete_dimension_type1::
+                                      continuous_dimension_type>) {
             return deriv_dim_1(coord_eval, spline_coef);
         } else if constexpr (std::is_same_v<
                                      InterestDim,
-                                     typename evaluation_mesh_type2::continuous_dimension_type>) {
+                                     typename evaluation_discrete_dimension_type2::
+                                             continuous_dimension_type>) {
             return deriv_dim_2(coord_eval, spline_coef);
         }
     }
@@ -515,12 +522,12 @@ public:
         static_assert(
                 (std::is_same_v<
                          InterestDim1,
-                         typename evaluation_mesh_type1::
-                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename evaluation_mesh_type2::continuous_dimension_type>)
+                         typename evaluation_discrete_dimension_type1::
+                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename evaluation_discrete_dimension_type2::continuous_dimension_type>)
                 || (std::is_same_v<
                             InterestDim2,
-                            typename evaluation_mesh_type1::
-                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename evaluation_mesh_type2::continuous_dimension_type>));
+                            typename evaluation_discrete_dimension_type1::
+                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename evaluation_discrete_dimension_type2::continuous_dimension_type>));
         return deriv_1_and_2(coord_eval, spline_coef);
     }
 
@@ -713,15 +720,17 @@ public:
         static_assert(
                 std::is_same_v<
                         InterestDim,
-                        typename evaluation_mesh_type1::
-                                continuous_dimension_type> || std::is_same_v<InterestDim, typename evaluation_mesh_type2::continuous_dimension_type>);
+                        typename evaluation_discrete_dimension_type1::
+                                continuous_dimension_type> || std::is_same_v<InterestDim, typename evaluation_discrete_dimension_type2::continuous_dimension_type>);
         if constexpr (std::is_same_v<
                               InterestDim,
-                              typename evaluation_mesh_type1::continuous_dimension_type>) {
+                              typename evaluation_discrete_dimension_type1::
+                                      continuous_dimension_type>) {
             return deriv_dim_1(spline_eval, coords_eval, spline_coef);
         } else if constexpr (std::is_same_v<
                                      InterestDim,
-                                     typename evaluation_mesh_type2::continuous_dimension_type>) {
+                                     typename evaluation_discrete_dimension_type2::
+                                             continuous_dimension_type>) {
             return deriv_dim_2(spline_eval, coords_eval, spline_coef);
         }
     }
@@ -770,12 +779,12 @@ public:
         static_assert(
                 (std::is_same_v<
                          InterestDim1,
-                         typename evaluation_mesh_type1::
-                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename evaluation_mesh_type2::continuous_dimension_type>)
+                         typename evaluation_discrete_dimension_type1::
+                                 continuous_dimension_type> && std::is_same_v<InterestDim2, typename evaluation_discrete_dimension_type2::continuous_dimension_type>)
                 || (std::is_same_v<
                             InterestDim2,
-                            typename evaluation_mesh_type1::
-                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename evaluation_mesh_type2::continuous_dimension_type>));
+                            typename evaluation_discrete_dimension_type1::
+                                    continuous_dimension_type> && std::is_same_v<InterestDim1, typename evaluation_discrete_dimension_type2::continuous_dimension_type>));
         return deriv_1_and_2(spline_eval, coords_eval, spline_coef);
     }
 
@@ -857,8 +866,8 @@ private:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        using Dim1 = typename evaluation_mesh_type1::continuous_dimension_type;
-        using Dim2 = typename evaluation_mesh_type2::continuous_dimension_type;
+        using Dim1 = typename evaluation_discrete_dimension_type1::continuous_dimension_type;
+        using Dim2 = typename evaluation_discrete_dimension_type2::continuous_dimension_type;
         if constexpr (bsplines_type1::is_periodic()) {
             if (ddc::get<Dim1>(coord_eval) < ddc::discrete_space<bsplines_type1>().rmin()
                 || ddc::get<Dim1>(coord_eval) > ddc::discrete_space<bsplines_type1>().rmax()) {
@@ -899,8 +908,8 @@ private:
         }
         return eval_no_bc<eval_type, eval_type>(
                 ddc::Coordinate<
-                        typename evaluation_mesh_type1::continuous_dimension_type,
-                        typename evaluation_mesh_type2::continuous_dimension_type>(
+                        typename evaluation_discrete_dimension_type1::continuous_dimension_type,
+                        typename evaluation_discrete_dimension_type2::continuous_dimension_type>(
                         ddc::get<Dim1>(coord_eval),
                         ddc::get<Dim2>(coord_eval)),
                 spline_coef);
@@ -943,13 +952,13 @@ private:
                 double,
                 std::experimental::extents<std::size_t, bsplines_type2::degree() + 1>> const
                 vals2(vals2_ptr.data());
-        ddc::Coordinate<typename evaluation_mesh_type1::continuous_dimension_type>
-                coord_eval_interest1
-                = ddc::select<typename evaluation_mesh_type1::continuous_dimension_type>(
+        ddc::Coordinate<typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                coord_eval_interest1 = ddc::select<
+                        typename evaluation_discrete_dimension_type1::continuous_dimension_type>(
                         coord_eval);
-        ddc::Coordinate<typename evaluation_mesh_type2::continuous_dimension_type>
-                coord_eval_interest2
-                = ddc::select<typename evaluation_mesh_type2::continuous_dimension_type>(
+        ddc::Coordinate<typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                coord_eval_interest2 = ddc::select<
+                        typename evaluation_discrete_dimension_type2::continuous_dimension_type>(
                         coord_eval);
 
         if constexpr (std::is_same_v<EvalType1, eval_type>) {

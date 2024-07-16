@@ -47,7 +47,7 @@ struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
 };
 using GrevillePoints = ddc::
         GrevilleInterpolationPoints<BSplinesX, BoundCond, BoundCond>;
-struct DDimX : GrevillePoints::interpolation_mesh_type
+struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
 //! [X-discretization]

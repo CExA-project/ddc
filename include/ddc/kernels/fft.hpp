@@ -92,7 +92,7 @@ enum class FFT_Normalization {
     BACKWARD, ///< No normalization for forward FFT, multiply by 1/N for backward FFT
     ORTHO, ///< Multiply by 1/sqrt(N)
     FULL /**< 
-          * Multiply by (b-a)/N/sqrt(2*pi) for forward FFT and  (kb-ka)/N/sqrt(2*pi) for backward
+          * Multiply by (b-a)/N/sqrt(2*pi) for forward FFT and (kb-ka)/N/sqrt(2*pi) for backward
           * FFT. It is aligned with the usual definition of the (continuous) Fourier transform
           * 1/sqrt(2*pi)*int f(x)*e^-ikx*dx, and thus preserves the gaussian function exp(-x^2/2) numerically.
           */

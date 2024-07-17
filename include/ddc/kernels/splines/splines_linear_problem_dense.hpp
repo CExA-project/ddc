@@ -8,11 +8,16 @@
 #include <memory>
 #include <string>
 
+#include <Kokkos_DualView.hpp>
+
 #if __has_include(<mkl_lapacke.h>)
 #include <mkl_lapacke.h>
 #else
 #include <lapacke.h>
 #endif
+
+#include <KokkosBatched_Getrs.hpp>
+#include <KokkosBatched_Util.hpp>
 
 #include "splines_linear_problem.hpp"
 
@@ -33,8 +38,8 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::HostSpace> m_a;
-    Kokkos::View<int*, Kokkos::HostSpace> m_ipiv;
+    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_a;
+    Kokkos::DualView<int*, typename ExecSpace::memory_space> m_ipiv;
 
 public:
     /**
@@ -47,21 +52,21 @@ public:
         , m_a("a", mat_size, mat_size)
         , m_ipiv("ipiv", mat_size)
     {
-        Kokkos::deep_copy(m_a, 0.);
+        Kokkos::deep_copy(m_a.h_view, 0.);
     }
 
     double get_element(std::size_t const i, std::size_t const j) const override
     {
         assert(i < size());
         assert(j < size());
-        return m_a(i, j);
+        return m_a.h_view(i, j);
     }
 
     void set_element(std::size_t const i, std::size_t const j, double const aij) override
     {
         assert(i < size());
         assert(j < size());
-        m_a(i, j) = aij;
+        m_a.h_view(i, j) = aij;
     }
 
     /**
@@ -75,13 +80,24 @@ public:
                 LAPACK_ROW_MAJOR,
                 size(),
                 size(),
-                m_a.data(),
+                m_a.h_view.data(),
                 size(),
-                m_ipiv.data());
+                m_ipiv.h_view.data());
         if (info != 0) {
             throw std::runtime_error(
                     "LAPACKE_dgetrf failed with error code " + std::to_string(info));
         }
+
+        // Convert 1-based index to 0-based index
+        for (int i = 0; i < size(); ++i) {
+            m_ipiv.h_view(i) -= 1;
+        }
+
+        // Push on device
+        m_a.modify_host();
+        m_a.sync_device();
+        m_ipiv.modify_host();
+        m_ipiv.sync_device();
     }
 
     /**
@@ -96,23 +112,38 @@ public:
     {
         assert(b.extent(0) == size());
 
-        auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b);
-        Kokkos::deep_copy(b_host, b);
-        int const info = LAPACKE_dgetrs(
-                LAPACK_ROW_MAJOR,
-                transpose ? 'T' : 'N',
-                b_host.extent(0),
-                b_host.extent(1),
-                m_a.data(),
-                b_host.extent(0),
-                m_ipiv.data(),
-                b_host.data(),
-                b_host.stride(0));
-        if (info != 0) {
-            throw std::runtime_error(
-                    "LAPACKE_dgetrs failed with error code " + std::to_string(info));
+        // For order 1 splines, size() can be 0 then we bypass the solver call.
+        if (size() == 0)
+            return;
+
+        auto a_device = m_a.d_view;
+        auto ipiv_device = m_ipiv.d_view;
+
+        Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
+
+        if (transpose) {
+            Kokkos::parallel_for(
+                    "gerts",
+                    policy,
+                    KOKKOS_LAMBDA(const int i) {
+                        auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
+                        KokkosBatched::SerialGetrs<
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Algo::Getrs::Unblocked>::
+                                invoke(a_device, ipiv_device, sub_b);
+                    });
+        } else {
+            Kokkos::parallel_for(
+                    "gerts",
+                    policy,
+                    KOKKOS_LAMBDA(const int i) {
+                        auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
+                        KokkosBatched::SerialGetrs<
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Algo::Getrs::Unblocked>::
+                                invoke(a_device, ipiv_device, sub_b);
+                    });
         }
-        Kokkos::deep_copy(b, b_host);
     }
 };
 

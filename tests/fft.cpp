@@ -215,7 +215,7 @@ TEST(FourierMesh, Even)
                     ddc::DiscreteDomain<DDim<RDimX>>(x_mesh)));
 
     double const epsilon = 1e-14;
-    for (int i=-static_cast<int>(Nx)/2; i<=static_cast<int>(Nx-2)/2; i++) {
+    for (int i = -static_cast<int>(Nx) / 2; i <= static_cast<int>(Nx - 2) / 2; i++) {
         EXPECT_NEAR(
                 ddc::coordinate(ddc::DiscreteElement<DFDim<ddc::Fourier<RDimX>>>(i)),
                 2 * i * Kokkos::numbers::pi / (b - a),
@@ -239,7 +239,7 @@ TEST(FourierMesh, Odd)
                     ddc::DiscreteDomain<DDim<RDimX>>(x_mesh)));
 
     double const epsilon = 1e-14;
-    for (int i=-static_cast<int>(Nx-1)/2; i<=static_cast<int>(Nx-1)/2; i++) {
+    for (int i = -static_cast<int>(Nx - 1) / 2; i <= static_cast<int>(Nx - 1) / 2; i++) {
         EXPECT_NEAR(
                 ddc::coordinate(ddc::DiscreteElement<DFDim<ddc::Fourier<RDimX>>>(i)),
                 2 * i * Kokkos::numbers::pi / (b - a),

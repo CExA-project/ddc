@@ -38,7 +38,7 @@ struct BSplines : ddc::UniformBSplines<X, s_degree_x>
 
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <typename X>
-struct IDim : GrevillePoints<BSplines<X>>::interpolation_mesh_type
+struct IDim : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
 {
 };
 
@@ -49,7 +49,7 @@ struct BSplines : ddc::NonUniformBSplines<X, s_degree_x>
 };
 
 template <typename X>
-struct IDim : GrevillePoints<BSplines<X>>::interpolation_mesh_type
+struct IDim : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
 {
 };
 

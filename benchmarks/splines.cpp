@@ -30,7 +30,7 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
             BSplinesX,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC>;
-    struct DDimX : GrevillePoints::interpolation_mesh_type
+    struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
     {
     };
 
@@ -148,7 +148,8 @@ static void characteristics_advection(benchmark::State& state)
         ddc::parallel_for_each(
                 feet_coords.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const e) {
-                    feet_coords(e) = ddc::coordinate(ddc::select<DDimX>(e)) - ddc::Coordinate<X>(0.0176429863);
+                    feet_coords(e) = ddc::coordinate(ddc::select<DDimX>(e))
+                                     - ddc::Coordinate<X>(0.0176429863);
                 });
         Kokkos::Profiling::popRegion();
         Kokkos::Profiling::pushRegion("SplineBuilder");

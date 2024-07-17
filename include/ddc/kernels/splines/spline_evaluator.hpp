@@ -23,16 +23,16 @@ namespace ddc {
  * @tparam ExecSpace The Kokkos execution space on which the spline evaluation is performed.
  * @tparam MemorySpace The Kokkos memory space on which the data (spline coefficients and evaluation) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
- * @tparam EvaluationMesh The discrete dimension on which evaluation points are defined.
+ * @tparam EvaluationDDim The discrete dimension on which evaluation points are defined.
  * @tparam LowerExtrapolationRule The lower extrapolation rule type.
  * @tparam UpperExtrapolationRule The upper extrapolation rule type.
- * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (EvaluationMesh + batched dimensions).
+ * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (EvaluationDDim + batched dimensions).
  */
 template <
         class ExecSpace,
         class MemorySpace,
         class BSplines,
-        class EvaluationMesh,
+        class EvaluationDDim,
         class LowerExtrapolationRule,
         class UpperExtrapolationRule,
         class... IDimX>
@@ -53,8 +53,6 @@ private:
     {
     };
 
-    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
-
 public:
     /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
@@ -62,14 +60,17 @@ public:
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
+    /// @brief The type of the evaluation continuous dimension (continuous dimension of interest) used by this class.
+    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
+
     /// @brief The type of the evaluation discrete dimension (discrete dimension of interest) used by this class.
-    using evaluation_mesh_type = EvaluationMesh;
+    using evaluation_discrete_dimension_type = EvaluationDDim;
 
     /// @brief The discrete dimension representing the B-splines.
     using bsplines_type = BSplines;
 
     /// @brief The type of the domain for the 1D evaluation mesh used by this class.
-    using evaluation_domain_type = ddc::DiscreteDomain<evaluation_mesh_type>;
+    using evaluation_domain_type = ddc::DiscreteDomain<evaluation_discrete_dimension_type>;
 
     /// @brief The type of the whole domain representing evaluation points.
     using batched_evaluation_domain_type = ddc::DiscreteDomain<IDimX...>;
@@ -84,7 +85,7 @@ public:
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<evaluation_mesh_type>>>;
+                    ddc::detail::TypeSeq<evaluation_discrete_dimension_type>>>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain
@@ -93,7 +94,7 @@ public:
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<evaluation_mesh_type>,
+                    ddc::detail::TypeSeq<evaluation_discrete_dimension_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
     /// @brief The type of the extrapolation rule at the lower boundary.
@@ -405,9 +406,8 @@ private:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
-                coord_eval_interest
-                = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
+        ddc::Coordinate<continuous_dimension_type> coord_eval_interest
+                = ddc::select<continuous_dimension_type>(coord_eval);
         if constexpr (bsplines_type::is_periodic()) {
             if (coord_eval_interest < ddc::discrete_space<bsplines_type>().rmin()
                 || coord_eval_interest > ddc::discrete_space<bsplines_type>().rmax()) {
@@ -442,9 +442,8 @@ private:
                 double,
                 std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
                 vals(vals_ptr.data());
-        ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
-                coord_eval_interest
-                = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
+        ddc::Coordinate<continuous_dimension_type> coord_eval_interest
+                = ddc::select<continuous_dimension_type>(coord_eval);
         if constexpr (std::is_same_v<EvalType, eval_type>) {
             jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
         } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {

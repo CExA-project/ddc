@@ -63,8 +63,8 @@ public:
             , m_cols_idx(std::move(cols_idx_))
             , m_values(std::move(values_))
         {
-            assert(rows_idx.extent(0) == cols_idx.extent(0));
-            assert(rows_idx.extent(0) == values.extent(0));
+            assert(m_rows_idx.extent(0) == m_cols_idx.extent(0));
+            assert(m_rows_idx.extent(0) == m_values.extent(0));
         }
 
         KOKKOS_FUNCTION std::size_t nnz() const

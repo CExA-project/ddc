@@ -78,7 +78,7 @@ template <typename X, typename I1, typename I2>
 struct IDim
     : std::conditional_t<
               std::is_same_v<X, I1> || std::is_same_v<X, I2>,
-              typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
+              typename GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type,
               ddc::UniformPointSampling<X>>
 {
 };
@@ -93,7 +93,7 @@ template <typename X, typename I1, typename I2>
 struct IDim
     : std::conditional_t<
               std::is_same_v<X, I1> || std::is_same_v<X, I2>,
-              typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
+              typename GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type,
               ddc::NonUniformPointSampling<X>>
 {
 };

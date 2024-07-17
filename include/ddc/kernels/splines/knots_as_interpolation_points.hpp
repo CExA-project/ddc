@@ -26,14 +26,14 @@ namespace ddc {
  * with this choice of interpolation points.
  *
  * @tparam BSplines The type of the uniform or non-uniform spline basis whose knots are used as interpolation points.
- * @tparam BcXmin The lower boundary condition.
- * @tparam BcXmin The upper boundary condition.
+ * @tparam BcLower The lower boundary condition.
+ * @tparam BcLower The upper boundary condition.
  */
-template <class BSplines, ddc::BoundCond BcXmin, ddc::BoundCond BcXmax>
+template <class BSplines, ddc::BoundCond BcLower, ddc::BoundCond BcUpper>
 class KnotsAsInterpolationPoints
 {
-    static_assert(BcXmin != ddc::BoundCond::GREVILLE);
-    static_assert(BcXmax != ddc::BoundCond::GREVILLE);
+    static_assert(BcLower != ddc::BoundCond::GREVILLE);
+    static_assert(BcUpper != ddc::BoundCond::GREVILLE);
 
     using continuous_dimension_type = typename BSplines::continuous_dimension_type;
 
@@ -55,11 +55,11 @@ public:
         } else {
             using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
             std::vector<double> knots(ddc::discrete_space<BSplines>().npoints());
-            ddc::DiscreteDomain<typename BSplines::knot_mesh_type> break_point_domain(
+            ddc::DiscreteDomain<typename BSplines::knot_discrete_dimension_type> break_point_domain(
                     ddc::discrete_space<BSplines>().break_point_domain());
             ddc::for_each(
                     break_point_domain,
-                    [&](ddc::DiscreteElement<typename BSplines::knot_mesh_type> ik) {
+                    [&](ddc::DiscreteElement<typename BSplines::knot_discrete_dimension_type> ik) {
                         knots[ik - break_point_domain.front()] = ddc::coordinate(ik);
                     });
             return SamplingImpl(knots);
@@ -67,7 +67,7 @@ public:
     }
 
     /// The DDC type of the sampling for the interpolation points.
-    using interpolation_mesh_type = std::conditional_t<
+    using interpolation_discrete_dimension_type = std::conditional_t<
             is_uniform_bsplines_v<BSplines>,
             ddc::UniformPointSampling<continuous_dimension_type>,
             ddc::NonUniformPointSampling<continuous_dimension_type>>;

@@ -32,36 +32,33 @@ enum class SplineSolver {
  * A class which contains an operator () which can be used to build a spline approximation
  * of a function. A spline approximation is represented by coefficients stored in a Chunk
  * of B-splines. The spline is constructed such that it respects the boundary conditions
- * BcXmin and BcXmax, and it interpolates the function at the points on the interpolation_mesh
- * associated with interpolation_mesh_type.
+ * BcLower and BcUpper, and it interpolates the function at the points on the interpolation_discrete_dimension
+ * associated with interpolation_discrete_dimension_type.
  * @tparam ExecSpace The Kokkos execution space on which the spline approximation is performed.
  * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
- * @tparam InterpolationMesh The discrete dimension on which interpolation points are defined.
- * @tparam BcXmin The lower boundary condition.
- * @tparam BcXmax The upper boundary condition.
+ * @tparam InterpolationDDim The discrete dimension on which interpolation points are defined.
+ * @tparam BcLower The lower boundary condition.
+ * @tparam BcUpper The upper boundary condition.
  * @tparam Solver The SplineSolver giving the backend used to perform the spline approximation.
- * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (InterpolationMesh + batched dimensions).
+ * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (InterpolationDDim + batched dimensions).
  */
 template <
         class ExecSpace,
         class MemorySpace,
         class BSplines,
-        class InterpolationMesh,
-        ddc::BoundCond BcXmin,
-        ddc::BoundCond BcXmax,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
 class SplineBuilder
 {
     static_assert(
-            (BSplines::is_periodic() && (BcXmin == ddc::BoundCond::PERIODIC)
-             && (BcXmax == ddc::BoundCond::PERIODIC))
-            || (!BSplines::is_periodic() && (BcXmin != ddc::BoundCond::PERIODIC)
-                && (BcXmax != ddc::BoundCond::PERIODIC)));
-
-private:
-    using continuous_dimension_type = typename InterpolationMesh::continuous_dimension_type;
+            (BSplines::is_periodic() && (BcLower == ddc::BoundCond::PERIODIC)
+             && (BcUpper == ddc::BoundCond::PERIODIC))
+            || (!BSplines::is_periodic() && (BcLower != ddc::BoundCond::PERIODIC)
+                && (BcUpper != ddc::BoundCond::PERIODIC)));
 
 public:
     /// @brief The type of the Kokkos execution space used by this class.
@@ -70,8 +67,11 @@ public:
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
+    /// @brief The type of the interpolation continuous dimension (continuous dimension of interest) used by this class.
+    using continuous_dimension_type = typename InterpolationDDim::continuous_dimension_type;
+
     /// @brief The type of the interpolation discrete dimension (discrete dimension of interest) used by this class.
-    using interpolation_mesh_type = InterpolationMesh;
+    using interpolation_discrete_dimension_type = InterpolationDDim;
 
     /// @brief The discrete dimension representing the B-splines.
     using bsplines_type = BSplines;
@@ -80,7 +80,7 @@ public:
     using deriv_type = ddc::Deriv<continuous_dimension_type>;
 
     /// @brief The type of the domain for the 1D interpolation mesh used by this class.
-    using interpolation_domain_type = ddc::DiscreteDomain<interpolation_mesh_type>;
+    using interpolation_domain_type = ddc::DiscreteDomain<interpolation_discrete_dimension_type>;
 
     /// @brief The type of the whole domain representing interpolation points.
     using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
@@ -95,7 +95,7 @@ public:
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type>>>;
+                    ddc::detail::TypeSeq<interpolation_discrete_dimension_type>>>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain
@@ -107,7 +107,7 @@ public:
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type>,
+                    ddc::detail::TypeSeq<interpolation_discrete_dimension_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
 private:
@@ -123,7 +123,7 @@ private:
                     ddc::detail::TypeSeq<bsplines_type>,
                     ddc::type_seq_remove_t<
                             ddc::detail::TypeSeq<IDimX...>,
-                            ddc::detail::TypeSeq<interpolation_mesh_type>>>>;
+                            ddc::detail::TypeSeq<interpolation_discrete_dimension_type>>>>;
 
 public:
     /**
@@ -136,23 +136,23 @@ public:
     using batched_derivs_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_mesh_type>,
+                    ddc::detail::TypeSeq<interpolation_discrete_dimension_type>,
                     ddc::detail::TypeSeq<deriv_type>>>;
 
     /// @brief Indicates if the degree of the splines is odd or even.
     static constexpr bool s_odd = BSplines::degree() % 2;
 
     /// @brief The number of equations defining the boundary condition at the lower bound.
-    static constexpr int s_nbc_xmin = n_boundary_equations(BcXmin, BSplines::degree());
+    static constexpr int s_nbc_xmin = n_boundary_equations(BcLower, BSplines::degree());
 
     /// @brief The number of equations defining the boundary condition at the upper bound.
-    static constexpr int s_nbc_xmax = n_boundary_equations(BcXmax, BSplines::degree());
+    static constexpr int s_nbc_xmax = n_boundary_equations(BcUpper, BSplines::degree());
 
     /// @brief The boundary condition implemented at the lower bound.
-    static constexpr ddc::BoundCond s_bc_xmin = BcXmin;
+    static constexpr ddc::BoundCond s_bc_xmin = BcLower;
 
     /// @brief The boundary condition implemented at the upper bound.
-    static constexpr ddc::BoundCond s_bc_xmax = BcXmax;
+    static constexpr ddc::BoundCond s_bc_xmax = BcUpper;
 
 private:
     batched_interpolation_domain_type m_batched_interpolation_domain;
@@ -194,7 +194,7 @@ public:
                / ddc::discrete_space<BSplines>().ncells())
     {
         static_assert(
-                ((BcXmin == BoundCond::PERIODIC) == (BcXmax == BoundCond::PERIODIC)),
+                ((BcLower == BoundCond::PERIODIC) == (BcUpper == BoundCond::PERIODIC)),
                 "Incompatible boundary conditions");
 
         // Calculate block sizes
@@ -292,7 +292,7 @@ public:
     batched_spline_domain_type batched_spline_domain() const noexcept
     {
         return ddc::replace_dim_of<
-                interpolation_mesh_type,
+                interpolation_discrete_dimension_type,
                 bsplines_type>(batched_interpolation_domain(), spline_domain());
     }
 
@@ -300,17 +300,18 @@ private:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest being the leading dimension.
      *
-     * This is used internally due to solver limitation and because it may be beneficial to computation performance.
+     * This is used internally due to solver limitation and because it may be beneficial to computation performance. For LAPACK backend and non-periodic boundary condition, we are using SplinesLinearSolver3x3Blocks which requires upper_block_size additional rows for internal operations.
      *
      * @return The (transposed) domain for the spline coefficients.
      */
     batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
     {
-        return batched_spline_tr_domain_type(
-                batched_spline_domain().restrict(ddc::DiscreteDomain<bsplines_type>(
+        return batched_spline_tr_domain_type(ddc::replace_dim_of<bsplines_type, bsplines_type>(
+                batched_spline_domain(),
+                ddc::DiscreteDomain<bsplines_type>(
                         ddc::DiscreteElement<bsplines_type>(0),
                         ddc::DiscreteVector<bsplines_type>(
-                                ddc::discrete_space<bsplines_type>().nbasis()))));
+                                matrix->required_number_of_rhs_rows()))));
     }
 
 public:
@@ -323,7 +324,7 @@ public:
      */
     batched_derivs_domain_type batched_derivs_xmin_domain() const noexcept
     {
-        return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
+        return ddc::replace_dim_of<interpolation_discrete_dimension_type, deriv_type>(
                 batched_interpolation_domain(),
                 ddc::DiscreteDomain<deriv_type>(
                         ddc::DiscreteElement<deriv_type>(1),
@@ -339,7 +340,7 @@ public:
      */
     batched_derivs_domain_type batched_derivs_xmax_domain() const noexcept
     {
-        return ddc::replace_dim_of<interpolation_mesh_type, deriv_type>(
+        return ddc::replace_dim_of<interpolation_discrete_dimension_type, deriv_type>(
                 batched_interpolation_domain(),
                 ddc::DiscreteDomain<deriv_type>(
                         ddc::DiscreteElement<deriv_type>(1),
@@ -414,18 +415,18 @@ template <
         class ExecSpace,
         class MemorySpace,
         class BSplines,
-        class InterpolationMesh,
-        ddc::BoundCond BcXmin,
-        ddc::BoundCond BcXmax,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
 int SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
-        InterpolationMesh,
-        BcXmin,
-        BcXmax,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
         Solver,
         IDimX...>::compute_offset(interpolation_domain_type const& interpolation_domain)
 {
@@ -437,7 +438,8 @@ int SplineBuilder<
                 double,
                 std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
                 values(values_ptr.data());
-        ddc::DiscreteElement<interpolation_mesh_type> start(interpolation_domain.front());
+        ddc::DiscreteElement<interpolation_discrete_dimension_type> start(
+                interpolation_domain.front());
         auto jmin = ddc::discrete_space<BSplines>()
                             .eval_basis(values, ddc::coordinate(start + BSplines::degree()));
         if constexpr (bsplines_type::degree() % 2 == 0) {
@@ -457,22 +459,22 @@ template <
         class ExecSpace,
         class MemorySpace,
         class BSplines,
-        class InterpolationMesh,
-        ddc::BoundCond BcXmin,
-        ddc::BoundCond BcXmax,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
 void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
-        InterpolationMesh,
-        BcXmin,
-        BcXmax,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
         Solver,
         IDimX...>::compute_block_sizes_uniform(int& lower_block_size, int& upper_block_size) const
 {
-    switch (BcXmin) {
+    switch (BcLower) {
     case ddc::BoundCond::PERIODIC:
         upper_block_size = (bsplines_type::degree()) / 2;
         break;
@@ -485,7 +487,7 @@ void SplineBuilder<
     default:
         throw std::runtime_error("ddc::BoundCond not handled");
     }
-    switch (BcXmax) {
+    switch (BcUpper) {
     case ddc::BoundCond::PERIODIC:
         lower_block_size = (bsplines_type::degree()) / 2;
         break;
@@ -504,23 +506,23 @@ template <
         class ExecSpace,
         class MemorySpace,
         class BSplines,
-        class InterpolationMesh,
-        ddc::BoundCond BcXmin,
-        ddc::BoundCond BcXmax,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
 void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
-        InterpolationMesh,
-        BcXmin,
-        BcXmax,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
         Solver,
         IDimX...>::compute_block_sizes_non_uniform(int& lower_block_size, int& upper_block_size)
         const
 {
-    switch (BcXmin) {
+    switch (BcLower) {
     case ddc::BoundCond::PERIODIC:
         upper_block_size = bsplines_type::degree() - 1;
         break;
@@ -533,7 +535,7 @@ void SplineBuilder<
     default:
         throw std::runtime_error("ddc::BoundCond not handled");
     }
-    switch (BcXmax) {
+    switch (BcUpper) {
     case ddc::BoundCond::PERIODIC:
         lower_block_size = bsplines_type::degree() - 1;
         break;
@@ -552,18 +554,18 @@ template <
         class ExecSpace,
         class MemorySpace,
         class BSplines,
-        class InterpolationMesh,
-        ddc::BoundCond BcXmin,
-        ddc::BoundCond BcXmax,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
 void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
-        InterpolationMesh,
-        BcXmin,
-        BcXmax,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
         Solver,
         IDimX...>::
         allocate_matrix(
@@ -620,23 +622,23 @@ template <
         class ExecSpace,
         class MemorySpace,
         class BSplines,
-        class InterpolationMesh,
-        ddc::BoundCond BcXmin,
-        ddc::BoundCond BcXmax,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
 void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
-        InterpolationMesh,
-        BcXmin,
-        BcXmax,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
         Solver,
         IDimX...>::build_matrix_system()
 {
     // Hermite boundary conditions at xmin, if any
-    if constexpr (BcXmin == ddc::BoundCond::HERMITE) {
+    if constexpr (BcLower == ddc::BoundCond::HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         ddc::DSpan2D
@@ -675,7 +677,7 @@ void SplineBuilder<
     ddc::for_each(interpolation_domain(), [&](auto ix) {
         auto jmin = ddc::discrete_space<BSplines>().eval_basis(
                 values,
-                ddc::coordinate(ddc::DiscreteElement<interpolation_mesh_type>(ix)));
+                ddc::coordinate(ddc::DiscreteElement<interpolation_discrete_dimension_type>(ix)));
         for (std::size_t s = 0; s < bsplines_type::degree() + 1; ++s) {
             int const j = ddc::detail::
                     modulo(int(jmin.uid() - m_offset + s),
@@ -685,7 +687,7 @@ void SplineBuilder<
     });
 
     // Hermite boundary conditions at xmax, if any
-    if constexpr (BcXmax == ddc::BoundCond::HERMITE) {
+    if constexpr (BcUpper == ddc::BoundCond::HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         std::experimental::mdspan<
@@ -722,9 +724,9 @@ template <
         class ExecSpace,
         class MemorySpace,
         class BSplines,
-        class InterpolationMesh,
-        ddc::BoundCond BcXmin,
-        ddc::BoundCond BcXmax,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
 template <class Layout>
@@ -732,9 +734,9 @@ void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
-        InterpolationMesh,
-        BcXmin,
-        BcXmax,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
         Solver,
         IDimX...>::
 operator()(
@@ -751,24 +753,24 @@ operator()(
                 Layout,
                 memory_space>> const derivs_xmax) const
 {
-    assert(vals.template extent<interpolation_mesh_type>()
+    assert(vals.template extent<interpolation_discrete_dimension_type>()
            == ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin - s_nbc_xmax);
 
-    assert((BcXmin == ddc::BoundCond::HERMITE)
+    assert((BcLower == ddc::BoundCond::HERMITE)
            != (!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0));
-    assert((BcXmax == ddc::BoundCond::HERMITE)
+    assert((BcUpper == ddc::BoundCond::HERMITE)
            != (!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0));
-    if constexpr (BcXmin == BoundCond::HERMITE) {
+    if constexpr (BcLower == BoundCond::HERMITE) {
         assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == 1);
     }
-    if constexpr (BcXmax == BoundCond::HERMITE) {
+    if constexpr (BcUpper == BoundCond::HERMITE) {
         assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == 1);
     }
 
     // Hermite boundary conditions at xmin, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
-    if constexpr (BcXmin == BoundCond::HERMITE) {
+    if constexpr (BcLower == BoundCond::HERMITE) {
         assert(derivs_xmin->template extent<deriv_type>() == s_nbc_xmin);
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = m_dx;
@@ -799,7 +801,9 @@ operator()(
             spline[ddc::DiscreteDomain<bsplines_type>(
                            ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + m_offset),
                            ddc::DiscreteVector<bsplines_type>(static_cast<std::size_t>(
-                                   vals.domain().template extent<interpolation_mesh_type>())))]
+                                   vals.domain()
+                                           .template extent<
+                                                   interpolation_discrete_dimension_type>())))]
                     .allocation_kokkos_view(),
             vals.allocation_kokkos_view());
 
@@ -809,7 +813,7 @@ operator()(
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
-    if constexpr (BcXmax == BoundCond::HERMITE) {
+    if constexpr (BcUpper == BoundCond::HERMITE) {
         assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
         auto derivs_xmax_values = *derivs_xmax;
         auto const dx_proxy = m_dx;
@@ -846,7 +850,7 @@ operator()(
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
     Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
             spline_tr.data_handle(),
-            ddc::discrete_space<bsplines_type>().nbasis(),
+            static_cast<std::size_t>(spline_tr.template extent<bsplines_type>()),
             batch_domain().size());
     // Compute spline coef
     matrix->solve(bcoef_section);

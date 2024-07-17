@@ -78,6 +78,26 @@ public:
     {
         return m_size;
     }
+
+    /**
+     * @brief Get the required number of rows of the multi-rhs view passed to solve().
+     *
+     * Implementations may require a number of rows larger than what `size` returns for optimization purposes.
+     *
+     * @return The required number of rows of the multi-rhs view. It is guaranteed to be greater or equal to `size`.
+     */
+    std::size_t required_number_of_rhs_rows() const
+    {
+        std::size_t const nrows = impl_required_number_of_rhs_rows();
+        assert(nrows >= size());
+        return nrows;
+    }
+
+private:
+    virtual std::size_t impl_required_number_of_rhs_rows() const
+    {
+        return m_size;
+    }
 };
 
 /**

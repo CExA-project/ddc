@@ -199,6 +199,56 @@ struct RDimX;
 struct RDimY;
 struct RDimZ;
 
+TEST(FourierMesh, Even)
+{
+    double const a = -10;
+    double const b = 10;
+    std::size_t const Nx = 64;
+
+    DDom<DDim<RDimX>> const x_mesh(
+            ddc::init_discrete_space<DDim<RDimX>>(DDim<RDimX>::template init<DDim<RDimX>>(
+                    ddc::Coordinate<RDimX>(a + (b - a) / Nx / 2),
+                    ddc::Coordinate<RDimX>(b - (b - a) / Nx / 2),
+                    DVect<DDim<RDimX>>(Nx))));
+    ddc::init_discrete_space<DFDim<ddc::Fourier<RDimX>>>(
+            ddc::init_fourier_space<DFDim<ddc::Fourier<RDimX>>>(
+                    ddc::DiscreteDomain<DDim<RDimX>>(x_mesh)));
+
+    double const epsilon = 1e-14;
+    // for (int i=-static_cast<int>(Nx)/2; i<=static_cast<int>(Nx-2)/2; i++) {
+    for (int i = -static_cast<int>(Nx - 2) / 2; i <= static_cast<int>(Nx) / 2; i++) {
+        EXPECT_NEAR(
+                ddc::coordinate(ddc::DiscreteElement<DFDim<ddc::Fourier<RDimX>>>(i)),
+                2 * i * Kokkos::numbers::pi / (b - a),
+                epsilon);
+    }
+}
+
+TEST(FourierMesh, Odd)
+{
+    double const a = -10;
+    double const b = 10;
+    std::size_t const Nx = 65;
+
+    DDom<DDim<RDimX>> const x_mesh(
+            ddc::init_discrete_space<DDim<RDimX>>(DDim<RDimX>::template init<DDim<RDimX>>(
+                    ddc::Coordinate<RDimX>(a + (b - a) / Nx / 2),
+                    ddc::Coordinate<RDimX>(b - (b - a) / Nx / 2),
+                    DVect<DDim<RDimX>>(Nx))));
+    ddc::init_discrete_space<DFDim<ddc::Fourier<RDimX>>>(
+            ddc::init_fourier_space<DFDim<ddc::Fourier<RDimX>>>(
+                    ddc::DiscreteDomain<DDim<RDimX>>(x_mesh)));
+
+    double const epsilon = 1e-14;
+    // for (int i=-static_cast<int>(Nx-1)/2; i<=static_cast<int>(Nx-1)/2; i++) {
+    for (int i = -static_cast<int>(Nx - 3) / 2; i <= static_cast<int>(Nx - 1) / 2; i++) {
+        EXPECT_NEAR(
+                ddc::coordinate(ddc::DiscreteElement<DFDim<ddc::Fourier<RDimX>>>(i)),
+                2 * i * Kokkos::numbers::pi / (b - a),
+                epsilon);
+    }
+}
+
 #if fftw_serial_AVAIL
 TEST(FFTNorm, OFF)
 {

@@ -290,15 +290,15 @@ static void Batched2dSplineTest()
     auto const dom_spline = spline_builder.batched_spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals1_cpu_alloc(
+    ddc::Chunk vals1_host_alloc(
             dom_interpolation,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();
+    ddc::ChunkSpan vals1_host = vals1_host_alloc.span_view();
     evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>> evaluator(dom_interpolation);
-    evaluator(vals1_cpu);
+    evaluator(vals1_host);
     ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals1 = vals1_alloc.span_view();
-    ddc::parallel_deepcopy(vals1, vals1_cpu);
+    ddc::parallel_deepcopy(vals1, vals1_host);
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
@@ -312,158 +312,158 @@ static void Batched2dSplineTest()
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
     int constexpr shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
-    ddc::Chunk Sderiv1_lhs_alloc(dom_derivs1, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv1_lhs = Sderiv1_lhs_alloc.span_view();
+    ddc::Chunk derivs1_lhs_alloc(dom_derivs1, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan derivs1_lhs = derivs1_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
-        ddc::Chunk Sderiv1_lhs1_cpu_alloc(
+        ddc::Chunk derivs1_lhs1_host_alloc(
                 ddc::DiscreteDomain<
                         ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv1_lhs1_cpu = Sderiv1_lhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan derivs1_lhs1_host = derivs1_lhs1_host_alloc.span_view();
         ddc::for_each(
-                Sderiv1_lhs1_cpu.domain(),
+                derivs1_lhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, IDim<I2, I1, I2>> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<IDim<I2, I1, I2>>(e));
-                    Sderiv1_lhs1_cpu(e) = evaluator.deriv(x0<I1>(), x2, deriv_idx + shift - 1, 0);
+                    derivs1_lhs1_host(e) = evaluator.deriv(x0<I1>(), x2, deriv_idx + shift - 1, 0);
                 });
-        ddc::Chunk Sderiv1_lhs1_alloc(
+        ddc::Chunk derivs1_lhs1_alloc(
                 ddc::DiscreteDomain<
                         ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv1_lhs1 = Sderiv1_lhs1_alloc.span_view();
-        ddc::parallel_deepcopy(Sderiv1_lhs1, Sderiv1_lhs1_cpu);
+        ddc::ChunkSpan derivs1_lhs1 = derivs1_lhs1_alloc.span_view();
+        ddc::parallel_deepcopy(derivs1_lhs1, derivs1_lhs1_host);
 
         ddc::parallel_for_each(
                 exec_space,
-                Sderiv1_lhs.domain(),
+                derivs1_lhs.domain(),
                 KOKKOS_LAMBDA(
-                        typename decltype(Sderiv1_lhs.domain())::discrete_element_type const e) {
-                    Sderiv1_lhs(e) = Sderiv1_lhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
+                        typename decltype(derivs1_lhs.domain())::discrete_element_type const e) {
+                    derivs1_lhs(e) = derivs1_lhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
                 });
     }
 
-    ddc::Chunk Sderiv1_rhs_alloc(dom_derivs1, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv1_rhs = Sderiv1_rhs_alloc.span_view();
+    ddc::Chunk derivs1_rhs_alloc(dom_derivs1, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan derivs1_rhs = derivs1_rhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
-        ddc::Chunk Sderiv1_rhs1_cpu_alloc(
+        ddc::Chunk derivs1_rhs1_host_alloc(
                 ddc::DiscreteDomain<
                         ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv1_rhs1_cpu = Sderiv1_rhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan derivs1_rhs1_host = derivs1_rhs1_host_alloc.span_view();
         ddc::for_each(
-                Sderiv1_rhs1_cpu.domain(),
+                derivs1_rhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, IDim<I2, I1, I2>> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<IDim<I2, I1, I2>>(e));
-                    Sderiv1_rhs1_cpu(e) = evaluator.deriv(xN<I1>(), x2, deriv_idx + shift - 1, 0);
+                    derivs1_rhs1_host(e) = evaluator.deriv(xN<I1>(), x2, deriv_idx + shift - 1, 0);
                 });
-        ddc::Chunk Sderiv1_rhs1_alloc(
+        ddc::Chunk derivs1_rhs1_alloc(
                 ddc::DiscreteDomain<
                         ddc::Deriv<I1>,
                         IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv1_rhs1 = Sderiv1_rhs1_alloc.span_view();
-        ddc::parallel_deepcopy(Sderiv1_rhs1, Sderiv1_rhs1_cpu);
+        ddc::ChunkSpan derivs1_rhs1 = derivs1_rhs1_alloc.span_view();
+        ddc::parallel_deepcopy(derivs1_rhs1, derivs1_rhs1_host);
 
         ddc::parallel_for_each(
                 exec_space,
-                Sderiv1_rhs.domain(),
+                derivs1_rhs.domain(),
                 KOKKOS_LAMBDA(
-                        typename decltype(Sderiv1_rhs.domain())::discrete_element_type const e) {
-                    Sderiv1_rhs(e) = Sderiv1_rhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
+                        typename decltype(derivs1_rhs.domain())::discrete_element_type const e) {
+                    derivs1_rhs(e) = derivs1_rhs1(ddc::select<ddc::Deriv<I1>, IDim<I2, I1, I2>>(e));
                 });
     }
 
-    ddc::Chunk Sderiv2_lhs_alloc(dom_derivs2, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv2_lhs = Sderiv2_lhs_alloc.span_view();
+    ddc::Chunk derivs2_lhs_alloc(dom_derivs2, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan derivs2_lhs = derivs2_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
-        ddc::Chunk Sderiv2_lhs1_cpu_alloc(
+        ddc::Chunk derivs2_lhs1_host_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
                         ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv2_lhs1_cpu = Sderiv2_lhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan derivs2_lhs1_host = derivs2_lhs1_host_alloc.span_view();
         ddc::for_each(
-                Sderiv2_lhs1_cpu.domain(),
+                derivs2_lhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<IDim<I1, I1, I2>>(e));
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
-                    Sderiv2_lhs1_cpu(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx + shift - 1);
+                    derivs2_lhs1_host(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx + shift - 1);
                 });
 
-        ddc::Chunk Sderiv2_lhs1_alloc(
+        ddc::Chunk derivs2_lhs1_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
                         ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv2_lhs1 = Sderiv2_lhs1_alloc.span_view();
-        ddc::parallel_deepcopy(Sderiv2_lhs1, Sderiv2_lhs1_cpu);
+        ddc::ChunkSpan derivs2_lhs1 = derivs2_lhs1_alloc.span_view();
+        ddc::parallel_deepcopy(derivs2_lhs1, derivs2_lhs1_host);
 
         ddc::parallel_for_each(
                 exec_space,
-                Sderiv2_lhs.domain(),
+                derivs2_lhs.domain(),
                 KOKKOS_LAMBDA(
-                        typename decltype(Sderiv2_lhs.domain())::discrete_element_type const e) {
-                    Sderiv2_lhs(e) = Sderiv2_lhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
+                        typename decltype(derivs2_lhs.domain())::discrete_element_type const e) {
+                    derivs2_lhs(e) = derivs2_lhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
                 });
     }
 
-    ddc::Chunk Sderiv2_rhs_alloc(dom_derivs2, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv2_rhs = Sderiv2_rhs_alloc.span_view();
+    ddc::Chunk derivs2_rhs_alloc(dom_derivs2, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan derivs2_rhs = derivs2_rhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
-        ddc::Chunk Sderiv2_rhs1_cpu_alloc(
+        ddc::Chunk derivs2_rhs1_host_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
                         ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv2_rhs1_cpu = Sderiv2_rhs1_cpu_alloc.span_view();
+        ddc::ChunkSpan derivs2_rhs1_host = derivs2_rhs1_host_alloc.span_view();
         ddc::for_each(
-                Sderiv2_rhs1_cpu.domain(),
+                derivs2_rhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<IDim<I1, I1, I2>, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<IDim<I1, I1, I2>>(e));
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
-                    Sderiv2_rhs1_cpu(e) = evaluator.deriv(x1, xN<I2>(), 0, deriv_idx + shift - 1);
+                    derivs2_rhs1_host(e) = evaluator.deriv(x1, xN<I2>(), 0, deriv_idx + shift - 1);
                 });
 
-        ddc::Chunk Sderiv2_rhs1_alloc(
+        ddc::Chunk derivs2_rhs1_alloc(
                 ddc::DiscreteDomain<
                         IDim<I1, I1, I2>,
                         ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv2_rhs1 = Sderiv2_rhs1_alloc.span_view();
-        ddc::parallel_deepcopy(Sderiv2_rhs1, Sderiv2_rhs1_cpu);
+        ddc::ChunkSpan derivs2_rhs1 = derivs2_rhs1_alloc.span_view();
+        ddc::parallel_deepcopy(derivs2_rhs1, derivs2_rhs1_host);
 
         ddc::parallel_for_each(
                 exec_space,
-                Sderiv2_rhs.domain(),
+                derivs2_rhs.domain(),
                 KOKKOS_LAMBDA(
-                        typename decltype(Sderiv2_rhs.domain())::discrete_element_type const e) {
-                    Sderiv2_rhs(e) = Sderiv2_rhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
+                        typename decltype(derivs2_rhs.domain())::discrete_element_type const e) {
+                    derivs2_rhs(e) = derivs2_rhs1(ddc::select<IDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
                 });
     }
 
-    ddc::Chunk Sderiv_mixed_lhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv_mixed_lhs_lhs = Sderiv_mixed_lhs_lhs_alloc.span_view();
-    ddc::Chunk Sderiv_mixed_rhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv_mixed_rhs_lhs = Sderiv_mixed_rhs_lhs_alloc.span_view();
-    ddc::Chunk Sderiv_mixed_lhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv_mixed_lhs_rhs = Sderiv_mixed_lhs_rhs_alloc.span_view();
-    ddc::Chunk Sderiv_mixed_rhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan Sderiv_mixed_rhs_rhs = Sderiv_mixed_rhs_rhs_alloc.span_view();
+    ddc::Chunk derivs_mixed_lhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan derivs_mixed_lhs_lhs = derivs_mixed_lhs_lhs_alloc.span_view();
+    ddc::Chunk derivs_mixed_rhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan derivs_mixed_rhs_lhs = derivs_mixed_rhs_lhs_alloc.span_view();
+    ddc::Chunk derivs_mixed_lhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan derivs_mixed_lhs_rhs = derivs_mixed_lhs_rhs_alloc.span_view();
+    ddc::Chunk derivs_mixed_rhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan derivs_mixed_rhs_rhs = derivs_mixed_rhs_rhs_alloc.span_view();
 
     if (s_bcl == ddc::BoundCond::HERMITE) {
-        ddc::Chunk Sderiv_mixed_lhs_lhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv_mixed_lhs_lhs1_cpu = Sderiv_mixed_lhs_lhs1_cpu_alloc.span_view();
-        ddc::Chunk Sderiv_mixed_rhs_lhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv_mixed_rhs_lhs1_cpu = Sderiv_mixed_rhs_lhs1_cpu_alloc.span_view();
-        ddc::Chunk Sderiv_mixed_lhs_rhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv_mixed_lhs_rhs1_cpu = Sderiv_mixed_lhs_rhs1_cpu_alloc.span_view();
-        ddc::Chunk Sderiv_mixed_rhs_rhs1_cpu_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan Sderiv_mixed_rhs_rhs1_cpu = Sderiv_mixed_rhs_rhs1_cpu_alloc.span_view();
+        ddc::Chunk derivs_mixed_lhs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
+        ddc::ChunkSpan derivs_mixed_lhs_lhs1_host = derivs_mixed_lhs_lhs1_host_alloc.span_view();
+        ddc::Chunk derivs_mixed_rhs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
+        ddc::ChunkSpan derivs_mixed_rhs_lhs1_host = derivs_mixed_rhs_lhs1_host_alloc.span_view();
+        ddc::Chunk derivs_mixed_lhs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
+        ddc::ChunkSpan derivs_mixed_lhs_rhs1_host = derivs_mixed_lhs_rhs1_host_alloc.span_view();
+        ddc::Chunk derivs_mixed_rhs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
+        ddc::ChunkSpan derivs_mixed_rhs_rhs1_host = derivs_mixed_rhs_rhs1_host_alloc.span_view();
 
         for (std::size_t ii = 1;
              ii < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I1>>()) + 1;
@@ -471,53 +471,53 @@ static void Batched2dSplineTest()
             for (std::size_t jj = 1;
                  jj < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I2>>()) + 1;
                  ++jj) {
-                Sderiv_mixed_lhs_lhs1_cpu(
+                derivs_mixed_lhs_lhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
                         = evaluator.deriv(x0<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
-                Sderiv_mixed_rhs_lhs1_cpu(
+                derivs_mixed_rhs_lhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
                         = evaluator.deriv(xN<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
-                Sderiv_mixed_lhs_rhs1_cpu(
+                derivs_mixed_lhs_rhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
                         = evaluator.deriv(x0<I1>(), xN<I2>(), ii + shift - 1, jj + shift - 1);
-                Sderiv_mixed_rhs_rhs1_cpu(
+                derivs_mixed_rhs_rhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
                         = evaluator.deriv(xN<I1>(), xN<I2>(), ii + shift - 1, jj + shift - 1);
             }
         }
-        ddc::Chunk Sderiv_mixed_lhs_lhs1_alloc(
+        ddc::Chunk derivs_mixed_lhs_lhs1_alloc(
                 derivs_domain,
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv_mixed_lhs_lhs1 = Sderiv_mixed_lhs_lhs1_alloc.span_view();
-        ddc::parallel_deepcopy(Sderiv_mixed_lhs_lhs1, Sderiv_mixed_lhs_lhs1_cpu);
-        ddc::Chunk Sderiv_mixed_rhs_lhs1_alloc(
+        ddc::ChunkSpan derivs_mixed_lhs_lhs1 = derivs_mixed_lhs_lhs1_alloc.span_view();
+        ddc::parallel_deepcopy(derivs_mixed_lhs_lhs1, derivs_mixed_lhs_lhs1_host);
+        ddc::Chunk derivs_mixed_rhs_lhs1_alloc(
                 derivs_domain,
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv_mixed_rhs_lhs1 = Sderiv_mixed_rhs_lhs1_alloc.span_view();
-        ddc::parallel_deepcopy(Sderiv_mixed_rhs_lhs1, Sderiv_mixed_rhs_lhs1_cpu);
-        ddc::Chunk Sderiv_mixed_lhs_rhs1_alloc(
+        ddc::ChunkSpan derivs_mixed_rhs_lhs1 = derivs_mixed_rhs_lhs1_alloc.span_view();
+        ddc::parallel_deepcopy(derivs_mixed_rhs_lhs1, derivs_mixed_rhs_lhs1_host);
+        ddc::Chunk derivs_mixed_lhs_rhs1_alloc(
                 derivs_domain,
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv_mixed_lhs_rhs1 = Sderiv_mixed_lhs_rhs1_alloc.span_view();
-        ddc::parallel_deepcopy(Sderiv_mixed_lhs_rhs1, Sderiv_mixed_lhs_rhs1_cpu);
-        ddc::Chunk Sderiv_mixed_rhs_rhs1_alloc(
+        ddc::ChunkSpan derivs_mixed_lhs_rhs1 = derivs_mixed_lhs_rhs1_alloc.span_view();
+        ddc::parallel_deepcopy(derivs_mixed_lhs_rhs1, derivs_mixed_lhs_rhs1_host);
+        ddc::Chunk derivs_mixed_rhs_rhs1_alloc(
                 derivs_domain,
                 ddc::KokkosAllocator<double, MemorySpace>());
-        ddc::ChunkSpan Sderiv_mixed_rhs_rhs1 = Sderiv_mixed_rhs_rhs1_alloc.span_view();
-        ddc::parallel_deepcopy(Sderiv_mixed_rhs_rhs1, Sderiv_mixed_rhs_rhs1_cpu);
+        ddc::ChunkSpan derivs_mixed_rhs_rhs1 = derivs_mixed_rhs_rhs1_alloc.span_view();
+        ddc::parallel_deepcopy(derivs_mixed_rhs_rhs1, derivs_mixed_rhs_rhs1_host);
 
         ddc::parallel_for_each(
                 exec_space,
                 dom_derivs,
                 KOKKOS_LAMBDA(typename decltype(dom_derivs)::discrete_element_type const e) {
-                    Sderiv_mixed_lhs_lhs(e)
-                            = Sderiv_mixed_lhs_lhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                    Sderiv_mixed_rhs_lhs(e)
-                            = Sderiv_mixed_rhs_lhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                    Sderiv_mixed_lhs_rhs(e)
-                            = Sderiv_mixed_lhs_rhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
-                    Sderiv_mixed_rhs_rhs(e)
-                            = Sderiv_mixed_rhs_rhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                    derivs_mixed_lhs_lhs(e)
+                            = derivs_mixed_lhs_lhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                    derivs_mixed_rhs_lhs(e)
+                            = derivs_mixed_rhs_lhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                    derivs_mixed_lhs_rhs(e)
+                            = derivs_mixed_lhs_rhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                    derivs_mixed_rhs_rhs(e)
+                            = derivs_mixed_rhs_rhs1(ddc::select<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
                 });
     }
 #endif
@@ -531,14 +531,14 @@ static void Batched2dSplineTest()
     spline_builder(
             coef,
             vals.span_cview(),
-            std::optional(Sderiv1_lhs.span_cview()),
-            std::optional(Sderiv1_rhs.span_cview()),
-            std::optional(Sderiv2_lhs.span_cview()),
-            std::optional(Sderiv2_rhs.span_cview()),
-            std::optional(Sderiv_mixed_lhs_lhs.span_cview()),
-            std::optional(Sderiv_mixed_rhs_lhs.span_cview()),
-            std::optional(Sderiv_mixed_lhs_rhs.span_cview()),
-            std::optional(Sderiv_mixed_rhs_rhs.span_cview()));
+            std::optional(derivs1_lhs.span_cview()),
+            std::optional(derivs1_rhs.span_cview()),
+            std::optional(derivs2_lhs.span_cview()),
+            std::optional(derivs2_rhs.span_cview()),
+            std::optional(derivs_mixed_lhs_lhs.span_cview()),
+            std::optional(derivs_mixed_rhs_lhs.span_cview()),
+            std::optional(derivs_mixed_lhs_rhs.span_cview()),
+            std::optional(derivs_mixed_rhs_rhs.span_cview()));
 #else
     spline_builder(coef, vals.span_cview());
 #endif

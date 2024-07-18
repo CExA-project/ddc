@@ -150,15 +150,15 @@ static void PeriodicitySplineBuilderTest()
     ddc::DiscreteDomain<BSplines<X>> const dom_bsplines = spline_builder.spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals1_cpu_alloc(
+    ddc::Chunk vals1_host_alloc(
             dom_vals,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();
+    ddc::ChunkSpan vals1_host = vals1_host_alloc.span_view();
     evaluator_type<IDim<X>> evaluator(dom_vals);
-    evaluator(vals1_cpu);
+    evaluator(vals1_host);
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
-    ddc::parallel_deepcopy(vals, vals1_cpu);
+    ddc::parallel_deepcopy(vals, vals1_host);
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(dom_bsplines, ddc::KokkosAllocator<double, MemorySpace>());

@@ -247,15 +247,15 @@ static void ExtrapolationRuleSplineTest()
     auto const dom_spline = spline_builder.batched_spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals1_cpu_alloc(
+    ddc::Chunk vals1_host_alloc(
             dom_interpolation,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();
+    ddc::ChunkSpan vals1_host = vals1_host_alloc.span_view();
     evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>> evaluator(dom_interpolation);
-    evaluator(vals1_cpu);
+    evaluator(vals1_host);
     ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals1 = vals1_alloc.span_view();
-    ddc::parallel_deepcopy(vals1, vals1_cpu);
+    ddc::parallel_deepcopy(vals1, vals1_host);
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();

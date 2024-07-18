@@ -122,33 +122,33 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     evaluator(yvals.span_view());
 
     int constexpr shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
-    ddc::Chunk Sderiv_lhs_alloc(derivs_domain, ddc::HostAllocator<double>());
-    ddc::ChunkSpan Sderiv_lhs = Sderiv_lhs_alloc.span_view();
+    ddc::Chunk derivs_lhs_alloc(derivs_domain, ddc::HostAllocator<double>());
+    ddc::ChunkSpan derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
         for (ddc::DiscreteElement<ddc::Deriv<DimX>> const ii : derivs_domain) {
-            Sderiv_lhs(ii) = evaluator.deriv(x0, ii - derivs_domain.front() + shift);
+            derivs_lhs(ii) = evaluator.deriv(x0, ii - derivs_domain.front() + shift);
         }
     }
 
-    ddc::Chunk Sderiv_rhs_alloc(derivs_domain, ddc::HostAllocator<double>());
-    ddc::ChunkSpan Sderiv_rhs = Sderiv_rhs_alloc.span_view();
+    ddc::Chunk derivs_rhs_alloc(derivs_domain, ddc::HostAllocator<double>());
+    ddc::ChunkSpan derivs_rhs = derivs_rhs_alloc.span_view();
     if (s_bcr == ddc::BoundCond::HERMITE) {
         for (ddc::DiscreteElement<ddc::Deriv<DimX>> const ii : derivs_domain) {
-            Sderiv_rhs(ii) = evaluator.deriv(xN, ii - derivs_domain.front() + shift);
+            derivs_rhs(ii) = evaluator.deriv(xN, ii - derivs_domain.front() + shift);
         }
     }
 
 // 6. Finally build the spline by filling `coef`
 #if defined(BCL_HERMITE)
-    auto deriv_l = std::optional(Sderiv_lhs.span_cview());
+    auto deriv_l = std::optional(derivs_lhs.span_cview());
 #else
-    decltype(std::optional(Sderiv_lhs.span_cview())) deriv_l = std::nullopt;
+    decltype(std::optional(derivs_lhs.span_cview())) deriv_l = std::nullopt;
 #endif
 
 #if defined(BCR_HERMITE)
-    auto deriv_r = std::optional(Sderiv_rhs.span_cview());
+    auto deriv_r = std::optional(derivs_rhs.span_cview());
 #else
-    decltype(std::optional(Sderiv_rhs.span_cview())) deriv_r = std::nullopt;
+    decltype(std::optional(derivs_rhs.span_cview())) deriv_r = std::nullopt;
 #endif
 
     spline_builder(coef.span_view(), yvals.span_cview(), deriv_l, deriv_r);

@@ -8,6 +8,7 @@
 #include <memory>
 #include <string>
 
+#include <KokkosBlas3_gemm.hpp>
 #include <Kokkos_DualView.hpp>
 
 #include "splines_linear_problem.hpp"
@@ -37,12 +38,78 @@ public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
 
+    /**
+     * @brief COO storage.
+     *
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     */
+    struct Coo
+    {
+        std::size_t m_nrows;
+        std::size_t m_ncols;
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_rows_idx;
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_cols_idx;
+        Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_values;
+
+        Coo() : m_nrows(0), m_ncols(0) {}
+
+        Coo(std::size_t const nrows_,
+            std::size_t const ncols_,
+            Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx_,
+            Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx_,
+            Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> values_)
+            : m_nrows(nrows_)
+            , m_ncols(ncols_)
+            , m_rows_idx(std::move(rows_idx_))
+            , m_cols_idx(std::move(cols_idx_))
+            , m_values(std::move(values_))
+        {
+            assert(m_rows_idx.extent(0) == m_cols_idx.extent(0));
+            assert(m_rows_idx.extent(0) == m_values.extent(0));
+        }
+
+        KOKKOS_FUNCTION std::size_t nnz() const
+        {
+            return m_values.extent(0);
+        }
+
+        KOKKOS_FUNCTION std::size_t nrows() const
+        {
+            return m_nrows;
+        }
+
+        KOKKOS_FUNCTION std::size_t ncols() const
+        {
+            return m_ncols;
+        }
+
+        KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+        rows_idx() const
+        {
+            return m_rows_idx;
+        }
+
+        KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+        cols_idx() const
+        {
+            return m_cols_idx;
+        }
+
+        KOKKOS_FUNCTION Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+        values() const
+        {
+            return m_values;
+        }
+    };
+
 protected:
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_top_right_block;
+    Coo m_top_right_block_coo;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_bottom_left_block;
+    Coo m_bottom_left_block_coo;
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
 
 public:
@@ -108,6 +175,63 @@ public:
         }
     }
 
+    /**
+     * @brief Fill a COO version of a Dense matrix (remove zeros).
+     *
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     *
+     * Runs on a single thread to garantee ordering.
+     *
+     * @param[in] dense_matrix The dense storage matrix whose non-zeros are extracted to fill the COO matrix.
+     * @param[in] tol The tolerancy applied to filter the non-zeros.
+     *
+     * @return The COO storage matrix filled with the non-zeros from dense_matrix.
+     */
+    Coo dense2coo(
+            Kokkos::View<const double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                    dense_matrix,
+            double const tol = 1e-14)
+    {
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx(
+                "ddc_splines_coo_rows_idx",
+                dense_matrix.extent(0) * dense_matrix.extent(1));
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx(
+                "ddc_splines_coo_cols_idx",
+                dense_matrix.extent(0) * dense_matrix.extent(1));
+        Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                values("ddc_splines_coo_values", dense_matrix.extent(0) * dense_matrix.extent(1));
+
+        Kokkos::DualView<std::size_t, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                n_nonzeros("ddc_splines_n_nonzeros");
+        n_nonzeros.h_view() = 0;
+        n_nonzeros.modify_host();
+        n_nonzeros.sync_device();
+
+        Kokkos::parallel_for(
+                "dense2coo",
+                Kokkos::RangePolicy(ExecSpace(), 0, 1),
+                KOKKOS_LAMBDA(const int) {
+                    for (int i = 0; i < dense_matrix.extent(0); i++) {
+                        for (int j = 0; j < dense_matrix.extent(1); j++) {
+                            double aij = dense_matrix(i, j);
+                            if (Kokkos::abs(aij) >= tol) {
+                                rows_idx(n_nonzeros.d_view()) = i;
+                                cols_idx(n_nonzeros.d_view()) = j;
+                                values(n_nonzeros.d_view()) = aij;
+                                n_nonzeros.d_view()++;
+                            }
+                        }
+                    }
+                });
+        n_nonzeros.modify_device();
+        n_nonzeros.sync_host();
+        Kokkos::resize(rows_idx, n_nonzeros.h_view());
+        Kokkos::resize(cols_idx, n_nonzeros.h_view());
+        Kokkos::resize(values, n_nonzeros.h_view());
+
+        return Coo(dense_matrix.extent(0), dense_matrix.extent(1), rows_idx, cols_idx, values);
+    }
+
 private:
     /// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.
     void compute_schur_complement()
@@ -151,12 +275,14 @@ public:
         m_top_right_block.modify_host();
         m_top_right_block.sync_device();
         m_top_left_block->solve(m_top_right_block.d_view);
+        m_top_right_block_coo = dense2coo(m_top_right_block.d_view);
         m_top_right_block.modify_device();
         m_top_right_block.sync_host();
 
         // Push lambda on device in bottom-left block
         m_bottom_left_block.modify_host();
         m_bottom_left_block.sync_device();
+        m_bottom_left_block_coo = dense2coo(m_bottom_left_block.d_view);
 
         // Compute delta - lambda*Q^-1*gamma in bottom-right block & setup the bottom-right solver
         compute_schur_complement();
@@ -164,67 +290,48 @@ public:
     }
 
     /**
-     * @brief Compute y <- y - LinOp*x or y <- y - LinOp^t*x.
+     * @brief Compute y <- y - LinOp*x or y <- y - LinOp^t*x with a sparse LinOp.
      *
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      *
-     * @param x
-     * @param y
-     * @param LinOp
-     * @param transpose
+     * Perform a spdm operation (sparse-dense matrix multiplication) with parameters alpha=-1 and beta=1 between
+     * a sparse matrix stored in COO format and a dense matrix x.
+     *
+     * @param[in] LinOp The sparse matrix, left side of the matrix multiplication.
+     * @param[in] x The dense matrix, right side of the matrix multiplication.
+     * @param[inout] y The dense matrix to be altered by the operation.
+     * @param transpose A flag to indicate if the direct or transposed version of the operation is performed. 
      */
-    void gemv_minus1_1(
-            MultiRHS const x,
-            MultiRHS const y,
-            Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> const
-                    LinOp,
-            bool const transpose = false) const
+    void spdm_minus1_1(Coo LinOp, MultiRHS const x, MultiRHS const y, bool const transpose = false)
+            const
     {
-        assert((!transpose && LinOp.extent(0) == y.extent(0))
-               || (transpose && LinOp.extent(1) == y.extent(0)));
-        assert((!transpose && LinOp.extent(1) == x.extent(0))
-               || (transpose && LinOp.extent(0) == x.extent(0)));
+        assert((!transpose && LinOp.nrows() == y.extent(0))
+               || (transpose && LinOp.ncols() == y.extent(0)));
+        assert((!transpose && LinOp.ncols() == x.extent(0))
+               || (transpose && LinOp.nrows() == x.extent(0)));
         assert(x.extent(1) == y.extent(1));
 
         if (!transpose) {
             Kokkos::parallel_for(
-                    "gemv_minus1_1",
-                    Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
-                    KOKKOS_LAMBDA(
-                            const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                        const int i = teamMember.league_rank() / y.extent(1);
-                        const int j = teamMember.league_rank() % y.extent(1);
-
-                        double LinOpTimesX = 0.;
-                        Kokkos::parallel_reduce(
-                                Kokkos::TeamThreadRange(teamMember, x.extent(0)),
-                                [&](const int l, double& LinOpTimesX_tmp) {
-                                    LinOpTimesX_tmp += LinOp(i, l) * x(l, j);
-                                },
-                                LinOpTimesX);
-                        Kokkos::single(Kokkos::PerTeam(teamMember), [&]() {
-                            y(i, j) -= LinOpTimesX;
-                        });
+                    "ddc_splines_spdm_minus1_1",
+                    Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
+                    KOKKOS_LAMBDA(const int j) {
+                        for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
+                            const int i = LinOp.rows_idx()(nz_idx);
+                            const int k = LinOp.cols_idx()(nz_idx);
+                            y(i, j) -= LinOp.values()(nz_idx) * x(k, j);
+                        }
                     });
         } else {
             Kokkos::parallel_for(
-                    "gemv_minus1_1_tr",
-                    Kokkos::TeamPolicy<ExecSpace>(y.extent(0) * y.extent(1), Kokkos::AUTO),
-                    KOKKOS_LAMBDA(
-                            const typename Kokkos::TeamPolicy<ExecSpace>::member_type& teamMember) {
-                        const int i = teamMember.league_rank() / y.extent(1);
-                        const int j = teamMember.league_rank() % y.extent(1);
-
-                        double LinOpTimesX = 0.;
-                        Kokkos::parallel_reduce(
-                                Kokkos::TeamThreadRange(teamMember, x.extent(0)),
-                                [&](const int l, double& LinOpTimesX_tmp) {
-                                    LinOpTimesX_tmp += LinOp(l, i) * x(l, j);
-                                },
-                                LinOpTimesX);
-                        Kokkos::single(Kokkos::PerTeam(teamMember), [&]() {
-                            y(i, j) -= LinOpTimesX;
-                        });
+                    "ddc_splines_spdm_minus1_1_tr",
+                    Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
+                    KOKKOS_LAMBDA(const int j) {
+                        for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
+                            const int i = LinOp.rows_idx()(nz_idx);
+                            const int k = LinOp.cols_idx()(nz_idx);
+                            y(k, j) -= LinOp.values()(nz_idx) * x(i, j);
+                        }
                     });
         }
     }
@@ -261,13 +368,13 @@ public:
                         Kokkos::ALL);
         if (!transpose) {
             m_top_left_block->solve(b1);
-            gemv_minus1_1(b1, b2, m_bottom_left_block.d_view);
+            spdm_minus1_1(m_bottom_left_block_coo, b1, b2);
             m_bottom_right_block->solve(b2);
-            gemv_minus1_1(b2, b1, m_top_right_block.d_view);
+            spdm_minus1_1(m_top_right_block_coo, b2, b1);
         } else {
-            gemv_minus1_1(b1, b2, m_top_right_block.d_view, true);
+            spdm_minus1_1(m_top_right_block_coo, b1, b2, true);
             m_bottom_right_block->solve(b2, true);
-            gemv_minus1_1(b2, b1, m_bottom_left_block.d_view, true);
+            spdm_minus1_1(m_bottom_left_block_coo, b2, b1, true);
             m_top_left_block->solve(b1, true);
         }
     }

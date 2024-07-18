@@ -183,7 +183,7 @@ static void characteristics_advection(benchmark::State& state)
 
 // Tuning : 512 cols and 8 precond on CPU, 16384 cols and 1 precond on GPU
 
-#ifdef KOKKOS_ENABLE_CUDA
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
 std::string chip = "gpu";
 std::size_t cols_per_chunk_ref = 65535;
 unsigned int preconditioner_max_block_size_ref = 1u;

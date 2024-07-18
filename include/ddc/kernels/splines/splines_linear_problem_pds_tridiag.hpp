@@ -8,11 +8,16 @@
 #include <memory>
 #include <string>
 
+#include <Kokkos_DualView.hpp>
+
 #if __has_include(<mkl_lapacke.h>)
 #include <mkl_lapacke.h>
 #else
 #include <lapacke.h>
 #endif
+
+#include <KokkosBatched_Pttrs.hpp>
+#include <KokkosBatched_Util.hpp>
 
 #include "splines_linear_problem.hpp"
 
@@ -39,7 +44,8 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    Kokkos::View<double**, Kokkos::HostSpace> m_q; // pds band matrix representation
+    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+            m_q; // pds tridiagonal matrix representation
 
 public:
     /**
@@ -51,7 +57,7 @@ public:
         : SplinesLinearProblem<ExecSpace>(mat_size)
         , m_q("q", 2, mat_size)
     {
-        Kokkos::deep_copy(m_q, 0.);
+        Kokkos::deep_copy(m_q.h_view, 0.);
     }
 
     double get_element(std::size_t i, std::size_t j) const override
@@ -64,7 +70,7 @@ public:
             std::swap(i, j);
         }
         if (j - i < 2) {
-            return m_q(j - i, i);
+            return m_q.h_view(j - i, i);
         } else {
             return 0.0;
         }
@@ -80,7 +86,7 @@ public:
             std::swap(i, j);
         }
         if (j - i < 2) {
-            m_q(j - i, i) = aij;
+            m_q.h_view(j - i, i) = aij;
         } else {
             assert(std::fabs(aij) < 1e-20);
         }
@@ -93,11 +99,18 @@ public:
      */
     void setup_solver() override
     {
-        int const info = LAPACKE_dpttrf(size(), m_q.data(), m_q.data() + m_q.stride(0));
+        int const info = LAPACKE_dpttrf(
+                size(),
+                m_q.h_view.data(),
+                m_q.h_view.data() + m_q.h_view.stride(0));
         if (info != 0) {
             throw std::runtime_error(
                     "LAPACKE_dpttrf failed with error code " + std::to_string(info));
         }
+
+        // Push on device
+        m_q.modify_host();
+        m_q.sync_device();
     }
 
     /**
@@ -111,22 +124,19 @@ public:
     void solve(MultiRHS const b, bool const) const override
     {
         assert(b.extent(0) == size());
-
-        auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b);
-        Kokkos::deep_copy(b_host, b);
-        int const info = LAPACKE_dpttrs(
-                LAPACK_ROW_MAJOR,
-                b_host.extent(0),
-                b_host.extent(1),
-                m_q.data(),
-                m_q.data() + m_q.stride(0),
-                b_host.data(),
-                b_host.stride(0));
-        if (info != 0) {
-            throw std::runtime_error(
-                    "LAPACKE_dpttrs failed with error code " + std::to_string(info));
-        }
-        Kokkos::deep_copy(b, b_host);
+        auto q_device = m_q.d_view;
+        auto d = Kokkos::subview(q_device, 0, Kokkos::ALL);
+        auto e = Kokkos::
+                subview(q_device, 1, Kokkos::pair<int, int>(0, q_device.extent_int(1) - 1));
+        Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
+        Kokkos::parallel_for(
+                "pttrs",
+                policy,
+                KOKKOS_LAMBDA(const int i) {
+                    auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
+                    KokkosBatched::SerialPttrs<
+                            KokkosBatched::Algo::Pttrs::Unblocked>::invoke(d, e, sub_b);
+                });
     }
 };
 

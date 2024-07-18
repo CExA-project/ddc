@@ -57,8 +57,6 @@ public:
 
         std::size_t m_n_period {2};
 
-        bool m_odd_period {false};
-
     public:
         using discrete_dimension_type = PeriodicSampling;
 
@@ -77,7 +75,6 @@ public:
             : m_origin(impl.m_origin)
             , m_step(impl.m_step)
             , m_n_period(impl.m_n_period)
-            , m_odd_period(impl.m_odd_period)
         {
         }
 
@@ -93,7 +90,6 @@ public:
             : m_origin(origin)
             , m_step(step)
             , m_n_period(n_period)
-            , m_odd_period(static_cast<bool>(n_period % 2))
         {
             assert(step > 0);
             assert(n_period > 0);
@@ -131,11 +127,8 @@ public:
         {
             return m_origin
                    + continuous_element_type(
-                             static_cast<int>(
-                                     (icoord.uid()
-                                      + (m_n_period - static_cast<int>(m_odd_period)) / 2)
-                                     % m_n_period)
-                             - static_cast<int>((m_n_period - static_cast<int>(m_odd_period)) / 2))
+                             static_cast<int>((icoord.uid() + m_n_period / 2) % m_n_period)
+                             - static_cast<int>(m_n_period / 2))
                              * m_step;
         }
     };

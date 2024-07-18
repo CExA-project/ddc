@@ -45,10 +45,11 @@ static void test_fourier_mesh(std::size_t Nx)
             = ddc::FourierMesh<DFDim<ddc::Fourier<X>>>(x_mesh, true);
 
     double const epsilon = 1e-14;
+    ddc::DiscreteElement<DFDim<ddc::Fourier<X>>> const k_front = k_mesh.front();
     for (ddc::DiscreteElement<DFDim<ddc::Fourier<X>>> k : k_mesh) {
         double const ka = -Kokkos::numbers::pi * Nx / (b - a);
         double const kb = Kokkos::numbers::pi * Nx / (b - a);
-        double const k_pred = 2 * k.uid() * Kokkos::numbers::pi / (b - a);
+        double const k_pred = 2 * (k - k_front) * Kokkos::numbers::pi / (b - a);
         EXPECT_NEAR(
                 ddc::coordinate(k),
                 k_pred - (kb - ka) * Kokkos::floor((k_pred - ka) / (kb - ka)),

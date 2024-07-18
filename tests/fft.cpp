@@ -41,15 +41,17 @@ static void test_fourier_mesh(std::size_t Nx)
             DVect<DDim<X>>(Nx))));
     ddc::init_discrete_space<DFDim<ddc::Fourier<X>>>(
             ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(ddc::DiscreteDomain<DDim<X>>(x_mesh)));
+    DDom<DFDim<ddc::Fourier<X>>> const k_mesh
+            = ddc::FourierMesh<DFDim<ddc::Fourier<X>>>(x_mesh, true);
 
     double const epsilon = 1e-14;
-    for (int i = 0; i < Nx; i++) {
+    for (ddc::DiscreteElement<DFDim<ddc::Fourier<X>>> k : k_mesh) {
         double const ka = -Kokkos::numbers::pi * Nx / (b - a);
         double const kb = Kokkos::numbers::pi * Nx / (b - a);
-        double const k = 2 * i * Kokkos::numbers::pi / (b - a);
+        double const k_pred = 2 * k.uid() * Kokkos::numbers::pi / (b - a);
         EXPECT_NEAR(
-                ddc::coordinate(ddc::DiscreteElement<DFDim<ddc::Fourier<X>>>(i)),
-                k - (kb - ka) * Kokkos::floor((k - ka) / (kb - ka)),
+                ddc::coordinate(k),
+                k_pred - (kb - ka) * Kokkos::floor((k_pred - ka) / (kb - ka)),
                 epsilon);
     }
 }

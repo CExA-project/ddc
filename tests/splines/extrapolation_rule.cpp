@@ -247,15 +247,14 @@ static void ExtrapolationRuleSplineTest()
     auto const dom_spline = spline_builder.batched_spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals1_host_alloc(
+    ddc::Chunk vals_1d_host_alloc(
             dom_interpolation,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan vals1_host = vals1_host_alloc.span_view();
+    ddc::ChunkSpan vals_1d_host = vals_1d_host_alloc.span_view();
     evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>> evaluator(dom_interpolation);
-    evaluator(vals1_host);
-    ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan vals1 = vals1_alloc.span_view();
-    ddc::parallel_deepcopy(vals1, vals1_host);
+    evaluator(vals_1d_host);
+    auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
+    ddc::ChunkSpan vals_1d = vals_1d_alloc.span_view();
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
@@ -263,7 +262,7 @@ static void ExtrapolationRuleSplineTest()
             exec_space,
             vals.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
+                vals(e) = vals_1d(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
             });
 
     // Instantiate chunk of spline coefs to receive output of spline_builder

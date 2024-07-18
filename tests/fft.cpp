@@ -29,8 +29,8 @@ struct DFDim : ddc::PeriodicSampling<Kx>
 {
 };
 
-template <typename X, std::size_t Nx>
-static void test_fourier_mesh()
+template <typename X>
+static void test_fourier_mesh(std::size_t Nx)
 {
     double const a = -10;
     double const b = 10;
@@ -226,12 +226,12 @@ struct RDimZ;
 
 TEST(FourierMesh, Even)
 {
-    test_fourier_mesh<RDimX, 16>();
+    test_fourier_mesh<RDimX>(16);
 }
 
 TEST(FourierMesh, Odd)
 {
-    test_fourier_mesh<RDimX, 17>();
+    test_fourier_mesh<RDimX>(17);
 }
 
 #if fftw_serial_AVAIL

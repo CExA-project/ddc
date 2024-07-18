@@ -251,9 +251,8 @@ static void BatchedSplineTest()
     ddc::ChunkSpan vals1_host = vals1_host_alloc.span_view();
     evaluator_type<IDim<I, I>> evaluator(dom_interpolation);
     evaluator(vals1_host);
-    ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
+    auto vals1_alloc = ddc::create_mirror_view_and_copy(exec_space, vals1_host);
     ddc::ChunkSpan vals1 = vals1_alloc.span_view();
-    ddc::parallel_deepcopy(vals1, vals1_host);
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
@@ -278,9 +277,8 @@ static void BatchedSplineTest()
                     typename decltype(derivs_lhs1_host.domain())::discrete_element_type(ii))
                     = evaluator.deriv(x0<I>(), ii + shift - 1);
         }
-        ddc::Chunk derivs_lhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
+        auto derivs_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_lhs1_host);
         ddc::ChunkSpan derivs_lhs1 = derivs_lhs1_alloc.span_view();
-        ddc::parallel_deepcopy(derivs_lhs1, derivs_lhs1_host);
         ddc::parallel_for_each(
                 exec_space,
                 derivs_lhs.domain(),
@@ -301,7 +299,7 @@ static void BatchedSplineTest()
                     typename decltype(derivs_rhs1_host.domain())::discrete_element_type(ii))
                     = evaluator.deriv(xN<I>(), ii + shift - 1);
         }
-        ddc::Chunk derivs_rhs1_alloc(derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
+        auto derivs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_rhs1_host);
         ddc::ChunkSpan derivs_rhs1 = derivs_rhs1_alloc.span_view();
         ddc::parallel_deepcopy(derivs_rhs1, derivs_rhs1_host);
 

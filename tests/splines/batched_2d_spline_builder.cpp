@@ -296,9 +296,8 @@ static void Batched2dSplineTest()
     ddc::ChunkSpan vals1_host = vals1_host_alloc.span_view();
     evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>> evaluator(dom_interpolation);
     evaluator(vals1_host);
-    ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
+    auto vals1_alloc = ddc::create_mirror_view_and_copy(exec_space, vals1_host);
     ddc::ChunkSpan vals1 = vals1_alloc.span_view();
-    ddc::parallel_deepcopy(vals1, vals1_host);
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
@@ -328,13 +327,8 @@ static void Batched2dSplineTest()
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<IDim<I2, I1, I2>>(e));
                     derivs1_lhs1_host(e) = evaluator.deriv(x0<I1>(), x2, deriv_idx + shift - 1, 0);
                 });
-        ddc::Chunk derivs1_lhs1_alloc(
-                ddc::DiscreteDomain<
-                        ddc::Deriv<I1>,
-                        IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
-                ddc::KokkosAllocator<double, MemorySpace>());
+        auto derivs1_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs1_lhs1_host);
         ddc::ChunkSpan derivs1_lhs1 = derivs1_lhs1_alloc.span_view();
-        ddc::parallel_deepcopy(derivs1_lhs1, derivs1_lhs1_host);
 
         ddc::parallel_for_each(
                 exec_space,
@@ -361,13 +355,8 @@ static void Batched2dSplineTest()
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<IDim<I2, I1, I2>>(e));
                     derivs1_rhs1_host(e) = evaluator.deriv(xN<I1>(), x2, deriv_idx + shift - 1, 0);
                 });
-        ddc::Chunk derivs1_rhs1_alloc(
-                ddc::DiscreteDomain<
-                        ddc::Deriv<I1>,
-                        IDim<I2, I1, I2>>(derivs_domain1, interpolation_domain2),
-                ddc::KokkosAllocator<double, MemorySpace>());
+        auto derivs1_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs1_rhs1_host);
         ddc::ChunkSpan derivs1_rhs1 = derivs1_rhs1_alloc.span_view();
-        ddc::parallel_deepcopy(derivs1_rhs1, derivs1_rhs1_host);
 
         ddc::parallel_for_each(
                 exec_space,
@@ -395,13 +384,9 @@ static void Batched2dSplineTest()
                     derivs2_lhs1_host(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx + shift - 1);
                 });
 
-        ddc::Chunk derivs2_lhs1_alloc(
-                ddc::DiscreteDomain<
-                        IDim<I1, I1, I2>,
-                        ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
-                ddc::KokkosAllocator<double, MemorySpace>());
+
+        auto derivs2_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs2_lhs1_host);
         ddc::ChunkSpan derivs2_lhs1 = derivs2_lhs1_alloc.span_view();
-        ddc::parallel_deepcopy(derivs2_lhs1, derivs2_lhs1_host);
 
         ddc::parallel_for_each(
                 exec_space,
@@ -429,11 +414,7 @@ static void Batched2dSplineTest()
                     derivs2_rhs1_host(e) = evaluator.deriv(x1, xN<I2>(), 0, deriv_idx + shift - 1);
                 });
 
-        ddc::Chunk derivs2_rhs1_alloc(
-                ddc::DiscreteDomain<
-                        IDim<I1, I1, I2>,
-                        ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
-                ddc::KokkosAllocator<double, MemorySpace>());
+        auto derivs2_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs2_rhs1_host);
         ddc::ChunkSpan derivs2_rhs1 = derivs2_rhs1_alloc.span_view();
         ddc::parallel_deepcopy(derivs2_rhs1, derivs2_rhs1_host);
 
@@ -485,26 +466,14 @@ static void Batched2dSplineTest()
                         = evaluator.deriv(xN<I1>(), xN<I2>(), ii + shift - 1, jj + shift - 1);
             }
         }
-        ddc::Chunk derivs_mixed_lhs_lhs1_alloc(
-                derivs_domain,
-                ddc::KokkosAllocator<double, MemorySpace>());
+        auto derivs_mixed_lhs_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs_lhs1_host);
         ddc::ChunkSpan derivs_mixed_lhs_lhs1 = derivs_mixed_lhs_lhs1_alloc.span_view();
-        ddc::parallel_deepcopy(derivs_mixed_lhs_lhs1, derivs_mixed_lhs_lhs1_host);
-        ddc::Chunk derivs_mixed_rhs_lhs1_alloc(
-                derivs_domain,
-                ddc::KokkosAllocator<double, MemorySpace>());
+        auto derivs_mixed_rhs_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_rhs_lhs1_host);
         ddc::ChunkSpan derivs_mixed_rhs_lhs1 = derivs_mixed_rhs_lhs1_alloc.span_view();
-        ddc::parallel_deepcopy(derivs_mixed_rhs_lhs1, derivs_mixed_rhs_lhs1_host);
-        ddc::Chunk derivs_mixed_lhs_rhs1_alloc(
-                derivs_domain,
-                ddc::KokkosAllocator<double, MemorySpace>());
+        auto derivs_mixed_lhs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs_rhs1_host);
         ddc::ChunkSpan derivs_mixed_lhs_rhs1 = derivs_mixed_lhs_rhs1_alloc.span_view();
-        ddc::parallel_deepcopy(derivs_mixed_lhs_rhs1, derivs_mixed_lhs_rhs1_host);
-        ddc::Chunk derivs_mixed_rhs_rhs1_alloc(
-                derivs_domain,
-                ddc::KokkosAllocator<double, MemorySpace>());
+        auto derivs_mixed_rhs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_rhs_rhs1_host);
         ddc::ChunkSpan derivs_mixed_rhs_rhs1 = derivs_mixed_rhs_rhs1_alloc.span_view();
-        ddc::parallel_deepcopy(derivs_mixed_rhs_rhs1, derivs_mixed_rhs_rhs1_host);
 
         ddc::parallel_for_each(
                 exec_space,

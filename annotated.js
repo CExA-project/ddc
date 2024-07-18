@@ -48,6 +48,7 @@ var annotated =
       [ "is_periodic_sampling", "structddc_1_1is__periodic__sampling.html", null ],
       [ "is_uniform_bsplines", "structddc_1_1is__uniform__bsplines.html", null ],
       [ "is_uniform_point_sampling", "structddc_1_1is__uniform__point__sampling.html", null ],
+      [ "KnotDiscreteDimension", "namespaceddc.html#structddc_1_1KnotDiscreteDimension", "namespaceddc_structddc_1_1KnotDiscreteDimension_dup" ],
       [ "KnotsAsInterpolationPoints", "classddc_1_1KnotsAsInterpolationPoints.html", "classddc_1_1KnotsAsInterpolationPoints" ],
       [ "KokkosAllocator", "classddc_1_1KokkosAllocator.html", "classddc_1_1KokkosAllocator" ],
       [ "kwArgs_fft", "namespaceddc.html#structddc_1_1kwArgs__fft", "namespaceddc_structddc_1_1kwArgs__fft_dup" ],

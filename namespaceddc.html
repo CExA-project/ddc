@@ -144,6 +144,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1is__uniform__point__sampling.html">is_uniform_point_sampling</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structddc_1_1KnotDiscreteDimension" id="r_structddc_1_1KnotDiscreteDimension"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">KnotDiscreteDimension</a></td></tr>
+<tr class="memdesc:structddc_1_1KnotDiscreteDimension"><td class="mdescLeft">&#160;</td><td class="mdescRight">If the type <code>DDim</code> is a B-spline, defines <code>type</code> to the discrete dimension of the associated knots.  <a href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">More...</a><br /></td></tr>
+<tr class="separator:structddc_1_1KnotDiscreteDimension"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1KnotsAsInterpolationPoints.html">KnotsAsInterpolationPoints</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper class for the initialisation of the mesh of interpolation points.  <a href="classddc_1_1KnotsAsInterpolationPoints.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,6 +229,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ad6cf37f23e5e0fc7893bf8cb37bc1a7a" id="r_ad6cf37f23e5e0fc7893bf8cb37bc1a7a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">DiscreteVectorElement</a> = std::ptrdiff_t</td></tr>
 <tr class="memdesc:ad6cf37f23e5e0fc7893bf8cb37bc1a7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A DiscreteVectorElement is a scalar that represents the difference between two coordinates.  <br /></td></tr>
 <tr class="separator:ad6cf37f23e5e0fc7893bf8cb37bc1a7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bb23b18d7ef49df880108facd429dc4" id="r_a9bb23b18d7ef49df880108facd429dc4"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </td></tr>
+<tr class="memitem:a9bb23b18d7ef49df880108facd429dc4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9bb23b18d7ef49df880108facd429dc4">knot_discrete_dimension_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">KnotDiscreteDimension</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;::type</td></tr>
+<tr class="memdesc:a9bb23b18d7ef49df880108facd429dc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type to easily access <code><a class="el" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension" title="If the type DDim is a B-spline, defines type to the discrete dimension of the associated knots.">KnotDiscreteDimension</a>&lt;DDim&gt;::type</code>  <br /></td></tr>
+<tr class="separator:a9bb23b18d7ef49df880108facd429dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68e6835d462fda368841ec8c17081079" id="r_a68e6835d462fda368841ec8c17081079"><td class="memTemplParams" colspan="2">template&lt;std::size_t N, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> &gt; </td></tr>
 <tr class="memitem:a68e6835d462fda368841ec8c17081079"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a68e6835d462fda368841ec8c17081079">SpanND</a> = std::experimental::mdspan&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, std::experimental::dextents&lt; std::size_t, N &gt; &gt;</td></tr>
 <tr class="separator:a68e6835d462fda368841ec8c17081079"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -982,6 +989,31 @@ struct ddc::Deriv&lt; CDim &gt;</div><p>A templated struct representing a discre
 struct ddc::Fourier&lt; Dim &gt;</div></div>
 </div>
 </div>
+<a name="structddc_1_1KnotDiscreteDimension" id="structddc_1_1KnotDiscreteDimension"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structddc_1_1KnotDiscreteDimension">&#9670;&#160;</a></span>ddc::KnotDiscreteDimension</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct ddc::KnotDiscreteDimension</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;<br />
+struct ddc::KnotDiscreteDimension&lt; DDim &gt;</div><p>If the type <code>DDim</code> is a B-spline, defines <code>type</code> to the discrete dimension of the associated knots. </p>
+</div><table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="aa4e7e9a6c69afc54243d97fce5629abc" name="aa4e7e9a6c69afc54243d97fce5629abc"></a><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">conditional_t</a>&lt; <a class="el" href="namespaceddc.html#a20d13e258d90b019d44b38be91885f35">is_uniform_bsplines_v</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="structddc_1_1NonUniformBsplinesKnots.html">NonUniformBsplinesKnots</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; &gt;</td>
+<td class="fieldname">
+type</td>
+<td class="fielddoc">
+The type representing the discrete dimension of the knots. </td></tr>
+</table>
+
+</div>
+</div>
 <a name="structddc_1_1kwArgs__fft" id="structddc_1_1kwArgs__fft"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structddc_1_1kwArgs__fft">&#9670;&#160;</a></span>ddc::kwArgs_fft</h2>
 
@@ -1168,6 +1200,24 @@ template&lt;typename... DDom&gt; </div>
 </div><div class="memdoc">
 
 <p>A DiscreteVectorElement is a scalar that represents the difference between two coordinates. </p>
+
+</div>
+</div>
+<a id="a9bb23b18d7ef49df880108facd429dc4" name="a9bb23b18d7ef49df880108facd429dc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bb23b18d7ef49df880108facd429dc4">&#9670;&#160;</a></span>knot_discrete_dimension_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#a9bb23b18d7ef49df880108facd429dc4">ddc::knot_discrete_dimension_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">KnotDiscreteDimension</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Helper type to easily access <code><a class="el" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension" title="If the type DDim is a B-spline, defines type to the discrete dimension of the associated knots.">KnotDiscreteDimension</a>&lt;DDim&gt;::type</code> </p>
 
 </div>
 </div>

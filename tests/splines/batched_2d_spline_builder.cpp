@@ -390,7 +390,6 @@ static void Batched2dSplineTest()
                     derivs2_lhs1_host(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx + shift - 1);
                 });
 
-
         auto derivs2_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs2_lhs1_host);
         ddc::ChunkSpan derivs2_lhs1 = derivs2_lhs1_alloc.span_view();
 

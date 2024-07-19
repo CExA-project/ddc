@@ -135,6 +135,8 @@ public:
 
     /** Construct a Impl<Kokkos::HostSpace> and associated discrete_domain_type from a segment
      *  \f$[a, b] \subset [a, +\infty[\f$ and a number of points `n`.
+     *  Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling.
+     *  One should expect usual floating point rounding errors.
      *
      * @param a coordinate of the first point of the domain
      * @param b coordinate of the last point of the domain
@@ -159,6 +161,8 @@ public:
 
     /** Construct a periodic `DiscreteDomain` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a
      *  number of points `n`.
+     *  Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling.
+     *  One should expect usual floating point rounding errors.
      *
      * @param a coordinate of the first point of the domain
      * @param b coordinate of the last point of the domain
@@ -209,6 +213,8 @@ public:
 
     /** Construct a periodic `DiscreteDomain` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a
      *  number of points `n`.
+     *  Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling.
+     *  One should expect usual floating point rounding errors.
      *
      * @param a coordinate of the first point of the domain
      * @param b coordinate of the last point of the domain

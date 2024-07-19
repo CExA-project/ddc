@@ -179,8 +179,8 @@ $(document).ready(function(){initNavTree('periodic__sampling_8hpp_source.html','
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        {</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            <span class="keywordflow">return</span> m_origin</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                   + continuous_element_type(</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                             <span class="keyword">static_cast</span>&lt;<span class="keywordtype">int</span>&gt;((icoord.uid() + m_n_period / 2 - 1) % m_n_period)</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                             - <span class="keyword">static_cast</span>&lt;<span class="keywordtype">int</span>&gt;(m_n_period / 2 - 1))</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                             <span class="keyword">static_cast</span>&lt;<span class="keywordtype">int</span>&gt;((icoord.uid() + m_n_period / 2) % m_n_period)</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                             - <span class="keyword">static_cast</span>&lt;<span class="keywordtype">int</span>&gt;(m_n_period / 2))</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                             * m_step;</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        }</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    };</div>

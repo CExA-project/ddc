@@ -74,7 +74,7 @@ struct Fourier;
 /**
  * @brief A named argument to choose the direction of the FFT.
  *
- * @see kwArgs_core, kwArgs_fft
+ * @see kwArgs_impl, kwArgs_fft
  */
 enum class FFT_Direction {
     FORWARD, ///< Forward, corresponds to direct FFT up to normalization
@@ -84,7 +84,7 @@ enum class FFT_Direction {
 /**
  * @brief A named argument to choose the type of normalization of the FFT.
  *
- * @see kwArgs_core, kwArgs_fft
+ * @see kwArgs_impl, kwArgs_fft
  */
 enum class FFT_Normalization {
     OFF, ///< No normalization. Un-normalized FFT is sum_j f(x_j)*e^-ikx_j
@@ -358,11 +358,11 @@ hipfftResult _hipfftExec([[maybe_unused]] LastArg lastArg, Args... args)
 #endif
 
 /*
- * @brief A structure embedding the configuration of the core FFT function: direction and type of normalization.
+ * @brief A structure embedding the configuration of the impl FFT function: direction and type of normalization.
  *
- * @see FFT_core
+ * @see FFT_impl
  */
-struct kwArgs_core
+struct kwArgs_impl
 {
     ddc::FFT_Direction
             direction; // Only effective for C2C transform and for normalization BACKWARD and FORWARD
@@ -388,12 +388,12 @@ int N(ddc::DiscreteDomain<DDimX...> x_mesh)
 
 /// @brief Core internal function to perform the FFT.
 template <typename Tin, typename Tout, typename ExecSpace, typename MemorySpace, typename... DDimX>
-void core(
+void impl(
         ExecSpace const& execSpace,
         Tout* out_data,
         Tin* in_data,
         ddc::DiscreteDomain<DDimX...> mesh,
-        const kwArgs_core& kwargs)
+        const kwArgs_impl& kwargs)
 {
     static_assert(
             std::is_same_v<real_type_t<Tin>, float> || std::is_same_v<real_type_t<Tin>, double>,
@@ -746,7 +746,7 @@ void fft(
             (is_periodic_sampling_v<DDimFx> && ...),
             "DDimFx dimensions should derive from PeriodicPointSampling");
 
-    ddc::detail::fft::core<Tin, Tout, ExecSpace, MemorySpace, DDimX...>(
+    ddc::detail::fft::impl<Tin, Tout, ExecSpace, MemorySpace, DDimX...>(
             execSpace,
             out.data_handle(),
             in.data_handle(),
@@ -805,7 +805,7 @@ void ifft(
             (is_periodic_sampling_v<DDimFx> && ...),
             "DDimFx dimensions should derive from PeriodicPointSampling");
 
-    ddc::detail::fft::core<Tin, Tout, ExecSpace, MemorySpace, DDimX...>(
+    ddc::detail::fft::impl<Tin, Tout, ExecSpace, MemorySpace, DDimX...>(
             execSpace,
             out.data_handle(),
             in.data_handle(),

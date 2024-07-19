@@ -47,7 +47,7 @@ struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
 };
 using GrevillePoints = ddc::
         GrevilleInterpolationPoints<BSplinesX, BoundCond, BoundCond>;
-struct DDimX : GrevillePoints::interpolation_mesh_type
+struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
 //! [X-discretization]
@@ -144,15 +144,10 @@ int main(int argc, char** argv)
             ddc::Coordinate<X>(x_start),
             ddc::Coordinate<X>(x_end),
             nb_x_points);
-    ddc::init_discrete_space<DDimX>(ddc::GrevilleInterpolationPoints<
-                                    BSplinesX,
-                                    BoundCond,
-                                    BoundCond>::get_sampling<DDimX>());
+    ddc::init_discrete_space<DDimX>(
+            GrevillePoints::get_sampling<DDimX>());
 
-    auto const x_domain = ddc::GrevilleInterpolationPoints<
-            BSplinesX,
-            BoundCond,
-            BoundCond>::get_domain<DDimX>();
+    auto const x_domain = GrevillePoints::get_domain<DDimX>();
     //! [X-global-domain]
     // Initialization of the global domain in Y
     auto const y_domain
@@ -231,7 +226,7 @@ int main(int argc, char** argv)
             DDimX,
             BoundCond,
             BoundCond,
-            ddc::SplineSolver::GINKGO,
+            ddc::SplineSolver::LAPACK,
             DDimX,
             DDimY>
             spline_builder(x_mesh);

@@ -8,11 +8,16 @@
 #include <memory>
 #include <string>
 
+#include <Kokkos_DualView.hpp>
+
 #if __has_include(<mkl_lapacke.h>)
 #include <mkl_lapacke.h>
 #else
 #include <lapacke.h>
 #endif
+
+#include <KokkosBatched_Pbtrs.hpp>
+#include <KokkosBatched_Util.hpp>
 
 #include "splines_linear_problem.hpp"
 
@@ -39,7 +44,8 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    Kokkos::View<double**, Kokkos::HostSpace> m_q; // pds band matrix representation
+    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+            m_q; // pds band matrix representation
 
 public:
     /**
@@ -54,7 +60,7 @@ public:
     {
         assert(m_q.extent(0) <= mat_size);
 
-        Kokkos::deep_copy(m_q, 0.);
+        Kokkos::deep_copy(m_q.h_view, 0.);
     }
 
     double get_element(std::size_t i, std::size_t j) const override
@@ -67,7 +73,7 @@ public:
             std::swap(i, j);
         }
         if (j - i < m_q.extent(0)) {
-            return m_q(j - i, i);
+            return m_q.h_view(j - i, i);
         } else {
             return 0.0;
         }
@@ -83,7 +89,7 @@ public:
             std::swap(i, j);
         }
         if (j - i < m_q.extent(0)) {
-            m_q(j - i, i) = aij;
+            m_q.h_view(j - i, i) = aij;
         } else {
             assert(std::fabs(aij) < 1e-20);
         }
@@ -101,14 +107,18 @@ public:
                 'L',
                 size(),
                 m_q.extent(0) - 1,
-                m_q.data(),
-                m_q.stride(
-                        0) // m_q.stride(0) if LAPACK_ROW_MAJOR, m_q.stride(1) if LAPACK_COL_MAJOR
+                m_q.h_view.data(),
+                m_q.h_view.stride(
+                        0) // m_q.h_view.stride(0) if LAPACK_ROW_MAJOR, m_q.h_view.stride(1) if LAPACK_COL_MAJOR
         );
         if (info != 0) {
             throw std::runtime_error(
                     "LAPACKE_dpbtrf failed with error code " + std::to_string(info));
         }
+
+        // Push on device
+        m_q.modify_host();
+        m_q.sync_device();
     }
 
     /**
@@ -119,28 +129,21 @@ public:
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem (unused for a symmetric problem).
      */
-    void solve(MultiRHS b, bool const) const override
+    void solve(MultiRHS const b, bool const) const override
     {
         assert(b.extent(0) == size());
 
-        auto b_host = create_mirror_view(Kokkos::DefaultHostExecutionSpace(), b);
-        Kokkos::deep_copy(b_host, b);
-        int const info = LAPACKE_dpbtrs(
-                LAPACK_ROW_MAJOR,
-                'L',
-                b_host.extent(0),
-                m_q.extent(0) - 1,
-                b_host.extent(1),
-                m_q.data(),
-                m_q.stride(
-                        0), // m_q.stride(0) if LAPACK_ROW_MAJOR, m_q.stride(1) if LAPACK_COL_MAJOR
-                b_host.data(),
-                b_host.stride(0));
-        if (info != 0) {
-            throw std::runtime_error(
-                    "LAPACKE_dpbtrs failed with error code " + std::to_string(info));
-        }
-        Kokkos::deep_copy(b, b_host);
+        auto q_device = m_q.d_view;
+        Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
+        Kokkos::parallel_for(
+                "pbtrs",
+                policy,
+                KOKKOS_LAMBDA(const int i) {
+                    auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
+                    KokkosBatched::SerialPbtrs<
+                            KokkosBatched::Uplo::Lower,
+                            KokkosBatched::Algo::Pbtrs::Unblocked>::invoke(q_device, sub_b);
+                });
     }
 };
 

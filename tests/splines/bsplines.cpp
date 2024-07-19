@@ -107,3 +107,20 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnity_NonUniform)
         EXPECT_LE(fabs(sum - 1.0), 1.0e-15);
     }
 }
+
+TEST(KnotDiscreteDimension, Type)
+{
+    struct DDim1 : ddc::UniformBSplines<struct X, 1>
+    {
+    };
+    EXPECT_TRUE((std::is_same_v<
+                 ddc::knot_discrete_dimension_t<DDim1>,
+                 ddc::UniformBsplinesKnots<DDim1>>));
+
+    struct DDim2 : ddc::NonUniformBSplines<struct X, 1>
+    {
+    };
+    EXPECT_TRUE((std::is_same_v<
+                 ddc::knot_discrete_dimension_t<DDim2>,
+                 ddc::NonUniformBsplinesKnots<DDim2>>));
+}

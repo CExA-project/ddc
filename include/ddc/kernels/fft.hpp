@@ -87,14 +87,14 @@ enum class FFT_Direction {
  * @see kwArgs_core, kwArgs_fft
  */
 enum class FFT_Normalization {
-    OFF, ///< No normalization
+    OFF, ///< No normalization. Un-normalized FFT is sum_j f(x_j)*e^-ikx_j
     FORWARD, ///< Multiply by 1/N for forward FFT, no normalization for backward FFT
     BACKWARD, ///< No normalization for forward FFT, multiply by 1/N for backward FFT
     ORTHO, ///< Multiply by 1/sqrt(N)
-    FULL /**< 
-          * Multiply by (b-a)/N/sqrt(2*pi) for forward FFT and (kb-ka)/N/sqrt(2*pi) for backward
+    FULL /**<
+          * Multiply by dx/sqrt(2*pi) for forward FFT and dk/sqrt(2*pi) for backward
           * FFT. It is aligned with the usual definition of the (continuous) Fourier transform
-          * 1/sqrt(2*pi)*int f(x)*e^-ikx*dx, and thus preserves the gaussian function exp(-x^2/2) numerically.
+          * 1/sqrt(2*pi)*int f(x)*e^-ikx*dx, and thus may be relevant for spectral analysis applications.
           */
 };
 } // namespace ddc
@@ -357,10 +357,10 @@ hipfftResult _hipfftExec([[maybe_unused]] LastArg lastArg, Args... args)
 }
 #endif
 
-/* 
+/*
  * @brief A structure embedding the configuration of the core FFT function: direction and type of normalization.
  *
- * @see FFT_core 
+ * @see FFT_core
  */
 struct kwArgs_core
 {
@@ -384,66 +384,6 @@ int N(ddc::DiscreteDomain<DDimX...> x_mesh)
             (is_uniform_point_sampling_v<DDimX> && ...),
             "DDimX dimensions should derive from UniformPointSampling");
     return static_cast<int>(x_mesh.template extent<DDim>());
-}
-
-/**
- * @brief Get the lower boundary coordinate along a given dimension.
- *
- * The lower boundary of the domain (which appears in Nyquist-Shannon theorem) is not
- * xmin=ddc::coordinate(x_mesh.front()). Indeed, this coordinate identifies the lower cell, but
- * the lower boundary is the left side of this lower cell, which is a = xmin - cell_size/2, with
- * cell_size = (b-a)/N. It leads to a = xmin-(b-a)/2N. The same derivation for the
- * upper boundary coordinate gives b = xmax+(b-a)/2N. Inverting this linear system leads to:
- *
- * a = ((2N-1)*xmin-xmax)/2/(N-1)
- * b = ((2N-1)*xmax-xmin)/2/(N-1)
- *
- * The current function implements the first equation.
- *
- * @tparam DDim The dimension along which the lower cell coordinate of the Fourier mesh is returned.
- * @param x_mesh The mesh.
- *
- * @return The lower boundary along the required dimension.
- */
-template <typename DDim, typename... DDimX>
-double a(ddc::DiscreteDomain<DDimX...> x_mesh)
-{
-    static_assert(
-            (is_uniform_point_sampling_v<DDimX> && ...),
-            "DDimX dimensions should derive from UniformPointSampling");
-    return ((2 * N<DDim>(x_mesh) - 1) * coordinate(ddc::select<DDim>(x_mesh).front())
-            - coordinate(ddc::select<DDim>(x_mesh).back()))
-           / 2 / (N<DDim>(x_mesh) - 1);
-}
-
-/**
- * @brief Get the upper boundary coordinate along a given dimension.
- *
- * The upper boundary of the domain (which appears in Nyquist-Shannon theorem) is not
- * xmax=ddc::coordinate(x_mesh.back()). Indeed, this coordinate identifies the upper cell, but
- * the upper boundary is the right side of this upper cell, which is b = xmax + cell_size/2, with
- * cell_size = (b-a)/N. It leads to b = xmax+(b-a)/2N. The same derivation for the
- * lower boundary coordinate gives a = xmin-(b-a)/2N. Inverting this linear system leads to:
- *
- * a = ((2N-1)*xmin-xmax)/2/(N-1)
- * b = ((2N-1)*xmax-xmin)/2/(N-1)
- *
- * The current function implements the second equation.
- *
- * @tparam DDim The dimension along which the upper cell coordinate of the Fourier mesh is returned.
- * @param x_mesh The mesh.
- *
- * @return The upper boundary along the required dimension.
- */
-template <typename DDim, typename... DDimX>
-double b(ddc::DiscreteDomain<DDimX...> x_mesh)
-{
-    static_assert(
-            (is_uniform_point_sampling_v<DDimX> && ...),
-            "DDimX dimensions should derive from UniformPointSampling");
-    return ((2 * N<DDim>(x_mesh) - 1) * coordinate(ddc::select<DDim>(x_mesh).back())
-            - coordinate(ddc::select<DDim>(x_mesh).front()))
-           / 2 / (N<DDim>(x_mesh) - 1);
 }
 
 /// @brief Core internal function to perform the FFT.
@@ -674,13 +614,12 @@ namespace ddc {
  * @brief Initialize a Fourier discrete dimension.
  *
  * Initialize the (1D) discrete space representing the Fourier discrete dimension associated
- * to the (1D) mesh passed as argument. It is a N-periodic PeriodicSampling defined between
- * ka=0 and kb=2*N/(b-a)*pi.
+ * to the (1D) mesh passed as argument. It is a N-periodic PeriodicSampling with a periodic window of width 2*pi/dx.
  *
- * This value for kb comes from the Nyquist-Shannon theorem: the period of the spectral domain
- * is kb-ka = 2*pi/cell_size = 2*pi*N/(b-a). The PeriodicSampling then contains cells between coordinates
- * k=0 and k=2*pi*(N-1)/(b-a), because the cell at coordinate k=2*pi*N/(b-a) is a periodic point (f(ka)=f(kb)).
- *  
+ * This value comes from the Nyquist-Shannon theorem: the period of the spectral domain is N*dk = 2*pi/dx.
+ * Adding to this the relations dx = (xmax-xmin)/(N-1), and dk = (kmax-kmin)/(N-1), we get kmax-kmin = 2*pi*(N-1)^2/N/(xmax-xmin),
+ * which is used in the implementation (xmax, xmin, kmin and kmax are the centers of lower and upper cells inside a single period of the meshes).
+ *
  * @tparam DDimFx A PeriodicSampling representing the Fourier discrete dimension.
  * @tparam DDimX The type of the original discrete dimension.
  *
@@ -704,7 +643,10 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
             ddc::Coordinate<typename DDimFx::continuous_dimension_type>(0),
             ddc::Coordinate<typename DDimFx::continuous_dimension_type>(
                     2 * (ddc::detail::fft::N<DDimX>(x_mesh) - 1)
-                    / (ddc::detail::fft::b<DDimX>(x_mesh) - ddc::detail::fft::a<DDimX>(x_mesh))
+                    * (ddc::detail::fft::N<DDimX>(x_mesh) - 1)
+                    / static_cast<double>(
+                            ddc::detail::fft::N<DDimX>(x_mesh)
+                            * (ddc::coordinate(x_mesh.back()) - ddc::coordinate(x_mesh.front())))
                     * Kokkos::numbers::pi),
             ddc::DiscreteVector<DDimFx>(ddc::detail::fft::N<DDimX>(x_mesh)),
             ddc::DiscreteVector<DDimFx>(ddc::detail::fft::N<DDimX>(x_mesh)));
@@ -717,10 +659,8 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
  * Compute the Fourier (or spectral) mesh on which the Discrete Fourier Transform of a
  * discrete function is defined.
  *
- * The uid identifies the mode (ie. ddc::DiscreteElement<DDimFx>(0) corresponds to mode 0).
- *
  * @param x_mesh The DiscreteDomain representing the original mesh.
- * @param C2C A flag indicating if a complex-to-complex DFT is going to be performed. Indeed, 
+ * @param C2C A flag indicating if a complex-to-complex DFT is going to be performed. Indeed,
  * in this case the two meshes have same number of points, whereas for real-to-complex
  * or complex-to-real DFT, each complex value of the Fourier-transformed function contains twice more
  * information, and thus only half (actually Nx*Ny*(Nz/2+1) for 3D R2C FFT to take in account mode 0)
@@ -746,7 +686,7 @@ ddc::DiscreteDomain<DDimFx...> FourierMesh(ddc::DiscreteDomain<DDimX...> x_mesh,
                                  ddc::detail::fft::N<DDimX>(x_mesh)))))...);
 }
 
-/** 
+/**
  * @brief A structure embedding the configuration of the exposed FFT function with the type of normalization.
  *
  * @see fft, ifft

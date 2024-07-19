@@ -332,29 +332,7 @@ int N(ddc::DiscreteDomain<DDimX...> x_mesh)
     static_assert(
             (is_uniform_point_sampling_v<DDimX> && ...),
             "DDimX dimensions should derive from UniformPointSampling");
-    return ddc::get<DDim>(x_mesh.extents());
-}
-
-template <typename DDim, typename... DDimX>
-double a(ddc::DiscreteDomain<DDimX...> x_mesh)
-{
-    static_assert(
-            (is_uniform_point_sampling_v<DDimX> && ...),
-            "DDimX dimensions should derive from UniformPointSampling");
-    return ((2 * N<DDim>(x_mesh) - 1) * coordinate(ddc::select<DDim>(x_mesh).front())
-            - coordinate(ddc::select<DDim>(x_mesh).back()))
-           / 2 / (N<DDim>(x_mesh) - 1);
-}
-
-template <typename DDim, typename... DDimX>
-double b(ddc::DiscreteDomain<DDimX...> x_mesh)
-{
-    static_assert(
-            (is_uniform_point_sampling_v<DDimX> && ...),
-            "DDimX dimensions should derive from UniformPointSampling");
-    return ((2 * N<DDim>(x_mesh) - 1) * coordinate(ddc::select<DDim>(x_mesh).back())
-            - coordinate(ddc::select<DDim>(x_mesh).front()))
-           / 2 / (N<DDim>(x_mesh) - 1);
+    return static_cast<int>(x_mesh.template extent<DDim>());
 }
 
 // core
@@ -595,7 +573,10 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
             ddc::Coordinate<typename DDimFx::continuous_dimension_type>(0),
             ddc::Coordinate<typename DDimFx::continuous_dimension_type>(
                     2 * (ddc::detail::fft::N<DDimX>(x_mesh) - 1)
-                    / (ddc::detail::fft::b<DDimX>(x_mesh) - ddc::detail::fft::a<DDimX>(x_mesh))
+                    * (ddc::detail::fft::N<DDimX>(x_mesh) - 1)
+                    / static_cast<double>(
+                            ddc::detail::fft::N<DDimX>(x_mesh)
+                            * (ddc::coordinate(x_mesh.back()) - ddc::coordinate(x_mesh.front())))
                     * Kokkos::numbers::pi),
             ddc::DiscreteVector<DDimFx>(ddc::detail::fft::N<DDimX>(x_mesh)),
             ddc::DiscreteVector<DDimFx>(ddc::detail::fft::N<DDimX>(x_mesh)));

@@ -127,8 +127,8 @@ public:
         {
             return m_origin
                    + continuous_element_type(
-                             static_cast<int>((icoord.uid() + m_n_period / 2 - 1) % m_n_period)
-                             - static_cast<int>(m_n_period / 2 - 1))
+                             static_cast<int>((icoord.uid() + m_n_period / 2) % m_n_period)
+                             - static_cast<int>(m_n_period / 2))
                              * m_step;
         }
     };

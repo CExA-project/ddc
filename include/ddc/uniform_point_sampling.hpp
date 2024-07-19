@@ -217,14 +217,6 @@ struct is_uniform_point_sampling : public std::is_base_of<detail::UniformPointSa
 template <class DDim>
 constexpr bool is_uniform_point_sampling_v = is_uniform_point_sampling<DDim>::value;
 
-template <class DDim>
-using is_uniform_sampling [[deprecated("Use is_uniform_point_sampling instead")]]
-= is_uniform_point_sampling<DDim>;
-
-template <class DDim>
-[[deprecated("Use is_uniform_point_sampling_v instead")]] constexpr bool is_uniform_sampling_v
-        = is_uniform_point_sampling_v<DDim>;
-
 template <
         class DDimImpl,
         std::enable_if_t<

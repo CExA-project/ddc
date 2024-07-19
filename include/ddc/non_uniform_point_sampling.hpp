@@ -209,15 +209,6 @@ struct is_non_uniform_point_sampling
 template <class DDim>
 constexpr bool is_non_uniform_point_sampling_v = is_non_uniform_point_sampling<DDim>::value;
 
-template <class DDim>
-using is_non_uniform_sampling [[deprecated("Use is_non_uniform_point_sampling instead")]]
-= is_non_uniform_point_sampling<DDim>;
-
-template <class DDim>
-[[deprecated(
-        "Use is_non_uniform_point_sampling_v instead")]] constexpr bool is_non_uniform_sampling_v
-        = is_non_uniform_point_sampling_v<DDim>;
-
 template <
         class DDimImpl,
         std::enable_if_t<

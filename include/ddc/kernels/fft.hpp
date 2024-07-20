@@ -63,6 +63,7 @@ static_assert(alignof(hipfftDoubleComplex) <= alignof(Kokkos::complex<double>));
 #endif
 
 namespace ddc {
+
 /**
  * @brief A templated tag representing a continuous dimension in the Fourier space associated to the original continuous dimension.
  *
@@ -97,6 +98,7 @@ enum class FFT_Normalization {
           * 1/sqrt(2*pi)*int f(x)*e^-ikx*dx, and thus may be relevant for spectral analysis applications.
           */
 };
+
 } // namespace ddc
 
 namespace ddc::detail::fft {
@@ -389,7 +391,7 @@ int N(ddc::DiscreteDomain<DDimX...> x_mesh)
 /// @brief Core internal function to perform the FFT.
 template <typename Tin, typename Tout, typename ExecSpace, typename MemorySpace, typename... DDimX>
 void impl(
-        ExecSpace const& execSpace,
+        ExecSpace const& exec_space,
         Tout* out_data,
         Tin* in_data,
         ddc::DiscreteDomain<DDimX...> mesh,
@@ -451,10 +453,10 @@ void impl(
     else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
         if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
             fftwf_init_threads();
-            fftwf_plan_with_nthreads(execSpace.concurrency());
+            fftwf_plan_with_nthreads(exec_space.concurrency());
         } else {
             fftw_init_threads();
-            fftw_plan_with_nthreads(execSpace.concurrency());
+            fftw_plan_with_nthreads(exec_space.concurrency());
         }
         _fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin, Tout>(
                 kwargs.direction == ddc::FFT_Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
@@ -481,7 +483,7 @@ void impl(
 #endif
 #if cufft_AVAIL
     else if constexpr (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-        cudaStream_t stream = execSpace.cuda_stream();
+        cudaStream_t stream = exec_space.cuda_stream();
 
         cufftHandle unmanaged_plan = -1;
         cufftResult cufft_rt = cufftCreate(&unmanaged_plan);
@@ -520,7 +522,7 @@ void impl(
 #endif
 #if hipfft_AVAIL
     else if constexpr (std::is_same_v<ExecSpace, Kokkos::HIP>) {
-        hipStream_t stream = execSpace.hip_stream();
+        hipStream_t stream = exec_space.hip_stream();
 
         hipfftHandle unmanaged_plan;
         hipfftResult hipfft_rt = hipfftCreate(&unmanaged_plan);
@@ -595,7 +597,7 @@ void impl(
         Kokkos::parallel_for(
                 "ddc_fft_normalization",
                 Kokkos::RangePolicy<ExecSpace>(
-                        execSpace,
+                        exec_space,
                         0,
                         is_complex_v<Tout> && transform_type_v<Tin, Tout> != TransformType::C2C
                                 ? (LastSelector<double, DDimX, DDimX...>(
@@ -606,6 +608,7 @@ void impl(
                 KOKKOS_LAMBDA(const int& i) { out_data[i] = out_data[i] * norm_coef; });
     }
 }
+
 } // namespace ddc::detail::fft
 
 namespace ddc {
@@ -710,10 +713,10 @@ struct kwArgs_fft
  * @tparam ExecSpace The type of the Kokkos::ExecutionSpace on which the FFT is performed. It determines which specialized
  * backend is used (ie. fftw, cuFFT...).
  * @tparam MemorySpace The type of the Kokkos::MemorySpace on which are stored the input and output discrete functions.
- * @tparam layout_in The layout of the Chunkspan representing the input discrete function.
- * @tparam layout_out The layout of the Chunkspan representing the output discrete function.
+ * @tparam LayoutIn The layout of the Chunkspan representing the input discrete function.
+ * @tparam LayoutOut The layout of the Chunkspan representing the output discrete function.
  *
- * @param execSpace The Kokkos::ExecutionSpace on which the FFT is performed.
+ * @param exec_space The Kokkos::ExecutionSpace on which the FFT is performed.
  * @param out The output discrete function, represented as a ChunkSpan storing values on a spectral mesh.
  * @param in The input discrete function, represented as a ChunkSpan storing values on a mesh.
  * @param kwargs The kwArgs_fft configuring the FFT.
@@ -725,19 +728,19 @@ template <
         typename... DDimX,
         typename ExecSpace,
         typename MemorySpace,
-        typename layout_in,
-        typename layout_out>
+        typename LayoutIn,
+        typename LayoutOut>
 void fft(
-        ExecSpace const& execSpace,
-        ddc::ChunkSpan<Tout, ddc::DiscreteDomain<DDimFx...>, layout_out, MemorySpace> out,
-        ddc::ChunkSpan<Tin, ddc::DiscreteDomain<DDimX...>, layout_in, MemorySpace> in,
+        ExecSpace const& exec_space,
+        ddc::ChunkSpan<Tout, ddc::DiscreteDomain<DDimFx...>, LayoutOut, MemorySpace> out,
+        ddc::ChunkSpan<Tin, ddc::DiscreteDomain<DDimX...>, LayoutIn, MemorySpace> in,
         ddc::kwArgs_fft kwargs = {ddc::FFT_Normalization::OFF})
 {
     static_assert(
             std::is_same_v<
-                    layout_in,
+                    LayoutIn,
                     std::experimental::
-                            layout_right> && std::is_same_v<layout_out, std::experimental::layout_right>,
+                            layout_right> && std::is_same_v<LayoutOut, std::experimental::layout_right>,
             "Layouts must be right-handed");
     static_assert(
             (is_uniform_point_sampling_v<DDimX> && ...),
@@ -747,7 +750,7 @@ void fft(
             "DDimFx dimensions should derive from PeriodicPointSampling");
 
     ddc::detail::fft::impl<Tin, Tout, ExecSpace, MemorySpace, DDimX...>(
-            execSpace,
+            exec_space,
             out.data_handle(),
             in.data_handle(),
             in.domain(),
@@ -769,10 +772,10 @@ void fft(
  * @tparam ExecSpace The type of the Kokkos::ExecutionSpace on which the iFFT is performed. It determines which specialized
  * backend is used (ie. fftw, cuFFT...).
  * @tparam MemorySpace The type of the Kokkos::MemorySpace on which are stored the input and output discrete functions.
- * @tparam layout_in The layout of the Chunkspan representing the input discrete function.
- * @tparam layout_out The layout of the Chunkspan representing the output discrete function.
+ * @tparam LayoutIn The layout of the Chunkspan representing the input discrete function.
+ * @tparam LayoutOut The layout of the Chunkspan representing the output discrete function.
  *
- * @param execSpace The Kokkos::ExecutionSpace on which the iFFT is performed.
+ * @param exec_space The Kokkos::ExecutionSpace on which the iFFT is performed.
  * @param out The output discrete function, represented as a ChunkSpan storing values on a mesh.
  * @param in The input discrete function, represented as a ChunkSpan storing values on a spectral mesh.
  * @param kwargs The kwArgs_fft configuring the iFFT.
@@ -784,19 +787,19 @@ template <
         typename... DDimFx,
         typename ExecSpace,
         typename MemorySpace,
-        typename layout_in,
-        typename layout_out>
+        typename LayoutIn,
+        typename LayoutOut>
 void ifft(
-        ExecSpace const& execSpace,
-        ddc::ChunkSpan<Tout, ddc::DiscreteDomain<DDimX...>, layout_out, MemorySpace> out,
-        ddc::ChunkSpan<Tin, ddc::DiscreteDomain<DDimFx...>, layout_in, MemorySpace> in,
+        ExecSpace const& exec_space,
+        ddc::ChunkSpan<Tout, ddc::DiscreteDomain<DDimX...>, LayoutOut, MemorySpace> out,
+        ddc::ChunkSpan<Tin, ddc::DiscreteDomain<DDimFx...>, LayoutIn, MemorySpace> in,
         ddc::kwArgs_fft kwargs = {ddc::FFT_Normalization::OFF})
 {
     static_assert(
             std::is_same_v<
-                    layout_in,
+                    LayoutIn,
                     std::experimental::
-                            layout_right> && std::is_same_v<layout_out, std::experimental::layout_right>,
+                            layout_right> && std::is_same_v<LayoutOut, std::experimental::layout_right>,
             "Layouts must be right-handed");
     static_assert(
             (is_uniform_point_sampling_v<DDimX> && ...),
@@ -806,10 +809,11 @@ void ifft(
             "DDimFx dimensions should derive from PeriodicPointSampling");
 
     ddc::detail::fft::impl<Tin, Tout, ExecSpace, MemorySpace, DDimX...>(
-            execSpace,
+            exec_space,
             out.data_handle(),
             in.data_handle(),
             out.domain(),
             {ddc::FFT_Direction::BACKWARD, kwargs.normalization});
 }
+
 } // namespace ddc

@@ -92,7 +92,7 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
      * this is DiscreteDomain<X,Z>
      */
-    using batch_domain_type = typename ddc::remove_dims_of_t<
+    using batch_domain_type = ddc::remove_dims_of_t<
             batched_interpolation_domain_type,
             interpolation_discrete_dimension_type>;
 
@@ -103,7 +103,7 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
      * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<X,BSplinesY,Z>.
      */
-    using batched_spline_domain_type = typename ddc::replace_dim_of_t<
+    using batched_spline_domain_type = ddc::replace_dim_of_t<
             batched_interpolation_domain_type,
             interpolation_discrete_dimension_type,
             bsplines_type>;
@@ -131,7 +131,7 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
      * this is DiscreteDomain<X,Deriv<Y>,Z>
      */
-    using batched_derivs_domain_type = typename ddc::replace_dim_of_t<
+    using batched_derivs_domain_type = ddc::replace_dim_of_t<
             batched_interpolation_domain_type,
             interpolation_discrete_dimension_type,
             deriv_type>;

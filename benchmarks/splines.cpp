@@ -14,7 +14,7 @@
 
 #include <benchmark/benchmark.h>
 
-static const ddc::SplineSolver Backend = ddc::SplineSolver::GINKGO;
+static const ddc::SplineSolver Backend = ddc::SplineSolver::LAPACK;
 
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
 {

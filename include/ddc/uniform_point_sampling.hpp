@@ -116,6 +116,8 @@ public:
 
     /** Construct a Impl<Kokkos::HostSpace> and associated discrete_domain_type from a segment
      *  \f$[a, b] \subset [a, +\infty[\f$ and a number of points `n`.
+     *  Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling.
+     *  One should expect usual floating point rounding errors.
      *
      * @param a coordinate of the first point of the domain
      * @param b coordinate of the last point of the domain
@@ -135,6 +137,8 @@ public:
 
     /** Construct a uniform `DiscreteDomain` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a
      *  number of points `n`.
+     *  Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling.
+     *  One should expect usual floating point rounding errors.
      *
      * @param a coordinate of the first point of the domain
      * @param b coordinate of the last point of the domain
@@ -180,6 +184,8 @@ public:
 
     /** Construct a uniform `DiscreteDomain` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a
      *  number of points `n`.
+     *  Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling.
+     *  One should expect usual floating point rounding errors.
      *
      * @param a coordinate of the first point of the domain
      * @param b coordinate of the last point of the domain
@@ -210,14 +216,6 @@ struct is_uniform_point_sampling : public std::is_base_of<detail::UniformPointSa
 
 template <class DDim>
 constexpr bool is_uniform_point_sampling_v = is_uniform_point_sampling<DDim>::value;
-
-template <class DDim>
-using is_uniform_sampling [[deprecated("Use is_uniform_point_sampling instead")]]
-= is_uniform_point_sampling<DDim>;
-
-template <class DDim>
-[[deprecated("Use is_uniform_point_sampling_v instead")]] constexpr bool is_uniform_sampling_v
-        = is_uniform_point_sampling_v<DDim>;
 
 template <
         class DDimImpl,

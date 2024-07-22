@@ -6,7 +6,11 @@
 
 namespace ddc {
 
-template <class Tag>
+/**
+ * @brief A templated struct representing a discrete dimension storing
+ * the derivatives of a function along a continuous dimension CDim.
+ */
+template <class CDim>
 struct Deriv
 {
 };

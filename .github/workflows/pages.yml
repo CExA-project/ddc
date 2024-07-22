@@ -97,9 +97,10 @@ jobs:
               -DDOXYGEN_WARN_AS_ERROR=NO \
               -DMDSPAN_CXX_STANDARD=20 \
               -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-              /src
-          cmake --build . --verbose --target doc
-          mv docs/doxygen.log /src/docs_out/doxygen.log
+              -B build \
+              -S /src
+          cmake --build build --verbose --target doc
+          mv build/docs/doxygen.log /src/docs_out/doxygen.log
         EOF
         mkdir docs_out
         chmod a+rwx docs_out
@@ -147,16 +148,22 @@ jobs:
           export CXX=clang++
           cmake \
               -DDDC_BUILD_DOCUMENTATION=ON \
+              -DCMAKE_CXX_FLAGS="-Wno-unused-command-line-argument" \
               -DCMAKE_CXX_STANDARD=20 \
+              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
               -DMDSPAN_CXX_STANDARD=20 \
               -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-              /src
-          cmake --build . --verbose --target doc
-          mv docs/html /src/docs_out
+              -B build \
+              -S /src
+          cmake --build build --verbose --target doc
+          mv build/docs/html /src/docs_out
         EOF
         mkdir docs_out
         chmod a+rwx docs_out
         docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
+        if [ -f docs_out/doxygen.log ]; then
+          cat docs_out/doxygen.log
+        fi
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |

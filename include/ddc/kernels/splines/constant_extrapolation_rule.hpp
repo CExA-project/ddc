@@ -4,6 +4,10 @@
 
 #pragma once
 
+#include <ddc/ddc.hpp>
+
+#include <Kokkos_Core.hpp>
+
 #include "view.hpp"
 
 namespace ddc {
@@ -187,12 +191,12 @@ public:
                 std::experimental::extents<std::size_t, BSplines2::degree() + 1>> const
                 vals2(vals2_ptr.data());
 
-        ddc::DiscreteElement<BSplines1> idx1
-                = ddc::discrete_space<BSplines1>()
-                          .eval_basis(vals1, ddc::select<typename BSplines1::tag_type>(eval_pos));
-        ddc::DiscreteElement<BSplines2> idx2
-                = ddc::discrete_space<BSplines2>()
-                          .eval_basis(vals2, ddc::select<typename BSplines2::tag_type>(eval_pos));
+        ddc::DiscreteElement<BSplines1> idx1 = ddc::discrete_space<BSplines1>().eval_basis(
+                vals1,
+                ddc::select<typename BSplines1::continuous_dimension_type>(eval_pos));
+        ddc::DiscreteElement<BSplines2> idx2 = ddc::discrete_space<BSplines2>().eval_basis(
+                vals2,
+                ddc::select<typename BSplines2::continuous_dimension_type>(eval_pos));
 
         double y = 0.0;
         for (std::size_t i = 0; i < BSplines1::degree() + 1; ++i) {

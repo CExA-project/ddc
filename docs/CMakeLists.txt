@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.22)
 
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html")
 set(DOXYGEN_AUTOLINK_SUPPORT YES)
@@ -59,8 +59,9 @@ set(DOXYGEN_IMAGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/images")
 doxygen_add_docs(doc
         "${CMAKE_CURRENT_SOURCE_DIR}/About.md"
         "${CMAKE_CURRENT_SOURCE_DIR}/first_steps.md"
+        "${CMAKE_CURRENT_SOURCE_DIR}/going_further.md"
         "${CMAKE_CURRENT_SOURCE_DIR}/uniform_heat_equation.md"
-        "${CMAKE_CURRENT_SOURCE_DIR}/heat_equation.md"
+        "${CMAKE_CURRENT_SOURCE_DIR}/non_uniform_heat_equation.md"
         "${CMAKE_CURRENT_SOURCE_DIR}/transformations.md"
         "${DDC_SOURCE_DIR}/include/ddc/"
         ALL)

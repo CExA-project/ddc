@@ -17,16 +17,16 @@ namespace ddc {
 
 namespace detail {
 
-template <class T>
-struct UniformBsplinesKnots : UniformPointSampling<typename T::tag_type>
-{
-};
-
 struct UniformBSplinesBase
 {
 };
 
 } // namespace detail
+
+template <class T>
+struct UniformBsplinesKnots : UniformPointSampling<typename T::continuous_dimension_type>
+{
+};
 
 /**
  * The type of a uniform 1D spline basis (B-spline).
@@ -34,17 +34,17 @@ struct UniformBSplinesBase
  * Knots for uniform B-splines are uniformly distributed (the associated discrete dimension
  * is a UniformPointSampling).
  *
- * @tparam Tag The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
+ * @tparam CDim The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
  * @tparam D The degree of the B-splines.
  */
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 class UniformBSplines : detail::UniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
 
 public:
     /// @brief The tag identifying the continuous dimension on which the support of the B-splines are defined.
-    using tag_type = Tag;
+    using continuous_dimension_type = CDim;
 
     /// @brief The discrete dimension representing B-splines.
     using discrete_dimension_type = UniformBSplines;
@@ -64,7 +64,7 @@ public:
      */
     static constexpr bool is_periodic() noexcept
     {
-        return Tag::PERIODIC;
+        return CDim::PERIODIC;
     }
 
     /** @brief Indicates if the B-splines are uniform or not (this is the case here).
@@ -87,13 +87,10 @@ public:
         template <class ODDim, class OMemorySpace>
         friend class Impl;
 
-    private:
-        using mesh_type = detail::UniformBsplinesKnots<DDim>;
-
-        // In the periodic case, it contains twice the periodic point!!!
-        ddc::DiscreteDomain<mesh_type> m_domain;
-
     public:
+        /// @brief The type of the knots defining the B-splines.
+        using knot_discrete_dimension_type = UniformBsplinesKnots<DDim>;
+
         /// @brief The type of the discrete dimension representing the B-splines.
         using discrete_dimension_type = UniformBSplines;
 
@@ -106,61 +103,73 @@ public:
         /// @brief The type of a DiscreteVector representing an "index displacement" between two B-splines.
         using discrete_vector_type = DiscreteVector<DDim>;
 
+    private:
+        // In the periodic case, they contain the periodic point twice!!!
+        ddc::DiscreteDomain<knot_discrete_dimension_type> m_knot_domain;
+        ddc::DiscreteDomain<knot_discrete_dimension_type> m_break_point_domain;
+
+    public:
         Impl() = default;
 
-        /** Constructs a spline basis (B-splines) with n equidistant knots over \f$[a, b]\f$
+        /** Constructs a spline basis (B-splines) with n equidistant knots over \f$[a, b]\f$.
          *
-         * @param rmin    the real ddc::coordinate of the first knot
-         * @param rmax    the real ddc::coordinate of the last knot
-         * @param ncells the number of cells in the range [rmin, rmax]
+         * @param rmin    The real ddc::coordinate of the first knot.
+         * @param rmax    The real ddc::coordinate of the last knot.
+         * @param ncells The number of cells in the range [rmin, rmax].
          */
-        explicit Impl(ddc::Coordinate<Tag> rmin, ddc::Coordinate<Tag> rmax, std::size_t ncells)
-            : m_domain(
-                    ddc::DiscreteElement<mesh_type>(0),
-                    ddc::DiscreteVector<mesh_type>(
-                            ncells + 1)) // Create a mesh including the eventual periodic point
+        explicit Impl(ddc::Coordinate<CDim> rmin, ddc::Coordinate<CDim> rmax, std::size_t ncells)
         {
             assert(ncells > 0);
-            ddc::init_discrete_space<mesh_type>(
-                    mesh_type::template init<
-                            mesh_type>(rmin, rmax, ddc::DiscreteVector<mesh_type>(ncells + 1)));
+            ddc::DiscreteDomain<knot_discrete_dimension_type> pre_ghost;
+            ddc::DiscreteDomain<knot_discrete_dimension_type> post_ghost;
+            std::tie(m_break_point_domain, m_knot_domain, pre_ghost, post_ghost)
+                    = ddc::init_discrete_space<knot_discrete_dimension_type>(
+                            knot_discrete_dimension_type::template init_ghosted<
+                                    knot_discrete_dimension_type>(
+                                    rmin,
+                                    rmax,
+                                    ddc::DiscreteVector<knot_discrete_dimension_type>(ncells + 1),
+                                    ddc::DiscreteVector<knot_discrete_dimension_type>(degree()),
+                                    ddc::DiscreteVector<knot_discrete_dimension_type>(degree())));
         }
 
-        /** @brief Copy-constructs from another Impl with a different Kokkos memory space
+        /** @brief Copy-constructs from another Impl with a different Kokkos memory space.
          *
-         * @param impl A reference to the other Impl
+         * @param impl A reference to the other Impl.
          */
         template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_domain(impl.m_domain)
+        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
+            : m_knot_domain(impl.m_knot_domain)
+            , m_break_point_domain(impl.m_break_point_domain)
         {
         }
 
-        /** @brief Copy-constructs
+        /** @brief Copy-constructs.
          *
-         * @param x A reference to another Impl
+         * @param x A reference to another Impl.
          */
         Impl(Impl const& x) = default;
 
-        /** @brief Move-constructs
+        /** @brief Move-constructs.
          *
-         * @param x An rvalue to another Impl
+         * @param x An rvalue to another Impl.
          */
         Impl(Impl&& x) = default;
 
-        /// @brief Destructs
+        /// @brief Destructs.
         ~Impl() = default;
 
-        /** @brief Copy-assigns
+        /** @brief Copy-assigns.
          *
-         * @param x A reference to another Impl
-         * @return A reference to the copied Impl
+         * @param x A reference to another Impl.
+         * @return A reference to the copied Impl.
          */
         Impl& operator=(Impl const& x) = default;
 
-        /** @brief Move-assigns
+        /** @brief Move-assigns.
          *
-         * @param x An rvalue to another Impl
-         * @return A reference to the moved Impl
+         * @param x An rvalue to another Impl.
+         * @return A reference to this object.
          */
         Impl& operator=(Impl&& x) = default;
 
@@ -177,7 +186,7 @@ public:
          * @return The index of the first B-spline which is evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
+        eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x) const
         {
             assert(values.size() == degree() + 1);
             return eval_basis(values, x, degree());
@@ -196,7 +205,7 @@ public:
          * @return The index of the first B-spline which is evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
+        eval_deriv(DSpan1D derivs, ddc::Coordinate<CDim> const& x) const;
 
         /** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate
          *
@@ -213,7 +222,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
-                ddc::Coordinate<Tag> const& x,
+                ddc::Coordinate<CDim> const& x,
                 std::size_t n) const;
 
         /** @brief Compute the integrals of the B-splines.
@@ -229,21 +238,6 @@ public:
                 integrals(ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
                                   int_vals) const;
 
-        /** @brief Returns the coordinate of the knot corresponding to the given index.
-         *
-         * Returns the coordinate of the knot corresponding to the given index. The domain
-         * over which the B-splines are defined is comprised of ncells+1 break points however there are a total of
-         * ncells+1+2*degree knots. The additional knots which control the shape of the B-splines near the
-         * boundary are added equidistantly before and after the break points. The knot index is therefore in the interval [-degree, ncells+degree]
-         *
-         * @param[in] knot_idx Integer identifying index of the knot.
-         * @return Coordinate of the knot.
-         */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> get_knot(int knot_idx) const noexcept
-        {
-            return ddc::Coordinate<Tag>(rmin() + knot_idx * ddc::step<mesh_type>());
-        }
-
         /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a B-spline.
          *
          * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
@@ -251,11 +245,13 @@ public:
          * In other words it returns the lower bound of the support.
          *
          * @param[in] ix DiscreteElement identifying the B-spline.
-         * @return Coordinate of the knot.
+         * @return DiscreteElement of the lower bound of the support of the B-spline.
          */
-        KOKKOS_INLINE_FUNCTION double get_first_support_knot(discrete_element_type const& ix) const
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_discrete_dimension_type>
+        get_first_support_knot(discrete_element_type const& ix) const
         {
-            return get_knot(ix.uid() - degree());
+            return ddc::DiscreteElement<knot_discrete_dimension_type>(
+                    (ix - discrete_element_type(0)).value());
         }
 
         /** @brief Returns the coordinate of the last support knot associated to a DiscreteElement identifying a B-spline.
@@ -265,44 +261,31 @@ public:
          * In other words it returns the upper bound of the support.
          *
          * @param[in] ix DiscreteElement identifying the B-spline.
-         * @return Coordinate of the knot.
+         * @return DiscreteElement of the upper bound of the support of the B-spline.
          */
-        KOKKOS_INLINE_FUNCTION double get_last_support_knot(discrete_element_type const& ix) const
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_discrete_dimension_type>
+        get_last_support_knot(discrete_element_type const& ix) const
         {
-            return get_knot(ix.uid() + 1);
-        }
-
-        /** @brief Returns the coordinate of the (n+1)-th knot in the support of the identified B-spline.
-         *
-         * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
-         * provided DiscreteElement, this function returns the (n+1)-th knot in the support of the B-spline.
-         *
-         * @param[in] ix DiscreteElement identifying the B-spline.
-         * @param[in] n Integer indexing a knot in the support of the B-spline.
-         * @return Coordinate of the knot.
-         */
-        KOKKOS_INLINE_FUNCTION double get_support_knot_n(discrete_element_type const& ix, int n)
-                const
-        {
-            return get_knot(ix.uid() + n - degree());
+            return get_first_support_knot(ix)
+                   + ddc::DiscreteVector<knot_discrete_dimension_type>(degree() + 1);
         }
 
         /** @brief Returns the coordinate of the lower bound of the domain on which the B-splines are defined.
          *
          * @return Coordinate of the lower bound of the domain.
          */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
+        KOKKOS_INLINE_FUNCTION ddc::Coordinate<CDim> rmin() const noexcept
         {
-            return ddc::coordinate(m_domain.front());
+            return ddc::coordinate(m_break_point_domain.front());
         }
 
         /** @brief Returns the coordinate of the upper bound of the domain on which the B-splines are defined.
          *
          * @return Coordinate of the upper bound of the domain.
          */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
+        KOKKOS_INLINE_FUNCTION ddc::Coordinate<CDim> rmax() const noexcept
         {
-            return ddc::coordinate(m_domain.back());
+            return ddc::coordinate(m_break_point_domain.back());
         }
 
         /** @brief Returns the length of the domain.
@@ -336,6 +319,16 @@ public:
             return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
         }
 
+        /** @brief Returns the discrete domain which describes the break points.
+         *
+         * @return The discrete domain describing the break points.
+         */
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteDomain<knot_discrete_dimension_type>
+        break_point_domain() const
+        {
+            return m_break_point_domain;
+        }
+
         /** @brief Returns the number of basis functions.
          *
          * The number of functions in the spline basis.
@@ -356,22 +349,22 @@ public:
          */
         KOKKOS_INLINE_FUNCTION std::size_t ncells() const noexcept
         {
-            return m_domain.size() - 1;
+            return m_break_point_domain.size() - 1;
         }
 
     private:
         KOKKOS_INLINE_FUNCTION double inv_step() const noexcept
         {
-            return 1.0 / ddc::step<mesh_type>();
+            return 1.0 / ddc::step<knot_discrete_dimension_type>();
         }
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x, std::size_t degree) const;
+        eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x, std::size_t degree) const;
 
         KOKKOS_INLINE_FUNCTION void get_icell_and_offset(
                 int& icell,
                 double& offset,
-                ddc::Coordinate<Tag> const& x) const;
+                ddc::Coordinate<CDim> const& x) const;
     };
 };
 
@@ -388,12 +381,12 @@ struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase,
 template <class DDim>
 constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<DDim>::value;
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::
-        eval_basis(
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
+        Impl<DDim, MemorySpace>::eval_basis(
                 DSpan1D values,
-                ddc::Coordinate<Tag> const& x,
+                ddc::Coordinate<CDim> const& x,
                 [[maybe_unused]] std::size_t const deg) const
 {
     assert(values.size() == deg + 1);
@@ -422,10 +415,10 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<
     return discrete_element_type(jmin);
 }
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::
-        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
+        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<CDim> const& x) const
 {
     assert(derivs.size() == degree() + 1);
 
@@ -438,7 +431,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<
     // 3. Compute derivatives of aforementioned B-splines
     //    Derivatives are normalized, hence they should be divided by dx
     double xx, temp, saved;
-    derivs(0) = 1.0 / ddc::step<mesh_type>();
+    derivs(0) = 1.0 / ddc::step<knot_discrete_dimension_type>();
     for (std::size_t j = 1; j < degree(); ++j) {
         xx = -offset;
         saved = 0.0;
@@ -465,12 +458,12 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<
     return discrete_element_type(jmin);
 }
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::
-        eval_basis_and_n_derivs(
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
+        Impl<DDim, MemorySpace>::eval_basis_and_n_derivs(
                 ddc::DSpan2D const derivs,
-                ddc::Coordinate<Tag> const& x,
+                ddc::Coordinate<CDim> const& x,
                 std::size_t const n) const
 {
     std::array<double, (degree() + 1) * (degree() + 1)> ndu_ptr;
@@ -485,8 +478,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<
     double offset;
     int jmin;
 
-    assert(x >= rmin());
-    assert(x <= rmax());
+    assert(x - rmin() >= -length() * 1e-14);
+    assert(rmax() - x >= -length() * 1e-14);
     // assert(n >= 0); as long as n is unsigned
     assert(n <= degree());
     assert(derivs.extent(0) == 1 + degree());
@@ -558,15 +551,15 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<Tag, D>::Impl<
     return discrete_element_type(jmin);
 }
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION void UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::get_icell_and_offset(
+KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::get_icell_and_offset(
         int& icell,
         double& offset,
-        ddc::Coordinate<Tag> const& x) const
+        ddc::Coordinate<CDim> const& x) const
 {
-    assert(x >= rmin());
-    assert(x <= rmax());
+    assert(x - rmin() >= -length() * 1e-14);
+    assert(rmax() - x >= -length() * 1e-14);
 
     double const inv_dx = inv_step();
     if (x == rmin()) {
@@ -589,11 +582,11 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::ge
     }
 }
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 template <class Layout, class MemorySpace2>
 KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
-UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
+UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::integrals(
         ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const
 {
     if constexpr (is_periodic()) {
@@ -607,7 +600,7 @@ UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
         discrete_domain_type const dom_bsplines(
                 full_dom_splines.take_first(discrete_vector_type {nbasis()}));
         for (auto ix : dom_bsplines) {
-            int_vals(ix) = ddc::step<mesh_type>();
+            int_vals(ix) = ddc::step<knot_discrete_dimension_type>();
         }
         if (int_vals.size() == size()) {
             discrete_domain_type const dom_bsplines_repeated(
@@ -621,7 +614,7 @@ UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
                 = full_dom_splines
                           .remove(discrete_vector_type(degree()), discrete_vector_type(degree()));
         for (auto ix : dom_bspline_entirely_in_domain) {
-            int_vals(ix) = ddc::step<mesh_type>();
+            int_vals(ix) = ddc::step<knot_discrete_dimension_type>();
         }
 
         std::array<double, degree() + 2> edge_vals_ptr;
@@ -636,7 +629,7 @@ UniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
         for (std::size_t i = 0; i < degree(); ++i) {
             double const c_eval = ddc::detail::sum(edge_vals, 0, degree() - i);
 
-            double const edge_value = ddc::step<mesh_type>() * (d_eval - c_eval);
+            double const edge_value = ddc::step<knot_discrete_dimension_type>() * (d_eval - c_eval);
 
             int_vals(discrete_element_type(i)) = edge_value;
             int_vals(discrete_element_type(nbasis() - 1 - i)) = edge_value;

@@ -78,7 +78,7 @@ template <typename X, typename I1, typename I2>
 struct IDim
     : std::conditional_t<
               std::is_same_v<X, I1> || std::is_same_v<X, I2>,
-              typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
+              typename GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type,
               ddc::UniformPointSampling<X>>
 {
 };
@@ -93,7 +93,7 @@ template <typename X, typename I1, typename I2>
 struct IDim
     : std::conditional_t<
               std::is_same_v<X, I1> || std::is_same_v<X, I2>,
-              typename GrevillePoints<BSplines<X>>::interpolation_mesh_type,
+              typename GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type,
               ddc::NonUniformPointSampling<X>>
 {
 };
@@ -247,15 +247,14 @@ static void ExtrapolationRuleSplineTest()
     auto const dom_spline = spline_builder.batched_spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals1_cpu_alloc(
+    ddc::Chunk vals_1d_host_alloc(
             dom_interpolation,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();
+    ddc::ChunkSpan vals_1d_host = vals_1d_host_alloc.span_view();
     evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>> evaluator(dom_interpolation);
-    evaluator(vals1_cpu);
-    ddc::Chunk vals1_alloc(dom_interpolation, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan vals1 = vals1_alloc.span_view();
-    ddc::parallel_deepcopy(vals1, vals1_cpu);
+    evaluator(vals_1d_host);
+    auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
+    ddc::ChunkSpan vals_1d = vals_1d_alloc.span_view();
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan vals = vals_alloc.span_view();
@@ -263,7 +262,7 @@ static void ExtrapolationRuleSplineTest()
             exec_space,
             vals.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                vals(e) = vals1(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
+                vals(e) = vals_1d(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
             });
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
@@ -374,10 +373,6 @@ static void ExtrapolationRuleSplineTest()
                         vals.domain(),
                         vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type
                         e_without_interest(e);
-                typename decltype(ddc::remove_dims_of(
-                        vals.domain(),
-                        vals.template domain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>()))::
-                        discrete_element_type e_batch(e);
                 double tmp;
                 if (ddc::select<I2>(coords_eval(e)) > xN<I2>()) {
 #if defined(BC_PERIODIC)
@@ -385,6 +380,10 @@ static void ExtrapolationRuleSplineTest()
                             vals.template domain<IDim<I1, I1, I2>>().back(),
                             e_without_interest));
 #else
+                    typename decltype(ddc::remove_dims_of(
+                            vals.domain(),
+                            vals.template domain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>()))::
+                            discrete_element_type e_batch(e);
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),
                             vals.template domain<IDim<I2, I1, I2>>().back(),

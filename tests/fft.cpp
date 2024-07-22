@@ -29,6 +29,34 @@ struct DFDim : ddc::PeriodicSampling<Kx>
 {
 };
 
+template <typename X>
+static void test_fourier_mesh(std::size_t Nx)
+{
+    double const a = -10;
+    double const b = 10;
+
+    DDom<DDim<X>> const x_mesh(ddc::init_discrete_space<DDim<X>>(DDim<X>::template init<DDim<X>>(
+            ddc::Coordinate<X>(a + (b - a) / Nx / 2),
+            ddc::Coordinate<X>(b - (b - a) / Nx / 2),
+            DVect<DDim<X>>(Nx))));
+    ddc::init_discrete_space<DFDim<ddc::Fourier<X>>>(
+            ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(ddc::DiscreteDomain<DDim<X>>(x_mesh)));
+    DDom<DFDim<ddc::Fourier<X>>> const k_mesh
+            = ddc::FourierMesh<DFDim<ddc::Fourier<X>>>(x_mesh, true);
+
+    double const epsilon = 1e-14;
+    ddc::DiscreteElement<DFDim<ddc::Fourier<X>>> const k_front = k_mesh.front();
+    for (ddc::DiscreteElement<DFDim<ddc::Fourier<X>>> k : k_mesh) {
+        double const ka = -Kokkos::numbers::pi * Nx / (b - a);
+        double const kb = Kokkos::numbers::pi * Nx / (b - a);
+        double const k_pred = 2 * (k - k_front) * Kokkos::numbers::pi / (b - a);
+        EXPECT_NEAR(
+                ddc::coordinate(k),
+                k_pred - (kb - ka) * Kokkos::floor((k_pred - ka) / (kb - ka)),
+                epsilon);
+    }
+}
+
 // TODO:
 // - FFT multidim but according to a subset of dimensions
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename... X>
@@ -198,6 +226,16 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
 struct RDimX;
 struct RDimY;
 struct RDimZ;
+
+TEST(FourierMesh, Even)
+{
+    test_fourier_mesh<RDimX>(16);
+}
+
+TEST(FourierMesh, Odd)
+{
+    test_fourier_mesh<RDimX>(17);
+}
 
 #if fftw_serial_AVAIL
 TEST(FFTNorm, OFF)

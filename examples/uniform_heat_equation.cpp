@@ -36,13 +36,17 @@ struct DDimT : ddc::UniformPointSampling<T>
 };
 //! [time-space]
 
+//! [display]
+
 /** A function to pretty print the temperature
  * @tparam ChunkType The type of chunk span. This way the template parameters are avoided,
  *                   should be deduced by the compiler.
  * @param time The time at which the output is made.
  * @param temp The temperature at this time-step.
  */
+
 //! [display]
+
 template <class ChunkType>
 void display(double time, ChunkType temp)
 {
@@ -107,6 +111,7 @@ int main(int argc, char** argv)
     //! [main-start-t-parameters]
     std::ptrdiff_t const t_output_period = 10;
     //! [parameters]
+
     //! [main-start]
 
     //! [X-parameters]
@@ -149,12 +154,14 @@ int main(int argc, char** argv)
     //! [Y-domains]
 
     //! [CFL-condition]
+
     double const dx = ddc::step<DDimX>();
     double const dy = ddc::step<DDimY>();
     double const invdx2 = 1. / (dx * dx);
     double const invdy2 = 1. / (dy * dy);
 
     ddc::Coordinate<T> const dt(.5 / (kx * invdx2 + ky * invdy2));
+
     //! [CFL-condition]
 
     //! [time-domain]
@@ -166,6 +173,7 @@ int main(int argc, char** argv)
                     ddc::Coordinate<T>(start_time),
                     ddc::Coordinate<T>(end_time),
                     nb_time_steps + 1));
+
     //! [time-domain]
 
     //! [data allocation]

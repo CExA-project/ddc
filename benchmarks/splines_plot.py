@@ -31,7 +31,7 @@ data_dict = [{
 "nx": int(benchmark["name"].split("/")[4]),
 "ny": int(benchmark["name"].split("/")[5]),
 "cols_per_chunk": int(benchmark["name"].split("/")[6]),
-"preconditionner_max_block_size": int(benchmark["name"].split("/")[7]),
+"preconditioner_max_block_size": int(benchmark["name"].split("/")[7]),
 "bytes_per_second": benchmark["bytes_per_second"],
 "gpu_mem_occupancy": benchmark["gpu_mem_occupancy"]
 } for benchmark in data["benchmarks"]]
@@ -165,16 +165,16 @@ if name=="cols_per_chunk":
     plt.savefig("throughput_cols_"+str(backend).lower()+".png")
 
 #####################
-## preconditionner ##
+## preconditioner ##
 #####################
 
-if name=="preconditionner_max_block_size":
+if name=="preconditioner_max_block_size":
     data_dict_sorted = sorted(data_dict, key=itemgetter("nx","cols_per_chunk"))
     plt.figure(figsize=(16, 6))
 
     plt.subplot(1, 2, 1)
     for (non_uniform, nx) in itertools.product((False,True), nx_values):
-        plotter(plt, "preconditionner_max_block_size", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
+        plotter(plt, "preconditioner_max_block_size", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and not item["on_gpu"])
 
     plt.grid()
     plt.xlabel("Max block size of preconditioner")
@@ -184,7 +184,7 @@ if name=="preconditionner_max_block_size":
 
     plt.subplot(1, 2, 2)
     for (non_uniform, nx) in itertools.product((False,True), nx_values):
-        plotter(plt, "preconditionner_max_block_size", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
+        plotter(plt, "preconditioner_max_block_size", "bytes_per_second", data_dict_sorted, lambda item : item["nx"]==nx and item["non_uniform"]==non_uniform and item["on_gpu"])
 
     plt.grid()
     plt.xlabel("Max block size of preconditioner")

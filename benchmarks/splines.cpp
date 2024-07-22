@@ -39,7 +39,7 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
             ddc::BoundCond::PERIODIC>;
 
     template <typename NonUniform, std::size_t s_degree_x>
-    struct DDimX : GrevillePoints<NonUniform, s_degree_x>::interpolation_mesh_type
+    struct DDimX : GrevillePoints<NonUniform, s_degree_x>::interpolation_discrete_dimension_type
     {
     };
 
@@ -57,8 +57,7 @@ void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem
     size_t freeMem = 0;
     size_t totalMem = 0;
     while (monitorFlag) {
-        std::this_thread::sleep_for(
-                std::chrono::microseconds(10)); // Adjust the interval as needed
+        std::this_thread::sleep_for(std::chrono::microseconds(10)); // Adjust the interval as needed
 
         // Acquire a lock to ensure thread safety when accessing CUDA functions
         std::lock_guard<std::mutex> lock(mutex);
@@ -76,7 +75,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
     std::size_t nx = state.range(3);
     std::size_t ny = state.range(4);
     int cols_per_chunk = state.range(5);
-    int preconditionner_max_block_size = state.range(6);
+    int preconditioner_max_block_size = state.range(6);
 
     size_t freeMem = 0;
     size_t totalMem = 0;
@@ -149,7 +148,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
             Backend,
             DDimX<NonUniform, s_degree_x>,
             DDimY>
-            spline_builder(x_mesh, cols_per_chunk, preconditionner_max_block_size);
+            spline_builder(x_mesh, cols_per_chunk, preconditioner_max_block_size);
     ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
     ddc::SplineEvaluator<
             ExecSpace,
@@ -167,7 +166,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
     ddc::ChunkSpan coef = coef_alloc.span_view();
     ddc::Chunk feet_coords_alloc(
             spline_builder.batched_interpolation_domain(),
-            ddc::KokkosAllocator<ddc::Coordinate<X, Y>, typename ExecSpace::memory_space>());
+            ddc::KokkosAllocator<ddc::Coordinate<X>, typename ExecSpace::memory_space>());
     ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
 
     for (auto _ : state) {
@@ -176,10 +175,8 @@ static void characteristics_advection_unitary(benchmark::State& state)
                 ExecSpace(),
                 feet_coords.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<NonUniform, s_degree_x>, DDimY> const e) {
-                    feet_coords(e) = ddc::Coordinate<X, Y>(
-                            ddc::coordinate(ddc::select<DDimX<NonUniform, s_degree_x>>(e))
-                                    - ddc::Coordinate<X>(0.0176429863),
-                            ddc::coordinate(ddc::select<DDimY>(e)));
+                    feet_coords(e) = ddc::coordinate(ddc::select<DDimX<NonUniform, s_degree_x>>(e))
+                                     - ddc::Coordinate<X>(0.0176429863);
                 });
         Kokkos::Profiling::popRegion();
         Kokkos::Profiling::pushRegion("SplineBuilder");
@@ -188,6 +185,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
         Kokkos::Profiling::pushRegion("SplineEvaluator");
         spline_evaluator(density, feet_coords.span_cview(), coef.span_cview());
         Kokkos::Profiling::popRegion();
+        Kokkos::fence("End of advection step");
     }
     monitorFlag = false;
     monitorThread.join();
@@ -260,15 +258,15 @@ static void characteristics_advection(benchmark::State& state)
 bool on_gpu_ref = true;
 bool non_uniform_ref = false;
 std::size_t degree_x_ref = 3;
-#if (defined(KOKKOS_ENABLE_CUDA) or defined(KOKKOS_ENABLE_HIP))
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
 std::size_t cols_per_chunk_ref = 65535;
-unsigned int preconditionner_max_block_size_ref = 1u;
+unsigned int preconditioner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_OPENMP)
 std::size_t cols_per_chunk_ref = 8192;
-unsigned int preconditionner_max_block_size_ref = 1u;
+unsigned int preconditioner_max_block_size_ref = 1u;
 #elif defined(KOKKOS_ENABLE_SERIAL)
 std::size_t cols_per_chunk_ref = 8192;
-unsigned int preconditionner_max_block_size_ref = 32u;
+unsigned int preconditioner_max_block_size_ref = 32u;
 #endif
 // std::size_t ny_ref = 100000;
 std::size_t ny_ref = 1000;
@@ -284,7 +282,7 @@ BENCHMARK(characteristics_advection)
                  {64, 1024},
                  {ny_ref, ny_ref},
                  {cols_per_chunk_ref, cols_per_chunk_ref},
-                 {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+                 {preconditioner_max_block_size_ref, preconditioner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
 /*
@@ -299,7 +297,7 @@ BENCHMARK(characteristics_advection)
                  {64, 1024},
                  {100, 200000},
                  {cols_per_chunk_ref, cols_per_chunk_ref},
-                 {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+                 {preconditioner_max_block_size_ref, preconditioner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
 */
@@ -315,13 +313,13 @@ BENCHMARK(characteristics_advection)
                  {64, 1024},
                  {ny_ref, ny_ref},
                  {64, 65535},
-                 {preconditionner_max_block_size_ref, preconditionner_max_block_size_ref}})
+                 {preconditioner_max_block_size_ref, preconditioner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
 */
 /*
-// Sweep on preconditionner_max_block_size
-std::string name = "preconditionner_max_block_size";
+// Sweep on preconditioner_max_block_size
+std::string name = "preconditioner_max_block_size";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -344,8 +342,8 @@ int main(int argc, char** argv)
             AddCustomContext("backend", Backend == ddc::SplineSolver::GINKGO ? "GINKGO" : "LAPACK");
     ::benchmark::AddCustomContext("cols_per_chunk_ref", std::to_string(cols_per_chunk_ref));
     ::benchmark::AddCustomContext(
-            "preconditionner_max_block_size_ref",
-            std::to_string(preconditionner_max_block_size_ref));
+            "preconditioner_max_block_size_ref",
+            std::to_string(preconditioner_max_block_size_ref));
     if (::benchmark::ReportUnrecognizedArguments(argc, argv)) {
         return 1;
     }

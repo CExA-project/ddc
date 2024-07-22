@@ -24,7 +24,7 @@ struct NonUniformBSplinesBase
 } // namespace detail
 
 template <class T>
-struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::tag_type>
+struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::continuous_dimension_type>
 {
 };
 
@@ -34,17 +34,17 @@ struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::tag_type>
  * Knots for non-uniform B-splines are non-uniformly distributed (no assumption is made on the uniformity of their distribution,
  * the associated discrete dimension is a NonUniformPointSampling).
  *
- * @tparam Tag The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
+ * @tparam CDim The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
  * @tparam D The degree of the B-splines.
  */
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 class NonUniformBSplines : detail::NonUniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
 
 public:
     /// @brief The tag identifying the continuous dimension on which the support of the B-splines are defined.
-    using tag_type = Tag;
+    using continuous_dimension_type = CDim;
 
     /// @brief The discrete dimension identifying B-splines.
     using discrete_dimension_type = NonUniformBSplines;
@@ -64,7 +64,7 @@ public:
      */
     static constexpr bool is_periodic() noexcept
     {
-        return Tag::PERIODIC;
+        return CDim::PERIODIC;
     }
 
     /** @brief Indicates if the B-splines are uniform or not (this is not the case here).
@@ -89,7 +89,7 @@ public:
 
     public:
         /// @brief The type of the knots defining the B-splines.
-        using knot_mesh_type = NonUniformBsplinesKnots<DDim>;
+        using knot_discrete_dimension_type = NonUniformBsplinesKnots<DDim>;
 
         /// @brief The type of the discrete dimension representing the B-splines.
         using discrete_dimension_type = NonUniformBSplines;
@@ -104,8 +104,8 @@ public:
         using discrete_vector_type = DiscreteVector<DDim>;
 
     private:
-        ddc::DiscreteDomain<knot_mesh_type> m_knot_domain;
-        ddc::DiscreteDomain<knot_mesh_type> m_break_point_domain;
+        ddc::DiscreteDomain<knot_discrete_dimension_type> m_knot_domain;
+        ddc::DiscreteDomain<knot_discrete_dimension_type> m_break_point_domain;
 
     public:
         Impl() = default;
@@ -117,7 +117,7 @@ public:
          *
          * @param breaks The std::initializer_list of the coordinates of break points.
          */
-        explicit Impl(std::initializer_list<ddc::Coordinate<Tag>> breaks)
+        explicit Impl(std::initializer_list<ddc::Coordinate<CDim>> breaks)
             : Impl(breaks.begin(), breaks.end())
         {
         }
@@ -129,7 +129,7 @@ public:
          *
          * @param breaks The std::vector of the coordinates of break points.
          */
-        explicit Impl(std::vector<ddc::Coordinate<Tag>> const& breaks)
+        explicit Impl(std::vector<ddc::Coordinate<CDim>> const& breaks)
             : Impl(breaks.begin(), breaks.end())
         {
         }
@@ -208,7 +208,7 @@ public:
          * @return The index of the first B-spline which is evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const;
+        eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x) const;
 
         /** @brief Evaluates non-zero B-spline derivatives at a given coordinate
          *
@@ -223,7 +223,7 @@ public:
          * @return The index of the first B-spline which is derivated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const;
+        eval_deriv(DSpan1D derivs, ddc::Coordinate<CDim> const& x) const;
 
         /** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate
          *
@@ -240,7 +240,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
                 ddc::DSpan2D derivs,
-                ddc::Coordinate<Tag> const& x,
+                ddc::Coordinate<CDim> const& x,
                 std::size_t n) const;
 
         /** @brief Compute the integrals of the B-splines.
@@ -265,10 +265,11 @@ public:
          * @param[in] ix DiscreteElement identifying the B-spline.
          * @return DiscreteElement of the lower bound of the support of the B-spline.
          */
-        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> get_first_support_knot(
-                discrete_element_type const& ix) const
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_discrete_dimension_type>
+        get_first_support_knot(discrete_element_type const& ix) const
         {
-            return ddc::DiscreteElement<knot_mesh_type>((ix - discrete_element_type(0)).value());
+            return ddc::DiscreteElement<knot_discrete_dimension_type>(
+                    (ix - discrete_element_type(0)).value());
         }
 
         /** @brief Returns the coordinate of the last support knot associated to a DiscreteElement identifying a B-spline.
@@ -280,17 +281,18 @@ public:
          * @param[in] ix DiscreteElement identifying the B-spline.
          * @return DiscreteElement of the upper bound of the support of the B-spline.
          */
-        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> get_last_support_knot(
-                discrete_element_type const& ix) const
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_discrete_dimension_type>
+        get_last_support_knot(discrete_element_type const& ix) const
         {
-            return get_first_support_knot(ix) + ddc::DiscreteVector<knot_mesh_type>(degree() + 1);
+            return get_first_support_knot(ix)
+                   + ddc::DiscreteVector<knot_discrete_dimension_type>(degree() + 1);
         }
 
         /** @brief Returns the coordinate of the first break point of the domain on which the B-splines are defined.
          *
          * @return Coordinate of the lower bound of the domain.
          */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmin() const noexcept
+        KOKKOS_INLINE_FUNCTION ddc::Coordinate<CDim> rmin() const noexcept
         {
             return ddc::coordinate(m_break_point_domain.front());
         }
@@ -299,7 +301,7 @@ public:
          *
          * @return Coordinate of the upper bound of the domain.
          */
-        KOKKOS_INLINE_FUNCTION ddc::Coordinate<Tag> rmax() const noexcept
+        KOKKOS_INLINE_FUNCTION ddc::Coordinate<CDim> rmax() const noexcept
         {
             return ddc::coordinate(m_break_point_domain.back());
         }
@@ -339,7 +341,8 @@ public:
          *
          * @return The discrete domain describing the break points.
          */
-        KOKKOS_INLINE_FUNCTION ddc::DiscreteDomain<knot_mesh_type> break_point_domain() const
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteDomain<knot_discrete_dimension_type>
+        break_point_domain() const
         {
             return m_break_point_domain;
         }
@@ -379,8 +382,8 @@ public:
         }
 
     private:
-        KOKKOS_INLINE_FUNCTION discrete_element_type
-        get_first_bspline_in_cell(ddc::DiscreteElement<knot_mesh_type> const& ic) const
+        KOKKOS_INLINE_FUNCTION discrete_element_type get_first_bspline_in_cell(
+                ddc::DiscreteElement<knot_discrete_dimension_type> const& ic) const
         {
             return discrete_element_type((ic - m_break_point_domain.front()).value());
         }
@@ -390,8 +393,8 @@ public:
          * @param x The point whose location must be determined.
          * @returns The DiscreteElement describing the knot at the lower bound of the cell of interest.
          */
-        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_mesh_type> find_cell_start(
-                ddc::Coordinate<Tag> const& x) const;
+        KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_discrete_dimension_type> find_cell_start(
+                ddc::Coordinate<CDim> const& x) const;
     };
 };
 
@@ -408,31 +411,31 @@ struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplin
 template <class DDim>
 constexpr bool is_non_uniform_bsplines_v = is_non_uniform_bsplines<DDim>::value;
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 template <class RandomIt>
-NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
+NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::Impl(
         RandomIt const break_begin,
         RandomIt const break_end)
     : m_knot_domain(
-            ddc::DiscreteElement<knot_mesh_type>(0),
-            ddc::DiscreteVector<knot_mesh_type>(
+            ddc::DiscreteElement<knot_discrete_dimension_type>(0),
+            ddc::DiscreteVector<knot_discrete_dimension_type>(
                     (break_end - break_begin)
                     + 2 * degree())) // Create a mesh of knots including the eventual periodic point
     , m_break_point_domain(
-              ddc::DiscreteElement<knot_mesh_type>(degree()),
-              ddc::DiscreteVector<knot_mesh_type>(
+              ddc::DiscreteElement<knot_discrete_dimension_type>(degree()),
+              ddc::DiscreteVector<knot_discrete_dimension_type>(
                       (break_end - break_begin))) // Create a mesh of break points
 {
-    std::vector<ddc::Coordinate<Tag>> knots((break_end - break_begin) + 2 * degree());
+    std::vector<ddc::Coordinate<CDim>> knots((break_end - break_begin) + 2 * degree());
     // Fill the provided knots
     int ii = 0;
     for (RandomIt it = break_begin; it < break_end; ++it) {
         knots[degree() + ii] = *it;
         ++ii;
     }
-    ddc::Coordinate<Tag> const rmin = knots[degree()];
-    ddc::Coordinate<Tag> const rmax = knots[(break_end - break_begin) + degree() - 1];
+    ddc::Coordinate<CDim> const rmin = knots[degree()];
+    ddc::Coordinate<CDim> const rmax = knots[(break_end - break_begin) + degree() - 1];
     assert(rmin < rmax);
 
     // Fill out the extra knots
@@ -449,25 +452,25 @@ NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::Impl(
             knots[degree() + npoints() - 1 + i] = rmax;
         }
     }
-    ddc::init_discrete_space<knot_mesh_type>(knots);
+    ddc::init_discrete_space<knot_discrete_dimension_type>(knots);
 }
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
-        Impl<DDim, MemorySpace>::eval_basis(DSpan1D values, ddc::Coordinate<Tag> const& x) const
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
+        Impl<DDim, MemorySpace>::eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x) const
 {
     assert(values.size() == D + 1);
 
     std::array<double, degree()> left;
     std::array<double, degree()> right;
 
-    assert(x >= rmin());
-    assert(x <= rmax());
+    assert(x - rmin() >= -length() * 1e-14);
+    assert(rmax() - x >= -length() * 1e-14);
     assert(values.size() == degree() + 1);
 
     // 1. Compute cell index 'icell'
-    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell_start(x);
+    ddc::DiscreteElement<knot_discrete_dimension_type> const icell = find_cell_start(x);
 
     assert(icell >= m_break_point_domain.front());
     assert(icell <= m_break_point_domain.back());
@@ -492,20 +495,20 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     return get_first_bspline_in_cell(icell);
 }
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
-        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<Tag> const& x) const
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
+        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<CDim> const& x) const
 {
     std::array<double, degree()> left;
     std::array<double, degree()> right;
 
-    assert(x >= rmin());
-    assert(x <= rmax());
+    assert(x - rmin() >= -length() * 1e-14);
+    assert(rmax() - x >= -length() * 1e-14);
     assert(derivs.size() == degree() + 1);
 
     // 1. Compute cell index 'icell'
-    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell_start(x);
+    ddc::DiscreteElement<knot_discrete_dimension_type> const icell = find_cell_start(x);
 
     assert(icell >= m_break_point_domain.front());
     assert(icell <= m_break_point_domain.back());
@@ -551,12 +554,12 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     return get_first_bspline_in_cell(icell);
 }
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
         Impl<DDim, MemorySpace>::eval_basis_and_n_derivs(
                 ddc::DSpan2D const derivs,
-                ddc::Coordinate<Tag> const& x,
+                ddc::Coordinate<CDim> const& x,
                 std::size_t const n) const
 {
     std::array<double, degree()> left;
@@ -573,15 +576,15 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
             std::experimental::extents<std::size_t, degree() + 1, degree() + 1>> const
             ndu(ndu_ptr.data());
 
-    assert(x >= rmin());
-    assert(x <= rmax());
+    assert(x - rmin() >= -length() * 1e-14);
+    assert(rmax() - x >= -length() * 1e-14);
     // assert(n >= 0); as long as n is unsigned
     assert(n <= degree());
     assert(derivs.extent(0) == 1 + degree());
     assert(derivs.extent(1) == 1 + n);
 
     // 1. Compute cell index 'icell' and x_offset
-    ddc::DiscreteElement<knot_mesh_type> const icell = find_cell_start(x);
+    ddc::DiscreteElement<knot_discrete_dimension_type> const icell = find_cell_start(x);
 
     assert(icell >= m_break_point_domain.front());
     assert(icell <= m_break_point_domain.back());
@@ -657,14 +660,14 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<Tag, D>::
     return get_first_bspline_in_cell(icell);
 }
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUniformBSplines<
-        Tag,
-        D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<Tag> const& x) const
+        CDim,
+        D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<CDim> const& x) const
 {
-    assert(x <= rmax());
-    assert(x >= rmin());
+    assert(x - rmin() >= -length() * 1e-14);
+    assert(rmax() - x >= -length() * 1e-14);
 
     if (x == rmin())
         return m_break_point_domain.front();
@@ -672,9 +675,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUn
         return m_break_point_domain.back() - 1;
 
     // Binary search
-    ddc::DiscreteElement<knot_mesh_type> low = m_break_point_domain.front();
-    ddc::DiscreteElement<knot_mesh_type> high = m_break_point_domain.back();
-    ddc::DiscreteElement<knot_mesh_type> icell = low + (high - low) / 2;
+    ddc::DiscreteElement<knot_discrete_dimension_type> low = m_break_point_domain.front();
+    ddc::DiscreteElement<knot_discrete_dimension_type> high = m_break_point_domain.back();
+    ddc::DiscreteElement<knot_discrete_dimension_type> icell = low + (high - low) / 2;
     while (x < ddc::coordinate(icell) || x >= ddc::coordinate(icell + 1)) {
         if (x < ddc::coordinate(icell)) {
             high = icell;
@@ -686,11 +689,11 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUn
     return icell;
 }
 
-template <class Tag, std::size_t D>
+template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 template <class Layout, class MemorySpace2>
 KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
-NonUniformBSplines<Tag, D>::Impl<DDim, MemorySpace>::integrals(
+NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::integrals(
         ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const
 {
     if constexpr (is_periodic()) {

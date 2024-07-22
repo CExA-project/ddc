@@ -245,14 +245,44 @@ endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
   # Ginkgo
-  find_package(Ginkgo 1.7.0 EXACT REQUIRED)
+  find_package(Ginkgo 1.8.0 EXACT REQUIRED)
   target_link_libraries(DDC INTERFACE Ginkgo::ginkgo)
   target_compile_definitions(DDC INTERFACE ginkgo_AVAIL)
 
   # Lapacke
   find_package(LAPACKE REQUIRED)
-  target_link_libraries(DDC INTERFACE "${LAPACKE_LIBRARIES}")
-  target_include_directories(DDC INTERFACE "${LAPACKE_INCLUDE_DIRS}")
+  target_link_libraries(DDC INTERFACE ${LAPACKE_LIBRARIES})
+  target_include_directories(DDC INTERFACE ${LAPACKE_INCLUDE_DIRS})
+
+  # Kokkos-kernels
+  set(DDC_KokkosKernels_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `KokkosKernels` package. Options: ${DDC_DEPENDENCY_POLICIES}")
+  set_property(CACHE DDC_KokkosKernels_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
+  if("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "AUTO")
+    if(NOT TARGET Kokkos::kokkoskernels)
+      find_package(KokkosKernels)
+      if(NOT KokkosKernels_FOUND)
+        set(KokkosKernels_ENABLE_ALL_COMPONENTS OFF)
+        set(KokkosKernels_ENABLE_COMPONENT_BLAS ON)
+        set(KokkosKernels_ENABLE_COMPONENT_BATCHED ON)
+        set(KokkosKernels_ENABLE_COMPONENT_LAPACK OFF)
+        set(KokkosKernels_ENABLE_TPL_BLAS OFF)
+        set(KokkosKernels_ENABLE_TPL_LAPACK OFF)
+        add_subdirectory(vendor/kokkos-kernels)
+      endif()
+    endif()
+  elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
+    set(KokkosKernels_ENABLE_ALL_COMPONENTS OFF)
+    set(KokkosKernels_ENABLE_COMPONENT_BLAS ON)
+    set(KokkosKernels_ENABLE_COMPONENT_BATCHED ON)
+    set(KokkosKernels_ENABLE_COMPONENT_LAPACK OFF)
+    set(KokkosKernels_ENABLE_TPL_BLAS OFF)
+    set(KokkosKernels_ENABLE_TPL_LAPACK OFF)
+    add_subdirectory(vendor/kokkos-kernels)
+  elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
+    find_package(KokkosKernels REQUIRED)
+  endif()
+
+  target_link_libraries(DDC INTERFACE Kokkos::kokkoskernels)
 endif()
 
 ## The PDI wrapper

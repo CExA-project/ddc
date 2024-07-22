@@ -23,18 +23,18 @@ namespace ddc {
  * @tparam ExecSpace The Kokkos execution space on which the spline evaluation is performed.
  * @tparam MemorySpace The Kokkos memory space on which the data (spline coefficients and evaluation) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
- * @tparam EvaluationMesh The discrete dimension on which evaluation points are defined.
- * @tparam LeftExtrapolationRule The lower extrapolation rule type.
- * @tparam RightExtrapolationRule The upper extrapolation rule type.
- * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (EvaluationMesh + batched dimensions).
+ * @tparam EvaluationDDim The discrete dimension on which evaluation points are defined.
+ * @tparam LowerExtrapolationRule The lower extrapolation rule type.
+ * @tparam UpperExtrapolationRule The upper extrapolation rule type.
+ * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (EvaluationDDim + batched dimensions).
  */
 template <
         class ExecSpace,
         class MemorySpace,
         class BSplines,
-        class EvaluationMesh,
-        class LeftExtrapolationRule,
-        class RightExtrapolationRule,
+        class EvaluationDDim,
+        class LowerExtrapolationRule,
+        class UpperExtrapolationRule,
         class... IDimX>
 class SplineEvaluator
 {
@@ -53,8 +53,6 @@ private:
     {
     };
 
-    using tag_type = typename BSplines::tag_type;
-
 public:
     /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
@@ -62,14 +60,17 @@ public:
     /// @brief The type of the Kokkos memory space used by this class.
     using memory_space = MemorySpace;
 
+    /// @brief The type of the evaluation continuous dimension (continuous dimension of interest) used by this class.
+    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
+
     /// @brief The type of the evaluation discrete dimension (discrete dimension of interest) used by this class.
-    using evaluation_mesh_type = EvaluationMesh;
+    using evaluation_discrete_dimension_type = EvaluationDDim;
 
     /// @brief The discrete dimension representing the B-splines.
     using bsplines_type = BSplines;
 
     /// @brief The type of the domain for the 1D evaluation mesh used by this class.
-    using evaluation_domain_type = ddc::DiscreteDomain<evaluation_mesh_type>;
+    using evaluation_domain_type = ddc::DiscreteDomain<evaluation_discrete_dimension_type>;
 
     /// @brief The type of the whole domain representing evaluation points.
     using batched_evaluation_domain_type = ddc::DiscreteDomain<IDimX...>;
@@ -84,7 +85,7 @@ public:
     using batch_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<evaluation_mesh_type>>>;
+                    ddc::detail::TypeSeq<evaluation_discrete_dimension_type>>>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain
@@ -93,67 +94,67 @@ public:
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<evaluation_mesh_type>,
+                    ddc::detail::TypeSeq<evaluation_discrete_dimension_type>,
                     ddc::detail::TypeSeq<bsplines_type>>>;
 
     /// @brief The type of the extrapolation rule at the lower boundary.
-    using left_extrapolation_rule_type = LeftExtrapolationRule;
+    using lower_extrapolation_rule_type = LowerExtrapolationRule;
 
     /// @brief The type of the extrapolation rule at the upper boundary.
-    using right_extrapolation_rule_type = RightExtrapolationRule;
+    using upper_extrapolation_rule_type = UpperExtrapolationRule;
 
 
 private:
-    LeftExtrapolationRule m_left_extrap_rule;
+    LowerExtrapolationRule m_lower_extrap_rule;
 
-    RightExtrapolationRule m_right_extrap_rule;
+    UpperExtrapolationRule m_upper_extrap_rule;
 
 public:
     static_assert(
-            std::is_same_v<LeftExtrapolationRule,
+            std::is_same_v<LowerExtrapolationRule,
                             typename ddc::PeriodicExtrapolationRule<
-                                    tag_type>> == bsplines_type::is_periodic()
+                                    continuous_dimension_type>> == bsplines_type::is_periodic()
                     && std::is_same_v<
-                               RightExtrapolationRule,
+                               UpperExtrapolationRule,
                                typename ddc::PeriodicExtrapolationRule<
-                                       tag_type>> == bsplines_type::is_periodic(),
+                                       continuous_dimension_type>> == bsplines_type::is_periodic(),
             "PeriodicExtrapolationRule has to be used if and only if dimension is periodic");
     static_assert(
             std::is_invocable_r_v<
                     double,
-                    LeftExtrapolationRule,
-                    ddc::Coordinate<tag_type>,
+                    LowerExtrapolationRule,
+                    ddc::Coordinate<continuous_dimension_type>,
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
                             std::experimental::layout_right,
                             memory_space>>,
-            "LeftExtrapolationRule::operator() has to be callable with usual arguments.");
+            "LowerExtrapolationRule::operator() has to be callable with usual arguments.");
     static_assert(
             std::is_invocable_r_v<
                     double,
-                    RightExtrapolationRule,
-                    ddc::Coordinate<tag_type>,
+                    UpperExtrapolationRule,
+                    ddc::Coordinate<continuous_dimension_type>,
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
                             std::experimental::layout_right,
                             memory_space>>,
-            "RightExtrapolationRule::operator() has to be callable with usual arguments.");
+            "UpperExtrapolationRule::operator() has to be callable with usual arguments.");
 
     /**
      * @brief Build a SplineEvaluator acting on batched_spline_domain.
      * 
-     * @param left_extrap_rule The extrapolation rule at the lower boundary.
-     * @param right_extrap_rule The extrapolation rule at the upper boundary.
+     * @param lower_extrap_rule The extrapolation rule at the lower boundary.
+     * @param upper_extrap_rule The extrapolation rule at the upper boundary.
      *
      * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
      */
     explicit SplineEvaluator(
-            LeftExtrapolationRule const& left_extrap_rule,
-            RightExtrapolationRule const& right_extrap_rule)
-        : m_left_extrap_rule(left_extrap_rule)
-        , m_right_extrap_rule(right_extrap_rule)
+            LowerExtrapolationRule const& lower_extrap_rule,
+            UpperExtrapolationRule const& upper_extrap_rule)
+        : m_lower_extrap_rule(lower_extrap_rule)
+        , m_upper_extrap_rule(upper_extrap_rule)
     {
     }
 
@@ -199,9 +200,9 @@ public:
      *
      * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
      */
-    left_extrapolation_rule_type left_extrapolation_rule() const
+    lower_extrapolation_rule_type lower_extrapolation_rule() const
     {
-        return m_left_extrap_rule;
+        return m_lower_extrap_rule;
     }
 
     /**
@@ -213,9 +214,9 @@ public:
      *
      * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
      */
-    right_extrapolation_rule_type right_extrapolation_rule() const
+    upper_extrapolation_rule_type upper_extrapolation_rule() const
     {
-        return m_right_extrap_rule;
+        return m_upper_extrap_rule;
     }
 
     /**
@@ -405,9 +406,8 @@ private:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
-                coord_eval_interest
-                = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
+        ddc::Coordinate<continuous_dimension_type> coord_eval_interest
+                = ddc::select<continuous_dimension_type>(coord_eval);
         if constexpr (bsplines_type::is_periodic()) {
             if (coord_eval_interest < ddc::discrete_space<bsplines_type>().rmin()
                 || coord_eval_interest > ddc::discrete_space<bsplines_type>().rmax()) {
@@ -419,10 +419,10 @@ private:
             }
         } else {
             if (coord_eval_interest < ddc::discrete_space<bsplines_type>().rmin()) {
-                return m_left_extrap_rule(coord_eval_interest, spline_coef);
+                return m_lower_extrap_rule(coord_eval_interest, spline_coef);
             }
             if (coord_eval_interest > ddc::discrete_space<bsplines_type>().rmax()) {
-                return m_right_extrap_rule(coord_eval_interest, spline_coef);
+                return m_upper_extrap_rule(coord_eval_interest, spline_coef);
             }
         }
         return eval_no_bc<eval_type>(coord_eval_interest, spline_coef);
@@ -442,9 +442,8 @@ private:
                 double,
                 std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
                 vals(vals_ptr.data());
-        ddc::Coordinate<typename evaluation_mesh_type::continuous_dimension_type>
-                coord_eval_interest
-                = ddc::select<typename evaluation_mesh_type::continuous_dimension_type>(coord_eval);
+        ddc::Coordinate<continuous_dimension_type> coord_eval_interest
+                = ddc::select<continuous_dimension_type>(coord_eval);
         if constexpr (std::is_same_v<EvalType, eval_type>) {
             jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
         } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {

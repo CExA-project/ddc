@@ -25,13 +25,13 @@ There are many use-cases of transformations for simulation or signal processing 
 finite element methods, filtering (compression), signal analysis (post-process)...
 
 Every basis has its own specificities (ie. orthogonality, n-derivability, etc...) but as they all are
-function space basis, they have in common a formalism and a terminology. However, this is currently
+function space bases, they have in common a formalism and a terminology. However, this is currently
 not very manifest when looking at the API in the DDC implementations (DFT and Splines API are very different).
 It must be explained:
 
-- Fourier requires the periodicity of the represented function, thus boundary conditions does not need to be provided.
-- Fourier basis functions are indexed with the wave vector \f$ \vec{k} \f$, whose possible values form a set of coordinates which generates
-the Fourier space. Mesh of "real" space and mesh of Fourier space are in bijection one-to-the-other.
+- Fourier requires the periodicity of the represented function, thus boundary conditions do not need to be provided.
+- Fourier basis functions are indexed with the wave vector \f$ \vec{k} \f$, whose possible values form a set of coordinates which generate
+the Fourier space. There is a bijection between the mesh of the "real" space and the mesh of the Fourier space.
 The situation is more complicated for Splines.
 - Fourier and Splines basis use-cases are quite different. Thus - as shown below - the so-called "evaluator" is not
 implemented for Fourier (while inverse DFT is) and inverse Spline transform is not implemented (while Spline evaluator is).

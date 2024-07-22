@@ -92,10 +92,9 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
      * this is DiscreteDomain<X,Z>
      */
-    using batch_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
-                    ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_discrete_dimension_type>>>;
+    using batch_domain_type = typename ddc::remove_dims_of_t<
+            batched_interpolation_domain_type,
+            interpolation_discrete_dimension_type>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain

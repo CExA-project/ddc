@@ -389,6 +389,18 @@ struct ConvertTypeSeqToDiscreteDomain<detail::TypeSeq<DDims...>>
 template <class T>
 using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDomain<T>::type;
 
+template <class T>
+struct ConvertDiscreteDomainToTypeSeq;
+
+template <class... DDims>
+struct ConvertDiscreteDomainToTypeSeq<DiscreteDomain<DDims...>>
+{
+    using type = detail::TypeSeq<DDims...>;
+};
+
+template <class T>
+using convert_discrete_domain_to_type_seq = typename ConvertDiscreteDomainToTypeSeq<T>::type;
+
 } // namespace detail
 
 // Computes the cartesian product of DiscreteDomain types
@@ -417,6 +429,12 @@ struct cartesian_prod<DDom1, DDom2, Tail...>
 
 template <typename... DDom>
 using cartesian_prod_t = typename cartesian_prod<DDom...>::type;
+
+// Remove dimensions from a domain type
+template <typename DDom, typename... DDim>
+using remove_dims_of_t = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
+                                 ddc::detail::convert_discrete_domain_to_type_seq<DDom>,
+                                 ddc::detail::TypeSeq<DDim...>>>;
 
 // Computes the substraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
 template <class... DDimsA, class... DDimsB>

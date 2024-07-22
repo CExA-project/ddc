@@ -959,9 +959,16 @@ SplineBuilder<
             ddc::KokkosAllocator<double, MemorySpace>>
             coefficients(domain);
 
+    // Coefficients of quadrature in integral_bsplines (values which would always be multiplied
+    // by f'(x)=0 are removed
+    ddc::DiscreteDomain<bsplines_type> slice =
+            spline_domain()
+                      .remove(ddc::DiscreteVector<bsplines_type> {s_nbc_xmin},
+                              ddc::DiscreteVector<bsplines_type> {s_nbc_xmax});
+
     Kokkos::deep_copy(
             coefficients.allocation_kokkos_view(),
-            integral_bsplines_without_periodic_point.allocation_kokkos_view());
+            integral_bsplines_without_periodic_point[slice].allocation_kokkos_view());
 
     return coefficients;
 }

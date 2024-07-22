@@ -397,6 +397,13 @@ public:
                     derivs_xmax
             = std::nullopt) const;
 
+    ddc::Chunk<
+            double,
+            ddc::DiscreteDomain<interpolation_discrete_dimension_type>,
+            ddc::KokkosAllocator<double, memory_space>>
+    quadrature_coefficients(
+            ddc::DiscreteDomain<interpolation_discrete_dimension_type> const& domain) const;
+
 private:
     void compute_block_sizes_uniform(int& lower_block_size, int& upper_block_size) const;
 
@@ -892,5 +899,70 @@ operator()(
                     }
                 });
     }
+}
+
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
+        SplineSolver Solver,
+        class... IDimX>
+ddc::Chunk<
+        double,
+        ddc::DiscreteDomain<InterpolationDDim>,
+        ddc::KokkosAllocator<double, MemorySpace>>
+SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
+        Solver,
+        IDimX...>::quadrature_coefficients(ddc::DiscreteDomain<InterpolationDDim> const& domain)
+        const
+{
+    ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type>> integral_bsplines(spline_domain());
+    ddc::discrete_space<bsplines_type>().integrals(integral_bsplines.span_view());
+
+    // Solve matrix equation
+    ddc::ChunkSpan integral_bsplines_without_periodic_point
+            = integral_bsplines.span_view()[ddc::DiscreteDomain<bsplines_type>(
+                    ddc::DiscreteElement<bsplines_type>(0),
+                    ddc::DiscreteVector<bsplines_type>(matrix->size()))];
+    Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace>
+            integral_bsplines_mirror_with_additional_allocation(
+                    "integral_bsplines_mirror_with_additional_allocation",
+                    matrix->required_number_of_rhs_rows(),
+                    1);
+    Kokkos::View<double*, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace>
+            integral_bsplines_mirror = Kokkos::
+                    subview(integral_bsplines_mirror_with_additional_allocation,
+                            std::pair<std::size_t, std::size_t> {
+                                    0,
+                                    integral_bsplines_without_periodic_point.size()},
+                            0);
+    Kokkos::deep_copy(
+            integral_bsplines_mirror,
+            integral_bsplines_without_periodic_point.allocation_kokkos_view());
+    matrix->solve(integral_bsplines_mirror_with_additional_allocation, true);
+    Kokkos::deep_copy(
+            integral_bsplines_without_periodic_point.allocation_kokkos_view(),
+            integral_bsplines_mirror);
+
+    ddc::Chunk<
+            double,
+            ddc::DiscreteDomain<InterpolationDDim>,
+            ddc::KokkosAllocator<double, MemorySpace>>
+            coefficients(domain);
+
+    Kokkos::deep_copy(
+            coefficients.allocation_kokkos_view(),
+            integral_bsplines_without_periodic_point.allocation_kokkos_view());
+
+    return coefficients;
 }
 } // namespace ddc

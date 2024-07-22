@@ -125,12 +125,10 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
      * this is DiscreteDomain<Z>.
      */
-    using batch_domain_type
-            = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
-                    ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<
-                            interpolation_discrete_dimension_type1,
-                            interpolation_discrete_dimension_type2>>>;
+    using batch_domain_type = typename ddc::remove_dims_of_t<
+            batched_interpolation_domain_type,
+            interpolation_discrete_dimension_type1,
+            interpolation_discrete_dimension_type2>;
 
     /** 
      * @brief The type of the whole spline domain (cartesian product of 2D spline domain
@@ -163,11 +161,10 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
      * this is DiscreteDomain<X, Deriv<Y>, Z>.
      */
-    using batched_derivs_domain_type2
-            = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
-                    ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_discrete_dimension_type2>,
-                    ddc::detail::TypeSeq<deriv_type2>>>;
+    using batched_derivs_domain_type2 = typename ddc::replace_dim_of_t<
+            batched_interpolation_domain_type,
+            interpolation_discrete_dimension_type1,
+            deriv_type1>;
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain

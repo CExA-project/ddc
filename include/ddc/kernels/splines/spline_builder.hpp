@@ -933,12 +933,14 @@ SplineBuilder<
                     ddc::DiscreteElement<bsplines_type>(0),
                     ddc::DiscreteVector<bsplines_type>(matrix->size()))];
 
-    // Allocate
+    // Allocate mirror with additional rows (cf. SplinesLinearProblem3x3Blocks documentation)
     Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace>
             integral_bsplines_mirror_with_additional_allocation(
                     "integral_bsplines_mirror_with_additional_allocation",
                     matrix->required_number_of_rhs_rows(),
                     1);
+
+    // Extract relevant subview
     Kokkos::View<double*, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace>
             integral_bsplines_mirror = Kokkos::
                     subview(integral_bsplines_mirror_with_additional_allocation,
@@ -956,9 +958,10 @@ SplineBuilder<
             integral_bsplines_without_periodic_point.allocation_kokkos_view(),
             integral_bsplines_mirror);
 
+    // Allocate Chunk on interpolation_discrete_dimension_type and copy quadrature coefficients into it
     ddc::Chunk<
             double,
-            ddc::DiscreteDomain<InterpolationDDim>,
+            ddc::DiscreteDomain<interpolation_discrete_dimension_type>,
             ddc::KokkosAllocator<double, MemorySpace>>
             coefficients(ddc::DiscreteDomain<interpolation_discrete_dimension_type>(
                     interpolation_domain().front(),
@@ -972,7 +975,6 @@ SplineBuilder<
                              ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
                              ddc::DiscreteVector<bsplines_type>(coefficients.size()))]
                             .allocation_kokkos_view());
-
     return coefficients;
 }
 } // namespace ddc

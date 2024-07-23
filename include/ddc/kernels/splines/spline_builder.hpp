@@ -397,6 +397,26 @@ public:
                     derivs_xmax
             = std::nullopt) const;
 
+    /**
+     * @brief Compute the quadrature coefficients associated to the b-splines used by this SplineBuilder.
+     *
+     * Those coefficients can be used to perform integration way faster than SplineEvaluator::integrate().
+     *
+     * This function solves matrix equation A^t*Q=integral_bsplines. In case of HERMITE boundary conditions,
+     * integral_bsplines contains the integral coefficients at the boundaries, and Q thus has to
+     * be splitted in three parts (quadrature coefficients for the derivatives at lower boundary,
+     * for the values inside the domain and for the derivatives at upper boundary).
+     *
+     * A discrete function f can then be integrated using sum_j Q_j*f_j for j in interpolation_domain.
+     * If boundary condition is HERMITE, sum_j Qderiv_j*(d^j f/dx^j)*dx^j for j in derivs_domain
+     * must be added at the boundary.
+     *
+     * Please refer to Emily's Bourne phd (https://theses.fr/2022AIXM0412) for more information and to
+     * the (Non)PeriodicSplineBuilderTest for example usage to compute integrals.
+     *
+     * @return A tuple containing the three Chunks containing the quadrature coefficients (if HERMITE
+     * is not used, first and third are empty).
+     */
     std::tuple<
             ddc::Chunk<
                     double,

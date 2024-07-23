@@ -133,8 +133,7 @@ TEST(PeriodicSplineBuilderTest, Identity)
     spline_evaluator.integrate(integral.span_view(), coef.span_cview());
 
     ddc::Chunk quadrature_coefficients = spline_builder.quadrature_coefficients();
-    ddc::Chunk quadrature_integral(spline_builder.batch_domain(), ddc::HostAllocator<double>());
-    quadrature_integral(ddc::DiscreteElement<>()) = ddc::parallel_transform_reduce(
+    double const quadrature_integral = ddc::parallel_transform_reduce(
             Kokkos::DefaultHostExecutionSpace(),
             quadrature_coefficients.domain(),
             0.0,
@@ -142,7 +141,6 @@ TEST(PeriodicSplineBuilderTest, Identity)
             [&](ddc::DiscreteElement<IDimX> const ix) {
                 return quadrature_coefficients(ix) * yvals(ix);
             });
-
 
     // 8. Checking errors
     std::cout << "---------- TEST ----------\n";
@@ -162,9 +160,8 @@ TEST(PeriodicSplineBuilderTest, Identity)
 
     double const max_norm_error_integ = std::fabs(
             integral(ddc::DiscreteElement<>()) - evaluator.deriv(xN, -1) + evaluator.deriv(x0, -1));
-    double const max_norm_error_quadrature_integ = std::fabs(
-            quadrature_integral(ddc::DiscreteElement<>()) - evaluator.deriv(xN, -1)
-            + evaluator.deriv(x0, -1));
+    double const max_norm_error_quadrature_integ
+            = std::fabs(quadrature_integral - evaluator.deriv(xN, -1) + evaluator.deriv(x0, -1));
 
     double const max_norm = evaluator.max_norm();
     double const max_norm_diff = evaluator.max_norm(1);

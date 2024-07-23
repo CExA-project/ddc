@@ -222,8 +222,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
 #else
     double const quadrature_integral_derivs_xmax = 0;
 #endif
-    quadrature_integral = quadrature_integral_derivs_xmin + quadrature_integral
-                          + quadrature_integral_derivs_xmax;
+    quadrature_integral += quadrature_integral_derivs_xmin + quadrature_integral_derivs_xmax;
 
     // 8. Checking errors
     double max_norm_error = 0.;

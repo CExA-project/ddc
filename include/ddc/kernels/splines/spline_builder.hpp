@@ -364,11 +364,6 @@ public:
         return *matrix;
     }
 
-    double dx() const noexcept
-    {
-        return m_dx;
-    }
-
     /**
      * @brief Compute a spline approximation of a function.
      *

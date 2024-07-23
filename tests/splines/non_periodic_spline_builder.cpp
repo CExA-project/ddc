@@ -82,9 +82,8 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
         DVectX constexpr npoints(ncells + 1);
         std::vector<CoordX> breaks(npoints);
-        double dx = (xN - x0) / ncells;
         for (int i(0); i < npoints; ++i) {
-            breaks[i] = CoordX(x0 + i * dx);
+            breaks[i] = CoordX(x0 + i * (xN - x0) / ncells);
         }
         ddc::init_discrete_space<BSplinesX>(breaks);
 #endif
@@ -200,11 +199,13 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             ddc::reducer::sum<double>(),
             [&](ddc::DiscreteElement<ddc::Deriv<typename IDimX::continuous_dimension_type>> const
                         ix) {
+                ddc::Coordinate<DimX> const dx
+                        = ddc::distance_at_right(interpolation_domain.front() + 1);
                 return quadrature_coefficients_derivs_xmin(ix)
-                       * (*deriv_l)(ix)*ddc::detail::ipow(spline_builder.dx(), ix.uid());
+                       * (*deriv_l)(ix)*ddc::detail::ipow(dx, ix.uid());
             });
 #else
-    double const quadrature_integral_derivs_xmin = 0;
+    double const quadrature_integral_derivs_xmin = 0.;
 #endif
     double quadrature_integral = ddc::parallel_transform_reduce(
             Kokkos::DefaultHostExecutionSpace(),
@@ -222,11 +223,13 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             ddc::reducer::sum<double>(),
             [&](ddc::DiscreteElement<ddc::Deriv<typename IDimX::continuous_dimension_type>> const
                         ix) {
+                ddc::Coordinate<DimX> const dx
+                        = ddc::distance_at_left(interpolation_domain.back() - 1);
                 return quadrature_coefficients_derivs_xmax(ix)
-                       * (*deriv_r)(ix)*ddc::detail::ipow(spline_builder.dx(), ix.uid());
+                       * (*deriv_r)(ix)*ddc::detail::ipow(dx, ix.uid());
             });
 #else
-    double const quadrature_integral_derivs_xmax = 0;
+    double const quadrature_integral_derivs_xmax = 0.;
 #endif
     quadrature_integral += quadrature_integral_derivs_xmin + quadrature_integral_derivs_xmax;
 

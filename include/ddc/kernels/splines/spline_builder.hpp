@@ -1007,7 +1007,7 @@ SplineBuilder<
             coefficients(ddc::DiscreteDomain<interpolation_discrete_dimension_type>(
                     interpolation_domain().front(),
                     ddc::DiscreteVector<interpolation_discrete_dimension_type>(
-                            ddc::discrete_space<bsplines_type>().size() - s_nbc_xmin
+                            ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin
                             - s_nbc_xmax)));
     ddc::Chunk<double, ddc::DiscreteDomain<deriv_type>, ddc::KokkosAllocator<double, MemorySpace>>
             coefficients_derivs_xmax(ddc::DiscreteDomain<deriv_type>(

@@ -397,10 +397,19 @@ public:
                     derivs_xmax
             = std::nullopt) const;
 
-    ddc::Chunk<
-            double,
-            ddc::DiscreteDomain<interpolation_discrete_dimension_type>,
-            ddc::KokkosAllocator<double, memory_space>>
+    std::tuple<
+            ddc::Chunk<
+                    double,
+                    ddc::DiscreteDomain<deriv_type>,
+                    ddc::KokkosAllocator<double, MemorySpace>>&&,
+            ddc::Chunk<
+                    double,
+                    interpolation_domain_type,
+                    ddc::KokkosAllocator<double, MemorySpace>>&&,
+            ddc::Chunk<
+                    double,
+                    ddc::DiscreteDomain<deriv_type>,
+                    ddc::KokkosAllocator<double, MemorySpace>>&&>
     quadrature_coefficients() const;
 
 private:
@@ -909,10 +918,21 @@ template <
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
-ddc::Chunk<
-        double,
-        ddc::DiscreteDomain<InterpolationDDim>,
-        ddc::KokkosAllocator<double, MemorySpace>>
+std::tuple<
+        ddc::Chunk<
+                double,
+                ddc::DiscreteDomain<
+                        ddc::Deriv<typename InterpolationDDim::continuous_dimension_type>>,
+                ddc::KokkosAllocator<double, MemorySpace>>&&,
+        ddc::Chunk<
+                double,
+                ddc::DiscreteDomain<InterpolationDDim>,
+                ddc::KokkosAllocator<double, MemorySpace>>&&,
+        ddc::Chunk<
+                double,
+                ddc::DiscreteDomain<
+                        ddc::Deriv<typename InterpolationDDim::continuous_dimension_type>>,
+                ddc::KokkosAllocator<double, MemorySpace>>&&>
 SplineBuilder<
         ExecSpace,
         MemorySpace,
@@ -959,15 +979,23 @@ SplineBuilder<
             integral_bsplines_mirror);
 
     // Allocate Chunk on interpolation_discrete_dimension_type and copy quadrature coefficients into it
+    ddc::Chunk<double, ddc::DiscreteDomain<deriv_type>, ddc::KokkosAllocator<double, MemorySpace>>
+            coefficients_derivs_xmin(ddc::DiscreteDomain<deriv_type>(
+                        ddc::DiscreteElement<deriv_type>(1),
+                        ddc::DiscreteVector<deriv_type>(s_nbc_xmin)));
     ddc::Chunk<
             double,
-            ddc::DiscreteDomain<interpolation_discrete_dimension_type>,
+            interpolation_domain_type,
             ddc::KokkosAllocator<double, MemorySpace>>
             coefficients(ddc::DiscreteDomain<interpolation_discrete_dimension_type>(
                     interpolation_domain().front(),
                     ddc::DiscreteVector<interpolation_discrete_dimension_type>(
                             ddc::discrete_space<bsplines_type>().size() - s_nbc_xmin
                             - s_nbc_xmax)));
+    ddc::Chunk<double, ddc::DiscreteDomain<deriv_type>, ddc::KokkosAllocator<double, MemorySpace>>
+            coefficients_derivs_xmax(ddc::DiscreteDomain<deriv_type>(
+                        ddc::DiscreteElement<deriv_type>(1),
+                        ddc::DiscreteVector<deriv_type>(s_nbc_xmax)));
     Kokkos::deep_copy(
             coefficients.allocation_kokkos_view(),
             integral_bsplines_without_periodic_point
@@ -975,6 +1003,6 @@ SplineBuilder<
                              ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
                              ddc::DiscreteVector<bsplines_type>(coefficients.size()))]
                             .allocation_kokkos_view());
-    return coefficients;
+    return std::make_tuple(std::move(coefficients_derivs_xmin), std::move(coefficients), std::move(coefficients_derivs_xmax));
 }
 } // namespace ddc

@@ -132,8 +132,9 @@ TEST(PeriodicSplineBuilderTest, Identity)
     ddc::Chunk integral(spline_builder.batch_domain(), ddc::HostAllocator<double>());
     spline_evaluator.integrate(integral.span_view(), coef.span_cview());
 
-	ddc::Chunk<double, ddc::DiscreteDomain<IDimX>> quadrature_coefficients;
-    std::tie(std::ignore, quadrature_coefficients, std::ignore) = spline_builder.quadrature_coefficients();
+    ddc::Chunk<double, ddc::DiscreteDomain<IDimX>> quadrature_coefficients;
+    std::tie(std::ignore, quadrature_coefficients, std::ignore)
+            = spline_builder.quadrature_coefficients();
     double const quadrature_integral = ddc::parallel_transform_reduce(
             Kokkos::DefaultHostExecutionSpace(),
             quadrature_coefficients.domain(),

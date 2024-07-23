@@ -199,7 +199,10 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             0.0,
             ddc::reducer::sum<double>(),
             [&](ddc::DiscreteElement<ddc::Deriv<typename IDimX::continuous_dimension_type>> const
-                        ix) { return quadrature_coefficients_derivs_xmin(ix) * (*deriv_l)(ix); });
+                        ix) {
+                return quadrature_coefficients_derivs_xmin(ix)
+                       * (*deriv_l)(ix)*ddc::detail::ipow(spline_builder.dx(), ix.uid());
+            });
 #else
     double const quadrature_integral_derivs_xmin = 0;
 #endif
@@ -211,14 +214,17 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             [&](ddc::DiscreteElement<IDimX> const ix) {
                 return quadrature_coefficients(ix) * yvals(ix);
             });
-#if defined(BCL_HERMITE)
+#if defined(BCR_HERMITE)
     double const quadrature_integral_derivs_xmax = ddc::parallel_transform_reduce(
             Kokkos::DefaultHostExecutionSpace(),
             quadrature_coefficients_derivs_xmax.domain(),
             0.0,
             ddc::reducer::sum<double>(),
             [&](ddc::DiscreteElement<ddc::Deriv<typename IDimX::continuous_dimension_type>> const
-                        ix) { return quadrature_coefficients_derivs_xmax(ix) * (*deriv_r)(ix); });
+                        ix) {
+                return quadrature_coefficients_derivs_xmax(ix)
+                       * (*deriv_r)(ix)*ddc::detail::ipow(spline_builder.dx(), ix.uid());
+            });
 #else
     double const quadrature_integral_derivs_xmax = 0;
 #endif

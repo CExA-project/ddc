@@ -401,8 +401,7 @@ public:
             double,
             ddc::DiscreteDomain<interpolation_discrete_dimension_type>,
             ddc::KokkosAllocator<double, memory_space>>
-    quadrature_coefficients(
-            ddc::DiscreteDomain<interpolation_discrete_dimension_type> const& domain) const;
+    quadrature_coefficients() const;
 
 private:
     void compute_block_sizes_uniform(int& lower_block_size, int& upper_block_size) const;
@@ -922,17 +921,19 @@ SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::quadrature_coefficients(ddc::DiscreteDomain<InterpolationDDim> const& domain)
-        const
+        IDimX...>::quadrature_coefficients() const
 {
+    // Compute integrals of bsplines
     ddc::Chunk<double, ddc::DiscreteDomain<bsplines_type>> integral_bsplines(spline_domain());
     ddc::discrete_space<bsplines_type>().integrals(integral_bsplines.span_view());
 
-    // Solve matrix equation
+    // Remove last cell in the periodic case
     ddc::ChunkSpan integral_bsplines_without_periodic_point
             = integral_bsplines.span_view()[ddc::DiscreteDomain<bsplines_type>(
                     ddc::DiscreteElement<bsplines_type>(0),
                     ddc::DiscreteVector<bsplines_type>(matrix->size()))];
+
+    // Allocate
     Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace>
             integral_bsplines_mirror_with_additional_allocation(
                     "integral_bsplines_mirror_with_additional_allocation",
@@ -945,6 +946,8 @@ SplineBuilder<
                                     0,
                                     integral_bsplines_without_periodic_point.size()},
                             0);
+
+    // Solve matrix equation A^t*X=integral_bsplines
     Kokkos::deep_copy(
             integral_bsplines_mirror,
             integral_bsplines_without_periodic_point.allocation_kokkos_view());
@@ -957,18 +960,17 @@ SplineBuilder<
             double,
             ddc::DiscreteDomain<InterpolationDDim>,
             ddc::KokkosAllocator<double, MemorySpace>>
-            coefficients(domain);
-
-    // Coefficients of quadrature in integral_bsplines (values which would always be multiplied
-    // by f'(x)=0 are removed
-    ddc::DiscreteDomain<bsplines_type> slice =
-            spline_domain()
-                      .remove(ddc::DiscreteVector<bsplines_type> {s_nbc_xmin},
-                              ddc::DiscreteVector<bsplines_type> {s_nbc_xmax});
-
+            coefficients(ddc::DiscreteDomain<interpolation_discrete_dimension_type>(
+                    interpolation_domain().front(),
+                    ddc::DiscreteVector<interpolation_discrete_dimension_type>(
+                            integral_bsplines_without_periodic_point.size())));
     Kokkos::deep_copy(
             coefficients.allocation_kokkos_view(),
-            integral_bsplines_without_periodic_point[slice].allocation_kokkos_view());
+            integral_bsplines_without_periodic_point
+                    [ddc::DiscreteDomain<bsplines_type>(
+                             ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
+                             ddc::DiscreteVector<bsplines_type>(interpolation_domain().size()))]
+                            .allocation_kokkos_view());
 
     return coefficients;
 }

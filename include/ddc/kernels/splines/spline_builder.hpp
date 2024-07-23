@@ -411,7 +411,7 @@ public:
      * If boundary condition is HERMITE, sum_j Qderiv_j*(d^j f/dx^j)*dx^j for j in derivs_domain
      * must be added at the boundary.
      *
-     * Please refer to Emily's Bourne phd (https://theses.fr/2022AIXM0412) for more information and to
+     * Please refer to section 2.8.1 of Emily's Bourne phd (https://theses.fr/2022AIXM0412) for more information and to
      * the (Non)PeriodicSplineBuilderTest for example usage to compute integrals.
      *
      * @return A tuple containing the three Chunks containing the quadrature coefficients (if HERMITE

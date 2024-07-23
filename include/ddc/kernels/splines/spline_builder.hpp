@@ -963,13 +963,18 @@ SplineBuilder<
             coefficients(ddc::DiscreteDomain<interpolation_discrete_dimension_type>(
                     interpolation_domain().front(),
                     ddc::DiscreteVector<interpolation_discrete_dimension_type>(
-                            integral_bsplines_without_periodic_point.size())));
+                            bsplines_type::is_periodic()
+                                    ? interpolation_domain().size()
+                                    : ddc::discrete_space<bsplines_type>().nbasis())));
     Kokkos::deep_copy(
             coefficients.allocation_kokkos_view(),
             integral_bsplines_without_periodic_point
                     [ddc::DiscreteDomain<bsplines_type>(
-                             ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
-                             ddc::DiscreteVector<bsplines_type>(interpolation_domain().size()))]
+                             ddc::DiscreteElement<bsplines_type>(0),
+                             ddc::DiscreteVector<bsplines_type>(
+                                     bsplines_type::is_periodic()
+                                             ? interpolation_domain().size()
+                                             : ddc::discrete_space<bsplines_type>().nbasis()))]
                             .allocation_kokkos_view());
 
     return coefficients;

@@ -994,11 +994,25 @@ SplineBuilder<
                     ddc::DiscreteElement<deriv_type>(1),
                     ddc::DiscreteVector<deriv_type>(s_nbc_xmax)));
     Kokkos::deep_copy(
+            coefficients_derivs_xmin.allocation_kokkos_view(),
+            integral_bsplines_without_periodic_point[ddc::DiscreteDomain<bsplines_type>(
+                                                             ddc::DiscreteElement<bsplines_type>(0),
+                                                             ddc::DiscreteVector<bsplines_type>(
+                                                                     s_nbc_xmin))]
+                    .allocation_kokkos_view());
+    Kokkos::deep_copy(
             coefficients.allocation_kokkos_view(),
             integral_bsplines_without_periodic_point
                     [ddc::DiscreteDomain<bsplines_type>(
                              ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
                              ddc::DiscreteVector<bsplines_type>(coefficients.size()))]
+                            .allocation_kokkos_view());
+    Kokkos::deep_copy(
+            coefficients_derivs_xmax.allocation_kokkos_view(),
+            integral_bsplines_without_periodic_point
+                    [ddc::DiscreteDomain<bsplines_type>(
+                             ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + coefficients.size()),
+                             ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))]
                             .allocation_kokkos_view());
     return std::make_tuple(
             std::move(coefficients_derivs_xmin),

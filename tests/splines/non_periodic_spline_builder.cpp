@@ -182,10 +182,28 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
     ddc::Chunk integral(spline_builder.batch_domain(), ddc::HostAllocator<double>());
     spline_evaluator.integrate(integral.span_view(), coef.span_cview());
 
+    ddc::Chunk<double, ddc::DiscreteDomain<ddc::Deriv<typename IDimX::continuous_dimension_type>>>
+            quadrature_coefficients_derivs_xmin;
     ddc::Chunk<double, ddc::DiscreteDomain<IDimX>> quadrature_coefficients;
-    std::tie(std::ignore, quadrature_coefficients, std::ignore)
+    ddc::Chunk<double, ddc::DiscreteDomain<ddc::Deriv<typename IDimX::continuous_dimension_type>>>
+            quadrature_coefficients_derivs_xmax;
+    std::
+            tie(quadrature_coefficients_derivs_xmin,
+                quadrature_coefficients,
+                quadrature_coefficients_derivs_xmax)
             = spline_builder.quadrature_coefficients();
-    double const quadrature_integral = ddc::parallel_transform_reduce(
+#if defined(BCL_HERMITE)
+    double const quadrature_integral_derivs_xmin = ddc::parallel_transform_reduce(
+            Kokkos::DefaultHostExecutionSpace(),
+            quadrature_coefficients_derivs_xmin.domain(),
+            0.0,
+            ddc::reducer::sum<double>(),
+            [&](ddc::DiscreteElement<ddc::Deriv<typename IDimX::continuous_dimension_type>> const
+                        ix) { return quadrature_coefficients_derivs_xmin(ix) * (*deriv_l)(ix); });
+#else
+    double const quadrature_integral_derivs_xmin = 0;
+#endif
+    double quadrature_integral = ddc::parallel_transform_reduce(
             Kokkos::DefaultHostExecutionSpace(),
             quadrature_coefficients.domain(),
             0.0,
@@ -193,6 +211,19 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             [&](ddc::DiscreteElement<IDimX> const ix) {
                 return quadrature_coefficients(ix) * yvals(ix);
             });
+#if defined(BCL_HERMITE)
+    double const quadrature_integral_derivs_xmax = ddc::parallel_transform_reduce(
+            Kokkos::DefaultHostExecutionSpace(),
+            quadrature_coefficients_derivs_xmax.domain(),
+            0.0,
+            ddc::reducer::sum<double>(),
+            [&](ddc::DiscreteElement<ddc::Deriv<typename IDimX::continuous_dimension_type>> const
+                        ix) { return quadrature_coefficients_derivs_xmax(ix) * (*deriv_r)(ix); });
+#else
+    double const quadrature_integral_derivs_xmax = 0;
+#endif
+    quadrature_integral = quadrature_integral_derivs_xmin + quadrature_integral
+                          + quadrature_integral_derivs_xmax;
 
     // 8. Checking errors
     double max_norm_error = 0.;

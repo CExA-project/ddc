@@ -13,66 +13,79 @@
 
 namespace ddc {
 
-/// Returns a new `Chunk` with the same layout as `src` allocated on the memory space `Space::memory_space`.
+/// @param[in] space A Kokkos memory space or execution space.
+/// @param[in] src A layout right ChunkSpan.
+/// @return a `Chunk` with the same support and layout as `src` allocated on the `Space::memory_space` memory space.
 template <class Space, class ElementType, class Support, class Layout, class MemorySpace>
 auto create_mirror(
         [[maybe_unused]] Space const& space,
         ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
     static_assert(
+            Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,
+            "DDC: parameter \"Space\" must be either a Kokkos execution space or a memory space");
+    static_assert(
             std::is_same_v<Layout, std::experimental::layout_right>,
-            "Only layout right is supported");
+            "DDC: parameter \"Layout\" must be a `layout_right`");
     return Chunk(
             src.domain(),
             KokkosAllocator<std::remove_const_t<ElementType>, typename Space::memory_space>());
 }
 
-/// Returns a new host `Chunk` with the same layout as `src`.
+/// Equivalent to `create_mirror(Kokkos::HostSpace(), src)`.
+/// @param[in] src A layout right ChunkSpan.
+/// @return a `Chunk` with the same support and layout as `src` allocated on the `Kokkos::HostSpace` memory space.
 template <class ElementType, class Support, class Layout, class MemorySpace>
 auto create_mirror(ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
-    static_assert(
-            std::is_same_v<Layout, std::experimental::layout_right>,
-            "Only layout right is supported");
-    return Chunk(src.domain(), HostAllocator<std::remove_const_t<ElementType>>());
+    return create_mirror(Kokkos::HostSpace(), src);
 }
 
-/// Returns a new `Chunk` with the same layout as `src` allocated on the memory space `Space::memory_space` and operates a deep copy between the two.
+/// @param[in] space A Kokkos memory space or execution space.
+/// @param[in] src A layout right ChunkSpan.
+/// @return a `Chunk` with the same support and layout as `src` allocated on the `Space::memory_space` memory space and operates a deep copy between the two.
 template <class Space, class ElementType, class Support, class Layout, class MemorySpace>
 auto create_mirror_and_copy(
         Space const& space,
         ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
     static_assert(
-            std::is_same_v<Layout, std::experimental::layout_right>,
-            "Only layout right is supported");
-    Chunk chunk = create_mirror(space, src);
-    parallel_deepcopy(space, chunk, src);
-    return chunk;
-}
-
-/// Returns a new host `Chunk` with the same layout as `src` and operates a deep copy between the two.
-template <class ElementType, class Support, class Layout, class MemorySpace>
-auto create_mirror_and_copy(ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
-{
+            Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,
+            "DDC: parameter \"Space\" must be either a Kokkos execution space or a memory space");
     static_assert(
             std::is_same_v<Layout, std::experimental::layout_right>,
-            "Only layout right is supported");
-    Chunk chunk = create_mirror(src);
+            "DDC: parameter \"Layout\" must be a `layout_right`");
+    Chunk chunk = create_mirror(space, src);
     parallel_deepcopy(chunk, src);
     return chunk;
 }
 
-/// If `src` is accessible from `space` then returns a copy of `src`,
-/// otherwise returns a new `Chunk` with the same layout as `src` allocated on the memory space `Space::memory_space`.
+/// Equivalent to `create_mirror_and_copy(Kokkos::HostSpace(), src)`.
+/// @param[in] src A layout right ChunkSpan.
+/// @return a `Chunk` with the same support and layout as `src` allocated on the `Kokkos::HostSpace` memory space and operates a deep copy between the two.
+template <class ElementType, class Support, class Layout, class MemorySpace>
+auto create_mirror_and_copy(ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
+{
+    return create_mirror_and_copy(Kokkos::HostSpace(), src);
+}
+
+/// @param[in] space A Kokkos memory space or execution space.
+/// @param[in] src A non-const, layout right ChunkSpan.
+/// @return If `MemorySpace` is accessible from `Space` then returns a copy of `src`, otherwise returns a `Chunk` with the same support and layout as `src` allocated on the `Space::memory_space` memory space.
 template <class Space, class ElementType, class Support, class Layout, class MemorySpace>
 auto create_mirror_view(
-        Space const& space,
+        [[maybe_unused]] Space const& space,
         ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
     static_assert(
+            !std::is_const_v<ElementType>,
+            "DDC: parameter \"ElementType\" must not be `const`");
+    static_assert(
+            Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,
+            "DDC: parameter \"Space\" must be either a Kokkos execution space or a memory space");
+    static_assert(
             std::is_same_v<Layout, std::experimental::layout_right>,
-            "Only layout right is supported");
+            "DDC: parameter \"Layout\" must be a `layout_right`");
     if constexpr (Kokkos::SpaceAccessibility<Space, MemorySpace>::accessible) {
         return src;
     } else {
@@ -80,31 +93,29 @@ auto create_mirror_view(
     }
 }
 
-/// If `src` is host accessible then returns a copy of `src`,
-/// otherwise returns a new host `Chunk` with the same layout.
+/// Equivalent to `create_mirror_view(Kokkos::HostSpace(), src)`.
+/// @param[in] src A non-const, layout right ChunkSpan.
+/// @return If `Kokkos::HostSpace` is accessible from `Space` then returns a copy of `src`, otherwise returns a `Chunk` with the same support and layout as `src` allocated on the `Kokkos::HostSpace` memory space.
 template <class ElementType, class Support, class Layout, class MemorySpace>
 auto create_mirror_view(ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
-    static_assert(
-            std::is_same_v<Layout, std::experimental::layout_right>,
-            "Only layout right is supported");
-    if constexpr (Kokkos::SpaceAccessibility<Kokkos::HostSpace, MemorySpace>::accessible) {
-        return src;
-    } else {
-        return create_mirror(src);
-    }
+    create_mirror_view(Kokkos::HostSpace(), src);
 }
 
-/// If `src` is accessible from `space` then returns a copy of `src`,
-/// otherwise returns a new `Chunk` with the same layout as `src` allocated on the memory space `Space::memory_space` and operates a deep copy between the two.
+/// @param[in] space A Kokkos memory space or execution space.
+/// @param[in] src A layout right ChunkSpan.
+/// @return If `MemorySpace` is accessible from `Space` then returns a copy of `src`, otherwise returns a `Chunk` with the same support and layout as `src` allocated on the `Space::memory_space` memory space and operates a deep copy between the two.
 template <class Space, class ElementType, class Support, class Layout, class MemorySpace>
 auto create_mirror_view_and_copy(
-        Space const& space,
+        [[maybe_unused]] Space const& space,
         ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
     static_assert(
+            Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,
+            "DDC: parameter \"Space\" must be either a Kokkos execution space or a memory space");
+    static_assert(
             std::is_same_v<Layout, std::experimental::layout_right>,
-            "Only layout right is supported");
+            "DDC: parameter \"Layout\" must be a `layout_right`");
     if constexpr (Kokkos::SpaceAccessibility<Space, MemorySpace>::accessible) {
         return src;
     } else {
@@ -112,19 +123,13 @@ auto create_mirror_view_and_copy(
     }
 }
 
-/// If `src` is host accessible then returns a copy of `src`,
-/// otherwise returns a new host `Chunk` with the same layout as `src` and operates a deep copy between the two.
+/// Equivalent to `create_mirror_view_and_copy(Kokkos::HostSpace(), src)`.
+/// @param[in] src A layout right ChunkSpan.
+/// @return If `Kokkos::HostSpace` is accessible from `Space` then returns a copy of `src`, otherwise returns a `Chunk` with the same support and layout as `src` allocated on the `Kokkos::HostSpace` memory space and operates a deep copy between the two.
 template <class ElementType, class Support, class Layout, class MemorySpace>
 auto create_mirror_view_and_copy(ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
-    static_assert(
-            std::is_same_v<Layout, std::experimental::layout_right>,
-            "Only layout right is supported");
-    if constexpr (Kokkos::SpaceAccessibility<Kokkos::HostSpace, MemorySpace>::accessible) {
-        return src;
-    } else {
-        return create_mirror_and_copy(src);
-    }
+    return create_mirror_view_and_copy(Kokkos::HostSpace(), src);
 }
 
 } // namespace ddc

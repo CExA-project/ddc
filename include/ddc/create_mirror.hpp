@@ -72,7 +72,7 @@ auto create_mirror_view(
         ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
     static_assert(
-            std::is_const_v<ElementType>,
+            !std::is_const_v<ElementType>,
             "DDC: parameter \"ElementType\" must not be `const`");
     static_assert(
             Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,

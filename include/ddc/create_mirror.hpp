@@ -49,6 +49,12 @@ auto create_mirror_and_copy(
         Space const& space,
         ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
+    static_assert(
+            Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,
+            "DDC: parameter \"Space\" must be either a Kokkos execution space or a memory space");
+    static_assert(
+            std::is_same_v<Layout, std::experimental::layout_right>,
+            "DDC: parameter \"Layout\" must be a `layout_right`");
     Chunk chunk = create_mirror(space, src);
     parallel_deepcopy(chunk, src);
     return chunk;

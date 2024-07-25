@@ -418,10 +418,6 @@ struct cartesian_prod<DDom1, DDom2, Tail...>
 template <typename... DDom>
 using cartesian_prod_t = typename cartesian_prod<DDom...>::type;
 
-// Remove dimensions from a domain type
-template <typename DDom, typename... DDims>
-using remove_dims_of_t = decltype(remove_dims_of<DDims...>(std::declval<DDom>()));
-
 // Computes the substraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
 template <class... DDimsA, class... DDimsB>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
@@ -448,9 +444,9 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(DDomA const& DDom_a) noexcept
     return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
 }
 
-// Replace dimensions from a domain type
-template <typename DDom, typename DDim1, typename DDim2>
-using replace_dim_of_t = decltype(replace_dim_of<DDim1, DDim2>(std::declval<DDom>(), std::declval<DiscreteDomain<DDim2>>()));
+// Remove dimensions from a domain type
+template <typename DDom, typename... DDims>
+using remove_dims_of_t = decltype(remove_dims_of<DDims...>(std::declval<DDom>()));
 
 namespace detail {
 
@@ -492,6 +488,14 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
                     DDimsA,
                     DDimsB...>(ddc::select<DDimsA>(DDom_a), DDom_b)...);
 }
+
+// Replace dimensions from a domain type
+template <typename DDom, typename DDim1, typename DDim2>
+using replace_dim_of_t
+        = decltype(replace_dim_of<
+                   DDim1,
+                   DDim2>(std::declval<DDom>(), std::declval<DiscreteDomain<DDim2>>()));
+
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDims...> extents(

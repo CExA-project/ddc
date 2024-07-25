@@ -92,10 +92,9 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
      * this is DiscreteDomain<X,Z>
      */
-    using batch_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
-                    ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_discrete_dimension_type>>>;
+    using batch_domain_type = ddc::remove_dims_of_t<
+            batched_interpolation_domain_type,
+            interpolation_discrete_dimension_type>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain
@@ -104,11 +103,10 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
      * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<X,BSplinesY,Z>.
      */
-    using batched_spline_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
-                    ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_discrete_dimension_type>,
-                    ddc::detail::TypeSeq<bsplines_type>>>;
+    using batched_spline_domain_type = ddc::replace_dim_of_t<
+            batched_interpolation_domain_type,
+            interpolation_discrete_dimension_type,
+            bsplines_type>;
 
 private:
     /**
@@ -133,11 +131,10 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
      * this is DiscreteDomain<X,Deriv<Y>,Z>
      */
-    using batched_derivs_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
-                    ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<interpolation_discrete_dimension_type>,
-                    ddc::detail::TypeSeq<deriv_type>>>;
+    using batched_derivs_domain_type = ddc::replace_dim_of_t<
+            batched_interpolation_domain_type,
+            interpolation_discrete_dimension_type,
+            deriv_type>;
 
     /// @brief Indicates if the degree of the splines is odd or even.
     static constexpr bool s_odd = BSplines::degree() % 2;

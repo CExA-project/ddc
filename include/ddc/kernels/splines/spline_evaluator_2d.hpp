@@ -113,12 +113,10 @@ public:
      * @brief The type of the batch domain (obtained by removing the dimensions of interest
      * from the whole domain).
      */
-    using batch_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
-                    ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<
-                            evaluation_discrete_dimension_type1,
-                            evaluation_discrete_dimension_type2>>>;
+    using batch_domain_type = typename ddc::remove_dims_of_t<
+            batched_evaluation_domain_type,
+            evaluation_discrete_dimension_type1,
+            evaluation_discrete_dimension_type2>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 2D spline domain

@@ -296,6 +296,7 @@ public:
     void solve(MultiRHS const b, bool const transpose) const override
     {
         assert(b.extent(0) == size());
+	Kokkos::Profiling::pushRegion("ddc_splines_solve");
 #if defined(SPLINE_VERSION0)
         // Using spdm
         MultiRHS b1 = Kokkos::
@@ -357,6 +358,7 @@ public:
             m_top_left_block->solve(b1, true);
         }
 #endif
+	Kokkos::Profiling::popRegion();
     }
 
     // Kernel fusion interface for gemm

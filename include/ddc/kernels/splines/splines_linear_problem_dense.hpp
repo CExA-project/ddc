@@ -121,9 +121,8 @@ public:
         auto a_device = this->m_a.d_view;
         auto ipiv_device = this->m_ipiv.d_view;
 
-        std::string name = "getrs";
+        std::string name = "KokkosBatched::SerialGetrs";
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
-        Kokkos::Profiling::pushRegion(name);
         if (transpose) {
             Kokkos::parallel_for(
                     name,
@@ -147,7 +146,6 @@ public:
                                 invoke(a_device, ipiv_device, sub_b);
                     });
         }
-        Kokkos::Profiling::popRegion();
     }
 
     void solve(
@@ -166,9 +164,8 @@ public:
                 subview(b,
                         std::pair<std::size_t, std::size_t>(this->size(), b.extent(0)),
                         Kokkos::ALL);
-        std::string name = "getrs";
+        std::string name = "KokkosBatched::SerialGetrs-Gemm";
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
-        Kokkos::Profiling::pushRegion(name);
         if (transpose) {
             Kokkos::parallel_for(
                     name,
@@ -224,7 +221,6 @@ public:
                                 invoke(-1.0, top_right_block, sub_b2, 1.0, sub_b1);
                     });
         }
-        Kokkos::Profiling::popRegion();
     }
 
     void solve(
@@ -243,9 +239,8 @@ public:
                 subview(b,
                         std::pair<std::size_t, std::size_t>(this->size(), b.extent(0)),
                         Kokkos::ALL);
-        std::string name = "getrs";
+        std::string name = "KokkosBatched::SerialGetrs-Spdm";
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
-        Kokkos::Profiling::pushRegion(name);
         if (transpose) {
             Kokkos::parallel_for(
                     name,
@@ -305,7 +300,6 @@ public:
                         }
                     });
         }
-        Kokkos::Profiling::popRegion();
     }
 };
 

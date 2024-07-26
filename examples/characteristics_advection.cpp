@@ -226,7 +226,11 @@ int main(int argc, char** argv)
             DDimX,
             BoundCond,
             BoundCond,
+#if defined(SOLVER_LAPACK)
             ddc::SplineSolver::LAPACK,
+#elif defined(SOLVER_GINKGO)
+            ddc::SplineSolver::GINKGO,
+#endif
             DDimX,
             DDimY>
             spline_builder(x_mesh);

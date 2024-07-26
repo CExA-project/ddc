@@ -117,7 +117,11 @@ static void characteristics_advection(benchmark::State& state)
             DDimX,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
+#if defined(SOLVER_LAPACK)
             ddc::SplineSolver::LAPACK,
+#elif defined(SOLVER_GINKGO)
+            ddc::SplineSolver::GINKGO,
+#endif
             DDimX,
             DDimY>
             spline_builder(x_mesh, state.range(2), state.range(3));

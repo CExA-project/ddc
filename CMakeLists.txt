@@ -294,6 +294,17 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
   elseif("${DDC_SPLINES_VERSION}" STREQUAL "2")
     target_compile_definitions(DDC INTERFACE SPLINE_VERSION2)
   endif()
+
+  set(DDC_SPLINES_SOLVERS "GINKGO" "LAPACK")
+  set(DDC_SPLINES_SOLVER "AUTO" CACHE STRING "Solver of spline kernels in DDC. Options: ${DDC_SPLINES_SOLVERS}")
+  if("${DDC_SPLINES_VERSION}" STREQUAL "GINKGO")
+    target_compile_definitions(DDC INTERFACE SOLVER_GINKGO)
+  elseif("${DDC_SPLINES_VERSION}" STREQUAL "LAPACK")
+    target_compile_definitions(DDC INTERFACE SOLVER_LAPACK)
+  else()
+    target_compile_definitions(DDC INTERFACE SOLVER_LAPACK)
+  endif()
+  
 endif()
 
 ## The PDI wrapper

@@ -134,7 +134,7 @@ public:
         Kokkos::parallel_for(
                 name,
                 policy,
-                KOKKOS_CLASS_LAMBDA(const int i) {
+                KOKKOS_LAMBDA(const int i) {
                     auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                     KokkosBatched::SerialPttrs<
                             KokkosBatched::Algo::Pttrs::Unblocked>::invoke(d, e, sub_b);
@@ -165,7 +165,7 @@ public:
             Kokkos::parallel_for(
                     name,
                     policy,
-                    KOKKOS_CLASS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(const int i) {
                         auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
                         KokkosBlas::SerialGemv<
@@ -190,7 +190,7 @@ public:
             Kokkos::parallel_for(
                     name,
                     policy,
-                    KOKKOS_CLASS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(const int i) {
                         auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
                         KokkosBatched::SerialPttrs<
@@ -238,7 +238,7 @@ public:
             Kokkos::parallel_for(
                     name,
                     policy,
-                    KOKKOS_CLASS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(const int i) {
                         auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
 
@@ -266,7 +266,7 @@ public:
             Kokkos::parallel_for(
                     name,
                     policy,
-                    KOKKOS_CLASS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(const int i) {
                         auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
                         KokkosBatched::SerialPttrs<

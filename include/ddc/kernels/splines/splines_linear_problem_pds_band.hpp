@@ -170,7 +170,7 @@ public:
             Kokkos::parallel_for(
                     name,
                     policy,
-                    KOKKOS_CLASS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(const int i) {
                         auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
 
@@ -197,7 +197,7 @@ public:
             Kokkos::parallel_for(
                     name,
                     policy,
-                    KOKKOS_CLASS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(const int i) {
                         auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
                         KokkosBatched::SerialPbtrs<
@@ -243,7 +243,7 @@ public:
             Kokkos::parallel_for(
                     name,
                     policy,
-                    KOKKOS_CLASS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(const int i) {
                         auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
 
@@ -272,7 +272,7 @@ public:
             Kokkos::parallel_for(
                     name,
                     policy,
-                    KOKKOS_CLASS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(const int i) {
                         auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
                         auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
                         KokkosBatched::SerialPbtrs<

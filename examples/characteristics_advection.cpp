@@ -211,9 +211,11 @@ int main(int argc, char** argv)
 
     //! [initial output]
     // display the initial data
+    /*
     ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
     display(ddc::coordinate(time_domain.front()),
             host_density_alloc[x_domain][y_domain]);
+    */
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
@@ -298,6 +300,7 @@ int main(int argc, char** argv)
         //! [numerical scheme]
 
         //! [output]
+        /*
         if (iter - last_output >= t_output_period) {
             last_output = iter;
             ddc::parallel_deepcopy(
@@ -306,6 +309,7 @@ int main(int argc, char** argv)
             display(ddc::coordinate(iter),
                     host_density_alloc[x_domain][y_domain]);
         }
+        */
         //! [output]
 
         //! [swap]

@@ -151,7 +151,7 @@ $(document).ready(function(){initNavTree('create__mirror_8hpp_source.html',''); 
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> ElementType, <span class="keyword">class</span> Support, <span class="keyword">class</span> Layout, <span class="keyword">class</span> MemorySpace&gt;</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keyword">auto</span> <a class="code hl_function" href="namespaceddc.html#a31cc1b0db51ba2264e09a5d51dc8f949">create_mirror_view</a>(<a class="code hl_friend" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;ElementType, Support, Layout, MemorySpace&gt; <span class="keyword">const</span>&amp; src)</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>{</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    create_mirror_view(Kokkos::HostSpace(), src);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordflow">return</span> create_mirror_view(Kokkos::HostSpace(), src);</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>}</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment">/// @param[in] space A Kokkos memory space or execution space.</span></div>

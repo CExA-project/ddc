@@ -82,20 +82,17 @@ public:
      * @brief The type of the batch domain (obtained by removing the dimension of interest
      * from the whole domain).
      */
-    using batch_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_remove_t<
-                    ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<evaluation_discrete_dimension_type>>>;
+    using batch_domain_type = ddc::
+            remove_dims_of_t<batched_evaluation_domain_type, evaluation_discrete_dimension_type>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain
      * and batch domain) preserving the order of dimensions.
      */
-    using batched_spline_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
-                    ddc::detail::TypeSeq<IDimX...>,
-                    ddc::detail::TypeSeq<evaluation_discrete_dimension_type>,
-                    ddc::detail::TypeSeq<bsplines_type>>>;
+    using batched_spline_domain_type = ddc::replace_dim_of_t<
+            batched_evaluation_domain_type,
+            evaluation_discrete_dimension_type,
+            bsplines_type>;
 
     /// @brief The type of the extrapolation rule at the lower boundary.
     using lower_extrapolation_rule_type = LowerExtrapolationRule;

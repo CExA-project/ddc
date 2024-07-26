@@ -930,6 +930,7 @@ operator()(
     }
 }
 
+template <class OutMemorySpace>
 template <
         class ExecSpace,
         class MemorySpace,
@@ -939,7 +940,6 @@ template <
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
-template <class OutMemorySpace>
 std::tuple<
         ddc::Chunk<
                 double,

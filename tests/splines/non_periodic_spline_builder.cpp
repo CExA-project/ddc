@@ -82,8 +82,9 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
         DVectX constexpr npoints(ncells + 1);
         std::vector<CoordX> breaks(npoints);
+        double dx = (xN - x0) / ncells;
         for (int i(0); i < npoints; ++i) {
-            breaks[i] = CoordX(x0 + i * (xN - x0) / ncells);
+            breaks[i] = CoordX(x0 + i * dx);
         }
         ddc::init_discrete_space<BSplinesX>(breaks);
 #endif
@@ -199,10 +200,10 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             ddc::reducer::sum<double>(),
             [&](ddc::DiscreteElement<ddc::Deriv<typename IDimX::continuous_dimension_type>> const
                         ix) {
-                ddc::Coordinate<DimX> const dx
+                ddc::Coordinate<DimX> const dx_lower
                         = ddc::distance_at_right(interpolation_domain.front() + 1);
                 return quadrature_coefficients_derivs_xmin(ix)
-                       * (*deriv_l)(ix)*ddc::detail::ipow(dx, ix.uid());
+                       * (*deriv_l)(ix)*ddc::detail::ipow(dx_lower, ix.uid());
             });
 #else
     double const quadrature_integral_derivs_xmin = 0.;
@@ -223,10 +224,10 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             ddc::reducer::sum<double>(),
             [&](ddc::DiscreteElement<ddc::Deriv<typename IDimX::continuous_dimension_type>> const
                         ix) {
-                ddc::Coordinate<DimX> const dx
+                ddc::Coordinate<DimX> const dx_upper
                         = ddc::distance_at_left(interpolation_domain.back() - 1);
                 return quadrature_coefficients_derivs_xmax(ix)
-                       * (*deriv_r)(ix)*ddc::detail::ipow(dx, ix.uid());
+                       * (*deriv_r)(ix)*ddc::detail::ipow(dx_upper, ix.uid());
             });
 #else
     double const quadrature_integral_derivs_xmax = 0.;

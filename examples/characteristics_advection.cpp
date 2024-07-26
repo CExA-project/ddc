@@ -117,7 +117,7 @@ int main(int argc, char** argv)
     // End of the domain of interest in the X dimension
     double const x_end = 1.;
     // Number of discretization points in the X dimension
-    size_t const nb_x_points = 100;
+    size_t const nb_x_points = 1000;
     // Velocity along x dimension
     double const vx = .2;
     // Start of the domain of interest in the Y dimension
@@ -125,13 +125,13 @@ int main(int argc, char** argv)
     // End of the domain of interest in the Y dimension
     double const y_end = 1.;
     // Number of discretization points in the Y dimension
-    size_t const nb_y_points = 100;
+    size_t const nb_y_points = 100000;
     // Simulated time at which to start simulation
     double const start_time = 0.;
     // Simulated time to reach as target of the simulation
-    double const end_time = 10.;
+    double const end_time = 0.1;
     // Number of time-steps between outputs
-    ptrdiff_t const t_output_period = 10;
+    ptrdiff_t const t_output_period = 0.1;
     // Maximum time-step
     ddc::Coordinate<T> const max_dt {0.1};
     //! [parameters]

@@ -177,8 +177,8 @@ TEST(DiscreteDomainTest, RangeFor)
 TEST(DiscreteDomainTest, DiffEmpty)
 {
     DDomX const dom_x = DDomX();
-    auto const subdomain1 = ddc::remove_dims_of(dom_x, dom_x);
-    auto const subdomain2 = ddc::remove_dims_of<DDimX>(dom_x);
+    ddc::remove_dims_of_t<DDomX, DDimX> const subdomain1 = ddc::remove_dims_of(dom_x, dom_x);
+    ddc::remove_dims_of_t<DDomX, DDimX> const subdomain2 = ddc::remove_dims_of<DDimX>(dom_x);
     EXPECT_EQ(subdomain1, ddc::DiscreteDomain<>());
     EXPECT_EQ(subdomain2, ddc::DiscreteDomain<>());
 }
@@ -188,8 +188,10 @@ TEST(DiscreteDomainTest, Diff)
     DDomX const dom_x = DDomX();
     DDomXY const dom_x_y = DDomXY();
     DDomZY const dom_z_y = DDomZY();
-    auto const subdomain1 = ddc::remove_dims_of(dom_x_y, dom_z_y);
-    auto const subdomain2 = ddc::remove_dims_of<DDimZ, DDimY>(dom_x_y);
+    ddc::remove_dims_of_t<DDomX, DDimZ, DDimY> const subdomain1
+            = ddc::remove_dims_of(dom_x_y, dom_z_y);
+    ddc::remove_dims_of_t<DDomX, DDimZ, DDimY> const subdomain2
+            = ddc::remove_dims_of<DDimZ, DDimY>(dom_x_y);
     EXPECT_EQ(subdomain1, dom_x);
     EXPECT_EQ(subdomain2, dom_x);
 }
@@ -199,7 +201,8 @@ TEST(DiscreteDomainTest, Replace)
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     DDomZ const dom_z(lbound_z, nelems_z);
     DDomXZ const dom_x_z(lbound_x_z, nelems_x_z);
-    auto const subdomain = ddc::replace_dim_of<DDimY, DDimZ>(dom_x_y, dom_z);
+    ddc::replace_dim_of_t<DDomXY, DDimY, DDimZ> const subdomain
+            = ddc::replace_dim_of<DDimY, DDimZ>(dom_x_y, dom_z);
     EXPECT_EQ(subdomain, dom_x_z);
 }
 

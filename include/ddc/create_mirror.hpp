@@ -99,7 +99,7 @@ auto create_mirror_view(
 template <class ElementType, class Support, class Layout, class MemorySpace>
 auto create_mirror_view(ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
-    create_mirror_view(Kokkos::HostSpace(), src);
+    return create_mirror_view(Kokkos::HostSpace(), src);
 }
 
 /// @param[in] space A Kokkos memory space or execution space.

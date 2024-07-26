@@ -44,13 +44,10 @@ class SplinesLinearProblemPDSTridiag : public SplinesLinearProblem<ExecSpace>
 {
 public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
+    using typename SplinesLinearProblem<ExecSpace>::Coo;
     using typename SplinesLinearProblem<ExecSpace>::AViewType;
     using typename SplinesLinearProblem<ExecSpace>::PivViewType;
     using SplinesLinearProblem<ExecSpace>::size;
-
-    //protected:
-    //    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-    //            m_q; // pds tridiagonal matrix representation
 
 public:
     /**
@@ -126,7 +123,7 @@ public:
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem (unused for a symmetric problem).
      */
-    void solve(MultiRHS b, bool const) const override
+    void solve(MultiRHS const b, bool const) const override
     {
         assert(b.extent(0) == size());
         auto a_device = this->m_a.d_view;
@@ -216,6 +213,86 @@ public:
                                 KokkosBlas::Trans::NoTranspose,
                                 KokkosBlas::Algo::Gemv::Unblocked>::
                                 invoke(-1.0, top_right_block, sub_b2, 1.0, sub_b1);
+                    });
+        }
+        Kokkos::Profiling::popRegion();
+    }
+
+    void solve(
+            Coo top_right_block,
+            Coo bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool const transpose) const override
+    {
+        auto Q = this->m_a.d_view;
+        auto d = Kokkos::subview(Q, 0, Kokkos::ALL);
+        auto e = Kokkos::subview(Q, 1, Kokkos::pair<int, int>(0, Q.extent(1) - 1));
+        MultiRHS b1 = Kokkos::
+                subview(b, std::pair<std::size_t, std::size_t>(0, this->size()), Kokkos::ALL);
+        MultiRHS b2 = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(this->size(), b.extent(0)),
+                        Kokkos::ALL);
+
+        std::string name = "pttrs";
+        Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
+        Kokkos::Profiling::pushRegion(name);
+        if (transpose) {
+            Kokkos::parallel_for(
+                    name,
+                    policy,
+                    KOKKOS_CLASS_LAMBDA(const int i) {
+                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
+                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
+
+                        for (int nz_idx = 0; nz_idx < top_right_block.nnz(); ++nz_idx) {
+                            const int r = top_right_block.rows_idx()(nz_idx);
+                            const int c = top_right_block.cols_idx()(nz_idx);
+                            sub_b2(c) -= top_right_block.values()(nz_idx) * sub_b1(r);
+                        }
+
+                        KokkosBatched::SerialGetrs<
+                                KokkosBatched::Trans::Transpose,
+                                KokkosBatched::Algo::Getrs::Unblocked>::
+                                invoke(bottom_right_block, bottom_right_piv, sub_b2);
+
+                        for (int nz_idx = 0; nz_idx < bottom_left_block.nnz(); ++nz_idx) {
+                            const int r = bottom_left_block.rows_idx()(nz_idx);
+                            const int c = bottom_left_block.cols_idx()(nz_idx);
+                            sub_b1(c) -= bottom_left_block.values()(nz_idx) * sub_b2(r);
+                        }
+
+                        KokkosBatched::SerialPttrs<
+                                KokkosBatched::Algo::Pttrs::Unblocked>::invoke(d, e, sub_b1);
+                    });
+        } else {
+            Kokkos::parallel_for(
+                    name,
+                    policy,
+                    KOKKOS_CLASS_LAMBDA(const int i) {
+                        auto sub_b1 = Kokkos::subview(b1, Kokkos::ALL, i);
+                        auto sub_b2 = Kokkos::subview(b2, Kokkos::ALL, i);
+                        KokkosBatched::SerialPttrs<
+                                KokkosBatched::Algo::Pttrs::Unblocked>::invoke(d, e, sub_b1);
+
+                        for (int nz_idx = 0; nz_idx < bottom_left_block.nnz(); ++nz_idx) {
+                            const int r = bottom_left_block.rows_idx()(nz_idx);
+                            const int c = bottom_left_block.cols_idx()(nz_idx);
+                            sub_b2(r) -= bottom_left_block.values()(nz_idx) * sub_b1(c);
+                        }
+
+                        KokkosBatched::SerialGetrs<
+                                KokkosBatched::Trans::NoTranspose,
+                                KokkosBatched::Algo::Getrs::Unblocked>::
+                                invoke(bottom_right_block, bottom_right_piv, sub_b2);
+
+                        for (int nz_idx = 0; nz_idx < top_right_block.nnz(); ++nz_idx) {
+                            const int r = top_right_block.rows_idx()(nz_idx);
+                            const int c = top_right_block.cols_idx()(nz_idx);
+                            sub_b1(r) -= top_right_block.values()(nz_idx) * sub_b2(c);
+                        }
                     });
         }
         Kokkos::Profiling::popRegion();

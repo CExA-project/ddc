@@ -29,7 +29,7 @@ struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree_x>
 using GrevillePoints = ddc::
         GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 
-struct IDimX : GrevillePoints::interpolation_mesh_type
+struct IDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
 

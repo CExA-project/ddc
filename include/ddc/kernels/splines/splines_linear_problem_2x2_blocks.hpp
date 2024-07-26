@@ -36,6 +36,7 @@ class SplinesLinearProblem2x2Blocks : public SplinesLinearProblem<ExecSpace>
 {
 public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
+    using typename SplinesLinearProblem<ExecSpace>::Coo;
     using typename SplinesLinearProblem<ExecSpace>::AViewType;
     using typename SplinesLinearProblem<ExecSpace>::PivViewType;
     using SplinesLinearProblem<ExecSpace>::size;
@@ -44,8 +45,10 @@ protected:
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_top_right_block;
+    Coo m_top_right_block_coo;
     Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
             m_bottom_left_block;
+    Coo m_bottom_left_block_coo;
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
 
 public:
@@ -111,6 +114,63 @@ public:
         }
     }
 
+    /**
+     * @brief Fill a COO version of a Dense matrix (remove zeros).
+     *
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     *
+     * Runs on a single thread to garantee ordering.
+     *
+     * @param[in] dense_matrix The dense storage matrix whose non-zeros are extracted to fill the COO matrix.
+     * @param[in] tol The tolerancy applied to filter the non-zeros.
+     *
+     * @return The COO storage matrix filled with the non-zeros from dense_matrix.
+     */
+    Coo dense2coo(
+            Kokkos::View<const double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                    dense_matrix,
+            double const tol = 1e-14)
+    {
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx(
+                "ddc_splines_coo_rows_idx",
+                dense_matrix.extent(0) * dense_matrix.extent(1));
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx(
+                "ddc_splines_coo_cols_idx",
+                dense_matrix.extent(0) * dense_matrix.extent(1));
+        Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                values("ddc_splines_coo_values", dense_matrix.extent(0) * dense_matrix.extent(1));
+
+        Kokkos::DualView<std::size_t, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+                n_nonzeros("ddc_splines_n_nonzeros");
+        n_nonzeros.h_view() = 0;
+        n_nonzeros.modify_host();
+        n_nonzeros.sync_device();
+
+        Kokkos::parallel_for(
+                "dense2coo",
+                Kokkos::RangePolicy(ExecSpace(), 0, 1),
+                KOKKOS_LAMBDA(const int) {
+                    for (int i = 0; i < dense_matrix.extent(0); i++) {
+                        for (int j = 0; j < dense_matrix.extent(1); j++) {
+                            double aij = dense_matrix(i, j);
+                            if (Kokkos::abs(aij) >= tol) {
+                                rows_idx(n_nonzeros.d_view()) = i;
+                                cols_idx(n_nonzeros.d_view()) = j;
+                                values(n_nonzeros.d_view()) = aij;
+                                n_nonzeros.d_view()++;
+                            }
+                        }
+                    }
+                });
+        n_nonzeros.modify_device();
+        n_nonzeros.sync_host();
+        Kokkos::resize(rows_idx, n_nonzeros.h_view());
+        Kokkos::resize(cols_idx, n_nonzeros.h_view());
+        Kokkos::resize(values, n_nonzeros.h_view());
+
+        return Coo(dense_matrix.extent(0), dense_matrix.extent(1), rows_idx, cols_idx, values);
+    }
+
 private:
     /// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.
     void compute_schur_complement()
@@ -154,16 +214,65 @@ public:
         m_top_right_block.modify_host();
         m_top_right_block.sync_device();
         m_top_left_block->solve(m_top_right_block.d_view);
+        m_top_right_block_coo = dense2coo(m_top_right_block.d_view);
         m_top_right_block.modify_device();
         m_top_right_block.sync_host();
 
         // Push lambda on device in bottom-left block
         m_bottom_left_block.modify_host();
         m_bottom_left_block.sync_device();
+        m_bottom_left_block_coo = dense2coo(m_bottom_left_block.d_view);
 
         // Compute delta - lambda*Q^-1*gamma in bottom-right block & setup the bottom-right solver
         compute_schur_complement();
         m_bottom_right_block->setup_solver();
+    }
+
+    /**
+     * @brief Compute y <- y - LinOp*x or y <- y - LinOp^t*x with a sparse LinOp.
+     *
+     * [SHOULD BE PRIVATE (GPU programming limitation)]
+     *
+     * Perform a spdm operation (sparse-dense matrix multiplication) with parameters alpha=-1 and beta=1 between
+     * a sparse matrix stored in COO format and a dense matrix x.
+     *
+     * @param[in] LinOp The sparse matrix, left side of the matrix multiplication.
+     * @param[in] x The dense matrix, right side of the matrix multiplication.
+     * @param[inout] y The dense matrix to be altered by the operation.
+     * @param transpose A flag to indicate if the direct or transposed version of the operation is performed. 
+     */
+    void spdm_minus1_1(Coo LinOp, MultiRHS const x, MultiRHS const y, bool const transpose = false)
+            const
+    {
+        assert((!transpose && LinOp.nrows() == y.extent(0))
+               || (transpose && LinOp.ncols() == y.extent(0)));
+        assert((!transpose && LinOp.ncols() == x.extent(0))
+               || (transpose && LinOp.nrows() == x.extent(0)));
+        assert(x.extent(1) == y.extent(1));
+
+        if (!transpose) {
+            Kokkos::parallel_for(
+                    "ddc_splines_spdm_minus1_1",
+                    Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
+                    KOKKOS_LAMBDA(const int j) {
+                        for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
+                            const int i = LinOp.rows_idx()(nz_idx);
+                            const int k = LinOp.cols_idx()(nz_idx);
+                            y(i, j) -= LinOp.values()(nz_idx) * x(k, j);
+                        }
+                    });
+        } else {
+            Kokkos::parallel_for(
+                    "ddc_splines_spdm_minus1_1_tr",
+                    Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
+                    KOKKOS_LAMBDA(const int j) {
+                        for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
+                            const int i = LinOp.rows_idx()(nz_idx);
+                            const int k = LinOp.cols_idx()(nz_idx);
+                            y(k, j) -= LinOp.values()(nz_idx) * x(i, j);
+                        }
+                    });
+        }
     }
 
     /**
@@ -184,9 +293,32 @@ public:
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.
      */
-    void solve(MultiRHS b, bool const transpose) const override
+    void solve(MultiRHS const b, bool const transpose) const override
     {
         assert(b.extent(0) == size());
+#if defined(SPLINE_VERSION0)
+        // Using spdm
+        MultiRHS b1 = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
+                        Kokkos::ALL);
+        MultiRHS b2 = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
+                        Kokkos::ALL);
+        if (!transpose) {
+            m_top_left_block->solve(b1);
+            spdm_minus1_1(m_bottom_left_block_coo, b1, b2);
+            m_bottom_right_block->solve(b2);
+            spdm_minus1_1(m_top_right_block_coo, b2, b1);
+        } else {
+            spdm_minus1_1(m_top_right_block_coo, b1, b2, true);
+            m_bottom_right_block->solve(b2, true);
+            spdm_minus1_1(m_bottom_left_block_coo, b2, b1, true);
+            m_top_left_block->solve(b1, true);
+        }
+#elif defined(SPLINE_VERSION1)
+        // using kernel fusion with gemm
         m_top_left_block
                 ->solve(m_top_right_block.d_view,
                         m_bottom_left_block.d_view,
@@ -194,11 +326,54 @@ public:
                         m_bottom_right_block->get_pivot(),
                         b,
                         transpose);
+#elif defined(SPLINE_VERSION2)
+        // using kernel fusion with spdm
+        m_top_left_block
+                ->solve(m_top_right_block_coo,
+                        m_bottom_left_block_coo,
+                        m_bottom_right_block->get_matrix(),
+                        m_bottom_right_block->get_pivot(),
+                        b,
+                        transpose);
+#else
+        // Using gemm
+        MultiRHS b1 = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
+                        Kokkos::ALL);
+        MultiRHS b2 = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
+                        Kokkos::ALL);
+        if (!transpose) {
+            m_top_left_block->solve(b1);
+            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., m_bottom_left_block.d_view, b1, 1., b2);
+            m_bottom_right_block->solve(b2);
+            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., m_top_right_block.d_view, b2, 1., b1);
+        } else {
+            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., m_top_right_block.d_view, b1, 1., b2);
+            m_bottom_right_block->solve(b2, true);
+            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., m_bottom_left_block.d_view, b2, 1., b1);
+            m_top_left_block->solve(b1, true);
+        }
+#endif
     }
 
+    // Kernel fusion interface for gemm
     void solve(
             typename AViewType::t_dev top_right_block,
             typename AViewType::t_dev bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool const transpose) const override
+    {
+    }
+
+    // Kernel fusion interface for spdm
+    void solve(
+            Coo top_right_block,
+            Coo bottom_left_block,
             typename AViewType::t_dev bottom_right_block,
             typename PivViewType::t_dev bottom_right_piv,
             MultiRHS b,

@@ -38,7 +38,7 @@ struct BSplines : ddc::UniformBSplines<X, s_degree_x>
 
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <typename X>
-struct IDim : GrevillePoints<BSplines<X>>::interpolation_mesh_type
+struct IDim : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
 {
 };
 
@@ -49,7 +49,7 @@ struct BSplines : ddc::NonUniformBSplines<X, s_degree_x>
 };
 
 template <typename X>
-struct IDim : GrevillePoints<BSplines<X>>::interpolation_mesh_type
+struct IDim : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
 {
 };
 
@@ -150,15 +150,14 @@ static void PeriodicitySplineBuilderTest()
     ddc::DiscreteDomain<BSplines<X>> const dom_bsplines = spline_builder.spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals1_cpu_alloc(
+    ddc::Chunk vals_host_alloc(
             dom_vals,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan vals1_cpu = vals1_cpu_alloc.span_view();
+    ddc::ChunkSpan vals_host = vals_host_alloc.span_view();
     evaluator_type<IDim<X>> evaluator(dom_vals);
-    evaluator(vals1_cpu);
-    ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    evaluator(vals_host);
+    auto vals_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_host);
     ddc::ChunkSpan vals = vals_alloc.span_view();
-    ddc::parallel_deepcopy(vals, vals1_cpu);
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(dom_bsplines, ddc::KokkosAllocator<double, MemorySpace>());

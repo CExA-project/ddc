@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: DoozyX/clang-format-lint-action@v0.17
       with:
-        source: 'include/ddc/ tests/ examples/'
+        source: 'benchmarks/ examples/ include/ddc/ tests/'
         exclude: ''
         extensions: 'hpp,cpp'
         clangFormatVersion: 12
@@ -142,12 +142,12 @@ jobs:
           'cpu-clang')
             export CC=clang
             export CXX=clang++
-            DDC_CMAKE_CXX_FLAGS="-Werror=extra-semi -Werror=old-style-cast"
+            DDC_CMAKE_CXX_FLAGS="-Wextra-semi -Wextra-semi-stmt -Wold-style-cast"
           ;;
           'cpu-gcc')
             export CC=gcc
             export CXX=g++
-            DDC_CMAKE_CXX_FLAGS="-Werror=extra-semi -Werror=old-style-cast"
+            DDC_CMAKE_CXX_FLAGS="-Wextra-semi -Wold-style-cast"
             if [ 'xDebug' = 'x${{matrix.cmake_build_type}}' ]
             then
               DDC_CMAKE_CXX_FLAGS="${DDC_CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=address"

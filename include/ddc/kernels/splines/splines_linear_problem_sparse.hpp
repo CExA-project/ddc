@@ -79,16 +79,16 @@ std::size_t default_cols_per_chunk() noexcept
 }
 
 /**
- * @brief Return the default value of the parameter preconditionner_max_block_size for a given Kokkos::ExecutionSpace.
+ * @brief Return the default value of the parameter preconditioner_max_block_size for a given Kokkos::ExecutionSpace.
  *
  * The values are hardware-specific (but they can be overriden in the constructor of SplinesLinearProblemSparse).
  * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace type.
- * @return The default value for the parameter preconditionner_max_block_size.
+ * @return The default value for the parameter preconditioner_max_block_size.
  */
 template <class ExecSpace>
-unsigned int default_preconditionner_max_block_size() noexcept
+unsigned int default_preconditioner_max_block_size() noexcept
 {
 #ifdef KOKKOS_ENABLE_SERIAL
     if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
@@ -125,6 +125,7 @@ class SplinesLinearProblemSparse : public SplinesLinearProblem<ExecSpace>
 {
 public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
+    using typename SplinesLinearProblem<ExecSpace>::Coo;
     using typename SplinesLinearProblem<ExecSpace>::AViewType;
     using typename SplinesLinearProblem<ExecSpace>::PivViewType;
 
@@ -152,7 +153,7 @@ private:
 
     std::size_t m_cols_per_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
 
-    unsigned int m_preconditionner_max_block_size; // Maximum size of Jacobi-block preconditionner
+    unsigned int m_preconditioner_max_block_size; // Maximum size of Jacobi-block preconditioner
 
 public:
     /**
@@ -161,17 +162,17 @@ public:
      * @param mat_size The size of one of the dimensions of the square matrix.
      * @param cols_per_chunk An optional parameter used to define the number of right-hand sides to pass to
      * Ginkgo solver calls. see default_cols_per_chunk.
-     * @param preconditionner_max_block_size An optional parameter used to define the maximum size of a block
-     * used by the block-Jacobi preconditionner. see default_preconditionner_max_block_size.
+     * @param preconditioner_max_block_size An optional parameter used to define the maximum size of a block
+     * used by the block-Jacobi preconditioner. see default_preconditioner_max_block_size.
      */
     explicit SplinesLinearProblemSparse(
             const std::size_t mat_size,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditionner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplinesLinearProblem<ExecSpace>(mat_size)
         , m_cols_per_chunk(cols_per_chunk.value_or(default_cols_per_chunk<ExecSpace>()))
-        , m_preconditionner_max_block_size(preconditionner_max_block_size.value_or(
-                  default_preconditionner_max_block_size<ExecSpace>()))
+        , m_preconditioner_max_block_size(preconditioner_max_block_size.value_or(
+                  default_preconditioner_max_block_size<ExecSpace>()))
     {
         std::shared_ptr const gko_exec = create_gko_exec<ExecSpace>();
         m_matrix_dense = gko::matrix::Dense<
@@ -217,7 +218,7 @@ public:
 
         std::shared_ptr const preconditioner
                 = gko::preconditioner::Jacobi<double>::build()
-                          .with_max_block_size(m_preconditionner_max_block_size)
+                          .with_max_block_size(m_preconditioner_max_block_size)
                           .on(gko_exec);
 
         std::unique_ptr const solver_factory
@@ -241,7 +242,7 @@ public:
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.
      */
-    void solve(MultiRHS b, bool const transpose) const override
+    void solve(MultiRHS const b, bool const transpose) const override
     {
         assert(b.extent(0) == size());
 
@@ -290,6 +291,16 @@ public:
     void solve(
             typename AViewType::t_dev top_right_block,
             typename AViewType::t_dev bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool const transpose) const override
+    {
+    }
+
+    void solve(
+            Coo top_right_block,
+            Coo bottom_left_block,
             typename AViewType::t_dev bottom_right_block,
             typename PivViewType::t_dev bottom_right_piv,
             MultiRHS b,

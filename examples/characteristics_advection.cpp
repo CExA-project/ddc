@@ -12,6 +12,9 @@
 #include <ddc/kernels/splines.hpp>
 
 #include <Kokkos_Core.hpp>
+
+#define PERIODIC_DOMAIN // Comment this to run non-periodic simulation
+
 //! [includes]
 static constexpr std::size_t s_degree_x = 3;
 
@@ -19,20 +22,32 @@ static constexpr std::size_t s_degree_x = 3;
 /// Our first continuous dimension
 struct X
 {
+#ifdef PERIODIC_DOMAIN
     static constexpr bool PERIODIC = true;
+#else
+    static constexpr bool PERIODIC = false;
+#endif
 };
 //! [X-dimension]
+
+//! [boundary-condition]
+#ifdef PERIODIC_DOMAIN
+static constexpr ddc::BoundCond BoundCond = ddc::BoundCond::PERIODIC;
+using ExtrapolationRule = ddc::PeriodicExtrapolationRule<X>;
+#else
+static constexpr ddc::BoundCond BoundCond = ddc::BoundCond::GREVILLE;
+using ExtrapolationRule = ddc::NullExtrapolationRule;
+#endif
+//! [boundary-condition]
 
 //! [X-discretization]
 /// A uniform discretization of X
 struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
 {
 };
-using GrevillePoints = ddc::GrevilleInterpolationPoints<
-        BSplinesX,
-        ddc::BoundCond::PERIODIC,
-        ddc::BoundCond::PERIODIC>;
-struct DDimX : GrevillePoints::interpolation_mesh_type
+using GrevillePoints = ddc::
+        GrevilleInterpolationPoints<BSplinesX, BoundCond, BoundCond>;
+struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
 //! [X-discretization]
@@ -102,7 +117,7 @@ int main(int argc, char** argv)
     // End of the domain of interest in the X dimension
     double const x_end = 1.;
     // Number of discretization points in the X dimension
-    size_t const nb_x_points = 1000;
+    size_t const nb_x_points = 100;
     // Velocity along x dimension
     double const vx = .2;
     // Start of the domain of interest in the Y dimension
@@ -110,7 +125,7 @@ int main(int argc, char** argv)
     // End of the domain of interest in the Y dimension
     double const y_end = 1.;
     // Number of discretization points in the Y dimension
-    size_t const nb_y_points = 100000;
+    size_t const nb_y_points = 100;
     // Simulated time at which to start simulation
     double const start_time = 0.;
     // Simulated time to reach as target of the simulation
@@ -118,7 +133,7 @@ int main(int argc, char** argv)
     // Number of time-steps between outputs
     ptrdiff_t const t_output_period = 10;
     // Maximum time-step
-    ddc::Coordinate<T> const max_dt {10};
+    ddc::Coordinate<T> const max_dt {0.1};
     //! [parameters]
 
     //! [main-start]
@@ -130,15 +145,9 @@ int main(int argc, char** argv)
             ddc::Coordinate<X>(x_end),
             nb_x_points);
     ddc::init_discrete_space<DDimX>(
-            ddc::GrevilleInterpolationPoints<
-                    BSplinesX,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC>::get_sampling<DDimX>());
+            GrevillePoints::get_sampling<DDimX>());
 
-    auto const x_domain = ddc::GrevilleInterpolationPoints<
-            BSplinesX,
-            ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC>::get_domain<DDimX>();
+    auto const x_domain = GrevillePoints::get_domain<DDimX>();
     //! [X-global-domain]
     // Initialization of the global domain in Y
     auto const y_domain
@@ -182,8 +191,6 @@ int main(int argc, char** argv)
     ddc::DiscreteDomain<DDimX, DDimY> x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
-            "fill",
-            Kokkos::DefaultExecutionSpace(),
             x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x
@@ -204,11 +211,9 @@ int main(int argc, char** argv)
 
     //! [initial output]
     // display the initial data
-    /*
     ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
     display(ddc::coordinate(time_domain.front()),
             host_density_alloc[x_domain][y_domain]);
-     */
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
@@ -219,25 +224,23 @@ int main(int argc, char** argv)
             Kokkos::DefaultExecutionSpace::memory_space,
             BSplinesX,
             DDimX,
-            ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC,
+            BoundCond,
+            BoundCond,
             ddc::SplineSolver::LAPACK,
             DDimX,
             DDimY>
             spline_builder(x_mesh);
-    ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
+    ExtrapolationRule extrapolation_rule;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             BSplinesX,
             DDimX,
-            ddc::PeriodicExtrapolationRule<X>,
-            ddc::PeriodicExtrapolationRule<X>,
+            ExtrapolationRule,
+            ExtrapolationRule,
             DDimX,
             DDimY>
-            spline_evaluator(
-                    periodic_extrapolation,
-                    periodic_extrapolation);
+            spline_evaluator(extrapolation_rule, extrapolation_rule);
     //! [instantiate solver]
 
     //! [instantiate intermediate chunks]
@@ -274,8 +277,6 @@ int main(int argc, char** argv)
         // Stencil computation on the main domain
         // Find the coordinates of the characteristics feet
         ddc::parallel_for_each(
-                "feetcoords_computation",
-                Kokkos::DefaultExecutionSpace(),
                 feet_coords.domain(),
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX, DDimY> const e) {
@@ -293,7 +294,6 @@ int main(int argc, char** argv)
         //! [numerical scheme]
 
         //! [output]
-        /*
         if (iter - last_output >= t_output_period) {
             last_output = iter;
             ddc::parallel_deepcopy(
@@ -302,7 +302,6 @@ int main(int argc, char** argv)
             display(ddc::coordinate(iter),
                     host_density_alloc[x_domain][y_domain]);
         }
-        */
         //! [output]
 
         //! [swap]
@@ -312,12 +311,10 @@ int main(int argc, char** argv)
     }
 
     //! [final output]
-    /*
     if (last_output < time_domain.back()) {
         ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
         display(ddc::coordinate(time_domain.back()),
                 host_density_alloc[x_domain][y_domain]);
     }
-    */
     //! [final output]
 }

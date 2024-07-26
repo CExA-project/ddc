@@ -36,16 +36,16 @@ struct ddc_to_kokkos_reducer<reducer::prod<T>>
     using type = Kokkos::Prod<T>;
 };
 
-template <>
-struct ddc_to_kokkos_reducer<reducer::land>
+template <class T>
+struct ddc_to_kokkos_reducer<reducer::land<T>>
 {
-    using type = Kokkos::LAnd<void>;
+    using type = Kokkos::LAnd<T>;
 };
 
-template <>
-struct ddc_to_kokkos_reducer<reducer::lor>
+template <class T>
+struct ddc_to_kokkos_reducer<reducer::lor<T>>
 {
-    using type = Kokkos::LOr<void>;
+    using type = Kokkos::LOr<T>;
 };
 
 template <class T>

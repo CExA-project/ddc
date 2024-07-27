@@ -20,6 +20,9 @@ std::vector<double> generate_random_vector(
         double lower_bound,
         double higher_bound)
 {
+    assert(n > 1);
+    assert(lower_bound < higher_bound);
+
     std::random_device rd;
     std::mt19937 gen(rd());
     // p represents the fraction of displacement

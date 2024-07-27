@@ -44,7 +44,10 @@ protected:
             std::experimental::layout_stride>;
 
 public:
-    using mdomain_type = DiscreteDomain<DDims...>;
+    using discrete_domain_type = DiscreteDomain<DDims...>;
+
+    using mdomain_type [[deprecated("Use `discrete_domain_type` instead")]]
+    = DiscreteDomain<DDims...>;
 
     /// The dereferenceable part of the co-domain but with a different domain, starting at 0
     using allocation_mdspan_type = std::experimental::mdspan<
@@ -57,7 +60,7 @@ public:
             std::experimental::dextents<std::size_t, sizeof...(DDims)>,
             LayoutStridedPolicy>;
 
-    using discrete_element_type = typename mdomain_type::discrete_element_type;
+    using discrete_element_type = typename discrete_domain_type::discrete_element_type;
 
     using extents_type = typename allocation_mdspan_type::extents_type;
 
@@ -94,7 +97,7 @@ protected:
     internal_mdspan_type m_internal_mdspan;
 
     /// The mesh on which this chunk is defined
-    mdomain_type m_domain;
+    discrete_domain_type m_domain;
 
 public:
     static KOKKOS_FUNCTION constexpr int rank() noexcept
@@ -131,7 +134,7 @@ private:
     template <class Mapping = mapping_type>
     static KOKKOS_FUNCTION constexpr std::
             enable_if_t<std::is_constructible_v<Mapping, extents_type>, internal_mdspan_type>
-            make_internal_mdspan(ElementType* ptr, mdomain_type const& domain)
+            make_internal_mdspan(ElementType* ptr, discrete_domain_type const& domain)
     {
         if (domain.empty()) {
             return internal_mdspan_type(
@@ -199,7 +202,7 @@ public:
     /** Provide access to the domain on which this chunk is defined
      * @return the domain on which this chunk is defined
      */
-    KOKKOS_FUNCTION constexpr mdomain_type domain() const noexcept
+    KOKKOS_FUNCTION constexpr discrete_domain_type domain() const noexcept
     {
         return m_domain;
     }
@@ -223,7 +226,7 @@ protected:
      */
     KOKKOS_FUNCTION constexpr ChunkCommon(
             internal_mdspan_type internal_mdspan,
-            mdomain_type const& domain) noexcept
+            discrete_domain_type const& domain) noexcept
         : m_internal_mdspan(std::move(internal_mdspan))
         , m_domain(domain)
     {
@@ -236,7 +239,7 @@ protected:
     template <
             class Mapping = mapping_type,
             std::enable_if_t<std::is_constructible_v<Mapping, extents_type>, int> = 0>
-    KOKKOS_FUNCTION constexpr ChunkCommon(ElementType* ptr, mdomain_type const& domain)
+    KOKKOS_FUNCTION constexpr ChunkCommon(ElementType* ptr, discrete_domain_type const& domain)
         : m_internal_mdspan(make_internal_mdspan(ptr, domain))
         , m_domain(domain)
     {

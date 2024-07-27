@@ -242,7 +242,7 @@ jobs:
             ctest --test-dir build --parallel 2 --output-on-failure --timeout 5 --output-junit tests.xml
             ./build/examples/heat_equation
             ./build/examples/uniform_heat_equation
-            # ./build/examples/non_uniform_heat_equation # too slow for now
+            ./build/examples/non_uniform_heat_equation
             ./build/examples/heat_equation_spectral
             ./build/examples/game_of_life
             ./build/examples/characteristics_advection
@@ -311,7 +311,7 @@ jobs:
           ctest --test-dir build --parallel 2 --output-on-failure --timeout 5 --output-junit tests.xml
           ./build/examples/heat_equation
           ./build/examples/uniform_heat_equation
-          # ./build/examples/non_uniform_heat_equation # too slow for now
+          ./build/examples/non_uniform_heat_equation
           ./build/examples/heat_equation_spectral
           ./build/examples/game_of_life
           ./build/examples/characteristics_advection

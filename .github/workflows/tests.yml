@@ -240,6 +240,12 @@ jobs:
           case "${{matrix.backend}}" in
           'cpu-'*)
             ctest --test-dir build --parallel 2 --output-on-failure --timeout 5 --output-junit tests.xml
+            ./build/examples/heat_equation
+            ./build/examples/uniform_heat_equation
+            # ./build/examples/non_uniform_heat_equation # too slow for now
+            ./build/examples/heat_equation_spectral
+            ./build/examples/game_of_life
+            ./build/examples/characteristics_advection
           ;;
           esac
         EOF
@@ -303,6 +309,12 @@ jobs:
           cmake --build build --parallel 2
           export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,suppressions=/src/ubsan.supp
           ctest --test-dir build --parallel 2 --output-on-failure --timeout 5 --output-junit tests.xml
+          ./build/examples/heat_equation
+          ./build/examples/uniform_heat_equation
+          # ./build/examples/non_uniform_heat_equation # too slow for now
+          ./build/examples/heat_equation_spectral
+          ./build/examples/game_of_life
+          ./build/examples/characteristics_advection
         EOF
         docker run \
           --cidfile='docker.cid' \

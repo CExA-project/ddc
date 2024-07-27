@@ -22,7 +22,7 @@ jobs:
         clangFormatVersion: 12
     - name: REUSE Compliance Check
       if: always()
-      uses: fsfe/reuse-action@v3
+      uses: fsfe/reuse-action@v4
 
   id_repo:
     runs-on: ubuntu-latest

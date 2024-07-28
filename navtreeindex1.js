@@ -1,5 +1,8 @@
 var NAVTREEINDEX1 =
 {
+"classddc_1_1DiscreteVector.html#afb3c8c9ab49ebd9923116eda48657037":[3,0,22,18],
+"classddc_1_1GrevilleInterpolationPoints.html":[3,0,24],
+"classddc_1_1GrevilleInterpolationPoints.html#a3aabc690bfdb30f7edb997cc16dd27ff":[3,0,24,0],
 "classddc_1_1KnotsAsInterpolationPoints.html":[3,0,37],
 "classddc_1_1KnotsAsInterpolationPoints.html#a284ded7e85d17eebffd68e7f72d64e4d":[3,0,37,0],
 "classddc_1_1KokkosAllocator.html":[3,0,38],
@@ -246,8 +249,5 @@ var NAVTREEINDEX1 =
 "classddc_1_1SplineEvaluator2D.html#af5ed764988760bc149c7470a1a7a98d7":[3,0,51,31],
 "classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c":[3,0,51,16],
 "classddc_1_1SplineEvaluator2D.html#afa0aea95ac9c8f0ed9e6453ba34da331":[3,0,51,33],
-"classddc_1_1SplineEvaluator2D.html#afa77b5aabb5ee02e51a1c20de067bd4a":[3,0,51,13],
-"classddc_1_1SplineEvaluator2D.html#afb2f24b16f952f3c7d6a768e8041197f":[3,0,51,8],
-"classddc_1_1SplineEvaluator2D.html#afdbf68e0af68c34eaca5d48d20f4d44d":[3,0,51,12],
-"classddc_1_1SplineEvaluator2D.html#afdee3123c1444a5e62e03b820e06dcb6":[3,0,51,26]
+"classddc_1_1SplineEvaluator2D.html#afa77b5aabb5ee02e51a1c20de067bd4a":[3,0,51,13]
 };

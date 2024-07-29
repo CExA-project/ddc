@@ -985,7 +985,9 @@ SplineBuilder<
     // Extract relevant subview
     Kokkos::View<double*, Kokkos::LayoutRight, MemorySpace> integral_bsplines_mirror = Kokkos::
             subview(integral_bsplines_mirror_with_additional_allocation,
-                    std::pair {0, integral_bsplines_without_periodic_point.size()},
+                    std::
+                            pair {static_cast<std::size_t>(0),
+                                  integral_bsplines_without_periodic_point.size()},
                     0);
 
     // Solve matrix equation A^t*X=integral_bsplines
@@ -998,18 +1000,22 @@ SplineBuilder<
             integral_bsplines_mirror);
 
     // Allocate Chunk on interpolation_discrete_dimension_type and copy quadrature coefficients into it
-    ddc::Chunk
-            coefficients_derivs_xmin(ddc::DiscreteDomain<deriv_type>(
+    ddc::Chunk coefficients_derivs_xmin(
+            ddc::DiscreteDomain<deriv_type>(
                     ddc::DiscreteElement<deriv_type>(1),
-                    ddc::DiscreteVector<deriv_type>(s_nbc_xmin)),ddc::KokkosAllocator<double, OutMemorySpace>());
-    ddc::Chunk
-            coefficients(interpolation_domain().take_first(
+                    ddc::DiscreteVector<deriv_type>(s_nbc_xmin)),
+            ddc::KokkosAllocator<double, OutMemorySpace>());
+    ddc::Chunk coefficients(
+            interpolation_domain().take_first(
+                    ddc::DiscreteVector<interpolation_discrete_dimension_type>(
                             ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin
-                            - s_nbc_xmax), ddc::KokkosAllocator<double, OutMemorySpace>());
-    ddc::Chunk
-            coefficients_derivs_xmax(ddc::DiscreteDomain<deriv_type>(
+                            - s_nbc_xmax)),
+            ddc::KokkosAllocator<double, OutMemorySpace>());
+    ddc::Chunk coefficients_derivs_xmax(
+            ddc::DiscreteDomain<deriv_type>(
                     ddc::DiscreteElement<deriv_type>(1),
-                    ddc::DiscreteVector<deriv_type>(s_nbc_xmax)), ddc::KokkosAllocator<double, OutMemorySpace>());
+                    ddc::DiscreteVector<deriv_type>(s_nbc_xmax)),
+            ddc::KokkosAllocator<double, OutMemorySpace>());
     Kokkos::deep_copy(
             coefficients_derivs_xmin.allocation_kokkos_view(),
             integral_bsplines_without_periodic_point[ddc::DiscreteDomain<bsplines_type>(

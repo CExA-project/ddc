@@ -972,7 +972,7 @@ SplineBuilder<
     ddc::discrete_space<bsplines_type>().integrals(integral_bsplines.span_view());
 
     // Remove additional B-splines in the periodic case (cf. UniformBSplines::full_domain() documentation)
-    ddc::ChunkSpan integral_bsplines_without_periodic_point
+    ddc::ChunkSpan integral_bsplines_without_periodic_additional_bsplines
             = integral_bsplines[spline_domain().take_first(
                     ddc::DiscreteVector<bsplines_type>(matrix->size()))];
 
@@ -988,16 +988,16 @@ SplineBuilder<
             subview(integral_bsplines_mirror_with_additional_allocation,
                     std::
                             pair {static_cast<std::size_t>(0),
-                                  integral_bsplines_without_periodic_point.size()},
+                                  integral_bsplines_without_periodic_additional_bsplines.size()},
                     0);
 
     // Solve matrix equation A^t*X=integral_bsplines
     Kokkos::deep_copy(
             integral_bsplines_mirror,
-            integral_bsplines_without_periodic_point.allocation_kokkos_view());
+            integral_bsplines_without_periodic_additional_bsplines.allocation_kokkos_view());
     matrix->solve(integral_bsplines_mirror_with_additional_allocation, true);
     Kokkos::deep_copy(
-            integral_bsplines_without_periodic_point.allocation_kokkos_view(),
+            integral_bsplines_without_periodic_additional_bsplines.allocation_kokkos_view(),
             integral_bsplines_mirror);
 
     // Allocate Chunk on interpolation_discrete_dimension_type and copy quadrature coefficients into it
@@ -1019,19 +1019,19 @@ SplineBuilder<
             ddc::KokkosAllocator<double, OutMemorySpace>());
     Kokkos::deep_copy(
             coefficients_derivs_xmin.allocation_kokkos_view(),
-            integral_bsplines_without_periodic_point
+            integral_bsplines_without_periodic_additional_bsplines
                     [spline_domain().take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))]
                             .allocation_kokkos_view());
     Kokkos::deep_copy(
             coefficients.allocation_kokkos_view(),
-            integral_bsplines_without_periodic_point
+            integral_bsplines_without_periodic_additional_bsplines
                     [spline_domain()
                              .remove_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))
                              .take_first(ddc::DiscreteVector<bsplines_type>(coefficients.size()))]
                             .allocation_kokkos_view());
     Kokkos::deep_copy(
             coefficients_derivs_xmax.allocation_kokkos_view(),
-            integral_bsplines_without_periodic_point
+            integral_bsplines_without_periodic_additional_bsplines
                     [spline_domain()
                              .remove_first(ddc::DiscreteVector<bsplines_type>(
                                      s_nbc_xmin + coefficients.size()))

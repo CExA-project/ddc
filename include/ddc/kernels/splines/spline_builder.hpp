@@ -971,10 +971,9 @@ SplineBuilder<
     ddc::Chunk integral_bsplines(spline_domain(), ddc::KokkosAllocator<double, MemorySpace>());
     ddc::discrete_space<bsplines_type>().integrals(integral_bsplines.span_view());
 
-    // Remove last cell in the periodic case
+    // Remove additional B-splines in the periodic case (cf. UniformBSplines::full_domain() documentation)
     ddc::ChunkSpan integral_bsplines_without_periodic_point
-            = integral_bsplines[ddc::DiscreteDomain<bsplines_type>(
-                    ddc::DiscreteElement<bsplines_type>(0),
+            = integral_bsplines[spline_domain().take_first(
                     ddc::DiscreteVector<bsplines_type>(matrix->size()))];
 
     // Allocate mirror with additional rows (cf. SplinesLinearProblem3x3Blocks documentation)
@@ -1020,24 +1019,23 @@ SplineBuilder<
             ddc::KokkosAllocator<double, OutMemorySpace>());
     Kokkos::deep_copy(
             coefficients_derivs_xmin.allocation_kokkos_view(),
-            integral_bsplines_without_periodic_point[ddc::DiscreteDomain<bsplines_type>(
-                                                             ddc::DiscreteElement<bsplines_type>(0),
-                                                             ddc::DiscreteVector<bsplines_type>(
-                                                                     s_nbc_xmin))]
-                    .allocation_kokkos_view());
+            integral_bsplines_without_periodic_point
+                    [spline_domain().take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))]
+                            .allocation_kokkos_view());
     Kokkos::deep_copy(
             coefficients.allocation_kokkos_view(),
             integral_bsplines_without_periodic_point
-                    [ddc::DiscreteDomain<bsplines_type>(
-                             ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
-                             ddc::DiscreteVector<bsplines_type>(coefficients.size()))]
+                    [spline_domain()
+                             .remove_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))
+                             .take_first(ddc::DiscreteVector<bsplines_type>(coefficients.size()))]
                             .allocation_kokkos_view());
     Kokkos::deep_copy(
             coefficients_derivs_xmax.allocation_kokkos_view(),
             integral_bsplines_without_periodic_point
-                    [ddc::DiscreteDomain<bsplines_type>(
-                             ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + coefficients.size()),
-                             ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))]
+                    [spline_domain()
+                             .remove_first(ddc::DiscreteVector<bsplines_type>(
+                                     s_nbc_xmin + coefficients.size()))
+                             .take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))]
                             .allocation_kokkos_view());
     return std::make_tuple(
             std::move(coefficients_derivs_xmin),

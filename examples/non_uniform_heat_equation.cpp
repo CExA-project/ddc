@@ -20,20 +20,31 @@ std::vector<double> generate_random_vector(
         double lower_bound,
         double higher_bound)
 {
+    assert(n > 1);
+    assert(lower_bound < higher_bound);
+
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<double>
-            dis(lower_bound, higher_bound);
+    // p represents the fraction of displacement
+    // it should be less than 0.5 to avoid reordering of nodes
+    double const p = 0.1;
+    std::uniform_real_distribution<double> dis(-p, +p);
+
+    double const dx = (higher_bound - lower_bound) / (n - 1);
 
     std::vector<double> vec(n);
-    vec[0] = lower_bound;
-    vec[n - 1] = higher_bound;
 
-    for (int i = 1; i < vec.size() - 1; ++i) {
-        vec[i] = dis(gen);
+    // Generate a uniform mesh
+    for (int i = 0; i < n; ++i) {
+        vec[i] = lower_bound + i * dx;
+    }
+    // Add a random perturbation
+    for (int i = 1; i < n - 1; ++i) {
+        vec[i] += dis(gen) * dx;
     }
 
-    std::sort(vec.begin(), vec.end());
+    assert(std::is_sorted(vec.begin(), vec.end()));
+
     return vec;
 }
 //! [vector_generator]

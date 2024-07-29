@@ -447,6 +447,7 @@ private:
     void build_matrix_system();
 };
 
+///\cond
 template <
         class ExecSpace,
         class MemorySpace,
@@ -1042,4 +1043,5 @@ SplineBuilder<
             std::move(coefficients),
             std::move(coefficients_derivs_xmax));
 }
+///\endcond
 } // namespace ddc

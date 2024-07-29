@@ -259,7 +259,7 @@ BENCHMARK(characteristics_advection<std::false_type, 5>)
         ->MinTime(3)
         ->UseRealTime();
 
-// Uniform mesh degree 3-5
+// Non-uniform mesh degree 3-5
 BENCHMARK(characteristics_advection<std::true_type, 3>)
         ->RangeMultiplier(2)
         ->Ranges({{64, 1024},

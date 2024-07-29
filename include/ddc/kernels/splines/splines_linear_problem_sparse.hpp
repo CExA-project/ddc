@@ -10,11 +10,11 @@
 #include <type_traits>
 #include <utility>
 
+#include <ginkgo/extensions/kokkos.hpp>
 #include <ginkgo/ginkgo.hpp>
 
 #include <Kokkos_Core.hpp>
 
-#include "ginkgo_executors.hpp"
 #include "splines_linear_problem.hpp"
 
 namespace ddc::detail {
@@ -170,7 +170,7 @@ public:
         , m_preconditioner_max_block_size(preconditioner_max_block_size.value_or(
                   default_preconditioner_max_block_size<ExecSpace>()))
     {
-        std::shared_ptr const gko_exec = create_gko_exec<ExecSpace>();
+        std::shared_ptr const gko_exec = gko::ext::kokkos::create_executor(ExecSpace());
         m_matrix_dense = gko::matrix::Dense<
                 double>::create(gko_exec->get_master(), gko::dim<2>(mat_size, mat_size));
         m_matrix_dense->fill(0);

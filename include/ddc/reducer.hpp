@@ -34,9 +34,10 @@ struct prod
     }
 };
 
+template <class T>
 struct land
 {
-    using value_type = bool;
+    using value_type = T;
 
     KOKKOS_FUNCTION constexpr value_type operator()(value_type const& lhs, value_type const& rhs)
             const noexcept
@@ -45,9 +46,10 @@ struct land
     }
 };
 
+template <class T>
 struct lor
 {
-    using value_type = bool;
+    using value_type = T;
 
     KOKKOS_FUNCTION constexpr value_type operator()(value_type const& lhs, value_type const& rhs)
             const noexcept

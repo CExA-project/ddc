@@ -59,7 +59,10 @@ public:
             LayoutStridedPolicy,
             MemorySpace>;
 
-    using mdomain_type = DiscreteDomain<DDims...>;
+    using discrete_domain_type = typename base_type::discrete_domain_type;
+
+    using mdomain_type [[deprecated("Use `discrete_domain_type` instead")]]
+    = DiscreteDomain<DDims...>;
 
     using memory_space = MemorySpace;
 
@@ -68,7 +71,7 @@ public:
 
     using const_allocation_mdspan_type = typename base_type::const_allocation_mdspan_type;
 
-    using discrete_element_type = typename mdomain_type::discrete_element_type;
+    using discrete_element_type = typename discrete_domain_type::discrete_element_type;
 
     using extents_type = typename base_type::extents_type;
 
@@ -140,7 +143,7 @@ public:
             class Allocator,
             class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
     KOKKOS_FUNCTION constexpr ChunkSpan(
-            Chunk<OElementType, mdomain_type, Allocator>& other) noexcept
+            Chunk<OElementType, discrete_domain_type, Allocator>& other) noexcept
         : base_type(other.m_internal_mdspan, other.m_domain)
     {
     }
@@ -156,7 +159,7 @@ public:
             class Allocator,
             class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
     KOKKOS_FUNCTION constexpr ChunkSpan(
-            Chunk<OElementType, mdomain_type, Allocator> const& other) noexcept
+            Chunk<OElementType, discrete_domain_type, Allocator> const& other) noexcept
         : base_type(other.m_internal_mdspan, other.m_domain)
     {
     }
@@ -166,7 +169,8 @@ public:
      */
     template <class OElementType>
     KOKKOS_FUNCTION constexpr ChunkSpan(
-            ChunkSpan<OElementType, mdomain_type, layout_type, MemorySpace> const& other) noexcept
+            ChunkSpan<OElementType, discrete_domain_type, layout_type, MemorySpace> const&
+                    other) noexcept
         : base_type(other.m_internal_mdspan, other.m_domain)
     {
     }
@@ -178,7 +182,7 @@ public:
     template <
             class Mapping = mapping_type,
             std::enable_if_t<std::is_constructible_v<Mapping, extents_type>, int> = 0>
-    KOKKOS_FUNCTION constexpr ChunkSpan(ElementType* const ptr, mdomain_type const& domain)
+    KOKKOS_FUNCTION constexpr ChunkSpan(ElementType* const ptr, discrete_domain_type const& domain)
         : base_type(ptr, domain)
     {
     }
@@ -189,7 +193,7 @@ public:
      */
     KOKKOS_FUNCTION constexpr ChunkSpan(
             allocation_mdspan_type allocation_mdspan,
-            mdomain_type const& domain)
+            discrete_domain_type const& domain)
     {
         assert(((allocation_mdspan.extent(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)
                  == static_cast<std::size_t>(domain.template extent<DDims>().value()))
@@ -214,7 +218,9 @@ public:
      * @param domain the domain that sustains the view
      */
     template <class KokkosView, class = std::enable_if_t<Kokkos::is_view<KokkosView>::value>>
-    KOKKOS_FUNCTION constexpr ChunkSpan(KokkosView const& view, mdomain_type const& domain) noexcept
+    KOKKOS_FUNCTION constexpr ChunkSpan(
+            KokkosView const& view,
+            discrete_domain_type const& domain) noexcept
         : ChunkSpan(
                 detail::build_mdspan(view, std::make_index_sequence<sizeof...(DDims)> {}),
                 domain)

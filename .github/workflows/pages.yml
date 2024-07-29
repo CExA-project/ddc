@@ -53,7 +53,7 @@ jobs:
         docker save ghcr.io/cexa-project/ddc/doxygen:${GITHUB_SHA:0:7} > doxygen.tar
     - name: Generate docker artifact from image
       if: needs.id_repo.outputs.in_base_repo == 'false'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: doxygen-artifact
         path: doxygen.tar
@@ -73,7 +73,7 @@ jobs:
         fetch-depth: 0
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with: { name: 'doxygen-artifact' }
     - name: Load image artifact into docker
       if: needs.id_repo.outputs.in_base_repo == 'false'
@@ -132,7 +132,7 @@ jobs:
       with: { submodules: recursive }
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with: { name: 'doxygen-artifact' }
     - name: Load image artifact into docker
       if: needs.id_repo.outputs.in_base_repo == 'false'

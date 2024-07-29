@@ -54,7 +54,10 @@ public:
 
     using const_allocation_mdspan_type = typename base_type::const_allocation_mdspan_type;
 
-    using mdomain_type = typename base_type::mdomain_type;
+    using discrete_domain_type = typename base_type::discrete_domain_type;
+
+    using mdomain_type [[deprecated("Use `discrete_domain_type` instead")]] =
+            typename base_type::mdomain_type;
 
     using memory_space = typename Allocator::memory_space;
 
@@ -91,7 +94,7 @@ public:
     /// Construct a labeled Chunk on a domain with uninitialized values
     explicit Chunk(
             std::string const& label,
-            mdomain_type const& domain,
+            discrete_domain_type const& domain,
             Allocator allocator = Allocator())
         : base_type(allocator.allocate(label, domain.size()), domain)
         , m_allocator(std::move(allocator))
@@ -100,7 +103,7 @@ public:
     }
 
     /// Construct a Chunk on a domain with uninitialized values
-    explicit Chunk(mdomain_type const& domain, Allocator allocator = Allocator())
+    explicit Chunk(discrete_domain_type const& domain, Allocator allocator = Allocator())
         : Chunk("no-label", domain, std::move(allocator))
     {
     }

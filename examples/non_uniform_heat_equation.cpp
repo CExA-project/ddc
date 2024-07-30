@@ -73,13 +73,13 @@ struct DDimT : ddc::UniformPointSampling<T>
 };
 //! [time-space]
 
-//! [display]
 /** A function to pretty print the temperature
  * @tparam ChunkType The type of chunk span. This way the template parameters are avoided,
  *                   should be deduced by the compiler.
  * @param time The time at which the output is made.
  * @param temp The temperature at this time-step.
  */
+//! [display]
 template <class ChunkType>
 void display(double time, ChunkType temp)
 {
@@ -113,20 +113,17 @@ void display(double time, ChunkType temp)
 }
 //! [display]
 
-
-//! [main-start]
-//! [main-start-x-parameters]
 int main(int argc, char** argv)
 {
 #ifdef DDC_BUILD_PDI_WRAPPER
-    auto pdi_conf = PC_parse_string("");
+    PC_tree_t pdi_conf = PC_parse_string("");
     PDI_init(pdi_conf);
 #endif
     Kokkos::ScopeGuard const kokkos_scope(argc, argv);
     ddc::ScopeGuard const ddc_scope(argc, argv);
 
-
     //! [parameters]
+    //! [main-start-x-parameters]
     double const x_start = -1.;
     double const x_end = 1.;
     std::size_t const nb_x_points = 10;
@@ -190,7 +187,6 @@ int main(int argc, char** argv)
             y_domain_vect.back()
             + (y_domain_vect[1] - y_domain_vect.front())};
     //! [ghost_points_y]
-
     //! [Y-vectors]
 
     //! [build-Y-domain]
@@ -209,7 +205,6 @@ int main(int argc, char** argv)
             y_pre_ghost.extents());
 
     //! [CFL-condition]
-
     double const invdx2_max = ddc::transform_reduce(
             x_domain,
             0.,
@@ -232,7 +227,6 @@ int main(int argc, char** argv)
 
     ddc::Coordinate<T> const max_dt {
             .5 / (kx * invdx2_max + ky * invdy2_max)};
-
     //! [CFL-condition]
 
     //! [time-domain]
@@ -244,7 +238,6 @@ int main(int argc, char** argv)
                     ddc::Coordinate<T>(start_time),
                     ddc::Coordinate<T>(end_time),
                     nb_time_steps + 1));
-
     //! [time-domain]
 
     //! [data allocation]
@@ -393,7 +386,6 @@ int main(int argc, char** argv)
         std::swap(ghosted_last_temp, ghosted_next_temp);
         //! [swap]
     }
-
 
     //! [final output]
     if (last_output_iter < time_domain.back()) {

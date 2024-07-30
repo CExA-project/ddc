@@ -94,7 +94,8 @@ Dimension X</h3>
 <div class="line">std::size_t <span class="keyword">const</span> nb_x_points = 10;</div>
 <div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> kx = .01;</div>
 </div><!-- fragment --><p>The first step to create a <code>DiscreteDomain</code> with non-uniform spatial discretization is to create a C++ iterator containing the actual coordinates of the points along each dimension. For tutorial purposes, we have constructed a function <code>generate_random_vector</code> that generates a vector with random data ranging from the lower bound to the higher one to populate our vectors.</p>
-<p>For the <code>X</code> dimension, we want to build 4 domains:</p><ul>
+<p>For the <code>X</code> dimension, we want to build 4 domains:</p>
+<ul>
 <li><code>x_domain</code>: the main domain from the start (included) to end (included) but excluding "ghost" points.</li>
 <li><code>ghosted_x_domain</code>: the domain including all "ghost" points.</li>
 <li><code>x_pre_ghost</code>: the "ghost" points that come before the main domain.</li>
@@ -118,7 +119,8 @@ Dimension X</h3>
 <div class="line">                x_pre_ghost_vect,</div>
 <div class="line">                x_post_ghost_vect));</div>
 <div class="ttc" id="anamespaceddc_html_a70f12a43ed0afbc092f4e974b024db3d"><div class="ttname"><a href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a></div><div class="ttdeci">void init_discrete_space(Args &amp;&amp;... args)</div><div class="ttdoc">Initialize (emplace) a global singleton discrete space.</div><div class="ttdef"><b>Definition</b> discrete_space.hpp:151</div></div>
-</div><!-- fragment --><p><b>To summarize,</b> in this section we saw how to build a domain with non-uniform space discretization:</p><ul>
+</div><!-- fragment --><p><b>To summarize,</b> in this section we saw how to build a domain with non-uniform space discretization:</p>
+<ul>
 <li>Create an iterator for your domain.</li>
 <li>Call the <code>init_discretization</code> function with <code>init_ghosted</code> if you need ghost points or with <code>init</code> for a regular domain.</li>
 </ul>

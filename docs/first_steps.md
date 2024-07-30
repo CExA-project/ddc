@@ -15,16 +15,15 @@ As usual, the file starts with a few includes that will be used in the code.
 
 As you can see, to use DDC, we have to include `<ddc/ddc.hpp>`
 
-# Definition of the discretization
+## Definition of the discretization
 
-Before solving the equation, DDC's primary goal is to define a discrete domain of dimensions specified by the user, along with a discretization along each dimension, which also needs to be specified. 
+Before solving the equation, DDC's primary goal is to define a discrete domain of dimensions specified by the user, along with a discretization along each dimension, which also needs to be specified.
 
 ![domains_image](./images/domains.png "Domains")
 
 Each point in the *DiscreteDomain* is a *DiscreteElement*. These concepts will be clarified later. Let's start by constructing this DiscreteDomain necessary for solving our 2D problem for the heat equation.
 
-
-## Dimensions naming
+### Dimensions naming
 
 We start by defining types that we later use to name our
 dimensions.
@@ -48,10 +47,9 @@ And once again, now for the time dimension.
 
 \snippet{trimleft} uniform_heat_equation.cpp time-space
 
+### Domains
 
-## Domains
-
-### Dimension X
+#### Dimension X
 
 Once the types are defined, we can start the `main` function where we will define our various
 domains. Here for each dimension, the user needs to specify the starting and ending coordinates of the dimension of the domain, as well as the number of discretization points along each of these dimensions. Additionally, we specify here the physical characteristics specific to our equation (the thermal diffusion coefficient).
@@ -81,6 +79,7 @@ discretization of `X`.
 number of discretized points in the domain and the number of additional points on each side of the
 domain.
 The fours `DiscreteDomain`s returned are:
+
 * `x_domain`: the main domain from the start (included) to end (included) but excluding "ghost"
   points.
 * `ghosted_x_domain`: the domain including all "ghost" points.
@@ -108,6 +107,7 @@ The first parameter given to the constructor is the first element of the domain,
 `DiscreteVector<DDimX>`.
 
 **To summarize,** in this section, we have introduced the following types:
+
 * `Coordinate<X>` that represents a point in the continuous dimension `X`,
 * `DiscreteElement<DDimX>` that represents one of the elements of `DDimX`, the discretization of
   `X`,
@@ -115,10 +115,9 @@ The first parameter given to the constructor is the first element of the domain,
 * `DiscreteDomain<DDimX>` that represents an interval in `DDimX`, a set of contiguous elements of
   the  discretization.
 
+#### Dimension Y
 
-### Dimension Y
-
-The domains in the `Y` dimension are handled in a way very similar to the `X` dimension. We first define the domain characteristics along this dimension 
+The domains in the `Y` dimension are handled in a way very similar to the `X` dimension. We first define the domain characteristics along this dimension
 
 \snippet{trimleft} uniform_heat_equation.cpp main-start-y-parameters
 
@@ -126,9 +125,9 @@ Then we initialize the domain along this dimension just like we did with the `X`
 
 \snippet{trimleft} uniform_heat_equation.cpp Y-domains
 
-### Time dimension
+#### Time dimension
 
-Then we handle the domains for the simulated time dimension. We first give the simulated time at which to stard and end the simulation. 
+Then we handle the domains for the simulated time dimension. We first give the simulated time at which to stard and end the simulation.
 
 \snippet{trimleft} uniform_heat_equation.cpp main-start-t-parameters
 
@@ -136,24 +135,24 @@ Then we use the CFL condition to determine the time step of the simulation.
 
 \snippet{trimleft} uniform_heat_equation.cpp CFL-condition
 
-Finally, we determine the number of time steps and as we did with the `X` and `Y` dimensions, we create the time domain. 
+Finally, we determine the number of time steps and as we did with the `X` and `Y` dimensions, we create the time domain.
 
 \snippet{trimleft} uniform_heat_equation.cpp time-domain
 
-
-# Data allocation
+## Data allocation
 
 We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains' points at t and t+dt. When constructing the Chunks one can give an optional string to label the memory allocations. This helps debugging and profiling applications using the Kokkos tools, see also [Kokkos Tools](https://github.com/kokkos/kokkos-tools).
 
 These chunks map the temperature into the full domain (including ghosts) twice:
-+ *ghosted_last_temp* for the last fully computed time-step.
-+ *ghosted_next_temp* for time-step being computed.
+
+* *ghosted_last_temp* for the last fully computed time-step.
+* *ghosted_next_temp* for time-step being computed.
 
 \snippet{trimleft} uniform_heat_equation.cpp data allocation
 
 Note that the `DeviceAllocator` is responsible for allocating memory on the default memory space.
 
-# Initial conditions
+## Initial conditions
 
 To set the initial conditions, the `ghosted_intial_temp` is created and acts as a pointer to the chunk. The const qualifier makes it clear that ghosted_initial_temp always references the same chunk, `ghosted_last_temp` in this case.
 
@@ -175,11 +174,9 @@ And we display the initial data.
 
 \snippet{trimleft} uniform_heat_equation.cpp initial-display
 
-
 \snippet{trimleft} uniform_heat_equation.cpp time iteration
 
 To display the data, a chunk is created on the host.
-
 
 \snippet{trimleft} uniform_heat_equation.cpp host-chunk
 
@@ -193,40 +190,39 @@ And we display the initial data.
 
 \snippet{trimleft} uniform_heat_equation.cpp initial-display
 
-For the numerical scheme, two chunkspans are created: 
-+ `next_temp` a span excluding ghosts of the temperature at the time-step we will build.
-+ `last_temp` a read-only view of the temperature at the previous time-step.Note that *span_cview* returns a read-only ChunkSpan.
+For the numerical scheme, two chunkspans are created:
+
+* `next_temp` a span excluding ghosts of the temperature at the time-step we will build.
+* `last_temp` a read-only view of the temperature at the previous time-step.Note that *span_cview* returns a read-only ChunkSpan.
 
 \snippet{trimleft} uniform_heat_equation.cpp manipulated views
 
 We then solve the equation.
 
 \snippet{trimleft} uniform_heat_equation.cpp numerical scheme
-# Time loop
+
+## Time loop
 
 \snippet{trimleft} uniform_heat_equation.cpp time iteration
 
-
-## Periodic conditions
+### Periodic conditions
 
 \snippet{trimleft} uniform_heat_equation.cpp output
 
 \snippet{trimleft} uniform_heat_equation.cpp boundary conditions
 
-
-## Numerical scheme
-
+### Numerical scheme
 
 \snippet{trimleft} uniform_heat_equation.cpp swap
 
-For the numerical scheme, two chunkspans are created: 
-+ `next_temp` a span excluding ghosts of the temperature at the time-step we will build.
-+ `last_temp` a read-only view of the temperature at the previous time-step.Note that *span_cview* returns a read-only ChunkSpan.
+For the numerical scheme, two chunkspans are created:
+
+* `next_temp` a span excluding ghosts of the temperature at the time-step we will build.
+* `last_temp` a read-only view of the temperature at the previous time-step.Note that *span_cview* returns a read-only ChunkSpan.
 
 \snippet{trimleft} uniform_heat_equation.cpp manipulated views
 
 We then solve the equation.
-
 
 \snippet{trimleft} uniform_heat_equation.cpp final output
 

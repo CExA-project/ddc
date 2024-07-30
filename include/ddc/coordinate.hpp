@@ -36,14 +36,14 @@ KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type...> coordina
 // Gives access to the type of the coordinates of a discrete element
 // Example usage : "using Coords = coordinate_of_t<DElem>;"
 template <class T>
-struct coordinate_of
+struct CoordinateOf
 {
     static_assert(is_discrete_element_v<T>, "Parameter T must be of type DiscreteElement");
     using type = decltype(coordinate(std::declval<T>()));
 };
 
-/// Helper type of \ref ddc::coordinate_of
+/// Helper type of \ref ddc::CoordinateOf
 template <class T>
-using coordinate_of_t = typename coordinate_of<T>::type;
+using coordinate_of_t = typename CoordinateOf<T>::type;
 
 } // namespace ddc

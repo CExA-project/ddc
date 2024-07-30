@@ -104,8 +104,6 @@ int main(int argc, char** argv)
     std::ptrdiff_t const t_output_period = 10;
     //! [parameters]
 
-    //! [main-start]
-
     //! [X-parameters]
     ddc::DiscreteVector<DDimX> const gwx(1);
     //! [X-parameters]

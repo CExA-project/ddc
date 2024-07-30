@@ -55,15 +55,40 @@ var NAVTREE =
       ] ],
       [ "examples/non_uniform_heat_equation.cpp", "non_uniform_heat_equation.html", null ]
     ] ],
-    [ "API reference", "annotated.html", "annotated" ]
+    [ "Namespaces", "namespaces.html", [
+      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
+      [ "Namespace Members", "namespacemembers.html", [
+        [ "All", "namespacemembers.html", null ],
+        [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ],
+        [ "Typedefs", "namespacemembers_type.html", null ],
+        [ "Enumerations", "namespacemembers_enum.html", null ]
+      ] ]
+    ] ],
+    [ "Classes", "annotated.html", [
+      [ "Class List", "annotated.html", "annotated_dup" ],
+      [ "Class Index", "classes.html", null ],
+      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
+      [ "Class Members", "functions.html", [
+        [ "All", "functions.html", "functions_dup" ],
+        [ "Functions", "functions_func.html", "functions_func" ],
+        [ "Variables", "functions_vars.html", null ],
+        [ "Typedefs", "functions_type.html", null ],
+        [ "Related Symbols", "functions_rela.html", null ]
+      ] ]
+    ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
 "annotated.html",
+"classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a943b22693810dde1dd3c76a643ebeabd",
 "classddc_1_1DiscreteVector.html#afb3c8c9ab49ebd9923116eda48657037",
-"classddc_1_1SplineEvaluator2D.html#afb2f24b16f952f3c7d6a768e8041197f"
+"classddc_1_1SplineBuilder.html#a2c376178b21d15b25a888c53c8d30e6f",
+"classddc_1_1SplineEvaluator2D.html#afb2f24b16f952f3c7d6a768e8041197f",
+"namespaceddc.html#a5d5196bd6303219e1c7de8a9d2a8564b",
+"structddc_1_1reducer_1_1min.html#ab828d81922f09687babfccc97c3dad35"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

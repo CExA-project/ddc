@@ -26,11 +26,81 @@ class SplinesLinearProblem
 public:
     /// @brief The type of a Kokkos::View storing multiple right-hand sides.
     using MultiRHS = Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>;
+    using AViewType
+            = Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>;
+    using PivViewType = Kokkos::DualView<int*, typename ExecSpace::memory_space>;
+
+    /**
+     *  @brief COO storage.
+     *  
+     *  [SHOULD BE PRIVATE (GPU programming limitation)]
+     */
+    struct Coo
+    {
+        std::size_t m_nrows;
+        std::size_t m_ncols;
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_rows_idx;
+        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_cols_idx;
+        Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_values;
+
+        Coo() : m_nrows(0), m_ncols(0) {}
+
+        Coo(std::size_t const nrows_,
+            std::size_t const ncols_,
+            Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx_,
+            Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx_,
+            Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> values_)
+            : m_nrows(nrows_)
+            , m_ncols(ncols_)
+            , m_rows_idx(std::move(rows_idx_))
+            , m_cols_idx(std::move(cols_idx_))
+            , m_values(std::move(values_))
+        {
+            assert(m_rows_idx.extent(0) == m_cols_idx.extent(0));
+            assert(m_rows_idx.extent(0) == m_values.extent(0));
+        }
+
+        KOKKOS_FUNCTION std::size_t nnz() const
+        {
+            return m_values.extent(0);
+        }
+
+        KOKKOS_FUNCTION std::size_t nrows() const
+        {
+            return m_nrows;
+        }
+
+        KOKKOS_FUNCTION std::size_t ncols() const
+        {
+            return m_ncols;
+        }
+
+        KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+        rows_idx() const
+        {
+            return m_rows_idx;
+        }
+
+        KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+        cols_idx() const
+        {
+            return m_cols_idx;
+        }
+
+        KOKKOS_FUNCTION Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+        values() const
+        {
+            return m_values;
+        }
+    };
 
 private:
     std::size_t m_size;
 
 protected:
+    AViewType m_a;
+    PivViewType m_ipiv;
+
     explicit SplinesLinearProblem(const std::size_t size) : m_size(size) {}
 
 public:
@@ -69,6 +139,22 @@ public:
      */
     virtual void solve(MultiRHS b, bool transpose = false) const = 0;
 
+    virtual void solve(
+            typename AViewType::t_dev top_right_block,
+            typename AViewType::t_dev bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool transpose = false) const = 0;
+
+    virtual void solve(
+            Coo top_right_block,
+            Coo bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool transpose = false) const = 0;
+
     /**
      * @brief Get the size of the square matrix in one of its dimensions.
      *
@@ -77,6 +163,16 @@ public:
     std::size_t size() const
     {
         return m_size;
+    }
+
+    auto get_matrix() const
+    {
+        return m_a.d_view;
+    }
+
+    auto get_pivot() const
+    {
+        return m_ipiv.d_view;
     }
 
     /**

@@ -36,71 +36,10 @@ class SplinesLinearProblem2x2Blocks : public SplinesLinearProblem<ExecSpace>
 {
 public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
+    using typename SplinesLinearProblem<ExecSpace>::Coo;
+    using typename SplinesLinearProblem<ExecSpace>::AViewType;
+    using typename SplinesLinearProblem<ExecSpace>::PivViewType;
     using SplinesLinearProblem<ExecSpace>::size;
-
-    /**
-     * @brief COO storage.
-     *
-     * [SHOULD BE PRIVATE (GPU programming limitation)]
-     */
-    struct Coo
-    {
-        std::size_t m_nrows;
-        std::size_t m_ncols;
-        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_rows_idx;
-        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_cols_idx;
-        Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_values;
-
-        Coo() : m_nrows(0), m_ncols(0) {}
-
-        Coo(std::size_t const nrows_,
-            std::size_t const ncols_,
-            Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx_,
-            Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx_,
-            Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> values_)
-            : m_nrows(nrows_)
-            , m_ncols(ncols_)
-            , m_rows_idx(std::move(rows_idx_))
-            , m_cols_idx(std::move(cols_idx_))
-            , m_values(std::move(values_))
-        {
-            assert(m_rows_idx.extent(0) == m_cols_idx.extent(0));
-            assert(m_rows_idx.extent(0) == m_values.extent(0));
-        }
-
-        KOKKOS_FUNCTION std::size_t nnz() const
-        {
-            return m_values.extent(0);
-        }
-
-        KOKKOS_FUNCTION std::size_t nrows() const
-        {
-            return m_nrows;
-        }
-
-        KOKKOS_FUNCTION std::size_t ncols() const
-        {
-            return m_ncols;
-        }
-
-        KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-        rows_idx() const
-        {
-            return m_rows_idx;
-        }
-
-        KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-        cols_idx() const
-        {
-            return m_cols_idx;
-        }
-
-        KOKKOS_FUNCTION Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-        values() const
-        {
-            return m_values;
-        }
-    };
 
 protected:
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
@@ -357,7 +296,9 @@ public:
     void solve(MultiRHS const b, bool const transpose) const override
     {
         assert(b.extent(0) == size());
-
+	Kokkos::Profiling::pushRegion("ddc_splines_solve");
+#if defined(SPLINE_VERSION0)
+        // Using spdm
         MultiRHS b1 = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
@@ -377,6 +318,69 @@ public:
             spdm_minus1_1(m_bottom_left_block_coo, b2, b1, true);
             m_top_left_block->solve(b1, true);
         }
+#elif defined(SPLINE_VERSION1)
+        // using kernel fusion with gemm
+        m_top_left_block
+                ->solve(m_top_right_block.d_view,
+                        m_bottom_left_block.d_view,
+                        m_bottom_right_block->get_matrix(),
+                        m_bottom_right_block->get_pivot(),
+                        b,
+                        transpose);
+#elif defined(SPLINE_VERSION2)
+        // using kernel fusion with spdm
+        m_top_left_block
+                ->solve(m_top_right_block_coo,
+                        m_bottom_left_block_coo,
+                        m_bottom_right_block->get_matrix(),
+                        m_bottom_right_block->get_pivot(),
+                        b,
+                        transpose);
+#else
+        // Using gemm
+        MultiRHS b1 = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
+                        Kokkos::ALL);
+        MultiRHS b2 = Kokkos::
+                subview(b,
+                        std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
+                        Kokkos::ALL);
+        if (!transpose) {
+            m_top_left_block->solve(b1);
+            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., m_bottom_left_block.d_view, b1, 1., b2);
+            m_bottom_right_block->solve(b2);
+            KokkosBlas::gemm(ExecSpace(), "N", "N", -1., m_top_right_block.d_view, b2, 1., b1);
+        } else {
+            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., m_top_right_block.d_view, b1, 1., b2);
+            m_bottom_right_block->solve(b2, true);
+            KokkosBlas::gemm(ExecSpace(), "T", "N", -1., m_bottom_left_block.d_view, b2, 1., b1);
+            m_top_left_block->solve(b1, true);
+        }
+#endif
+	Kokkos::Profiling::popRegion();
+    }
+
+    // Kernel fusion interface for gemm
+    void solve(
+            typename AViewType::t_dev top_right_block,
+            typename AViewType::t_dev bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool const transpose) const override
+    {
+    }
+
+    // Kernel fusion interface for spdm
+    void solve(
+            Coo top_right_block,
+            Coo bottom_left_block,
+            typename AViewType::t_dev bottom_right_block,
+            typename PivViewType::t_dev bottom_right_piv,
+            MultiRHS b,
+            bool const transpose) const override
+    {
     }
 };
 

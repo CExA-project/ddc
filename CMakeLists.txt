@@ -251,8 +251,8 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
   # Lapacke
   find_package(LAPACKE REQUIRED)
-  target_link_libraries(DDC INTERFACE ${LAPACKE_LIBRARIES})
-  target_include_directories(DDC INTERFACE ${LAPACKE_INCLUDE_DIRS})
+  target_link_libraries(DDC INTERFACE "${LAPACKE_LIBRARIES}")
+  target_include_directories(DDC INTERFACE "${LAPACKE_INCLUDE_DIRS}")
 
   # Kokkos-kernels
   set(DDC_KokkosKernels_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `KokkosKernels` package. Options: ${DDC_DEPENDENCY_POLICIES}")
@@ -283,6 +283,28 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
   endif()
 
   target_link_libraries(DDC INTERFACE Kokkos::kokkoskernels)
+
+  # Compile options for profile
+  set(DDC_SPLINES_VERSIONS "0" "1" "2")
+  set(DDC_SPLINES_VERSION "AUTO" CACHE STRING "VERSION of spline kernels in DDC. Options: ${DDC_SPLINES_VERSIONS}")
+  if("${DDC_SPLINES_VERSION}" STREQUAL "0")
+    target_compile_definitions(DDC INTERFACE SPLINE_VERSION0)
+  elseif("${DDC_SPLINES_VERSION}" STREQUAL "1")
+    target_compile_definitions(DDC INTERFACE SPLINE_VERSION1)
+  elseif("${DDC_SPLINES_VERSION}" STREQUAL "2")
+    target_compile_definitions(DDC INTERFACE SPLINE_VERSION2)
+  endif()
+
+  set(DDC_SPLINES_SOLVERS "GINKGO" "LAPACK")
+  set(DDC_SPLINES_SOLVER "AUTO" CACHE STRING "Solver of spline kernels in DDC. Options: ${DDC_SPLINES_SOLVERS}")
+  if("${DDC_SPLINES_SOLVER}" STREQUAL "GINKGO")
+    target_compile_definitions(DDC INTERFACE SOLVER_GINKGO)
+  elseif("${DDC_SPLINES_SOLVER}" STREQUAL "LAPACK")
+    target_compile_definitions(DDC INTERFACE SOLVER_LAPACK)
+  else()
+    target_compile_definitions(DDC INTERFACE SOLVER_LAPACK)
+  endif()
+  
 endif()
 
 ## The PDI wrapper

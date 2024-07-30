@@ -199,12 +199,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             0.0,
             ddc::reducer::sum<double>(),
             [&](ddc::DiscreteElement<ddc::Deriv<typename IDimX::continuous_dimension_type>> const
-                        ix) {
-                ddc::Coordinate<DimX> const dx
-                        = ddc::distance_at_right(interpolation_domain.front() + 1);
-                return quadrature_coefficients_derivs_xmin(ix)
-                       * (*deriv_l)(ix)*ddc::detail::ipow(dx, ix.uid());
-            });
+                        ix) { return quadrature_coefficients_derivs_xmin(ix) * (*deriv_l)(ix); });
 #else
     double const quadrature_integral_derivs_xmin = 0.;
 #endif
@@ -223,12 +218,7 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
             0.0,
             ddc::reducer::sum<double>(),
             [&](ddc::DiscreteElement<ddc::Deriv<typename IDimX::continuous_dimension_type>> const
-                        ix) {
-                ddc::Coordinate<DimX> const dx
-                        = ddc::distance_at_left(interpolation_domain.back() - 1);
-                return quadrature_coefficients_derivs_xmax(ix)
-                       * (*deriv_r)(ix)*ddc::detail::ipow(dx, ix.uid());
-            });
+                        ix) { return quadrature_coefficients_derivs_xmax(ix) * (*deriv_r)(ix); });
 #else
     double const quadrature_integral_derivs_xmax = 0.;
 #endif

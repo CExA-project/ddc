@@ -405,7 +405,7 @@ public:
      * for the values inside the domain and for the derivatives at upper boundary).
      *
      * A discrete function f can then be integrated using sum_j Q_j*f_j for j in interpolation_domain.
-     * If boundary condition is HERMITE, sum_j Qderiv_j*(d^j f/dx^j)*dx^j for j in derivs_domain
+     * If boundary condition is HERMITE, sum_j Qderiv_j*(d^j f/dx^j) for j in derivs_domain
      * must be added at the boundary.
      *
      * Please refer to section 2.8.1 of Emily's Bourne phd (https://theses.fr/2022AIXM0412) for more information and to
@@ -1000,47 +1000,76 @@ SplineBuilder<
             integral_bsplines_without_periodic_additional_bsplines.allocation_kokkos_view(),
             integral_bsplines_mirror);
 
-    // Allocate Chunk on interpolation_discrete_dimension_type and copy quadrature coefficients into it
-    ddc::Chunk coefficients_derivs_xmin(
+    // Slice into three ChunkSpan corresponding to lower derivatives, function values and upper derivatives
+    ddc::ChunkSpan coefficients_derivs_xmin
+            = integral_bsplines_without_periodic_additional_bsplines[spline_domain().take_first(
+                    ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))];
+    ddc::ChunkSpan coefficients = integral_bsplines_without_periodic_additional_bsplines
+            [spline_domain()
+                     .remove_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))
+                     .take_first(ddc::DiscreteVector<bsplines_type>(
+                             ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin
+                             - s_nbc_xmax))];
+    ddc::ChunkSpan coefficients_derivs_xmax = integral_bsplines_without_periodic_additional_bsplines
+            [spline_domain()
+                     .remove_first(
+                             ddc::DiscreteVector<bsplines_type>(s_nbc_xmin + coefficients.size()))
+                     .take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))];
+    interpolation_domain_type interpolation_domain_proxy = interpolation_domain();
+
+    // Multiply derivatives coefficients by dx^n
+    ddc::parallel_for_each(
+            exec_space(),
+            coefficients_derivs_xmin.domain(),
+            KOKKOS_LAMBDA(ddc::DiscreteElement<bsplines_type> i) {
+                ddc::Coordinate<continuous_dimension_type> const dx
+                        = ddc::distance_at_right(interpolation_domain_proxy.front() + 1);
+                coefficients_derivs_xmin(i) *= ddc::detail::
+                        ipow(dx,
+                             static_cast<std::size_t>(get<bsplines_type>(
+                                     i - coefficients_derivs_xmin.domain().front() + 1)));
+            });
+    ddc::parallel_for_each(
+            exec_space(),
+            coefficients_derivs_xmax.domain(),
+            KOKKOS_LAMBDA(ddc::DiscreteElement<bsplines_type> i) {
+                ddc::Coordinate<continuous_dimension_type> const dx
+                        = ddc::distance_at_left(interpolation_domain_proxy.back() - 1);
+                coefficients_derivs_xmax(i) *= ddc::detail::
+                        ipow(dx,
+                             static_cast<std::size_t>(get<bsplines_type>(
+                                     i - coefficients_derivs_xmax.domain().front() + 1)));
+            });
+
+    // Allocate Chunk on deriv_type and interpolation_discrete_dimension_type and copy quadrature coefficients into it
+    ddc::Chunk coefficients_derivs_xmin_out(
             ddc::DiscreteDomain<deriv_type>(
                     ddc::DiscreteElement<deriv_type>(1),
                     ddc::DiscreteVector<deriv_type>(s_nbc_xmin)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
-    ddc::Chunk coefficients(
+    ddc::Chunk coefficients_out(
             interpolation_domain().take_first(
                     ddc::DiscreteVector<interpolation_discrete_dimension_type>(
-                            ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin
-                            - s_nbc_xmax)),
+                            coefficients.size())),
             ddc::KokkosAllocator<double, OutMemorySpace>());
-    ddc::Chunk coefficients_derivs_xmax(
+    ddc::Chunk coefficients_derivs_xmax_out(
             ddc::DiscreteDomain<deriv_type>(
                     ddc::DiscreteElement<deriv_type>(1),
                     ddc::DiscreteVector<deriv_type>(s_nbc_xmax)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     Kokkos::deep_copy(
-            coefficients_derivs_xmin.allocation_kokkos_view(),
-            integral_bsplines_without_periodic_additional_bsplines
-                    [spline_domain().take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))]
-                            .allocation_kokkos_view());
+            coefficients_derivs_xmin_out.allocation_kokkos_view(),
+            coefficients_derivs_xmin.allocation_kokkos_view());
     Kokkos::deep_copy(
-            coefficients.allocation_kokkos_view(),
-            integral_bsplines_without_periodic_additional_bsplines
-                    [spline_domain()
-                             .remove_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))
-                             .take_first(ddc::DiscreteVector<bsplines_type>(coefficients.size()))]
-                            .allocation_kokkos_view());
+            coefficients_out.allocation_kokkos_view(),
+            coefficients.allocation_kokkos_view());
     Kokkos::deep_copy(
-            coefficients_derivs_xmax.allocation_kokkos_view(),
-            integral_bsplines_without_periodic_additional_bsplines
-                    [spline_domain()
-                             .remove_first(ddc::DiscreteVector<bsplines_type>(
-                                     s_nbc_xmin + coefficients.size()))
-                             .take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))]
-                            .allocation_kokkos_view());
+            coefficients_derivs_xmax_out.allocation_kokkos_view(),
+            coefficients_derivs_xmax.allocation_kokkos_view());
     return std::make_tuple(
-            std::move(coefficients_derivs_xmin),
-            std::move(coefficients),
-            std::move(coefficients_derivs_xmax));
+            std::move(coefficients_derivs_xmin_out),
+            std::move(coefficients_out),
+            std::move(coefficients_derivs_xmax_out));
 }
 
 } // namespace ddc

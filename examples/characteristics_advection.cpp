@@ -15,9 +15,6 @@
 
 #define PERIODIC_DOMAIN // Comment this to run non-periodic simulation
 
-//! [includes]
-static constexpr std::size_t s_degree_x = 3;
-
 //! [X-dimension]
 /// Our first continuous dimension
 struct X
@@ -42,12 +39,25 @@ using ExtrapolationRule = ddc::NullExtrapolationRule;
 
 //! [X-discretization]
 /// A uniform discretization of X
-struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
+template <typename NonUniform, std::size_t s_degree_x>
+struct BSplinesX
+    : std::conditional_t<
+              NonUniform::value,
+              ddc::NonUniformBSplines<X, s_degree_x>,
+              ddc::UniformBSplines<X, s_degree_x>>
 {
 };
-using GrevillePoints = ddc::
-        GrevilleInterpolationPoints<BSplinesX, BoundCond, BoundCond>;
-struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
+
+template <typename NonUniform, std::size_t s_degree_x>
+using GrevillePoints = ddc::GrevilleInterpolationPoints<
+        BSplinesX<NonUniform, s_degree_x>,
+        BoundCond,
+        BoundCond>;
+
+template <typename NonUniform, std::size_t s_degree_x>
+struct DDimX
+    : GrevillePoints<NonUniform, s_degree_x>::
+              interpolation_discrete_dimension_type
 {
 };
 //! [X-discretization]
@@ -75,6 +85,7 @@ struct DDimT : ddc::UniformPointSampling<T>
  * @param time the time at which the output is made
  * @param density the density at this time-step
  */
+/*
 template <class ChunkType>
 void display(double time, ChunkType density)
 {
@@ -100,14 +111,12 @@ void display(double time, ChunkType density)
             });
     std::cout << " }" << std::endl;
 }
+*/
 //! [display]
 
-//! [main-start]
-int main(int argc, char** argv)
+template <typename NonUniform, std::size_t s_degree_x>
+static void characteristics_advection()
 {
-    Kokkos::ScopeGuard const kokkos_scope(argc, argv);
-    ddc::ScopeGuard const ddc_scope(argc, argv);
-
     // some parameters that would typically be read from some form of
     // configuration file in a more realistic code
 
@@ -129,25 +138,42 @@ int main(int argc, char** argv)
     // Simulated time at which to start simulation
     double const start_time = 0.;
     // Simulated time to reach as target of the simulation
-    double const end_time = 0.1;
+    double const end_time = 1.0;
     // Number of time-steps between outputs
     ptrdiff_t const t_output_period = 0.1;
     // Maximum time-step
     ddc::Coordinate<T> const max_dt {0.1};
     //! [parameters]
+    using _DDimX = DDimX<NonUniform, s_degree_x>;
+    using _BSplinesX = BSplinesX<NonUniform, s_degree_x>;
+    using _GrevillePoints = GrevillePoints<NonUniform, s_degree_x>;
 
     //! [main-start]
 
     //! [X-global-domain]
     // Initialization of the global domain in X
-    ddc::init_discrete_space<BSplinesX>(
-            ddc::Coordinate<X>(x_start),
-            ddc::Coordinate<X>(x_end),
-            nb_x_points);
-    ddc::init_discrete_space<DDimX>(
-            GrevillePoints::get_sampling<DDimX>());
+    if constexpr (!NonUniform::value) {
+        ddc::init_discrete_space<_BSplinesX>(
+                ddc::Coordinate<X>(x_start),
+                ddc::Coordinate<X>(x_end),
+                nb_x_points);
+        std::cout << "Uniform spline degree " << s_degree_x
+                  << std::endl;
+    } else {
+        std::cout << "Non-uniform spline degree " << s_degree_x
+                  << std::endl;
+        std::vector<ddc::Coordinate<X>> breaks(nb_x_points + 1);
+        for (std::size_t i(0); i < nb_x_points + 1; ++i) {
+            breaks[i] = ddc::Coordinate<X>(
+                    static_cast<double>(i) / nb_x_points);
+        }
+        ddc::init_discrete_space<_BSplinesX>(breaks);
+    }
 
-    auto const x_domain = GrevillePoints::get_domain<DDimX>();
+    ddc::init_discrete_space<_DDimX>(
+            _GrevillePoints::template get_sampling<_DDimX>());
+
+    auto const x_domain = _GrevillePoints::template get_domain<_DDimX>();
     //! [X-global-domain]
     // Initialization of the global domain in Y
     auto const y_domain
@@ -175,12 +201,12 @@ int main(int argc, char** argv)
     // Maps density into the full domain twice:
     // - once for the last fully computed time-step
     ddc::Chunk last_density_alloc(
-            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
+            ddc::DiscreteDomain<_DDimX, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
 
     // - once for time-step being computed
     ddc::Chunk next_density_alloc(
-            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
+            ddc::DiscreteDomain<_DDimX, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
     //! [data allocation]
 
@@ -188,13 +214,14 @@ int main(int argc, char** argv)
     ddc::ChunkSpan const initial_density
             = last_density_alloc.span_view();
     // Initialize the density on the main domain
-    ddc::DiscreteDomain<DDimX, DDimY> x_mesh
-            = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
+    ddc::DiscreteDomain<_DDimX, DDimY> x_mesh
+            = ddc::DiscreteDomain<_DDimX, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
             x_mesh,
-            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
+            KOKKOS_LAMBDA(
+                    ddc::DiscreteElement<_DDimX, DDimY> const ixy) {
                 double const x
-                        = ddc::coordinate(ddc::select<DDimX>(ixy));
+                        = ddc::coordinate(ddc::select<_DDimX>(ixy));
                 double const y
                         = ddc::coordinate(ddc::select<DDimY>(ixy));
                 initial_density(ixy)
@@ -205,7 +232,7 @@ int main(int argc, char** argv)
     //! [initial-conditions]
 
     ddc::Chunk host_density_alloc(
-            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
+            ddc::DiscreteDomain<_DDimX, DDimY>(x_domain, y_domain),
             ddc::HostAllocator<double>());
 
 
@@ -224,8 +251,8 @@ int main(int argc, char** argv)
     ddc::SplineBuilder<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
-            BSplinesX,
-            DDimX,
+            _BSplinesX,
+            _DDimX,
             BoundCond,
             BoundCond,
 #if defined(SOLVER_LAPACK)
@@ -233,18 +260,18 @@ int main(int argc, char** argv)
 #elif defined(SOLVER_GINKGO)
             ddc::SplineSolver::GINKGO,
 #endif
-            DDimX,
+            _DDimX,
             DDimY>
             spline_builder(x_mesh);
     ExtrapolationRule extrapolation_rule;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
-            BSplinesX,
-            DDimX,
+            _BSplinesX,
+            _DDimX,
             ExtrapolationRule,
             ExtrapolationRule,
-            DDimX,
+            _DDimX,
             DDimY>
             spline_evaluator(extrapolation_rule, extrapolation_rule);
     //! [instantiate solver]
@@ -285,9 +312,9 @@ int main(int argc, char** argv)
         ddc::parallel_for_each(
                 feet_coords.domain(),
                 KOKKOS_LAMBDA(
-                        ddc::DiscreteElement<DDimX, DDimY> const e) {
+                        ddc::DiscreteElement<_DDimX, DDimY> const e) {
                     feet_coords(e)
-                            = ddc::coordinate(ddc::select<DDimX>(e))
+                            = ddc::coordinate(ddc::select<_DDimX>(e))
                               - ddc::Coordinate<X>(
                                       vx * ddc::step<DDimT>());
                 });
@@ -319,10 +346,47 @@ int main(int argc, char** argv)
     }
 
     //! [final output]
+    /*
     if (last_output < time_domain.back()) {
         ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
         display(ddc::coordinate(time_domain.back()),
                 host_density_alloc[x_domain][y_domain]);
     }
+    */
     //! [final output]
+}
+
+//! [main-start]
+int main(int argc, char** argv)
+{
+    Kokkos::ScopeGuard const kokkos_scope(argc, argv);
+    ddc::ScopeGuard const ddc_scope(argc, argv);
+
+    if (argc != 3) {
+        std::cout << "Usage ./app <non-uniformity> <spline degree>"
+                  << std::endl;
+        return 0;
+    }
+
+    bool non_uniform = std::stoi(argv[1]);
+    int spline_degree = std::stoi(argv[2]);
+    if (non_uniform) {
+        // Non-uniform mesh degree 3-5
+        if (spline_degree == 3) {
+            characteristics_advection<std::true_type, 3>();
+        } else if (spline_degree == 4) {
+            characteristics_advection<std::true_type, 4>();
+        } else if (spline_degree == 5) {
+            characteristics_advection<std::true_type, 5>();
+        }
+    } else {
+        // Uniform mesh degree 3-5
+        if (spline_degree == 3) {
+            characteristics_advection<std::false_type, 3>();
+        } else if (spline_degree == 4) {
+            characteristics_advection<std::false_type, 4>();
+        } else if (spline_degree == 5) {
+            characteristics_advection<std::false_type, 5>();
+        }
+    }
 }

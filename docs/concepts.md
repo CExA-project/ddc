@@ -29,10 +29,10 @@ Let's continue with our previous example of a 2D grid labeled along two dimensio
 More precisely, a discreteElement is a C++ variable that carries the strong type of the dimension in which it is defined. Let's return to our example by defining a variable `y` as follows:
 
 ```cpp
-DDC::DiscreteElement<DDimX> y;
+DDC::DiscreteElement<DDimY> y(0);
 ```
 
-The variable `y` carries the strong typing of the ordinate dimension DDimY. 
+The variable `y` carries the strong typing of the ordinate dimension DDimY and corresponds to the first point along the `Y` dimension.
 
 Moreover, `DDC::DiscreteElement` are very useful for another reason. If we take the example of a classic container in C++, let's say we want to access the element (i,j) of this container, we would do it like this:
 
@@ -63,4 +63,4 @@ As mentioned earlier, DDC operates on a coordinate system. These coordinates are
 
 Note that it is possible to construct a domain with both uniform (see \subpage uniform_heat_equation "examples/uniform_heat_equation.cpp") and non-uniform (see \subpage non_uniform_heat_equation "examples/non_uniform_heat_equation.cpp") distribution of points.
 
-## Iterer sur ces containers (differents algos)
+## How to iterate in DDC ?

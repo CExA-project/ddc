@@ -40,7 +40,7 @@ Moreover, `DDC::DiscreteElement` are very useful for another reason. If we take 
 container(i,j);
 ```
 
-Now, if we take a slice of this container and still want to access the same element (i,j) from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at 0. However, with DDC, this is not the case. If we take a slice of a chunkspan, accessing a `DDC::DiscreteElement` is the same between the slice and the original chunkspan. 
+Now, if we take a slice of this container and still want to access the same element (i,j) from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at 0. However, with DDC, this is not the case. If we take a slice of a chunkspan, accessing a `DDC::DiscreteElement` is the same between the slice and the original chunkspan because of the uniqueness of each discrete element on the grid.
 
 A `DDC::DiscreteVector` corresponds to an integer that, like `DDC::DiscreteElement`, carries the strong typing of the dimension in which it is defined. For instance in the uniform heat equation example, defining the `DDC::DiscreteVector` `gwx` as follows: 
 
@@ -51,6 +51,11 @@ DDC::DiscreteVector<DDimX> gwx(1);
 is equivalent to defining a number of points, here 1, along the `x` dimension.
 
 > Note that the difference between two `DDC::DiscreteElement` creates a `DDC::DiscreteVector`, and the sum of a `DDC::DiscreteVector` and a `DDC::DiscreteElement` results in a `DDC::DiscreteElement`. This illustrates how `DDC::DiscreteElement` could correspond to points in an affine space, while `DDC::DiscreteVector` could correspond to vectors in a vector space or to a distance between two points.
+
+In summary; 
+
++ `DDC::DiscreteElement` corresponds to each unique point of the mesh, fixed throughout the duration of the simulation and defined according to the discretization that has been done (uniform or non-uniform: see the examples of the heat equation). They are similar to fixed points in an affine space. 
++ On the other hand, `DDC::DiscreteVector` corresponds to a number of points along a particular axis or to a distance between two points; in DDC, it corresponds to a distance between two DiscreteElements. These are integers that carry the strong typing of the dimension in which they are defined.
 
 ## ddc::DiscreteDomain
 

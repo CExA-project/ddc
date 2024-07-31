@@ -218,44 +218,41 @@ static void characteristics_advection(benchmark::State& state)
     long const non_uniform = 1;
     // Preallocate 12 unitary benchs for each combination of cpu/gpu execution space, uniform/non-uniform and spline degree we may want to benchmark (those are determined at compile-time, that's why we need to build explicitely 12 variants of the bench even if we call only one of them)
     std::map<std::array<long, 3>, std::function<void(benchmark::State&)>> benchs;
-    benchs[std::array {host, uniform, static_cast<long>(3)}] = characteristics_advection_unitary<
+    benchs[std::array {host, uniform, 3L}] = characteristics_advection_unitary<
             Kokkos::DefaultHostExecutionSpace,
             std::false_type,
             3>;
-    benchs[std::array {host, uniform, static_cast<long>(4)}] = characteristics_advection_unitary<
+    benchs[std::array {host, uniform, 4L}] = characteristics_advection_unitary<
             Kokkos::DefaultHostExecutionSpace,
             std::false_type,
             4>;
-    benchs[std::array {host, uniform, static_cast<long>(5)}] = characteristics_advection_unitary<
+    benchs[std::array {host, uniform, 5L}] = characteristics_advection_unitary<
             Kokkos::DefaultHostExecutionSpace,
             std::false_type,
             5>;
-    benchs[std::array {host, non_uniform, static_cast<long>(3)}]
-            = characteristics_advection_unitary<
-                    Kokkos::DefaultHostExecutionSpace,
-                    std::true_type,
-                    3>;
-    benchs[std::array {host, non_uniform, static_cast<long>(4)}]
-            = characteristics_advection_unitary<
-                    Kokkos::DefaultHostExecutionSpace,
-                    std::true_type,
-                    4>;
-    benchs[std::array {host, non_uniform, static_cast<long>(5)}]
-            = characteristics_advection_unitary<
-                    Kokkos::DefaultHostExecutionSpace,
-                    std::true_type,
-                    5>;
-    benchs[std::array {dev, uniform, static_cast<long>(3)}]
+    benchs[std::array {host, non_uniform, 3L}] = characteristics_advection_unitary<
+            Kokkos::DefaultHostExecutionSpace,
+            std::true_type,
+            3>;
+    benchs[std::array {host, non_uniform, 4L}] = characteristics_advection_unitary<
+            Kokkos::DefaultHostExecutionSpace,
+            std::true_type,
+            4>;
+    benchs[std::array {host, non_uniform, 5L}] = characteristics_advection_unitary<
+            Kokkos::DefaultHostExecutionSpace,
+            std::true_type,
+            5>;
+    benchs[std::array {dev, uniform, 3L}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::false_type, 3>;
-    benchs[std::array {dev, uniform, static_cast<long>(4)}]
+    benchs[std::array {dev, uniform, 4L}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::false_type, 4>;
-    benchs[std::array {dev, uniform, static_cast<long>(5)}]
+    benchs[std::array {dev, uniform, 5L}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::false_type, 5>;
-    benchs[std::array {dev, non_uniform, static_cast<long>(3)}]
+    benchs[std::array {dev, non_uniform, 3L}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::true_type, 3>;
-    benchs[std::array {dev, non_uniform, static_cast<long>(4)}]
+    benchs[std::array {dev, non_uniform, 4L}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::true_type, 4>;
-    benchs[std::array {dev, non_uniform, static_cast<long>(5)}]
+    benchs[std::array {dev, non_uniform, 5L}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, std::true_type, 5>;
 
     // Run the desired bench

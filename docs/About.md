@@ -1,5 +1,4 @@
-\mainpage About
-
+# About {#mainpage}
 <!--
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 
@@ -16,6 +15,7 @@ Where these two libraries are based on [numpy](https://numpy.org/), DDC relies o
 CPU/GPU performance-portable multi-dimensional arrays and iterators.
 
 DDC aims to offer abstractions to represent:
+
 * tagged continuous dimensions,
 * discretizations of these (multiple kinds of meshes, function spaces, Fourier, etc.),
 * domains in these discretized dimensions,
@@ -26,14 +26,14 @@ All these abstractions are handled at compilation using C++ template meta-progra
 overhead at execution and enable developers to change their design choices (*eg.* from a regular
 mesh to a non-uniform one) with performance portability.
 
-# Discover more
+## Discover more
 
 * First, you should \ref first_steps "have a look at our commented example / tutorial".
 * To know more, you can [delve in the reference documentation](annotated.html).
 * [Use the source, Luke](https://github.com/Maison-de-la-Simulation/ddc).
 * [You should definitely come see us on Slack](https://join.slack.com/t/ddc-lib/shared_invite/zt-14b6rjcrn-AwSfM6_arEamAKk_VgQPhg).
 
-# Join us!
+## Join us
 
 If you like the project,
 [leave us a ⭐star⭐ on Github](https://github.com/Maison-de-la-Simulation/ddc).

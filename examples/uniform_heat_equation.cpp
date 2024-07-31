@@ -11,7 +11,6 @@
 #include <ddc/ddc.hpp>
 //! [includes]
 
-
 //! [X-dimension]
 struct X;
 //! [X-dimension]
@@ -36,17 +35,13 @@ struct DDimT : ddc::UniformPointSampling<T>
 };
 //! [time-space]
 
-//! [display]
-
 /** A function to pretty print the temperature
  * @tparam ChunkType The type of chunk span. This way the template parameters are avoided,
  *                   should be deduced by the compiler.
  * @param time The time at which the output is made.
  * @param temp The temperature at this time-step.
  */
-
 //! [display]
-
 template <class ChunkType>
 void display(double time, ChunkType temp)
 {
@@ -80,20 +75,17 @@ void display(double time, ChunkType temp)
 }
 //! [display]
 
-
-//! [main-start]
-//! [main-start-x-parameters]
 int main(int argc, char** argv)
 {
 #ifdef DDC_BUILD_PDI_WRAPPER
-    auto pdi_conf = PC_parse_string("");
+    PC_tree_t pdi_conf = PC_parse_string("");
     PDI_init(pdi_conf);
 #endif
     Kokkos::ScopeGuard const kokkos_scope(argc, argv);
     ddc::ScopeGuard const ddc_scope(argc, argv);
 
-
     //! [parameters]
+    //! [main-start-x-parameters]
     double const x_start = -1.;
     double const x_end = 1.;
     std::size_t const nb_x_points = 10;
@@ -111,8 +103,6 @@ int main(int argc, char** argv)
     //! [main-start-t-parameters]
     std::ptrdiff_t const t_output_period = 10;
     //! [parameters]
-
-    //! [main-start]
 
     //! [X-parameters]
     ddc::DiscreteVector<DDimX> const gwx(1);
@@ -154,14 +144,12 @@ int main(int argc, char** argv)
     //! [Y-domains]
 
     //! [CFL-condition]
-
     double const dx = ddc::step<DDimX>();
     double const dy = ddc::step<DDimY>();
     double const invdx2 = 1. / (dx * dx);
     double const invdy2 = 1. / (dy * dy);
 
     ddc::Coordinate<T> const dt(.5 / (kx * invdx2 + ky * invdy2));
-
     //! [CFL-condition]
 
     //! [time-domain]
@@ -173,7 +161,6 @@ int main(int argc, char** argv)
                     ddc::Coordinate<T>(start_time),
                     ddc::Coordinate<T>(end_time),
                     nb_time_steps + 1));
-
     //! [time-domain]
 
     //! [data allocation]
@@ -315,7 +302,6 @@ int main(int argc, char** argv)
         std::swap(ghosted_last_temp, ghosted_next_temp);
         //! [swap]
     }
-
 
     //! [final output]
     if (last_output_iter < time_domain.back()) {

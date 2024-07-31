@@ -20,20 +20,31 @@ std::vector<double> generate_random_vector(
         double lower_bound,
         double higher_bound)
 {
+    assert(n > 1);
+    assert(lower_bound < higher_bound);
+
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<double>
-            dis(lower_bound, higher_bound);
+    // p represents the fraction of displacement
+    // it should be less than 0.5 to avoid reordering of nodes
+    double const p = 0.1;
+    std::uniform_real_distribution<double> dis(-p, +p);
+
+    double const dx = (higher_bound - lower_bound) / (n - 1);
 
     std::vector<double> vec(n);
-    vec[0] = lower_bound;
-    vec[n - 1] = higher_bound;
 
-    for (int i = 1; i < vec.size() - 1; ++i) {
-        vec[i] = dis(gen);
+    // Generate a uniform mesh
+    for (int i = 0; i < n; ++i) {
+        vec[i] = lower_bound + i * dx;
+    }
+    // Add a random perturbation
+    for (int i = 1; i < n - 1; ++i) {
+        vec[i] += dis(gen) * dx;
     }
 
-    std::sort(vec.begin(), vec.end());
+    assert(std::is_sorted(vec.begin(), vec.end()));
+
     return vec;
 }
 //! [vector_generator]
@@ -62,13 +73,13 @@ struct DDimT : ddc::UniformPointSampling<T>
 };
 //! [time-space]
 
-//! [display]
 /** A function to pretty print the temperature
  * @tparam ChunkType The type of chunk span. This way the template parameters are avoided,
  *                   should be deduced by the compiler.
  * @param time The time at which the output is made.
  * @param temp The temperature at this time-step.
  */
+//! [display]
 template <class ChunkType>
 void display(double time, ChunkType temp)
 {
@@ -102,20 +113,17 @@ void display(double time, ChunkType temp)
 }
 //! [display]
 
-
-//! [main-start]
-//! [main-start-x-parameters]
 int main(int argc, char** argv)
 {
 #ifdef DDC_BUILD_PDI_WRAPPER
-    auto pdi_conf = PC_parse_string("");
+    PC_tree_t pdi_conf = PC_parse_string("");
     PDI_init(pdi_conf);
 #endif
     Kokkos::ScopeGuard const kokkos_scope(argc, argv);
     ddc::ScopeGuard const ddc_scope(argc, argv);
 
-
     //! [parameters]
+    //! [main-start-x-parameters]
     double const x_start = -1.;
     double const x_end = 1.;
     std::size_t const nb_x_points = 10;
@@ -179,7 +187,6 @@ int main(int argc, char** argv)
             y_domain_vect.back()
             + (y_domain_vect[1] - y_domain_vect.front())};
     //! [ghost_points_y]
-
     //! [Y-vectors]
 
     //! [build-Y-domain]
@@ -198,7 +205,6 @@ int main(int argc, char** argv)
             y_pre_ghost.extents());
 
     //! [CFL-condition]
-
     double const invdx2_max = ddc::transform_reduce(
             x_domain,
             0.,
@@ -221,7 +227,6 @@ int main(int argc, char** argv)
 
     ddc::Coordinate<T> const max_dt {
             .5 / (kx * invdx2_max + ky * invdy2_max)};
-
     //! [CFL-condition]
 
     //! [time-domain]
@@ -233,7 +238,6 @@ int main(int argc, char** argv)
                     ddc::Coordinate<T>(start_time),
                     ddc::Coordinate<T>(end_time),
                     nb_time_steps + 1));
-
     //! [time-domain]
 
     //! [data allocation]
@@ -382,7 +386,6 @@ int main(int argc, char** argv)
         std::swap(ghosted_last_temp, ghosted_next_temp);
         //! [swap]
     }
-
 
     //! [final output]
     if (last_output_iter < time_domain.back()) {

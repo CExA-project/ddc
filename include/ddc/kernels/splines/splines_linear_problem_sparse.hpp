@@ -247,7 +247,10 @@ public:
 
         std::size_t const main_chunk_size = std::min(m_cols_per_chunk, b.extent(1));
 
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const x("", size(), main_chunk_size);
+        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
+                b_buffer("ddc_sparse_b_buffer", size(), main_chunk_size);
+        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
+                x("ddc_sparse_x", size(), main_chunk_size);
 
         std::size_t const iend = (b.extent(1) + main_chunk_size - 1) / main_chunk_size;
         for (std::size_t i = 0; i < iend; ++i) {
@@ -257,21 +260,29 @@ public:
 
             auto const b_chunk
                     = Kokkos::subview(b, Kokkos::ALL, Kokkos::pair(subview_begin, subview_end));
+            auto const b_buffer_chunk = Kokkos::
+                    subview(b_buffer,
+                            Kokkos::ALL,
+                            Kokkos::pair(std::size_t(0), subview_end - subview_begin));
             auto const x_chunk = Kokkos::
                     subview(x,
                             Kokkos::ALL,
                             Kokkos::pair(std::size_t(0), subview_end - subview_begin));
 
+            Kokkos::deep_copy(b_buffer_chunk, b_chunk);
             Kokkos::deep_copy(x_chunk, b_chunk);
 
             if (!transpose) {
                 m_solver->add_logger(convergence_logger);
-                m_solver->apply(to_gko_dense(gko_exec, b_chunk), to_gko_dense(gko_exec, x_chunk));
+                m_solver
+                        ->apply(to_gko_dense(gko_exec, b_buffer_chunk),
+                                to_gko_dense(gko_exec, x_chunk));
                 m_solver->remove_logger(convergence_logger);
             } else {
                 m_solver_tr->add_logger(convergence_logger);
                 m_solver_tr
-                        ->apply(to_gko_dense(gko_exec, b_chunk), to_gko_dense(gko_exec, x_chunk));
+                        ->apply(to_gko_dense(gko_exec, b_buffer_chunk),
+                                to_gko_dense(gko_exec, x_chunk));
                 m_solver_tr->remove_logger(convergence_logger);
             }
 

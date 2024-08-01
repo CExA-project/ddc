@@ -376,7 +376,7 @@ struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase,
 /**
  * @brief Indicates if a tag corresponds to uniform B-splines or not.
  *
- * @tparam The presumed uniform B-splines. 
+ * @tparam The presumed uniform B-splines.
  */
 template <class DDim>
 constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<DDim>::value;

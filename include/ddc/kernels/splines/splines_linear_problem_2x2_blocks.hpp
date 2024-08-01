@@ -23,7 +23,7 @@ namespace ddc::detail {
  * A = |   Q    | gamma |
  *     | lambda | delta |
  *
- * The storage format is dense row-major for top-left, top-right and bottom-left blocks, and determined by 
+ * The storage format is dense row-major for top-left, top-right and bottom-left blocks, and determined by
  * its type for the top-left block.
  *
  * This class implements a Schur complement method to perform a block-LU factorization and solve,
@@ -300,7 +300,7 @@ public:
      * @param[in] LinOp The sparse matrix, left side of the matrix multiplication.
      * @param[in] x The dense matrix, right side of the matrix multiplication.
      * @param[inout] y The dense matrix to be altered by the operation.
-     * @param transpose A flag to indicate if the direct or transposed version of the operation is performed. 
+     * @param transpose A flag to indicate if the direct or transposed version of the operation is performed.
      */
     void spdm_minus1_1(Coo LinOp, MultiRHS const x, MultiRHS const y, bool const transpose = false)
             const
@@ -348,8 +348,8 @@ public:
      * For the non-transposed case:
      * - Solve inplace Q * x'1 = b1 (using the solver internal to Q).
      * - Compute inplace b'2 = b2 - lambda*x'1.
-     * - Solve inplace (delta - lambda*Q^-1*gamma) * x2 = b'2. 
-     * - Compute inplace x1 = x'1 - (delta - lambda*Q^-1*gamma)*x2. 
+     * - Solve inplace (delta - lambda*Q^-1*gamma) * x2 = b'2.
+     * - Compute inplace x1 = x'1 - (delta - lambda*Q^-1*gamma)*x2.
      *
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.

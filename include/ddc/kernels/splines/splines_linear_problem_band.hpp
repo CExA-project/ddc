@@ -66,7 +66,7 @@ public:
         , m_kl(kl)
         , m_ku(ku)
         /*
-         * The matrix itself stored in band format requires a (kl + ku + 1)*mat_size 
+         * The matrix itself stored in band format requires a (kl + ku + 1)*mat_size
          * allocation, but the LU-factorization requires an additional kl*mat_size block
          */
         , m_q("q", 2 * kl + ku + 1, mat_size)
@@ -92,7 +92,7 @@ public:
         /*
          * The "row index" of the band format storage identify the (sub/super)-diagonal
          * while the column index is actually the column index of the matrix. Two layouts
-         * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of 
+         * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of
          * the matrix itself but required for the storage of its LU factorization.
          */
         if (i >= std::
@@ -112,7 +112,7 @@ public:
         /*
          * The "row index" of the band format storage identify the (sub/super)-diagonal
          * while the column index is actually the column index of the matrix. Two layouts
-         * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of 
+         * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of
          * the matrix itself but required for the storage of its LU factorization.
          */
         if (i >= std::

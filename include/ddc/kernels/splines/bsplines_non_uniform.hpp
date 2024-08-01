@@ -257,7 +257,7 @@ public:
                                   int_vals) const;
 
         /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a B-spline.
-         * 
+         *
          * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
          * provided DiscreteElement, this function returns the first knot in the support of the B-spline.
          * In other words it returns the lower bound of the support.

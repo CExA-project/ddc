@@ -125,7 +125,7 @@ private:
 
 public:
     /**
-     * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain 
+     * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain
      * and batch domain) preserving the underlying memory layout (order of dimensions).
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
@@ -167,7 +167,7 @@ private:
 public:
     /**
      * @brief Build a SplineBuilder acting on batched_interpolation_domain.
-     * 
+     *
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
      *
      * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
@@ -370,8 +370,8 @@ public:
      *
      * Use the values of a function (defined on
      * SplineBuilder::batched_interpolation_domain) and the derivatives of the
-     * function at the boundaries (in the case of BoundCond::HERMITE only, defined 
-     * on SplineBuilder::batched_derivs_xmin_domain and SplineBuilder::batched_derivs_xmax_domain) 
+     * function at the boundaries (in the case of BoundCond::HERMITE only, defined
+     * on SplineBuilder::batched_derivs_xmin_domain and SplineBuilder::batched_derivs_xmax_domain)
      * to calculate a spline approximation of this function.
      *
      * The spline approximation is stored as a ChunkSpan of coefficients

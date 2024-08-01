@@ -56,15 +56,40 @@ var NAVTREE =
       [ "examples/non_uniform_heat_equation.cpp", "non_uniform_heat_equation.html", null ]
     ] ],
     [ "Deprecated List", "deprecated.html", null ],
-    [ "API reference", "annotated.html", "annotated" ]
+    [ "Namespaces", "namespaces.html", [
+      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
+      [ "Namespace Members", "namespacemembers.html", [
+        [ "All", "namespacemembers.html", null ],
+        [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ],
+        [ "Typedefs", "namespacemembers_type.html", null ],
+        [ "Enumerations", "namespacemembers_enum.html", null ]
+      ] ]
+    ] ],
+    [ "Classes", "annotated.html", [
+      [ "Class List", "annotated.html", "annotated_dup" ],
+      [ "Class Index", "classes.html", null ],
+      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
+      [ "Class Members", "functions.html", [
+        [ "All", "functions.html", "functions_dup" ],
+        [ "Functions", "functions_func.html", "functions_func" ],
+        [ "Variables", "functions_vars.html", null ],
+        [ "Typedefs", "functions_type.html", null ],
+        [ "Related Symbols", "functions_rela.html", null ]
+      ] ]
+    ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
 "annotated.html",
+"classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a943b22693810dde1dd3c76a643ebeabd",
 "classddc_1_1DiscreteVector.html#afb3c8c9ab49ebd9923116eda48657037",
-"classddc_1_1SplineEvaluator2D.html#afa77b5aabb5ee02e51a1c20de067bd4a"
+"classddc_1_1SplineBuilder.html#a28af8c6773ec5572c70f7da4b7576c57",
+"classddc_1_1SplineEvaluator2D.html#afa77b5aabb5ee02e51a1c20de067bd4a",
+"namespaceddc.html#a54da8d37b5ff148e68c65185c0c1e44e",
+"structddc_1_1reducer_1_1min.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

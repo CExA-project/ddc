@@ -55,6 +55,7 @@ var NAVTREE =
       ] ],
       [ "examples/non_uniform_heat_equation.cpp", "non_uniform_heat_equation.html", null ]
     ] ],
+    [ "Deprecated List", "deprecated.html", null ],
     [ "API reference", "annotated.html", "annotated" ]
   ] ]
 ];

@@ -350,7 +350,7 @@ public:
      * This can be useful for debugging (as it allows
      * one to print the matrix) or for more complex quadrature schemes.
      *
-     * Warning: the returned detail::Matrix class is not supposed to be exposed
+     * @warning the returned detail::Matrix class is not supposed to be exposed
      * to user, which means its usage is not supported out of the scope of current class.
      * Use at your own risk.
      *

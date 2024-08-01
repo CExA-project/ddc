@@ -763,7 +763,7 @@ void fft(
  * Compute the inverse discrete Fourier transform of a spectral function using the specialized implementation for the Kokkos::ExecutionSpace
  * of the iFFT algorithm.
  *
- * /!\ C2R iFFT does NOT preserve input !
+ * @warning C2R iFFT does NOT preserve input.
  *
  * @tparam Tin The type of the input elements (Kokkos::complex<float> or Kokkos::complex<double>).
  * @tparam Tout The type of the output elements (float, Kokkos::complex<float>, double or Kokkos::complex<double>).

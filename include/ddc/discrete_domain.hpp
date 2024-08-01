@@ -518,29 +518,6 @@ KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> back(
     return DiscreteElement<QueryDDims...>(select<QueryDDims>(domain).back()...);
 }
 
-namespace detail {
-
-template <class QueryDDimSeq>
-struct Selection;
-
-template <class... QueryDDims>
-struct Selection<detail::TypeSeq<QueryDDims...>>
-{
-    template <class Domain>
-    static KOKKOS_FUNCTION constexpr auto select(Domain const& domain)
-    {
-        return ddc::select<QueryDDims...>(domain);
-    }
-};
-
-} // namespace detail
-
-template <class QueryDDimSeq, class... DDims>
-KOKKOS_FUNCTION constexpr auto select_by_type_seq(DiscreteDomain<DDims...> const& domain)
-{
-    return detail::Selection<QueryDDimSeq>::select(domain);
-}
-
 template <class DDim>
 struct DiscreteDomainIterator
 {

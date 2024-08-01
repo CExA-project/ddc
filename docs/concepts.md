@@ -33,7 +33,7 @@ More precisely, a `DDC::DiscreteElement` is a C++ variable that carries the stro
 DDC::DiscreteElement<DDimY> y(0);
 ```
 
-carries the strong typing of the ordinate dimension DDimY and corresponds to y<sub>0, the first point along the `Y` dimension.
+carries the strong typing of the ordinate dimension `DDimY` and corresponds to y<sub>0 , the first point along the `Y` dimension.
 
 Moreover, `DDC::DiscreteElement` are very useful for another reason. If we take the example of a classic container in C++, let's say we want to access the element `(i,j)` of this container, we would do it like this:
 

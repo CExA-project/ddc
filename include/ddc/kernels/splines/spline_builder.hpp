@@ -350,13 +350,17 @@ public:
      * This can be useful for debugging (as it allows
      * one to print the matrix) or for more complex quadrature schemes.
      *
+     * @deprecated Use @ref quadrature_coefficients instead.
+     *
      * @warning the returned detail::Matrix class is not supposed to be exposed
      * to user, which means its usage is not supported out of the scope of current class.
      * Use at your own risk.
      *
      * @return A reference to the interpolation matrix.
      */
-    const ddc::detail::SplinesLinearProblem<exec_space>& get_interpolation_matrix() const noexcept
+    [[deprecated("Use quadrature_coefficients() instead.")]] const ddc::detail::
+            SplinesLinearProblem<exec_space>&
+            get_interpolation_matrix() const noexcept
     {
         return *matrix;
     }

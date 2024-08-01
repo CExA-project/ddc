@@ -27,13 +27,13 @@ Note that swapping the `ddc::DiscreteElement<DDimX>` and `ddc::DiscreteElement<D
 ### DDC::DiscreteElement
 Let's continue with our previous example of a 2D grid labeled along two discretized dimensions labeled as `DDimX` and `DDimY`. In the previous paragraph, we discussed how `DDC::DiscreteElement` could be used as indices to have access to a physical value at a precised point on the 2D grid. 
 
-More precisely, a `DDC::DiscreteElement` is a C++ variable that carries the strong type of the dimension in which it is defined. Let's return to our example, If we take a discretization of the y-axis as follows: {y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n</sub>}, defining a variable `y` as follows:
+More precisely, a `DDC::DiscreteElement` is a C++ variable that carries the strong type of the dimension in which it is defined. Let's return to our example, If we take a discretization of the y-axis as follows: {y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n</sub>}, the variable `y` defined as follows:
 
 ```cpp
 DDC::DiscreteElement<DDimY> y(0);
 ```
 
-The variable `y` carries the strong typing of the ordinate dimension DDimY and corresponds to the first point along the `Y` dimension, y<sub>0.
+carries the strong typing of the ordinate dimension DDimY and corresponds to y<sub>0, the first point along the `Y` dimension.
 
 Moreover, `DDC::DiscreteElement` are very useful for another reason. If we take the example of a classic container in C++, let's say we want to access the element `(i,j)` of this container, we would do it like this:
 

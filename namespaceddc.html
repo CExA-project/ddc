@@ -4163,7 +4163,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>Perform an inverse Fast <a class="el" href="namespaceddc.html#structddc_1_1Fourier" title="A templated tag representing a continuous dimension in the Fourier space associated to the original c...">Fourier</a> Transform. </p>
 <p>Compute the inverse discrete <a class="el" href="namespaceddc.html#structddc_1_1Fourier" title="A templated tag representing a continuous dimension in the Fourier space associated to the original c...">Fourier</a> transform of a spectral function using the specialized implementation for the Kokkos::ExecutionSpace of the iFFT algorithm.</p>
-<p>/!\ C2R iFFT does NOT preserve input !</p>
+<dl class="section warning"><dt>Warning</dt><dd>C2R iFFT does NOT preserve input.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Tin</td><td>The type of the input elements (Kokkos::complex&lt;float&gt; or Kokkos::complex&lt;double&gt;). </td></tr>

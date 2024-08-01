@@ -815,7 +815,7 @@ $(document).ready(function(){initNavTree('fft_8hpp_source.html',''); initResizab
 <div class="line"><span class="lineno">  763</span><span class="comment"> * Compute the inverse discrete Fourier transform of a spectral function using the specialized implementation for the Kokkos::ExecutionSpace</span></div>
 <div class="line"><span class="lineno">  764</span><span class="comment"> * of the iFFT algorithm.</span></div>
 <div class="line"><span class="lineno">  765</span><span class="comment"> *</span></div>
-<div class="line"><span class="lineno">  766</span><span class="comment"> * /!\ C2R iFFT does NOT preserve input !</span></div>
+<div class="line"><span class="lineno">  766</span><span class="comment"> * @warning C2R iFFT does NOT preserve input.</span></div>
 <div class="line"><span class="lineno">  767</span><span class="comment"> *</span></div>
 <div class="line"><span class="lineno">  768</span><span class="comment"> * @tparam Tin The type of the input elements (Kokkos::complex&lt;float&gt; or Kokkos::complex&lt;double&gt;).</span></div>
 <div class="line"><span class="lineno">  769</span><span class="comment"> * @tparam Tout The type of the output elements (float, Kokkos::complex&lt;float&gt;, double or Kokkos::complex&lt;double&gt;).</span></div>

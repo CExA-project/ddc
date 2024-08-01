@@ -1,7 +1,0 @@
-var searchData=
-[
-  ['layout_5ftype_0',['layout_type',['../classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ae743407b73c892badfe181838f6f089d',1,'ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt;::layout_type'],['../classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a9576b7f3d1dca885909c9167abf2dd24',1,'ddc::ChunkCommon&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy &gt;::layout_type'],['../classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#ab4e22962aa713b5748b5db2c0d69c48e',1,'ddc::ChunkSpan&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy, MemorySpace &gt;::layout_type']]],
-  ['lower_5fextrapolation_5frule_5f1_5ftype_1',['lower_extrapolation_rule_1_type',['../classddc_1_1SplineEvaluator2D.html#a1f540c576e408f453ce84a574b70c6d4',1,'ddc::SplineEvaluator2D']]],
-  ['lower_5fextrapolation_5frule_5f2_5ftype_2',['lower_extrapolation_rule_2_type',['../classddc_1_1SplineEvaluator2D.html#ab68ea985e0df94c94a230504b6d33521',1,'ddc::SplineEvaluator2D']]],
-  ['lower_5fextrapolation_5frule_5ftype_3',['lower_extrapolation_rule_type',['../classddc_1_1SplineEvaluator.html#ae208485296a34e531fb293c631dfbdfb',1,'ddc::SplineEvaluator']]]
-];

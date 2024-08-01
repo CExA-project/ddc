@@ -1,7 +1,0 @@
-<map id="ddc::NonUniformBsplinesKnots&lt; T &gt;" name="ddc::NonUniformBsplinesKnots&lt; T &gt;">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,281,260,347"/>
-<area shape="rect" id="Node000002" href="$classddc_1_1NonUniformPointSampling.html" title=" " alt="" coords="12,133,253,233"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,247,135,281,130,281,130,247"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="31,5,234,85"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="135,99,135,133,130,133,130,99"/>
-</map>

@@ -162,7 +162,7 @@ Then, we iterate over each *DiscreteElement* of the domain to fill `ghosted_init
 
 \snippet{trimleft} uniform_heat_equation.cpp fill-initial-chunkspan
 
-To display the data, a chunk is created on the host.
+To display the data, a chunk is created on the host using the \ref ddc::create_mirror function.
 
 \snippet{trimleft} uniform_heat_equation.cpp host-chunk
 
@@ -176,7 +176,7 @@ And we display the initial data.
 
 \snippet{trimleft} uniform_heat_equation.cpp time iteration
 
-To display the data, a chunk is created on the host.
+To display the data, a chunk is created on the host using the \ref ddc::create_mirror function.
 
 \snippet{trimleft} uniform_heat_equation.cpp host-chunk
 

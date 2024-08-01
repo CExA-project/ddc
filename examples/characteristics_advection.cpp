@@ -204,9 +204,8 @@ int main(int argc, char** argv)
             });
     //! [initial-conditions]
 
-    ddc::Chunk host_density_alloc(
-            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
-            ddc::HostAllocator<double>());
+    ddc::Chunk host_density_alloc
+            = ddc::create_mirror(last_density_alloc.span_cview());
 
 
     //! [initial output]

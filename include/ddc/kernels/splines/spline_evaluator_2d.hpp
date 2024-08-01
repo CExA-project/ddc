@@ -123,7 +123,7 @@ public:
      * and batch domain) preserving the underlying memory layout (order of dimensions).
      */
     using batched_spline_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
+            typename ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<
                             evaluation_discrete_dimension_type1,

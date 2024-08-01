@@ -117,7 +117,7 @@ private:
      * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<BSplinesY,X,Z>.
      */
     using batched_spline_tr_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_merge_t<
+            typename ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
                     ddc::type_seq_remove_t<
                             ddc::detail::TypeSeq<IDimX...>,

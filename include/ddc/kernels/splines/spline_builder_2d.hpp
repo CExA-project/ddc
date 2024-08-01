@@ -138,7 +138,7 @@ public:
      * (associated to B-splines tags BSplinesX and BSplinesY), this is DiscreteDomain<BSplinesX, BSplinesY, Z>
      */
     using batched_spline_domain_type
-            = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
+            = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<
                             interpolation_discrete_dimension_type1,
@@ -174,7 +174,7 @@ public:
      * this is DiscreteDomain<Deriv<X>, Deriv<Y>, Z>.
      */
     using batched_derivs_domain_type
-            = ddc::detail::convert_type_seq_to_discrete_domain<ddc::type_seq_replace_t<
+            = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
                     ddc::detail::TypeSeq<IDimX...>,
                     ddc::detail::TypeSeq<
                             interpolation_discrete_dimension_type1,

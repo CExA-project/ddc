@@ -387,7 +387,7 @@ struct ConvertTypeSeqToDiscreteDomain<detail::TypeSeq<DDims...>>
 };
 
 template <class T>
-using convert_type_seq_to_discrete_domain = typename ConvertTypeSeqToDiscreteDomain<T>::type;
+using convert_type_seq_to_discrete_domain_t = typename ConvertTypeSeqToDiscreteDomain<T>::type;
 
 } // namespace detail
 
@@ -428,7 +428,7 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
     using TagSeqB = detail::TypeSeq<DDimsB...>;
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
-    return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
+    return detail::convert_type_seq_to_discrete_domain_t<type_seq_r>(DDom_a);
 }
 
 //! Remove the dimensions DDimsB from DDom_a
@@ -441,7 +441,7 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(DDomA const& DDom_a) noexcept
     using TagSeqB = detail::TypeSeq<DDimsB...>;
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
-    return detail::convert_type_seq_to_discrete_domain<type_seq_r>(DDom_a);
+    return detail::convert_type_seq_to_discrete_domain_t<type_seq_r>(DDom_a);
 }
 
 // Remove dimensions from a domain type
@@ -481,7 +481,7 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
     using TagSeqC = detail::TypeSeq<DDim2>;
 
     using type_seq_r = ddc::type_seq_replace_t<TagSeqA, TagSeqB, TagSeqC>;
-    return ddc::detail::convert_type_seq_to_discrete_domain<type_seq_r>(
+    return ddc::detail::convert_type_seq_to_discrete_domain_t<type_seq_r>(
             detail::replace_dim_of_1d<
                     DDim1,
                     DDim2,

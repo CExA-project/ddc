@@ -14,19 +14,20 @@ The advantage of using DDC is that it provides array-like containers that have l
 
 > Note that the use of DDC is not restricted to solving equations. Indeed, one can easily imagine strong typing of variables corresponding to names or ages in a registry. The operations must then be adapted accordingly. Here, we largely base our approach on the uniform and non-uniform resolution of the heat equation in two dimensions, which is why we focus the presentation on solving equations using finite differences on a 2D grid.
 
-## ddc::Chunk and ddc::ChunkSpan
+## DDC::Chunk and DDC::ChunkSpan
 
 The `ddc::chunk` is a container that holds the data, while `ddc::chunkspan` behaves like `mdspan`, meaning they are pointers to the data contained within the chunk.
 
-As mentioned in the introduction, ddc is a library that offers strongly typed indexing. Chunks contain data that can be located in space by coordinates. Thus, to access the data at a specific point in a 2D space, instead of entering two integers corresponding to the x and y positions, ddc requires entering the  coordinate `x` as a discrete element of the x position: `ddc::DiscreteElement<DDimX>`, and entering the `y` coordinate as a discrete element following the y dimension: `ddc::DiscreteElement<DDimY>`. This is done after predefining a strong typing for the x dimension as DDimX and a strong typing for the y dimension as DDimY (see the heat equation example \subpage uniform_heat_equation "examples/uniform_heat_equation.cpp"). 
+As mentioned in the introduction, ddc is a library that offers strongly typed indexing. Chunks contain data that can be located in space by coordinates. Thus, to access the data at a specific point in a 2D space, instead of entering two integers corresponding to the x and y positions, ddc requires entering the  coordinate `x` as a discrete element of the x position: `ddc::DiscreteElement<DDimX>`, and entering the `y` coordinate as a discrete element following the y dimension: `ddc::DiscreteElement<DDimY>`. This is done after predefining a strong typing for the discretized `X` dimension as `DDimX` and a strong typing for the discretized `Y` dimension as `DDimY` (see the heat equation example \subpage uniform_heat_equation "examples/uniform_heat_equation.cpp"). 
 
 Note that swapping the `ddc::DiscreteElement<DDimX>` and `ddc::DiscreteElement<DDimY>` indices when calling the chunkspan does not affect the correctness of the code; the result remains the same.
 
-## ddc::DiscreteElement and ddc::DiscreteVector
+## DDC::DiscreteElement and DDC::DiscreteVector
 
-Let's continue with our previous example of a 2D grid labeled along two dimensions labeled as DDimX and DDimY. In the previous paragraph, we discussed how `DDC::DiscreteElement` could be used to obtain a physical value at a point on the 2D grid. 
+### DDC::DiscreteElement
+Let's continue with our previous example of a 2D grid labeled along two discretized dimensions labeled as `DDimX` and `DDimY`. In the previous paragraph, we discussed how `DDC::DiscreteElement` could be used as indices to have access to a physical value at a precised point on the 2D grid. 
 
-More precisely, a discreteElement is a C++ variable that carries the strong type of the dimension in which it is defined. Let's return to our example by defining a variable `y` as follows:
+More precisely, a DDC::DiscreteElement` is a C++ variable that carries the strong type of the dimension in which it is defined. Let's return to our example by defining a variable `y` as follows:
 
 ```cpp
 DDC::DiscreteElement<DDimY> y(0);
@@ -34,13 +35,15 @@ DDC::DiscreteElement<DDimY> y(0);
 
 The variable `y` carries the strong typing of the ordinate dimension DDimY and corresponds to the first point along the `Y` dimension.
 
-Moreover, `DDC::DiscreteElement` are very useful for another reason. If we take the example of a classic container in C++, let's say we want to access the element (i,j) of this container, we would do it like this:
+Moreover, `DDC::DiscreteElement` are very useful for another reason. If we take the example of a classic container in C++, let's say we want to access the element `(i,j)` of this container, we would do it like this:
 
 ```cpp
 container(i,j);
 ```
 
-Now, if we take a slice of this container and still want to access the same element (i,j) from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at 0. However, with DDC, this is not the case. If we take a slice of a chunkspan, accessing a `DDC::DiscreteElement` is the same between the slice and the original chunkspan because of the uniqueness of each discrete element on the grid.
+Now, if we take a slice of this container and still want to access the same element `(i,j)` from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at 0. However, with DDC, this is not the case. If we take a slice of a chunkspan, accessing a `DDC::DiscreteElement` is the same between the slice and the original chunkspan because of the uniqueness of each discrete element on the grid and because of the way we access data using DDC.
+
+### DDC::DiscreteVector
 
 A `DDC::DiscreteVector` corresponds to an integer that, like `DDC::DiscreteElement`, carries the strong typing of the dimension in which it is defined. For instance in the uniform heat equation example, defining the `DDC::DiscreteVector` `gwx` as follows: 
 

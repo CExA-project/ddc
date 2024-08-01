@@ -2,33 +2,81 @@
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
-<!DOCTYPE html>
-<html>
+<!-- HTML header for doxygen 1.9.8-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
-	<meta charset="UTF-8">
-	<meta name="generator" content="Doxygen 1.9.8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<title>DDC: discrete_element.hpp Source File</title>
-	<script type="text/javascript" src="jquery.js"></script>
-	<script type="text/javascript" src="dynsections.js"></script>
-	<script type="text/javascript" src="navtreedata.js"></script>
-	<script type="text/javascript" src="navtree.js"></script>
-	<link href="style.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>DDC: discrete_element.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeParagraphLink.init()
+</script>
 </head>
 <body>
-<div>
-<header id="titlearea">
-	<div id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></div>
-	<h1 id="projectname">DDC&nbsp;<span id="projectnumber">0.0.0</span></h1>
-	<h2 id="projectbrief">a <span class="acronym">d</span>iscrete <span class="acronym">d</span>omain <span class="acronym">c</span>omputation library</h2>
-</header>
-<nav id="tabs"><ul>
-	<li><a href="index.html">About</a>
-	<li><a href="first_steps.html">Commented example</a>
-	<li><a href="annotated.html">API reference</a>
-	<li id="gitlab-ribbon"><a rel="noopener" href="https://github.com/CExA-project/ddc" target="_blank">Contribute on Github</a></li>
-</ul></nav>
+<a href="https://github.com/CExA-project/ddc" class="github-corner" title="View source on GitHub" target="_blank" rel="noopener noreferrer">
+  <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+  <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></td>
+  <td id="projectalign">
+   <div id="projectname">DDC<span id="projectnumber">&#160;0.0.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
 <!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -46,6 +94,27 @@ $(document).ready(function(){initNavTree('discrete__element_8hpp_source.html',''
 /* @license-end */
 </script>
 <div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
 <div class="header">
   <div class="headertitle"><div class="title">discrete_element.hpp</div></div>
 </div><!--header-->
@@ -480,55 +549,63 @@ $(document).ready(function(){initNavTree('discrete__element_8hpp_source.html',''
 <div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>}</div>
 <div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span> </div>
 <div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>} <span class="comment">// namespace ddc</span></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a007c9d9195f696a869211412d61c6b64"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a007c9d9195f696a869211412d61c6b64">ddc::DiscreteElement::operator+=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator+=(DiscreteVector&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:266</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a137ec8ab82fce4d40d7f763c0f277586"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a137ec8ab82fce4d40d7f763c0f277586">ddc::DiscreteElement::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr value_type const &amp; uid() const noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:216</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a1cf25c7978e4e81cb194966f7a7ae154"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a1cf25c7978e4e81cb194966f7a7ae154">ddc::DiscreteElement::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr value_type &amp; uid() noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:208</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a007c9d9195f696a869211412d61c6b64"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a007c9d9195f696a869211412d61c6b64">ddc::DiscreteElement::operator+=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator+=(DiscreteVector&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00266">discrete_element.hpp:266</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a137ec8ab82fce4d40d7f763c0f277586"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a137ec8ab82fce4d40d7f763c0f277586">ddc::DiscreteElement::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr value_type const &amp; uid() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00216">discrete_element.hpp:216</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a1cf25c7978e4e81cb194966f7a7ae154"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a1cf25c7978e4e81cb194966f7a7ae154">ddc::DiscreteElement::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr value_type &amp; uid() noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00208">discrete_element.hpp:208</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_a293505e9414c9901ecfecd6bb8cac68b"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a293505e9414c9901ecfecd6bb8cac68b">ddc::DiscreteElement::~DiscreteElement</a></div><div class="ttdeci">KOKKOS_DEFAULTED_FUNCTION ~DiscreteElement()=default</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a33e19ad055b6ca5af999b767d203ac51"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a33e19ad055b6ca5af999b767d203ac51">ddc::DiscreteElement::operator++</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator++()</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:236</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a61eaa26a89abdb43b42d105b2e064a45"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a61eaa26a89abdb43b42d105b2e064a45">ddc::DiscreteElement::operator-=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator-=(IntegralType const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:297</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a33e19ad055b6ca5af999b767d203ac51"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a33e19ad055b6ca5af999b767d203ac51">ddc::DiscreteElement::operator++</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator++()</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00236">discrete_element.hpp:236</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a61eaa26a89abdb43b42d105b2e064a45"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a61eaa26a89abdb43b42d105b2e064a45">ddc::DiscreteElement::operator-=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator-=(IntegralType const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00297">discrete_element.hpp:297</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_a6e9396f1eb1143642d65de2088ad4c76"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a6e9396f1eb1143642d65de2088ad4c76">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteElement(DiscreteElement const &amp;)=default</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a89e6f84fc49cf4431e78c8ff2604ebb1"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a89e6f84fc49cf4431e78c8ff2604ebb1">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement(DElems const &amp;... delems) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:174</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a9a2d95d083a799eb040613934cf4fdd1"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a9a2d95d083a799eb040613934cf4fdd1">ddc::DiscreteElement::uid_or</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr value_type const &amp; uid_or(value_type const &amp;default_value) const &amp;</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:196</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_aa71d92c781018fab8d3892ae3d33d5b3"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#aa71d92c781018fab8d3892ae3d33d5b3">ddc::DiscreteElement::operator-=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator-=(DiscreteVector&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:285</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_aac565f20f0009355b71a21bb6fc3a986"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#aac565f20f0009355b71a21bb6fc3a986">ddc::DiscreteElement::operator++</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement operator++(int)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:243</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a89e6f84fc49cf4431e78c8ff2604ebb1"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a89e6f84fc49cf4431e78c8ff2604ebb1">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement(DElems const &amp;... delems) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00174">discrete_element.hpp:174</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_a9a2d95d083a799eb040613934cf4fdd1"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#a9a2d95d083a799eb040613934cf4fdd1">ddc::DiscreteElement::uid_or</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr value_type const &amp; uid_or(value_type const &amp;default_value) const &amp;</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00196">discrete_element.hpp:196</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_aa71d92c781018fab8d3892ae3d33d5b3"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#aa71d92c781018fab8d3892ae3d33d5b3">ddc::DiscreteElement::operator-=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator-=(DiscreteVector&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00285">discrete_element.hpp:285</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_aac565f20f0009355b71a21bb6fc3a986"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#aac565f20f0009355b71a21bb6fc3a986">ddc::DiscreteElement::operator++</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement operator++(int)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00243">discrete_element.hpp:243</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_aae48d441289e8e21b6584903647e9c77"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteElement()=default</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_ab533db0b0ab061b8359a1f4e2324ef54"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#ab533db0b0ab061b8359a1f4e2324ef54">ddc::DiscreteElement::operator--</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator--()</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:251</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_ab533db0b0ab061b8359a1f4e2324ef54"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#ab533db0b0ab061b8359a1f4e2324ef54">ddc::DiscreteElement::operator--</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator--()</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00251">discrete_element.hpp:251</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_ab5ff44dfae4fc04a643937cb85fc5d58"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#ab5ff44dfae4fc04a643937cb85fc5d58">ddc::DiscreteElement::operator=</a></div><div class="ttdeci">KOKKOS_DEFAULTED_FUNCTION DiscreteElement &amp; operator=(DiscreteElement const &amp;other)=default</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_abcf6b3701328026e906d1a83c79c58a1"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#abcf6b3701328026e906d1a83c79c58a1">ddc::DiscreteElement::operator--</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement operator--(int)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:258</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_ac40188cb36135f8260b73696f3ee7242"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#ac40188cb36135f8260b73696f3ee7242">ddc::DiscreteElement::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr std::enable_if_t&lt; N==1, value_type &amp; &gt; uid() noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:224</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_acfcb7133c4b379df9968af2d80990f0b"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#acfcb7133c4b379df9968af2d80990f0b">ddc::DiscreteElement::size</a></div><div class="ttdeci">static KOKKOS_FUNCTION constexpr std::size_t size() noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:161</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_ae99e00a72ea441716e17a5eaa3a7c65f"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#ae99e00a72ea441716e17a5eaa3a7c65f">ddc::DiscreteElement::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr std::enable_if_t&lt; N==1, value_type const &amp; &gt; uid() const noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:230</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_aec1567e396078845090cdd796b2c24c7"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#aec1567e396078845090cdd796b2c24c7">ddc::DiscreteElement::operator+=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator+=(IntegralType const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:278</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_abcf6b3701328026e906d1a83c79c58a1"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#abcf6b3701328026e906d1a83c79c58a1">ddc::DiscreteElement::operator--</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement operator--(int)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00258">discrete_element.hpp:258</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_ac40188cb36135f8260b73696f3ee7242"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#ac40188cb36135f8260b73696f3ee7242">ddc::DiscreteElement::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr std::enable_if_t&lt; N==1, value_type &amp; &gt; uid() noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00224">discrete_element.hpp:224</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_acfcb7133c4b379df9968af2d80990f0b"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#acfcb7133c4b379df9968af2d80990f0b">ddc::DiscreteElement::size</a></div><div class="ttdeci">static KOKKOS_FUNCTION constexpr std::size_t size() noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00161">discrete_element.hpp:161</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_ae99e00a72ea441716e17a5eaa3a7c65f"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#ae99e00a72ea441716e17a5eaa3a7c65f">ddc::DiscreteElement::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr std::enable_if_t&lt; N==1, value_type const &amp; &gt; uid() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00230">discrete_element.hpp:230</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_aec1567e396078845090cdd796b2c24c7"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#aec1567e396078845090cdd796b2c24c7">ddc::DiscreteElement::operator+=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement &amp; operator+=(IntegralType const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00278">discrete_element.hpp:278</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_af482b2025b8acab47b16dd381471bc2d"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#af482b2025b8acab47b16dd381471bc2d">ddc::DiscreteElement::operator=</a></div><div class="ttdeci">KOKKOS_DEFAULTED_FUNCTION DiscreteElement &amp; operator=(DiscreteElement &amp;&amp;other)=default</div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_af6776e89752caf2077e70f690502a5e5"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#af6776e89752caf2077e70f690502a5e5">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement(Params const &amp;... params) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:184</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html_af6776e89752caf2077e70f690502a5e5"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#af6776e89752caf2077e70f690502a5e5">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement(Params const &amp;... params) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00184">discrete_element.hpp:184</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html_af7be21f66a058dedbbb16898529357ed"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#af7be21f66a058dedbbb16898529357ed">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteElement(DiscreteElement &amp;&amp;)=default</div></div>
-<div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> aligned_allocator.hpp:11</div></div>
-<div class="ttc" id="anamespaceddc_html_a034e95457849b21c45287576bcbe7222"><div class="ttname"><a href="namespaceddc.html#a034e95457849b21c45287576bcbe7222">ddc::operator&lt;</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator&lt;(DiscreteElement&lt; Tag &gt; const &amp;lhs, DiscreteElement&lt; Tag &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:338</div></div>
-<div class="ttc" id="anamespaceddc_html_a136cae73704e0e5a7c4007c36b52069f"><div class="ttname"><a href="namespaceddc.html#a136cae73704e0e5a7c4007c36b52069f">ddc::uid_or</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElementType const &amp; uid_or(DiscreteElement&lt; Tags... &gt; const &amp;tuple, DiscreteElementType const &amp;default_value) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:76</div></div>
-<div class="ttc" id="anamespaceddc_html_a1493add32b8156d8a5dc132aa94b2bfd"><div class="ttname"><a href="namespaceddc.html#a1493add32b8156d8a5dc132aa94b2bfd">ddc::operator==</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator==(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteElement&lt; OTags... &gt; const &amp;rhs) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:322</div></div>
-<div class="ttc" id="anamespaceddc_html_a1689438d04166c36090bb438b8c0fea3"><div class="ttname"><a href="namespaceddc.html#a1689438d04166c36090bb438b8c0fea3">ddc::select</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; QueryTags... &gt; select(DiscreteElement&lt; Tags... &gt; &amp;&amp;arr) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:91</div></div>
-<div class="ttc" id="anamespaceddc_html_a1db25c408e39437a0f9314809001d92f"><div class="ttname"><a href="namespaceddc.html#a1db25c408e39437a0f9314809001d92f">ddc::select</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; QueryTags... &gt; select(DiscreteElement&lt; Tags... &gt; const &amp;arr) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:84</div></div>
-<div class="ttc" id="anamespaceddc_html_a39f234f0f9635b7c542f7f2abc5221b9"><div class="ttname"><a href="namespaceddc.html#a39f234f0f9635b7c542f7f2abc5221b9">ddc::take</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr auto const &amp; take(HeadDElem const &amp;head, TailDElems const &amp;... tail)</div><div class="ttdoc">Returns a reference towards the DiscreteElement that contains the QueryTag.</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:105</div></div>
-<div class="ttc" id="anamespaceddc_html_a4a2fc8ce660318bd042ba52e917851a7"><div class="ttname"><a href="namespaceddc.html#a4a2fc8ce660318bd042ba52e917851a7">ddc::operator-</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; Tag &gt; operator-(DiscreteElement&lt; Tag &gt; const &amp;lhs, IntegralType const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:412</div></div>
-<div class="ttc" id="anamespaceddc_html_a55329c09ef34e180c2a4dc5d59e876fb"><div class="ttname"><a href="namespaceddc.html#a55329c09ef34e180c2a4dc5d59e876fb">ddc::operator-</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteVector&lt; Tags... &gt; operator-(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteElement&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdoc">binary operator: -</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:422</div></div>
-<div class="ttc" id="anamespaceddc_html_a70f6a7634ef3f77720ba76b015de2008"><div class="ttname"><a href="namespaceddc.html#a70f6a7634ef3f77720ba76b015de2008">ddc::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElementType const &amp; uid(DiscreteElement&lt; Tag &gt; const &amp;tuple) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:51</div></div>
-<div class="ttc" id="anamespaceddc_html_a7123be229effc95925eb3e4ccae71f0e"><div class="ttname"><a href="namespaceddc.html#a7123be229effc95925eb3e4ccae71f0e">ddc::operator+</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; Tags... &gt; operator+(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteVector&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdoc">right external binary operators: +, -</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:372</div></div>
-<div class="ttc" id="anamespaceddc_html_a7b38d024576fa519079635817d26c2a7"><div class="ttname"><a href="namespaceddc.html#a7b38d024576fa519079635817d26c2a7">ddc::is_discrete_element_v</a></div><div class="ttdeci">constexpr bool is_discrete_element_v</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:33</div></div>
-<div class="ttc" id="anamespaceddc_html_a8d453b6dc3ccccf7dfa48efb229b228c"><div class="ttname"><a href="namespaceddc.html#a8d453b6dc3ccccf7dfa48efb229b228c">ddc::operator&gt;=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator&gt;=(DiscreteElement&lt; Tag &gt; const &amp;lhs, DiscreteElement&lt; Tag &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:362</div></div>
-<div class="ttc" id="anamespaceddc_html_a94c629e9b48bb50b8e6ea9dd28448731"><div class="ttname"><a href="namespaceddc.html#a94c629e9b48bb50b8e6ea9dd28448731">ddc::operator&lt;=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator&lt;=(DiscreteElement&lt; Tag &gt; const &amp;lhs, DiscreteElement&lt; Tag &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:346</div></div>
-<div class="ttc" id="anamespaceddc_html_a9a4cd62d6f8f234732cf71afa0859f09"><div class="ttname"><a href="namespaceddc.html#a9a4cd62d6f8f234732cf71afa0859f09">ddc::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElementType &amp; uid(DiscreteElement&lt; Tags... &gt; &amp;tuple) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:70</div></div>
-<div class="ttc" id="anamespaceddc_html_ab7aea0ab57b0bf8f428bc92115b3149a"><div class="ttname"><a href="namespaceddc.html#ab7aea0ab57b0bf8f428bc92115b3149a">ddc::operator&gt;</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator&gt;(DiscreteElement&lt; Tag &gt; const &amp;lhs, DiscreteElement&lt; Tag &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:354</div></div>
-<div class="ttc" id="anamespaceddc_html_abe5de511997e3b4c086403f81ddee0c8"><div class="ttname"><a href="namespaceddc.html#abe5de511997e3b4c086403f81ddee0c8">ddc::operator+</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; Tag &gt; operator+(DiscreteElement&lt; Tag &gt; const &amp;lhs, IntegralType const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:388</div></div>
-<div class="ttc" id="anamespaceddc_html_abfeecbd05212f790cbdd85181f01c59e"><div class="ttname"><a href="namespaceddc.html#abfeecbd05212f790cbdd85181f01c59e">ddc::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElementType &amp; uid(DiscreteElement&lt; Tag &gt; &amp;tuple) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:57</div></div>
-<div class="ttc" id="anamespaceddc_html_acfd0276ca45dc3e36fd03fff4a7d5b02"><div class="ttname"><a href="namespaceddc.html#acfd0276ca45dc3e36fd03fff4a7d5b02">ddc::operator-</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; Tags... &gt; operator-(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteVector&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:396</div></div>
-<div class="ttc" id="anamespaceddc_html_ad055e25ad4b426fad4ea6b650e000755"><div class="ttname"><a href="namespaceddc.html#ad055e25ad4b426fad4ea6b650e000755">ddc::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElementType const &amp; uid(DiscreteElement&lt; Tags... &gt; const &amp;tuple) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:63</div></div>
-<div class="ttc" id="anamespaceddc_html_af71143b67a010f2229acda8c9a66e21e"><div class="ttname"><a href="namespaceddc.html#af71143b67a010f2229acda8c9a66e21e">ddc::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteElement&lt; OTags... &gt; const &amp;rhs) noexcept</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:330</div></div>
-<div class="ttc" id="astructddc_1_1is__discrete__element_html"><div class="ttname"><a href="structddc_1_1is__discrete__element.html">ddc::is_discrete_element</a></div><div class="ttdef"><b>Definition</b> discrete_element.hpp:24</div></div>
+<div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a034e95457849b21c45287576bcbe7222"><div class="ttname"><a href="namespaceddc.html#a034e95457849b21c45287576bcbe7222">ddc::operator&lt;</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator&lt;(DiscreteElement&lt; Tag &gt; const &amp;lhs, DiscreteElement&lt; Tag &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00338">discrete_element.hpp:338</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a136cae73704e0e5a7c4007c36b52069f"><div class="ttname"><a href="namespaceddc.html#a136cae73704e0e5a7c4007c36b52069f">ddc::uid_or</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElementType const &amp; uid_or(DiscreteElement&lt; Tags... &gt; const &amp;tuple, DiscreteElementType const &amp;default_value) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00076">discrete_element.hpp:76</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a1493add32b8156d8a5dc132aa94b2bfd"><div class="ttname"><a href="namespaceddc.html#a1493add32b8156d8a5dc132aa94b2bfd">ddc::operator==</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator==(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteElement&lt; OTags... &gt; const &amp;rhs) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00322">discrete_element.hpp:322</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a1689438d04166c36090bb438b8c0fea3"><div class="ttname"><a href="namespaceddc.html#a1689438d04166c36090bb438b8c0fea3">ddc::select</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; QueryTags... &gt; select(DiscreteElement&lt; Tags... &gt; &amp;&amp;arr) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00091">discrete_element.hpp:91</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a1db25c408e39437a0f9314809001d92f"><div class="ttname"><a href="namespaceddc.html#a1db25c408e39437a0f9314809001d92f">ddc::select</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; QueryTags... &gt; select(DiscreteElement&lt; Tags... &gt; const &amp;arr) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00084">discrete_element.hpp:84</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a39f234f0f9635b7c542f7f2abc5221b9"><div class="ttname"><a href="namespaceddc.html#a39f234f0f9635b7c542f7f2abc5221b9">ddc::take</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr auto const &amp; take(HeadDElem const &amp;head, TailDElems const &amp;... tail)</div><div class="ttdoc">Returns a reference towards the DiscreteElement that contains the QueryTag.</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00105">discrete_element.hpp:105</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a4a2fc8ce660318bd042ba52e917851a7"><div class="ttname"><a href="namespaceddc.html#a4a2fc8ce660318bd042ba52e917851a7">ddc::operator-</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; Tag &gt; operator-(DiscreteElement&lt; Tag &gt; const &amp;lhs, IntegralType const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00412">discrete_element.hpp:412</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a55329c09ef34e180c2a4dc5d59e876fb"><div class="ttname"><a href="namespaceddc.html#a55329c09ef34e180c2a4dc5d59e876fb">ddc::operator-</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteVector&lt; Tags... &gt; operator-(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteElement&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdoc">binary operator: -</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00422">discrete_element.hpp:422</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a70f6a7634ef3f77720ba76b015de2008"><div class="ttname"><a href="namespaceddc.html#a70f6a7634ef3f77720ba76b015de2008">ddc::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElementType const &amp; uid(DiscreteElement&lt; Tag &gt; const &amp;tuple) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00051">discrete_element.hpp:51</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a7123be229effc95925eb3e4ccae71f0e"><div class="ttname"><a href="namespaceddc.html#a7123be229effc95925eb3e4ccae71f0e">ddc::operator+</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; Tags... &gt; operator+(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteVector&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdoc">right external binary operators: +, -</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00372">discrete_element.hpp:372</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a7b38d024576fa519079635817d26c2a7"><div class="ttname"><a href="namespaceddc.html#a7b38d024576fa519079635817d26c2a7">ddc::is_discrete_element_v</a></div><div class="ttdeci">constexpr bool is_discrete_element_v</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00033">discrete_element.hpp:33</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a8d453b6dc3ccccf7dfa48efb229b228c"><div class="ttname"><a href="namespaceddc.html#a8d453b6dc3ccccf7dfa48efb229b228c">ddc::operator&gt;=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator&gt;=(DiscreteElement&lt; Tag &gt; const &amp;lhs, DiscreteElement&lt; Tag &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00362">discrete_element.hpp:362</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a94c629e9b48bb50b8e6ea9dd28448731"><div class="ttname"><a href="namespaceddc.html#a94c629e9b48bb50b8e6ea9dd28448731">ddc::operator&lt;=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator&lt;=(DiscreteElement&lt; Tag &gt; const &amp;lhs, DiscreteElement&lt; Tag &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00346">discrete_element.hpp:346</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a9a4cd62d6f8f234732cf71afa0859f09"><div class="ttname"><a href="namespaceddc.html#a9a4cd62d6f8f234732cf71afa0859f09">ddc::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElementType &amp; uid(DiscreteElement&lt; Tags... &gt; &amp;tuple) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00070">discrete_element.hpp:70</a></div></div>
+<div class="ttc" id="anamespaceddc_html_ab7aea0ab57b0bf8f428bc92115b3149a"><div class="ttname"><a href="namespaceddc.html#ab7aea0ab57b0bf8f428bc92115b3149a">ddc::operator&gt;</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator&gt;(DiscreteElement&lt; Tag &gt; const &amp;lhs, DiscreteElement&lt; Tag &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00354">discrete_element.hpp:354</a></div></div>
+<div class="ttc" id="anamespaceddc_html_abe5de511997e3b4c086403f81ddee0c8"><div class="ttname"><a href="namespaceddc.html#abe5de511997e3b4c086403f81ddee0c8">ddc::operator+</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; Tag &gt; operator+(DiscreteElement&lt; Tag &gt; const &amp;lhs, IntegralType const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00388">discrete_element.hpp:388</a></div></div>
+<div class="ttc" id="anamespaceddc_html_abfeecbd05212f790cbdd85181f01c59e"><div class="ttname"><a href="namespaceddc.html#abfeecbd05212f790cbdd85181f01c59e">ddc::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElementType &amp; uid(DiscreteElement&lt; Tag &gt; &amp;tuple) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00057">discrete_element.hpp:57</a></div></div>
+<div class="ttc" id="anamespaceddc_html_acfd0276ca45dc3e36fd03fff4a7d5b02"><div class="ttname"><a href="namespaceddc.html#acfd0276ca45dc3e36fd03fff4a7d5b02">ddc::operator-</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElement&lt; Tags... &gt; operator-(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteVector&lt; OTags... &gt; const &amp;rhs)</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00396">discrete_element.hpp:396</a></div></div>
+<div class="ttc" id="anamespaceddc_html_ad055e25ad4b426fad4ea6b650e000755"><div class="ttname"><a href="namespaceddc.html#ad055e25ad4b426fad4ea6b650e000755">ddc::uid</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr DiscreteElementType const &amp; uid(DiscreteElement&lt; Tags... &gt; const &amp;tuple) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00063">discrete_element.hpp:63</a></div></div>
+<div class="ttc" id="anamespaceddc_html_af71143b67a010f2229acda8c9a66e21e"><div class="ttname"><a href="namespaceddc.html#af71143b67a010f2229acda8c9a66e21e">ddc::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteElement&lt; Tags... &gt; const &amp;lhs, DiscreteElement&lt; OTags... &gt; const &amp;rhs) noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00330">discrete_element.hpp:330</a></div></div>
+<div class="ttc" id="astructddc_1_1is__discrete__element_html"><div class="ttname"><a href="structddc_1_1is__discrete__element.html">ddc::is_discrete_element</a></div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00023">discrete_element.hpp:24</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!--
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
+<!-- HTML footer for doxygen 1.9.8-->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_5207078cb8d41128e6db12b03ca44199.html">ddc</a></li><li class="navelem"><b>discrete_element.hpp</b></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
 </body>
 </html>

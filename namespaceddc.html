@@ -2,33 +2,76 @@
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
-<!DOCTYPE html>
-<html>
+<!-- HTML header for doxygen 1.9.8-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
-	<meta charset="UTF-8">
-	<meta name="generator" content="Doxygen 1.9.8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<title>DDC: ddc Namespace Reference</title>
-	<script type="text/javascript" src="jquery.js"></script>
-	<script type="text/javascript" src="dynsections.js"></script>
-	<script type="text/javascript" src="navtreedata.js"></script>
-	<script type="text/javascript" src="navtree.js"></script>
-	<link href="style.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>DDC: ddc Namespace Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeParagraphLink.init()
+</script>
 </head>
 <body>
-<div>
-<header id="titlearea">
-	<div id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></div>
-	<h1 id="projectname">DDC&nbsp;<span id="projectnumber">0.0.0</span></h1>
-	<h2 id="projectbrief">a <span class="acronym">d</span>iscrete <span class="acronym">d</span>omain <span class="acronym">c</span>omputation library</h2>
-</header>
-<nav id="tabs"><ul>
-	<li><a href="index.html">About</a>
-	<li><a href="first_steps.html">Commented example</a>
-	<li><a href="annotated.html">API reference</a>
-	<li id="gitlab-ribbon"><a rel="noopener" href="https://github.com/CExA-project/ddc" target="_blank">Contribute on Github</a></li>
-</ul></nav>
+<a href="https://github.com/CExA-project/ddc" class="github-corner" title="View source on GitHub" target="_blank" rel="noopener noreferrer">
+  <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+  <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></td>
+  <td id="projectalign">
+   <div id="projectname">DDC<span id="projectnumber">&#160;0.0.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
 <!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -46,6 +89,27 @@ $(document).ready(function(){initNavTree('namespaceddc.html',''); initResizable(
 /* @license-end */
 </script>
 <div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
@@ -162,7 +226,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1NonUniformBsplinesKnots.html">NonUniformBsplinesKnots</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformPointSampling.html">NonUniformPointSampling</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non-uniform discretization of the CDim segment .">NonUniformPointSampling</a></code> models a non-uniform discretization of the <code>CDim</code> segment <picture><source srcset="form_9_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$[a, b]$" src="form_9.png" width="24" height="14"/></picture>.  <a href="classddc_1_1NonUniformPointSampling.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non-uniform discretization of the CDim segment .">NonUniformPointSampling</a></code> models a non-uniform discretization of the <code>CDim</code> segment <img class="formulaInl" alt="$[a, b]$" src="form_9.png" width="24" height="14"/>.  <a href="classddc_1_1NonUniformPointSampling.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1NullExtrapolationRule.html">NullExtrapolationRule</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A functor describing a null extrapolation boundary value for 1D spline evaluator.  <a href="structddc_1_1NullExtrapolationRule.html#details">More...</a><br /></td></tr>
@@ -761,7 +825,17 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename... DDom&gt;<br />
-struct ddc::cartesian_prod&lt; DDom &gt;</div></div>
+struct ddc::cartesian_prod&lt; DDom &gt;</div>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00397">397</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::cartesian_prod&lt; DDom &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1cartesian__prod__coll__graph.png" border="0" usemap="#addc_1_1cartesian__prod_3_01DDom_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1cartesian__prod_3_01DDom_01_4_coll__map" id="addc_1_1cartesian__prod_3_01DDom_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="5,5,147,85"/>
+</map>
+</div>
+
 </div>
 </div>
 <a name="structddc_1_1cartesian__prod_3_01ddc_1_1DiscreteDomain_3_01DDim1_8_8_8_01_4_00_01ddc_1_1Discrete74c011d44ff586684f50f3f3d6d191c1" id="structddc_1_1cartesian__prod_3_01ddc_1_1DiscreteDomain_3_01DDim1_8_8_8_01_4_00_01ddc_1_1Discrete74c011d44ff586684f50f3f3d6d191c1"></a>
@@ -776,7 +850,17 @@ struct ddc::cartesian_prod&lt; DDom &gt;</div></div>
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename... DDim1, typename... DDim2&gt;<br />
-struct ddc::cartesian_prod&lt; ddc::DiscreteDomain&lt; DDim1... &gt;, ddc::DiscreteDomain&lt; DDim2... &gt; &gt;</div></div><table class="fieldtable">
+struct ddc::cartesian_prod&lt; ddc::DiscreteDomain&lt; DDim1... &gt;, ddc::DiscreteDomain&lt; DDim2... &gt; &gt;</div>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00400">400</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::cartesian_prod&lt; ddc::DiscreteDomain&lt; DDim1... &gt;, ddc::DiscreteDomain&lt; DDim2... &gt; &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1cartesian__prod_3_01ddc_1_1DiscreteDomain_3_01DDim1_8_8_8_01_4_00_01ddc_1_1Discretec41e48707ee990d7da3cb28ef1a292b7.png" border="0" usemap="#addc_1_1cartesian__prod_3_01ddc_1_1DiscreteDomain_3_01DDim1_8_8_8_01_4_00_01ddc_1_1DiscreteDomain_3_01DDim2_8_8_8_01_4_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1cartesian__prod_3_01ddc_1_1DiscreteDomain_3_01DDim1_8_8_8_01_4_00_01ddc_1_1DiscreteDomain_3_01DDim2_8_8_8_01_4_01_4_coll__map" id="addc_1_1cartesian__prod_3_01ddc_1_1DiscreteDomain_3_01DDim1_8_8_8_01_4_00_01ddc_1_1DiscreteDomain_3_01DDim2_8_8_8_01_4_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="5,5,251,115"/>
+</map>
+</div>
+<table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
 <a id="af73f6db5a745d3101bdf2293dba87b37" name="af73f6db5a745d3101bdf2293dba87b37"></a><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDim1..., DDim2... &gt;</td>
@@ -800,7 +884,17 @@ type</td>
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a>&gt;<br />
-struct ddc::cartesian_prod&lt; DDom &gt;</div></div><table class="fieldtable">
+struct ddc::cartesian_prod&lt; DDom &gt;</div>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00406">406</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::cartesian_prod&lt; DDom &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1cartesian__prod_3_01DDom_01_4__coll__graph.png" border="0" usemap="#addc_1_1cartesian__prod_3_01DDom_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1cartesian__prod_3_01DDom_01_4_coll__map" id="addc_1_1cartesian__prod_3_01DDom_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="5,5,147,85"/>
+</map>
+</div>
+<table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
 <a id="ad27f45492cb0fc1414012b4f0a0645ae" name="ad27f45492cb0fc1414012b4f0a0645ae"></a><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a></td>
@@ -824,7 +918,17 @@ type</td>
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom2</a>, typename... Tail&gt;<br />
-struct ddc::cartesian_prod&lt; DDom1, DDom2, Tail... &gt;</div></div><table class="fieldtable">
+struct ddc::cartesian_prod&lt; DDom1, DDom2, Tail... &gt;</div>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00412">412</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::cartesian_prod&lt; DDom1, DDom2, Tail... &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1cartesian__prod_3_01DDom1_00_01DDom2_00_01Tail_8_8_8_01_4__coll__graph.png" border="0" usemap="#addc_1_1cartesian__prod_3_01DDom1_00_01DDom2_00_01Tail_8_8_8_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1cartesian__prod_3_01DDom1_00_01DDom2_00_01Tail_8_8_8_01_4_coll__map" id="addc_1_1cartesian__prod_3_01DDom1_00_01DDom2_00_01Tail_8_8_8_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="5,5,197,85"/>
+</map>
+</div>
+<table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
 <a id="a3ad8a026ea5e94265c21b2387e291777" name="a3ad8a026ea5e94265c21b2387e291777"></a><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a3ad8a026ea5e94265c21b2387e291777">type</a>, Tail... &gt;::type</td>
@@ -848,7 +952,17 @@ type</td>
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Allocator</a> = HostAllocator&lt;ElementType&gt;&gt;<br />
-class ddc::Chunk&lt; ElementType, class, Allocator &gt;</div></div>
+class ddc::Chunk&lt; ElementType, class, Allocator &gt;</div>
+<p class="definition">Definition at line <a class="el" href="chunk_8hpp_source.html#l00021">21</a> of file <a class="el" href="chunk_8hpp_source.html">chunk.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::Chunk&lt; ElementType, class, Allocator &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classddc_1_1Chunk__coll__graph.png" border="0" usemap="#addc_1_1Chunk_3_01ElementType_00_01class_00_01Allocator_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1Chunk_3_01ElementType_00_01class_00_01Allocator_01_4_coll__map" id="addc_1_1Chunk_3_01ElementType_00_01class_00_01Allocator_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="5,5,195,85"/>
+</map>
+</div>
+
 </div>
 </div>
 <a name="structddc_1_1chunk__traits" id="structddc_1_1chunk__traits"></a>
@@ -863,7 +977,17 @@ class ddc::Chunk&lt; ElementType, class, Allocator &gt;</div></div>
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> T&gt;<br />
-struct ddc::chunk_traits&lt; T &gt;</div></div><table class="fieldtable">
+struct ddc::chunk_traits&lt; T &gt;</div>
+<p class="definition">Definition at line <a class="el" href="chunk__traits_8hpp_source.html#l00027">27</a> of file <a class="el" href="chunk__traits_8hpp_source.html">chunk_traits.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::chunk_traits&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1chunk__traits__coll__graph.png" border="0" usemap="#addc_1_1chunk__traits_3_01T_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1chunk__traits_3_01T_01_4_coll__map" id="addc_1_1chunk__traits_3_01T_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="5,5,168,71"/>
+</map>
+</div>
+<table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
 <a id="a48988abbf18f1cc701617a25b6714551" name="a48988abbf18f1cc701617a25b6714551"></a><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">remove_cv_t</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">remove_pointer_t</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">declval</a>&lt; T &gt;().data_handle())&gt; &gt;</td>
@@ -899,7 +1023,17 @@ reference_type</td>
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>&gt;<br />
-class ddc::ChunkCommon&lt; ElementType, SupportType, LayoutStridedPolicy &gt;</div></div>
+class ddc::ChunkCommon&lt; ElementType, SupportType, LayoutStridedPolicy &gt;</div>
+<p class="definition">Definition at line <a class="el" href="chunk__common_8hpp_source.html#l00034">34</a> of file <a class="el" href="chunk__common_8hpp_source.html">chunk_common.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::ChunkCommon&lt; ElementType, SupportType, LayoutStridedPolicy &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classddc_1_1ChunkCommon__coll__graph.png" border="0" usemap="#addc_1_1ChunkCommon_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1ChunkCommon_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_01_4_coll__map" id="addc_1_1ChunkCommon_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="5,5,236,100"/>
+</map>
+</div>
+
 </div>
 </div>
 <a name="classddc_1_1ChunkSpan" id="classddc_1_1ChunkSpan"></a>
@@ -914,7 +1048,17 @@ class ddc::ChunkCommon&lt; ElementType, SupportType, LayoutStridedPolicy &gt;</d
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> = std::experimental::layout_right, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> = Kokkos::DefaultHostExecutionSpace::memory_space&gt;<br />
-class ddc::ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt;</div></div>
+class ddc::ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt;</div>
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00030">30</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySpace &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classddc_1_1ChunkSpan__coll__graph.png" border="0" usemap="#addc_1_1ChunkSpan_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_00_01MemorySpace_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1ChunkSpan_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_00_01MemorySpace_01_4_coll__map" id="addc_1_1ChunkSpan_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_00_01MemorySpace_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="5,5,244,100"/>
+</map>
+</div>
+
 </div>
 </div>
 <a name="structddc_1_1ConstantExtrapolationRule" id="structddc_1_1ConstantExtrapolationRule"></a>
@@ -929,7 +1073,17 @@ class ddc::ChunkSpan&lt; ElementType, SupportType, LayoutStridedPolicy, MemorySp
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DimI</a>, class... Dim&gt;<br />
-struct ddc::ConstantExtrapolationRule&lt; DimI, Dim &gt;</div></div>
+struct ddc::ConstantExtrapolationRule&lt; DimI, Dim &gt;</div>
+<p class="definition">Definition at line <a class="el" href="constant__extrapolation__rule_8hpp_source.html#l00016">16</a> of file <a class="el" href="constant__extrapolation__rule_8hpp_source.html">constant_extrapolation_rule.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::ConstantExtrapolationRule&lt; DimI, Dim &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1ConstantExtrapolationRule__coll__graph.png" border="0" usemap="#addc_1_1ConstantExtrapolationRule_3_01DimI_00_01Dim_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1ConstantExtrapolationRule_3_01DimI_00_01Dim_01_4_coll__map" id="addc_1_1ConstantExtrapolationRule_3_01DimI_00_01Dim_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="5,5,196,85"/>
+</map>
+</div>
+
 </div>
 </div>
 <a name="structddc_1_1coordinate__of" id="structddc_1_1coordinate__of"></a>
@@ -944,7 +1098,17 @@ struct ddc::ConstantExtrapolationRule&lt; DimI, Dim &gt;</div></div>
       </table>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> T&gt;<br />
-struct ddc::coordinate_of&lt; T &gt;</div></div><table class="fieldtable">
+struct ddc::coordinate_of&lt; T &gt;</div>
+<p class="definition">Definition at line <a class="el" href="coordinate_8hpp_source.html#l00039">39</a> of file <a class="el" href="coordinate_8hpp_source.html">coordinate.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::coordinate_of&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1coordinate__of__coll__graph.png" border="0" usemap="#addc_1_1coordinate__of_3_01T_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1coordinate__of_3_01T_01_4_coll__map" id="addc_1_1coordinate__of_3_01T_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="5,5,177,71"/>
+</map>
+</div>
+<table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
 <a id="ab01ee23e93d0d4ad07d7c20596efe998" name="ab01ee23e93d0d4ad07d7c20596efe998"></a><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">coordinate</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">declval</a>&lt; T &gt;()))</td>
@@ -969,7 +1133,17 @@ type</td>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>&gt;<br />
 struct ddc::Deriv&lt; CDim &gt;</div><p>A templated struct representing a discrete dimension storing the derivatives of a function along a continuous dimension CDim. </p>
+
+<p class="definition">Definition at line <a class="el" href="deriv_8hpp_source.html#l00014">14</a> of file <a class="el" href="deriv_8hpp_source.html">deriv.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::Deriv&lt; CDim &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1Deriv__coll__graph.png" border="0" usemap="#addc_1_1Deriv_3_01CDim_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1Deriv_3_01CDim_01_4_coll__map" id="addc_1_1Deriv_3_01CDim_01_4_coll__map">
+<area shape="rect" title="A templated struct representing a discrete dimension storing the derivatives of a function along a co..." alt="" coords="5,5,152,71"/>
+</map>
 </div>
+
 </div>
 </div>
 <a name="structddc_1_1Fourier" id="structddc_1_1Fourier"></a>
@@ -991,7 +1165,17 @@ struct ddc::Fourier&lt; Dim &gt;</div><p>A templated tag representing a continuo
   </table>
   </dd>
 </dl>
+
+<p class="definition">Definition at line <a class="el" href="fft_8hpp_source.html#l00073">73</a> of file <a class="el" href="fft_8hpp_source.html">fft.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::Fourier&lt; Dim &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1Fourier__coll__graph.png" border="0" usemap="#addc_1_1Fourier_3_01Dim_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1Fourier_3_01Dim_01_4_coll__map" id="addc_1_1Fourier_3_01Dim_01_4_coll__map">
+<area shape="rect" title="A templated tag representing a continuous dimension in the Fourier space associated to the original c..." alt="" coords="5,5,152,71"/>
+</map>
 </div>
+
 </div>
 </div>
 <a name="structddc_1_1KnotDiscreteDimension" id="structddc_1_1KnotDiscreteDimension"></a>
@@ -1007,7 +1191,17 @@ struct ddc::Fourier&lt; Dim &gt;</div><p>A templated tag representing a continuo
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>&gt;<br />
 struct ddc::KnotDiscreteDimension&lt; DDim &gt;</div><p>If the type <code>DDim</code> is a B-spline, defines <code>type</code> to the discrete dimension of the associated knots. </p>
-</div><table class="fieldtable">
+
+<p class="definition">Definition at line <a class="el" href="knot__discrete__dimension__type_8hpp_source.html#l00014">14</a> of file <a class="el" href="knot__discrete__dimension__type_8hpp_source.html">knot_discrete_dimension_type.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::KnotDiscreteDimension&lt; DDim &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1KnotDiscreteDimension__coll__graph.png" border="0" usemap="#addc_1_1KnotDiscreteDimension_3_01DDim_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1KnotDiscreteDimension_3_01DDim_01_4_coll__map" id="addc_1_1KnotDiscreteDimension_3_01DDim_01_4_coll__map">
+<area shape="rect" title="If the type DDim is a B&#45;spline, defines type to the discrete dimension of the associated knots." alt="" coords="5,5,204,85"/>
+</map>
+</div>
+<table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
 <a id="aa4e7e9a6c69afc54243d97fce5629abc" name="aa4e7e9a6c69afc54243d97fce5629abc"></a><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">conditional_t</a>&lt; <a class="el" href="namespaceddc.html#a20d13e258d90b019d44b38be91885f35">is_uniform_bsplines_v</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="structddc_1_1NonUniformBsplinesKnots.html">NonUniformBsplinesKnots</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; &gt;</td>
@@ -1032,7 +1226,17 @@ The type representing the discrete dimension of the knots. </td></tr>
 </div><div class="memdoc">
 <div class="textblock"><p>A structure embedding the configuration of the exposed FFT function with the type of normalization. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="namespaceddc.html#a4949624204145ca2a0390c7b73a02480" title="Perform a direct Fast Fourier Transform.">fft</a>, <a class="el" href="namespaceddc.html#a17507ff514a63591f7e9e4822e1ebacc" title="Perform an inverse Fast Fourier Transform.">ifft</a> </dd></dl>
-</div><table class="fieldtable">
+
+<p class="definition">Definition at line <a class="el" href="fft_8hpp_source.html#l00697">697</a> of file <a class="el" href="fft_8hpp_source.html">fft.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::kwArgs_fft:</div>
+<div class="dyncontent">
+<div class="center"><img src="structddc_1_1kwArgs__fft__coll__graph.png" border="0" usemap="#addc_1_1kwArgs__fft_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1kwArgs__fft_coll__map" id="addc_1_1kwArgs__fft_coll__map">
+<area shape="rect" title="A structure embedding the configuration of the exposed FFT function with the type of normalization." alt="" coords="5,5,124,71"/>
+</map>
+</div>
+<table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
 <a id="a0d4f462ed7fb0849df1d424aace7910c" name="a0d4f462ed7fb0849df1d424aace7910c"></a><a class="el" href="namespaceddc.html#a5d5291156a65ec442dfcd7274f045631">FFT_Normalization</a></td>
@@ -1059,6 +1263,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00349">349</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+
 </div>
 </div>
 <a id="adb335346eb3412e07727f1097c76302b" name="adb335346eb3412e07727f1097c76302b"></a>
@@ -1074,6 +1280,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="chunk__traits_8hpp_source.html#l00037">37</a> of file <a class="el" href="chunk__traits_8hpp_source.html">chunk_traits.hpp</a>.</p>
 
 </div>
 </div>
@@ -1091,6 +1299,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="chunk__traits_8hpp_source.html#l00040">40</a> of file <a class="el" href="chunk__traits_8hpp_source.html">chunk_traits.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a4f36a871e49681abe05cc39604126187" name="a4f36a871e49681abe05cc39604126187"></a>
@@ -1107,6 +1317,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="chunk__traits_8hpp_source.html#l00043">43</a> of file <a class="el" href="chunk__traits_8hpp_source.html">chunk_traits.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a287fd69405cf97cad795bf3d70139928" name="a287fd69405cf97cad795bf3d70139928"></a>
@@ -1122,6 +1334,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>A CoordinateElement the type of the scalar used to represent elements of coordinates in the continuous space. </p>
+
+<p class="definition">Definition at line <a class="el" href="coordinate_8hpp_source.html#l00018">18</a> of file <a class="el" href="coordinate_8hpp_source.html">coordinate.hpp</a>.</p>
 
 </div>
 </div>
@@ -1142,6 +1356,8 @@ template&lt;class... CDims&gt; </div>
 <p>A Coordinate represents a coordinate in the continuous space. </p>
 <p>It is tagged by its dimensions. </p>
 
+<p class="definition">Definition at line <a class="el" href="coordinate_8hpp_source.html#l00026">26</a> of file <a class="el" href="coordinate_8hpp_source.html">coordinate.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a8c3f382fc669c87da3d57d3113b35e74" name="a8c3f382fc669c87da3d57d3113b35e74"></a>
@@ -1160,6 +1376,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>Helper type of <a class="el" href="namespaceddc.html#structddc_1_1coordinate__of">ddc::coordinate_of</a>. </p>
 
+<p class="definition">Definition at line <a class="el" href="coordinate_8hpp_source.html#l00047">47</a> of file <a class="el" href="coordinate_8hpp_source.html">coordinate.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a5e5b2c58c7353731413345f20685b444" name="a5e5b2c58c7353731413345f20685b444"></a>
@@ -1175,6 +1393,8 @@ template&lt;typename... DDom&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00419">419</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -1192,6 +1412,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00449">449</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a6c0bf8d3be70d27e359963ffc36bddd2" name="a6c0bf8d3be70d27e359963ffc36bddd2"></a>
@@ -1207,6 +1429,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00494">494</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -1224,6 +1448,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>A DiscreteCoordElement is a scalar that identifies an element of the discrete dimension. </p>
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00048">48</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ad6cf37f23e5e0fc7893bf8cb37bc1a7a" name="ad6cf37f23e5e0fc7893bf8cb37bc1a7a"></a>
@@ -1239,6 +1465,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>A DiscreteVectorElement is a scalar that represents the difference between two coordinates. </p>
+
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00049">49</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -1258,6 +1486,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>Helper type to easily access <code><a class="el" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension" title="If the type DDim is a B-spline, defines type to the discrete dimension of the associated knots.">KnotDiscreteDimension</a>&lt;DDim&gt;::type</code> </p>
 
+<p class="definition">Definition at line <a class="el" href="knot__discrete__dimension__type_8hpp_source.html#l00027">27</a> of file <a class="el" href="knot__discrete__dimension__type_8hpp_source.html">knot_discrete_dimension_type.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a68e6835d462fda368841ec8c17081079" name="a68e6835d462fda368841ec8c17081079"></a>
@@ -1273,6 +1503,8 @@ template&lt;std::size_t N, <a class="el" href="namespaceddc.html#a70f12a43ed0afb
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00097">97</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
 
 </div>
 </div>
@@ -1290,6 +1522,8 @@ template&lt;std::size_t N, <a class="el" href="namespaceddc.html#a70f12a43ed0afb
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00100">100</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a90a3ae31ee9a0b37dfd96a2d942b300f" name="a90a3ae31ee9a0b37dfd96a2d942b300f"></a>
@@ -1305,6 +1539,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00103">103</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
 
 </div>
 </div>
@@ -1322,6 +1558,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00106">106</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a59ac5cbb0122d8bb95169a746de09adb" name="a59ac5cbb0122d8bb95169a746de09adb"></a>
@@ -1337,6 +1575,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00109">109</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
 
 </div>
 </div>
@@ -1354,6 +1594,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00112">112</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a47eb1655f14f6e8e40ce0e7507754cbc" name="a47eb1655f14f6e8e40ce0e7507754cbc"></a>
@@ -1367,6 +1609,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00126">126</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
 
 </div>
 </div>
@@ -1382,6 +1626,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00128">128</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a469cf66eab1419498e8bf75da55fbba4" name="a469cf66eab1419498e8bf75da55fbba4"></a>
@@ -1395,6 +1641,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00130">130</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
 
 </div>
 </div>
@@ -1410,6 +1658,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00132">132</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a6d25bd494a9ce55560ce451ce6949ef3" name="a6d25bd494a9ce55560ce451ce6949ef3"></a>
@@ -1424,6 +1674,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00134">134</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a00b6b64dc679794345f02cf9de750aa3" name="a00b6b64dc679794345f02cf9de750aa3"></a>
@@ -1437,6 +1689,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00136">136</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
 
 </div>
 </div>
@@ -1454,6 +1708,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="kokkos__allocator_8hpp_source.html#l00080">80</a> of file <a class="el" href="kokkos__allocator_8hpp_source.html">kokkos_allocator.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a1eb87e589bae955cef6cd18cdc7826f3" name="a1eb87e589bae955cef6cd18cdc7826f3"></a>
@@ -1470,6 +1726,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="kokkos__allocator_8hpp_source.html#l00083">83</a> of file <a class="el" href="kokkos__allocator_8hpp_source.html">kokkos_allocator.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ab25c16a5ce1c3230941216a27acb684f" name="ab25c16a5ce1c3230941216a27acb684f"></a>
@@ -1483,6 +1741,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="real__type_8hpp_source.html#l00015">15</a> of file <a class="el" href="real__type_8hpp_source.html">real_type.hpp</a>.</p>
 
 </div>
 </div>
@@ -1515,6 +1775,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <tr><td class="fieldname"><a id="ae672eb355c3d1fa7de604e8bf6164853a6377b4908ae38f9a57fe9120cf179eb1" name="ae672eb355c3d1fa7de604e8bf6164853a6377b4908ae38f9a57fe9120cf179eb1"></a>BACKWARD&#160;</td><td class="fielddoc"><p>Backward, corresponds to inverse FFT up to normalization. </p>
 </td></tr>
 </table>
+
+<p class="definition">Definition at line <a class="el" href="fft_8hpp_source.html#l00080">80</a> of file <a class="el" href="fft_8hpp_source.html">fft.hpp</a>.</p>
 
 </div>
 </div>
@@ -1554,6 +1816,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </td></tr>
 </table>
 
+<p class="definition">Definition at line <a class="el" href="fft_8hpp_source.html#l00090">90</a> of file <a class="el" href="fft_8hpp_source.html">fft.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a28f4ae114fe8694bf78c0d761bc9744a" name="a28f4ae114fe8694bf78c0d761bc9744a"></a>
@@ -1587,6 +1851,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </td></tr>
 </table>
 
+<p class="definition">Definition at line <a class="el" href="spline__boundary__conditions_8hpp_source.html#l00015">15</a> of file <a class="el" href="spline__boundary__conditions_8hpp_source.html">spline_boundary_conditions.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a36c0210a850dde0979ad8b5772ee730c" name="a36c0210a850dde0979ad8b5772ee730c"></a>
@@ -1617,6 +1883,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <tr><td class="fieldname"><a id="a36c0210a850dde0979ad8b5772ee730ca7015270b41ffefb4e67d40c8bd451a4d" name="a36c0210a850dde0979ad8b5772ee730ca7015270b41ffefb4e67d40c8bd451a4d"></a>LAPACK&#160;</td><td class="fielddoc"><p>Enum member to identify the LAPACK-based solver (direct method) </p>
 </td></tr>
 </table>
+
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00024">24</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1657,6 +1925,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="aligned__allocator_8hpp_source.html#l00059">59</a> of file <a class="el" href="aligned__allocator_8hpp_source.html">aligned_allocator.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a1e2daade1cf2aa66fd6772beb01ac888" name="a1e2daade1cf2aa66fd6772beb01ac888"></a>
@@ -1694,6 +1964,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="aligned__allocator_8hpp_source.html#l00065">65</a> of file <a class="el" href="aligned__allocator_8hpp_source.html">aligned_allocator.hpp</a>.</p>
 
 </div>
 </div>
@@ -1798,6 +2070,8 @@ template&lt;class... QueryDDims, <a class="el" href="namespaceddc.html#a70f12a43
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the domain of view in the queried dimensions </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="chunk__common_8hpp_source.html#l00027">27</a> of file <a class="el" href="chunk__common_8hpp_source.html">chunk_common.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a25bdb64cb80790c6e3509834f159d65d" name="a25bdb64cb80790c6e3509834f159d65d"></a>
@@ -1848,6 +2122,8 @@ template&lt;class... DDim, std::enable_if_t&lt;(sizeof...(<a class="el" href="na
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="coordinate_8hpp_source.html#l00029">29</a> of file <a class="el" href="coordinate_8hpp_source.html">coordinate.hpp</a>.</p>
+
 </div>
 </div>
 <a id="af5a820cbfa67651ae082f77f446ed882" name="af5a820cbfa67651ae082f77f446ed882"></a>
@@ -1886,6 +2162,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Space::memory_space</code> memory space. </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00020">20</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a9acf5aabb0421518743fe6e8eb57abf2" name="a9acf5aabb0421518743fe6e8eb57abf2"></a>
@@ -1914,6 +2192,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Kokkos::HostSpace</code> memory space. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00039">39</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
 
 </div>
 </div>
@@ -1953,6 +2233,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Space::memory_space</code> memory space and operates a deep copy between the two. </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00048">48</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ae424d60fa2d297fc202f0dd5c4452d39" name="ae424d60fa2d297fc202f0dd5c4452d39"></a>
@@ -1981,6 +2263,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Kokkos::HostSpace</code> memory space and operates a deep copy between the two. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00067">67</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
 
 </div>
 </div>
@@ -2020,6 +2304,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If <code>MemorySpace</code> is accessible from <code>Space</code> then returns a copy of <code>src</code>, otherwise returns a <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Space::memory_space</code> memory space. </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00076">76</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a31cc1b0db51ba2264e09a5d51dc8f949" name="a31cc1b0db51ba2264e09a5d51dc8f949"></a>
@@ -2048,6 +2334,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If <code>Kokkos::HostSpace</code> is accessible from <code>Space</code> then returns a copy of <code>src</code>, otherwise returns a <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Kokkos::HostSpace</code> memory space. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00100">100</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
 
 </div>
 </div>
@@ -2087,6 +2375,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If <code>MemorySpace</code> is accessible from <code>Space</code> then returns a copy of <code>src</code>, otherwise returns a <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Space::memory_space</code> memory space and operates a deep copy between the two. </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00109">109</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a092ce7410d0be40006e171e599adee7c" name="a092ce7410d0be40006e171e599adee7c"></a>
@@ -2116,6 +2406,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If <code>Kokkos::HostSpace</code> is accessible from <code>Space</code> then returns a copy of <code>src</code>, otherwise returns a <code><a class="el" href="namespaceddc.html#classddc_1_1Chunk">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Kokkos::HostSpace</code> memory space and operates a deep copy between the two. </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00130">130</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+
 </div>
 </div>
 <a id="adbc459eecdc4f531bad4e69fc7c60fe9" name="adbc459eecdc4f531bad4e69fc7c60fe9"></a>
@@ -2143,6 +2435,8 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00370">370</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -2182,6 +2476,8 @@ template&lt;class... DDimsA, class... DDimsB&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00423">423</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a7197d9ff102e113319536b520944a024" name="a7197d9ff102e113319536b520944a024"></a>
@@ -2218,6 +2514,8 @@ template&lt;class... DDimsB, <a class="el" href="namespaceddc.html#a70f12a43ed0a
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The discrete domain without DDimsB dimensions </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00438">438</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -2257,6 +2555,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00474">474</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a824d715f606cabc059607f3218923473" name="a824d715f606cabc059607f3218923473"></a>
@@ -2284,6 +2584,8 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00501">501</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -2313,6 +2615,8 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00508">508</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a0a26a2377549b9a50dbf29267bf0ebc2" name="a0a26a2377549b9a50dbf29267bf0ebc2"></a>
@@ -2340,6 +2644,8 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00515">515</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -2369,6 +2675,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00539">539</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a70f6a7634ef3f77720ba76b015de2008" name="a70f6a7634ef3f77720ba76b015de2008"></a>
@@ -2396,6 +2704,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00051">51</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -2425,6 +2735,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00057">57</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ad055e25ad4b426fad4ea6b650e000755" name="ad055e25ad4b426fad4ea6b650e000755"></a>
@@ -2453,6 +2765,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00063">63</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a9a4cd62d6f8f234732cf71afa0859f09" name="a9a4cd62d6f8f234732cf71afa0859f09"></a>
@@ -2480,6 +2794,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00070">70</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -2519,6 +2835,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00076">76</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a1db25c408e39437a0f9314809001d92f" name="a1db25c408e39437a0f9314809001d92f"></a>
@@ -2547,6 +2865,8 @@ template&lt;class... QueryTags, class... Tags&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00084">84</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a1689438d04166c36090bb438b8c0fea3" name="a1689438d04166c36090bb438b8c0fea3"></a>
@@ -2574,6 +2894,8 @@ template&lt;class... QueryTags, class... Tags&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00091">91</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -2615,6 +2937,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>Returns a reference towards the <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> that contains the QueryTag. </p>
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00105">105</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a7a6e1d2966fa32bdf06b79ae7b336d2a" name="a7a6e1d2966fa32bdf06b79ae7b336d2a"></a>
@@ -2651,6 +2975,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00304">304</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a9f20ba0faf7b90ba56a17bfdc2c93bb2" name="a9f20ba0faf7b90ba56a17bfdc2c93bb2"></a>
@@ -2680,6 +3006,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00311">311</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -2719,6 +3047,8 @@ template&lt;class... Tags, class... OTags&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00322">322</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="af71143b67a010f2229acda8c9a66e21e" name="af71143b67a010f2229acda8c9a66e21e"></a>
@@ -2756,6 +3086,8 @@ template&lt;class... Tags, class... OTags&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00330">330</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -2795,6 +3127,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00338">338</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a94c629e9b48bb50b8e6ea9dd28448731" name="a94c629e9b48bb50b8e6ea9dd28448731"></a>
@@ -2832,6 +3166,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00346">346</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -2871,6 +3207,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00354">354</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a8d453b6dc3ccccf7dfa48efb229b228c" name="a8d453b6dc3ccccf7dfa48efb229b228c"></a>
@@ -2908,6 +3246,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00362">362</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -2949,6 +3289,8 @@ template&lt;class... Tags, class... OTags&gt; </div>
 
 <p>right external binary operators: +, - </p>
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00372">372</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="abe5de511997e3b4c086403f81ddee0c8" name="abe5de511997e3b4c086403f81ddee0c8"></a>
@@ -2986,6 +3328,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00388">388</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -3025,6 +3369,8 @@ template&lt;class... Tags, class... OTags&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00396">396</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a4a2fc8ce660318bd042ba52e917851a7" name="a4a2fc8ce660318bd042ba52e917851a7"></a>
@@ -3062,6 +3408,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00412">412</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -3103,6 +3451,8 @@ template&lt;class... Tags, class... OTags&gt; </div>
 
 <p>binary operator: - </p>
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00422">422</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a70f12a43ed0afbc092f4e974b024db3d" name="a70f12a43ed0afbc092f4e974b024db3d"></a>
@@ -3130,6 +3480,8 @@ template&lt;class DDim , class... Args&gt; </div>
   </table>
   </dd>
 </dl>
+
+<p class="definition">Definition at line <a class="el" href="discrete__space_8hpp_source.html#l00151">151</a> of file <a class="el" href="discrete__space_8hpp_source.html">discrete_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -3162,6 +3514,8 @@ template&lt;class DDim , class DDimImpl , class Arg0 &gt; </div>
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="discrete__space_8hpp_source.html#l00182">182</a> of file <a class="el" href="discrete__space_8hpp_source.html">discrete_space.hpp</a>.</p>
+
 </div>
 </div>
 <a id="af7b4091f18fe6f867e2dea266128d8f9" name="af7b4091f18fe6f867e2dea266128d8f9"></a>
@@ -3193,6 +3547,8 @@ template&lt;class DDim , class DDimImpl , class Arg0 , class Arg1 , class... Arg
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="discrete__space_8hpp_source.html#l00194">194</a> of file <a class="el" href="discrete__space_8hpp_source.html">discrete_space.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ad818604dd82f3da545fa9aebdf9168a0" name="ad818604dd82f3da545fa9aebdf9168a0"></a>
@@ -3218,6 +3574,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the discrete space instance associated with <code>DDim</code>. This function must be called from a <code>KOKKOS_FUNCTION</code>. Call <code><a class="el" href="namespaceddc.html#a7d46db599cc0436ad0b042efd27dc055">ddc::host_discrete_space</a></code> for a host-only function instead. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="discrete__space_8hpp_source.html#l00207">207</a> of file <a class="el" href="discrete__space_8hpp_source.html">discrete_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -3246,6 +3604,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__space_8hpp_source.html#l00227">227</a> of file <a class="el" href="discrete__space_8hpp_source.html">discrete_space.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a7d46db599cc0436ad0b042efd27dc055" name="a7d46db599cc0436ad0b042efd27dc055"></a>
@@ -3264,6 +3624,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__space_8hpp_source.html#l00233">233</a> of file <a class="el" href="discrete__space_8hpp_source.html">discrete_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -3293,6 +3655,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00052">52</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a6141d17f89f3cc72b0472729a6aa3a54" name="a6141d17f89f3cc72b0472729a6aa3a54"></a>
@@ -3320,6 +3684,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00059">59</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -3359,6 +3725,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00065">65</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a1679e10cfa3a064f0ea8119daa1499c7" name="a1679e10cfa3a064f0ea8119daa1499c7"></a>
@@ -3389,6 +3757,8 @@ template&lt;class... Tags&gt; </div>
 
 <p>Unary operators: +, -. </p>
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00075">75</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a77c6c5e50851724776486b027c73add8" name="a77c6c5e50851724776486b027c73add8"></a>
@@ -3416,6 +3786,8 @@ template&lt;class... Tags&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00081">81</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -3457,6 +3829,8 @@ template&lt;class... Tags, class... OTags&gt; </div>
 
 <p>Internal binary operators: +, -. </p>
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00089">89</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a3d600c6f06ea28fe24517e6ea9e918eb" name="a3d600c6f06ea28fe24517e6ea9e918eb"></a>
@@ -3494,6 +3868,8 @@ template&lt;class... Tags, class... OTags&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00108">108</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -3533,6 +3909,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00127">127</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a8556b3b6887d7c18a0fb95836da99a81" name="a8556b3b6887d7c18a0fb95836da99a81"></a>
@@ -3570,6 +3948,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00135">135</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -3609,6 +3989,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00143">143</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a9fdc2cbe96c3789a3f09d7f7ffd08119" name="a9fdc2cbe96c3789a3f09d7f7ffd08119"></a>
@@ -3646,6 +4028,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00151">151</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -3687,6 +4071,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>external left binary operator: * </p>
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00164">164</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a7ee893855d0a26f5fc01571d492258ef" name="a7ee893855d0a26f5fc01571d492258ef"></a>
@@ -3715,6 +4101,8 @@ template&lt;class... QueryTags, class... Tags&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00172">172</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ac4e808ab08b6a4bd398b26032ea67376" name="ac4e808ab08b6a4bd398b26032ea67376"></a>
@@ -3742,6 +4130,8 @@ template&lt;class... QueryTags, class... Tags&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00179">179</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -3783,6 +4173,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>Returns a reference towards the <a class="el" href="classddc_1_1DiscreteVector.html" title="A DiscreteVector is a vector in the discrete dimension.">DiscreteVector</a> that contains the QueryTag. </p>
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00193">193</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a96a18074e95f1f37cc321ef7c15ddf77" name="a96a18074e95f1f37cc321ef7c15ddf77"></a>
@@ -3820,6 +4212,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00429">429</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -3859,6 +4253,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00437">437</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ab1813a572d9e998ffa335c08b7af8d11" name="ab1813a572d9e998ffa335c08b7af8d11"></a>
@@ -3895,6 +4291,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00442">442</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ab1493964ffd857dda950653e78ec824d" name="ab1493964ffd857dda950653e78ec824d"></a>
@@ -3924,6 +4322,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00449">449</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -3972,6 +4372,8 @@ template&lt;class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0af
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="for__each_8hpp_source.html#l00048">48</a> of file <a class="el" href="for__each_8hpp_source.html">for_each.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a9633d820c1eafa7a55bd8850fab5aa78" name="a9633d820c1eafa7a55bd8850fab5aa78"></a>
@@ -4010,6 +4412,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The initialized Impl representing the discrete <a class="el" href="namespaceddc.html#structddc_1_1Fourier" title="A templated tag representing a continuous dimension in the Fourier space associated to the original c...">Fourier</a> space.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classddc_1_1PeriodicSampling.html" title="PeriodicSampling models a periodic discretization of the provided continuous dimension.">PeriodicSampling</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="fft_8hpp_source.html#l00636">636</a> of file <a class="el" href="fft_8hpp_source.html">fft.hpp</a>.</p>
 
 </div>
 </div>
@@ -4051,6 +4455,8 @@ template&lt;typename... DDimFx, typename... DDimX&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The domain representing the <a class="el" href="namespaceddc.html#structddc_1_1Fourier" title="A templated tag representing a continuous dimension in the Fourier space associated to the original c...">Fourier</a> mesh. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="fft_8hpp_source.html#l00675">675</a> of file <a class="el" href="fft_8hpp_source.html">fft.hpp</a>.</p>
 
 </div>
 </div>
@@ -4118,6 +4524,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </table>
   </dd>
 </dl>
+
+<p class="definition">Definition at line <a class="el" href="fft_8hpp_source.html#l00733">733</a> of file <a class="el" href="fft_8hpp_source.html">fft.hpp</a>.</p>
 
 </div>
 </div>
@@ -4187,6 +4595,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="fft_8hpp_source.html#l00792">792</a> of file <a class="el" href="fft_8hpp_source.html">fft.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a086f7e0fd872b6bd2aef5760d1b3845f" name="a086f7e0fd872b6bd2aef5760d1b3845f"></a>
@@ -4233,6 +4643,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of equations. </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="spline__boundary__conditions_8hpp_source.html#l00051">51</a> of file <a class="el" href="spline__boundary__conditions_8hpp_source.html">spline_boundary_conditions.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ab5f4b442bd231cb75cac113a0f508863" name="ab5f4b442bd231cb75cac113a0f508863"></a>
@@ -4261,6 +4673,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00115">115</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a07265a51a26fd9366dfd7461d838fa16" name="a07265a51a26fd9366dfd7461d838fa16"></a>
@@ -4288,6 +4702,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00121">121</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
 
 </div>
 </div>
@@ -4321,6 +4737,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>Convenient function to dump a mdspan, it recursively prints all dimensions. </p>
 <p>Disclaimer: use with caution for large arrays </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00144">144</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
 
 </div>
 </div>
@@ -4360,6 +4778,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="kokkos__allocator_8hpp_source.html#l00068">68</a> of file <a class="el" href="kokkos__allocator_8hpp_source.html">kokkos_allocator.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ae4269f314ca30fb3ded4fdcc3a399965" name="ae4269f314ca30fb3ded4fdcc3a399965"></a>
@@ -4398,6 +4818,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="kokkos__allocator_8hpp_source.html#l00074">74</a> of file <a class="el" href="kokkos__allocator_8hpp_source.html">kokkos_allocator.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a8d5b65eff91b58f4c733a6339caf325f" name="a8d5b65eff91b58f4c733a6339caf325f"></a>
@@ -4428,6 +4850,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="non__uniform__point__sampling_8hpp_source.html#l00217">217</a> of file <a class="el" href="non__uniform__point__sampling_8hpp_source.html">non_uniform_point_sampling.hpp</a>.</p>
+
 </div>
 </div>
 <a id="acb92141804530afd55d2747b2f0e7398" name="acb92141804530afd55d2747b2f0e7398"></a>
@@ -4447,6 +4871,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="non__uniform__point__sampling_8hpp_source.html#l00223">223</a> of file <a class="el" href="non__uniform__point__sampling_8hpp_source.html">non_uniform_point_sampling.hpp</a>.</p>
 
 </div>
 </div>
@@ -4468,6 +4894,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="non__uniform__point__sampling_8hpp_source.html#l00230">230</a> of file <a class="el" href="non__uniform__point__sampling_8hpp_source.html">non_uniform_point_sampling.hpp</a>.</p>
+
 </div>
 </div>
 <a id="af78ae4219dfa28ce02622005e8a06b41" name="af78ae4219dfa28ce02622005e8a06b41"></a>
@@ -4487,6 +4915,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="non__uniform__point__sampling_8hpp_source.html#l00237">237</a> of file <a class="el" href="non__uniform__point__sampling_8hpp_source.html">non_uniform_point_sampling.hpp</a>.</p>
 
 </div>
 </div>
@@ -4508,6 +4938,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="non__uniform__point__sampling_8hpp_source.html#l00244">244</a> of file <a class="el" href="non__uniform__point__sampling_8hpp_source.html">non_uniform_point_sampling.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a0f6fdedc3306e0a0b5a34f6446db1294" name="a0f6fdedc3306e0a0b5a34f6446db1294"></a>
@@ -4528,6 +4960,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="non__uniform__point__sampling_8hpp_source.html#l00251">251</a> of file <a class="el" href="non__uniform__point__sampling_8hpp_source.html">non_uniform_point_sampling.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a9843ffde244885e82a6307449cc13682" name="a9843ffde244885e82a6307449cc13682"></a>
@@ -4547,6 +4981,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="non__uniform__point__sampling_8hpp_source.html#l00258">258</a> of file <a class="el" href="non__uniform__point__sampling_8hpp_source.html">non_uniform_point_sampling.hpp</a>.</p>
 
 </div>
 </div>
@@ -4587,6 +5023,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__deepcopy_8hpp_source.html#l00021">21</a> of file <a class="el" href="parallel__deepcopy_8hpp_source.html">parallel_deepcopy.hpp</a>.</p>
 
 </div>
 </div>
@@ -4635,6 +5073,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="parallel__deepcopy_8hpp_source.html#l00040">40</a> of file <a class="el" href="parallel__deepcopy_8hpp_source.html">parallel_deepcopy.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a9818f50e1b95ec461586abacca9b4819" name="a9818f50e1b95ec461586abacca9b4819"></a>
@@ -4674,6 +5114,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__fill_8hpp_source.html#l00021">21</a> of file <a class="el" href="parallel__fill_8hpp_source.html">parallel_fill.hpp</a>.</p>
 
 </div>
 </div>
@@ -4721,6 +5163,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ChunkSpan</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__fill_8hpp_source.html#l00036">36</a> of file <a class="el" href="parallel__fill_8hpp_source.html">parallel_fill.hpp</a>.</p>
 
 </div>
 </div>
@@ -4783,6 +5227,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="parallel__for__each_8hpp_source.html#l00155">155</a> of file <a class="el" href="parallel__for__each_8hpp_source.html">parallel_for_each.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a10efcc69f87367680e580b9b06585390" name="a10efcc69f87367680e580b9b06585390"></a>
@@ -4836,6 +5282,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </table>
   </dd>
 </dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__for__each_8hpp_source.html#l00170">170</a> of file <a class="el" href="parallel__for__each_8hpp_source.html">parallel_for_each.hpp</a>.</p>
 
 </div>
 </div>
@@ -4891,6 +5339,8 @@ template&lt;class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0af
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="parallel__for__each_8hpp_source.html#l00188">188</a> of file <a class="el" href="parallel__for__each_8hpp_source.html">parallel_for_each.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ad477f030c80deb9c1a4808ec3698ca8f" name="ad477f030c80deb9c1a4808ec3698ca8f"></a>
@@ -4937,6 +5387,8 @@ template&lt;class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0af
   </table>
   </dd>
 </dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__for__each_8hpp_source.html#l00201">201</a> of file <a class="el" href="parallel__for__each_8hpp_source.html">parallel_for_each.hpp</a>.</p>
 
 </div>
 </div>
@@ -5013,6 +5465,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00305">305</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a2b178b6c103ad16472da958fffc85b68" name="a2b178b6c103ad16472da958fffc85b68"></a>
@@ -5080,6 +5534,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </table>
   </dd>
 </dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00332">332</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
 
 </div>
 </div>
@@ -5149,6 +5605,8 @@ template&lt;class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0af
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00358">358</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
+
 </div>
 </div>
 <a id="af00cc443c9d5f113239f843cfbd34aa9" name="af00cc443c9d5f113239f843cfbd34aa9"></a>
@@ -5210,6 +5668,8 @@ template&lt;class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0af
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00383">383</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a23d4abcde702238b33c5185cd6457658" name="a23d4abcde702238b33c5185cd6457658"></a>
@@ -5239,6 +5699,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pdi_8hpp_source.html#l00146">146</a> of file <a class="el" href="pdi_8hpp_source.html">pdi.hpp</a>.</p>
 
 </div>
 </div>
@@ -5270,6 +5732,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="pdi_8hpp_source.html#l00152">152</a> of file <a class="el" href="pdi_8hpp_source.html">pdi.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a068f74236a491a323a2936a732042bd0" name="a068f74236a491a323a2936a732042bd0"></a>
@@ -5298,6 +5762,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>Lower bound index of the mesh. </p>
+
+<p class="definition">Definition at line <a class="el" href="periodic__sampling_8hpp_source.html#l00266">266</a> of file <a class="el" href="periodic__sampling_8hpp_source.html">periodic_sampling.hpp</a>.</p>
 
 </div>
 </div>
@@ -5328,6 +5794,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>Lower bound index of the mesh. </p>
 
+<p class="definition">Definition at line <a class="el" href="periodic__sampling_8hpp_source.html#l00274">274</a> of file <a class="el" href="periodic__sampling_8hpp_source.html">periodic_sampling.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a05957d017ae47fc7fea43a1a64ec2dc5" name="a05957d017ae47fc7fea43a1a64ec2dc5"></a>
@@ -5356,6 +5824,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>Spacing step of the mesh. </p>
+
+<p class="definition">Definition at line <a class="el" href="periodic__sampling_8hpp_source.html#l00281">281</a> of file <a class="el" href="periodic__sampling_8hpp_source.html">periodic_sampling.hpp</a>.</p>
 
 </div>
 </div>
@@ -5418,6 +5888,8 @@ template&lt;class... DDims, <a class="el" href="namespaceddc.html#a70f12a43ed0af
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="transform__reduce_8hpp_source.html#l00072">72</a> of file <a class="el" href="transform__reduce_8hpp_source.html">transform_reduce.hpp</a>.</p>
+
 </div>
 </div>
 <a id="ad1dd2f87c3672f42f1adbddcdaa78b97" name="ad1dd2f87c3672f42f1adbddcdaa78b97"></a>
@@ -5445,6 +5917,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uniform__point__sampling_8hpp_source.html#l00232">232</a> of file <a class="el" href="uniform__point__sampling_8hpp_source.html">uniform_point_sampling.hpp</a>.</p>
 
 </div>
 </div>
@@ -5475,6 +5949,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>Lower bound index of the mesh. </p>
 
+<p class="definition">Definition at line <a class="el" href="uniform__point__sampling_8hpp_source.html#l00243">243</a> of file <a class="el" href="uniform__point__sampling_8hpp_source.html">uniform_point_sampling.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a5fcc420419c1228f8087acb91c118da2" name="a5fcc420419c1228f8087acb91c118da2"></a>
@@ -5503,6 +5979,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>Lower bound index of the mesh. </p>
+
+<p class="definition">Definition at line <a class="el" href="uniform__point__sampling_8hpp_source.html#l00251">251</a> of file <a class="el" href="uniform__point__sampling_8hpp_source.html">uniform_point_sampling.hpp</a>.</p>
 
 </div>
 </div>
@@ -5533,6 +6011,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>Spacing step of the mesh. </p>
 
+<p class="definition">Definition at line <a class="el" href="uniform__point__sampling_8hpp_source.html#l00258">258</a> of file <a class="el" href="uniform__point__sampling_8hpp_source.html">uniform_point_sampling.hpp</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
@@ -5558,6 +6038,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="chunk_8hpp_source.html#l00024">24</a> of file <a class="el" href="chunk_8hpp_source.html">chunk.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a940791d3528033e07205be12f8aee358" name="a940791d3528033e07205be12f8aee358"></a>
@@ -5581,6 +6063,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00033">33</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
 
 </div>
 </div>
@@ -5606,6 +6090,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00037">37</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a0c0e4de1cdacb9ca1ec06c43675d7a5b" name="a0c0e4de1cdacb9ca1ec06c43675d7a5b"></a>
@@ -5629,6 +6115,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="chunk__traits_8hpp_source.html#l00013">13</a> of file <a class="el" href="chunk__traits_8hpp_source.html">chunk_traits.hpp</a>.</p>
 
 </div>
 </div>
@@ -5654,6 +6142,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="chunk__traits_8hpp_source.html#l00016">16</a> of file <a class="el" href="chunk__traits_8hpp_source.html">chunk_traits.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a19c5fc81d81d5676bfcc0eededc0bd22" name="a19c5fc81d81d5676bfcc0eededc0bd22"></a>
@@ -5677,6 +6167,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="chunk__traits_8hpp_source.html#l00019">19</a> of file <a class="el" href="chunk__traits_8hpp_source.html">chunk_traits.hpp</a>.</p>
 
 </div>
 </div>
@@ -5703,8 +6195,10 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= <a class="code hl_variable" href="namespaceddc.html#a19c5fc81d81d5676bfcc0eededc0bd22">is_chunk_v</a>&lt;</div>
 <div class="line">                  T&gt; &amp;&amp; (std::is_lvalue_reference_v&lt;T&gt; || enable_borrowed_chunk&lt;std::remove_cv_t&lt;std::remove_reference_t&lt;T&gt;&gt;&gt;)</div>
-<div class="ttc" id="anamespaceddc_html_a19c5fc81d81d5676bfcc0eededc0bd22"><div class="ttname"><a href="namespaceddc.html#a19c5fc81d81d5676bfcc0eededc0bd22">ddc::is_chunk_v</a></div><div class="ttdeci">constexpr bool is_chunk_v</div><div class="ttdef"><b>Definition</b> chunk_traits.hpp:19</div></div>
+<div class="ttc" id="anamespaceddc_html_a19c5fc81d81d5676bfcc0eededc0bd22"><div class="ttname"><a href="namespaceddc.html#a19c5fc81d81d5676bfcc0eededc0bd22">ddc::is_chunk_v</a></div><div class="ttdeci">constexpr bool is_chunk_v</div><div class="ttdef"><b>Definition</b> <a href="chunk__traits_8hpp_source.html#l00019">chunk_traits.hpp:19</a></div></div>
 </div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="chunk__traits_8hpp_source.html#l00022">22</a> of file <a class="el" href="chunk__traits_8hpp_source.html">chunk_traits.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a6b0404afeb25a439cafc10e9bd7cbec6" name="a6b0404afeb25a439cafc10e9bd7cbec6"></a>
@@ -5728,6 +6222,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="chunk__traits_8hpp_source.html#l00046">46</a> of file <a class="el" href="chunk__traits_8hpp_source.html">chunk_traits.hpp</a>.</p>
 
 </div>
 </div>
@@ -5753,6 +6249,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00036">36</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a7b38d024576fa519079635817d26c2a7" name="a7b38d024576fa519079635817d26c2a7"></a>
@@ -5777,6 +6275,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00033">33</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a6f856b258e5bd40d0c4a6d3f0fc1b9d1" name="a6f856b258e5bd40d0c4a6d3f0fc1b9d1"></a>
@@ -5800,6 +6300,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__vector_8hpp_source.html#l00034">34</a> of file <a class="el" href="discrete__vector_8hpp_source.html">discrete_vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -5833,6 +6335,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="bsplines__non__uniform_8hpp_source.html#l00412">412</a> of file <a class="el" href="bsplines__non__uniform_8hpp_source.html">bsplines_non_uniform.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a20d13e258d90b019d44b38be91885f35" name="a20d13e258d90b019d44b38be91885f35"></a>
@@ -5865,6 +6369,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="bsplines__uniform_8hpp_source.html#l00382">382</a> of file <a class="el" href="bsplines__uniform_8hpp_source.html">bsplines_uniform.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a0c621cc4a504cb9368d8e6ce080067e9" name="a0c621cc4a504cb9368d8e6ce080067e9"></a>
@@ -5888,6 +6394,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="non__uniform__point__sampling_8hpp_source.html#l00210">210</a> of file <a class="el" href="non__uniform__point__sampling_8hpp_source.html">non_uniform_point_sampling.hpp</a>.</p>
 
 </div>
 </div>
@@ -5913,6 +6421,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="periodic__sampling_8hpp_source.html#l00249">249</a> of file <a class="el" href="periodic__sampling_8hpp_source.html">periodic_sampling.hpp</a>.</p>
+
 </div>
 </div>
 <a id="a5d92fe6350fd1f8ecc31403595d976a8" name="a5d92fe6350fd1f8ecc31403595d976a8"></a>
@@ -5937,6 +6447,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="uniform__point__sampling_8hpp_source.html#l00218">218</a> of file <a class="el" href="uniform__point__sampling_8hpp_source.html">uniform_point_sampling.hpp</a>.</p>
+
 </div>
 </div>
 </div><!-- contents -->
@@ -5945,5 +6457,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
+<!-- HTML footer for doxygen 1.9.8-->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespaceddc.html">ddc</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
 </body>
 </html>

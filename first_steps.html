@@ -2,33 +2,76 @@
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
-<!DOCTYPE html>
-<html>
+<!-- HTML header for doxygen 1.9.8-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
-	<meta charset="UTF-8">
-	<meta name="generator" content="Doxygen 1.9.8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<title>DDC: Commented example: the uniform heat equation</title>
-	<script type="text/javascript" src="jquery.js"></script>
-	<script type="text/javascript" src="dynsections.js"></script>
-	<script type="text/javascript" src="navtreedata.js"></script>
-	<script type="text/javascript" src="navtree.js"></script>
-	<link href="style.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>DDC: Commented example: the uniform heat equation</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeParagraphLink.init()
+</script>
 </head>
 <body>
-<div>
-<header id="titlearea">
-	<div id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></div>
-	<h1 id="projectname">DDC&nbsp;<span id="projectnumber">0.0.0</span></h1>
-	<h2 id="projectbrief">a <span class="acronym">d</span>iscrete <span class="acronym">d</span>omain <span class="acronym">c</span>omputation library</h2>
-</header>
-<nav id="tabs"><ul>
-	<li><a href="index.html">About</a>
-	<li><a href="first_steps.html">Commented example</a>
-	<li><a href="annotated.html">API reference</a>
-	<li id="gitlab-ribbon"><a rel="noopener" href="https://github.com/CExA-project/ddc" target="_blank">Contribute on Github</a></li>
-</ul></nav>
+<a href="https://github.com/CExA-project/ddc" class="github-corner" title="View source on GitHub" target="_blank" rel="noopener noreferrer">
+  <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+  <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></td>
+  <td id="projectalign">
+   <div id="projectname">DDC<span id="projectnumber">&#160;0.0.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
 <!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -46,6 +89,27 @@ $(document).ready(function(){initNavTree('first_steps.html',''); initResizable()
 /* @license-end */
 </script>
 <div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
 <div><div class="header">
   <div class="headertitle"><div class="title">Commented example: the uniform heat equation</div></div>
 </div><!--header-->
@@ -76,7 +140,7 @@ Dimensions naming</h2>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>DDimX : <a class="code hl_class" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;X&gt;</div>
 <div class="line">{</div>
 <div class="line">};</div>
-<div class="ttc" id="aclassddc_1_1UniformPointSampling_html"><div class="ttname"><a href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a></div><div class="ttdoc">UniformPointSampling models a uniform discretization of the provided continuous dimension.</div><div class="ttdef"><b>Definition</b> uniform_point_sampling.hpp:36</div></div>
+<div class="ttc" id="aclassddc_1_1UniformPointSampling_html"><div class="ttname"><a href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a></div><div class="ttdoc">UniformPointSampling models a uniform discretization of the provided continuous dimension.</div><div class="ttdef"><b>Definition</b> <a href="uniform__point__sampling_8hpp_source.html#l00035">uniform_point_sampling.hpp:36</a></div></div>
 </div><!-- fragment --><p>We do the same thing for the second dimension <code>Y</code>.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>Y;</div>
 <div class="line"><span class="keyword">struct </span>DDimY : <a class="code hl_class" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;Y&gt;</div>
@@ -98,7 +162,7 @@ Dimension X</h3>
 <div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> kx = .01;</div>
 </div><!-- fragment --><p>We start by defining <code>gwx</code>, the number of "ghost" points in the <code>X</code> dimension, those represented in dark grey in the figure on each side of the domain.</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimX&gt;</a> <span class="keyword">const</span> gwx(1);</div>
-<div class="ttc" id="aclassddc_1_1DiscreteVector_html"><div class="ttname"><a href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition</b> discrete_vector.hpp:254</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteVector_html"><div class="ttname"><a href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00253">discrete_vector.hpp:254</a></div></div>
 </div><!-- fragment --><p> The type for this constant is <code>DiscreteVector&lt;DDimX&gt;</code> that represents a number of elements in the discretization of the <code>X</code> dimension.</p>
 <p>Once done, we initialize the discretization of the <code>X</code> dimension. Its name has been specified before, but we now set its parameters with the <code>init_discretization</code> function.</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> <span class="keyword">const</span> [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]</div>
@@ -107,8 +171,8 @@ Dimension X</h3>
 <div class="line">                <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;X&gt;</a>(x_end),</div>
 <div class="line">                <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimX&gt;</a>(nb_x_points),</div>
 <div class="line">                gwx));</div>
-<div class="ttc" id="anamespaceddc_html_a70f12a43ed0afbc092f4e974b024db3d"><div class="ttname"><a href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a></div><div class="ttdeci">void init_discrete_space(Args &amp;&amp;... args)</div><div class="ttdoc">Initialize (emplace) a global singleton discrete space.</div><div class="ttdef"><b>Definition</b> discrete_space.hpp:151</div></div>
-<div class="ttc" id="anamespaceddc_html_ac18286f7d289865ee020284651f29bb1"><div class="ttname"><a href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a></div><div class="ttdeci">detail::TaggedVector&lt; CoordinateElement, CDims... &gt; Coordinate</div><div class="ttdoc">A Coordinate represents a coordinate in the continuous space.</div><div class="ttdef"><b>Definition</b> coordinate.hpp:26</div></div>
+<div class="ttc" id="anamespaceddc_html_a70f12a43ed0afbc092f4e974b024db3d"><div class="ttname"><a href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a></div><div class="ttdeci">void init_discrete_space(Args &amp;&amp;... args)</div><div class="ttdoc">Initialize (emplace) a global singleton discrete space.</div><div class="ttdef"><b>Definition</b> <a href="discrete__space_8hpp_source.html#l00151">discrete_space.hpp:151</a></div></div>
+<div class="ttc" id="anamespaceddc_html_ac18286f7d289865ee020284651f29bb1"><div class="ttname"><a href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a></div><div class="ttdeci">detail::TaggedVector&lt; CoordinateElement, CDims... &gt; Coordinate</div><div class="ttdoc">A Coordinate represents a coordinate in the continuous space.</div><div class="ttdef"><b>Definition</b> <a href="coordinate_8hpp_source.html#l00026">coordinate.hpp:26</a></div></div>
 </div><!-- fragment --><p> Depending on the way the function is called, its return type can differ. Here we use it with an inner call to <code>init_ghosted</code> and receive four 1D domains as a result. Their type is not specified because we use C++ <a href="https://en.cppreference.com/w/cpp/language/structured_binding">structured bindings</a>, but they are all of the same type: <code>DiscreteDomain&lt;DDimX&gt;</code> that represents a set of contiguous points in the discretization of <code>X</code>.</p>
 <p><a class="el" href="classddc_1_1UniformPointSampling.html#afc315e9fe09e69f789d16cf45b38c713">init_ghosted</a> takes as parameters the coordinate of the first and last discretized points, the number of discretized points in the domain and the number of additional points on each side of the domain. The fours <code>DiscreteDomain</code>s returned are:</p>
 <ul>
@@ -124,7 +188,7 @@ Dimension X</h3>
 <div class="line"><a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX&gt;</a> <span class="keyword">const</span> x_domain_end(</div>
 <div class="line">        x_domain.back() - x_pre_ghost.extents() + 1,</div>
 <div class="line">        x_pre_ghost.extents());</div>
-<div class="ttc" id="aclassddc_1_1DiscreteDomain_html"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a></div><div class="ttdef"><b>Definition</b> discrete_domain.hpp:51</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteDomain_html"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a></div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00050">discrete_domain.hpp:51</a></div></div>
 </div><!-- fragment --><p><code>x_domain_begin</code> is the sub-domain at the beginning of <code>x_domain</code> of the same shape as <code>x_post_ghost</code> that will be mirrored to it. Reciprocally for <code>x_domain_end</code> with <code>x_pre_ghost</code>.</p>
 <p>The type of both sub-domains is <code>DiscreteDomain&lt;DDimX&gt;</code> even if only <code>DiscreteDomain</code> is specified, this relies on C++ <a href="https://en.cppreference.com/w/cpp/language/class_template_argument_deduction">class template argument deduction (CTAD)</a>. The first parameter given to the constructor is the first element of the domain, a <code>DiscreteElement&lt;DDimX&gt;</code>, the second parameter is a number of elements to include, a <code>DiscreteVector&lt;DDimX&gt;</code>.</p>
 <p><b>To summarize,</b> in this section, we have introduced the following types:</p>
@@ -199,15 +263,15 @@ Data allocation</h1>
 <div class="line">                DDimX,</div>
 <div class="line">                DDimY&gt;(ghosted_x_domain, ghosted_y_domain),</div>
 <div class="line">        <a class="code hl_class" href="classddc_1_1KokkosAllocator.html">ddc::DeviceAllocator&lt;double&gt;</a>());</div>
-<div class="ttc" id="aclassddc_1_1KokkosAllocator_html"><div class="ttname"><a href="classddc_1_1KokkosAllocator.html">ddc::KokkosAllocator</a></div><div class="ttdef"><b>Definition</b> kokkos_allocator.hpp:17</div></div>
-<div class="ttc" id="anamespaceddc_html_classddc_1_1Chunk"><div class="ttname"><a href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a></div><div class="ttdef"><b>Definition</b> chunk.hpp:21</div></div>
+<div class="ttc" id="aclassddc_1_1KokkosAllocator_html"><div class="ttname"><a href="classddc_1_1KokkosAllocator.html">ddc::KokkosAllocator</a></div><div class="ttdef"><b>Definition</b> <a href="kokkos__allocator_8hpp_source.html#l00016">kokkos_allocator.hpp:17</a></div></div>
+<div class="ttc" id="anamespaceddc_html_classddc_1_1Chunk"><div class="ttname"><a href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a></div><div class="ttdef"><b>Definition</b> <a href="chunk_8hpp_source.html#l00021">chunk.hpp:21</a></div></div>
 </div><!-- fragment --><p>Note that the <code>DeviceAllocator</code> is responsible for allocating memory on the default memory space.</p>
 <h1><a class="anchor" id="autotoc_md9"></a>
 Initial conditions</h1>
 <p>To set the initial conditions, the <code>ghosted_intial_temp</code> is created and acts as a pointer to the chunk. The const qualifier makes it clear that ghosted_initial_temp always references the same chunk, <code>ghosted_last_temp</code> in this case.</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> ghosted_initial_temp</div>
 <div class="line">        = ghosted_last_temp.span_view();</div>
-<div class="ttc" id="anamespaceddc_html_classddc_1_1ChunkSpan"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition</b> chunk_span.hpp:30</div></div>
+<div class="ttc" id="anamespaceddc_html_classddc_1_1ChunkSpan"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition</b> <a href="chunk__span_8hpp_source.html#l00030">chunk_span.hpp:30</a></div></div>
 </div><!-- fragment --><p>Then, we iterate over each <em>DiscreteElement</em> of the domain to fill <code>ghosted_initial_temp</code> with the initial values of the simulation.</p>
 <div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
 <div class="line">        <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain),</div>
@@ -219,9 +283,9 @@ Initial conditions</h1>
 <div class="line">            ghosted_initial_temp(ixy)</div>
 <div class="line">                    = 9.999 * ((x * x + y * y) &lt; 0.25);</div>
 <div class="line">        });</div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html"><div class="ttname"><a href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition</b> discrete_element.hpp:146</div></div>
-<div class="ttc" id="anamespaceddc_html_a6b058df8c02517deafeeb424e2f8803a"><div class="ttname"><a href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a></div><div class="ttdeci">KOKKOS_FUNCTION Coordinate&lt; typename DDim::continuous_dimension_type... &gt; coordinate(DiscreteElement&lt; DDim... &gt; const &amp;c)</div><div class="ttdef"><b>Definition</b> coordinate.hpp:29</div></div>
-<div class="ttc" id="anamespaceddc_html_a96a2f39201f11e37e7334285cca07b37"><div class="ttname"><a href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a></div><div class="ttdeci">void parallel_for_each(std::string const &amp;label, ExecSpace const &amp;execution_space, DiscreteDomain&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using a given Kokkos execution space</div><div class="ttdef"><b>Definition</b> parallel_for_each.hpp:155</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteElement_html"><div class="ttname"><a href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00145">discrete_element.hpp:146</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a6b058df8c02517deafeeb424e2f8803a"><div class="ttname"><a href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a></div><div class="ttdeci">KOKKOS_FUNCTION Coordinate&lt; typename DDim::continuous_dimension_type... &gt; coordinate(DiscreteElement&lt; DDim... &gt; const &amp;c)</div><div class="ttdef"><b>Definition</b> <a href="coordinate_8hpp_source.html#l00029">coordinate.hpp:29</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a96a2f39201f11e37e7334285cca07b37"><div class="ttname"><a href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a></div><div class="ttdeci">void parallel_for_each(std::string const &amp;label, ExecSpace const &amp;execution_space, DiscreteDomain&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using a given Kokkos execution space</div><div class="ttdef"><b>Definition</b> <a href="parallel__for__each_8hpp_source.html#l00155">parallel_for_each.hpp:155</a></div></div>
 </div><!-- fragment --><p>To display the data, a chunk is created on the host.</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_temp(</div>
 <div class="line">        <span class="stringliteral">&quot;ghost_temp&quot;</span>,</div>
@@ -231,14 +295,14 @@ Initial conditions</h1>
 <div class="line">        <a class="code hl_class" href="classddc_1_1KokkosAllocator.html">ddc::HostAllocator&lt;double&gt;</a>());</div>
 </div><!-- fragment --><p>We deepcopy the data from the <code>ghosted_last_temp</code> chunk to <code>ghosted_temp</code> on the host.</p>
 <div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
-<div class="ttc" id="anamespaceddc_html_a37d4f1dc7122e72c049517a90ff0b98b"><div class="ttname"><a href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a></div><div class="ttdeci">auto parallel_deepcopy(ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</div><div class="ttdoc">Copy the content of a borrowed chunk into another.</div><div class="ttdef"><b>Definition</b> parallel_deepcopy.hpp:21</div></div>
+<div class="ttc" id="anamespaceddc_html_a37d4f1dc7122e72c049517a90ff0b98b"><div class="ttname"><a href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a></div><div class="ttdeci">auto parallel_deepcopy(ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</div><div class="ttdoc">Copy the content of a borrowed chunk into another.</div><div class="ttdef"><b>Definition</b> <a href="parallel__deepcopy_8hpp_source.html#l00021">parallel_deepcopy.hpp:21</a></div></div>
 </div><!-- fragment --><p>And we display the initial data.</p>
 <div class="fragment"><div class="line">display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>()),</div>
 <div class="line">        ghosted_temp[x_domain][y_domain]);</div>
-<div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a75660adbd6207e6dd4eec152cae420de"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">ddc::DiscreteDomain::front</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition</b> discrete_domain.hpp:139</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a75660adbd6207e6dd4eec152cae420de"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">ddc::DiscreteDomain::front</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00139">discrete_domain.hpp:139</a></div></div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> <span class="keyword">const</span> iter :</div>
 <div class="line">     time_domain.remove_first(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;DDimT&gt;(1))) {</div>
-<div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> aligned_allocator.hpp:11</div></div>
+<div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
 </div><!-- fragment --><p>To display the data, a chunk is created on the host.</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_temp(</div>
 <div class="line">        <span class="stringliteral">&quot;ghost_temp&quot;</span>,</div>
@@ -374,7 +438,7 @@ Numerical scheme</h2>
 <div class="line">                    DDimX,</div>
 <div class="line">                    DDimY&gt;(x_domain, y_domain)]);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassddc_1_1DiscreteDomain_html_abc808a930eda098e573917e26c5140b3"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">ddc::DiscreteDomain::back</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type back() const noexcept</div><div class="ttdef"><b>Definition</b> discrete_domain.hpp:144</div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteDomain_html_abc808a930eda098e573917e26c5140b3"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">ddc::DiscreteDomain::back</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type back() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00144">discrete_domain.hpp:144</a></div></div>
 </div><!-- fragment --><div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
 <div class="line">        next_temp.domain(),</div>
 <div class="line">        KOKKOS_LAMBDA(</div>
@@ -403,5 +467,12 @@ Numerical scheme</h2>
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
+<!-- HTML footer for doxygen 1.9.8-->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -256,12 +256,8 @@ int main(int argc, char** argv)
             });
     //! [initial-conditions]
 
-    ddc::Chunk ghosted_temp(
-            "ghost_temp",
-            ddc::DiscreteDomain<
-                    DDimX,
-                    DDimY>(ghosted_x_domain, ghosted_y_domain),
-            ddc::HostAllocator<double>());
+    ddc::Chunk ghosted_temp
+            = ddc::create_mirror(ghosted_last_temp.span_cview());
 
 
     //! [initial output]

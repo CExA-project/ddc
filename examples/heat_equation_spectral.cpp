@@ -208,10 +208,7 @@ int main(int argc, char** argv)
             });
     //! [initial-conditions]
 
-    ddc::Chunk _host_temp(
-            "_host_temp",
-            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
-            ddc::HostAllocator<double>());
+    ddc::Chunk _host_temp = ddc::create_mirror(_last_temp.span_cview());
 
 
     //! [initial output]

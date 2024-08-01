@@ -220,7 +220,7 @@ public:
 
     /**
      * @brief Build a SplineEvaluator2D acting on batched_spline_domain.
-     * 
+     *
      * @param lower_extrap_rule1 The extrapolation rule at the lower boundary along the first dimension.
      * @param upper_extrap_rule1 The extrapolation rule at the upper boundary along the first dimension.
      * @param lower_extrap_rule2 The extrapolation rule at the lower boundary along the second dimension.
@@ -339,7 +339,7 @@ public:
      * @param coord_eval The coordinate where the spline is evaluated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
      *
-     * @return The value of the spline function at the desired coordinate. 
+     * @return The value of the spline function at the desired coordinate.
      */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double operator()(
@@ -410,7 +410,7 @@ public:
      * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
      *
-     * @return The derivative of the spline function at the desired coordinate. 
+     * @return The derivative of the spline function at the desired coordinate.
      */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_dim_1(
@@ -430,7 +430,7 @@ public:
      * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
      *
-     * @return The derivative of the spline function at the desired coordinate. 
+     * @return The derivative of the spline function at the desired coordinate.
      */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_dim_2(
@@ -450,7 +450,7 @@ public:
      * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
      *
-     * @return The derivative of the spline function at the desired coordinate. 
+     * @return The derivative of the spline function at the desired coordinate.
      */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_1_and_2(
@@ -472,7 +472,7 @@ public:
      * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
      *
-     * @return The derivative of the spline function at the desired coordinate. 
+     * @return The derivative of the spline function at the desired coordinate.
      */
     template <class InterestDim, class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv(
@@ -511,7 +511,7 @@ public:
      * @param coord_eval The coordinate where the spline is double-differentiated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the 2D spline coefficients.
      *
-     * @return The derivative of the spline function at the desired coordinate. 
+     * @return The derivative of the spline function at the desired coordinate.
      */
     template <class InterestDim1, class InterestDim2, class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv2(

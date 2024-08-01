@@ -8,7 +8,7 @@
 # python3 splines_plot.py /path/to/splines_bench.json
 
 import argparse
-from operator import itemgetter 
+from operator import itemgetter
 import itertools
 import matplotlib.pyplot as plt
 import json

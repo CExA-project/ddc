@@ -130,7 +130,7 @@ public:
             interpolation_discrete_dimension_type1,
             interpolation_discrete_dimension_type2>;
 
-    /** 
+    /**
      * @brief The type of the whole spline domain (cartesian product of 2D spline domain
      * and batch domain) preserving the order of dimensions.
      *
@@ -189,7 +189,7 @@ private:
 public:
     /**
      * @brief Build a SplineBuilder2D acting on batched_interpolation_domain.
-     * 
+     *
      * @param batched_interpolation_domain The domain on which the interpolation points are defined.
      *
      * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size

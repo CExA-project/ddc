@@ -141,7 +141,7 @@ public:
 
     /**
      * @brief Build a SplineEvaluator acting on batched_spline_domain.
-     * 
+     *
      * @param lower_extrap_rule The extrapolation rule at the lower boundary.
      * @param upper_extrap_rule The extrapolation rule at the upper boundary.
      *
@@ -193,7 +193,7 @@ public:
      *
      * Extrapolation rules are functors used to define the behavior of the SplineEvaluator out of the domain where the break points of the B-splines are defined.
      *
-     * @return The lower extrapolation rule. 
+     * @return The lower extrapolation rule.
      *
      * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
      */
@@ -207,7 +207,7 @@ public:
      *
      * Extrapolation rules are functors used to define the behavior of the SplineEvaluator out of the domain where the break points of the B-splines are defined.
      *
-     * @return The upper extrapolation rule. 
+     * @return The upper extrapolation rule.
      *
      * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
      */
@@ -226,7 +226,7 @@ public:
      * @param coord_eval The coordinate where the spline is evaluated. Note that only the component along the dimension of interest is used.
      * @param spline_coef A ChunkSpan storing the 1D spline coefficients.
      *
-     * @return The value of the spline function at the desired coordinate. 
+     * @return The value of the spline function at the desired coordinate.
      */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double operator()(
@@ -295,7 +295,7 @@ public:
      * @param coord_eval The coordinate where the spline is differentiated. Note that only the component along the dimension of interest is used.
      * @param spline_coef A ChunkSpan storing the 1D spline coefficients.
      *
-     * @return The derivative of the spline function at the desired coordinate. 
+     * @return The derivative of the spline function at the desired coordinate.
      */
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv(

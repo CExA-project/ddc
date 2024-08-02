@@ -67,8 +67,6 @@ In summary;
 
 As mentioned earlier, DDC operates on a coordinate system. These coordinates are part of a domain. Users must start their code by constructing a `ddc::DiscreteDomain` that contains each `ddc::DiscreteElement`. To construct a domain, you need to build a 1D domain along each direction. This is usually done when calling the function `ddc::init_discrete_space`.
 
-Note that it is possible to construct a domain with both uniform (see \subpage uniform_heat_equation "examples/uniform_heat_equation.cpp") and non-uniform (see \subpage non_uniform_heat_equation "examples/non_uniform_heat_equation.cpp") distribution of points.
-
 ## Algorithms in ddc ?
 
 + `for_each`: this algorithm allows iterating over each DiscreteElement in the domain of study.

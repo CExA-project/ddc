@@ -20,7 +20,7 @@ The `ddc::Chunk` is a container that holds the data, while `ddc::ChunkSpan` beha
 
   As mentioned in the introduction, DDC is a library that offers strongly typed indexing. Chunks contain data that can be accessed by unique identifiers called discrete elements. Thus, to access the data at a specific point in a 2D space, instead of entering two integers corresponding to the 'x' and 'y' axes, DDC requires entering the coordinate `x` as a discrete element of the x position: `ddc::DiscreteElement<DDimX>`, and entering the `y` coordinate as a discrete element following the y dimension: `ddc::DiscreteElement<DDimY>`. This is done after predefining a strong typing for the discretized `X` dimension as `DDimX` and a strong typing for the discretized `Y` dimension as `DDimY` (see the heat equation example \subpage uniform_heat_equation "examples/uniform_heat_equation.cpp").
 
-Note that swapping the `ddc::DiscreteElement<DDimX>` and `ddc::DiscreteElement<DDimY>` indices when calling the chunkspan does not affect the correctness of the code; the result remains the same.
+Note that swapping the `ddc::DiscreteElement<DDimX>` and `ddc::DiscreteElement<DDimY>` indices when calling the `ddc::ChunkSpan` does not affect the correctness of the code; the result remains the same.
 
 ## ddc::DiscreteElement, ddc::DiscreteVector and ddc::Coordinate
 

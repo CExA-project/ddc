@@ -76,3 +76,13 @@ TEST(TypeSeqTest, Replace)
     using ExpectedR = ddc::detail::TypeSeq<a, y, c, z, e>;
     EXPECT_TRUE((ddc::type_seq_same_v<R, ExpectedR>));
 }
+
+TEST(TypeSeqTest, Length)
+{
+    using A = ddc::detail::TypeSeq<a, b, c>;
+    using B = ddc::detail::TypeSeq<a, b, c, d, e, y, z>;
+    using C = ddc::detail::TypeSeq<a>;
+    EXPECT_EQ((ddc::type_seq_length_v<A>), 3);
+    EXPECT_EQ((ddc::type_seq_length_v<B>), 7);
+    EXPECT_EQ((ddc::type_seq_length_v<C>), 1);
+}

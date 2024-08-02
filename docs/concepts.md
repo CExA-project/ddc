@@ -25,7 +25,7 @@ Note that swapping the `ddc::DiscreteElement<DDimX>` and `ddc::DiscreteElement<D
 ## ddc::DiscreteElement, ddc::DiscreteVector and ddc::Coordinate
 
 ### ddc::DiscreteElement
-Let's continue with our previous example of a 2D grid labeled along two discretized dimensions labeled as `DDimX` and `DDimY`. In the previous paragraph, we discussed how `ddc::DiscreteElement` could be used as indices to have access to a physical value at a precised point on the 2D grid. 
+Let's continue with our previous example of a 2D grid along two discretized dimensions labeled as `DDimX` and `DDimY`. In the previous paragraph, we discussed how `ddc::DiscreteElement` could be used as indices to have access to a physical value at a precised point on the 2D grid. 
 
 More precisely, a `ddc::DiscreteElement` is a C++ variable that carries the strong type of the dimension in which it is defined. 
 Let's return to our example, If we take a discretization of the Y-axis as follows: {y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n</sub>}, the variable `y` defined as follows:
@@ -36,19 +36,19 @@ ddc::DiscreteElement<DDimY> y(0);
 
 carries the strong typing of the ordinate dimension `DDimY` and corresponds to y<sub>0</sub> , the first point along the `Y` dimension.
 
-Moreover, `ddc::DiscreteElement` are very useful for another reason. If we take the example of a classic container in C++, let's say we want to access the element `(i,j)` of this container, we would do it like this:
+Moreover, `ddc::DiscreteElement` are very useful for another reason. If we take the example of a classic container in C++, let's say we want to access the element `(i,j)` of this container which corresponds to the grid point at the i th row and j th column, we would do it like this:
 
 ```cpp
 container(i,j);
 ```
 
-Now, if we take a slice of this container and still want to access the same element `(i,j)` from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at 0. However, with ddc, this is not the case. If we take a slice of a chunkspan, accessing a `ddc::DiscreteElement` is the same between the slice and the original chunkspan because of the uniqueness of each discrete element on the grid and because of the way we access data using ddc.
+Now, if we take a slice of this container and still want to access the same element `(i,j)` from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at zero. However, with ddc, this is not the case. If we take a slice of a chunkspan, accessing a `ddc::DiscreteElement` is the same between the slice and the original chunkspan because of the uniqueness of each discrete element on the grid and because of the way we access data using ddc.
 
 ### ddc::Coordinate
 
 A `ddc::Coordinate` is one of the only ddc types which represents a continuous data type. This means that it can take any value that can be represented by a double. It represents the position of a coordinate in the vector space. 
 
-Let's take the same discretization of the Y-axis {y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n</sub>}. We saw that ```cpp ddc::DiscreteElement<DDimY> y(0)``` points to the first element y<sub>0</sub> along the Y-axis. Now if we take ```cpp ddc::Coordinate<DDimY> (ddc::DiscreteElement<DDimY> y(0))``` it will correspond to the actual value of y<sub>0</sub> in the simulation. If the first point is at a position `y = -1`, it will be characterized by a `ddc::DiscreteElement` as the first point of the discretization, but physically its position is -1. 
+Let's take the same discretization of the Y-axis {y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n</sub>}. We saw that ```cpp ddc::DiscreteElement<DDimY> y(0)``` points to the first element y<sub>0</sub> along the Y-axis. Now if we take ```cpp ddc::Coordinate<DDimY> (ddc::DiscreteElement<DDimY> y(0))``` it will correspond to the actual value of y<sub>0</sub> in the simulation. If the first point is at a position `y = -1`, it will be characterized by a `ddc::DiscreteElement` as the first point of the discretization, but physically its position is -1 and this is the value that `ddc::Coordinate` of this element will be. 
 
 The `ddc::Coordinate` thus bridges the gap between the discretization accessible by `ddc::DiscreteElement` and the actual physical value of the coordinate.
 
@@ -68,6 +68,7 @@ is equivalent to defining a number of points, here 1, along the `x` dimension.
 In summary; 
 
 + `ddc::DiscreteElement` corresponds to each unique point of the mesh, fixed throughout the duration of the simulation. They are similar to fixed points in an affine space. 
++ `ddc::Coordinate` represents the actual value of the discretized points on the grid indexed with the `ddc::DiscreteElement`
 + On the other hand, `ddc::DiscreteVector` corresponds to a number of points along a particular axis or to a distance between two points; in ddc, it corresponds to a distance between two DiscreteElements. These are integers that carry the strong typing of the dimension in which they are defined.
 
 ## ddc::DiscreteDomain

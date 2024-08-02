@@ -37,16 +37,11 @@ target_link_libraries(ddc_tests
         DDC::DDC
 )
 gtest_discover_tests(ddc_tests DISCOVERY_MODE PRE_TEST)
+
 if("${DDC_BUILD_KERNELS_FFT}")
-  add_executable(fft_tests main.cpp fft.cpp)
-  target_compile_features(fft_tests PUBLIC cxx_std_17)
-  target_link_libraries(fft_tests
-	  PUBLIC
-		  GTest::gtest
-		  DDC::DDC
-  )
-  gtest_discover_tests(fft_tests DISCOVERY_MODE PRE_TEST)
+  add_subdirectory(fft)
 endif()
+
 if("${DDC_BUILD_KERNELS_SPLINES}")
   add_subdirectory(splines)
 endif()

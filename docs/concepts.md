@@ -6,7 +6,7 @@ Copyright (C) The ddc development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
 
-ddc introduces labels in the form of dimensions, and attributes on top of Kokkos views, which allows for a more intuitive, and less error-prone developer experience.
+DDC introduces labels in the form of dimensions and attributes on top of Kokkos arrays, which allows for a more intuitive and less error-prone developer experience.
 
 In fact, in Kokkos, the indices of views are weakly typed, meaning that each index is a simple integer. Let's consider a multidimensional view intended to represent a physical quantity, such as velocity in our example. The first index represents the velocity along the X-axis, and the second index represents the velocity along the Y-axis. In reality, there is nothing to distinguish between these two indices from the computer's perspective; they are both simply integers. This can lead to a situation where one mistakenly swaps the two indices. The code would compile successfully, but the resulting behavior would be incorrect, and the source of the error could be difficult to trace.
 

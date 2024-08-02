@@ -48,7 +48,7 @@ Now, if we take a slice of this container and still want to access the same elem
 
 ### ddc::DiscreteVector
 
-A `ddc::DiscreteVector` corresponds to an integer that, like `ddc::DiscreteElement`, carries the strong typing of the dimension in which it is defined. For instance in the uniform heat equation example, defining the `ddc::DiscreteVector` `gwx` as follows:
+A `ddc::DiscreteVector` corresponds to an integer that, like `ddc::DiscreteElement`, carries the label of the dimension in which it is defined. For instance in the uniform heat equation example, defining the `ddc::DiscreteVector` `gwx` as follows:
 
 ```cpp
 ddc::DiscreteVector<DDimX> gwx(1);

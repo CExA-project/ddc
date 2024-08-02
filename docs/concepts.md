@@ -77,4 +77,13 @@ As mentioned earlier, ddc operates on a coordinate system. These coordinates are
 
 Note that it is possible to construct a domain with both uniform (see \subpage uniform_heat_equation "examples/uniform_heat_equation.cpp") and non-uniform (see \subpage non_uniform_heat_equation "examples/non_uniform_heat_equation.cpp") distribution of points.
 
-## How to iterate in ddc ?
+## Algorithms in ddc ?
+
++ `for_each`: this algorithm allows iterating over each DiscreteElement in the domain of study.
++ `fill`: this algorithm allows filling a borrowed chunk with a given value.
++ `reduce`: this algorithm allows reducing operations on a chunk.
++ `copy`: this algorithm allows copying the content of a borrowed chunk into another
+
+
+
+ 

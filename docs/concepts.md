@@ -69,7 +69,7 @@ As mentioned earlier, DDC operates on a coordinate system. These coordinates are
 
 ## Algorithms in ddc ?
 
-+ `for_each`: this algorithm allows iterating over each DiscreteElement in the domain of study.
++ `for_each`: this algorithm allows iterating over each `ddc::DiscreteElement` in the domain of study.
 + `fill`: this algorithm allows filling a borrowed chunk with a given value.
 + `reduce`: this algorithm allows reducing operations on a chunk.
 + `copy`: this algorithm allows copying the content of a borrowed chunk into another

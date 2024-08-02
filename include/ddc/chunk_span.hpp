@@ -250,12 +250,13 @@ public:
         auto subview = std::experimental::
                 submdspan(allocation_mdspan(), get_slicer_for<DDims>(slice_spec)...);
         using detail::TypeSeq;
-        using selected_meshes = type_seq_remove_t<TypeSeq<DDims...>, TypeSeq<QueryDDims...>>;
+        using OutTypeSeqDDims = type_seq_remove_t<TypeSeq<DDims...>, TypeSeq<QueryDDims...>>;
+        using OutDDom = detail::convert_type_seq_to_discrete_domain_t<OutTypeSeqDDims>;
         return ChunkSpan<
                 ElementType,
-                decltype(select_by_type_seq<selected_meshes>(this->m_domain)),
+                OutDDom,
                 typename decltype(subview)::layout_type,
-                memory_space>(subview, select_by_type_seq<selected_meshes>(this->m_domain));
+                memory_space>(subview, OutDDom(this->m_domain));
     }
 
     /** Restrict to a subdomain

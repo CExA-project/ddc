@@ -10,7 +10,7 @@ DDC introduces labels in the form of dimensions and attributes on top of Kokkos 
 
 In fact, in Kokkos, the indices of views are weakly typed, meaning that each index is a simple integer. Let's consider a multidimensional view intended to represent a physical quantity, such as a velocity field for example. The first index represents the velocity along the X-axis, and the second index represents the velocity along the Y-axis. As both are simply integers this can lead to a situation where one mistakenly swaps the two indices. The code would compile successfully, but the resulting behavior would be incorrect, and the source of the error could be difficult to trace.
 
-The advantage of using ddc is that it provides array-like containers that have labeled dimensions using strongly typed indices. For instance, by labeling dimensions by `X` and `Y`, the indices along those labeled dimensions become strongly typed preventing the user from making such mistakes.
+The advantage of using DDC is that it provides array-like containers that have labeled dimensions using strongly typed indices. For instance, by labeling dimensions `X` and `Y`, the indices along those labeled dimensions become strongly typed preventing the user from making such mistakes.
 
 > Note that the use of ddc is not restricted to solving equations. Indeed, one can easily imagine strong typing of variables corresponding to names or ages in a registry. The operations must then be adapted accordingly. Here, we largely base our approach on the uniform and non-uniform resolution of the heat equation in two dimensions, which is why we focus the presentation on solving equations using finite differences on a 2D grid.
 

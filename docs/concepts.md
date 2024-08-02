@@ -16,7 +16,7 @@ The advantage of using DDC is that it provides array-like containers that have l
 
 ## ddc::Chunk and ddc::ChunkSpan
 
-The `ddc::chunk` is a container that holds the data, while `ddc::chunkspan` behaves like `mdspan`, meaning they are pointers to the data contained within the chunk.
+The `ddc::Chunk` is a container that holds the data, while `ddc::ChunkSpan` behaves like `std::mdspan`, meaning they are pointers to the data contained within the `ddc::Chunk`.
 
 As mentioned in the introduction, ddc is a library that offers strongly typed indexing. Chunks contain data that can be located in space by coordinates. Thus, to access the data at a specific point in a 2D space, instead of entering two integers corresponding to the x and y positions, ddc requires entering the  coordinate `x` as a discrete element of the x position: `ddc::DiscreteElement<DDimX>`, and entering the `y` coordinate as a discrete element following the y dimension: `ddc::DiscreteElement<DDimY>`. This is done after predefining a strong typing for the discretized `X` dimension as `DDimX` and a strong typing for the discretized `Y` dimension as `DDimY` (see the heat equation example \subpage uniform_heat_equation "examples/uniform_heat_equation.cpp").
 

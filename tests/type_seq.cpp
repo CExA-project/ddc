@@ -20,6 +20,14 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(TYPE_SED_CPP)
 
 } // namespace )
 
+TEST(TypeSeqTest, Size)
+{
+    using Empty = ddc::detail::TypeSeq<>;
+    using A = ddc::detail::TypeSeq<a, b, c>;
+    EXPECT_EQ((ddc::type_seq_size_v<Empty>), 0);
+    EXPECT_EQ((ddc::type_seq_size_v<A>), 3);
+}
+
 TEST(TypeSeqTest, Rank)
 {
     using A = ddc::detail::TypeSeq<a, b, c>;

@@ -199,6 +199,13 @@ template <class TagSeqA, class TagSeqB, class TagSeqC>
 using type_seq_replace_t =
         typename detail::TypeSeqReplace<TagSeqA, TagSeqB, TagSeqC, detail::TypeSeq<>>::type;
 
+/// Get the number of parameters defining a TypeSeq
+template <class TypeSeq>
+constexpr std::size_t type_seq_length_v = std::numeric_limits<std::size_t>::max();
+
+template <class... Tags>
+constexpr std::size_t type_seq_length_v<detail::TypeSeq<Tags...>> = sizeof...(Tags);
+
 template <class T>
 using to_type_seq_t = typename detail::ToTypeSeq<T>::type;
 

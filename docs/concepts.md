@@ -45,13 +45,6 @@ container(i,j);
 
 Now, if we take a slice of this container and still want to access the same element `(i,j)` from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at zero. However, with DDC, this is not the case. If we take a slice of a `ddc::ChunkSpan`, accessing a `ddc::DiscreteElement` is the same between the slice and the original `ddc::ChunkSpan` because of the uniqueness of each discrete element on the grid and because of the way we access data using DDC.
 
-### ddc::Coordinate
-
-A `ddc::Coordinate` is one of the only ddc types which represents a continuous data type. This means that it can take any value that can be represented by a double. It represents the position of a coordinate in the vector space.
-
-Let's take the same discretization of the Y-axis {y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n</sub>}. We saw that ```cpp ddc::DiscreteElement<DDimY> y(0)``` points to the first element y<sub>0</sub> along the Y-axis. Now if we take ```cpp ddc::Coordinate<DDimY> (ddc::DiscreteElement<DDimY> y(0))``` it will correspond to the actual value of y<sub>0</sub> in the simulation. If the first point is at a position `y = -1`, it will be characterized by a `ddc::DiscreteElement` as the first point of the discretization, but physically its position is -1 and this is the value that `ddc::Coordinate` of this element will be.
-
-The `ddc::Coordinate` thus bridges the gap between the discretization accessible by `ddc::DiscreteElement` and the actual physical value of the coordinate.
 
 ### ddc::DiscreteVector
 

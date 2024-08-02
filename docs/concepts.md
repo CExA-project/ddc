@@ -43,7 +43,7 @@ Moreover, `ddc::DiscreteElement` are very useful for another reason. If we take 
 container(i,j);
 ```
 
-Now, if we take a slice of this container and still want to access the same element `(i,j)` from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at zero. However, with ddc, this is not the case. If we take a slice of a chunkspan, accessing a `ddc::DiscreteElement` is the same between the slice and the original chunkspan because of the uniqueness of each discrete element on the grid and because of the way we access data using ddc.
+Now, if we take a slice of this container and still want to access the same element `(i,j)` from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at zero. However, with DDC, this is not the case. If we take a slice of a `ddc::ChunkSpan`, accessing a `ddc::DiscreteElement` is the same between the slice and the original `ddc::ChunkSpan` because of the uniqueness of each discrete element on the grid and because of the way we access data using DDC.
 
 ### ddc::Coordinate
 

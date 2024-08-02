@@ -157,8 +157,7 @@ static void characteristics_advection()
                 ddc::Coordinate<X>(x_start),
                 ddc::Coordinate<X>(x_end),
                 nb_x_points);
-        std::cout << "Uniform spline degree " << s_degree_x
-                  << std::endl;
+        std::cout << "Uniform spline degree " << s_degree_x << std::endl;
     } else {
         std::cout << "Non-uniform spline degree " << s_degree_x
                   << std::endl;
@@ -362,7 +361,7 @@ int main(int argc, char** argv)
     Kokkos::ScopeGuard const kokkos_scope(argc, argv);
     ddc::ScopeGuard const ddc_scope(argc, argv);
 
-    if (argc != 3) {
+    if (argc < 3) {
         std::cout << "Usage ./app <non-uniformity> <spline degree>"
                   << std::endl;
         return 0;

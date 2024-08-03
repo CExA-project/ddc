@@ -104,7 +104,7 @@ int main(int argc, char** argv)
     // Number of time-steps between outputs
     std::ptrdiff_t const t_output_period = 10;
 
-    std::cout << "Using spectral method \n";
+    std::cout << "Using spectral method\n";
 
     // Initialization of the global domain in X with gwx ghost points on
     // each side

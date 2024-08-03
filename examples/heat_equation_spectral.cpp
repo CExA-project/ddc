@@ -204,14 +204,12 @@ int main(int argc, char** argv)
                                       ikxky) {
                     ddc::DiscreteElement<DDimFx> const ikx(ikxky);
                     ddc::DiscreteElement<DDimFy> const iky(ikxky);
-                    Ff(ikx, iky)
-                            = Ff(ikx, iky)
-                              * (1
-                                 - (coordinate(ikx) * coordinate(ikx)
-                                            * kx
-                                    + coordinate(iky) * coordinate(iky)
-                                              * ky)
-                                           * max_dt); // Ff(t+dt) = (1-D*k^2*dt)*Ff(t)
+                    double const rkx = ddc::coordinate(ikx);
+                    double const rky = ddc::coordinate(iky);
+                    // Ff(t+dt) = (1-D*k^2*dt)*Ff(t)
+                    Ff(ikx, iky) *= 1
+                                    - (rkx * rkx * kx + rky * rky * ky)
+                                              * max_dt;
                 });
         ddc::
                 ifft(Kokkos::DefaultExecutionSpace(),

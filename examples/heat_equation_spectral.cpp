@@ -177,10 +177,11 @@ int main(int argc, char** argv)
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
 
-    ddc::init_discrete_space<DDimFx>(ddc::init_fourier_space<DDimFx>(
-            ddc::DiscreteDomain<DDimX>(xy_domain)));
-    ddc::init_discrete_space<DDimFy>(ddc::init_fourier_space<DDimFy>(
-            ddc::DiscreteDomain<DDimY>(xy_domain)));
+    ddc::init_discrete_space<DDimFx>(
+            ddc::init_fourier_space<DDimFx>(x_domain));
+    ddc::init_discrete_space<DDimFy>(
+            ddc::init_fourier_space<DDimFy>(y_domain));
+
     ddc::DiscreteDomain<DDimFx, DDimFy> const k_mesh
             = ddc::FourierMesh<DDimFx, DDimFy>(xy_domain, false);
     ddc::Chunk Ff_allocation(

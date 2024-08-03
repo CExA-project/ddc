@@ -211,10 +211,9 @@ int main(int argc, char** argv)
                     ddc::DiscreteElement<DDimFy> const iky(ikxky);
                     double const rkx = ddc::coordinate(ikx);
                     double const rky = ddc::coordinate(iky);
-                    // Ff(t+dt) = (1-D*k^2*dt)*Ff(t)
                     Ff(ikxky)
                             *= 1
-                               - (rkx * rkx * kx + rky * rky * ky) * dt;
+                               - (kx * rkx * rkx + ky * rky * rky) * dt;
                 });
         ddc::ifft(execution_space, next_temp, Ff, kwargs);
 

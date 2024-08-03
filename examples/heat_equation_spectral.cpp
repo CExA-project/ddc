@@ -173,7 +173,7 @@ int main(int argc, char** argv)
     // display the initial data
     ddc::parallel_deepcopy(_host_temp, _last_temp);
     display(ddc::coordinate(time_domain.front()),
-            _host_temp[x_domain][y_domain]);
+            _host_temp.span_cview());
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
 
@@ -221,8 +221,7 @@ int main(int argc, char** argv)
         if (iter - last_output >= t_output_period) {
             last_output = iter;
             ddc::parallel_deepcopy(_host_temp, _next_temp);
-            display(ddc::coordinate(iter),
-                    _host_temp[x_domain][y_domain]);
+            display(ddc::coordinate(iter), _host_temp.span_cview());
         }
 
         // Swap our two buffers
@@ -232,6 +231,6 @@ int main(int argc, char** argv)
     if (last_output < time_domain.back()) {
         ddc::parallel_deepcopy(_host_temp, _last_temp);
         display(ddc::coordinate(time_domain.back()),
-                _host_temp[x_domain][y_domain]);
+                _host_temp.span_cview());
     }
 }

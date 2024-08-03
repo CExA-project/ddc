@@ -140,24 +140,26 @@ int main(int argc, char** argv)
                     ddc::Coordinate<T>(end_time),
                     nb_time_steps + 1));
 
+    ddc::DiscreteDomain<DDimX, DDimY> const
+            xy_domain(x_domain, y_domain);
+
     // Maps temperature into the full domain (including ghosts) twice:
     // - once for the last fully computed time-step
     ddc::Chunk _last_temp(
             "_last_temp",
-            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
+            xy_domain,
             ddc::DeviceAllocator<double>());
 
     // - once for time-step being computed
     ddc::Chunk _next_temp(
             "_next_temp",
-            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
+            xy_domain,
             ddc::DeviceAllocator<double>());
 
     ddc::ChunkSpan const initial_temp = _last_temp.span_view();
     // Initialize the temperature on the main domain
-    ddc::DiscreteDomain<DDimX, DDimY> const x_mesh(x_domain, y_domain);
     ddc::parallel_for_each(
-            x_mesh,
+            xy_domain,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                 double const x = ddc::coordinate(
                         ddc::DiscreteElement<DDimX>(ixy));
@@ -176,11 +178,11 @@ int main(int argc, char** argv)
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
 
     ddc::init_discrete_space<DDimFx>(ddc::init_fourier_space<DDimFx>(
-            ddc::DiscreteDomain<DDimX>(initial_temp.domain())));
+            ddc::DiscreteDomain<DDimX>(xy_domain)));
     ddc::init_discrete_space<DDimFy>(ddc::init_fourier_space<DDimFy>(
-            ddc::DiscreteDomain<DDimY>(initial_temp.domain())));
-    ddc::DiscreteDomain<DDimFx, DDimFy> const k_mesh = ddc::
-            FourierMesh<DDimFx, DDimFy>(initial_temp.domain(), false);
+            ddc::DiscreteDomain<DDimY>(xy_domain)));
+    ddc::DiscreteDomain<DDimFx, DDimFy> const k_mesh
+            = ddc::FourierMesh<DDimFx, DDimFy>(xy_domain, false);
     ddc::Chunk Ff_allocation(
             "Ff_allocation",
             k_mesh,

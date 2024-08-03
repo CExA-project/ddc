@@ -178,10 +178,10 @@ int main(int argc, char** argv)
     ddc::parallel_for_each(
             x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                double const x
-                        = ddc::coordinate(ddc::select<DDimX>(ixy));
-                double const y
-                        = ddc::coordinate(ddc::select<DDimY>(ixy));
+                double const x = ddc::coordinate(
+                        ddc::DiscreteElement<DDimX>(ixy));
+                double const y = ddc::coordinate(
+                        ddc::DiscreteElement<DDimY>(ixy));
                 initial_temp(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
 
@@ -222,10 +222,8 @@ int main(int argc, char** argv)
                 k_mesh,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimFx, DDimFy> const
                                       ikxky) {
-                    ddc::DiscreteElement<DDimFx> const ikx
-                            = ddc::select<DDimFx>(ikxky);
-                    ddc::DiscreteElement<DDimFy> const iky
-                            = ddc::select<DDimFy>(ikxky);
+                    ddc::DiscreteElement<DDimFx> const ikx(ikxky);
+                    ddc::DiscreteElement<DDimFy> const iky(ikxky);
                     Ff(ikx, iky)
                             = Ff(ikx, iky)
                               * (1

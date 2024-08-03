@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-//! [includes]
 #include <cmath>
 #include <cstddef>
 #include <iomanip>
@@ -13,25 +12,19 @@
 #include <ddc/kernels/fft.hpp>
 
 #include <Kokkos_Core.hpp>
-//! [includes]
 
-//! [X-dimension]
 /// Our first continuous dimension
 struct X;
-//! [X-dimension]
 
-//! [X-discretization]
 /// A uniform discretization of X
 struct DDimX : ddc::UniformPointSampling<X>
 {
 };
-//! [X-discretization]
 
 struct DDimFx : ddc::PeriodicSampling<ddc::Fourier<X>>
 {
 };
 
-//! [Y-space]
 // Our second continuous dimension
 struct Y;
 // Its uniform discretization
@@ -42,18 +35,14 @@ struct DDimY : ddc::UniformPointSampling<Y>
 struct DDimFy : ddc::PeriodicSampling<ddc::Fourier<Y>>
 {
 };
-//! [Y-space]
 
-//! [time-space]
 // Our simulated time dimension
 struct T;
 // Its uniform discretization
 struct DDimT : ddc::UniformPointSampling<T>
 {
 };
-//! [time-space]
 
-//! [display]
 /** A function to pretty print the temperature
  * @param time the time at which the output is made
  * @param temp the temperature at this time-step
@@ -83,9 +72,7 @@ void display(double time, ChunkType temp)
             });
     std::cout << " }" << std::endl;
 }
-//! [display]
 
-//! [main-start]
 int main(int argc, char** argv)
 {
     Kokkos::ScopeGuard const kokkos_scope(argc, argv);
@@ -94,7 +81,6 @@ int main(int argc, char** argv)
     // some parameters that would typically be read from some form of
     // configuration file in a more realistic code
 
-    //! [parameters]
     // Start of the domain of interest in the X dimension
     double const x_start = -1.;
     // End of the domain of interest in the X dimension
@@ -117,12 +103,9 @@ int main(int argc, char** argv)
     double const end_time = 10.;
     // Number of time-steps between outputs
     ptrdiff_t const t_output_period = 10;
-    //! [parameters]
 
-    //! [main-start]
     std::cout << "Using spectral method \n";
 
-    //! [X-global-domain]
     // Initialization of the global domain in X with gwx ghost points on
     // each side
     auto const x_domain
@@ -130,7 +113,6 @@ int main(int argc, char** argv)
                     ddc::Coordinate<X>(x_start),
                     ddc::Coordinate<X>(x_end),
                     ddc::DiscreteVector<DDimX>(nb_x_points)));
-    //! [X-global-domain]
 
     // Initialization of the global domain in Y with gwy ghost points on
     // each side
@@ -140,7 +122,6 @@ int main(int argc, char** argv)
                     ddc::Coordinate<Y>(y_end),
                     ddc::DiscreteVector<DDimY>(nb_y_points)));
 
-    //! [time-domains]
     // max(1/dx^2)
     double const invdx2_max = ddc::transform_reduce(
             x_domain,
@@ -178,7 +159,6 @@ int main(int argc, char** argv)
                     ddc::Coordinate<T>(end_time),
                     nb_time_steps + 1));
 
-    //! [data allocation]
     // Maps temperature into the full domain (including ghosts) twice:
     // - once for the last fully computed time-step
     ddc::Chunk _last_temp(
@@ -191,9 +171,7 @@ int main(int argc, char** argv)
             "_next_temp",
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
-    //! [data allocation]
 
-    //! [initial-conditions]
     ddc::ChunkSpan const initial_temp = _last_temp.span_view();
     // Initialize the temperature on the main domain
     ddc::DiscreteDomain<DDimX, DDimY> x_mesh
@@ -207,19 +185,15 @@ int main(int argc, char** argv)
                         = ddc::coordinate(ddc::select<DDimY>(ixy));
                 initial_temp(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
-    //! [initial-conditions]
 
     ddc::Chunk _host_temp = ddc::create_mirror(_last_temp.span_cview());
 
-
-    //! [initial output]
     // display the initial data
     ddc::parallel_deepcopy(_host_temp, _last_temp);
     display(ddc::coordinate(time_domain.front()),
             _host_temp[x_domain][y_domain]);
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
-    //! [initial output]
 
     ddc::init_discrete_space<DDimFx>(ddc::init_fourier_space<DDimFx>(
             ddc::DiscreteDomain<DDimX>(initial_temp.domain())));
@@ -233,23 +207,14 @@ int main(int argc, char** argv)
                   ddc::DeviceAllocator<Kokkos::complex<double>>());
     ddc::ChunkSpan Ff = Ff_allocation.span_view();
 
-    //! [time iteration]
     for (auto const iter :
          time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
-        //! [time iteration]
-
-        //! [boundary conditions]
-        //! [boundary conditions]
-
-        //! [manipulated views]
         // a span excluding ghosts of the temperature at the time-step we
         // will build
         ddc::ChunkSpan const next_temp {_next_temp.span_view()};
         // a read-only view of the temperature at the previous time-step
         ddc::ChunkSpan const last_temp {_last_temp.span_view()};
-        //! [manipulated views]
 
-        //! [numerical scheme]
         // Stencil computation on the main domain
         ddc::FFT_Normalization norm = ddc::FFT_Normalization::BACKWARD;
         ddc::fft(Kokkos::DefaultExecutionSpace(), Ff, last_temp, {norm});
@@ -275,28 +240,21 @@ int main(int argc, char** argv)
                      next_temp,
                      Ff,
                      {norm});
-        //! [numerical scheme]
 
-        //! [output]
         if (iter - last_output >= t_output_period) {
             last_output = iter;
             ddc::parallel_deepcopy(_host_temp, _next_temp);
             display(ddc::coordinate(iter),
                     _host_temp[x_domain][y_domain]);
         }
-        //! [output]
 
-        //! [swap]
         // Swap our two buffers
         std::swap(_last_temp, _next_temp);
-        //! [swap]
     }
 
-    //! [final output]
     if (last_output < time_domain.back()) {
         ddc::parallel_deepcopy(_host_temp, _last_temp);
         display(ddc::coordinate(time_domain.back()),
                 _host_temp[x_domain][y_domain]);
     }
-    //! [final output]
 }

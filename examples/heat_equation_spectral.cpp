@@ -122,30 +122,11 @@ int main(int argc, char** argv)
                     ddc::Coordinate<Y>(y_end),
                     ddc::DiscreteVector<DDimY>(nb_y_points)));
 
-    // max(1/dx^2)
-    double const invdx2_max = ddc::transform_reduce(
-            x_domain,
-            0.,
-            ddc::reducer::max<double>(),
-            [](ddc::DiscreteElement<DDimX> ix) {
-                return 1.
-                       / (ddc::distance_at_left(ix)
-                          * ddc::distance_at_right(ix));
-            });
-    // max(1/dy^2)
-    double const invdy2_max = ddc::transform_reduce(
-            y_domain,
-            0.,
-            ddc::reducer::max<double>(),
-            [](ddc::DiscreteElement<DDimY> iy) {
-                return 1.
-                       / (ddc::distance_at_left(iy)
-                          * ddc::distance_at_right(iy));
-            });
+    double const invdx2 = 1. / (ddc::step<DDimX>() * ddc::step<DDimX>());
+    double const invdy2 = 1. / (ddc::step<DDimY>() * ddc::step<DDimY>());
     ddc::Coordinate<T> const max_dt(
-            2. / Kokkos::pow(Kokkos::numbers::pi, 2)
-            / (kx * invdx2_max
-               + ky * invdy2_max)); // Classical stability theory gives .5 but empirically we see that for FFT method we need .2
+            2. / (Kokkos::numbers::pi * Kokkos::numbers::pi)
+            / (kx * invdx2 + ky * invdy2));
 
     // number of time intervals required to reach the end time
     ddc::DiscreteVector<DDimT> const nb_time_steps(

@@ -174,8 +174,7 @@ int main(int argc, char** argv)
 
     ddc::ChunkSpan const initial_temp = _last_temp.span_view();
     // Initialize the temperature on the main domain
-    ddc::DiscreteDomain<DDimX, DDimY> const x_mesh
-            = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
+    ddc::DiscreteDomain<DDimX, DDimY> const x_mesh(x_domain, y_domain);
     ddc::parallel_for_each(
             x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
@@ -201,10 +200,10 @@ int main(int argc, char** argv)
             ddc::DiscreteDomain<DDimY>(initial_temp.domain())));
     ddc::DiscreteDomain<DDimFx, DDimFy> const k_mesh = ddc::
             FourierMesh<DDimFx, DDimFy>(initial_temp.domain(), false);
-    ddc::Chunk Ff_allocation = ddc::
-            Chunk("Ff_allocation",
-                  k_mesh,
-                  ddc::DeviceAllocator<Kokkos::complex<double>>());
+    ddc::Chunk Ff_allocation(
+            "Ff_allocation",
+            k_mesh,
+            ddc::DeviceAllocator<Kokkos::complex<double>>());
     ddc::ChunkSpan const Ff = Ff_allocation.span_view();
 
     for (auto const iter :

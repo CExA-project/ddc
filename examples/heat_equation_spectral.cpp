@@ -215,9 +215,8 @@ int main(int argc, char** argv)
         ddc::ChunkSpan const last_temp = _last_temp.span_view();
 
         // Stencil computation on the main domain
-        ddc::FFT_Normalization const norm
-                = ddc::FFT_Normalization::BACKWARD;
-        ddc::fft(Kokkos::DefaultExecutionSpace(), Ff, last_temp, {norm});
+        ddc::kwArgs_fft const kwargs {ddc::FFT_Normalization::BACKWARD};
+        ddc::fft(Kokkos::DefaultExecutionSpace(), Ff, last_temp, kwargs);
         ddc::parallel_for_each(
                 k_mesh,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimFx, DDimFy> const
@@ -237,7 +236,7 @@ int main(int argc, char** argv)
                 ifft(Kokkos::DefaultExecutionSpace(),
                      next_temp,
                      Ff,
-                     {norm});
+                     kwargs);
 
         if (iter - last_output >= t_output_period) {
             last_output = iter;

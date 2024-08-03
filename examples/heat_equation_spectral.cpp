@@ -142,14 +142,14 @@ int main(int argc, char** argv)
                        / (ddc::distance_at_left(iy)
                           * ddc::distance_at_right(iy));
             });
-    ddc::Coordinate<T> const max_dt {
+    ddc::Coordinate<T> const max_dt(
             2. / Kokkos::pow(Kokkos::numbers::pi, 2)
             / (kx * invdx2_max
-               + ky * invdy2_max)}; // Classical stability theory gives .5 but empirically we see that for FFT method we need .2
+               + ky * invdy2_max)); // Classical stability theory gives .5 but empirically we see that for FFT method we need .2
 
     // number of time intervals required to reach the end time
-    ddc::DiscreteVector<DDimT> const nb_time_steps {
-            std::ceil((end_time - start_time) / max_dt) + .2};
+    ddc::DiscreteVector<DDimT> const nb_time_steps(
+            std::ceil((end_time - start_time) / max_dt) + .2);
     // Initialization of the global domain in time:
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
@@ -211,9 +211,9 @@ int main(int argc, char** argv)
          time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
         // a span excluding ghosts of the temperature at the time-step we
         // will build
-        ddc::ChunkSpan const next_temp {_next_temp.span_view()};
+        ddc::ChunkSpan const next_temp = _next_temp.span_view();
         // a read-only view of the temperature at the previous time-step
-        ddc::ChunkSpan const last_temp {_last_temp.span_view()};
+        ddc::ChunkSpan const last_temp = _last_temp.span_view();
 
         // Stencil computation on the main domain
         ddc::FFT_Normalization norm = ddc::FFT_Normalization::BACKWARD;

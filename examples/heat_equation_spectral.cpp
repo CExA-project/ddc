@@ -197,8 +197,10 @@ int main(int argc, char** argv)
 
         // Stencil computation on the main domain
         ddc::kwArgs_fft const kwargs {ddc::FFT_Normalization::BACKWARD};
-        ddc::fft(Kokkos::DefaultExecutionSpace(), Ff, last_temp, kwargs);
+        Kokkos::DefaultExecutionSpace execution_space;
+        ddc::fft(execution_space, Ff, last_temp, kwargs);
         ddc::parallel_for_each(
+                execution_space,
                 k_mesh,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimFx, DDimFy> const
                                       ikxky) {
@@ -211,11 +213,7 @@ int main(int argc, char** argv)
                                     - (rkx * rkx * kx + rky * rky * ky)
                                               * max_dt;
                 });
-        ddc::
-                ifft(Kokkos::DefaultExecutionSpace(),
-                     next_temp,
-                     Ff,
-                     kwargs);
+        ddc::ifft(execution_space, next_temp, Ff, kwargs);
 
         if (iter - last_output >= t_output_period) {
             last_output = iter;

@@ -106,21 +106,25 @@ int main(int argc, char** argv)
 
     std::cout << "Using spectral method\n";
 
-    // Initialization of the global domain in X with gwx ghost points on
-    // each side
-    auto const x_domain
+    // Initialization of the global domain in X including periodic point to have correct step
+    auto const x_domain_with_periodic_point
             = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(
                     ddc::Coordinate<X>(x_start),
                     ddc::Coordinate<X>(x_end),
                     ddc::DiscreteVector<DDimX>(nb_x_points)));
+    ddc::DiscreteDomain<DDimX> x_domain
+            = x_domain_with_periodic_point.remove_last(
+                    ddc::DiscreteVector<DDimX>(1));
 
-    // Initialization of the global domain in Y with gwy ghost points on
-    // each side
-    auto const y_domain
+    // Initialization of the global domain in Y including periodic point to have correct step
+    auto const y_domain_with_periodic_point
             = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
                     ddc::Coordinate<Y>(y_start),
                     ddc::Coordinate<Y>(y_end),
                     ddc::DiscreteVector<DDimY>(nb_y_points)));
+    ddc::DiscreteDomain<DDimY> y_domain
+            = y_domain_with_periodic_point.remove_last(
+                    ddc::DiscreteVector<DDimY>(1));
 
     double const invdx2 = 1. / (ddc::step<DDimX>() * ddc::step<DDimX>());
     double const invdy2 = 1. / (ddc::step<DDimY>() * ddc::step<DDimY>());

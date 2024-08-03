@@ -190,7 +190,7 @@ int main(int argc, char** argv)
             ddc::DeviceAllocator<Kokkos::complex<double>>());
     ddc::ChunkSpan const Ff = Ff_allocation.span_view();
 
-    for (auto const iter :
+    for (ddc::DiscreteElement<DDimT> const iter :
          time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
         // a span excluding ghosts of the temperature at the time-step we
         // will build

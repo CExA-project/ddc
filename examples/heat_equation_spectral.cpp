@@ -124,13 +124,13 @@ int main(int argc, char** argv)
 
     double const invdx2 = 1. / (ddc::step<DDimX>() * ddc::step<DDimX>());
     double const invdy2 = 1. / (ddc::step<DDimY>() * ddc::step<DDimY>());
-    ddc::Coordinate<T> const max_dt(
+    ddc::Coordinate<T> const dt(
             2. / (Kokkos::numbers::pi * Kokkos::numbers::pi)
             / (kx * invdx2 + ky * invdy2));
 
     // number of time intervals required to reach the end time
     ddc::DiscreteVector<DDimT> const nb_time_steps(
-            std::ceil((end_time - start_time) / max_dt) + .2);
+            std::ceil((end_time - start_time) / dt) + .2);
     // Initialization of the global domain in time:
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
@@ -212,9 +212,9 @@ int main(int argc, char** argv)
                     double const rkx = ddc::coordinate(ikx);
                     double const rky = ddc::coordinate(iky);
                     // Ff(t+dt) = (1-D*k^2*dt)*Ff(t)
-                    Ff(ikx, iky) *= 1
-                                    - (rkx * rkx * kx + rky * rky * ky)
-                                              * max_dt;
+                    Ff(ikx, iky)
+                            *= 1
+                               - (rkx * rkx * kx + rky * rky * ky) * dt;
                 });
         ddc::ifft(execution_space, next_temp, Ff, kwargs);
 

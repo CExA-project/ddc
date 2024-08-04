@@ -126,11 +126,10 @@ int main(int argc, char** argv)
             = y_domain_with_periodic_point.remove_last(
                     ddc::DiscreteVector<DDimY>(1));
 
-    double const invdx2 = 1. / (ddc::step<DDimX>() * ddc::step<DDimX>());
-    double const invdy2 = 1. / (ddc::step<DDimY>() * ddc::step<DDimY>());
+    double const max_rkx = Kokkos::numbers::pi / ddc::step<DDimX>();
+    double const max_rky = Kokkos::numbers::pi / ddc::step<DDimY>();
     ddc::Coordinate<T> const dt(
-            2. / (Kokkos::numbers::pi * Kokkos::numbers::pi)
-            / (kx * invdx2 + ky * invdy2));
+            2. / (kx * max_rkx * max_rkx + ky * max_rky * max_rky));
 
     // number of time intervals required to reach the end time
     ddc::DiscreteVector<DDimT> const nb_time_steps(

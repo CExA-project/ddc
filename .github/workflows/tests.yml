@@ -41,9 +41,6 @@ jobs:
       matrix:
         image: ['oldest', 'latest']
         backend: ['cpu', 'cuda', 'hip']
-        exclude:
-        - image: 'latest' # no ppa yet for hip in noble image
-          backend: 'hip'
     needs: id_repo
     runs-on: ubuntu-latest
     steps:
@@ -98,8 +95,6 @@ jobs:
         - image: 'oldest' # nvcc 11 only supports C++-17
           backend: 'cuda'
           cxx_version: '23'
-        - image: 'latest' # no ppa yet for hip in noble image
-          backend: 'hip'
         - image: 'latest' # nvcc 12 only supports C++-20
           backend: 'cuda'
           cxx_version: '23'

@@ -3,12 +3,15 @@
 // SPDX-License-Identifier: MIT
 
 //! [includes]
+#ifndef NDEBUG
 #include <algorithm>
+#endif
 #include <cmath>
+#include <cstddef>
 #include <iomanip>
 #include <iostream>
-#include <numeric>
 #include <random>
+#include <utility>
 #include <vector>
 
 #include <ddc/ddc.hpp>

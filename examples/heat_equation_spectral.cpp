@@ -6,7 +6,6 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-#include <numeric>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/fft.hpp>

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <cmath>
+#include <cstddef>
 #include <iostream>
 
 #include <ddc/ddc.hpp>

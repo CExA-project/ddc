@@ -10,6 +10,8 @@
 #include <utility>
 
 #include <ddc/ddc.hpp>
+
+#include <Kokkos_Core.hpp>
 //! [includes]
 
 //! [X-dimension]

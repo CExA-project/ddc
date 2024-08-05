@@ -8,6 +8,8 @@
 
 #include <ddc/ddc.hpp>
 
+#include <Kokkos_Core.hpp>
+
 using cell = bool;
 
 // Name of the axis

@@ -53,11 +53,14 @@ $(document).ready(function(){initNavTree('first_steps.html',''); initResizable()
 <div class="textblock"><p>In <a class="el" href="uniform_heat_equation.html">examples/uniform_heat_equation.cpp</a> is a DDC example implementing a forward finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary conditions.</p>
 <p>As usual, the file starts with a few includes that will be used in the code.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cmath&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iomanip&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;numeric&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;ddc/ddc.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
 </div><!-- fragment --><p>As you can see, to use DDC, we have to include <code>&lt;<a class="el" href="ddc_8hpp_source.html">ddc/ddc.hpp</a>&gt;</code></p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Definition of the discretization</h1>

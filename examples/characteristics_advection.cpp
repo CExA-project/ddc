@@ -298,7 +298,7 @@ int main(int argc, char** argv)
             last_output = iter;
             ddc::parallel_deepcopy(
                     host_density_alloc,
-                    last_density_alloc);
+                    next_density_alloc);
             display(ddc::coordinate(iter),
                     host_density_alloc[x_domain][y_domain]);
         }

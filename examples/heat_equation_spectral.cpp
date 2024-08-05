@@ -280,7 +280,7 @@ int main(int argc, char** argv)
         //! [output]
         if (iter - last_output >= t_output_period) {
             last_output = iter;
-            ddc::parallel_deepcopy(_host_temp, _last_temp);
+            ddc::parallel_deepcopy(_host_temp, _next_temp);
             display(ddc::coordinate(iter),
                     _host_temp[x_domain][y_domain]);
         }

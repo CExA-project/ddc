@@ -159,7 +159,7 @@ public:
                         std::pair<std::size_t, std::size_t>(this->size(), b.extent(0)),
                         Kokkos::ALL);
 
-        std::string name = "KokkosBatched::SerialPttrs-Gemm";
+        std::string name = "KokkosBatched::SerialPttrs-Gemv";
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
         if (transpose) {
             Kokkos::parallel_for(
@@ -232,7 +232,7 @@ public:
                         std::pair<std::size_t, std::size_t>(this->size(), b.extent(0)),
                         Kokkos::ALL);
 
-        std::string name = "KokkosBatched::SerialPttrs-Spdm";
+        std::string name = "KokkosBatched::SerialPttrs-Spmv";
         Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
         if (transpose) {
             Kokkos::parallel_for(

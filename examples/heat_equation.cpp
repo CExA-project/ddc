@@ -4,11 +4,14 @@
 
 //! [includes]
 #include <cmath>
+#include <cstddef>
 #include <iomanip>
 #include <iostream>
-#include <numeric>
+#include <utility>
 
 #include <ddc/ddc.hpp>
+
+#include <Kokkos_Core.hpp>
 //! [includes]
 
 

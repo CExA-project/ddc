@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <array>
+#include <climits>
 #include <cmath>
 
 #include <ddc/ddc.hpp>
@@ -123,4 +124,65 @@ TEST(KnotDiscreteDimension, Type)
     EXPECT_TRUE((std::is_same_v<
                  ddc::knot_discrete_dimension_t<DDim2>,
                  ddc::NonUniformBsplinesKnots<DDim2>>));
+}
+
+TEST(BSplinesFixture, Rounding_NonUniform)
+{
+    std::size_t constexpr degree = TestFixture::spline_degree;
+    using DimX = typename TestFixture::DimX;
+    using BSplinesX = typename TestFixture::NUBSplinesX;
+    using CoordX = ddc::Coordinate<DimX>;
+    static constexpr CoordX xmin = CoordX(0.0);
+    static constexpr CoordX xmax = CoordX(0.2);
+    static constexpr std::size_t ncells = TestFixture::ncells;
+    std::vector<CoordX> breaks(ncells + 1);
+    double dx = (xmax - xmin) / ncells;
+    for (std::size_t i(0); i < ncells + 1; ++i) {
+        breaks[i] = CoordX(xmin + i * dx);
+    }
+    ddc::init_discrete_space<BSplinesX>(breaks);
+
+    ddc::DiscreteDomain<BSplinesX> bspl_basis_domain = ddc::discrete_space<BSplinesX>().nbasis();
+
+    std::array<double, degree + 1> values_ptr;
+    std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
+            values(values_ptr.data());
+
+    CoordX test_point_min(xmin - DBL_EPSILON);
+    ddc::DiscreteElement<BSplinesX> front_idx = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
+    EXPECT_GE(front_idx, bspl_basis_domain.front());
+    EXPECT_LE(front_idx, bspl_basis_domain.back());
+
+    CoordX test_point_max(xmax + DBL_EPSILON);
+    ddc::DiscreteElement<BSplinesX> back_idx = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
+    EXPECT_GE(back_idx, bspl_basis_domain.front());
+    EXPECT_LE(back_idx, bspl_basis_domain.back());
+}
+
+TEST(BSplinesFixture, Rounding_Uniform)
+{
+    std::size_t constexpr degree = TestFixture::spline_degree;
+    using DimX = typename TestFixture::DimX;
+    using BSplinesX = typename TestFixture::UBSplinesX;
+    using CoordX = ddc::Coordinate<DimX>;
+    static constexpr CoordX xmin = CoordX(0.0);
+    static constexpr CoordX xmax = CoordX(0.2);
+    static constexpr std::size_t ncells = TestFixture::ncells;
+    ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
+
+    ddc::DiscreteDomain<BSplinesX> bspl_basis_domain = ddc::discrete_space<BSplinesX>().nbasis();
+
+    std::array<double, degree + 1> values_ptr;
+    std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
+            values(values_ptr.data());
+
+    CoordX test_point_min(xmin - DBL_EPSILON);
+    ddc::DiscreteElement<BSplinesX> front_idx = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
+    EXPECT_GE(front_idx, bspl_basis_domain.front());
+    EXPECT_LE(front_idx, bspl_basis_domain.back());
+
+    CoordX test_point_max(xmax + DBL_EPSILON);
+    ddc::DiscreteElement<BSplinesX> back_idx = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
+    EXPECT_GE(back_idx, bspl_basis_domain.front());
+    EXPECT_LE(back_idx, bspl_basis_domain.back());
 }

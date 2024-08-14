@@ -149,12 +149,14 @@ TEST(BSplinesFixture, Rounding_NonUniform)
             values(values_ptr.data());
 
     CoordX test_point_min(xmin - DBL_EPSILON);
-    ddc::DiscreteElement<BSplinesX> front_idx = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
+    ddc::DiscreteElement<BSplinesX> front_idx
+            = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
     EXPECT_GE(front_idx, bspl_basis_domain.front());
     EXPECT_LE(front_idx, bspl_basis_domain.back());
 
     CoordX test_point_max(xmax + DBL_EPSILON);
-    ddc::DiscreteElement<BSplinesX> back_idx = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
+    ddc::DiscreteElement<BSplinesX> back_idx
+            = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
     EXPECT_GE(back_idx, bspl_basis_domain.front());
     EXPECT_LE(back_idx, bspl_basis_domain.back());
 }
@@ -177,12 +179,14 @@ TEST(BSplinesFixture, Rounding_Uniform)
             values(values_ptr.data());
 
     CoordX test_point_min(xmin - DBL_EPSILON);
-    ddc::DiscreteElement<BSplinesX> front_idx = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
+    ddc::DiscreteElement<BSplinesX> front_idx
+            = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
     EXPECT_GE(front_idx, bspl_basis_domain.front());
     EXPECT_LE(front_idx, bspl_basis_domain.back());
 
     CoordX test_point_max(xmax + DBL_EPSILON);
-    ddc::DiscreteElement<BSplinesX> back_idx = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
+    ddc::DiscreteElement<BSplinesX> back_idx
+            = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
     EXPECT_GE(back_idx, bspl_basis_domain.front());
     EXPECT_LE(back_idx, bspl_basis_domain.back());
 }

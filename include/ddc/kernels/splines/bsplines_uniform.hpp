@@ -562,10 +562,10 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::g
     assert(rmax() - x >= -length() * 1e-14);
 
     double const inv_dx = inv_step();
-    if (x == rmin()) {
+    if (x <= rmin()) {
         icell = 0;
         offset = 0.0;
-    } else if (x == rmax()) {
+    } else if (x >= rmax()) {
         icell = ncells() - 1;
         offset = 1.0;
     } else {

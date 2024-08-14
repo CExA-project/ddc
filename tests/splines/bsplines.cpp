@@ -126,7 +126,7 @@ TEST(KnotDiscreteDimension, Type)
                  ddc::NonUniformBsplinesKnots<DDim2>>));
 }
 
-TEST(BSplinesFixture, Rounding_NonUniform)
+TYPED_TEST(BSplinesFixture, Rounding_NonUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
     using DimX = typename TestFixture::DimX;
@@ -142,7 +142,9 @@ TEST(BSplinesFixture, Rounding_NonUniform)
     }
     ddc::init_discrete_space<BSplinesX>(breaks);
 
-    ddc::DiscreteDomain<BSplinesX> bspl_basis_domain = ddc::discrete_space<BSplinesX>().nbasis();
+    ddc::DiscreteVector<BSplinesX> nbasis(ddc::discrete_space<BSplinesX>().nbasis());
+    ddc::DiscreteDomain<BSplinesX> bspl_basis_domain
+            = ddc::discrete_space<BSplinesX>().full_domain().take_first(nbasis);
 
     std::array<double, degree + 1> values_ptr;
     std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
@@ -161,7 +163,7 @@ TEST(BSplinesFixture, Rounding_NonUniform)
     EXPECT_LE(back_idx, bspl_basis_domain.back());
 }
 
-TEST(BSplinesFixture, Rounding_Uniform)
+TYPED_TEST(BSplinesFixture, Rounding_Uniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
     using DimX = typename TestFixture::DimX;
@@ -172,7 +174,9 @@ TEST(BSplinesFixture, Rounding_Uniform)
     static constexpr std::size_t ncells = TestFixture::ncells;
     ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
 
-    ddc::DiscreteDomain<BSplinesX> bspl_basis_domain = ddc::discrete_space<BSplinesX>().nbasis();
+    ddc::DiscreteVector<BSplinesX> nbasis(ddc::discrete_space<BSplinesX>().nbasis());
+    ddc::DiscreteDomain<BSplinesX> bspl_basis_domain
+            = ddc::discrete_space<BSplinesX>().full_domain().take_first(nbasis);
 
     std::array<double, degree + 1> values_ptr;
     std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const

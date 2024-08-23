@@ -61,7 +61,9 @@ is equivalent to defining a number of points, here 1, along the `x` dimension.
 In summary;
 
 + `ddc::DiscreteElement` corresponds to each unique point of the mesh, fixed throughout the duration of the simulation. They are similar to fixed points in an affine space.
-+ On the other hand, `ddc::DiscreteVector` corresponds to a number of points along a particular axis or to a distance between two points; in ddc, it corresponds to a distance between two DiscreteElements. These are integers that carry the strong typing of the dimension in which they are defined.
+- `ddc::DiscreteVector` corresponds to a *number* of points along a particular axis or to a distance between two points (i.e. between two `ddc::DiscreteElement`s).
+
+Both are integers that carry the strong typing of the dimension they are defined from.
 
 ## ddc::DiscreteDomain
 

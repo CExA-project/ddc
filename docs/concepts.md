@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 
 DDC introduces labels in the form of dimensions and attributes on top of Kokkos arrays, which offer a more intuitive and less error-prone development experience.
 
-In fact, in Kokkos, the indices of views are weakly typed, meaning that each index is a simple integer. Let's consider a multidimensional view intended to represent a physical quantity, such as a velocity field for example. The first index represents the velocity along the X-axis, and the second index represents the velocity along the Y-axis. As both are simply integers this can lead to a situation where one mistakenly swaps the two indices. The code would compile successfully, but the resulting behavior would be incorrect, and the source of the error could be difficult to trace.
+Using Kokkos, the indices of views are weakly typed, meaning that each index is a simple integer. Let's consider a multidimensional view intended to represent a physical quantity, such as a temperature field for example. The first index represents the temperature along the $x$ axis, and the second index represents the temperature along the $y$ axis. As both indices are simple integers, they may be swapped by mistake. The code would compile successfully, but the result would be incorrect, and the source of the error would be difficult to trace.
 
 The advantage of using DDC is that it provides array-like containers that have labeled dimensions using strongly typed indices. For instance, by labeling dimensions `X` and `Y`, the indices along those labeled dimensions become strongly typed preventing the user from making such mistakes.
 

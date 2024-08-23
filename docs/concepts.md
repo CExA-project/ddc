@@ -1,4 +1,4 @@
-# ddc concepts
+# DDC concepts
 
 <!--
 Copyright (C) The ddc development team, see COPYRIGHT.md file

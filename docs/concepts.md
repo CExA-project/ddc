@@ -37,7 +37,7 @@ ddc::DiscreteElement<DDimY> iy(0);
 
 carries the strong typing of the ordinate dimension `DDimY`, and corresponds to the index 0 as in $y_0$, i.e. the index of the first point along the $y$ dimension.
 
-Moreover, `ddc::DiscreteElement` are very useful for another reason. If we take the example of a classic container in C++, let's say we want to access the element `(i,j)` of this container which corresponds to the grid point at the i th row and j th column, we would do it like this:
+`ddc::DiscreteElement` is used to access arrays. Let's take a multidimensional container and access its element `(i, j)`, which corresponds to the grid point at the $i$th row and the $j$th column. We would do it like this:
 
 ```cpp
 container(i,j);

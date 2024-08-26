@@ -29,7 +29,7 @@ Note that swapping the `ddc::DiscreteElement<DDimX>` and `ddc::DiscreteElement<D
 Let's continue with our previous example of a 2D grid along two discretized dimensions `DDimX` and `DDimY`. In the previous section, we discussed how `ddc::DiscreteElement` is used as an index.
 
 More precisely, a `ddc::DiscreteElement` is a type that carries the label of the dimension it is defined from.
-Let's return to our example, If we take a discretization of the Y-axis as follows: {y<sub>0</sub>, y<sub>1</sub>, ..., y<sub>n</sub>}, the variable `y` defined as follows:
+Let's discretize the $y$ axis as follows: {$y_0$, $y_1$, ..., $y_n$}. Then the index `iy` defined as follows:
 
 ```cpp
 ddc::DiscreteElement<DDimY> y(0);

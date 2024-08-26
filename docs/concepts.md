@@ -43,7 +43,7 @@ carries the strong typing of the ordinate dimension `DDimY`, and corresponds to 
 container(i, j);
 ```
 
-Now, if we take a slice of this container and still want to access the same element `(i,j)` from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at zero. However, with DDC, this is not the case. If we take a slice of a `ddc::ChunkSpan`, accessing a `ddc::DiscreteElement` is the same between the slice and the original `ddc::ChunkSpan` because of the uniqueness of each discrete element on the grid and because of the way we access data using DDC.
+Now, if we take a slice of this container and still want to access the same element `(i, j)` from the grid, we need to adjust the indices, because they are relative to the first point of the slice. Using DDC and a slice (`ddc::ChunkSpan`), accessing with a `ddc::DiscreteElement` is the same between the slice and the original multidimensional array (`ddc::Chunk` or `ddc::ChunkSpan`), because of the uniqueness of each discrete element on the grid and because of the way we access data using DDC.
 
 
 ### ddc::DiscreteVector

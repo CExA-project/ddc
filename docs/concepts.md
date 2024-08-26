@@ -32,7 +32,7 @@ More precisely, a `ddc::DiscreteElement` is a type that carries the label of the
 Let's discretize the $y$ axis as follows: {$y_0$, $y_1$, ..., $y_n$}. Then the index `iy` defined as follows:
 
 ```cpp
-ddc::DiscreteElement<DDimY> y(0);
+ddc::DiscreteElement<DDimY> iy(0);
 ```
 
 carries the strong typing of the ordinate dimension `DDimY`, and corresponds to the index 0 as in $y_0$, i.e. the index of the first point along the $y$ dimension.

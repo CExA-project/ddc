@@ -40,7 +40,7 @@ carries the strong typing of the ordinate dimension `DDimY`, and corresponds to 
 `ddc::DiscreteElement` is used to access arrays. Let's take a multidimensional container and access its element `(i, j)`, which corresponds to the grid point at the $i$th row and the $j$th column. We would do it like this:
 
 ```cpp
-container(i,j);
+container(i, j);
 ```
 
 Now, if we take a slice of this container and still want to access the same element `(i,j)` from the grid, we will need to adjust the indices because the indexing of the new sliced container along each dimension starts at zero. However, with DDC, this is not the case. If we take a slice of a `ddc::ChunkSpan`, accessing a `ddc::DiscreteElement` is the same between the slice and the original `ddc::ChunkSpan` because of the uniqueness of each discrete element on the grid and because of the way we access data using DDC.

@@ -54,7 +54,7 @@ A `ddc::DiscreteVector` corresponds to an integer that, like `ddc::DiscreteEleme
 ddc::DiscreteVector<DDimX> gwx(5);
 ```
 
-is equivalent to defining a number of points, here 1, along the `x` dimension.
+This defines five point, along the $x$ dimension.
 
 \remark Note that the difference between two `ddc::DiscreteElement` creates a `ddc::DiscreteVector`, and the sum of a `ddc::DiscreteVector` and a `ddc::DiscreteElement` results in a `ddc::DiscreteElement`. This illustrates how `ddc::DiscreteElement` could correspond to points in an affine space, while `ddc::DiscreteVector` could correspond to vectors in a vector space or to a distance between two points.
 

@@ -35,7 +35,7 @@ Let's discretize the $y$ axis as follows: {$y_0$, $y_1$, ..., $y_n$}. Then the i
 ddc::DiscreteElement<DDimY> y(0);
 ```
 
-carries the strong typing of the ordinate dimension `DDimY` and corresponds to y<sub>0</sub> , the first point along the `Y` dimension.
+carries the strong typing of the ordinate dimension `DDimY`, and corresponds to the index 0 as in $y_0$, i.e. the index of the first point along the $y$ dimension.
 
 Moreover, `ddc::DiscreteElement` are very useful for another reason. If we take the example of a classic container in C++, let's say we want to access the element `(i,j)` of this container which corresponds to the grid point at the i th row and j th column, we would do it like this:
 

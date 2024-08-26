@@ -56,7 +56,7 @@ ddc::DiscreteVector<DDimX> gwx(5);
 
 This defines five point, along the $x$ dimension.
 
-\remark Note that the difference between two `ddc::DiscreteElement` creates a `ddc::DiscreteVector`, and the sum of a `ddc::DiscreteVector` and a `ddc::DiscreteElement` results in a `ddc::DiscreteElement`. This illustrates how `ddc::DiscreteElement` could correspond to points in an affine space, while `ddc::DiscreteVector` could correspond to vectors in a vector space or to a distance between two points.
+\remark Note that the difference between two `ddc::DiscreteElement`s gives a `ddc::DiscreteVector`, and the sum of a `ddc::DiscreteVector` and a `ddc::DiscreteElement` gives a `ddc::DiscreteElement`. This illustrates how `ddc::DiscreteElement`s correspond to points in an affine space, while `ddc::DiscreteVector`s correspond to vectors in a vector space, or to a distance between two points.
 
 In summary;
 

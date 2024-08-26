@@ -58,9 +58,9 @@ This defines five point, along the $x$ dimension.
 
 \remark Note that the difference between two `ddc::DiscreteElement`s gives a `ddc::DiscreteVector`, and the sum of a `ddc::DiscreteVector` and a `ddc::DiscreteElement` gives a `ddc::DiscreteElement`. This illustrates how `ddc::DiscreteElement`s correspond to points in an affine space, while `ddc::DiscreteVector`s correspond to vectors in a vector space, or to a distance between two points.
 
-In summary;
+In summary:
 
-+ `ddc::DiscreteElement` corresponds to each unique point of the mesh, fixed throughout the duration of the simulation. They are similar to fixed points in an affine space.
+- `ddc::DiscreteElement` corresponds to each unique point of the mesh. It is similar to fixed points in an affine space.
 - `ddc::DiscreteVector` corresponds to a *number* of points along a particular axis or to a distance between two points (i.e. between two `ddc::DiscreteElement`s).
 
 Both are integers that carry the strong typing of the dimension they are defined from.

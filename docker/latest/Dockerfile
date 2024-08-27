@@ -53,9 +53,8 @@ RUN chmod +x /bin/bash_run \
     "cpu") \
       apt-get install -y --no-install-recommends \
       clang \
-      clang-tidy-14 \
-      clang-format-14 \
-      llvm-14-tools \
+      clang-tidy \
+      clang-format \
  ;; "cuda") \
       apt-get install -y --no-install-recommends \
       nvidia-cuda-toolkit \

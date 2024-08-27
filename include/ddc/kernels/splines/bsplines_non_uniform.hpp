@@ -474,8 +474,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
 
     assert(icell >= m_break_point_domain.front());
     assert(icell <= m_break_point_domain.back());
-    assert(ddc::coordinate(icell) - x <= 1e-14);
-    assert(x - ddc::coordinate(icell + 1) <= 1e-14);
+    assert(ddc::coordinate(icell) - x <= length() * 1e-14);
+    assert(x - ddc::coordinate(icell + 1) <= length() * 1e-14);
 
     // 2. Compute values of B-splines with support over cell 'icell'
     double temp;

@@ -144,7 +144,7 @@ TYPED_TEST(BSplinesFixture, Rounding_NonUniform)
 
     ddc::DiscreteVector<BSplinesX> nbasis(ddc::discrete_space<BSplinesX>().nbasis());
     ddc::DiscreteDomain<BSplinesX> bspl_basis_domain
-            = ddc::discrete_space<BSplinesX>().full_domain().take_first(nbasis);
+            = ddc::discrete_space<BSplinesX>().full_domain();
 
     std::array<double, degree + 1> values_ptr;
     std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
@@ -158,7 +158,7 @@ TYPED_TEST(BSplinesFixture, Rounding_NonUniform)
     CoordX test_point_max(xmax + std::numeric_limits<double>::epsilon());
     ddc::DiscreteElement<BSplinesX> back_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
-    EXPECT_EQ(back_idx, bspl_basis_domain.back());
+    EXPECT_EQ(back_idx, bspl_basis_domain.back() - BSplinesX::degree());
 }
 
 TYPED_TEST(BSplinesFixture, Rounding_Uniform)
@@ -174,7 +174,7 @@ TYPED_TEST(BSplinesFixture, Rounding_Uniform)
 
     ddc::DiscreteVector<BSplinesX> nbasis(ddc::discrete_space<BSplinesX>().nbasis());
     ddc::DiscreteDomain<BSplinesX> bspl_basis_domain
-            = ddc::discrete_space<BSplinesX>().full_domain().take_first(nbasis);
+            = ddc::discrete_space<BSplinesX>().full_domain();
 
     std::array<double, degree + 1> values_ptr;
     std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
@@ -188,5 +188,5 @@ TYPED_TEST(BSplinesFixture, Rounding_Uniform)
     CoordX test_point_max(xmax + std::numeric_limits<double>::epsilon());
     ddc::DiscreteElement<BSplinesX> back_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
-    EXPECT_EQ(back_idx, bspl_basis_domain.back());
+    EXPECT_EQ(back_idx, bspl_basis_domain.back() - BSplinesX::degree());
 }

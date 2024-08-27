@@ -153,8 +153,8 @@ TYPED_TEST(BSplinesFixture, Rounding_NonUniform)
     CoordX test_point_min(xmin - std::numeric_limits<double>::epsilon());
     ddc::DiscreteElement<BSplinesX> front_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
-    EXPECT_GE(front_idx, bspl_basis_domain.front());
-    EXPECT_LE(front_idx, bspl_basis_domain.back());
+    EXPECT_EQUAL(front_idx, bspl_basis_domain.front());
+    EXPECT_EQUAL(front_idx, bspl_basis_domain.back());
 
     CoordX test_point_max(xmax + std::numeric_limits<double>::epsilon());
     ddc::DiscreteElement<BSplinesX> back_idx

@@ -142,8 +142,7 @@ TYPED_TEST(BSplinesFixture, Rounding_NonUniform)
     }
     ddc::init_discrete_space<BSplinesX>(breaks);
 
-    ddc::DiscreteVector<BSplinesX> nbasis(ddc::discrete_space<BSplinesX>().nbasis());
-    ddc::DiscreteDomain<BSplinesX> bspl_basis_domain
+    ddc::DiscreteDomain<BSplinesX> bspl_full_domain
             = ddc::discrete_space<BSplinesX>().full_domain();
 
     std::array<double, degree + 1> values_ptr;
@@ -153,12 +152,12 @@ TYPED_TEST(BSplinesFixture, Rounding_NonUniform)
     CoordX test_point_min(xmin - std::numeric_limits<double>::epsilon());
     ddc::DiscreteElement<BSplinesX> front_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
-    EXPECT_EQ(front_idx, bspl_basis_domain.front());
+    EXPECT_EQ(front_idx, bspl_full_domain.front());
 
     CoordX test_point_max(xmax + std::numeric_limits<double>::epsilon());
     ddc::DiscreteElement<BSplinesX> back_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
-    EXPECT_EQ(back_idx, bspl_basis_domain.back() - BSplinesX::degree());
+    EXPECT_EQ(back_idx, bspl_full_domain.back() - BSplinesX::degree());
 }
 
 TYPED_TEST(BSplinesFixture, Rounding_Uniform)
@@ -172,8 +171,7 @@ TYPED_TEST(BSplinesFixture, Rounding_Uniform)
     static constexpr std::size_t ncells = TestFixture::ncells;
     ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
 
-    ddc::DiscreteVector<BSplinesX> nbasis(ddc::discrete_space<BSplinesX>().nbasis());
-    ddc::DiscreteDomain<BSplinesX> bspl_basis_domain
+    ddc::DiscreteDomain<BSplinesX> bspl_full_domain
             = ddc::discrete_space<BSplinesX>().full_domain();
 
     std::array<double, degree + 1> values_ptr;
@@ -183,10 +181,10 @@ TYPED_TEST(BSplinesFixture, Rounding_Uniform)
     CoordX test_point_min(xmin - std::numeric_limits<double>::epsilon());
     ddc::DiscreteElement<BSplinesX> front_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
-    EXPECT_EQ(front_idx, bspl_basis_domain.front());
+    EXPECT_EQ(front_idx, bspl_full_domain.front());
 
     CoordX test_point_max(xmax + std::numeric_limits<double>::epsilon());
     ddc::DiscreteElement<BSplinesX> back_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
-    EXPECT_EQ(back_idx, bspl_basis_domain.back() - BSplinesX::degree());
+    EXPECT_EQ(back_idx, bspl_full_domain.back() - BSplinesX::degree());
 }

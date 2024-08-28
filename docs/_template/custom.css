@@ -1,0 +1,10 @@
+/*
+ * Copyright (C) The DDC development team, see COPYRIGHT.md file
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+/* Allow the column with long return type to break in function list */
+.memTemplItemLeft {
+    white-space: unset !important;
+}

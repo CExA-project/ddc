@@ -2,76 +2,33 @@
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
-<!-- HTML header for doxygen 1.9.8-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=11"/>
-<meta name="generator" content="Doxygen 1.9.8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DDC: ddc::SplineEvaluator2D&lt; ExecSpace, MemorySpace, BSplines1, BSplines2, EvaluationDDim1, EvaluationDDim2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2, IDimX &gt; Class Template Reference</title>
-<link href="tabs.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="jquery.js"></script>
-<script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
-<link href="search/search.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="search/searchdata.js"></script>
-<script type="text/javascript" src="search/search.js"></script>
-<link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
-<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
-<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
-<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
-<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
-<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
-<script type="text/javascript">
-    DoxygenAwesomeDarkModeToggle.init()
-    DoxygenAwesomeFragmentCopyButton.init()
-    DoxygenAwesomeInteractiveToc.init()
-    DoxygenAwesomeParagraphLink.init()
-</script>
+	<meta charset="UTF-8">
+	<meta name="generator" content="Doxygen 1.9.8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>DDC: ddc::SplineEvaluator2D&lt; ExecSpace, MemorySpace, BSplines1, BSplines2, EvaluationDDim1, EvaluationDDim2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2, IDimX &gt; Class Template Reference</title>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="dynsections.js"></script>
+	<script type="text/javascript" src="navtreedata.js"></script>
+	<script type="text/javascript" src="navtree.js"></script>
+	<link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<a href="https://github.com/CExA-project/ddc" class="github-corner" title="View source on GitHub" target="_blank" rel="noopener noreferrer">
-  <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
-  <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
-<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
-<div id="titlearea">
-<table cellspacing="0" cellpadding="0">
- <tbody>
- <tr id="projectrow">
-  <td id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></td>
-  <td id="projectalign">
-   <div id="projectname">DDC<span id="projectnumber">&#160;0.0.0</span>
-   </div>
-  </td>
- </tr>
- </tbody>
-</table>
-</div>
-<!-- end header part -->
+<div>
+<header id="titlearea">
+	<div id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></div>
+	<h1 id="projectname">DDC&nbsp;<span id="projectnumber">0.0.0</span></h1>
+	<h2 id="projectbrief">a <span class="acronym">d</span>iscrete <span class="acronym">d</span>omain <span class="acronym">c</span>omputation library</h2>
+</header>
+<nav id="tabs"><ul>
+	<li><a href="index.html">About</a>
+	<li><a href="first_steps.html">Commented example</a>
+	<li><a href="annotated.html">API reference</a>
+	<li id="gitlab-ribbon"><a rel="noopener" href="https://github.com/CExA-project/ddc" target="_blank">Contribute on Github</a></li>
+</ul></nav>
 <!-- Generated by Doxygen 1.9.8 -->
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-var searchBox = new SearchBox("searchBox", "search/",'.html');
-/* @license-end */
-</script>
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('',true,false,'search.php','Search');
-  $(document).ready(function() { init_search(); });
-});
-/* @license-end */
-</script>
-<div id="main-nav"></div>
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -89,27 +46,6 @@ $(document).ready(function(){initNavTree('classddc_1_1SplineEvaluator2D.html',''
 /* @license-end */
 </script>
 <div id="doc-content">
-<!-- window showing the filter options -->
-<div id="MSearchSelectWindow"
-     onmouseover="return searchBox.OnSearchSelectShow()"
-     onmouseout="return searchBox.OnSearchSelectHide()"
-     onkeydown="return searchBox.OnSearchSelectKey(event)">
-</div>
-
-<!-- iframe showing the search results (closed by default) -->
-<div id="MSearchResultsWindow">
-<div id="MSearchResults">
-<div class="SRPage">
-<div id="SRIndex">
-<div id="SRResults"></div>
-<div class="SRStatus" id="Loading">Loading...</div>
-<div class="SRStatus" id="Searching">Searching...</div>
-<div class="SRStatus" id="NoMatches">No Matches</div>
-</div>
-</div>
-</div>
-</div>
-
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
@@ -122,16 +58,6 @@ $(document).ready(function(){initNavTree('classddc_1_1SplineEvaluator2D.html',''
 
 <p>A class to evaluate, differentiate or integrate a 2D spline function.  
  <a href="classddc_1_1SplineEvaluator2D.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>&gt;</code></p>
-<div class="dynheader">
-Collaboration diagram for ddc::SplineEvaluator2D&lt; ExecSpace, MemorySpace, BSplines1, BSplines2, EvaluationDDim1, EvaluationDDim2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2, IDimX &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="classddc_1_1SplineEvaluator2D__coll__graph.png" border="0" usemap="#addc_1_1SplineEvaluator2D_3_01ExecSpace_00_01MemorySpace_00_01BSplines1_00_01BSplines2_00_01EvaluationDDim1_00_01EvaluationDDim2_00_01LowerExtrapolationRule1_00_01UpperExtrapolationRule1_00_01LowerExtrapolationRule2_00_01UpperExtrapolationRule2_00_01IDimX_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="addc_1_1SplineEvaluator2D_3_01ExecSpace_00_01MemorySpace_00_01BSplines1_00_01BSplines2_00_01EvaluationDDim1_00_01EvaluationDDim2_00_01LowerExtrapolationRule1_00_01UpperExtrapolationRule1_00_01LowerExtrapolationRule2_00_01UpperExtrapolationRule2_00_01IDimX_01_4_coll__map" id="addc_1_1SplineEvaluator2D_3_01ExecSpace_00_01MemorySpace_00_01BSplines1_00_01BSplines2_00_01EvaluationDDim1_00_01EvaluationDDim2_00_01LowerExtrapolationRule1_00_01UpperExtrapolationRule1_00_01LowerExtrapolationRule2_00_01UpperExtrapolationRule2_00_01IDimX_01_4_coll__map">
-<area shape="rect" title="A class to evaluate, differentiate or integrate a 2D spline function." alt="" coords="5,5,361,643"/>
-</map>
-</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -183,9 +109,9 @@ Public Types</h2></td></tr>
 <tr class="memitem:a4d1020bfed6e1cfa7e0c15a1b2ee676d" id="r_a4d1020bfed6e1cfa7e0c15a1b2ee676d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a4d1020bfed6e1cfa7e0c15a1b2ee676d">batch_domain_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a46e92a9cb87ee7573d46fa56d333a09b">ddc::remove_dims_of_t</a>&lt; <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a8b16838f697cd333951ffe1829320b10">evaluation_discrete_dimension_type1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#ac903d738136b8861cefec0696bfcbf5c">evaluation_discrete_dimension_type2</a> &gt;</td></tr>
 <tr class="memdesc:a4d1020bfed6e1cfa7e0c15a1b2ee676d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the batch domain (obtained by removing the dimensions of interest from the whole domain).  <br /></td></tr>
 <tr class="separator:a4d1020bfed6e1cfa7e0c15a1b2ee676d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6f24a9a17d785c05f48742f5a925e5c" id="r_af6f24a9a17d785c05f48742f5a925e5c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> ddc::detail::convert_type_seq_to_discrete_domain&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::type_seq_replace_t</a>&lt; ddc::detail::TypeSeq&lt; IDimX... &gt;, ddc::detail::TypeSeq&lt; <a class="el" href="classddc_1_1SplineEvaluator2D.html#a8b16838f697cd333951ffe1829320b10">evaluation_discrete_dimension_type1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#ac903d738136b8861cefec0696bfcbf5c">evaluation_discrete_dimension_type2</a> &gt;, ddc::detail::TypeSeq&lt; <a class="el" href="classddc_1_1SplineEvaluator2D.html#a449c339bd52aa60440c2dfb3f39c2a91">bsplines_type1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a3d82e7a6609105bab7c469e968808bec">bsplines_type2</a> &gt; &gt; &gt;</td></tr>
-<tr class="memdesc:af6f24a9a17d785c05f48742f5a925e5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the whole spline domain (cartesian product of 2D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).  <br /></td></tr>
-<tr class="separator:af6f24a9a17d785c05f48742f5a925e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc2ab987af52f44b24d4898c3c5ab55b" id="r_acc2ab987af52f44b24d4898c3c5ab55b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> ddc::detail::convert_type_seq_to_discrete_domain_t&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::type_seq_replace_t</a>&lt; ddc::detail::TypeSeq&lt; IDimX... &gt;, ddc::detail::TypeSeq&lt; <a class="el" href="classddc_1_1SplineEvaluator2D.html#a8b16838f697cd333951ffe1829320b10">evaluation_discrete_dimension_type1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#ac903d738136b8861cefec0696bfcbf5c">evaluation_discrete_dimension_type2</a> &gt;, ddc::detail::TypeSeq&lt; <a class="el" href="classddc_1_1SplineEvaluator2D.html#a449c339bd52aa60440c2dfb3f39c2a91">bsplines_type1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a3d82e7a6609105bab7c469e968808bec">bsplines_type2</a> &gt; &gt; &gt;</td></tr>
+<tr class="memdesc:acc2ab987af52f44b24d4898c3c5ab55b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the whole spline domain (cartesian product of 2D spline domain and batch domain) preserving the underlying memory layout (order of dimensions).  <br /></td></tr>
+<tr class="separator:acc2ab987af52f44b24d4898c3c5ab55b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f540c576e408f453ce84a574b70c6d4" id="r_a1f540c576e408f453ce84a574b70c6d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a1f540c576e408f453ce84a574b70c6d4">lower_extrapolation_rule_1_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LowerExtrapolationRule1</a></td></tr>
 <tr class="memdesc:a1f540c576e408f453ce84a574b70c6d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the extrapolation rule at the lower boundary along the first dimension.  <br /></td></tr>
 <tr class="separator:a1f540c576e408f453ce84a574b70c6d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,7 +162,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:af5ed764988760bc149c7470a1a7a98d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate 2D spline function (described by its spline coefficients) at a given coordinate.  <br /></td></tr>
 <tr class="separator:af5ed764988760bc149c7470a1a7a98d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0815e231e2dc7fbae136e2366f67a8f" id="r_ae0815e231e2dc7fbae136e2366f67a8f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a> , class... CoordsDims&gt; </td></tr>
-<tr class="memitem:ae0815e231e2dc7fbae136e2366f67a8f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#ae0815e231e2dc7fbae136e2366f67a8f">operator()</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memitem:ae0815e231e2dc7fbae136e2366f67a8f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#ae0815e231e2dc7fbae136e2366f67a8f">operator()</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:ae0815e231e2dc7fbae136e2366f67a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate 2D spline function (described by its spline coefficients) on a mesh.  <br /></td></tr>
 <tr class="separator:ae0815e231e2dc7fbae136e2366f67a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa0aea95ac9c8f0ed9e6453ba34da331" id="r_afa0aea95ac9c8f0ed9e6453ba34da331"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a> , class... CoordsDims&gt; </td></tr>
@@ -260,27 +186,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:af11ac7274bad22c3024683b7062610f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Double-differentiate 2D spline function (described by its spline coefficients) at a given coordinate along specified dimensions of interest.  <br /></td></tr>
 <tr class="separator:af11ac7274bad22c3024683b7062610f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a056f783e31ad051a2f7b61ded7bad729" id="r_a056f783e31ad051a2f7b61ded7bad729"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a> , class... CoordsDims&gt; </td></tr>
-<tr class="memitem:a056f783e31ad051a2f7b61ded7bad729"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a056f783e31ad051a2f7b61ded7bad729">deriv_dim_1</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memitem:a056f783e31ad051a2f7b61ded7bad729"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a056f783e31ad051a2f7b61ded7bad729">deriv_dim_1</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a056f783e31ad051a2f7b61ded7bad729"><td class="mdescLeft">&#160;</td><td class="mdescRight">Differentiate 2D spline function (described by its spline coefficients) on a mesh along first dimension of interest.  <br /></td></tr>
 <tr class="separator:a056f783e31ad051a2f7b61ded7bad729"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a422ed7f3b0513c2195b7599389733de0" id="r_a422ed7f3b0513c2195b7599389733de0"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a> , class... CoordsDims&gt; </td></tr>
-<tr class="memitem:a422ed7f3b0513c2195b7599389733de0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a422ed7f3b0513c2195b7599389733de0">deriv_dim_2</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memitem:a422ed7f3b0513c2195b7599389733de0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a422ed7f3b0513c2195b7599389733de0">deriv_dim_2</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a422ed7f3b0513c2195b7599389733de0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Differentiate 2D spline function (described by its spline coefficients) on a mesh along second dimension of interest.  <br /></td></tr>
 <tr class="separator:a422ed7f3b0513c2195b7599389733de0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f86be5883f92e6e48fe3df062343f93" id="r_a6f86be5883f92e6e48fe3df062343f93"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a> , class... CoordsDims&gt; </td></tr>
-<tr class="memitem:a6f86be5883f92e6e48fe3df062343f93"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a6f86be5883f92e6e48fe3df062343f93">deriv_1_and_2</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memitem:a6f86be5883f92e6e48fe3df062343f93"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a6f86be5883f92e6e48fe3df062343f93">deriv_1_and_2</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a6f86be5883f92e6e48fe3df062343f93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cross-differentiate 2D spline function (described by its spline coefficients) on a mesh along dimensions of interest.  <br /></td></tr>
 <tr class="separator:a6f86be5883f92e6e48fe3df062343f93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1005c67e9787dab870c5dae21c9b6610" id="r_a1005c67e9787dab870c5dae21c9b6610"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterestDim</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a> , class... CoordsDims&gt; </td></tr>
-<tr class="memitem:a1005c67e9787dab870c5dae21c9b6610"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a1005c67e9787dab870c5dae21c9b6610">deriv</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memitem:a1005c67e9787dab870c5dae21c9b6610"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a1005c67e9787dab870c5dae21c9b6610">deriv</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a1005c67e9787dab870c5dae21c9b6610"><td class="mdescLeft">&#160;</td><td class="mdescRight">Differentiate spline function (described by its spline coefficients) on a mesh along a specified dimension of interest.  <br /></td></tr>
 <tr class="separator:a1005c67e9787dab870c5dae21c9b6610"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61626823e5714039608b83fc0e81a3bf" id="r_a61626823e5714039608b83fc0e81a3bf"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterestDim1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterestDim2</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a> , class... CoordsDims&gt; </td></tr>
-<tr class="memitem:a61626823e5714039608b83fc0e81a3bf"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a61626823e5714039608b83fc0e81a3bf">deriv2</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memitem:a61626823e5714039608b83fc0e81a3bf"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#a61626823e5714039608b83fc0e81a3bf">deriv2</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; CoordsDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4ab7ab96aedb91f6ec10c3ae8e651e83">batched_evaluation_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">coords_eval</a>, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a61626823e5714039608b83fc0e81a3bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Double-differentiate 2D spline function (described by its spline coefficients) on a mesh along specified dimensions of interest.  <br /></td></tr>
 <tr class="separator:a61626823e5714039608b83fc0e81a3bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adee43c8444d224f4874b0d0fd2db36b4" id="r_adee43c8444d224f4874b0d0fd2db36b4"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a> &gt; </td></tr>
-<tr class="memitem:adee43c8444d224f4874b0d0fd2db36b4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#adee43c8444d224f4874b0d0fd2db36b4">integrate</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4d1020bfed6e1cfa7e0c15a1b2ee676d">batch_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> integrals, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memitem:adee43c8444d224f4874b0d0fd2db36b4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator2D.html#adee43c8444d224f4874b0d0fd2db36b4">integrate</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a4d1020bfed6e1cfa7e0c15a1b2ee676d">batch_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> integrals, <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">spline_coef</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:adee43c8444d224f4874b0d0fd2db36b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform batched 2D integrations of a spline function (described by its spline coefficients) along the dimensions of interest and store results on a subdomain of batch_domain.  <br /></td></tr>
 <tr class="separator:adee43c8444d224f4874b0d0fd2db36b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -304,8 +230,6 @@ class ddc::SplineEvaluator2D&lt; ExecSpace, MemorySpace, BSplines1, BSplines2, E
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00047">47</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="aa55c51cd13ac919507cb6a2f540e348a" name="aa55c51cd13ac919507cb6a2f540e348a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa55c51cd13ac919507cb6a2f540e348a">&#9670;&#160;</a></span>continuous_dimension_type1</h2>
@@ -322,8 +246,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The type of the first evaluation continuous dimension used by this class. </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00066">66</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -343,8 +265,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The type of the second evaluation continuous dimension used by this class. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00069">69</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="aad8bc29e660d3e82991431179f1236f1" name="aad8bc29e660d3e82991431179f1236f1"></a>
@@ -362,8 +282,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The type of the Kokkos execution space used by this class. </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00072">72</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -383,8 +301,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The type of the Kokkos memory space used by this class. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00075">75</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="a8b16838f697cd333951ffe1829320b10" name="a8b16838f697cd333951ffe1829320b10"></a>
@@ -402,8 +318,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The type of the first discrete dimension of interest used by this class. </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00078">78</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -423,8 +337,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The type of the second discrete dimension of interest used by this class. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00081">81</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="a449c339bd52aa60440c2dfb3f39c2a91" name="a449c339bd52aa60440c2dfb3f39c2a91"></a>
@@ -442,8 +354,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The discrete dimension representing the B-splines along first dimension. </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00084">84</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -463,8 +373,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The discrete dimension representing the B-splines along second dimension. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00087">87</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="afb2f24b16f952f3c7d6a768e8041197f" name="afb2f24b16f952f3c7d6a768e8041197f"></a>
@@ -482,8 +390,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The type of the domain for the 1D evaluation mesh along first dimension used by this class. </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00090">90</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -503,8 +409,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The type of the domain for the 1D evaluation mesh along second dimension used by this class. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00093">93</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="a41ebb3afb1566749f56ed263b18f72ec" name="a41ebb3afb1566749f56ed263b18f72ec"></a>
@@ -522,8 +426,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The type of the domain for the 2D evaluation mesh used by this class. </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00096">96</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -543,8 +445,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The type of the whole domain representing evaluation points. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00101">101</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="afdbf68e0af68c34eaca5d48d20f4d44d" name="afdbf68e0af68c34eaca5d48d20f4d44d"></a>
@@ -562,8 +462,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The type of the 1D spline domain corresponding to the first dimension of interest. </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00104">104</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -583,8 +481,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The type of the 1D spline domain corresponding to the second dimension of interest. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00107">107</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="a588ac501df42d1ed7de726b435809b5c" name="a588ac501df42d1ed7de726b435809b5c"></a>
@@ -602,8 +498,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The type of the 2D spline domain corresponding to the dimensions of interest. </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00110">110</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -623,12 +517,10 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The type of the batch domain (obtained by removing the dimensions of interest from the whole domain). </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00116">116</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
-<a id="af6f24a9a17d785c05f48742f5a925e5c" name="af6f24a9a17d785c05f48742f5a925e5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6f24a9a17d785c05f48742f5a925e5c">&#9670;&#160;</a></span>batched_spline_domain_type</h2>
+<a id="acc2ab987af52f44b24d4898c3c5ab55b" name="acc2ab987af52f44b24d4898c3c5ab55b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc2ab987af52f44b24d4898c3c5ab55b">&#9670;&#160;</a></span>batched_spline_domain_type</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -636,14 +528,12 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines2</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">EvaluationDDim1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">EvaluationDDim2</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LowerExtrapolationRule1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UpperExtrapolationRule1</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LowerExtrapolationRule2</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UpperExtrapolationRule2</a> , class... IDimX&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1SplineEvaluator2D.html">ddc::SplineEvaluator2D</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines2</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">EvaluationDDim1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">EvaluationDDim2</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LowerExtrapolationRule1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UpperExtrapolationRule1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LowerExtrapolationRule2</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UpperExtrapolationRule2</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">IDimX</a> &gt;::batched_spline_domain_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> ddc::detail::convert_type_seq_to_discrete_domain&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::type_seq_replace_t</a>&lt; ddc::detail::TypeSeq&lt;IDimX...&gt;, ddc::detail::TypeSeq&lt; <a class="el" href="classddc_1_1SplineEvaluator2D.html#a8b16838f697cd333951ffe1829320b10">evaluation_discrete_dimension_type1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#ac903d738136b8861cefec0696bfcbf5c">evaluation_discrete_dimension_type2</a>&gt;, ddc::detail::TypeSeq&lt;<a class="el" href="classddc_1_1SplineEvaluator2D.html#a449c339bd52aa60440c2dfb3f39c2a91">bsplines_type1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a3d82e7a6609105bab7c469e968808bec">bsplines_type2</a>&gt; &gt;&gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1SplineEvaluator2D.html">ddc::SplineEvaluator2D</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines2</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">EvaluationDDim1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">EvaluationDDim2</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LowerExtrapolationRule1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UpperExtrapolationRule1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LowerExtrapolationRule2</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UpperExtrapolationRule2</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">IDimX</a> &gt;::batched_spline_domain_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> ddc::detail::convert_type_seq_to_discrete_domain_t&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::type_seq_replace_t</a>&lt; ddc::detail::TypeSeq&lt;IDimX...&gt;, ddc::detail::TypeSeq&lt; <a class="el" href="classddc_1_1SplineEvaluator2D.html#a8b16838f697cd333951ffe1829320b10">evaluation_discrete_dimension_type1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#ac903d738136b8861cefec0696bfcbf5c">evaluation_discrete_dimension_type2</a>&gt;, ddc::detail::TypeSeq&lt;<a class="el" href="classddc_1_1SplineEvaluator2D.html#a449c339bd52aa60440c2dfb3f39c2a91">bsplines_type1</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a3d82e7a6609105bab7c469e968808bec">bsplines_type2</a>&gt; &gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>The type of the whole spline domain (cartesian product of 2D spline domain and batch domain) preserving the underlying memory layout (order of dimensions). </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00125">125</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -663,8 +553,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The type of the extrapolation rule at the lower boundary along the first dimension. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00134">134</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="ab5efad7cf91d5d3badb851e52865910b" name="ab5efad7cf91d5d3badb851e52865910b"></a>
@@ -682,8 +570,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The type of the extrapolation rule at the upper boundary along the first dimension. </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00137">137</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -703,8 +589,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The type of the extrapolation rule at the lower boundary along the second dimension. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00140">140</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="affaa48699a4aec8ad995cf73cc41cc37" name="affaa48699a4aec8ad995cf73cc41cc37"></a>
@@ -722,8 +606,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>The type of the extrapolation rule at the upper boundary along the second dimension. </p>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00143">143</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -787,8 +669,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structddc_1_1NullExtrapolationRule.html" title="A functor describing a null extrapolation boundary value for 1D spline evaluator.">NullExtrapolationRule</a> <a class="el" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a> <a class="el" href="structddc_1_1PeriodicExtrapolationRule.html">PeriodicExtrapolationRule</a> </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00231">231</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -998,8 +878,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <dl class="section return"><dt>Returns</dt><dd>The lower extrapolation rule along the first dimension.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structddc_1_1NullExtrapolationRule.html" title="A functor describing a null extrapolation boundary value for 1D spline evaluator.">NullExtrapolationRule</a> <a class="el" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a> <a class="el" href="structddc_1_1PeriodicExtrapolationRule.html">PeriodicExtrapolationRule</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00285">285</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="ad741ac46aaa112ff75a6971108f864eb" name="ad741ac46aaa112ff75a6971108f864eb"></a>
@@ -1031,8 +909,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>Extrapolation rules are functors used to define the behavior of the <a class="el" href="classddc_1_1SplineEvaluator.html" title="A class to evaluate, differentiate or integrate a spline function.">SplineEvaluator</a> out of the domain where the break points of the B-splines are defined.</p>
 <dl class="section return"><dt>Returns</dt><dd>The upper extrapolation rule along the first dimension.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structddc_1_1NullExtrapolationRule.html" title="A functor describing a null extrapolation boundary value for 1D spline evaluator.">NullExtrapolationRule</a> <a class="el" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a> <a class="el" href="structddc_1_1PeriodicExtrapolationRule.html">PeriodicExtrapolationRule</a> </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00299">299</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1066,8 +942,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <dl class="section return"><dt>Returns</dt><dd>The lower extrapolation rule along the second dimension.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structddc_1_1NullExtrapolationRule.html" title="A functor describing a null extrapolation boundary value for 1D spline evaluator.">NullExtrapolationRule</a> <a class="el" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a> <a class="el" href="structddc_1_1PeriodicExtrapolationRule.html">PeriodicExtrapolationRule</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00313">313</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="ac8d96899355fe17515085a52d6370331" name="ac8d96899355fe17515085a52d6370331"></a>
@@ -1099,8 +973,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>Extrapolation rules are functors used to define the behavior of the <a class="el" href="classddc_1_1SplineEvaluator.html" title="A class to evaluate, differentiate or integrate a spline function.">SplineEvaluator</a> out of the domain where the break points of the B-splines are defined.</p>
 <dl class="section return"><dt>Returns</dt><dd>The upper extrapolation rule along the second dimension.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structddc_1_1NullExtrapolationRule.html" title="A functor describing a null extrapolation boundary value for 1D spline evaluator.">NullExtrapolationRule</a> <a class="el" href="namespaceddc.html#structddc_1_1ConstantExtrapolationRule">ConstantExtrapolationRule</a> <a class="el" href="structddc_1_1PeriodicExtrapolationRule.html">PeriodicExtrapolationRule</a> </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00327">327</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1154,8 +1026,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The value of the spline function at the desired coordinate. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00345">345</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="ae0815e231e2dc7fbae136e2366f67a8f" name="ae0815e231e2dc7fbae136e2366f67a8f"></a>
@@ -1186,7 +1056,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
           <td class="paramname"><em>spline_coef</em>&#160;</td>
         </tr>
         <tr>
@@ -1214,8 +1084,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00374">374</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1268,8 +1136,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The derivative of the spline function at the desired coordinate. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00416">416</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="a3fcbf993c5a8f32f5a46e45a6637c64a" name="a3fcbf993c5a8f32f5a46e45a6637c64a"></a>
@@ -1321,8 +1187,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The derivative of the spline function at the desired coordinate. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00436">436</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="a465557ef87d806f9b783bd73f3f9b840" name="a465557ef87d806f9b783bd73f3f9b840"></a>
@@ -1373,8 +1237,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The derivative of the spline function at the desired coordinate. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00456">456</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1432,8 +1294,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The derivative of the spline function at the desired coordinate. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00478">478</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1494,8 +1354,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The derivative of the spline function at the desired coordinate. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00517">517</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="a056f783e31ad051a2f7b61ded7bad729" name="a056f783e31ad051a2f7b61ded7bad729"></a>
@@ -1526,7 +1384,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
           <td class="paramname"><em>spline_coef</em>&#160;</td>
         </tr>
         <tr>
@@ -1553,8 +1411,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00555">555</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1586,7 +1442,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
           <td class="paramname"><em>spline_coef</em>&#160;</td>
         </tr>
         <tr>
@@ -1613,8 +1469,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00606">606</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1646,7 +1500,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
           <td class="paramname"><em>spline_coef</em>&#160;</td>
         </tr>
         <tr>
@@ -1673,8 +1527,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00657">657</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1706,7 +1558,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
           <td class="paramname"><em>spline_coef</em>&#160;</td>
         </tr>
         <tr>
@@ -1740,8 +1592,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00709">709</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="a61626823e5714039608b83fc0e81a3bf" name="a61626823e5714039608b83fc0e81a3bf"></a>
@@ -1772,7 +1622,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout3</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
           <td class="paramname"><em>spline_coef</em>&#160;</td>
         </tr>
         <tr>
@@ -1808,8 +1658,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00768">768</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <a id="adee43c8444d224f4874b0d0fd2db36b4" name="adee43c8444d224f4874b0d0fd2db36b4"></a>
@@ -1834,7 +1682,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#af6f24a9a17d785c05f48742f5a925e5c">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#acc2ab987af52f44b24d4898c3c5ab55b">batched_spline_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout2</a>, <a class="el" href="classddc_1_1SplineEvaluator2D.html#a79d35195c2d67062631eb3ed3cfb12fd">memory_space</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a>&#160;</td>
           <td class="paramname"><em>spline_coef</em>&#160;</td>
         </tr>
         <tr>
@@ -1861,8 +1709,6 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l00805">805</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -1874,13 +1720,5 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
-<!-- HTML footer for doxygen 1.9.8-->
-<!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="namespaceddc.html">ddc</a></li><li class="navelem"><a class="el" href="classddc_1_1SplineEvaluator2D.html">SplineEvaluator2D</a></li>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
-  </ul>
-</div>
 </body>
 </html>

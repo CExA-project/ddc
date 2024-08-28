@@ -165,7 +165,7 @@ jobs:
           cat docs_out/doxygen.log
         fi
     - name: Publish site
-      if: ${{ needs.id_repo.outputs.in_base_repo == 'true' }}
+      if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |
         git fetch origin gh-pages
         git worktree add -B gh-pages public remotes/origin/gh-pages

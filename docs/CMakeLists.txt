@@ -4,6 +4,10 @@
 
 cmake_minimum_required(VERSION 3.22)
 
+if(NOT ("${DOXYGEN_VERSION}" VERSION_EQUAL "1.9.8"))
+  message(WARNING "The documentation works best with Doxygen 1.9.8")
+endif()
+
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html")
 set(DOXYGEN_AUTOLINK_SUPPORT YES)
 set(DOXYGEN_BUILTIN_STL_SUPPORT YES)

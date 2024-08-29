@@ -69,9 +69,7 @@ It is constructed using the method `ddc::init_discrete_space`.
 ## ddc::Chunk and ddc::ChunkSpan
 
 The `ddc::Chunk` is a container that holds the data, while `ddc::ChunkSpan` behaves like `std::mdspan`, meaning it is a pointer to the data contained within the `ddc::Chunk`.
-
-Chunks contain data that can be accessed by [unique identifiers](#ddcdiscreteelement). Usually, to access the data at a specific point of a 2D space, we would use two integers corresponding to the usual `i` and `j` indices. Instead, DDC uses the coordinate `ix` as a discrete element of the $x$ position (`ddc::DiscreteElement<DDimX>`), and the coordinate `iy` as a discrete element following the $DDim$ dimension (`ddc::DiscreteElement<DDim>`). This is done after defining a strong typing for each dimension as `DDim`.
-
+Chunks contain data that can be accessed by [ddc::DiscreteElement](#ddcdiscreteelement).
 Note that swapping the `ddc::DiscreteElement<DDim1>` and `ddc::DiscreteElement<DDim2>` indices when calling the `ddc::ChunkSpan` does not affect the correctness of the code; the result remains the same: 
 
 ```cpp

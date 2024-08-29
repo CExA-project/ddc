@@ -25,16 +25,16 @@ ddc::DiscreteElement<DDimY> iy(0);
 
 carries the strong typing of the ordinate dimension `DDimY`, and corresponds to the index 0 as in $y_0$, i.e. the index of the first point along the $y$ dimension.
 
-Another example would be the study of a charged plasma. 
-One dimension could represent species with charge and mass information, and another could represent particle momentum. 
+Another example would be the study of a charged plasma.
+One dimension could represent species with charge and mass information, and another could represent particle momentum.
 Let's discretize the $species$ dimension as follows: {$sp_0$, $sp_1$, ..., $sp_n$}. Then the index `isp` defined as follows:
 
-`ddc::DiscreteElement<Species_Dimension> isp(0)` 
+`ddc::DiscreteElement<Species_Dimension> isp(0)`
 
-carries the strong typing of the labeled dimension Species_Dimension and corresponds to the index 0 as in $sp_0$, i.e. the index of the first particle along the $sp$ dimension (eventhough the order does not matter in this study). 
+carries the strong typing of the labeled dimension Species_Dimension and corresponds to the index 0 as in $sp_0$, i.e. the index of the first particle along the $sp$ dimension (eventhough the order does not matter in this study).
 Same would apply for the momentum dimension.
 
-`ddc::DiscreteElement` is used to access arrays. 
+`ddc::DiscreteElement` is used to access arrays.
 Let's take a multidimensional container and access its element `(i, j)`, which corresponds to the grid point at the $i$th row and the $j$th column. We would do it like this:
 
 ```cpp
@@ -63,14 +63,15 @@ In summary:
 ## ddc::DiscreteDomain
 
 `ddc::DiscreteDomain` is an interval of [ddc::DiscreteElement](#ddcdiscreteelement) distributed according to each labeled dimension.
-It allows for the distribution of [ddc::DiscreteElement](#ddcdiscreteelement) across each previously defined labeled dimension. 
-It is constructed using the method `ddc::init_discrete_space`. 
+It allows for the distribution of [ddc::DiscreteElement](#ddcdiscreteelement) across each previously defined labeled dimension.
+It is constructed using the method `ddc::init_discrete_space`.
 
 ## ddc::Chunk and ddc::ChunkSpan
 
 The `ddc::Chunk` is a container that holds the data, while `ddc::ChunkSpan` behaves like `std::mdspan`, meaning it is a pointer to the data contained within the `ddc::Chunk`.
 Chunks contain data that can be accessed by [ddc::DiscreteElement](#ddcdiscreteelement).
-Note that swapping the `ddc::DiscreteElement<DDim1>` and `ddc::DiscreteElement<DDim2>` indices when calling the `ddc::ChunkSpan` does not affect the correctness of the code; the result remains the same: 
+
+Note that swapping the `ddc::DiscreteElement<DDim1>` and `ddc::DiscreteElement<DDim2>` indices when calling the `ddc::ChunkSpan` does not affect the correctness of the code; the result remains the same:
 
 ```cpp
 ddc::Chunkspan(ddc::DiscreteElement<DDim1>,ddc::DiscreteElement<DDim2> ) == ddc::Chunkspan(ddc::DiscreteElement<DDim2>,ddc::DiscreteElement<DDim1> );
@@ -78,7 +79,7 @@ ddc::Chunkspan(ddc::DiscreteElement<DDim1>,ddc::DiscreteElement<DDim2> ) == ddc:
 
 ## Algorithms in ddc ?
 
-+ `for_each`: this algorithm allows iterating over each `ddc::DiscreteElement` in the domain of study.
-+ `fill`: this algorithm allows filling a borrowed chunk with a given value.
-+ `reduce`: this algorithm allows reducing operations on a chunk.
-+ `copy`: this algorithm allows copying the content of a borrowed chunk into another
+- `for_each`: this algorithm allows iterating over each `ddc::DiscreteElement` in the domain of study.
+- `fill`: this algorithm allows filling a borrowed chunk with a given value.
+- `reduce`: this algorithm allows reducing operations on a chunk.
+- `copy`: this algorithm allows copying the content of a borrowed chunk into another

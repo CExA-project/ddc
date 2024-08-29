@@ -27,8 +27,11 @@ carries the strong typing of the ordinate dimension `DDimY`, and corresponds to 
 
 Another example would be the study of a charged plasma. 
 One dimension could represent species with charge and mass information, and another could represent particle momentum. 
+Let's discretize the $species$ dimension as follows: {$sp_0$, $sp_1$, ..., $sp_n$}. Then the index `isp` defined as follows:
 
-Here, `ddc::DiscreteElement<Species_dimension> ispecies(0)` would correspond to a unique tuple of mass and charge for a particle in the model. 
+`ddc::DiscreteElement<Species_dimension> ispecies(0)` 
+
+would correspond to the index 0 as in $sp_0$, i.e. the index of the first particle along the $sp$ dimension (eventhough the order does not matter in this study). 
 Same would apply for the momentum dimension.
 
 `ddc::DiscreteElement` is used to access arrays. 

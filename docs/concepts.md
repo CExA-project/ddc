@@ -71,7 +71,7 @@ Chunks contain data that can be accessed by [unique identifiers](#ddcdiscreteele
 
 Note that swapping the `ddc::DiscreteElement<DDim1>` and `ddc::DiscreteElement<DDim2>` indices when calling the `ddc::ChunkSpan` does not affect the correctness of the code; the result remains the same: 
 
-`cpp
+```cpp
 ddc::Chunkspan(ddc::DiscreteElement<DDim1>,ddc::DiscreteElement<DDim2> ) == ddc::Chunkspan(ddc::DiscreteElement<DDim2>,ddc::DiscreteElement<DDim1> );
 ```
 

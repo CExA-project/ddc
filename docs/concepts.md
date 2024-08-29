@@ -12,23 +12,11 @@ Using Kokkos, the indices of views are weakly typed, meaning that each index is 
 
 DDC provides array-like containers that have labeled dimensions and strongly typed indices. For instance, by labeling dimensions `X` and `Y`, the indices along those labeled dimensions become strongly typed and cannot be swapped anymore.
 
-> Note that the use of DDC is not restricted to solving equations. Indeed, one can easily imagine strong typing of variables corresponding to names or ages in a database. The operations must then be adapted accordingly. Here, we largely base our approach on the uniform and non-uniform resolution of the heat equation in two dimensions, which is why we focus the presentation on solving equations using finite differences on a 2D grid.
-
-## ddc::Chunk and ddc::ChunkSpan
-
-The `ddc::Chunk` is a container that holds the data, while `ddc::ChunkSpan` behaves like `std::mdspan`, meaning it is a pointer to the data contained within the `ddc::Chunk`.
-
-Chunks contain data that can be accessed by unique identifiers called *discrete elements*. Usually, to access the data at a specific point of a 2D space, we would use two integers corresponding to the usual 'i' and 'j' indices. Instead, DDC uses the coordinate `ix` as a discrete element of the $x$ position (`ddc::DiscreteElement<DDimX>`), and the coordinate `iy` as a discrete element following the $y$ dimension (`ddc::DiscreteElement<DDimY>`). This is done after defining a strong typing for the discretized `X` dimension as `DDimX` and a strong typing for the discretized `Y` dimension as `DDimY` (see the heat equation example \subpage uniform_heat_equation "examples/uniform_heat_equation.cpp").
-
-Note that swapping the `ddc::DiscreteElement<DDimX>` and `ddc::DiscreteElement<DDimY>` indices when calling the `ddc::ChunkSpan` does not affect the correctness of the code; the result remains the same.
-
-## ddc::DiscreteElement, ddc::DiscreteVector and ddc::Coordinate
+## ddc::DiscreteElement and ddc::DiscreteVector
 
 ### ddc::DiscreteElement
 
-Let's continue with our previous example of a 2D grid along two discretized dimensions `DDimX` and `DDimY`. In the previous section, we discussed how `ddc::DiscreteElement` is used as an index.
-
-More precisely, a `ddc::DiscreteElement` is a type that carries the label of the dimension it is defined from.
+A `ddc::DiscreteElement` is a type that carries the label of the dimension it is defined from.
 Let's discretize the $y$ axis as follows: {$y_0$, $y_1$, ..., $y_n$}. Then the index `iy` defined as follows:
 
 ```cpp
@@ -37,14 +25,20 @@ ddc::DiscreteElement<DDimY> iy(0);
 
 carries the strong typing of the ordinate dimension `DDimY`, and corresponds to the index 0 as in $y_0$, i.e. the index of the first point along the $y$ dimension.
 
-`ddc::DiscreteElement` is used to access arrays. Let's take a multidimensional container and access its element `(i, j)`, which corresponds to the grid point at the $i$th row and the $j$th column. We would do it like this:
+Another example would be the study of a charged plasma. 
+One dimension could represent species with charge and mass information, and another could represent particle momentum. 
+
+Here, `ddc::DiscreteElement<Species_dimension> ispecies(0)` would correspond to a unique tuple of mass and charge for a particle in the model. 
+Same would apply for the momentum dimension.
+
+`ddc::DiscreteElement` is used to access arrays. 
+Let's take a multidimensional container and access its element `(i, j)`, which corresponds to the grid point at the $i$th row and the $j$th column. We would do it like this:
 
 ```cpp
 container(i, j);
 ```
 
-Now, if we take a slice of this container and still want to access the same element `(i, j)` from the grid, we need to adjust the indices, because they are relative to the first point of the slice. Using DDC and a slice (`ddc::ChunkSpan`), accessing with a `ddc::DiscreteElement` is the same between the slice and the original multidimensional array (`ddc::Chunk` or `ddc::ChunkSpan`), because of the uniqueness of each discrete element on the grid and because of the way we access data using DDC.
-
+Now, if we take a slice of this container and still want to access the same element `(i, j)` from the grid, we need to adjust the indices, because they are relative to the first point of the slice. Using DDC and a slice  accessing with a `ddc::DiscreteElement` is the same between the slice and the original multidimensional array because of the uniqueness of each discrete element on the grid and because of the way we access data using DDC.
 
 ### ddc::DiscreteVector
 
@@ -54,20 +48,32 @@ A `ddc::DiscreteVector` corresponds to an integer that, like `ddc::DiscreteEleme
 ddc::DiscreteVector<DDimX> gwx(5);
 ```
 
-This defines five point, along the $x$ dimension.
+defines five point, along the $x$ dimension.
 
 \remark Note that the difference between two `ddc::DiscreteElement`s gives a `ddc::DiscreteVector`, and the sum of a `ddc::DiscreteVector` and a `ddc::DiscreteElement` gives a `ddc::DiscreteElement`. This illustrates how `ddc::DiscreteElement`s correspond to points in an affine space, while `ddc::DiscreteVector`s correspond to vectors in a vector space, or to a distance between two points.
 
 In summary:
 
-- `ddc::DiscreteElement` corresponds to each unique point of the mesh. It is similar to fixed points in an affine space.
-- `ddc::DiscreteVector` corresponds to a *number* of points along a particular axis or to a distance between two points (i.e. between two `ddc::DiscreteElement`s).
-
-Both are integers that carry the strong typing of the dimension they are defined from.
+- `ddc::DiscreteElement` corresponds to unique points in the simulation labeled by a dimension. They can for instance represent discrete points along a dimension or be linked to particles, allowing access to certain data (e.g., mass, charge, etc.).
+- `ddc::DiscreteVector` corresponds to a *number* of points along a labeled dimensions.
 
 ## ddc::DiscreteDomain
 
-As mentioned earlier, DDC operates on a coordinate system. These coordinates are part of a domain. Users must start their code by constructing a `ddc::DiscreteDomain` that contains each `ddc::DiscreteElement`. To construct a domain, you need to build a 1D domain along each direction. This is usually done when calling the function `ddc::init_discrete_space`.
+`ddc::DiscreteDomain` is an interval of [unique identifiers](#ddcdiscreteelement) distributed according to each labeled dimension.
+It allows for the distribution of [unique identifiers](#ddcdiscreteelement) across each previously defined labeled dimension. 
+It is constructed using the method `ddc::init_discrete_space`. 
+
+## ddc::Chunk and ddc::ChunkSpan
+
+The `ddc::Chunk` is a container that holds the data, while `ddc::ChunkSpan` behaves like `std::mdspan`, meaning it is a pointer to the data contained within the `ddc::Chunk`.
+
+Chunks contain data that can be accessed by [unique identifiers](#ddcdiscreteelement). Usually, to access the data at a specific point of a 2D space, we would use two integers corresponding to the usual 'i' and 'j' indices. Instead, DDC uses the coordinate `ix` as a discrete element of the $x$ position (`ddc::DiscreteElement<DDimX>`), and the coordinate `iy` as a discrete element following the $DDim$ dimension (`ddc::DiscreteElement<DDim>`). This is done after defining a strong typing for each dimension as `DDim`.
+
+Note that swapping the `ddc::DiscreteElement<DDim1>` and `ddc::DiscreteElement<DDim2>` indices when calling the `ddc::ChunkSpan` does not affect the correctness of the code; the result remains the same: 
+
+`cpp
+ddc::Chunkspan(ddc::DiscreteElement<DDim1>,ddc::DiscreteElement<DDim2> ) == ddc::Chunkspan(ddc::DiscreteElement<DDim2>,ddc::DiscreteElement<DDim1> );
+```
 
 ## Algorithms in ddc ?
 

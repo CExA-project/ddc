@@ -17,7 +17,7 @@ DDC provides array-like containers that have labeled dimensions and strongly typ
 ### ddc::DiscreteElement
 
 A `ddc::DiscreteElement` is a type that carries the label of the dimension it is defined from.
-Let's discretize the $y$ axis as follows: {$y_0$, $y_1$, ..., $y_n$}. Then the index `iy` defined as follows:
+Let's discretize the $y$ axis as follows: \{$y_0$, $y_1$, ..., $y_n$\}. Then the index `iy` defined as follows:
 
 ```cpp
 ddc::DiscreteElement<DDimY> iy(0);
@@ -29,9 +29,9 @@ Another example would be the study of a charged plasma.
 One dimension could represent species with charge and mass information, and another could represent particle momentum. 
 Let's discretize the $species$ dimension as follows: {$sp_0$, $sp_1$, ..., $sp_n$}. Then the index `isp` defined as follows:
 
-`ddc::DiscreteElement<Species_dimension> ispecies(0)` 
+`ddc::DiscreteElement<Species_Dimension> isp(0)` 
 
-would correspond to the index 0 as in $sp_0$, i.e. the index of the first particle along the $sp$ dimension (eventhough the order does not matter in this study). 
+carries the strong typing of the labeled dimension Species_Dimension and corresponds to the index 0 as in $sp_0$, i.e. the index of the first particle along the $sp$ dimension (eventhough the order does not matter in this study). 
 Same would apply for the momentum dimension.
 
 `ddc::DiscreteElement` is used to access arrays. 
@@ -62,15 +62,15 @@ In summary:
 
 ## ddc::DiscreteDomain
 
-`ddc::DiscreteDomain` is an interval of [unique identifiers](#ddcdiscreteelement) distributed according to each labeled dimension.
-It allows for the distribution of [unique identifiers](#ddcdiscreteelement) across each previously defined labeled dimension. 
+`ddc::DiscreteDomain` is an interval of [ddc::DiscreteElement](#ddcdiscreteelement) distributed according to each labeled dimension.
+It allows for the distribution of [ddc::DiscreteElement](#ddcdiscreteelement) across each previously defined labeled dimension. 
 It is constructed using the method `ddc::init_discrete_space`. 
 
 ## ddc::Chunk and ddc::ChunkSpan
 
 The `ddc::Chunk` is a container that holds the data, while `ddc::ChunkSpan` behaves like `std::mdspan`, meaning it is a pointer to the data contained within the `ddc::Chunk`.
 
-Chunks contain data that can be accessed by [unique identifiers](#ddcdiscreteelement). Usually, to access the data at a specific point of a 2D space, we would use two integers corresponding to the usual 'i' and 'j' indices. Instead, DDC uses the coordinate `ix` as a discrete element of the $x$ position (`ddc::DiscreteElement<DDimX>`), and the coordinate `iy` as a discrete element following the $DDim$ dimension (`ddc::DiscreteElement<DDim>`). This is done after defining a strong typing for each dimension as `DDim`.
+Chunks contain data that can be accessed by [unique identifiers](#ddcdiscreteelement). Usually, to access the data at a specific point of a 2D space, we would use two integers corresponding to the usual `i` and `j` indices. Instead, DDC uses the coordinate `ix` as a discrete element of the $x$ position (`ddc::DiscreteElement<DDimX>`), and the coordinate `iy` as a discrete element following the $DDim$ dimension (`ddc::DiscreteElement<DDim>`). This is done after defining a strong typing for each dimension as `DDim`.
 
 Note that swapping the `ddc::DiscreteElement<DDim1>` and `ddc::DiscreteElement<DDim2>` indices when calling the `ddc::ChunkSpan` does not affect the correctness of the code; the result remains the same: 
 

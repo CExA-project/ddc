@@ -161,6 +161,13 @@ struct ToTypeSeq;
 
 } // namespace detail
 
+template <class TypeSeq>
+constexpr std::size_t type_seq_size_v = std::numeric_limits<std::size_t>::max();
+
+/// Returns the number of types in a @ref TypeSeq.
+template <class... Tags>
+constexpr std::size_t type_seq_size_v<detail::TypeSeq<Tags...>> = sizeof...(Tags);
+
 template <class QueryTag, class TypeSeq>
 constexpr std::size_t type_seq_rank_v = std::numeric_limits<std::size_t>::max();
 

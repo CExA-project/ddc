@@ -32,6 +32,7 @@ target_link_libraries(bsplines_tests
         GTest::gtest
 		DDC::DDC
 )
+gtest_discover_tests(bsplines_tests DISCOVERY_MODE PRE_TEST)
 
 add_executable(splines_linear_problem_tests
     ../main.cpp

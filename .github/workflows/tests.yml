@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: DoozyX/clang-format-lint-action@v0.17
+    - uses: DoozyX/clang-format-lint-action@v0.18
       with:
         source: 'benchmarks/ examples/ include/ddc/ tests/'
         exclude: ''
@@ -41,9 +41,6 @@ jobs:
       matrix:
         image: ['oldest', 'latest']
         backend: ['cpu', 'cuda', 'hip']
-        exclude:
-        - image: 'latest' # no ppa yet for hip in noble image
-          backend: 'hip'
     needs: id_repo
     runs-on: ubuntu-latest
     steps:
@@ -98,8 +95,6 @@ jobs:
         - image: 'oldest' # nvcc 11 only supports C++-17
           backend: 'cuda'
           cxx_version: '23'
-        - image: 'latest' # no ppa yet for hip in noble image
-          backend: 'hip'
         - image: 'latest' # nvcc 12 only supports C++-20
           backend: 'cuda'
           cxx_version: '23'
@@ -369,8 +364,8 @@ jobs:
         -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
         -B build \
         -S /src
-        find /src/benchmarks /src/examples /src/tests -name '*.cpp' -exec clang-tidy-14 -p build -header-filter="(/src/include/ddc/.*|/src/tests/.*)" '{}' '+'
+        find /src/benchmarks /src/examples /src/tests -name '*.cpp' -exec clang-tidy -p build -header-filter="(/src/include/ddc/.*|/src/tests/.*)" '{}' '+'
         EOF
         docker run \
-          -v ${PWD}:/src:ro ghcr.io/cexa-project/ddc/oldest_cpu:${GITHUB_SHA:0:7} \
+          -v ${PWD}:/src:ro ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} \
           bash /src/run.sh

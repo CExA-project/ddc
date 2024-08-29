@@ -3,9 +3,12 @@
 // SPDX-License-Identifier: MIT
 
 #include <cmath>
+#include <cstddef>
 #include <iostream>
 
 #include <ddc/ddc.hpp>
+
+#include <Kokkos_Core.hpp>
 
 using cell = bool;
 

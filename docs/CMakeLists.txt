@@ -72,5 +72,6 @@ doxygen_add_docs(doc
         "${CMAKE_CURRENT_SOURCE_DIR}/going_further.md"
         "${CMAKE_CURRENT_SOURCE_DIR}/uniform_heat_equation.md"
         "${CMAKE_CURRENT_SOURCE_DIR}/non_uniform_heat_equation.md"
+        "${CMAKE_CURRENT_SOURCE_DIR}/concepts.md"
         "${DDC_SOURCE_DIR}/include/ddc/"
         ALL)

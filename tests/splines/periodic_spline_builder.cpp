@@ -15,8 +15,6 @@
 
 #include <gtest/gtest.h>
 
-#include "ddc/create_mirror.hpp"
-
 #include "cosine_evaluator.hpp"
 #include "polynomial_evaluator.hpp"
 #include "spline_error_bounds.hpp"
@@ -105,6 +103,7 @@ void TestPeriodicSplineBuilderTestIdentity()
     ddc::ChunkSpan const yvals(yvals_alloc.span_view());
     evaluator_type evaluator(interpolation_domain);
     ddc::parallel_for_each(
+            execution_space(),
             yvals.domain(),
             KOKKOS_LAMBDA(IndexX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
 
@@ -127,6 +126,7 @@ void TestPeriodicSplineBuilderTestIdentity()
             coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<CoordX, memory_space>());
     ddc::ChunkSpan const coords_eval(coords_eval_alloc.span_view());
     ddc::parallel_for_each(
+            execution_space(),
             interpolation_domain,
             KOKKOS_LAMBDA(IndexX const ix) { coords_eval(ix) = ddc::coordinate(ix); });
 

@@ -124,6 +124,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::ChunkSpan const yvals(yvals_alloc.span_view());
     evaluator_type evaluator(interpolation_domain);
     ddc::parallel_for_each(
+            execution_space(),
             yvals.domain(),
             KOKKOS_LAMBDA(IndexX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
 
@@ -132,6 +133,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::ChunkSpan derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::parallel_for_each(
+                execution_space(),
                 derivs_domain,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ii) {
                     derivs_lhs(ii) = evaluator.deriv(x0, ii - derivs_domain.front() + shift);
@@ -142,6 +144,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::ChunkSpan derivs_rhs = derivs_rhs_alloc.span_view();
     if (s_bcr == ddc::BoundCond::HERMITE) {
         ddc::parallel_for_each(
+                execution_space(),
                 derivs_domain,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ii) {
                     derivs_rhs(ii) = evaluator.deriv(xN, ii - derivs_domain.front() + shift);
@@ -179,6 +182,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<CoordX, memory_space>());
     ddc::ChunkSpan const coords_eval(coords_eval_alloc.span_view());
     ddc::parallel_for_each(
+            execution_space(),
             interpolation_domain,
             KOKKOS_LAMBDA(IndexX const ix) { coords_eval(ix) = ddc::coordinate(ix); });
 

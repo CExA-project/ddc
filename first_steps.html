@@ -380,7 +380,7 @@ Time loop</h1>
 Periodic conditions</h2>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (iter - last_output_iter &gt;= t_output_period) {</div>
 <div class="line">    last_output_iter = iter;</div>
-<div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
+<div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_next_temp);</div>
 <div class="line">    display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(iter),</div>
 <div class="line">            ghosted_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
 <div class="line">                    DDimX,</div>

@@ -135,6 +135,14 @@ public:
      */
     KOKKOS_DEFAULTED_FUNCTION constexpr ChunkSpan(ChunkSpan&& other) = default;
 
+    /** Forbids to construct a ChunkSpan from a rvalue of type Chunk.
+     */
+    template <
+            class OElementType,
+            class Allocator,
+            class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
+    ChunkSpan(Chunk<OElementType, discrete_domain_type, Allocator>&& other) noexcept = delete;
+
     /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data
      * @param other the Chunk to view
      */

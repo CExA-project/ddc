@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <cmath>
+
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
 
@@ -16,9 +18,7 @@ struct CosineEvaluator
         using Dim = DDim;
 
     private:
-        static inline constexpr double s_2_pi = 2. * Kokkos::numbers::pi;
-
-        static inline constexpr double s_pi_2 = Kokkos::numbers::pi / 2;
+        static inline constexpr double s_2_pi = 2. * M_PI;
 
     private:
         double m_c0;
@@ -27,12 +27,12 @@ struct CosineEvaluator
 
     public:
         template <class Domain>
-        explicit Evaluator([[maybe_unused]] Domain const domain) : m_c0(1.0)
-                                                                 , m_c1(0.0)
+        Evaluator([[maybe_unused]] Domain domain) : m_c0(1.0)
+                                                  , m_c1(0.0)
         {
         }
 
-        Evaluator(double const c0, double const c1) : m_c0(c0), m_c1(c1) {}
+        Evaluator(double c0, double c1) : m_c0(c0), m_c1(c1) {}
 
         KOKKOS_FUNCTION double operator()(double const x) const noexcept
         {
@@ -40,9 +40,11 @@ struct CosineEvaluator
         }
 
         KOKKOS_FUNCTION void operator()(
-                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> const chunk) const
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
         {
-            for (ddc::DiscreteElement<DDim> const i : chunk.domain()) {
+            auto const& domain = chunk.domain();
+
+            for (ddc::DiscreteElement<DDim> const i : domain) {
                 chunk(i) = eval(ddc::coordinate(i), 0);
             }
         }
@@ -56,12 +58,14 @@ struct CosineEvaluator
                 ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk,
                 int const derivative) const
         {
-            for (ddc::DiscreteElement<DDim> const i : chunk.domain()) {
+            auto const& domain = chunk.domain();
+
+            for (ddc::DiscreteElement<DDim> const i : domain) {
                 chunk(i) = eval(ddc::coordinate(i), derivative);
             }
         }
 
-        KOKKOS_FUNCTION double max_norm(int const diff = 0) const
+        KOKKOS_FUNCTION double max_norm(int diff = 0) const
         {
             return ddc::detail::ipow(s_2_pi * m_c0, diff);
         }
@@ -70,7 +74,7 @@ struct CosineEvaluator
         KOKKOS_FUNCTION double eval(double const x, int const derivative) const noexcept
         {
             return ddc::detail::ipow(s_2_pi * m_c0, derivative)
-                   * Kokkos::cos(s_pi_2 * derivative + s_2_pi * (m_c0 * x + m_c1));
+                   * Kokkos::cos(M_PI_2 * derivative + s_2_pi * (m_c0 * x + m_c1));
         }
     };
 };

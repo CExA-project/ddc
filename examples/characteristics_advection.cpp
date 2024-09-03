@@ -126,15 +126,15 @@ int main(int argc, char** argv)
     // End of the domain of interest in the Y dimension
     double const y_end = 1.;
     // Number of discretization points in the Y dimension
-    std::size_t const nb_y_points = 100;
+    size_t const nb_y_points = 100;
     // Simulated time at which to start simulation
     double const start_time = 0.;
     // Simulated time to reach as target of the simulation
     double const end_time = 10.;
     // Number of time-steps between outputs
-    std::ptrdiff_t const t_output_period = 10;
+    ptrdiff_t const t_output_period = 10;
     // Maximum time-step
-    ddc::Coordinate<T> const dt(0.1);
+    ddc::Coordinate<T> const max_dt {0.1};
     //! [parameters]
 
     //! [main-start]
@@ -161,7 +161,7 @@ int main(int argc, char** argv)
 
     // number of time intervals required to reach the end time
     ddc::DiscreteVector<DDimT> const nb_time_steps {
-            std::ceil((end_time - start_time) / dt) + .2};
+            std::ceil((end_time - start_time) / max_dt) + .2};
     // Initialization of the global domain in time:
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
@@ -172,19 +172,16 @@ int main(int argc, char** argv)
                     nb_time_steps + 1));
     //! [time-domains]
 
-    ddc::DiscreteDomain<DDimX, DDimY> const
-            xy_domain(x_domain, y_domain);
-
     //! [data allocation]
     // Maps density into the full domain twice:
     // - once for the last fully computed time-step
     ddc::Chunk last_density_alloc(
-            xy_domain,
+            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
 
     // - once for time-step being computed
     ddc::Chunk next_density_alloc(
-            xy_domain,
+            ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             ddc::DeviceAllocator<double>());
     //! [data allocation]
 
@@ -192,27 +189,31 @@ int main(int argc, char** argv)
     ddc::ChunkSpan const initial_density
             = last_density_alloc.span_view();
     // Initialize the density on the main domain
+    ddc::DiscreteDomain<DDimX, DDimY> x_mesh
+            = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
-            xy_domain,
+            x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                ddc::DiscreteElement<DDimX> const ix(ixy);
-                ddc::DiscreteElement<DDimY> const iy(ixy);
-                double const x = ddc::coordinate(ix);
-                double const y = ddc::coordinate(iy);
+                double const x
+                        = ddc::coordinate(ddc::select<DDimX>(ixy));
+                double const y
+                        = ddc::coordinate(ddc::select<DDimY>(ixy));
                 initial_density(ixy)
                         = 9.999
                           * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
+                // initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
     //! [initial-conditions]
 
     ddc::Chunk host_density_alloc
             = ddc::create_mirror(last_density_alloc.span_cview());
 
+
     //! [initial output]
     // display the initial data
     ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
     display(ddc::coordinate(time_domain.front()),
-            host_density_alloc.span_cview());
+            host_density_alloc[x_domain][y_domain]);
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
@@ -228,7 +229,7 @@ int main(int argc, char** argv)
             ddc::SplineSolver::LAPACK,
             DDimX,
             DDimY>
-            spline_builder(xy_domain);
+            spline_builder(x_mesh);
     ExtrapolationRule extrapolation_rule;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
@@ -247,28 +248,29 @@ int main(int argc, char** argv)
     ddc::Chunk coef_alloc(
             spline_builder.batched_spline_domain(),
             ddc::DeviceAllocator<double>());
-    ddc::ChunkSpan const coef = coef_alloc.span_view();
+    ddc::ChunkSpan coef = coef_alloc.span_view();
 
     // Instantiate chunk to receive feet coords
     ddc::Chunk feet_coords_alloc(
             spline_builder.batched_interpolation_domain(),
             ddc::DeviceAllocator<ddc::Coordinate<X>>());
-    ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
+    ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
     //! [instantiate intermediate chunks]
 
+
     //! [time iteration]
-    for (ddc::DiscreteElement<DDimT> const iter :
+    for (auto const iter :
          time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
         //! [time iteration]
 
         //! [manipulated views]
         // a span of the density at the time-step we
         // will build
-        ddc::ChunkSpan const next_density
-                = next_density_alloc.span_view();
+        ddc::ChunkSpan const next_density {
+                next_density_alloc.span_view()};
         // a read-only view of the density at the previous time-step
-        ddc::ChunkSpan const last_density
-                = last_density_alloc.span_view();
+        ddc::ChunkSpan const last_density {
+                last_density_alloc.span_view()};
         //! [manipulated views]
 
         //! [numerical scheme]
@@ -277,10 +279,11 @@ int main(int argc, char** argv)
         ddc::parallel_for_each(
                 feet_coords.domain(),
                 KOKKOS_LAMBDA(
-                        ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                    ddc::DiscreteElement<DDimX> ix(ixy);
-                    ddc::Coordinate<X> const x = ddc::coordinate(ix);
-                    feet_coords(ixy) = x - vx * ddc::step<DDimT>();
+                        ddc::DiscreteElement<DDimX, DDimY> const e) {
+                    feet_coords(e)
+                            = ddc::coordinate(ddc::select<DDimX>(e))
+                              - ddc::Coordinate<X>(
+                                      vx * ddc::step<DDimT>());
                 });
         // Interpolate the values at feets on the grid
         spline_builder(coef, last_density.span_cview());
@@ -297,7 +300,7 @@ int main(int argc, char** argv)
                     host_density_alloc,
                     next_density_alloc);
             display(ddc::coordinate(iter),
-                    host_density_alloc.span_cview());
+                    host_density_alloc[x_domain][y_domain]);
         }
         //! [output]
 
@@ -311,7 +314,7 @@ int main(int argc, char** argv)
     if (last_output < time_domain.back()) {
         ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
         display(ddc::coordinate(time_domain.back()),
-                host_density_alloc.span_cview());
+                host_density_alloc[x_domain][y_domain]);
     }
     //! [final output]
 }

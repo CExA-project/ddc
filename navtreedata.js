@@ -60,6 +60,7 @@ var NAVTREE =
         [ "ddc::DiscreteElement", "md_concepts.html#autotoc_md22", null ]
       ] ]
     ] ],
+    [ "examples/heat_equation_spectral.cpp", "heat_equation_spectral.html", null ],
     [ "Deprecated List", "deprecated.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -93,8 +94,8 @@ var NAVTREEINDEX =
 "classddc_1_1DiscreteVector.html#afb3c8c9ab49ebd9923116eda48657037",
 "classddc_1_1SplineBuilder.html#a28af8c6773ec5572c70f7da4b7576c57",
 "classddc_1_1SplineEvaluator2D.html#afa77b5aabb5ee02e51a1c20de067bd4a",
-"namespaceddc.html#a527ffc7bfc33850ef64720205544a21d",
-"structddc_1_1reducer_1_1max.html#afa446a8d57408979f7716bac33c1a8c6"
+"namespaceddc.html#a523881fb2db5c5ef7e84dc8d0fd521bd",
+"structddc_1_1reducer_1_1max.html#ab07f0de9e0215ecf27bc51cdd9130dc5"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -104,8 +104,6 @@ int main(int argc, char** argv)
     // Number of time-steps between outputs
     std::ptrdiff_t const t_output_period = 10;
 
-    std::cout << "Using spectral method\n";
-
     // Initialization of the global domain in X including periodic point to have correct step
     auto const x_domain_with_periodic_point
             = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(

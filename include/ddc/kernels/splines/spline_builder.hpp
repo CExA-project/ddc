@@ -6,6 +6,7 @@
 #include <ddc/ddc.hpp>
 
 #include "ddc/chunk_span.hpp"
+#include "ddc/create_mirror.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
@@ -975,8 +976,10 @@ SplineBuilder<
         IDimX...>::quadrature_coefficients() const
 {
     // Compute integrals of bsplines
-    ddc::Chunk integral_bsplines(spline_domain(), ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::discrete_space<bsplines_type>().integrals(integral_bsplines.span_view());
+    ddc::Chunk integral_bsplines_host(spline_domain(), ddc::HostAllocator<double>());
+    ddc::discrete_space<bsplines_type>().integrals(integral_bsplines_host.span_view());
+    auto integral_bsplines
+            = ddc::create_mirror_view_and_copy(MemorySpace(), integral_bsplines_host.span_view());
 
     // Remove additional B-splines in the periodic case (cf. UniformBSplines::full_domain() documentation)
     ddc::ChunkSpan integral_bsplines_without_periodic_additional_bsplines

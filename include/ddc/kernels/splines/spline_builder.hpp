@@ -151,6 +151,9 @@ public:
     /// @brief The boundary condition implemented at the upper bound.
     static constexpr ddc::BoundCond s_bc_xmax = BcUpper;
 
+    /// @brief The SplineSolver giving the backend used to perform the spline approximation.
+    static constexpr SplineSolver s_spline_solver = Solver;
+
 private:
     batched_interpolation_domain_type m_batched_interpolation_domain;
 

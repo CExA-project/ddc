@@ -37,9 +37,9 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_VECTOR_CPP)
 
 TEST(DiscreteVectorXYZTest, ConstructorFromDiscreteVectors)
 {
-    std::size_t const dv_x = 7;
-    std::size_t const dv_y = 13;
-    std::size_t const dv_z = 4;
+    std::ptrdiff_t const dv_x = 7;
+    std::ptrdiff_t const dv_y = 13;
+    std::ptrdiff_t const dv_z = 4;
     DVectXZ const ixz(dv_x, dv_z);
     DVectY const iy(dv_y);
     DVectXYZ const ixyz(ixz, iy);
@@ -86,13 +86,13 @@ TEST(DiscreteVectorXTest, PostDecrement)
 
 TEST(DiscreteVectorTest, ExternalBinaryOperatorPlus)
 {
-    std::size_t const dv_x = 7;
-    std::size_t const dv_y = -2;
-    std::size_t const dv_z = 15;
+    std::ptrdiff_t const dv_x = 7;
+    std::ptrdiff_t const dv_y = -2;
+    std::ptrdiff_t const dv_z = 15;
     DVectXYZ const dxyz(dv_x, dv_y, dv_z);
-    std::size_t const dv2_x = -4;
-    std::size_t const dv2_y = 22;
-    std::size_t const dv2_z = 8;
+    std::ptrdiff_t const dv2_x = -4;
+    std::ptrdiff_t const dv2_y = 22;
+    std::ptrdiff_t const dv2_z = 8;
     DVectX const dx(dv2_x);
     DVectXZ const dxz(dv2_x, dv2_z);
     DVectXYZ const dxyz2(dv2_x, dv2_y, dv2_z);
@@ -126,13 +126,13 @@ TEST(DiscreteVectorTest, ExternalBinaryOperatorPlus)
 
 TEST(DiscreteVectorTest, ExternalBinaryOperatorMinus)
 {
-    std::size_t const dv_x = 7;
-    std::size_t const dv_y = -2;
-    std::size_t const dv_z = 15;
+    std::ptrdiff_t const dv_x = 7;
+    std::ptrdiff_t const dv_y = -2;
+    std::ptrdiff_t const dv_z = 15;
     DVectXYZ const dxyz(dv_x, dv_y, dv_z);
-    std::size_t const dv2_x = -4;
-    std::size_t const dv2_y = 22;
-    std::size_t const dv2_z = 8;
+    std::ptrdiff_t const dv2_x = -4;
+    std::ptrdiff_t const dv2_y = 22;
+    std::ptrdiff_t const dv2_z = 8;
     DVectX const dx(dv2_x);
     DVectXZ const dxz(dv2_x, dv2_z);
     DVectXYZ const dxyz2(dv2_x, dv2_y, dv2_z);

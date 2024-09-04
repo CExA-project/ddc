@@ -1,5 +1,7 @@
 var NAVTREEINDEX5 =
 {
+"namespaceddc.html#a4ccc832ef3821a25e39751a82da27b44":[6,0,0,183],
+"namespaceddc.html#a4f36a871e49681abe05cc39604126187":[6,0,0,58],
 "namespaceddc.html#a523881fb2db5c5ef7e84dc8d0fd521bd":[6,0,0,163],
 "namespaceddc.html#a527ffc7bfc33850ef64720205544a21d":[6,0,0,77],
 "namespaceddc.html#a5395f39830c8845c51a251404985bc56":[6,0,0,157],
@@ -247,7 +249,5 @@ var NAVTREEINDEX5 =
 "structddc_1_1reducer_1_1lor.html#a2a4a1a017019f131705656b77dcf537d":[6,0,0,0,4,0],
 "structddc_1_1reducer_1_1lor.html#ad55bf58dbee06048a5b7a80f88c6f715":[6,0,0,0,4,1],
 "structddc_1_1reducer_1_1lor.html#ad55bf58dbee06048a5b7a80f88c6f715":[7,0,0,0,4,1],
-"structddc_1_1reducer_1_1max.html":[6,0,0,0,5],
-"structddc_1_1reducer_1_1max.html":[7,0,0,0,5],
-"structddc_1_1reducer_1_1max.html#ab07f0de9e0215ecf27bc51cdd9130dc5":[7,0,0,0,5,0]
+"structddc_1_1reducer_1_1max.html":[6,0,0,0,5]
 };

@@ -49,15 +49,14 @@ jobs:
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
     - name: Build
       run: |
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin || true
-        docker buildx build --load \
+        docker pull ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} || true
+        DOCKER_BUILDKIT=1 docker build \
           --build-arg BACKEND=${{matrix.backend}} \
-          --cache-from ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}:cache \
-          --cache-to ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}:cache \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --cache-from ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
           -t ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
           -t ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}:${GITHUB_SHA:0:7} \
           docker/${{matrix.image}}

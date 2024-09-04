@@ -11,6 +11,7 @@
 #include "ddc/kokkos_allocator.hpp"
 
 #include "deriv.hpp"
+#include "integrals.hpp"
 #include "math_tools.hpp"
 #include "spline_boundary_conditions.hpp"
 #include "splines_linear_problem_maker.hpp"
@@ -976,10 +977,8 @@ SplineBuilder<
         IDimX...>::quadrature_coefficients() const
 {
     // Compute integrals of bsplines
-    ddc::Chunk integral_bsplines_host(spline_domain(), ddc::HostAllocator<double>());
-    ddc::discrete_space<bsplines_type>().integrals(integral_bsplines_host.span_view());
-    auto integral_bsplines
-            = ddc::create_mirror_view_and_copy(MemorySpace(), integral_bsplines_host.span_view());
+    ddc::Chunk integral_bsplines(spline_domain(), ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::integrals(ExecSpace(), integral_bsplines.span_view());
 
     // Remove additional B-splines in the periodic case (cf. UniformBSplines::full_domain() documentation)
     ddc::ChunkSpan integral_bsplines_without_periodic_additional_bsplines

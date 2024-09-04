@@ -21,6 +21,11 @@ struct UniformBSplinesBase
 {
 };
 
+template <class ExecSpace, class ODDim, class Layout, class OMemorySpace>
+void uniform_bsplines_integrals(
+        ExecSpace const& execution_space,
+        ddc::ChunkSpan<double, ddc::DiscreteDomain<ODDim>, Layout, OMemorySpace> int_vals);
+
 } // namespace detail
 
 template <class T>
@@ -86,6 +91,11 @@ public:
     {
         template <class ODDim, class OMemorySpace>
         friend class Impl;
+
+        template <class ExecSpace, class ODDim, class Layout, class OMemorySpace>
+        friend void detail::uniform_bsplines_integrals(
+                ExecSpace const& execution_space,
+                ddc::ChunkSpan<double, ddc::DiscreteDomain<ODDim>, Layout, OMemorySpace> int_vals);
 
     public:
         /// @brief The type of the knots defining the B-splines.
@@ -229,11 +239,13 @@ public:
          *
          * The integral of each of the B-splines over their support within the domain on which this basis was defined.
          *
+         * @deprecated Use @ref integrals instead.
+         *
          * @param[out] int_vals The values of the integrals. It has to be a 1D Chunkspan of size (nbasis).
          * @return The values of the integrals.
          */
         template <class Layout, class MemorySpace2>
-        KOKKOS_INLINE_FUNCTION ddc::
+        [[deprecated("Use `integrals` instead")]] KOKKOS_INLINE_FUNCTION ddc::
                 ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
                 integrals(ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
                                   int_vals) const;

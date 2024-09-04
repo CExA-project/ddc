@@ -9,6 +9,7 @@
 #include <ddc/ddc.hpp>
 
 #include "Kokkos_Macros.hpp"
+#include "integrals.hpp"
 #include "periodic_extrapolation_rule.hpp"
 #include "spline_boundary_conditions.hpp"
 #include "view.hpp"
@@ -378,10 +379,7 @@ public:
                 ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()),
                 ddc::KokkosAllocator<double, memory_space>());
         ddc::ChunkSpan values = values_alloc.span_view();
-        Kokkos::parallel_for(
-                "ddc_splines_integrate_bsplines",
-                Kokkos::RangePolicy<exec_space>(0, 1),
-                KOKKOS_LAMBDA(int) { ddc::discrete_space<bsplines_type>().integrals(values); });
+        ddc::integrals(exec_space(), values);
 
         ddc::parallel_for_each(
                 "ddc_splines_integrate",

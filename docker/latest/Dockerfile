@@ -79,7 +79,7 @@ RUN chmod +x /bin/bash_run \
       # The Ginkgo heuristic does not seem to be compatible with the new HIP v6 directory layout.
       # This makes amdclang++ fail during cmake compiler test (https://releases.llvm.org/18.1.0/tools/clang/docs/HIPSupport.html#order-of-precedence-for-hip-path)
       export HIP_PATH=`hipconfig --path` \
-      && cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_HIP_ARCHITECTURES=gfx90a -DGINKGO_BUILD_HIP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF \
+      && cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_HIP_ARCHITECTURES=gfx90a -DGINKGO_BUILD_HIP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF \
  ;; esac \
  && cmake --build build \
  && cmake --install build \

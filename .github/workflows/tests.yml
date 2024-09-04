@@ -49,9 +49,14 @@ jobs:
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       run: |
-        echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin || true
         DOCKER_BUILDKIT=1 docker build \
           --build-arg BACKEND=${{matrix.backend}} \
           --build-arg BUILDKIT_INLINE_CACHE=1 \

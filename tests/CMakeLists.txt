@@ -10,6 +10,7 @@ add_executable(ddc_tests
     main.cpp
     aligned_allocator.cpp
     chunk.cpp
+    chunk_span.cpp
     create_mirror.cpp
     discrete_domain.cpp
     non_uniform_point_sampling.cpp

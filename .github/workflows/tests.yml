@@ -206,6 +206,7 @@ jobs:
             -DKokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
             -DKokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
             -DKokkosKernels_ENABLE_TPL_BLAS=OFF \
+            -DKokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
             -DKokkosKernels_ENABLE_TPL_LAPACK=OFF \
             -B build \
             -S /src/vendor/kokkos-kernels

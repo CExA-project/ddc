@@ -183,7 +183,7 @@ $(document).ready(function(){initNavTree('uniform__point__sampling_8hpp_source.h
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">using</span> discrete_element_type = DiscreteElement&lt;DDim&gt;;</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">using</span> discrete_vector_type = DiscreteVector&lt;DDim&gt;;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">using</span> discrete_vector_type = <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt;;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <a class="code hl_function" href="classddc_1_1UniformPointSampling_1_1Impl.html#a54880cc05b0029249b79e35949e8cc65">Impl</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
@@ -247,7 +247,7 @@ $(document).ready(function(){initNavTree('uniform__point__sampling_8hpp_source.h
 <div class="line"><span class="lineno">  125</span><span class="comment">     */</span></div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keyword">static</span> std::tuple&lt;<span class="keyword">typename</span> DDim::<span class="keyword">template</span> <a class="code hl_function" href="classddc_1_1UniformPointSampling.html#a28cdba79b1cdbaa0833687d0e5f7de4b">Impl</a>&lt;DDim, Kokkos::HostSpace&gt;, <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt;&gt;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <a class="code hl_function" href="classddc_1_1UniformPointSampling.html#a28cdba79b1cdbaa0833687d0e5f7de4b">init</a>(Coordinate&lt;CDim&gt; a, Coordinate&lt;CDim&gt; b, DiscreteVector&lt;DDim&gt; n)</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <a class="code hl_function" href="classddc_1_1UniformPointSampling.html#a28cdba79b1cdbaa0833687d0e5f7de4b">init</a>(Coordinate&lt;CDim&gt; a, Coordinate&lt;CDim&gt; b, <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n)</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    {</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        assert(a &lt; b);</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        assert(n &gt; 1);</div>
@@ -278,9 +278,9 @@ $(document).ready(function(){initNavTree('uniform__point__sampling_8hpp_source.h
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <a class="code hl_function" href="classddc_1_1UniformPointSampling.html#afc315e9fe09e69f789d16cf45b38c713">init_ghosted</a>(</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            Coordinate&lt;CDim&gt; a,</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            Coordinate&lt;CDim&gt; b,</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            DiscreteVector&lt;DDim&gt; n,</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            DiscreteVector&lt;DDim&gt; n_ghosts_before,</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            DiscreteVector&lt;DDim&gt; n_ghosts_after)</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n,</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n_ghosts_before,</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n_ghosts_after)</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    {</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="keyword">using</span> discrete_domain_type = <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt;;</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        assert(a &lt; b);</div>
@@ -324,8 +324,8 @@ $(document).ready(function(){initNavTree('uniform__point__sampling_8hpp_source.h
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <a class="code hl_function" href="classddc_1_1UniformPointSampling.html#a3df74134c8f3bf7029672c69c00ebe6f">init_ghosted</a>(</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            Coordinate&lt;CDim&gt; a,</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            Coordinate&lt;CDim&gt; b,</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            DiscreteVector&lt;DDim&gt; n,</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            DiscreteVector&lt;DDim&gt; n_ghosts)</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n,</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n_ghosts)</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    {</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <span class="keywordflow">return</span> init_ghosted(a, b, n, n_ghosts, n_ghosts);</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    }</div>
@@ -419,6 +419,7 @@ $(document).ready(function(){initNavTree('uniform__point__sampling_8hpp_source.h
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00053">discrete_domain.hpp:53</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteVector_html_a62e896bfa78045521042a0eab87c0acb"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">ddc::DiscreteVector::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteVector&lt; OTags... &gt; const &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00312">discrete_vector.hpp:312</a></div></div>
 <div class="ttc" id="aclassddc_1_1UniformPointSampling_1_1Impl_html"><div class="ttname"><a href="classddc_1_1UniformPointSampling_1_1Impl.html">ddc::UniformPointSampling::Impl</a></div><div class="ttdef"><b>Definition</b> <a href="uniform__point__sampling_8hpp_source.html#l00047">uniform_point_sampling.hpp:48</a></div></div>
 <div class="ttc" id="aclassddc_1_1UniformPointSampling_1_1Impl_html_a2000f725762ceb86e2ed191af78983c9"><div class="ttname"><a href="classddc_1_1UniformPointSampling_1_1Impl.html#a2000f725762ceb86e2ed191af78983c9">ddc::UniformPointSampling::Impl::Impl</a></div><div class="ttdeci">Impl(Impl &amp;&amp;)=default</div></div>
 <div class="ttc" id="aclassddc_1_1UniformPointSampling_1_1Impl_html_a4bb093b56e346dd604833971272ac55c"><div class="ttname"><a href="classddc_1_1UniformPointSampling_1_1Impl.html#a4bb093b56e346dd604833971272ac55c">ddc::UniformPointSampling::Impl::Impl</a></div><div class="ttdeci">Impl(continuous_element_type origin, Real step)</div><div class="ttdoc">Construct a Impl from a point and a spacing step.</div><div class="ttdef"><b>Definition</b> <a href="uniform__point__sampling_8hpp_source.html#l00084">uniform_point_sampling.hpp:84</a></div></div>

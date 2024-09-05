@@ -186,7 +186,7 @@ $(document).ready(function(){initNavTree('periodic__sampling_8hpp_source.html','
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keyword">using</span> discrete_element_type = DiscreteElement&lt;DDim&gt;;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keyword">using</span> discrete_vector_type = DiscreteVector&lt;DDim&gt;;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keyword">using</span> discrete_vector_type = <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt;;</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <a class="code hl_function" href="classddc_1_1PeriodicSampling_1_1Impl.html#a179ae0ef527393831bae4725b9c83e94">Impl</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
@@ -269,8 +269,8 @@ $(document).ready(function(){initNavTree('periodic__sampling_8hpp_source.html','
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keyword">static</span> std::tuple&lt;<span class="keyword">typename</span> DDim::<span class="keyword">template</span> <a class="code hl_function" href="classddc_1_1PeriodicSampling.html#a1ff14db4af0dbdb8d10933df7aa86993">Impl</a>&lt;DDim, Kokkos::HostSpace&gt;, <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt;&gt;</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <a class="code hl_function" href="classddc_1_1PeriodicSampling.html#a1ff14db4af0dbdb8d10933df7aa86993">init</a>(Coordinate&lt;CDim&gt; a,</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>         Coordinate&lt;CDim&gt; b,</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>         DiscreteVector&lt;DDim&gt; n,</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>         DiscreteVector&lt;DDim&gt; n_period)</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>         <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n,</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>         <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n_period)</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    {</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        assert(a &lt; b);</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        assert(n &gt; 1);</div>
@@ -303,10 +303,10 @@ $(document).ready(function(){initNavTree('periodic__sampling_8hpp_source.html','
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <a class="code hl_function" href="classddc_1_1PeriodicSampling.html#a58533823caa0d21d59700eb3c5d423ab">init_ghosted</a>(</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            continuous_element_type a,</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>            continuous_element_type b,</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            DiscreteVector&lt;DDim&gt; n,</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>            DiscreteVector&lt;DDim&gt; n_period,</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            DiscreteVector&lt;DDim&gt; n_ghosts_before,</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>            DiscreteVector&lt;DDim&gt; n_ghosts_after)</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n,</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n_period,</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n_ghosts_before,</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n_ghosts_after)</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    {</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        <span class="keyword">using</span> discrete_domain_type = <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt;;</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        assert(a &lt; b);</div>
@@ -354,9 +354,9 @@ $(document).ready(function(){initNavTree('periodic__sampling_8hpp_source.html','
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <a class="code hl_function" href="classddc_1_1PeriodicSampling.html#a011edbc59b1aa71488221b4bec79fc9f">init_ghosted</a>(</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            continuous_element_type a,</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>            continuous_element_type b,</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            DiscreteVector&lt;DDim&gt; n,</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            DiscreteVector&lt;DDim&gt; n_period,</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            DiscreteVector&lt;DDim&gt; n_ghosts)</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n,</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n_period,</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; n_ghosts)</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    {</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        <span class="keywordflow">return</span> init_ghosted(a, b, n, n_period, n_ghosts, n_ghosts);</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    }</div>
@@ -449,6 +449,7 @@ $(document).ready(function(){initNavTree('periodic__sampling_8hpp_source.html','
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00053">discrete_domain.hpp:53</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteVector_html_a62e896bfa78045521042a0eab87c0acb"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">ddc::DiscreteVector::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteVector&lt; OTags... &gt; const &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00312">discrete_vector.hpp:312</a></div></div>
 <div class="ttc" id="aclassddc_1_1PeriodicSampling_1_1Impl_html"><div class="ttname"><a href="classddc_1_1PeriodicSampling_1_1Impl.html">ddc::PeriodicSampling::Impl</a></div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00048">periodic_sampling.hpp:49</a></div></div>
 <div class="ttc" id="aclassddc_1_1PeriodicSampling_1_1Impl_html_a179ae0ef527393831bae4725b9c83e94"><div class="ttname"><a href="classddc_1_1PeriodicSampling_1_1Impl.html#a179ae0ef527393831bae4725b9c83e94">ddc::PeriodicSampling::Impl::Impl</a></div><div class="ttdeci">Impl()=default</div></div>
 <div class="ttc" id="aclassddc_1_1PeriodicSampling_1_1Impl_html_a259154bc9f54dd0295a4d602d0266522"><div class="ttname"><a href="classddc_1_1PeriodicSampling_1_1Impl.html#a259154bc9f54dd0295a4d602d0266522">ddc::PeriodicSampling::Impl::~Impl</a></div><div class="ttdeci">~Impl()=default</div></div>

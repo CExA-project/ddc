@@ -61,10 +61,13 @@ constexpr bool operator==(AlignedAllocator<T, NT> const&, AlignedAllocator<U, NU
     return std::is_same_v<AlignedAllocator<T, NT>, AlignedAllocator<U, NU>>;
 }
 
+#if !defined(__cpp_impl_three_way_comparison)
+// In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
 template <class T, std::size_t NT, class U, std::size_t NU>
 constexpr bool operator!=(AlignedAllocator<T, NT> const&, AlignedAllocator<U, NU> const&) noexcept
 {
     return !std::is_same_v<AlignedAllocator<T, NT>, AlignedAllocator<U, NU>>;
 }
+#endif
 
 } // namespace ddc

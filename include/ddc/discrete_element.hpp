@@ -326,6 +326,8 @@ KOKKOS_FUNCTION constexpr bool operator==(
     return ((lhs.template uid<Tags>() == rhs.template uid<Tags>()) && ...);
 }
 
+#if !defined(__cpp_impl_three_way_comparison)
+// In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
 template <class... Tags, class... OTags>
 KOKKOS_FUNCTION constexpr bool operator!=(
         DiscreteElement<Tags...> const& lhs,
@@ -333,6 +335,7 @@ KOKKOS_FUNCTION constexpr bool operator!=(
 {
     return !(lhs == rhs);
 }
+#endif
 
 template <class Tag>
 KOKKOS_FUNCTION constexpr bool operator<(

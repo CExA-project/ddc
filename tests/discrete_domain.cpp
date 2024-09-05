@@ -166,7 +166,7 @@ TEST(DiscreteDomainTest, RangeFor)
 {
     DDomX const dom(lbound_x, nelems_x);
     DElemX ii = lbound_x;
-    for (DElemX ix : dom) {
+    for (DElemX const ix : dom) {
         EXPECT_LE(lbound_x, ix);
         EXPECT_EQ(ix, ii);
         EXPECT_LE(ix, ubound_x);

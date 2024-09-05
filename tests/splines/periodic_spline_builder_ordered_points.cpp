@@ -55,7 +55,7 @@ TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
 
     // 2. Create the interpolation domain
     ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling<IDimX>());
-    ddc::DiscreteDomain<IDimX> interpolation_domain(GrevillePoints::get_domain<IDimX>());
+    ddc::DiscreteDomain<IDimX> const interpolation_domain(GrevillePoints::get_domain<IDimX>());
 
     double last(ddc::coordinate(interpolation_domain.front()));
     double current;

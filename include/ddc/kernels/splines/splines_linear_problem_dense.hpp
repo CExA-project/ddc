@@ -119,7 +119,7 @@ public:
         auto a_device = m_a.d_view;
         auto ipiv_device = m_ipiv.d_view;
 
-        Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
+        Kokkos::RangePolicy<ExecSpace> const policy(0, b.extent(1));
 
         if (transpose) {
             Kokkos::parallel_for(

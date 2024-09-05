@@ -64,7 +64,7 @@ public:
         explicit Impl(std::initializer_list<continuous_element_type> points)
         {
             std::vector<continuous_element_type> host_points(points.begin(), points.end());
-            Kokkos::View<continuous_element_type*, Kokkos::HostSpace>
+            Kokkos::View<continuous_element_type*, Kokkos::HostSpace> const
                     host(host_points.data(), host_points.size());
             Kokkos::resize(m_points, host.extent(0));
             Kokkos::deep_copy(m_points, host);
@@ -78,7 +78,7 @@ public:
                 Kokkos::deep_copy(m_points, points);
             } else {
                 std::vector<continuous_element_type> host_points(points.begin(), points.end());
-                Kokkos::View<continuous_element_type*, Kokkos::HostSpace>
+                Kokkos::View<continuous_element_type*, Kokkos::HostSpace> const
                         host(host_points.data(), host_points.size());
                 Kokkos::resize(m_points, host.extent(0));
                 Kokkos::deep_copy(m_points, host);
@@ -90,7 +90,7 @@ public:
         Impl(InputIt points_begin, InputIt points_end)
         {
             std::vector<continuous_element_type> host_points(points_begin, points_end);
-            Kokkos::View<continuous_element_type*, Kokkos::HostSpace>
+            Kokkos::View<continuous_element_type*, Kokkos::HostSpace> const
                     host(host_points.data(), host_points.size());
             Kokkos::resize(m_points, host.extent(0));
             Kokkos::deep_copy(m_points, host);

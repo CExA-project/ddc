@@ -143,8 +143,7 @@ static void PeriodicitySplineBuilderTest()
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
             ddc::SplineSolver::GINKGO,
-            IDim<X>>
-            spline_builder(dom_vals);
+            IDim<X>> const spline_builder(dom_vals);
 
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<BSplines<X>> const dom_bsplines = spline_builder.spline_domain();
@@ -153,21 +152,21 @@ static void PeriodicitySplineBuilderTest()
     ddc::Chunk vals_host_alloc(
             dom_vals,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan vals_host = vals_host_alloc.span_view();
-    evaluator_type<IDim<X>> evaluator(dom_vals);
+    ddc::ChunkSpan const vals_host = vals_host_alloc.span_view();
+    evaluator_type<IDim<X>> const evaluator(dom_vals);
     evaluator(vals_host);
     auto vals_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_host);
-    ddc::ChunkSpan vals = vals_alloc.span_view();
+    ddc::ChunkSpan const vals = vals_alloc.span_view();
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(dom_bsplines, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan coef = coef_alloc.span_view();
+    ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
     spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    ddc::PeriodicExtrapolationRule<X> extrapolation_rule;
+    ddc::PeriodicExtrapolationRule<X> const extrapolation_rule;
     ddc::SplineEvaluator<
             ExecSpace,
             MemorySpace,
@@ -175,12 +174,11 @@ static void PeriodicitySplineBuilderTest()
             IDim<X>,
             ddc::PeriodicExtrapolationRule<X>,
             ddc::PeriodicExtrapolationRule<X>,
-            IDim<X>>
-            spline_evaluator(extrapolation_rule, extrapolation_rule);
+            IDim<X>> const spline_evaluator(extrapolation_rule, extrapolation_rule);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());
-    ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
+    ddc::ChunkSpan const coords_eval = coords_eval_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
@@ -191,13 +189,13 @@ static void PeriodicitySplineBuilderTest()
 
     // Instantiate chunks to receive outputs of spline_evaluator
     ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
+    ddc::ChunkSpan const spline_eval = spline_eval_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors (we recover the initial values)
-    double max_norm_error = ddc::parallel_transform_reduce(
+    double const max_norm_error = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval.domain(),
             0.,

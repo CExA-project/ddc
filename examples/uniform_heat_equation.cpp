@@ -57,7 +57,7 @@ void display(double time, ChunkType temp)
     std::cout << std::fixed << std::setprecision(3);
     std::cout << "At t = " << time << ",\n";
     std::cout << "  * mean temperature  = " << mean_temp << "\n";
-    ddc::ChunkSpan temp_slice
+    ddc::ChunkSpan const temp_slice
             = temp[ddc::get_domain<DDimY>(temp).front()
                    + ddc::get_domain<DDimY>(temp).size() / 2];
     std::cout << "  * temperature[y:"

@@ -208,10 +208,11 @@ public:
                 && ...));
         namespace stdex = std::experimental;
         if (!domain.empty()) {
-            extents_type extents_s((front<DDims>(domain) + extents<DDims>(domain)).uid()...);
-            std::array<std::size_t, sizeof...(DDims)> strides_s {allocation_mdspan.mapping().stride(
-                    type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
-            stdex::layout_stride::mapping<extents_type> mapping_s(extents_s, strides_s);
+            extents_type const extents_s((front<DDims>(domain) + extents<DDims>(domain)).uid()...);
+            std::array<std::size_t, sizeof...(DDims)> const strides_s {
+                    allocation_mdspan.mapping().stride(
+                            type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
+            stdex::layout_stride::mapping<extents_type> const mapping_s(extents_s, strides_s);
             this->m_internal_mdspan = internal_mdspan_type(
                     allocation_mdspan.data_handle() - mapping_s(front<DDims>(domain).uid()...),
                     mapping_s);

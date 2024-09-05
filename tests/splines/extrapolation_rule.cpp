@@ -238,8 +238,7 @@ static void ExtrapolationRuleSplineTest()
             s_bcl2,
             s_bcr2,
             ddc::SplineSolver::GINKGO,
-            IDim<X, I1, I2>...>
-            spline_builder(dom_vals);
+            IDim<X, I1, I2>...> const spline_builder(dom_vals);
 
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>> const dom_interpolation
@@ -250,14 +249,14 @@ static void ExtrapolationRuleSplineTest()
     ddc::Chunk vals_1d_host_alloc(
             dom_interpolation,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan vals_1d_host = vals_1d_host_alloc.span_view();
-    evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>> evaluator(dom_interpolation);
+    ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
+    evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>> const evaluator(dom_interpolation);
     evaluator(vals_1d_host);
     auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
-    ddc::ChunkSpan vals_1d = vals_1d_alloc.span_view();
+    ddc::ChunkSpan const vals_1d = vals_1d_alloc.span_view();
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan vals = vals_alloc.span_view();
+    ddc::ChunkSpan const vals = vals_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
             vals.domain(),
@@ -267,36 +266,36 @@ static void ExtrapolationRuleSplineTest()
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan coef = coef_alloc.span_view();
+    ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
     spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
 #if defined(ER_NULL)
-    ddc::NullExtrapolationRule extrapolation_rule_left_dim_1;
-    ddc::NullExtrapolationRule extrapolation_rule_right_dim_1;
+    ddc::NullExtrapolationRule const extrapolation_rule_left_dim_1;
+    ddc::NullExtrapolationRule const extrapolation_rule_right_dim_1;
 #if defined(BC_PERIODIC)
-    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_left_dim_2;
-    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_right_dim_2;
+    ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_left_dim_2;
+    ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_right_dim_2;
 #else
-    ddc::NullExtrapolationRule extrapolation_rule_left_dim_2;
-    ddc::NullExtrapolationRule extrapolation_rule_right_dim_2;
+    ddc::NullExtrapolationRule const extrapolation_rule_left_dim_2;
+    ddc::NullExtrapolationRule const extrapolation_rule_right_dim_2;
 #endif
 #elif defined(ER_CONSTANT)
 #if defined(BC_PERIODIC)
-    ddc::ConstantExtrapolationRule<I1, I2> extrapolation_rule_left_dim_1(x0<I1>());
-    ddc::ConstantExtrapolationRule<I1, I2> extrapolation_rule_right_dim_1(xN<I1>());
-    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_left_dim_2;
-    ddc::PeriodicExtrapolationRule<I2> extrapolation_rule_right_dim_2;
+    ddc::ConstantExtrapolationRule<I1, I2> const extrapolation_rule_left_dim_1(x0<I1>());
+    ddc::ConstantExtrapolationRule<I1, I2> const extrapolation_rule_right_dim_1(xN<I1>());
+    ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_left_dim_2;
+    ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_right_dim_2;
 #else
-    ddc::ConstantExtrapolationRule<I1, I2>
+    ddc::ConstantExtrapolationRule<I1, I2> const
             extrapolation_rule_left_dim_1(x0<I1>(), x0<I2>(), xN<I2>());
-    ddc::ConstantExtrapolationRule<I1, I2>
+    ddc::ConstantExtrapolationRule<I1, I2> const
             extrapolation_rule_right_dim_1(xN<I1>(), x0<I2>(), xN<I2>());
-    ddc::ConstantExtrapolationRule<I2, I1>
+    ddc::ConstantExtrapolationRule<I2, I1> const
             extrapolation_rule_left_dim_2(x0<I2>(), x0<I1>(), xN<I1>());
-    ddc::ConstantExtrapolationRule<I2, I1>
+    ddc::ConstantExtrapolationRule<I2, I1> const
             extrapolation_rule_right_dim_2(xN<I2>(), x0<I1>(), xN<I1>());
 #endif
 #endif
@@ -327,7 +326,7 @@ static void ExtrapolationRuleSplineTest()
 #endif
 #endif
 
-            IDim<X, I1, I2>...>
+            IDim<X, I1, I2>...> const
             spline_evaluator_batched(
                     extrapolation_rule_left_dim_1,
                     extrapolation_rule_right_dim_1,
@@ -336,7 +335,7 @@ static void ExtrapolationRuleSplineTest()
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
-    ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
+    ddc::ChunkSpan const coords_eval = coords_eval_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
@@ -354,13 +353,13 @@ static void ExtrapolationRuleSplineTest()
 
     // Instantiate chunks to receive outputs of spline_evaluator
     ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
+    ddc::ChunkSpan const spline_eval = spline_eval_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors (we recover the initial values)
-    double max_norm_error = ddc::parallel_transform_reduce(
+    double const max_norm_error = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval.domain(),
             0.,
@@ -371,7 +370,7 @@ static void ExtrapolationRuleSplineTest()
 #elif defined(ER_CONSTANT)
                 typename decltype(ddc::remove_dims_of(
                         vals.domain(),
-                        vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type
+                        vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type const
                         e_without_interest(e);
                 double tmp;
                 if (ddc::select<I2>(coords_eval(e)) > xN<I2>()) {
@@ -383,7 +382,7 @@ static void ExtrapolationRuleSplineTest()
                     typename decltype(ddc::remove_dims_of(
                             vals.domain(),
                             vals.template domain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>()))::
-                            discrete_element_type e_batch(e);
+                            discrete_element_type const e_batch(e);
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),
                             vals.template domain<IDim<I2, I1, I2>>().back(),

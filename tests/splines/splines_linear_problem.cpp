@@ -46,8 +46,8 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
             ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
             ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
     {
-        double TOL = 1e-10;
-        std::size_t N = matrix.extent(0);
+        double const TOL = 1e-10;
+        std::size_t const N = matrix.extent(0);
 
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
@@ -64,8 +64,8 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
             ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
             ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
     {
-        double TOL = 1e-10;
-        std::size_t N = matrix.extent(0);
+        double const TOL = 1e-10;
+        std::size_t const N = matrix.extent(0);
 
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
@@ -85,7 +85,7 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
         const std::size_t N = splines_linear_problem.size();
 
         std::vector<double> val_ptr(N * N);
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
                 val(val_ptr.data(), N, N);
 
         copy_matrix(val, splines_linear_problem);
@@ -94,7 +94,7 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
 
         Kokkos::DualView<double*>
                 inv_ptr("inv_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
                 inv(inv_ptr.h_view.data(), splines_linear_problem.required_number_of_rhs_rows(), N);
         fill_identity(inv);
         inv_ptr.modify_host();
@@ -109,7 +109,7 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
 
         Kokkos::DualView<double*>
                 inv_tr_ptr("inv_tr_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
                 inv_tr(inv_tr_ptr.h_view.data(),
                        splines_linear_problem.required_number_of_rhs_rows(),
                        N);
@@ -422,7 +422,7 @@ TEST_P(SplinesLinearProblemSizesFixture, PeriodicBand)
                         false);
         for (std::size_t i(0); i < N; ++i) {
             for (std::size_t j(0); j < N; ++j) {
-                std::ptrdiff_t diag = ddc::detail::
+                std::ptrdiff_t const diag = ddc::detail::
                         modulo(static_cast<std::ptrdiff_t>(j - i), static_cast<std::ptrdiff_t>(N));
                 if (diag == s || diag == N + s) {
                     splines_linear_problem->set_element(i, j, 2.0 * k + 1);

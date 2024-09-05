@@ -67,8 +67,8 @@ static void deepcopy_1d(benchmark::State& state)
     std::vector<double> src_data(state.range(0), 0.0);
     std::vector<double> dst_data(state.range(0), -1.0);
     DDomX const dom(DElemX(0), DVectX(state.range(0)));
-    ChunkSpanX<double> src(src_data.data(), dom);
-    ChunkSpanX<double> dst(dst_data.data(), dom);
+    ChunkSpanX<double> const src(src_data.data(), dom);
+    ChunkSpanX<double> const dst(dst_data.data(), dom);
     for (auto _ : state) {
         ddc::parallel_deepcopy(dst, src);
     }
@@ -97,8 +97,8 @@ static void deepcopy_2d(benchmark::State& state)
     std::vector<double> src_data(state.range(0) * state.range(1), 0.0);
     std::vector<double> dst_data(state.range(0) * state.range(1), -1.0);
     DDomXY const dom(DElemXY(0, 0), DVectXY(state.range(0) - 1, state.range(1) - 1));
-    ChunkSpanXY<double> src(src_data.data(), dom);
-    ChunkSpanXY<double> dst(dst_data.data(), dom);
+    ChunkSpanXY<double> const src(src_data.data(), dom);
+    ChunkSpanXY<double> const dst(dst_data.data(), dom);
     for (auto _ : state) {
         ddc::parallel_deepcopy(dst, src);
     }
@@ -112,10 +112,10 @@ static void deepcopy_subchunk_2d(benchmark::State& state)
     std::vector<double> src_data(state.range(0) * state.range(1), 0.0);
     std::vector<double> dst_data(state.range(0) * state.range(1), -1.0);
     DDomXY const dom(DElemXY(0, 0), DVectXY(state.range(0) - 1, state.range(1) - 1));
-    ChunkSpanXY<double> src(src_data.data(), dom);
-    ChunkSpanXY<double> dst(dst_data.data(), dom);
+    ChunkSpanXY<double> const src(src_data.data(), dom);
+    ChunkSpanXY<double> const dst(dst_data.data(), dom);
     for (auto _ : state) {
-        for (DElemX i : ddc::select<DDimX>(dom)) {
+        for (DElemX const i : ddc::select<DDimX>(dom)) {
             auto&& dst_i = dst[i];
             auto&& src_i = src[i];
             ddc::parallel_deepcopy(dst_i, src_i);

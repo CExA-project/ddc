@@ -128,7 +128,7 @@ public:
         auto d = Kokkos::subview(q_device, 0, Kokkos::ALL);
         auto e = Kokkos::
                 subview(q_device, 1, Kokkos::pair<int, int>(0, q_device.extent_int(1) - 1));
-        Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
+        Kokkos::RangePolicy<ExecSpace> const policy(0, b.extent(1));
         Kokkos::parallel_for(
                 "pttrs",
                 policy,

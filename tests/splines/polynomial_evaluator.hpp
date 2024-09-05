@@ -71,9 +71,9 @@ struct PolynomialEvaluator
         KOKKOS_FUNCTION double eval(double const x, int const derivative) const
         {
             double result(0.0);
-            int start = derivative < 0 ? 0 : derivative;
+            int const start = derivative < 0 ? 0 : derivative;
             for (int i(start); i < Degree + 1; ++i) {
-                double v
+                double const v
                         = double(falling_factorial(i, derivative)) * Kokkos::pow(x, i - derivative);
                 result += m_coeffs[i] * v;
             }

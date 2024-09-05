@@ -46,7 +46,7 @@ static void test_fourier_mesh(std::size_t Nx)
 
     double const epsilon = 1e-14;
     ddc::DiscreteElement<DFDim<ddc::Fourier<X>>> const k_front = k_mesh.front();
-    for (ddc::DiscreteElement<DFDim<ddc::Fourier<X>>> k : k_mesh) {
+    for (ddc::DiscreteElement<DFDim<ddc::Fourier<X>>> const k : k_mesh) {
         double const ka = -Kokkos::numbers::pi * Nx / (b - a);
         double const kb = Kokkos::numbers::pi * Nx / (b - a);
         double const k_pred = 2 * (k - k_front) * Kokkos::numbers::pi / (b - a);
@@ -145,7 +145,8 @@ static void test_fft()
                 double const diff = Kokkos::abs(FFf_host(e)) - Kokkos::abs(f_host(e));
                 return pow2(diff) / Kokkos::pow(Nx, sizeof...(X));
             }));
-    double epsilon = std::is_same_v<ddc::detail::fft::real_type_t<Tin>, double> ? 1e-15 : 1e-7;
+    double const epsilon
+            = std::is_same_v<ddc::detail::fft::real_type_t<Tin>, double> ? 1e-15 : 1e-7;
     EXPECT_LE(criterion, epsilon)
             << "Distance between analytical prediction and numerical result : " << criterion;
     EXPECT_LE(criterion2, epsilon)

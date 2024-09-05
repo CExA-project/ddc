@@ -110,7 +110,7 @@ int main(int argc, char** argv)
                     ddc::Coordinate<X>(x_start),
                     ddc::Coordinate<X>(x_end),
                     ddc::DiscreteVector<DDimX>(nb_x_points)));
-    ddc::DiscreteDomain<DDimX> x_domain
+    ddc::DiscreteDomain<DDimX> const x_domain
             = x_domain_with_periodic_point.remove_last(
                     ddc::DiscreteVector<DDimX>(1));
 
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
                     ddc::Coordinate<Y>(y_start),
                     ddc::Coordinate<Y>(y_end),
                     ddc::DiscreteVector<DDimY>(nb_y_points)));
-    ddc::DiscreteDomain<DDimY> y_domain
+    ddc::DiscreteDomain<DDimY> const y_domain
             = y_domain_with_periodic_point.remove_last(
                     ddc::DiscreteVector<DDimY>(1));
 
@@ -201,7 +201,7 @@ int main(int argc, char** argv)
 
         // Stencil computation on the main domain
         ddc::kwArgs_fft const kwargs {ddc::FFT_Normalization::BACKWARD};
-        Kokkos::DefaultExecutionSpace execution_space;
+        Kokkos::DefaultExecutionSpace const execution_space;
         ddc::fft(execution_space, Ff, last_temp, kwargs);
         ddc::parallel_for_each(
                 execution_space,

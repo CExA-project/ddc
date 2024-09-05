@@ -134,7 +134,7 @@ public:
         assert(b.extent(0) == size());
 
         auto q_device = m_q.d_view;
-        Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
+        Kokkos::RangePolicy<ExecSpace> const policy(0, b.extent(1));
         Kokkos::parallel_for(
                 "pbtrs",
                 policy,

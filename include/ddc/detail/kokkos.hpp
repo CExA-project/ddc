@@ -134,8 +134,7 @@ KOKKOS_FUNCTION mdspan_to_kokkos_layout_t<typename MP::layout_type> build_kokkos
         std::experimental::mdspan<
                 std::size_t,
                 std::experimental::extents<std::size_t, sizeof...(Is), 2>,
-                std::experimental::layout_right>
-                interleaved_extents_strides(storage.data());
+                std::experimental::layout_right> const interleaved_extents_strides(storage.data());
         ((interleaved_extents_strides(Is, 0) = ep.extent(Is),
           interleaved_extents_strides(Is, 1) = mapping.stride(Is)),
          ...);
@@ -175,14 +174,13 @@ struct use_annotated_operator
 template <class ExecSpace>
 constexpr bool need_annotated_operator() noexcept
 {
-    bool need_annotation = false;
-#ifdef KOKKOS_ENABLE_CUDA
-    need_annotation = need_annotation || std::is_same_v<ExecSpace, Kokkos::Cuda>;
+#if defined(KOKKOS_ENABLE_CUDA)
+    return std::is_same_v<ExecSpace, Kokkos::Cuda>;
+#elif defined(KOKKOS_ENABLE_HIP)
+    return std::is_same_v<ExecSpace, Kokkos::HIP>;
+#else
+    return false;
 #endif
-#ifdef KOKKOS_ENABLE_HIP
-    need_annotation = need_annotation || std::is_same_v<ExecSpace, Kokkos::HIP>;
-#endif
-    return need_annotation;
 }
 
 } // namespace ddc::detail

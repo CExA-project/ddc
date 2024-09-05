@@ -163,7 +163,7 @@ public:
         using discrete_domain_type = DiscreteDomain<DDim>;
         assert(a < b);
         assert(n > 1);
-        Real discretization_step {(b - a) / (n - 1)};
+        Real const discretization_step {(b - a) / (n - 1)};
         typename DDim::template Impl<DDim, Kokkos::HostSpace>
                 disc(a - n_ghosts_before.value() * discretization_step, discretization_step);
         discrete_domain_type ghosted_domain

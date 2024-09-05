@@ -109,9 +109,8 @@ public:
         return m_element_begin == other.m_element_begin && m_element_end == other.m_element_end;
     }
 
-#if __cplusplus <= 201703L
-    // Shall not be necessary anymore in C++20
-    // `a!=b` shall be translated by the compiler to `!(a==b)`
+#if !defined(__cpp_impl_three_way_comparison)
+    // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
     template <class... ODims>
     KOKKOS_FUNCTION constexpr bool operator!=(DiscreteDomain<ODims...> const& other) const
     {
@@ -293,9 +292,8 @@ public:
         return true;
     }
 
-#if __cplusplus <= 201703L
-    // Shall not be necessary anymore in C++20
-    // `a!=b` shall be translated by the compiler to `!(a==b)`
+#if !defined(__cpp_impl_three_way_comparison)
+    // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
     KOKKOS_FUNCTION constexpr bool operator!=(DiscreteDomain const& other) const
     {
         return !(*this == other);
@@ -599,12 +597,15 @@ public:
         return xx.m_value == yy.m_value;
     }
 
+#if !defined(__cpp_impl_three_way_comparison)
+    // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
     friend KOKKOS_FUNCTION constexpr bool operator!=(
             DiscreteDomainIterator const& xx,
             DiscreteDomainIterator const& yy)
     {
         return xx.m_value != yy.m_value;
     }
+#endif
 
     friend KOKKOS_FUNCTION constexpr bool operator<(
             DiscreteDomainIterator const& xx,

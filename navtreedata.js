@@ -94,7 +94,7 @@ var NAVTREEINDEX =
 "classddc_1_1DiscreteVector.html#af8f929d7b9589a21c255c18f5afb6f07",
 "classddc_1_1SplineBuilder.html#a21d3b08f179f6be5097949a6cb9d036c",
 "classddc_1_1SplineEvaluator2D.html#afa0aea95ac9c8f0ed9e6453ba34da331",
-"namespaceddc.html#a4ccc832ef3821a25e39751a82da27b44",
+"namespaceddc.html#a4c7a2930d12432d53c1fcfbb1a1ecda9",
 "structddc_1_1reducer_1_1max.html"
 ];
 

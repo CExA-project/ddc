@@ -176,6 +176,7 @@ var namespaceddc =
     [ "FourierMesh", "namespaceddc.html#a5395f39830c8845c51a251404985bc56", null ],
     [ "fft", "namespaceddc.html#a4949624204145ca2a0390c7b73a02480", null ],
     [ "ifft", "namespaceddc.html#a17507ff514a63591f7e9e4822e1ebacc", null ],
+    [ "integrals", "namespaceddc.html#a2e0f4e58eeec721f51500277e9f814fa", null ],
     [ "n_boundary_equations", "namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f", null ],
     [ "as_span", "namespaceddc.html#ab5f4b442bd231cb75cac113a0f508863", null ],
     [ "as_span", "namespaceddc.html#a07265a51a26fd9366dfd7461d838fa16", null ],

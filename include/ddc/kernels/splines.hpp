@@ -9,6 +9,7 @@
 #include "splines/constant_extrapolation_rule.hpp"
 #include "splines/deriv.hpp"
 #include "splines/greville_interpolation_points.hpp"
+#include "splines/integrals.hpp"
 #include "splines/knot_discrete_dimension_type.hpp"
 #include "splines/knots_as_interpolation_points.hpp"
 #include "splines/math_tools.hpp"

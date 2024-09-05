@@ -247,11 +247,13 @@ public:
          *
          * The integral of each of the B-splines over their support within the domain on which this basis was defined.
          *
+         * @deprecated Use @ref integrals instead.
+         *
          * @param[out] int_vals The values of the integrals. It has to be a 1D Chunkspan of size (nbasis).
          * @return The values of the integrals.
          */
         template <class Layout, class MemorySpace2>
-        KOKKOS_INLINE_FUNCTION ddc::
+        [[deprecated("Use `integrals` instead")]] KOKKOS_INLINE_FUNCTION ddc::
                 ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
                 integrals(ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
                                   int_vals) const;

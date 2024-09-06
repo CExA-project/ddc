@@ -601,11 +601,14 @@ KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout,
 UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::integrals(
         ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const
 {
-    if constexpr (is_periodic()) {
-        assert(int_vals.size() == nbasis() || int_vals.size() == size());
-    } else {
-        assert(int_vals.size() == nbasis());
-    }
+    assert([&]() -> bool {
+        if constexpr (is_periodic()) {
+            return int_vals.size() == nbasis() || int_vals.size() == size();
+        } else {
+            return int_vals.size() == nbasis();
+        }
+    }());
+
     discrete_domain_type const full_dom_splines(full_domain());
 
     if constexpr (is_periodic()) {

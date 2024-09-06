@@ -30,12 +30,15 @@ void uniform_bsplines_integrals(
             Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,
             "MemorySpace has to be accessible for ExecutionSpace.");
 
-    if constexpr (DDim::is_periodic()) {
-        assert(int_vals.size() == ddc::discrete_space<DDim>().nbasis()
-               || int_vals.size() == ddc::discrete_space<DDim>().size());
-    } else {
-        assert(int_vals.size() == ddc::discrete_space<DDim>().nbasis());
-    }
+    assert([&]() -> bool {
+        if constexpr (DDim::is_periodic()) {
+            return int_vals.size() == ddc::discrete_space<DDim>().nbasis()
+                   || int_vals.size() == ddc::discrete_space<DDim>().size();
+        } else {
+            return int_vals.size() == ddc::discrete_space<DDim>().nbasis();
+        }
+    }());
+
     ddc::DiscreteDomain<DDim> const full_dom_splines(ddc::discrete_space<DDim>().full_domain());
 
     if constexpr (DDim::is_periodic()) {
@@ -109,12 +112,15 @@ void non_uniform_bsplines_integrals(
             Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,
             "MemorySpace has to be accessible for ExecutionSpace.");
 
-    if constexpr (DDim::is_periodic()) {
-        assert(int_vals.size() == ddc::discrete_space<DDim>().nbasis()
-               || int_vals.size() == ddc::discrete_space<DDim>().size());
-    } else {
-        assert(int_vals.size() == ddc::discrete_space<DDim>().nbasis());
-    }
+    assert([&]() -> bool {
+        if constexpr (DDim::is_periodic()) {
+            return int_vals.size() == ddc::discrete_space<DDim>().nbasis()
+                   || int_vals.size() == ddc::discrete_space<DDim>().size();
+        } else {
+            return int_vals.size() == ddc::discrete_space<DDim>().nbasis();
+        }
+    }());
+
     ddc::DiscreteDomain<DDim> const full_dom_splines(ddc::discrete_space<DDim>().full_domain());
 
     double const inv_deg = 1.0 / (DDim::degree() + 1);

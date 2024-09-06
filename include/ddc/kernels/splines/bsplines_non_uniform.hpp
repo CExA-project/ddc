@@ -698,11 +698,13 @@ KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout,
 NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::integrals(
         ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const
 {
-    if constexpr (is_periodic()) {
-        assert(int_vals.size() == nbasis() || int_vals.size() == size());
-    } else {
-        assert(int_vals.size() == nbasis());
-    }
+    assert([&]() -> bool {
+        if constexpr (is_periodic()) {
+            return int_vals.size() == nbasis() || int_vals.size() == size();
+        } else {
+            return int_vals.size() == nbasis();
+        }
+    }());
 
     double const inv_deg = 1.0 / (degree() + 1);
 

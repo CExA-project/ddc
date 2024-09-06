@@ -50,14 +50,12 @@ static inline std::ostream& operator<<(std::ostream& out, ddc::BoundCond const b
  **/
 constexpr int n_boundary_equations(ddc::BoundCond const bc, std::size_t const degree)
 {
-    if (bc == ddc::BoundCond::PERIODIC) {
+    if (bc == ddc::BoundCond::PERIODIC || bc == ddc::BoundCond::GREVILLE) {
         return 0;
     } else if (bc == ddc::BoundCond::HERMITE) {
         return degree / 2;
-    } else if (bc == ddc::BoundCond::GREVILLE) {
-        return 0;
-    } else {
-        throw std::runtime_error("ddc::BoundCond not handled");
     }
+
+    throw std::runtime_error("ddc::BoundCond not handled");
 }
 } // namespace ddc

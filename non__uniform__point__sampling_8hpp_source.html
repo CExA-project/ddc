@@ -186,7 +186,7 @@ $(document).ready(function(){initNavTree('non__uniform__point__sampling_8hpp_sou
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">explicit</span> <a class="code hl_function" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#a6a33ce6446783b6e57a9953f03ac23ca">Impl</a>(std::initializer_list&lt;continuous_element_type&gt; points)</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        {</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            std::vector&lt;continuous_element_type&gt; host_points(points.begin(), points.end());</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            Kokkos::View&lt;continuous_element_type*, Kokkos::HostSpace&gt;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            Kokkos::View&lt;continuous_element_type*, Kokkos::HostSpace&gt; <span class="keyword">const</span></div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                    host(host_points.data(), host_points.size());</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            Kokkos::resize(m_points, host.extent(0));</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            Kokkos::deep_copy(m_points, host);</div>
@@ -200,7 +200,7 @@ $(document).ready(function(){initNavTree('non__uniform__point__sampling_8hpp_sou
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                Kokkos::deep_copy(m_points, points);</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                std::vector&lt;continuous_element_type&gt; host_points(points.begin(), points.end());</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                Kokkos::View&lt;continuous_element_type*, Kokkos::HostSpace&gt;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                Kokkos::View&lt;continuous_element_type*, Kokkos::HostSpace&gt; <span class="keyword">const</span></div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                        host(host_points.data(), host_points.size());</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                Kokkos::resize(m_points, host.extent(0));</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                Kokkos::deep_copy(m_points, host);</div>
@@ -212,7 +212,7 @@ $(document).ready(function(){initNavTree('non__uniform__point__sampling_8hpp_sou
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <a class="code hl_function" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#ad19606ba0ced3eb76213182b26f0bf57">Impl</a>(InputIt points_begin, InputIt points_end)</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        {</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            std::vector&lt;continuous_element_type&gt; host_points(points_begin, points_end);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            Kokkos::View&lt;continuous_element_type*, Kokkos::HostSpace&gt;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            Kokkos::View&lt;continuous_element_type*, Kokkos::HostSpace&gt; <span class="keyword">const</span></div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                    host(host_points.data(), host_points.size());</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            Kokkos::resize(m_points, host.extent(0));</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            Kokkos::deep_copy(m_points, host);</div>

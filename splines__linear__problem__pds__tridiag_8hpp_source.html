@@ -250,7 +250,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__pds__tridiag
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keyword">auto</span> d = Kokkos::subview(q_device, 0, Kokkos::ALL);</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keyword">auto</span> e = Kokkos::</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                subview(q_device, 1, Kokkos::pair&lt;<span class="keywordtype">int</span>, <span class="keywordtype">int</span>&gt;(0, q_device.extent_int(1) - 1));</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        Kokkos::RangePolicy&lt;ExecSpace&gt; policy(0, b.extent(1));</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        Kokkos::RangePolicy&lt;ExecSpace&gt; <span class="keyword">const</span> policy(0, b.extent(1));</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        Kokkos::parallel_for(</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                <span class="stringliteral">&quot;pttrs&quot;</span>,</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                policy,</div>

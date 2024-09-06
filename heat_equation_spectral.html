@@ -221,7 +221,7 @@ $(document).ready(function(){initNavTree('heat_equation_spectral.html',''); init
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                    <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;X&gt;</a>(x_start),</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                    <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;X&gt;</a>(x_end),</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimX&gt;</a>(nb_x_points)));</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX&gt;</a> x_domain</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX&gt;</a> <span class="keyword">const</span> x_domain</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            = x_domain_with_periodic_point.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a71753baee8d753fbce0aca0cc00834fb">remove_last</a>(</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimX&gt;</a>(1));</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
@@ -231,7 +231,7 @@ $(document).ready(function(){initNavTree('heat_equation_spectral.html',''); init
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                    <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;Y&gt;</a>(y_start),</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                    <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;Y&gt;</a>(y_end),</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimY&gt;</a>(nb_y_points)));</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimY&gt;</a> y_domain</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimY&gt;</a> <span class="keyword">const</span> y_domain</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            = y_domain_with_periodic_point.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a71753baee8d753fbce0aca0cc00834fb">remove_last</a>(</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                    <a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimY&gt;</a>(1));</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
@@ -312,7 +312,7 @@ $(document).ready(function(){initNavTree('heat_equation_spectral.html',''); init
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="comment">// Stencil computation on the main domain</span></div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        <a class="code hl_struct" href="namespaceddc.html#structddc_1_1kwArgs__fft">ddc::kwArgs_fft</a> <span class="keyword">const</span> kwargs {<a class="code hl_enumvalue" href="namespaceddc.html#a5d5291156a65ec442dfcd7274f045631a6377b4908ae38f9a57fe9120cf179eb1">ddc::FFT_Normalization::BACKWARD</a>};</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        Kokkos::DefaultExecutionSpace execution_space;</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        Kokkos::DefaultExecutionSpace <span class="keyword">const</span> execution_space;</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <a class="code hl_function" href="namespaceddc.html#a4949624204145ca2a0390c7b73a02480">ddc::fft</a>(execution_space, Ff, last_temp, kwargs);</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                execution_space,</div>

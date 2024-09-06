@@ -241,7 +241,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__dense_8hpp_s
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="keyword">auto</span> a_device = m_a.d_view;</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keyword">auto</span> ipiv_device = m_ipiv.d_view;</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        Kokkos::RangePolicy&lt;ExecSpace&gt; policy(0, b.extent(1));</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        Kokkos::RangePolicy&lt;ExecSpace&gt; <span class="keyword">const</span> policy(0, b.extent(1));</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">if</span> (transpose) {</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            Kokkos::parallel_for(</div>

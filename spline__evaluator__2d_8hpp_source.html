@@ -505,7 +505,7 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, batched_spline_domain_type, Layout3, memory_space&gt; <span class="keyword">const</span></div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>                    spline_coef) <span class="keyword">const</span></div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    {</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        batch_domain_type batch_domain(coords_eval.domain());</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        batch_domain_type <span class="keyword">const</span> batch_domain(coords_eval.domain());</div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>        evaluation_domain_type1 <span class="keyword">const</span> evaluation_domain1(spline_eval.domain());</div>
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        evaluation_domain_type2 <span class="keyword">const</span> evaluation_domain2(spline_eval.domain());</div>
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::parallel_for_each(</div>
@@ -686,7 +686,7 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, batched_spline_domain_type, Layout3, memory_space&gt; <span class="keyword">const</span></div>
 <div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>                    spline_coef) <span class="keyword">const</span></div>
 <div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>    {</div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>        batch_domain_type batch_domain(coords_eval.domain());</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>        batch_domain_type <span class="keyword">const</span> batch_domain(coords_eval.domain());</div>
 <div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>        evaluation_domain_type1 <span class="keyword">const</span> evaluation_domain1(spline_eval.domain());</div>
 <div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>        evaluation_domain_type2 <span class="keyword">const</span> evaluation_domain2(spline_eval.domain());</div>
 <div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::parallel_for_each(</div>
@@ -737,7 +737,7 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, batched_spline_domain_type, Layout3, memory_space&gt; <span class="keyword">const</span></div>
 <div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>                    spline_coef) <span class="keyword">const</span></div>
 <div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>    {</div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>        batch_domain_type batch_domain(coords_eval.domain());</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>        batch_domain_type <span class="keyword">const</span> batch_domain(coords_eval.domain());</div>
 <div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>        evaluation_domain_type1 <span class="keyword">const</span> evaluation_domain1(spline_eval.domain());</div>
 <div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>        evaluation_domain_type2 <span class="keyword">const</span> evaluation_domain2(spline_eval.domain());</div>
 <div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::parallel_for_each(</div>
@@ -788,7 +788,7 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, batched_spline_domain_type, Layout3, memory_space&gt; <span class="keyword">const</span></div>
 <div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>                    spline_coef) <span class="keyword">const</span></div>
 <div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>    {</div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>        batch_domain_type batch_domain(coords_eval.domain());</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>        batch_domain_type <span class="keyword">const</span> batch_domain(coords_eval.domain());</div>
 <div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>        evaluation_domain_type1 <span class="keyword">const</span> evaluation_domain1(spline_eval.domain());</div>
 <div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>        evaluation_domain_type2 <span class="keyword">const</span> evaluation_domain2(spline_eval.domain());</div>
 <div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::parallel_for_each(</div>
@@ -1068,9 +1068,9 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>                <span class="keywordtype">double</span>,</div>
 <div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span>                std::experimental::extents&lt;std::size_t, bsplines_type2::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
 <div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>                vals2(vals2_ptr.data());</div>
-<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1&gt; coord_eval_interest1</div>
+<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1&gt; <span class="keyword">const</span> coord_eval_interest1</div>
 <div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;continuous_dimension_type1&gt;(coord_eval);</div>
-<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type2&gt; coord_eval_interest2</div>
+<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type2&gt; <span class="keyword">const</span> coord_eval_interest2</div>
 <div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;continuous_dimension_type2&gt;(coord_eval);</div>
 <div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span> </div>
 <div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;EvalType1, eval_type&gt;) {</div>

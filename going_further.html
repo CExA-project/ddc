@@ -175,11 +175,11 @@ Dimension X</h3>
 <div class="fragment"><div class="line">std::vector&lt;double&gt; x_domain_vect</div>
 <div class="line">        = generate_random_vector(nb_x_points, x_start, x_end);</div>
 </div><!-- fragment --><p>For the initialization of ghost points in the non-uniform case, it was necessary to explicitly describe the position of the pre-ghost and post-ghost points. For the pre-ghost, it was necessary to start from the first coordinate along x and subtract the difference between the last and the penultimate coordinate of the x dimension to maintain periodicity. For the post-ghost point, take the last point and add the difference between the first and second points along the x dimension.</p>
-<div class="fragment"><div class="line">std::vector&lt;double&gt; x_pre_ghost_vect {</div>
+<div class="fragment"><div class="line">std::vector&lt;double&gt; <span class="keyword">const</span> x_pre_ghost_vect {</div>
 <div class="line">        x_domain_vect.front()</div>
 <div class="line">        - (x_domain_vect.back() - x_domain_vect[size_x - 2])};</div>
 <div class="line"> </div>
-<div class="line">std::vector&lt;double&gt; x_post_ghost_vect {</div>
+<div class="line">std::vector&lt;double&gt; <span class="keyword">const</span> x_post_ghost_vect {</div>
 <div class="line">        x_domain_vect.back()</div>
 <div class="line">        + (x_domain_vect[1] - x_domain_vect.front())};</div>
 </div><!-- fragment --><p>Then we can create our 4 domains using the <code>init_discretization</code> function with the <code>init_ghosted</code> function that takes the vectors as parameters.</p>
@@ -200,12 +200,12 @@ Dimension Y</h3>
 <div class="fragment"><div class="line">std::vector&lt;double&gt; y_domain_vect</div>
 <div class="line">        = generate_random_vector(nb_y_points, y_start, y_end);</div>
 <div class="line"> </div>
-<div class="line">std::size_t size_y = y_domain_vect.size();</div>
+<div class="line">std::size_t <span class="keyword">const</span> size_y = y_domain_vect.size();</div>
 <div class="line"> </div>
-<div class="line">std::vector&lt;double&gt; y_pre_ghost_vect {</div>
+<div class="line">std::vector&lt;double&gt; <span class="keyword">const</span> y_pre_ghost_vect {</div>
 <div class="line">        y_domain_vect.front()</div>
 <div class="line">        - (y_domain_vect.back() - y_domain_vect[size_y - 2])};</div>
-<div class="line">std::vector&lt;double&gt; y_post_ghost_vect {</div>
+<div class="line">std::vector&lt;double&gt; <span class="keyword">const</span> y_post_ghost_vect {</div>
 <div class="line">        y_domain_vect.back()</div>
 <div class="line">        + (y_domain_vect[1] - y_domain_vect.front())};</div>
 </div><!-- fragment --><p>And we use them to build the 4 domains in the same way as for the X dimension.</p>

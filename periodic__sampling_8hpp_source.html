@@ -372,84 +372,83 @@ $(document).ready(function(){initNavTree('periodic__sampling_8hpp_source.html','
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span><span class="keyword">template</span> &lt;</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        <span class="keyword">class</span> DDimImpl,</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        std::enable_if_t&lt;</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                is_periodic_sampling_v&lt;<span class="keyword">typename</span> DDimImpl::discrete_dimension_type&gt;,</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>                <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, DDimImpl <span class="keyword">const</span>&amp; mesh)</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>{</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keywordflow">return</span> out &lt;&lt; <span class="stringliteral">&quot;PeriodicSampling( origin=&quot;</span> &lt;&lt; mesh.origin() &lt;&lt; <span class="stringliteral">&quot;, step=&quot;</span> &lt;&lt; mesh.step() &lt;&lt; <span class="stringliteral">&quot; )&quot;</span>;</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>}</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span><span class="comment">/// @brief Lower bound index of the mesh</span></div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><a class="code hl_function" href="namespaceddc.html#a068f74236a491a323a2936a732042bd0">KOKKOS_FUNCTION</a> std::enable_if_t&lt;</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        is_periodic_sampling_v&lt;DDim&gt;,</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        Coordinate&lt;<span class="keyword">typename</span> DDim::<a class="code hl_function" href="namespaceddc.html#a068f74236a491a323a2936a732042bd0">continuous_dimension_type</a>&gt;&gt;</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span><a class="code hl_function" href="namespaceddc.html#a068f74236a491a323a2936a732042bd0">origin</a>() <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>{</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="keywordflow">return</span> discrete_space&lt;DDim&gt;().origin();</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>}</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span><span class="comment">/// @brief Lower bound index of the mesh</span></div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><a class="code hl_function" href="namespaceddc.html#accb50fa6a93b3ed4586e2cd190080c82">KOKKOS_FUNCTION</a> std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, DiscreteElement&lt;DDim&gt;&gt;</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><a class="code hl_function" href="namespaceddc.html#accb50fa6a93b3ed4586e2cd190080c82">front</a>() <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>{</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="keywordflow">return</span> discrete_space&lt;DDim&gt;().front();</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>}</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="comment">/// @brief Spacing step of the mesh</span></div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><a class="code hl_function" href="namespaceddc.html#a05957d017ae47fc7fea43a1a64ec2dc5">KOKKOS_FUNCTION</a> std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, Real&gt; <a class="code hl_function" href="namespaceddc.html#a05957d017ae47fc7fea43a1a64ec2dc5">step</a>() <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>{</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    <span class="keywordflow">return</span> discrete_space&lt;DDim&gt;().step();</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>}</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; coordinate(</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        DiscreteElement&lt;DDim&gt; <span class="keyword">const</span>&amp; c)</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>{</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    <span class="keywordflow">return</span> discrete_space&lt;DDim&gt;().coordinate(c);</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>}</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; distance_at_left(</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        DiscreteElement&lt;DDim&gt;)</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>{</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="keywordflow">return</span> Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt;(step&lt;DDim&gt;());</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>}</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; distance_at_right(</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        DiscreteElement&lt;DDim&gt;)</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>{</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="keywordflow">return</span> Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt;(step&lt;DDim&gt;());</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>}</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; rmin(</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt; <span class="keyword">const</span>&amp; d)</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>{</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="keywordflow">return</span> coordinate(d.front());</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>}</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; rmax(</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt; <span class="keyword">const</span>&amp; d)</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>{</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    <span class="keywordflow">return</span> coordinate(d.back());</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>}</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span> </div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; rlength(</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt; <span class="keyword">const</span>&amp; d)</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>{</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>    <span class="keywordflow">return</span> rmax(d) - rmin(d);</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>}</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        std::enable_if_t&lt;is_periodic_sampling_v&lt;<span class="keyword">typename</span> DDimImpl::discrete_dimension_type&gt;, <span class="keywordtype">int</span>&gt;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        = 0&gt;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, DDimImpl <span class="keyword">const</span>&amp; mesh)</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>{</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keywordflow">return</span> out &lt;&lt; <span class="stringliteral">&quot;PeriodicSampling( origin=&quot;</span> &lt;&lt; mesh.origin() &lt;&lt; <span class="stringliteral">&quot;, step=&quot;</span> &lt;&lt; mesh.step() &lt;&lt; <span class="stringliteral">&quot; )&quot;</span>;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>}</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="comment">/// @brief Lower bound index of the mesh</span></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><a class="code hl_function" href="namespaceddc.html#a068f74236a491a323a2936a732042bd0">KOKKOS_FUNCTION</a> std::enable_if_t&lt;</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        is_periodic_sampling_v&lt;DDim&gt;,</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        Coordinate&lt;<span class="keyword">typename</span> DDim::<a class="code hl_function" href="namespaceddc.html#a068f74236a491a323a2936a732042bd0">continuous_dimension_type</a>&gt;&gt;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><a class="code hl_function" href="namespaceddc.html#a068f74236a491a323a2936a732042bd0">origin</a>() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>{</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="keywordflow">return</span> discrete_space&lt;DDim&gt;().origin();</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>}</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span><span class="comment">/// @brief Lower bound index of the mesh</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><a class="code hl_function" href="namespaceddc.html#accb50fa6a93b3ed4586e2cd190080c82">KOKKOS_FUNCTION</a> std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, DiscreteElement&lt;DDim&gt;&gt;</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><a class="code hl_function" href="namespaceddc.html#accb50fa6a93b3ed4586e2cd190080c82">front</a>() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>{</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="keywordflow">return</span> discrete_space&lt;DDim&gt;().front();</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>}</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="comment">/// @brief Spacing step of the mesh</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><a class="code hl_function" href="namespaceddc.html#a05957d017ae47fc7fea43a1a64ec2dc5">KOKKOS_FUNCTION</a> std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, Real&gt; <a class="code hl_function" href="namespaceddc.html#a05957d017ae47fc7fea43a1a64ec2dc5">step</a>() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>{</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    <span class="keywordflow">return</span> discrete_space&lt;DDim&gt;().step();</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>}</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span> </div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; coordinate(</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        DiscreteElement&lt;DDim&gt; <span class="keyword">const</span>&amp; c)</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>{</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    <span class="keywordflow">return</span> discrete_space&lt;DDim&gt;().coordinate(c);</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>}</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; distance_at_left(</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        DiscreteElement&lt;DDim&gt;)</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>{</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    <span class="keywordflow">return</span> Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt;(step&lt;DDim&gt;());</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>}</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; distance_at_right(</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        DiscreteElement&lt;DDim&gt;)</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>{</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    <span class="keywordflow">return</span> Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt;(step&lt;DDim&gt;());</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>}</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span> </div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; rmin(</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt; <span class="keyword">const</span>&amp; d)</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>{</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    <span class="keywordflow">return</span> coordinate(d.front());</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>}</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; rmax(</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt; <span class="keyword">const</span>&amp; d)</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>{</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    <span class="keywordflow">return</span> coordinate(d.back());</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>}</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span> </div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim, std::enable_if_t&lt;is_periodic_sampling_v&lt;DDim&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>KOKKOS_FUNCTION Coordinate&lt;<span class="keyword">typename</span> DDim::continuous_dimension_type&gt; rlength(</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt; <span class="keyword">const</span>&amp; d)</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>{</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="keywordflow">return</span> rmax(d) - rmin(d);</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>}</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span> </div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00053">discrete_domain.hpp:53</a></div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteVector_html_a62e896bfa78045521042a0eab87c0acb"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">ddc::DiscreteVector::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteVector&lt; OTags... &gt; const &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00312">discrete_vector.hpp:312</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteVector_html_a62e896bfa78045521042a0eab87c0acb"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">ddc::DiscreteVector::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteVector&lt; OTags... &gt; const &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00313">discrete_vector.hpp:313</a></div></div>
 <div class="ttc" id="aclassddc_1_1PeriodicSampling_1_1Impl_html"><div class="ttname"><a href="classddc_1_1PeriodicSampling_1_1Impl.html">ddc::PeriodicSampling::Impl</a></div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00048">periodic_sampling.hpp:49</a></div></div>
 <div class="ttc" id="aclassddc_1_1PeriodicSampling_1_1Impl_html_a179ae0ef527393831bae4725b9c83e94"><div class="ttname"><a href="classddc_1_1PeriodicSampling_1_1Impl.html#a179ae0ef527393831bae4725b9c83e94">ddc::PeriodicSampling::Impl::Impl</a></div><div class="ttdeci">Impl()=default</div></div>
 <div class="ttc" id="aclassddc_1_1PeriodicSampling_1_1Impl_html_a259154bc9f54dd0295a4d602d0266522"><div class="ttname"><a href="classddc_1_1PeriodicSampling_1_1Impl.html#a259154bc9f54dd0295a4d602d0266522">ddc::PeriodicSampling::Impl::~Impl</a></div><div class="ttdeci">~Impl()=default</div></div>
@@ -467,10 +466,10 @@ $(document).ready(function(){initNavTree('periodic__sampling_8hpp_source.html','
 <div class="ttc" id="aclassddc_1_1PeriodicSampling_html_a1ff14db4af0dbdb8d10933df7aa86993"><div class="ttname"><a href="classddc_1_1PeriodicSampling.html#a1ff14db4af0dbdb8d10933df7aa86993">ddc::PeriodicSampling::init</a></div><div class="ttdeci">static std::tuple&lt; typename DDim::template Impl&lt; DDim, Kokkos::HostSpace &gt;, DiscreteDomain&lt; DDim &gt; &gt; init(Coordinate&lt; CDim &gt; a, Coordinate&lt; CDim &gt; b, DiscreteVector&lt; DDim &gt; n, DiscreteVector&lt; DDim &gt; n_period)</div><div class="ttdoc">Construct a Impl&lt;Kokkos::HostSpace&gt; and associated discrete_domain_type from a segment  and a number ...</div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00148">periodic_sampling.hpp:148</a></div></div>
 <div class="ttc" id="aclassddc_1_1PeriodicSampling_html_a58533823caa0d21d59700eb3c5d423ab"><div class="ttname"><a href="classddc_1_1PeriodicSampling.html#a58533823caa0d21d59700eb3c5d423ab">ddc::PeriodicSampling::init_ghosted</a></div><div class="ttdeci">std::tuple&lt; Impl&lt; DDim, Kokkos::HostSpace &gt;, DiscreteDomain&lt; DDim &gt;, DiscreteDomain&lt; DDim &gt;, DiscreteDomain&lt; DDim &gt;, DiscreteDomain&lt; DDim &gt; &gt; init_ghosted(continuous_element_type a, continuous_element_type b, DiscreteVector&lt; DDim &gt; n, DiscreteVector&lt; DDim &gt; n_period, DiscreteVector&lt; DDim &gt; n_ghosts_before, DiscreteVector&lt; DDim &gt; n_ghosts_after)</div><div class="ttdoc">Construct a periodic DiscreteDomain from a segment  and a number of points n.</div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00181">periodic_sampling.hpp:181</a></div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
-<div class="ttc" id="anamespaceddc_html_a05957d017ae47fc7fea43a1a64ec2dc5"><div class="ttname"><a href="namespaceddc.html#a05957d017ae47fc7fea43a1a64ec2dc5">ddc::step</a></div><div class="ttdeci">KOKKOS_FUNCTION std::enable_if_t&lt; is_periodic_sampling_v&lt; DDim &gt;, Real &gt; step() noexcept</div><div class="ttdoc">Spacing step of the mesh.</div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00281">periodic_sampling.hpp:281</a></div></div>
-<div class="ttc" id="anamespaceddc_html_a068f74236a491a323a2936a732042bd0"><div class="ttname"><a href="namespaceddc.html#a068f74236a491a323a2936a732042bd0">ddc::origin</a></div><div class="ttdeci">KOKKOS_FUNCTION std::enable_if_t&lt; is_periodic_sampling_v&lt; DDim &gt;, Coordinate&lt; typename DDim::continuous_dimension_type &gt; &gt; origin() noexcept</div><div class="ttdoc">Lower bound index of the mesh.</div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00266">periodic_sampling.hpp:266</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a05957d017ae47fc7fea43a1a64ec2dc5"><div class="ttname"><a href="namespaceddc.html#a05957d017ae47fc7fea43a1a64ec2dc5">ddc::step</a></div><div class="ttdeci">KOKKOS_FUNCTION std::enable_if_t&lt; is_periodic_sampling_v&lt; DDim &gt;, Real &gt; step() noexcept</div><div class="ttdoc">Spacing step of the mesh.</div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00280">periodic_sampling.hpp:280</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a068f74236a491a323a2936a732042bd0"><div class="ttname"><a href="namespaceddc.html#a068f74236a491a323a2936a732042bd0">ddc::origin</a></div><div class="ttdeci">KOKKOS_FUNCTION std::enable_if_t&lt; is_periodic_sampling_v&lt; DDim &gt;, Coordinate&lt; typename DDim::continuous_dimension_type &gt; &gt; origin() noexcept</div><div class="ttdoc">Lower bound index of the mesh.</div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00265">periodic_sampling.hpp:265</a></div></div>
 <div class="ttc" id="anamespaceddc_html_ab228bb1534b98a4a4faceff92b4f16d0"><div class="ttname"><a href="namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0">ddc::is_periodic_sampling_v</a></div><div class="ttdeci">constexpr bool is_periodic_sampling_v</div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00249">periodic_sampling.hpp:249</a></div></div>
-<div class="ttc" id="anamespaceddc_html_accb50fa6a93b3ed4586e2cd190080c82"><div class="ttname"><a href="namespaceddc.html#accb50fa6a93b3ed4586e2cd190080c82">ddc::front</a></div><div class="ttdeci">KOKKOS_FUNCTION std::enable_if_t&lt; is_periodic_sampling_v&lt; DDim &gt;, DiscreteElement&lt; DDim &gt; &gt; front() noexcept</div><div class="ttdoc">Lower bound index of the mesh.</div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00274">periodic_sampling.hpp:274</a></div></div>
+<div class="ttc" id="anamespaceddc_html_accb50fa6a93b3ed4586e2cd190080c82"><div class="ttname"><a href="namespaceddc.html#accb50fa6a93b3ed4586e2cd190080c82">ddc::front</a></div><div class="ttdeci">KOKKOS_FUNCTION std::enable_if_t&lt; is_periodic_sampling_v&lt; DDim &gt;, DiscreteElement&lt; DDim &gt; &gt; front() noexcept</div><div class="ttdoc">Lower bound index of the mesh.</div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00273">periodic_sampling.hpp:273</a></div></div>
 <div class="ttc" id="astructddc_1_1is__periodic__sampling_html"><div class="ttname"><a href="structddc_1_1is__periodic__sampling.html">ddc::is_periodic_sampling</a></div><div class="ttdef"><b>Definition</b> <a href="periodic__sampling_8hpp_source.html#l00244">periodic_sampling.hpp:245</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

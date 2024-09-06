@@ -54,37 +54,43 @@ namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
 // Function to monitor GPU memory asynchronously
 void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem)
 {
-    size_t freeMem = 0;
-    size_t totalMem = 0;
     while (monitorFlag) {
         std::this_thread::sleep_for(std::chrono::microseconds(10)); // Adjust the interval as needed
 
         // Acquire a lock to ensure thread safety when accessing CUDA functions
-        std::lock_guard<std::mutex> lock(mutex);
+        std::lock_guard<std::mutex> const lock(mutex);
 
 #if defined(__CUDACC__)
+        std::size_t freeMem = 0;
+        std::size_t totalMem = 0;
         cudaMemGetInfo(&freeMem, &totalMem);
+        std::size_t const usedMem = totalMem - freeMem;
+#else
+        std::size_t const usedMem = 0;
 #endif
-        maxUsedMem = std::max(maxUsedMem, totalMem - freeMem);
+
+        maxUsedMem = std::max(maxUsedMem, usedMem);
     }
 }
 
 template <typename ExecSpace, typename NonUniform, std::size_t s_degree_x>
 static void characteristics_advection_unitary(benchmark::State& state)
 {
-    std::size_t nx = state.range(3);
-    std::size_t ny = state.range(4);
+    std::size_t const nx = state.range(3);
+    std::size_t const ny = state.range(4);
     int cols_per_chunk = state.range(5);
     int preconditioner_max_block_size = state.range(6);
 
-    size_t freeMem = 0;
-    size_t totalMem = 0;
+
 #if defined(__CUDACC__)
+    std::size_t freeMem = 0;
+    std::size_t totalMem = 0;
     cudaMemGetInfo(&freeMem, &totalMem);
+    // cudaMemGetInfo gives GPU total memory occupation, we consider that other users of the GPU have constant occupancy and substract it.
+    std::size_t const initUsedMem = totalMem - freeMem;
+#else
+    std::size_t const initUsedMem = 0;
 #endif
-    size_t initUsedMem
-            = totalMem
-              - freeMem; // cudaMemGetInfo gives GPU total memory occupation, we consider that other users of the GPU have constant occupancy and substract it.
     size_t maxUsedMem = initUsedMem;
 
     bool monitorFlag = true;
@@ -113,7 +119,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
                     ddc::BoundCond::PERIODIC,
                     ddc::BoundCond::PERIODIC>::
                     template get_sampling<DDimX<NonUniform, s_degree_x>>());
-    ddc::DiscreteDomain<DDimY> y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
+    ddc::DiscreteDomain<DDimY> const y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
             ddc::Coordinate<Y>(-1.),
             ddc::Coordinate<Y>(1.),
             ddc::DiscreteVector<DDimY>(ny)));
@@ -127,7 +133,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
             ddc::KokkosAllocator<double, typename ExecSpace::memory_space>());
     ddc::ChunkSpan const density = density_alloc.span_view();
     // Initialize the density on the main domain
-    ddc::DiscreteDomain<DDimX<NonUniform, s_degree_x>, DDimY> x_mesh
+    ddc::DiscreteDomain<DDimX<NonUniform, s_degree_x>, DDimY> const x_mesh
             = ddc::DiscreteDomain<DDimX<NonUniform, s_degree_x>, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
             ExecSpace(),
@@ -147,9 +153,8 @@ static void characteristics_advection_unitary(benchmark::State& state)
             ddc::BoundCond::PERIODIC,
             Backend,
             DDimX<NonUniform, s_degree_x>,
-            DDimY>
-            spline_builder(x_mesh, cols_per_chunk, preconditioner_max_block_size);
-    ddc::PeriodicExtrapolationRule<X> periodic_extrapolation;
+            DDimY> const spline_builder(x_mesh, cols_per_chunk, preconditioner_max_block_size);
+    ddc::PeriodicExtrapolationRule<X> const periodic_extrapolation;
     ddc::SplineEvaluator<
             ExecSpace,
             typename ExecSpace::memory_space,
@@ -158,16 +163,15 @@ static void characteristics_advection_unitary(benchmark::State& state)
             ddc::PeriodicExtrapolationRule<X>,
             ddc::PeriodicExtrapolationRule<X>,
             DDimX<NonUniform, s_degree_x>,
-            DDimY>
-            spline_evaluator(periodic_extrapolation, periodic_extrapolation);
+            DDimY> const spline_evaluator(periodic_extrapolation, periodic_extrapolation);
     ddc::Chunk coef_alloc(
             spline_builder.batched_spline_domain(),
             ddc::KokkosAllocator<double, typename ExecSpace::memory_space>());
-    ddc::ChunkSpan coef = coef_alloc.span_view();
+    ddc::ChunkSpan const coef = coef_alloc.span_view();
     ddc::Chunk feet_coords_alloc(
             spline_builder.batched_interpolation_domain(),
             ddc::KokkosAllocator<ddc::Coordinate<X>, typename ExecSpace::memory_space>());
-    ddc::ChunkSpan feet_coords = feet_coords_alloc.span_view();
+    ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
 
     for (auto _ : state) {
         Kokkos::Profiling::pushRegion("FeetCharacteristics");

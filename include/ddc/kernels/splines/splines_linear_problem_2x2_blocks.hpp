@@ -213,7 +213,7 @@ public:
                 KOKKOS_LAMBDA(const int) {
                     for (int i = 0; i < dense_matrix.extent(0); i++) {
                         for (int j = 0; j < dense_matrix.extent(1); j++) {
-                            double aij = dense_matrix(i, j);
+                            double const aij = dense_matrix(i, j);
                             if (Kokkos::abs(aij) >= tol) {
                                 rows_idx(n_nonzeros.d_view()) = i;
                                 cols_idx(n_nonzeros.d_view()) = j;
@@ -358,11 +358,11 @@ public:
     {
         assert(b.extent(0) == size());
 
-        MultiRHS b1 = Kokkos::
+        MultiRHS const b1 = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t>(0, m_top_left_block->size()),
                         Kokkos::ALL);
-        MultiRHS b2 = Kokkos::
+        MultiRHS const b2 = Kokkos::
                 subview(b,
                         std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
                         Kokkos::ALL);

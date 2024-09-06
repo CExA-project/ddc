@@ -64,7 +64,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnity_Uniform)
     double const dx = (xmax - xmin) / (n_test_points - 1);
 
     for (std::size_t i(0); i < n_test_points; ++i) {
-        CoordX test_point(xmin + dx * i);
+        CoordX const test_point(xmin + dx * i);
         ddc::discrete_space<BSplinesX>().eval_basis(values, test_point);
         double sum = 0.0;
         for (std::size_t j(0); j < degree + 1; ++j) {
@@ -95,11 +95,11 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnity_NonUniform)
             values(values_ptr.data());
 
 
-    std::size_t n_test_points = ncells * 30;
+    std::size_t const n_test_points = ncells * 30;
     dx = (xmax - xmin) / (n_test_points - 1);
 
     for (std::size_t i(0); i < n_test_points; ++i) {
-        CoordX test_point(xmin + dx * i);
+        CoordX const test_point(xmin + dx * i);
         ddc::discrete_space<BSplinesX>().eval_basis(values, test_point);
         double sum = 0.0;
         for (std::size_t j(0); j < degree + 1; ++j) {
@@ -136,26 +136,26 @@ TYPED_TEST(BSplinesFixture, Rounding_NonUniform)
     static constexpr CoordX xmax = CoordX(0.2);
     static constexpr std::size_t ncells = TestFixture::ncells;
     std::vector<CoordX> breaks(ncells + 1);
-    double dx = (xmax - xmin) / ncells;
+    double const dx = (xmax - xmin) / ncells;
     for (std::size_t i(0); i < ncells + 1; ++i) {
         breaks[i] = CoordX(xmin + i * dx);
     }
     ddc::init_discrete_space<BSplinesX>(breaks);
 
-    ddc::DiscreteDomain<BSplinesX> bspl_full_domain
+    ddc::DiscreteDomain<BSplinesX> const bspl_full_domain
             = ddc::discrete_space<BSplinesX>().full_domain();
 
     std::array<double, degree + 1> values_ptr;
     std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
             values(values_ptr.data());
 
-    CoordX test_point_min(xmin - std::numeric_limits<double>::epsilon());
-    ddc::DiscreteElement<BSplinesX> front_idx
+    CoordX const test_point_min(xmin - std::numeric_limits<double>::epsilon());
+    ddc::DiscreteElement<BSplinesX> const front_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
     EXPECT_EQ(front_idx, bspl_full_domain.front());
 
-    CoordX test_point_max(xmax + std::numeric_limits<double>::epsilon());
-    ddc::DiscreteElement<BSplinesX> back_idx
+    CoordX const test_point_max(xmax + std::numeric_limits<double>::epsilon());
+    ddc::DiscreteElement<BSplinesX> const back_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
     EXPECT_EQ(back_idx, bspl_full_domain.back() - BSplinesX::degree());
 }
@@ -171,20 +171,20 @@ TYPED_TEST(BSplinesFixture, Rounding_Uniform)
     static constexpr std::size_t ncells = TestFixture::ncells;
     ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
 
-    ddc::DiscreteDomain<BSplinesX> bspl_full_domain
+    ddc::DiscreteDomain<BSplinesX> const bspl_full_domain
             = ddc::discrete_space<BSplinesX>().full_domain();
 
     std::array<double, degree + 1> values_ptr;
     std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
             values(values_ptr.data());
 
-    CoordX test_point_min(xmin - std::numeric_limits<double>::epsilon());
-    ddc::DiscreteElement<BSplinesX> front_idx
+    CoordX const test_point_min(xmin - std::numeric_limits<double>::epsilon());
+    ddc::DiscreteElement<BSplinesX> const front_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_min);
     EXPECT_EQ(front_idx, bspl_full_domain.front());
 
-    CoordX test_point_max(xmax + std::numeric_limits<double>::epsilon());
-    ddc::DiscreteElement<BSplinesX> back_idx
+    CoordX const test_point_max(xmax + std::numeric_limits<double>::epsilon());
+    ddc::DiscreteElement<BSplinesX> const back_idx
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
     EXPECT_EQ(back_idx, bspl_full_domain.back() - BSplinesX::degree());
 }

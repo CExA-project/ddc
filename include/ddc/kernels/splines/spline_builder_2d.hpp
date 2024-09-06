@@ -484,7 +484,7 @@ operator()(
     ddc::Chunk spline1_alloc(
             m_spline_builder1.batched_spline_domain(),
             ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan spline1 = spline1_alloc.span_view();
+    ddc::ChunkSpan const spline1 = spline1_alloc.span_view();
 
     m_spline_builder1(spline1, vals, derivs_min1, derivs_max1);
 

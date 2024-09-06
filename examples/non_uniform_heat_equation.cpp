@@ -97,7 +97,7 @@ void display(double time, ChunkType temp)
     std::cout << std::fixed << std::setprecision(3);
     std::cout << "At t = " << time << ",\n";
     std::cout << "  * mean temperature  = " << mean_temp << "\n";
-    ddc::ChunkSpan temp_slice
+    ddc::ChunkSpan const temp_slice
             = temp[ddc::get_domain<DDimY>(temp).front()
                    + ddc::get_domain<DDimY>(temp).size() / 2];
     std::cout << "  * temperature[y:"
@@ -152,14 +152,14 @@ int main(int argc, char** argv)
             = generate_random_vector(nb_x_points, x_start, x_end);
     //! [iterator_main-domain]
 
-    std::size_t size_x = x_domain_vect.size();
+    std::size_t const size_x = x_domain_vect.size();
 
     //! [ghost_points_x]
-    std::vector<double> x_pre_ghost_vect {
+    std::vector<double> const x_pre_ghost_vect {
             x_domain_vect.front()
             - (x_domain_vect.back() - x_domain_vect[size_x - 2])};
 
-    std::vector<double> x_post_ghost_vect {
+    std::vector<double> const x_post_ghost_vect {
             x_domain_vect.back()
             + (x_domain_vect[1] - x_domain_vect.front())};
     //! [ghost_points_x]
@@ -182,13 +182,13 @@ int main(int argc, char** argv)
     std::vector<double> y_domain_vect
             = generate_random_vector(nb_y_points, y_start, y_end);
 
-    std::size_t size_y = y_domain_vect.size();
+    std::size_t const size_y = y_domain_vect.size();
 
     //! [ghost_points_y]
-    std::vector<double> y_pre_ghost_vect {
+    std::vector<double> const y_pre_ghost_vect {
             y_domain_vect.front()
             - (y_domain_vect.back() - y_domain_vect[size_y - 2])};
-    std::vector<double> y_post_ghost_vect {
+    std::vector<double> const y_post_ghost_vect {
             y_domain_vect.back()
             + (y_domain_vect[1] - y_domain_vect.front())};
     //! [ghost_points_y]

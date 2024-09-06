@@ -171,11 +171,11 @@ public:
     {
         assert(b.extent(0) == size());
 
-        std::size_t kl_proxy = m_kl;
-        std::size_t ku_proxy = m_ku;
+        std::size_t const kl_proxy = m_kl;
+        std::size_t const ku_proxy = m_ku;
         auto q_device = m_q.d_view;
         auto ipiv_device = m_ipiv.d_view;
-        Kokkos::RangePolicy<ExecSpace> policy(0, b.extent(1));
+        Kokkos::RangePolicy<ExecSpace> const policy(0, b.extent(1));
         if (transpose) {
             Kokkos::parallel_for(
                     "gbtrs",

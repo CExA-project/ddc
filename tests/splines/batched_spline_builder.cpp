@@ -208,7 +208,7 @@ static void BatchedSplineTest()
     dims_initializer(ncells);
 
     // Create the values domain (mesh)
-    ddc::DiscreteDomain<IDim<I, I>> interpolation_domain
+    ddc::DiscreteDomain<IDim<I, I>> const interpolation_domain
             = GrevillePoints<BSplines<I>>::template get_domain<IDim<I, I>>();
     auto const dom_vals_tmp = ddc::DiscreteDomain<IDim<X, void>...>(
             ddc::DiscreteDomain<
@@ -236,8 +236,7 @@ static void BatchedSplineTest()
 #elif defined(SOLVER_GINKGO)
             ddc::SplineSolver::GINKGO,
 #endif
-            IDim<X, I>...>
-            spline_builder(dom_vals);
+            IDim<X, I>...> const spline_builder(dom_vals);
 
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<IDim<I, I>> const dom_interpolation = spline_builder.interpolation_domain();
@@ -248,14 +247,14 @@ static void BatchedSplineTest()
     ddc::Chunk vals_1d_host_alloc(
             dom_interpolation,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
-    ddc::ChunkSpan vals_1d_host = vals_1d_host_alloc.span_view();
-    evaluator_type<IDim<I, I>> evaluator(dom_interpolation);
+    ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
+    evaluator_type<IDim<I, I>> const evaluator(dom_interpolation);
     evaluator(vals_1d_host);
     auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
-    ddc::ChunkSpan vals_1d = vals_1d_alloc.span_view();
+    ddc::ChunkSpan const vals_1d = vals_1d_alloc.span_view();
 
     ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan vals = vals_alloc.span_view();
+    ddc::ChunkSpan const vals = vals_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
             vals.domain(),
@@ -267,10 +266,10 @@ static void BatchedSplineTest()
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
     int constexpr shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan derivs_lhs = derivs_lhs_alloc.span_view();
+    ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan derivs_lhs1_host = derivs_lhs1_host_alloc.span_view();
+        ddc::ChunkSpan const derivs_lhs1_host = derivs_lhs1_host_alloc.span_view();
         for (int ii = 1; ii < derivs_lhs1_host.domain().template extent<ddc::Deriv<I>>() + 1;
              ++ii) {
             derivs_lhs1_host(
@@ -278,7 +277,7 @@ static void BatchedSplineTest()
                     = evaluator.deriv(x0<I>(), ii + shift - 1);
         }
         auto derivs_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_lhs1_host);
-        ddc::ChunkSpan derivs_lhs1 = derivs_lhs1_alloc.span_view();
+        ddc::ChunkSpan const derivs_lhs1 = derivs_lhs1_alloc.span_view();
         ddc::parallel_for_each(
                 exec_space,
                 derivs_lhs.domain(),
@@ -289,10 +288,10 @@ static void BatchedSplineTest()
     }
 
     ddc::Chunk derivs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan derivs_rhs = derivs_rhs_alloc.span_view();
+    ddc::ChunkSpan const derivs_rhs = derivs_rhs_alloc.span_view();
     if (s_bcr == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
-        ddc::ChunkSpan derivs_rhs1_host = derivs_rhs1_host_alloc.span_view();
+        ddc::ChunkSpan const derivs_rhs1_host = derivs_rhs1_host_alloc.span_view();
         for (int ii = 1; ii < derivs_rhs1_host.domain().template extent<ddc::Deriv<I>>() + 1;
              ++ii) {
             derivs_rhs1_host(
@@ -300,7 +299,7 @@ static void BatchedSplineTest()
                     = evaluator.deriv(xN<I>(), ii + shift - 1);
         }
         auto derivs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_rhs1_host);
-        ddc::ChunkSpan derivs_rhs1 = derivs_rhs1_alloc.span_view();
+        ddc::ChunkSpan const derivs_rhs1 = derivs_rhs1_alloc.span_view();
 
         ddc::parallel_for_each(
                 exec_space,
@@ -314,7 +313,7 @@ static void BatchedSplineTest()
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan coef = coef_alloc.span_view();
+    ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
 #if defined(BC_HERMITE)
@@ -329,9 +328,9 @@ static void BatchedSplineTest()
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
 #if defined(BC_PERIODIC)
-    ddc::PeriodicExtrapolationRule<I> extrapolation_rule;
+    ddc::PeriodicExtrapolationRule<I> const extrapolation_rule;
 #else
-    ddc::NullExtrapolationRule extrapolation_rule;
+    ddc::NullExtrapolationRule const extrapolation_rule;
 #endif
     ddc::SplineEvaluator<
             ExecSpace,
@@ -345,12 +344,11 @@ static void BatchedSplineTest()
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
 #endif
-            IDim<X, I>...>
-            spline_evaluator_batched(extrapolation_rule, extrapolation_rule);
+            IDim<X, I>...> const spline_evaluator_batched(extrapolation_rule, extrapolation_rule);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
-    ddc::ChunkSpan coords_eval = coords_eval_alloc.span_view();
+    ddc::ChunkSpan const coords_eval = coords_eval_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
@@ -359,11 +357,11 @@ static void BatchedSplineTest()
 
     // Instantiate chunks to receive outputs of spline_evaluator
     ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan spline_eval = spline_eval_alloc.span_view();
+    ddc::ChunkSpan const spline_eval = spline_eval_alloc.span_view();
     ddc::Chunk spline_eval_deriv_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan spline_eval_deriv = spline_eval_deriv_alloc.span_view();
+    ddc::ChunkSpan const spline_eval_deriv = spline_eval_deriv_alloc.span_view();
     ddc::Chunk spline_eval_integrals_alloc(dom_batch, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan spline_eval_integrals = spline_eval_integrals_alloc.span_view();
+    ddc::ChunkSpan const spline_eval_integrals = spline_eval_integrals_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
@@ -371,7 +369,7 @@ static void BatchedSplineTest()
     spline_evaluator_batched.integrate(spline_eval_integrals, coef.span_cview());
 
     // Checking errors (we recover the initial values)
-    double max_norm_error = ddc::parallel_transform_reduce(
+    double const max_norm_error = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval.domain(),
             0.,
@@ -380,7 +378,7 @@ static void BatchedSplineTest()
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 
-    double max_norm_error_diff = ddc::parallel_transform_reduce(
+    double const max_norm_error_diff = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_deriv.domain(),
             0.,
@@ -389,7 +387,7 @@ static void BatchedSplineTest()
                 Coord<I> const x = ddc::coordinate(ddc::select<IDim<I, I>>(e));
                 return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, 1));
             });
-    double max_norm_error_integ = ddc::parallel_transform_reduce(
+    double const max_norm_error_integ = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_integrals.domain(),
             0.,

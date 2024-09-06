@@ -688,7 +688,7 @@ void SplineBuilder<
     if constexpr (BcLower == ddc::BoundCond::HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
-        ddc::DSpan2D
+        ddc::DSpan2D const
                 derivs(derivs_ptr.data(),
                        bsplines_type::degree() + 1,
                        bsplines_type::degree() / 2 + 1);
@@ -883,7 +883,7 @@ operator()(
     ddc::Chunk spline_tr_alloc(
             batched_spline_tr_domain(),
             ddc::KokkosAllocator<double, memory_space>());
-    ddc::ChunkSpan spline_tr = spline_tr_alloc.span_view();
+    ddc::ChunkSpan const spline_tr = spline_tr_alloc.span_view();
     ddc::parallel_for_each(
             "ddc_splines_transpose_rhs",
             exec_space(),
@@ -895,7 +895,7 @@ operator()(
                 }
             });
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
-    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> bcoef_section(
+    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> const bcoef_section(
             spline_tr.data_handle(),
             static_cast<std::size_t>(spline_tr.template extent<bsplines_type>()),
             batch_domain().size());
@@ -981,24 +981,26 @@ SplineBuilder<
     ddc::integrals(ExecSpace(), integral_bsplines.span_view());
 
     // Remove additional B-splines in the periodic case (cf. UniformBSplines::full_domain() documentation)
-    ddc::ChunkSpan integral_bsplines_without_periodic_additional_bsplines
+    ddc::ChunkSpan const integral_bsplines_without_periodic_additional_bsplines
             = integral_bsplines[spline_domain().take_first(
                     ddc::DiscreteVector<bsplines_type>(matrix->size()))];
 
     // Allocate mirror with additional rows (cf. SplinesLinearProblem3x3Blocks documentation)
-    Kokkos::View<double**, Kokkos::LayoutRight, MemorySpace>
+    Kokkos::View<double**, Kokkos::LayoutRight, MemorySpace> const
             integral_bsplines_mirror_with_additional_allocation(
                     "integral_bsplines_mirror_with_additional_allocation",
                     matrix->required_number_of_rhs_rows(),
                     1);
 
     // Extract relevant subview
-    Kokkos::View<double*, Kokkos::LayoutRight, MemorySpace> integral_bsplines_mirror = Kokkos::
-            subview(integral_bsplines_mirror_with_additional_allocation,
-                    std::
-                            pair {static_cast<std::size_t>(0),
-                                  integral_bsplines_without_periodic_additional_bsplines.size()},
-                    0);
+    Kokkos::View<double*, Kokkos::LayoutRight, MemorySpace> const integral_bsplines_mirror
+            = Kokkos::
+                    subview(integral_bsplines_mirror_with_additional_allocation,
+                            std::
+                                    pair {static_cast<std::size_t>(0),
+                                          integral_bsplines_without_periodic_additional_bsplines
+                                                  .size()},
+                            0);
 
     // Solve matrix equation A^t*X=integral_bsplines
     Kokkos::deep_copy(
@@ -1010,21 +1012,22 @@ SplineBuilder<
             integral_bsplines_mirror);
 
     // Slice into three ChunkSpan corresponding to lower derivatives, function values and upper derivatives
-    ddc::ChunkSpan coefficients_derivs_xmin
+    ddc::ChunkSpan const coefficients_derivs_xmin
             = integral_bsplines_without_periodic_additional_bsplines[spline_domain().take_first(
                     ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))];
-    ddc::ChunkSpan coefficients = integral_bsplines_without_periodic_additional_bsplines
+    ddc::ChunkSpan const coefficients = integral_bsplines_without_periodic_additional_bsplines
             [spline_domain()
                      .remove_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))
                      .take_first(ddc::DiscreteVector<bsplines_type>(
                              ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin
                              - s_nbc_xmax))];
-    ddc::ChunkSpan coefficients_derivs_xmax = integral_bsplines_without_periodic_additional_bsplines
-            [spline_domain()
-                     .remove_first(
-                             ddc::DiscreteVector<bsplines_type>(s_nbc_xmin + coefficients.size()))
-                     .take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))];
-    interpolation_domain_type interpolation_domain_proxy = interpolation_domain();
+    ddc::ChunkSpan const coefficients_derivs_xmax
+            = integral_bsplines_without_periodic_additional_bsplines
+                    [spline_domain()
+                             .remove_first(ddc::DiscreteVector<bsplines_type>(
+                                     s_nbc_xmin + coefficients.size()))
+                             .take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))];
+    interpolation_domain_type const interpolation_domain_proxy = interpolation_domain();
 
     // Multiply derivatives coefficients by dx^n
     ddc::parallel_for_each(

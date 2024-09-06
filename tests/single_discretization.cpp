@@ -10,19 +10,19 @@
 
 namespace ddcexp = ddc::experimental;
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SINGLE_DISCRETIZATION_CPP)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SINGLE_DISCRETIZATION_CPP) {
+
+class DimX;
+
+using CoordX = ddc::Coordinate<DimX>;
+
+struct DDimX : ddcexp::SingleDiscretization<DimX>
 {
-    class DimX;
+};
 
-    using CoordX = ddc::Coordinate<DimX>;
+using DElemX = ddc::DiscreteElement<DDimX>;
 
-    struct DDimX : ddcexp::SingleDiscretization<DimX>
-    {
-    };
-
-    using DElemX = ddc::DiscreteElement<DDimX>;
-
-} // namespace )
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SINGLE_DISCRETIZATION_CPP)
 
 TEST(SingleDiscretization, ClassSize)
 {

@@ -208,9 +208,9 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_spline_builder1(
-                batched_interpolation_domain,
-                cols_per_chunk,
-                preconditioner_max_block_size)
+                  batched_interpolation_domain,
+                  cols_per_chunk,
+                  preconditioner_max_block_size)
         , m_spline_builder_deriv1(
                   ddc::replace_dim_of<interpolation_discrete_dimension_type2, deriv_type2>(
                           m_spline_builder1.batched_interpolation_domain(),

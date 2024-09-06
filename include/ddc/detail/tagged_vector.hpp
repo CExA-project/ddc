@@ -200,9 +200,10 @@ template <
         class HeadTaggedVector,
         class... TailTaggedVectors,
         std::enable_if_t<
-                is_tagged_vector_v<
-                        HeadTaggedVector> && (is_tagged_vector_v<TailTaggedVectors> && ...),
-                int> = 1>
+                is_tagged_vector_v<HeadTaggedVector>
+                        && (is_tagged_vector_v<TailTaggedVectors> && ...),
+                int>
+        = 1>
 KOKKOS_FUNCTION constexpr auto const& take(
         HeadTaggedVector const& head,
         TailTaggedVectors const&... tail)
@@ -210,9 +211,8 @@ KOKKOS_FUNCTION constexpr auto const& take(
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
     if constexpr (type_seq_contains_v<detail::TypeSeq<QueryTag>, to_type_seq_t<HeadTaggedVector>>) {
         static_assert(
-                (!type_seq_contains_v<
-                         detail::TypeSeq<QueryTag>,
-                         to_type_seq_t<TailTaggedVectors>> && ...),
+                (!type_seq_contains_v<detail::TypeSeq<QueryTag>, to_type_seq_t<TailTaggedVectors>>
+                 && ...),
                 "ERROR: tag redundant");
         return head;
     } else {
@@ -232,7 +232,7 @@ template <class ElementType, class Tag>
 class TaggedVectorConversionOperators<TaggedVector<ElementType, Tag>>
 {
 public:
-    KOKKOS_FUNCTION constexpr operator ElementType const &() const noexcept
+    KOKKOS_FUNCTION constexpr operator ElementType const&() const noexcept
     {
         return static_cast<TaggedVector<ElementType, Tag> const*>(this)->m_values[0];
     }

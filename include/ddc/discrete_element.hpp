@@ -101,7 +101,8 @@ template <
         class... TailDElems,
         std::enable_if_t<
                 is_discrete_element_v<HeadDElem> && (is_discrete_element_v<TailDElems> && ...),
-                int> = 1>
+                int>
+        = 1>
 KOKKOS_FUNCTION constexpr auto const& take(HeadDElem const& head, TailDElems const&... tail)
 {
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
@@ -265,7 +266,7 @@ public:
     template <class... OTags>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator+=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>)&&...));
+        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>) && ...));
         ((m_values[type_seq_rank_v<OTags, tags_seq>] += rhs.template get<OTags>()), ...);
         return *this;
     }
@@ -284,7 +285,7 @@ public:
     template <class... OTags>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator-=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>)&&...));
+        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>) && ...));
         ((m_values[type_seq_rank_v<OTags, tags_seq>] -= rhs.template get<OTags>()), ...);
         return *this;
     }
@@ -377,7 +378,7 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator+(
         DiscreteVector<OTags...> const& rhs)
 {
     using detail::TypeSeq;
-    static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>)&&...));
+    static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>) && ...));
     DiscreteElement<Tags...> result(lhs);
     result += rhs;
     return result;
@@ -401,7 +402,7 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator-(
         DiscreteVector<OTags...> const& rhs)
 {
     using detail::TypeSeq;
-    static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>)&&...));
+    static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>) && ...));
     DiscreteElement<Tags...> result(lhs);
     result -= rhs;
     return result;

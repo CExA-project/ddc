@@ -8,57 +8,57 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MULTIPLE_DISCRETE_DIMENSIONS_CPP)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MULTIPLE_DISCRETE_DIMENSIONS_CPP) {
+
+class SingleValueDiscreteDimension
 {
-    class SingleValueDiscreteDimension
+public:
+    using discrete_dimension_type = SingleValueDiscreteDimension;
+
+public:
+    template <class DDim, class MemorySpace>
+    class Impl
     {
+        template <class ODDim, class OMemorySpace>
+        friend class Impl;
+
+    private:
+        int m_value;
+
     public:
         using discrete_dimension_type = SingleValueDiscreteDimension;
 
-    public:
-        template <class DDim, class MemorySpace>
-        class Impl
+        Impl() = default;
+
+        Impl(Impl const&) = delete;
+
+        template <class OriginMemorySpace>
+        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_value(impl.m_value)
         {
-            template <class ODDim, class OMemorySpace>
-            friend class Impl;
+        }
 
-        private:
-            int m_value;
+        Impl(Impl&&) = default;
 
-        public:
-            using discrete_dimension_type = SingleValueDiscreteDimension;
+        explicit Impl(int value) : m_value(value) {}
 
-            Impl() = default;
+        ~Impl() = default;
 
-            Impl(Impl const&) = delete;
-
-            template <class OriginMemorySpace>
-            explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_value(impl.m_value)
-            {
-            }
-
-            Impl(Impl&&) = default;
-
-            explicit Impl(int value) : m_value(value) {}
-
-            ~Impl() = default;
-
-            KOKKOS_FUNCTION int value() const noexcept
-            {
-                return m_value;
-            }
-        };
+        KOKKOS_FUNCTION int value() const noexcept
+        {
+            return m_value;
+        }
     };
+};
 
-    struct SVDD1 : SingleValueDiscreteDimension
-    {
-    };
+struct SVDD1 : SingleValueDiscreteDimension
+{
+};
 
-    struct SVDD2 : SingleValueDiscreteDimension
-    {
-    };
+struct SVDD2 : SingleValueDiscreteDimension
+{
+};
 
-} // namespace )
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MULTIPLE_DISCRETE_DIMENSIONS_CPP)
 
 TEST(MultipleDiscreteDimensions, Value)
 {

@@ -12,44 +12,44 @@
 
 #include <benchmark/benchmark.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DEEPCOPY_CPP)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DEEPCOPY_CPP) {
+
+struct DDimX
 {
-    struct DDimX
-    {
-    };
-    using DElemX = ddc::DiscreteElement<DDimX>;
-    using DVectX = ddc::DiscreteVector<DDimX>;
-    using DDomX = ddc::DiscreteDomain<DDimX>;
+};
+using DElemX = ddc::DiscreteElement<DDimX>;
+using DVectX = ddc::DiscreteVector<DDimX>;
+using DDomX = ddc::DiscreteDomain<DDimX>;
 
-    template <class Datatype>
-    using ChunkSpanX = ddc::ChunkSpan<Datatype, DDomX>;
+template <class Datatype>
+using ChunkSpanX = ddc::ChunkSpan<Datatype, DDomX>;
 
 
-    struct DDimY
-    {
-    };
+struct DDimY
+{
+};
 
 
-    using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
-    using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
-    using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
+using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
+using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
+using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 
-    template <class Datatype>
-    using ChunkSpanXY = ddc::ChunkSpan<Datatype, DDomXY>;
+template <class Datatype>
+using ChunkSpanXY = ddc::ChunkSpan<Datatype, DDomXY>;
 
 
-    // Let say 1MB cache
-    static std::size_t constexpr small_dim1_2D = 400;
-    static std::size_t constexpr small_dim2_2D = small_dim1_2D;
+// Let say 1MB cache
+static std::size_t constexpr small_dim1_2D = 400;
+static std::size_t constexpr small_dim2_2D = small_dim1_2D;
 
-    static std::size_t constexpr small_dim1_1D = small_dim1_2D * small_dim1_2D;
+static std::size_t constexpr small_dim1_1D = small_dim1_2D * small_dim1_2D;
 
-    static std::size_t constexpr large_dim1_2D = 2000;
-    static std::size_t constexpr large_dim2_2D = large_dim1_2D;
+static std::size_t constexpr large_dim1_2D = 2000;
+static std::size_t constexpr large_dim2_2D = large_dim1_2D;
 
-    static std::size_t constexpr large_dim1_1D = large_dim1_2D * large_dim1_2D;
+static std::size_t constexpr large_dim1_1D = large_dim1_2D * large_dim1_2D;
 
-} // namespace )
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DEEPCOPY_CPP)
 
 
 static void memcpy_1d(benchmark::State& state)

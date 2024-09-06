@@ -420,10 +420,10 @@ NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::Impl(
         RandomIt const break_begin,
         RandomIt const break_end)
     : m_knot_domain(
-            ddc::DiscreteElement<knot_discrete_dimension_type>(0),
-            ddc::DiscreteVector<knot_discrete_dimension_type>(
-                    (break_end - break_begin)
-                    + 2 * degree())) // Create a mesh of knots including the eventual periodic point
+              ddc::DiscreteElement<knot_discrete_dimension_type>(0),
+              ddc::DiscreteVector<knot_discrete_dimension_type>(
+                      (break_end - break_begin)
+                      + 2 * degree())) // Create a mesh of knots including the eventual periodic point
     , m_break_point_domain(
               ddc::DiscreteElement<knot_discrete_dimension_type>(degree()),
               ddc::DiscreteVector<knot_discrete_dimension_type>(

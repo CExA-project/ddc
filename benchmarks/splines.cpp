@@ -16,40 +16,40 @@
 
 static const ddc::SplineSolver Backend = ddc::SplineSolver::LAPACK;
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP) {
+
+struct X
 {
-    struct X
-    {
-        static constexpr bool PERIODIC = true;
-    };
+    static constexpr bool PERIODIC = true;
+};
 
-    template <typename NonUniform, std::size_t s_degree_x>
-    struct BSplinesX
-        : std::conditional_t<
-                  NonUniform::value,
-                  ddc::NonUniformBSplines<X, s_degree_x>,
-                  ddc::UniformBSplines<X, s_degree_x>>
-    {
-    };
+template <typename NonUniform, std::size_t s_degree_x>
+struct BSplinesX
+    : std::conditional_t<
+              NonUniform::value,
+              ddc::NonUniformBSplines<X, s_degree_x>,
+              ddc::UniformBSplines<X, s_degree_x>>
+{
+};
 
-    template <typename NonUniform, std::size_t s_degree_x>
-    using GrevillePoints = ddc::GrevilleInterpolationPoints<
-            BSplinesX<NonUniform, s_degree_x>,
-            ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC>;
+template <typename NonUniform, std::size_t s_degree_x>
+using GrevillePoints = ddc::GrevilleInterpolationPoints<
+        BSplinesX<NonUniform, s_degree_x>,
+        ddc::BoundCond::PERIODIC,
+        ddc::BoundCond::PERIODIC>;
 
-    template <typename NonUniform, std::size_t s_degree_x>
-    struct DDimX : GrevillePoints<NonUniform, s_degree_x>::interpolation_discrete_dimension_type
-    {
-    };
+template <typename NonUniform, std::size_t s_degree_x>
+struct DDimX : GrevillePoints<NonUniform, s_degree_x>::interpolation_discrete_dimension_type
+{
+};
 
-    struct Y;
+struct Y;
 
-    struct DDimY : ddc::UniformPointSampling<Y>
-    {
-    };
+struct DDimY : ddc::UniformPointSampling<Y>
+{
+};
 
-} // namespace )
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
 
 // Function to monitor GPU memory asynchronously
 void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem)

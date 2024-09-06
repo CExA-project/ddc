@@ -301,11 +301,12 @@ public:
 };
 
 template <class... DDims, class Allocator>
-Chunk(std::string const&, DiscreteDomain<DDims...> const&, Allocator)
-        -> Chunk<typename Allocator::value_type, DiscreteDomain<DDims...>, Allocator>;
+Chunk(std::string const&,
+      DiscreteDomain<DDims...> const&,
+      Allocator) -> Chunk<typename Allocator::value_type, DiscreteDomain<DDims...>, Allocator>;
 
 template <class... DDims, class Allocator>
-Chunk(DiscreteDomain<DDims...> const&, Allocator)
-        -> Chunk<typename Allocator::value_type, DiscreteDomain<DDims...>, Allocator>;
+Chunk(DiscreteDomain<DDims...> const&,
+      Allocator) -> Chunk<typename Allocator::value_type, DiscreteDomain<DDims...>, Allocator>;
 
 } // namespace ddc

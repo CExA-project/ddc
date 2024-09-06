@@ -6,34 +6,34 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP) {
+
+struct DDimX
 {
-    struct DDimX
-    {
-    };
-    using DElemX = ddc::DiscreteElement<DDimX>;
-    using DVectX = ddc::DiscreteVector<DDimX>;
-    using DDomX = ddc::DiscreteDomain<DDimX>;
+};
+using DElemX = ddc::DiscreteElement<DDimX>;
+using DVectX = ddc::DiscreteVector<DDimX>;
+using DDomX = ddc::DiscreteDomain<DDimX>;
 
-    static DElemX constexpr lbound_x(50);
-    static DVectX constexpr nelems_x(3);
-    static DDomX constexpr dom_x(lbound_x, nelems_x);
+static DElemX constexpr lbound_x(50);
+static DVectX constexpr nelems_x(3);
+static DDomX constexpr dom_x(lbound_x, nelems_x);
 
-    template <class ElementType, class Support, class Layout, class MemorySpace, class T>
-    [[nodiscard]] bool all_equal_to(
-            ddc::ChunkSpan<ElementType, Support, Layout, MemorySpace> const& chunk_span,
-            T const& value)
-    {
-        return ddc::parallel_transform_reduce(
-                "all_equal_to",
-                typename MemorySpace::execution_space(),
-                chunk_span.domain(),
-                true,
-                ddc::reducer::land<bool>(),
-                KOKKOS_LAMBDA(DElemX elem_x) { return chunk_span(elem_x) == value; });
-    }
+template <class ElementType, class Support, class Layout, class MemorySpace, class T>
+[[nodiscard]] bool all_equal_to(
+        ddc::ChunkSpan<ElementType, Support, Layout, MemorySpace> const& chunk_span,
+        T const& value)
+{
+    return ddc::parallel_transform_reduce(
+            "all_equal_to",
+            typename MemorySpace::execution_space(),
+            chunk_span.domain(),
+            true,
+            ddc::reducer::land<bool>(),
+            KOKKOS_LAMBDA(DElemX elem_x) { return chunk_span(elem_x) == value; });
+}
 
-} // namespace )
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP)
 
 TEST(CreateMirror, Host)
 {

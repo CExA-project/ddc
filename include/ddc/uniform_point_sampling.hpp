@@ -221,7 +221,8 @@ template <
         class DDimImpl,
         std::enable_if_t<
                 is_uniform_point_sampling_v<typename DDimImpl::discrete_dimension_type>,
-                int> = 0>
+                int>
+        = 0>
 std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 {
     return out << "UniformPointSampling( origin=" << mesh.origin() << ", step=" << mesh.step()

@@ -250,9 +250,8 @@ constexpr bool is_periodic_sampling_v = is_periodic_sampling<DDim>::value;
 
 template <
         class DDimImpl,
-        std::enable_if_t<
-                is_periodic_sampling_v<typename DDimImpl::discrete_dimension_type>,
-                int> = 0>
+        std::enable_if_t<is_periodic_sampling_v<typename DDimImpl::discrete_dimension_type>, int>
+        = 0>
 std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
 {
     return out << "PeriodicSampling( origin=" << mesh.origin() << ", step=" << mesh.step() << " )";

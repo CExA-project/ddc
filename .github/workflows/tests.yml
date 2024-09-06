@@ -19,7 +19,7 @@ jobs:
         source: 'benchmarks/ examples/ include/ddc/ tests/'
         exclude: ''
         extensions: 'hpp,cpp'
-        clangFormatVersion: 12
+        clangFormatVersion: 18
     - name: Find trailing whitespaces
       run: find . -not -path './vendor/*' -type f \( -name '*.[c|h]pp' -o -name 'CMakeLists.txt' -o -name '*.cmake' -o -name '*.md' -o -name '*.py' \) -exec ./bin/trailing_spaces --Werror '{}' '+'
     - name: REUSE Compliance Check

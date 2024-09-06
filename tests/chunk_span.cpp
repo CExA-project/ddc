@@ -8,22 +8,22 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_SPAN_CPP)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_SPAN_CPP) {
+
+struct DDimX
 {
-    struct DDimX
-    {
-    };
-    using DElemX = ddc::DiscreteElement<DDimX>;
-    using DVectX = ddc::DiscreteVector<DDimX>;
-    using DDomX = ddc::DiscreteDomain<DDimX>;
+};
+using DElemX = ddc::DiscreteElement<DDimX>;
+using DVectX = ddc::DiscreteVector<DDimX>;
+using DDomX = ddc::DiscreteDomain<DDimX>;
 
-    template <class Datatype>
-    using ChunkX = ddc::Chunk<Datatype, DDomX>;
+template <class Datatype>
+using ChunkX = ddc::Chunk<Datatype, DDomX>;
 
-    template <class Datatype>
-    using ChunkSpanX = ddc::ChunkSpan<Datatype, DDomX>;
+template <class Datatype>
+using ChunkSpanX = ddc::ChunkSpan<Datatype, DDomX>;
 
-} // namespace )
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_SPAN_CPP)
 
 TEST(ChunkSpan1DTest, ConstructionFromChunk)
 {

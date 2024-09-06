@@ -70,7 +70,7 @@ constexpr bool operator==(KokkosAllocator<T, MST> const&, KokkosAllocator<U, MSU
     return std::is_same_v<KokkosAllocator<T, MST>, KokkosAllocator<U, MSU>>;
 }
 
-#if !defined(__cpp_impl_three_way_comparison)
+#if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
 // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
 template <class T, class MST, class U, class MSU>
 constexpr bool operator!=(KokkosAllocator<T, MST> const&, KokkosAllocator<U, MSU> const&) noexcept

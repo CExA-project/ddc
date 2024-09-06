@@ -319,7 +319,7 @@ public:
         return ((m_values[type_seq_rank_v<Tags, tags_seq>] == rhs.template get<Tags>()) && ...);
     }
 
-#if !defined(__cpp_impl_three_way_comparison)
+#if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
     // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
     template <class OElementType, class... OTags>
     KOKKOS_FUNCTION constexpr bool operator!=(

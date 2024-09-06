@@ -110,12 +110,12 @@ private:
 public:
     static_assert(
             std::is_same_v<LowerExtrapolationRule,
-                            typename ddc::PeriodicExtrapolationRule<
-                                    continuous_dimension_type>> == bsplines_type::is_periodic()
+                            typename ddc::PeriodicExtrapolationRule<continuous_dimension_type>>
+                            == bsplines_type::is_periodic()
                     && std::is_same_v<
                                UpperExtrapolationRule,
-                               typename ddc::PeriodicExtrapolationRule<
-                                       continuous_dimension_type>> == bsplines_type::is_periodic(),
+                               typename ddc::PeriodicExtrapolationRule<continuous_dimension_type>>
+                               == bsplines_type::is_periodic(),
             "PeriodicExtrapolationRule has to be used if and only if dimension is periodic");
     static_assert(
             std::is_invocable_r_v<

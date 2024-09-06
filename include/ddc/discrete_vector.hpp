@@ -92,12 +92,12 @@ KOKKOS_FUNCTION constexpr auto operator+(
 {
     using detail::TypeSeq;
     if constexpr (sizeof...(Tags) >= sizeof...(OTags)) {
-        static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>)&&...));
+        static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>) && ...));
         DiscreteVector<Tags...> result(lhs);
         result += rhs;
         return result;
     } else {
-        static_assert(((type_seq_contains_v<TypeSeq<Tags>, TypeSeq<OTags...>>)&&...));
+        static_assert(((type_seq_contains_v<TypeSeq<Tags>, TypeSeq<OTags...>>) && ...));
         DiscreteVector<OTags...> result(rhs);
         result += lhs;
         return result;
@@ -111,12 +111,12 @@ KOKKOS_FUNCTION constexpr auto operator-(
 {
     using detail::TypeSeq;
     if constexpr (sizeof...(Tags) >= sizeof...(OTags)) {
-        static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>)&&...));
+        static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>) && ...));
         DiscreteVector<Tags...> result(lhs);
         result -= rhs;
         return result;
     } else {
-        static_assert(((type_seq_contains_v<TypeSeq<Tags>, TypeSeq<OTags...>>)&&...));
+        static_assert(((type_seq_contains_v<TypeSeq<Tags>, TypeSeq<OTags...>>) && ...));
         DiscreteVector<OTags...> result(-rhs);
         result += lhs;
         return result;
@@ -189,7 +189,8 @@ template <
         class... TailDVects,
         std::enable_if_t<
                 is_discrete_vector_v<HeadDVect> && (is_discrete_vector_v<TailDVects> && ...),
-                int> = 1>
+                int>
+        = 1>
 KOKKOS_FUNCTION constexpr auto const& take(HeadDVect const& head, TailDVects const&... tail)
 {
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
@@ -216,7 +217,7 @@ template <class Tag>
 class DiscreteVectorConversionOperators<DiscreteVector<Tag>>
 {
 public:
-    KOKKOS_FUNCTION constexpr operator DiscreteVectorElement const &() const noexcept
+    KOKKOS_FUNCTION constexpr operator DiscreteVectorElement const&() const noexcept
     {
         return static_cast<DiscreteVector<Tag> const*>(this)->m_values[0];
     }
@@ -384,7 +385,7 @@ public:
     template <class... OTags>
     KOKKOS_FUNCTION constexpr DiscreteVector& operator+=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>)&&...));
+        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>) && ...));
         ((m_values[type_seq_rank_v<OTags, tags_seq>] += rhs.template get<OTags>()), ...);
         return *this;
     }
@@ -403,7 +404,7 @@ public:
     template <class... OTags>
     KOKKOS_FUNCTION constexpr DiscreteVector& operator-=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>)&&...));
+        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>) && ...));
         ((m_values[type_seq_rank_v<OTags, tags_seq>] -= rhs.template get<OTags>()), ...);
         return *this;
     }
@@ -422,7 +423,7 @@ public:
     template <class... OTags>
     KOKKOS_FUNCTION constexpr DiscreteVector& operator*=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>)&&...));
+        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>) && ...));
         ((m_values[type_seq_rank_v<OTags, tags_seq>] *= rhs.template get<OTags>()), ...);
         return *this;
     }

@@ -31,11 +31,13 @@ class ChunkSpan;
 
 template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
 inline constexpr bool
-        enable_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>> = true;
+        enable_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>>
+        = true;
 
 template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
-inline constexpr bool enable_borrowed_chunk<
-        ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>> = true;
+inline constexpr bool
+        enable_borrowed_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>>
+        = true;
 
 template <class ElementType, class... DDims, class LayoutStridedPolicy, class MemorySpace>
 class ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy, MemorySpace>
@@ -231,8 +233,8 @@ public:
             KokkosView const& view,
             discrete_domain_type const& domain) noexcept
         : ChunkSpan(
-                detail::build_mdspan(view, std::make_index_sequence<sizeof...(DDims)> {}),
-                domain)
+                  detail::build_mdspan(view, std::make_index_sequence<sizeof...(DDims)> {}),
+                  domain)
     {
     }
 
@@ -345,11 +347,12 @@ template <
         class KokkosView,
         class... DDims,
         class = std::enable_if_t<Kokkos::is_view<KokkosView>::value>>
-ChunkSpan(KokkosView const& view, DiscreteDomain<DDims...> domain) -> ChunkSpan<
-        detail::kokkos_to_mdspan_element_t<typename KokkosView::data_type>,
-        DiscreteDomain<DDims...>,
-        detail::kokkos_to_mdspan_layout_t<typename KokkosView::array_layout>,
-        typename KokkosView::memory_space>;
+ChunkSpan(KokkosView const& view, DiscreteDomain<DDims...> domain)
+        -> ChunkSpan<
+                detail::kokkos_to_mdspan_element_t<typename KokkosView::data_type>,
+                DiscreteDomain<DDims...>,
+                detail::kokkos_to_mdspan_layout_t<typename KokkosView::array_layout>,
+                typename KokkosView::memory_space>;
 
 template <
         class ElementType,

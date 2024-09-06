@@ -16,124 +16,123 @@
 
 #include "test_utils.hpp"
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP) {
+
+void fill_identity(
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS mat)
 {
-    void fill_identity(
-            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS mat)
-    {
-        for (std::size_t i(0); i < mat.extent(0); ++i) {
-            for (std::size_t j(0); j < mat.extent(1); ++j) {
-                mat(i, j) = int(i == j);
-            }
+    for (std::size_t i(0); i < mat.extent(0); ++i) {
+        for (std::size_t j(0); j < mat.extent(1); ++j) {
+            mat(i, j) = int(i == j);
         }
     }
+}
 
-    void copy_matrix(
-            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS copy,
-            ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace> const& mat)
-    {
-        assert(mat.size() == copy.extent(0));
-        assert(mat.size() == copy.extent(1));
+void copy_matrix(
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS copy,
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace> const& mat)
+{
+    assert(mat.size() == copy.extent(0));
+    assert(mat.size() == copy.extent(1));
 
-        for (std::size_t i(0); i < copy.extent(0); ++i) {
-            for (std::size_t j(0); j < copy.extent(1); ++j) {
-                copy(i, j) = mat.get_element(i, j);
-            }
+    for (std::size_t i(0); i < copy.extent(0); ++i) {
+        for (std::size_t j(0); j < copy.extent(1); ++j) {
+            copy(i, j) = mat.get_element(i, j);
         }
     }
+}
 
-    void check_inverse(
-            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
-            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
-    {
-        double const TOL = 1e-10;
-        std::size_t const N = matrix.extent(0);
+void check_inverse(
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
+{
+    double const TOL = 1e-10;
+    std::size_t const N = matrix.extent(0);
 
-        for (std::size_t i(0); i < N; ++i) {
-            for (std::size_t j(0); j < N; ++j) {
-                double id_val = 0.0;
-                for (std::size_t k(0); k < N; ++k) {
-                    id_val += matrix(i, k) * inv(k, j);
-                }
-                EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
+    for (std::size_t i(0); i < N; ++i) {
+        for (std::size_t j(0); j < N; ++j) {
+            double id_val = 0.0;
+            for (std::size_t k(0); k < N; ++k) {
+                id_val += matrix(i, k) * inv(k, j);
             }
+            EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
         }
     }
+}
 
-    void check_inverse_transpose(
-            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
-            ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
-    {
-        double const TOL = 1e-10;
-        std::size_t const N = matrix.extent(0);
+void check_inverse_transpose(
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
+{
+    double const TOL = 1e-10;
+    std::size_t const N = matrix.extent(0);
 
-        for (std::size_t i(0); i < N; ++i) {
-            for (std::size_t j(0); j < N; ++j) {
-                double id_val = 0.0;
-                for (std::size_t k(0); k < N; ++k) {
-                    id_val += matrix(i, k) * inv(j, k);
-                }
-                EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
+    for (std::size_t i(0); i < N; ++i) {
+        for (std::size_t j(0); j < N; ++j) {
+            double id_val = 0.0;
+            for (std::size_t k(0); k < N; ++k) {
+                id_val += matrix(i, k) * inv(j, k);
             }
+            EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
         }
     }
+}
 
-    void solve_and_validate(
-            ddc::detail::SplinesLinearProblem<
-                    Kokkos::DefaultExecutionSpace> & splines_linear_problem)
-    {
-        const std::size_t N = splines_linear_problem.size();
+void solve_and_validate(
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>& splines_linear_problem)
+{
+    const std::size_t N = splines_linear_problem.size();
 
-        std::vector<double> val_ptr(N * N);
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
-                val(val_ptr.data(), N, N);
+    std::vector<double> val_ptr(N * N);
+    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
+            val(val_ptr.data(), N, N);
 
-        copy_matrix(val, splines_linear_problem);
+    copy_matrix(val, splines_linear_problem);
 
-        splines_linear_problem.setup_solver();
+    splines_linear_problem.setup_solver();
 
-        Kokkos::DualView<double*>
-                inv_ptr("inv_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
-                inv(inv_ptr.h_view.data(), splines_linear_problem.required_number_of_rhs_rows(), N);
-        fill_identity(inv);
-        inv_ptr.modify_host();
-        inv_ptr.sync_device();
-        splines_linear_problem.solve(
-                ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
-                        inv_ptr.d_view.data(),
-                        splines_linear_problem.required_number_of_rhs_rows(),
-                        N));
-        inv_ptr.modify_device();
-        inv_ptr.sync_host();
+    Kokkos::DualView<double*>
+            inv_ptr("inv_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
+    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
+            inv(inv_ptr.h_view.data(), splines_linear_problem.required_number_of_rhs_rows(), N);
+    fill_identity(inv);
+    inv_ptr.modify_host();
+    inv_ptr.sync_device();
+    splines_linear_problem.solve(
+            ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
+                    inv_ptr.d_view.data(),
+                    splines_linear_problem.required_number_of_rhs_rows(),
+                    N));
+    inv_ptr.modify_device();
+    inv_ptr.sync_host();
 
-        Kokkos::DualView<double*>
-                inv_tr_ptr("inv_tr_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
-                inv_tr(inv_tr_ptr.h_view.data(),
-                       splines_linear_problem.required_number_of_rhs_rows(),
-                       N);
-        fill_identity(inv_tr);
-        inv_tr_ptr.modify_host();
-        inv_tr_ptr.sync_device();
-        splines_linear_problem
-                .solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
-                               inv_tr_ptr.d_view.data(),
-                               splines_linear_problem.required_number_of_rhs_rows(),
-                               N),
-                       true);
-        inv_tr_ptr.modify_device();
-        inv_tr_ptr.sync_host();
+    Kokkos::DualView<double*>
+            inv_tr_ptr("inv_tr_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
+    ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
+            inv_tr(inv_tr_ptr.h_view.data(),
+                   splines_linear_problem.required_number_of_rhs_rows(),
+                   N);
+    fill_identity(inv_tr);
+    inv_tr_ptr.modify_host();
+    inv_tr_ptr.sync_device();
+    splines_linear_problem
+            .solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
+                           inv_tr_ptr.d_view.data(),
+                           splines_linear_problem.required_number_of_rhs_rows(),
+                           N),
+                   true);
+    inv_tr_ptr.modify_device();
+    inv_tr_ptr.sync_host();
 
-        check_inverse(
-                val,
-                Kokkos::subview(inv, std::pair<std::size_t, std::size_t> {0, N}, Kokkos::ALL));
-        check_inverse_transpose(
-                val,
-                Kokkos::subview(inv_tr, std::pair<std::size_t, std::size_t> {0, N}, Kokkos::ALL));
-    }
+    check_inverse(
+            val,
+            Kokkos::subview(inv, std::pair<std::size_t, std::size_t> {0, N}, Kokkos::ALL));
+    check_inverse_transpose(
+            val,
+            Kokkos::subview(inv_tr, std::pair<std::size_t, std::size_t> {0, N}, Kokkos::ALL));
+}
 
-} // namespace )
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
 
 TEST(SplinesLinearProblemSparse, Formatting)
 {

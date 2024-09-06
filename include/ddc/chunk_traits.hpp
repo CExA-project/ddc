@@ -20,8 +20,9 @@ inline constexpr bool is_chunk_v = enable_chunk<std::remove_const_t<std::remove_
 
 template <class T>
 inline constexpr bool is_borrowed_chunk_v
-        = is_chunk_v<
-                  T> && (std::is_lvalue_reference_v<T> || enable_borrowed_chunk<std::remove_cv_t<std::remove_reference_t<T>>>);
+        = is_chunk_v<T>
+          && (std::is_lvalue_reference_v<T>
+              || enable_borrowed_chunk<std::remove_cv_t<std::remove_reference_t<T>>>);
 
 template <class T>
 struct chunk_traits

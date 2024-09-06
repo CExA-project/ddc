@@ -178,20 +178,19 @@ template <class TypeSeq, class OTypeSeq>
 constexpr bool type_seq_contains_v = false;
 
 template <class TypeSeq, class B>
-constexpr bool type_seq_same_v = type_seq_contains_v<TypeSeq, B>&& type_seq_contains_v<B, TypeSeq>;
+constexpr bool type_seq_same_v = type_seq_contains_v<TypeSeq, B> && type_seq_contains_v<B, TypeSeq>;
 
 template <class QueryTag, class... Tags>
-constexpr bool in_tags_v<QueryTag, detail::TypeSeq<Tags...>> = detail::
-        TypeSeqRank<detail::SingleType<QueryTag>, detail::TypeSeq<Tags...>>::present;
+constexpr bool in_tags_v<QueryTag, detail::TypeSeq<Tags...>>
+        = detail::TypeSeqRank<detail::SingleType<QueryTag>, detail::TypeSeq<Tags...>>::present;
 
 template <class... Tags, class OTypeSeq>
-constexpr bool type_seq_contains_v<
-        detail::TypeSeq<Tags...>,
-        OTypeSeq> = ((detail::TypeSeqRank<detail::SingleType<Tags>, OTypeSeq>::present) && ...);
+constexpr bool type_seq_contains_v<detail::TypeSeq<Tags...>, OTypeSeq>
+        = ((detail::TypeSeqRank<detail::SingleType<Tags>, OTypeSeq>::present) && ...);
 
 template <class QueryTag, class... Tags>
-constexpr std::size_t type_seq_rank_v<QueryTag, detail::TypeSeq<Tags...>> = detail::
-        TypeSeqRank<detail::SingleType<QueryTag>, detail::TypeSeq<Tags...>>::val;
+constexpr std::size_t type_seq_rank_v<QueryTag, detail::TypeSeq<Tags...>>
+        = detail::TypeSeqRank<detail::SingleType<QueryTag>, detail::TypeSeq<Tags...>>::val;
 
 template <std::size_t I, class TagSeq>
 using type_seq_element_t = typename detail::TypeSeqElement<I, TagSeq>::type;

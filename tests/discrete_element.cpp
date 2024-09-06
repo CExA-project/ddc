@@ -8,41 +8,41 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_ELEMENT_CPP)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_ELEMENT_CPP) {
+
+struct DDimX
 {
-    struct DDimX
-    {
-    };
-    using DElemX = ddc::DiscreteElement<DDimX>;
-    using DVectX = ddc::DiscreteVector<DDimX>;
+};
+using DElemX = ddc::DiscreteElement<DDimX>;
+using DVectX = ddc::DiscreteVector<DDimX>;
 
 
-    struct DDimY
-    {
-    };
-    using DElemY = ddc::DiscreteElement<DDimY>;
-    using DVectY = ddc::DiscreteVector<DDimY>;
+struct DDimY
+{
+};
+using DElemY = ddc::DiscreteElement<DDimY>;
+using DVectY = ddc::DiscreteVector<DDimY>;
 
 
-    struct DDimZ
-    {
-    };
-    using DElemZ = ddc::DiscreteElement<DDimZ>;
-    using DVectZ = ddc::DiscreteVector<DDimZ>;
+struct DDimZ
+{
+};
+using DElemZ = ddc::DiscreteElement<DDimZ>;
+using DVectZ = ddc::DiscreteVector<DDimZ>;
 
 
-    using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
-    using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
+using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
+using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
 
 
-    using DElemYX = ddc::DiscreteElement<DDimY, DDimX>;
-    using DVectYX = ddc::DiscreteVector<DDimY, DDimX>;
+using DElemYX = ddc::DiscreteElement<DDimY, DDimX>;
+using DVectYX = ddc::DiscreteVector<DDimY, DDimX>;
 
 
-    using DElemXYZ = ddc::DiscreteElement<DDimX, DDimY, DDimZ>;
-    using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
+using DElemXYZ = ddc::DiscreteElement<DDimX, DDimY, DDimZ>;
+using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
 
-} // namespace )
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_ELEMENT_CPP)
 
 TEST(DiscreteElementXYZTest, ConstructorFromDiscreteElements)
 {

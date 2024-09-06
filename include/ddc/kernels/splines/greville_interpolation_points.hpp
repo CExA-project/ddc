@@ -139,7 +139,8 @@ public:
             typename U = BSplines,
             std::enable_if_t<
                     is_uniform_discrete_dimension_v<U>,
-                    bool> = true> // U must be in condition for SFINAE
+                    bool>
+            = true> // U must be in condition for SFINAE
     static auto get_sampling()
     {
         return uniform_greville_points<Sampling>();
@@ -157,7 +158,8 @@ public:
             typename U = BSplines,
             std::enable_if_t<
                     !is_uniform_discrete_dimension_v<U>,
-                    bool> = true> // U must be in condition for SFINAE
+                    bool>
+            = true> // U must be in condition for SFINAE
     static auto get_sampling()
     {
         using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;

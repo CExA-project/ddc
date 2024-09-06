@@ -155,20 +155,20 @@ private:
 public:
     static_assert(
             std::is_same_v<LowerExtrapolationRule1,
-                            typename ddc::PeriodicExtrapolationRule<
-                                    continuous_dimension_type1>> == bsplines_type1::is_periodic()
+                            typename ddc::PeriodicExtrapolationRule<continuous_dimension_type1>>
+                            == bsplines_type1::is_periodic()
                     && std::is_same_v<
                                UpperExtrapolationRule1,
-                               typename ddc::PeriodicExtrapolationRule<
-                                       continuous_dimension_type1>> == bsplines_type1::is_periodic()
+                               typename ddc::PeriodicExtrapolationRule<continuous_dimension_type1>>
+                               == bsplines_type1::is_periodic()
                     && std::is_same_v<
                                LowerExtrapolationRule2,
-                               typename ddc::PeriodicExtrapolationRule<
-                                       continuous_dimension_type2>> == bsplines_type2::is_periodic()
+                               typename ddc::PeriodicExtrapolationRule<continuous_dimension_type2>>
+                               == bsplines_type2::is_periodic()
                     && std::is_same_v<
                                UpperExtrapolationRule2,
-                               typename ddc::PeriodicExtrapolationRule<
-                                       continuous_dimension_type2>> == bsplines_type2::is_periodic(),
+                               typename ddc::PeriodicExtrapolationRule<continuous_dimension_type2>>
+                               == bsplines_type2::is_periodic(),
             "PeriodicExtrapolationRule has to be used if and only if dimension is periodic");
     static_assert(
             std::is_invocable_r_v<
@@ -482,9 +482,8 @@ public:
                     spline_coef) const
     {
         static_assert(
-                std::is_same_v<
-                        InterestDim,
-                        continuous_dimension_type1> || std::is_same_v<InterestDim, continuous_dimension_type2>);
+                std::is_same_v<InterestDim, continuous_dimension_type1>
+                || std::is_same_v<InterestDim, continuous_dimension_type2>);
         if constexpr (std::is_same_v<
                               InterestDim,
                               typename evaluation_discrete_dimension_type1::
@@ -523,12 +522,12 @@ public:
         static_assert(
                 (std::is_same_v<
                          InterestDim1,
-                         typename evaluation_discrete_dimension_type1::
-                                 continuous_dimension_type> && std::is_same_v<InterestDim2, continuous_dimension_type2>)
+                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                 && std::is_same_v<InterestDim2, continuous_dimension_type2>)
                 || (std::is_same_v<
                             InterestDim2,
-                            typename evaluation_discrete_dimension_type1::
-                                    continuous_dimension_type> && std::is_same_v<InterestDim1, continuous_dimension_type2>));
+                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                    && std::is_same_v<InterestDim1, continuous_dimension_type2>));
         return deriv_1_and_2(coord_eval, spline_coef);
     }
 
@@ -721,8 +720,8 @@ public:
         static_assert(
                 std::is_same_v<
                         InterestDim,
-                        typename evaluation_discrete_dimension_type1::
-                                continuous_dimension_type> || std::is_same_v<InterestDim, continuous_dimension_type2>);
+                        typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || std::is_same_v<InterestDim, continuous_dimension_type2>);
         if constexpr (std::is_same_v<
                               InterestDim,
                               typename evaluation_discrete_dimension_type1::
@@ -780,12 +779,12 @@ public:
         static_assert(
                 (std::is_same_v<
                          InterestDim1,
-                         typename evaluation_discrete_dimension_type1::
-                                 continuous_dimension_type> && std::is_same_v<InterestDim2, continuous_dimension_type2>)
+                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                 && std::is_same_v<InterestDim2, continuous_dimension_type2>)
                 || (std::is_same_v<
                             InterestDim2,
-                            typename evaluation_discrete_dimension_type1::
-                                    continuous_dimension_type> && std::is_same_v<InterestDim1, continuous_dimension_type2>));
+                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                    && std::is_same_v<InterestDim1, continuous_dimension_type2>));
         return deriv_1_and_2(spline_eval, coords_eval, spline_coef);
     }
 

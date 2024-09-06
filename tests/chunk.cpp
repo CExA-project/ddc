@@ -10,80 +10,80 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP) {
+
+using DElem0D = ddc::DiscreteElement<>;
+using DVect0D = ddc::DiscreteVector<>;
+using DDom0D = ddc::DiscreteDomain<>;
+
+template <class Datatype>
+using Chunk0D = ddc::Chunk<Datatype, DDom0D>;
+template <class Datatype>
+using ChunkSpan0D = ddc::ChunkSpan<Datatype, DDom0D>;
+
+
+struct DDimX
 {
-    using DElem0D = ddc::DiscreteElement<>;
-    using DVect0D = ddc::DiscreteVector<>;
-    using DDom0D = ddc::DiscreteDomain<>;
+};
+using DElemX = ddc::DiscreteElement<DDimX>;
+using DVectX = ddc::DiscreteVector<DDimX>;
+using DDomX = ddc::DiscreteDomain<DDimX>;
 
-    template <class Datatype>
-    using Chunk0D = ddc::Chunk<Datatype, DDom0D>;
-    template <class Datatype>
-    using ChunkSpan0D = ddc::ChunkSpan<Datatype, DDom0D>;
-
-
-    struct DDimX
-    {
-    };
-    using DElemX = ddc::DiscreteElement<DDimX>;
-    using DVectX = ddc::DiscreteVector<DDimX>;
-    using DDomX = ddc::DiscreteDomain<DDimX>;
-
-    template <class Datatype>
-    using ChunkX = ddc::Chunk<Datatype, DDomX>;
+template <class Datatype>
+using ChunkX = ddc::Chunk<Datatype, DDomX>;
 
 
-    struct DDimY
-    {
-    };
-    using DElemY = ddc::DiscreteElement<DDimY>;
-    using DVectY = ddc::DiscreteVector<DDimY>;
-    using DDomY = ddc::DiscreteDomain<DDimY>;
+struct DDimY
+{
+};
+using DElemY = ddc::DiscreteElement<DDimY>;
+using DVectY = ddc::DiscreteVector<DDimY>;
+using DDomY = ddc::DiscreteDomain<DDimY>;
 
-    template <class Datatype>
-    using ChunkY = ddc::Chunk<Datatype, DDomY>;
-
-
-    struct DDimZ
-    {
-    };
-    using DElemZ = ddc::DiscreteElement<DDimZ>;
-    using DVectZ = ddc::DiscreteVector<DDimZ>;
-    using DDomZ = ddc::DiscreteDomain<DDimZ>;
+template <class Datatype>
+using ChunkY = ddc::Chunk<Datatype, DDomY>;
 
 
-    using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
-    using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
-    using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
-
-    template <class Datatype>
-    using ChunkXY = ddc::Chunk<Datatype, DDomXY>;
-
-
-    using DElemYX = ddc::DiscreteElement<DDimY, DDimX>;
-    using DVectYX = ddc::DiscreteVector<DDimY, DDimX>;
-    using DDomYX = ddc::DiscreteDomain<DDimY, DDimX>;
-
-    template <class Datatype>
-    using ChunkYX = ddc::Chunk<Datatype, DDomYX>;
+struct DDimZ
+{
+};
+using DElemZ = ddc::DiscreteElement<DDimZ>;
+using DVectZ = ddc::DiscreteVector<DDimZ>;
+using DDomZ = ddc::DiscreteDomain<DDimZ>;
 
 
-    static DElem0D constexpr lbound_0d {};
-    static DVect0D constexpr nelems_0d {};
-    static DDom0D constexpr dom_0d(lbound_0d, nelems_0d);
+using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
+using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
+using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 
-    static DElemX constexpr lbound_x(50);
-    static DVectX constexpr nelems_x(3);
-    static DDomX constexpr dom_x(lbound_x, nelems_x);
+template <class Datatype>
+using ChunkXY = ddc::Chunk<Datatype, DDomXY>;
 
-    static DElemY constexpr lbound_y(4);
-    static DVectY constexpr nelems_y(12);
 
-    static DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
-    static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
-    static DDomXY constexpr dom_x_y(lbound_x_y, nelems_x_y);
+using DElemYX = ddc::DiscreteElement<DDimY, DDimX>;
+using DVectYX = ddc::DiscreteVector<DDimY, DDimX>;
+using DDomYX = ddc::DiscreteDomain<DDimY, DDimX>;
 
-} // namespace )
+template <class Datatype>
+using ChunkYX = ddc::Chunk<Datatype, DDomYX>;
+
+
+static DElem0D constexpr lbound_0d {};
+static DVect0D constexpr nelems_0d {};
+static DDom0D constexpr dom_0d(lbound_0d, nelems_0d);
+
+static DElemX constexpr lbound_x(50);
+static DVectX constexpr nelems_x(3);
+static DDomX constexpr dom_x(lbound_x, nelems_x);
+
+static DElemY constexpr lbound_y(4);
+static DVectY constexpr nelems_y(12);
+
+static DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
+static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
+static DDomXY constexpr dom_x_y(lbound_x_y, nelems_x_y);
+
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP)
 
 // Member types of Chunk 1D \{
 

@@ -164,9 +164,8 @@ public:
                     MemorySpace> const spline_coef) const
     {
         static_assert(
-                in_tags_v<
-                        DimI,
-                        to_type_seq_t<CoordType>> && in_tags_v<DimNI, to_type_seq_t<CoordType>>);
+                in_tags_v<DimI, to_type_seq_t<CoordType>>
+                && in_tags_v<DimNI, to_type_seq_t<CoordType>>);
 
         ddc::Coordinate<DimI, DimNI> eval_pos;
         if constexpr (DimNI::PERIODIC) {

@@ -213,8 +213,8 @@ $(document).ready(function(){initNavTree('view_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>} <span class="comment">// namespace ddc::detail</span></div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keyword">template</span> &lt;std::size_t N, <span class="keyword">class</span> ElementType&gt;</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keyword">using</span> SpanND = std::experimental::mdspan&lt;ElementType, std::experimental::dextents&lt;std::size_t, N&gt;&gt;;</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
@@ -269,7 +269,8 @@ $(document).ready(function(){initNavTree('view_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>{</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail::stream_impl(os, s, std::make_index_sequence&lt;Extents::rank()&gt;());</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>}</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
 <div class="ttc" id="anamespaceddc_html_a07265a51a26fd9366dfd7461d838fa16"><div class="ttname"><a href="namespaceddc.html#a07265a51a26fd9366dfd7461d838fa16">ddc::as_span</a></div><div class="ttdeci">Span1D&lt; const ElementType &gt; as_span(std::array&lt; ElementType, N &gt; const &amp;arr) noexcept</div><div class="ttdef"><b>Definition</b> <a href="view_8hpp_source.html#l00121">view.hpp:121</a></div></div>
 <div class="ttc" id="anamespaceddc_html_ab5f4b442bd231cb75cac113a0f508863"><div class="ttname"><a href="namespaceddc.html#ab5f4b442bd231cb75cac113a0f508863">ddc::as_span</a></div><div class="ttdeci">Span1D&lt; ElementType &gt; as_span(std::array&lt; ElementType, N &gt; &amp;arr) noexcept</div><div class="ttdef"><b>Definition</b> <a href="view_8hpp_source.html#l00115">view.hpp:115</a></div></div>

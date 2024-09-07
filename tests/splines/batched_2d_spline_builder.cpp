@@ -3,27 +3,23 @@
 // SPDX-License-Identifier: MIT
 
 #include <algorithm>
-#include <array>
-#include <cmath>
-#include <iosfwd>
+#include <cstddef>
+#if defined(BC_HERMITE)
+#include <optional>
+#endif
+#include <type_traits>
 #include <vector>
-
-#include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
 
 #include <gtest/gtest.h>
 
-#include "ddc/coordinate.hpp"
-#include "ddc/detail/macros.hpp"
-#include "ddc/discrete_domain.hpp"
-#include "ddc/for_each.hpp"
-#include "ddc/uniform_point_sampling.hpp"
-
 #include "cosine_evaluator.hpp"
 #include "evaluator_2d.hpp"
+#if !defined(BC_PERIODIC)
 #include "polynomial_evaluator.hpp"
+#endif
 #include "spline_error_bounds.hpp"
 
 #if defined(BC_PERIODIC)

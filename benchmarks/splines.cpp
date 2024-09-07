@@ -3,16 +3,24 @@
 // SPDX-License-Identifier: MIT
 
 #include <algorithm>
+#include <array>
+#include <chrono>
+#include <cstddef>
 #include <cstdint>
-#include <cstring>
-#include <iosfwd>
+#include <functional>
+#include <map>
+#include <mutex>
+#include <string>
 #include <thread>
+#include <type_traits>
 #include <vector>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
 
 #include <benchmark/benchmark.h>
+
+#include <Kokkos_Core.hpp>
 
 static const ddc::SplineSolver Backend = ddc::SplineSolver::LAPACK;
 

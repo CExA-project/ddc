@@ -6,6 +6,7 @@
 #ifndef NDEBUG
 #include <algorithm>
 #endif
+#include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <iomanip>
@@ -17,6 +18,10 @@
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
+#ifdef DDC_BUILD_PDI_WRAPPER
+#include <paraconf.h>
+#include <pdi.h>
+#endif
 //! [includes]
 
 //! [vector_generator]

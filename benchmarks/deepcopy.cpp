@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <algorithm>
-#include <cstdint>
+#include <cstddef>
 #include <cstring>
-#include <iosfwd>
 #include <vector>
 
 #include <ddc/ddc.hpp>
 
 #include <benchmark/benchmark.h>
+
+#include <Kokkos_Core.hpp>
 
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DEEPCOPY_CPP) {
 

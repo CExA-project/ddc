@@ -2,9 +2,10 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <cmath>
 #include <cstddef>
 #include <iostream>
+
+#include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
 

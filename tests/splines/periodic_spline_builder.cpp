@@ -3,12 +3,13 @@
 // SPDX-License-Identifier: MIT
 
 #include <algorithm>
-#include <array>
 #include <cmath>
-#include <iosfwd>
+#include <cstddef>
+#include <iostream>
+#include <tuple>
+#if defined(BSPLINES_TYPE_NON_UNIFORM)
 #include <vector>
-
-#include <experimental/mdspan>
+#endif
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
@@ -16,7 +17,6 @@
 #include <gtest/gtest.h>
 
 #include "cosine_evaluator.hpp"
-#include "polynomial_evaluator.hpp"
 #include "spline_error_bounds.hpp"
 
 struct DimX

@@ -3,12 +3,14 @@
 // SPDX-License-Identifier: MIT
 
 #include <algorithm>
-#include <array>
 #include <cmath>
-#include <iosfwd>
+#include <cstddef>
+#include <optional>
+#include <tuple>
+#include <type_traits>
+#if defined(BSPLINES_TYPE_NON_UNIFORM)
 #include <vector>
-
-#include <experimental/mdspan>
+#endif
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>

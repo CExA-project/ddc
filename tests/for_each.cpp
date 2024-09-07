@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: MIT
 
 #include <algorithm>
-#include <cstddef>
 #include <ostream>
 #include <vector>
 

@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <experimental/mdspan>
+
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>

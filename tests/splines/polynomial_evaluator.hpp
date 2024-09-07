@@ -7,7 +7,8 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
-#include <random>
+#include <cstddef>
+#include <cstdlib>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>

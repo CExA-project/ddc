@@ -209,9 +209,11 @@ public:
         int lower_block_size;
         int upper_block_size;
         if constexpr (bsplines_type::is_uniform()) {
-            compute_block_sizes_uniform(lower_block_size, upper_block_size);
+            upper_block_size = compute_block_sizes_uniform(BcLower, s_nbc_xmin);
+            lower_block_size = compute_block_sizes_uniform(BcUpper, s_nbc_xmax);
         } else {
-            compute_block_sizes_non_uniform(lower_block_size, upper_block_size);
+            upper_block_size = compute_block_sizes_non_uniform(BcLower, s_nbc_xmin);
+            lower_block_size = compute_block_sizes_non_uniform(BcUpper, s_nbc_xmax);
         }
         allocate_matrix(
                 lower_block_size,
@@ -452,9 +454,9 @@ public:
     quadrature_coefficients() const;
 
 private:
-    void compute_block_sizes_uniform(int& lower_block_size, int& upper_block_size) const;
+    static int compute_block_sizes_uniform(ddc::BoundCond bound_cond, int nbc);
 
-    void compute_block_sizes_non_uniform(int& lower_block_size, int& upper_block_size) const;
+    static int compute_block_sizes_non_uniform(ddc::BoundCond bound_cond, int nbc);
 
     void allocate_matrix(
             int lower_block_size,
@@ -518,7 +520,7 @@ template <
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
-void SplineBuilder<
+int SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
@@ -526,34 +528,21 @@ void SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::compute_block_sizes_uniform(int& lower_block_size, int& upper_block_size) const
+        IDimX...>::compute_block_sizes_uniform(ddc::BoundCond const bound_cond, int const nbc)
 {
-    switch (BcLower) {
-    case ddc::BoundCond::PERIODIC:
-        upper_block_size = (bsplines_type::degree()) / 2;
-        break;
-    case ddc::BoundCond::HERMITE:
-        upper_block_size = s_nbc_xmin;
-        break;
-    case ddc::BoundCond::GREVILLE:
-        upper_block_size = bsplines_type::degree() - 1;
-        break;
-    default:
-        throw std::runtime_error("ddc::BoundCond not handled");
+    if (bound_cond == ddc::BoundCond::PERIODIC) {
+        return static_cast<int>(bsplines_type::degree()) / 2;
     }
-    switch (BcUpper) {
-    case ddc::BoundCond::PERIODIC:
-        lower_block_size = (bsplines_type::degree()) / 2;
-        break;
-    case ddc::BoundCond::HERMITE:
-        lower_block_size = s_nbc_xmax;
-        break;
-    case ddc::BoundCond::GREVILLE:
-        lower_block_size = bsplines_type::degree() - 1;
-        break;
-    default:
-        throw std::runtime_error("ddc::BoundCond not handled");
+
+    if (bound_cond == ddc::BoundCond::HERMITE) {
+        return nbc;
     }
+
+    if (bound_cond == ddc::BoundCond::GREVILLE) {
+        return static_cast<int>(bsplines_type::degree()) - 1;
+    }
+
+    throw std::runtime_error("ddc::BoundCond not handled");
 }
 
 template <
@@ -565,7 +554,7 @@ template <
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
-void SplineBuilder<
+int SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
@@ -573,35 +562,17 @@ void SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::compute_block_sizes_non_uniform(int& lower_block_size, int& upper_block_size)
-        const
+        IDimX...>::compute_block_sizes_non_uniform(ddc::BoundCond const bound_cond, int const nbc)
 {
-    switch (BcLower) {
-    case ddc::BoundCond::PERIODIC:
-        upper_block_size = bsplines_type::degree() - 1;
-        break;
-    case ddc::BoundCond::HERMITE:
-        upper_block_size = s_nbc_xmin + 1;
-        break;
-    case ddc::BoundCond::GREVILLE:
-        upper_block_size = bsplines_type::degree() - 1;
-        break;
-    default:
-        throw std::runtime_error("ddc::BoundCond not handled");
+    if (bound_cond == ddc::BoundCond::PERIODIC || bound_cond == ddc::BoundCond::GREVILLE) {
+        return static_cast<int>(bsplines_type::degree()) - 1;
     }
-    switch (BcUpper) {
-    case ddc::BoundCond::PERIODIC:
-        lower_block_size = bsplines_type::degree() - 1;
-        break;
-    case ddc::BoundCond::HERMITE:
-        lower_block_size = s_nbc_xmax + 1;
-        break;
-    case ddc::BoundCond::GREVILLE:
-        lower_block_size = bsplines_type::degree() - 1;
-        break;
-    default:
-        throw std::runtime_error("ddc::BoundCond not handled");
+
+    if (bound_cond == ddc::BoundCond::HERMITE) {
+        return nbc + 1;
     }
+
+    throw std::runtime_error("ddc::BoundCond not handled");
 }
 
 template <

@@ -6,6 +6,7 @@
 
 #include <array>
 #include <cstddef>
+#include <stdexcept>
 #include <type_traits>
 #include <utility>
 
@@ -22,7 +23,6 @@
 #if cufft_AVAIL
 #include <functional>
 #include <memory>
-#include <stdexcept>
 
 #include <cuda_runtime_api.h>
 #include <cufft.h>
@@ -31,7 +31,6 @@
 #if hipfft_AVAIL
 #include <functional>
 #include <memory>
-#include <stdexcept>
 
 #include <hip/hip_runtime_api.h>
 #include <hipfft/hipfft.h>
@@ -564,36 +563,35 @@ void impl(
 
     if (kwargs.normalization != ddc::FFT_Normalization::OFF) {
         real_type_t<Tout> norm_coef = 1;
-        switch (kwargs.normalization) {
-        case ddc::FFT_Normalization::OFF:
-            break;
-        case ddc::FFT_Normalization::FORWARD:
-            norm_coef = kwargs.direction == ddc::FFT_Direction::FORWARD
-                                ? 1. / (ddc::get<DDimX>(mesh.extents()) * ...)
-                                : 1.;
-            break;
-        case ddc::FFT_Normalization::BACKWARD:
-            norm_coef = kwargs.direction == ddc::FFT_Direction::BACKWARD
-                                ? 1. / (ddc::get<DDimX>(mesh.extents()) * ...)
-                                : 1.;
-            break;
-        case ddc::FFT_Normalization::ORTHO:
+        if (kwargs.normalization == ddc::FFT_Normalization::FORWARD) {
+            if (kwargs.direction == ddc::FFT_Direction::FORWARD) {
+                norm_coef = 1. / (ddc::get<DDimX>(mesh.extents()) * ...);
+            }
+        } else if (kwargs.normalization == ddc::FFT_Normalization::BACKWARD) {
+            if (kwargs.direction == ddc::FFT_Direction::BACKWARD) {
+                norm_coef = 1. / (ddc::get<DDimX>(mesh.extents()) * ...);
+            }
+        } else if (kwargs.normalization == ddc::FFT_Normalization::ORTHO) {
             norm_coef = 1. / Kokkos::sqrt((ddc::get<DDimX>(mesh.extents()) * ...));
-            break;
-        case ddc::FFT_Normalization::FULL:
-            norm_coef = kwargs.direction == ddc::FFT_Direction::FORWARD
-                                ? (((coordinate(ddc::select<DDimX>(mesh).back())
-                                     - coordinate(ddc::select<DDimX>(mesh).front()))
-                                    / (ddc::get<DDimX>(mesh.extents()) - 1)
-                                    / Kokkos::sqrt(2 * Kokkos::numbers::pi))
-                                   * ...)
-                                : ((Kokkos::sqrt(2 * Kokkos::numbers::pi)
-                                    / (coordinate(ddc::select<DDimX>(mesh).back())
-                                       - coordinate(ddc::select<DDimX>(mesh).front()))
-                                    * (ddc::get<DDimX>(mesh.extents()) - 1)
-                                    / ddc::get<DDimX>(mesh.extents()))
-                                   * ...);
-            break;
+        } else if (kwargs.normalization == ddc::FFT_Normalization::FULL) {
+            if (kwargs.direction == ddc::FFT_Direction::FORWARD) {
+                norm_coef
+                        = (((coordinate(ddc::select<DDimX>(mesh).back())
+                             - coordinate(ddc::select<DDimX>(mesh).front()))
+                            / (ddc::get<DDimX>(mesh.extents()) - 1)
+                            / Kokkos::sqrt(2 * Kokkos::numbers::pi))
+                           * ...);
+            } else {
+                norm_coef
+                        = ((Kokkos::sqrt(2 * Kokkos::numbers::pi)
+                            / (coordinate(ddc::select<DDimX>(mesh).back())
+                               - coordinate(ddc::select<DDimX>(mesh).front()))
+                            * (ddc::get<DDimX>(mesh.extents()) - 1)
+                            / ddc::get<DDimX>(mesh.extents()))
+                           * ...);
+            }
+        } else {
+            throw std::runtime_error("ddc::FFT_Normalization not handled");
         }
 
         Kokkos::parallel_for(

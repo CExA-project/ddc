@@ -29,16 +29,19 @@ enum class BoundCond {
  **/
 static inline std::ostream& operator<<(std::ostream& out, ddc::BoundCond const bc)
 {
-    switch (bc) {
-    case ddc::BoundCond::PERIODIC:
+    if (bc == ddc::BoundCond::PERIODIC) {
         return out << "PERIODIC";
-    case ddc::BoundCond::HERMITE:
-        return out << "HERMITE";
-    case ddc::BoundCond::GREVILLE:
-        return out << "GREVILLE";
-    default:
-        throw std::runtime_error("ddc::BoundCond not handled");
     }
+
+    if (bc == ddc::BoundCond::HERMITE) {
+        return out << "HERMITE";
+    }
+
+    if (bc == ddc::BoundCond::GREVILLE) {
+        return out << "GREVILLE";
+    }
+
+    throw std::runtime_error("ddc::BoundCond not handled");
 }
 
 /**

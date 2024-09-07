@@ -24,4 +24,5 @@ struct NullExtrapolationRule
         return 0.0;
     }
 };
+
 } // namespace ddc

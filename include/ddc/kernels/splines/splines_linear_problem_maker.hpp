@@ -16,6 +16,7 @@
 #include "splines_linear_problem_sparse.hpp"
 
 namespace ddc::detail {
+
 /**
  * @brief A static factory for SplinesLinearProblem classes.
  */

@@ -25,4 +25,5 @@ struct PeriodicExtrapolationRule
         return 0.;
     }
 };
+
 } // namespace ddc

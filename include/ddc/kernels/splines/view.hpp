@@ -91,8 +91,8 @@ std::ostream& stream_impl(
 
 } // namespace ddc::detail
 
-
 namespace ddc {
+
 template <std::size_t N, class ElementType>
 using SpanND = std::experimental::mdspan<ElementType, std::experimental::dextents<std::size_t, N>>;
 
@@ -147,4 +147,5 @@ std::ostream& operator<<(
 {
     return ddc::detail::stream_impl(os, s, std::make_index_sequence<Extents::rank()>());
 }
+
 } // namespace ddc

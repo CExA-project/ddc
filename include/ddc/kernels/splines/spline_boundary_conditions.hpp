@@ -58,4 +58,5 @@ constexpr int n_boundary_equations(ddc::BoundCond const bc, std::size_t const de
 
     throw std::runtime_error("ddc::BoundCond not handled");
 }
+
 } // namespace ddc

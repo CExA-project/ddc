@@ -102,6 +102,7 @@ enum class FFT_Normalization {
 } // namespace ddc
 
 namespace ddc::detail::fft {
+
 template <typename T>
 struct real_type
 {

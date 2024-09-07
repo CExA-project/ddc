@@ -727,4 +727,5 @@ NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::integrals(
     }
     return int_vals;
 }
+
 } // namespace ddc

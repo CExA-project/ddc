@@ -207,4 +207,5 @@ public:
         return y;
     }
 };
+
 } // namespace ddc

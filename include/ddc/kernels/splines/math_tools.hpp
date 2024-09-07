@@ -12,6 +12,7 @@
 #include <Kokkos_Core.hpp>
 
 namespace ddc::detail {
+
 template <typename T>
 KOKKOS_INLINE_FUNCTION T sum(T* array, int size)
 {
@@ -114,4 +115,5 @@ KOKKOS_INLINE_FUNCTION T max(T x, T y)
 {
     return x > y ? x : y;
 }
+
 } // namespace ddc::detail

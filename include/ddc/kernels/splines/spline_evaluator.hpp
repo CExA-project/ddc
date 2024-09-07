@@ -451,4 +451,5 @@ private:
         return y;
     }
 };
+
 } // namespace ddc

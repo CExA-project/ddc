@@ -507,4 +507,5 @@ operator()(
     // Spline2-approximate spline1
     m_spline_builder2(spline, spline1.span_cview(), spline1_deriv_min_opt, spline1_deriv_max_opt);
 }
+
 } // namespace ddc

@@ -284,4 +284,5 @@ public:
                 ddc::DiscreteVector<Sampling>(npoints));
     }
 };
+
 } // namespace ddc

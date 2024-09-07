@@ -6,7 +6,7 @@
 
 #include <cassert>
 #include <iomanip>
-#include <iostream>
+#include <ostream>
 
 #include <Kokkos_Core.hpp>
 

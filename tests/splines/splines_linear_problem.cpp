@@ -6,7 +6,6 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
-#include <iostream>
 #include <memory>
 #include <sstream>
 #include <tuple>
@@ -279,7 +278,6 @@ TEST(SplinesLinearProblem, 3x3Blocks)
 
     // Build a non-symmetric full-rank matrix (without zero)
     for (std::size_t i(0); i < N; ++i) {
-        std::cout << i;
         splines_linear_problem->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
         for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));

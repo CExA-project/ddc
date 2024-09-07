@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
-#include <iostream>
 #include <tuple>
 #if defined(BSPLINES_TYPE_NON_UNIFORM)
 #include <vector>
@@ -157,7 +156,6 @@ void TestPeriodicSplineBuilderTestIdentity()
             KOKKOS_LAMBDA(IndexX const ix) { return quadrature_coefficients(ix) * yvals(ix); });
 
     // 8. Checking errors
-    std::cout << "---------- TEST ----------\n";
     double const max_norm_error = ddc::parallel_transform_reduce(
             execution_space(),
             interpolation_domain,

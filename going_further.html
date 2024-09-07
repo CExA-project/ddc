@@ -120,6 +120,7 @@ $(document).ready(function(){initNavTree('going_further.html',''); initResizable
 <div class="fragment"><div class="line"><span class="preprocessor">#ifndef NDEBUG</span></div>
 <div class="line"><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="preprocessor">#include &lt;cassert&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iomanip&gt;</span></div>
@@ -131,6 +132,10 @@ $(document).ready(function(){initNavTree('going_further.html',''); initResizable
 <div class="line"><span class="preprocessor">#include &lt;ddc/ddc.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#ifdef DDC_BUILD_PDI_WRAPPER</span></div>
+<div class="line"><span class="preprocessor">#include &lt;paraconf.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;pdi.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md13"></a>
 Differences with the uniform problem resolution</h1>
 <p>For non-uniform discretization, differences arise compared to uniform discretization, particularly in terms of dimension labeling, domain construction, and even in the resolution of the problem.</p>

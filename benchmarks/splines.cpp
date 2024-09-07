@@ -60,7 +60,7 @@ struct DDimY : ddc::UniformPointSampling<Y>
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
 
 // Function to monitor GPU memory asynchronously
-void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, size_t& maxUsedMem)
+void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, std::size_t& maxUsedMem)
 {
     while (monitorFlag) {
         std::this_thread::sleep_for(std::chrono::microseconds(10)); // Adjust the interval as needed
@@ -99,7 +99,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
 #else
     std::size_t const initUsedMem = 0;
 #endif
-    size_t maxUsedMem = initUsedMem;
+    std::size_t maxUsedMem = initUsedMem;
 
     bool monitorFlag = true;
     std::mutex mutex;

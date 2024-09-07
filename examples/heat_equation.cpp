@@ -114,7 +114,7 @@ int main(int argc, char** argv)
     // End of the domain of interest in the X dimension
     double const x_end = 1.;
     // Number of discretization points in the X dimension
-    size_t const nb_x_points = 10;
+    std::size_t const nb_x_points = 10;
     // Thermal diffusion coefficient
     double const kx = .01;
     // Start of the domain of interest in the Y dimension
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
     // End of the domain of interest in the Y dimension
     double const y_end = 1.;
     // Number of discretization points in the Y dimension
-    size_t const nb_y_points = 100;
+    std::size_t const nb_y_points = 100;
     // Thermal diffusion coefficient
     double const ky = .002;
     // Simulated time at which to start simulation
@@ -130,7 +130,7 @@ int main(int argc, char** argv)
     // Simulated time to reach as target of the simulation
     double const end_time = 10.;
     // Number of time-steps between outputs
-    ptrdiff_t const t_output_period = 10;
+    std::ptrdiff_t const t_output_period = 10;
     //! [parameters]
 
     //! [main-start]

@@ -4,7 +4,14 @@
 
 #include <array>
 #include <cmath>
+#include <cstddef>
 #include <limits>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <vector>
+
+#include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>

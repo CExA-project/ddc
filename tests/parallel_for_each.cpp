@@ -4,12 +4,13 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <ostream>
 #include <vector>
 
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
+
+#include <Kokkos_Core.hpp>
 
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FOR_EACH_CPP) {
 

@@ -8,7 +8,6 @@
 #include <memory>
 #include <string>
 
-#include <KokkosBlas3_gemm.hpp>
 #include <Kokkos_DualView.hpp>
 
 #include "splines_linear_problem.hpp"

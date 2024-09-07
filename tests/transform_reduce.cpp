@@ -8,8 +8,6 @@
 
 #include <gtest/gtest.h>
 
-#include <Kokkos_Core.hpp>
-
 using DElem0D = ddc::DiscreteElement<>;
 using DVect0D = ddc::DiscreteVector<>;
 using DDom0D = ddc::DiscreteDomain<>;

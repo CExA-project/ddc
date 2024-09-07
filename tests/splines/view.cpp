@@ -3,17 +3,10 @@
 // SPDX-License-Identifier: MIT
 
 #include <array>
-#include <memory>
-#include <sstream>
-
-#include <experimental/mdspan>
 
 #include <ddc/kernels/splines.hpp>
 
 #include <gtest/gtest.h>
-
-using namespace std;
-using namespace std::experimental;
 
 TEST(View1DTest, Constructor)
 {

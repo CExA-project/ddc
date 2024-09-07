@@ -12,6 +12,10 @@
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
+#ifdef DDC_BUILD_PDI_WRAPPER
+#include <paraconf.h>
+#include <pdi.h>
+#endif
 //! [includes]
 
 //! [X-dimension]

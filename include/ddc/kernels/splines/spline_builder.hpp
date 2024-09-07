@@ -5,11 +5,6 @@
 #pragma once
 #include <ddc/ddc.hpp>
 
-#include "ddc/chunk_span.hpp"
-#include "ddc/create_mirror.hpp"
-#include "ddc/discrete_domain.hpp"
-#include "ddc/kokkos_allocator.hpp"
-
 #include "deriv.hpp"
 #include "integrals.hpp"
 #include "math_tools.hpp"

@@ -3,9 +3,15 @@
 // SPDX-License-Identifier: MIT
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
+#include <cstddef>
+#include <iostream>
 #include <memory>
 #include <sstream>
+#include <tuple>
+#include <utility>
+#include <vector>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
@@ -13,8 +19,6 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_DualView.hpp>
-
-#include "test_utils.hpp"
 
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP) {
 

@@ -2,13 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <iosfwd>
+#include <cstddef>
 #include <vector>
-
-#include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>

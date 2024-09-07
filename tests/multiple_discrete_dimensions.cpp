@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-#include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
 
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MULTIPLE_DISCRETE_DIMENSIONS_CPP) {
 

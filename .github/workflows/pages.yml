@@ -37,7 +37,6 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       run: |
-        docker pull ghcr.io/cexa-project/ddc/doxygen || true
         DOCKER_BUILDKIT=1 docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           --cache-from ghcr.io/cexa-project/ddc/doxygen \

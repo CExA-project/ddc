@@ -536,7 +536,7 @@ $(document).ready(function(){initNavTree('fft_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    std::array&lt;<span class="keywordtype">int</span>, <span class="keyword">sizeof</span>...(DDimX)&gt; n = {<span class="keyword">static_cast</span>&lt;<span class="keywordtype">int</span>&gt;(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;DDimX&gt;(mesh.extents()))...};</div>
 <div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    <span class="keywordtype">int</span> idist = 1;</div>
 <div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    <span class="keywordtype">int</span> odist = 1;</div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; <span class="keyword">sizeof</span>...(DDimX); i++) {</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; <span class="keyword">sizeof</span>...(DDimX); ++i) {</div>
 <div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>        idist = transform_type_v&lt;Tin, Tout&gt; == TransformType::C2R &amp;&amp; i == <span class="keyword">sizeof</span>...(DDimX) - 1</div>
 <div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>                        ? idist * (n[i] / 2 + 1)</div>
 <div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>                        : idist * n[i];</div>

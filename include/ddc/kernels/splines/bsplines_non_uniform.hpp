@@ -653,7 +653,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
 
     int r = degree();
     for (int k = 1; k < int(n + 1); ++k) {
-        for (std::size_t i = 0; i < derivs.extent(0); i++) {
+        for (std::size_t i = 0; i < derivs.extent(0); ++i) {
             derivs(i, k) *= r;
         }
         r *= degree() - k;

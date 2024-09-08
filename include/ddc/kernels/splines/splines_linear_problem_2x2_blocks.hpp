@@ -210,8 +210,8 @@ public:
                 "dense2coo",
                 Kokkos::RangePolicy(ExecSpace(), 0, 1),
                 KOKKOS_LAMBDA(const int) {
-                    for (int i = 0; i < dense_matrix.extent(0); i++) {
-                        for (int j = 0; j < dense_matrix.extent(1); j++) {
+                    for (int i = 0; i < dense_matrix.extent(0); ++i) {
+                        for (int j = 0; j < dense_matrix.extent(1); ++j) {
                             double const aij = dense_matrix(i, j);
                             if (Kokkos::abs(aij) >= tol) {
                                 rows_idx(n_nonzeros.d_view()) = i;

@@ -97,7 +97,7 @@ class GrevilleInterpolationPoints
             while (greville_points[npoints] < ddc::discrete_space<BSplines>().rmin()) {
                 temp_knots[npoints]
                         = greville_points[npoints] + ddc::discrete_space<BSplines>().length();
-                npoints++;
+                ++npoints;
             }
             // Shift the points
             for (std::size_t i = 0; i < ddc::discrete_space<BSplines>().nbasis() - npoints; ++i) {

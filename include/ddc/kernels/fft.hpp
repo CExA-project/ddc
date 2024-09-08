@@ -414,7 +414,7 @@ void impl(
     std::array<int, sizeof...(DDimX)> n = {static_cast<int>(ddc::get<DDimX>(mesh.extents()))...};
     int idist = 1;
     int odist = 1;
-    for (std::size_t i = 0; i < sizeof...(DDimX); i++) {
+    for (std::size_t i = 0; i < sizeof...(DDimX); ++i) {
         idist = transform_type_v<Tin, Tout> == TransformType::C2R && i == sizeof...(DDimX) - 1
                         ? idist * (n[i] / 2 + 1)
                         : idist * n[i];

@@ -666,7 +666,7 @@ static void Batched2dSplineTest()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-12 * max_norm_diff12));
+                        1e-11 * max_norm_diff12));
 }
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)

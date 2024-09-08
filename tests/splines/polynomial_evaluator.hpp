@@ -8,7 +8,7 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
-#include <cstdlib>
+#include <random>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
@@ -29,8 +29,11 @@ struct PolynomialEvaluator
         template <class Domain>
         Evaluator(Domain domain) : m_xN(std::max(std::abs(rmin(domain)), std::abs(rmax(domain))))
         {
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_real_distribution dis(0., 1.);
             for (int i(0); i < Degree + 1; ++i) {
-                m_coeffs[i] = double(rand() % 100) / 100.0;
+                m_coeffs[i] = dis(gen);
             }
         }
 

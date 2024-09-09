@@ -24,11 +24,17 @@
 #include <sstream>
 
 #include <cuda.h>
+
+#define DDC_DETAIL_CUDA_THROW_ON_ERROR(val)                                                        \
+    ddc::detail::cuda_throw_on_error((val), #val, __FILE__, __LINE__)
 #endif
 #if defined(__HIPCC__)
 #include <sstream>
 
 #include <hip/hip_runtime.h>
+
+#define DDC_DETAIL_HIP_THROW_ON_ERROR(val)                                                         \
+    ddc::detail::hip_throw_on_error((val), #val, __FILE__, __LINE__)
 #endif
 
 
@@ -37,7 +43,6 @@ namespace ddc {
 namespace detail {
 
 #if defined(__CUDACC__)
-#define CUDA_THROW_ON_ERROR(val) ddc::detail::cuda_throw_on_error((val), #val, __FILE__, __LINE__)
 template <class T>
 void cuda_throw_on_error(
         T const err,
@@ -53,7 +58,6 @@ void cuda_throw_on_error(
     }
 }
 #elif defined(__HIPCC__)
-#define HIP_THROW_ON_ERROR(val) ddc::detail::hip_throw_on_error((val), #val, __FILE__, __LINE__)
 template <class T>
 void hip_throw_on_error(T const err, const char* const func, const char* const file, const int line)
 {
@@ -161,12 +165,12 @@ void init_discrete_space(Args&&... args)
         detail::g_discrete_space_dual<DDim>.reset();
     });
 #if defined(__CUDACC__)
-    CUDA_THROW_ON_ERROR(cudaMemcpyToSymbol(
+    DDC_DETAIL_CUDA_THROW_ON_ERROR(cudaMemcpyToSymbol(
             detail::g_discrete_space_device<DDim>,
             &detail::g_discrete_space_dual<DDim>->get_device(),
             sizeof(detail::g_discrete_space_dual<DDim>->get_device())));
 #elif defined(__HIPCC__)
-    HIP_THROW_ON_ERROR(hipMemcpyToSymbol(
+    DDC_DETAIL_HIP_THROW_ON_ERROR(hipMemcpyToSymbol(
             detail::g_discrete_space_device<DDim>,
             &detail::g_discrete_space_dual<DDim>->get_device(),
             sizeof(detail::g_discrete_space_dual<DDim>->get_device())));
@@ -236,3 +240,10 @@ detail::ddim_impl_t<DDim, Kokkos::HostSpace> const& host_discrete_space()
 }
 
 } // namespace ddc
+
+#if defined(__CUDACC__)
+#undef DDC_DETAIL_CUDA_THROW_ON_ERROR
+#endif
+#if defined(__HIPCC__)
+#undef DDC_DETAIL_HIP_THROW_ON_ERROR
+#endif

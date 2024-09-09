@@ -10,6 +10,7 @@
 
 #include "bsplines_non_uniform.hpp"
 #include "bsplines_uniform.hpp"
+#include "knot_discrete_dimension_type.hpp"
 #include "spline_boundary_conditions.hpp"
 
 namespace ddc {
@@ -55,11 +56,11 @@ public:
         } else {
             using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
             std::vector<double> knots(ddc::discrete_space<BSplines>().npoints());
-            ddc::DiscreteDomain<typename BSplines::knot_discrete_dimension_type> break_point_domain(
+            ddc::DiscreteDomain<knot_discrete_dimension_t<BSplines>> break_point_domain(
                     ddc::discrete_space<BSplines>().break_point_domain());
             ddc::for_each(
                     break_point_domain,
-                    [&](ddc::DiscreteElement<typename BSplines::knot_discrete_dimension_type> ik) {
+                    [&](ddc::DiscreteElement<knot_discrete_dimension_t<BSplines>> ik) {
                         knots[ik - break_point_domain.front()] = ddc::coordinate(ik);
                     });
             return SamplingImpl(knots);

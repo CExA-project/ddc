@@ -151,13 +151,17 @@ public:
         std::size_t const nq = m_top_left_block->size();
         if (i < nq && j < nq) {
             return m_top_left_block->get_element(i, j);
-        } else if (i >= nq && j >= nq) {
-            return m_bottom_right_block->get_element(i - nq, j - nq);
-        } else if (j >= nq) {
-            return m_top_right_block.h_view(i, j - nq);
-        } else {
-            return m_bottom_left_block.h_view(i - nq, j);
         }
+
+        if (i >= nq && j >= nq) {
+            return m_bottom_right_block->get_element(i - nq, j - nq);
+        }
+
+        if (j >= nq) {
+            return m_top_right_block.h_view(i, j - nq);
+        }
+
+        return m_bottom_left_block.h_view(i - nq, j);
     }
 
     void set_element(std::size_t const i, std::size_t const j, double const aij) override

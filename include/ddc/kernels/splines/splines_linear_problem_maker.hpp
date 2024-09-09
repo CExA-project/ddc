@@ -61,13 +61,17 @@ public:
     {
         if (kl == ku && kl == 1 && pds) {
             return std::make_unique<SplinesLinearProblemPDSTridiag<ExecSpace>>(n);
-        } else if (kl == ku && pds) {
-            return std::make_unique<SplinesLinearProblemPDSBand<ExecSpace>>(n, kl);
-        } else if (2 * kl + ku + 1 >= n) {
-            return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
-        } else {
-            return std::make_unique<SplinesLinearProblemBand<ExecSpace>>(n, kl, ku);
         }
+
+        if (kl == ku && pds) {
+            return std::make_unique<SplinesLinearProblemPDSBand<ExecSpace>>(n, kl);
+        }
+
+        if (2 * kl + ku + 1 >= n) {
+            return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+        }
+
+        return std::make_unique<SplinesLinearProblemBand<ExecSpace>>(n, kl, ku);
     }
 
     /**

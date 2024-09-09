@@ -73,11 +73,12 @@ public:
         if (i > j) {
             std::swap(i, j);
         }
+
         if (j - i < 2) {
             return m_q.h_view(j - i, i);
-        } else {
-            return 0.0;
         }
+
+        return 0.0;
     }
 
     void set_element(std::size_t i, std::size_t j, double const aij) override

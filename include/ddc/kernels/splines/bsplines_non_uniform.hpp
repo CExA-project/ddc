@@ -417,27 +417,27 @@ template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 template <class RandomIt>
 NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::Impl(
-        RandomIt const break_begin,
-        RandomIt const break_end)
+        RandomIt const breaks_begin,
+        RandomIt const breaks_end)
     : m_knot_domain(
               ddc::DiscreteElement<knot_discrete_dimension_type>(0),
               ddc::DiscreteVector<knot_discrete_dimension_type>(
-                      (break_end - break_begin)
+                      (breaks_end - breaks_begin)
                       + 2 * degree())) // Create a mesh of knots including the eventual periodic point
     , m_break_point_domain(
               ddc::DiscreteElement<knot_discrete_dimension_type>(degree()),
               ddc::DiscreteVector<knot_discrete_dimension_type>(
-                      (break_end - break_begin))) // Create a mesh of break points
+                      (breaks_end - breaks_begin))) // Create a mesh of break points
 {
-    std::vector<ddc::Coordinate<CDim>> knots((break_end - break_begin) + 2 * degree());
+    std::vector<ddc::Coordinate<CDim>> knots((breaks_end - breaks_begin) + 2 * degree());
     // Fill the provided knots
     int ii = 0;
-    for (RandomIt it = break_begin; it < break_end; ++it) {
+    for (RandomIt it = breaks_begin; it < breaks_end; ++it) {
         knots[degree() + ii] = *it;
         ++ii;
     }
     ddc::Coordinate<CDim> const rmin = knots[degree()];
-    ddc::Coordinate<CDim> const rmax = knots[(break_end - break_begin) + degree() - 1];
+    ddc::Coordinate<CDim> const rmax = knots[(breaks_end - breaks_begin) + degree() - 1];
     assert(rmin < rmax);
 
     // Fill out the extra knots

@@ -39,15 +39,15 @@ using ChunkSpanXY = ddc::ChunkSpan<Datatype, DDomXY>;
 
 
 // Let say 1MB cache
-static std::size_t constexpr small_dim1_2D = 400;
-static std::size_t constexpr small_dim2_2D = small_dim1_2D;
+std::size_t constexpr small_dim1_2D = 400;
+std::size_t constexpr small_dim2_2D = small_dim1_2D;
 
-static std::size_t constexpr small_dim1_1D = small_dim1_2D * small_dim1_2D;
+std::size_t constexpr small_dim1_1D = small_dim1_2D * small_dim1_2D;
 
-static std::size_t constexpr large_dim1_2D = 2000;
-static std::size_t constexpr large_dim2_2D = large_dim1_2D;
+std::size_t constexpr large_dim1_2D = 2000;
+std::size_t constexpr large_dim2_2D = large_dim1_2D;
 
-static std::size_t constexpr large_dim1_1D = large_dim1_2D * large_dim1_2D;
+std::size_t constexpr large_dim1_1D = large_dim1_2D * large_dim1_2D;
 
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DEEPCOPY_CPP)
 

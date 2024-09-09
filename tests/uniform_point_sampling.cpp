@@ -24,10 +24,10 @@ struct DDimY : ddc::UniformPointSampling<DimY>
 {
 };
 
-static ddc::Coordinate<DimX> constexpr origin(-1.);
-static ddc::Real constexpr step = 0.5;
-static ddc::DiscreteElement<DDimX> constexpr point_ix(2);
-static ddc::Coordinate<DimX> constexpr point_rx(0.);
+ddc::Coordinate<DimX> constexpr origin(-1.);
+ddc::Real constexpr step = 0.5;
+ddc::DiscreteElement<DDimX> constexpr point_ix(2);
+ddc::Coordinate<DimX> constexpr point_rx(0.);
 
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(UNIFORM_POINT_SAMPLING_CPP)
 

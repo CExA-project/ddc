@@ -71,20 +71,20 @@ template <class Datatype>
 using ChunkYX = ddc::Chunk<Datatype, DDomYX>;
 
 
-static DElem0D constexpr lbound_0d {};
-static DVect0D constexpr nelems_0d {};
-static DDom0D constexpr dom_0d(lbound_0d, nelems_0d);
+DElem0D constexpr lbound_0d {};
+DVect0D constexpr nelems_0d {};
+DDom0D constexpr dom_0d(lbound_0d, nelems_0d);
 
-static DElemX constexpr lbound_x(50);
-static DVectX constexpr nelems_x(3);
-static DDomX constexpr dom_x(lbound_x, nelems_x);
+DElemX constexpr lbound_x(50);
+DVectX constexpr nelems_x(3);
+DDomX constexpr dom_x(lbound_x, nelems_x);
 
-static DElemY constexpr lbound_y(4);
-static DVectY constexpr nelems_y(12);
+DElemY constexpr lbound_y(4);
+DVectY constexpr nelems_y(12);
 
-static DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
-static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
-static DDomXY constexpr dom_x_y(lbound_x_y, nelems_x_y);
+DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
+DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
+DDomXY constexpr dom_x_y(lbound_x_y, nelems_x_y);
 
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP)
 

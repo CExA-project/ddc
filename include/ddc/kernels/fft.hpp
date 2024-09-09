@@ -216,20 +216,21 @@ _fftw_plan<Tin> _fftw_plan_many_dft(
         Args... args)
 { // Ugly, penultArg and lastArg are passed before the rest because of a limitation of C++ (parameter packs must be last arguments)
     const TransformType transformType = transform_type_v<Tin, Tout>;
-    if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, float>)
+    if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, float>) {
         return fftwf_plan_many_dft_r2c(args..., lastArg);
-    else if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, double>)
+    } else if constexpr (transformType == TransformType::R2C && std::is_same_v<Tin, double>) {
         return fftw_plan_many_dft_r2c(args..., lastArg);
-    else if constexpr (transformType == TransformType::C2R && std::is_same_v<Tout, float>)
+    } else if constexpr (transformType == TransformType::C2R && std::is_same_v<Tout, float>) {
         return fftwf_plan_many_dft_c2r(args..., lastArg);
-    else if constexpr (transformType == TransformType::C2R && std::is_same_v<Tout, double>)
+    } else if constexpr (transformType == TransformType::C2R && std::is_same_v<Tout, double>) {
         return fftw_plan_many_dft_c2r(args..., lastArg);
-    else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<float>>)
+    } else if constexpr (
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<float>>) {
         return fftwf_plan_many_dft(args..., penultArg, lastArg);
-    else if constexpr (
-            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<double>>)
+    } else if constexpr (
+            transformType == TransformType::C2C && std::is_same_v<Tin, Kokkos::complex<double>>) {
         return fftw_plan_many_dft(args..., penultArg, lastArg);
+    }
     // else constexpr
     //   static_assert(false, "Transform type not supported");
 }

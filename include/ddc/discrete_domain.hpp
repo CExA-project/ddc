@@ -571,19 +571,21 @@ public:
 
     KOKKOS_FUNCTION constexpr DiscreteDomainIterator& operator+=(difference_type n)
     {
-        if (n >= difference_type(0))
+        if (n >= difference_type(0)) {
             m_value.uid() += static_cast<DiscreteElementType>(n);
-        else
+        } else {
             m_value.uid() -= static_cast<DiscreteElementType>(-n);
+        }
         return *this;
     }
 
     KOKKOS_FUNCTION constexpr DiscreteDomainIterator& operator-=(difference_type n)
     {
-        if (n >= difference_type(0))
+        if (n >= difference_type(0)) {
             m_value.uid() -= static_cast<DiscreteElementType>(n);
-        else
+        } else {
             m_value.uid() += static_cast<DiscreteElementType>(-n);
+        }
         return *this;
     }
 

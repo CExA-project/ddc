@@ -43,10 +43,11 @@ void blinker_init(
                         = ddc::select<DDimY>(ixy);
                 if (iy == ddc::DiscreteElement<DDimY>(2)
                     && (ix >= ddc::DiscreteElement<DDimX>(1)
-                        && ix <= ddc::DiscreteElement<DDimX>(3)))
+                        && ix <= ddc::DiscreteElement<DDimX>(3))) {
                     cells(ixy) = true;
-                else
+                } else {
                     cells(ixy) = false;
+                }
             });
 }
 
@@ -126,11 +127,13 @@ int main()
                     // its current number of alive neighbors
                     if (cells_in(ixy)) {
                         alive_neighbors--;
-                        if (alive_neighbors < 2 || alive_neighbors > 3)
+                        if (alive_neighbors < 2 || alive_neighbors > 3) {
                             cells_out(ixy) = false;
+                        }
                     } else {
-                        if (alive_neighbors == 3)
+                        if (alive_neighbors == 3) {
                             cells_out(ixy) = true;
+                        }
                     }
                 });
         ddc::parallel_deepcopy(cells_in, cells_out);

@@ -15,7 +15,7 @@ namespace ddc {
 
 class ScopeGuard
 {
-    void discretization_store_initialization() const
+    static void discretization_store_initialization()
     {
         detail::g_discretization_store
                 = std::make_optional<std::map<std::string, std::function<void()>>>();

@@ -52,7 +52,7 @@ using Cases = tuple_to_types_t<cartesian_product_t<degrees, ncells, periodicity>
 // Trailing comma is needed to avoid spurious `gnu-zero-variadic-macro-arguments` warning with clang
 TYPED_TEST_SUITE(BSplinesFixture, Cases, );
 
-TYPED_TEST(BSplinesFixture, PartitionOfUnity_Uniform)
+TYPED_TEST(BSplinesFixture, PartitionOfUnityUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
     using DimX = typename TestFixture::DimX;
@@ -81,7 +81,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnity_Uniform)
     }
 }
 
-TYPED_TEST(BSplinesFixture, PartitionOfUnity_NonUniform)
+TYPED_TEST(BSplinesFixture, PartitionOfUnityNonUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
     using DimX = typename TestFixture::DimX;
@@ -133,7 +133,7 @@ TEST(KnotDiscreteDimension, Type)
                  ddc::NonUniformBsplinesKnots<DDim2>>));
 }
 
-TYPED_TEST(BSplinesFixture, Rounding_NonUniform)
+TYPED_TEST(BSplinesFixture, RoundingNonUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
     using DimX = typename TestFixture::DimX;
@@ -167,7 +167,7 @@ TYPED_TEST(BSplinesFixture, Rounding_NonUniform)
     EXPECT_EQ(back_idx, bspl_full_domain.back() - BSplinesX::degree());
 }
 
-TYPED_TEST(BSplinesFixture, Rounding_Uniform)
+TYPED_TEST(BSplinesFixture, RoundingUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
     using DimX = typename TestFixture::DimX;

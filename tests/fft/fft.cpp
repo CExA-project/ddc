@@ -241,7 +241,7 @@ TEST(FourierMesh, Odd)
 }
 
 #if fftw_serial_AVAIL
-TEST(FFTNorm, OFF)
+TEST(FftNorm, Off)
 {
     test_fft_norm<
             Kokkos::Serial,
@@ -251,7 +251,7 @@ TEST(FFTNorm, OFF)
             RDimX>(ddc::FFT_Normalization::OFF);
 }
 
-TEST(FFTNorm, BACKWARD)
+TEST(FftNorm, Backward)
 {
     test_fft_norm<
             Kokkos::Serial,
@@ -261,7 +261,7 @@ TEST(FFTNorm, BACKWARD)
             RDimX>(ddc::FFT_Normalization::BACKWARD);
 }
 
-TEST(FFTNorm, FORWARD)
+TEST(FftNorm, Forward)
 {
     test_fft_norm<
             Kokkos::Serial,
@@ -271,7 +271,7 @@ TEST(FFTNorm, FORWARD)
             RDimX>(ddc::FFT_Normalization::FORWARD);
 }
 
-TEST(FFTNorm, ORTHO)
+TEST(FftNorm, Ortho)
 {
     test_fft_norm<
             Kokkos::Serial,
@@ -281,7 +281,7 @@ TEST(FFTNorm, ORTHO)
             RDimX>(ddc::FFT_Normalization::ORTHO);
 }
 
-TEST(FFTNorm, FULL)
+TEST(FftNorm, Full)
 {
     test_fft_norm<
             Kokkos::Serial,
@@ -291,12 +291,12 @@ TEST(FFTNorm, FULL)
             RDimX>(ddc::FFT_Normalization::FULL);
 }
 
-TEST(FFTSerialHost, R2C_1D)
+TEST(FftSerialHost, R2cIn1d)
 {
     test_fft<Kokkos::Serial, Kokkos::Serial::memory_space, float, Kokkos::complex<float>, RDimX>();
 }
 
-TEST(FFTSerialHost, R2C_2D)
+TEST(FftSerialHost, R2cIn2d)
 {
     test_fft<
             Kokkos::Serial,
@@ -307,7 +307,7 @@ TEST(FFTSerialHost, R2C_2D)
             RDimY>();
 }
 
-TEST(FFTSerialHost, R2C_3D)
+TEST(FftSerialHost, R2cIn3d)
 {
     test_fft<
             Kokkos::Serial,
@@ -321,12 +321,12 @@ TEST(FFTSerialHost, R2C_3D)
 #endif
 
 #if fftw_omp_AVAIL
-TEST(FFTParallelHost, R2C_1D)
+TEST(FftParallelHost, R2cIn1d)
 {
     test_fft<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, float, Kokkos::complex<float>, RDimX>();
 }
 
-TEST(FFTParallelHost, R2C_2D)
+TEST(FftParallelHost, R2cIn2d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -337,7 +337,7 @@ TEST(FFTParallelHost, R2C_2D)
             RDimY>();
 }
 
-TEST(FFTParallelHost, R2C_3D)
+TEST(FftParallelHost, R2cIn3d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -350,7 +350,7 @@ TEST(FFTParallelHost, R2C_3D)
 }
 #endif
 
-TEST(FFTParallelDevice, R2C_1D)
+TEST(FftParallelDevice, R2cIn1d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -360,7 +360,7 @@ TEST(FFTParallelDevice, R2C_1D)
             RDimX>();
 }
 
-TEST(FFTParallelDevice, R2C_2D)
+TEST(FftParallelDevice, R2cIn2d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -371,7 +371,7 @@ TEST(FFTParallelDevice, R2C_2D)
             RDimY>();
 }
 
-TEST(FFTParallelDevice, R2C_3D)
+TEST(FftParallelDevice, R2cIn3d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -384,7 +384,7 @@ TEST(FFTParallelDevice, R2C_3D)
 }
 
 #if fftw_serial_AVAIL
-TEST(FFTSerialHost, C2C_1D)
+TEST(FftSerialHost, C2cIn1d)
 {
     test_fft<
             Kokkos::Serial,
@@ -394,7 +394,7 @@ TEST(FFTSerialHost, C2C_1D)
             RDimX>();
 }
 
-TEST(FFTSerialHost, C2C_2D)
+TEST(FftSerialHost, C2cIn2d)
 {
     test_fft<
             Kokkos::Serial,
@@ -405,7 +405,7 @@ TEST(FFTSerialHost, C2C_2D)
             RDimY>();
 }
 
-TEST(FFTSerialHost, C2C_3D)
+TEST(FftSerialHost, C2cIn3d)
 {
     test_fft<
             Kokkos::Serial,
@@ -419,7 +419,7 @@ TEST(FFTSerialHost, C2C_3D)
 #endif
 
 #if fftw_omp_AVAIL
-TEST(FFTParallelHost, C2C_1D)
+TEST(FftParallelHost, C2cIn1d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -429,7 +429,7 @@ TEST(FFTParallelHost, C2C_1D)
             RDimX>();
 }
 
-TEST(FFTParallelHost, C2C_2D)
+TEST(FftParallelHost, C2cIn2d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -440,7 +440,7 @@ TEST(FFTParallelHost, C2C_2D)
             RDimY>();
 }
 
-TEST(FFTParallelHost, C2C_3D)
+TEST(FftParallelHost, C2cIn3d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -453,7 +453,7 @@ TEST(FFTParallelHost, C2C_3D)
 }
 #endif
 
-TEST(FFTParallelDevice, C2C_1D)
+TEST(FftParallelDevice, C2cIn1d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -463,7 +463,7 @@ TEST(FFTParallelDevice, C2C_1D)
             RDimX>();
 }
 
-TEST(FFTParallelDevice, C2C_2D)
+TEST(FftParallelDevice, C2cIn2d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -474,7 +474,7 @@ TEST(FFTParallelDevice, C2C_2D)
             RDimY>();
 }
 
-TEST(FFTParallelDevice, C2C_3D)
+TEST(FftParallelDevice, C2cIn3d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -487,7 +487,7 @@ TEST(FFTParallelDevice, C2C_3D)
 }
 
 #if fftw_serial_AVAIL
-TEST(FFTSerialHost, D2Z_1D)
+TEST(FftSerialHost, D2zIn1d)
 {
     test_fft<
             Kokkos::Serial,
@@ -497,7 +497,7 @@ TEST(FFTSerialHost, D2Z_1D)
             RDimX>();
 }
 
-TEST(FFTSerialHost, D2Z_2D)
+TEST(FftSerialHost, D2zIn2d)
 {
     test_fft<
             Kokkos::Serial,
@@ -508,7 +508,7 @@ TEST(FFTSerialHost, D2Z_2D)
             RDimY>();
 }
 
-TEST(FFTSerialHost, D2Z_3D)
+TEST(FftSerialHost, D2zIn3d)
 {
     test_fft<
             Kokkos::Serial,
@@ -522,7 +522,7 @@ TEST(FFTSerialHost, D2Z_3D)
 #endif
 
 #if fftw_omp_AVAIL
-TEST(FFTParallelHost, D2Z_1D)
+TEST(FftParallelHost, D2zIn1d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -532,7 +532,7 @@ TEST(FFTParallelHost, D2Z_1D)
             RDimX>();
 }
 
-TEST(FFTParallelHost, D2Z_2D)
+TEST(FftParallelHost, D2zIn2d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -543,7 +543,7 @@ TEST(FFTParallelHost, D2Z_2D)
             RDimY>();
 }
 
-TEST(FFTParallelHost, D2Z_3D)
+TEST(FftParallelHost, D2zIn3d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -556,7 +556,7 @@ TEST(FFTParallelHost, D2Z_3D)
 }
 #endif
 
-TEST(FFTParallelDevice, D2Z_1D)
+TEST(FftParallelDevice, D2zIn1d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -566,7 +566,7 @@ TEST(FFTParallelDevice, D2Z_1D)
             RDimX>();
 }
 
-TEST(FFTParallelDevice, D2Z_2D)
+TEST(FftParallelDevice, D2zIn2d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -577,7 +577,7 @@ TEST(FFTParallelDevice, D2Z_2D)
             RDimY>();
 }
 
-TEST(FFTParallelDevice, D2Z_3D)
+TEST(FftParallelDevice, D2zIn3d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -590,7 +590,7 @@ TEST(FFTParallelDevice, D2Z_3D)
 }
 
 #if fftw_serial_AVAIL
-TEST(FFTSerialHost, Z2Z_1D)
+TEST(FftSerialHost, Z2zIn1d)
 {
     test_fft<
             Kokkos::Serial,
@@ -600,7 +600,7 @@ TEST(FFTSerialHost, Z2Z_1D)
             RDimX>();
 }
 
-TEST(FFTSerialHost, Z2Z_2D)
+TEST(FftSerialHost, Z2zIn2d)
 {
     test_fft<
             Kokkos::Serial,
@@ -611,7 +611,7 @@ TEST(FFTSerialHost, Z2Z_2D)
             RDimY>();
 }
 
-TEST(FFTSerialHost, Z2Z_3D)
+TEST(FftSerialHost, Z2zIn3d)
 {
     test_fft<
             Kokkos::Serial,
@@ -625,7 +625,7 @@ TEST(FFTSerialHost, Z2Z_3D)
 #endif
 
 #if fftw_omp_AVAIL
-TEST(FFTParallelHost, Z2Z_1D)
+TEST(FftParallelHost, Z2zIn1d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -635,7 +635,7 @@ TEST(FFTParallelHost, Z2Z_1D)
             RDimX>();
 }
 
-TEST(FFTParallelHost, Z2Z_2D)
+TEST(FftParallelHost, Z2zIn2d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -646,7 +646,7 @@ TEST(FFTParallelHost, Z2Z_2D)
             RDimY>();
 }
 
-TEST(FFTParallelHost, Z2Z_3D)
+TEST(FftParallelHost, Z2zIn3d)
 {
     test_fft<
             Kokkos::OpenMP,
@@ -659,7 +659,7 @@ TEST(FFTParallelHost, Z2Z_3D)
 }
 #endif
 
-TEST(FFTParallelDevice, Z2Z_1D)
+TEST(FftParallelDevice, Z2zIn1d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -669,7 +669,7 @@ TEST(FFTParallelDevice, Z2Z_1D)
             RDimX>();
 }
 
-TEST(FFTParallelDevice, Z2Z_2D)
+TEST(FftParallelDevice, Z2zIn2d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,
@@ -680,7 +680,7 @@ TEST(FFTParallelDevice, Z2Z_2D)
             RDimY>();
 }
 
-TEST(FFTParallelDevice, Z2Z_3D)
+TEST(FftParallelDevice, Z2zIn3d)
 {
     test_fft<
             Kokkos::DefaultExecutionSpace,

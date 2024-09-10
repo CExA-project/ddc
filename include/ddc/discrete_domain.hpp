@@ -122,7 +122,7 @@ public:
 
     KOKKOS_FUNCTION constexpr std::size_t size() const
     {
-        return (1ul * ... * (uid<DDims>(m_element_end) - uid<DDims>(m_element_begin)));
+        return (1UL * ... * (uid<DDims>(m_element_end) - uid<DDims>(m_element_begin)));
     }
 
     KOKKOS_FUNCTION constexpr mlength_type extents() const noexcept

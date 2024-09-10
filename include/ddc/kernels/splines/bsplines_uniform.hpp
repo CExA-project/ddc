@@ -410,7 +410,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     get_icell_and_offset(jmin, offset, x);
 
     // 3. Compute values of aforementioned B-splines
-    double xx, temp, saved;
+    double xx;
+    double temp;
+    double saved;
     values(0) = 1.0;
     for (std::size_t j = 1; j < values.size(); ++j) {
         xx = -offset;
@@ -442,7 +444,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
 
     // 3. Compute derivatives of aforementioned B-splines
     //    Derivatives are normalized, hence they should be divided by dx
-    double xx, temp, saved;
+    double xx;
+    double temp;
+    double saved;
     derivs(0) = 1.0 / ddc::step<knot_discrete_dimension_type>();
     for (std::size_t j = 1; j < degree(); ++j) {
         xx = -offset;
@@ -504,7 +508,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     // 3. Recursively evaluate B-splines (eval_basis)
     //    up to self%degree, and store them all in the upper-right triangle of
     //    ndu
-    double xx, temp, saved;
+    double xx;
+    double temp;
+    double saved;
     ndu(0, 0) = 1.0;
     for (std::size_t j = 1; j < degree() + 1; ++j) {
         xx = -offset;

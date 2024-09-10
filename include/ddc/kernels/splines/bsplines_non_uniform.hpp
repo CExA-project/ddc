@@ -524,7 +524,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
      * for splines up to degree degree-1 which are needed to compute derivative
      * First part of Algorithm  A3.2 of NURBS book
      */
-    double saved, temp;
+    double saved;
+    double temp;
     derivs[0] = 1.0;
     for (std::size_t j = 0; j < degree() - 1; ++j) {
         left[j] = x - ddc::coordinate(icell - j);
@@ -601,7 +602,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     //    divisions
     //                [Yaman Güçlü, Edoardo Zoni]
 
-    double saved, temp;
+    double saved;
+    double temp;
     ndu(0, 0) = 1.0;
     for (std::size_t j = 0; j < degree(); ++j) {
         left[j] = x - ddc::coordinate(icell - j);

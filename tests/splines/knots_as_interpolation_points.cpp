@@ -81,21 +81,23 @@ TYPED_TEST(UniformBSplinesFixture, KnotsAsInterpolationPoints)
     using BSplinesX = typename TestFixture::BSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
     constexpr ddc::BoundCond Bc = TestFixture::Bc;
-    constexpr CoordX xmin(0.);
-    constexpr CoordX xmax(1.);
+    using KnotsAsInterpolationPoints = ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>;
+    using Knots = ddc::knot_discrete_dimension_t<BSplinesX>;
+
+    CoordX const xmin(0.);
+    CoordX const xmax(1.);
     std::size_t const ncells = 20;
     ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
-    ddc::init_discrete_space<DDimX>(
-            ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>::template get_sampling<DDimX>());
-    auto const interp_points_dom
-            = ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>::template get_domain<DDimX>();
-    auto break_points_dom = ddc::discrete_space<BSplinesX>().break_point_domain();
+    ddc::init_discrete_space<DDimX>(KnotsAsInterpolationPoints::template get_sampling<DDimX>());
+    ddc::DiscreteDomain<DDimX> const interp_points_dom
+            = KnotsAsInterpolationPoints::template get_domain<DDimX>();
+    ddc::DiscreteDomain<Knots> break_points_dom
+            = ddc::discrete_space<BSplinesX>().break_point_domain();
     if (BSplinesX::is_periodic()) {
-        break_points_dom = break_points_dom.remove_last(
-                ddc::DiscreteVector<ddc::knot_discrete_dimension_t<BSplinesX>>(1));
+        break_points_dom = break_points_dom.remove_last(ddc::DiscreteVector<Knots>(1));
     }
     ASSERT_EQ(interp_points_dom.size(), break_points_dom.size());
-    for (int i = 0; i != interp_points_dom.size(); ++i) {
+    for (std::size_t i = 0; i != interp_points_dom.size(); ++i) {
         EXPECT_DOUBLE_EQ(
                 ddc::coordinate(interp_points_dom[i]),
                 ddc::coordinate(break_points_dom[i]));
@@ -112,26 +114,28 @@ TYPED_TEST(NonUniformBSplinesFixture, KnotsAsInterpolationPoints)
     using BSplinesX = typename TestFixture::BSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
     constexpr ddc::BoundCond Bc = TestFixture::Bc;
-    constexpr CoordX xmin(0.);
-    constexpr CoordX xmax(1.);
+    using KnotsAsInterpolationPoints = ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>;
+    using Knots = ddc::knot_discrete_dimension_t<BSplinesX>;
+
+    CoordX const xmin(0.);
+    CoordX const xmax(1.);
     std::size_t const ncells = 20;
     std::vector<CoordX> breaks(ncells + 1);
     double const dx = (xmax - xmin) / ncells;
     for (std::size_t i = 0; i < ncells + 1; ++i) {
-        breaks[i] = CoordX(xmin + i * dx);
+        breaks[i] = xmin + i * dx;
     }
     ddc::init_discrete_space<BSplinesX>(breaks);
-    ddc::init_discrete_space<DDimX>(
-            ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>::template get_sampling<DDimX>());
-    auto const interp_points_dom
-            = ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>::template get_domain<DDimX>();
-    auto break_points_dom = ddc::discrete_space<BSplinesX>().break_point_domain();
+    ddc::init_discrete_space<DDimX>(KnotsAsInterpolationPoints::template get_sampling<DDimX>());
+    ddc::DiscreteDomain<DDimX> const interp_points_dom
+            = KnotsAsInterpolationPoints::template get_domain<DDimX>();
+    ddc::DiscreteDomain<Knots> break_points_dom
+            = ddc::discrete_space<BSplinesX>().break_point_domain();
     if (BSplinesX::is_periodic()) {
-        break_points_dom = break_points_dom.remove_last(
-                ddc::DiscreteVector<ddc::knot_discrete_dimension_t<BSplinesX>>(1));
+        break_points_dom = break_points_dom.remove_last(ddc::DiscreteVector<Knots>(1));
     }
     ASSERT_EQ(interp_points_dom.size(), break_points_dom.size());
-    for (int i = 0; i != interp_points_dom.size(); ++i) {
+    for (std::size_t i = 0; i != interp_points_dom.size(); ++i) {
         EXPECT_DOUBLE_EQ(
                 ddc::coordinate(interp_points_dom[i]),
                 ddc::coordinate(break_points_dom[i]));

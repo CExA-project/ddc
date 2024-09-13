@@ -194,9 +194,6 @@ target_compile_features(DDC INTERFACE cxx_std_17)
 target_include_directories(DDC
 	INTERFACE
 		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-)
-target_include_directories(DDC
-	SYSTEM INTERFACE
 		"$<INSTALL_INTERFACE:include>"
 )
 target_link_libraries(DDC
@@ -252,7 +249,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
   # Lapacke
   find_package(LAPACKE REQUIRED)
   target_link_libraries(DDC INTERFACE ${LAPACKE_LIBRARIES})
-  target_include_directories(DDC INTERFACE ${LAPACKE_INCLUDE_DIRS})
+  target_include_directories(DDC SYSTEM INTERFACE ${LAPACKE_INCLUDE_DIRS})
 
   # Kokkos-kernels
   set(DDC_KokkosKernels_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `KokkosKernels` package. Options: ${DDC_DEPENDENCY_POLICIES}")
@@ -293,9 +290,6 @@ if("${DDC_BUILD_PDI_WRAPPER}")
 	target_include_directories(PDI_Wrapper
 		INTERFACE
 			"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-	)
-	target_include_directories(PDI_Wrapper
-		SYSTEM INTERFACE
 			"$<INSTALL_INTERFACE:include>"
 	)
 	target_link_libraries(PDI_Wrapper

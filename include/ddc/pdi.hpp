@@ -13,8 +13,7 @@
 #include <pdi.h>
 
 #include "ddc/chunk_traits.hpp"
-
-#include "chunk_span.hpp"
+#include "ddc/discrete_vector.hpp"
 
 namespace ddc {
 

@@ -11,6 +11,8 @@
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_Core.hpp>
+
 #include "cosine_evaluator.hpp"
 #include "evaluator_2d.hpp"
 #if !defined(BC_PERIODIC)

@@ -10,6 +10,8 @@
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_Core.hpp>
+
 template <typename X>
 struct DDim : ddc::UniformPointSampling<X>
 {

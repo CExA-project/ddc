@@ -4,8 +4,12 @@
 
 #pragma once
 
+#include <algorithm>
+#include <cassert>
+#include <cstddef>
 #include <memory>
 #include <optional>
+#include <utility>
 
 #include "splines_linear_problem_2x2_blocks.hpp"
 #include "splines_linear_problem_3x3_blocks.hpp"

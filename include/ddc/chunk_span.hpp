@@ -12,6 +12,8 @@
 
 #include <experimental/mdspan>
 
+#include <Kokkos_Core.hpp>
+
 #include "ddc/chunk_common.hpp"
 #include "ddc/detail/kokkos.hpp"
 #include "ddc/discrete_domain.hpp"

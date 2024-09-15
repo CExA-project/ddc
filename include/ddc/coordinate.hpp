@@ -5,6 +5,9 @@
 #pragma once
 
 #include <type_traits>
+#include <utility>
+
+#include <Kokkos_Macros.hpp>
 
 #include "ddc/detail/tagged_vector.hpp"
 #include "ddc/discrete_element.hpp"

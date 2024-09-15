@@ -3,7 +3,18 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
+
+#include <cassert>
+#include <cstddef>
+#include <memory>
+#include <optional>
+#include <stdexcept>
+#include <tuple>
+#include <utility>
+
 #include <ddc/ddc.hpp>
+
+#include <Kokkos_Core.hpp>
 
 #include "deriv.hpp"
 #include "integrals.hpp"

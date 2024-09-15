@@ -6,13 +6,8 @@
 
 #include <array>
 #include <cstddef>
-#include <type_traits>
 #include <utility>
 
-#include <Kokkos_Core.hpp>
-
-#include "ddc/chunk_span.hpp"
-#include "ddc/detail/kokkos.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
 #include "ddc/discrete_vector.hpp"

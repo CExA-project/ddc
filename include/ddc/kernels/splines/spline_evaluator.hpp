@@ -5,14 +5,18 @@
 #pragma once
 
 #include <array>
+#include <cstddef>
+#include <type_traits>
+
+#include <experimental/mdspan>
 
 #include <ddc/ddc.hpp>
 
-#include "Kokkos_Macros.hpp"
+#include <Kokkos_Macros.hpp>
+#include <Kokkos_MathematicalFunctions.hpp>
+
 #include "integrals.hpp"
 #include "periodic_extrapolation_rule.hpp"
-#include "spline_boundary_conditions.hpp"
-#include "view.hpp"
 
 namespace ddc {
 

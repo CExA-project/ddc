@@ -5,9 +5,12 @@
 #pragma once
 
 #include <cassert>
+#include <cstddef>
 #include <memory>
 #include <string>
+#include <utility>
 
+#include <Kokkos_Core.hpp>
 #include <Kokkos_DualView.hpp>
 
 #include "splines_linear_problem.hpp"

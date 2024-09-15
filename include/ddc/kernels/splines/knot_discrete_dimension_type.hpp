@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <type_traits>
+
 #include "bsplines_non_uniform.hpp"
 #include "bsplines_uniform.hpp"
 

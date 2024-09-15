@@ -6,7 +6,7 @@
 
 #include <utility>
 
-#include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
 
 namespace ddc::reducer {
 

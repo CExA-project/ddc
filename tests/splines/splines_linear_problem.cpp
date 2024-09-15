@@ -4,10 +4,11 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cmath>
 #include <cstddef>
+#include <cstdlib>
 #include <memory>
 #include <sstream>
+#include <string>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -17,6 +18,7 @@
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_Core.hpp>
 #include <Kokkos_DualView.hpp>
 
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP) {

@@ -4,6 +4,10 @@
 
 #pragma once
 
+#include <cstddef>
+#include <optional>
+#include <type_traits>
+
 #include <ddc/ddc.hpp>
 
 #include "spline_builder.hpp"

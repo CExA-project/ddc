@@ -3,18 +3,21 @@
 // SPDX-License-Identifier: MIT
 
 #include <algorithm>
-#include <cmath>
 #include <cstddef>
 #if defined(BC_HERMITE)
 #include <optional>
 #endif
+#if defined(BSPLINES_TYPE_UNIFORM)
 #include <type_traits>
+#endif
 #include <vector>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
 
 #include <gtest/gtest.h>
+
+#include <Kokkos_Core.hpp>
 
 #include "cosine_evaluator.hpp"
 #include "spline_error_bounds.hpp"

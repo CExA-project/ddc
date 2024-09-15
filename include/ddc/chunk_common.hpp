@@ -6,12 +6,13 @@
 
 #include <array>
 #include <cassert>
+#include <cstddef>
 #include <type_traits>
 #include <utility>
 
 #include <experimental/mdspan>
 
-#include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
 
 #include "ddc/chunk_traits.hpp"
 #include "ddc/detail/macros.hpp"

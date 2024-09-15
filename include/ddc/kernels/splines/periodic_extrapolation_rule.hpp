@@ -6,9 +6,7 @@
 
 #include <cassert>
 
-#include <Kokkos_Core.hpp>
-
-#include "view.hpp"
+#include <Kokkos_Macros.hpp>
 
 namespace ddc {
 

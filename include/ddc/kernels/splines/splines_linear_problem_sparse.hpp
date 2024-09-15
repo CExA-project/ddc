@@ -5,10 +5,12 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
+#include <cstddef>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 #include <type_traits>
-#include <utility>
 
 #include <ginkgo/extensions/kokkos.hpp>
 #include <ginkgo/ginkgo.hpp>

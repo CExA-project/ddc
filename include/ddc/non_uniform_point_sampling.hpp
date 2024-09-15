@@ -4,10 +4,13 @@
 
 #pragma once
 
+#include <cassert>
 #include <cstddef>
 #include <initializer_list>
 #include <ostream>
+#include <tuple>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include <Kokkos_Core.hpp>

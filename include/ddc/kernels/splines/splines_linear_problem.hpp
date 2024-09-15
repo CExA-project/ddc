@@ -5,12 +5,11 @@
 #pragma once
 
 #include <cassert>
+#include <cstddef>
 #include <iomanip>
 #include <ostream>
 
 #include <Kokkos_Core.hpp>
-
-#include "view.hpp"
 
 namespace ddc::detail {
 

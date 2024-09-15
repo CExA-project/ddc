@@ -4,11 +4,15 @@
 
 #pragma once
 
+#include <array>
+#include <cstddef>
+#include <type_traits>
+
+#include <experimental/mdspan>
+
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
-
-#include "view.hpp"
 
 namespace ddc {
 

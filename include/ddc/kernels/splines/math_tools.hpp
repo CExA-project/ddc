@@ -4,12 +4,14 @@
 
 #pragma once
 
-#include <algorithm>
+#include <array>
 #include <cmath>
+#include <cstddef>
 
 #include <experimental/mdspan>
 
-#include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
+#include <Kokkos_MathematicalFunctions.hpp>
 
 namespace ddc::detail {
 

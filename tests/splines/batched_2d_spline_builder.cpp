@@ -7,7 +7,9 @@
 #if defined(BC_HERMITE)
 #include <optional>
 #endif
+#if defined(BSPLINES_TYPE_UNIFORM)
 #include <type_traits>
+#endif
 #include <vector>
 
 #include <ddc/ddc.hpp>
@@ -15,9 +17,12 @@
 
 #include <gtest/gtest.h>
 
-#include "cosine_evaluator.hpp"
+#include <Kokkos_Core.hpp>
+
 #include "evaluator_2d.hpp"
-#if !defined(BC_PERIODIC)
+#if defined(BC_PERIODIC)
+#include "cosine_evaluator.hpp"
+#else
 #include "polynomial_evaluator.hpp"
 #endif
 #include "spline_error_bounds.hpp"

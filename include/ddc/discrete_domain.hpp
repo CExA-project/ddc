@@ -10,6 +10,8 @@
 #include <tuple>
 #include <type_traits>
 
+#include <Kokkos_Macros.hpp>
+
 #include "ddc/detail/type_seq.hpp"
 #include "ddc/discrete_element.hpp"
 #include "ddc/discrete_vector.hpp"

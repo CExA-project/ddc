@@ -4,6 +4,12 @@
 
 #pragma once
 
+#include <array>
+#include <cassert>
+#include <cstddef>
+
+#include <experimental/mdspan>
+
 #include <ddc/ddc.hpp>
 
 #include "bsplines_non_uniform.hpp"

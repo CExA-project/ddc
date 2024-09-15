@@ -6,6 +6,8 @@
 
 #include <type_traits>
 
+#include <experimental/mdspan>
+
 #include <Kokkos_Core.hpp>
 
 #include "ddc/chunk_span.hpp"

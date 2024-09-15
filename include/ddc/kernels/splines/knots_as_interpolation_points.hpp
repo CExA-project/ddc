@@ -8,7 +8,6 @@
 
 #include <ddc/ddc.hpp>
 
-#include "bsplines_non_uniform.hpp"
 #include "bsplines_uniform.hpp"
 #include "knot_discrete_dimension_type.hpp"
 #include "spline_boundary_conditions.hpp"

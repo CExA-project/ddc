@@ -4,9 +4,12 @@
 
 #pragma once
 
+#include <cassert>
 #include <ostream>
 #include <type_traits>
 #include <utility>
+
+#include <Kokkos_Macros.hpp>
 
 #include "ddc/coordinate.hpp"
 #include "ddc/discrete_domain.hpp"

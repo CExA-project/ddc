@@ -17,7 +17,11 @@
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_Core.hpp>
+
+#if defined(EVALUATOR_COSINE)
 #include "cosine_evaluator.hpp"
+#endif
 #include "polynomial_evaluator.hpp"
 #include "spline_error_bounds.hpp"
 

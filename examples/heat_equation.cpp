@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <utility>
 
 #include <ddc/ddc.hpp>

@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <ostream>
 #include <stdexcept>
 

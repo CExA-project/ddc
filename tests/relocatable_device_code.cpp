@@ -8,6 +8,8 @@
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_Macros.hpp>
+
 #include "relocatable_device_code_initialization.hpp"
 
 std::pair<ddc::Coordinate<rdc::DimX>, ddc::Coordinate<rdc::DimX>> read_from_device()

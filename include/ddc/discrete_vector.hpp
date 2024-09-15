@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <utility>
 
-#include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
 
 #include "ddc/detail/macros.hpp"
 #include "ddc/detail/type_seq.hpp"

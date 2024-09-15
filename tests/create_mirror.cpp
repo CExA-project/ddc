@@ -2,11 +2,14 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <string>
 #include <type_traits>
 
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
+
+#include <Kokkos_Core.hpp>
 
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP) {
 

@@ -126,31 +126,33 @@ $(document).ready(function(){initNavTree('knot__discrete__dimension__type_8hpp_s
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#</span><span class="preprocessor">pragma</span> <span class="preprocessor">once</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;bsplines_non_uniform.hpp&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;bsplines_uniform.hpp&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">type_traits</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;bsplines_non_uniform.hpp&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;bsplines_uniform.hpp&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">/// If the type `DDim` is a B-spline, defines `type` to the discrete dimension of the associated knots.</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">struct</span> <a class="code hl_struct" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">KnotDiscreteDimension</a></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">static_assert</span>(is_uniform_bsplines_v&lt;DDim&gt; || is_non_uniform_bsplines_v&lt;DDim&gt;);</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="comment">/// The type representing the discrete dimension of the knots.</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">using</span> type = std::conditional_t&lt;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            is_uniform_bsplines_v&lt;DDim&gt;,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>            <a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;DDim&gt;,</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            <a class="code hl_struct" href="structddc_1_1NonUniformBsplinesKnots.html">NonUniformBsplinesKnots</a>&lt;DDim&gt;&gt;;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>};</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">/// Helper type to easily access `KnotDiscreteDimension&lt;DDim&gt;::type`</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">using</span> knot_discrete_dimension_t = <span class="keyword">typename</span> <a class="code hl_struct" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">KnotDiscreteDimension</a>&lt;DDim&gt;::type;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">/// If the type `DDim` is a B-spline, defines `type` to the discrete dimension of the associated knots.</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">struct</span> <a class="code hl_struct" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">KnotDiscreteDimension</a></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>{</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">static_assert</span>(is_uniform_bsplines_v&lt;DDim&gt; || is_non_uniform_bsplines_v&lt;DDim&gt;);</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="comment">/// The type representing the discrete dimension of the knots.</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">using</span> type = std::conditional_t&lt;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            is_uniform_bsplines_v&lt;DDim&gt;,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            <a class="code hl_struct" href="structddc_1_1UniformBsplinesKnots.html">UniformBsplinesKnots</a>&lt;DDim&gt;,</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            <a class="code hl_struct" href="structddc_1_1NonUniformBsplinesKnots.html">NonUniformBsplinesKnots</a>&lt;DDim&gt;&gt;;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>};</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">/// Helper type to easily access `KnotDiscreteDimension&lt;DDim&gt;::type`</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">using</span> knot_discrete_dimension_t = <span class="keyword">typename</span> <a class="code hl_struct" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">KnotDiscreteDimension</a>&lt;DDim&gt;::type;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
-<div class="ttc" id="anamespaceddc_html_structddc_1_1KnotDiscreteDimension"><div class="ttname"><a href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">ddc::KnotDiscreteDimension</a></div><div class="ttdoc">If the type DDim is a B-spline, defines type to the discrete dimension of the associated knots.</div><div class="ttdef"><b>Definition</b> <a href="knot__discrete__dimension__type_8hpp_source.html#l00014">knot_discrete_dimension_type.hpp:15</a></div></div>
+<div class="ttc" id="anamespaceddc_html_structddc_1_1KnotDiscreteDimension"><div class="ttname"><a href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">ddc::KnotDiscreteDimension</a></div><div class="ttdoc">If the type DDim is a B-spline, defines type to the discrete dimension of the associated knots.</div><div class="ttdef"><b>Definition</b> <a href="knot__discrete__dimension__type_8hpp_source.html#l00016">knot_discrete_dimension_type.hpp:17</a></div></div>
 <div class="ttc" id="astructddc_1_1NonUniformBsplinesKnots_html"><div class="ttname"><a href="structddc_1_1NonUniformBsplinesKnots.html">ddc::NonUniformBsplinesKnots</a></div><div class="ttdef"><b>Definition</b> <a href="bsplines__non__uniform_8hpp_source.html#l00027">bsplines_non_uniform.hpp:28</a></div></div>
 <div class="ttc" id="astructddc_1_1UniformBsplinesKnots_html"><div class="ttname"><a href="structddc_1_1UniformBsplinesKnots.html">ddc::UniformBsplinesKnots</a></div><div class="ttdef"><b>Definition</b> <a href="bsplines__uniform_8hpp_source.html#l00032">bsplines_uniform.hpp:33</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

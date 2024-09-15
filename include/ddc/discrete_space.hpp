@@ -47,8 +47,8 @@ void cuda_throw_on_error(
 {
     if (err != cudaSuccess) {
         std::stringstream ss;
-        ss << "CUDA Runtime Error at: " << file << ":" << line << std::endl;
-        ss << cudaGetErrorString(err) << " " << func << std::endl;
+        ss << "CUDA Runtime Error at: " << file << ":" << line << "\n";
+        ss << cudaGetErrorString(err) << " " << func << "\n";
         throw std::runtime_error(ss.str());
     }
 }
@@ -59,8 +59,8 @@ void hip_throw_on_error(T const err, const char* const func, const char* const f
 {
     if (err != hipSuccess) {
         std::stringstream ss;
-        ss << "HIP Runtime Error at: " << file << ":" << line << std::endl;
-        ss << hipGetErrorString(err) << " " << func << std::endl;
+        ss << "HIP Runtime Error at: " << file << ":" << line << "\n";
+        ss << hipGetErrorString(err) << " " << func << "\n";
         throw std::runtime_error(ss.str());
     }
 }

@@ -116,7 +116,7 @@ std::ostream& operator<<(std::ostream& os, SplinesLinearProblem<ExecSpace> const
             os << std::fixed << std::setprecision(3) << std::setw(10)
                << linear_problem.get_element(i, j);
         }
-        os << std::endl;
+        os << "\n";
     }
     return os;
 }

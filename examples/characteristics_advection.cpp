@@ -99,7 +99,7 @@ void display(double time, ChunkType density)
             [=](ddc::DiscreteElement<DDimX> const ix) {
                 std::cout << std::setw(6) << density_slice(ix) << " ";
             });
-    std::cout << " }" << std::endl;
+    std::cout << " }\n" << std::flush;
 }
 //! [display]
 

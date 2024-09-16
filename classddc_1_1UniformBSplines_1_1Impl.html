@@ -21,6 +21,13 @@ SPDX-License-Identifier: MIT
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="custom.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
@@ -157,7 +164,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5d147de02f56a214e31d3bfc45b2b779" id="r_a5d147de02f56a214e31d3bfc45b2b779"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a5d147de02f56a214e31d3bfc45b2b779">Impl</a> ()=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="separator:a5d147de02f56a214e31d3bfc45b2b779"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1027ba57ec532f30acea8614c4b016bd" id="r_a1027ba57ec532f30acea8614c4b016bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a1027ba57ec532f30acea8614c4b016bd">Impl</a> (<a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a3aaff28144f0724ec6d22be0aa3407b5">rmin</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a24b9621c7a03174130420452ea0934c7">rmax</a>, std::size_t <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#abb65a2002d5793cee2489d917bab7a1b">ncells</a>)</td></tr>
-<tr class="memdesc:a1027ba57ec532f30acea8614c4b016bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a spline basis (B-splines) with n equidistant knots over <img class="formulaInl" alt="$[a, b]$" src="form_9.png" width="24" height="14"/>.  <br /></td></tr>
+<tr class="memdesc:a1027ba57ec532f30acea8614c4b016bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a spline basis (B-splines) with n equidistant knots over \([a, b]\).  <br /></td></tr>
 <tr class="separator:a1027ba57ec532f30acea8614c4b016bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad14ec609c7f8fa7a92559cc9c442d7e" id="r_aad14ec609c7f8fa7a92559cc9c442d7e"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OriginMemorySpace</a> &gt; </td></tr>
 <tr class="memitem:aad14ec609c7f8fa7a92559cc9c442d7e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#aad14ec609c7f8fa7a92559cc9c442d7e">Impl</a> (<a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OriginMemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;impl)</td></tr>
@@ -185,7 +192,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:abf451093e3c84862bd7028e7170cbe59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates non-zero B-spline derivatives at a given coordinate.  <br /></td></tr>
 <tr class="separator:abf451093e3c84862bd7028e7170cbe59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b92747dfcd84480d78efb9c192dd333" id="r_a7b92747dfcd84480d78efb9c192dd333"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a40899a0c360e208a67ce83a3f397fbcd">discrete_element_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#a7b92747dfcd84480d78efb9c192dd333">eval_basis_and_n_derivs</a> (<a class="el" href="namespaceddc.html#a5d5196bd6303219e1c7de8a9d2a8564b">ddc::DSpan2D</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">derivs</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">x</a>, std::size_t <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="memdesc:a7b92747dfcd84480d78efb9c192dd333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates non-zero B-spline values and <img class="formulaInl" alt="$n$" src="form_8.png" width="9" height="6"/> derivatives at a given coordinate.  <br /></td></tr>
+<tr class="memdesc:a7b92747dfcd84480d78efb9c192dd333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates non-zero B-spline values and \(n\) derivatives at a given coordinate.  <br /></td></tr>
 <tr class="separator:a7b92747dfcd84480d78efb9c192dd333"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3c5fd2b94d4f99855450042566ee70a" id="r_ad3c5fd2b94d4f99855450042566ee70a"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt; </td></tr>
 <tr class="memitem:ad3c5fd2b94d4f99855450042566ee70a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_INLINE_FUNCTION</a> <a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ad3c5fd2b94d4f99855450042566ee70a">integrals</a> (<a class="el" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">double</a>, <a class="el" href="classddc_1_1UniformBSplines_1_1Impl.html#ac3a1d53a1dcfef6283d3719c81cb8086">discrete_domain_type</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace2</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int_vals</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
@@ -426,7 +433,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p>Constructs a spline basis (B-splines) with n equidistant knots over <img class="formulaInl" alt="$[a, b]$" src="form_9.png" width="24" height="14"/>. </p>
+<p>Constructs a spline basis (B-splines) with n equidistant knots over \([a, b]\). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rmin</td><td>The real <a class="el" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a> of the first knot. </td></tr>
@@ -802,11 +809,11 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p>Evaluates non-zero B-spline values and <img class="formulaInl" alt="$n$" src="form_8.png" width="9" height="6"/> derivatives at a given coordinate. </p>
+<p>Evaluates non-zero B-spline values and \(n\) derivatives at a given coordinate. </p>
 <p>The values and derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1) B-splines which are non-zero at any given point. It is these B-splines which are evaluated and derivated. A spline approximation of a derivative at coordinate x is a linear combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed initial discrete function.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">derivs</td><td>The values and <img class="formulaInl" alt="$n$" src="form_8.png" width="9" height="6"/> derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan of sizes (degree+1, n+1). </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">derivs</td><td>The values and \(n\) derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan of sizes (degree+1, n+1). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">n</td><td>The number of derivatives to evaluate (in addition to the B-spline values themselves). </td></tr>
   </table>

@@ -21,6 +21,13 @@ SPDX-License-Identifier: MIT
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="custom.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
@@ -164,15 +171,15 @@ Public Types</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a28cdba79b1cdbaa0833687d0e5f7de4b" id="r_a28cdba79b1cdbaa0833687d0e5f7de4b"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </td></tr>
 <tr class="memitem:a28cdba79b1cdbaa0833687d0e5f7de4b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> std::tuple&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> DDim::template <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#a28cdba79b1cdbaa0833687d0e5f7de4b">init</a> (<a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">a</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">b</a>, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>)</td></tr>
-<tr class="memdesc:a28cdba79b1cdbaa0833687d0e5f7de4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d" title="Initialize (emplace) a global singleton discrete space.">Impl&lt;Kokkos::HostSpace&gt;</a> and associated discrete_domain_type from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_12.png" width="83" height="14"/> and a number of points <code>n</code>.  <br /></td></tr>
+<tr class="memdesc:a28cdba79b1cdbaa0833687d0e5f7de4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d" title="Initialize (emplace) a global singleton discrete space.">Impl&lt;Kokkos::HostSpace&gt;</a> and associated discrete_domain_type from a segment \([a, b] \subset [a, +\infty[\) and a number of points <code>n</code>.  <br /></td></tr>
 <tr class="separator:a28cdba79b1cdbaa0833687d0e5f7de4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc315e9fe09e69f789d16cf45b38c713" id="r_afc315e9fe09e69f789d16cf45b38c713"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </td></tr>
 <tr class="memitem:afc315e9fe09e69f789d16cf45b38c713"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> std::tuple&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> DDim::template <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#afc315e9fe09e69f789d16cf45b38c713">init_ghosted</a> (<a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">a</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">b</a>, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n_ghosts_before</a>, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n_ghosts_after</a>)</td></tr>
-<tr class="memdesc:afc315e9fe09e69f789d16cf45b38c713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_12.png" width="83" height="14"/> and a number of points <code>n</code>.  <br /></td></tr>
+<tr class="memdesc:afc315e9fe09e69f789d16cf45b38c713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment \([a, b] \subset [a, +\infty[\) and a number of points <code>n</code>.  <br /></td></tr>
 <tr class="separator:afc315e9fe09e69f789d16cf45b38c713"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3df74134c8f3bf7029672c69c00ebe6f" id="r_a3df74134c8f3bf7029672c69c00ebe6f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </td></tr>
 <tr class="memitem:a3df74134c8f3bf7029672c69c00ebe6f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> std::tuple&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> DDim::template <a class="el" href="classddc_1_1UniformPointSampling_1_1Impl.html">Impl</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a>, Kokkos::HostSpace &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1UniformPointSampling.html#a3df74134c8f3bf7029672c69c00ebe6f">init_ghosted</a> (<a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">a</a>, <a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">b</a>, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>, <a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n_ghosts</a>)</td></tr>
-<tr class="memdesc:a3df74134c8f3bf7029672c69c00ebe6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_12.png" width="83" height="14"/> and a number of points <code>n</code>.  <br /></td></tr>
+<tr class="memdesc:a3df74134c8f3bf7029672c69c00ebe6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment \([a, b] \subset [a, +\infty[\) and a number of points <code>n</code>.  <br /></td></tr>
 <tr class="separator:a3df74134c8f3bf7029672c69c00ebe6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -280,13 +287,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p>Construct a <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d" title="Initialize (emplace) a global singleton discrete space.">Impl&lt;Kokkos::HostSpace&gt;</a> and associated discrete_domain_type from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_12.png" width="83" height="14"/> and a number of points <code>n</code>. </p>
+<p>Construct a <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d" title="Initialize (emplace) a global singleton discrete space.">Impl&lt;Kokkos::HostSpace&gt;</a> and associated discrete_domain_type from a segment \([a, b] \subset [a, +\infty[\) and a number of points <code>n</code>. </p>
 <p>Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling. One should expect usual floating point rounding errors.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>coordinate of the first point of the domain </td></tr>
     <tr><td class="paramname">b</td><td>coordinate of the last point of the domain </td></tr>
-    <tr><td class="paramname">n</td><td>number of points to map on the segment <img class="formulaInl" alt="$[a, b]$" src="form_9.png" width="24" height="14"/> including a &amp; b </td></tr>
+    <tr><td class="paramname">n</td><td>number of points to map on the segment \([a, b]\) including a &amp; b </td></tr>
   </table>
   </dd>
 </dl>
@@ -351,13 +358,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p>Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_12.png" width="83" height="14"/> and a number of points <code>n</code>. </p>
+<p>Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment \([a, b] \subset [a, +\infty[\) and a number of points <code>n</code>. </p>
 <p>Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling. One should expect usual floating point rounding errors.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>coordinate of the first point of the domain </td></tr>
     <tr><td class="paramname">b</td><td>coordinate of the last point of the domain </td></tr>
-    <tr><td class="paramname">n</td><td>the number of points to map the segment <img class="formulaInl" alt="$[a, b]$" src="form_9.png" width="24" height="14"/> including a &amp; b </td></tr>
+    <tr><td class="paramname">n</td><td>the number of points to map the segment \([a, b]\) including a &amp; b </td></tr>
     <tr><td class="paramname">n_ghosts_before</td><td>number of additional "ghost" points before the segment </td></tr>
     <tr><td class="paramname">n_ghosts_after</td><td>number of additional "ghost" points after the segment </td></tr>
   </table>
@@ -418,13 +425,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p>Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment <img class="formulaInl" alt="$[a, b] \subset [a, +\infty[$" src="form_12.png" width="83" height="14"/> and a number of points <code>n</code>. </p>
+<p>Construct a uniform <code><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a></code> from a segment \([a, b] \subset [a, +\infty[\) and a number of points <code>n</code>. </p>
 <p>Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling. One should expect usual floating point rounding errors.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>coordinate of the first point of the domain </td></tr>
     <tr><td class="paramname">b</td><td>coordinate of the last point of the domain </td></tr>
-    <tr><td class="paramname">n</td><td>the number of points to map the segment <img class="formulaInl" alt="$[a, b]$" src="form_9.png" width="24" height="14"/> including a &amp; b </td></tr>
+    <tr><td class="paramname">n</td><td>the number of points to map the segment \([a, b]\) including a &amp; b </td></tr>
     <tr><td class="paramname">n_ghosts</td><td>number of additional "ghost" points before and after the segment </td></tr>
   </table>
   </dd>

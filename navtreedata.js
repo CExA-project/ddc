@@ -57,8 +57,12 @@ var NAVTREE =
     ] ],
     [ "DDC concepts", "md_concepts.html", [
       [ "ddc::DiscreteElement and ddc::DiscreteVector", "md_concepts.html#autotoc_md21", [
-        [ "ddc::DiscreteElement", "md_concepts.html#autotoc_md22", null ]
-      ] ]
+        [ "ddc::DiscreteElement", "md_concepts.html#autotoc_md22", null ],
+        [ "ddc::DiscreteVector", "md_concepts.html#autotoc_md23", null ]
+      ] ],
+      [ "ddc::DiscreteDomain", "md_concepts.html#autotoc_md24", null ],
+      [ "ddc::Chunk and ddc::ChunkSpan", "md_concepts.html#autotoc_md25", null ],
+      [ "Algorithms in ddc ?", "md_concepts.html#autotoc_md26", null ]
     ] ],
     [ "examples/heat_equation_spectral.cpp", "heat_equation_spectral.html", null ],
     [ "Deprecated List", "deprecated.html", null ],
@@ -94,8 +98,8 @@ var NAVTREEINDEX =
 "classddc_1_1DiscreteVector.html#af8f929d7b9589a21c255c18f5afb6f07",
 "classddc_1_1SplineBuilder.html#a21d3b08f179f6be5097949a6cb9d036c",
 "classddc_1_1SplineEvaluator2D.html#afa0aea95ac9c8f0ed9e6453ba34da331",
-"namespaceddc.html#a4c7a2930d12432d53c1fcfbb1a1ecda9",
-"structddc_1_1reducer_1_1max.html"
+"namespaceddc.html#a46e92a9cb87ee7573d46fa56d333a09b",
+"structddc_1_1reducer_1_1lor.html#a2a4a1a017019f131705656b77dcf537d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

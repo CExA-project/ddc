@@ -21,6 +21,13 @@ SPDX-License-Identifier: MIT
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="custom.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
@@ -291,7 +298,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>Get the value of the function on B-splines at a coordinate outside the domain. </p>
-<p>In the dimension defined in the constructor Dim1 (or Dim2), it sets the coordinate pos_1 (or pos_2) given at the m_eval_pos coordinate if it is outside the domain. If the coordinate on the complementary dimension of the boundary condition dimension ddc::select&lt;DimNI&gt;(coord_extrap) is outside the domain, then it also sets the coordinate at eval_pos_not_interest_min (if ddc::select&lt;DimNI&gt;(coord_extrap) <img class="formulaInl" alt="$ &lt; $" src="form_10.png" width="9" height="9"/> eval_pos_not_interest_min) or at eval_pos_not_interest_max (if ddc::select&lt;DimNI&gt;(coord_extrap) <img class="formulaInl" alt="$ &gt; $" src="form_11.png" width="9" height="9"/> eval_pos_not_interest_max).</p>
+<p>In the dimension defined in the constructor Dim1 (or Dim2), it sets the coordinate pos_1 (or pos_2) given at the m_eval_pos coordinate if it is outside the domain. If the coordinate on the complementary dimension of the boundary condition dimension ddc::select&lt;DimNI&gt;(coord_extrap) is outside the domain, then it also sets the coordinate at eval_pos_not_interest_min (if ddc::select&lt;DimNI&gt;(coord_extrap) \( &lt; \) eval_pos_not_interest_min) or at eval_pos_not_interest_max (if ddc::select&lt;DimNI&gt;(coord_extrap) \( &gt; \) eval_pos_not_interest_max).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">coord_extrap</td><td>The coordinates where we want to evaluate the function on B-splines </td></tr>

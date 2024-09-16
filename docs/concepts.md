@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 
 DDC introduces labels in the form of dimensions and attributes on top of Kokkos arrays, which offer a more intuitive and less error-prone development experience.
 
-Using Kokkos, the indices of views are weakly typed, meaning that each index is a simple integer. Let's consider a multidimensional view intended to represent a physical quantity, such as a temperature field for example. The first index represents the temperature along the $x$ axis, and the second index represents the temperature along the $y$ axis. As both indices are simple integers, they may be swapped by mistake. The code would compile successfully, but the result would be incorrect, and the source of the error would be difficult to trace.
+Using Kokkos, the indices of views are weakly typed, meaning that each index is a simple integer. Let's consider a multidimensional view intended to represent a physical quantity, such as a temperature field for example. The first index represents the temperature along the \f$x\f$ axis, and the second index represents the temperature along the \f$y\f$ axis. As both indices are simple integers, they may be swapped by mistake. The code would compile successfully, but the result would be incorrect, and the source of the error would be difficult to trace.
 
 DDC provides array-like containers that have labeled dimensions and strongly typed indices. For instance, by labeling dimensions `X` and `Y`, the indices along those labeled dimensions become strongly typed and cannot be swapped anymore.
 
@@ -17,25 +17,25 @@ DDC provides array-like containers that have labeled dimensions and strongly typ
 ### ddc::DiscreteElement
 
 A `ddc::DiscreteElement` is a type that carries the label of the dimension it is defined from.
-Let's discretize the $y$ axis as follows: \{$y_0$, $y_1$, ..., $y_n$\}. Then the index `iy` defined as follows:
+Let's discretize the \f$y\f$ axis as follows: \f$\{y_0, y_1, ..., y_n\}\f$. Then the index `iy` defined as follows:
 
 ```cpp
 ddc::DiscreteElement<DDimY> iy(0);
 ```
 
-carries the strong typing of the ordinate dimension `DDimY`, and corresponds to the index 0 as in $y_0$, i.e. the index of the first point along the $y$ dimension.
+carries the strong typing of the ordinate dimension `DDimY`, and corresponds to the index 0 as in \f$y_0\f$, i.e. the index of the first point along the \f$y\f$ dimension.
 
 Another example would be the study of a charged plasma.
 One dimension could represent species with charge and mass information, and another could represent particle momentum.
-Let's discretize the $species$ dimension as follows: {$sp_0$, $sp_1$, ..., $sp_n$}. Then the index `isp` defined as follows:
+Let's discretize the species dimension as follows: \f$\{sp_0, sp_1, ..., sp_n\}\f$. Then the index `isp` defined as follows:
 
 `ddc::DiscreteElement<Species_Dimension> isp(0)`
 
-carries the strong typing of the labeled dimension Species_Dimension and corresponds to the index 0 as in $sp_0$, i.e. the index of the first particle along the $sp$ dimension (eventhough the order does not matter in this study).
+carries the strong typing of the labeled dimension `Species_Dimension` and corresponds to the index 0 as in \f$sp_0\f$, i.e. the index of the first particle along the \f$sp\f$ dimension (eventhough the order does not matter in this study).
 Same would apply for the momentum dimension.
 
 `ddc::DiscreteElement` is used to access arrays.
-Let's take a multidimensional container and access its element `(i, j)`, which corresponds to the grid point at the $i$th row and the $j$th column. We would do it like this:
+Let's take a multidimensional container and access its element `(i, j)`, which corresponds to the grid point at the i-th row and the j-th column. We would do it like this:
 
 ```cpp
 container(i, j);
@@ -51,7 +51,7 @@ A `ddc::DiscreteVector` corresponds to an integer that, like `ddc::DiscreteEleme
 ddc::DiscreteVector<DDimX> gwx(5);
 ```
 
-defines five point, along the $x$ dimension.
+defines five point, along the \f$x\f$ dimension.
 
 \remark Note that the difference between two `ddc::DiscreteElement`s gives a `ddc::DiscreteVector`, and the sum of a `ddc::DiscreteVector` and a `ddc::DiscreteElement` gives a `ddc::DiscreteElement`. This illustrates how `ddc::DiscreteElement`s correspond to points in an affine space, while `ddc::DiscreteVector`s correspond to vectors in a vector space, or to a distance between two points.
 
@@ -62,14 +62,14 @@ In summary:
 
 ## ddc::DiscreteDomain
 
-`ddc::DiscreteDomain` is an interval of [ddc::DiscreteElement](#ddcdiscreteelement) distributed according to each labeled dimension.
-It allows for the distribution of [ddc::DiscreteElement](#ddcdiscreteelement) across each previously defined labeled dimension.
+`ddc::DiscreteDomain` is an interval of `ddc::DiscreteElement` distributed according to each labeled dimension.
+It allows for the distribution of `ddc::DiscreteElement` across each previously defined labeled dimension.
 It is constructed using the method `ddc::init_discrete_space`.
 
 ## ddc::Chunk and ddc::ChunkSpan
 
 The `ddc::Chunk` is a container that holds the data, while `ddc::ChunkSpan` behaves like `std::mdspan`, meaning it is a pointer to the data contained within the `ddc::Chunk`.
-Chunks contain data that can be accessed by [ddc::DiscreteElement](#ddcdiscreteelement).
+Chunks contain data that can be accessed by `ddc::DiscreteElement`.
 
 Note that swapping the `ddc::DiscreteElement<DDim1>` and `ddc::DiscreteElement<DDim2>` indices when calling the `ddc::ChunkSpan` does not affect the correctness of the code; the result remains the same:
 

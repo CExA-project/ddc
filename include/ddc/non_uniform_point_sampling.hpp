@@ -77,7 +77,7 @@ public:
         template <class InputRange>
         explicit Impl(InputRange const& points)
         {
-            if constexpr (Kokkos::is_view<InputRange>::value) {
+            if constexpr (Kokkos::is_view_v<InputRange>) {
                 Kokkos::deep_copy(m_points, points);
             } else {
                 std::vector<continuous_element_type> host_points(points.begin(), points.end());

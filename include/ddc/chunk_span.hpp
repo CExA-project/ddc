@@ -230,7 +230,7 @@ public:
      * @param view the Kokkos view
      * @param domain the domain that sustains the view
      */
-    template <class KokkosView, class = std::enable_if_t<Kokkos::is_view<KokkosView>::value>>
+    template <class KokkosView, class = std::enable_if_t<Kokkos::is_view_v<KokkosView>>>
     KOKKOS_FUNCTION constexpr ChunkSpan(
             KokkosView const& view,
             discrete_domain_type const& domain) noexcept
@@ -345,10 +345,7 @@ public:
     }
 };
 
-template <
-        class KokkosView,
-        class... DDims,
-        class = std::enable_if_t<Kokkos::is_view<KokkosView>::value>>
+template <class KokkosView, class... DDims, class = std::enable_if_t<Kokkos::is_view_v<KokkosView>>>
 ChunkSpan(KokkosView const& view, DiscreteDomain<DDims...> domain)
         -> ChunkSpan<
                 detail::kokkos_to_mdspan_element_t<typename KokkosView::data_type>,

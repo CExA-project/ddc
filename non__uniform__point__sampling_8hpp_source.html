@@ -206,7 +206,7 @@ $(document).ready(function(){initNavTree('non__uniform__point__sampling_8hpp_sou
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keyword">template</span> &lt;<span class="keyword">class</span> InputRange&gt;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keyword">explicit</span> <a class="code hl_function" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#aa31034a9da59ee6eecbd14cca6e31dae">Impl</a>(InputRange <span class="keyword">const</span>&amp; points)</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        {</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (Kokkos::is_view&lt;InputRange&gt;::value) {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (Kokkos::is_view_v&lt;InputRange&gt;) {</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                Kokkos::deep_copy(m_points, points);</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                std::vector&lt;continuous_element_type&gt; host_points(points.begin(), points.end());</div>

@@ -8,10 +8,7 @@
 #include <cmath>
 #include <cstddef>
 
-#include <experimental/mdspan>
-
-#include <Kokkos_Macros.hpp>
-#include <Kokkos_MathematicalFunctions.hpp>
+#include <Kokkos_Core.hpp>
 
 namespace ddc::detail {
 
@@ -26,9 +23,9 @@ KOKKOS_INLINE_FUNCTION T sum(T* array, int size)
 }
 
 template <class ElementType, class LayoutPolicy, class AccessorPolicy, std::size_t Ext>
-KOKKOS_INLINE_FUNCTION ElementType sum(std::experimental::mdspan<
+KOKKOS_INLINE_FUNCTION ElementType sum(Kokkos::mdspan<
                                        ElementType,
-                                       std::experimental::extents<std::size_t, Ext>,
+                                       Kokkos::extents<std::size_t, Ext>,
                                        LayoutPolicy,
                                        AccessorPolicy> const& array)
 {
@@ -41,9 +38,9 @@ KOKKOS_INLINE_FUNCTION ElementType sum(std::experimental::mdspan<
 
 template <class ElementType, class LayoutPolicy, class AccessorPolicy, std::size_t Ext>
 KOKKOS_INLINE_FUNCTION ElementType
-sum(std::experimental::mdspan<
+sum(Kokkos::mdspan<
             ElementType,
-            std::experimental::extents<std::size_t, Ext>,
+            Kokkos::extents<std::size_t, Ext>,
             LayoutPolicy,
             AccessorPolicy> const& array,
     int start,

@@ -569,15 +569,11 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     std::array<double, degree()> right;
 
     std::array<double, 2 * (degree() + 1)> a_ptr;
-    std::experimental::
-            mdspan<double, std::experimental::extents<std::size_t, degree() + 1, 2>> const a(
-                    a_ptr.data());
+    Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree() + 1, 2>> const a(a_ptr.data());
 
     std::array<double, (degree() + 1) * (degree() + 1)> ndu_ptr;
-    std::experimental::mdspan<
-            double,
-            std::experimental::extents<std::size_t, degree() + 1, degree() + 1>> const
-            ndu(ndu_ptr.data());
+    Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree() + 1, degree() + 1>> const ndu(
+            ndu_ptr.data());
 
     assert(x - rmin() >= -length() * 1e-14);
     assert(rmax() - x >= -length() * 1e-14);

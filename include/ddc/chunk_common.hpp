@@ -10,9 +10,7 @@
 #include <type_traits>
 #include <utility>
 
-#include <experimental/mdspan>
-
-#include <Kokkos_Macros.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "ddc/chunk_traits.hpp"
 #include "ddc/detail/macros.hpp"
@@ -39,10 +37,10 @@ class ChunkCommon<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy>
 {
 protected:
     /// the raw mdspan underlying this, with the same indexing (0 might no be dereferenceable)
-    using internal_mdspan_type = std::experimental::mdspan<
+    using internal_mdspan_type = Kokkos::mdspan<
             ElementType,
-            std::experimental::dextents<std::size_t, sizeof...(DDims)>,
-            std::experimental::layout_stride>;
+            Kokkos::dextents<std::size_t, sizeof...(DDims)>,
+            Kokkos::layout_stride>;
 
 public:
     using discrete_domain_type = DiscreteDomain<DDims...>;
@@ -51,14 +49,14 @@ public:
     = DiscreteDomain<DDims...>;
 
     /// The dereferenceable part of the co-domain but with a different domain, starting at 0
-    using allocation_mdspan_type = std::experimental::mdspan<
+    using allocation_mdspan_type = Kokkos::mdspan<
             ElementType,
-            std::experimental::dextents<std::size_t, sizeof...(DDims)>,
+            Kokkos::dextents<std::size_t, sizeof...(DDims)>,
             LayoutStridedPolicy>;
 
-    using const_allocation_mdspan_type = std::experimental::mdspan<
+    using const_allocation_mdspan_type = Kokkos::mdspan<
             const ElementType,
-            std::experimental::dextents<std::size_t, sizeof...(DDims)>,
+            Kokkos::dextents<std::size_t, sizeof...(DDims)>,
             LayoutStridedPolicy>;
 
     using discrete_element_type = typename discrete_domain_type::discrete_element_type;
@@ -138,9 +136,7 @@ private:
             make_internal_mdspan(ElementType* ptr, discrete_domain_type const& domain)
     {
         if (domain.empty()) {
-            return internal_mdspan_type(
-                    ptr,
-                    std::experimental::layout_stride::mapping<extents_type>());
+            return internal_mdspan_type(ptr, Kokkos::layout_stride::mapping<extents_type>());
         }
         extents_type const extents_r(::ddc::extents<DDims>(domain).value()...);
         mapping_type const mapping_r(extents_r);
@@ -148,8 +144,7 @@ private:
         extents_type const extents_s((front<DDims>(domain) + ddc::extents<DDims>(domain)).uid()...);
         std::array<std::size_t, sizeof...(DDims)> const strides_s {
                 mapping_r.stride(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
-        std::experimental::layout_stride::mapping<extents_type> const
-                mapping_s(extents_s, strides_s);
+        Kokkos::layout_stride::mapping<extents_type> const mapping_s(extents_s, strides_s);
         return internal_mdspan_type(ptr - mapping_s(front<DDims>(domain).uid()...), mapping_s);
     }
 
@@ -300,7 +295,7 @@ protected:
     {
         DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
         extents_type const extents_s(::ddc::extents<DDims>(m_domain).value()...);
-        if constexpr (std::is_same_v<LayoutStridedPolicy, std::experimental::layout_stride>) {
+        if constexpr (std::is_same_v<LayoutStridedPolicy, Kokkos::layout_stride>) {
             mapping_type const map(extents_s, m_internal_mdspan.mapping().strides());
             return allocation_mdspan_type(data_handle(), map);
         } else {

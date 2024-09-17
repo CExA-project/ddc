@@ -8,12 +8,9 @@
 #include <cstddef>
 #include <type_traits>
 
-#include <experimental/mdspan>
-
 #include <ddc/ddc.hpp>
 
-#include <Kokkos_Macros.hpp>
-#include <Kokkos_MathematicalFunctions.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "integrals.hpp"
 #include "periodic_extrapolation_rule.hpp"
@@ -182,7 +179,7 @@ public:
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
-                            std::experimental::layout_right,
+                            Kokkos::layout_right,
                             memory_space>>,
             "LowerExtrapolationRule1::operator() has to be callable "
             "with usual arguments.");
@@ -194,7 +191,7 @@ public:
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
-                            std::experimental::layout_right,
+                            Kokkos::layout_right,
                             memory_space>>,
             "UpperExtrapolationRule1::operator() has to be callable "
             "with usual arguments.");
@@ -206,7 +203,7 @@ public:
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
-                            std::experimental::layout_right,
+                            Kokkos::layout_right,
                             memory_space>>,
             "LowerExtrapolationRule2::operator() has to be callable "
             "with usual arguments.");
@@ -218,7 +215,7 @@ public:
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
-                            std::experimental::layout_right,
+                            Kokkos::layout_right,
                             memory_space>>,
             "UpperExtrapolationRule2::operator() has to be callable "
             "with usual arguments.");
@@ -940,14 +937,10 @@ private:
         ddc::DiscreteElement<bsplines_type2> jmin2;
 
         std::array<double, bsplines_type1::degree() + 1> vals1_ptr;
-        std::experimental::mdspan<
-                double,
-                std::experimental::extents<std::size_t, bsplines_type1::degree() + 1>> const
+        Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type1::degree() + 1>> const
                 vals1(vals1_ptr.data());
         std::array<double, bsplines_type2::degree() + 1> vals2_ptr;
-        std::experimental::mdspan<
-                double,
-                std::experimental::extents<std::size_t, bsplines_type2::degree() + 1>> const
+        Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type2::degree() + 1>> const
                 vals2(vals2_ptr.data());
         ddc::Coordinate<continuous_dimension_type1> const coord_eval_interest1
                 = ddc::select<continuous_dimension_type1>(coord_eval);

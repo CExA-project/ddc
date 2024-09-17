@@ -6,7 +6,6 @@
 
 include(CMakeFindDependencyMacro)
 
-find_dependency(mdspan)
 if(@DDC_BUILD_PDI_WRAPPER@)
    find_dependency(PDI COMPONENTS C)
 endif()

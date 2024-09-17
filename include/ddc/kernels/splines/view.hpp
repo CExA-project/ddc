@@ -8,7 +8,7 @@
 #include <ostream>
 #include <utility>
 
-#include <experimental/mdspan>
+#include <Kokkos_Core.hpp>
 
 namespace ddc::detail {
 
@@ -18,19 +18,15 @@ struct ViewNDMaker;
 template <std::size_t N, class ElementType>
 struct ViewNDMaker<N, ElementType, true>
 {
-    using type = std::experimental::mdspan<
-            ElementType,
-            std::experimental::dextents<std::size_t, N>,
-            std::experimental::layout_right>;
+    using type
+            = Kokkos::mdspan<ElementType, Kokkos::dextents<std::size_t, N>, Kokkos::layout_right>;
 };
 
 template <std::size_t N, class ElementType>
 struct ViewNDMaker<N, ElementType, false>
 {
-    using type = std::experimental::mdspan<
-            ElementType,
-            std::experimental::dextents<std::size_t, N>,
-            std::experimental::layout_stride>;
+    using type
+            = Kokkos::mdspan<ElementType, Kokkos::dextents<std::size_t, N>, Kokkos::layout_stride>;
 };
 
 /// Note: We use the comma operator to fill the input parameters
@@ -47,7 +43,7 @@ template <
         std::size_t... Is>
 std::ostream& stream_impl(
         std::ostream& os,
-        std::experimental::mdspan<ElementType, Extents, Layout, Accessor> const& s,
+        Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
         std::index_sequence<I0, Is...>)
 {
     if constexpr (sizeof...(Is) > 0) {
@@ -55,8 +51,7 @@ std::ostream& stream_impl(
         for (std::size_t i0 = 0; i0 < s.extent(I0); ++i0) {
             stream_impl(
                     os,
-                    std::experimental::
-                            submdspan(s, i0, ((void)Is, std::experimental::full_extent)...),
+                    Kokkos::submdspan(s, i0, ((void)Is, Kokkos::full_extent)...),
                     std::make_index_sequence<sizeof...(Is)>());
         }
         os << ']';
@@ -75,7 +70,7 @@ std::ostream& stream_impl(
 template <class ElementType, class Extents, class Layout, class Accessor>
 std::ostream& operator<<(
         std::ostream& os,
-        std::experimental::mdspan<ElementType, Extents, Layout, Accessor> const& s)
+        Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s)
 {
     return ddc::detail::stream_impl(os, s, std::make_index_sequence<Extents::rank()>());
 }
@@ -85,7 +80,7 @@ std::ostream& operator<<(
 namespace ddc {
 
 template <std::size_t N, class ElementType>
-using SpanND = std::experimental::mdspan<ElementType, std::experimental::dextents<std::size_t, N>>;
+using SpanND = Kokkos::mdspan<ElementType, Kokkos::dextents<std::size_t, N>>;
 
 template <std::size_t N, class ElementType>
 using ViewND = SpanND<N, ElementType const>;

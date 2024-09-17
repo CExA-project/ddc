@@ -490,9 +490,7 @@ int SplineBuilder<
     if constexpr (bsplines_type::is_periodic()) {
         // Calculate offset so that the matrix is diagonally dominant
         std::array<double, bsplines_type::degree() + 1> values_ptr;
-        std::experimental::mdspan<
-                double,
-                std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
+        Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type::degree() + 1>> const
                 values(values_ptr.data());
         ddc::DiscreteElement<interpolation_discrete_dimension_type> start(
                 interpolation_domain.front());
@@ -693,10 +691,8 @@ void SplineBuilder<
 
     // Interpolation points
     std::array<double, bsplines_type::degree() + 1> values_ptr;
-    std::experimental::mdspan<
-            double,
-            std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
-            values(values_ptr.data());
+    Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type::degree() + 1>> const values(
+            values_ptr.data());
 
     int start = interpolation_domain().front().uid();
     ddc::for_each(interpolation_domain(), [&](auto ix) {
@@ -715,9 +711,9 @@ void SplineBuilder<
     if constexpr (BcUpper == ddc::BoundCond::HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
-        std::experimental::mdspan<
+        Kokkos::mdspan<
                 double,
-                std::experimental::extents<
+                Kokkos::extents<
                         std::size_t,
                         bsplines_type::degree() + 1,
                         bsplines_type::degree() / 2 + 1>> const derivs(derivs_ptr.data());

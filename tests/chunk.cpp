@@ -7,11 +7,11 @@
 #include <type_traits>
 #include <utility>
 
-#include <experimental/mdspan>
-
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
+
+#include <Kokkos_Core.hpp>
 
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP) {
 
@@ -92,16 +92,14 @@ DDomXY constexpr dom_x_y(lbound_x_y, nelems_x_y);
 
 TEST(Chunk0DTest, LayoutType)
 {
-    EXPECT_TRUE((std::is_same_v<Chunk0D<double>::layout_type, std::experimental::layout_right>));
+    EXPECT_TRUE((std::is_same_v<Chunk0D<double>::layout_type, Kokkos::layout_right>));
 }
 
 TEST(Chunk1DTest, LayoutType)
 {
     ChunkX<double> const chunk(dom_x);
 
-    EXPECT_TRUE((std::is_same_v<
-                 std::decay_t<decltype(chunk)>::layout_type,
-                 std::experimental::layout_right>));
+    EXPECT_TRUE((std::is_same_v<std::decay_t<decltype(chunk)>::layout_type, Kokkos::layout_right>));
 }
 
 // TODO: many missing types
@@ -461,9 +459,8 @@ TEST(Chunk2DTest, SliceCoordX)
     }
 
     auto&& chunk_y = chunk_cref[slice_x_val];
-    EXPECT_TRUE((std::is_same_v<
-                 std::decay_t<decltype(chunk_y)>::layout_type,
-                 std::experimental::layout_right>));
+    EXPECT_TRUE(
+            (std::is_same_v<std::decay_t<decltype(chunk_y)>::layout_type, Kokkos::layout_right>));
     EXPECT_EQ(chunk_y.extent<DDimY>(), chunk.extent<DDimY>());
     for (auto&& ix : chunk_cref.domain<DDimY>()) {
         // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
@@ -484,9 +481,8 @@ TEST(Chunk2DTest, SliceCoordY)
     }
 
     auto&& chunk_x = chunk_cref[slice_y_val];
-    EXPECT_TRUE((std::is_same_v<
-                 std::decay_t<decltype(chunk_x)>::layout_type,
-                 std::experimental::layout_stride>));
+    EXPECT_TRUE(
+            (std::is_same_v<std::decay_t<decltype(chunk_x)>::layout_type, Kokkos::layout_stride>));
     EXPECT_EQ(chunk_x.extent<DDimX>(), chunk.extent<DDimX>());
     for (auto&& ix : chunk_cref.domain<DDimX>()) {
         // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
@@ -507,9 +503,8 @@ TEST(Chunk2DTest, SliceDomainX)
     }
 
     auto&& subchunk_x = chunk_cref[subdomain_x];
-    EXPECT_TRUE((std::is_same_v<
-                 std::decay_t<decltype(subchunk_x)>::layout_type,
-                 std::experimental::layout_right>));
+    EXPECT_TRUE((
+            std::is_same_v<std::decay_t<decltype(subchunk_x)>::layout_type, Kokkos::layout_right>));
 
     EXPECT_EQ(subchunk_x.extent<DDimX>(), subdomain_x.size());
     EXPECT_EQ(subchunk_x.extent<DDimY>(), chunk.domain<DDimY>().size());
@@ -535,7 +530,7 @@ TEST(Chunk2DTest, SliceDomainY)
     auto&& subchunk_y = chunk_cref[subdomain_y];
     EXPECT_TRUE((std::is_same_v<
                  std::decay_t<decltype(subchunk_y)>::layout_type,
-                 std::experimental::layout_stride>));
+                 Kokkos::layout_stride>));
 
     EXPECT_EQ(subchunk_y.extent<DDimX>(), chunk.domain<DDimX>().size());
     EXPECT_EQ(subchunk_y.extent<DDimY>(), subdomain_y.size());
@@ -574,7 +569,7 @@ TEST(Chunk2DTest, DeepcopyReordered)
         }
     }
     ChunkYX<double> chunk2(ddc::select<DDimY, DDimX>(chunk.domain()));
-    ddc::ChunkSpan<double, DDomXY, std::experimental::layout_left> const
+    ddc::ChunkSpan<double, DDomXY, Kokkos::layout_left> const
             chunk2_view(chunk2.data_handle(), chunk.domain());
     ddc::parallel_deepcopy(chunk2_view, chunk);
     for (auto&& ix : chunk.domain<DDimX>()) {

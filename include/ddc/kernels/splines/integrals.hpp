@@ -8,8 +8,6 @@
 #include <cassert>
 #include <cstddef>
 
-#include <experimental/mdspan>
-
 #include <ddc/ddc.hpp>
 
 #include "bsplines_non_uniform.hpp"
@@ -78,9 +76,7 @@ void uniform_bsplines_integrals(
                         Kokkos::IndexType<std::size_t>>(execution_space, 0, DDim::degree()),
                 KOKKOS_LAMBDA(std::size_t i) {
                     std::array<double, DDim::degree() + 2> edge_vals_ptr;
-                    std::experimental::mdspan<
-                            double,
-                            std::experimental::extents<std::size_t, DDim::degree() + 2>> const
+                    Kokkos::mdspan<double, Kokkos::extents<std::size_t, DDim::degree() + 2>> const
                             edge_vals(edge_vals_ptr.data());
 
                     ddc::discrete_space<DDim>().eval_basis(

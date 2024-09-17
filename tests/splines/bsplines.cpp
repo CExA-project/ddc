@@ -11,12 +11,12 @@
 #include <utility>
 #include <vector>
 
-#include <experimental/mdspan>
-
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
 
 #include <gtest/gtest.h>
+
+#include <Kokkos_Core.hpp>
 
 #include "test_utils.hpp"
 
@@ -64,8 +64,8 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityUniform)
     ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
 
     std::array<double, degree + 1> values_ptr;
-    std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
-            values(values_ptr.data());
+    Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree + 1>> const values(
+            values_ptr.data());
 
     std::size_t const n_test_points = ncells * 30;
     double const dx = (xmax - xmin) / (n_test_points - 1);
@@ -98,8 +98,8 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityNonUniform)
     ddc::init_discrete_space<BSplinesX>(breaks);
 
     std::array<double, degree + 1> values_ptr;
-    std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
-            values(values_ptr.data());
+    Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree + 1>> const values(
+            values_ptr.data());
 
 
     std::size_t const n_test_points = ncells * 30;
@@ -153,8 +153,8 @@ TYPED_TEST(BSplinesFixture, RoundingNonUniform)
             = ddc::discrete_space<BSplinesX>().full_domain();
 
     std::array<double, degree + 1> values_ptr;
-    std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
-            values(values_ptr.data());
+    Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree + 1>> const values(
+            values_ptr.data());
 
     CoordX const test_point_min(xmin - std::numeric_limits<double>::epsilon());
     ddc::DiscreteElement<BSplinesX> const front_idx
@@ -182,8 +182,8 @@ TYPED_TEST(BSplinesFixture, RoundingUniform)
             = ddc::discrete_space<BSplinesX>().full_domain();
 
     std::array<double, degree + 1> values_ptr;
-    std::experimental::mdspan<double, std::experimental::extents<std::size_t, degree + 1>> const
-            values(values_ptr.data());
+    Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree + 1>> const values(
+            values_ptr.data());
 
     CoordX const test_point_min(xmin - std::numeric_limits<double>::epsilon());
     ddc::DiscreteElement<BSplinesX> const front_idx

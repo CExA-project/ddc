@@ -53,7 +53,9 @@ constexpr int n_boundary_equations(ddc::BoundCond const bc, std::size_t const de
 {
     if (bc == ddc::BoundCond::PERIODIC || bc == ddc::BoundCond::GREVILLE) {
         return 0;
-    } else if (bc == ddc::BoundCond::HERMITE) {
+    }
+
+    if (bc == ddc::BoundCond::HERMITE) {
         return degree / 2;
     }
 

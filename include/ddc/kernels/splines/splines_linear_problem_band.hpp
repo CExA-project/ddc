@@ -105,9 +105,9 @@ public:
                                 static_cast<std::ptrdiff_t>(j) - static_cast<std::ptrdiff_t>(m_ku))
             && i < std::min(size(), j + m_kl + 1)) {
             return m_q.h_view(band_storage_row_index(i, j), j);
-        } else {
-            return 0.0;
         }
+
+        return 0.0;
     }
 
     void set_element(std::size_t const i, std::size_t const j, double const aij) override

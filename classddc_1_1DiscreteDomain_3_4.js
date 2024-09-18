@@ -12,17 +12,12 @@ var classddc_1_1DiscreteDomain_3_4 =
     [ "operator=", "classddc_1_1DiscreteDomain_3_4.html#a6a167dd5bbee615b86415e7405704137", null ],
     [ "operator==", "classddc_1_1DiscreteDomain_3_4.html#ad1d3ff59248f955e150f835b8840444b", null ],
     [ "operator!=", "classddc_1_1DiscreteDomain_3_4.html#a5678f3ad8565423bbb00e169ec9b1415", null ],
-    [ "size", "classddc_1_1DiscreteDomain_3_4.html#aa4e6da70fb42b6f27f281721c39b60f9", null ],
-    [ "extents", "classddc_1_1DiscreteDomain_3_4.html#a5bf83f59be475ccfb3a3ca2699a05917", null ],
-    [ "front", "classddc_1_1DiscreteDomain_3_4.html#afc8904c1d3a34d6b4148d19f6e770fe9", null ],
-    [ "back", "classddc_1_1DiscreteDomain_3_4.html#a147f3403147a132bf2a43f609cf2fae5", null ],
     [ "take_first", "classddc_1_1DiscreteDomain_3_4.html#a378eda91c9bfb611454212a7233d5dea", null ],
     [ "take_last", "classddc_1_1DiscreteDomain_3_4.html#ade012d627128e941c1ae7a7e3f58fffb", null ],
     [ "remove_first", "classddc_1_1DiscreteDomain_3_4.html#a89d6a3084909d425e4be6aa31733101e", null ],
     [ "remove_last", "classddc_1_1DiscreteDomain_3_4.html#a8e48cfe27d39f868e37c8d37a1709998", null ],
     [ "remove", "classddc_1_1DiscreteDomain_3_4.html#acf8e7989b93bf4c93444628bc59d25ba", null ],
     [ "restrict", "classddc_1_1DiscreteDomain_3_4.html#acd1bdfddaa4bd04f8c3e41d5244d22e5", null ],
-    [ "empty", "classddc_1_1DiscreteDomain_3_4.html#a7c323eb8bd7c20baa705593d97f1c9d7", null ],
     [ "operator bool", "classddc_1_1DiscreteDomain_3_4.html#a6c35d71dd28805fa4b1c99d9db306297", null ],
     [ "DiscreteDomain", "classddc_1_1DiscreteDomain_3_4.html#a5cdbd7cda4dd9c4369a8810c88cf3bed", null ]
 ];

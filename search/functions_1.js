@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['back_0',['back',['../classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3',1,'ddc::DiscreteDomain::back()'],['../classddc_1_1DiscreteDomain_3_4.html#a147f3403147a132bf2a43f609cf2fae5',1,'ddc::DiscreteDomain&lt;&gt;::back()'],['../namespaceddc.html#a0a26a2377549b9a50dbf29267bf0ebc2',1,'ddc::back()']]],
+  ['back_0',['back',['../classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3',1,'ddc::DiscreteDomain::back()'],['../classddc_1_1DiscreteDomain_3_4.html#a818a020621912c0b5f8c996a3567a199',1,'ddc::DiscreteDomain&lt;&gt;::back()'],['../namespaceddc.html#a0a26a2377549b9a50dbf29267bf0ebc2',1,'ddc::back()']]],
   ['batch_5fdomain_1',['batch_domain',['../classddc_1_1SplineBuilder.html#ad1a60f2daf7744cb9474e71cd5b7d8ca',1,'ddc::SplineBuilder::batch_domain()'],['../classddc_1_1SplineBuilder2D.html#ad961bb311bfe2c7678aa1df4e95e1a3f',1,'ddc::SplineBuilder2D::batch_domain()']]],
   ['batched_5fderivs_5fxmax_5fdomain_2',['batched_derivs_xmax_domain',['../classddc_1_1SplineBuilder.html#a8ef59a861089eb03870f5eb1c62e00aa',1,'ddc::SplineBuilder']]],
   ['batched_5fderivs_5fxmin_5fdomain_3',['batched_derivs_xmin_domain',['../classddc_1_1SplineBuilder.html#aec391940401b6ffbab9328d07d0e2e7a',1,'ddc::SplineBuilder']]],

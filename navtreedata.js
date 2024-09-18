@@ -95,11 +95,11 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a82025a6731665ac59733c93ec50f560b",
-"classddc_1_1DiscreteVector.html#af8f929d7b9589a21c255c18f5afb6f07",
-"classddc_1_1SplineBuilder.html#a21d3b08f179f6be5097949a6cb9d036c",
-"classddc_1_1SplineEvaluator2D.html#afa0aea95ac9c8f0ed9e6453ba34da331",
-"namespaceddc.html#a46e92a9cb87ee7573d46fa56d333a09b",
-"structddc_1_1reducer_1_1lor.html#a2a4a1a017019f131705656b77dcf537d"
+"classddc_1_1KnotsAsInterpolationPoints.html#a284ded7e85d17eebffd68e7f72d64e4d",
+"classddc_1_1SplineBuilder.html#a42be62740203361e4f50e42631d20a2a",
+"classddc_1_1SplineEvaluator2D.html#affaa48699a4aec8ad995cf73cc41cc37",
+"namespaceddc.html#a54da8d37b5ff148e68c65185c0c1e44e",
+"structddc_1_1reducer_1_1min.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,15 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"namespaceddc.html#a46e92a9cb87ee7573d46fa56d333a09b":[6,0,0,63],
-"namespaceddc.html#a47eb1655f14f6e8e40ce0e7507754cbc":[6,0,0,74],
-"namespaceddc.html#a4949624204145ca2a0390c7b73a02480":[6,0,0,158],
-"namespaceddc.html#a4a2fc8ce660318bd042ba52e917851a7":[6,0,0,128],
-"namespaceddc.html#a4c7a2930d12432d53c1fcfbb1a1ecda9":[6,0,0,65],
-"namespaceddc.html#a4ccc832ef3821a25e39751a82da27b44":[6,0,0,184],
-"namespaceddc.html#a4f36a871e49681abe05cc39604126187":[6,0,0,58],
-"namespaceddc.html#a523881fb2db5c5ef7e84dc8d0fd521bd":[6,0,0,164],
-"namespaceddc.html#a527ffc7bfc33850ef64720205544a21d":[6,0,0,77],
-"namespaceddc.html#a5395f39830c8845c51a251404985bc56":[6,0,0,157],
 "namespaceddc.html#a54da8d37b5ff148e68c65185c0c1e44e":[6,0,0,89],
 "namespaceddc.html#a55329c09ef34e180c2a4dc5d59e876fb":[6,0,0,129],
 "namespaceddc.html#a580afa45261b42925af30519dca3c0bf":[6,0,0,155],
@@ -249,5 +239,15 @@ var NAVTREEINDEX5 =
 "structddc_1_1reducer_1_1land.html#a80490e289b6fedf06453be8f1b2b6d51":[7,0,0,0,3,1],
 "structddc_1_1reducer_1_1land.html#a80490e289b6fedf06453be8f1b2b6d51":[6,0,0,0,3,1],
 "structddc_1_1reducer_1_1lor.html":[7,0,0,0,4],
-"structddc_1_1reducer_1_1lor.html":[6,0,0,0,4]
+"structddc_1_1reducer_1_1lor.html":[6,0,0,0,4],
+"structddc_1_1reducer_1_1lor.html#a2a4a1a017019f131705656b77dcf537d":[6,0,0,0,4,0],
+"structddc_1_1reducer_1_1lor.html#a2a4a1a017019f131705656b77dcf537d":[7,0,0,0,4,0],
+"structddc_1_1reducer_1_1lor.html#ad55bf58dbee06048a5b7a80f88c6f715":[6,0,0,0,4,1],
+"structddc_1_1reducer_1_1lor.html#ad55bf58dbee06048a5b7a80f88c6f715":[7,0,0,0,4,1],
+"structddc_1_1reducer_1_1max.html":[7,0,0,0,5],
+"structddc_1_1reducer_1_1max.html":[6,0,0,0,5],
+"structddc_1_1reducer_1_1max.html#ab07f0de9e0215ecf27bc51cdd9130dc5":[7,0,0,0,5,0],
+"structddc_1_1reducer_1_1max.html#ab07f0de9e0215ecf27bc51cdd9130dc5":[6,0,0,0,5,0],
+"structddc_1_1reducer_1_1max.html#afa446a8d57408979f7716bac33c1a8c6":[6,0,0,0,5,1],
+"structddc_1_1reducer_1_1max.html#afa446a8d57408979f7716bac33c1a8c6":[7,0,0,0,5,1]
 };

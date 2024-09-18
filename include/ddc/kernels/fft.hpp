@@ -426,10 +426,8 @@ void impl(
                         : odist * n[i];
     }
 
-    if constexpr (false) {
-    } // Trick to get only else if
 #if fftw_serial_AVAIL
-    else if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::Serial>) {
         _fftw_plan<Tin> plan = _fftw_plan_many_dft<Tin, Tout>(
                 kwargs.direction == ddc::FFT_Direction::FORWARD ? FFTW_FORWARD : FFTW_BACKWARD,
                 FFTW_ESTIMATE,
@@ -454,7 +452,7 @@ void impl(
     }
 #endif
 #if fftw_omp_AVAIL
-    else if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
         if constexpr (std::is_same_v<real_type_t<Tin>, float>) {
             fftwf_init_threads();
             fftwf_plan_with_nthreads(exec_space.concurrency());
@@ -486,7 +484,7 @@ void impl(
     }
 #endif
 #if cufft_AVAIL
-    else if constexpr (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
         cudaStream_t stream = exec_space.cuda_stream();
 
         cufftHandle unmanaged_plan = -1;
@@ -525,7 +523,7 @@ void impl(
     }
 #endif
 #if hipfft_AVAIL
-    else if constexpr (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+    if constexpr (std::is_same_v<ExecSpace, Kokkos::HIP>) {
         hipStream_t stream = exec_space.hip_stream();
 
         hipfftHandle unmanaged_plan;

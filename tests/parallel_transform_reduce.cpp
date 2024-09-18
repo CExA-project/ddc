@@ -44,7 +44,7 @@ static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 TEST(ParallelTransformReduceHost, ZeroDimension)
 {
     DDom0D const dom;
-    std::vector<int> storage(dom.size(), 0);
+    std::vector<int> storage(DDom0D::size(), 0);
     ddc::ChunkSpan<int, DDom0D> const chunk(storage.data(), dom);
     int count = 0;
     ddc::for_each(dom, [&](DElem0D const i) { chunk(i) = count++; });

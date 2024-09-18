@@ -279,13 +279,13 @@ bool non_uniform_ref = false;
 std::size_t degree_x_ref = 3;
 #if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
 std::size_t cols_per_chunk_ref = 65535;
-unsigned int preconditioner_max_block_size_ref = 1u;
+unsigned int preconditioner_max_block_size_ref = 1U;
 #elif defined(KOKKOS_ENABLE_OPENMP)
 std::size_t cols_per_chunk_ref = 8192;
-unsigned int preconditioner_max_block_size_ref = 1u;
+unsigned int preconditioner_max_block_size_ref = 1U;
 #elif defined(KOKKOS_ENABLE_SERIAL)
 std::size_t cols_per_chunk_ref = 8192;
-unsigned int preconditioner_max_block_size_ref = 32u;
+unsigned int preconditioner_max_block_size_ref = 32U;
 #endif
 // std::size_t ny_ref = 100000;
 std::size_t ny_ref = 1000;

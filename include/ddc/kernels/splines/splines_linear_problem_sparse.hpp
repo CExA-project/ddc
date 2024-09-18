@@ -94,25 +94,25 @@ unsigned int default_preconditioner_max_block_size() noexcept
 {
 #ifdef KOKKOS_ENABLE_SERIAL
     if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
-        return 32u;
+        return 32U;
     }
 #endif
 #ifdef KOKKOS_ENABLE_OPENMP
     if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
-        return 1u;
+        return 1U;
     }
 #endif
 #ifdef KOKKOS_ENABLE_CUDA
     if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
-        return 1u;
+        return 1U;
     }
 #endif
 #ifdef KOKKOS_ENABLE_HIP
     if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
-        return 1u;
+        return 1U;
     }
 #endif
-    return 1u;
+    return 1U;
 }
 
 /**
@@ -212,7 +212,7 @@ public:
                         gko_exec);
 
         std::shared_ptr const iterations_criterion
-                = gko::stop::Iteration::build().with_max_iters(1000u).on(gko_exec);
+                = gko::stop::Iteration::build().with_max_iters(1000U).on(gko_exec);
 
         std::shared_ptr const preconditioner
                 = gko::preconditioner::Jacobi<double>::build()

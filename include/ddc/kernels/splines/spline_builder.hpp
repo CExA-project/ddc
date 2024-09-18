@@ -206,7 +206,8 @@ public:
                 "Incompatible boundary conditions");
 
         // Calculate block sizes
-        int lower_block_size, upper_block_size;
+        int lower_block_size;
+        int upper_block_size;
         if constexpr (bsplines_type::is_uniform()) {
             compute_block_sizes_uniform(lower_block_size, upper_block_size);
         } else {

@@ -38,19 +38,19 @@ struct DDimY : ddc::NonUniformPointSampling<DimY>
 {
 };
 
-static std::array<double, 4> const array_points_x VALUES_X;
-static std::vector<double> const vector_points_x VALUES_X;
+std::array<double, 4> const array_points_x VALUES_X;
+std::vector<double> const vector_points_x VALUES_X;
 
-static std::vector<double> const vector_points_y VALUES_Y;
+std::vector<double> const vector_points_y VALUES_Y;
 
-static ddc::DiscreteElement<DDimX> constexpr point_ix(2);
-static ddc::Coordinate<DimX> constexpr point_rx(0.3);
+ddc::DiscreteElement<DDimX> constexpr point_ix(2);
+ddc::Coordinate<DimX> constexpr point_rx(0.3);
 
-static ddc::DiscreteElement<DDimY> constexpr point_iy(1);
-static ddc::Coordinate<DimY> constexpr point_ry(0.2);
+ddc::DiscreteElement<DDimY> constexpr point_iy(1);
+ddc::Coordinate<DimY> constexpr point_ry(0.2);
 
-static ddc::DiscreteElement<DDimX, DDimY> constexpr point_ixy(2, 1);
-static ddc::Coordinate<DimX, DimY> constexpr point_rxy(0.3, 0.2);
+ddc::DiscreteElement<DDimX, DDimY> constexpr point_ixy(2, 1);
+ddc::Coordinate<DimX, DimY> constexpr point_rxy(0.3, 0.2);
 
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(NON_UNIFORM_POINT_SAMPLING_CPP)
 

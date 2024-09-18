@@ -20,9 +20,9 @@ using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
 using DDomX = ddc::DiscreteDomain<DDimX>;
 
-static DElemX constexpr lbound_x(50);
-static DVectX constexpr nelems_x(3);
-static DDomX constexpr dom_x(lbound_x, nelems_x);
+DElemX constexpr lbound_x(50);
+DVectX constexpr nelems_x(3);
+DDomX constexpr dom_x(lbound_x, nelems_x);
 
 template <class ElementType, class Support, class Layout, class MemorySpace, class T>
 [[nodiscard]] bool all_equal_to(

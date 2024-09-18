@@ -671,10 +671,12 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUn
     assert(x - rmin() >= -length() * 1e-14);
     assert(rmax() - x >= -length() * 1e-14);
 
-    if (x <= rmin())
+    if (x <= rmin()) {
         return m_break_point_domain.front();
-    if (x >= rmax())
+    }
+    if (x >= rmax()) {
         return m_break_point_domain.back() - 1;
+    }
 
     // Binary search
     ddc::DiscreteElement<knot_discrete_dimension_type> low = m_break_point_domain.front();

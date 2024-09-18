@@ -302,22 +302,22 @@ public:
     }
 #endif
 
-    KOKKOS_FUNCTION constexpr std::size_t size() const
+    static KOKKOS_FUNCTION constexpr std::size_t size()
     {
         return 1;
     }
 
-    KOKKOS_FUNCTION constexpr mlength_type extents() const noexcept
+    static KOKKOS_FUNCTION constexpr mlength_type extents() noexcept
     {
         return {};
     }
 
-    KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept
+    static KOKKOS_FUNCTION constexpr discrete_element_type front() noexcept
     {
         return {};
     }
 
-    KOKKOS_FUNCTION constexpr discrete_element_type back() const noexcept
+    static KOKKOS_FUNCTION constexpr discrete_element_type back() noexcept
     {
         return {};
     }
@@ -355,7 +355,7 @@ public:
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr bool empty() const noexcept
+    static KOKKOS_FUNCTION constexpr bool empty() noexcept
     {
         return false;
     }

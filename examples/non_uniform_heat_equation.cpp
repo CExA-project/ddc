@@ -113,7 +113,7 @@ void display(double time, ChunkType temp)
             [=](ddc::DiscreteElement<DDimX> const ix) {
                 std::cout << std::setw(6) << temp_slice(ix);
             });
-    std::cout << " }" << std::endl;
+    std::cout << " }\n" << std::flush;
 
 #ifdef DDC_BUILD_PDI_WRAPPER
     ddc::PdiEvent("display")

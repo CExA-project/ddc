@@ -52,7 +52,7 @@ TEST(ForEachSerialHost, Empty)
     ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
     ddc::for_each(dom, [=](DElemX const ix) { view(ix) += 1; });
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size())
-            << std::count(storage.begin(), storage.end(), 1) << std::endl;
+            << std::count(storage.begin(), storage.end(), 1) << "\n";
 }
 
 TEST(ForEachSerialHost, ZeroDimension)
@@ -61,7 +61,7 @@ TEST(ForEachSerialHost, ZeroDimension)
     int storage = 0;
     ddc::ChunkSpan<int, DDom0D> const view(&storage, dom);
     ddc::for_each(dom, [=](DElem0D const ii) { view(ii) += 1; });
-    EXPECT_EQ(storage, 1) << storage << std::endl;
+    EXPECT_EQ(storage, 1) << storage << "\n";
 }
 
 TEST(ForEachSerialHost, OneDimension)

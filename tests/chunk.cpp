@@ -334,7 +334,7 @@ TEST(Chunk1DTest, IsAlwaysContiguous)
     EXPECT_TRUE(chunk.is_always_exhaustive());
 }
 
-TEST(Chunk1DTest, is_always_strided)
+TEST(Chunk1DTest, IsAlwaysStrided)
 {
     ChunkX<double> const chunk(dom_x);
     EXPECT_TRUE(chunk.is_always_strided());

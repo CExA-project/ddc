@@ -50,12 +50,12 @@ DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 TEST(ParallelForEachParallelHost, ZeroDimension)
 {
     DDom0D const dom;
-    std::vector<int> storage(dom.size(), 0);
+    std::vector<int> storage(DDom0D::size(), 0);
     ddc::ChunkSpan<int, DDom0D> const view(storage.data(), dom);
     ddc::parallel_for_each(Kokkos::DefaultHostExecutionSpace(), dom, [=](DElem0D const i) {
         view(i) += 1;
     });
-    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
+    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), DDom0D::size());
 }
 
 TEST(ParallelForEachParallelHost, OneDimension)
@@ -92,10 +92,10 @@ void TestParallelForEachParallelDeviceZeroDimension()
     int const* const ptr = storage.data_handle();
     int sum;
     Kokkos::parallel_reduce(
-            dom.size(),
+            DDom0D::size(),
             KOKKOS_LAMBDA(std::size_t i, int& local_sum) { local_sum += ptr[i]; },
             Kokkos::Sum<int>(sum));
-    EXPECT_EQ(sum, dom.size());
+    EXPECT_EQ(sum, DDom0D::size());
 }
 
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FOR_EACH_CPP)

@@ -176,8 +176,8 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>{</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">if</span> (err != cudaSuccess) {</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        std::stringstream ss;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        ss &lt;&lt; <span class="stringliteral">&quot;CUDA Runtime Error at: &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;:&quot;</span> &lt;&lt; line &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        ss &lt;&lt; cudaGetErrorString(err) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; func &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        ss &lt;&lt; <span class="stringliteral">&quot;CUDA Runtime Error at: &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;:&quot;</span> &lt;&lt; line &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        ss &lt;&lt; cudaGetErrorString(err) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; func &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordflow">throw</span> std::runtime_error(ss.str());</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}</div>
@@ -188,8 +188,8 @@ $(document).ready(function(){initNavTree('discrete__space_8hpp_source.html','');
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>{</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">if</span> (err != hipSuccess) {</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        std::stringstream ss;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        ss &lt;&lt; <span class="stringliteral">&quot;HIP Runtime Error at: &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;:&quot;</span> &lt;&lt; line &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        ss &lt;&lt; hipGetErrorString(err) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; func &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        ss &lt;&lt; <span class="stringliteral">&quot;HIP Runtime Error at: &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;:&quot;</span> &lt;&lt; line &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        ss &lt;&lt; hipGetErrorString(err) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; func &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">throw</span> std::runtime_error(ss.str());</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>

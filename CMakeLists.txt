@@ -61,19 +61,6 @@ endif()
 # Custom cmake modules
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
 
-# FFTW
-if("${DDC_BUILD_KERNELS_FFT}" AND NOT FFTW_FOUND)
-	find_package( FFTW MODULE REQUIRED )
-endif()
-
-## CUDA + CUDAToolkit
-if("${DDC_BUILD_KERNELS_FFT}" AND "${Kokkos_ENABLE_CUDA}")
-	find_package( CUDAToolkit MODULE REQUIRED )
-	if( NOT(CUDAToolkit_FOUND) )
-	  message(FATAL_ERROR "CUDAToolkit not found." )
-	endif()
-endif()
-
 
 ## PDI
 
@@ -179,30 +166,27 @@ install(
 
 # Link library to DDC
 
-if( FFTW_FOUND )
-	target_link_libraries( DDC INTERFACE FFTW::Float )
-	target_link_libraries( DDC INTERFACE FFTW::Double )
-endif()
+if("${DDC_BUILD_KERNELS_FFT}")
+  # Kokkos-fft
+  set(DDC_KokkosFFT_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `Kokkos-fft` package. Options: ${DDC_DEPENDENCY_POLICIES}")
+  set_property(CACHE DDC_KokkosFFT_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
 
-if( FFTW_FOUND AND "${Kokkos_ENABLE_SERIAL}")
-	target_compile_definitions(DDC INTERFACE fftw_serial_AVAIL)
-endif()
+  if("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "AUTO")
+    if(NOT TARGET KokkosFFT::fft)
+      find_package(KokkosFFT CONFIG QUIET)
+      if(NOT KokkosFFT_FOUND)
+        option(KokkosFFT_ENABLE_HOST_AND_DEVICE "Enable FFT on both host and device" ON)
+        add_subdirectory(vendor/kokkos-fft)
+      endif()
+    endif()
+  elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
+    option(KokkosFFT_ENABLE_HOST_AND_DEVICE "Enable FFT on both host and device" ON)
+    add_subdirectory(vendor/kokkos-fft)
+  elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
+    find_package(KokkosFFT CONFIG REQUIRED)
+  endif()
 
-if( FFTW_FOUND AND "${Kokkos_ENABLE_OPENMP}")
-	target_link_libraries( DDC INTERFACE FFTW::FloatOpenMP )
-	target_link_libraries( DDC INTERFACE FFTW::DoubleOpenMP )
-	target_compile_definitions(DDC INTERFACE fftw_omp_AVAIL)
-endif()
-
-if( CUDAToolkit_FOUND AND "${Kokkos_ENABLE_CUDA}")
-	target_link_libraries( DDC INTERFACE CUDA::cufft )
-	target_compile_definitions(DDC INTERFACE cufft_AVAIL)
-endif()
-
-if("${Kokkos_ENABLE_HIP}")
-	find_package( hipfft REQUIRED ) # Not compatible with nvidia
-	target_link_libraries( DDC INTERFACE hip::hipfft )
-	target_compile_definitions(DDC INTERFACE hipfft_AVAIL)
+  target_link_libraries(DDC INTERFACE KokkosFFT::fft)
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")

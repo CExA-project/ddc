@@ -13,6 +13,18 @@
 
 #include <Kokkos_Core.hpp>
 
+#if !defined(KOKKOSFFT_ENABLE_SERIAL)
+#if defined(KOKKOS_ENABLE_SERIAL) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)
+#define KOKKOSFFT_ENABLE_SERIAL
+#endif
+#endif
+
+#if !defined(KOKKOSFFT_ENABLE_OPENMP)
+#if defined(KOKKOS_ENABLE_OPENMP) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)
+#define KOKKOSFFT_ENABLE_OPENMP
+#endif
+#endif
+
 template <typename X>
 struct DDim : ddc::UniformPointSampling<X>
 {
@@ -237,7 +249,7 @@ TEST(FourierMesh, Odd)
     test_fourier_mesh<RDimX>(17);
 }
 
-#if fftw_serial_AVAIL
+#if defined(KOKKOSFFT_ENABLE_SERIAL)
 TEST(FftNorm, Off)
 {
     test_fft_norm<
@@ -317,7 +329,7 @@ TEST(FftSerialHost, R2cIn3d)
 }
 #endif
 
-#if fftw_omp_AVAIL
+#if defined(KOKKOSFFT_ENABLE_OPENMP)
 TEST(FftParallelHost, R2cIn1d)
 {
     test_fft<Kokkos::OpenMP, Kokkos::OpenMP::memory_space, float, Kokkos::complex<float>, RDimX>();
@@ -380,7 +392,7 @@ TEST(FftParallelDevice, R2cIn3d)
             RDimZ>();
 }
 
-#if fftw_serial_AVAIL
+#if defined(KOKKOSFFT_ENABLE_SERIAL)
 TEST(FftSerialHost, C2cIn1d)
 {
     test_fft<
@@ -415,7 +427,7 @@ TEST(FftSerialHost, C2cIn3d)
 }
 #endif
 
-#if fftw_omp_AVAIL
+#if defined(KOKKOSFFT_ENABLE_OPENMP)
 TEST(FftParallelHost, C2cIn1d)
 {
     test_fft<
@@ -483,7 +495,7 @@ TEST(FftParallelDevice, C2cIn3d)
             RDimZ>();
 }
 
-#if fftw_serial_AVAIL
+#if defined(KOKKOSFFT_ENABLE_SERIAL)
 TEST(FftSerialHost, D2zIn1d)
 {
     test_fft<
@@ -518,7 +530,7 @@ TEST(FftSerialHost, D2zIn3d)
 }
 #endif
 
-#if fftw_omp_AVAIL
+#if defined(KOKKOSFFT_ENABLE_OPENMP)
 TEST(FftParallelHost, D2zIn1d)
 {
     test_fft<
@@ -586,7 +598,7 @@ TEST(FftParallelDevice, D2zIn3d)
             RDimZ>();
 }
 
-#if fftw_serial_AVAIL
+#if defined(KOKKOSFFT_ENABLE_SERIAL)
 TEST(FftSerialHost, Z2zIn1d)
 {
     test_fft<
@@ -621,7 +633,7 @@ TEST(FftSerialHost, Z2zIn3d)
 }
 #endif
 
-#if fftw_omp_AVAIL
+#if defined(KOKKOSFFT_ENABLE_OPENMP)
 TEST(FftParallelHost, Z2zIn1d)
 {
     test_fft<

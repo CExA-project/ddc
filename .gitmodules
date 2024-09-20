@@ -18,3 +18,6 @@
 [submodule "vendor/doxygen-awesome-css"]
 	path = vendor/doxygen-awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "vendor/kokkos-fft"]
+	path = vendor/kokkos-fft
+	url = https://github.com/kokkos/kokkos-fft.git

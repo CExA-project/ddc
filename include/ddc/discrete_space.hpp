@@ -37,6 +37,21 @@
     ddc::detail::hip_throw_on_error((val), #val, __FILE__, __LINE__)
 #endif
 
+#if defined(KOKKOS_ENABLE_CUDA)
+#if !defined(KOKKOS_ENABLE_CUDA_CONSTEXPR)
+static_assert(false, "DDC requires option Kokkos_ENABLE_CUDA_CONSTEXPR");
+#endif
+
+#if !defined(KOKKOS_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE)
+static_assert(false, "DDC requires option Kokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE");
+#endif
+#endif
+
+#if defined(KOKKOS_ENABLE_HIP)
+#if !defined(KOKKOS_ENABLE_HIP_RELOCATABLE_DEVICE_CODE)
+static_assert(false, "DDC requires option Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE");
+#endif
+#endif
 
 namespace ddc {
 

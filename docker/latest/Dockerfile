@@ -7,8 +7,8 @@ FROM ubuntu:noble
 LABEL "org.opencontainers.image.source"="https://github.com/Maison-de-la-Simulation/ddc"
 
 ARG BACKEND
-ARG AMDGPU_VERSION=6.2
-ARG ROCM_VERSION=6.2
+ARG AMDGPU_VERSION=6.2.1
+ARG ROCM_VERSION=6.2.1
 
 COPY bash_run /bin/
 ENV BASH_ENV=/etc/profile
@@ -16,8 +16,8 @@ SHELL ["/bin/bash", "-c"]
 
 ENV PATH="/usr/local/cuda-12.6/bin${PATH:+:${PATH}}"
 ENV PATH="/opt/cmake-3.27.9-linux-x86_64/bin${PATH:+:${PATH}}"
-ENV PATH="${PATH:+$PATH:}/opt/rocm-${ROCM_VERSION}.0/bin"
-ENV CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:+$CMAKE_PREFIX_PATH:}/opt/rocm-${ROCM_VERSION}.0"
+ENV PATH="${PATH:+$PATH:}/opt/rocm-${ROCM_VERSION}/bin"
+ENV CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:+$CMAKE_PREFIX_PATH:}/opt/rocm-${ROCM_VERSION}"
 
 RUN chmod +x /bin/bash_run \
  && export DEBIAN_FRONTEND=noninteractive \
@@ -81,13 +81,13 @@ RUN chmod +x /bin/bash_run \
       apt-get install -y --no-install-recommends \
       # libxml2 seems to be a missing dependency of rocm-hip-runtime
       libxml2 \
-      hipblas-dev${ROCM_VERSION}.0 \
-      hipfft-dev${ROCM_VERSION}.0 \
-      hiprand-dev${ROCM_VERSION}.0 \
-      hipsparse-dev${ROCM_VERSION}.0 \
-      rocm-hip-runtime-dev${ROCM_VERSION}.0 \
-      rocrand-dev${ROCM_VERSION}.0 \
-      rocthrust-dev${ROCM_VERSION}.0 \
+      hipblas-dev${ROCM_VERSION} \
+      hipfft-dev${ROCM_VERSION} \
+      hiprand-dev${ROCM_VERSION} \
+      hipsparse-dev${ROCM_VERSION} \
+      rocm-hip-runtime-dev${ROCM_VERSION} \
+      rocrand-dev${ROCM_VERSION} \
+      rocthrust-dev${ROCM_VERSION} \
       && echo "/opt/rocm/lib" >> /etc/ld.so.conf.d/rocm.conf \
       && echo "/opt/rocm/lib64" >> /etc/ld.so.conf.d/rocm.conf \
       && ldconfig \

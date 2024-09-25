@@ -5,6 +5,9 @@ Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![test](https://github.com/CExA-project/ddc/actions/workflows/tests.yml/badge.svg)](https://github.com/CExA-project/ddc/actions/workflows/tests.yml)
+
 See <https://ddc.mdls.fr/>
 
 [DDC](https://ddc.mdls.fr/), is a C++-17 library that aims to offer to the C++/MPI world an equivalent to the [`xarray.DataArray`](https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html)/[`dask.Array`](https://docs.dask.org/en/stable/array.html) python environment.

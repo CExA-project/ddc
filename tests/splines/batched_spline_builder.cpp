@@ -97,8 +97,8 @@ struct IDim_
 {
 };
 
-template <typename X, typename I>
-using IDim = IDim_<X, std::is_same_v<X, I>>;
+template <typename X, typename Y>
+using IDim = IDim_<X, std::is_same_v<X, Y>>;
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
@@ -110,7 +110,7 @@ struct IDim_ : ddc::NonUniformPointSampling<X>
 {
 };
 
-template <typename X, typename I>
+template <typename X, typename Y>
 using IDim = IDim_<X>;
 #endif
 
@@ -125,8 +125,8 @@ template <typename... X>
 using Coord = ddc::Coordinate<X...>;
 
 // Extract batch dimensions from IDim (remove dimension of interest). Usefull
-template <typename I, typename... X>
-using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>, ddc::detail::TypeSeq<I>>;
+template <typename X, typename... Y>
+using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<Y...>, ddc::detail::TypeSeq<X>>;
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>

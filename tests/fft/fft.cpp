@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstddef>
+#include <stdexcept>
 #include <type_traits>
 
 #include <ddc/ddc.hpp>
@@ -197,27 +198,23 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
 
     double Ff0_expected;
     double FFf_expected;
-    switch (norm) {
-    case ddc::FFT_Normalization::OFF:
+    if (norm == ddc::FFT_Normalization::OFF) {
         Ff0_expected = f_sum;
         FFf_expected = f_sum;
-        break;
-    case ddc::FFT_Normalization::FORWARD:
+    } else if (norm == ddc::FFT_Normalization::FORWARD) {
         Ff0_expected = 1;
         FFf_expected = 1;
-        break;
-    case ddc::FFT_Normalization::BACKWARD:
+    } else if (norm == ddc::FFT_Normalization::BACKWARD) {
         Ff0_expected = f_sum;
         FFf_expected = 1;
-        break;
-    case ddc::FFT_Normalization::ORTHO:
+    } else if (norm == ddc::FFT_Normalization::ORTHO) {
         Ff0_expected = Kokkos::sqrt(f_sum);
         FFf_expected = 1;
-        break;
-    case ddc::FFT_Normalization::FULL:
+    } else if (norm == ddc::FFT_Normalization::FULL) {
         Ff0_expected = 1 / Kokkos::sqrt(2 * Kokkos::numbers::pi);
         FFf_expected = 1;
-        break;
+    } else {
+        throw std::runtime_error("ddc::FFT_Normalization not handled");
     }
 
     double const epsilon = 1e-6;

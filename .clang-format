@@ -132,10 +132,6 @@ IncludeCategories:
     Priority:        -120
     SortPriority:    0
     CaseSensitive:   false
-  - Regex:           '^<sll/.*>$'
-    Priority:        -100
-    SortPriority:    0
-    CaseSensitive:   false
   - Regex:           '^<.*/.*>$'
     Priority:        -80
     SortPriority:    0

@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <array>
 #include <cstddef>
 #include <ostream>
 #include <utility>
@@ -71,24 +70,15 @@ std::ostream& stream_impl(
     return os;
 }
 
-
-// template <class>
-// struct IsContiguous;
-// template <>
-// struct IsContiguous<std::experimental::layout_stride>
-// {
-//     static constexpr bool val = false;
-// };
-// template <>
-// struct IsContiguous<std::experimental::layout_right>
-// {
-//     static constexpr bool val = true;
-// };
-// template <class ElementType, class Extents, class LayoutPolicy, class AccessorPolicy>
-// struct IsContiguous<std::experimental::mdspan<ElementType, Extents, LayoutPolicy, AccessorPolicy>>
-// {
-//     static constexpr bool val = IsContiguous<LayoutPolicy>::val;
-// };
+/// Convenient function to dump a mdspan, it recursively prints all dimensions.
+/// Disclaimer: use with caution for large arrays
+template <class ElementType, class Extents, class Layout, class Accessor>
+std::ostream& operator<<(
+        std::ostream& os,
+        std::experimental::mdspan<ElementType, Extents, Layout, Accessor> const& s)
+{
+    return ddc::detail::stream_impl(os, s, std::make_index_sequence<Extents::rank()>());
+}
 
 } // namespace ddc::detail
 
@@ -112,18 +102,6 @@ using View1D = ViewND<1, ElementType>;
 template <class ElementType>
 using View2D = ViewND<2, ElementType>;
 
-template <class ElementType, std::size_t N>
-Span1D<ElementType> as_span(std::array<ElementType, N>& arr) noexcept
-{
-    return Span1D<ElementType>(arr.data(), N);
-}
-
-template <class ElementType, std::size_t N>
-Span1D<const ElementType> as_span(std::array<ElementType, N> const& arr) noexcept
-{
-    return Span1D<const ElementType>(arr.data(), N);
-}
-
 using DSpan1D = ddc::Span1D<double>;
 
 using DSpan2D = ddc::Span2D<double>;
@@ -135,18 +113,5 @@ using CDSpan2D = ddc::Span2D<double const>;
 using DView1D = View1D<double>;
 
 using DView2D = View2D<double>;
-
-// template <class C>
-// constexpr bool is_contiguous_v = detail::IsContiguous<C>::val;
-
-/// Convenient function to dump a mdspan, it recursively prints all dimensions.
-/// Disclaimer: use with caution for large arrays
-template <class ElementType, class Extents, class Layout, class Accessor>
-std::ostream& operator<<(
-        std::ostream& os,
-        std::experimental::mdspan<ElementType, Extents, Layout, Accessor> const& s)
-{
-    return ddc::detail::stream_impl(os, s, std::make_index_sequence<Extents::rank()>());
-}
 
 } // namespace ddc

@@ -98,8 +98,8 @@ var NAVTREEINDEX =
 "classddc_1_1KnotsAsInterpolationPoints.html#a284ded7e85d17eebffd68e7f72d64e4d",
 "classddc_1_1SplineBuilder.html#a42be62740203361e4f50e42631d20a2a",
 "classddc_1_1SplineEvaluator2D.html#affaa48699a4aec8ad995cf73cc41cc37",
-"namespaceddc.html#a54da8d37b5ff148e68c65185c0c1e44e",
-"structddc_1_1reducer_1_1min.html"
+"namespaceddc.html#a580afa45261b42925af30519dca3c0bf",
+"structddc_1_1reducer_1_1min.html#a286d64b92533b4387e7302981e80a87b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

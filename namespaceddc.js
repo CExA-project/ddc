@@ -68,7 +68,7 @@ var namespaceddc =
     [ "DiscreteElementType", "namespaceddc.html#a4c7a2930d12432d53c1fcfbb1a1ecda9", null ],
     [ "DiscreteVectorElement", "namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a", null ],
     [ "knot_discrete_dimension_t", "namespaceddc.html#a9bb23b18d7ef49df880108facd429dc4", null ],
-    [ "SpanND", "namespaceddc.html#a68e6835d462fda368841ec8c17081079", null ],
+    [ "SpanND", "namespaceddc.html#a3cb193243e09bb06d637109d835433ba", null ],
     [ "ViewND", "namespaceddc.html#a81595331ac59bc701cfd6d82f9ca3248", null ],
     [ "Span1D", "namespaceddc.html#a90a3ae31ee9a0b37dfd96a2d942b300f", null ],
     [ "Span2D", "namespaceddc.html#aff4173d4e6a9546b3325d06ae290f250", null ],

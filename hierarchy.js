@@ -11,11 +11,11 @@ var hierarchy =
     [ "ddc::Chunk< ElementType, class, Allocator >", "namespaceddc.html#classddc_1_1Chunk", null ],
     [ "ddc::chunk_traits< T >", "namespaceddc.html#structddc_1_1chunk__traits", null ],
     [ "ddc::ChunkCommon< ElementType, SupportType, LayoutStridedPolicy >", "namespaceddc.html#classddc_1_1ChunkCommon", null ],
+    [ "ddc::ChunkCommon< ElementType, DiscreteDomain< DDims... >, Kokkos::layout_right >", "namespaceddc.html", [
+      [ "ddc::Chunk< ElementType, DiscreteDomain< DDims... >, Allocator >", "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html", null ]
+    ] ],
     [ "ddc::ChunkCommon< ElementType, DiscreteDomain< DDims... >, LayoutStridedPolicy >", "classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html", [
       [ "ddc::ChunkSpan< ElementType, DiscreteDomain< DDims... >, LayoutStridedPolicy, MemorySpace >", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html", null ]
-    ] ],
-    [ "ddc::ChunkCommon< ElementType, DiscreteDomain< DDims... >, std::experimental::layout_right >", "namespaceddc.html", [
-      [ "ddc::Chunk< ElementType, DiscreteDomain< DDims... >, Allocator >", "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html", null ]
     ] ],
     [ "ddc::ChunkSpan< ElementType, SupportType, LayoutStridedPolicy, MemorySpace >", "namespaceddc.html#classddc_1_1ChunkSpan", null ],
     [ "ddc::ConstantExtrapolationRule< DimI, Dim >", "namespaceddc.html#structddc_1_1ConstantExtrapolationRule", null ],

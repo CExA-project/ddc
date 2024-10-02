@@ -8,8 +8,6 @@
 #include <string>
 #include <utility>
 
-#include <experimental/mdspan>
-
 #include <Kokkos_Core.hpp>
 
 #include "ddc/chunk_common.hpp"
@@ -27,11 +25,10 @@ inline constexpr bool enable_chunk<Chunk<ElementType, SupportType, Allocator>> =
 
 template <class ElementType, class... DDims, class Allocator>
 class Chunk<ElementType, DiscreteDomain<DDims...>, Allocator>
-    : public ChunkCommon<ElementType, DiscreteDomain<DDims...>, std::experimental::layout_right>
+    : public ChunkCommon<ElementType, DiscreteDomain<DDims...>, Kokkos::layout_right>
 {
 protected:
-    using base_type
-            = ChunkCommon<ElementType, DiscreteDomain<DDims...>, std::experimental::layout_right>;
+    using base_type = ChunkCommon<ElementType, DiscreteDomain<DDims...>, Kokkos::layout_right>;
 
     /// ND memory view
     using internal_mdspan_type = typename base_type::internal_mdspan_type;
@@ -41,14 +38,14 @@ public:
     using span_type = ChunkSpan<
             ElementType,
             DiscreteDomain<DDims...>,
-            std::experimental::layout_right,
+            Kokkos::layout_right,
             typename Allocator::memory_space>;
 
     /// type of a view of this full chunk
     using view_type = ChunkSpan<
             ElementType const,
             DiscreteDomain<DDims...>,
-            std::experimental::layout_right,
+            Kokkos::layout_right,
             typename Allocator::memory_space>;
 
     /// The dereferenceable part of the co-domain but with indexing starting at 0

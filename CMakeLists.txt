@@ -27,30 +27,13 @@ include(CMakePackageConfigHelpers)
 include(CTest)
 
 
-## mdspan
-
-set(DDC_mdspan_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `mdspan` package. Options: ${DDC_DEPENDENCY_POLICIES}")
-set_property(CACHE DDC_mdspan_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
-if("${DDC_mdspan_DEPENDENCY_POLICY}" STREQUAL "AUTO")
-	if(NOT TARGET std::mdspan)
-		find_package(mdspan 0.6.0 EXACT CONFIG QUIET)
-		if(NOT mdspan_FOUND)
-			add_subdirectory(vendor/mdspan)
-		endif()
-	endif()
-elseif("${DDC_mdspan_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
-	add_subdirectory(vendor/mdspan)
-elseif("${DDC_mdspan_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-	find_package(mdspan 0.6.0 EXACT CONFIG REQUIRED)
-endif()
-
 ## kokkos
 
 set(DDC_Kokkos_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `Kokkos` package. Options: ${DDC_DEPENDENCY_POLICIES}")
 set_property(CACHE DDC_Kokkos_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
 if("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "AUTO")
 	if(NOT TARGET Kokkos::kokkos)
-		find_package(Kokkos CONFIG QUIET)
+		find_package(Kokkos 4.4...4.5 CONFIG QUIET)
 		if(NOT Kokkos_FOUND)
 			if("${Kokkos_ENABLE_CUDA}")
 				option(Kokkos_ENABLE_CUDA_CONSTEXPR "Whether to activate experimental relaxed constexpr functions" ON)
@@ -72,7 +55,7 @@ elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
 	endif()
 	add_subdirectory(vendor/kokkos)
 elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-	find_package(Kokkos CONFIG REQUIRED)
+	find_package(Kokkos 4.4...4.5 CONFIG REQUIRED)
 endif()
 
 # Custom cmake modules
@@ -179,7 +162,7 @@ target_include_directories(DDC
 		"$<INSTALL_INTERFACE:include>"
 )
 target_link_libraries(DDC
-	INTERFACE std::mdspan Kokkos::kokkos
+	INTERFACE Kokkos::kokkos
 )
 target_compile_definitions(DDC
 	INTERFACE

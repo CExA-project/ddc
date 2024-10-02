@@ -6,8 +6,6 @@
 #include <iostream>
 #include <string>
 
-#include <experimental/mdspan>
-
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
@@ -31,7 +29,7 @@ void blinker_init(
         ddc::ChunkSpan<
                 cell,
                 ddc::DiscreteDomain<DDimX, DDimY>,
-                std::experimental::layout_right,
+                Kokkos::layout_right,
                 Kokkos::DefaultExecutionSpace::memory_space> cells)
 {
     ddc::parallel_for_each(

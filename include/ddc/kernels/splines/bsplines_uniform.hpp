@@ -483,14 +483,10 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
                 std::size_t const n) const
 {
     std::array<double, (degree() + 1) * (degree() + 1)> ndu_ptr;
-    std::experimental::mdspan<
-            double,
-            std::experimental::extents<std::size_t, degree() + 1, degree() + 1>> const
-            ndu(ndu_ptr.data());
+    Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree() + 1, degree() + 1>> const ndu(
+            ndu_ptr.data());
     std::array<double, 2 * (degree() + 1)> a_ptr;
-    std::experimental::
-            mdspan<double, std::experimental::extents<std::size_t, degree() + 1, 2>> const a(
-                    a_ptr.data());
+    Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree() + 1, 2>> const a(a_ptr.data());
     double offset;
     int jmin;
 
@@ -639,9 +635,8 @@ UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::integrals(
         }
 
         std::array<double, degree() + 2> edge_vals_ptr;
-        std::experimental::
-                mdspan<double, std::experimental::extents<std::size_t, degree() + 2>> const
-                        edge_vals(edge_vals_ptr.data());
+        Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree() + 2>> const edge_vals(
+                edge_vals_ptr.data());
 
         eval_basis(edge_vals, rmin(), degree() + 1);
 

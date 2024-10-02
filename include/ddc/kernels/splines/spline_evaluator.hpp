@@ -8,8 +8,6 @@
 #include <cstddef>
 #include <type_traits>
 
-#include <experimental/mdspan>
-
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Macros.hpp>
@@ -129,7 +127,7 @@ public:
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
-                            std::experimental::layout_right,
+                            Kokkos::layout_right,
                             memory_space>>,
             "LowerExtrapolationRule::operator() has to be callable with usual arguments.");
     static_assert(
@@ -140,7 +138,7 @@ public:
                     ddc::ChunkSpan<
                             double const,
                             spline_domain_type,
-                            std::experimental::layout_right,
+                            Kokkos::layout_right,
                             memory_space>>,
             "UpperExtrapolationRule::operator() has to be callable with usual arguments.");
 
@@ -437,9 +435,7 @@ private:
                 std::is_same_v<EvalType, eval_type> || std::is_same_v<EvalType, eval_deriv_type>);
         ddc::DiscreteElement<bsplines_type> jmin;
         std::array<double, bsplines_type::degree() + 1> vals_ptr;
-        std::experimental::mdspan<
-                double,
-                std::experimental::extents<std::size_t, bsplines_type::degree() + 1>> const
+        Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type::degree() + 1>> const
                 vals(vals_ptr.data());
         ddc::Coordinate<continuous_dimension_type> const coord_eval_interest
                 = ddc::select<continuous_dimension_type>(coord_eval);

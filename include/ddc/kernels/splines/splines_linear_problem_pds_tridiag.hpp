@@ -140,6 +140,7 @@ public:
                 KOKKOS_LAMBDA(const int i) {
                     auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                     KokkosBatched::SerialPttrs<
+                            KokkosBatched::Uplo::Lower,
                             KokkosBatched::Algo::Pttrs::Unblocked>::invoke(d, e, sub_b);
                 });
     }

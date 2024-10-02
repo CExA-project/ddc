@@ -6,8 +6,6 @@
 
 #include <type_traits>
 
-#include <experimental/mdspan>
-
 #include <Kokkos_Core.hpp>
 
 #include "ddc/chunk_span.hpp"
@@ -27,7 +25,7 @@ auto create_mirror(
             Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,
             "DDC: parameter \"Space\" must be either a Kokkos execution space or a memory space");
     static_assert(
-            std::is_same_v<Layout, std::experimental::layout_right>,
+            std::is_same_v<Layout, Kokkos::layout_right>,
             "DDC: parameter \"Layout\" must be a `layout_right`");
     return Chunk(
             src.domain(),
@@ -55,7 +53,7 @@ auto create_mirror_and_copy(
             Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,
             "DDC: parameter \"Space\" must be either a Kokkos execution space or a memory space");
     static_assert(
-            std::is_same_v<Layout, std::experimental::layout_right>,
+            std::is_same_v<Layout, Kokkos::layout_right>,
             "DDC: parameter \"Layout\" must be a `layout_right`");
     Chunk chunk = create_mirror(space, src);
     parallel_deepcopy(chunk, src);
@@ -86,7 +84,7 @@ auto create_mirror_view(
             Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,
             "DDC: parameter \"Space\" must be either a Kokkos execution space or a memory space");
     static_assert(
-            std::is_same_v<Layout, std::experimental::layout_right>,
+            std::is_same_v<Layout, Kokkos::layout_right>,
             "DDC: parameter \"Layout\" must be a `layout_right`");
     if constexpr (Kokkos::SpaceAccessibility<Space, MemorySpace>::accessible) {
         return src;
@@ -116,7 +114,7 @@ auto create_mirror_view_and_copy(
             Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,
             "DDC: parameter \"Space\" must be either a Kokkos execution space or a memory space");
     static_assert(
-            std::is_same_v<Layout, std::experimental::layout_right>,
+            std::is_same_v<Layout, Kokkos::layout_right>,
             "DDC: parameter \"Layout\" must be a `layout_right`");
     if constexpr (Kokkos::SpaceAccessibility<Space, MemorySpace>::accessible) {
         return src;

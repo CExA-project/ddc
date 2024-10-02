@@ -8,8 +8,6 @@
 #include <cstddef>
 #include <type_traits>
 
-#include <experimental/mdspan>
-
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
@@ -63,10 +61,8 @@ public:
         static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
 
         std::array<double, BSplines::degree() + 1> vals_ptr;
-        std::experimental::mdspan<
-                double,
-                std::experimental::extents<std::size_t, BSplines::degree() + 1>> const
-                vals(vals_ptr.data());
+        Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines::degree() + 1>> const vals(
+                vals_ptr.data());
 
         ddc::DiscreteElement<BSplines> const idx
                 = ddc::discrete_space<BSplines>().eval_basis(vals, m_eval_pos);
@@ -184,15 +180,11 @@ public:
         }
 
         std::array<double, BSplines1::degree() + 1> vals1_ptr;
-        std::experimental::mdspan<
-                double,
-                std::experimental::extents<std::size_t, BSplines1::degree() + 1>> const
-                vals1(vals1_ptr.data());
+        Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines1::degree() + 1>> const vals1(
+                vals1_ptr.data());
         std::array<double, BSplines2::degree() + 1> vals2_ptr;
-        std::experimental::mdspan<
-                double,
-                std::experimental::extents<std::size_t, BSplines2::degree() + 1>> const
-                vals2(vals2_ptr.data());
+        Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines2::degree() + 1>> const vals2(
+                vals2_ptr.data());
 
         ddc::DiscreteElement<BSplines1> const idx1 = ddc::discrete_space<BSplines1>().eval_basis(
                 vals1,

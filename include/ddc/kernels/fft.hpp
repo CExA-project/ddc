@@ -10,8 +10,6 @@
 #include <type_traits>
 #include <utility>
 
-#include <experimental/mdspan>
-
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
@@ -737,8 +735,8 @@ void fft(
         ddc::kwArgs_fft kwargs = {ddc::FFT_Normalization::OFF})
 {
     static_assert(
-            std::is_same_v<LayoutIn, std::experimental::layout_right>
-                    && std::is_same_v<LayoutOut, std::experimental::layout_right>,
+            std::is_same_v<LayoutIn, Kokkos::layout_right>
+                    && std::is_same_v<LayoutOut, Kokkos::layout_right>,
             "Layouts must be right-handed");
     static_assert(
             (is_uniform_point_sampling_v<DDimX> && ...),
@@ -794,8 +792,8 @@ void ifft(
         ddc::kwArgs_fft kwargs = {ddc::FFT_Normalization::OFF})
 {
     static_assert(
-            std::is_same_v<LayoutIn, std::experimental::layout_right>
-                    && std::is_same_v<LayoutOut, std::experimental::layout_right>,
+            std::is_same_v<LayoutIn, Kokkos::layout_right>
+                    && std::is_same_v<LayoutOut, Kokkos::layout_right>,
             "Layouts must be right-handed");
     static_assert(
             (is_uniform_point_sampling_v<DDimX> && ...),

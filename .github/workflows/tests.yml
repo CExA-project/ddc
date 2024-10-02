@@ -160,7 +160,6 @@ jobs:
           export GTest_ROOT=$PWD/opt/gtest
           export Kokkos_ROOT=$PWD/opt/kokkos
           export KokkosKernels_ROOT=$PWD/opt/kokkos-kernels
-          export mdspan_ROOT=$PWD/opt/mdspan
 
           cmake \
             -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
@@ -216,16 +215,6 @@ jobs:
 
           cmake \
             -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
-            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -DMDSPAN_CXX_STANDARD=${{matrix.cxx_version}} \
-            -B build \
-            -S /src/vendor/mdspan
-          cmake --build build --parallel 2
-          cmake --install build --prefix $mdspan_ROOT
-          rm -rf build
-
-          cmake \
-            -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
             -DCMAKE_CXX_FLAGS="\
               -Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors \
               ${DDC_CMAKE_CXX_FLAGS}" \
@@ -234,7 +223,6 @@ jobs:
             -DDDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
             -DDDC_GTest_DEPENDENCY_POLICY=INSTALLED \
             -DDDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
-            -DDDC_mdspan_DEPENDENCY_POLICY=INSTALLED \
             -B build \
             -S /src
           cmake --build build --parallel 2
@@ -301,7 +289,6 @@ jobs:
             -DDDC_BUILD_BENCHMARKS=ON \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_CXX_STANDARD=17 \
-            -DMDSPAN_CXX_STANDARD=17 \
             -DKokkos_ENABLE_DEPRECATED_CODE_3=OFF \
             -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
             -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
@@ -364,7 +351,6 @@ jobs:
         -DBUILD_TESTING=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_STANDARD=17 \
-        -DMDSPAN_CXX_STANDARD=17 \
         -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
         -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
         -B build \

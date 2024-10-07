@@ -7,7 +7,7 @@
 include(CMakeFindDependencyMacro)
 
 if(@DDC_BUILD_KERNELS_FFT@)
-   find_dependency(KokkosFFT 0.2 CONFIG REQUIRED)
+   find_dependency(KokkosFFT 0.2.1...<1 CONFIG)
 endif()
 
 if(@DDC_BUILD_PDI_WRAPPER@)

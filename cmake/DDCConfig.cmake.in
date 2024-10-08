@@ -10,6 +10,12 @@ if(@DDC_BUILD_KERNELS_FFT@)
    find_dependency(KokkosFFT 0.2.1...<1 CONFIG)
 endif()
 
+if(@DDC_BUILD_KERNELS_SPLINES@)
+   find_package(Ginkgo 1.8.0 EXACT)
+   find_package(LAPACKE)
+   find_package(KokkosKernels)
+endif()
+
 if(@DDC_BUILD_PDI_WRAPPER@)
    find_dependency(PDI COMPONENTS C)
 endif()

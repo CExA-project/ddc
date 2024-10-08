@@ -159,6 +159,7 @@ jobs:
           export benchmark_ROOT=$PWD/opt/benchmark
           export GTest_ROOT=$PWD/opt/gtest
           export Kokkos_ROOT=$PWD/opt/kokkos
+          export KokkosFFT_ROOT=$PWD/opt/kokkos-fft
           export KokkosKernels_ROOT=$PWD/opt/kokkos-kernels
 
           cmake \
@@ -199,6 +200,16 @@ jobs:
           cmake \
             -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
             -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -DKokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
+            -B build \
+            -S /src/vendor/kokkos-fft
+          cmake --build build --parallel 2
+          cmake --install build --prefix $KokkosFFT_ROOT
+          rm -rf build
+
+          cmake \
+            -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -DKokkosKernels_ADD_DEFAULT_ETI=OFF \
             -DKokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
             -DKokkosKernels_ENABLE_COMPONENT_BLAS=ON \
@@ -223,6 +234,7 @@ jobs:
             -DDDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
             -DDDC_GTest_DEPENDENCY_POLICY=INSTALLED \
             -DDDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
+            -DDDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
             -B build \
             -S /src
           cmake --build build --parallel 2

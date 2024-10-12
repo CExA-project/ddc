@@ -66,7 +66,7 @@ public:
      * @param[in, out] multi_rhs A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.
      */
-    virtual void solve(MultiRHS b, bool transpose = false) const = 0;
+    virtual void solve(MultiRHS b, bool transpose) const = 0;
 
     /**
      * @brief Get the size of the square matrix in one of its dimensions.

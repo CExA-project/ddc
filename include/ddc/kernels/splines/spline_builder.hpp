@@ -874,7 +874,7 @@ operator()(
             static_cast<std::size_t>(spline_tr.template extent<bsplines_type>()),
             batch_domain().size());
     // Compute spline coef
-    matrix->solve(bcoef_section);
+    matrix->solve(bcoef_section, false);
     // Transpose back spline_tr into spline.
     ddc::parallel_for_each(
             "ddc_splines_transpose_back_rhs",

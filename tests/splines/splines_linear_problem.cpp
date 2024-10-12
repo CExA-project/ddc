@@ -103,11 +103,12 @@ void solve_and_validate(
     fill_identity(inv);
     inv_ptr.modify_host();
     inv_ptr.sync_device();
-    splines_linear_problem.solve(
-            ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
-                    inv_ptr.d_view.data(),
-                    splines_linear_problem.required_number_of_rhs_rows(),
-                    N));
+    splines_linear_problem
+            .solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
+                           inv_ptr.d_view.data(),
+                           splines_linear_problem.required_number_of_rhs_rows(),
+                           N),
+                   false);
     inv_ptr.modify_device();
     inv_ptr.sync_host();
 

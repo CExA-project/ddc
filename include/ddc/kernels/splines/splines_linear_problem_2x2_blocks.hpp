@@ -280,7 +280,7 @@ public:
         // Compute Q^-1*gamma in top-right block
         m_top_right_block.modify_host();
         m_top_right_block.sync_device();
-        m_top_left_block->solve(m_top_right_block.d_view);
+        m_top_left_block->solve(m_top_right_block.d_view, false);
         m_top_right_block_coo = dense2coo(m_top_right_block.d_view);
         m_top_right_block.modify_device();
         m_top_right_block.sync_host();
@@ -373,9 +373,9 @@ public:
                         std::pair<std::size_t, std::size_t>(m_top_left_block->size(), b.extent(0)),
                         Kokkos::ALL);
         if (!transpose) {
-            m_top_left_block->solve(b1);
+            m_top_left_block->solve(b1, false);
             spdm_minus1_1(m_bottom_left_block_coo, b1, b2);
-            m_bottom_right_block->solve(b2);
+            m_bottom_right_block->solve(b2, false);
             spdm_minus1_1(m_top_right_block_coo, b2, b1);
         } else {
             spdm_minus1_1(m_top_right_block_coo, b1, b2, true);

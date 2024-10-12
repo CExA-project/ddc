@@ -23,7 +23,8 @@ struct PolynomialEvaluator
 
     private:
         std::array<double, Degree + 1> m_coeffs;
-        double const m_xN;
+
+        double m_xN;
 
     public:
         template <class Domain>

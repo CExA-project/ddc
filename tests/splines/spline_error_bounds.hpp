@@ -26,7 +26,7 @@ private:
              50521.0 / 3715891200.0});
 
 private:
-    Evaluator const& m_evaluator;
+    Evaluator m_evaluator;
 
 private:
     /*******************************************************************************

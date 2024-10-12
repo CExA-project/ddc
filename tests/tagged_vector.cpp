@@ -89,9 +89,9 @@ TEST(TaggedVector, Assignment)
 
 TEST(TaggedVector, MoveAssignment)
 {
-    ddc::detail::TaggedVector<int, double, float> a(1, 2);
+    auto make_tagged_vector = []() { return ddc::detail::TaggedVector<int, double, float>(1, 2); };
     ddc::detail::TaggedVector<int, double, float> b;
-    b = std::move(a);
+    b = make_tagged_vector();
     EXPECT_EQ(1, b.get<double>());
     EXPECT_EQ(2, b.get<float>());
 }

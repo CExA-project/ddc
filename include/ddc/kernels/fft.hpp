@@ -179,15 +179,14 @@ void rescale(
 template <class DDim>
 Real forward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
 {
-    return (coordinate(ddom.back()) - coordinate(ddom.front()))
-           / (ddc::get<DDim>(ddom.extents()) - 1) / Kokkos::sqrt(2 * Kokkos::numbers::pi);
+    return rlength(ddom) / (ddc::get<DDim>(ddom.extents()) - 1)
+           / Kokkos::sqrt(2 * Kokkos::numbers::pi);
 }
 
 template <class DDim>
 Real backward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
 {
-    return Kokkos::sqrt(2 * Kokkos::numbers::pi)
-           / (coordinate(ddom.back()) - coordinate(ddom.front()))
+    return Kokkos::sqrt(2 * Kokkos::numbers::pi) / rlength(ddom)
            * (ddc::get<DDim>(ddom.extents()) - 1) / ddc::get<DDim>(ddom.extents());
 }
 

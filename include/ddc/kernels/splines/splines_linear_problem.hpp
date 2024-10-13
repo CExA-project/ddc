@@ -11,8 +11,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/kernels/splines/splines_linear_problem_maker.hpp"
-
 namespace ddc::detail {
 
 /**

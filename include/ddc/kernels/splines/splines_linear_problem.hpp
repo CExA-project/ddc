@@ -11,6 +11,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "ddc/kernels/splines/splines_linear_problem_maker.hpp"
+
 namespace ddc::detail {
 
 /**
@@ -33,8 +35,16 @@ protected:
     explicit SplinesLinearProblem(const std::size_t size) : m_size(size) {}
 
 public:
+    SplinesLinearProblem(SplinesLinearProblem const& x) = delete;
+
+    SplinesLinearProblem(SplinesLinearProblem&& x) = delete;
+
     /// @brief Destruct
     virtual ~SplinesLinearProblem() = default;
+
+    SplinesLinearProblem& operator=(SplinesLinearProblem const& x) = delete;
+
+    SplinesLinearProblem& operator=(SplinesLinearProblem&& x) = delete;
 
     /**
      * @brief Get an element of the matrix at indexes i, j. It must not be called after `setup_solver`.

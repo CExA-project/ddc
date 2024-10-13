@@ -30,18 +30,22 @@ public:
 
         Impl() = default;
 
-        Impl(Impl const&) = delete;
-
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_value(impl.m_value)
         {
         }
 
-        Impl(Impl&&) = default;
-
         explicit Impl(int value) : m_value(value) {}
 
+        Impl(Impl const&) = delete;
+
+        Impl(Impl&&) = default;
+
         ~Impl() = default;
+
+        Impl& operator=(Impl const& x) = delete;
+
+        Impl& operator=(Impl&& x) = default;
 
         KOKKOS_FUNCTION int value() const noexcept
         {

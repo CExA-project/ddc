@@ -88,6 +88,10 @@ public:
 
         ~Impl() = default;
 
+        Impl& operator=(Impl const& x) = delete;
+
+        Impl& operator=(Impl&& x) = default;
+
         /// @brief Lower bound index of the mesh
         KOKKOS_FUNCTION continuous_element_type origin() const noexcept
         {

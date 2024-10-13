@@ -111,6 +111,10 @@ public:
 
         ~Impl() = default;
 
+        Impl& operator=(Impl const& x) = delete;
+
+        Impl& operator=(Impl&& x) = default;
+
         KOKKOS_FUNCTION std::size_t size() const
         {
             return m_points.size();

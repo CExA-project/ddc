@@ -60,14 +60,20 @@ public:
 
         Impl(continuous_element_type origin) noexcept : m_point(std::move(origin)) {}
 
-        Impl(Impl const& other) = delete;
-
-        Impl(Impl&& other) = delete;
-
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_point(impl.m_point)
         {
         }
+
+        Impl(Impl const&) = delete;
+
+        Impl(Impl&&) = default;
+
+        ~Impl() = default;
+
+        Impl& operator=(Impl const& x) = delete;
+
+        Impl& operator=(Impl&& x) = default;
 
         KOKKOS_FUNCTION continuous_element_type origin() const noexcept
         {

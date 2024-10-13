@@ -10,6 +10,8 @@ var classddc_1_1UniformPointSampling_1_1Impl =
     [ "Impl", "classddc_1_1UniformPointSampling_1_1Impl.html#a2000f725762ceb86e2ed191af78983c9", null ],
     [ "Impl", "classddc_1_1UniformPointSampling_1_1Impl.html#a4bb093b56e346dd604833971272ac55c", null ],
     [ "~Impl", "classddc_1_1UniformPointSampling_1_1Impl.html#aba951373ae9594d7bf3d29a31fa99aee", null ],
+    [ "operator=", "classddc_1_1UniformPointSampling_1_1Impl.html#a4cf7e755d0359d9600340407f7f47547", null ],
+    [ "operator=", "classddc_1_1UniformPointSampling_1_1Impl.html#afd44a265efe3bffc54856bba7f3d9cef", null ],
     [ "origin", "classddc_1_1UniformPointSampling_1_1Impl.html#ac3bd12222e1c11a8a55648fa9b7ab527", null ],
     [ "front", "classddc_1_1UniformPointSampling_1_1Impl.html#a7bde99588d41326a7965c07597df22cc", null ],
     [ "step", "classddc_1_1UniformPointSampling_1_1Impl.html#ace5522198e3b94fa2dcc91f800e945c2", null ],

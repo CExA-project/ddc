@@ -10,6 +10,8 @@ var classddc_1_1PeriodicSampling_1_1Impl =
     [ "Impl", "classddc_1_1PeriodicSampling_1_1Impl.html#ae7ec0a74fc26c91b21076463ad705e45", null ],
     [ "Impl", "classddc_1_1PeriodicSampling_1_1Impl.html#a284bec9a8b0da9cbd7dfac5c3da53e08", null ],
     [ "~Impl", "classddc_1_1PeriodicSampling_1_1Impl.html#a259154bc9f54dd0295a4d602d0266522", null ],
+    [ "operator=", "classddc_1_1PeriodicSampling_1_1Impl.html#af626b904b1466f804b4e6ed742bd5651", null ],
+    [ "operator=", "classddc_1_1PeriodicSampling_1_1Impl.html#a015cf7acfaaca0d5beda493de54c35f0", null ],
     [ "origin", "classddc_1_1PeriodicSampling_1_1Impl.html#ab27d732a44f3d15c1dc8eccb1e464ca2", null ],
     [ "front", "classddc_1_1PeriodicSampling_1_1Impl.html#a81e5708e46fdb0d4d84af1b2470856d6", null ],
     [ "step", "classddc_1_1PeriodicSampling_1_1Impl.html#af4de8de1f28d1d46fb89f6a9c0e57352", null ],

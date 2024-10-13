@@ -173,6 +173,7 @@ var namespaceddc =
     [ "operator<<", "namespaceddc.html#ab1493964ffd857dda950653e78ec824d", null ],
     [ "for_each", "namespaceddc.html#a580afa45261b42925af30519dca3c0bf", null ],
     [ "init_fourier_space", "namespaceddc.html#a9633d820c1eafa7a55bd8850fab5aa78", null ],
+    [ "fourier_mesh", "namespaceddc.html#a7de86fe7740202197e08f47e570354ea", null ],
     [ "FourierMesh", "namespaceddc.html#a5395f39830c8845c51a251404985bc56", null ],
     [ "fft", "namespaceddc.html#a4949624204145ca2a0390c7b73a02480", null ],
     [ "ifft", "namespaceddc.html#a17507ff514a63591f7e9e4822e1ebacc", null ],

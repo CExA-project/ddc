@@ -179,15 +179,16 @@ void rescale(
 template <class DDim>
 Real forward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
 {
-    return rlength(ddom) / (ddc::get<DDim>(ddom.extents()) - 1)
-           / Kokkos::sqrt(2 * Kokkos::numbers::pi);
+    return rlength(ddom) / Kokkos::sqrt(2 * Kokkos::numbers::pi)
+           / (ddc::get<DDim>(ddom.extents()) - 1);
 }
 
 template <class DDim>
 Real backward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
 {
-    return Kokkos::sqrt(2 * Kokkos::numbers::pi) / rlength(ddom)
-           * (ddc::get<DDim>(ddom.extents()) - 1) / ddc::get<DDim>(ddom.extents());
+    return (Kokkos::sqrt(2 * Kokkos::numbers::pi) * (ddc::get<DDim>(ddom.extents()) - 1)
+            / rlength(ddom))
+           / ddc::get<DDim>(ddom.extents());
 }
 
 /// @brief Core internal function to perform the FFT.

@@ -340,7 +340,7 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
  * @return The domain representing the Fourier mesh.
  */
 template <typename... DDimFx, typename... DDimX>
-ddc::DiscreteDomain<DDimFx...> FourierMesh(ddc::DiscreteDomain<DDimX...> x_mesh, bool C2C)
+ddc::DiscreteDomain<DDimFx...> fourier_mesh(ddc::DiscreteDomain<DDimX...> x_mesh, bool C2C)
 {
     static_assert(
             (is_uniform_point_sampling_v<DDimX> && ...),
@@ -355,6 +355,31 @@ ddc::DiscreteDomain<DDimFx...> FourierMesh(ddc::DiscreteDomain<DDimX...> x_mesh,
                          : ddc::detail::fft::LastSelector<double, DDimX, DDimX...>(
                                    ddc::detail::fft::N<DDimX>(x_mesh) / 2 + 1,
                                    ddc::detail::fft::N<DDimX>(x_mesh)))))...);
+}
+
+/**
+ * @brief Get the Fourier mesh.
+ *
+ * Compute the Fourier (or spectral) mesh on which the Discrete Fourier Transform of a
+ * discrete function is defined.
+ *
+ * @deprecated Use @ref fourier_mesh instead.
+ *
+ * @param x_mesh The DiscreteDomain representing the original mesh.
+ * @param C2C A flag indicating if a complex-to-complex DFT is going to be performed. Indeed,
+ * in this case the two meshes have same number of points, whereas for real-to-complex
+ * or complex-to-real DFT, each complex value of the Fourier-transformed function contains twice more
+ * information, and thus only half (actually Nx*Ny*(Nz/2+1) for 3D R2C FFT to take in account mode 0)
+ * values are needed (cf. DFT conjugate symmetry property for more information about this).
+ *
+ * @return The domain representing the Fourier mesh.
+ */
+template <typename... DDimFx, typename... DDimX>
+[[deprecated("Use `fourier_mesh` instead")]] ddc::DiscreteDomain<DDimFx...> FourierMesh(
+        ddc::DiscreteDomain<DDimX...> x_mesh,
+        bool C2C)
+{
+    return fourier_mesh<DDimFx...>(x_mesh, C2C);
 }
 
 /**

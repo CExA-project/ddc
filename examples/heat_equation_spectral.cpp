@@ -185,7 +185,7 @@ int main(int argc, char** argv)
             ddc::init_fourier_space<DDimFy>(y_domain));
 
     ddc::DiscreteDomain<DDimFx, DDimFy> const k_mesh
-            = ddc::FourierMesh<DDimFx, DDimFy>(xy_domain, false);
+            = ddc::fourier_mesh<DDimFx, DDimFy>(xy_domain, false);
     ddc::Chunk Ff_allocation(
             "Ff_allocation",
             k_mesh,

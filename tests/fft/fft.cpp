@@ -57,7 +57,7 @@ static void test_fourier_mesh(std::size_t Nx)
     ddc::init_discrete_space<DFDim<ddc::Fourier<X>>>(
             ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(ddc::DiscreteDomain<DDim<X>>(x_mesh)));
     DDom<DFDim<ddc::Fourier<X>>> const k_mesh
-            = ddc::FourierMesh<DFDim<ddc::Fourier<X>>>(x_mesh, true);
+            = ddc::fourier_mesh<DFDim<ddc::Fourier<X>>>(x_mesh, true);
 
     double const epsilon = 1e-14;
     ddc::DiscreteElement<DFDim<ddc::Fourier<X>>> const k_front = k_mesh.front();
@@ -92,7 +92,7 @@ static void test_fft()
              ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(ddc::DiscreteDomain<DDim<X>>(x_mesh))),
      ...);
     DDom<DFDim<ddc::Fourier<X>>...> const k_mesh(
-            ddc::FourierMesh<DFDim<ddc::Fourier<X>>...>(x_mesh, full_fft));
+            ddc::fourier_mesh<DFDim<ddc::Fourier<X>>...>(x_mesh, full_fft));
 
     ddc::Chunk f_alloc(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan const f = f_alloc.span_view();
@@ -182,7 +182,7 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
     ddc::init_discrete_space<DFDim<ddc::Fourier<X>>>(
             ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(x_mesh));
     DDom<DFDim<ddc::Fourier<X>>> const k_mesh
-            = ddc::FourierMesh<DFDim<ddc::Fourier<X>>>(x_mesh, full_fft);
+            = ddc::fourier_mesh<DFDim<ddc::Fourier<X>>>(x_mesh, full_fft);
 
     ddc::Chunk f_alloc = ddc::Chunk(x_mesh, ddc::KokkosAllocator<Tin, MemorySpace>());
     ddc::ChunkSpan const f = f_alloc.span_view();

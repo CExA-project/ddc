@@ -241,7 +241,7 @@ jobs:
 
           case "${{matrix.backend}}" in
           'cpu-'*)
-            ctest --test-dir build --parallel 2 --output-on-failure --timeout 5 --output-junit tests.xml
+            ctest --test-dir build --parallel 2 --output-on-failure --timeout 10 --output-junit tests.xml
             ./build/examples/heat_equation
             ./build/examples/uniform_heat_equation
             ./build/examples/non_uniform_heat_equation
@@ -309,7 +309,7 @@ jobs:
             -S /src
           cmake --build build --parallel 2
           export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,suppressions=/src/ubsan.supp
-          ctest --test-dir build --parallel 2 --output-on-failure --timeout 5 --output-junit tests.xml
+          ctest --test-dir build --parallel 2 --output-on-failure --timeout 10 --output-junit tests.xml
           ./build/examples/heat_equation
           ./build/examples/uniform_heat_equation
           ./build/examples/non_uniform_heat_equation

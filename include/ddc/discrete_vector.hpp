@@ -319,7 +319,6 @@ public:
     template <class QueryTag>
     KOKKOS_FUNCTION constexpr DiscreteVectorElement& get() noexcept
     {
-        using namespace detail;
         static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteVector");
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }
@@ -327,7 +326,6 @@ public:
     template <class QueryTag>
     KOKKOS_FUNCTION constexpr DiscreteVectorElement const& get() const noexcept
     {
-        using namespace detail;
         static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteVector");
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }

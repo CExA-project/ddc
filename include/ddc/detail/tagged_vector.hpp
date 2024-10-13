@@ -332,7 +332,6 @@ public:
     template <class QueryTag>
     KOKKOS_FUNCTION constexpr ElementType& get() noexcept
     {
-        using namespace detail;
         static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from TaggedVector");
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }
@@ -340,7 +339,6 @@ public:
     template <class QueryTag>
     KOKKOS_FUNCTION constexpr ElementType const& get() const noexcept
     {
-        using namespace detail;
         static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from TaggedVector");
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }

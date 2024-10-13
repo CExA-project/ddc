@@ -210,7 +210,6 @@ public:
     template <class QueryTag>
     KOKKOS_FUNCTION constexpr value_type& uid() noexcept
     {
-        using namespace detail;
         static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteElement");
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }
@@ -218,7 +217,6 @@ public:
     template <class QueryTag>
     KOKKOS_FUNCTION constexpr value_type const& uid() const noexcept
     {
-        using namespace detail;
         static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteElement");
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }

@@ -58,7 +58,7 @@ public:
 
         using discrete_vector_type = DiscreteVector<DDim>;
 
-        Impl(continuous_element_type origin) noexcept : m_point(std::move(origin)) {}
+        explicit Impl(continuous_element_type origin) noexcept : m_point(std::move(origin)) {}
 
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_point(impl.m_point)

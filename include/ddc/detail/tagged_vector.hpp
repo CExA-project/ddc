@@ -232,6 +232,7 @@ template <class ElementType, class Tag>
 class TaggedVectorConversionOperators<TaggedVector<ElementType, Tag>>
 {
 public:
+    // NOLINTBEGIN(google-explicit-constructor)
     KOKKOS_FUNCTION constexpr operator ElementType const&() const noexcept
     {
         return static_cast<TaggedVector<ElementType, Tag> const*>(this)->m_values[0];
@@ -241,6 +242,7 @@ public:
     {
         return static_cast<TaggedVector<ElementType, Tag>*>(this)->m_values[0];
     }
+    // NOLINTEND(google-explicit-constructor)
 };
 
 template <class ElementType, class... Tags>
@@ -269,7 +271,7 @@ public:
     KOKKOS_DEFAULTED_FUNCTION constexpr TaggedVector(TaggedVector&&) = default;
 
     template <class... TVectors, class = std::enable_if_t<(is_tagged_vector_v<TVectors> && ...)>>
-    explicit KOKKOS_FUNCTION constexpr TaggedVector(TVectors const&... delems) noexcept
+    KOKKOS_FUNCTION constexpr explicit TaggedVector(TVectors const&... delems) noexcept
         : m_values {static_cast<ElementType>(take<Tags>(delems...).template get<Tags>())...}
     {
     }
@@ -279,7 +281,7 @@ public:
             class = std::enable_if_t<(!is_tagged_vector_v<Params> && ...)>,
             class = std::enable_if_t<(std::is_convertible_v<Params, ElementType> && ...)>,
             class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
-    explicit KOKKOS_FUNCTION constexpr TaggedVector(Params const&... params) noexcept
+    KOKKOS_FUNCTION constexpr explicit TaggedVector(Params const&... params) noexcept
         : m_values {static_cast<ElementType>(params)...}
     {
     }

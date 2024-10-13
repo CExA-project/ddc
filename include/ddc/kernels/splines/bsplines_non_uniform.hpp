@@ -117,7 +117,7 @@ public:
          *
          * @param breaks The std::initializer_list of the coordinates of break points.
          */
-        explicit Impl(std::initializer_list<ddc::Coordinate<CDim>> breaks)
+        Impl(std::initializer_list<ddc::Coordinate<CDim>> breaks)
             : Impl(breaks.begin(), breaks.end())
         {
         }

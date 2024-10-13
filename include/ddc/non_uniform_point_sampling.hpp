@@ -64,7 +64,7 @@ public:
         Impl() = default;
 
         /// @brief Construct a `NonUniformPointSampling` using a brace-list, i.e. `NonUniformPointSampling mesh({0., 1.})`
-        explicit Impl(std::initializer_list<continuous_element_type> points)
+        Impl(std::initializer_list<continuous_element_type> points)
         {
             std::vector<continuous_element_type> host_points(points.begin(), points.end());
             Kokkos::View<continuous_element_type*, Kokkos::HostSpace> const

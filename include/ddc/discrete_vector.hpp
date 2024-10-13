@@ -217,6 +217,7 @@ template <class Tag>
 class DiscreteVectorConversionOperators<DiscreteVector<Tag>>
 {
 public:
+    // NOLINTBEGIN(google-explicit-constructor)
     KOKKOS_FUNCTION constexpr operator DiscreteVectorElement const&() const noexcept
     {
         return static_cast<DiscreteVector<Tag> const*>(this)->m_values[0];
@@ -226,6 +227,7 @@ public:
     {
         return static_cast<DiscreteVector<Tag>*>(this)->m_values[0];
     }
+    // NOLINTEND(google-explicit-constructor)
 };
 
 /// Returns a reference to the underlying `std::array`
@@ -279,7 +281,7 @@ public:
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteVector(DiscreteVector&&) = default;
 
     template <class... DVects, class = std::enable_if_t<(is_discrete_vector_v<DVects> && ...)>>
-    explicit KOKKOS_FUNCTION constexpr DiscreteVector(DVects const&... delems) noexcept
+    KOKKOS_FUNCTION constexpr explicit DiscreteVector(DVects const&... delems) noexcept
         : m_values {take<Tags>(delems...).template get<Tags>()...}
     {
     }
@@ -289,7 +291,7 @@ public:
             class = std::enable_if_t<(!is_discrete_vector_v<Params> && ...)>,
             class = std::enable_if_t<(std::is_convertible_v<Params, DiscreteVectorElement> && ...)>,
             class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
-    explicit KOKKOS_FUNCTION constexpr DiscreteVector(Params const&... params) noexcept
+    KOKKOS_FUNCTION constexpr explicit DiscreteVector(Params const&... params) noexcept
         : m_values {static_cast<DiscreteVectorElement>(params)...}
     {
     }

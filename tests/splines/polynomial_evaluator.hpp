@@ -28,7 +28,8 @@ struct PolynomialEvaluator
 
     public:
         template <class Domain>
-        Evaluator(Domain domain) : m_xN(std::max(std::abs(rmin(domain)), std::abs(rmax(domain))))
+        explicit Evaluator(Domain domain)
+            : m_xN(std::max(std::abs(rmin(domain)), std::abs(rmax(domain))))
         {
             std::random_device rd;
             std::mt19937 gen(rd());

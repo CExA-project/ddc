@@ -158,7 +158,7 @@ public:
             class OElementType,
             class Allocator,
             class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
-    KOKKOS_FUNCTION constexpr ChunkSpan(
+    KOKKOS_FUNCTION constexpr explicit ChunkSpan(
             Chunk<OElementType, discrete_domain_type, Allocator>& other) noexcept
         : base_type(other.m_internal_mdspan, other.m_domain)
     {
@@ -174,7 +174,7 @@ public:
             class = std::enable_if_t<std::is_const_v<SFINAEElementType>>,
             class Allocator,
             class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
-    KOKKOS_FUNCTION constexpr ChunkSpan(
+    KOKKOS_FUNCTION constexpr explicit ChunkSpan(
             Chunk<OElementType, discrete_domain_type, Allocator> const& other) noexcept
         : base_type(other.m_internal_mdspan, other.m_domain)
     {
@@ -184,7 +184,7 @@ public:
      * @param other the ChunkSpan to move
      */
     template <class OElementType>
-    KOKKOS_FUNCTION constexpr ChunkSpan(
+    KOKKOS_FUNCTION constexpr explicit ChunkSpan(
             ChunkSpan<OElementType, discrete_domain_type, layout_type, MemorySpace> const&
                     other) noexcept
         : base_type(other.m_internal_mdspan, other.m_domain)

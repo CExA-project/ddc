@@ -272,9 +272,11 @@ void impl(
     if (kwargs.normalization == ddc::FFT_Normalization::FULL) {
         real_type_t<Tout> norm_coef;
         if (kwargs.direction == ddc::FFT_Direction::FORWARD) {
-            norm_coef = (forward_full_norm_coef(ddc::select<DDimIn>(in.domain())) * ...);
+            DiscreteDomain<DDimIn...> const ddom_in = in.domain();
+            norm_coef = (forward_full_norm_coef(DiscreteDomain<DDimIn>(ddom_in)) * ...);
         } else {
-            norm_coef = (backward_full_norm_coef(ddc::select<DDimOut>(out.domain())) * ...);
+            DiscreteDomain<DDimOut...> const ddom_out = out.domain();
+            norm_coef = (backward_full_norm_coef(DiscreteDomain<DDimOut>(ddom_out)) * ...);
         }
 
         rescale(exec_space, out, norm_coef);

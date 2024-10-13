@@ -176,6 +176,21 @@ void rescale(
             });
 }
 
+template <class DDimIn>
+Real forward_full_norm_coef(DiscreteDomain<DDimIn> const& ddom) noexcept
+{
+    return (coordinate(ddom.back()) - coordinate(ddom.front()))
+           / (ddc::get<DDimIn>(ddom.extents()) - 1) / Kokkos::sqrt(2 * Kokkos::numbers::pi);
+}
+
+template <class DDimOut>
+Real backward_full_norm_coef(DiscreteDomain<DDimOut> const& ddom) noexcept
+{
+    return Kokkos::sqrt(2 * Kokkos::numbers::pi)
+           / (coordinate(ddom.back()) - coordinate(ddom.front()))
+           * (ddc::get<DDimOut>(ddom.extents()) - 1) / ddc::get<DDimOut>(ddom.extents());
+}
+
 /// @brief Core internal function to perform the FFT.
 template <
         typename Tin,
@@ -257,20 +272,9 @@ void impl(
     if (kwargs.normalization == ddc::FFT_Normalization::FULL) {
         real_type_t<Tout> norm_coef;
         if (kwargs.direction == ddc::FFT_Direction::FORWARD) {
-            norm_coef
-                    = (((coordinate(ddc::select<DDimIn>(in.domain()).back())
-                         - coordinate(ddc::select<DDimIn>(in.domain()).front()))
-                        / (ddc::get<DDimIn>(in.domain().extents()) - 1)
-                        / Kokkos::sqrt(2 * Kokkos::numbers::pi))
-                       * ...);
+            norm_coef = (forward_full_norm_coef(ddc::select<DDimIn>(in.domain())) * ...);
         } else {
-            norm_coef
-                    = ((Kokkos::sqrt(2 * Kokkos::numbers::pi)
-                        / (coordinate(ddc::select<DDimOut>(out.domain()).back())
-                           - coordinate(ddc::select<DDimOut>(out.domain()).front()))
-                        * (ddc::get<DDimOut>(out.domain().extents()) - 1)
-                        / ddc::get<DDimOut>(out.domain().extents()))
-                       * ...);
+            norm_coef = (backward_full_norm_coef(ddc::select<DDimOut>(out.domain())) * ...);
         }
 
         rescale(exec_space, out, norm_coef);

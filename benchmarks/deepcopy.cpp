@@ -116,8 +116,8 @@ static void deepcopy_subchunk_2d(benchmark::State& state)
     ChunkSpanXY<double> const dst(dst_data.data(), dom);
     for (auto _ : state) {
         for (DElemX const i : ddc::select<DDimX>(dom)) {
-            auto&& dst_i = dst[i];
-            auto&& src_i = src[i];
+            ddc::ChunkSpan const dst_i = dst[i];
+            ddc::ChunkSpan const src_i = src[i];
             ddc::parallel_deepcopy(dst_i, src_i);
         }
     }

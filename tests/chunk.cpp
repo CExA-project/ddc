@@ -122,13 +122,13 @@ TEST(Chunk1DTest, MoveConstructor)
 {
     double const factor = 1.391;
     ChunkX<double> chunk(dom_x);
-    for (auto&& ix : chunk.domain()) {
+    for (DElemX const ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
     }
 
     ChunkX<double> const chunk2(std::move(chunk));
     EXPECT_EQ(chunk2.domain(), dom_x);
-    for (auto&& ix : chunk2.domain()) {
+    for (DElemX const ix : chunk2.domain()) {
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(factor * ix.uid(), chunk2(ix));
     }
@@ -150,14 +150,14 @@ TEST(Chunk1DTest, MoveAssignment)
 {
     double const factor = 1.976;
     ChunkX<double> chunk(dom_x);
-    for (auto&& ix : chunk.domain()) {
+    for (DElemX const ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
     }
 
     ChunkX<double> chunk2(DDomX(lbound_x, DVectX(0)));
     chunk2 = std::move(chunk);
     EXPECT_EQ(chunk2.domain(), dom_x);
-    for (auto&& ix : chunk2.domain()) {
+    for (DElemX const ix : chunk2.domain()) {
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(factor * ix.uid(), chunk2(ix));
     }
@@ -182,7 +182,7 @@ TEST(Chunk1DTest, Swap)
 {
     double const factor = 1.976;
     ChunkX<double> chunk(dom_x);
-    for (auto&& ix : chunk.domain()) {
+    for (DElemX const ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
     }
 
@@ -192,7 +192,7 @@ TEST(Chunk1DTest, Swap)
     std::swap(chunk2, chunk);
     EXPECT_EQ(chunk.domain(), empty_domain);
     EXPECT_EQ(chunk2.domain(), dom_x);
-    for (auto&& ix : chunk2.domain()) {
+    for (DElemX const ix : chunk2.domain()) {
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(factor * ix.uid(), chunk2(ix));
     }
@@ -205,7 +205,7 @@ TEST(Chunk1DTest, AccessConst)
     double const factor = 1.012;
     ChunkX<double> chunk(dom_x);
     ChunkX<double> const& chunk_cref = chunk;
-    for (auto&& ix : chunk.domain()) {
+    for (DElemX const ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(chunk_cref(ix), factor * ix.uid());
@@ -216,7 +216,7 @@ TEST(Chunk1DTest, Access)
 {
     double const factor = 1.012;
     ChunkX<double> chunk(dom_x);
-    for (auto&& ix : chunk.domain()) {
+    for (DElemX const ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(chunk(ix), factor * ix.uid());
@@ -227,7 +227,7 @@ TEST(Chunk1DTest, SpanCview)
 {
     double const factor = 1.567;
     ChunkX<double> chunk(dom_x);
-    for (auto&& ix : chunk.domain()) {
+    for (DElemX const ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(chunk.span_cview()(ix), factor * ix.uid());
@@ -239,7 +239,7 @@ TEST(Chunk1DTest, ViewConst)
     double const factor = 1.802;
     ChunkX<double> chunk(dom_x);
     ChunkX<double> const& chunk_cref = chunk;
-    for (auto&& ix : chunk.domain()) {
+    for (DElemX const ix : chunk.domain()) {
         chunk(ix) = factor * ix.uid();
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(chunk_cref.span_view()(ix), factor * ix.uid());
@@ -250,7 +250,7 @@ TEST(Chunk1DTest, View)
 {
     double const factor = 1.259;
     ChunkX<double> chunk(dom_x);
-    for (auto&& ix : chunk.domain()) {
+    for (DElemX const ix : chunk.domain()) {
         chunk.span_view()(ix) = factor * ix.uid();
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(chunk(ix), factor * ix.uid());
@@ -389,12 +389,12 @@ TEST(Chunk1DTest, GetDomainX)
 TEST(Chunk1DTest, Deepcopy)
 {
     ChunkX<double> chunk(dom_x);
-    for (auto&& ix : chunk.domain()) {
+    for (DElemX const ix : chunk.domain()) {
         chunk(ix) = 1.001 * ix.uid();
     }
     ChunkX<double> chunk2(chunk.domain());
     ddc::parallel_deepcopy(chunk2, chunk);
-    for (auto&& ix : chunk.domain()) {
+    for (DElemX const ix : chunk.domain()) {
         // we expect exact equality, not EXPECT_DOUBLE_EQ: these are copy
         EXPECT_EQ(chunk2(ix), chunk(ix));
     }
@@ -408,8 +408,8 @@ TEST(Chunk1DTest, Deepcopy)
 TEST(Chunk2DTest, Access)
 {
     ChunkXY<double> chunk(dom_x_y);
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             chunk(ix, iy) = 1.357 * ix.uid() + 1.159 * iy.uid();
             // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
             EXPECT_EQ(chunk(ix, iy), chunk(ix, iy));
@@ -420,8 +420,8 @@ TEST(Chunk2DTest, Access)
 TEST(Chunk2DTest, AccessReordered)
 {
     ChunkXY<double> chunk(dom_x_y);
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             chunk(ix, iy) = 1.455 * ix.uid() + 1.522 * iy.uid();
             // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
             EXPECT_EQ(chunk(iy, ix), chunk(ix, iy));
@@ -432,14 +432,14 @@ TEST(Chunk2DTest, AccessReordered)
 TEST(Chunk2DTest, Cview)
 {
     ChunkXY<double> chunk(dom_x_y);
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
         }
     }
     auto const cview = chunk.span_cview();
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
             EXPECT_EQ(cview(ix, iy), chunk(ix, iy));
         }
@@ -452,19 +452,19 @@ TEST(Chunk2DTest, SliceCoordX)
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
         }
     }
 
-    auto&& chunk_y = chunk_cref[slice_x_val];
+    ddc::ChunkSpan const chunk_y = chunk_cref[slice_x_val];
     EXPECT_TRUE(
             (std::is_same_v<std::decay_t<decltype(chunk_y)>::layout_type, Kokkos::layout_right>));
     EXPECT_EQ(chunk_y.extent<DDimY>(), chunk.extent<DDimY>());
-    for (auto&& ix : chunk_cref.domain<DDimY>()) {
+    for (DElemY const iy : chunk_cref.domain<DDimY>()) {
         // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
-        EXPECT_EQ(chunk_y(ix), chunk_cref(slice_x_val, ix));
+        EXPECT_EQ(chunk_y(iy), chunk_cref(slice_x_val, iy));
     }
 }
 
@@ -474,17 +474,17 @@ TEST(Chunk2DTest, SliceCoordY)
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
         }
     }
 
-    auto&& chunk_x = chunk_cref[slice_y_val];
+    ddc::ChunkSpan const chunk_x = chunk_cref[slice_y_val];
     EXPECT_TRUE(
             (std::is_same_v<std::decay_t<decltype(chunk_x)>::layout_type, Kokkos::layout_stride>));
     EXPECT_EQ(chunk_x.extent<DDimX>(), chunk.extent<DDimX>());
-    for (auto&& ix : chunk_cref.domain<DDimX>()) {
+    for (DElemX const ix : chunk_cref.domain<DDimX>()) {
         // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
         EXPECT_EQ(chunk_x(ix), chunk_cref(ix, slice_y_val));
     }
@@ -496,20 +496,20 @@ TEST(Chunk2DTest, SliceDomainX)
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
         }
     }
 
-    auto&& subchunk_x = chunk_cref[subdomain_x];
+    ddc::ChunkSpan const subchunk_x = chunk_cref[subdomain_x];
     EXPECT_TRUE((
             std::is_same_v<std::decay_t<decltype(subchunk_x)>::layout_type, Kokkos::layout_right>));
 
     EXPECT_EQ(subchunk_x.extent<DDimX>(), subdomain_x.size());
     EXPECT_EQ(subchunk_x.extent<DDimY>(), chunk.domain<DDimY>().size());
-    for (auto&& ix : subchunk_x.domain<DDimX>()) {
-        for (auto&& iy : subchunk_x.domain<DDimY>()) {
+    for (DElemX const ix : subchunk_x.domain<DDimX>()) {
+        for (DElemY const iy : subchunk_x.domain<DDimY>()) {
             // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
             EXPECT_EQ(subchunk_x(ix, iy), chunk_cref(ix, iy));
         }
@@ -522,20 +522,20 @@ TEST(Chunk2DTest, SliceDomainY)
 
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
         }
     }
-    auto&& subchunk_y = chunk_cref[subdomain_y];
+    ddc::ChunkSpan const subchunk_y = chunk_cref[subdomain_y];
     EXPECT_TRUE((std::is_same_v<
                  std::decay_t<decltype(subchunk_y)>::layout_type,
                  Kokkos::layout_stride>));
 
     EXPECT_EQ(subchunk_y.extent<DDimX>(), chunk.domain<DDimX>().size());
     EXPECT_EQ(subchunk_y.extent<DDimY>(), subdomain_y.size());
-    for (auto&& ix : subchunk_y.domain<DDimX>()) {
-        for (auto&& iy : subchunk_y.domain<DDimY>()) {
+    for (DElemX const ix : subchunk_y.domain<DDimX>()) {
+        for (DElemY const iy : subchunk_y.domain<DDimY>()) {
             // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
             EXPECT_EQ(subchunk_y(ix, iy), chunk_cref(ix, iy));
         }
@@ -545,15 +545,15 @@ TEST(Chunk2DTest, SliceDomainY)
 TEST(Chunk2DTest, Deepcopy)
 {
     ChunkXY<double> chunk(dom_x_y);
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             chunk(ix, iy) = 1.739 * ix.uid() + 1.412 * iy.uid();
         }
     }
     ChunkXY<double> chunk2(chunk.domain());
     ddc::parallel_deepcopy(chunk2, chunk);
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
             EXPECT_EQ(chunk2(ix, iy), chunk(ix, iy));
         }
@@ -563,8 +563,8 @@ TEST(Chunk2DTest, Deepcopy)
 TEST(Chunk2DTest, DeepcopyReordered)
 {
     ChunkXY<double> chunk(dom_x_y);
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             chunk(ix, iy) = 1.739 * ix.uid() + 1.412 * iy.uid();
         }
     }
@@ -572,8 +572,8 @@ TEST(Chunk2DTest, DeepcopyReordered)
     ddc::ChunkSpan<double, DDomXY, Kokkos::layout_left> const
             chunk2_view(chunk2.data_handle(), chunk.domain());
     ddc::parallel_deepcopy(chunk2_view, chunk);
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
             EXPECT_EQ(chunk2(ix, iy), chunk(ix, iy));
             EXPECT_EQ(chunk2(ix, iy), chunk(iy, ix));
@@ -587,9 +587,9 @@ TEST(Chunk3DTest, AccessFromDiscreteElements)
     DDomZ const dom_z(ddc::DiscreteElement<DDimZ>(2), ddc::DiscreteVector<DDimZ>(4));
     ddc::Chunk<double, DDomXYZ> chunk(DDomXYZ(dom_x_y, dom_z));
     ddc::ChunkSpan const chunk_span = chunk.span_cview();
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
-            for (auto&& iz : chunk.domain<DDimZ>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
+            for (DElemZ const iz : chunk.domain<DDimZ>()) {
                 chunk(ix, iy, iz) = 1.357 * ix.uid() + 1.159 * iy.uid() + 3.2 * iz.uid();
                 ddc::DiscreteElement<DDimX, DDimZ> const izx(iz, ix);
                 // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
@@ -605,8 +605,8 @@ TEST(Chunk2DTest, Mirror)
     ChunkXY<double> chunk(dom_x_y);
     ddc::parallel_fill(chunk, 1.4);
     auto const chunk2 = ddc::create_mirror_and_copy(chunk.span_cview());
-    for (auto&& ix : chunk.domain<DDimX>()) {
-        for (auto&& iy : chunk.domain<DDimY>()) {
+    for (DElemX const ix : chunk.domain<DDimX>()) {
+        for (DElemY const iy : chunk.domain<DDimY>()) {
             // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
             EXPECT_EQ(chunk2(ix, iy), chunk(ix, iy));
         }

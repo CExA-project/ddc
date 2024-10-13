@@ -176,19 +176,19 @@ void rescale(
             });
 }
 
-template <class DDimIn>
-Real forward_full_norm_coef(DiscreteDomain<DDimIn> const& ddom) noexcept
+template <class DDim>
+Real forward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
 {
     return (coordinate(ddom.back()) - coordinate(ddom.front()))
-           / (ddc::get<DDimIn>(ddom.extents()) - 1) / Kokkos::sqrt(2 * Kokkos::numbers::pi);
+           / (ddc::get<DDim>(ddom.extents()) - 1) / Kokkos::sqrt(2 * Kokkos::numbers::pi);
 }
 
-template <class DDimOut>
-Real backward_full_norm_coef(DiscreteDomain<DDimOut> const& ddom) noexcept
+template <class DDim>
+Real backward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
 {
     return Kokkos::sqrt(2 * Kokkos::numbers::pi)
            / (coordinate(ddom.back()) - coordinate(ddom.front()))
-           * (ddc::get<DDimOut>(ddom.extents()) - 1) / ddc::get<DDimOut>(ddom.extents());
+           * (ddc::get<DDim>(ddom.extents()) - 1) / ddc::get<DDim>(ddom.extents());
 }
 
 /// @brief Core internal function to perform the FFT.

@@ -352,7 +352,7 @@ ddc::DiscreteDomain<DDimFx...> fourier_mesh(ddc::DiscreteDomain<DDimX...> x_mesh
             ddc::DiscreteElement<DDimFx>(0),
             ddc::DiscreteVector<DDimFx>(
                     (C2C ? ddc::detail::fft::N<DDimX>(x_mesh)
-                         : ddc::detail::fft::LastSelector<double, DDimX, DDimX...>(
+                         : ddc::detail::fft::LastSelector<int, DDimX, DDimX...>(
                                    ddc::detail::fft::N<DDimX>(x_mesh) / 2 + 1,
                                    ddc::detail::fft::N<DDimX>(x_mesh)))))...);
 }

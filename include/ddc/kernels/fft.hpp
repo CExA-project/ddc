@@ -176,6 +176,19 @@ void rescale(
             });
 }
 
+template <class DDim>
+Real forward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
+{
+    return rlength(ddom) / Kokkos::sqrt(2 * Kokkos::numbers::pi_v<Real>)
+           / (ddom.extents() - 1).value();
+}
+
+template <class DDim>
+Real backward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
+{
+    return 1 / (forward_full_norm_coef(ddom) * ddom.extents().value());
+}
+
 /// @brief Core internal function to perform the FFT.
 template <
         typename Tin,
@@ -255,25 +268,16 @@ void impl(
 
     // The FULL normalization is mesh-dependant and thus handled by DDC
     if (kwargs.normalization == ddc::FFT_Normalization::FULL) {
-        real_type_t<Tout> norm_coef;
+        Real norm_coef;
         if (kwargs.direction == ddc::FFT_Direction::FORWARD) {
-            norm_coef
-                    = (((coordinate(ddc::select<DDimIn>(in.domain()).back())
-                         - coordinate(ddc::select<DDimIn>(in.domain()).front()))
-                        / (ddc::get<DDimIn>(in.domain().extents()) - 1)
-                        / Kokkos::sqrt(2 * Kokkos::numbers::pi))
-                       * ...);
+            DiscreteDomain<DDimIn...> const ddom_in = in.domain();
+            norm_coef = (forward_full_norm_coef(DiscreteDomain<DDimIn>(ddom_in)) * ...);
         } else {
-            norm_coef
-                    = ((Kokkos::sqrt(2 * Kokkos::numbers::pi)
-                        / (coordinate(ddc::select<DDimOut>(out.domain()).back())
-                           - coordinate(ddc::select<DDimOut>(out.domain()).front()))
-                        * (ddc::get<DDimOut>(out.domain().extents()) - 1)
-                        / ddc::get<DDimOut>(out.domain().extents()))
-                       * ...);
+            DiscreteDomain<DDimOut...> const ddom_out = out.domain();
+            norm_coef = (backward_full_norm_coef(DiscreteDomain<DDimOut>(ddom_out)) * ...);
         }
 
-        rescale(exec_space, out, norm_coef);
+        rescale(exec_space, out, static_cast<real_type_t<Tout>>(norm_coef));
     }
 }
 

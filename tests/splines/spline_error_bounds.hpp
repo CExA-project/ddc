@@ -49,7 +49,7 @@ private:
     }
 
 public:
-    SplineErrorBounds(Evaluator const& evaluator) : m_evaluator(evaluator) {}
+    explicit SplineErrorBounds(Evaluator const& evaluator) : m_evaluator(evaluator) {}
 
     double error_bound(double cell_width, int degree)
     {

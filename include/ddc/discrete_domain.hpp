@@ -74,7 +74,7 @@ public:
 
     /// Construct a DiscreteDomain by copies and merge of domains
     template <class... DDoms, class = std::enable_if_t<(is_discrete_domain_v<DDoms> && ...)>>
-    explicit KOKKOS_FUNCTION constexpr DiscreteDomain(DDoms const&... domains)
+    KOKKOS_FUNCTION constexpr explicit DiscreteDomain(DDoms const&... domains)
         : m_element_begin(domains.front()...)
         , m_element_end((domains.front() + domains.extents())...)
     {
@@ -264,7 +264,7 @@ public:
 
     // Construct a DiscreteDomain from a reordered copy of `domain`
     template <class... ODDims>
-    explicit KOKKOS_FUNCTION constexpr DiscreteDomain(
+    KOKKOS_FUNCTION constexpr explicit DiscreteDomain(
             [[maybe_unused]] DiscreteDomain<ODDims...> const& domain)
     {
     }

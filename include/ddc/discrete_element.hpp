@@ -174,7 +174,7 @@ public:
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteElement(DiscreteElement&&) = default;
 
     template <class... DElems, class = std::enable_if_t<(is_discrete_element_v<DElems> && ...)>>
-    explicit KOKKOS_FUNCTION constexpr DiscreteElement(DElems const&... delems) noexcept
+    KOKKOS_FUNCTION constexpr explicit DiscreteElement(DElems const&... delems) noexcept
         : m_values {take<Tags>(delems...).template uid<Tags>()...}
     {
     }
@@ -184,7 +184,7 @@ public:
             class = std::enable_if_t<(!is_discrete_element_v<Params> && ...)>,
             class = std::enable_if_t<(std::is_integral_v<Params> && ...)>,
             class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
-    explicit KOKKOS_FUNCTION constexpr DiscreteElement(Params const&... params) noexcept
+    KOKKOS_FUNCTION constexpr explicit DiscreteElement(Params const&... params) noexcept
         : m_values {static_cast<value_type>(params)...}
     {
     }

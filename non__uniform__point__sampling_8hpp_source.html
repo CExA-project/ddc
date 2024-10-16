@@ -55,7 +55,7 @@ MathJax.Hub.Config({
  <tr id="projectrow">
   <td id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></td>
   <td id="projectalign">
-   <div id="projectname">DDC<span id="projectnumber">&#160;0.0.0</span>
+   <div id="projectname">DDC<span id="projectnumber">&#160;0.1.0</span>
    </div>
   </td>
  </tr>
@@ -193,7 +193,7 @@ $(document).ready(function(){initNavTree('non__uniform__point__sampling_8hpp_sou
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <a class="code hl_function" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#a303cc88f434dd361877b568c23f93203">Impl</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="comment">/// @brief Construct a `NonUniformPointSampling` using a brace-list, i.e. `NonUniformPointSampling mesh({0., 1.})`</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keyword">explicit</span> <a class="code hl_function" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#a6a33ce6446783b6e57a9953f03ac23ca">Impl</a>(std::initializer_list&lt;continuous_element_type&gt; points)</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <a class="code hl_function" href="classddc_1_1NonUniformPointSampling_1_1Impl.html#a6a33ce6446783b6e57a9953f03ac23ca">Impl</a>(std::initializer_list&lt;continuous_element_type&gt; points)</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        {</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            std::vector&lt;continuous_element_type&gt; host_points(points.begin(), points.end());</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            Kokkos::View&lt;continuous_element_type*, Kokkos::HostSpace&gt; <span class="keyword">const</span></div>
@@ -400,7 +400,7 @@ $(document).ready(function(){initNavTree('non__uniform__point__sampling_8hpp_sou
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00055">discrete_domain.hpp:55</a></div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteVector_html_a62e896bfa78045521042a0eab87c0acb"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">ddc::DiscreteVector::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteVector&lt; OTags... &gt; const &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00313">discrete_vector.hpp:313</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteVector_html_a62e896bfa78045521042a0eab87c0acb"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">ddc::DiscreteVector::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteVector&lt; OTags... &gt; const &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00315">discrete_vector.hpp:315</a></div></div>
 <div class="ttc" id="aclassddc_1_1NonUniformPointSampling_1_1Impl_html"><div class="ttname"><a href="classddc_1_1NonUniformPointSampling_1_1Impl.html">ddc::NonUniformPointSampling::Impl</a></div><div class="ttdef"><b>Definition</b> <a href="non__uniform__point__sampling_8hpp_source.html#l00048">non_uniform_point_sampling.hpp:49</a></div></div>
 <div class="ttc" id="aclassddc_1_1NonUniformPointSampling_1_1Impl_html_a03857c4aad5d45351ac321b0e6d9443e"><div class="ttname"><a href="classddc_1_1NonUniformPointSampling_1_1Impl.html#a03857c4aad5d45351ac321b0e6d9443e">ddc::NonUniformPointSampling::Impl::size</a></div><div class="ttdeci">KOKKOS_FUNCTION std::size_t size() const</div><div class="ttdef"><b>Definition</b> <a href="non__uniform__point__sampling_8hpp_source.html#l00118">non_uniform_point_sampling.hpp:118</a></div></div>
 <div class="ttc" id="aclassddc_1_1NonUniformPointSampling_1_1Impl_html_a12850761ffb35df7c319119dac8dd4e4"><div class="ttname"><a href="classddc_1_1NonUniformPointSampling_1_1Impl.html#a12850761ffb35df7c319119dac8dd4e4">ddc::NonUniformPointSampling::Impl::coordinate</a></div><div class="ttdeci">KOKKOS_FUNCTION continuous_element_type coordinate(discrete_element_type const &amp;icoord) const noexcept</div><div class="ttdoc">Convert a mesh index into a position in CDim</div><div class="ttdef"><b>Definition</b> <a href="non__uniform__point__sampling_8hpp_source.html#l00131">non_uniform_point_sampling.hpp:131</a></div></div>

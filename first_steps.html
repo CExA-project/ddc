@@ -55,7 +55,7 @@ MathJax.Hub.Config({
  <tr id="projectrow">
   <td id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></td>
   <td id="projectalign">
-   <div id="projectname">DDC<span id="projectnumber">&#160;0.0.0</span>
+   <div id="projectname">DDC<span id="projectnumber">&#160;0.1.0</span>
    </div>
   </td>
  </tr>
@@ -178,7 +178,7 @@ Dimension X</h3>
 <div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> kx = .01;</div>
 </div><!-- fragment --><p>We start by defining <code>gwx</code>, the number of "ghost" points in the <code>X</code> dimension, those represented in dark grey in the figure on each side of the domain.</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimX&gt;</a> <span class="keyword">const</span> gwx(1);</div>
-<div class="ttc" id="aclassddc_1_1DiscreteVector_html"><div class="ttname"><a href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00254">discrete_vector.hpp:255</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteVector_html"><div class="ttname"><a href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00256">discrete_vector.hpp:257</a></div></div>
 </div><!-- fragment --><p> The type for this constant is <code>DiscreteVector&lt;DDimX&gt;</code> that represents a number of elements in the discretization of the <code>X</code> dimension.</p>
 <p>Once done, we initialize the discretization of the <code>X</code> dimension. Its name has been specified before, but we now set its parameters with the <code>init_discretization</code> function.</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> <span class="keyword">const</span> [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]</div>

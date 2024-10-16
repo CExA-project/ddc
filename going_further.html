@@ -55,7 +55,7 @@ MathJax.Hub.Config({
  <tr id="projectrow">
   <td id="projectlogo"><a href="index.html"><img alt="Logo" src="logo.png"/></a></td>
   <td id="projectalign">
-   <div id="projectname">DDC<span id="projectnumber">&#160;0.0.0</span>
+   <div id="projectname">DDC<span id="projectnumber">&#160;0.1.0</span>
    </div>
   </td>
  </tr>
@@ -271,7 +271,7 @@ Time dimension</h3>
 <div class="line">                <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;T&gt;</a>(end_time),</div>
 <div class="line">                nb_time_steps + 1));</div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a></div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00052">discrete_domain.hpp:53</a></div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteVector_html"><div class="ttname"><a href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00254">discrete_vector.hpp:255</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteVector_html"><div class="ttname"><a href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00256">discrete_vector.hpp:257</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md19"></a>
 Time loop</h2>
 <p>Allocation and initialization are the same as for the uniform case. Let's focus on resolving the numerical scheme. The main difference in solving the numerical equation is that we need to account for the fact that the values of dx and dy on the left and right sides are different. We use the functions <code>distance_at_left</code> and <code>distance_at_right</code> to solve the equation.</p>

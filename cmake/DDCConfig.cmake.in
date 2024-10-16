@@ -6,8 +6,23 @@
 
 include(CMakeFindDependencyMacro)
 
+set(DDC_BUILD_DOUBLE_PRECISION @DDC_BUILD_DOUBLE_PRECISION@)
+set(DDC_BUILD_KERNELS_FFT @DDC_BUILD_KERNELS_FFT@)
+set(DDC_BUILD_KERNELS_SPLINES @DDC_BUILD_KERNELS_SPLINES@)
+set(DDC_BUILD_PDI_WRAPPER @DDC_BUILD_PDI_WRAPPER@)
+
+find_package(Kokkos 4.4...4.5 CONFIG)
+
 if(@DDC_BUILD_KERNELS_FFT@)
    find_dependency(KokkosFFT 0.2.1...<1 CONFIG)
+endif()
+
+if(@DDC_BUILD_KERNELS_SPLINES@)
+   find_dependency(Ginkgo 1.8.0 EXACT)
+   list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+   find_dependency(LAPACKE)
+   list(POP_FRONT CMAKE_MODULE_PATH)
+   find_dependency(KokkosKernels)
 endif()
 
 if(@DDC_BUILD_PDI_WRAPPER@)

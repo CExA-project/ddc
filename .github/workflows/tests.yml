@@ -157,6 +157,7 @@ jobs:
           esac
 
           export benchmark_ROOT=$PWD/opt/benchmark
+          export DDC_ROOT=$PWD/opt/ddc
           export GTest_ROOT=$PWD/opt/gtest
           export Kokkos_ROOT=$PWD/opt/kokkos
           export KokkosFFT_ROOT=$PWD/opt/kokkos-fft
@@ -250,6 +251,15 @@ jobs:
             ./build/examples/characteristics_advection
           ;;
           esac
+
+          cmake --install build --prefix $DDC_ROOT
+          rm -rf build
+          cmake \
+            -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
+            -B build \
+            -S /src/install_test
+          cmake --build build --parallel 2
+
         EOF
         docker run \
           --cidfile='docker.cid' \

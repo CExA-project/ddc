@@ -159,6 +159,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
   endif()
 
   target_link_libraries(DDC INTERFACE KokkosFFT::fft)
+  target_compile_definitions(DDC INTERFACE "DDC_BUILD_KERNELS_FFT")
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -170,6 +171,9 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
   find_package(LAPACKE REQUIRED)
   target_link_libraries(DDC INTERFACE ${LAPACKE_LIBRARIES})
   target_include_directories(DDC SYSTEM INTERFACE ${LAPACKE_INCLUDE_DIRS})
+  install(
+	FILES cmake/FindLAPACKE.cmake
+	DESTINATION lib/cmake/DDC)
 
   # Kokkos-kernels
   set(DDC_KokkosKernels_DEPENDENCY_POLICY "AUTO" CACHE STRING "Policy to find the `KokkosKernels` package. Options: ${DDC_DEPENDENCY_POLICIES}")
@@ -188,6 +192,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
   endif()
 
   target_link_libraries(DDC INTERFACE Kokkos::kokkoskernels)
+  target_compile_definitions(DDC INTERFACE "DDC_BUILD_KERNELS_SPLINES")
 endif()
 
 ## The PDI wrapper

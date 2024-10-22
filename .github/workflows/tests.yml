@@ -128,6 +128,14 @@ jobs:
         cat<<-'EOF' > run.sh
           set -xe
           git config --global --add safe.directory '*'
+
+          export benchmark_ROOT=$PWD/opt/benchmark
+          export DDC_ROOT=$PWD/opt/ddc
+          export GTest_ROOT=$PWD/opt/gtest
+          export Kokkos_ROOT=$PWD/opt/kokkos
+          export KokkosFFT_ROOT=$PWD/opt/kokkos-fft
+          export KokkosKernels_ROOT=$PWD/opt/kokkos-kernels
+
           case "${{matrix.backend}}" in
           'cuda')
             export CC=${CUDA_GCC}
@@ -137,7 +145,7 @@ jobs:
           'hip')
             export CC=hipcc
             export CXX=hipcc
-            export CMAKE_PREFIX_PATH=/opt/rocm
+            export CMAKE_PREFIX_PATH="/opt/rocm:$benchmark_ROOT:$DDC_ROOT:$GTest_ROOT:$Kokkos_ROOT:$KokkosFFT_ROOT:$KokkosKernels_ROOT"
             EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ENABLE_ROCTHRUST=OFF -DKokkos_ARCH_AMD_GFX90A=ON"
           ;;
           'cpu-clang')
@@ -155,13 +163,6 @@ jobs:
             fi
           ;;
           esac
-
-          export benchmark_ROOT=$PWD/opt/benchmark
-          export DDC_ROOT=$PWD/opt/ddc
-          export GTest_ROOT=$PWD/opt/gtest
-          export Kokkos_ROOT=$PWD/opt/kokkos
-          export KokkosFFT_ROOT=$PWD/opt/kokkos-fft
-          export KokkosKernels_ROOT=$PWD/opt/kokkos-kernels
 
           cmake \
             -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \

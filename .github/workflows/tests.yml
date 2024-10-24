@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: DoozyX/clang-format-lint-action@v0.18
       with:
-        source: 'benchmarks/ examples/ include/ddc/ tests/'
+        source: 'benchmarks/ examples/ include/ddc/ install_test/ tests/'
         exclude: ''
         extensions: 'hpp,cpp'
         clangFormatVersion: 18

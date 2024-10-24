@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: DoozyX/clang-format-lint-action@v0.18
       with:
-        source: 'benchmarks/ examples/ include/ddc/ tests/'
+        source: 'benchmarks/ examples/ include/ddc/ install_test/ tests/'
         exclude: ''
         extensions: 'hpp,cpp'
         clangFormatVersion: 18
@@ -128,6 +128,14 @@ jobs:
         cat<<-'EOF' > run.sh
           set -xe
           git config --global --add safe.directory '*'
+
+          export benchmark_ROOT=$PWD/opt/benchmark
+          export DDC_ROOT=$PWD/opt/ddc
+          export GTest_ROOT=$PWD/opt/gtest
+          export Kokkos_ROOT=$PWD/opt/kokkos
+          export KokkosFFT_ROOT=$PWD/opt/kokkos-fft
+          export KokkosKernels_ROOT=$PWD/opt/kokkos-kernels
+
           case "${{matrix.backend}}" in
           'cuda')
             export CC=${CUDA_GCC}
@@ -137,7 +145,9 @@ jobs:
           'hip')
             export CC=hipcc
             export CXX=hipcc
-            export CMAKE_PREFIX_PATH=/opt/rocm
+            # We extend the CMAKE_PREFIX_PATH with the content of _ROOT variables to support
+            # rocm 5.7. (likely due to a cmake_minimum_required(VERSION 3.3))
+            export CMAKE_PREFIX_PATH="/opt/rocm:$benchmark_ROOT:$DDC_ROOT:$GTest_ROOT:$Kokkos_ROOT:$KokkosFFT_ROOT:$KokkosKernels_ROOT"
             EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ENABLE_ROCTHRUST=OFF -DKokkos_ARCH_AMD_GFX90A=ON"
           ;;
           'cpu-clang')
@@ -155,12 +165,6 @@ jobs:
             fi
           ;;
           esac
-
-          export benchmark_ROOT=$PWD/opt/benchmark
-          export GTest_ROOT=$PWD/opt/gtest
-          export Kokkos_ROOT=$PWD/opt/kokkos
-          export KokkosFFT_ROOT=$PWD/opt/kokkos-fft
-          export KokkosKernels_ROOT=$PWD/opt/kokkos-kernels
 
           cmake \
             -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
@@ -250,6 +254,15 @@ jobs:
             ./build/examples/characteristics_advection
           ;;
           esac
+
+          cmake --install build --prefix $DDC_ROOT
+          rm -rf build
+          cmake \
+            -DCMAKE_BUILD_TYPE=${{matrix.cmake_build_type}} \
+            -B build \
+            -S /src/install_test
+          cmake --build build --parallel 2
+
         EOF
         docker run \
           --cidfile='docker.cid' \

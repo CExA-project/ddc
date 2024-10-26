@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <cmath>
-
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
+
+#include <Kokkos_MathematicalConstants.hpp>
 
 struct CosineEvaluator
 {
@@ -18,7 +18,9 @@ struct CosineEvaluator
         using Dim = DDim;
 
     private:
-        static constexpr double s_2_pi = 2. * M_PI;
+        static constexpr double s_2_pi = 2 * Kokkos::numbers::pi;
+
+        static constexpr double s_pi_2 = Kokkos::numbers::pi / 2;
 
     private:
         double m_c0;
@@ -74,7 +76,7 @@ struct CosineEvaluator
         KOKKOS_FUNCTION double eval(double const x, int const derivative) const noexcept
         {
             return ddc::detail::ipow(s_2_pi * m_c0, derivative)
-                   * Kokkos::cos(M_PI_2 * derivative + s_2_pi * (m_c0 * x + m_c1));
+                   * Kokkos::cos(s_pi_2 * derivative + s_2_pi * (m_c0 * x + m_c1));
         }
     };
 };

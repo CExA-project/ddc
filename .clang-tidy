@@ -65,6 +65,5 @@ readability-*,
 -readability-implicit-bool-conversion,
 -readability-magic-numbers,
 -readability-named-parameter,
--readability-redundant-access-specifiers,
--readability-redundant-inline-specifier'
+-readability-redundant-access-specifiers'
 WarningsAsErrors: '*'

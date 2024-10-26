@@ -18,7 +18,7 @@ struct CosineEvaluator
         using Dim = DDim;
 
     private:
-        static inline constexpr double s_2_pi = 2. * M_PI;
+        static constexpr double s_2_pi = 2. * M_PI;
 
     private:
         double m_c0;

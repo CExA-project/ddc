@@ -28,7 +28,6 @@ cppcoreguidelines-*,
 -cppcoreguidelines-pro-bounds-pointer-arithmetic,
 -cppcoreguidelines-pro-type-member-init,
 -cppcoreguidelines-pro-type-reinterpret-cast,
--cppcoreguidelines-rvalue-reference-param-not-moved,
 google-*,
 -google-readability-casting,
 -google-readability-todo,
@@ -67,3 +66,5 @@ readability-*,
 -readability-named-parameter,
 -readability-redundant-access-specifiers'
 WarningsAsErrors: '*'
+CheckOptions:
+  cppcoreguidelines-rvalue-reference-param-not-moved.AllowPartialMove: 'true'

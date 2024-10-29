@@ -6,7 +6,8 @@ cmake_minimum_required(VERSION 3.22)
 
 add_subdirectory(discrete_space)
 
-add_executable(ddc_tests
+add_executable(
+    ddc_tests
     main.cpp
     aligned_allocator.cpp
     chunk.cpp
@@ -32,18 +33,13 @@ add_executable(ddc_tests
     multiple_discrete_dimensions.cpp
 )
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
-target_link_libraries(ddc_tests
-    PUBLIC
-        GTest::gtest
-        DDC::DDC
-)
+target_link_libraries(ddc_tests PUBLIC GTest::gtest DDC::DDC)
 gtest_discover_tests(ddc_tests DISCOVERY_MODE PRE_TEST)
 
 if("${DDC_BUILD_KERNELS_FFT}")
-  add_subdirectory(fft)
+    add_subdirectory(fft)
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
-  add_subdirectory(splines)
+    add_subdirectory(splines)
 endif()
-

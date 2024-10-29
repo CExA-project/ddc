@@ -7,7 +7,11 @@
 
 macro(ddc_configure_benchmark)
     option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." OFF)
-    option(BENCHMARK_ENABLE_INSTALL "Enable installation of benchmark. (Projects embedding benchmark may want to turn this OFF.)" OFF)
+    option(
+        BENCHMARK_ENABLE_INSTALL
+        "Enable installation of benchmark. (Projects embedding benchmark may want to turn this OFF.)"
+        OFF
+    )
     add_subdirectory(vendor/benchmark)
 endmacro()
 
@@ -17,11 +21,23 @@ endmacro()
 
 macro(ddc_configure_kokkos)
     if("${Kokkos_ENABLE_CUDA}")
-        option(Kokkos_ENABLE_CUDA_CONSTEXPR "Whether to activate experimental relaxed constexpr functions" ON)
-        option(Kokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE "Whether to enable relocatable device code (RDC) for CUDA" ON)
+        option(
+            Kokkos_ENABLE_CUDA_CONSTEXPR
+            "Whether to activate experimental relaxed constexpr functions"
+            ON
+        )
+        option(
+            Kokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE
+            "Whether to enable relocatable device code (RDC) for CUDA"
+            ON
+        )
     endif()
     if("${Kokkos_ENABLE_HIP}")
-        option(Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE "Whether to enable relocatable device code (RDC) for HIP" ON)
+        option(
+            Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE
+            "Whether to enable relocatable device code (RDC) for HIP"
+            ON
+        )
     endif()
     add_subdirectory(vendor/kokkos)
 endmacro()

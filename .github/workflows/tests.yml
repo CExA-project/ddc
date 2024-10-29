@@ -26,6 +26,25 @@ jobs:
       if: always()
       uses: fsfe/reuse-action@v4
 
+  cmake-format:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install python3 virtual environments
+      run: |
+        sudo apt-get update
+        sudo apt-get --yes install python3-pip python3-venv
+    - name: Install gersemi
+      run: |
+        python3 -m venv ./gersemi
+        . ./gersemi/bin/activate
+        python3 -m pip install gersemi
+    - name: Run gersemi
+      run: |
+        . ./gersemi/bin/activate
+        gersemi --line-length 100 --indent 4 --check cmake/DDCVendorConfiguration.cmake
+        find CMakeLists.txt tests/ examples/ benchmarks/ -name 'CMakeLists.txt' -exec gersemi --definitions $PWD/cmake --line-length 100 --indent 4 --check '{}' '+'
+
   id_repo:
     runs-on: ubuntu-latest
     steps:

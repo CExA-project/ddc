@@ -38,12 +38,12 @@ jobs:
       run: |
         python3 -m venv ./gersemi
         . ./gersemi/bin/activate
-        python3 -m pip install gersemi
+        python3 -m pip install gersemi==0.17
     - name: Run gersemi
       run: |
         . ./gersemi/bin/activate
-        gersemi --line-length 100 --indent 4 --check cmake/DDCVendorConfiguration.cmake
-        find CMakeLists.txt tests/ examples/ benchmarks/ -name 'CMakeLists.txt' -exec gersemi --definitions $PWD/cmake --line-length 100 --indent 4 --check '{}' '+'
+        gersemi --check cmake/DDCVendorConfiguration.cmake
+        find CMakeLists.txt tests/ examples/ benchmarks/ -name 'CMakeLists.txt' -exec gersemi --check '{}' '+'
 
   id_repo:
     runs-on: ubuntu-latest

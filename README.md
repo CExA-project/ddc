@@ -37,3 +37,28 @@ cd ddc
 cmake -B build -D DDC_BUILD_KERNELS_FFT=OFF -D DDC_BUILD_KERNELS_SPLINES=OFF -D DDC_BUILD_PDI_WRAPPER=OFF
 cmake --build build
 ```
+
+## Contributing
+
+### Formatting
+
+The project makes use of formatting tools for the C++ ([clang-format](https://clang.llvm.org/docs/ClangFormat.html)) and cmake ([gersemi](https://github.com/BlankSpruce/gersemi)) files. The formatting must be applied for a PR to be accepted.
+
+To format a cmake file, please apply the command
+
+```bash
+gersemi -i the-cmake-file
+```
+
+One can find the formatting style in the file `.gersemirc`.
+
+To format a C++ file, please apply the command
+
+```bash
+clang-format -i the-cpp-file
+```
+
+One can find the formatting style in the file `.clang-format`.
+
+> [!WARNING]
+> The formatting might not give the same result with different versions of a tool.

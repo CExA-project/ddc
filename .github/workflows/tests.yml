@@ -22,6 +22,8 @@ jobs:
         clangFormatVersion: 18
     - name: Prefer 'if defined' over 'ifdef'
       run: if grep -R "ifdef" benchmarks/ examples/ include/ddc/ install_test/ tests/; then exit 1; fi
+    - name: Find modifications of Kokkos reserved macros
+      run: if grep -RE "(define|undef) KOKKOS_" benchmarks/ examples/ include/ddc/ install_test/ tests/; then exit 1; fi
     - name: Find trailing whitespaces
       run: find . -not -path './vendor/*' -type f \( -name '*.[c|h]pp' -o -name 'CMakeLists.txt' -o -name '*.cmake' -o -name '*.md' -o -name '*.py' \) -exec ./bin/trailing_spaces --Werror '{}' '+'
     - name: REUSE Compliance Check

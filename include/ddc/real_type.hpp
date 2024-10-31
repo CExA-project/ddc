@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "ddc/config.hpp"
+
 namespace ddc {
 
 #if defined(DDC_BUILD_DOUBLE_PRECISION)

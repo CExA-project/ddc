@@ -13,7 +13,9 @@
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
-#if defined(DDC_BUILD_PDI_WRAPPER)
+#if defined(DDC_EXAMPLE_WITH_PDI)
+#include <ddc/pdi.hpp>
+
 #include <paraconf.h>
 #include <pdi.h>
 #endif
@@ -86,7 +88,7 @@ void display(double time, ChunkType temp)
             });
     std::cout << " }\n" << std::flush;
 
-#if defined(DDC_BUILD_PDI_WRAPPER)
+#if defined(DDC_EXAMPLE_WITH_PDI)
     ddc::PdiEvent("display")
             .with("temp", temp)
             .and_with("mean_temp", mean_temp)
@@ -99,7 +101,7 @@ void display(double time, ChunkType temp)
 //! [main-start]
 int main(int argc, char** argv)
 {
-#if defined(DDC_BUILD_PDI_WRAPPER)
+#if defined(DDC_EXAMPLE_WITH_PDI)
     auto pdi_conf = PC_parse_string("");
     PDI_init(pdi_conf);
 #endif
@@ -363,7 +365,7 @@ int main(int argc, char** argv)
     }
     //! [final output]
 
-#if defined(DDC_BUILD_PDI_WRAPPER)
+#if defined(DDC_EXAMPLE_WITH_PDI)
     PDI_finalize();
     PC_tree_destroy(&pdi_conf);
 #endif

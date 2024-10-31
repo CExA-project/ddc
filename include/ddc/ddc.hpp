@@ -10,6 +10,7 @@ namespace ddc {
 }
 
 // Misc
+#include "ddc/config.hpp"
 #include "ddc/detail/macros.hpp"
 #include "ddc/detail/tagged_vector.hpp"
 #include "ddc/detail/type_seq.hpp"
@@ -41,8 +42,3 @@ namespace ddc {
 #include "ddc/parallel_transform_reduce.hpp"
 #include "ddc/reducer.hpp"
 #include "ddc/transform_reduce.hpp"
-
-// PDI wrapper
-#if defined(DDC_BUILD_PDI_WRAPPER)
-#include "ddc/pdi.hpp"
-#endif

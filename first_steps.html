@@ -134,7 +134,7 @@ $(document).ready(function(){initNavTree('first_steps.html',''); initResizable()
 <div class="line"><span class="preprocessor">#include &lt;ddc/ddc.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#ifdef DDC_BUILD_PDI_WRAPPER</span></div>
+<div class="line"><span class="preprocessor">#if defined(DDC_BUILD_PDI_WRAPPER)</span></div>
 <div class="line"><span class="preprocessor">#include &lt;paraconf.h&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;pdi.h&gt;</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>

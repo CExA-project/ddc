@@ -23,7 +23,7 @@ static constexpr std::size_t s_degree_x = 3;
 /// Our first continuous dimension
 struct X
 {
-#ifdef PERIODIC_DOMAIN
+#if defined(PERIODIC_DOMAIN)
     static constexpr bool PERIODIC = true;
 #else
     static constexpr bool PERIODIC = false;
@@ -32,7 +32,7 @@ struct X
 //! [X-dimension]
 
 //! [boundary-condition]
-#ifdef PERIODIC_DOMAIN
+#if defined(PERIODIC_DOMAIN)
 static constexpr ddc::BoundCond BoundCond = ddc::BoundCond::PERIODIC;
 using ExtrapolationRule = ddc::PeriodicExtrapolationRule<X>;
 #else

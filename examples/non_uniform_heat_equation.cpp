@@ -19,7 +19,7 @@
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
-#ifdef DDC_BUILD_PDI_WRAPPER
+#if defined(DDC_BUILD_PDI_WRAPPER)
 #include <paraconf.h>
 #include <pdi.h>
 #endif
@@ -115,7 +115,7 @@ void display(double time, ChunkType temp)
             });
     std::cout << " }\n" << std::flush;
 
-#ifdef DDC_BUILD_PDI_WRAPPER
+#if defined(DDC_BUILD_PDI_WRAPPER)
     ddc::PdiEvent("display")
             .with("temp", temp)
             .and_with("mean_temp", mean_temp)
@@ -126,7 +126,7 @@ void display(double time, ChunkType temp)
 
 int main(int argc, char** argv)
 {
-#ifdef DDC_BUILD_PDI_WRAPPER
+#if defined(DDC_BUILD_PDI_WRAPPER)
     PC_tree_t pdi_conf = PC_parse_string("");
     PDI_init(pdi_conf);
 #endif
@@ -404,7 +404,7 @@ int main(int argc, char** argv)
     }
     //! [final output]
 
-#ifdef DDC_BUILD_PDI_WRAPPER
+#if defined(DDC_BUILD_PDI_WRAPPER)
     PDI_finalize();
     PC_tree_destroy(&pdi_conf);
 #endif

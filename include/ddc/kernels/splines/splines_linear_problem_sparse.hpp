@@ -57,22 +57,22 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
 template <class ExecSpace>
 std::size_t default_cols_per_chunk() noexcept
 {
-#ifdef KOKKOS_ENABLE_SERIAL
+#if defined(KOKKOS_ENABLE_SERIAL)
     if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
         return 8192;
     }
 #endif
-#ifdef KOKKOS_ENABLE_OPENMP
+#if defined(KOKKOS_ENABLE_OPENMP)
     if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
         return 8192;
     }
 #endif
-#ifdef KOKKOS_ENABLE_CUDA
+#if defined(KOKKOS_ENABLE_CUDA)
     if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
         return 65535;
     }
 #endif
-#ifdef KOKKOS_ENABLE_HIP
+#if defined(KOKKOS_ENABLE_HIP)
     if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
         return 65535;
     }
@@ -92,22 +92,22 @@ std::size_t default_cols_per_chunk() noexcept
 template <class ExecSpace>
 unsigned int default_preconditioner_max_block_size() noexcept
 {
-#ifdef KOKKOS_ENABLE_SERIAL
+#if defined(KOKKOS_ENABLE_SERIAL)
     if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
         return 32U;
     }
 #endif
-#ifdef KOKKOS_ENABLE_OPENMP
+#if defined(KOKKOS_ENABLE_OPENMP)
     if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
         return 1U;
     }
 #endif
-#ifdef KOKKOS_ENABLE_CUDA
+#if defined(KOKKOS_ENABLE_CUDA)
     if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
         return 1U;
     }
 #endif
-#ifdef KOKKOS_ENABLE_HIP
+#if defined(KOKKOS_ENABLE_HIP)
     if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
         return 1U;
     }
@@ -131,7 +131,7 @@ public:
 
 private:
     using matrix_sparse_type = gko::matrix::Csr<double, gko::int32>;
-#ifdef KOKKOS_ENABLE_OPENMP
+#if defined(KOKKOS_ENABLE_OPENMP)
     using solver_type = std::conditional_t<
             std::is_same_v<ExecSpace, Kokkos::OpenMP>,
             gko::solver::Gmres<double>,

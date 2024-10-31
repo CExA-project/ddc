@@ -34,4 +34,10 @@ endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/DDCTargets.cmake)
 
+foreach(target fft;pdi;splines)
+   if(TARGET DDC::ddc_${target})
+      add_library(DDC::${target} ALIAS DDC::ddc_${target})
+   endif()
+endforeach()
+
 check_required_components(DDC)

@@ -9,7 +9,7 @@
 #include <tuple>
 #include <type_traits>
 #if defined(BSPLINES_TYPE_NON_UNIFORM)
-#include <vector>
+#    include <vector>
 #endif
 
 #include <ddc/ddc.hpp>
@@ -20,7 +20,7 @@
 #include <Kokkos_Core.hpp>
 
 #if defined(EVALUATOR_COSINE)
-#include "cosine_evaluator.hpp"
+#    include "cosine_evaluator.hpp"
 #endif
 #include "polynomial_evaluator.hpp"
 #include "spline_error_bounds.hpp"

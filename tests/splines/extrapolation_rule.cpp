@@ -16,7 +16,7 @@
 #include "cosine_evaluator.hpp"
 #include "evaluator_2d.hpp"
 #if !defined(BC_PERIODIC)
-#include "polynomial_evaluator.hpp"
+#    include "polynomial_evaluator.hpp"
 #endif
 
 #if defined(BC_PERIODIC)
@@ -268,20 +268,20 @@ static void ExtrapolationRuleSplineTest()
 #if defined(ER_NULL)
     ddc::NullExtrapolationRule const extrapolation_rule_left_dim_1;
     ddc::NullExtrapolationRule const extrapolation_rule_right_dim_1;
-#if defined(BC_PERIODIC)
+#    if defined(BC_PERIODIC)
     ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_left_dim_2;
     ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_right_dim_2;
-#else
+#    else
     ddc::NullExtrapolationRule const extrapolation_rule_left_dim_2;
     ddc::NullExtrapolationRule const extrapolation_rule_right_dim_2;
-#endif
+#    endif
 #elif defined(ER_CONSTANT)
-#if defined(BC_PERIODIC)
+#    if defined(BC_PERIODIC)
     ddc::ConstantExtrapolationRule<I1, I2> const extrapolation_rule_left_dim_1(x0<I1>());
     ddc::ConstantExtrapolationRule<I1, I2> const extrapolation_rule_right_dim_1(xN<I1>());
     ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_left_dim_2;
     ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_right_dim_2;
-#else
+#    else
     ddc::ConstantExtrapolationRule<I1, I2> const
             extrapolation_rule_left_dim_1(x0<I1>(), x0<I2>(), xN<I2>());
     ddc::ConstantExtrapolationRule<I1, I2> const
@@ -290,7 +290,7 @@ static void ExtrapolationRuleSplineTest()
             extrapolation_rule_left_dim_2(x0<I2>(), x0<I1>(), xN<I1>());
     ddc::ConstantExtrapolationRule<I2, I1> const
             extrapolation_rule_right_dim_2(xN<I2>(), x0<I1>(), xN<I1>());
-#endif
+#    endif
 #endif
     ddc::SplineEvaluator2D<
             ExecSpace,
@@ -310,13 +310,13 @@ static void ExtrapolationRuleSplineTest()
             ddc::PeriodicExtrapolationRule<I2>,
             ddc::PeriodicExtrapolationRule<I2>,
 #else
-#if defined(ER_NULL)
+#    if defined(ER_NULL)
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
-#elif defined(ER_CONSTANT)
+#    elif defined(ER_CONSTANT)
             ddc::ConstantExtrapolationRule<I2, I1>,
             ddc::ConstantExtrapolationRule<I2, I1>,
-#endif
+#    endif
 #endif
 
             IDim<X, I1, I2>...> const
@@ -367,11 +367,11 @@ static void ExtrapolationRuleSplineTest()
                         e_without_interest(e);
                 double tmp;
                 if (ddc::select<I2>(coords_eval(e)) > xN<I2>()) {
-#if defined(BC_PERIODIC)
+#    if defined(BC_PERIODIC)
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),
                             e_without_interest));
-#else
+#    else
                     typename decltype(ddc::remove_dims_of(
                             vals.domain(),
                             vals.template domain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>()))::
@@ -380,7 +380,7 @@ static void ExtrapolationRuleSplineTest()
                             vals.template domain<IDim<I1, I1, I2>>().back(),
                             vals.template domain<IDim<I2, I1, I2>>().back(),
                             e_batch));
-#endif
+#    endif
                 } else {
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),
@@ -396,21 +396,21 @@ static void ExtrapolationRuleSplineTest()
 }
 
 #if defined(ER_NULL) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Null##Periodic##Uniform
+#    define SUFFIX(name) name##Null##Periodic##Uniform
 #elif defined(ER_NULL) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Null##Periodic##NonUniform
+#    define SUFFIX(name) name##Null##Periodic##NonUniform
 #elif defined(ER_NULL) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Null##Greville##Uniform
+#    define SUFFIX(name) name##Null##Greville##Uniform
 #elif defined(ER_NULL) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Null##Greville##NonUniform
+#    define SUFFIX(name) name##Null##Greville##NonUniform
 #elif defined(ER_CONSTANT) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Constant##Periodic##Uniform
+#    define SUFFIX(name) name##Constant##Periodic##Uniform
 #elif defined(ER_CONSTANT) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Constant##Periodic##NonUniform
+#    define SUFFIX(name) name##Constant##Periodic##NonUniform
 #elif defined(ER_CONSTANT) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Constant##Greville##Uniform
+#    define SUFFIX(name) name##Constant##Greville##Uniform
 #elif defined(ER_CONSTANT) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Constant##Greville##NonUniform
+#    define SUFFIX(name) name##Constant##Greville##NonUniform
 #endif
 
 TEST(SUFFIX(ExtrapolationRuleSplineHost), 2DXY)

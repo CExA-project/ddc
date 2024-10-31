@@ -14,15 +14,15 @@
 #include <Kokkos_Core.hpp>
 
 #if !defined(KOKKOSFFT_ENABLE_SERIAL)
-#if defined(KOKKOS_ENABLE_SERIAL) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)
-#define KOKKOSFFT_ENABLE_SERIAL
-#endif
+#    if defined(KOKKOS_ENABLE_SERIAL) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)
+#        define KOKKOSFFT_ENABLE_SERIAL
+#    endif
 #endif
 
 #if !defined(KOKKOSFFT_ENABLE_OPENMP)
-#if defined(KOKKOS_ENABLE_OPENMP) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)
-#define KOKKOSFFT_ENABLE_OPENMP
-#endif
+#    if defined(KOKKOS_ENABLE_OPENMP) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)
+#        define KOKKOSFFT_ENABLE_OPENMP
+#    endif
 #endif
 
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FFT_CPP) {

@@ -21,18 +21,18 @@
 #include "ddc/detail/macros.hpp"
 
 #if defined(KOKKOS_ENABLE_CUDA)
-#include <sstream>
+#    include <sstream>
 
-#include <cuda.h>
+#    include <cuda.h>
 #elif defined(KOKKOS_ENABLE_HIP)
-#include <sstream>
+#    include <sstream>
 
-#include <hip/hip_runtime.h>
+#    include <hip/hip_runtime.h>
 #endif
 
 #if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
-#define DDC_DETAIL_DEVICE_THROW_ON_ERROR(val)                                                      \
-    ddc::detail::device_throw_on_error((val), #val, __FILE__, __LINE__)
+#    define DDC_DETAIL_DEVICE_THROW_ON_ERROR(val)                                                  \
+        ddc::detail::device_throw_on_error((val), #val, __FILE__, __LINE__)
 #endif
 
 namespace ddc {
@@ -253,5 +253,5 @@ detail::ddim_impl_t<DDim, Kokkos::HostSpace> const& host_discrete_space()
 } // namespace ddc
 
 #if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
-#undef DDC_DETAIL_DEVICE_THROW_ON_ERROR
+#    undef DDC_DETAIL_DEVICE_THROW_ON_ERROR
 #endif

@@ -7,25 +7,25 @@
 #include <Kokkos_Core.hpp>
 
 #if defined(KOKKOS_ENABLE_CUDA)
-#if !defined(KOKKOS_ENABLE_CUDA_CONSTEXPR)
+#    if !defined(KOKKOS_ENABLE_CUDA_CONSTEXPR)
 static_assert(false, "DDC requires option -DKokkos_ENABLE_CUDA_CONSTEXPR=ON");
-#endif
+#    endif
 
-#if !defined(KOKKOS_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE)
+#    if !defined(KOKKOS_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE)
 static_assert(false, "DDC requires option -DKokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON");
-#endif
+#    endif
 #endif
 
 #if defined(KOKKOS_ENABLE_HIP)
-#if !defined(KOKKOS_ENABLE_HIP_RELOCATABLE_DEVICE_CODE)
+#    if !defined(KOKKOS_ENABLE_HIP_RELOCATABLE_DEVICE_CODE)
 static_assert(false, "DDC requires option -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON");
-#endif
+#    endif
 #endif
 
 #if defined(KOKKOS_ENABLE_SYCL)
-#if !defined(KOKKOS_ENABLE_SYCL_RELOCATABLE_DEVICE_CODE)
+#    if !defined(KOKKOS_ENABLE_SYCL_RELOCATABLE_DEVICE_CODE)
 static_assert(false, "DDC requires option -DKokkos_ENABLE_SYCL_RELOCATABLE_DEVICE_CODE=ON");
-#endif
+#    endif
 #endif
 
 //! @brief The top-level namespace of DDC.

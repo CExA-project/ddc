@@ -8,49 +8,49 @@
 
 #if defined(__NVCC__)
 
-#define DDC_MAKE_PRAGMA(X) _Pragma(#X)
+#    define DDC_MAKE_PRAGMA(X) _Pragma(#X)
 
-#if defined __NVCC_DIAG_PRAGMA_SUPPORT__
-#define DDC_NV_DIAGNOSTIC_PUSH DDC_MAKE_PRAGMA(nv_diagnostic push)
-#define DDC_NV_DIAGNOSTIC_POP DDC_MAKE_PRAGMA(nv_diagnostic pop)
-#define DDC_NV_DIAG_SUPPRESS(X) DDC_MAKE_PRAGMA(nv_diag_suppress X)
+#    if defined __NVCC_DIAG_PRAGMA_SUPPORT__
+#        define DDC_NV_DIAGNOSTIC_PUSH DDC_MAKE_PRAGMA(nv_diagnostic push)
+#        define DDC_NV_DIAGNOSTIC_POP DDC_MAKE_PRAGMA(nv_diagnostic pop)
+#        define DDC_NV_DIAG_SUPPRESS(X) DDC_MAKE_PRAGMA(nv_diag_suppress X)
+#    else
+#        define DDC_NV_DIAGNOSTIC_PUSH
+#        define DDC_NV_DIAGNOSTIC_POP
+#        define DDC_NV_DIAG_SUPPRESS(X) DDC_MAKE_PRAGMA(diag_suppress X)
+#    endif
+
+#    define DDC_IF_NVCC_THEN_PUSH(X) DDC_NV_DIAGNOSTIC_PUSH
+#    define DDC_IF_NVCC_THEN_SUPPRESS(X) DDC_NV_DIAG_SUPPRESS(X)
+#    define DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(X)                                                  \
+        DDC_NV_DIAGNOSTIC_PUSH                                                                     \
+        DDC_NV_DIAG_SUPPRESS(X)
+#    define DDC_IF_NVCC_THEN_POP DDC_NV_DIAGNOSTIC_POP
+
 #else
-#define DDC_NV_DIAGNOSTIC_PUSH
-#define DDC_NV_DIAGNOSTIC_POP
-#define DDC_NV_DIAG_SUPPRESS(X) DDC_MAKE_PRAGMA(diag_suppress X)
-#endif
 
-#define DDC_IF_NVCC_THEN_PUSH(X) DDC_NV_DIAGNOSTIC_PUSH
-#define DDC_IF_NVCC_THEN_SUPPRESS(X) DDC_NV_DIAG_SUPPRESS(X)
-#define DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(X)                                                      \
-    DDC_NV_DIAGNOSTIC_PUSH                                                                         \
-    DDC_NV_DIAG_SUPPRESS(X)
-#define DDC_IF_NVCC_THEN_POP DDC_NV_DIAGNOSTIC_POP
-
-#else
-
-#define DDC_IF_NVCC_THEN_PUSH(X)
-#define DDC_IF_NVCC_THEN_SUPPRESS(X)
-#define DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(X)
-#define DDC_IF_NVCC_THEN_POP
+#    define DDC_IF_NVCC_THEN_PUSH(X)
+#    define DDC_IF_NVCC_THEN_SUPPRESS(X)
+#    define DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(X)
+#    define DDC_IF_NVCC_THEN_POP
 
 #endif
 
 #if defined(__HIP_DEVICE_COMPILE__)
-#define DDC_CURRENT_KOKKOS_SPACE Kokkos::HIPSpace
+#    define DDC_CURRENT_KOKKOS_SPACE Kokkos::HIPSpace
 #elif defined(__CUDA_ARCH__)
-#define DDC_CURRENT_KOKKOS_SPACE Kokkos::CudaSpace
+#    define DDC_CURRENT_KOKKOS_SPACE Kokkos::CudaSpace
 #elif defined(__SYCL_DEVICE_ONLY__)
-#define DDC_CURRENT_KOKKOS_SPACE Kokkos::SYCLDeviceUSMSpace
+#    define DDC_CURRENT_KOKKOS_SPACE Kokkos::SYCLDeviceUSMSpace
 #else
-#define DDC_CURRENT_KOKKOS_SPACE Kokkos::HostSpace
+#    define DDC_CURRENT_KOKKOS_SPACE Kokkos::HostSpace
 #endif
 
 #if defined(__HIPCC__)
-#define DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(NAME)                                           \
-    DDC_NAMESPACE_##NAME {}                                                                        \
-    using namespace DDC_NAMESPACE_##NAME;                                                          \
-    namespace DDC_NAMESPACE_##NAME
+#    define DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(NAME)                                       \
+        DDC_NAMESPACE_##NAME {}                                                                    \
+        using namespace DDC_NAMESPACE_##NAME;                                                      \
+        namespace DDC_NAMESPACE_##NAME
 #else
-#define DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(NAME)
+#    define DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(NAME)
 #endif

@@ -5,10 +5,10 @@
 #include <algorithm>
 #include <cstddef>
 #if defined(BC_HERMITE)
-#include <optional>
+#    include <optional>
 #endif
 #if defined(BSPLINES_TYPE_UNIFORM)
-#include <type_traits>
+#    include <type_traits>
 #endif
 #include <vector>
 
@@ -21,9 +21,9 @@
 
 #include "evaluator_2d.hpp"
 #if defined(BC_PERIODIC)
-#include "cosine_evaluator.hpp"
+#    include "cosine_evaluator.hpp"
 #else
-#include "polynomial_evaluator.hpp"
+#    include "polynomial_evaluator.hpp"
 #endif
 #include "spline_error_bounds.hpp"
 
@@ -586,17 +586,17 @@ void Batched2dSplineTest()
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_2D_SPLINE_BUILDER_CPP)
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Periodic##Uniform
+#    define SUFFIX(name) name##Periodic##Uniform
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Periodic##NonUniform
+#    define SUFFIX(name) name##Periodic##NonUniform
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Greville##Uniform
+#    define SUFFIX(name) name##Greville##Uniform
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Greville##NonUniform
+#    define SUFFIX(name) name##Greville##NonUniform
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Hermite##Uniform
+#    define SUFFIX(name) name##Hermite##Uniform
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Hermite##NonUniform
+#    define SUFFIX(name) name##Hermite##NonUniform
 #endif
 
 TEST(SUFFIX(Batched2dSplineHost), 2DXY)

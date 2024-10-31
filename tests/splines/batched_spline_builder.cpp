@@ -5,10 +5,10 @@
 #include <algorithm>
 #include <cstddef>
 #if defined(BC_HERMITE)
-#include <optional>
+#    include <optional>
 #endif
 #if defined(BSPLINES_TYPE_UNIFORM)
-#include <type_traits>
+#    include <type_traits>
 #endif
 #include <vector>
 
@@ -356,29 +356,29 @@ void BatchedSplineTest()
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_SPLINE_BUILDER_CPP)
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#define SUFFIX(name) name##Lapack##Periodic##Uniform
+#    define SUFFIX(name) name##Lapack##Periodic##Uniform
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#define SUFFIX(name) name##Lapack##Periodic##NonUniform
+#    define SUFFIX(name) name##Lapack##Periodic##NonUniform
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#define SUFFIX(name) name##Lapack##Greville##Uniform
+#    define SUFFIX(name) name##Lapack##Greville##Uniform
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#define SUFFIX(name) name##Lapack##Greville##NonUniform
+#    define SUFFIX(name) name##Lapack##Greville##NonUniform
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#define SUFFIX(name) name##Lapack##Hermite##Uniform
+#    define SUFFIX(name) name##Lapack##Hermite##Uniform
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#define SUFFIX(name) name##Lapack##Hermite##NonUniform
+#    define SUFFIX(name) name##Lapack##Hermite##NonUniform
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#define SUFFIX(name) name##Ginkgo##Periodic##Uniform
+#    define SUFFIX(name) name##Ginkgo##Periodic##Uniform
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#define SUFFIX(name) name##Ginkgo##Periodic##NonUniform
+#    define SUFFIX(name) name##Ginkgo##Periodic##NonUniform
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#define SUFFIX(name) name##Ginkgo##Greville##Uniform
+#    define SUFFIX(name) name##Ginkgo##Greville##Uniform
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#define SUFFIX(name) name##Ginkgo##Greville##NonUniform
+#    define SUFFIX(name) name##Ginkgo##Greville##NonUniform
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#define SUFFIX(name) name##Ginkgo##Hermite##Uniform
+#    define SUFFIX(name) name##Ginkgo##Hermite##Uniform
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#define SUFFIX(name) name##Ginkgo##Hermite##NonUniform
+#    define SUFFIX(name) name##Ginkgo##Hermite##NonUniform
 #endif
 
 TEST(SUFFIX(BatchedSplineHost), 1DX)

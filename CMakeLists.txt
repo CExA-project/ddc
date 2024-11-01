@@ -290,4 +290,14 @@ configure_package_config_file(
     INSTALL_DESTINATION lib/cmake/DDC
 )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake DESTINATION lib/cmake/DDC)
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
+    COMPATIBILITY SameMinorVersion
+)
+
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
+    DESTINATION lib/cmake/DDC
+)

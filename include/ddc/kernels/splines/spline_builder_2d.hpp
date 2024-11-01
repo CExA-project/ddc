@@ -8,9 +8,8 @@
 #include <optional>
 #include <type_traits>
 
-#include <ddc/ddc.hpp>
-
-#include "spline_builder.hpp"
+#include "ddc/ddc.hpp"
+#include "ddc/kernels/splines/spline_builder.hpp"
 
 namespace ddc {
 

@@ -8,9 +8,9 @@
 #include <cstddef>
 #include <type_traits>
 
-#include <ddc/ddc.hpp>
-
 #include <Kokkos_Core.hpp>
+
+#include "ddc/ddc.hpp"
 
 namespace ddc {
 

@@ -9,9 +9,8 @@
 #include <memory>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-
-#include "view.hpp"
+#include "ddc/ddc.hpp"
+#include "ddc/kernels/splines/view.hpp"
 
 namespace ddc {
 

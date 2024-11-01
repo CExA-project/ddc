@@ -12,15 +12,14 @@
 #include <tuple>
 #include <utility>
 
-#include <ddc/ddc.hpp>
-
 #include <Kokkos_Core.hpp>
 
-#include "deriv.hpp"
-#include "integrals.hpp"
-#include "math_tools.hpp"
-#include "spline_boundary_conditions.hpp"
-#include "splines_linear_problem_maker.hpp"
+#include "ddc/ddc.hpp"
+#include "ddc/kernels/splines/deriv.hpp"
+#include "ddc/kernels/splines/integrals.hpp"
+#include "ddc/kernels/splines/math_tools.hpp"
+#include "ddc/kernels/splines/spline_boundary_conditions.hpp"
+#include "ddc/kernels/splines/splines_linear_problem_maker.hpp"
 
 namespace ddc {
 

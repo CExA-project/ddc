@@ -11,7 +11,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "macros.hpp"
+#include "ddc/detail/macros.hpp"
 
 namespace ddc::detail {
 

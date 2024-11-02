@@ -75,7 +75,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityUniform)
         ddc::discrete_space<BSplinesX>().eval_basis(values, test_point);
         double sum = 0.0;
         for (std::size_t j(0); j < degree + 1; ++j) {
-            sum += values(j);
+            sum += ddc::detail::mdspan_call(values, j);
         }
         EXPECT_LE(fabs(sum - 1.0), 1.0e-15);
     }
@@ -110,7 +110,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityNonUniform)
         ddc::discrete_space<BSplinesX>().eval_basis(values, test_point);
         double sum = 0.0;
         for (std::size_t j(0); j < degree + 1; ++j) {
-            sum += values(j);
+            sum += ddc::detail::mdspan_call(values, j);
         }
         EXPECT_LE(fabs(sum - 1.0), 1.0e-15);
     }

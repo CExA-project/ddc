@@ -13,28 +13,17 @@
 
 #include "macros.hpp"
 
-namespace ddc::detail {
-
-template <
-        class ElementType,
-        class Extents,
-        class LayoutPolicy,
-        class AccessorPolicy,
-        class... SizeTypes>
-KOKKOS_FORCEINLINE_FUNCTION constexpr decltype(auto) mdspan_call(
-        Kokkos::mdspan<ElementType, Extents, LayoutPolicy, AccessorPolicy> const& mdspan,
-        SizeTypes const&... indices)
-{
 #if defined(MDSPAN_USE_BRACKET_OPERATOR)
 #if MDSPAN_USE_BRACKET_OPERATOR
-    return mdspan[indices...];
+#define DDC_MDSPAN_ACCESS_OP(mds, ...) mds[__VA_ARGS__]
 #else
-    return mdspan(indices...);
+#define DDC_MDSPAN_ACCESS_OP(mds, ...) mds(__VA_ARGS__)
 #endif
 #else
-    return mdspan[indices...];
+#define DDC_MDSPAN_ACCESS_OP(mds, ...) mds[__VA_ARGS__]
 #endif
-}
+
+namespace ddc::detail {
 
 template <class T>
 struct type_holder
@@ -154,8 +143,8 @@ KOKKOS_FUNCTION mdspan_to_kokkos_layout_t<typename MP::layout_type> build_kokkos
                 std::size_t,
                 Kokkos::extents<std::size_t, sizeof...(Is), 2>,
                 Kokkos::layout_right> const interleaved_extents_strides(storage.data());
-        ((mdspan_call(interleaved_extents_strides, Is, 0) = ep.extent(Is),
-          mdspan_call(interleaved_extents_strides, Is, 1) = mapping.stride(Is)),
+        ((DDC_MDSPAN_ACCESS_OP(interleaved_extents_strides, Is, 0) = ep.extent(Is),
+          DDC_MDSPAN_ACCESS_OP(interleaved_extents_strides, Is, 1) = mapping.stride(Is)),
          ...);
         return make_layout_stride(storage, std::make_index_sequence<sizeof...(Is) * 2> {});
     } else {

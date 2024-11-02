@@ -600,7 +600,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
 
     double saved;
     double temp;
-    detail::mdspan_call(ndu, 0, 0) = 1.0;
+    DDC_MDSPAN_ACCESS_OP(ndu, 0, 0) = 1.0;
     for (std::size_t j = 0; j < degree(); ++j) {
         left[j] = x - ddc::coordinate(icell - j);
         right[j] = ddc::coordinate(icell + j + 1) - x;
@@ -608,47 +608,47 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
         for (std::size_t r = 0; r < j + 1; ++r) {
             // compute inverse of knot differences and save them into lower
             // triangular part of ndu
-            detail::mdspan_call(ndu, r, j + 1) = 1.0 / (right[r] + left[j - r]);
+            DDC_MDSPAN_ACCESS_OP(ndu, r, j + 1) = 1.0 / (right[r] + left[j - r]);
             // compute basis functions and save them into upper triangular part
             // of ndu
-            temp = detail::mdspan_call(ndu, j, r) * detail::mdspan_call(ndu, r, j + 1);
-            detail::mdspan_call(ndu, j + 1, r) = saved + right[r] * temp;
+            temp = DDC_MDSPAN_ACCESS_OP(ndu, j, r) * DDC_MDSPAN_ACCESS_OP(ndu, r, j + 1);
+            DDC_MDSPAN_ACCESS_OP(ndu, j + 1, r) = saved + right[r] * temp;
             saved = left[j - r] * temp;
         }
-        detail::mdspan_call(ndu, j + 1, j + 1) = saved;
+        DDC_MDSPAN_ACCESS_OP(ndu, j + 1, j + 1) = saved;
     }
     // Save 0-th derivative
     for (std::size_t j = 0; j < degree() + 1; ++j) {
-        detail::mdspan_call(derivs, j, 0) = detail::mdspan_call(ndu, degree(), j);
+        DDC_MDSPAN_ACCESS_OP(derivs, j, 0) = DDC_MDSPAN_ACCESS_OP(ndu, degree(), j);
     }
 
     for (int r = 0; r < int(degree() + 1); ++r) {
         int s1 = 0;
         int s2 = 1;
-        detail::mdspan_call(a, 0, 0) = 1.0;
+        DDC_MDSPAN_ACCESS_OP(a, 0, 0) = 1.0;
         for (int k = 1; k < int(n + 1); ++k) {
             double d = 0.0;
             int const rk = r - k;
             int const pk = degree() - k;
             if (r >= k) {
-                detail::mdspan_call(a, 0, s2)
-                        = detail::mdspan_call(a, 0, s1) * detail::mdspan_call(ndu, rk, pk + 1);
-                d = detail::mdspan_call(a, 0, s2) * detail::mdspan_call(ndu, pk, rk);
+                DDC_MDSPAN_ACCESS_OP(a, 0, s2)
+                        = DDC_MDSPAN_ACCESS_OP(a, 0, s1) * DDC_MDSPAN_ACCESS_OP(ndu, rk, pk + 1);
+                d = DDC_MDSPAN_ACCESS_OP(a, 0, s2) * DDC_MDSPAN_ACCESS_OP(ndu, pk, rk);
             }
             int const j1 = rk > -1 ? 1 : (-rk);
             int const j2 = (r - 1) <= pk ? k : (degree() - r + 1);
             for (int j = j1; j < j2; ++j) {
-                detail::mdspan_call(a, j, s2)
-                        = (detail::mdspan_call(a, j, s1) - detail::mdspan_call(a, j - 1, s1))
-                          * detail::mdspan_call(ndu, rk + j, pk + 1);
-                d += detail::mdspan_call(a, j, s2) * detail::mdspan_call(ndu, pk, rk + j);
+                DDC_MDSPAN_ACCESS_OP(a, j, s2)
+                        = (DDC_MDSPAN_ACCESS_OP(a, j, s1) - DDC_MDSPAN_ACCESS_OP(a, j - 1, s1))
+                          * DDC_MDSPAN_ACCESS_OP(ndu, rk + j, pk + 1);
+                d += DDC_MDSPAN_ACCESS_OP(a, j, s2) * DDC_MDSPAN_ACCESS_OP(ndu, pk, rk + j);
             }
             if (r <= pk) {
-                detail::mdspan_call(a, k, s2)
-                        = -detail::mdspan_call(a, k - 1, s1) * detail::mdspan_call(ndu, r, pk + 1);
-                d += detail::mdspan_call(a, k, s2) * detail::mdspan_call(ndu, pk, r);
+                DDC_MDSPAN_ACCESS_OP(a, k, s2) = -DDC_MDSPAN_ACCESS_OP(a, k - 1, s1)
+                                                 * DDC_MDSPAN_ACCESS_OP(ndu, r, pk + 1);
+                d += DDC_MDSPAN_ACCESS_OP(a, k, s2) * DDC_MDSPAN_ACCESS_OP(ndu, pk, r);
             }
-            detail::mdspan_call(derivs, r, k) = d;
+            DDC_MDSPAN_ACCESS_OP(derivs, r, k) = d;
             Kokkos::kokkos_swap(s1, s2);
         }
     }
@@ -656,7 +656,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     int r = degree();
     for (int k = 1; k < int(n + 1); ++k) {
         for (std::size_t i = 0; i < derivs.extent(0); ++i) {
-            detail::mdspan_call(derivs, i, k) *= r;
+            DDC_MDSPAN_ACCESS_OP(derivs, i, k) *= r;
         }
         r *= degree() - k;
     }

@@ -501,7 +501,7 @@ int SplineBuilder<
         } else {
             int const mid = bsplines_type::degree() / 2;
             offset = jmin.uid() - start.uid()
-                     + (detail::mdspan_call(values, mid) > detail::mdspan_call(values, mid + 1)
+                     + (DDC_MDSPAN_ACCESS_OP(values, mid) > DDC_MDSPAN_ACCESS_OP(values, mid + 1)
                                 ? mid
                                 : mid + 1)
                      - BSplines::degree();
@@ -680,7 +680,7 @@ void SplineBuilder<
         // all derivatives by multiplying the i-th derivative by dx^i
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {
             for (std::size_t j = 1; j < bsplines_type::degree() / 2 + 1; ++j) {
-                detail::mdspan_call(derivs, i, j) *= ddc::detail::ipow(m_dx, j);
+                DDC_MDSPAN_ACCESS_OP(derivs, i, j) *= ddc::detail::ipow(m_dx, j);
             }
         }
 
@@ -690,7 +690,7 @@ void SplineBuilder<
                 matrix->set_element(
                         i,
                         j,
-                        detail::mdspan_call(derivs, j, s_nbc_xmin - i - 1 + s_odd));
+                        DDC_MDSPAN_ACCESS_OP(derivs, j, s_nbc_xmin - i - 1 + s_odd));
             }
         }
     }
@@ -709,7 +709,7 @@ void SplineBuilder<
             int const j = ddc::detail::
                     modulo(int(jmin.uid() - m_offset + s),
                            static_cast<int>(ddc::discrete_space<BSplines>().nbasis()));
-            matrix->set_element(ix.uid() - start + s_nbc_xmin, j, detail::mdspan_call(values, s));
+            matrix->set_element(ix.uid() - start + s_nbc_xmin, j, DDC_MDSPAN_ACCESS_OP(values, s));
         }
     });
 
@@ -733,7 +733,7 @@ void SplineBuilder<
         // all derivatives by multiplying the i-th derivative by dx^i
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {
             for (std::size_t j = 1; j < bsplines_type::degree() / 2 + 1; ++j) {
-                detail::mdspan_call(derivs, i, j) *= ddc::detail::ipow(m_dx, j);
+                DDC_MDSPAN_ACCESS_OP(derivs, i, j) *= ddc::detail::ipow(m_dx, j);
             }
         }
 
@@ -741,7 +741,7 @@ void SplineBuilder<
         int const j0 = ddc::discrete_space<BSplines>().nbasis() - bsplines_type::degree();
         for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
             for (std::size_t i = 0; i < s_nbc_xmax; ++i) {
-                matrix->set_element(i0 + i, j0 + j, detail::mdspan_call(derivs, j + 1, i + s_odd));
+                matrix->set_element(i0 + i, j0 + j, DDC_MDSPAN_ACCESS_OP(derivs, j + 1, i + s_odd));
             }
         }
     }

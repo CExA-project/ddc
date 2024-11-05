@@ -131,7 +131,6 @@ target_include_directories(
         "$<INSTALL_INTERFACE:include>"
 )
 target_link_libraries(DDC INTERFACE Kokkos::kokkos)
-target_compile_definitions(DDC INTERFACE MDSPAN_USE_PAREN_OPERATOR=1)
 if("${DDC_BUILD_DOUBLE_PRECISION}")
     target_compile_definitions(DDC INTERFACE DDC_BUILD_DOUBLE_PRECISION)
 endif()

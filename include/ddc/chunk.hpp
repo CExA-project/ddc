@@ -13,6 +13,7 @@
 #include "ddc/chunk_common.hpp"
 #include "ddc/chunk_span.hpp"
 #include "ddc/chunk_traits.hpp"
+#include "ddc/detail/kokkos.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
 namespace ddc {
@@ -192,7 +193,7 @@ public:
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
         assert(((select<DDims>(take<DDims>(delems...)) >= front<DDims>(this->m_domain)) && ...));
         assert(((select<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(uid<DDims>(take<DDims>(delems...))...);
+        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
     }
 
     /** Element access using a list of DiscreteElement
@@ -208,7 +209,7 @@ public:
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
         assert(((select<DDims>(take<DDims>(delems...)) >= front<DDims>(this->m_domain)) && ...));
         assert(((select<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(uid<DDims>(take<DDims>(delems...))...);
+        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
     }
 
     /** Returns the label of the Chunk

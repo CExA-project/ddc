@@ -330,7 +330,7 @@ public:
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
         assert(((select<DDims>(take<DDims>(delems...)) >= front<DDims>(this->m_domain)) && ...));
         assert(((select<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain)) && ...));
-        return this->m_internal_mdspan(uid<DDims>(take<DDims>(delems...))...);
+        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
     }
 
     /** Access to the underlying allocation pointer

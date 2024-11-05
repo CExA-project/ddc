@@ -122,6 +122,9 @@ jobs:
         - image: 'oldest' # nvcc 11 only supports C++-17
           backend: 'cuda'
           cxx_version: '23'
+        - image: 'oldest' # clang bug with multidimensional bracket operator and parameter packs
+          backend: 'hip'
+          cxx_version: '23'
         - image: 'latest' # nvcc 12 only supports C++-20
           backend: 'cuda'
           cxx_version: '23'

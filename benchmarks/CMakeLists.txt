@@ -3,9 +3,9 @@
 # SPDX-License-Identifier: MIT
 
 add_executable(ddc_benchmark_deepcopy deepcopy.cpp)
-target_link_libraries(ddc_benchmark_deepcopy PUBLIC benchmark::benchmark DDC::DDC)
+target_link_libraries(ddc_benchmark_deepcopy PUBLIC benchmark::benchmark ddc_core)
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
     add_executable(ddc_benchmark_splines splines.cpp)
-    target_link_libraries(ddc_benchmark_splines PUBLIC benchmark::benchmark DDC::DDC)
+    target_link_libraries(ddc_benchmark_splines PUBLIC benchmark::benchmark ddc_core ddc_splines)
 endif()

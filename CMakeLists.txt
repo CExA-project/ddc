@@ -127,24 +127,24 @@ add_library(DDC INTERFACE)
 add_library(DDC::DDC ALIAS DDC)
 install(TARGETS DDC EXPORT DDCTargets)
 
-add_library(ddc INTERFACE)
-add_library(DDC::ddc ALIAS ddc)
-install(TARGETS ddc EXPORT DDCTargets)
-target_compile_definitions(ddc INTERFACE MDSPAN_USE_PAREN_OPERATOR=1)
+add_library(ddc_core INTERFACE)
+add_library(DDC::core ALIAS ddc_core)
+install(TARGETS ddc_core EXPORT DDCTargets)
+target_compile_definitions(ddc_core INTERFACE MDSPAN_USE_PAREN_OPERATOR=1)
 if("${DDC_BUILD_DOUBLE_PRECISION}")
-    target_compile_definitions(ddc INTERFACE DDC_BUILD_DOUBLE_PRECISION)
+    target_compile_definitions(ddc_core INTERFACE DDC_BUILD_DOUBLE_PRECISION)
 endif()
-target_compile_features(ddc INTERFACE cxx_std_17)
+target_compile_features(ddc_core INTERFACE cxx_std_17)
 target_include_directories(
-    ddc
+    ddc_core
     INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:include>"
 )
-target_link_libraries(ddc INTERFACE Kokkos::kokkos)
+target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
 
 ### DDC legacy target
-target_link_libraries(DDC INTERFACE ddc)
+target_link_libraries(DDC INTERFACE ddc_core)
 
 # Link library to DDC
 
@@ -177,7 +177,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
     add_library(DDC::fft ALIAS ddc_fft)
     install(TARGETS ddc_fft EXPORT DDCTargets)
     target_compile_definitions(ddc_fft INTERFACE "DDC_BUILD_KERNELS_FFT")
-    target_link_libraries(ddc_fft INTERFACE ddc Kokkos::kokkos KokkosFFT::fft)
+    target_link_libraries(ddc_fft INTERFACE ddc_core Kokkos::kokkos KokkosFFT::fft)
 
     ### DDC legacy target
     target_link_libraries(DDC INTERFACE ddc_fft)
@@ -221,7 +221,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     target_include_directories(ddc_splines SYSTEM INTERFACE ${LAPACKE_INCLUDE_DIRS})
     target_link_libraries(
         ddc_splines
-        INTERFACE ddc Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels ${LAPACKE_LIBRARIES}
+        INTERFACE ddc_core Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels ${LAPACKE_LIBRARIES}
     )
 
     ### DDC legacy target
@@ -242,10 +242,11 @@ if("${DDC_BUILD_PDI_WRAPPER}")
             "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
             "$<INSTALL_INTERFACE:include>"
     )
-    target_link_libraries(ddc_pdi INTERFACE ddc PDI::PDI_C)
+    target_link_libraries(ddc_pdi INTERFACE ddc_core PDI::PDI_C)
 
     ### PDI_Wrapper legacy target
     add_library(PDI_Wrapper INTERFACE)
+    set_target_properties(PDI_Wrapper PROPERTIES DEPRECATION "Use DDC::pdi instead")
     add_library(DDC::PDI_Wrapper ALIAS PDI_Wrapper)
     install(TARGETS PDI_Wrapper EXPORT DDCTargets)
     target_link_libraries(PDI_Wrapper INTERFACE ddc_pdi)

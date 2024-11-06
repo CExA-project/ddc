@@ -8,5 +8,5 @@ include(GoogleTest)
 
 add_executable(fft_tests ../main.cpp fft.cpp)
 target_compile_features(fft_tests PUBLIC cxx_std_17)
-target_link_libraries(fft_tests PUBLIC GTest::gtest DDC::DDC)
+target_link_libraries(fft_tests PUBLIC GTest::gtest DDC::core DDC::fft)
 gtest_discover_tests(fft_tests DISCOVERY_MODE PRE_TEST)

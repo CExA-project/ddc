@@ -122,20 +122,29 @@ endif()
 
 ## The library itself
 
+### DDC legacy target
 add_library(DDC INTERFACE)
-target_compile_features(DDC INTERFACE cxx_std_17)
+add_library(DDC::DDC ALIAS DDC)
+install(TARGETS DDC EXPORT DDCTargets)
+
+add_library(ddc_core INTERFACE)
+add_library(DDC::core ALIAS ddc_core)
+install(TARGETS ddc_core EXPORT DDCTargets)
+target_compile_definitions(ddc_core INTERFACE MDSPAN_USE_PAREN_OPERATOR=1)
+if("${DDC_BUILD_DOUBLE_PRECISION}")
+    target_compile_definitions(ddc_core INTERFACE DDC_BUILD_DOUBLE_PRECISION)
+endif()
+target_compile_features(ddc_core INTERFACE cxx_std_17)
 target_include_directories(
-    DDC
+    ddc_core
     INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:include>"
 )
-target_link_libraries(DDC INTERFACE Kokkos::kokkos)
-if("${DDC_BUILD_DOUBLE_PRECISION}")
-    target_compile_definitions(DDC INTERFACE DDC_BUILD_DOUBLE_PRECISION)
-endif()
-add_library(DDC::DDC ALIAS DDC)
-install(TARGETS DDC EXPORT DDCTargets)
+target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
+
+### DDC legacy target
+target_link_libraries(DDC INTERFACE DDC::core)
 
 # Link library to DDC
 
@@ -164,20 +173,22 @@ if("${DDC_BUILD_KERNELS_FFT}")
         find_package(KokkosFFT 0.2.1...<1 REQUIRED)
     endif()
 
-    target_link_libraries(DDC INTERFACE KokkosFFT::fft)
-    target_compile_definitions(DDC INTERFACE "DDC_BUILD_KERNELS_FFT")
+    add_library(ddc_fft INTERFACE)
+    add_library(DDC::fft ALIAS ddc_fft)
+    install(TARGETS ddc_fft EXPORT DDCTargets)
+    target_compile_definitions(ddc_fft INTERFACE "DDC_BUILD_KERNELS_FFT")
+    target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
+
+    ### DDC legacy target
+    target_link_libraries(DDC INTERFACE DDC::fft)
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
     # Ginkgo
     find_package(Ginkgo 1.8.0 EXACT REQUIRED)
-    target_link_libraries(DDC INTERFACE Ginkgo::ginkgo)
 
     # Lapacke
     find_package(LAPACKE REQUIRED)
-    target_link_libraries(DDC INTERFACE ${LAPACKE_LIBRARIES})
-    target_include_directories(DDC SYSTEM INTERFACE ${LAPACKE_INCLUDE_DIRS})
-    install(FILES cmake/FindLAPACKE.cmake DESTINATION lib/cmake/DDC)
 
     # Kokkos-kernels
     set(DDC_KokkosKernels_DEPENDENCY_POLICY
@@ -202,25 +213,46 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
         find_package(KokkosKernels REQUIRED)
     endif()
 
-    target_link_libraries(DDC INTERFACE Kokkos::kokkoskernels)
-    target_compile_definitions(DDC INTERFACE "DDC_BUILD_KERNELS_SPLINES")
+    add_library(ddc_splines INTERFACE)
+    add_library(DDC::splines ALIAS ddc_splines)
+    install(FILES cmake/FindLAPACKE.cmake DESTINATION lib/cmake/DDC)
+    install(TARGETS ddc_splines EXPORT DDCTargets)
+    target_compile_definitions(ddc_splines INTERFACE "DDC_BUILD_KERNELS_SPLINES")
+    target_include_directories(ddc_splines SYSTEM INTERFACE ${LAPACKE_INCLUDE_DIRS})
+    target_link_libraries(
+        ddc_splines
+        INTERFACE DDC::core Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels ${LAPACKE_LIBRARIES}
+    )
+
+    ### DDC legacy target
+    target_link_libraries(DDC INTERFACE DDC::splines)
 endif()
 
 ## The PDI wrapper
 
 if("${DDC_BUILD_PDI_WRAPPER}")
-    add_library(PDI_Wrapper INTERFACE)
-    target_compile_features(PDI_Wrapper INTERFACE cxx_std_17)
+    add_library(ddc_pdi INTERFACE)
+    add_library(DDC::pdi ALIAS ddc_pdi)
+    install(TARGETS ddc_pdi EXPORT DDCTargets)
+    target_compile_definitions(ddc_pdi INTERFACE "DDC_BUILD_PDI_WRAPPER")
+    target_compile_features(ddc_pdi INTERFACE cxx_std_17)
     target_include_directories(
-        PDI_Wrapper
+        ddc_pdi
         INTERFACE
             "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
             "$<INSTALL_INTERFACE:include>"
     )
-    target_link_libraries(PDI_Wrapper INTERFACE DDC::DDC PDI::PDI_C)
-    target_compile_definitions(PDI_Wrapper INTERFACE "DDC_BUILD_PDI_WRAPPER")
+    target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
+
+    ### PDI_Wrapper legacy target
+    add_library(PDI_Wrapper INTERFACE)
+    set_target_properties(PDI_Wrapper PROPERTIES DEPRECATION "Use DDC::pdi instead")
     add_library(DDC::PDI_Wrapper ALIAS PDI_Wrapper)
     install(TARGETS PDI_Wrapper EXPORT DDCTargets)
+    target_link_libraries(PDI_Wrapper INTERFACE DDC::pdi)
+
+    ### DDC legacy target
+    target_link_libraries(DDC INTERFACE DDC::pdi)
 endif()
 
 ## if examples are enabled, build them
@@ -249,7 +281,7 @@ endif()
 
 ## installation
 
-install(EXPORT DDCTargets NAMESPACE DDC:: DESTINATION lib/cmake/DDC)
+install(EXPORT DDCTargets NAMESPACE DDC::impl:: DESTINATION lib/cmake/DDC)
 
 install(DIRECTORY include/ TYPE INCLUDE)
 

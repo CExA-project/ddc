@@ -14,4 +14,4 @@ message("DDC_BUILD_KERNELS_SPLINES=${DDC_BUILD_KERNELS_SPLINES}")
 message("DDC_BUILD_PDI_WRAPPER=${DDC_BUILD_PDI_WRAPPER}")
 
 add_executable(main main.cpp)
-target_link_libraries(main PRIVATE DDC::DDC DDC::PDI_Wrapper)
+target_link_libraries(main PRIVATE DDC::core DDC::fft DDC::pdi DDC::splines)

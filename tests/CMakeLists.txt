@@ -33,7 +33,7 @@ add_executable(
     multiple_discrete_dimensions.cpp
 )
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
-target_link_libraries(ddc_tests PUBLIC GTest::gtest DDC::DDC)
+target_link_libraries(ddc_tests PUBLIC GTest::gtest DDC::core)
 gtest_discover_tests(ddc_tests DISCOVERY_MODE PRE_TEST)
 
 if("${DDC_BUILD_KERNELS_FFT}")

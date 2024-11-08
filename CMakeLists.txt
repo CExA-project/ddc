@@ -29,6 +29,10 @@ set(DDC_DEPENDENCY_POLICIES "AUTO" "EMBEDDED" "INSTALLED" "SUBPROJECT")
 
 include(CMakePackageConfigHelpers)
 include(CTest)
+include(GNUInstallDirs)
+
+set(DDC_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+set(DDC_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
 
 ## Custom cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -139,7 +143,7 @@ target_include_directories(
     INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-        "$<INSTALL_INTERFACE:include>"
+        "$<INSTALL_INTERFACE:${DDC_INSTALL_INCLUDEDIR}>"
 )
 target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
 
@@ -214,7 +218,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
     add_library(ddc_splines INTERFACE)
     add_library(DDC::splines ALIAS ddc_splines)
-    install(FILES cmake/FindLAPACKE.cmake DESTINATION lib/cmake/DDC)
+    install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
     install(TARGETS ddc_splines EXPORT DDCTargets)
     target_include_directories(ddc_splines SYSTEM INTERFACE ${LAPACKE_INCLUDE_DIRS})
     target_link_libraries(
@@ -237,7 +241,7 @@ if("${DDC_BUILD_PDI_WRAPPER}")
         ddc_pdi
         INTERFACE
             "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-            "$<INSTALL_INTERFACE:include>"
+            "$<INSTALL_INTERFACE:${DDC_INSTALL_INCLUDEDIR}>"
     )
     target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
 
@@ -278,14 +282,14 @@ endif()
 
 ## installation
 
-install(EXPORT DDCTargets NAMESPACE DDC::impl:: DESTINATION lib/cmake/DDC)
+install(EXPORT DDCTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 
-install(DIRECTORY include/ TYPE INCLUDE)
+install(DIRECTORY include/ddc TYPE INCLUDE)
 
 configure_package_config_file(
     cmake/DDCConfig.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
-    INSTALL_DESTINATION lib/cmake/DDC
+    INSTALL_DESTINATION ${DDC_INSTALL_CMAKEDIR}
 )
 
 # We use SameMinorVersion until major version 1
@@ -301,5 +305,5 @@ install(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
-    DESTINATION lib/cmake/DDC
+    DESTINATION ${DDC_INSTALL_CMAKEDIR}
 )

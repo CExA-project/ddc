@@ -146,7 +146,7 @@ jobs:
     - name: Load image artifact into docker
       if: needs.id_repo.outputs.in_base_repo == 'false'
       run: |
-        docker load < ${{matrix.image}}_${{fromJSON('{"gcc":"cpu","clang":"cpu"}')[matrix.backend] || matrix.backend}}.tar
+        docker load < ${{matrix.image}}_${{fromJSON('{"cpu-gcc":"cpu","cpu-clang":"cpu"}')[matrix.backend] || matrix.backend}}.tar
         rm ${{matrix.image}}_${{fromJSON('{"cpu-gcc":"cpu","cpu-clang":"cpu"}')[matrix.backend] || matrix.backend}}.tar
     - name: Test
       id: test

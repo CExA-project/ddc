@@ -290,4 +290,18 @@ configure_package_config_file(
     INSTALL_DESTINATION lib/cmake/DDC
 )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake DESTINATION lib/cmake/DDC)
+# We use SameMinorVersion until major version 1
+if(PROJECT_VERSION VERSION_GREATER_EQUAL 1)
+    message(FATAL_ERROR "DDC must switch COMPATIBILITY mode to SameMajorVersion")
+endif()
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
+    COMPATIBILITY SameMinorVersion
+)
+
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
+    DESTINATION lib/cmake/DDC
+)

@@ -388,8 +388,8 @@ jobs:
     - name: Load image artifact into docker
       if: needs.id_repo.outputs.in_base_repo == 'false'
       run: |
-        docker load < oldest_cpu-artifact.tar
-        rm oldest_cpu-artifact.tar
+        docker load < oldest_cpu.tar
+        rm oldest_cpu.tar
     - name: clang-tidy
       run: |
         cat<<-'EOF' > run.sh

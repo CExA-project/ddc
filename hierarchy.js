@@ -8,6 +8,7 @@ var hierarchy =
     [ "ddc::cartesian_prod< ddc::DiscreteDomain< DDim1... >, ddc::DiscreteDomain< DDim2... > >", "namespaceddc.html#structddc_1_1cartesian__prod_3_01ddc_1_1DiscreteDomain_3_01DDim1_8_8_8_01_4_00_01ddc_1_1Discrete74c011d44ff586684f50f3f3d6d191c1", null ],
     [ "ddc::cartesian_prod< DDom >", "namespaceddc.html#structddc_1_1cartesian__prod_3_01DDom_01_4", null ],
     [ "ddc::cartesian_prod< DDom1, DDom2, Tail... >", "namespaceddc.html#structddc_1_1cartesian__prod_3_01DDom1_00_01DDom2_00_01Tail_8_8_8_01_4", null ],
+    [ "ddc::cartesian_prod<>", "namespaceddc.html#structddc_1_1cartesian__prod_3_4", null ],
     [ "ddc::Chunk< ElementType, class, Allocator >", "namespaceddc.html#classddc_1_1Chunk", null ],
     [ "ddc::chunk_traits< T >", "namespaceddc.html#structddc_1_1chunk__traits", null ],
     [ "ddc::ChunkCommon< ElementType, SupportType, LayoutStridedPolicy >", "namespaceddc.html#classddc_1_1ChunkCommon", null ],

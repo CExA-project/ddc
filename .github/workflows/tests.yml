@@ -384,12 +384,12 @@ jobs:
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'
       uses: actions/download-artifact@v4
-      with: { name: 'oldest_cpu-artifact' }
+      with: { name: 'latest_cpu-artifact' }
     - name: Load image artifact into docker
       if: needs.id_repo.outputs.in_base_repo == 'false'
       run: |
-        docker load < oldest_cpu.tar
-        rm oldest_cpu.tar
+        docker load < latest_cpu.tar
+        rm latest_cpu.tar
     - name: clang-tidy
       run: |
         cat<<-'EOF' > run.sh

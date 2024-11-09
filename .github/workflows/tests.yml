@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: DoozyX/clang-format-lint-action@v0.18
+    - uses: DoozyX/clang-format-lint-action@v0
       with:
         source: 'benchmarks/ examples/ include/ddc/ install_test/ tests/'
         exclude: ''
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1.3.1
+      uses: jlumbroso/free-disk-space@v1
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4
@@ -132,7 +132,7 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
     - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1.3.1
+      uses: jlumbroso/free-disk-space@v1
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4
@@ -310,7 +310,7 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
     - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1.3.1
+      uses: jlumbroso/free-disk-space@v1
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4
@@ -376,7 +376,7 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
     - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1.3.1
+      uses: jlumbroso/free-disk-space@v1
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4

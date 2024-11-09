@@ -408,6 +408,12 @@ struct cartesian_prod<DDom>
     using type = DDom;
 };
 
+template <>
+struct cartesian_prod<>
+{
+    using type = ddc::DiscreteDomain<>;
+};
+
 template <typename DDom1, typename DDom2, typename... Tail>
 struct cartesian_prod<DDom1, DDom2, Tail...>
 {

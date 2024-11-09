@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1
+      uses: jlumbroso/free-disk-space@v1.3.1
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4
@@ -68,7 +68,7 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
     - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1
+      uses: jlumbroso/free-disk-space@v1.3.1
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4
@@ -129,7 +129,7 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
     - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1
+      uses: jlumbroso/free-disk-space@v1.3.1
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4

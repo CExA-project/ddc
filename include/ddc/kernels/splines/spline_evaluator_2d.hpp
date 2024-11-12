@@ -418,14 +418,14 @@ public:
      * @param[out] spline_eval The values of the 2D spline function at their coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
-    template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
+    template <class Layout1, class Layout2>
     void operator()(
             ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
-            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
                     spline_coef) const
     {
-        batch_domain_type const batch_domain(coords_eval.domain());
+        batch_domain_type const batch_domain(spline_eval.domain());
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
@@ -641,14 +641,14 @@ public:
      * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
-    template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
+    template <class Layout1, class Layout2>
     void deriv_dim_1(
             ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
-            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
                     spline_coef) const
     {
-        batch_domain_type const batch_domain(coords_eval.domain());
+        batch_domain_type const batch_domain(spline_eval.domain());
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         ddc::parallel_for_each(
@@ -734,11 +734,11 @@ public:
      * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
-    template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
+    template <class Layout1, class Layout2>
     void deriv_dim_2(
             ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
-            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
                     spline_coef) const
     {
         batch_domain_type const batch_domain(spline_eval.domain());
@@ -827,11 +827,11 @@ public:
      * @param[out] spline_eval The cross-derivatives of the 2D spline function at the desired coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
-    template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
+    template <class Layout1, class Layout2>
     void deriv_1_and_2(
             ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,
-            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
                     spline_coef) const
     {
         batch_domain_type const batch_domain(spline_eval.domain());

@@ -282,7 +282,7 @@ public:
                     memory_space>(a, OutDDom(this->m_domain));
         } else {
             if constexpr (OutDDom::rank() == 0) {
-                ddc::DiscreteDomain<> dom;
+                ddc::DiscreteDomain<> const dom;
                 return ChunkSpan<
                         ElementType,
                         OutDDom,

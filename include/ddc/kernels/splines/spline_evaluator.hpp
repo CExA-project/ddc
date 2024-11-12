@@ -325,7 +325,8 @@ public:
                     const auto spline_eval_1D = spline_eval[j];
                     const auto spline_coef_1D = spline_coef[j];
                     for (auto const i : evaluation_domain) {
-                        ddc::Coordinate<continuous_dimension_type> coord_eval_1D = ddc::coordinate(i);
+                        ddc::Coordinate<continuous_dimension_type> coord_eval_1D
+                                = ddc::coordinate(i);
                         spline_eval_1D(i) = eval(coord_eval_1D, spline_coef_1D);
                     }
                 });
@@ -431,8 +432,10 @@ public:
                     const auto spline_eval_1D = spline_eval[j];
                     const auto spline_coef_1D = spline_coef[j];
                     for (auto const i : evaluation_domain) {
-                        ddc::Coordinate<continuous_dimension_type> coord_eval_1D = ddc::coordinate(i);
-                        spline_eval_1D(i) = eval_no_bc<eval_deriv_type>(coord_eval_1D, spline_coef_1D);
+                        ddc::Coordinate<continuous_dimension_type> coord_eval_1D
+                                = ddc::coordinate(i);
+                        spline_eval_1D(i)
+                                = eval_no_bc<eval_deriv_type>(coord_eval_1D, spline_coef_1D);
                     }
                 });
     }

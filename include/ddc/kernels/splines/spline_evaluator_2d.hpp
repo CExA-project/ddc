@@ -1013,11 +1013,7 @@ public:
      * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
-    template <
-            class InterestDim1,
-            class InterestDim2,
-            class Layout1,
-            class Layout2>
+    template <class InterestDim1, class InterestDim2, class Layout1, class Layout2>
     void deriv2(
             ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
                     spline_eval,

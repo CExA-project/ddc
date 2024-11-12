@@ -290,6 +290,59 @@ public:
     }
 
     /**
+     * @brief Evaluate spline function (described by its spline coefficients) on a
+     * mesh.
+     *
+     * The spline coefficients represent a spline function defined on a cartesian
+     * product of batch_domain and B-splines (basis splines). They can be obtained
+     * via various methods, such as using a SplineBuilder.
+     *
+     * This is not a multidimensional evaluation. This is a batched 1D evaluation.
+     * This means that for each slice of coordinates identified by a
+     * batch_domain_type::discrete_element_type, the evaluation is performed with
+     * the 1D set of spline coefficients identified by the same
+     * batch_domain_type::discrete_element_type.
+     *
+     * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline
+     * interpolation.
+     *
+     * @param[out] spline_eval The values of the spline function at the desired
+     * coordinates. For practical reasons those are stored in a ChunkSpan defined
+     * on a batched_evaluation_domain_type.
+     * @param[in] coords_eval The coordinates where the spline is evaluated. Those
+     * are stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note
+     * that the coordinates of the points represented by this domain are unused
+     * and irrelevant (but the points themselves (DiscreteElement) are used to
+     * select the set of 1D spline coefficients retained to perform the
+     * evaluation).
+     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
+     */
+    template <class Layout1, class Layout2>
+    void operator()(
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+                    spline_eval,
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
+                    spline_coef) const
+    {
+        evaluation_domain_type const evaluation_domain(spline_eval.domain());
+        batch_domain_type const batch_domain(spline_eval.domain());
+
+        ddc::parallel_for_each(
+                "ddc_splines_evaluate",
+                exec_space(),
+                batch_domain,
+                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                    const auto spline_eval_1D = spline_eval[j];
+                    const auto spline_coef_1D = spline_coef[j];
+                    for (auto const i : evaluation_domain) {
+                        spline_eval_1D(i) = eval(
+                                ddc::coordinate(ddc::select<evaluation_discrete_dimension_type>(j)),
+                                spline_coef_1D);
+                    }
+                });
+    }
+
+    /**
      * @brief Differentiate 1D spline function (described by its spline coefficients) at a given coordinate.
      *
      * The spline coefficients represent a 1D spline function defined on a B-splines (basis splines). They can be

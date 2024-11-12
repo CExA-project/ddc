@@ -409,14 +409,13 @@ public:
      * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
      *
-     * This is not a nD evaluation. This is a batched 2D evaluation. This means that for each slice of coordinates
-     * identified by a batch_domain_type::discrete_element_type, the evaluation is performed with the 2D set of
-     * spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * Remark: calling SplineBuilder2D then SplineEvaluator2D corresponds to a 2D spline interpolation.
      *
-     * @param[out] spline_eval The values of the 2D spline function at their coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
+     * @param[out] spline_eval The values of the 2D spline function at their coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
      */
     template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
@@ -635,9 +634,9 @@ public:
      * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
      *
-     * This is not a nD evaluation. This is a batched 2D differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
@@ -728,9 +727,9 @@ public:
      * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
      *
-     * This is not a nD differentiation. This is a batched 2D differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
@@ -821,9 +820,9 @@ public:
      * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
      *
-     * This is not a nD cross-differentiation. This is a batched 2D cross-differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the cross-differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * @param[out] spline_eval The cross-derivatives of the 2D spline function at the desired coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
@@ -910,9 +909,9 @@ public:
      * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
      *
-     * This is not a nD evaluation. This is a batched 2D differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * @tparam InterestDim Dimension along which differentiation is performed.
      * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.
@@ -1002,9 +1001,9 @@ public:
      * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
      *
-     * This is not a nD evaluation. This is a batched 2D differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * Note: double-differentiation other than cross-differentiation is not supported atm. See #440
      *

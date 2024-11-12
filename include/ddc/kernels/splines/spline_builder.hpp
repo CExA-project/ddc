@@ -467,6 +467,13 @@ private:
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt);
 
     void build_matrix_system();
+
+    void check_valid_grid();
+
+    template <class KnotElement>
+    static void check_n_points_in_cell(
+            int n_points_in_cell,
+            KnotElement current_cell_end_idx);
 };
 
 template <
@@ -1064,6 +1071,84 @@ SplineBuilder<
             std::move(coefficients_derivs_xmin_out),
             std::move(coefficients_out),
             std::move(coefficients_derivs_xmax_out));
+}
+
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
+        SplineSolver Solver,
+        class... IDimX>
+template <class KnotElement>
+void SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
+        Solver,
+        IDimX...>::check_n_points_in_cell(
+                int n_points_in_cell,
+                KnotElement current_cell_end_idx)
+{
+    if (n_points_in_cell > BSplines::degree() + 1) {
+        KnotElement rmin_idx = ddc::discrete_space<BSplines>().break_point_domain().front();
+        int failed_cell = (current_cell_end_idx - rmin_idx).value();
+        throw std::runtime_error(
+                "The spline problem is overconstrained. There are "
+                + std::to_string(n_points_in_cell) + " points in the "
+                + std::to_string(failed_cell) + "-th cell.");
+    }
+}
+
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
+        SplineSolver Solver,
+        class... IDimX>
+void SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
+        Solver,
+        IDimX...>::check_valid_grid()
+{
+    const std::size_t n_interp_points = interpolation_domain().size();
+    std::size_t const expected_npoints = ddc::discrete_space<BSplines>().nbasis() - s_nbc_xmin - s_nbc_xmax;
+    if (n_interp_points != expected_npoints) {
+        throw std::runtime_error(
+                "Incorrect number of points supplied to NonUniformInterpolationPoints. "
+                "(Received : "
+                + std::to_string(n_interp_points)
+                + ", expected : " + std::to_string(expected_npoints));
+    }
+    int n_points_in_cell = 0;
+    auto current_cell_end_idx
+            = ddc::discrete_space<BSplines>().break_point_domain().front() + 1;
+    ddc::for_each(interpolation_domain(), [&](auto idx) {
+        ddc::Coordinate<continuous_dimension_type> point = ddc::coordinate(idx);
+        if (point == ddc::coordinate(current_cell_end_idx)) {
+            check_n_points_in_cell(n_points_in_cell + 1, current_cell_end_idx);
+            n_points_in_cell = 1;
+        } else if (point > ddc::coordinate(current_cell_end_idx)) {
+            check_n_points_in_cell(n_points_in_cell, current_cell_end_idx);
+            n_points_in_cell = 1;
+        } else {
+            n_points_in_cell += 1;
+        }
+    });
+    check_n_points_in_cell(n_points_in_cell, current_cell_end_idx);
 }
 
 } // namespace ddc

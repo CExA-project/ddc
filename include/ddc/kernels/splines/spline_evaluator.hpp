@@ -290,23 +290,21 @@ public:
     }
 
     /**
-     * @brief Evaluate spline function (described by its spline coefficients) on a
-     * mesh.
+     * @brief Evaluate a spline function (described by its spline coefficients) on a mesh.
      *
      * The spline coefficients represent a spline function defined on a cartesian
      * product of batch_domain and B-splines (basis splines). They can be obtained
      * via various methods, such as using a SplineBuilder.
      *
      * This is not a multidimensional evaluation. This is a batched 1D evaluation.
-     * This means that for each slice of coordinates identified by a
-     * batch_domain_type::discrete_element_type, the evaluation is performed with
-     * the 1D set of spline coefficients identified by the same
-     * batch_domain_type::discrete_element_type.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 1D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * Remark: calling SplineBuilder then SplineEvaluator corresponds to a spline
      * interpolation.
      *
-     * @param[out] spline_eval The values of the spline function at the coordinates.
+     * @param[out] spline_eval The values of the spline function at the coordinates
+     * of the mesh.
      * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
     template <class Layout1, class Layout2>
@@ -408,8 +406,9 @@ public:
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
      *
      * The derivation is not performed in a multidimensional way (in any sense). This is a batched 1D derivation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the derivation is performed with the 1D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     * This is not a multidimensional evaluation. This is a batched 1D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 1D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * @param[out] spline_eval The derivatives of the spline function at the coordinates.
      * @param[in] spline_coef A ChunkSpan storing the spline coefficients.

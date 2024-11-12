@@ -37,8 +37,8 @@ TEST(ChunkSpan1DTest, ConstructionFromChunk)
 TEST(ChunkSpan, empty_bracket_operator)
 {
     DDomX dom(DElemX(0), DVectX(10));
-    ChunkX alloc(dom, ddc::HostAllocator<double>());
-    ChunkSpanX span = alloc.span_view();
+    ChunkX<double> alloc(dom, ddc::HostAllocator<double>());
+    ChunkSpanX<double> span = alloc.span_view();
     auto subspan = span[DElemX(0)];
     EXPECT_TRUE(subspan.rank() == 0);
 }

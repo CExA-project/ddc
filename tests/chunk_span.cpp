@@ -33,3 +33,12 @@ TEST(ChunkSpan1DTest, ConstructionFromChunk)
     EXPECT_TRUE((std::is_constructible_v<ChunkSpanX<const double>, ChunkX<double>&>));
     EXPECT_TRUE((std::is_constructible_v<ChunkSpanX<const double>, ChunkX<double> const&>));
 }
+
+TEST(ChunkSpan, empty_bracket_operator)
+{
+    DDomX dom(DElemX(0), DVectX(10));
+    ChunkX alloc(dom, ddc::HostAllocator<double>());
+    ChunkSpanX span = alloc.span_view();
+    auto subspan = span[DElemX(0)];
+    EXPECT_TRUE(subspan.rank() == 0);
+}

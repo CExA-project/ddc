@@ -281,11 +281,20 @@ public:
                     Kokkos::layout_stride,
                     memory_space>(a, OutDDom(this->m_domain));
         } else {
-            return ChunkSpan<
-                    ElementType,
-                    OutDDom,
-                    layout_type,
-                    memory_space>(subview, OutDDom(this->m_domain));
+            if constexpr (OutDDom::rank() == 0) {
+                ddc::DiscreteDomain<> dom;
+                return ChunkSpan<
+                        ElementType,
+                        OutDDom,
+                        layout_type,
+                        memory_space>(data_handle(), dom);
+            } else {
+                return ChunkSpan<
+                        ElementType,
+                        OutDDom,
+                        layout_type,
+                        memory_space>(subview, OutDDom(this->m_domain));
+            }
         }
     }
 

@@ -28,7 +28,7 @@ jobs:
       run: find . -not -path './vendor/*' -type f \( -name '*.[c|h]pp' -o -name 'CMakeLists.txt' -o -name '*.cmake' -o -name '*.md' -o -name '*.py' \) -exec ./bin/trailing_spaces --Werror '{}' '+'
     - name: REUSE Compliance Check
       if: always()
-      uses: fsfe/reuse-action@v4
+      uses: fsfe/reuse-action@v5
 
   cmake-format:
     runs-on: ubuntu-latest

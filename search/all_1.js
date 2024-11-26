@@ -23,8 +23,9 @@ var searchData=
   ['bsplines_5ftype_20',['bsplines_type',['../classddc_1_1SplineBuilder.html#a780e9b0f720be67cfe2b67ab54172b9b',1,'ddc::SplineBuilder::bsplines_type'],['../classddc_1_1SplineEvaluator.html#a0986d222c01780eb322e7ce56c7b8dd1',1,'ddc::SplineEvaluator::bsplines_type']]],
   ['bsplines_5ftype1_21',['bsplines_type1',['../classddc_1_1SplineBuilder2D.html#a720708791c3ee0a58d9c24616a2f5559',1,'ddc::SplineBuilder2D::bsplines_type1'],['../classddc_1_1SplineEvaluator2D.html#a449c339bd52aa60440c2dfb3f39c2a91',1,'ddc::SplineEvaluator2D::bsplines_type1']]],
   ['bsplines_5ftype2_22',['bsplines_type2',['../classddc_1_1SplineBuilder2D.html#a2d280cde58c2d43cc8a3e2867f65ee41',1,'ddc::SplineBuilder2D::bsplines_type2'],['../classddc_1_1SplineEvaluator2D.html#a3d82e7a6609105bab7c469e968808bec',1,'ddc::SplineEvaluator2D::bsplines_type2']]],
-  ['builder_5fderiv_5ftype1_23',['builder_deriv_type1',['../classddc_1_1SplineBuilder2D.html#a1c7817fa6e779ee196e77c28522e79d6',1,'ddc::SplineBuilder2D']]],
-  ['builder_5ftype1_24',['builder_type1',['../classddc_1_1SplineBuilder2D.html#ad9404c4320f29ae9536e4fa5f433c036',1,'ddc::SplineBuilder2D']]],
-  ['builder_5ftype2_25',['builder_type2',['../classddc_1_1SplineBuilder2D.html#af7a2691a4af2bbe6ca7f02540024cbb5',1,'ddc::SplineBuilder2D']]],
-  ['bxor_26',['bxor',['../structddc_1_1reducer_1_1bxor.html',1,'ddc::reducer']]]
+  ['build_5finternal_5fmdspan_23',['build_internal_mdspan',['../classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a7de2241d12d3365d4cbff1ef46c8120e',1,'ddc::ChunkSpan&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy, MemorySpace &gt;']]],
+  ['builder_5fderiv_5ftype1_24',['builder_deriv_type1',['../classddc_1_1SplineBuilder2D.html#a1c7817fa6e779ee196e77c28522e79d6',1,'ddc::SplineBuilder2D']]],
+  ['builder_5ftype1_25',['builder_type1',['../classddc_1_1SplineBuilder2D.html#ad9404c4320f29ae9536e4fa5f433c036',1,'ddc::SplineBuilder2D']]],
+  ['builder_5ftype2_26',['builder_type2',['../classddc_1_1SplineBuilder2D.html#af7a2691a4af2bbe6ca7f02540024cbb5',1,'ddc::SplineBuilder2D']]],
+  ['bxor_27',['bxor',['../structddc_1_1reducer_1_1bxor.html',1,'ddc::reducer']]]
 ];

@@ -103,6 +103,24 @@ public:
     friend class ChunkSpan;
 
 protected:
+    static KOKKOS_FUNCTION internal_mdspan_type build_internal_mdspan(
+            allocation_mdspan_type const& allocation_mdspan,
+            discrete_domain_type const& domain)
+    {
+        if (!domain.empty()) {
+            extents_type const extents_s((front<DDims>(domain) + extents<DDims>(domain)).uid()...);
+            std::array<std::size_t, sizeof...(DDims)> const strides_s {
+                    allocation_mdspan.mapping().stride(
+                            type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
+            Kokkos::layout_stride::mapping<extents_type> const mapping_s(extents_s, strides_s);
+            return internal_mdspan_type(
+                    allocation_mdspan.data_handle() - mapping_s(front<DDims>(domain).uid()...),
+                    mapping_s);
+        }
+
+        return internal_mdspan_type(allocation_mdspan);
+    }
+
     template <class QueryDDim, class... ODDims>
     KOKKOS_FUNCTION constexpr auto get_slicer_for(DiscreteElement<ODDims...> const& c) const
     {
@@ -210,23 +228,11 @@ public:
     KOKKOS_FUNCTION constexpr ChunkSpan(
             allocation_mdspan_type allocation_mdspan,
             discrete_domain_type const& domain)
+        : base_type(build_internal_mdspan(allocation_mdspan, domain), domain)
     {
         assert(((allocation_mdspan.extent(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)
                  == static_cast<std::size_t>(domain.template extent<DDims>().value()))
                 && ...));
-        if (!domain.empty()) {
-            extents_type const extents_s((front<DDims>(domain) + extents<DDims>(domain)).uid()...);
-            std::array<std::size_t, sizeof...(DDims)> const strides_s {
-                    allocation_mdspan.mapping().stride(
-                            type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
-            Kokkos::layout_stride::mapping<extents_type> const mapping_s(extents_s, strides_s);
-            this->m_internal_mdspan = internal_mdspan_type(
-                    allocation_mdspan.data_handle() - mapping_s(front<DDims>(domain).uid()...),
-                    mapping_s);
-        } else {
-            this->m_internal_mdspan = internal_mdspan_type(allocation_mdspan);
-        }
-        this->m_domain = domain;
     }
 
     /** Constructs a new ChunkSpan from scratch
@@ -281,20 +287,11 @@ public:
                     Kokkos::layout_stride,
                     memory_space>(a, OutDDom(this->m_domain));
         } else {
-            if constexpr (OutDDom::rank() == 0) {
-                ddc::DiscreteDomain<> const dom;
-                return ChunkSpan<
-                        ElementType,
-                        OutDDom,
-                        layout_type,
-                        memory_space>(data_handle(), dom);
-            } else {
-                return ChunkSpan<
-                        ElementType,
-                        OutDDom,
-                        layout_type,
-                        memory_space>(subview, OutDDom(this->m_domain));
-            }
+            return ChunkSpan<
+                    ElementType,
+                    OutDDom,
+                    layout_type,
+                    memory_space>(subview, OutDDom(this->m_domain));
         }
     }
 

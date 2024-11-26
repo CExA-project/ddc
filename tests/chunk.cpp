@@ -378,7 +378,29 @@ TEST(Chunk1DTest, DomainX)
 
 // TODO: internal_mdspan
 
-// TODO: allocation_mdspan
+TEST(Chunk0DTest, AllocationMdspan)
+{
+    Chunk0D<int> chk(dom_0d);
+    chk() = 5;
+
+    ChunkSpan0D<const int> const chunk_span(chk.allocation_mdspan(), dom_0d);
+
+    EXPECT_EQ(chunk_span(), 5);
+}
+
+TEST(Chunk1DTest, AllocationMdspan)
+{
+    ChunkX<int> chk(dom_x);
+    chk(lbound_x) = 5;
+    chk(lbound_x + 1) = 6;
+    chk(lbound_x + 2) = 7;
+
+    ddc::ChunkSpan<const int, DDomX> const chunk_span(chk.allocation_mdspan(), dom_x);
+
+    EXPECT_EQ(chunk_span(lbound_x), 5);
+    EXPECT_EQ(chunk_span(lbound_x + 1), 6);
+    EXPECT_EQ(chunk_span(lbound_x + 2), 7);
+}
 
 TEST(Chunk1DTest, GetDomainX)
 {

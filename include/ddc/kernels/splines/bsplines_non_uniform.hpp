@@ -243,6 +243,7 @@ public:
                 ddc::Coordinate<CDim> const& x,
                 std::size_t n) const;
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
         /** @brief Compute the integrals of the B-splines.
          *
          * The integral of each of the B-splines over their support within the domain on which this basis was defined.
@@ -257,6 +258,7 @@ public:
                 ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
                 integrals(ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
                                   int_vals) const;
+#endif
 
         /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a B-spline.
          *
@@ -695,6 +697,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUn
     return icell;
 }
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
 template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 template <class Layout, class MemorySpace2>
@@ -731,5 +734,6 @@ NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::integrals(
     }
     return int_vals;
 }
+#endif
 
 } // namespace ddc

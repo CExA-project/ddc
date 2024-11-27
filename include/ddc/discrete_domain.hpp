@@ -172,8 +172,17 @@ public:
         return DiscreteDomain(front() + n1, extents() - n1 - n2);
     }
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
     template <class... ODDims>
-    KOKKOS_FUNCTION constexpr auto restrict(DiscreteDomain<ODDims...> const& odomain) const
+    [[deprecated("Use `restrict_with` instead")]] KOKKOS_FUNCTION constexpr auto restrict(
+            DiscreteDomain<ODDims...> const& odomain) const
+    {
+        return restrict_with(odomain);
+    }
+#endif
+
+    template <class... ODDims>
+    KOKKOS_FUNCTION constexpr auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
     {
         assert(((uid<ODDims>(m_element_begin) <= uid<ODDims>(odomain.m_element_begin)) && ...));
         assert(((uid<ODDims>(m_element_end) >= uid<ODDims>(odomain.m_element_end)) && ...));
@@ -349,8 +358,18 @@ public:
         return *this;
     }
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
     template <class... ODims>
-    KOKKOS_FUNCTION constexpr DiscreteDomain restrict(DiscreteDomain<ODims...> const&) const
+    [[deprecated("Use `restrict_with` instead")]] KOKKOS_FUNCTION constexpr DiscreteDomain restrict(
+            DiscreteDomain<ODims...> const& odomain) const
+    {
+        return restrict_with(odomain);
+    }
+#endif
+
+    template <class... ODims>
+    KOKKOS_FUNCTION constexpr DiscreteDomain restrict_with(
+            DiscreteDomain<ODims...> const& /* odomain */) const
     {
         return *this;
     }

@@ -56,8 +56,10 @@ public:
 
     using discrete_domain_type = typename base_type::discrete_domain_type;
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
     using mdomain_type [[deprecated("Use `discrete_domain_type` instead")]] =
             typename base_type::mdomain_type;
+#endif
 
     using memory_space = typename Allocator::memory_space;
 

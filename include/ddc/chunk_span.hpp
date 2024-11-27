@@ -69,8 +69,10 @@ public:
 
     using discrete_domain_type = typename base_type::discrete_domain_type;
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
     using mdomain_type [[deprecated("Use `discrete_domain_type` instead")]]
     = DiscreteDomain<DDims...>;
+#endif
 
     using memory_space = MemorySpace;
 
@@ -311,15 +313,15 @@ public:
                     a(subview.data_handle(), mapping_stride);
             return ChunkSpan<
                     ElementType,
-                    decltype(this->m_domain.restrict(odomain)),
+                    decltype(this->m_domain.restrict_with(odomain)),
                     Kokkos::layout_stride,
-                    memory_space>(a, this->m_domain.restrict(odomain));
+                    memory_space>(a, this->m_domain.restrict_with(odomain));
         } else {
             return ChunkSpan<
                     ElementType,
-                    decltype(this->m_domain.restrict(odomain)),
+                    decltype(this->m_domain.restrict_with(odomain)),
                     layout_type,
-                    memory_space>(subview, this->m_domain.restrict(odomain));
+                    memory_space>(subview, this->m_domain.restrict_with(odomain));
         }
     }
 

@@ -393,19 +393,19 @@ using convert_type_seq_to_discrete_domain_t = typename ConvertTypeSeqToDiscreteD
 
 // Computes the cartesian product of DiscreteDomain types
 // Example usage : "using DDom = cartesian_prod_t<DDom1,DDom2,DDom3>;"
-template <typename... DDom>
+template <typename... DDoms>
 struct cartesian_prod;
 
-template <typename... DDim1, typename... DDim2>
-struct cartesian_prod<ddc::DiscreteDomain<DDim1...>, ddc::DiscreteDomain<DDim2...>>
+template <typename... DDims1, typename... DDims2, typename... DDomsTail>
+struct cartesian_prod<DiscreteDomain<DDims1...>, DiscreteDomain<DDims2...>, DDomsTail...>
 {
-    using type = ddc::DiscreteDomain<DDim1..., DDim2...>;
+    using type = typename cartesian_prod<DiscreteDomain<DDims1..., DDims2...>, DDomsTail...>::type;
 };
 
-template <typename DDom>
-struct cartesian_prod<DDom>
+template <typename... DDims>
+struct cartesian_prod<DiscreteDomain<DDims...>>
 {
-    using type = DDom;
+    using type = DiscreteDomain<DDims...>;
 };
 
 template <>
@@ -414,15 +414,8 @@ struct cartesian_prod<>
     using type = ddc::DiscreteDomain<>;
 };
 
-template <typename DDom1, typename DDom2, typename... Tail>
-struct cartesian_prod<DDom1, DDom2, Tail...>
-{
-    using type =
-            typename cartesian_prod<typename cartesian_prod<DDom1, DDom2>::type, Tail...>::type;
-};
-
-template <typename... DDom>
-using cartesian_prod_t = typename cartesian_prod<DDom...>::type;
+template <typename... DDoms>
+using cartesian_prod_t = typename cartesian_prod<DDoms...>::type;
 
 // Computes the substraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
 template <class... DDimsA, class... DDimsB>

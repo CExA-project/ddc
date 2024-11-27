@@ -287,3 +287,11 @@ TEST(DiscreteDomainTest, Transpose3DConstructor)
     EXPECT_EQ(ddc::select<DDimY>(dom_x_y_z.back()), ddc::select<DDimY>(dom_z_y_x.back()));
     EXPECT_EQ(ddc::select<DDimZ>(dom_x_y_z.back()), ddc::select<DDimZ>(dom_z_y_x.back()));
 }
+
+TEST(DiscreteDomainTest, CartesianProduct)
+{
+    EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<>, ddc::DiscreteDomain<>>));
+    EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomX>, DDomX>));
+    EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomX, DDomY, DDomZ>, DDomXYZ>));
+    EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomZY, DDomX>, DDomZYX>));
+}

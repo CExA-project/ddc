@@ -358,6 +358,7 @@ public:
                         ddc::DiscreteVector<deriv_type>(s_nbc_xmax)));
     }
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
     /**
      * @brief Get the interpolation matrix.
      *
@@ -378,6 +379,7 @@ public:
     {
         return *matrix;
     }
+#endif
 
     /**
      * @brief Compute a spline approximation of a function.

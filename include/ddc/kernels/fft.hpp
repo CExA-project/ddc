@@ -361,6 +361,7 @@ ddc::DiscreteDomain<DDimFx...> fourier_mesh(ddc::DiscreteDomain<DDimX...> x_mesh
                                    ddc::detail::fft::N<DDimX>(x_mesh)))))...);
 }
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
 /**
  * @brief Get the Fourier mesh.
  *
@@ -385,6 +386,7 @@ template <typename... DDimFx, typename... DDimX>
 {
     return fourier_mesh<DDimFx...>(x_mesh, C2C);
 }
+#endif
 
 /**
  * @brief A structure embedding the configuration of the exposed FFT function with the type of normalization.

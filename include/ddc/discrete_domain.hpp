@@ -172,12 +172,14 @@ public:
         return DiscreteDomain(front() + n1, extents() - n1 - n2);
     }
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
     template <class... ODDims>
     [[deprecated("Use `restrict_with` instead")]] KOKKOS_FUNCTION constexpr auto restrict(
             DiscreteDomain<ODDims...> const& odomain) const
     {
         return restrict_with(odomain);
     }
+#endif
 
     template <class... ODDims>
     KOKKOS_FUNCTION constexpr auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
@@ -356,12 +358,14 @@ public:
         return *this;
     }
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
     template <class... ODims>
     [[deprecated("Use `restrict_with` instead")]] KOKKOS_FUNCTION constexpr DiscreteDomain restrict(
             DiscreteDomain<ODims...> const& odomain) const
     {
         return restrict_with(odomain);
     }
+#endif
 
     template <class... ODims>
     KOKKOS_FUNCTION constexpr DiscreteDomain restrict_with(

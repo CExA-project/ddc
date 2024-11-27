@@ -45,8 +45,10 @@ protected:
 public:
     using discrete_domain_type = DiscreteDomain<DDims...>;
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
     using mdomain_type [[deprecated("Use `discrete_domain_type` instead")]]
     = DiscreteDomain<DDims...>;
+#endif
 
     /// The dereferenceable part of the co-domain but with a different domain, starting at 0
     using allocation_mdspan_type = Kokkos::mdspan<

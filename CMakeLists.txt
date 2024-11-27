@@ -8,6 +8,7 @@ project(DDC VERSION 0.1.0 LANGUAGES CXX)
 # List of options
 
 option(DDC_BUILD_BENCHMARKS "Build DDC benchmarks." OFF)
+option(DDC_BUILD_DEPRECATED_CODE "Build DDC deprecated code." ON)
 option(DDC_BUILD_DOCUMENTATION "Build DDC documentation/website" OFF)
 option(
     DDC_BUILD_DOUBLE_PRECISION

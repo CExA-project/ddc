@@ -311,15 +311,15 @@ public:
                     a(subview.data_handle(), mapping_stride);
             return ChunkSpan<
                     ElementType,
-                    decltype(this->m_domain.restrict(odomain)),
+                    decltype(this->m_domain.restrict_with(odomain)),
                     Kokkos::layout_stride,
-                    memory_space>(a, this->m_domain.restrict(odomain));
+                    memory_space>(a, this->m_domain.restrict_with(odomain));
         } else {
             return ChunkSpan<
                     ElementType,
-                    decltype(this->m_domain.restrict(odomain)),
+                    decltype(this->m_domain.restrict_with(odomain)),
                     layout_type,
-                    memory_space>(subview, this->m_domain.restrict(odomain));
+                    memory_space>(subview, this->m_domain.restrict_with(odomain));
         }
     }
 

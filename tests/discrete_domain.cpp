@@ -155,7 +155,7 @@ TEST(DiscreteDomainTest, Subdomain)
     ddc::DiscreteElement<DDimX> const lbound_subdomain_x(lbound_x + 1);
     ddc::DiscreteVector<DDimX> const npoints_subdomain_x(nelems_x - 2);
     DDomX const subdomain_x(lbound_subdomain_x, npoints_subdomain_x);
-    DDomXY const subdomain = dom_x_y.restrict(subdomain_x);
+    DDomXY const subdomain = dom_x_y.restrict_with(subdomain_x);
     EXPECT_EQ(
             subdomain,
             DDomXY(ddc::DiscreteElement<DDimX, DDimY>(lbound_subdomain_x, lbound_y),
@@ -252,7 +252,7 @@ TEST(DiscreteDomainTest, SliceDomainXTooearly)
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     // the error message is checked with clang & gcc only
     EXPECT_DEATH(
-            dom_x_y.restrict(subdomain_x),
+            dom_x_y.restrict_with(subdomain_x),
             R"rgx([Aa]ssert.*uid<ODDims>\(m_element_begin\).*uid<ODDims>\(odomain\.m_element_begin\))rgx");
 #else
     GTEST_SKIP();
@@ -266,7 +266,7 @@ TEST(DiscreteDomainTest, SliceDomainXToolate)
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     // the error message is checked with clang & gcc only
     EXPECT_DEATH(
-            dom_x_y.restrict(subdomain_x),
+            dom_x_y.restrict_with(subdomain_x),
             R"rgx([Aa]ssert.*uid<ODDims>\(m_element_end\).*uid<ODDims>\(odomain\.m_element_end\).*)rgx");
 #else
     GTEST_SKIP();

@@ -22,7 +22,9 @@ var classddc_1_1SplineEvaluator =
     [ "upper_extrapolation_rule", "classddc_1_1SplineEvaluator.html#ac53ef0a56abe5c596297615e1846ae8e", null ],
     [ "operator()", "classddc_1_1SplineEvaluator.html#adedf3d1e5e826ad672bc906e09ee2e7f", null ],
     [ "operator()", "classddc_1_1SplineEvaluator.html#ab07c08427bbe21570a1e8b29537e7aef", null ],
+    [ "operator()", "classddc_1_1SplineEvaluator.html#ae8c0b82b609da97f96f0a3241764c052", null ],
     [ "deriv", "classddc_1_1SplineEvaluator.html#a06dc70a9ce8dc2aa678754ee845fcd90", null ],
     [ "deriv", "classddc_1_1SplineEvaluator.html#a038a2167994d7e840e16cba86a04894b", null ],
+    [ "deriv", "classddc_1_1SplineEvaluator.html#a9ef00484e467edfc082bbf634601b6ab", null ],
     [ "integrate", "classddc_1_1SplineEvaluator.html#aa8e37bdb2f1cb9201327ae473af1a4f2", null ]
 ];

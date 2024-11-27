@@ -404,6 +404,48 @@ public:
     }
 
     /**
+     * @brief Evaluate 2D spline function (described by its spline coefficients) on a mesh.
+     *
+     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
+     *
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     *
+     * Remark: calling SplineBuilder2D then SplineEvaluator2D corresponds to a 2D spline interpolation.
+     *
+     * @param[out] spline_eval The values of the 2D spline function at their coordinates.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
+     */
+    template <class Layout1, class Layout2>
+    void operator()(
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+                    spline_eval,
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
+                    spline_coef) const
+    {
+        batch_domain_type const batch_domain(spline_eval.domain());
+        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
+        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
+        ddc::parallel_for_each(
+                "ddc_splines_evaluate_2d",
+                exec_space(),
+                batch_domain,
+                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                    const auto spline_eval_2D = spline_eval[j];
+                    const auto spline_coef_2D = spline_coef[j];
+                    for (auto const i1 : evaluation_domain1) {
+                        for (auto const i2 : evaluation_domain2) {
+                            ddc::Coordinate<continuous_dimension_type1, continuous_dimension_type2>
+                                    coord_eval_2D(ddc::coordinate(i1), ddc::coordinate(i2));
+                            spline_eval_2D(i1, i2) = eval(coord_eval_2D(i1, i2), spline_coef_2D);
+                        }
+                    }
+                });
+    }
+
+    /**
      * @brief Differentiate 2D spline function (described by its spline coefficients) at a given coordinate along first dimension of interest.
      *
      * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be
@@ -586,6 +628,48 @@ public:
     }
 
     /**
+     * @brief Differentiate 2D spline function (described by its spline coefficients) on a mesh along first dimension of interest.
+     *
+     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
+     *
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     *
+     * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
+     */
+    template <class Layout1, class Layout2>
+    void deriv_dim_1(
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+                    spline_eval,
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
+                    spline_coef) const
+    {
+        batch_domain_type const batch_domain(spline_eval.domain());
+        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
+        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
+        ddc::parallel_for_each(
+                "ddc_splines_differentiate_2d_dim_1",
+                exec_space(),
+                batch_domain,
+                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                    const auto spline_eval_2D = spline_eval[j];
+                    const auto spline_coef_2D = spline_coef[j];
+                    for (auto const i1 : evaluation_domain1) {
+                        for (auto const i2 : evaluation_domain2) {
+                            ddc::Coordinate<continuous_dimension_type1, continuous_dimension_type2>
+                                    coord_eval_2D(ddc::coordinate(i1), ddc::coordinate(i2));
+                            spline_eval_2D(i1, i2) = eval_no_bc<
+                                    eval_deriv_type,
+                                    eval_type>(coord_eval_2D, spline_coef_2D);
+                        }
+                    }
+                });
+    }
+
+    /**
      * @brief Differentiate 2D spline function (described by its spline coefficients) on a mesh along second dimension of interest.
      *
      * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
@@ -631,6 +715,48 @@ public:
                             spline_eval_2D(i1, i2) = eval_no_bc<
                                     eval_type,
                                     eval_deriv_type>(coords_eval_2D(i1, i2), spline_coef_2D);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * @brief Differentiate 2D spline function (described by its spline coefficients) on a mesh along second dimension of interest.
+     *
+     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
+     *
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     *
+     * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
+     */
+    template <class Layout1, class Layout2>
+    void deriv_dim_2(
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+                    spline_eval,
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
+                    spline_coef) const
+    {
+        batch_domain_type const batch_domain(spline_eval.domain());
+        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
+        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
+        ddc::parallel_for_each(
+                "ddc_splines_differentiate_2d_dim_2",
+                exec_space(),
+                batch_domain,
+                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                    const auto spline_eval_2D = spline_eval[j];
+                    const auto spline_coef_2D = spline_coef[j];
+                    for (auto const i1 : evaluation_domain1) {
+                        for (auto const i2 : evaluation_domain2) {
+                            ddc::Coordinate<continuous_dimension_type1, continuous_dimension_type2>
+                                    coord_eval_2D(ddc::coordinate(i1), ddc::coordinate(i2));
+                            spline_eval_2D(i1, i2) = eval_no_bc<
+                                    eval_type,
+                                    eval_deriv_type>(coord_eval_2D, spline_coef_2D);
                         }
                     }
                 });
@@ -688,6 +814,48 @@ public:
     }
 
     /**
+     * @brief Cross-differentiate 2D spline function (described by its spline coefficients) on a mesh along dimensions of interest.
+     *
+     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
+     *
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     *
+     * @param[out] spline_eval The cross-derivatives of the 2D spline function at the desired coordinates.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
+     */
+    template <class Layout1, class Layout2>
+    void deriv_1_and_2(
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+                    spline_eval,
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
+                    spline_coef) const
+    {
+        batch_domain_type const batch_domain(spline_eval.domain());
+        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
+        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
+        ddc::parallel_for_each(
+                "ddc_splines_cross_differentiate",
+                exec_space(),
+                batch_domain,
+                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                    const auto spline_eval_2D = spline_eval[j];
+                    const auto spline_coef_2D = spline_coef[j];
+                    for (auto const i1 : evaluation_domain1) {
+                        for (auto const i2 : evaluation_domain2) {
+                            ddc::Coordinate<continuous_dimension_type1, continuous_dimension_type2>
+                                    coord_eval_2D(ddc::coordinate(i1), ddc::coordinate(i2));
+                            spline_eval_2D(i1, i2) = eval_no_bc<
+                                    eval_deriv_type,
+                                    eval_deriv_type>(coord_eval_2D, spline_coef_2D);
+                        }
+                    }
+                });
+    }
+
+    /**
      * @brief Differentiate spline function (described by its spline coefficients) on a mesh along a specified dimension of interest.
      *
      * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
@@ -733,6 +901,45 @@ public:
                                      typename evaluation_discrete_dimension_type2::
                                              continuous_dimension_type>) {
             return deriv_dim_2(spline_eval, coords_eval, spline_coef);
+        }
+    }
+
+    /**
+     * @brief Differentiate spline function (described by its spline coefficients) on a mesh along a specified dimension of interest.
+     *
+     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
+     *
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     *
+     * @tparam InterestDim Dimension along which differentiation is performed.
+     * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
+     */
+    template <class InterestDim, class Layout1, class Layout2>
+    void deriv(
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+                    spline_eval,
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
+                    spline_coef) const
+    {
+        static_assert(
+                std::is_same_v<
+                        InterestDim,
+                        typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || std::is_same_v<InterestDim, continuous_dimension_type2>);
+        if constexpr (std::is_same_v<
+                              InterestDim,
+                              typename evaluation_discrete_dimension_type1::
+                                      continuous_dimension_type>) {
+            return deriv_dim_1(spline_eval, spline_coef);
+        } else if constexpr (std::is_same_v<
+                                     InterestDim,
+                                     typename evaluation_discrete_dimension_type2::
+                                             continuous_dimension_type>) {
+            return deriv_dim_2(spline_eval, spline_coef);
         }
     }
 
@@ -787,6 +994,43 @@ public:
                             typename evaluation_discrete_dimension_type1::continuous_dimension_type>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>));
         return deriv_1_and_2(spline_eval, coords_eval, spline_coef);
+    }
+
+    /**
+     * @brief Double-differentiate 2D spline function (described by its spline coefficients) on a mesh along specified dimensions of interest.
+     *
+     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.
+     *
+     * This is not a multidimensional evaluation. This is a batched 2D evaluation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     *
+     * Note: double-differentiation other than cross-differentiation is not supported atm. See #440
+     *
+     * @tparam InterestDim1 First dimension along which differentiation is performed.
+     * @tparam InterestDim2 Second dimension along which differentiation is performed.
+     *
+     * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.
+     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.
+     */
+    template <class InterestDim1, class InterestDim2, class Layout1, class Layout2>
+    void deriv2(
+            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+                    spline_eval,
+            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
+                    spline_coef) const
+    {
+        static_assert(
+                (std::is_same_v<
+                         InterestDim1,
+                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                 && std::is_same_v<InterestDim2, continuous_dimension_type2>)
+                || (std::is_same_v<
+                            InterestDim2,
+                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                    && std::is_same_v<InterestDim1, continuous_dimension_type2>));
+        return deriv_1_and_2(spline_eval, spline_coef);
     }
 
     /** @brief Perform batched 2D integrations of a spline function (described by its spline coefficients) along the dimensions of interest and store results on a subdomain of batch_domain.

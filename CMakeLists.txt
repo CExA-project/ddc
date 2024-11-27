@@ -129,14 +129,14 @@ install(TARGETS DDC EXPORT DDCTargets)
 
 add_library(ddc_core INTERFACE)
 add_library(DDC::core ALIAS ddc_core)
+configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/config.hpp DESTINATION include/ddc)
 install(TARGETS ddc_core EXPORT DDCTargets)
-if("${DDC_BUILD_DOUBLE_PRECISION}")
-    target_compile_definitions(ddc_core INTERFACE DDC_BUILD_DOUBLE_PRECISION)
-endif()
 target_compile_features(ddc_core INTERFACE cxx_std_17)
 target_include_directories(
     ddc_core
     INTERFACE
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:include>"
 )
@@ -175,7 +175,6 @@ if("${DDC_BUILD_KERNELS_FFT}")
     add_library(ddc_fft INTERFACE)
     add_library(DDC::fft ALIAS ddc_fft)
     install(TARGETS ddc_fft EXPORT DDCTargets)
-    target_compile_definitions(ddc_fft INTERFACE "DDC_BUILD_KERNELS_FFT")
     target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
 
     ### DDC legacy target
@@ -216,7 +215,6 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     add_library(DDC::splines ALIAS ddc_splines)
     install(FILES cmake/FindLAPACKE.cmake DESTINATION lib/cmake/DDC)
     install(TARGETS ddc_splines EXPORT DDCTargets)
-    target_compile_definitions(ddc_splines INTERFACE "DDC_BUILD_KERNELS_SPLINES")
     target_include_directories(ddc_splines SYSTEM INTERFACE ${LAPACKE_INCLUDE_DIRS})
     target_link_libraries(
         ddc_splines
@@ -233,7 +231,6 @@ if("${DDC_BUILD_PDI_WRAPPER}")
     add_library(ddc_pdi INTERFACE)
     add_library(DDC::pdi ALIAS ddc_pdi)
     install(TARGETS ddc_pdi EXPORT DDCTargets)
-    target_compile_definitions(ddc_pdi INTERFACE "DDC_BUILD_PDI_WRAPPER")
     target_compile_features(ddc_pdi INTERFACE cxx_std_17)
     target_include_directories(
         ddc_pdi

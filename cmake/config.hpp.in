@@ -1,0 +1,7 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
+#pragma once
+
+#cmakedefine DDC_BUILD_DOUBLE_PRECISION

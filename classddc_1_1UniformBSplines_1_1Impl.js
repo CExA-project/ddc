@@ -16,7 +16,6 @@ var classddc_1_1UniformBSplines_1_1Impl =
     [ "eval_basis", "classddc_1_1UniformBSplines_1_1Impl.html#a2b3b80a14c5d0bed1f4ea38e71188a71", null ],
     [ "eval_deriv", "classddc_1_1UniformBSplines_1_1Impl.html#abf451093e3c84862bd7028e7170cbe59", null ],
     [ "eval_basis_and_n_derivs", "classddc_1_1UniformBSplines_1_1Impl.html#a7b92747dfcd84480d78efb9c192dd333", null ],
-    [ "integrals", "classddc_1_1UniformBSplines_1_1Impl.html#ad3c5fd2b94d4f99855450042566ee70a", null ],
     [ "get_first_support_knot", "classddc_1_1UniformBSplines_1_1Impl.html#a89d33b2329721a2e6e9e0a7fc5e3816d", null ],
     [ "get_last_support_knot", "classddc_1_1UniformBSplines_1_1Impl.html#a0fab685cf839a412f6425ef48b10de53", null ],
     [ "rmin", "classddc_1_1UniformBSplines_1_1Impl.html#a3aaff28144f0724ec6d22be0aa3407b5", null ],

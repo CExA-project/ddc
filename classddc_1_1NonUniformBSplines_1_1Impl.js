@@ -18,7 +18,6 @@ var classddc_1_1NonUniformBSplines_1_1Impl =
     [ "eval_basis", "classddc_1_1NonUniformBSplines_1_1Impl.html#a2c459bf2cc409127e95ea979378f333b", null ],
     [ "eval_deriv", "classddc_1_1NonUniformBSplines_1_1Impl.html#af9113e1cf985b328239b7fd2f61a1097", null ],
     [ "eval_basis_and_n_derivs", "classddc_1_1NonUniformBSplines_1_1Impl.html#a8f7915f5b080c69ed03e0ef3f5e448a2", null ],
-    [ "integrals", "classddc_1_1NonUniformBSplines_1_1Impl.html#af4b48260c7c12d238a963d1ab4ead97a", null ],
     [ "get_first_support_knot", "classddc_1_1NonUniformBSplines_1_1Impl.html#ab5e9c78d28cadc9933d9ab149a3ab97a", null ],
     [ "get_last_support_knot", "classddc_1_1NonUniformBSplines_1_1Impl.html#a6be7cd21b37263ce360f53702aa75c4b", null ],
     [ "rmin", "classddc_1_1NonUniformBSplines_1_1Impl.html#a20dd3da81cc2b0ce313cf8ca12564c16", null ],

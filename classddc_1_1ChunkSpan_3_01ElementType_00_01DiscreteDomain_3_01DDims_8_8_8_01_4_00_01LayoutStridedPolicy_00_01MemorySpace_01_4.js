@@ -4,7 +4,6 @@ var classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01
     [ "span_type", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a8e04f3f19c856719d095dd22827ce664", null ],
     [ "view_type", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#ab5cf52437bbb0301a47da34aaa90f05f", null ],
     [ "discrete_domain_type", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a8b27133ce6077b794b032ba3e170ccb3", null ],
-    [ "mdomain_type", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#abf29936c9f504a06f849ee42e126bdb5", null ],
     [ "memory_space", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a14d04219ae6a288691ae53564e02fc25", null ],
     [ "allocation_mdspan_type", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#ae7b857b5568dcc0d44a66801c84144de", null ],
     [ "const_allocation_mdspan_type", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a067356626e08dc9d8835abdfc17751ab", null ],

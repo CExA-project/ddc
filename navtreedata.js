@@ -65,7 +65,6 @@ var NAVTREE =
       [ "Algorithms in ddc ?", "md_concepts.html#autotoc_md26", null ]
     ] ],
     [ "examples/heat_equation_spectral.cpp", "heat_equation_spectral.html", null ],
-    [ "Deprecated List", "deprecated.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -94,12 +93,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a9560083192c223a3c3ca564500b0d820",
-"classddc_1_1KnotsAsInterpolationPoints.html#a284ded7e85d17eebffd68e7f72d64e4d",
-"classddc_1_1SplineBuilder.html#a28af8c6773ec5572c70f7da4b7576c57",
-"classddc_1_1SplineEvaluator2D.html#ad741ac46aaa112ff75a6971108f864eb",
-"namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a",
-"structddc_1_1reducer_1_1bor.html#afb94b064916f18b56fe3ebe725a09d27"
+"classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#aa70c391d731552f8b5cdf6ecab0abe6b",
+"classddc_1_1KokkosAllocator.html#a2bdf2a47bb76872e469ab05b689ab1dc",
+"classddc_1_1SplineBuilder.html#a42be62740203361e4f50e42631d20a2a",
+"classddc_1_1SplineEvaluator2D.html#af2cadb8ecf499a7d00129d8b0cd1cf15",
+"namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b",
+"structddc_1_1reducer_1_1lor.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

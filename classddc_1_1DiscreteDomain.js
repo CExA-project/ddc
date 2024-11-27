@@ -22,7 +22,7 @@ var classddc_1_1DiscreteDomain =
     [ "remove_first", "classddc_1_1DiscreteDomain.html#a95862b64fda54bb06c4adc8ddc0745db", null ],
     [ "remove_last", "classddc_1_1DiscreteDomain.html#a71753baee8d753fbce0aca0cc00834fb", null ],
     [ "remove", "classddc_1_1DiscreteDomain.html#ab3fcbbb13c15e586b38df612f8a45a21", null ],
-    [ "restrict", "classddc_1_1DiscreteDomain.html#abb09fc0e8691841c6e11544940b0a794", null ],
+    [ "restrict_with", "classddc_1_1DiscreteDomain.html#a3d7a05b7eb67262b9b2ccae8296eb261", null ],
     [ "empty", "classddc_1_1DiscreteDomain.html#a4c7cbb4a86785bc239c235fa6c8d1e37", null ],
     [ "operator bool", "classddc_1_1DiscreteDomain.html#af072b07bd07fce19032545ad54104876", null ],
     [ "begin", "classddc_1_1DiscreteDomain.html#a142afb6de0aff95d0e92088cd8e70f00", null ],

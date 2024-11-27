@@ -7,7 +7,6 @@ var classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_0
     [ "allocation_mdspan_type", "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a44a07a59145e8c0056f8b6dd462c3435", null ],
     [ "const_allocation_mdspan_type", "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a360ab865a8dbb427b6e30555ac0ba79d", null ],
     [ "discrete_domain_type", "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a805da76a4fd53095eaa7a3001934c34e", null ],
-    [ "mdomain_type", "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a1963dd8eb87472d674e33315a1a22742", null ],
     [ "memory_space", "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a6de2c5763408dfea17c03d7d52920a68", null ],
     [ "discrete_element_type", "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ac2e30b803cc4fa5e0c2305b4b73f3f4d", null ],
     [ "extents_type", "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a82025a6731665ac59733c93ec50f560b", null ],

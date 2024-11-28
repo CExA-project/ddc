@@ -373,7 +373,7 @@ public:
         }
 
         KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x, std::size_t degree) const;
+        eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x, [[maybe_unused]] std::size_t degree) const;
 
         KOKKOS_INLINE_FUNCTION void get_icell_and_offset(
                 int& icell,
@@ -401,7 +401,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
         Impl<DDim, MemorySpace>::eval_basis(
                 DSpan1D values,
                 ddc::Coordinate<CDim> const& x,
-                [[maybe_unused]] std::size_t const deg) const
+                [[maybe_unused]] std::size_t const degree) const
 {
     assert(values.size() == deg + 1);
 

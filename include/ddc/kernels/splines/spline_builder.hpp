@@ -1137,9 +1137,11 @@ void SplineBuilder<
         if (point == ddc::coordinate(current_cell_end_idx)) {
             check_n_points_in_cell(n_points_in_cell + 1, current_cell_end_idx);
             n_points_in_cell = 1;
+            current_cell_end_idx += 1;
         } else if (point > ddc::coordinate(current_cell_end_idx)) {
             check_n_points_in_cell(n_points_in_cell, current_cell_end_idx);
             n_points_in_cell = 1;
+            current_cell_end_idx += 1;
         } else {
             n_points_in_cell += 1;
         }

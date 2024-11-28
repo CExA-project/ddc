@@ -1090,11 +1090,12 @@ void SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::check_n_points_in_cell(int n_points_in_cell, KnotElement current_cell_end_idx)
+        IDimX...>::
+        check_n_points_in_cell(int const n_points_in_cell, KnotElement const current_cell_end_idx)
 {
     if (n_points_in_cell > BSplines::degree() + 1) {
-        KnotElement rmin_idx = ddc::discrete_space<BSplines>().break_point_domain().front();
-        int failed_cell = (current_cell_end_idx - rmin_idx).value();
+        KnotElement const rmin_idx = ddc::discrete_space<BSplines>().break_point_domain().front();
+        int const failed_cell = (current_cell_end_idx - rmin_idx).value();
         throw std::runtime_error(
                 "The spline problem is overconstrained. There are "
                 + std::to_string(n_points_in_cell) + " points in the " + std::to_string(failed_cell)
@@ -1121,7 +1122,7 @@ void SplineBuilder<
         Solver,
         IDimX...>::check_valid_grid()
 {
-    const std::size_t n_interp_points = interpolation_domain().size();
+    std::size_t const n_interp_points = interpolation_domain().size();
     std::size_t const expected_npoints
             = ddc::discrete_space<BSplines>().nbasis() - s_nbc_xmin - s_nbc_xmax;
     if (n_interp_points != expected_npoints) {
@@ -1134,7 +1135,7 @@ void SplineBuilder<
     int n_points_in_cell = 0;
     auto current_cell_end_idx = ddc::discrete_space<BSplines>().break_point_domain().front() + 1;
     ddc::for_each(interpolation_domain(), [&](auto idx) {
-        ddc::Coordinate<continuous_dimension_type> point = ddc::coordinate(idx);
+        ddc::Coordinate<continuous_dimension_type> const point = ddc::coordinate(idx);
         if (point > ddc::coordinate(current_cell_end_idx)) {
             // Check the points found in the previous cell
             check_n_points_in_cell(n_points_in_cell, current_cell_end_idx);

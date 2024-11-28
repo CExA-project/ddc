@@ -1134,18 +1134,26 @@ void SplineBuilder<
     auto current_cell_end_idx = ddc::discrete_space<BSplines>().break_point_domain().front() + 1;
     ddc::for_each(interpolation_domain(), [&](auto idx) {
         ddc::Coordinate<continuous_dimension_type> point = ddc::coordinate(idx);
-        if (point == ddc::coordinate(current_cell_end_idx)) {
-            check_n_points_in_cell(n_points_in_cell + 1, current_cell_end_idx);
-            n_points_in_cell = 1;
-            current_cell_end_idx += 1;
-        } else if (point > ddc::coordinate(current_cell_end_idx)) {
+        if (point > ddc::coordinate(current_cell_end_idx)) {
+            // Check the points found in the previous cell
             check_n_points_in_cell(n_points_in_cell, current_cell_end_idx);
+            // Initialise the number of points in the subsequent cell, including the new point
             n_points_in_cell = 1;
+            // Move to the next cell
+            current_cell_end_idx += 1;
+        } else if (point == ddc::coordinate(current_cell_end_idx)) {
+            // Check the points found in the previous cell including the point on the boundary
+            check_n_points_in_cell(n_points_in_cell + 1, current_cell_end_idx);
+            // Initialise the number of points in the subsequent cell, including the point on the boundary
+            n_points_in_cell = 1;
+            // Move to the next cell
             current_cell_end_idx += 1;
         } else {
+            // Indicate that the point is in the cell
             n_points_in_cell += 1;
         }
     });
+    // Check the number of points in the final cell
     check_n_points_in_cell(n_points_in_cell, current_cell_end_idx);
 }
 

@@ -214,7 +214,8 @@ public:
 };
 
 template <class DDim>
-struct is_uniform_point_sampling : public std::is_base_of<detail::UniformPointSamplingBase, DDim>
+struct is_uniform_point_sampling
+    : public std::is_base_of<detail::UniformPointSamplingBase, DDim>::type
 {
 };
 

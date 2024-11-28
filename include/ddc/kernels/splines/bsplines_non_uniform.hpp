@@ -403,7 +403,7 @@ public:
 };
 
 template <class DDim>
-struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplinesBase, DDim>
+struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplinesBase, DDim>::type
 {
 };
 

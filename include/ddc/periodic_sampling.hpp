@@ -245,7 +245,7 @@ public:
 };
 
 template <class DDim>
-struct is_periodic_sampling : public std::is_base_of<detail::PeriodicSamplingBase, DDim>
+struct is_periodic_sampling : public std::is_base_of<detail::PeriodicSamplingBase, DDim>::type
 {
 };
 

@@ -90,7 +90,7 @@ public:
 };
 
 template <class DDim>
-struct is_single_discretization : public std::is_base_of<SingleDiscretizationBase, DDim>
+struct is_single_discretization : public std::is_base_of<SingleDiscretizationBase, DDim>::type
 {
 };
 

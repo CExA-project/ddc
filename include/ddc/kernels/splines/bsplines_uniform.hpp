@@ -383,7 +383,7 @@ public:
 };
 
 template <class DDim>
-struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase, DDim>
+struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase, DDim>::type
 {
 };
 

@@ -209,7 +209,7 @@ public:
 
 template <class DDim>
 struct is_non_uniform_point_sampling
-    : public std::is_base_of<detail::NonUniformPointSamplingBase, DDim>
+    : public std::is_base_of<detail::NonUniformPointSamplingBase, DDim>::type
 {
 };
 

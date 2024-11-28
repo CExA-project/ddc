@@ -204,6 +204,7 @@ public:
         static_assert(
                 ((BcLower == BoundCond::PERIODIC) == (BcUpper == BoundCond::PERIODIC)),
                 "Incompatible boundary conditions");
+        check_valid_grid();
 
         // Calculate block sizes
         int lower_block_size;

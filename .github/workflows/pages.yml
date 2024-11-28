@@ -158,14 +158,18 @@ jobs:
               -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
               -B build \
               -S /src
-          cmake --build build --verbose --target doc
+          cmake --build build --verbose --target doc || true
           mv build/docs/html /src/docs_out
           mv build/docs/doxygen.log /src/docs_out/doxygen.log
         EOF
         mkdir docs_out
         chmod a+rwx docs_out
         docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
-        head -n 10 docs_out/doxygen.log
+        if [ -s docs_out/doxygen.log ]; then
+          # The file is not-empty.
+          head -n 30 docs_out/doxygen.log
+          exit 1
+        fi
     - name: Publish site
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true' }}
       run: |

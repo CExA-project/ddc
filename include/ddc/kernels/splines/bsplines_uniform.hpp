@@ -372,10 +372,8 @@ public:
             return 1.0 / ddc::step<knot_discrete_dimension_type>();
         }
 
-        KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
-                DSpan1D values,
-                ddc::Coordinate<CDim> const& x,
-                [[maybe_unused]] std::size_t degree) const;
+        KOKKOS_INLINE_FUNCTION discrete_element_type
+        eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x, std::size_t degree) const;
 
         KOKKOS_INLINE_FUNCTION void get_icell_and_offset(
                 int& icell,
@@ -405,7 +403,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
                 ddc::Coordinate<CDim> const& x,
                 [[maybe_unused]] std::size_t const degree) const
 {
-    assert(values.size() == deg + 1);
+    assert(values.size() == degree + 1);
 
     double offset;
     int jmin;

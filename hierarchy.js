@@ -48,13 +48,6 @@ var hierarchy =
     [ "ddc::PeriodicSampling< CDim >::Impl< DDim, MemorySpace >", "classddc_1_1PeriodicSampling_1_1Impl.html", null ],
     [ "ddc::UniformBSplines< CDim, D >::Impl< DDim, MemorySpace >", "classddc_1_1UniformBSplines_1_1Impl.html", null ],
     [ "ddc::UniformPointSampling< CDim >::Impl< DDim, MemorySpace >", "classddc_1_1UniformPointSampling_1_1Impl.html", null ],
-    [ "std::is_base_of", null, [
-      [ "ddc::is_non_uniform_bsplines< DDim >", "structddc_1_1is__non__uniform__bsplines.html", null ],
-      [ "ddc::is_non_uniform_point_sampling< DDim >", "structddc_1_1is__non__uniform__point__sampling.html", null ],
-      [ "ddc::is_periodic_sampling< DDim >", "structddc_1_1is__periodic__sampling.html", null ],
-      [ "ddc::is_uniform_bsplines< DDim >", "structddc_1_1is__uniform__bsplines.html", null ],
-      [ "ddc::is_uniform_point_sampling< DDim >", "structddc_1_1is__uniform__point__sampling.html", null ]
-    ] ],
     [ "ddc::KnotDiscreteDimension< DDim >", "namespaceddc.html#structddc_1_1KnotDiscreteDimension", null ],
     [ "ddc::KnotsAsInterpolationPoints< BSplines, BcLower, BcUpper >", "classddc_1_1KnotsAsInterpolationPoints.html", null ],
     [ "ddc::KokkosAllocator< T, MemorySpace >", "classddc_1_1KokkosAllocator.html", null ],
@@ -96,6 +89,21 @@ var hierarchy =
       [ "ddc::is_discrete_domain< DiscreteDomain< Tags... > >", "structddc_1_1is__discrete__domain_3_01DiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html", null ],
       [ "ddc::is_discrete_element< DiscreteElement< Tags... > >", "structddc_1_1is__discrete__element_3_01DiscreteElement_3_01Tags_8_8_8_01_4_01_4.html", null ],
       [ "ddc::is_discrete_vector< DiscreteVector< Tags... > >", "structddc_1_1is__discrete__vector_3_01DiscreteVector_3_01Tags_8_8_8_01_4_01_4.html", null ]
+    ] ],
+    [ "std::is_base_of::type", null, [
+      [ "ddc::is_non_uniform_bsplines< DDim >", "structddc_1_1is__non__uniform__bsplines.html", null ]
+    ] ],
+    [ "std::is_base_of::type", null, [
+      [ "ddc::is_non_uniform_point_sampling< DDim >", "structddc_1_1is__non__uniform__point__sampling.html", null ]
+    ] ],
+    [ "std::is_base_of::type", null, [
+      [ "ddc::is_periodic_sampling< DDim >", "structddc_1_1is__periodic__sampling.html", null ]
+    ] ],
+    [ "std::is_base_of::type", null, [
+      [ "ddc::is_uniform_bsplines< DDim >", "structddc_1_1is__uniform__bsplines.html", null ]
+    ] ],
+    [ "std::is_base_of::type", null, [
+      [ "ddc::is_uniform_point_sampling< DDim >", "structddc_1_1is__uniform__point__sampling.html", null ]
     ] ],
     [ "ddc::detail::UniformBSplinesBase", null, [
       [ "ddc::UniformBSplines< CDim, D >", "classddc_1_1UniformBSplines.html", null ]

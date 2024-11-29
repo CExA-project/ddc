@@ -48,7 +48,7 @@ set(DDC_Kokkos_DEPENDENCY_POLICY
 set_property(CACHE DDC_Kokkos_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
 if("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "AUTO")
     if(NOT TARGET Kokkos::kokkos)
-        find_package(Kokkos 4.4...4.5 QUIET)
+        find_package(Kokkos 4.4 QUIET)
         if(NOT Kokkos_FOUND)
             ddc_configure_kokkos()
         endif()
@@ -56,7 +56,7 @@ if("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "AUTO")
 elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
     ddc_configure_kokkos()
 elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-    find_package(Kokkos 4.4...4.5 REQUIRED)
+    find_package(Kokkos 4.4 REQUIRED)
 endif()
 
 ## PDI

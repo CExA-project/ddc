@@ -14,7 +14,7 @@ endmacro()
 
 set(DDC_BUILD_DOUBLE_PRECISION @DDC_BUILD_DOUBLE_PRECISION@)
 
-ddc_find_dependency(Kokkos 4.4...4.5)
+ddc_find_dependency(Kokkos 4.4...<5)
 
 if(@DDC_BUILD_KERNELS_FFT@)
    ddc_find_dependency(KokkosFFT 0.2.1...<1)

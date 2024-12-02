@@ -134,30 +134,27 @@ public:
         }
     };
 
-    /** Construct an Impl<Kokkos::HostSpace> and associated discrete_domain_type from an iterator
+    /** Construct an Impl<Kokkos::HostSpace> and associated discrete_domain_type from a range
      * containing the points coordinates along the `DDim` dimension.
      *
-     * @param non_uniform_points a vector containing the coordinates of the points of the domain.
+     * @param non_uniform_points a range (std::vector, std::array, ...) containing the coordinates of the points of the domain.
      */
     template <class DDim, class InputRange>
     static std::tuple<typename DDim::template Impl<DDim, Kokkos::HostSpace>, DiscreteDomain<DDim>>
-    init(InputRange const non_uniform_points)
+    init(InputRange const& non_uniform_points)
     {
-        auto a = non_uniform_points.begin();
-        auto b = non_uniform_points.end();
-        auto n = std::distance(non_uniform_points.begin(), non_uniform_points.end());
-        assert(a < b);
-        assert(n > 0);
+        assert(!non_uniform_points.empty());
+        DiscreteVector<DDim> const n(non_uniform_points.size());
         typename DDim::template Impl<DDim, Kokkos::HostSpace> disc(non_uniform_points);
-        DiscreteDomain<DDim> domain {disc.front(), DiscreteVector<DDim> {n}};
+        DiscreteDomain<DDim> domain(disc.front(), n);
         return std::make_tuple(std::move(disc), std::move(domain));
     }
 
-    /** Construct 4 non-uniform `DiscreteDomain` and an Impl<Kokkos::HostSpace> from 3 iterators containing the points coordinates along the `DDim` dimension.
+    /** Construct 4 non-uniform `DiscreteDomain` and an Impl<Kokkos::HostSpace> from 3 ranges containing the points coordinates along the `DDim` dimension.
      *
-     * @param domain_r an iterator containing the coordinates of the points of the main domain along the DDim position
-     * @param pre_ghost_r an iterator containing the positions of the ghost points before the main domain the DDim position
-     * @param post_ghost_r an iterator containing the positions of the ghost points after the main domain the DDim position
+     * @param domain_r a range containing the coordinates of the points of the main domain along the DDim position
+     * @param pre_ghost_r a range containing the positions of the ghost points before the main domain the DDim position
+     * @param post_ghost_r a range containing the positions of the ghost points after the main domain the DDim position
      */
     template <class DDim, class InputRange>
     static std::tuple<
@@ -171,16 +168,11 @@ public:
             InputRange const& pre_ghost_r,
             InputRange const& post_ghost_r)
     {
-        using discrete_domain_type = DiscreteDomain<DDim>;
-        auto n = DiscreteVector<DDim> {std::distance(domain_r.begin(), domain_r.end())};
+        assert(!domain_r.empty());
 
-        assert(domain_r.begin() < domain_r.end());
-        assert(n > 1);
-
-        auto n_ghosts_before
-                = DiscreteVector<DDim> {std::distance(pre_ghost_r.begin(), pre_ghost_r.end())};
-        auto n_ghosts_after
-                = DiscreteVector<DDim> {std::distance(post_ghost_r.begin(), post_ghost_r.end())};
+        DiscreteVector<DDim> const n(domain_r.size());
+        DiscreteVector<DDim> const n_ghosts_before(pre_ghost_r.size());
+        DiscreteVector<DDim> const n_ghosts_after(post_ghost_r.size());
 
         std::vector<typename InputRange::value_type> full_domain;
 
@@ -190,14 +182,10 @@ public:
 
         typename DDim::template Impl<DDim, Kokkos::HostSpace> disc(full_domain);
 
-        discrete_domain_type ghosted_domain
-                = discrete_domain_type(disc.front(), n + n_ghosts_before + n_ghosts_after);
-        discrete_domain_type pre_ghost
-                = discrete_domain_type(ghosted_domain.front(), n_ghosts_before);
-        discrete_domain_type main_domain
-                = discrete_domain_type(ghosted_domain.front() + n_ghosts_before, n);
-        discrete_domain_type post_ghost
-                = discrete_domain_type(main_domain.back() + 1, n_ghosts_after);
+        DiscreteDomain<DDim> ghosted_domain(disc.front(), n + n_ghosts_before + n_ghosts_after);
+        DiscreteDomain<DDim> pre_ghost(ghosted_domain.front(), n_ghosts_before);
+        DiscreteDomain<DDim> main_domain(ghosted_domain.front() + n_ghosts_before, n);
+        DiscreteDomain<DDim> post_ghost(main_domain.back() + 1, n_ghosts_after);
         return std::make_tuple(
                 std::move(disc),
                 std::move(main_domain),

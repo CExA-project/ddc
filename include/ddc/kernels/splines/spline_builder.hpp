@@ -165,7 +165,7 @@ public:
 private:
     batched_interpolation_domain_type m_batched_interpolation_domain;
 
-    int m_offset;
+    int m_offset = 0;
 
     double m_dx; // average cell size for normalization of derivatives
 
@@ -173,7 +173,7 @@ private:
     std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> matrix;
 
     /// Calculate offset so that the matrix is diagonally dominant
-    int compute_offset(interpolation_domain_type const& interpolation_domain);
+    void compute_offset(interpolation_domain_type const& interpolation_domain, int& offset);
 
 public:
     /**
@@ -197,7 +197,6 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_batched_interpolation_domain(batched_interpolation_domain)
-        , m_offset(compute_offset(interpolation_domain()))
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                / ddc::discrete_space<BSplines>().ncells())
     {
@@ -205,6 +204,8 @@ public:
                 ((BcLower == BoundCond::PERIODIC) == (BcUpper == BoundCond::PERIODIC)),
                 "Incompatible boundary conditions");
         check_valid_grid();
+
+        compute_offset(interpolation_domain(), m_offset);
 
         // Calculate block sizes
         int lower_block_size;
@@ -484,7 +485,7 @@ template <
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
-int SplineBuilder<
+void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
@@ -492,9 +493,9 @@ int SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::compute_offset(interpolation_domain_type const& interpolation_domain)
+        IDimX...>::
+        compute_offset(interpolation_domain_type const& interpolation_domain, int& offset)
 {
-    int offset;
     if constexpr (bsplines_type::is_periodic()) {
         // Calculate offset so that the matrix is diagonally dominant
         std::array<double, bsplines_type::degree() + 1> values_ptr;
@@ -517,7 +518,6 @@ int SplineBuilder<
     } else {
         offset = 0;
     }
-    return offset;
 }
 
 template <

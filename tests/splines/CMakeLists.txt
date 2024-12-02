@@ -9,7 +9,13 @@ include(GoogleTest)
 set(SPLINES_TEST_DEGREE_MIN 3 CACHE STRING "Minimum degree to test splines.")
 set(SPLINES_TEST_DEGREE_MAX 3 CACHE STRING "Maximum degree to test splines.")
 
-add_executable(splines_tests ../main.cpp knots_as_interpolation_points.cpp view.cpp)
+add_executable(
+    splines_tests
+    ../main.cpp
+    knots_as_interpolation_points.cpp
+    spline_builder.cpp
+    view.cpp
+)
 
 target_compile_features(splines_tests PUBLIC cxx_std_17)
 target_link_libraries(splines_tests PUBLIC DDC::core DDC::splines GTest::gtest)

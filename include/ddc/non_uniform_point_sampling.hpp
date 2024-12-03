@@ -4,10 +4,12 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <initializer_list>
 #include <ostream>
+#include <stdexcept>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -66,6 +68,9 @@ public:
         /// @brief Construct a `NonUniformPointSampling` using a brace-list, i.e. `NonUniformPointSampling mesh({0., 1.})`
         Impl(std::initializer_list<continuous_element_type> points)
         {
+            if (!std::is_sorted(points.begin(), points.end())) {
+                throw std::runtime_error("Input points must be sorted");
+            }
             std::vector<continuous_element_type> host_points(points.begin(), points.end());
             Kokkos::View<continuous_element_type*, Kokkos::HostSpace> const
                     host(host_points.data(), host_points.size());
@@ -77,6 +82,9 @@ public:
         template <class InputRange>
         explicit Impl(InputRange const& points)
         {
+            if (!std::is_sorted(points.begin(), points.end())) {
+                throw std::runtime_error("Input points must be sorted");
+            }
             if constexpr (Kokkos::is_view_v<InputRange>) {
                 Kokkos::deep_copy(m_points, points);
             } else {
@@ -92,6 +100,9 @@ public:
         template <class InputIt>
         Impl(InputIt points_begin, InputIt points_end)
         {
+            if (!std::is_sorted(points_begin, points_end)) {
+                throw std::runtime_error("Input points must be sorted");
+            }
             std::vector<continuous_element_type> host_points(points_begin, points_end);
             Kokkos::View<continuous_element_type*, Kokkos::HostSpace> const
                     host(host_points.data(), host_points.size());

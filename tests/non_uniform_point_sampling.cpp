@@ -5,6 +5,7 @@
 #include <array>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <ddc/ddc.hpp>
@@ -73,6 +74,15 @@ TEST(NonUniformPointSamplingTest, VectorConstructor)
     DDimX::Impl<DDimX, Kokkos::HostSpace> const ddim_x(vector_points_x);
     EXPECT_EQ(ddim_x.size(), vector_points_x.size());
     EXPECT_EQ(ddim_x.coordinate(point_ix), point_rx);
+}
+
+TEST(NonUniformPointSamplingTest, NotSortedVectorConstructor)
+{
+    std::vector unordered_vector_points_x = vector_points_x;
+    std::swap(unordered_vector_points_x.front(), unordered_vector_points_x.back());
+    EXPECT_THROW(
+            (DDimX::Impl<DDimX, Kokkos::HostSpace>(unordered_vector_points_x)),
+            std::runtime_error);
 }
 
 TEST(NonUniformPointSamplingTest, IteratorConstructor)

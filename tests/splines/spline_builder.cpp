@@ -122,7 +122,7 @@ TEST(SplineBuilder, CorrectInterpolationGrid)
 
     ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
 
-    std::vector<double> const range {0.1, 0.11, 0.25, 0.23, 0.24};
+    std::vector<double> const range {0.05, 0.15, 0.5, 0.85, 0.95};
 
     ddc::DiscreteDomain<IDimX> const interpolation_domain
             = ddc::init_discrete_space<IDimX>(IDimX::init<IDimX>(range));

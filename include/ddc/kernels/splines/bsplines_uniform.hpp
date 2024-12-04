@@ -401,9 +401,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
         Impl<DDim, MemorySpace>::eval_basis(
                 DSpan1D values,
                 ddc::Coordinate<CDim> const& x,
-                [[maybe_unused]] std::size_t const deg) const
+                [[maybe_unused]] std::size_t const degree) const
 {
-    assert(values.size() == deg + 1);
+    assert(values.size() == degree + 1);
 
     double offset;
     int jmin;

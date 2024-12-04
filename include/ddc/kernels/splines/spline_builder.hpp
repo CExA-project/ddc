@@ -165,7 +165,7 @@ public:
 private:
     batched_interpolation_domain_type m_batched_interpolation_domain;
 
-    int m_offset;
+    int m_offset = 0;
 
     double m_dx; // average cell size for normalization of derivatives
 
@@ -173,7 +173,7 @@ private:
     std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> matrix;
 
     /// Calculate offset so that the matrix is diagonally dominant
-    int compute_offset(interpolation_domain_type const& interpolation_domain);
+    void compute_offset(interpolation_domain_type const& interpolation_domain, int& offset);
 
 public:
     /**
@@ -197,13 +197,15 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_batched_interpolation_domain(batched_interpolation_domain)
-        , m_offset(compute_offset(interpolation_domain()))
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                / ddc::discrete_space<BSplines>().ncells())
     {
         static_assert(
                 ((BcLower == BoundCond::PERIODIC) == (BcUpper == BoundCond::PERIODIC)),
                 "Incompatible boundary conditions");
+        check_valid_grid();
+
+        compute_offset(interpolation_domain(), m_offset);
 
         // Calculate block sizes
         int lower_block_size;
@@ -467,6 +469,11 @@ private:
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt);
 
     void build_matrix_system();
+
+    void check_valid_grid();
+
+    template <class KnotElement>
+    static void check_n_points_in_cell(int n_points_in_cell, KnotElement current_cell_end_idx);
 };
 
 template <
@@ -478,7 +485,7 @@ template <
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
         class... IDimX>
-int SplineBuilder<
+void SplineBuilder<
         ExecSpace,
         MemorySpace,
         BSplines,
@@ -486,9 +493,9 @@ int SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::compute_offset(interpolation_domain_type const& interpolation_domain)
+        IDimX...>::
+        compute_offset(interpolation_domain_type const& interpolation_domain, int& offset)
 {
-    int offset;
     if constexpr (bsplines_type::is_periodic()) {
         // Calculate offset so that the matrix is diagonally dominant
         std::array<double, bsplines_type::degree() + 1> values_ptr;
@@ -511,7 +518,6 @@ int SplineBuilder<
     } else {
         offset = 0;
     }
-    return offset;
 }
 
 template <
@@ -1064,6 +1070,93 @@ SplineBuilder<
             std::move(coefficients_derivs_xmin_out),
             std::move(coefficients_out),
             std::move(coefficients_derivs_xmax_out));
+}
+
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
+        SplineSolver Solver,
+        class... IDimX>
+template <class KnotElement>
+void SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
+        Solver,
+        IDimX...>::
+        check_n_points_in_cell(int const n_points_in_cell, KnotElement const current_cell_end_idx)
+{
+    if (n_points_in_cell > BSplines::degree() + 1) {
+        KnotElement const rmin_idx = ddc::discrete_space<BSplines>().break_point_domain().front();
+        int const failed_cell = (current_cell_end_idx - rmin_idx).value();
+        throw std::runtime_error(
+                "The spline problem is overconstrained. There are "
+                + std::to_string(n_points_in_cell) + " points in the " + std::to_string(failed_cell)
+                + "-th cell.");
+    }
+}
+
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class InterpolationDDim,
+        ddc::BoundCond BcLower,
+        ddc::BoundCond BcUpper,
+        SplineSolver Solver,
+        class... IDimX>
+void SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        BcLower,
+        BcUpper,
+        Solver,
+        IDimX...>::check_valid_grid()
+{
+    std::size_t const n_interp_points = interpolation_domain().size();
+    std::size_t const expected_npoints
+            = ddc::discrete_space<BSplines>().nbasis() - s_nbc_xmin - s_nbc_xmax;
+    if (n_interp_points != expected_npoints) {
+        throw std::runtime_error(
+                "Incorrect number of points supplied to NonUniformInterpolationPoints. "
+                "(Received : "
+                + std::to_string(n_interp_points)
+                + ", expected : " + std::to_string(expected_npoints));
+    }
+    int n_points_in_cell = 0;
+    auto current_cell_end_idx = ddc::discrete_space<BSplines>().break_point_domain().front() + 1;
+    ddc::for_each(interpolation_domain(), [&](auto idx) {
+        ddc::Coordinate<continuous_dimension_type> const point = ddc::coordinate(idx);
+        if (point > ddc::coordinate(current_cell_end_idx)) {
+            // Check the points found in the previous cell
+            check_n_points_in_cell(n_points_in_cell, current_cell_end_idx);
+            // Initialise the number of points in the subsequent cell, including the new point
+            n_points_in_cell = 1;
+            // Move to the next cell
+            current_cell_end_idx += 1;
+        } else if (point == ddc::coordinate(current_cell_end_idx)) {
+            // Check the points found in the previous cell including the point on the boundary
+            check_n_points_in_cell(n_points_in_cell + 1, current_cell_end_idx);
+            // Initialise the number of points in the subsequent cell, including the point on the boundary
+            n_points_in_cell = 1;
+            // Move to the next cell
+            current_cell_end_idx += 1;
+        } else {
+            // Indicate that the point is in the cell
+            n_points_in_cell += 1;
+        }
+    });
+    // Check the number of points in the final cell
+    check_n_points_in_cell(n_points_in_cell, current_cell_end_idx);
 }
 
 } // namespace ddc

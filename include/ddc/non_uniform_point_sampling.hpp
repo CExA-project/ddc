@@ -66,48 +66,29 @@ public:
         Impl() = default;
 
         /// @brief Construct a `NonUniformPointSampling` using a brace-list, i.e. `NonUniformPointSampling mesh({0., 1.})`
-        Impl(std::initializer_list<continuous_element_type> points)
+        Impl(std::initializer_list<continuous_element_type> const points)
+            : Impl(points.begin(), points.end())
         {
-            if (!std::is_sorted(points.begin(), points.end())) {
-                throw std::runtime_error("Input points must be sorted");
-            }
-            std::vector<continuous_element_type> host_points(points.begin(), points.end());
-            Kokkos::View<continuous_element_type*, Kokkos::HostSpace> const
-                    host(host_points.data(), host_points.size());
-            Kokkos::resize(m_points, host.extent(0));
-            Kokkos::deep_copy(m_points, host);
         }
 
         /// @brief Construct a `NonUniformPointSampling` using a C++20 "common range".
         template <class InputRange>
-        explicit Impl(InputRange const& points)
+        explicit Impl(InputRange const& points) : Impl(points.begin(), points.end())
         {
-            if (!std::is_sorted(points.begin(), points.end())) {
-                throw std::runtime_error("Input points must be sorted");
-            }
-            if constexpr (Kokkos::is_view_v<InputRange>) {
-                Kokkos::deep_copy(m_points, points);
-            } else {
-                std::vector<continuous_element_type> host_points(points.begin(), points.end());
-                Kokkos::View<continuous_element_type*, Kokkos::HostSpace> const
-                        host(host_points.data(), host_points.size());
-                Kokkos::resize(m_points, host.extent(0));
-                Kokkos::deep_copy(m_points, host);
-            }
         }
 
         /// @brief Construct a `NonUniformPointSampling` using a pair of iterators.
         template <class InputIt>
-        Impl(InputIt points_begin, InputIt points_end)
+        Impl(InputIt const points_begin, InputIt const points_end)
         {
+            using view_type = Kokkos::View<continuous_element_type*, MemorySpace>;
             if (!std::is_sorted(points_begin, points_end)) {
                 throw std::runtime_error("Input points must be sorted");
             }
+            // Make a contiguous copy of [points_begin, points_end[
             std::vector<continuous_element_type> host_points(points_begin, points_end);
-            Kokkos::View<continuous_element_type*, Kokkos::HostSpace> const
-                    host(host_points.data(), host_points.size());
-            Kokkos::resize(m_points, host.extent(0));
-            Kokkos::deep_copy(m_points, host);
+            m_points = view_type("NonUniformPointSampling::points", host_points.size());
+            Kokkos::deep_copy(m_points, view_type(host_points.data(), host_points.size()));
         }
 
         template <class OriginMemorySpace>

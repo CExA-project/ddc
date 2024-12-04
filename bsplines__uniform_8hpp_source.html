@@ -530,9 +530,9 @@ $(document).ready(function(){initNavTree('bsplines__uniform_8hpp_source.html',''
 <div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        <a class="code hl_class" href="classddc_1_1UniformBSplines_1_1Impl.html">Impl</a>&lt;DDim, MemorySpace&gt;::eval_basis(</div>
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>                DSpan1D values,</div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CDim&gt; <span class="keyword">const</span>&amp; x,</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>                [[maybe_unused]] std::size_t <span class="keyword">const</span> deg) <span class="keyword">const</span></div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>                [[maybe_unused]] std::size_t <span class="keyword">const</span> degree) <span class="keyword">const</span></div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>{</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    assert(values.size() == deg + 1);</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    assert(values.size() == degree + 1);</div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span> </div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    <span class="keywordtype">double</span> offset;</div>
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>    <span class="keywordtype">int</span> jmin;</div>

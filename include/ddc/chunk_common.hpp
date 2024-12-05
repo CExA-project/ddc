@@ -254,9 +254,9 @@ protected:
     /** Constructs a new ChunkCommon by move
      * @param other the ChunkCommon to move
      */
-    KOKKOS_DEFAULTED_FUNCTION constexpr ChunkCommon(ChunkCommon&& other) = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr ChunkCommon(ChunkCommon&& other) noexcept = default;
 
-    KOKKOS_DEFAULTED_FUNCTION ~ChunkCommon() = default;
+    KOKKOS_DEFAULTED_FUNCTION ~ChunkCommon() noexcept = default;
 
     /** Copy-assigns a new value to this ChunkCommon, yields a new view to the same data
      * @param other the ChunkCommon to copy
@@ -268,7 +268,8 @@ protected:
      * @param other the ChunkCommon to move
      * @return *this
      */
-    KOKKOS_DEFAULTED_FUNCTION constexpr ChunkCommon& operator=(ChunkCommon&& other) = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr ChunkCommon& operator=(ChunkCommon&& other) noexcept
+            = default;
 
     /** Access to the underlying allocation pointer
      * @return allocation pointer

@@ -116,7 +116,7 @@ public:
     /** Constructs a new Chunk by move
      * @param other the Chunk to move
      */
-    Chunk(Chunk&& other)
+    Chunk(Chunk&& other) noexcept
         : base_type(std::move(static_cast<base_type&>(other)))
         , m_allocator(std::move(other.m_allocator))
         , m_label(std::move(other.m_label))
@@ -124,7 +124,7 @@ public:
         other.m_internal_mdspan = internal_mdspan_type(nullptr, other.m_internal_mdspan.mapping());
     }
 
-    ~Chunk()
+    ~Chunk() noexcept
     {
         if (this->m_internal_mdspan.data_handle()) {
             m_allocator.deallocate(this->data_handle(), this->size());
@@ -138,7 +138,7 @@ public:
      * @param other the Chunk to move
      * @return *this
      */
-    Chunk& operator=(Chunk&& other)
+    Chunk& operator=(Chunk&& other) noexcept
     {
         if (this == &other) {
             return *this;

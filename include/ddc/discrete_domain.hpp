@@ -296,6 +296,8 @@ public:
     using mlength_type [[deprecated("Use `discrete_vector_type` instead")]] = discrete_vector_type;
 #endif
 
+    using discrete_vector_type = DiscreteVector<>;
+
     static KOKKOS_FUNCTION constexpr std::size_t rank()
     {
         return 0;

@@ -59,6 +59,8 @@ public:
 
     using mlength_type = DiscreteVector<DDims...>;
 
+    using discrete_vector_type = DiscreteVector<DDims...>;
+
 private:
     DiscreteElement<DDims...> m_element_begin;
 
@@ -285,6 +287,8 @@ public:
     using discrete_element_type = DiscreteElement<>;
 
     using mlength_type = DiscreteVector<>;
+
+    using discrete_vector_type = DiscreteVector<>;
 
     static KOKKOS_FUNCTION constexpr std::size_t rank()
     {

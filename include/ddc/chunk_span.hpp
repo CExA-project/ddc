@@ -39,9 +39,8 @@ inline constexpr bool
         enable_borrowed_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>>
         = true;
 
-template <class ElementType, class... DDims, class LayoutStridedPolicy, class MemorySpace>
-class ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy, MemorySpace>
-    : public ChunkCommon<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy>
+template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
+class ChunkSpan : public ChunkCommon<ElementType, SupportType, LayoutStridedPolicy>
 {
     static_assert(
             std::is_same_v<LayoutStridedPolicy, Kokkos::layout_left>
@@ -50,19 +49,14 @@ class ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy, Memo
             "ChunkSpan only supports layout_left, layout_right or layout_stride");
 
 protected:
-    using base_type = ChunkCommon<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy>;
+    using base_type = ChunkCommon<ElementType, SupportType, LayoutStridedPolicy>;
 
 public:
     /// type of a span of this full chunk
-    using span_type
-            = ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy, MemorySpace>;
+    using span_type = ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>;
 
     /// type of a view of this full chunk
-    using view_type = ChunkSpan<
-            ElementType const,
-            DiscreteDomain<DDims...>,
-            LayoutStridedPolicy,
-            MemorySpace>;
+    using view_type = ChunkSpan<ElementType const, SupportType, LayoutStridedPolicy, MemorySpace>;
 
     using discrete_domain_type = typename base_type::discrete_domain_type;
 
@@ -143,7 +137,7 @@ public:
             class OElementType,
             class Allocator,
             class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
-    ChunkSpan(Chunk<OElementType, discrete_domain_type, Allocator>&& other) noexcept = delete;
+    ChunkSpan(Chunk<OElementType, SupportType, Allocator>&& other) noexcept = delete;
 
     /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data
      * @param other the Chunk to view
@@ -153,7 +147,7 @@ public:
             class Allocator,
             class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
     KOKKOS_FUNCTION constexpr explicit ChunkSpan(
-            Chunk<OElementType, discrete_domain_type, Allocator>& other) noexcept
+            Chunk<OElementType, SupportType, Allocator>& other) noexcept
         : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }
@@ -169,7 +163,7 @@ public:
             class Allocator,
             class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
     KOKKOS_FUNCTION constexpr explicit ChunkSpan(
-            Chunk<OElementType, discrete_domain_type, Allocator> const& other) noexcept
+            Chunk<OElementType, SupportType, Allocator> const& other) noexcept
         : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }
@@ -179,8 +173,7 @@ public:
      */
     template <class OElementType>
     KOKKOS_FUNCTION constexpr explicit ChunkSpan(
-            ChunkSpan<OElementType, discrete_domain_type, layout_type, MemorySpace> const&
-                    other) noexcept
+            ChunkSpan<OElementType, SupportType, layout_type, MemorySpace> const& other) noexcept
         : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }
@@ -192,7 +185,7 @@ public:
     template <
             class Mapping = mapping_type,
             std::enable_if_t<std::is_constructible_v<Mapping, extents_type>, int> = 0>
-    KOKKOS_FUNCTION constexpr ChunkSpan(ElementType* const ptr, discrete_domain_type const& domain)
+    KOKKOS_FUNCTION constexpr ChunkSpan(ElementType* const ptr, SupportType const& domain)
         : base_type(ptr, domain)
     {
     }
@@ -203,12 +196,13 @@ public:
      */
     KOKKOS_FUNCTION constexpr ChunkSpan(
             allocation_mdspan_type allocation_mdspan,
-            discrete_domain_type const& domain)
+            SupportType const& domain)
         : base_type(allocation_mdspan, domain)
     {
-        assert(((allocation_mdspan.extent(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)
-                 == static_cast<std::size_t>(domain.template extent<DDims>().value()))
-                && ...));
+        for (std::size_t i = 0; i < SupportType::rank(); ++i) {
+            assert(allocation_mdspan.extent(i)
+                   == static_cast<std::size_t>(detail::array(domain.extents())[i]));
+        }
     }
 
     /** Constructs a new ChunkSpan from scratch
@@ -216,11 +210,9 @@ public:
      * @param domain the domain that sustains the view
      */
     template <class KokkosView, class = std::enable_if_t<Kokkos::is_view_v<KokkosView>>>
-    KOKKOS_FUNCTION constexpr ChunkSpan(
-            KokkosView const& view,
-            discrete_domain_type const& domain) noexcept
+    KOKKOS_FUNCTION constexpr ChunkSpan(KokkosView const& view, SupportType const& domain) noexcept
         : ChunkSpan(
-                  detail::build_mdspan(view, std::make_index_sequence<sizeof...(DDims)> {}),
+                  detail::build_mdspan(view, std::make_index_sequence<SupportType::rank()> {}),
                   domain)
     {
     }
@@ -239,65 +231,66 @@ public:
      */
     KOKKOS_DEFAULTED_FUNCTION constexpr ChunkSpan& operator=(ChunkSpan&& other) noexcept = default;
 
-    /** Slice out some dimensions
-     */
-    template <class... QueryDDims>
-    KOKKOS_FUNCTION constexpr auto operator[](
-            DiscreteElement<QueryDDims...> const& slice_spec) const
-    {
-        auto subview = Kokkos::submdspan(allocation_mdspan(), get_slicer_for<DDims>(slice_spec)...);
-        using layout_type = typename decltype(subview)::layout_type;
-        using extents_type = typename decltype(subview)::extents_type;
-        using detail::TypeSeq;
-        using OutTypeSeqDDims = type_seq_remove_t<TypeSeq<DDims...>, TypeSeq<QueryDDims...>>;
-        using OutDDom = detail::convert_type_seq_to_discrete_domain_t<OutTypeSeqDDims>;
-        if constexpr (
-                std::is_same_v<layout_type, Kokkos::Experimental::layout_left_padded<>>
-                || std::is_same_v<layout_type, Kokkos::Experimental::layout_right_padded<>>) {
-            Kokkos::layout_stride::mapping<extents_type> const mapping_stride(subview.mapping());
-            Kokkos::mdspan<ElementType, extents_type, Kokkos::layout_stride> const
-                    a(subview.data_handle(), mapping_stride);
-            return ChunkSpan<
-                    ElementType,
-                    OutDDom,
-                    Kokkos::layout_stride,
-                    memory_space>(a, OutDDom(this->m_domain));
-        } else {
-            return ChunkSpan<
-                    ElementType,
-                    OutDDom,
-                    layout_type,
-                    memory_space>(subview, OutDDom(this->m_domain));
-        }
-    }
+    // /** Slice out some dimensions
+    //  */
+    // template <class... QueryDDims>
+    // KOKKOS_FUNCTION constexpr auto operator[](
+    //         DiscreteElement<QueryDDims...> const& slice_spec) const
+    // {
+    //     auto subview = Kokkos::submdspan(allocation_mdspan(), get_slicer_for<DDims>(slice_spec)...);
+    //     using layout_type = typename decltype(subview)::layout_type;
+    //     using extents_type = typename decltype(subview)::extents_type;
+    //     using detail::TypeSeq;
+    //     using OutTypeSeqDDims
+    //             = type_seq_remove_t<detail::ToTypeSeq<SupportType>, TypeSeq<QueryDDims...>>;
+    //     using OutDDom = detail::convert_type_seq_to_discrete_domain_t<OutTypeSeqDDims>;
+    //     if constexpr (
+    //             std::is_same_v<layout_type, Kokkos::Experimental::layout_left_padded<>>
+    //             || std::is_same_v<layout_type, Kokkos::Experimental::layout_right_padded<>>) {
+    //         Kokkos::layout_stride::mapping<extents_type> const mapping_stride(subview.mapping());
+    //         Kokkos::mdspan<ElementType, extents_type, Kokkos::layout_stride> const
+    //                 a(subview.data_handle(), mapping_stride);
+    //         return ChunkSpan<
+    //                 ElementType,
+    //                 OutDDom,
+    //                 Kokkos::layout_stride,
+    //                 memory_space>(a, OutDDom(this->m_domain));
+    //     } else {
+    //         return ChunkSpan<
+    //                 ElementType,
+    //                 OutDDom,
+    //                 layout_type,
+    //                 memory_space>(subview, OutDDom(this->m_domain));
+    //     }
+    // }
 
-    /** Restrict to a subdomain
-     */
-    template <class... QueryDDims>
-    KOKKOS_FUNCTION constexpr auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
-    {
-        auto subview = Kokkos::submdspan(allocation_mdspan(), get_slicer_for<DDims>(odomain)...);
-        using layout_type = typename decltype(subview)::layout_type;
-        using extents_type = typename decltype(subview)::extents_type;
-        if constexpr (
-                std::is_same_v<layout_type, Kokkos::Experimental::layout_left_padded<>>
-                || std::is_same_v<layout_type, Kokkos::Experimental::layout_right_padded<>>) {
-            Kokkos::layout_stride::mapping<extents_type> const mapping_stride(subview.mapping());
-            Kokkos::mdspan<ElementType, extents_type, Kokkos::layout_stride> const
-                    a(subview.data_handle(), mapping_stride);
-            return ChunkSpan<
-                    ElementType,
-                    decltype(this->m_domain.restrict_with(odomain)),
-                    Kokkos::layout_stride,
-                    memory_space>(a, this->m_domain.restrict_with(odomain));
-        } else {
-            return ChunkSpan<
-                    ElementType,
-                    decltype(this->m_domain.restrict_with(odomain)),
-                    layout_type,
-                    memory_space>(subview, this->m_domain.restrict_with(odomain));
-        }
-    }
+    // /** Restrict to a subdomain
+    //  */
+    // template <class... QueryDDims>
+    // KOKKOS_FUNCTION constexpr auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
+    // {
+    //     auto subview = Kokkos::submdspan(allocation_mdspan(), get_slicer_for<DDims>(odomain)...);
+    //     using layout_type = typename decltype(subview)::layout_type;
+    //     using extents_type = typename decltype(subview)::extents_type;
+    //     if constexpr (
+    //             std::is_same_v<layout_type, Kokkos::Experimental::layout_left_padded<>>
+    //             || std::is_same_v<layout_type, Kokkos::Experimental::layout_right_padded<>>) {
+    //         Kokkos::layout_stride::mapping<extents_type> const mapping_stride(subview.mapping());
+    //         Kokkos::mdspan<ElementType, extents_type, Kokkos::layout_stride> const
+    //                 a(subview.data_handle(), mapping_stride);
+    //         return ChunkSpan<
+    //                 ElementType,
+    //                 decltype(this->m_domain.restrict_with(odomain)),
+    //                 Kokkos::layout_stride,
+    //                 memory_space>(a, this->m_domain.restrict_with(odomain));
+    //     } else {
+    //         return ChunkSpan<
+    //                 ElementType,
+    //                 decltype(this->m_domain.restrict_with(odomain)),
+    //                 layout_type,
+    //                 memory_space>(subview, this->m_domain.restrict_with(odomain));
+    //     }
+    // }
 
     /** Element access using a list of DiscreteElement
      * @param delems discrete elements
@@ -307,7 +300,7 @@ public:
     KOKKOS_FUNCTION constexpr reference operator()(DElems const&... delems) const noexcept
     {
         static_assert(
-                sizeof...(DDims) == (0 + ... + DElems::size()),
+                SupportType::rank() == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
         assert(this->m_domain.is_inside(delems...));
@@ -341,9 +334,9 @@ public:
         auto kokkos_layout = detail::build_kokkos_layout(
                 s.extents(),
                 s.mapping(),
-                std::make_index_sequence<sizeof...(DDims)> {});
+                std::make_index_sequence<SupportType::rank()> {});
         return Kokkos::View<
-                detail::mdspan_to_kokkos_element_t<ElementType, sizeof...(DDims)>,
+                detail::mdspan_to_kokkos_element_t<ElementType, SupportType::rank()>,
                 decltype(kokkos_layout),
                 MemorySpace>(s.data_handle(), kokkos_layout);
     }
@@ -359,33 +352,31 @@ public:
     }
 };
 
-template <class DataType, class... Properties, class... DDims>
+template <class DataType, class... Properties, class SupportType>
 KOKKOS_DEDUCTION_GUIDE ChunkSpan(
         Kokkos::View<DataType, Properties...> const& view,
-        DiscreteDomain<DDims...> domain)
+        SupportType domain)
         -> ChunkSpan<
                 detail::kokkos_to_mdspan_element_t<
                         typename Kokkos::View<DataType, Properties...>::data_type>,
-                DiscreteDomain<DDims...>,
+                SupportType,
                 detail::kokkos_to_mdspan_layout_t<
                         typename Kokkos::View<DataType, Properties...>::array_layout>,
                 typename Kokkos::View<DataType, Properties...>::memory_space>;
 
 template <class ElementType, class SupportType, class Allocator>
-ChunkSpan(Chunk<ElementType, SupportType, Allocator>& other)
-        -> ChunkSpan<
-                ElementType,
-                SupportType,
-                Kokkos::layout_right,
-                typename Allocator::memory_space>;
+ChunkSpan(Chunk<ElementType, SupportType, Allocator>& other) -> ChunkSpan<
+        ElementType,
+        SupportType,
+        Kokkos::layout_right,
+        typename Allocator::memory_space>;
 
 template <class ElementType, class SupportType, class Allocator>
-ChunkSpan(Chunk<ElementType, SupportType, Allocator> const& other)
-        -> ChunkSpan<
-                const ElementType,
-                SupportType,
-                Kokkos::layout_right,
-                typename Allocator::memory_space>;
+ChunkSpan(Chunk<ElementType, SupportType, Allocator> const& other) -> ChunkSpan<
+        const ElementType,
+        SupportType,
+        Kokkos::layout_right,
+        typename Allocator::memory_space>;
 
 template <
         class ElementType,

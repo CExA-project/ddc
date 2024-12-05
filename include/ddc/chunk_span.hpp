@@ -310,11 +310,10 @@ public:
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        assert(((select<DDims>(take<DDims>(delems...)) >= front<DDims>(this->m_domain)) && ...));
-        assert(((select<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain)) && ...));
+        assert(this->m_domain.is_inside(delems...));
         return DDC_MDSPAN_ACCESS_OP(
                 this->m_allocation_mdspan,
-                (select<DDims>(take<DDims>(delems...)) - front<DDims>(this->m_domain))...);
+                detail::array(this->m_domain.distance_from_front(delems...)));
     }
 
     /** Access to the underlying allocation pointer

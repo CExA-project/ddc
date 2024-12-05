@@ -187,6 +187,33 @@ public:
                 DiscreteVector<DDims...>((get_or<DDims>(oextents, get<DDims>(myextents)))...));
     }
 
+    template <class... DElems>
+    bool is_inside(DElems const&... delems) const noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DElems::size()),
+                "Invalid number of dimensions");
+        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
+        return (((DiscreteElement<DDims>(take<DDims>(delems...))
+                  >= DiscreteElement<DDims>(m_element_begin))
+                 && ...)
+                && ((DiscreteElement<DDims>(take<DDims>(delems...))
+                     < DiscreteElement<DDims>(m_element_end))
+                    && ...));
+    }
+
+    template <class... DElems>
+    DiscreteVector<DDims...> distance_from_front(DElems const&... delems) const noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DElems::size()),
+                "Invalid number of dimensions");
+        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
+        return DiscreteVector<DDims...>(
+                (DiscreteElement<DDims>(take<DDims>(delems...))
+                 - DiscreteElement<DDims>(m_element_begin))...);
+    }
+
     KOKKOS_FUNCTION constexpr bool empty() const noexcept
     {
         return size() == 0;
@@ -359,6 +386,26 @@ public:
             DiscreteDomain<ODims...> const& /* odomain */) const
     {
         return *this;
+    }
+
+    static bool is_inside() noexcept
+    {
+        return true;
+    }
+
+    static bool is_inside(DiscreteElement<>) noexcept
+    {
+        return true;
+    }
+
+    static DiscreteVector<> distance_from_front() noexcept
+    {
+        return DiscreteVector<>();
+    }
+
+    static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
+    {
+        return DiscreteVector<>();
     }
 
     static KOKKOS_FUNCTION constexpr bool empty() noexcept

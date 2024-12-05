@@ -32,21 +32,21 @@ KOKKOS_FUNCTION auto get_domain(ChunkType const& chunk) noexcept
 template <class ElementType, class SupportType, class LayoutStridedPolicy>
 class ChunkCommon;
 
-template <class ElementType, class... DDims, class LayoutStridedPolicy>
-class ChunkCommon<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy>
+template <class ElementType, class SupportType, class LayoutStridedPolicy>
+class ChunkCommon
 {
 public:
-    using discrete_domain_type = DiscreteDomain<DDims...>;
+    using discrete_domain_type = SupportType;
 
     /// The dereferenceable part of the co-domain but with a different domain, starting at 0
     using allocation_mdspan_type = Kokkos::mdspan<
             ElementType,
-            Kokkos::dextents<std::size_t, sizeof...(DDims)>,
+            Kokkos::dextents<std::size_t, SupportType::rank()>,
             LayoutStridedPolicy>;
 
     using const_allocation_mdspan_type = Kokkos::mdspan<
             const ElementType,
-            Kokkos::dextents<std::size_t, sizeof...(DDims)>,
+            Kokkos::dextents<std::size_t, SupportType::rank()>,
             LayoutStridedPolicy>;
 
     using discrete_element_type = typename discrete_domain_type::discrete_element_type;
@@ -86,7 +86,7 @@ protected:
     allocation_mdspan_type m_allocation_mdspan;
 
     /// The mesh on which this chunk is defined
-    discrete_domain_type m_domain;
+    SupportType m_domain;
 
 public:
     static KOKKOS_FUNCTION constexpr int rank() noexcept
@@ -123,9 +123,9 @@ private:
     template <class Mapping = mapping_type>
     static KOKKOS_FUNCTION constexpr std::
             enable_if_t<std::is_constructible_v<Mapping, extents_type>, allocation_mdspan_type>
-            make_allocation_mdspan(ElementType* ptr, discrete_domain_type const& domain)
+            make_allocation_mdspan(ElementType* ptr, SupportType const& domain)
     {
-        return allocation_mdspan_type(ptr, ::ddc::extents<DDims>(domain).value()...);
+        return allocation_mdspan_type(ptr, detail::array(domain.extents()));
     }
 
 public:
@@ -134,7 +134,7 @@ public:
         return m_allocation_mdspan.accessor();
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteVector<DDims...> extents() const noexcept
+    KOKKOS_FUNCTION constexpr SupportType::discrete_vector_type extents() const noexcept
     {
         return m_domain.extents();
     }
@@ -173,13 +173,14 @@ public:
     template <class QueryDDim>
     KOKKOS_FUNCTION constexpr size_type stride() const
     {
-        return m_allocation_mdspan.stride(type_seq_rank_v<QueryDDim, detail::TypeSeq<DDims...>>);
+        return m_allocation_mdspan.stride(
+                type_seq_rank_v<QueryDDim, detail::ToTypeSeq<SupportType>>);
     }
 
     /** Provide access to the domain on which this chunk is defined
      * @return the domain on which this chunk is defined
      */
-    KOKKOS_FUNCTION constexpr discrete_domain_type domain() const noexcept
+    KOKKOS_FUNCTION constexpr SupportType domain() const noexcept
     {
         return m_domain;
     }
@@ -203,7 +204,7 @@ protected:
      */
     KOKKOS_FUNCTION constexpr ChunkCommon(
             allocation_mdspan_type allocation_mdspan,
-            discrete_domain_type const& domain) noexcept
+            SupportType const& domain) noexcept
         : m_allocation_mdspan(std::move(allocation_mdspan))
         , m_domain(domain)
     {
@@ -216,7 +217,7 @@ protected:
     template <
             class Mapping = mapping_type,
             std::enable_if_t<std::is_constructible_v<Mapping, extents_type>, int> = 0>
-    KOKKOS_FUNCTION constexpr ChunkCommon(ElementType* ptr, discrete_domain_type const& domain)
+    KOKKOS_FUNCTION constexpr ChunkCommon(ElementType* ptr, SupportType const& domain)
         : m_allocation_mdspan(make_allocation_mdspan(ptr, domain))
         , m_domain(domain)
     {

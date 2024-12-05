@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <array>
+#include <list>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -39,10 +40,11 @@ struct DDimY : ddc::NonUniformPointSampling<DimY>
 {
 };
 
-std::array<double, 4> const array_points_x VALUES_X;
-std::vector<double> const vector_points_x VALUES_X;
+std::array<ddc::Coordinate<DimX>, 4> const array_points_x VALUES_X;
+std::list<ddc::Coordinate<DimX>> const list_points_x VALUES_X;
+std::vector<ddc::Coordinate<DimX>> const vector_points_x VALUES_X;
 
-std::vector<double> const vector_points_y VALUES_Y;
+std::vector<ddc::Coordinate<DimY>> const vector_points_y VALUES_Y;
 
 ddc::DiscreteElement<DDimX> constexpr point_ix(2);
 ddc::Coordinate<DimX> constexpr point_rx(0.3);
@@ -55,7 +57,7 @@ ddc::Coordinate<DimX, DimY> constexpr point_rxy(0.3, 0.2);
 
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(NON_UNIFORM_POINT_SAMPLING_CPP)
 
-TEST(NonUniformPointSamplingTest, ListConstructor)
+TEST(NonUniformPointSamplingTest, InitializerListConstructor)
 {
     DDimX::Impl<DDimX, Kokkos::HostSpace> const ddim_x(VALUES_X);
     EXPECT_EQ(ddim_x.size(), 4);
@@ -73,6 +75,13 @@ TEST(NonUniformPointSamplingTest, VectorConstructor)
 {
     DDimX::Impl<DDimX, Kokkos::HostSpace> const ddim_x(vector_points_x);
     EXPECT_EQ(ddim_x.size(), vector_points_x.size());
+    EXPECT_EQ(ddim_x.coordinate(point_ix), point_rx);
+}
+
+TEST(NonUniformPointSamplingTest, ListConstructor)
+{
+    DDimX::Impl<DDimX, Kokkos::HostSpace> const ddim_x(list_points_x);
+    EXPECT_EQ(ddim_x.size(), list_points_x.size());
     EXPECT_EQ(ddim_x.coordinate(point_ix), point_rx);
 }
 

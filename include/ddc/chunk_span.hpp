@@ -161,7 +161,7 @@ public:
     /** Constructs a new ChunkSpan by move
      * @param other the ChunkSpan to move
      */
-    KOKKOS_DEFAULTED_FUNCTION constexpr ChunkSpan(ChunkSpan&& other) = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr ChunkSpan(ChunkSpan&& other) noexcept = default;
 
     /** Forbids to construct a ChunkSpan from a rvalue of type Chunk.
      */
@@ -251,7 +251,7 @@ public:
     {
     }
 
-    KOKKOS_DEFAULTED_FUNCTION ~ChunkSpan() = default;
+    KOKKOS_DEFAULTED_FUNCTION ~ChunkSpan() noexcept = default;
 
     /** Copy-assigns a new value to this ChunkSpan, yields a new view to the same data
      * @param other the ChunkSpan to copy
@@ -263,7 +263,7 @@ public:
      * @param other the ChunkSpan to move
      * @return *this
      */
-    KOKKOS_DEFAULTED_FUNCTION constexpr ChunkSpan& operator=(ChunkSpan&& other) = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr ChunkSpan& operator=(ChunkSpan&& other) noexcept = default;
 
     /** Slice out some dimensions
      */

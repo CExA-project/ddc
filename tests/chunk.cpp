@@ -13,6 +13,10 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "ddc/kokkos_allocator.hpp"
+#include "ddc/parallel_fill.hpp"
+#include "ddc/strided_discrete_domain.hpp"
+
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP) {
 
 using DElem0D = ddc::DiscreteElement<>;
@@ -633,4 +637,13 @@ TEST(Chunk2DTest, Mirror)
             EXPECT_EQ(chunk2(ix, iy), chunk(ix, iy));
         }
     }
+}
+
+TEST(ChunkStridedDiscreteDomain, Constructor)
+{
+    ddc::StridedDiscreteDomain<DDimX, DDimY> dom(lbound_x_y, nelems_x_y, DVectXY(10, 10));
+    ddc::Chunk chk("", dom, ddc::HostAllocator<int>());
+    ddc::parallel_fill(chk.span_view(), 2);
+    EXPECT_EQ(chk(lbound_x_y), 2);
+    EXPECT_EQ(chk(lbound_x_y + DVectXY(10, 10)), 2);
 }

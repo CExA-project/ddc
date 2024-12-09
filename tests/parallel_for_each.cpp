@@ -154,3 +154,25 @@ TEST(ParallelForEachParallelDevice, TwoDimensions)
 {
     TestParallelForEachParallelDeviceTwoDimensions();
 }
+
+void TestParallelForEachParallelDeviceTwoDimensionsStrided()
+{
+    using DDomXY = ddc::StridedDiscreteDomain<DDimX, DDimY>;
+    DDomXY const dom(lbound_x_y, nelems_x_y, DVectXY(3, 3));
+    ddc::Chunk<int, DDomXY, ddc::DeviceAllocator<int>> storage(dom);
+    Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
+    ddc::ChunkSpan const view(storage.span_view());
+    ddc::parallel_for_each(dom, KOKKOS_LAMBDA(DElemXY const ixy) { view(ixy) += 1; });
+    int const* const ptr = storage.data_handle();
+    int sum;
+    Kokkos::parallel_reduce(
+            dom.size(),
+            KOKKOS_LAMBDA(std::size_t i, int& local_sum) { local_sum += ptr[i]; },
+            Kokkos::Sum<int>(sum));
+    EXPECT_EQ(sum, dom.size());
+}
+
+TEST(ParallelForEachParallelDevice, TwoDimensionsStrided)
+{
+    TestParallelForEachParallelDeviceTwoDimensionsStrided();
+}

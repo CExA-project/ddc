@@ -174,6 +174,12 @@ public:
         return DiscreteDomain(front() + n1, extents() - n1 - n2);
     }
 
+    KOKKOS_FUNCTION constexpr DiscreteElement<DDims...> operator()(
+            DiscreteVector<DDims...> const& dvect) const noexcept
+    {
+        return m_element_begin + dvect;
+    }
+
     template <class... ODDims>
     KOKKOS_FUNCTION constexpr auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
     {

@@ -197,6 +197,12 @@ public:
         return StridedDiscreteDomain(front() + prod(n1, m_strides), extents() - n1 - n2, m_strides);
     }
 
+    KOKKOS_FUNCTION constexpr DiscreteElement<DDims...> operator()(
+            DiscreteVector<DDims...> const& dvect) const noexcept
+    {
+        return m_element_begin + prod(dvect, m_strides);
+    }
+
     // template <class... ODDims>
     // KOKKOS_FUNCTION constexpr auto restrict_with(
     //         StridedDiscreteDomain<ODDims...> const& odomain) const
@@ -219,16 +225,18 @@ public:
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
         auto const test1
-                = ((select<DDims>(take<DDims>(delems...)) >= select<DDims>(m_element_begin))
+                = ((DiscreteElement<DDims>(take<DDims>(delems...))
+                    >= DiscreteElement<DDims>(m_element_begin))
                    && ...);
         auto const test2
-                = ((select<DDims>(take<DDims>(delems...))
-                    < (select<DDims>(m_element_begin)
-                       + select<DDims>(m_extents) * select<DDims>(m_strides)))
+                = ((DiscreteElement<DDims>(take<DDims>(delems...))
+                    < (DiscreteElement<DDims>(m_element_begin)
+                       + DiscreteVector<DDims>(m_extents) * DiscreteVector<DDims>(m_strides)))
                    && ...);
         auto const test3
-                = ((((select<DDims>(take<DDims>(delems...)) - select<DDims>(m_element_begin))
-                     % select<DDims>(m_strides))
+                = ((((DiscreteElement<DDims>(take<DDims>(delems...))
+                      - DiscreteElement<DDims>(m_element_begin))
+                     % DiscreteVector<DDims>(m_strides))
                     == 0)
                    && ...);
         return test1 && test2 && test3;
@@ -243,8 +251,9 @@ public:
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
         assert(is_inside(delems...));
         return DiscreteVector<DDims...>(
-                ((select<DDims>(take<DDims>(delems...)) - select<DDims>(m_element_begin))
-                 / select<DDims>(m_strides))...);
+                ((DiscreteElement<DDims>(take<DDims>(delems...))
+                  - DiscreteElement<DDims>(m_element_begin))
+                 / DiscreteVector<DDims>(m_strides))...);
     }
 
     KOKKOS_FUNCTION constexpr bool empty() const noexcept
@@ -474,8 +483,8 @@ KOKKOS_FUNCTION constexpr StridedDiscreteDomain<QueryDDims...> select(
         StridedDiscreteDomain<DDims...> const& domain)
 {
     return StridedDiscreteDomain<QueryDDims...>(
-            select<QueryDDims...>(domain.front()),
-            select<QueryDDims...>(domain.extents()));
+            DiscreteElement<QueryDDims...>(domain.front()),
+            DiscreteElement<QueryDDims...>(domain.extents()));
 }
 
 namespace detail {
@@ -521,7 +530,7 @@ replace_dim_of_1d(
         [[maybe_unused]] StridedDiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
     if constexpr (std::is_same_v<DDimA, DDim1>) {
-        return ddc::select<DDim2>(DDom_b);
+        return ddc::StridedDiscreteDomain<DDim2>(DDom_b);
     } else {
         return DDom_a;
     }
@@ -546,28 +555,28 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
                     DDim1,
                     DDim2,
                     DDimsA,
-                    DDimsB...>(ddc::select<DDimsA>(DDom_a), DDom_b)...);
+                    DDimsB...>(ddc::StridedDiscreteDomain<DDimsA>(DDom_a), DDom_b)...);
 }
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDims...> extents(
         StridedDiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteVector<QueryDDims...>(select<QueryDDims>(domain).size()...);
+    return DiscreteVector<QueryDDims...>(StridedDiscreteDomain<QueryDDims>(domain).size()...);
 }
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> front(
         StridedDiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteElement<QueryDDims...>(select<QueryDDims>(domain).front()...);
+    return DiscreteElement<QueryDDims...>(StridedDiscreteDomain<QueryDDims>(domain).front()...);
 }
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> back(
         StridedDiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteElement<QueryDDims...>(select<QueryDDims>(domain).back()...);
+    return DiscreteElement<QueryDDims...>(StridedDiscreteDomain<QueryDDims>(domain).back()...);
 }
 
 template <class DDim>

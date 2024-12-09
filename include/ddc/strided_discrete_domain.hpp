@@ -197,6 +197,12 @@ public:
         return StridedDiscreteDomain(front() + prod(n1, m_strides), extents() - n1 - n2, m_strides);
     }
 
+    KOKKOS_FUNCTION constexpr DiscreteElement<DDims...> operator()(
+            DiscreteVector<DDims...> const& dvect) const noexcept
+    {
+        return m_element_begin + prod(dvect, m_strides);
+    }
+
     // template <class... ODDims>
     // KOKKOS_FUNCTION constexpr auto restrict_with(
     //         StridedDiscreteDomain<ODDims...> const& odomain) const

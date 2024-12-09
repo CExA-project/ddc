@@ -402,6 +402,12 @@ public:
         return *this;
     }
 
+    KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
+            DiscreteVector<> const& dvect) const noexcept
+    {
+        return DiscreteElement<>();
+    }
+
 #if defined(DDC_BUILD_DEPRECATED_CODE)
     template <class... ODims>
     [[deprecated("Use `restrict_with` instead")]] KOKKOS_FUNCTION constexpr DiscreteDomain restrict(

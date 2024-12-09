@@ -387,6 +387,12 @@ public:
         return *this;
     }
 
+    KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
+            DiscreteVector<> const& /* dvect */) const noexcept
+    {
+        return DiscreteElement<>();
+    }
+
     template <class... ODims>
     KOKKOS_FUNCTION constexpr DiscreteDomain restrict_with(
             DiscreteDomain<ODims...> const& /* odomain */) const

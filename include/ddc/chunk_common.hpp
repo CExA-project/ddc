@@ -173,8 +173,7 @@ public:
     template <class QueryDDim>
     KOKKOS_FUNCTION constexpr size_type stride() const
     {
-        return m_allocation_mdspan.stride(
-                type_seq_rank_v<QueryDDim, detail::ToTypeSeq<SupportType>>);
+        return m_allocation_mdspan.stride(type_seq_rank_v<QueryDDim, to_type_seq_t<SupportType>>);
     }
 
     /** Provide access to the domain on which this chunk is defined

@@ -634,3 +634,12 @@ TEST(Chunk2DTest, Mirror)
         }
     }
 }
+
+TEST(ChunkStridedDiscreteDomain, Constructor)
+{
+    ddc::StridedDiscreteDomain<DDimX, DDimY> dom(lbound_x_y, nelems_x_y, DVectXY(10, 10));
+    ddc::Chunk chk("", dom, ddc::HostAllocator<int>());
+    ddc::parallel_fill(chk.span_view(), 2);
+    EXPECT_EQ(chk(lbound_x_y), 2);
+    EXPECT_EQ(chk(lbound_x_y + DVectXY(10, 10)), 2);
+}

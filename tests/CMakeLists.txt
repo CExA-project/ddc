@@ -29,6 +29,7 @@ add_executable(
     relocatable_device_code.cpp
     relocatable_device_code_initialization.cpp
     single_discretization.cpp
+    strided_discrete_domain.cpp
     tagged_vector.cpp
     transform_reduce.cpp
     type_seq.cpp

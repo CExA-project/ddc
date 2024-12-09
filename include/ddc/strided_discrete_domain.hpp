@@ -1,0 +1,729 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
+#pragma once
+
+#include <cassert>
+#include <cstddef>
+#include <iterator>
+#include <tuple>
+#include <type_traits>
+
+#include <Kokkos_Macros.hpp>
+
+#include "ddc/detail/type_seq.hpp"
+#include "ddc/discrete_element.hpp"
+#include "ddc/discrete_vector.hpp"
+
+namespace ddc {
+
+template <class DDim>
+struct StridedDiscreteDomainIterator;
+
+template <class... DDims>
+class StridedDiscreteDomain;
+
+template <class T>
+struct is_strided_discrete_domain : std::false_type
+{
+};
+
+template <class... Tags>
+struct is_strided_discrete_domain<StridedDiscreteDomain<Tags...>> : std::true_type
+{
+};
+
+template <class T>
+inline constexpr bool is_strided_discrete_domain_v = is_strided_discrete_domain<T>::value;
+
+
+namespace detail {
+
+template <class... Tags>
+struct ToTypeSeq<StridedDiscreteDomain<Tags...>>
+{
+    using type = TypeSeq<Tags...>;
+};
+
+} // namespace detail
+
+template <class... ODDims>
+DiscreteVector<ODDims...> prod(
+        DiscreteVector<ODDims...> const& lhs,
+        DiscreteVector<ODDims...> const& rhs) noexcept
+{
+    return DiscreteVector<ODDims...>((get<ODDims>(lhs) * get<ODDims>(rhs))...);
+}
+
+template <class... DDims>
+class StridedDiscreteDomain
+{
+    template <class...>
+    friend class StridedDiscreteDomain;
+
+public:
+    using discrete_element_type = DiscreteElement<DDims...>;
+
+    using discrete_vector_type = DiscreteVector<DDims...>;
+
+private:
+    DiscreteElement<DDims...> m_element_begin;
+
+    DiscreteVector<DDims...> m_extents;
+
+    DiscreteVector<DDims...> m_strides;
+
+public:
+    static KOKKOS_FUNCTION constexpr std::size_t rank()
+    {
+        return sizeof...(DDims);
+    }
+
+    KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain() = default;
+
+    /// Construct a StridedDiscreteDomain by copies and merge of domains
+    template <
+            class... DDoms,
+            class = std::enable_if_t<(is_strided_discrete_domain_v<DDoms> && ...)>>
+    KOKKOS_FUNCTION constexpr explicit StridedDiscreteDomain(DDoms const&... domains)
+        : m_element_begin(domains.front()...)
+        , m_extents(domains.extents()...)
+        , m_strides(domains.strides()...)
+    {
+    }
+
+    /** Construct a StridedDiscreteDomain starting from element_begin with size points.
+     * @param element_begin the lower bound in each direction
+     * @param size the number of points in each direction
+     */
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain(
+            discrete_element_type const& element_begin,
+            discrete_vector_type const& extents,
+            discrete_vector_type const& strides)
+        : m_element_begin(element_begin)
+        , m_extents(extents)
+        , m_strides(strides)
+    {
+    }
+
+    KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain(StridedDiscreteDomain const& x) = default;
+
+    KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain(StridedDiscreteDomain&& x) = default;
+
+    KOKKOS_DEFAULTED_FUNCTION ~StridedDiscreteDomain() = default;
+
+    KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain& operator=(StridedDiscreteDomain const& x)
+            = default;
+
+    KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain& operator=(StridedDiscreteDomain&& x) = default;
+
+    template <class... ODims>
+    KOKKOS_FUNCTION constexpr bool operator==(StridedDiscreteDomain<ODims...> const& other) const
+    {
+        if (empty() && other.empty()) {
+            return true;
+        }
+        return m_element_begin == other.m_element_begin && m_extents == other.m_extents
+               && m_strides == other.m_strides;
+    }
+
+#if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
+    // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
+    template <class... ODims>
+    KOKKOS_FUNCTION constexpr bool operator!=(StridedDiscreteDomain<ODims...> const& other) const
+    {
+        return !(*this == other);
+    }
+#endif
+
+    KOKKOS_FUNCTION constexpr std::size_t size() const
+    {
+        return (1UL * ... * get<DDims>(m_extents));
+    }
+
+    KOKKOS_FUNCTION constexpr discrete_vector_type extents() const noexcept
+    {
+        return m_extents;
+    }
+
+    KOKKOS_FUNCTION constexpr discrete_vector_type strides() const noexcept
+    {
+        return m_strides;
+    }
+
+    template <class QueryDDim>
+    KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDim> extent() const noexcept
+    {
+        return DiscreteVector<QueryDDim>(uid<QueryDDim>(m_extents));
+    }
+
+    KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept
+    {
+        return m_element_begin;
+    }
+
+    KOKKOS_FUNCTION constexpr discrete_element_type back() const noexcept
+    {
+        return discrete_element_type(
+                (uid<DDims>(m_element_begin)
+                 + (get<DDims>(m_extents) - 1) * get<DDims>(m_strides))...);
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain take_first(discrete_vector_type n) const
+    {
+        return StridedDiscreteDomain(front(), n, m_strides);
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain take_last(discrete_vector_type n) const
+    {
+        return StridedDiscreteDomain(front() + prod(extents() - n, m_strides), n, m_strides);
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove_first(discrete_vector_type n) const
+    {
+        return StridedDiscreteDomain(front() + prod(n, m_strides), extents() - n, m_strides);
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove_last(discrete_vector_type n) const
+    {
+        return StridedDiscreteDomain(front(), extents() - n, m_strides);
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove(
+            discrete_vector_type n1,
+            discrete_vector_type n2) const
+    {
+        return StridedDiscreteDomain(front() + prod(n1, m_strides), extents() - n1 - n2, m_strides);
+    }
+
+    // template <class... ODDims>
+    // KOKKOS_FUNCTION constexpr auto restrict_with(
+    //         StridedDiscreteDomain<ODDims...> const& odomain) const
+    // {
+    //     assert(((uid<ODDims>(m_element_begin) <= uid<ODDims>(odomain.m_element_begin)) && ...));
+    //     assert(((uid<ODDims>(m_element_end) >= uid<ODDims>(odomain.m_element_end)) && ...));
+    //     const DiscreteVector<DDims...> myextents = extents();
+    //     const DiscreteVector<ODDims...> oextents = odomain.extents();
+    //     return StridedDiscreteDomain(
+    //             DiscreteElement<DDims...>(
+    //                     (uid_or<DDims>(odomain.m_element_begin, uid<DDims>(m_element_begin)))...),
+    //             DiscreteVector<DDims...>((get_or<DDims>(oextents, get<DDims>(myextents)))...));
+    // }
+
+    template <class... DElems>
+    bool is_inside(DElems const&... delems) const noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DElems::size()),
+                "Invalid number of dimensions");
+        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
+        auto const test1
+                = ((select<DDims>(take<DDims>(delems...)) >= select<DDims>(m_element_begin))
+                   && ...);
+        auto const test2
+                = ((select<DDims>(take<DDims>(delems...))
+                    < (select<DDims>(m_element_begin)
+                       + select<DDims>(m_extents) * select<DDims>(m_strides)))
+                   && ...);
+        auto const test3
+                = ((((select<DDims>(take<DDims>(delems...)) - select<DDims>(m_element_begin))
+                     % select<DDims>(m_strides))
+                    == 0)
+                   && ...);
+        return test1 && test2 && test3;
+    }
+
+    template <class... DElems>
+    DiscreteVector<DDims...> distance_from_front(DElems const&... delems) const noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DElems::size()),
+                "Invalid number of dimensions");
+        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
+        assert(is_inside(delems...));
+        return DiscreteVector<DDims...>(
+                ((select<DDims>(take<DDims>(delems...)) - select<DDims>(m_element_begin))
+                 / select<DDims>(m_strides))...);
+    }
+
+    KOKKOS_FUNCTION constexpr bool empty() const noexcept
+    {
+        return size() == 0;
+    }
+
+    KOKKOS_FUNCTION constexpr explicit operator bool()
+    {
+        return !empty();
+    }
+
+    template <
+            std::size_t N = sizeof...(DDims),
+            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION auto begin() const
+    {
+        return StridedDiscreteDomainIterator<DDim0>(front(), m_strides);
+    }
+
+    template <
+            std::size_t N = sizeof...(DDims),
+            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION auto end() const
+    {
+        return StridedDiscreteDomainIterator<
+                DDim0>(m_element_begin + m_extents * m_strides, m_strides);
+    }
+
+    template <
+            std::size_t N = sizeof...(DDims),
+            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION auto cbegin() const
+    {
+        return StridedDiscreteDomainIterator<DDim0>(front(), m_strides);
+    }
+
+    template <
+            std::size_t N = sizeof...(DDims),
+            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION auto cend() const
+    {
+        return StridedDiscreteDomainIterator<
+                DDim0>(m_element_begin + m_extents * m_strides, m_strides);
+    }
+
+    template <
+            std::size_t N = sizeof...(DDims),
+            class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n)
+    {
+        return begin()[n];
+    }
+
+    template <
+            std::size_t N = sizeof...(DDims),
+            class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n) const
+    {
+        return begin()[n];
+    }
+};
+
+template <>
+class StridedDiscreteDomain<>
+{
+    template <class...>
+    friend class StridedDiscreteDomain;
+
+public:
+    using discrete_element_type = DiscreteElement<>;
+
+    using discrete_vector_type = DiscreteVector<>;
+
+    static KOKKOS_FUNCTION constexpr std::size_t rank()
+    {
+        return 0;
+    }
+
+    KOKKOS_DEFAULTED_FUNCTION constexpr StridedDiscreteDomain() = default;
+
+    // Construct a StridedDiscreteDomain from a reordered copy of `domain`
+    template <class... ODDims>
+    KOKKOS_FUNCTION constexpr explicit StridedDiscreteDomain(
+            [[maybe_unused]] StridedDiscreteDomain<ODDims...> const& domain)
+    {
+    }
+
+    /** Construct a StridedDiscreteDomain starting from element_begin with size points.
+     * @param element_begin the lower bound in each direction
+     * @param size the number of points in each direction
+     */
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain(
+            [[maybe_unused]] discrete_element_type const& element_begin,
+            [[maybe_unused]] discrete_vector_type const& size)
+    {
+    }
+
+    KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain(StridedDiscreteDomain const& x) = default;
+
+    KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain(StridedDiscreteDomain&& x) = default;
+
+    KOKKOS_DEFAULTED_FUNCTION ~StridedDiscreteDomain() = default;
+
+    KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain& operator=(StridedDiscreteDomain const& x)
+            = default;
+
+    KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain& operator=(StridedDiscreteDomain&& x) = default;
+
+    KOKKOS_FUNCTION constexpr bool operator==(
+            [[maybe_unused]] StridedDiscreteDomain const& other) const
+    {
+        return true;
+    }
+
+#if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
+    // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
+    KOKKOS_FUNCTION constexpr bool operator!=(StridedDiscreteDomain const& other) const
+    {
+        return !(*this == other);
+    }
+#endif
+
+    static KOKKOS_FUNCTION constexpr std::size_t size()
+    {
+        return 1;
+    }
+
+    static KOKKOS_FUNCTION constexpr discrete_vector_type extents() noexcept
+    {
+        return {};
+    }
+
+    static KOKKOS_FUNCTION constexpr discrete_element_type front() noexcept
+    {
+        return {};
+    }
+
+    static KOKKOS_FUNCTION constexpr discrete_element_type back() noexcept
+    {
+        return {};
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain take_first(
+            [[maybe_unused]] discrete_vector_type n) const
+    {
+        return *this;
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain take_last(
+            [[maybe_unused]] discrete_vector_type n) const
+    {
+        return *this;
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove_first(
+            [[maybe_unused]] discrete_vector_type n) const
+    {
+        return *this;
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove_last(
+            [[maybe_unused]] discrete_vector_type n) const
+    {
+        return *this;
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove(
+            [[maybe_unused]] discrete_vector_type n1,
+            [[maybe_unused]] discrete_vector_type n2) const
+    {
+        return *this;
+    }
+
+#if defined(DDC_BUILD_DEPRECATED_CODE)
+    template <class... ODims>
+    [[deprecated(
+            "Use `restrict_with` "
+            "instead")]] KOKKOS_FUNCTION constexpr StridedDiscreteDomain restrict(StridedDiscreteDomain<ODims...> const&
+                                                                                          odomain)
+            const
+    {
+        return restrict_with(odomain);
+    }
+#endif
+
+    template <class... ODims>
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain restrict_with(
+            StridedDiscreteDomain<ODims...> const& /* odomain */) const
+    {
+        return *this;
+    }
+
+    static bool is_inside() noexcept
+    {
+        return true;
+    }
+
+    static bool is_inside(DiscreteElement<>) noexcept
+    {
+        return true;
+    }
+
+    static DiscreteVector<> distance_from_front() noexcept
+    {
+        return DiscreteVector<>();
+    }
+
+    static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
+    {
+        return DiscreteVector<>();
+    }
+
+    static KOKKOS_FUNCTION constexpr bool empty() noexcept
+    {
+        return false;
+    }
+
+    KOKKOS_FUNCTION constexpr explicit operator bool()
+    {
+        return true;
+    }
+};
+
+template <class... QueryDDims, class... DDims>
+KOKKOS_FUNCTION constexpr StridedDiscreteDomain<QueryDDims...> select(
+        StridedDiscreteDomain<DDims...> const& domain)
+{
+    return StridedDiscreteDomain<QueryDDims...>(
+            select<QueryDDims...>(domain.front()),
+            select<QueryDDims...>(domain.extents()));
+}
+
+namespace detail {
+
+template <class T>
+struct ConvertTypeSeqToStridedDiscreteDomain;
+
+template <class... DDims>
+struct ConvertTypeSeqToStridedDiscreteDomain<detail::TypeSeq<DDims...>>
+{
+    using type = StridedDiscreteDomain<DDims...>;
+};
+
+template <class T>
+using convert_type_seq_to_strided_discrete_domain_t =
+        typename ConvertTypeSeqToStridedDiscreteDomain<T>::type;
+
+} // namespace detail
+
+// Computes the substraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
+template <class... DDimsA, class... DDimsB>
+KOKKOS_FUNCTION constexpr auto remove_dims_of(
+        StridedDiscreteDomain<DDimsA...> const& DDom_a,
+        [[maybe_unused]] StridedDiscreteDomain<DDimsB...> const& DDom_b) noexcept
+{
+    using TagSeqA = detail::TypeSeq<DDimsA...>;
+    using TagSeqB = detail::TypeSeq<DDimsB...>;
+
+    using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
+    return detail::convert_type_seq_to_strided_discrete_domain_t<type_seq_r>(DDom_a);
+}
+
+namespace detail {
+
+// Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be usefull in its own, it helps for replace_dim_of
+template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>
+KOKKOS_FUNCTION constexpr std::conditional_t<
+        std::is_same_v<DDimA, DDim1>,
+        ddc::StridedDiscreteDomain<DDim2>,
+        ddc::StridedDiscreteDomain<DDimA>>
+replace_dim_of_1d(
+        StridedDiscreteDomain<DDimA> const& DDom_a,
+        [[maybe_unused]] StridedDiscreteDomain<DDimsB...> const& DDom_b) noexcept
+{
+    if constexpr (std::is_same_v<DDimA, DDim1>) {
+        return ddc::select<DDim2>(DDom_b);
+    } else {
+        return DDom_a;
+    }
+}
+
+} // namespace detail
+
+// Replace in DDom_a the dimension Dim1 by the dimension Dim2 of DDom_b
+template <typename DDim1, typename DDim2, typename... DDimsA, typename... DDimsB>
+KOKKOS_FUNCTION constexpr auto replace_dim_of(
+        StridedDiscreteDomain<DDimsA...> const& DDom_a,
+        [[maybe_unused]] StridedDiscreteDomain<DDimsB...> const& DDom_b) noexcept
+{
+    // TODO : static_asserts
+    using TagSeqA = detail::TypeSeq<DDimsA...>;
+    using TagSeqB = detail::TypeSeq<DDim1>;
+    using TagSeqC = detail::TypeSeq<DDim2>;
+
+    using type_seq_r = ddc::type_seq_replace_t<TagSeqA, TagSeqB, TagSeqC>;
+    return ddc::detail::convert_type_seq_to_strided_discrete_domain_t<type_seq_r>(
+            detail::replace_dim_of_1d<
+                    DDim1,
+                    DDim2,
+                    DDimsA,
+                    DDimsB...>(ddc::select<DDimsA>(DDom_a), DDom_b)...);
+}
+
+template <class... QueryDDims, class... DDims>
+KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDims...> extents(
+        StridedDiscreteDomain<DDims...> const& domain) noexcept
+{
+    return DiscreteVector<QueryDDims...>(select<QueryDDims>(domain).size()...);
+}
+
+template <class... QueryDDims, class... DDims>
+KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> front(
+        StridedDiscreteDomain<DDims...> const& domain) noexcept
+{
+    return DiscreteElement<QueryDDims...>(select<QueryDDims>(domain).front()...);
+}
+
+template <class... QueryDDims, class... DDims>
+KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> back(
+        StridedDiscreteDomain<DDims...> const& domain) noexcept
+{
+    return DiscreteElement<QueryDDims...>(select<QueryDDims>(domain).back()...);
+}
+
+template <class DDim>
+struct StridedDiscreteDomainIterator
+{
+private:
+    DiscreteElement<DDim> m_value = DiscreteElement<DDim>();
+
+    DiscreteVector<DDim> m_stride = DiscreteVector<DDim>();
+
+public:
+    using iterator_category = std::random_access_iterator_tag;
+
+    using value_type = DiscreteElement<DDim>;
+
+    using difference_type = std::ptrdiff_t;
+
+    KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomainIterator() = default;
+
+    KOKKOS_FUNCTION constexpr explicit StridedDiscreteDomainIterator(
+            DiscreteElement<DDim> value,
+            DiscreteVector<DDim> stride)
+        : m_value(value)
+        , m_stride(stride)
+    {
+    }
+
+    KOKKOS_FUNCTION constexpr DiscreteElement<DDim> operator*() const noexcept
+    {
+        return m_value;
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator& operator++()
+    {
+        m_value.uid() += m_stride.value();
+        return *this;
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator operator++(int)
+    {
+        auto tmp = *this;
+        ++*this;
+        return tmp;
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator& operator--()
+    {
+        m_value.uid() -= m_stride.value();
+        return *this;
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator operator--(int)
+    {
+        auto tmp = *this;
+        --*this;
+        return tmp;
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator& operator+=(difference_type n)
+    {
+        if (n >= difference_type(0)) {
+            m_value.uid() += static_cast<DiscreteElementType>(n) * m_stride.value();
+        } else {
+            m_value.uid() -= static_cast<DiscreteElementType>(-n) * m_stride.value();
+        }
+        return *this;
+    }
+
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator& operator-=(difference_type n)
+    {
+        if (n >= difference_type(0)) {
+            m_value.uid() -= static_cast<DiscreteElementType>(n) * m_stride.value();
+        } else {
+            m_value.uid() += static_cast<DiscreteElementType>(-n) * m_stride.value();
+        }
+        return *this;
+    }
+
+    KOKKOS_FUNCTION constexpr DiscreteElement<DDim> operator[](difference_type n) const
+    {
+        return m_value + n * m_stride.value();
+    }
+
+    friend KOKKOS_FUNCTION constexpr bool operator==(
+            StridedDiscreteDomainIterator const& xx,
+            StridedDiscreteDomainIterator const& yy)
+    {
+        return xx.m_value == yy.m_value;
+    }
+
+#if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
+    // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
+    friend KOKKOS_FUNCTION constexpr bool operator!=(
+            StridedDiscreteDomainIterator const& xx,
+            StridedDiscreteDomainIterator const& yy)
+    {
+        return xx.m_value != yy.m_value;
+    }
+#endif
+
+    friend KOKKOS_FUNCTION constexpr bool operator<(
+            StridedDiscreteDomainIterator const& xx,
+            StridedDiscreteDomainIterator const& yy)
+    {
+        return xx.m_value < yy.m_value;
+    }
+
+    friend KOKKOS_FUNCTION constexpr bool operator>(
+            StridedDiscreteDomainIterator const& xx,
+            StridedDiscreteDomainIterator const& yy)
+    {
+        return yy < xx;
+    }
+
+    friend KOKKOS_FUNCTION constexpr bool operator<=(
+            StridedDiscreteDomainIterator const& xx,
+            StridedDiscreteDomainIterator const& yy)
+    {
+        return !(yy < xx);
+    }
+
+    friend KOKKOS_FUNCTION constexpr bool operator>=(
+            StridedDiscreteDomainIterator const& xx,
+            StridedDiscreteDomainIterator const& yy)
+    {
+        return !(xx < yy);
+    }
+
+    friend KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator operator+(
+            StridedDiscreteDomainIterator i,
+            difference_type n)
+    {
+        return i += n;
+    }
+
+    friend KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator operator+(
+            difference_type n,
+            StridedDiscreteDomainIterator i)
+    {
+        return i += n;
+    }
+
+    friend KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator operator-(
+            StridedDiscreteDomainIterator i,
+            difference_type n)
+    {
+        return i -= n;
+    }
+
+    friend KOKKOS_FUNCTION constexpr difference_type operator-(
+            StridedDiscreteDomainIterator const& xx,
+            StridedDiscreteDomainIterator const& yy)
+    {
+        return (yy.m_value > xx.m_value) ? (-static_cast<difference_type>(yy.m_value - xx.m_value))
+                                         : (xx.m_value - yy.m_value);
+    }
+};
+
+} // namespace ddc

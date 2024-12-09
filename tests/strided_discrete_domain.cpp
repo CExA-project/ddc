@@ -305,12 +305,12 @@ TEST(StridedDiscreteDomainTest, Transpose3DConstructor)
     DDomZ const dom_z(lbound_z, nelems_z, strides_z);
     DDomXYZ const dom_x_y_z(dom_x, dom_y, dom_z);
     DDomZYX const dom_z_y_x(dom_x_y_z);
-    EXPECT_EQ(ddc::select<DDimX>(dom_x_y_z.front()), ddc::select<DDimX>(dom_z_y_x.front()));
-    EXPECT_EQ(ddc::select<DDimY>(dom_x_y_z.front()), ddc::select<DDimY>(dom_z_y_x.front()));
-    EXPECT_EQ(ddc::select<DDimZ>(dom_x_y_z.front()), ddc::select<DDimZ>(dom_z_y_x.front()));
-    EXPECT_EQ(ddc::select<DDimX>(dom_x_y_z.back()), ddc::select<DDimX>(dom_z_y_x.back()));
-    EXPECT_EQ(ddc::select<DDimY>(dom_x_y_z.back()), ddc::select<DDimY>(dom_z_y_x.back()));
-    EXPECT_EQ(ddc::select<DDimZ>(dom_x_y_z.back()), ddc::select<DDimZ>(dom_z_y_x.back()));
+    EXPECT_EQ(DElemX(dom_x_y_z.front()), DElemX(dom_z_y_x.front()));
+    EXPECT_EQ(DElemY(dom_x_y_z.front()), DElemY(dom_z_y_x.front()));
+    EXPECT_EQ(DElemZ(dom_x_y_z.front()), DElemZ(dom_z_y_x.front()));
+    EXPECT_EQ(DElemX(dom_x_y_z.back()), DElemX(dom_z_y_x.back()));
+    EXPECT_EQ(DElemY(dom_x_y_z.back()), DElemY(dom_z_y_x.back()));
+    EXPECT_EQ(DElemZ(dom_x_y_z.back()), DElemZ(dom_z_y_x.back()));
 }
 
 // TEST(StridedDiscreteDomainTest, CartesianProduct)

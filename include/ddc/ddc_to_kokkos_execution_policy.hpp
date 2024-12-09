@@ -15,34 +15,33 @@
 
 namespace ddc::detail {
 
-template <class ExecSpace, class... DDims>
-auto ddc_to_kokkos_execution_policy(
-        ExecSpace const& execution_space,
-        DiscreteDomain<DDims...> const& domain)
+template <class ExecSpace, class Support>
+auto ddc_to_kokkos_execution_policy(ExecSpace const& execution_space, Support const& domain)
 {
     using work_tag = void;
     using index_type = Kokkos::IndexType<DiscreteElementType>;
-    if constexpr (sizeof...(DDims) == 0) {
+    if constexpr (Support::rank() == 0) {
         return Kokkos::RangePolicy<ExecSpace, work_tag, index_type>(execution_space, 0, 1);
     } else {
-        DiscreteElement<DDims...> const ddc_begin = domain.front();
-        DiscreteElement<DDims...> const ddc_end = domain.front() + domain.extents();
-        if constexpr (sizeof...(DDims) == 1) {
-            std::size_t const begin = ddc_begin.uid();
-            std::size_t const end = ddc_end.uid();
-            return Kokkos::
-                    RangePolicy<ExecSpace, work_tag, index_type>(execution_space, begin, end);
+        if constexpr (Support::rank() == 1) {
+            return Kokkos::RangePolicy<
+                    ExecSpace,
+                    work_tag,
+                    index_type>(execution_space, 0, domain.extents().value());
         } else {
-            using iteration_pattern = Kokkos::
-                    Rank<sizeof...(DDims), Kokkos::Iterate::Right, Kokkos::Iterate::Right>;
-            Kokkos::Array<std::size_t, sizeof...(DDims)> const begin {
-                    ddc::uid<DDims>(ddc_begin)...};
-            Kokkos::Array<std::size_t, sizeof...(DDims)> const end {ddc::uid<DDims>(ddc_end)...};
+            using iteration_pattern
+                    = Kokkos::Rank<Support::rank(), Kokkos::Iterate::Right, Kokkos::Iterate::Right>;
+            Kokkos::Array<std::size_t, Support::rank()> const begin {};
+            std::array const end = detail::array(domain.extents());
+            Kokkos::Array<std::size_t, Support::rank()> end2;
+            for (int i = 0; i < Support::rank(); ++i) {
+                end2[i] = end[i];
+            }
             return Kokkos::MDRangePolicy<
                     ExecSpace,
                     iteration_pattern,
                     work_tag,
-                    index_type>(execution_space, begin, end);
+                    index_type>(execution_space, begin, end2);
         }
     }
 }

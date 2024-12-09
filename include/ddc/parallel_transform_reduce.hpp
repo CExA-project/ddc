@@ -88,34 +88,41 @@ struct ddc_to_kokkos_reducer<reducer::minmax<T>>
 template <class Reducer>
 using ddc_to_kokkos_reducer_t = typename ddc_to_kokkos_reducer<Reducer>::type;
 
-template <class Reducer, class Functor, class... DDims>
-class TransformReducerKokkosLambdaAdapter
+template <class Reducer, class Functor, class Support, class IndexSequence>
+class TransformReducerKokkosLambdaAdapter;
+
+template <class Reducer, class Functor, class Support, std::size_t... Idx>
+class TransformReducerKokkosLambdaAdapter<Reducer, Functor, Support, std::index_sequence<Idx...>>
 {
-    template <class T>
+    template <std::size_t I>
     using index_type = DiscreteElementType;
 
     Reducer reducer;
 
     Functor functor;
 
+    Support m_support;
+
 public:
-    TransformReducerKokkosLambdaAdapter(Reducer const& r, Functor const& f) : reducer(r), functor(f)
+    TransformReducerKokkosLambdaAdapter(Reducer const& r, Functor const& f, Support const& support)
+        : reducer(r)
+        , functor(f)
+        , m_support(support)
     {
     }
 
-    template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
+    template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N == 0), bool> = true>
     KOKKOS_FUNCTION void operator()(
-            [[maybe_unused]] index_type<void> unused_id,
+            [[maybe_unused]] index_type<0> unused_id,
             typename Reducer::value_type& a) const
-
     {
         a = reducer(a, functor(DiscreteElement<>()));
     }
 
-    template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N > 0), bool> = true>
-    KOKKOS_FUNCTION void operator()(index_type<DDims>... ids, typename Reducer::value_type& a) const
+    template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N > 0), bool> = true>
+    KOKKOS_FUNCTION void operator()(index_type<Idx>... ids, typename Reducer::value_type& a) const
     {
-        a = reducer(a, functor(DiscreteElement<DDims...>(ids...)));
+        a = reducer(a, functor(m_support(typename Support::discrete_vector_type(ids...))));
     }
 };
 
@@ -129,11 +136,11 @@ public:
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
-template <class ExecSpace, class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
+template <class ExecSpace, class Support, class T, class BinaryReductionOp, class UnaryTransformOp>
 T transform_reduce_kokkos(
         std::string const& label,
         ExecSpace const& execution_space,
-        DiscreteDomain<DDims...> const& domain,
+        Support const& domain,
         T neutral,
         BinaryReductionOp const& reduce,
         UnaryTransformOp const& transform) noexcept
@@ -145,7 +152,8 @@ T transform_reduce_kokkos(
             TransformReducerKokkosLambdaAdapter<
                     BinaryReductionOp,
                     UnaryTransformOp,
-                    DDims...>(reduce, transform),
+                    Support,
+                    std::make_index_sequence<Support::rank()>>(reduce, transform, domain),
             ddc_to_kokkos_reducer_t<BinaryReductionOp>(result));
     return result;
 }
@@ -162,11 +170,11 @@ T transform_reduce_kokkos(
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
-template <class ExecSpace, class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
+template <class ExecSpace, class Support, class T, class BinaryReductionOp, class UnaryTransformOp>
 T parallel_transform_reduce(
         std::string const& label,
         ExecSpace const& execution_space,
-        DiscreteDomain<DDims...> const& domain,
+        Support const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
@@ -189,10 +197,10 @@ T parallel_transform_reduce(
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
-template <class ExecSpace, class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
+template <class ExecSpace, class Support, class T, class BinaryReductionOp, class UnaryTransformOp>
 std::enable_if_t<Kokkos::is_execution_space_v<ExecSpace>, T> parallel_transform_reduce(
         ExecSpace const& execution_space,
-        DiscreteDomain<DDims...> const& domain,
+        Support const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
@@ -215,10 +223,10 @@ std::enable_if_t<Kokkos::is_execution_space_v<ExecSpace>, T> parallel_transform_
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
-template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
+template <class Support, class T, class BinaryReductionOp, class UnaryTransformOp>
 T parallel_transform_reduce(
         std::string const& label,
-        DiscreteDomain<DDims...> const& domain,
+        Support const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
@@ -240,9 +248,9 @@ T parallel_transform_reduce(
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
-template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
+template <class Support, class T, class BinaryReductionOp, class UnaryTransformOp>
 T parallel_transform_reduce(
-        DiscreteDomain<DDims...> const& domain,
+        Support const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept

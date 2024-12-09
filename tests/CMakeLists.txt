@@ -16,6 +16,7 @@ add_executable(
     discrete_domain.cpp
     non_uniform_point_sampling.cpp
     single_discretization.cpp
+    strided_discrete_domain.cpp
     tagged_vector.cpp
     relocatable_device_code_initialization.cpp
     relocatable_device_code.cpp

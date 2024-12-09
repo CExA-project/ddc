@@ -59,6 +59,8 @@ public:
 
     using mlength_type = DiscreteVector<DDims...>;
 
+    using discrete_vector_type = DiscreteVector<DDims...>;
+
 private:
     DiscreteElement<DDims...> m_element_begin;
 
@@ -181,6 +183,12 @@ public:
     }
 #endif
 
+    KOKKOS_FUNCTION constexpr DiscreteElement<DDims...> operator()(
+            DiscreteVector<DDims...> const& dvect) const noexcept
+    {
+        return m_element_begin + dvect;
+    }
+
     template <class... ODDims>
     KOKKOS_FUNCTION constexpr auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
     {
@@ -192,6 +200,28 @@ public:
                 DiscreteElement<DDims...>(
                         (uid_or<DDims>(odomain.m_element_begin, uid<DDims>(m_element_begin)))...),
                 DiscreteVector<DDims...>((get_or<DDims>(oextents, get<DDims>(myextents)))...));
+    }
+
+    template <class... DElems>
+    bool is_inside(DElems const&... delems) const noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DElems::size()),
+                "Invalid number of dimensions");
+        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
+        return (((select<DDims>(take<DDims>(delems...)) >= select<DDims>(m_element_begin)) && ...)
+                && ((select<DDims>(take<DDims>(delems...)) < select<DDims>(m_element_end)) && ...));
+    }
+
+    template <class... DElems>
+    DiscreteVector<DDims...> distance_from_front(DElems const&... delems) const noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DElems::size()),
+                "Invalid number of dimensions");
+        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
+        return DiscreteVector<DDims...>(
+                (select<DDims>(take<DDims>(delems...)) - select<DDims>(m_element_begin))...);
     }
 
     KOKKOS_FUNCTION constexpr bool empty() const noexcept
@@ -263,6 +293,8 @@ public:
     using discrete_element_type = DiscreteElement<>;
 
     using mlength_type = DiscreteVector<>;
+
+    using discrete_vector_type = DiscreteVector<>;
 
     static KOKKOS_FUNCTION constexpr std::size_t rank()
     {
@@ -358,6 +390,12 @@ public:
         return *this;
     }
 
+    KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
+            DiscreteVector<> const& dvect) const noexcept
+    {
+        return DiscreteElement<>();
+    }
+
 #if defined(DDC_BUILD_DEPRECATED_CODE)
     template <class... ODims>
     [[deprecated("Use `restrict_with` instead")]] KOKKOS_FUNCTION constexpr DiscreteDomain restrict(
@@ -372,6 +410,26 @@ public:
             DiscreteDomain<ODims...> const& /* odomain */) const
     {
         return *this;
+    }
+
+    static bool is_inside() noexcept
+    {
+        return true;
+    }
+
+    static bool is_inside(DiscreteElement<>) noexcept
+    {
+        return true;
+    }
+
+    static DiscreteVector<> distance_from_front() noexcept
+    {
+        return DiscreteVector<>();
+    }
+
+    static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
+    {
+        return DiscreteVector<>();
     }
 
     static KOKKOS_FUNCTION constexpr bool empty() noexcept

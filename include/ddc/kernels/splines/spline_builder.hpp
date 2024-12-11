@@ -360,29 +360,6 @@ public:
                         ddc::DiscreteVector<deriv_type>(s_nbc_xmax)));
     }
 
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-    /**
-     * @brief Get the interpolation matrix.
-     *
-     * This can be useful for debugging (as it allows
-     * one to print the matrix) or for more complex quadrature schemes.
-     *
-     * @deprecated Use @ref quadrature_coefficients instead.
-     *
-     * @warning the returned detail::Matrix class is not supposed to be exposed
-     * to user, which means its usage is not supported out of the scope of current class.
-     * Use at your own risk.
-     *
-     * @return A reference to the interpolation matrix.
-     */
-    [[deprecated("Use quadrature_coefficients() instead.")]] const ddc::detail::
-            SplinesLinearProblem<exec_space>&
-            get_interpolation_matrix() const noexcept
-    {
-        return *matrix;
-    }
-#endif
-
     /**
      * @brief Compute a spline approximation of a function.
      *

@@ -57,7 +57,11 @@ class DiscreteDomain
 public:
     using discrete_element_type = DiscreteElement<DDims...>;
 
-    using mlength_type = DiscreteVector<DDims...>;
+    using discrete_vector_type = DiscreteVector<DDims...>;
+
+#if defined(DDC_BUILD_DEPRECATED_CODE)
+    using mlength_type [[deprecated("Use `discrete_vector_type` instead")]] = discrete_vector_type;
+#endif
 
 private:
     DiscreteElement<DDims...> m_element_begin;
@@ -86,7 +90,7 @@ public:
      */
     KOKKOS_FUNCTION constexpr DiscreteDomain(
             discrete_element_type const& element_begin,
-            mlength_type const& size)
+            discrete_vector_type const& size)
         : m_element_begin(element_begin)
         , m_element_end(element_begin + size)
     {
@@ -125,9 +129,9 @@ public:
         return (1UL * ... * (uid<DDims>(m_element_end) - uid<DDims>(m_element_begin)));
     }
 
-    KOKKOS_FUNCTION constexpr mlength_type extents() const noexcept
+    KOKKOS_FUNCTION constexpr discrete_vector_type extents() const noexcept
     {
-        return mlength_type((uid<DDims>(m_element_end) - uid<DDims>(m_element_begin))...);
+        return discrete_vector_type((uid<DDims>(m_element_end) - uid<DDims>(m_element_begin))...);
     }
 
     template <class QueryDDim>
@@ -147,27 +151,29 @@ public:
         return discrete_element_type((uid<DDims>(m_element_end) - 1)...);
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain take_first(mlength_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain take_first(discrete_vector_type n) const
     {
         return DiscreteDomain(front(), n);
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain take_last(mlength_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain take_last(discrete_vector_type n) const
     {
         return DiscreteDomain(front() + (extents() - n), n);
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain remove_first(mlength_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain remove_first(discrete_vector_type n) const
     {
         return DiscreteDomain(front() + n, extents() - n);
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain remove_last(mlength_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain remove_last(discrete_vector_type n) const
     {
         return DiscreteDomain(front(), extents() - n);
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain remove(mlength_type n1, mlength_type n2) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain remove(
+            discrete_vector_type n1,
+            discrete_vector_type n2) const
     {
         return DiscreteDomain(front() + n1, extents() - n1 - n2);
     }
@@ -262,7 +268,11 @@ class DiscreteDomain<>
 public:
     using discrete_element_type = DiscreteElement<>;
 
-    using mlength_type = DiscreteVector<>;
+    using discrete_vector_type = DiscreteVector<>;
+
+#if defined(DDC_BUILD_DEPRECATED_CODE)
+    using mlength_type [[deprecated("Use `discrete_vector_type` instead")]] = discrete_vector_type;
+#endif
 
     static KOKKOS_FUNCTION constexpr std::size_t rank()
     {
@@ -284,7 +294,7 @@ public:
      */
     KOKKOS_FUNCTION constexpr DiscreteDomain(
             [[maybe_unused]] discrete_element_type const& element_begin,
-            [[maybe_unused]] mlength_type const& size)
+            [[maybe_unused]] discrete_vector_type const& size)
     {
     }
 
@@ -316,7 +326,7 @@ public:
         return 1;
     }
 
-    static KOKKOS_FUNCTION constexpr mlength_type extents() noexcept
+    static KOKKOS_FUNCTION constexpr discrete_vector_type extents() noexcept
     {
         return {};
     }
@@ -331,29 +341,33 @@ public:
         return {};
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain take_first([[maybe_unused]] mlength_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain take_first(
+            [[maybe_unused]] discrete_vector_type n) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain take_last([[maybe_unused]] mlength_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain take_last(
+            [[maybe_unused]] discrete_vector_type n) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain remove_first([[maybe_unused]] mlength_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain remove_first(
+            [[maybe_unused]] discrete_vector_type n) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain remove_last([[maybe_unused]] mlength_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain remove_last(
+            [[maybe_unused]] discrete_vector_type n) const
     {
         return *this;
     }
 
     KOKKOS_FUNCTION constexpr DiscreteDomain remove(
-            [[maybe_unused]] mlength_type n1,
-            [[maybe_unused]] mlength_type n2) const
+            [[maybe_unused]] discrete_vector_type n1,
+            [[maybe_unused]] discrete_vector_type n2) const
     {
         return *this;
     }

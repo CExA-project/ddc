@@ -59,10 +59,6 @@ public:
 
     using discrete_vector_type = DiscreteVector<DDims...>;
 
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-    using mlength_type [[deprecated("Use `discrete_vector_type` instead")]] = discrete_vector_type;
-#endif
-
 private:
     DiscreteElement<DDims...> m_element_begin;
 
@@ -178,15 +174,6 @@ public:
         return DiscreteDomain(front() + n1, extents() - n1 - n2);
     }
 
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-    template <class... ODDims>
-    [[deprecated("Use `restrict_with` instead")]] KOKKOS_FUNCTION constexpr auto restrict(
-            DiscreteDomain<ODDims...> const& odomain) const
-    {
-        return restrict_with(odomain);
-    }
-#endif
-
     template <class... ODDims>
     KOKKOS_FUNCTION constexpr auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
     {
@@ -269,10 +256,6 @@ public:
     using discrete_element_type = DiscreteElement<>;
 
     using discrete_vector_type = DiscreteVector<>;
-
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-    using mlength_type [[deprecated("Use `discrete_vector_type` instead")]] = discrete_vector_type;
-#endif
 
     static KOKKOS_FUNCTION constexpr std::size_t rank()
     {
@@ -371,15 +354,6 @@ public:
     {
         return *this;
     }
-
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-    template <class... ODims>
-    [[deprecated("Use `restrict_with` instead")]] KOKKOS_FUNCTION constexpr DiscreteDomain restrict(
-            DiscreteDomain<ODims...> const& odomain) const
-    {
-        return restrict_with(odomain);
-    }
-#endif
 
     template <class... ODims>
     KOKKOS_FUNCTION constexpr DiscreteDomain restrict_with(

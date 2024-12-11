@@ -243,23 +243,6 @@ public:
                 ddc::Coordinate<CDim> const& x,
                 std::size_t n) const;
 
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-        /** @brief Compute the integrals of the B-splines.
-         *
-         * The integral of each of the B-splines over their support within the domain on which this basis was defined.
-         *
-         * @deprecated Use @ref integrals instead.
-         *
-         * @param[out] int_vals The values of the integrals. It has to be a 1D Chunkspan of size (nbasis).
-         * @return The values of the integrals.
-         */
-        template <class Layout, class MemorySpace2>
-        [[deprecated("Use `integrals` instead")]] KOKKOS_INLINE_FUNCTION ddc::
-                ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
-                integrals(ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
-                                  int_vals) const;
-#endif
-
         /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a B-spline.
          *
          * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
@@ -696,44 +679,5 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUn
     }
     return icell;
 }
-
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-template <class CDim, std::size_t D>
-template <class DDim, class MemorySpace>
-template <class Layout, class MemorySpace2>
-KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
-NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::integrals(
-        ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const
-{
-    assert([&]() -> bool {
-        if constexpr (is_periodic()) {
-            return int_vals.size() == nbasis() || int_vals.size() == size();
-        } else {
-            return int_vals.size() == nbasis();
-        }
-    }());
-
-    double const inv_deg = 1.0 / (degree() + 1);
-
-    discrete_domain_type const dom_bsplines(
-            full_domain().take_first(discrete_vector_type {nbasis()}));
-    for (auto ix : dom_bsplines) {
-        int_vals(ix) = double(ddc::coordinate(get_last_support_knot(ix))
-                              - ddc::coordinate(get_first_support_knot(ix)))
-                       * inv_deg;
-    }
-
-    if constexpr (is_periodic()) {
-        if (int_vals.size() == size()) {
-            discrete_domain_type const dom_bsplines_wrap(
-                    full_domain().take_last(discrete_vector_type {degree()}));
-            for (auto ix : dom_bsplines_wrap) {
-                int_vals(ix) = 0;
-            }
-        }
-    }
-    return int_vals;
-}
-#endif
 
 } // namespace ddc

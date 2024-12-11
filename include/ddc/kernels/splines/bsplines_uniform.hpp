@@ -235,23 +235,6 @@ public:
                 ddc::Coordinate<CDim> const& x,
                 std::size_t n) const;
 
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-        /** @brief Compute the integrals of the B-splines.
-         *
-         * The integral of each of the B-splines over their support within the domain on which this basis was defined.
-         *
-         * @deprecated Use @ref integrals instead.
-         *
-         * @param[out] int_vals The values of the integrals. It has to be a 1D Chunkspan of size (nbasis).
-         * @return The values of the integrals.
-         */
-        template <class Layout, class MemorySpace2>
-        [[deprecated("Use `integrals` instead")]] KOKKOS_INLINE_FUNCTION ddc::
-                ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
-                integrals(ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2>
-                                  int_vals) const;
-#endif
-
         /** @brief Returns the coordinate of the first support knot associated to a DiscreteElement identifying a B-spline.
          *
          * Each B-spline has a support defined over (degree+2) knots. For a B-spline identified by the
@@ -599,65 +582,5 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::g
         }
     }
 }
-
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-template <class CDim, std::size_t D>
-template <class DDim, class MemorySpace>
-template <class Layout, class MemorySpace2>
-KOKKOS_INLINE_FUNCTION ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace2>
-UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::integrals(
-        ddc::ChunkSpan<double, discrete_domain_type, Layout, MemorySpace2> int_vals) const
-{
-    assert([&]() -> bool {
-        if constexpr (is_periodic()) {
-            return int_vals.size() == nbasis() || int_vals.size() == size();
-        } else {
-            return int_vals.size() == nbasis();
-        }
-    }());
-
-    discrete_domain_type const full_dom_splines(full_domain());
-
-    if constexpr (is_periodic()) {
-        discrete_domain_type const dom_bsplines(
-                full_dom_splines.take_first(discrete_vector_type {nbasis()}));
-        for (auto ix : dom_bsplines) {
-            int_vals(ix) = ddc::step<knot_discrete_dimension_type>();
-        }
-        if (int_vals.size() == size()) {
-            discrete_domain_type const dom_bsplines_repeated(
-                    full_dom_splines.take_last(discrete_vector_type {degree()}));
-            for (auto ix : dom_bsplines_repeated) {
-                int_vals(ix) = 0;
-            }
-        }
-    } else {
-        discrete_domain_type const dom_bspline_entirely_in_domain
-                = full_dom_splines
-                          .remove(discrete_vector_type(degree()), discrete_vector_type(degree()));
-        for (auto ix : dom_bspline_entirely_in_domain) {
-            int_vals(ix) = ddc::step<knot_discrete_dimension_type>();
-        }
-
-        std::array<double, degree() + 2> edge_vals_ptr;
-        Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree() + 2>> const edge_vals(
-                edge_vals_ptr.data());
-
-        eval_basis(edge_vals, rmin(), degree() + 1);
-
-        double const d_eval = ddc::detail::sum(edge_vals);
-
-        for (std::size_t i = 0; i < degree(); ++i) {
-            double const c_eval = ddc::detail::sum(edge_vals, 0, degree() - i);
-
-            double const edge_value = ddc::step<knot_discrete_dimension_type>() * (d_eval - c_eval);
-
-            int_vals(discrete_element_type(i)) = edge_value;
-            int_vals(discrete_element_type(nbasis() - 1 - i)) = edge_value;
-        }
-    }
-    return int_vals;
-}
-#endif
 
 } // namespace ddc

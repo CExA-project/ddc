@@ -16,19 +16,19 @@ namespace ddc {
 
 namespace detail {
 
-template <class RetType, class Element, std::size_t N, class Functor, class... Is>
+template <class Support, class Element, std::size_t N, class Functor, class... Is>
 void for_each_serial(
-        std::array<Element, N> const& begin,
-        std::array<Element, N> const& end,
+        Support const& support,
+        std::array<Element, N> const& size,
         Functor const& f,
         Is const&... is) noexcept
 {
     static constexpr std::size_t I = sizeof...(Is);
     if constexpr (I == N) {
-        f(RetType(is...));
+        f(support(typename Support::discrete_vector_type(is...)));
     } else {
-        for (Element ii = begin[I]; ii < end[I]; ++ii) {
-            for_each_serial<RetType>(begin, end, f, is..., ii);
+        for (Element ii = 0; ii < size[I]; ++ii) {
+            for_each_serial(support, size, f, is..., ii);
         }
     }
 }
@@ -39,14 +39,11 @@ void for_each_serial(
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
-template <class... DDims, class Functor>
-void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
+template <class Support, class Functor>
+void for_each(Support const& domain, Functor&& f) noexcept
 {
-    DiscreteElement<DDims...> const ddc_begin = domain.front();
-    DiscreteElement<DDims...> const ddc_end = domain.front() + domain.extents();
-    std::array const begin = detail::array(ddc_begin);
-    std::array const end = detail::array(ddc_end);
-    detail::for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
+    std::array const size = detail::array(domain.extents());
+    detail::for_each_serial(domain, size, std::forward<Functor>(f));
 }
 
 } // namespace ddc

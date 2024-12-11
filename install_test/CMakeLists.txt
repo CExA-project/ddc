@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(test-installed-ddc LANGUAGES CXX)
 
-find_package(DDC 0.2 REQUIRED COMPONENTS fft pdi splines)
+find_package(DDC 0.3 REQUIRED COMPONENTS fft pdi splines)
 
 message("DDC options:")
 message("DDC_BUILD_DOUBLE_PRECISION=${DDC_BUILD_DOUBLE_PRECISION}")

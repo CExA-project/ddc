@@ -1,8 +1,8 @@
 var searchData=
 [
   ['take_0',['take',['../namespaceddc.html#a8eb1602ece15c6526f2944708075157f',1,'ddc::take(HeadDVect const &amp;head, TailDVects const &amp;... tail)'],['../namespaceddc.html#a39f234f0f9635b7c542f7f2abc5221b9',1,'ddc::take(HeadDElem const &amp;head, TailDElems const &amp;... tail)']]],
-  ['take_5ffirst_1',['take_first',['../classddc_1_1DiscreteDomain_3_4.html#a378eda91c9bfb611454212a7233d5dea',1,'ddc::DiscreteDomain&lt;&gt;::take_first()'],['../classddc_1_1DiscreteDomain.html#a079735b6927956b56ac7e24f7bd7210f',1,'ddc::DiscreteDomain::take_first(mlength_type n) const']]],
-  ['take_5flast_2',['take_last',['../classddc_1_1DiscreteDomain.html#a9267ca914417ed0b45cbc7ab3a837b7b',1,'ddc::DiscreteDomain::take_last()'],['../classddc_1_1DiscreteDomain_3_4.html#ade012d627128e941c1ae7a7e3f58fffb',1,'ddc::DiscreteDomain&lt;&gt;::take_last()']]],
+  ['take_5ffirst_1',['take_first',['../classddc_1_1DiscreteDomain_3_4.html#ab5e1c826568e7082cd6cf1b05b2eb959',1,'ddc::DiscreteDomain&lt;&gt;::take_first()'],['../classddc_1_1DiscreteDomain.html#aa02c83656e96ccefb9b41ae57599e0f0',1,'ddc::DiscreteDomain::take_first(discrete_vector_type n) const']]],
+  ['take_5flast_2',['take_last',['../classddc_1_1DiscreteDomain.html#a14051a5ee597ab1407a1b35811477e7a',1,'ddc::DiscreteDomain::take_last()'],['../classddc_1_1DiscreteDomain_3_4.html#a3f830f219ef1555c2164a84eb904a8ed',1,'ddc::DiscreteDomain&lt;&gt;::take_last()']]],
   ['the_20discretization_3',['Definition of the discretization',['../first_steps.html#autotoc_md2',1,'']]],
   ['the_20non_20uniform_20heat_20equation_4',['Commented example: the non uniform heat equation',['../going_further.html',1,'']]],
   ['the_20uniform_20heat_20equation_5',['Commented example: the uniform heat equation',['../first_steps.html',1,'']]],

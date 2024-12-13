@@ -109,6 +109,8 @@ var namespaceddc =
     [ "Chunk", "namespaceddc.html#a7c5da21fb1248e1cf1546388504f6842", null ],
     [ "get_domain", "namespaceddc.html#a03facdf8e4260396b89b134273fc4677", null ],
     [ "ChunkSpan", "namespaceddc.html#a25bdb64cb80790c6e3509834f159d65d", null ],
+    [ "ChunkSpan", "namespaceddc.html#a9092231cbfc4ea9b814f7ed7c06281e0", null ],
+    [ "ChunkSpan", "namespaceddc.html#ac28754ed318dd7231757154da265a388", null ],
     [ "coordinate", "namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a", null ],
     [ "create_mirror", "namespaceddc.html#af5a820cbfa67651ae082f77f446ed882", null ],
     [ "create_mirror", "namespaceddc.html#a9acf5aabb0421518743fe6e8eb57abf2", null ],

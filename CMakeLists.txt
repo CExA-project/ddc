@@ -245,13 +245,6 @@ if("${DDC_BUILD_PDI_WRAPPER}")
     )
     target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
 
-    ### PDI_Wrapper legacy target
-    add_library(PDI_Wrapper INTERFACE)
-    set_target_properties(PDI_Wrapper PROPERTIES DEPRECATION "Use DDC::pdi instead")
-    add_library(DDC::PDI_Wrapper ALIAS PDI_Wrapper)
-    install(TARGETS PDI_Wrapper EXPORT DDCTargets)
-    target_link_libraries(PDI_Wrapper INTERFACE DDC::pdi)
-
     ### DDC legacy target
     target_link_libraries(DDC INTERFACE DDC::pdi)
 endif()

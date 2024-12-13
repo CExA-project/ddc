@@ -134,7 +134,7 @@ public:
         return m_allocation_mdspan.accessor();
     }
 
-    KOKKOS_FUNCTION constexpr SupportType::discrete_vector_type extents() const noexcept
+    KOKKOS_FUNCTION constexpr typename SupportType::discrete_vector_type extents() const noexcept
     {
         return m_domain.extents();
     }

@@ -8,10 +8,9 @@
 #include <cassert>
 #include <memory>
 
-#include <ddc/ddc.hpp>
-
-#include "math_tools.hpp"
-#include "view.hpp"
+#include "ddc/ddc.hpp"
+#include "ddc/kernels/splines/math_tools.hpp"
+#include "ddc/kernels/splines/view.hpp"
 
 namespace ddc {
 

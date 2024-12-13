@@ -9,7 +9,7 @@
 #include <optional>
 #include <string>
 
-#include "discrete_space.hpp"
+#include "ddc/discrete_space.hpp"
 
 namespace ddc {
 

@@ -387,6 +387,22 @@ ChunkSpan(KokkosView const& view, DiscreteDomain<DDims...> domain)
                 detail::kokkos_to_mdspan_layout_t<typename KokkosView::array_layout>,
                 typename KokkosView::memory_space>;
 
+template <class ElementType, class SupportType, class Allocator>
+ChunkSpan(Chunk<ElementType, SupportType, Allocator>& other)
+        -> ChunkSpan<
+                ElementType,
+                SupportType,
+                Kokkos::layout_right,
+                typename Allocator::memory_space>;
+
+template <class ElementType, class SupportType, class Allocator>
+ChunkSpan(Chunk<ElementType, SupportType, Allocator> const& other)
+        -> ChunkSpan<
+                const ElementType,
+                SupportType,
+                Kokkos::layout_right,
+                typename Allocator::memory_space>;
+
 template <
         class ElementType,
         class SupportType,

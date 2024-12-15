@@ -102,7 +102,8 @@ int TestTransformReduceDevice(ddc::ChunkSpan<
 TEST(TransformReduceDevice, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
-    Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const storage("", dom.size());
+    Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const
+            storage("", dom.size());
     ddc::ChunkSpan<
             int,
             DDomXY,

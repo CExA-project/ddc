@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+cmake_minimum_required(VERSION 3.22)
+
 add_executable(ddc_benchmark_deepcopy deepcopy.cpp)
 target_link_libraries(ddc_benchmark_deepcopy PUBLIC benchmark::benchmark DDC::core)
 

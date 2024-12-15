@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+cmake_minimum_required(VERSION 3.22)
+
 include(GoogleTest)
 
 add_library(discrete_space_tests_lib STATIC discrete_space.cpp)

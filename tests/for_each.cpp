@@ -93,7 +93,7 @@ void TestForEachSerialDevice(ddc::ChunkSpan<
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             ddc::DiscreteDomain<>(),
-            KOKKOS_LAMBDA([[maybe_unused]] ddc::DiscreteElement<> i) {
+            KOKKOS_LAMBDA([[maybe_unused]] ddc::DiscreteElement<>) {
                 ddc::for_each(view.domain(), [=](DElemXY const ixy) { view(ixy) = 1; });
             });
 }

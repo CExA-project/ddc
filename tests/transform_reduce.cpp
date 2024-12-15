@@ -75,7 +75,11 @@ TEST(TransformReduce, TwoDimensions)
             dom.size() * (dom.size() - 1) / 2);
 }
 
-int TestTransformReduceDevice(ddc::ChunkSpan<int, DDomXY> chunk)
+int TestTransformReduceDevice(ddc::ChunkSpan<
+                              int,
+                              DDomXY,
+                              Kokkos::layout_right,
+                              typename Kokkos::DefaultExecutionSpace::memory_space> chunk)
 {
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
@@ -99,6 +103,10 @@ TEST(TransformReduceDevice, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> storage("", dom.size());
-    ddc::ChunkSpan<int, DDomXY> const chunk(storage.data(), dom);
+    ddc::ChunkSpan<
+            int,
+            DDomXY,
+            Kokkos::layout_right,
+            typename Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
     EXPECT_EQ(TestTransformReduceDevice(chunk), dom.size());
 }

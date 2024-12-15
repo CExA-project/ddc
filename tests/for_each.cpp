@@ -101,7 +101,7 @@ void TestForEachSerialDevice(ddc::ChunkSpan<
 TEST(ForEachSerialDevice, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
-    Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> storage("", dom.size());
+    Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const storage("", dom.size());
     ddc::ChunkSpan<
             int,
             DDomXY,

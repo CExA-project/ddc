@@ -87,14 +87,14 @@ int TestTransformReduceDevice(ddc::ChunkSpan<
             KOKKOS_LAMBDA([[maybe_unused]] DElem0D unused_elem) {
                 ddc::for_each(chunk.domain(), [=](DElemXY const ixy) { chunk(ixy) = 1; });
             });
-    Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> count("");
+    Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const count("");
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
             KOKKOS_LAMBDA([[maybe_unused]] DElem0D unused_elem) {
                 count() = ddc::transform_reduce(chunk.domain(), 0, ddc::reducer::sum<int>(), chunk);
             });
-    Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace> count_host
+    Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace> const count_host
             = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), count);
     return count_host();
 }
@@ -102,7 +102,7 @@ int TestTransformReduceDevice(ddc::ChunkSpan<
 TEST(TransformReduceDevice, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
-    Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> storage("", dom.size());
+    Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const storage("", dom.size());
     ddc::ChunkSpan<
             int,
             DDomXY,

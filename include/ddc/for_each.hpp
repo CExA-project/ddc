@@ -16,8 +16,9 @@ namespace ddc {
 
 namespace detail {
 
+#pragma hd_warning_disable
 template <class RetType, class Element, std::size_t N, class Functor, class... Is>
-void for_each_serial(
+KOKKOS_FUNCTION void for_each_serial(
         std::array<Element, N> const& begin,
         std::array<Element, N> const& end,
         Functor const& f,
@@ -39,8 +40,9 @@ void for_each_serial(
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
+#pragma hd_warning_disable
 template <class... DDims, class Functor>
-void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
+KOKKOS_FUNCTION void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
     DiscreteElement<DDims...> const ddc_begin = domain.front();
     DiscreteElement<DDims...> const ddc_end = domain.front() + domain.extents();

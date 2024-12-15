@@ -23,13 +23,14 @@ namespace detail {
  *            range. The return type must be acceptable as input to reduce
  * @param[in] dcoords discrete elements from dimensions already in a loop
  */
+#pragma hd_warning_disable
 template <
         class... DDims,
         class T,
         class BinaryReductionOp,
         class UnaryTransformOp,
         class... DCoords>
-T transform_reduce_serial(
+KOKKOS_FUNCTION T transform_reduce_serial(
         DiscreteDomain<DDims...> const& domain,
         [[maybe_unused]] T const neutral,
         BinaryReductionOp const& reduce,
@@ -62,8 +63,9 @@ T transform_reduce_serial(
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
+#pragma hd_warning_disable
 template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
-T transform_reduce(
+KOKKOS_FUNCTION T transform_reduce(
         DiscreteDomain<DDims...> const& domain,
         T neutral,
         BinaryReductionOp&& reduce,

@@ -24,7 +24,7 @@ namespace detail {
  * @param[in] dcoords discrete elements from dimensions already in a loop
  */
 #if defined KOKKOS_ENABLE_CUDA
-#pragma hd_warning_disable
+#pragma nv_exec_check_disable
 #endif
 template <
         class... DDims,
@@ -66,7 +66,7 @@ KOKKOS_FUNCTION T transform_reduce_serial(
  *            range. The return type must be acceptable as input to reduce
  */
 #if defined KOKKOS_ENABLE_CUDA
-#pragma hd_warning_disable
+#pragma nv_exec_check_disable
 #endif
 template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
 KOKKOS_FUNCTION T transform_reduce(

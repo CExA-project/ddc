@@ -91,7 +91,7 @@ int TestTransformReduceDevice(ddc::ChunkSpan<
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             ddc::DiscreteDomain<>(),
-            KOKKOS_LAMBDA(ddc::DiscreteElement<> i) {
+            KOKKOS_LAMBDA([[maybe_unused]] ddc::DiscreteElement<> i) {
                 count() = ddc::transform_reduce(chunk.domain(), 0, ddc::reducer::sum<int>(), chunk);
             });
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace> count_host

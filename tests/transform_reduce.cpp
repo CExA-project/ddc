@@ -84,14 +84,14 @@ int TestTransformReduceDevice(ddc::ChunkSpan<
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             ddc::DiscreteDomain<>(),
-            KOKKOS_LAMBDA([[maybe_unused]] ddc::DiscreteElement<>) {
+            KOKKOS_LAMBDA([[maybe_unused]] ddc::DiscreteElement<> unused_elem) {
                 ddc::for_each(chunk.domain(), [=](DElemXY const ixy) { chunk(ixy) = 1; });
             });
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> count("");
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             ddc::DiscreteDomain<>(),
-            KOKKOS_LAMBDA([[maybe_unused]] ddc::DiscreteElement<>) {
+            KOKKOS_LAMBDA([[maybe_unused]] ddc::DiscreteElement<> unused_elem) {
                 count() = ddc::transform_reduce(chunk.domain(), 0, ddc::reducer::sum<int>(), chunk);
             });
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace> count_host

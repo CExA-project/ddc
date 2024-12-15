@@ -89,8 +89,6 @@ if("${BUILD_TESTING}" AND "${DDC_BUILD_TESTS}")
     elseif("${DDC_GTest_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
         find_package(GTest REQUIRED)
     endif()
-
-    include(GoogleTest)
 endif()
 
 ## Google Benchmark

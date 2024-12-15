@@ -16,7 +16,9 @@ namespace ddc {
 
 namespace detail {
 
+#if defined KOKKOS_ENABLE_CUDA || KOKKOS_ENABLE_HIP
 #pragma hd_warning_disable
+#endif
 template <class RetType, class Element, std::size_t N, class Functor, class... Is>
 KOKKOS_FUNCTION void for_each_serial(
         std::array<Element, N> const& begin,
@@ -40,7 +42,9 @@ KOKKOS_FUNCTION void for_each_serial(
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
+#if defined KOKKOS_ENABLE_CUDA || KOKKOS_ENABLE_HIP
 #pragma hd_warning_disable
+#endif
 template <class... DDims, class Functor>
 KOKKOS_FUNCTION void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {

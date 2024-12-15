@@ -23,7 +23,9 @@ namespace detail {
  *            range. The return type must be acceptable as input to reduce
  * @param[in] dcoords discrete elements from dimensions already in a loop
  */
+#if defined KOKKOS_ENABLE_CUDA || KOKKOS_ENABLE_HIP
 #pragma hd_warning_disable
+#endif
 template <
         class... DDims,
         class T,
@@ -63,7 +65,9 @@ KOKKOS_FUNCTION T transform_reduce_serial(
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
+#if defined KOKKOS_ENABLE_CUDA || KOKKOS_ENABLE_HIP
 #pragma hd_warning_disable
+#endif
 template <class... DDims, class T, class BinaryReductionOp, class UnaryTransformOp>
 KOKKOS_FUNCTION T transform_reduce(
         DiscreteDomain<DDims...> const& domain,

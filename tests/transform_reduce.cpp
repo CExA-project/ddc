@@ -80,7 +80,7 @@ int TestTransformReduceDevice(ddc::ChunkSpan<int, DDomXY> chunk)
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             ddc::DiscreteDomain<>(),
-            KOKKOS_LAMBDA(ddc::DiscreteElement<> i) {
+            KOKKOS_LAMBDA([[maybe_unused]] ddc::DiscreteElement<> i) {
                 ddc::for_each(chunk.domain(), [=](DElemXY const ixy) { chunk(ixy) = 1; });
             });
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> count("");

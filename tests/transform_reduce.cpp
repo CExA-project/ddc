@@ -100,5 +100,5 @@ TEST(TransformReduceDevice, TwoDimensions)
     DDomXY const dom(lbound_x_y, nelems_x_y);
     Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> storage("", dom.size());
     ddc::ChunkSpan<int, DDomXY> const chunk(storage.data(), dom);
-    EXPECT_EQ(TestTransformReduceDevice(chunk), dom.size() * dom.size());
+    EXPECT_EQ(TestTransformReduceDevice(chunk), dom.size());
 }

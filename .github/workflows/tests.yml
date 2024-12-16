@@ -171,9 +171,6 @@ jobs:
           'hip')
             export CC=hipcc
             export CXX=hipcc
-            # We extend the CMAKE_PREFIX_PATH with the content of _ROOT variables to support
-            # rocm 5.7. (likely due to a cmake_minimum_required(VERSION 3.3))
-            export CMAKE_PREFIX_PATH="/opt/rocm:$benchmark_ROOT:$DDC_ROOT:$GTest_ROOT:$Kokkos_ROOT:$KokkosFFT_ROOT:$KokkosKernels_ROOT"
             EXTRA_CMAKE_FLAGS="-DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ENABLE_ROCTHRUST=OFF -DKokkos_ARCH_AMD_GFX90A=ON"
           ;;
           'cpu-clang')

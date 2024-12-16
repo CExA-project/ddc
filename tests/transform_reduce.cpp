@@ -8,6 +8,8 @@
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_StdAlgorithms.hpp>
+
 using DElem0D = ddc::DiscreteElement<>;
 using DVect0D = ddc::DiscreteVector<>;
 using DDom0D = ddc::DiscreteDomain<>;
@@ -75,39 +77,38 @@ TEST(TransformReduce, TwoDimensions)
             dom.size() * (dom.size() - 1) / 2);
 }
 
-int TestTransformReduceDevice(ddc::ChunkSpan<
-                              int,
-                              DDomXY,
-                              Kokkos::layout_right,
-                              typename Kokkos::DefaultExecutionSpace::memory_space> chunk)
+int TestAnnotatedTransformReduce(ddc::ChunkSpan<
+                                 int,
+                                 DDomXY,
+                                 Kokkos::layout_right,
+                                 typename Kokkos::DefaultExecutionSpace::memory_space> chunk)
 {
-    ddc::parallel_for_each(
-            Kokkos::DefaultExecutionSpace(),
-            DDom0D(),
-            KOKKOS_LAMBDA([[maybe_unused]] DElem0D unused_elem) {
-                ddc::for_each(chunk.domain(), [=](DElemXY const ixy) { chunk(ixy) = 1; });
-            });
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const count("");
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
             KOKKOS_LAMBDA([[maybe_unused]] DElem0D unused_elem) {
-                count() = ddc::transform_reduce(chunk.domain(), 0, ddc::reducer::sum<int>(), chunk);
+                count() = ddc::annotated_transform_reduce(
+                        chunk.domain(),
+                        0,
+                        ddc::reducer::sum<int>(),
+                        chunk);
             });
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace> const count_host
             = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), count);
     return count_host();
 }
 
-TEST(TransformReduceDevice, TwoDimensions)
+TEST(AnnotatedTransformReduce, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const
             storage("", dom.size());
+    Kokkos::Experimental::fill(Kokkos::DefaultExecutionSpace(), storage, 1);
     ddc::ChunkSpan<
             int,
             DDomXY,
             Kokkos::layout_right,
             typename Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
-    EXPECT_EQ(TestTransformReduceDevice(chunk), dom.size());
+    EXPECT_EQ(TestAnnotatedTransformReduce(chunk), dom.size());
 }

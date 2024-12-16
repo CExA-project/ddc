@@ -66,7 +66,7 @@ void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
     detail::for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
 }
 
-/** iterates over a nD domain in serial. Can be called from device kernel.
+/** iterates over a nD domain in serial. Can be called from a device kernel.
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */

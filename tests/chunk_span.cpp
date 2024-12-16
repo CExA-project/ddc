@@ -50,12 +50,12 @@ TEST(ChunkSpan1DTest, CtadFromChunk)
 
 TEST(ChunkSpan1DTest, CtadFromKokkosView)
 {
-    using ViewType = Kokkos::View<int*>;
+    using ViewType = Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::HostSpace>;
     EXPECT_TRUE((std::is_same_v<
                  decltype(ddc::ChunkSpan(std::declval<ViewType>(), std::declval<DDomX>())),
                  ddc::ChunkSpan<int, DDomX, Kokkos::layout_right, Kokkos::HostSpace>>));
 
-    using ConstViewType = Kokkos::View<const int*>;
+    using ConstViewType = Kokkos::View<const int*, Kokkos::LayoutRight, Kokkos::HostSpace>;
     EXPECT_TRUE((std::is_same_v<
                  decltype(ddc::ChunkSpan(std::declval<ConstViewType>(), std::declval<DDomX>())),
                  ddc::ChunkSpan<const int, DDomX, Kokkos::layout_right, Kokkos::HostSpace>>));

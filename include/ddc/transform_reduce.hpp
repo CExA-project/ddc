@@ -52,6 +52,15 @@ T transform_reduce_serial(
     DDC_IF_NVCC_THEN_POP
 }
 
+/** A serial reduction over a nD domain. Can be called from a device kernel.
+ * @param[in] domain the range over which to apply the algorithm
+ * @param[in] neutral the neutral element of the reduction operation
+ * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
+ *            results of transform, the results of other reduce and neutral.
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be acceptable as input to reduce
+ * @param[in] dcoords discrete elements from dimensions already in a loop
+ */
 template <
         class... DDims,
         class T,

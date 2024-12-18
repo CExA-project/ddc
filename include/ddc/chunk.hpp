@@ -24,28 +24,24 @@ class Chunk;
 template <class ElementType, class SupportType, class Allocator>
 inline constexpr bool enable_chunk<Chunk<ElementType, SupportType, Allocator>> = true;
 
-template <class ElementType, class... DDims, class Allocator>
-class Chunk<ElementType, DiscreteDomain<DDims...>, Allocator>
-    : public ChunkCommon<ElementType, DiscreteDomain<DDims...>, Kokkos::layout_right>
+template <class ElementType, class SupportType, class Allocator>
+class Chunk : public ChunkCommon<ElementType, SupportType, Kokkos::layout_right>
 {
 protected:
-    using base_type = ChunkCommon<ElementType, DiscreteDomain<DDims...>, Kokkos::layout_right>;
-
-    /// ND memory view
-    using internal_mdspan_type = typename base_type::internal_mdspan_type;
+    using base_type = ChunkCommon<ElementType, SupportType, Kokkos::layout_right>;
 
 public:
     /// type of a span of this full chunk
     using span_type = ChunkSpan<
             ElementType,
-            DiscreteDomain<DDims...>,
+            SupportType,
             Kokkos::layout_right,
             typename Allocator::memory_space>;
 
     /// type of a view of this full chunk
     using view_type = ChunkSpan<
             ElementType const,
-            DiscreteDomain<DDims...>,
+            SupportType,
             Kokkos::layout_right,
             typename Allocator::memory_space>;
 
@@ -91,7 +87,7 @@ public:
     /// Construct a labeled Chunk on a domain with uninitialized values
     explicit Chunk(
             std::string const& label,
-            discrete_domain_type const& domain,
+            SupportType const& domain,
             Allocator allocator = Allocator())
         : base_type(allocator.allocate(label, domain.size()), domain)
         , m_allocator(std::move(allocator))
@@ -100,7 +96,7 @@ public:
     }
 
     /// Construct a Chunk on a domain with uninitialized values
-    explicit Chunk(discrete_domain_type const& domain, Allocator allocator = Allocator())
+    explicit Chunk(SupportType const& domain, Allocator allocator = Allocator())
         : Chunk("no-label", domain, std::move(allocator))
     {
     }
@@ -116,12 +112,13 @@ public:
         , m_allocator(std::move(other.m_allocator))
         , m_label(std::move(other.m_label))
     {
-        other.m_internal_mdspan = internal_mdspan_type(nullptr, other.m_internal_mdspan.mapping());
+        other.m_allocation_mdspan
+                = allocation_mdspan_type(nullptr, other.m_allocation_mdspan.mapping());
     }
 
     ~Chunk() noexcept
     {
-        if (this->m_internal_mdspan.data_handle()) {
+        if (this->m_allocation_mdspan.data_handle()) {
             m_allocator.deallocate(this->data_handle(), this->size());
         }
     }
@@ -138,44 +135,45 @@ public:
         if (this == &other) {
             return *this;
         }
-        if (this->m_internal_mdspan.data_handle()) {
+        if (this->m_allocation_mdspan.data_handle()) {
             m_allocator.deallocate(this->data_handle(), this->size());
         }
         static_cast<base_type&>(*this) = std::move(static_cast<base_type&>(other));
         m_allocator = std::move(other.m_allocator);
         m_label = std::move(other.m_label);
-        other.m_internal_mdspan = internal_mdspan_type(nullptr, other.m_internal_mdspan.mapping());
+        other.m_allocation_mdspan
+                = allocation_mdspan_type(nullptr, other.m_allocation_mdspan.mapping());
 
         return *this;
     }
 
-    /// Slice out some dimensions
-    template <class... QueryDDims>
-    auto operator[](DiscreteElement<QueryDDims...> const& slice_spec) const
-    {
-        return view_type(*this)[slice_spec];
-    }
+    // /// Slice out some dimensions
+    // template <class... QueryDDims>
+    // auto operator[](DiscreteElement<QueryDDims...> const& slice_spec) const
+    // {
+    //     return view_type(*this)[slice_spec];
+    // }
 
-    /// Slice out some dimensions
-    template <class... QueryDDims>
-    auto operator[](DiscreteElement<QueryDDims...> const& slice_spec)
-    {
-        return span_view()[slice_spec];
-    }
+    // /// Slice out some dimensions
+    // template <class... QueryDDims>
+    // auto operator[](DiscreteElement<QueryDDims...> const& slice_spec)
+    // {
+    //     return span_view()[slice_spec];
+    // }
 
-    /// Slice out some dimensions
-    template <class... QueryDDims>
-    auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
-    {
-        return span_view()[odomain];
-    }
+    // /// Slice out some dimensions
+    // template <class... QueryDDims>
+    // auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
+    // {
+    //     return span_view()[odomain];
+    // }
 
-    /// Slice out some dimensions
-    template <class... QueryDDims>
-    auto operator[](DiscreteDomain<QueryDDims...> const& odomain)
-    {
-        return span_view()[odomain];
-    }
+    // /// Slice out some dimensions
+    // template <class... QueryDDims>
+    // auto operator[](DiscreteDomain<QueryDDims...> const& odomain)
+    // {
+    //     return span_view()[odomain];
+    // }
 
     /** Element access using a list of DiscreteElement
      * @param delems discrete coordinates
@@ -185,12 +183,13 @@ public:
     element_type const& operator()(DElems const&... delems) const noexcept
     {
         static_assert(
-                sizeof...(DDims) == (0 + ... + DElems::size()),
+                SupportType::rank() == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        assert(((select<DDims>(take<DDims>(delems...)) >= front<DDims>(this->m_domain)) && ...));
-        assert(((select<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain)) && ...));
-        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
+        assert(this->m_domain.is_inside(delems...));
+        return DDC_MDSPAN_ACCESS_OP(
+                this->m_allocation_mdspan,
+                detail::array(this->m_domain.distance_from_front(delems...)));
     }
 
     /** Element access using a list of DiscreteElement
@@ -201,12 +200,13 @@ public:
     element_type& operator()(DElems const&... delems) noexcept
     {
         static_assert(
-                sizeof...(DDims) == (0 + ... + DElems::size()),
+                SupportType::rank() == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        assert(((select<DDims>(take<DDims>(delems...)) >= front<DDims>(this->m_domain)) && ...));
-        assert(((select<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain)) && ...));
-        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
+        assert(this->m_domain.is_inside(delems...));
+        return DDC_MDSPAN_ACCESS_OP(
+                this->m_allocation_mdspan,
+                detail::array(this->m_domain.distance_from_front(delems...)));
     }
 
     /** Returns the label of the Chunk
@@ -258,9 +258,9 @@ public:
         auto kokkos_layout = detail::build_kokkos_layout(
                 s.extents(),
                 s.mapping(),
-                std::make_index_sequence<sizeof...(DDims)> {});
+                std::make_index_sequence<SupportType::rank()> {});
         return Kokkos::View<
-                detail::mdspan_to_kokkos_element_t<ElementType, sizeof...(DDims)>,
+                detail::mdspan_to_kokkos_element_t<ElementType, SupportType::rank()>,
                 decltype(kokkos_layout),
                 typename Allocator::memory_space>(s.data_handle(), kokkos_layout);
     }
@@ -274,9 +274,9 @@ public:
         auto kokkos_layout = detail::build_kokkos_layout(
                 s.extents(),
                 s.mapping(),
-                std::make_index_sequence<sizeof...(DDims)> {});
+                std::make_index_sequence<SupportType::rank()> {});
         return Kokkos::View<
-                detail::mdspan_to_kokkos_element_t<const ElementType, sizeof...(DDims)>,
+                detail::mdspan_to_kokkos_element_t<const ElementType, SupportType::rank()>,
                 decltype(kokkos_layout),
                 typename Allocator::memory_space>(s.data_handle(), kokkos_layout);
     }
@@ -297,13 +297,13 @@ public:
     }
 };
 
-template <class... DDims, class Allocator>
+template <class SupportType, class Allocator>
 Chunk(std::string const&,
-      DiscreteDomain<DDims...> const&,
-      Allocator) -> Chunk<typename Allocator::value_type, DiscreteDomain<DDims...>, Allocator>;
+      SupportType const&,
+      Allocator) -> Chunk<typename Allocator::value_type, SupportType, Allocator>;
 
-template <class... DDims, class Allocator>
-Chunk(DiscreteDomain<DDims...> const&,
-      Allocator) -> Chunk<typename Allocator::value_type, DiscreteDomain<DDims...>, Allocator>;
+template <class SupportType, class Allocator>
+Chunk(SupportType const&,
+      Allocator) -> Chunk<typename Allocator::value_type, SupportType, Allocator>;
 
 } // namespace ddc

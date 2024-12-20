@@ -26,7 +26,8 @@ auto parallel_deepcopy(ChunkDst&& dst, ChunkSrc&& src)
     static_assert(
             std::is_assignable_v<chunk_reference_t<ChunkDst>, chunk_reference_t<ChunkSrc>>,
             "Not assignable");
-    assert(dst.domain().extents() == src.domain().extents());
+    static_assert(std::is_same_v<decltype(dst.domain()), decltype(src.domain())>);
+    assert(dst.domain() == src.domain());
     Kokkos::deep_copy(dst.allocation_kokkos_view(), src.allocation_kokkos_view());
     return dst.span_view();
 }
@@ -45,7 +46,10 @@ auto parallel_deepcopy(ExecSpace const& execution_space, ChunkDst&& dst, ChunkSr
     static_assert(
             std::is_assignable_v<chunk_reference_t<ChunkDst>, chunk_reference_t<ChunkSrc>>,
             "Not assignable");
-    assert(dst.domain().extents() == src.domain().extents());
+    static_assert(
+            std::is_same_v<decltype(dst.domain()), decltype(src.domain())>,
+            "ddc::parallel_deepcopy only supports domains whose dimensions are of the same order");
+    assert(dst.domain() == src.domain());
     Kokkos::deep_copy(execution_space, dst.allocation_kokkos_view(), src.allocation_kokkos_view());
     return dst.span_view();
 }

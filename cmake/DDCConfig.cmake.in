@@ -28,7 +28,7 @@ if(@DDC_BUILD_KERNELS_SPLINES@)
    list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
    ddc_find_dependency(LAPACKE)
    list(POP_FRONT CMAKE_MODULE_PATH)
-   ddc_find_dependency(KokkosKernels)
+   ddc_find_dependency(KokkosKernels 4.5...<5)
 endif()
 
 if(@DDC_BUILD_PDI_WRAPPER@)

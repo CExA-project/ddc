@@ -18,8 +18,9 @@
 #include <lapacke.h>
 #endif
 
-#include "KokkosBatched_Getrs.hpp"
 #include <KokkosBatched_Util.hpp>
+
+#include "kokkos-kernels-ext/KokkosBatched_Getrs.hpp"
 
 #include "splines_linear_problem.hpp"
 

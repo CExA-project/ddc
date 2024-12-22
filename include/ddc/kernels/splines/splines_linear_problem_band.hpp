@@ -20,8 +20,9 @@
 #include <lapacke.h>
 #endif
 
-#include "KokkosBatched_Gbtrs.hpp"
 #include <KokkosBatched_Util.hpp>
+
+#include "kokkos-kernels-ext/KokkosBatched_Gbtrs.hpp"
 
 #include "splines_linear_problem.hpp"
 

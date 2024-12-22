@@ -208,9 +208,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     )
     if("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "AUTO")
         if(NOT TARGET Kokkos::kokkoskernels)
-            # fork https://github.com/yasahi-hpc/kokkos-kernels
-            # on branch develop-spline-kernels-v2
-            find_package(KokkosKernels QUIET)
+            find_package(KokkosKernels 4.5.1...<5 QUIET)
             if(NOT KokkosKernels_FOUND)
                 ddc_configure_kokkos_kernels()
             endif()
@@ -218,9 +216,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
         ddc_configure_kokkos_kernels()
     elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        # fork https://github.com/yasahi-hpc/kokkos-kernels
-        # on branch develop-spline-kernels-v2
-        find_package(KokkosKernels REQUIRED)
+        find_package(KokkosKernels 4.5.1...<5 REQUIRED)
     endif()
 
     add_library(ddc_splines INTERFACE)

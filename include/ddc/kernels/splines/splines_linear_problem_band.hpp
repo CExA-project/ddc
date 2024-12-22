@@ -20,8 +20,9 @@
 #include <lapacke.h>
 #endif
 
-#include <KokkosBatched_Gbtrs.hpp>
 #include <KokkosBatched_Util.hpp>
+
+#include "kokkos-kernels-ext/KokkosBatched_Gbtrs.hpp"
 
 #include "splines_linear_problem.hpp"
 
@@ -189,7 +190,7 @@ public:
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                         KokkosBatched::SerialGbtrs<
                                 KokkosBatched::Trans::Transpose,
-                                KokkosBatched::Algo::Gbtrs::Unblocked>::
+                                KokkosBatched::Algo::Level3::Unblocked>::
                                 invoke(q_device, sub_b, ipiv_device, kl_proxy, ku_proxy);
                     });
         } else {
@@ -200,7 +201,7 @@ public:
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                         KokkosBatched::SerialGbtrs<
                                 KokkosBatched::Trans::NoTranspose,
-                                KokkosBatched::Algo::Gbtrs::Unblocked>::
+                                KokkosBatched::Algo::Level3::Unblocked>::
                                 invoke(q_device, sub_b, ipiv_device, kl_proxy, ku_proxy);
                     });
         }

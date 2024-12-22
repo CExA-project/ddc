@@ -1,18 +1,9 @@
-//@HEADER
-// ************************************************************************
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
 //
-//                        Kokkos v. 4.0
-//       Copyright (2022) National Technology & Engineering
-//               Solutions of Sandia, LLC (NTESS).
-//
-// Under the terms of Contract DE-NA0003525 with NTESS,
-// the U.S. Government retains certain rights in this software.
-//
-// Part of Kokkos, under the Apache License v2.0 with LLVM Exceptions.
-// See https://kokkos.org/LICENSE for license information.
-// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-//
-//@HEADER
+// SPDX-License-Identifier: MIT
+
+// clang-format off
+// NOLINTBEGIN(*)
 
 #ifndef KOKKOSBATCHED_GETRS_SERIAL_IMPL_HPP_
 #define KOKKOSBATCHED_GETRS_SERIAL_IMPL_HPP_
@@ -69,8 +60,8 @@ struct SerialGetrs<Trans::NoTranspose, Algo::Level3::Unblocked> {
 
     [[maybe_unused]] auto info_laswp = KokkosBatched::SerialLaswp<Direct::Forward>::invoke(piv, b);
 
-    auto info_trsm = KokkosBatched::SerialTrsm<Side::Left, Uplo::Lower, Trans::NoTranspose, Diag::Unit,
-                                               Algo::Trsm::Unblocked>::invoke(1.0, A, b);
+    [[maybe_unused]] auto info_trsm = KokkosBatched::SerialTrsm<Side::Left, Uplo::Lower, Trans::NoTranspose, Diag::Unit,
+                                                                Algo::Trsm::Unblocked>::invoke(1.0, A, b);
     info_trsm      = KokkosBatched::SerialTrsm<Side::Left, Uplo::Upper, Trans::NoTranspose, Diag::NonUnit,
                                           Algo::Trsm::Unblocked>::invoke(1.0, A, b);
 
@@ -89,8 +80,8 @@ struct SerialGetrs<Trans::Transpose, Algo::Level3::Unblocked> {
     auto info = checkGetrsInput(A, b);
     if (info) return info;
 
-    auto info_trsm = KokkosBatched::SerialTrsm<Side::Left, Uplo::Upper, Trans::Transpose, Diag::NonUnit,
-                                               Algo::Trsm::Unblocked>::invoke(1.0, A, b);
+    [[maybe_unused]] auto info_trsm = KokkosBatched::SerialTrsm<Side::Left, Uplo::Upper, Trans::Transpose, Diag::NonUnit,
+                                                                Algo::Trsm::Unblocked>::invoke(1.0, A, b);
     info_trsm =
         KokkosBatched::SerialTrsm<Side::Left, Uplo::Lower, Trans::Transpose, Diag::Unit, Algo::Trsm::Unblocked>::invoke(
             1.0, A, b);
@@ -103,3 +94,6 @@ struct SerialGetrs<Trans::Transpose, Algo::Level3::Unblocked> {
 }  // namespace KokkosBatched
 
 #endif  // KOKKOSBATCHED_GETRS_SERIAL_IMPL_HPP_
+
+// NOLINTEND(*)
+// clang-format on

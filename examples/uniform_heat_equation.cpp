@@ -231,34 +231,26 @@ int main(int argc, char** argv)
         //! [time iteration]
 
         //! [boundary conditions]
-        ddc::parallel_deepcopy(
-                ghosted_last_temp[ddc::DiscreteDomain<
-                        DDimX,
-                        DDimY>(x_pre_ghost, y_domain)],
-                ghosted_last_temp[ddc::DiscreteDomain<
-                        DDimX,
-                        DDimY>(y_domain, x_domain_end)]);
-        ddc::parallel_deepcopy(
-                ghosted_last_temp[ddc::DiscreteDomain<
-                        DDimX,
-                        DDimY>(y_domain, x_post_ghost)],
-                ghosted_last_temp[ddc::DiscreteDomain<
-                        DDimX,
-                        DDimY>(y_domain, x_domain_begin)]);
-        ddc::parallel_deepcopy(
-                ghosted_last_temp[ddc::DiscreteDomain<
-                        DDimX,
-                        DDimY>(x_domain, y_pre_ghost)],
-                ghosted_last_temp[ddc::DiscreteDomain<
-                        DDimX,
-                        DDimY>(x_domain, y_domain_end)]);
-        ddc::parallel_deepcopy(
-                ghosted_last_temp[ddc::DiscreteDomain<
-                        DDimX,
-                        DDimY>(x_domain, y_post_ghost)],
-                ghosted_last_temp[ddc::DiscreteDomain<
-                        DDimX,
-                        DDimY>(x_domain, y_domain_begin)]);
+        for (ddc::DiscreteElement<DDimX> const ix : x_pre_ghost) {
+            ddc::parallel_deepcopy(
+                    ghosted_last_temp[ix][y_domain],
+                    ghosted_last_temp[ix + nb_x_points][y_domain]);
+        }
+        for (ddc::DiscreteElement<DDimX> const ix : x_post_ghost) {
+            ddc::parallel_deepcopy(
+                    ghosted_last_temp[ix][y_domain],
+                    ghosted_last_temp[ix - nb_x_points][y_domain]);
+        }
+        for (ddc::DiscreteElement<DDimY> const iy : y_pre_ghost) {
+            ddc::parallel_deepcopy(
+                    ghosted_last_temp[x_domain][iy],
+                    ghosted_last_temp[x_domain][iy + nb_y_points]);
+        }
+        for (ddc::DiscreteElement<DDimY> const iy : y_post_ghost) {
+            ddc::parallel_deepcopy(
+                    ghosted_last_temp[x_domain][iy],
+                    ghosted_last_temp[x_domain][iy - nb_y_points]);
+        }
         //! [boundary conditions]
 
         //! [manipulated views]

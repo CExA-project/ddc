@@ -4,7 +4,7 @@ var classddc_1_1PeriodicSampling_1_1Impl =
     [ "discrete_domain_type", "classddc_1_1PeriodicSampling_1_1Impl.html#a1bb780b03d0533f58b5bd01e06d557b5", null ],
     [ "discrete_element_type", "classddc_1_1PeriodicSampling_1_1Impl.html#a04c55f7720e9ca6edce4a177af83d5b5", null ],
     [ "discrete_vector_type", "classddc_1_1PeriodicSampling_1_1Impl.html#af057db14d2f80b6bfff7a0848e901032", null ],
-    [ "Impl", "classddc_1_1PeriodicSampling_1_1Impl.html#a179ae0ef527393831bae4725b9c83e94", null ],
+    [ "Impl", "classddc_1_1PeriodicSampling_1_1Impl.html#a48408832198d38e31e5ec063fd692ed8", null ],
     [ "Impl", "classddc_1_1PeriodicSampling_1_1Impl.html#aa09913f33d35272ad78a57d1cabe2d87", null ],
     [ "Impl", "classddc_1_1PeriodicSampling_1_1Impl.html#ae7ae2af71e89e0decf6589e135e6872b", null ],
     [ "Impl", "classddc_1_1PeriodicSampling_1_1Impl.html#ae7ec0a74fc26c91b21076463ad705e45", null ],

@@ -22,7 +22,7 @@
 #include <KokkosBatched_Pbtrs.hpp>
 #include <KokkosBatched_Util.hpp>
 
-#include "ddc/kernels/splines/splines_linear_problem.hpp"
+#include "splines_linear_problem.hpp"
 
 namespace ddc::detail {
 

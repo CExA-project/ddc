@@ -8,9 +8,9 @@
 #include <cstddef>
 #include <utility>
 
-#include "ddc/discrete_domain.hpp"
-#include "ddc/discrete_element.hpp"
-#include "ddc/discrete_vector.hpp"
+#include "discrete_domain.hpp"
+#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 

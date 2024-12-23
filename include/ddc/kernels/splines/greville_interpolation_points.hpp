@@ -8,10 +8,11 @@
 #include <type_traits>
 #include <vector>
 
-#include "ddc/ddc.hpp"
-#include "ddc/kernels/splines/bsplines_non_uniform.hpp"
-#include "ddc/kernels/splines/bsplines_uniform.hpp"
-#include "ddc/kernels/splines/spline_boundary_conditions.hpp"
+#include <ddc/ddc.hpp>
+
+#include "bsplines_non_uniform.hpp"
+#include "bsplines_uniform.hpp"
+#include "spline_boundary_conditions.hpp"
 
 namespace ddc {
 

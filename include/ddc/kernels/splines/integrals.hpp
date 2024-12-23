@@ -8,9 +8,10 @@
 #include <cassert>
 #include <cstddef>
 
-#include "ddc/ddc.hpp"
-#include "ddc/kernels/splines/bsplines_non_uniform.hpp"
-#include "ddc/kernels/splines/bsplines_uniform.hpp"
+#include <ddc/ddc.hpp>
+
+#include "bsplines_non_uniform.hpp"
+#include "bsplines_uniform.hpp"
 
 namespace ddc {
 

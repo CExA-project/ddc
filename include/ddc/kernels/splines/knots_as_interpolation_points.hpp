@@ -6,10 +6,11 @@
 
 #include <vector>
 
-#include "ddc/ddc.hpp"
-#include "ddc/kernels/splines/bsplines_uniform.hpp"
-#include "ddc/kernels/splines/knot_discrete_dimension_type.hpp"
-#include "ddc/kernels/splines/spline_boundary_conditions.hpp"
+#include <ddc/ddc.hpp>
+
+#include "bsplines_uniform.hpp"
+#include "knot_discrete_dimension_type.hpp"
+#include "spline_boundary_conditions.hpp"
 
 namespace ddc {
 

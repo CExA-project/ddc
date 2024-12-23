@@ -11,7 +11,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/detail/macros.hpp"
+#include "macros.hpp"
 
 // if MDSPAN_USE_BRACKET_OPERATOR is defined then we are likely
 // using the Kokkos implementation of mdspan

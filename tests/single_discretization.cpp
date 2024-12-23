@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <ddc/experimental/single_discretization.hpp>
+#include <ddc/ddc.hpp>
+#include <ddc/experimental_single_discretization.hpp>
 
 #include <gtest/gtest.h>
 

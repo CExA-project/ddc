@@ -8,12 +8,13 @@
 #include <cstddef>
 #include <type_traits>
 
+#include <ddc/ddc.hpp>
+
 #include <Kokkos_Macros.hpp>
 #include <Kokkos_MathematicalFunctions.hpp>
 
-#include "ddc/ddc.hpp"
-#include "ddc/kernels/splines/integrals.hpp"
-#include "ddc/kernels/splines/periodic_extrapolation_rule.hpp"
+#include "integrals.hpp"
+#include "periodic_extrapolation_rule.hpp"
 
 namespace ddc {
 

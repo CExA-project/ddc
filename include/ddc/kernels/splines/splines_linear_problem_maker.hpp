@@ -11,13 +11,13 @@
 #include <optional>
 #include <utility>
 
-#include "ddc/kernels/splines/splines_linear_problem_2x2_blocks.hpp"
-#include "ddc/kernels/splines/splines_linear_problem_3x3_blocks.hpp"
-#include "ddc/kernels/splines/splines_linear_problem_band.hpp"
-#include "ddc/kernels/splines/splines_linear_problem_dense.hpp"
-#include "ddc/kernels/splines/splines_linear_problem_pds_band.hpp"
-#include "ddc/kernels/splines/splines_linear_problem_pds_tridiag.hpp"
-#include "ddc/kernels/splines/splines_linear_problem_sparse.hpp"
+#include "splines_linear_problem_2x2_blocks.hpp"
+#include "splines_linear_problem_3x3_blocks.hpp"
+#include "splines_linear_problem_band.hpp"
+#include "splines_linear_problem_dense.hpp"
+#include "splines_linear_problem_pds_band.hpp"
+#include "splines_linear_problem_pds_tridiag.hpp"
+#include "splines_linear_problem_sparse.hpp"
 
 namespace ddc::detail {
 

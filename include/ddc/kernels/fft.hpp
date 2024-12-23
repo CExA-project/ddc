@@ -8,10 +8,10 @@
 #include <type_traits>
 #include <utility>
 
+#include <ddc/ddc.hpp>
+
 #include <KokkosFFT.hpp>
 #include <Kokkos_Core.hpp>
-
-#include "ddc/ddc.hpp"
 
 namespace ddc {
 

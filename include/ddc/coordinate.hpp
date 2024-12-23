@@ -9,9 +9,10 @@
 
 #include <Kokkos_Macros.hpp>
 
-#include "ddc/detail/tagged_vector.hpp"
-#include "ddc/discrete_element.hpp"
-#include "ddc/real_type.hpp"
+#include "detail/tagged_vector.hpp"
+
+#include "discrete_element.hpp"
+#include "real_type.hpp"
 
 namespace ddc {
 

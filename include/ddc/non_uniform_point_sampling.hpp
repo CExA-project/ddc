@@ -115,7 +115,7 @@ public:
         /// @brief Lower bound index of the mesh
         KOKKOS_FUNCTION discrete_element_type front() const noexcept
         {
-            return discrete_element_type {0};
+            return discrete_element_type(0);
         }
 
         /// @brief Convert a mesh index into a position in `CDim`
@@ -175,9 +175,9 @@ public:
         typename DDim::template Impl<DDim, Kokkos::HostSpace> disc(full_domain);
 
         DiscreteDomain<DDim> ghosted_domain(disc.front(), n + n_ghosts_before + n_ghosts_after);
-        DiscreteDomain<DDim> pre_ghost(ghosted_domain.front(), n_ghosts_before);
-        DiscreteDomain<DDim> main_domain(ghosted_domain.front() + n_ghosts_before, n);
-        DiscreteDomain<DDim> post_ghost(main_domain.back() + 1, n_ghosts_after);
+        DiscreteDomain<DDim> pre_ghost = ghosted_domain.take_first(n_ghosts_before);
+        DiscreteDomain<DDim> main_domain = ghosted_domain.remove(n_ghosts_before, n_ghosts_after);
+        DiscreteDomain<DDim> post_ghost = ghosted_domain.take_last(n_ghosts_after);
         return std::make_tuple(
                 std::move(disc),
                 std::move(main_domain),

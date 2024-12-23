@@ -51,11 +51,11 @@ public:
         friend class Impl;
 
     private:
-        continuous_element_type m_origin {0};
+        continuous_element_type m_origin;
 
-        Real m_step {1};
+        Real m_step;
 
-        std::size_t m_n_period {2};
+        std::size_t m_n_period;
 
     public:
         using discrete_dimension_type = PeriodicSampling;
@@ -66,7 +66,7 @@ public:
 
         using discrete_vector_type = DiscreteVector<DDim>;
 
-        Impl() = default;
+        Impl() noexcept : m_origin(0), m_step(1), m_n_period(2) {}
 
         Impl(Impl const&) = delete;
 
@@ -110,7 +110,7 @@ public:
         /// @brief Lower bound index of the mesh
         KOKKOS_FUNCTION discrete_element_type front() const noexcept
         {
-            return discrete_element_type {0};
+            return discrete_element_type(0);
         }
 
         /// @brief Spacing step of the mesh
@@ -158,8 +158,8 @@ public:
         assert(n > 1);
         assert(n_period > 1);
         typename DDim::template Impl<DDim, Kokkos::HostSpace>
-                disc(a, Coordinate<CDim> {(b - a) / (n - 1)}, n_period);
-        DiscreteDomain<DDim> domain {disc.front(), n};
+                disc(a, Coordinate<CDim>((b - a) / (n - 1)), n_period);
+        DiscreteDomain<DDim> domain(disc.front(), n);
         return std::make_tuple(std::move(disc), std::move(domain));
     }
 
@@ -190,23 +190,18 @@ public:
             DiscreteVector<DDim> n_ghosts_before,
             DiscreteVector<DDim> n_ghosts_after)
     {
-        using discrete_domain_type = DiscreteDomain<DDim>;
         assert(a < b);
         assert(n > 1);
         assert(n_period > 1);
-        Real discretization_step {(b - a) / (n - 1)};
+        Real const discretization_step = (b - a) / (n - 1);
         Impl<DDim, Kokkos::HostSpace>
                 disc(a - n_ghosts_before.value() * discretization_step,
                      discretization_step,
                      n_period);
-        discrete_domain_type ghosted_domain
-                = discrete_domain_type(disc.front(), n + n_ghosts_before + n_ghosts_after);
-        discrete_domain_type pre_ghost
-                = discrete_domain_type(ghosted_domain.front(), n_ghosts_before);
-        discrete_domain_type main_domain
-                = discrete_domain_type(ghosted_domain.front() + n_ghosts_before, n);
-        discrete_domain_type post_ghost
-                = discrete_domain_type(main_domain.back() + 1, n_ghosts_after);
+        DiscreteDomain<DDim> ghosted_domain(disc.front(), n + n_ghosts_before + n_ghosts_after);
+        DiscreteDomain<DDim> pre_ghost = ghosted_domain.take_first(n_ghosts_before);
+        DiscreteDomain<DDim> main_domain = ghosted_domain.remove(n_ghosts_before, n_ghosts_after);
+        DiscreteDomain<DDim> post_ghost = ghosted_domain.take_last(n_ghosts_after);
         return std::make_tuple(
                 std::move(disc),
                 std::move(main_domain),

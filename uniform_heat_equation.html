@@ -300,88 +300,80 @@ $(document).ready(function(){initNavTree('uniform_heat_equation.html',''); initR
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> <span class="keyword">const</span> iter :</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>         time_domain.remove_first(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;DDimT&gt;(1))) {</div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                        DDimX,</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                        DDimY&gt;(x_pre_ghost, y_domain)],</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                        DDimX,</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                        DDimY&gt;(y_domain, x_domain_end)]);</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>                        DDimX,</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                        DDimY&gt;(y_domain, x_post_ghost)],</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                        DDimX,</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                        DDimY&gt;(y_domain, x_domain_begin)]);</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                        DDimX,</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                        DDimY&gt;(x_domain, y_pre_ghost)],</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>                        DDimX,</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                        DDimY&gt;(x_domain, y_domain_end)]);</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>                        DDimX,</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>                        DDimY&gt;(x_domain, y_post_ghost)],</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>                ghosted_last_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                        DDimX,</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>                        DDimY&gt;(x_domain, y_domain_begin)]);</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> <span class="keyword">const</span> ix : x_pre_ghost) {</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                    ghosted_last_temp[ix][y_domain],</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                    ghosted_last_temp[ix + nb_x_points][y_domain]);</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        }</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        <span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> <span class="keyword">const</span> ix : x_post_ghost) {</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                    ghosted_last_temp[ix][y_domain],</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                    ghosted_last_temp[ix - nb_x_points][y_domain]);</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        }</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> <span class="keyword">const</span> iy : y_pre_ghost) {</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                    ghosted_last_temp[x_domain][iy],</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                    ghosted_last_temp[x_domain][iy + nb_y_points]);</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        }</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> <span class="keyword">const</span> iy : y_post_ghost) {</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                    ghosted_last_temp[x_domain][iy],</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                    ghosted_last_temp[x_domain][iy - nb_y_points]);</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        }</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> next_temp(</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>                ghosted_next_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>                        DDimX,</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                        DDimY&gt;(x_domain, y_domain)]);</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> last_temp(ghosted_last_temp.span_cview());</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span> </div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> next_temp(</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                ghosted_next_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                        DDimX,</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>                        DDimY&gt;(x_domain, y_domain)]);</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        <a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> last_temp(ghosted_last_temp.span_cview());</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        <a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>                next_temp.domain(),</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                KOKKOS_LAMBDA(</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>                        <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> ixy) {</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> <span class="keyword">const</span> ix(ixy);</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> <span class="keyword">const</span> iy(ixy);</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>                    <span class="keywordtype">double</span> <span class="keyword">const</span> dt = <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::step&lt;DDimT&gt;</a>();</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span> </div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                    next_temp(ix, iy) = last_temp(ix, iy);</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                    next_temp(ix, iy) += kx * dt</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>                                         * (last_temp(ix + 1, iy)</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                                            - 2.0 * last_temp(ix, iy)</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                                            + last_temp(ix - 1, iy))</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                                         * invdx2;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        <a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                next_temp.domain(),</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                KOKKOS_LAMBDA(</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>                        <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> ixy) {</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> <span class="keyword">const</span> ix(ixy);</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>                    <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> <span class="keyword">const</span> iy(ixy);</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>                    <span class="keywordtype">double</span> <span class="keyword">const</span> dt = <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::step&lt;DDimT&gt;</a>();</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                    next_temp(ix, iy) = last_temp(ix, iy);</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>                    next_temp(ix, iy) += kx * dt</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                                         * (last_temp(ix + 1, iy)</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>                                            - 2.0 * last_temp(ix, iy)</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                                            + last_temp(ix - 1, iy))</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                                         * invdx2;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                    next_temp(ix, iy) += ky * dt</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                                         * (last_temp(ix, iy + 1)</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                                            - 2.0 * last_temp(ix, iy)</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>                                            + last_temp(ix, iy - 1))</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                                         * invdy2;</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                });</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>                    next_temp(ix, iy) += ky * dt</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                                         * (last_temp(ix, iy + 1)</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>                                            - 2.0 * last_temp(ix, iy)</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>                                            + last_temp(ix, iy - 1))</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>                                         * invdy2;</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>                });</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        <span class="keywordflow">if</span> (iter - last_output_iter &gt;= t_output_period) {</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>            last_output_iter = iter;</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>            <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_next_temp);</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>            display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(iter),</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>                    ghosted_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>                            DDimX,</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>                            DDimY&gt;(x_domain, y_domain)]);</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        }</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        std::swap(ghosted_last_temp, ghosted_next_temp);</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    }</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    <span class="keywordflow">if</span> (last_output_iter &lt; time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()) {</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()),</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>                ghosted_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>                        DDimX,</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>                        DDimY&gt;(x_domain, y_domain)]);</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    }</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span><span class="preprocessor">#if defined(DDC_EXAMPLE_WITH_PDI)</span></div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    PDI_finalize();</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    PC_tree_destroy(&amp;pdi_conf);</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>}</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        <span class="keywordflow">if</span> (iter - last_output_iter &gt;= t_output_period) {</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>            last_output_iter = iter;</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_next_temp);</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>            display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(iter),</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>                    ghosted_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>                            DDimX,</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>                            DDimY&gt;(x_domain, y_domain)]);</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>        }</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>        std::swap(ghosted_last_temp, ghosted_next_temp);</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    }</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="keywordflow">if</span> (last_output_iter &lt; time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()) {</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()),</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>                ghosted_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt;</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>                        DDimX,</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>                        DDimY&gt;(x_domain, y_domain)]);</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    }</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span><span class="preprocessor">#if defined(DDC_EXAMPLE_WITH_PDI)</span></div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    PDI_finalize();</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    PC_tree_destroy(&amp;pdi_conf);</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>}</div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a></div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00052">discrete_domain.hpp:53</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a75660adbd6207e6dd4eec152cae420de"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">ddc::DiscreteDomain::front</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00140">discrete_domain.hpp:140</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_abc808a930eda098e573917e26c5140b3"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">ddc::DiscreteDomain::back</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type back() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00145">discrete_domain.hpp:145</a></div></div>

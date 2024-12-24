@@ -156,12 +156,13 @@ int main(int argc, char** argv)
     //! [X-domains]
     // our zone at the start of the domain that will be mirrored to the
     // ghost
-    ddc::DiscreteDomain<DDimX> const
-            x_domain_begin(x_domain.front(), x_post_ghost.extents());
+    ddc::DiscreteDomain<DDimX> const x_post_mirror(
+            x_post_ghost.front() - x_domain.extents(),
+            x_post_ghost.extents());
     // our zone at the end of the domain that will be mirrored to the
     // ghost
-    ddc::DiscreteDomain<DDimX> const x_domain_end(
-            x_domain.back() - x_pre_ghost.extents() + 1,
+    ddc::DiscreteDomain<DDimX> const x_pre_mirror(
+            x_pre_ghost.front() + x_domain.extents(),
             x_pre_ghost.extents());
     //! [X-domains]
 
@@ -180,12 +181,13 @@ int main(int argc, char** argv)
 
     // our zone at the start of the domain that will be mirrored to the
     // ghost
-    ddc::DiscreteDomain<DDimY> const
-            y_domain_begin(y_domain.front(), y_post_ghost.extents());
+    ddc::DiscreteDomain<DDimY> const y_post_mirror(
+            y_post_ghost.front() - y_domain.extents(),
+            y_post_ghost.extents());
     // our zone at the end of the domain that will be mirrored to the
     // ghost
-    ddc::DiscreteDomain<DDimY> const y_domain_end(
-            y_domain.back() - y_pre_ghost.extents() + 1,
+    ddc::DiscreteDomain<DDimY> const y_pre_mirror(
+            y_pre_ghost.front() + y_domain.extents(),
             y_pre_ghost.extents());
     //! [Y-domains]
 
@@ -286,25 +288,33 @@ int main(int argc, char** argv)
 
         //! [boundary conditions]
         // Periodic boundary conditions
-        for (ddc::DiscreteElement<DDimX> const ix : x_pre_ghost) {
+        for (ddc::DiscreteVectorElement ix = 0;
+             ix < x_pre_ghost.extents().value();
+             ++ix) {
             ddc::parallel_deepcopy(
-                    ghosted_last_temp[ix][y_domain],
-                    ghosted_last_temp[ix + nb_x_points][y_domain]);
+                    ghosted_last_temp[x_pre_ghost[ix]][y_domain],
+                    ghosted_last_temp[x_pre_mirror[ix]][y_domain]);
         }
-        for (ddc::DiscreteElement<DDimX> const ix : x_post_ghost) {
+        for (ddc::DiscreteVectorElement ix = 0;
+             ix < x_post_ghost.extents().value();
+             ++ix) {
             ddc::parallel_deepcopy(
-                    ghosted_last_temp[ix][y_domain],
-                    ghosted_last_temp[ix - nb_x_points][y_domain]);
+                    ghosted_last_temp[x_post_ghost[ix]][y_domain],
+                    ghosted_last_temp[x_post_mirror[ix]][y_domain]);
         }
-        for (ddc::DiscreteElement<DDimY> const iy : y_pre_ghost) {
+        for (ddc::DiscreteVectorElement iy = 0;
+             iy < y_pre_ghost.extents().value();
+             ++iy) {
             ddc::parallel_deepcopy(
-                    ghosted_last_temp[x_domain][iy],
-                    ghosted_last_temp[x_domain][iy + nb_y_points]);
+                    ghosted_last_temp[x_domain][y_pre_ghost[iy]],
+                    ghosted_last_temp[x_domain][y_pre_mirror[iy]]);
         }
-        for (ddc::DiscreteElement<DDimY> const iy : y_post_ghost) {
+        for (ddc::DiscreteVectorElement iy = 0;
+             iy < y_post_ghost.extents().value();
+             ++iy) {
             ddc::parallel_deepcopy(
-                    ghosted_last_temp[x_domain][iy],
-                    ghosted_last_temp[x_domain][iy - nb_y_points]);
+                    ghosted_last_temp[x_domain][y_post_ghost[iy]],
+                    ghosted_last_temp[x_domain][y_post_mirror[iy]]);
         }
         //! [boundary conditions]
 

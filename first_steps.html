@@ -209,7 +209,7 @@ Dimension X</h3>
 <div class="line">        x_pre_ghost.extents());</div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a></div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00052">discrete_domain.hpp:53</a></div></div>
 </div><!-- fragment --><p><code>x_domain_begin</code> is the sub-domain at the beginning of <code>x_domain</code> of the same shape as <code>x_post_ghost</code> that will be mirrored to it. Reciprocally for <code>x_domain_end</code> with <code>x_pre_ghost</code>.</p>
-<p>The type of both sub-domains is <code>DiscreteDomain&lt;DDimX&gt;</code> even if only <code>DiscreteDomain</code> is specified, this relies on C++ <a href="https://en.cppreference.com/w/cpp/language/class_template_argument_deduction">class template argument deduction (CTAD)</a>. The first parameter given to the constructor is the first element of the domain, a <code>DiscreteElement&lt;DDimX&gt;</code>, the second parameter is a number of elements to include, a <code>DiscreteVector&lt;DDimX&gt;</code>.</p>
+<p>The first parameter given to the constructor is the first element of the domain, a <code>DiscreteElement&lt;DDimX&gt;</code>, the second parameter is a number of elements to include, a <code>DiscreteVector&lt;DDimX&gt;</code>.</p>
 <p><b>To summarize,</b> in this section, we have introduced the following types:</p>
 <ul>
 <li><code>Coordinate&lt;X&gt;</code> that represents a point in the continuous dimension <code>X</code>,</li>

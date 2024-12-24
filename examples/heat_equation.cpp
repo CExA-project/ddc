@@ -139,7 +139,7 @@ int main(int argc, char** argv)
     //! [main-start]
     //! [X-parameters]
     // Number of ghost points to use on each side in X
-    ddc::DiscreteVector<DDimX> static constexpr gwx {1};
+    ddc::DiscreteVector<DDimX> static constexpr gwx(1);
     //! [X-parameters]
 
     //! [X-global-domain]
@@ -167,7 +167,7 @@ int main(int argc, char** argv)
 
     //! [Y-domains]
     // Number of ghost points to use on each side in Y
-    ddc::DiscreteVector<DDimY> static constexpr gwy {1};
+    ddc::DiscreteVector<DDimY> static constexpr gwy(1);
 
     // Initialization of the global domain in Y with gwy ghost points on
     // each side
@@ -210,13 +210,13 @@ int main(int argc, char** argv)
                        / (ddc::distance_at_left(iy)
                           * ddc::distance_at_right(iy));
             });
-    ddc::Coordinate<T> const max_dt {
-            .5 / (kx * invdx2_max + ky * invdy2_max)};
+    ddc::Coordinate<T> const max_dt(
+            .5 / (kx * invdx2_max + ky * invdy2_max));
 
     // number of time intervals required to reach the end time
     // The + .2 is used to make sure it is rounded to the correct number of steps
-    ddc::DiscreteVector<DDimT> const nb_time_steps {
-            std::ceil((end_time - start_time) / max_dt) + .2};
+    ddc::DiscreteVector<DDimT> const nb_time_steps(
+            std::ceil((end_time - start_time) / max_dt) + .2);
     // Initialization of the global domain in time:
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
@@ -303,11 +303,11 @@ int main(int argc, char** argv)
         //! [manipulated views]
         // a span excluding ghosts of the temperature at the time-step we
         // will build
-        ddc::ChunkSpan const next_temp {
-                ghosted_next_temp[x_domain][y_domain]};
+        ddc::ChunkSpan const next_temp
+                = ghosted_next_temp[x_domain][y_domain];
         // a read-only view of the temperature at the previous time-step
         // span_cview returns a read-only ChunkSpan
-        ddc::ChunkSpan const last_temp {ghosted_last_temp.span_cview()};
+        ddc::ChunkSpan const last_temp = ghosted_last_temp.span_cview();
         //! [manipulated views]
 
         //! [numerical scheme]

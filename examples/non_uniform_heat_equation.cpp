@@ -156,20 +156,20 @@ int main(int argc, char** argv)
     //! [parameters]
 
     //! [iterator_main-domain]
-    std::vector<double> x_domain_vect
+    std::vector<double> const x_domain_vect
             = generate_random_vector(nb_x_points, x_start, x_end);
     //! [iterator_main-domain]
 
     std::size_t const size_x = x_domain_vect.size();
 
     //! [ghost_points_x]
-    std::vector<double> const x_pre_ghost_vect {
+    std::vector<double> const x_pre_ghost_vect(
             x_domain_vect.front()
-            - (x_domain_vect.back() - x_domain_vect[size_x - 2])};
+            - (x_domain_vect.back() - x_domain_vect[size_x - 2]));
 
-    std::vector<double> const x_post_ghost_vect {
+    std::vector<double> const x_post_ghost_vect(
             x_domain_vect.back()
-            + (x_domain_vect[1] - x_domain_vect.front())};
+            + (x_domain_vect[1] - x_domain_vect.front()));
     //! [ghost_points_x]
 
     //! [build-domains]
@@ -187,18 +187,18 @@ int main(int argc, char** argv)
             x_pre_ghost.extents());
 
     //! [Y-vectors]
-    std::vector<double> y_domain_vect
+    std::vector<double> const y_domain_vect
             = generate_random_vector(nb_y_points, y_start, y_end);
 
     std::size_t const size_y = y_domain_vect.size();
 
     //! [ghost_points_y]
-    std::vector<double> const y_pre_ghost_vect {
+    std::vector<double> const y_pre_ghost_vect(
             y_domain_vect.front()
-            - (y_domain_vect.back() - y_domain_vect[size_y - 2])};
-    std::vector<double> const y_post_ghost_vect {
+            - (y_domain_vect.back() - y_domain_vect[size_y - 2]));
+    std::vector<double> const y_post_ghost_vect(
             y_domain_vect.back()
-            + (y_domain_vect[1] - y_domain_vect.front())};
+            + (y_domain_vect[1] - y_domain_vect.front()));
     //! [ghost_points_y]
     //! [Y-vectors]
 
@@ -238,8 +238,8 @@ int main(int argc, char** argv)
                           * ddc::distance_at_right(iy));
             });
 
-    ddc::Coordinate<T> const max_dt {
-            .5 / (kx * invdx2_max + ky * invdy2_max)};
+    ddc::Coordinate<T> const max_dt(
+            .5 / (kx * invdx2_max + ky * invdy2_max));
     //! [CFL-condition]
 
     //! [time-domain]

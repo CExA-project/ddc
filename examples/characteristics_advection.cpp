@@ -134,7 +134,7 @@ int main(int argc, char** argv)
     // Number of time-steps between outputs
     std::ptrdiff_t const t_output_period = 10;
     // Maximum time-step
-    ddc::Coordinate<T> const max_dt {0.1};
+    ddc::Coordinate<T> const max_dt(0.1);
     //! [parameters]
 
     //! [main-start]
@@ -160,8 +160,8 @@ int main(int argc, char** argv)
     //! [time-domains]
 
     // number of time intervals required to reach the end time
-    ddc::DiscreteVector<DDimT> const nb_time_steps {
-            std::ceil((end_time - start_time) / max_dt) + .2};
+    ddc::DiscreteVector<DDimT> const nb_time_steps(
+            std::ceil((end_time - start_time) / max_dt) + .2);
     // Initialization of the global domain in time:
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
@@ -265,11 +265,11 @@ int main(int argc, char** argv)
         //! [manipulated views]
         // a span of the density at the time-step we
         // will build
-        ddc::ChunkSpan const next_density {
-                next_density_alloc.span_view()};
+        ddc::ChunkSpan const next_density
+                = next_density_alloc.span_view();
         // a read-only view of the density at the previous time-step
-        ddc::ChunkSpan const last_density {
-                last_density_alloc.span_view()};
+        ddc::ChunkSpan const last_density
+                = last_density_alloc.span_view();
         //! [manipulated views]
 
         //! [numerical scheme]

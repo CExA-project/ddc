@@ -12,8 +12,8 @@
 
 #include <pdi.h>
 
-#include "ddc/chunk_traits.hpp"
-#include "ddc/discrete_vector.hpp"
+#include "chunk_traits.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 

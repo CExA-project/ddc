@@ -10,11 +10,12 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/chunk_common.hpp"
-#include "ddc/chunk_span.hpp"
-#include "ddc/chunk_traits.hpp"
-#include "ddc/detail/kokkos.hpp"
-#include "ddc/kokkos_allocator.hpp"
+#include "detail/kokkos.hpp"
+
+#include "chunk_common.hpp"
+#include "chunk_span.hpp"
+#include "chunk_traits.hpp"
+#include "kokkos_allocator.hpp"
 
 namespace ddc {
 

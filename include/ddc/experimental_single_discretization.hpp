@@ -11,10 +11,10 @@
 
 #include <Kokkos_Macros.hpp>
 
-#include "ddc/coordinate.hpp"
-#include "ddc/discrete_domain.hpp"
-#include "ddc/discrete_element.hpp"
-#include "ddc/discrete_space.hpp"
+#include "coordinate.hpp"
+#include "discrete_domain.hpp"
+#include "discrete_element.hpp"
+#include "discrete_space.hpp"
 
 namespace ddc::experimental {
 

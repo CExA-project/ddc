@@ -11,10 +11,11 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/ddc_to_kokkos_execution_policy.hpp"
-#include "ddc/detail/kokkos.hpp"
-#include "ddc/discrete_domain.hpp"
-#include "ddc/discrete_element.hpp"
+#include "detail/kokkos.hpp"
+
+#include "ddc_to_kokkos_execution_policy.hpp"
+#include "discrete_domain.hpp"
+#include "discrete_element.hpp"
 
 namespace ddc {
 

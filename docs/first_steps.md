@@ -99,9 +99,6 @@ Once this is done, we define two additional domains that will be mirrored to the
 `x_post_ghost` that will be mirrored to it.
 Reciprocally for `x_domain_end` with `x_pre_ghost`.
 
-The type of both sub-domains is `DiscreteDomain<DDimX>` even if only `DiscreteDomain` is specified,
-this relies on C++
-[class template argument deduction (CTAD)](https://en.cppreference.com/w/cpp/language/class_template_argument_deduction).
 The first parameter given to the constructor is the first element of the domain, a
 `DiscreteElement<DDimX>`, the second parameter is a number of elements to include, a
 `DiscreteVector<DDimX>`.

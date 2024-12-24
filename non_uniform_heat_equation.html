@@ -256,13 +256,13 @@ $(document).ready(function(){initNavTree('non_uniform_heat_equation.html',''); i
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    std::size_t <span class="keyword">const</span> size_x = x_domain_vect.size();</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    std::vector&lt;double&gt; <span class="keyword">const</span> x_pre_ghost_vect(</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    std::vector&lt;double&gt; <span class="keyword">const</span> x_pre_ghost_vect {</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            x_domain_vect.front()</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            - (x_domain_vect.back() - x_domain_vect[size_x - 2]));</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            - (x_domain_vect.back() - x_domain_vect[size_x - 2])};</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    std::vector&lt;double&gt; <span class="keyword">const</span> x_post_ghost_vect(</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    std::vector&lt;double&gt; <span class="keyword">const</span> x_post_ghost_vect {</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            x_domain_vect.back()</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            + (x_domain_vect[1] - x_domain_vect.front()));</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            + (x_domain_vect[1] - x_domain_vect.front())};</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="keyword">auto</span> <span class="keyword">const</span> [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>            = <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space&lt;DDimX&gt;</a>(DDimX::init_ghosted&lt;DDimX&gt;(</div>
@@ -281,12 +281,12 @@ $(document).ready(function(){initNavTree('non_uniform_heat_equation.html',''); i
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    std::size_t <span class="keyword">const</span> size_y = y_domain_vect.size();</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    std::vector&lt;double&gt; <span class="keyword">const</span> y_pre_ghost_vect(</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    std::vector&lt;double&gt; <span class="keyword">const</span> y_pre_ghost_vect {</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>            y_domain_vect.front()</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            - (y_domain_vect.back() - y_domain_vect[size_y - 2]));</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    std::vector&lt;double&gt; <span class="keyword">const</span> y_post_ghost_vect(</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            - (y_domain_vect.back() - y_domain_vect[size_y - 2])};</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    std::vector&lt;double&gt; <span class="keyword">const</span> y_post_ghost_vect {</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            y_domain_vect.back()</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            + (y_domain_vect[1] - y_domain_vect.front()));</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            + (y_domain_vect[1] - y_domain_vect.front())};</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keyword">auto</span> <span class="keyword">const</span> [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            = <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space&lt;DDimY&gt;</a>(DDimY::init_ghosted&lt;DDimY&gt;(</div>

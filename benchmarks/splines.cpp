@@ -24,9 +24,9 @@
 
 #include <Kokkos_Core.hpp>
 
-static const ddc::SplineSolver Backend = ddc::SplineSolver::LAPACK;
-
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP) {
+
+ddc::SplineSolver const Backend = ddc::SplineSolver::LAPACK;
 
 struct X
 {
@@ -59,8 +59,6 @@ struct DDimY : ddc::UniformPointSampling<Y>
 {
 };
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
-
 // Function to monitor GPU memory asynchronously
 void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, std::size_t& maxUsedMem)
 {
@@ -84,7 +82,7 @@ void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, std::size_t& maxUs
 }
 
 template <typename ExecSpace, bool IsNonUniform, std::size_t s_degree_x>
-static void characteristics_advection_unitary(benchmark::State& state)
+void characteristics_advection_unitary(benchmark::State& state)
 {
     std::size_t const nx = state.range(3);
     std::size_t const ny = state.range(4);
@@ -228,7 +226,7 @@ static void characteristics_advection_unitary(benchmark::State& state)
     ////////////////////////////////////////////////////
 }
 
-static void characteristics_advection(benchmark::State& state)
+void characteristics_advection(benchmark::State& state)
 {
     long const host = 0;
     long const dev = 1;
@@ -265,6 +263,8 @@ static void characteristics_advection(benchmark::State& state)
     benchs.at(std::array {state.range(0), state.range(1), state.range(2)})(state);
 }
 
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
+
 // Reference parameters: the benchmarks sweep on two parameters and fix all the others according to those reference parameters.
 bool on_gpu_ref = true;
 bool non_uniform_ref = false;
@@ -284,6 +284,7 @@ std::size_t ny_ref = 1000;
 
 // Sweep on spline order
 std::string name = "degree_x";
+// NOLINTBEGIN(misc-use-anonymous-namespace)
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -296,6 +297,8 @@ BENCHMARK(characteristics_advection)
                  {preconditioner_max_block_size_ref, preconditioner_max_block_size_ref}})
         ->MinTime(3)
         ->UseRealTime();
+// NOLINTEND(misc-use-anonymous-namespace)
+
 /*
 // Sweep on ny
 std::string name = "ny";

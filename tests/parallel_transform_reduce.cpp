@@ -10,6 +10,8 @@
 
 #include <Kokkos_Core.hpp>
 
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP) {
+
 using DElem0D = ddc::DiscreteElement<>;
 using DVect0D = ddc::DiscreteVector<>;
 using DDom0D = ddc::DiscreteDomain<>;
@@ -32,14 +34,16 @@ using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
 using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
 using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 
-static DElemX constexpr lbound_x(0);
-static DVectX constexpr nelems_x(10);
+DElemX constexpr lbound_x(0);
+DVectX constexpr nelems_x(10);
 
-static DElemY constexpr lbound_y(0);
-static DVectY constexpr nelems_y(12);
+DElemY constexpr lbound_y(0);
+DVectY constexpr nelems_y(12);
 
-static DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
-static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
+DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
+DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
+
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP)
 
 TEST(ParallelTransformReduceHost, ZeroDimension)
 {
@@ -92,7 +96,9 @@ TEST(ParallelTransformReduceHost, TwoDimensions)
             dom.size() * (dom.size() - 1) / 2);
 }
 
-static void TestParallelTransformReduceDeviceZeroDimension()
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP) {
+
+void TestParallelTransformReduceDeviceZeroDimension()
 {
     DDom0D const dom;
     ddc::Chunk<int, DDom0D, ddc::DeviceAllocator<int>> storage(dom);
@@ -107,12 +113,16 @@ static void TestParallelTransformReduceDeviceZeroDimension()
             dom.size() * (dom.size() - 1) / 2);
 }
 
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP)
+
 TEST(ParallelTransformReduceDevice, ZeroDimension)
 {
     TestParallelTransformReduceDeviceZeroDimension();
 }
 
-static void TestParallelTransformReduceDeviceOneDimension()
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP) {
+
+void TestParallelTransformReduceDeviceOneDimension()
 {
     DDomX const dom(lbound_x, nelems_x);
     ddc::Chunk<int, DDomX, ddc::DeviceAllocator<int>> storage(dom);
@@ -127,12 +137,16 @@ static void TestParallelTransformReduceDeviceOneDimension()
             dom.size() * (dom.size() - 1) / 2);
 }
 
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP)
+
 TEST(ParallelTransformReduceDevice, OneDimension)
 {
     TestParallelTransformReduceDeviceOneDimension();
 }
 
-static void TestParallelTransformReduceDeviceTwoDimensions()
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP) {
+
+void TestParallelTransformReduceDeviceTwoDimensions()
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     ddc::Chunk<int, DDomXY, ddc::DeviceAllocator<int>> storage(dom);
@@ -148,6 +162,8 @@ static void TestParallelTransformReduceDeviceTwoDimensions()
             ddc::parallel_transform_reduce(dom, 0, ddc::reducer::sum<int>(), chunk),
             dom.size() * (dom.size() - 1) / 2);
 }
+
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP)
 
 TEST(ParallelTransformReduceDevice, TwoDimensions)
 {

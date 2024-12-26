@@ -25,6 +25,8 @@
 #endif
 #endif
 
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FFT_CPP) {
+
 template <typename X>
 struct DDim : ddc::UniformPointSampling<X>
 {
@@ -45,7 +47,7 @@ struct DFDim : ddc::PeriodicSampling<Kx>
 };
 
 template <typename X>
-static void test_fourier_mesh(std::size_t Nx)
+void test_fourier_mesh(std::size_t Nx)
 {
     double const a = -10;
     double const b = 10;
@@ -75,7 +77,7 @@ static void test_fourier_mesh(std::size_t Nx)
 // TODO:
 // - FFT multidim but according to a subset of dimensions
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename... X>
-static void test_fft()
+void test_fft()
 {
     ExecSpace const exec_space;
     bool const full_fft
@@ -167,7 +169,7 @@ static void test_fft()
 }
 
 template <typename ExecSpace, typename MemorySpace, typename Tin, typename Tout, typename X>
-static void test_fft_norm(ddc::FFT_Normalization const norm)
+void test_fft_norm(ddc::FFT_Normalization const norm)
 {
     ExecSpace const exec_space;
     bool const full_fft
@@ -236,6 +238,8 @@ static void test_fft_norm(ddc::FFT_Normalization const norm)
 struct RDimX;
 struct RDimY;
 struct RDimZ;
+
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FFT_CPP)
 
 TEST(FourierMesh, Even)
 {

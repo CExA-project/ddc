@@ -20,10 +20,6 @@ struct DDimY
 {
 };
 
-static unsigned nt = 10;
-static unsigned length = 5;
-static unsigned height = 5;
-
 void blinker_init(
         ddc::DiscreteDomain<DDimX, DDimY> const& domain,
         ddc::ChunkSpan<
@@ -70,6 +66,10 @@ int main()
 {
     Kokkos::ScopeGuard const kokkos_scope;
     ddc::ScopeGuard const ddc_scope;
+
+    unsigned const nt = 10;
+    unsigned const length = 5;
+    unsigned const height = 5;
 
     ddc::DiscreteDomain<DDimX, DDimY> const domain_xy(
             ddc::DiscreteElement<DDimX, DDimY>(0, 0),

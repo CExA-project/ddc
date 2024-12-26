@@ -254,7 +254,7 @@ static void ExtrapolationRuleSplineTest()
             exec_space,
             vals.domain(),
             KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                vals(e) = vals_1d(ddc::select<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
+                vals(e) = vals_1d(Index<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
             });
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
@@ -336,11 +336,11 @@ static void ExtrapolationRuleSplineTest()
                 coords_eval(e) = ddc::coordinate(e);
                 // Set coords_eval outside of the domain (+1 to ensure left bound is outside domain)
                 ddc::get<I1>(coords_eval(e))
-                        = xN<I1>() + (ddc::select<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
+                        = xN<I1>() + (Coord<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
                 // Set coords_eval outside of the domain (this point should be found on the grid in
                 // the periodic case)
                 ddc::get<I2>(coords_eval(e))
-                        = 2 * xN<I2>() + (ddc::select<I2>(ddc::coordinate(e)) - x0<I2>());
+                        = 2 * xN<I2>() + (Coord<I2>(ddc::coordinate(e)) - x0<I2>());
             });
 
 
@@ -366,7 +366,7 @@ static void ExtrapolationRuleSplineTest()
                         vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type const
                         e_without_interest(e);
                 double tmp;
-                if (ddc::select<I2>(coords_eval(e)) > xN<I2>()) {
+                if (Coord<I2>(coords_eval(e)) > xN<I2>()) {
 #if defined(BC_PERIODIC)
                     tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
                             vals.template domain<IDim<I1, I1, I2>>().back(),

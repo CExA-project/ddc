@@ -18,8 +18,8 @@ struct Evaluator2D
     public:
         template <class Domain>
         explicit Evaluator(Domain domain)
-            : eval_func1(ddc::select<typename Eval1::Dim>(domain))
-            , eval_func2(ddc::select<typename Eval2::Dim>(domain))
+            : eval_func1(ddc::DiscreteDomain<typename Eval1::Dim>(domain))
+            , eval_func2(ddc::DiscreteDomain<typename Eval2::Dim>(domain))
         {
         }
 
@@ -39,8 +39,8 @@ struct Evaluator2D
         {
             auto const& domain = chunk.domain();
 
-            for (ddc::DiscreteElement<DDim1> const i : ddc::select<DDim1>(domain)) {
-                for (ddc::DiscreteElement<DDim2> const j : ddc::select<DDim2>(domain)) {
+            for (ddc::DiscreteElement<DDim1> const i : ddc::DiscreteDomain<DDim1>(domain)) {
+                for (ddc::DiscreteElement<DDim2> const j : ddc::DiscreteDomain<DDim2>(domain)) {
                     chunk(i, j) = eval_func1(ddc::coordinate(i)) * eval_func2(ddc::coordinate(j));
                 }
             }
@@ -73,8 +73,8 @@ struct Evaluator2D
         {
             auto const& domain = chunk.domain();
 
-            for (ddc::DiscreteElement<DDim1> const i : ddc::select<DDim1>(domain)) {
-                for (ddc::DiscreteElement<DDim2> const j : ddc::select<DDim2>(domain)) {
+            for (ddc::DiscreteElement<DDim1> const i : ddc::DiscreteDomain<DDim1>(domain)) {
+                for (ddc::DiscreteElement<DDim2> const j : ddc::DiscreteDomain<DDim2>(domain)) {
                     chunk(i, j) = eval_func1.deriv(ddc::coordinate(i), derivative_x)
                                   * eval_func2.deriv(ddc::coordinate(j), derivative_y);
                 }

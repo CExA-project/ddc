@@ -259,10 +259,10 @@ int main(int argc, char** argv)
     ddc::parallel_for_each(
             ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain),
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                double const x
-                        = ddc::coordinate(ddc::select<DDimX>(ixy));
-                double const y
-                        = ddc::coordinate(ddc::select<DDimY>(ixy));
+                double const x = ddc::coordinate(
+                        ddc::DiscreteElement<DDimX>(ixy));
+                double const y = ddc::coordinate(
+                        ddc::DiscreteElement<DDimY>(ixy));
                 ghosted_initial_temp(ixy)
                         = 9.999 * ((x * x + y * y) < 0.25);
             });
@@ -334,10 +334,8 @@ int main(int argc, char** argv)
                 next_temp.domain(),
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                    ddc::DiscreteElement<DDimX> const ix
-                            = ddc::select<DDimX>(ixy);
-                    ddc::DiscreteElement<DDimY> const iy
-                            = ddc::select<DDimY>(ixy);
+                    ddc::DiscreteElement<DDimX> const ix(ixy);
+                    ddc::DiscreteElement<DDimY> const iy(ixy);
                     double const dx_l = ddc::distance_at_left(ix);
                     double const dx_r = ddc::distance_at_right(ix);
                     double const dx_m = 0.5 * (dx_l + dx_r);

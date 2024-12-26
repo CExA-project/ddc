@@ -31,9 +31,6 @@ class Chunk<ElementType, DiscreteDomain<DDims...>, Allocator>
 protected:
     using base_type = ChunkCommon<ElementType, DiscreteDomain<DDims...>, Kokkos::layout_right>;
 
-    /// ND memory view
-    using internal_mdspan_type = typename base_type::internal_mdspan_type;
-
 public:
     /// type of a span of this full chunk
     using span_type = ChunkSpan<
@@ -116,12 +113,13 @@ public:
         , m_allocator(std::move(other.m_allocator))
         , m_label(std::move(other.m_label))
     {
-        other.m_internal_mdspan = internal_mdspan_type(nullptr, other.m_internal_mdspan.mapping());
+        other.m_allocation_mdspan
+                = allocation_mdspan_type(nullptr, other.m_allocation_mdspan.mapping());
     }
 
     ~Chunk() noexcept
     {
-        if (this->m_internal_mdspan.data_handle()) {
+        if (this->m_allocation_mdspan.data_handle()) {
             m_allocator.deallocate(this->data_handle(), this->size());
         }
     }
@@ -138,13 +136,14 @@ public:
         if (this == &other) {
             return *this;
         }
-        if (this->m_internal_mdspan.data_handle()) {
+        if (this->m_allocation_mdspan.data_handle()) {
             m_allocator.deallocate(this->data_handle(), this->size());
         }
         static_cast<base_type&>(*this) = std::move(static_cast<base_type&>(other));
         m_allocator = std::move(other.m_allocator);
         m_label = std::move(other.m_label);
-        other.m_internal_mdspan = internal_mdspan_type(nullptr, other.m_internal_mdspan.mapping());
+        other.m_allocation_mdspan
+                = allocation_mdspan_type(nullptr, other.m_allocation_mdspan.mapping());
 
         return *this;
     }
@@ -192,7 +191,9 @@ public:
                 && ...));
         assert(((DiscreteElement<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain))
                 && ...));
-        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
+        return DDC_MDSPAN_ACCESS_OP(
+                this->m_allocation_mdspan,
+                (DiscreteElement<DDims>(take<DDims>(delems...)) - front<DDims>(this->m_domain))...);
     }
 
     /** Element access using a list of DiscreteElement
@@ -210,7 +211,9 @@ public:
                 && ...));
         assert(((DiscreteElement<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain))
                 && ...));
-        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
+        return DDC_MDSPAN_ACCESS_OP(
+                this->m_allocation_mdspan,
+                (DiscreteElement<DDims>(take<DDims>(delems...)) - front<DDims>(this->m_domain))...);
     }
 
     /** Returns the label of the Chunk

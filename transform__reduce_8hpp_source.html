@@ -171,7 +171,7 @@ $(document).ready(function(){initNavTree('transform__reduce_8hpp_source.html',''
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keyword">using</span> CurrentDDim = type_seq_element_t&lt;<span class="keyword">sizeof</span>...(DCoords), detail::TypeSeq&lt;DDims...&gt;&gt;;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        T result = neutral;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordflow">for</span> (DiscreteElement&lt;CurrentDDim&gt; <span class="keyword">const</span> ii : select&lt;CurrentDDim&gt;(domain)) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordflow">for</span> (DiscreteElement&lt;CurrentDDim&gt; <span class="keyword">const</span> ii : <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;CurrentDDim&gt;(domain)) {</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            result = reduce(</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                    result,</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                    transform_reduce_serial(domain, neutral, reduce, transform, dcoords..., ii));</div>

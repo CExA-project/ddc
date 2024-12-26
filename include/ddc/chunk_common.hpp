@@ -207,7 +207,7 @@ public:
     template <class... QueryDDims>
     KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> domain() const noexcept
     {
-        return select<QueryDDims...>(domain());
+        return DiscreteDomain<QueryDDims...>(domain());
     }
 
 protected:

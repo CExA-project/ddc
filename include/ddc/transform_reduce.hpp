@@ -42,7 +42,7 @@ T transform_reduce_serial(
     } else {
         using CurrentDDim = type_seq_element_t<sizeof...(DCoords), detail::TypeSeq<DDims...>>;
         T result = neutral;
-        for (DiscreteElement<CurrentDDim> const ii : select<CurrentDDim>(domain)) {
+        for (DiscreteElement<CurrentDDim> const ii : DiscreteDomain<CurrentDDim>(domain)) {
             result = reduce(
                     result,
                     transform_reduce_serial(domain, neutral, reduce, transform, dcoords..., ii));

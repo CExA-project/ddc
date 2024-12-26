@@ -378,8 +378,8 @@ KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> select(
         DiscreteDomain<DDims...> const& domain)
 {
     return DiscreteDomain<QueryDDims...>(
-            select<QueryDDims...>(domain.front()),
-            select<QueryDDims...>(domain.extents()));
+            DiscreteElement<QueryDDims...>(domain.front()),
+            DiscreteElement<QueryDDims...>(domain.extents()));
 }
 
 namespace detail {
@@ -507,21 +507,21 @@ template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDims...> extents(
         DiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteVector<QueryDDims...>(select<QueryDDims>(domain).size()...);
+    return DiscreteVector<QueryDDims...>(DiscreteDomain<QueryDDims>(domain).size()...);
 }
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> front(
         DiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteElement<QueryDDims...>(select<QueryDDims>(domain).front()...);
+    return DiscreteElement<QueryDDims...>(DiscreteDomain<QueryDDims>(domain).front()...);
 }
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> back(
         DiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteElement<QueryDDims...>(select<QueryDDims>(domain).back()...);
+    return DiscreteElement<QueryDDims...>(DiscreteDomain<QueryDDims>(domain).back()...);
 }
 
 template <class DDim>

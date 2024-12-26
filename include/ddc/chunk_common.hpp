@@ -35,13 +35,6 @@ class ChunkCommon;
 template <class ElementType, class... DDims, class LayoutStridedPolicy>
 class ChunkCommon<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy>
 {
-protected:
-    /// the raw mdspan underlying this, with the same indexing (0 might no be dereferenceable)
-    using internal_mdspan_type = Kokkos::mdspan<
-            ElementType,
-            Kokkos::dextents<std::size_t, sizeof...(DDims)>,
-            Kokkos::layout_stride>;
-
 public:
     using discrete_domain_type = DiscreteDomain<DDims...>;
 
@@ -76,7 +69,7 @@ public:
 
     using reference = typename allocation_mdspan_type::reference;
 
-    // ChunkCommon, ChunkSpan and Chunk need to access to m_internal_mdspan and m_domain of other template versions
+    // ChunkCommon, ChunkSpan and Chunk need to access to m_allocation_mdspan_mdspan and m_domain of other template versions
     template <class, class, class>
     friend class ChunkCommon;
 
@@ -90,7 +83,7 @@ public:
 
 protected:
     /// The raw view of the data
-    internal_mdspan_type m_internal_mdspan;
+    allocation_mdspan_type m_allocation_mdspan;
 
     /// The mesh on which this chunk is defined
     discrete_domain_type m_domain;
@@ -129,26 +122,16 @@ public:
 private:
     template <class Mapping = mapping_type>
     static KOKKOS_FUNCTION constexpr std::
-            enable_if_t<std::is_constructible_v<Mapping, extents_type>, internal_mdspan_type>
-            make_internal_mdspan(ElementType* ptr, discrete_domain_type const& domain)
+            enable_if_t<std::is_constructible_v<Mapping, extents_type>, allocation_mdspan_type>
+            make_allocation_mdspan(ElementType* ptr, discrete_domain_type const& domain)
     {
-        if (domain.empty()) {
-            return internal_mdspan_type(ptr, Kokkos::layout_stride::mapping<extents_type>());
-        }
-        extents_type const extents_r(::ddc::extents<DDims>(domain).value()...);
-        mapping_type const mapping_r(extents_r);
-
-        extents_type const extents_s((front<DDims>(domain) + ddc::extents<DDims>(domain)).uid()...);
-        std::array<std::size_t, sizeof...(DDims)> const strides_s {
-                mapping_r.stride(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
-        Kokkos::layout_stride::mapping<extents_type> const mapping_s(extents_s, strides_s);
-        return internal_mdspan_type(ptr - mapping_s(front<DDims>(domain).uid()...), mapping_s);
+        return allocation_mdspan_type(ptr, ::ddc::extents<DDims>(domain).value()...);
     }
 
 public:
     KOKKOS_FUNCTION constexpr accessor_type accessor() const
     {
-        return m_internal_mdspan.accessor();
+        return m_allocation_mdspan.accessor();
     }
 
     KOKKOS_FUNCTION constexpr DiscreteVector<DDims...> extents() const noexcept
@@ -190,7 +173,7 @@ public:
     template <class QueryDDim>
     KOKKOS_FUNCTION constexpr size_type stride() const
     {
-        return m_internal_mdspan.stride(type_seq_rank_v<QueryDDim, detail::TypeSeq<DDims...>>);
+        return m_allocation_mdspan.stride(type_seq_rank_v<QueryDDim, detail::TypeSeq<DDims...>>);
     }
 
     /** Provide access to the domain on which this chunk is defined
@@ -215,13 +198,13 @@ protected:
     KOKKOS_DEFAULTED_FUNCTION constexpr ChunkCommon() = default;
 
     /** Constructs a new ChunkCommon from scratch
-     * @param internal_mdspan
+     * @param allocation_mdspan
      * @param domain
      */
     KOKKOS_FUNCTION constexpr ChunkCommon(
-            internal_mdspan_type internal_mdspan,
+            allocation_mdspan_type allocation_mdspan,
             discrete_domain_type const& domain) noexcept
-        : m_internal_mdspan(std::move(internal_mdspan))
+        : m_allocation_mdspan(std::move(allocation_mdspan))
         , m_domain(domain)
     {
     }
@@ -234,7 +217,7 @@ protected:
             class Mapping = mapping_type,
             std::enable_if_t<std::is_constructible_v<Mapping, extents_type>, int> = 0>
     KOKKOS_FUNCTION constexpr ChunkCommon(ElementType* ptr, discrete_domain_type const& domain)
-        : m_internal_mdspan(make_internal_mdspan(ptr, domain))
+        : m_allocation_mdspan(make_allocation_mdspan(ptr, domain))
         , m_domain(domain)
     {
         // Handle the case where an allocation of size 0 returns a nullptr.
@@ -271,19 +254,7 @@ protected:
      */
     KOKKOS_FUNCTION constexpr ElementType* data_handle() const
     {
-        ElementType* ptr = m_internal_mdspan.data_handle();
-        if (!m_domain.empty()) {
-            ptr += m_internal_mdspan.mapping()(front<DDims>(m_domain).uid()...);
-        }
-        return ptr;
-    }
-
-    /** Provide a modifiable view of the data
-     * @return a modifiable view of the data
-     */
-    KOKKOS_FUNCTION constexpr internal_mdspan_type internal_mdspan() const
-    {
-        return m_internal_mdspan;
+        return m_allocation_mdspan.data_handle();
     }
 
     /** Provide a modifiable view of the data
@@ -291,16 +262,7 @@ protected:
      */
     KOKKOS_FUNCTION constexpr allocation_mdspan_type allocation_mdspan() const
     {
-        DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
-        extents_type const extents_s(::ddc::extents<DDims>(m_domain).value()...);
-        if constexpr (std::is_same_v<LayoutStridedPolicy, Kokkos::layout_stride>) {
-            mapping_type const map(extents_s, m_internal_mdspan.mapping().strides());
-            return allocation_mdspan_type(data_handle(), map);
-        } else {
-            mapping_type const map(extents_s);
-            return allocation_mdspan_type(data_handle(), map);
-        }
-        DDC_IF_NVCC_THEN_POP
+        return m_allocation_mdspan;
     }
 };
 

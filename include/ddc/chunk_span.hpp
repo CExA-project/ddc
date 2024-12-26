@@ -52,9 +52,6 @@ class ChunkSpan<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy, Memo
 protected:
     using base_type = ChunkCommon<ElementType, DiscreteDomain<DDims...>, LayoutStridedPolicy>;
 
-    /// the raw mdspan underlying this, with the same indexing (0 might no be dereferenceable)
-    using typename base_type::internal_mdspan_type;
-
 public:
     /// type of a span of this full chunk
     using span_type
@@ -100,24 +97,6 @@ public:
     friend class ChunkSpan;
 
 protected:
-    static KOKKOS_FUNCTION internal_mdspan_type build_internal_mdspan(
-            allocation_mdspan_type const& allocation_mdspan,
-            discrete_domain_type const& domain)
-    {
-        if (!domain.empty()) {
-            extents_type const extents_s((front<DDims>(domain) + extents<DDims>(domain)).uid()...);
-            std::array<std::size_t, sizeof...(DDims)> const strides_s {
-                    allocation_mdspan.mapping().stride(
-                            type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};
-            Kokkos::layout_stride::mapping<extents_type> const mapping_s(extents_s, strides_s);
-            return internal_mdspan_type(
-                    allocation_mdspan.data_handle() - mapping_s(front<DDims>(domain).uid()...),
-                    mapping_s);
-        }
-
-        return internal_mdspan_type(allocation_mdspan);
-    }
-
     template <class QueryDDim, class... ODDims>
     KOKKOS_FUNCTION constexpr auto get_slicer_for(DiscreteElement<ODDims...> const& c) const
     {
@@ -175,7 +154,7 @@ public:
             class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
     KOKKOS_FUNCTION constexpr explicit ChunkSpan(
             Chunk<OElementType, discrete_domain_type, Allocator>& other) noexcept
-        : base_type(other.m_internal_mdspan, other.m_domain)
+        : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }
 
@@ -191,7 +170,7 @@ public:
             class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
     KOKKOS_FUNCTION constexpr explicit ChunkSpan(
             Chunk<OElementType, discrete_domain_type, Allocator> const& other) noexcept
-        : base_type(other.m_internal_mdspan, other.m_domain)
+        : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }
 
@@ -202,7 +181,7 @@ public:
     KOKKOS_FUNCTION constexpr explicit ChunkSpan(
             ChunkSpan<OElementType, discrete_domain_type, layout_type, MemorySpace> const&
                     other) noexcept
-        : base_type(other.m_internal_mdspan, other.m_domain)
+        : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }
 
@@ -225,7 +204,7 @@ public:
     KOKKOS_FUNCTION constexpr ChunkSpan(
             allocation_mdspan_type allocation_mdspan,
             discrete_domain_type const& domain)
-        : base_type(build_internal_mdspan(allocation_mdspan, domain), domain)
+        : base_type(allocation_mdspan, domain)
     {
         assert(((allocation_mdspan.extent(type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)
                  == static_cast<std::size_t>(domain.template extent<DDims>().value()))
@@ -335,7 +314,9 @@ public:
                 && ...));
         assert(((DiscreteElement<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain))
                 && ...));
-        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
+        return DDC_MDSPAN_ACCESS_OP(
+                this->m_allocation_mdspan,
+                (DiscreteElement<DDims>(take<DDims>(delems...)) - front<DDims>(this->m_domain))...);
     }
 
     /** Access to the underlying allocation pointer

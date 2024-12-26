@@ -590,7 +590,7 @@ TEST(Chunk2DTest, DeepcopyReordered)
             chunk(ix, iy) = 1.739 * ix.uid() + 1.412 * iy.uid();
         }
     }
-    ChunkYX<double> chunk2(ddc::select<DDimY, DDimX>(chunk.domain()));
+    ChunkYX<double> chunk2(DDomYX(chunk.domain()));
     ddc::ChunkSpan<double, DDomXY, Kokkos::layout_left> const
             chunk2_view(chunk2.data_handle(), chunk.domain());
     ddc::parallel_deepcopy(chunk2_view, chunk);

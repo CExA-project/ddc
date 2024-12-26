@@ -142,10 +142,10 @@ public:
      *
      * In the dimension defined in the constructor Dim1 (or Dim2), it sets the coordinate pos_1 (or pos_2)
      * given at the m_eval_pos coordinate if it is outside the domain.
-     * If the coordinate on the complementary dimension of the boundary condition dimension ddc::select<DimNI>(coord_extrap) is
+     * If the coordinate on the complementary dimension of the boundary condition dimension ddc::Coordinate<DimNI>(coord_extrap) is
      * outside the domain, then it also sets the coordinate at eval_pos_not_interest_min
-     * (if ddc::select<DimNI>(coord_extrap) @f$ < @f$ eval_pos_not_interest_min) or
-     * at eval_pos_not_interest_max (if ddc::select<DimNI>(coord_extrap) @f$ > @f$ eval_pos_not_interest_max).
+     * (if ddc::Coordinate<DimNI>(coord_extrap) @f$ < @f$ eval_pos_not_interest_min) or
+     * at eval_pos_not_interest_max (if ddc::Coordinate<DimNI>(coord_extrap) @f$ > @f$ eval_pos_not_interest_max).
      *
      * @param[in] coord_extrap
      * 			The coordinates where we want to evaluate the function on B-splines
@@ -169,12 +169,13 @@ public:
 
         ddc::Coordinate<DimI, DimNI> eval_pos;
         if constexpr (DimNI::PERIODIC) {
-            eval_pos = ddc::Coordinate<DimI, DimNI>(m_eval_pos, ddc::select<DimNI>(coord_extrap));
+            eval_pos = ddc::
+                    Coordinate<DimI, DimNI>(m_eval_pos, ddc::Coordinate<DimNI>(coord_extrap));
         } else {
             eval_pos = ddc::Coordinate<DimI, DimNI>(
                     m_eval_pos,
                     Kokkos::
-                            clamp(ddc::select<DimNI>(coord_extrap),
+                            clamp(ddc::Coordinate<DimNI>(coord_extrap),
                                   m_eval_pos_not_interest_min,
                                   m_eval_pos_not_interest_max));
         }
@@ -188,10 +189,10 @@ public:
 
         ddc::DiscreteElement<BSplines1> const idx1 = ddc::discrete_space<BSplines1>().eval_basis(
                 vals1,
-                ddc::select<typename BSplines1::continuous_dimension_type>(eval_pos));
+                ddc::Coordinate<typename BSplines1::continuous_dimension_type>(eval_pos));
         ddc::DiscreteElement<BSplines2> const idx2 = ddc::discrete_space<BSplines2>().eval_basis(
                 vals2,
-                ddc::select<typename BSplines2::continuous_dimension_type>(eval_pos));
+                ddc::Coordinate<typename BSplines2::continuous_dimension_type>(eval_pos));
 
         double y = 0.0;
         for (std::size_t i = 0; i < BSplines1::degree() + 1; ++i) {

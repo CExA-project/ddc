@@ -100,8 +100,7 @@ static void test_fft()
             exec_space,
             f.domain(),
             KOKKOS_LAMBDA(DElem<DDim<X>...> const e) {
-                ddc::Real const xn2
-                        = (Kokkos::pow(ddc::coordinate(ddc::select<DDim<X>>(e)), 2) + ...);
+                ddc::Real const xn2 = (Kokkos::pow(ddc::coordinate(DElem<DDim<X>>(e)), 2) + ...);
                 f(e) = Kokkos::exp(-xn2 / 2);
             });
     ddc::Chunk f_bis_alloc(f.domain(), ddc::KokkosAllocator<Tin, MemorySpace>());
@@ -144,8 +143,7 @@ static void test_fft()
             0.,
             ddc::reducer::sum<double>(),
             [=](DElem<DFDim<ddc::Fourier<X>>...> const e) {
-                double const xn2
-                        = (pow2(ddc::coordinate(ddc::select<DFDim<ddc::Fourier<X>>>(e))) + ...);
+                double const xn2 = (pow2(ddc::coordinate(DElem<DFDim<ddc::Fourier<X>>>(e))) + ...);
                 double const diff = Kokkos::abs(Ff_host(e)) - Kokkos::exp(-xn2 / 2);
                 std::size_t const denom
                         = (ddc::detail::fft::LastSelector<std::size_t, X, X...>(Nx / 2, Nx) * ...);

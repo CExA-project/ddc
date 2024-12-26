@@ -26,8 +26,8 @@ TEST(TaggedVector, ConstructorFromTaggedVectors)
 TEST(TaggedVector, ReorderingConstructor)
 {
     ddc::detail::TaggedVector<int, double, float> const map_ref(1, 2);
-    ddc::detail::TaggedVector<int, double> const submap_double = ddc::select<double>(map_ref);
-    ddc::detail::TaggedVector<int, float> const submap_float = ddc::select<float>(map_ref);
+    ddc::detail::TaggedVector<int, double> const submap_double(map_ref);
+    ddc::detail::TaggedVector<int, float> const submap_float(map_ref);
     ddc::detail::TaggedVector<int, double, float> const map_v1(submap_double, submap_float);
     ddc::detail::TaggedVector<int, double, float> const map_v2(submap_float, submap_double);
     ddc::detail::TaggedVector<int, float, double> const map_v3(map_ref);
@@ -70,7 +70,7 @@ TEST(TaggedVector, Operators)
 {
     ddc::detail::TaggedVector<int, double, float> const a(1, 2);
     ddc::detail::TaggedVector<int, float, double> const b(3, 4);
-    ddc::detail::TaggedVector<int, double> const c = ddc::select<double>(a);
+    ddc::detail::TaggedVector<int, double> const c(a);
     EXPECT_EQ(a + b, (ddc::detail::TaggedVector<int, double, float>(5, 5)));
     EXPECT_EQ(b - a, (ddc::detail::TaggedVector<int, double, float>(3, 1)));
     EXPECT_EQ(c + 4, (ddc::detail::TaggedVector<int, double>(5)));

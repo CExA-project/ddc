@@ -149,8 +149,9 @@ static void characteristics_advection_unitary(benchmark::State& state)
             ExecSpace(),
             x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<IsNonUniform, s_degree_x>, DDimY> const ixy) {
-                double const x = ddc::coordinate(ddc::select<DDimX<IsNonUniform, s_degree_x>>(ixy));
-                double const y = ddc::coordinate(ddc::select<DDimY>(ixy));
+                double const x = ddc::coordinate(
+                        ddc::DiscreteElement<DDimX<IsNonUniform, s_degree_x>>(ixy));
+                double const y = ddc::coordinate(ddc::DiscreteElement<DDimY>(ixy));
                 density(ixy) = 9.999 * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
                 // initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
@@ -191,7 +192,8 @@ static void characteristics_advection_unitary(benchmark::State& state)
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX<IsNonUniform, s_degree_x>, DDimY> const e) {
                     feet_coords(e)
-                            = ddc::coordinate(ddc::select<DDimX<IsNonUniform, s_degree_x>>(e))
+                            = ddc::coordinate(
+                                      ddc::DiscreteElement<DDimX<IsNonUniform, s_degree_x>>(e))
                               - ddc::Coordinate<X>(0.0176429863);
                 });
         Kokkos::Profiling::popRegion();

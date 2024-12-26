@@ -35,10 +35,8 @@ void blinker_init(
     ddc::parallel_for_each(
             domain,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                ddc::DiscreteElement<DDimX> const ix
-                        = ddc::select<DDimX>(ixy);
-                ddc::DiscreteElement<DDimY> const iy
-                        = ddc::select<DDimY>(ixy);
+                ddc::DiscreteElement<DDimX> const ix(ixy);
+                ddc::DiscreteElement<DDimY> const iy(ixy);
                 if (iy == ddc::DiscreteElement<DDimY>(2)
                     && (ix >= ddc::DiscreteElement<DDimX>(1)
                         && ix <= ddc::DiscreteElement<DDimX>(3))) {
@@ -56,10 +54,10 @@ std::ostream& print_2DChunk(
                 chunk)
 {
     ddc::for_each(
-            ddc::select<DDimY>(chunk.domain()),
+            ddc::DiscreteDomain<DDimY>(chunk.domain()),
             [&](ddc::DiscreteElement<DDimY> const iy) {
                 ddc::for_each(
-                        ddc::select<DDimX>(chunk.domain()),
+                        ddc::DiscreteDomain<DDimX>(chunk.domain()),
                         [&](ddc::DiscreteElement<DDimX> const ix) {
                             os << (chunk(ix, iy) ? "*" : ".");
                         });
@@ -108,10 +106,8 @@ int main()
                 inner_domain_xy,
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                    ddc::DiscreteElement<DDimX> const ix
-                            = ddc::select<DDimX>(ixy);
-                    ddc::DiscreteElement<DDimY> const iy
-                            = ddc::select<DDimY>(ixy);
+                    ddc::DiscreteElement<DDimX> const ix(ixy);
+                    ddc::DiscreteElement<DDimY> const iy(ixy);
                     int alive_neighbors = 0;
                     // Iterate on neighbors and increase the count of alive neighbors when necessary
                     for (int i = -1; i < 2; ++i) {

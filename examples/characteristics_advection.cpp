@@ -194,10 +194,10 @@ int main(int argc, char** argv)
     ddc::parallel_for_each(
             x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                double const x
-                        = ddc::coordinate(ddc::select<DDimX>(ixy));
-                double const y
-                        = ddc::coordinate(ddc::select<DDimY>(ixy));
+                double const x = ddc::coordinate(
+                        ddc::DiscreteElement<DDimX>(ixy));
+                double const y = ddc::coordinate(
+                        ddc::DiscreteElement<DDimY>(ixy));
                 initial_density(ixy)
                         = 9.999
                           * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
@@ -280,7 +280,8 @@ int main(int argc, char** argv)
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimX, DDimY> const e) {
                     feet_coords(e)
-                            = ddc::coordinate(ddc::select<DDimX>(e))
+                            = ddc::coordinate(
+                                      ddc::DiscreteElement<DDimX>(e))
                               - ddc::Coordinate<X>(
                                       vx * ddc::step<DDimT>());
                 });

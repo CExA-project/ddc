@@ -467,7 +467,7 @@ replace_dim_of_1d(
         [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
     if constexpr (std::is_same_v<DDimA, DDim1>) {
-        return ddc::select<DDim2>(DDom_b);
+        return ddc::DiscreteDomain<DDim2>(DDom_b);
     } else {
         return DDom_a;
     }
@@ -492,7 +492,7 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
                     DDim1,
                     DDim2,
                     DDimsA,
-                    DDimsB...>(ddc::select<DDimsA>(DDom_a), DDom_b)...);
+                    DDimsB...>(ddc::DiscreteDomain<DDimsA>(DDom_a), DDom_b)...);
 }
 
 // Replace dimensions from a domain type

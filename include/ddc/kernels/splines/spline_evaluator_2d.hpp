@@ -1186,10 +1186,8 @@ private:
         std::array<double, bsplines_type2::degree() + 1> vals2_ptr;
         Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type2::degree() + 1>> const
                 vals2(vals2_ptr.data());
-        ddc::Coordinate<continuous_dimension_type1> const coord_eval_interest1
-                = ddc::select<continuous_dimension_type1>(coord_eval);
-        ddc::Coordinate<continuous_dimension_type2> const coord_eval_interest2
-                = ddc::select<continuous_dimension_type2>(coord_eval);
+        ddc::Coordinate<continuous_dimension_type1> const coord_eval_interest1(coord_eval);
+        ddc::Coordinate<continuous_dimension_type2> const coord_eval_interest2(coord_eval);
 
         if constexpr (std::is_same_v<EvalType1, eval_type>) {
             jmin1 = ddc::discrete_space<bsplines_type1>().eval_basis(vals1, coord_eval_interest1);

@@ -486,8 +486,7 @@ private:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        ddc::Coordinate<continuous_dimension_type> coord_eval_interest
-                = ddc::select<continuous_dimension_type>(coord_eval);
+        ddc::Coordinate<continuous_dimension_type> coord_eval_interest(coord_eval);
         if constexpr (bsplines_type::is_periodic()) {
             if (coord_eval_interest < ddc::discrete_space<bsplines_type>().rmin()
                 || coord_eval_interest > ddc::discrete_space<bsplines_type>().rmax()) {
@@ -520,8 +519,7 @@ private:
         std::array<double, bsplines_type::degree() + 1> vals_ptr;
         Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type::degree() + 1>> const
                 vals(vals_ptr.data());
-        ddc::Coordinate<continuous_dimension_type> const coord_eval_interest
-                = ddc::select<continuous_dimension_type>(coord_eval);
+        ddc::Coordinate<continuous_dimension_type> const coord_eval_interest(coord_eval);
         if constexpr (std::is_same_v<EvalType, eval_type>) {
             jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
         } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {

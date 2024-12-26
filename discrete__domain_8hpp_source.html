@@ -596,7 +596,7 @@ $(document).ready(function(){initNavTree('discrete__domain_8hpp_source.html','')
 <div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>        [[maybe_unused]] <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDimsB...&gt; <span class="keyword">const</span>&amp; DDom_b) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>{</div>
 <div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;DDimA, DDim1&gt;) {</div>
-<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>        <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;DDim2&gt;(DDom_b);</div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>        <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim2&gt;(DDom_b);</div>
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>        <span class="keywordflow">return</span> DDom_a;</div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>    }</div>
@@ -621,7 +621,7 @@ $(document).ready(function(){initNavTree('discrete__domain_8hpp_source.html','')
 <div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span>                    DDim1,</div>
 <div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span>                    DDim2,</div>
 <div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>                    DDimsA,</div>
-<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>                    DDimsB...&gt;(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;DDimsA&gt;(DDom_a), DDom_b)...);</div>
+<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>                    DDimsB...&gt;(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDimsA&gt;(DDom_a), DDom_b)...);</div>
 <div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>}</div>
 <div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span> </div>
 <div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span><span class="comment">// Replace dimensions from a domain type</span></div>

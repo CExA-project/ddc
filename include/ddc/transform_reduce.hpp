@@ -6,9 +6,10 @@
 
 #include <utility>
 
-#include "ddc/detail/macros.hpp"
-#include "ddc/discrete_domain.hpp"
-#include "ddc/discrete_element.hpp"
+#include "detail/macros.hpp"
+
+#include "discrete_domain.hpp"
+#include "discrete_element.hpp"
 
 namespace ddc {
 

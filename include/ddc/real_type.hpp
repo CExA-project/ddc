@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "ddc/config.hpp"
+#include <ddc/config.hpp>
 
 namespace ddc {
 

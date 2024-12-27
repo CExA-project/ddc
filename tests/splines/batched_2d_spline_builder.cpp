@@ -27,6 +27,8 @@
 #endif
 #include "spline_error_bounds.hpp"
 
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_2D_SPLINE_BUILDER_CPP) {
+
 #if defined(BC_PERIODIC)
 struct DimX
 {
@@ -39,11 +41,6 @@ struct DimY
 };
 
 struct DimZ
-{
-    static constexpr bool PERIODIC = true;
-};
-
-struct DimT
 {
     static constexpr bool PERIODIC = true;
 };
@@ -63,24 +60,19 @@ struct DimZ
 {
     static constexpr bool PERIODIC = false;
 };
-
-struct DimT
-{
-    static constexpr bool PERIODIC = false;
-};
 #endif
 
-static constexpr std::size_t s_degree = DEGREE;
+constexpr std::size_t s_degree = DEGREE;
 
 #if defined(BC_PERIODIC)
-static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;
-static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::PERIODIC;
+constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;
+constexpr ddc::BoundCond s_bcr = ddc::BoundCond::PERIODIC;
 #elif defined(BC_GREVILLE)
-static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::GREVILLE;
-static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::GREVILLE;
+constexpr ddc::BoundCond s_bcl = ddc::BoundCond::GREVILLE;
+constexpr ddc::BoundCond s_bcr = ddc::BoundCond::GREVILLE;
 #elif defined(BC_HERMITE)
-static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::HERMITE;
-static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
+constexpr ddc::BoundCond s_bcl = ddc::BoundCond::HERMITE;
+constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
 #endif
 
 template <typename BSpX>
@@ -144,28 +136,28 @@ using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>, ddc::detail
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
-static constexpr Coord<X> x0()
+constexpr Coord<X> x0()
 {
     return Coord<X>(0.);
 }
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-static constexpr Coord<X> xN()
+constexpr Coord<X> xN()
 {
     return Coord<X>(1.);
 }
 
 // Templated function giving step of the mesh in given dimension.
 template <typename X>
-static constexpr double dx(std::size_t ncells)
+constexpr double dx(std::size_t ncells)
 {
     return (xN<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
 template <typename X>
-static std::vector<Coord<X>> breaks(std::size_t ncells)
+std::vector<Coord<X>> breaks(std::size_t ncells)
 {
     std::vector<Coord<X>> out(ncells + 1);
     for (std::size_t i(0); i < ncells + 1; ++i) {
@@ -217,7 +209,7 @@ struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename I1, typename I2, typename... X>
-static void Batched2dSplineTest()
+void Batched2dSplineTest()
 {
     // Instantiate execution spaces and initialize spaces
     Kokkos::DefaultHostExecutionSpace const host_exec_space;
@@ -666,6 +658,8 @@ static void Batched2dSplineTest()
                                 s_degree),
                         1e-11 * max_norm_diff12));
 }
+
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_2D_SPLINE_BUILDER_CPP)
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
 #define SUFFIX(name) name##Periodic##Uniform

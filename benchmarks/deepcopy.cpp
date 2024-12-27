@@ -49,10 +49,7 @@ std::size_t constexpr large_dim2_2D = large_dim1_2D;
 
 std::size_t constexpr large_dim1_1D = large_dim1_2D * large_dim1_2D;
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DEEPCOPY_CPP)
-
-
-static void memcpy_1d(benchmark::State& state)
+void memcpy_1d(benchmark::State& state)
 {
     std::vector<double> src_data(state.range(0), 0.0);
     std::vector<double> dst_data(state.range(0), -1.0);
@@ -62,7 +59,7 @@ static void memcpy_1d(benchmark::State& state)
     state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(state.range(0) * sizeof(double)));
 }
 
-static void deepcopy_1d(benchmark::State& state)
+void deepcopy_1d(benchmark::State& state)
 {
     std::vector<double> src_data(state.range(0), 0.0);
     std::vector<double> dst_data(state.range(0), -1.0);
@@ -75,7 +72,7 @@ static void deepcopy_1d(benchmark::State& state)
     state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(state.range(0) * sizeof(double)));
 }
 
-static void memcpy_2d(benchmark::State& state)
+void memcpy_2d(benchmark::State& state)
 {
     std::vector<double> src_data(state.range(0) * state.range(1), 0.0);
     std::vector<double> dst_data(state.range(0) * state.range(1), -1.0);
@@ -92,7 +89,7 @@ static void memcpy_2d(benchmark::State& state)
             * int64_t(state.range(0) * state.range(1) * sizeof(double)));
 }
 
-static void deepcopy_2d(benchmark::State& state)
+void deepcopy_2d(benchmark::State& state)
 {
     std::vector<double> src_data(state.range(0) * state.range(1), 0.0);
     std::vector<double> dst_data(state.range(0) * state.range(1), -1.0);
@@ -107,7 +104,7 @@ static void deepcopy_2d(benchmark::State& state)
             * int64_t(state.range(0) * state.range(1) * sizeof(double)));
 }
 
-static void deepcopy_subchunk_2d(benchmark::State& state)
+void deepcopy_subchunk_2d(benchmark::State& state)
 {
     std::vector<double> src_data(state.range(0) * state.range(1), 0.0);
     std::vector<double> dst_data(state.range(0) * state.range(1), -1.0);
@@ -126,7 +123,9 @@ static void deepcopy_subchunk_2d(benchmark::State& state)
             * int64_t(state.range(0) * state.range(1) * sizeof(double)));
 }
 
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DEEPCOPY_CPP)
 
+// NOLINTBEGIN(misc-use-anonymous-namespace)
 // 1D
 BENCHMARK(memcpy_1d)->Arg(small_dim1_1D);
 BENCHMARK(deepcopy_1d)->Arg(small_dim1_1D);
@@ -139,6 +138,7 @@ BENCHMARK(deepcopy_subchunk_2d)->Args({small_dim1_2D, small_dim2_2D});
 BENCHMARK(memcpy_2d)->Args({large_dim1_2D, large_dim2_2D});
 BENCHMARK(deepcopy_2d)->Args({large_dim1_2D, large_dim2_2D});
 BENCHMARK(deepcopy_subchunk_2d)->Args({large_dim1_2D, large_dim2_2D});
+// NOLINTEND(misc-use-anonymous-namespace)
 
 int main(int argc, char** argv)
 {

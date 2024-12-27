@@ -16,12 +16,14 @@
 #include "cosine_evaluator.hpp"
 #include "spline_error_bounds.hpp"
 
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PERIODICITY_SPLINE_BUILDER_CPP) {
+
 struct DimX
 {
     static constexpr bool PERIODIC = true;
 };
 
-static constexpr std::size_t s_degree_x = DEGREE_X;
+constexpr std::size_t s_degree_x = DEGREE_X;
 
 template <typename BSpX>
 using GrevillePoints = ddc::
@@ -63,28 +65,28 @@ using Coord = ddc::Coordinate<X...>;
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
-static constexpr Coord<X> x0()
+constexpr Coord<X> x0()
 {
     return Coord<X>(0.);
 }
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-static constexpr Coord<X> xN()
+constexpr Coord<X> xN()
 {
     return Coord<X>(1.);
 }
 
 // Templated function giving step of the mesh in given dimension.
 template <typename X>
-static constexpr double dx(std::size_t ncells)
+constexpr double dx(std::size_t ncells)
 {
     return (xN<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
 template <typename X>
-static std::vector<Coord<X>> breaks(std::size_t ncells)
+std::vector<Coord<X>> breaks(std::size_t ncells)
 {
     std::vector<Coord<X>> out(ncells + 1);
     for (std::size_t i(0); i < ncells + 1; ++i) {
@@ -117,7 +119,7 @@ struct DimsInitializer
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename X>
-static void PeriodicitySplineBuilderTest()
+void PeriodicitySplineBuilderTest()
 {
     // Instantiate execution spaces and initialize spaces
     Kokkos::DefaultHostExecutionSpace const host_exec_space;
@@ -210,6 +212,8 @@ static void PeriodicitySplineBuilderTest()
             max_norm_error,
             std::max(error_bounds.error_bound(dx<X>(ncells), s_degree_x), 1.0e-14 * max_norm));
 }
+
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PERIODICITY_SPLINE_BUILDER_CPP)
 
 TEST(PeriodicitySplineBuilderHost, 1D)
 {

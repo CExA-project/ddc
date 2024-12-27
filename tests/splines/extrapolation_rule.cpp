@@ -19,6 +19,8 @@
 #include "polynomial_evaluator.hpp"
 #endif
 
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(EXTRAPOLATION_RULE_CPP) {
+
 #if defined(BC_PERIODIC)
 struct DimX
 {
@@ -42,18 +44,18 @@ struct DimY
 };
 #endif
 
-static constexpr std::size_t s_degree = DEGREE;
+constexpr std::size_t s_degree = DEGREE;
 
 #if defined(BC_PERIODIC)
-static constexpr ddc::BoundCond s_bcl1 = ddc::BoundCond::GREVILLE;
-static constexpr ddc::BoundCond s_bcr1 = ddc::BoundCond::GREVILLE;
-static constexpr ddc::BoundCond s_bcl2 = ddc::BoundCond::PERIODIC;
-static constexpr ddc::BoundCond s_bcr2 = ddc::BoundCond::PERIODIC;
+constexpr ddc::BoundCond s_bcl1 = ddc::BoundCond::GREVILLE;
+constexpr ddc::BoundCond s_bcr1 = ddc::BoundCond::GREVILLE;
+constexpr ddc::BoundCond s_bcl2 = ddc::BoundCond::PERIODIC;
+constexpr ddc::BoundCond s_bcr2 = ddc::BoundCond::PERIODIC;
 #elif defined(BC_GREVILLE)
-static constexpr ddc::BoundCond s_bcl1 = ddc::BoundCond::GREVILLE;
-static constexpr ddc::BoundCond s_bcr1 = ddc::BoundCond::GREVILLE;
-static constexpr ddc::BoundCond s_bcl2 = ddc::BoundCond::GREVILLE;
-static constexpr ddc::BoundCond s_bcr2 = ddc::BoundCond::GREVILLE;
+constexpr ddc::BoundCond s_bcl1 = ddc::BoundCond::GREVILLE;
+constexpr ddc::BoundCond s_bcr1 = ddc::BoundCond::GREVILLE;
+constexpr ddc::BoundCond s_bcl2 = ddc::BoundCond::GREVILLE;
+constexpr ddc::BoundCond s_bcr2 = ddc::BoundCond::GREVILLE;
 #endif
 
 template <typename BSpX>
@@ -116,28 +118,28 @@ using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>, ddc::detail
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
-static constexpr Coord<X> x0()
+constexpr Coord<X> x0()
 {
     return Coord<X>(0.);
 }
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-static constexpr Coord<X> xN()
+constexpr Coord<X> xN()
 {
     return Coord<X>(1.);
 }
 
 // Templated function giving step of the mesh in given dimension.
 template <typename X>
-static constexpr double dx(std::size_t ncells)
+constexpr double dx(std::size_t ncells)
 {
     return (xN<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
 template <typename X>
-static std::vector<Coord<X>> breaks(std::size_t ncells)
+std::vector<Coord<X>> breaks(std::size_t ncells)
 {
     std::vector<Coord<X>> out(ncells + 1);
     for (std::size_t i(0); i < ncells + 1; ++i) {
@@ -189,7 +191,7 @@ struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename I1, typename I2, typename... X>
-static void ExtrapolationRuleSplineTest()
+void ExtrapolationRuleSplineTest()
 {
     // Instantiate execution spaces and initialize spaces
     Kokkos::DefaultHostExecutionSpace const host_exec_space;
@@ -394,6 +396,8 @@ static void ExtrapolationRuleSplineTest()
 
     EXPECT_LE(max_norm_error, 1.0e-14 * max_norm);
 }
+
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(EXTRAPOLATION_RULE_CPP)
 
 #if defined(ER_NULL) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
 #define SUFFIX(name) name##Null##Periodic##Uniform

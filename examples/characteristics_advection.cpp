@@ -46,8 +46,7 @@ using ExtrapolationRule = ddc::NullExtrapolationRule;
 struct BSplinesX : ddc::UniformBSplines<X, s_degree_x>
 {
 };
-using GrevillePoints = ddc::
-        GrevilleInterpolationPoints<BSplinesX, BoundCond, BoundCond>;
+using GrevillePoints = ddc::GrevilleInterpolationPoints<BSplinesX, BoundCond, BoundCond>;
 struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
@@ -79,26 +78,19 @@ struct DDimT : ddc::UniformPointSampling<T>
 template <class ChunkType>
 void display(double time, ChunkType density)
 {
-    double const mean_density = ddc::transform_reduce(
-                                        density.domain(),
-                                        0.,
-                                        ddc::reducer::sum<double>(),
-                                        density)
-                                / density.domain().size();
+    double const mean_density
+            = ddc::transform_reduce(density.domain(), 0., ddc::reducer::sum<double>(), density)
+              / density.domain().size();
     std::cout << std::fixed << std::setprecision(3);
     std::cout << "At t = " << time << ",\n";
     std::cout << "  * mean density  = " << mean_density << "\n";
     // take a slice in the middle of the box
     ddc::ChunkSpan const density_slice = density
-            [ddc::get_domain<DDimY>(density).front()
-             + ddc::get_domain<DDimY>(density).size() / 2];
-    std::cout << "  * density[y:"
-              << ddc::get_domain<DDimY>(density).size() / 2 << "] = {";
-    ddc::for_each(
-            ddc::get_domain<DDimX>(density),
-            [=](ddc::DiscreteElement<DDimX> const ix) {
-                std::cout << std::setw(6) << density_slice(ix) << " ";
-            });
+            [ddc::get_domain<DDimY>(density).front() + ddc::get_domain<DDimY>(density).size() / 2];
+    std::cout << "  * density[y:" << ddc::get_domain<DDimY>(density).size() / 2 << "] = {";
+    ddc::for_each(ddc::get_domain<DDimX>(density), [=](ddc::DiscreteElement<DDimX> const ix) {
+        std::cout << std::setw(6) << density_slice(ix) << " ";
+    });
     std::cout << " }\n" << std::flush;
 }
 //! [display]
@@ -141,21 +133,17 @@ int main(int argc, char** argv)
 
     //! [X-global-domain]
     // Initialization of the global domain in X
-    ddc::init_discrete_space<BSplinesX>(
-            ddc::Coordinate<X>(x_start),
-            ddc::Coordinate<X>(x_end),
-            nb_x_points);
-    ddc::init_discrete_space<DDimX>(
-            GrevillePoints::get_sampling<DDimX>());
+    ddc::init_discrete_space<
+            BSplinesX>(ddc::Coordinate<X>(x_start), ddc::Coordinate<X>(x_end), nb_x_points);
+    ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
 
     auto const x_domain = GrevillePoints::get_domain<DDimX>();
     //! [X-global-domain]
     // Initialization of the global domain in Y
-    auto const y_domain
-            = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
-                    ddc::Coordinate<Y>(y_start),
-                    ddc::Coordinate<Y>(y_end),
-                    ddc::DiscreteVector<DDimY>(nb_y_points)));
+    auto const y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
+            ddc::Coordinate<Y>(y_start),
+            ddc::Coordinate<Y>(y_end),
+            ddc::DiscreteVector<DDimY>(nb_y_points)));
 
     //! [time-domains]
 
@@ -186,34 +174,27 @@ int main(int argc, char** argv)
     //! [data allocation]
 
     //! [initial-conditions]
-    ddc::ChunkSpan const initial_density
-            = last_density_alloc.span_view();
+    ddc::ChunkSpan const initial_density = last_density_alloc.span_view();
     // Initialize the density on the main domain
     ddc::DiscreteDomain<DDimX, DDimY> const x_mesh
             = ddc::DiscreteDomain<DDimX, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
             x_mesh,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                double const x = ddc::coordinate(
-                        ddc::DiscreteElement<DDimX>(ixy));
-                double const y = ddc::coordinate(
-                        ddc::DiscreteElement<DDimY>(ixy));
-                initial_density(ixy)
-                        = 9.999
-                          * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
+                double const x = ddc::coordinate(ddc::DiscreteElement<DDimX>(ixy));
+                double const y = ddc::coordinate(ddc::DiscreteElement<DDimY>(ixy));
+                initial_density(ixy) = 9.999 * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
                 // initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
             });
     //! [initial-conditions]
 
-    ddc::Chunk host_density_alloc
-            = ddc::create_mirror(last_density_alloc.span_cview());
+    ddc::Chunk host_density_alloc = ddc::create_mirror(last_density_alloc.span_cview());
 
 
     //! [initial output]
     // display the initial data
     ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
-    display(ddc::coordinate(time_domain.front()),
-            host_density_alloc[x_domain][y_domain]);
+    display(ddc::coordinate(time_domain.front()), host_density_alloc[x_domain][y_domain]);
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
     //! [initial output]
@@ -238,15 +219,12 @@ int main(int argc, char** argv)
             ExtrapolationRule,
             ExtrapolationRule,
             DDimX,
-            DDimY> const
-            spline_evaluator(extrapolation_rule, extrapolation_rule);
+            DDimY> const spline_evaluator(extrapolation_rule, extrapolation_rule);
     //! [instantiate solver]
 
     //! [instantiate intermediate chunks]
     // Instantiate chunk of spline coefs to receive output of spline_builder
-    ddc::Chunk coef_alloc(
-            spline_builder.batched_spline_domain(),
-            ddc::DeviceAllocator<double>());
+    ddc::Chunk coef_alloc(spline_builder.batched_spline_domain(), ddc::DeviceAllocator<double>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Instantiate chunk to receive feet coords
@@ -258,18 +236,15 @@ int main(int argc, char** argv)
 
 
     //! [time iteration]
-    for (auto const iter :
-         time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
+    for (auto const iter : time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
         //! [time iteration]
 
         //! [manipulated views]
         // a span of the density at the time-step we
         // will build
-        ddc::ChunkSpan const next_density
-                = next_density_alloc.span_view();
+        ddc::ChunkSpan const next_density = next_density_alloc.span_view();
         // a read-only view of the density at the previous time-step
-        ddc::ChunkSpan const last_density
-                = last_density_alloc.span_view();
+        ddc::ChunkSpan const last_density = last_density_alloc.span_view();
         //! [manipulated views]
 
         //! [numerical scheme]
@@ -277,30 +252,20 @@ int main(int argc, char** argv)
         // Find the coordinates of the characteristics feet
         ddc::parallel_for_each(
                 feet_coords.domain(),
-                KOKKOS_LAMBDA(
-                        ddc::DiscreteElement<DDimX, DDimY> const e) {
-                    feet_coords(e)
-                            = ddc::coordinate(
-                                      ddc::DiscreteElement<DDimX>(e))
-                              - ddc::Coordinate<X>(
-                                      vx * ddc::step<DDimT>());
+                KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const e) {
+                    feet_coords(e) = ddc::coordinate(ddc::DiscreteElement<DDimX>(e))
+                                     - ddc::Coordinate<X>(vx * ddc::step<DDimT>());
                 });
         // Interpolate the values at feets on the grid
         spline_builder(coef, last_density.span_cview());
-        spline_evaluator(
-                next_density,
-                feet_coords.span_cview(),
-                coef.span_cview());
+        spline_evaluator(next_density, feet_coords.span_cview(), coef.span_cview());
         //! [numerical scheme]
 
         //! [output]
         if (iter - last_output >= t_output_period) {
             last_output = iter;
-            ddc::parallel_deepcopy(
-                    host_density_alloc,
-                    next_density_alloc);
-            display(ddc::coordinate(iter),
-                    host_density_alloc[x_domain][y_domain]);
+            ddc::parallel_deepcopy(host_density_alloc, next_density_alloc);
+            display(ddc::coordinate(iter), host_density_alloc[x_domain][y_domain]);
         }
         //! [output]
 
@@ -313,8 +278,7 @@ int main(int argc, char** argv)
     //! [final output]
     if (last_output < time_domain.back()) {
         ddc::parallel_deepcopy(host_density_alloc, last_density_alloc);
-        display(ddc::coordinate(time_domain.back()),
-                host_density_alloc[x_domain][y_domain]);
+        display(ddc::coordinate(time_domain.back()), host_density_alloc[x_domain][y_domain]);
     }
     //! [final output]
 }

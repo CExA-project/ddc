@@ -46,8 +46,7 @@ void blinker_init(
 template <class ElementType, class DDimX, class DDimY>
 std::ostream& print_2DChunk(
         std::ostream& os,
-        ddc::ChunkSpan<ElementType, ddc::DiscreteDomain<DDimX, DDimY>>
-                chunk)
+        ddc::ChunkSpan<ElementType, ddc::DiscreteDomain<DDimX, DDimY>> chunk)
 {
     ddc::for_each(
             ddc::DiscreteDomain<DDimY>(chunk.domain()),
@@ -79,16 +78,9 @@ int main()
             ddc::DiscreteElement<DDimX, DDimY>(1, 1),
             ddc::DiscreteVector<DDimX, DDimY>(length - 2, height - 2));
 
-    ddc::Chunk cells_in_dev_alloc(
-            "cells_in_dev",
-            domain_xy,
-            ddc::DeviceAllocator<cell>());
-    ddc::Chunk cells_out_dev_alloc(
-            "cells_out_dev",
-            domain_xy,
-            ddc::DeviceAllocator<cell>());
-    ddc::Chunk cells_in_host_alloc
-            = ddc::create_mirror(cells_in_dev_alloc.span_cview());
+    ddc::Chunk cells_in_dev_alloc("cells_in_dev", domain_xy, ddc::DeviceAllocator<cell>());
+    ddc::Chunk cells_out_dev_alloc("cells_out_dev", domain_xy, ddc::DeviceAllocator<cell>());
+    ddc::Chunk cells_in_host_alloc = ddc::create_mirror(cells_in_dev_alloc.span_cview());
 
     ddc::ChunkSpan const cells_in = cells_in_dev_alloc.span_view();
     ddc::ChunkSpan const cells_out = cells_out_dev_alloc.span_view();
@@ -100,12 +92,10 @@ int main()
     std::size_t iter = 0;
     for (; iter < nt; ++iter) {
         ddc::parallel_deepcopy(cells_in_host_alloc, cells_in);
-        print_2DChunk(std::cout, cells_in_host_alloc.span_cview())
-                << "\n";
+        print_2DChunk(std::cout, cells_in_host_alloc.span_cview()) << "\n";
         ddc::parallel_for_each(
                 inner_domain_xy,
-                KOKKOS_LAMBDA(
-                        ddc::DiscreteElement<DDimX, DDimY> const ixy) {
+                KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
                     ddc::DiscreteElement<DDimX> const ix(ixy);
                     ddc::DiscreteElement<DDimY> const iy(ixy);
                     int alive_neighbors = 0;

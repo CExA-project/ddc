@@ -296,12 +296,13 @@ Initial conditions</h1>
 </div><!-- fragment --><p>And we display the initial data.</p>
 <div class="fragment"><div class="line">display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>()), ghosted_temp[x_domain][y_domain]);</div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a75660adbd6207e6dd4eec152cae420de"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">ddc::DiscreteDomain::front</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00140">discrete_domain.hpp:140</a></div></div>
-</div><!-- fragment --><div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> <span class="keyword">const</span> iter :</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
+Time loop</h1>
+<div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> <span class="keyword">const</span> iter :</div>
 <div class="line">     time_domain.remove_first(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;DDimT&gt;(1))) {</div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
-</div><!-- fragment --><p>To display the data, a chunk is created on the host using the <a class="el" href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">ddc::create_mirror</a> function.</p>
-<div class="fragment"><div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_temp = <a class="code hl_function" href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">ddc::create_mirror</a>(ghosted_last_temp.span_cview());</div>
-</div><!-- fragment --><p>We deepcopy the data from the <code>ghosted_last_temp</code> chunk to <code>ghosted_temp</code> on the host.</p>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
+Periodic conditions</h2>
 <div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">ddc::DiscreteVectorElement</a> ix = 0; ix &lt; x_pre_ghost.extents().value(); ++ix) {</div>
 <div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
 <div class="line">            ghosted_last_temp[x_pre_ghost[ix]][y_domain],</div>
@@ -323,68 +324,6 @@ Initial conditions</h1>
 <div class="line">            ghosted_last_temp[x_domain][y_post_mirror[iy]]);</div>
 <div class="line">}</div>
 <div class="ttc" id="anamespaceddc_html_ad6cf37f23e5e0fc7893bf8cb37bc1a7a"><div class="ttname"><a href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">ddc::DiscreteVectorElement</a></div><div class="ttdeci">std::ptrdiff_t DiscreteVectorElement</div><div class="ttdoc">A DiscreteVectorElement is a scalar that represents the difference between two coordinates.</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00049">discrete_vector.hpp:49</a></div></div>
-</div><!-- fragment --><div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
-</div><!-- fragment --><p>And we display the initial data.</p>
-<div class="fragment"><div class="line">display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>()), ghosted_temp[x_domain][y_domain]);</div>
-</div><!-- fragment --><p>For the numerical scheme, two chunkspans are created:</p>
-<ul>
-<li><code>next_temp</code> a span excluding ghosts of the temperature at the time-step we will build.</li>
-<li><code>last_temp</code> a read-only view of the temperature at the previous time-step.Note that <em>span_cview</em> returns a read-only ChunkSpan.</li>
-</ul>
-<div class="fragment"><div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> next_temp(</div>
-<div class="line">        ghosted_next_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain)]);</div>
-<div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> last_temp(ghosted_last_temp.span_cview());</div>
-</div><!-- fragment --><p>We then solve the equation.</p>
-<div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
-<div class="line">        next_temp.domain(),</div>
-<div class="line">        KOKKOS_LAMBDA(<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> ixy) {</div>
-<div class="line">            <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> <span class="keyword">const</span> ix(ixy);</div>
-<div class="line">            <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> <span class="keyword">const</span> iy(ixy);</div>
-<div class="line">            <span class="keywordtype">double</span> <span class="keyword">const</span> dt = <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::step&lt;DDimT&gt;</a>();</div>
-<div class="line"> </div>
-<div class="line">            next_temp(ix, iy) = last_temp(ix, iy);</div>
-<div class="line">            next_temp(ix, iy) += kx * dt</div>
-<div class="line">                                 * (last_temp(ix + 1, iy) - 2.0 * last_temp(ix, iy)</div>
-<div class="line">                                    + last_temp(ix - 1, iy))</div>
-<div class="line">                                 * invdx2;</div>
-<div class="line"> </div>
-<div class="line">            next_temp(ix, iy) += ky * dt</div>
-<div class="line">                                 * (last_temp(ix, iy + 1) - 2.0 * last_temp(ix, iy)</div>
-<div class="line">                                    + last_temp(ix, iy - 1))</div>
-<div class="line">                                 * invdy2;</div>
-<div class="line">        });</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
-Time loop</h1>
-<div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> <span class="keyword">const</span> iter :</div>
-<div class="line">     time_domain.remove_first(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;DDimT&gt;(1))) {</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
-Periodic conditions</h2>
-<div class="fragment"><div class="line"><span class="keywordflow">if</span> (iter - last_output_iter &gt;= t_output_period) {</div>
-<div class="line">    last_output_iter = iter;</div>
-<div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_next_temp);</div>
-<div class="line">    display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(iter),</div>
-<div class="line">            ghosted_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain)]);</div>
-<div class="line">}</div>
-</div><!-- fragment --><div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">ddc::DiscreteVectorElement</a> ix = 0; ix &lt; x_pre_ghost.extents().value(); ++ix) {</div>
-<div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line">            ghosted_last_temp[x_pre_ghost[ix]][y_domain],</div>
-<div class="line">            ghosted_last_temp[x_pre_mirror[ix]][y_domain]);</div>
-<div class="line">}</div>
-<div class="line"><span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">ddc::DiscreteVectorElement</a> ix = 0; ix &lt; x_post_ghost.extents().value(); ++ix) {</div>
-<div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line">            ghosted_last_temp[x_post_ghost[ix]][y_domain],</div>
-<div class="line">            ghosted_last_temp[x_post_mirror[ix]][y_domain]);</div>
-<div class="line">}</div>
-<div class="line"><span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">ddc::DiscreteVectorElement</a> iy = 0; iy &lt; y_pre_ghost.extents().value(); ++iy) {</div>
-<div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line">            ghosted_last_temp[x_domain][y_pre_ghost[iy]],</div>
-<div class="line">            ghosted_last_temp[x_domain][y_pre_mirror[iy]]);</div>
-<div class="line">}</div>
-<div class="line"><span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">ddc::DiscreteVectorElement</a> iy = 0; iy &lt; y_post_ghost.extents().value(); ++iy) {</div>
-<div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
-<div class="line">            ghosted_last_temp[x_domain][y_post_ghost[iy]],</div>
-<div class="line">            ghosted_last_temp[x_domain][y_post_mirror[iy]]);</div>
-<div class="line">}</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
 Numerical scheme</h2>
 <div class="fragment"><div class="line">std::swap(ghosted_last_temp, ghosted_next_temp);</div>
@@ -397,13 +336,7 @@ Numerical scheme</h2>
 <div class="line">        ghosted_next_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain)]);</div>
 <div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> last_temp(ghosted_last_temp.span_cview());</div>
 </div><!-- fragment --><p>We then solve the equation.</p>
-<div class="fragment"><div class="line"><span class="keywordflow">if</span> (last_output_iter &lt; time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()) {</div>
-<div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
-<div class="line">    display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">back</a>()),</div>
-<div class="line">            ghosted_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain)]);</div>
-<div class="line">}</div>
-<div class="ttc" id="aclassddc_1_1DiscreteDomain_html_abc808a930eda098e573917e26c5140b3"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#abc808a930eda098e573917e26c5140b3">ddc::DiscreteDomain::back</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type back() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00145">discrete_domain.hpp:145</a></div></div>
-</div><!-- fragment --><div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
+<div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
 <div class="line">        next_temp.domain(),</div>
 <div class="line">        KOKKOS_LAMBDA(<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> ixy) {</div>
 <div class="line">            <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> <span class="keyword">const</span> ix(ixy);</div>

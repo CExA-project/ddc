@@ -268,6 +268,8 @@ private:
     std::array<DiscreteVectorElement, sizeof...(Tags)> m_values;
 
 public:
+    using value_type = DiscreteVectorElement;
+
     static KOKKOS_FUNCTION constexpr std::size_t size() noexcept
     {
         return sizeof...(Tags);

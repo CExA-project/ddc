@@ -62,12 +62,19 @@ struct SVDD2 : SingleValueDiscreteDimension
 {
 };
 
+template <class DDim>
+void create_single_discretization(int value)
+{
+    ddc::init_discrete_space_from_impl<DDim>(
+            SingleValueDiscreteDimension::template Impl<DDim, Kokkos::HostSpace>(value));
+}
+
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MULTIPLE_DISCRETE_DIMENSIONS_CPP)
 
 TEST(MultipleDiscreteDimensions, Value)
 {
-    ddc::init_discrete_space<SVDD1>(239);
-    ddc::init_discrete_space<SVDD2>(928);
+    create_single_discretization<SVDD1>(239);
+    create_single_discretization<SVDD2>(928);
     EXPECT_EQ(ddc::discrete_space<SVDD1>().value(), 239);
     EXPECT_EQ(ddc::discrete_space<SVDD2>().value(), 928);
 }

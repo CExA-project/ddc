@@ -52,12 +52,11 @@ void test_fourier_mesh(std::size_t Nx)
     double const a = -10;
     double const b = 10;
 
-    DDom<DDim<X>> const x_mesh(ddc::init_discrete_space<DDim<X>>(DDim<X>::template init<DDim<X>>(
+    DDom<DDim<X>> const x_mesh(ddc::create_uniform_point_sampling<DDim<X>>(
             ddc::Coordinate<X>(a + (b - a) / Nx / 2),
             ddc::Coordinate<X>(b - (b - a) / Nx / 2),
-            DVect<DDim<X>>(Nx))));
-    ddc::init_discrete_space<DFDim<ddc::Fourier<X>>>(
-            ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(ddc::DiscreteDomain<DDim<X>>(x_mesh)));
+            DVect<DDim<X>>(Nx)));
+    ddc::create_fourier_space<DFDim<ddc::Fourier<X>>>(ddc::DiscreteDomain<DDim<X>>(x_mesh));
     DDom<DFDim<ddc::Fourier<X>>> const k_mesh
             = ddc::fourier_mesh<DFDim<ddc::Fourier<X>>>(x_mesh, true);
 
@@ -86,13 +85,11 @@ void test_fft()
     double const b = 10;
     std::size_t const Nx = 64; // Optimal value is (b-a)^2/(2*pi)
 
-    DDom<DDim<X>...> const x_mesh(ddc::init_discrete_space<DDim<X>>(DDim<X>::template init<DDim<X>>(
+    DDom<DDim<X>...> const x_mesh(ddc::create_uniform_point_sampling<DDim<X>>(
             ddc::Coordinate<X>(a + (b - a) / Nx / 2),
             ddc::Coordinate<X>(b - (b - a) / Nx / 2),
-            DVect<DDim<X>>(Nx)))...);
-    (ddc::init_discrete_space<DFDim<ddc::Fourier<X>>>(
-             ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(ddc::DiscreteDomain<DDim<X>>(x_mesh))),
-     ...);
+            DVect<DDim<X>>(Nx))...);
+    (ddc::create_fourier_space<DFDim<ddc::Fourier<X>>>(ddc::DiscreteDomain<DDim<X>>(x_mesh)), ...);
     DDom<DFDim<ddc::Fourier<X>>...> const k_mesh(
             ddc::fourier_mesh<DFDim<ddc::Fourier<X>>...>(x_mesh, full_fft));
 
@@ -174,12 +171,11 @@ void test_fft_norm(ddc::FFT_Normalization const norm)
     bool const full_fft
             = ddc::detail::fft::is_complex_v<Tin> && ddc::detail::fft::is_complex_v<Tout>;
 
-    DDom<DDim<X>> const x_mesh(ddc::init_discrete_space<DDim<X>>(DDim<X>::template init<DDim<X>>(
+    DDom<DDim<X>> const x_mesh(ddc::create_uniform_point_sampling<DDim<X>>(
             ddc::Coordinate<X>(-1. / 4),
             ddc::Coordinate<X>(1. / 4),
-            DVect<DDim<X>>(2))));
-    ddc::init_discrete_space<DFDim<ddc::Fourier<X>>>(
-            ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(x_mesh));
+            DVect<DDim<X>>(2)));
+    ddc::create_fourier_space<DFDim<ddc::Fourier<X>>>(x_mesh);
     DDom<DFDim<ddc::Fourier<X>>> const k_mesh
             = ddc::fourier_mesh<DFDim<ddc::Fourier<X>>>(x_mesh, full_fft);
 

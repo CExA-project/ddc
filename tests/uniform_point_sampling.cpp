@@ -55,8 +55,9 @@ TEST(UniformPointSamplingTest, Coordinate)
     ddc::DiscreteElement<DDimX, DDimY> const point_ixy(point_ix, point_iy);
     ddc::Coordinate<DimX, DimY> const point_rxy(point_rx, point_ry);
 
-    ddc::init_discrete_space<DDimX>(origin, step);
-    ddc::init_discrete_space<DDimY>(ddc::Coordinate<DimY>(-10.), 1.);
+    ddc::create_uniform_point_sampling<DDimX>(origin, ddc::Coordinate<DimX>(step));
+    ddc::create_uniform_point_sampling<
+            DDimY>(ddc::Coordinate<DimY>(-10.), ddc::Coordinate<DimY>(1.));
     EXPECT_EQ(ddc::coordinate(point_ix), point_rx);
     EXPECT_EQ(ddc::coordinate(point_iy), point_ry);
     EXPECT_EQ(ddc::coordinate(point_ixy), point_rxy);

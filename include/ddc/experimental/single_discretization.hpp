@@ -93,6 +93,14 @@ public:
 };
 
 template <class DDim>
+void create_single_discretization(Coordinate<typename DDim::continuous_dimension_type> origin)
+{
+    init_discrete_space_from_impl<DDim>(
+            typename SingleDiscretization<typename DDim::continuous_dimension_type>::
+                    template Impl<DDim, Kokkos::HostSpace>(origin));
+}
+
+template <class DDim>
 struct is_single_discretization : public std::is_base_of<SingleDiscretizationBase, DDim>::type
 {
 };

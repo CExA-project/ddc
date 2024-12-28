@@ -41,6 +41,6 @@ TEST(SingleDiscretization, Constructor)
 TEST(SingleDiscretization, Coordinate)
 {
     CoordX const x(1.);
-    ddc::init_discrete_space<DDimX>(x);
+    ddc::experimental::create_single_discretization<DDimX>(x);
     EXPECT_EQ(ddcexp::coordinate(DElemX(0)), x);
 }

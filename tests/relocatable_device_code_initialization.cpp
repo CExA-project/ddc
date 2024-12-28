@@ -10,7 +10,7 @@ namespace rdc {
 
 void initialize_ddimx(ddc::Coordinate<DimX> const origin, ddc::Real const step)
 {
-    ddc::init_discrete_space<DDimX>(origin, step);
+    ddc::create_uniform_point_sampling<DDimX>(origin, ddc::Coordinate<DimX>(step));
 }
 
 } // namespace rdc

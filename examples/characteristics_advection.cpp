@@ -133,17 +133,17 @@ int main(int argc, char** argv)
 
     //! [X-global-domain]
     // Initialization of the global domain in X
-    ddc::init_discrete_space<
+    ddc::create_uniform_bsplines<
             BSplinesX>(ddc::Coordinate<X>(x_start), ddc::Coordinate<X>(x_end), nb_x_points);
-    ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
+    ddc::init_discrete_space_from_impl<DDimX>(GrevillePoints::get_sampling<DDimX>());
 
     auto const x_domain = GrevillePoints::get_domain<DDimX>();
     //! [X-global-domain]
     // Initialization of the global domain in Y
-    auto const y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
+    ddc::DiscreteDomain<DDimY> const y_domain = ddc::create_uniform_point_sampling<DDimY>(
             ddc::Coordinate<Y>(y_start),
             ddc::Coordinate<Y>(y_end),
-            ddc::DiscreteVector<DDimY>(nb_y_points)));
+            ddc::DiscreteVector<DDimY>(nb_y_points));
 
     //! [time-domains]
 
@@ -153,11 +153,8 @@ int main(int argc, char** argv)
     // Initialization of the global domain in time:
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
-    ddc::DiscreteDomain<DDimT> const time_domain
-            = ddc::init_discrete_space<DDimT>(DDimT::init<DDimT>(
-                    ddc::Coordinate<T>(start_time),
-                    ddc::Coordinate<T>(end_time),
-                    nb_time_steps + 1));
+    ddc::DiscreteDomain<DDimT> const time_domain = ddc::create_uniform_point_sampling<
+            DDimT>(ddc::Coordinate<T>(start_time), ddc::Coordinate<T>(end_time), nb_time_steps + 1);
     //! [time-domains]
 
     //! [data allocation]

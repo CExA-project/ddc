@@ -385,6 +385,46 @@ public:
     };
 };
 
+/** @brief Constructs a non uniform spline basis by iterating over a range of break points from begin to end.
+ * The associated static attributes are available after this call.
+ *
+ * The provided break points describe the separation between the cells on which the polynomials
+ * comprising a spline are defined. They are used to build a set of knots. There are 2*degree more
+ * knots than break points. In the non-periodic case the knots are defined as follows:
+ * \f$ k_i = b_0 \forall 0 \leq i < d \f$
+ * \f$ k_{i+d} = b_i \forall 0 \leq i < n_b \f$
+ * \f$ k_{i+d+n_b} = b_{n_b-1} \forall 0 \leq i < d \f$
+ * where \f$d\f$ is the degree of the polynomials, and \f$n_b\f$ is the number of break points in the input pair of iterators. And in the periodic case:
+ * \f$ k_i = b_{n_b-1-d+i} \forall 0 \leq i < d \f$
+ * \f$ k_{i+d} = b_i \forall 0 \leq i \leq n_b \f$
+ * \f$ k_{i+d+n_b} = b_{i+1} \forall 0 \leq i < d \f$
+ *
+ * This constructor makes the knots accessible via a DiscreteSpace.
+ * @tparam DDim  The name of the discrete dimension
+ * @param breaks_begin The iterator which points at the beginning of the break points.
+ * @param breaks_end The iterator which points at the end of the break points.
+ */
+template <class DDim, class RandomIt>
+void create_non_uniform_bsplines(RandomIt const breaks_begin, RandomIt const breaks_end)
+{
+    ddc::init_discrete_space_from_impl<DDim>(
+            typename NonUniformBSplines<typename DDim::continuous_dimension_type, DDim::degree()>::
+                    template Impl<DDim, Kokkos::HostSpace>(breaks_begin, breaks_end));
+}
+
+/** @brief Constructs a non uniform spline basis using break points contained in a std::vector.
+ * The associated static attributes are available after this call.
+ *
+ * @tparam DDim  The name of the discrete dimension
+ * @param breaks The std::vector of the coordinates of break points.
+ */
+template <class DDim>
+void create_non_uniform_bsplines(
+        std::vector<ddc::Coordinate<typename DDim::continuous_dimension_type>> const& breaks)
+{
+    create_non_uniform_bsplines<DDim>(breaks.begin(), breaks.end());
+}
+
 template <class DDim>
 struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplinesBase, DDim>::type
 {
@@ -439,7 +479,7 @@ NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::Impl(
             knots[degree() + npoints() - 1 + i] = rmax;
         }
     }
-    ddc::init_discrete_space<knot_discrete_dimension_type>(knots);
+    ddc::create_non_uniform_point_sampling<knot_discrete_dimension_type>(knots);
 }
 
 template <class CDim, std::size_t D>

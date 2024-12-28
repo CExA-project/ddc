@@ -96,11 +96,11 @@ int main(int argc, char** argv)
 
     //! [X-global-domain]
     auto const [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]
-            = ddc::init_discrete_space<DDimX>(DDimX::init_ghosted<DDimX>(
+            = ddc::create_uniform_point_sampling_ghosted<DDimX>(
                     ddc::Coordinate<X>(x_start),
                     ddc::Coordinate<X>(x_end),
                     ddc::DiscreteVector<DDimX>(nb_x_points),
-                    gwx));
+                    gwx);
     //! [X-global-domain]
 
     //! [X-domains]
@@ -114,11 +114,11 @@ int main(int argc, char** argv)
     ddc::DiscreteVector<DDimY> const gwy(1);
 
     auto const [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]
-            = ddc::init_discrete_space<DDimY>(DDimY::init_ghosted<DDimY>(
+            = ddc::create_uniform_point_sampling_ghosted<DDimY>(
                     ddc::Coordinate<Y>(y_start),
                     ddc::Coordinate<Y>(y_end),
                     ddc::DiscreteVector<DDimY>(nb_y_points),
-                    gwy));
+                    gwy);
 
     ddc::DiscreteDomain<DDimY> const
             y_post_mirror(y_post_ghost.front() - y_domain.extents(), y_post_ghost.extents());
@@ -139,11 +139,8 @@ int main(int argc, char** argv)
     //! [time-domain]
     ddc::DiscreteVector<DDimT> const nb_time_steps(std::ceil((end_time - start_time) / dt) + .2);
 
-    ddc::DiscreteDomain<DDimT> const time_domain
-            = ddc::init_discrete_space<DDimT>(DDimT::init<DDimT>(
-                    ddc::Coordinate<T>(start_time),
-                    ddc::Coordinate<T>(end_time),
-                    nb_time_steps + 1));
+    ddc::DiscreteDomain<DDimT> const time_domain = ddc::create_uniform_point_sampling<
+            DDimT>(ddc::Coordinate<T>(start_time), ddc::Coordinate<T>(end_time), nb_time_steps + 1);
     //! [time-domain]
 
     //! [data allocation]

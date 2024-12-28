@@ -132,14 +132,12 @@ public:
         {
             assert(ncells > 0);
             std::tie(m_break_point_domain, m_knot_domain, std::ignore, std::ignore)
-                    = ddc::init_discrete_space<knot_discrete_dimension_type>(
-                            knot_discrete_dimension_type::template init_ghosted<
-                                    knot_discrete_dimension_type>(
-                                    rmin,
-                                    rmax,
-                                    ddc::DiscreteVector<knot_discrete_dimension_type>(ncells + 1),
-                                    ddc::DiscreteVector<knot_discrete_dimension_type>(degree()),
-                                    ddc::DiscreteVector<knot_discrete_dimension_type>(degree())));
+                    = ddc::create_uniform_point_sampling_ghosted<knot_discrete_dimension_type>(
+                            rmin,
+                            rmax,
+                            ddc::DiscreteVector<knot_discrete_dimension_type>(ncells + 1),
+                            ddc::DiscreteVector<knot_discrete_dimension_type>(degree()),
+                            ddc::DiscreteVector<knot_discrete_dimension_type>(degree()));
         }
 
         /** @brief Copy-constructs from another Impl with a different Kokkos memory space.
@@ -363,6 +361,25 @@ public:
                 ddc::Coordinate<CDim> const& x) const;
     };
 };
+
+/** Constructs a spline basis (B-splines) with n equidistant knots over \f$[a, b]\f$.
+ * The associated static attributes are available after this call.
+ *
+ * @tparam DDim  The name of the discrete dimension
+ * @param rmin   The real ddc::coordinate of the first knot.
+ * @param rmax   The real ddc::coordinate of the last knot.
+ * @param ncells The number of cells in the range [rmin, rmax].
+ */
+template <class DDim>
+void create_uniform_bsplines(
+        ddc::Coordinate<typename DDim::continuous_dimension_type> rmin,
+        ddc::Coordinate<typename DDim::continuous_dimension_type> rmax,
+        std::size_t ncells)
+{
+    ddc::init_discrete_space_from_impl<DDim>(
+            typename UniformBSplines<typename DDim::continuous_dimension_type, DDim::degree()>::
+                    template Impl<DDim, Kokkos::HostSpace>(rmin, rmax, ncells));
+}
 
 template <class DDim>
 struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase, DDim>::type

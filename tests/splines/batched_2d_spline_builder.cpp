@@ -184,10 +184,9 @@ void BatchDimInitializer(std::size_t const ncells)
 {
     using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<DDim>(
-            DDim::template init<DDim>(x0<CDim>(), xN<CDim>(), DVect<DDim>(ncells)));
+    ddc::create_uniform_point_sampling<DDim>(x0<CDim>(), xN<CDim>(), DVect<DDim>(ncells));
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-    ddc::init_discrete_space<DDim>(breaks<CDim>(ncells));
+    ddc::create_non_uniform_point_sampling<DDim>(breaks<CDim>(ncells));
 #endif
 }
 

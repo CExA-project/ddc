@@ -190,6 +190,56 @@ public:
     }
 };
 
+/** Construct an Impl<Kokkos::HostSpace> and associated discrete_domain_type from a range
+ * containing the points coordinates along the `DDim` dimension.
+ *
+ * @param non_uniform_points a range (std::vector, std::array, ...) containing the coordinates of the points of the domain.
+ */
+template <class DDim, class InputRange>
+DiscreteDomain<DDim> create_non_uniform_point_sampling(InputRange const& non_uniform_points)
+{
+    assert(!non_uniform_points.empty());
+    init_discrete_space_from_impl<DDim>(
+            typename DDim::template Impl<DDim, Kokkos::HostSpace>(non_uniform_points));
+    DiscreteVector<DDim> const n(non_uniform_points.size());
+    return DiscreteDomain<DDim>(discrete_space<DDim>().front(), n);
+}
+
+/** Construct 4 non-uniform `DiscreteDomain` and an Impl<Kokkos::HostSpace> from 3 ranges containing the points coordinates along the `DDim` dimension.
+ *
+ * @param domain_r a range containing the coordinates of the points of the main domain along the DDim position
+ * @param pre_ghost_r a range containing the positions of the ghost points before the main domain the DDim position
+ * @param post_ghost_r a range containing the positions of the ghost points after the main domain the DDim position
+ */
+template <class DDim, class InputRange>
+std::tuple<DiscreteDomain<DDim>, DiscreteDomain<DDim>, DiscreteDomain<DDim>, DiscreteDomain<DDim>>
+create_non_uniform_point_sampling_ghosted(
+        InputRange const& domain_r,
+        InputRange const& pre_ghost_r,
+        InputRange const& post_ghost_r)
+{
+    assert(!domain_r.empty());
+
+    DiscreteVector<DDim> const n_ghosts_before(pre_ghost_r.size());
+    DiscreteVector<DDim> const n_ghosts_after(post_ghost_r.size());
+
+    std::vector<typename InputRange::value_type> full_domain;
+
+    std::copy(pre_ghost_r.begin(), pre_ghost_r.end(), std::back_inserter(full_domain));
+    std::copy(domain_r.begin(), domain_r.end(), std::back_inserter(full_domain));
+    std::copy(post_ghost_r.begin(), post_ghost_r.end(), std::back_inserter(full_domain));
+
+    DiscreteDomain<DDim> ghosted_domain = create_non_uniform_point_sampling<DDim>(full_domain);
+    DiscreteDomain<DDim> pre_ghost = ghosted_domain.take_first(n_ghosts_before);
+    DiscreteDomain<DDim> main_domain = ghosted_domain.remove(n_ghosts_before, n_ghosts_after);
+    DiscreteDomain<DDim> post_ghost = ghosted_domain.take_last(n_ghosts_after);
+    return std::make_tuple(
+            std::move(main_domain),
+            std::move(ghosted_domain),
+            std::move(pre_ghost),
+            std::move(post_ghost));
+}
+
 template <class DDim>
 struct is_non_uniform_point_sampling
     : public std::is_base_of<detail::NonUniformPointSamplingBase, DDim>::type

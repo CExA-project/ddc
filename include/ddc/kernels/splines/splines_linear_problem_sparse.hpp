@@ -24,8 +24,8 @@ namespace ddc::detail {
 /**
  * @brief Convert KokkosView to Ginkgo Dense matrix.
  *
- * @param gko_exec[in] A Ginkgo executor that has access to the Kokkos::View memory space
- * @param view[in] A 2-D Kokkos::View with unit stride in the second dimension
+ * @param[in] gko_exec A Ginkgo executor that has access to the Kokkos::View memory space
+ * @param[in] view A 2-D Kokkos::View with unit stride in the second dimension
  * @return A Ginkgo Dense matrix view over the Kokkos::View data
  */
 template <class KokkosViewType>

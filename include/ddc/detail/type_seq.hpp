@@ -62,7 +62,7 @@ struct TypeSeqElement<I, TypeSeq<Tags...>>
 
 /// R contains all elements in A that are not in B.
 /// Remark 1: This operation preserves the order from A.
-/// Remark 2: It is similar to the set difference in the set theory (R = A\B).
+/// Remark 2: It is similar to the set difference in the set theory (R = A\\B).
 /// Example: A = [a, b, c], B = [z, c, y], R = [a, b]
 template <class TagSeqA, class TagSeqB, class TagSeqR>
 struct TypeSeqRemove;
@@ -164,7 +164,7 @@ struct ToTypeSeq;
 template <class TypeSeq>
 constexpr std::size_t type_seq_size_v = std::numeric_limits<std::size_t>::max();
 
-/// Returns the number of types in a @ref TypeSeq.
+/// Returns the number of types in a @ref detail::TypeSeq.
 template <class... Tags>
 constexpr std::size_t type_seq_size_v<detail::TypeSeq<Tags...>> = sizeof...(Tags);
 

@@ -158,31 +158,32 @@ struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
     void operator()(std::size_t const ncells)
     {
 #if defined(BSPLINES_TYPE_UNIFORM)
-        (ddc::init_discrete_space<IDimX>(IDimX::template init<IDimX>(
+        (ddc::create_uniform_point_sampling<IDimX>(
                  x0<typename IDimX::continuous_dimension_type>(),
                  xN<typename IDimX::continuous_dimension_type>(),
-                 DVect<IDimX>(ncells))),
+                 DVect<IDimX>(ncells)),
          ...);
-        ddc::init_discrete_space<BSplines<typename IDimI1::continuous_dimension_type>>(
+        ddc::create_uniform_bsplines<BSplines<typename IDimI1::continuous_dimension_type>>(
                 x0<typename IDimI1::continuous_dimension_type>(),
                 xN<typename IDimI1::continuous_dimension_type>(),
                 ncells);
-        ddc::init_discrete_space<BSplines<typename IDimI2::continuous_dimension_type>>(
+        ddc::create_uniform_bsplines<BSplines<typename IDimI2::continuous_dimension_type>>(
                 x0<typename IDimI2::continuous_dimension_type>(),
                 xN<typename IDimI2::continuous_dimension_type>(),
                 ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        (ddc::init_discrete_space<IDimX>(breaks<typename IDimX::continuous_dimension_type>(ncells)),
+        (ddc::create_non_uniform_point_sampling<IDimX>(
+                 breaks<typename IDimX::continuous_dimension_type>(ncells)),
          ...);
-        ddc::init_discrete_space<BSplines<typename IDimI1::continuous_dimension_type>>(
+        ddc::create_non_uniform_bsplines<BSplines<typename IDimI1::continuous_dimension_type>>(
                 breaks<typename IDimI1::continuous_dimension_type>(ncells));
-        ddc::init_discrete_space<BSplines<typename IDimI2::continuous_dimension_type>>(
+        ddc::create_non_uniform_bsplines<BSplines<typename IDimI2::continuous_dimension_type>>(
                 breaks<typename IDimI2::continuous_dimension_type>(ncells));
 #endif
-        ddc::init_discrete_space<IDimI1>(
+        ddc::init_discrete_space_from_impl<IDimI1>(
                 GrevillePoints<BSplines<typename IDimI1::continuous_dimension_type>>::
                         template get_sampling<IDimI1>());
-        ddc::init_discrete_space<IDimI2>(
+        ddc::init_discrete_space_from_impl<IDimI2>(
                 GrevillePoints<BSplines<typename IDimI2::continuous_dimension_type>>::
                         template get_sampling<IDimI2>());
     }

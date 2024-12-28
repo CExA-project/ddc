@@ -65,7 +65,7 @@ void TestPeriodicSplineBuilderTestIdentity()
     // 1. Create BSplines
     {
 #if defined(BSPLINES_TYPE_UNIFORM)
-        ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
+        ddc::create_uniform_bsplines<BSplinesX>(x0, xN, ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
         DVectX constexpr npoints(ncells + 1);
         std::vector<CoordX> breaks(npoints);
@@ -73,7 +73,7 @@ void TestPeriodicSplineBuilderTestIdentity()
         for (int i(0); i < npoints; ++i) {
             breaks[i] = CoordX(x0 + i * dx);
         }
-        ddc::init_discrete_space<BSplinesX>(breaks);
+        ddc::create_non_uniform_bsplines<BSplinesX>(breaks);
 #endif
     }
     ddc::DiscreteDomain<BSplinesX> const dom_bsplines_x(
@@ -84,7 +84,7 @@ void TestPeriodicSplineBuilderTestIdentity()
     ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<double, memory_space>());
 
     // 3. Create the interpolation domain
-    ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling<IDimX>());
+    ddc::init_discrete_space_from_impl<IDimX>(GrevillePoints::get_sampling<IDimX>());
     ddc::DiscreteDomain<IDimX> const interpolation_domain(GrevillePoints::get_domain<IDimX>());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions

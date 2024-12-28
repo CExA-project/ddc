@@ -99,18 +99,18 @@ int main(int argc, char** argv)
     std::ptrdiff_t const t_output_period = 10;
 
     // Initialization of the global domain in X including periodic point to have correct step
-    auto const x_domain_with_periodic_point = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(
+    auto const x_domain_with_periodic_point = ddc::create_uniform_point_sampling<DDimX>(
             ddc::Coordinate<X>(x_start),
             ddc::Coordinate<X>(x_end),
-            ddc::DiscreteVector<DDimX>(nb_x_points)));
+            ddc::DiscreteVector<DDimX>(nb_x_points));
     ddc::DiscreteDomain<DDimX> const x_domain
             = x_domain_with_periodic_point.remove_last(ddc::DiscreteVector<DDimX>(1));
 
     // Initialization of the global domain in Y including periodic point to have correct step
-    auto const y_domain_with_periodic_point = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
+    auto const y_domain_with_periodic_point = ddc::create_uniform_point_sampling<DDimY>(
             ddc::Coordinate<Y>(y_start),
             ddc::Coordinate<Y>(y_end),
-            ddc::DiscreteVector<DDimY>(nb_y_points)));
+            ddc::DiscreteVector<DDimY>(nb_y_points));
     ddc::DiscreteDomain<DDimY> const y_domain
             = y_domain_with_periodic_point.remove_last(ddc::DiscreteVector<DDimY>(1));
 
@@ -123,11 +123,8 @@ int main(int argc, char** argv)
     // Initialization of the global domain in time:
     // - the number of discrete time-points is equal to the number of
     //   steps + 1
-    ddc::DiscreteDomain<DDimT> const time_domain
-            = ddc::init_discrete_space<DDimT>(DDimT::init<DDimT>(
-                    ddc::Coordinate<T>(start_time),
-                    ddc::Coordinate<T>(end_time),
-                    nb_time_steps + 1));
+    ddc::DiscreteDomain<DDimT> const time_domain = ddc::create_uniform_point_sampling<
+            DDimT>(ddc::Coordinate<T>(start_time), ddc::Coordinate<T>(end_time), nb_time_steps + 1);
 
     ddc::DiscreteDomain<DDimX, DDimY> const xy_domain(x_domain, y_domain);
 
@@ -156,8 +153,8 @@ int main(int argc, char** argv)
     // time of the iteration where the last output happened
     ddc::DiscreteElement<DDimT> last_output = time_domain.front();
 
-    ddc::init_discrete_space<DDimFx>(ddc::init_fourier_space<DDimFx>(x_domain));
-    ddc::init_discrete_space<DDimFy>(ddc::init_fourier_space<DDimFy>(y_domain));
+    ddc::create_fourier_space<DDimFx>(x_domain);
+    ddc::create_fourier_space<DDimFy>(y_domain);
 
     ddc::DiscreteDomain<DDimFx, DDimFy> const k_mesh
             = ddc::fourier_mesh<DDimFx, DDimFy>(xy_domain, false);

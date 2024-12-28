@@ -87,8 +87,9 @@ TYPED_TEST(UniformBSplinesFixture, KnotsAsInterpolationPoints)
     CoordX const xmin(0.);
     CoordX const xmax(1.);
     std::size_t const ncells = 20;
-    ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
-    ddc::init_discrete_space<DDimX>(KnotsAsInterpolationPoints::template get_sampling<DDimX>());
+    ddc::create_uniform_bsplines<BSplinesX>(xmin, xmax, ncells);
+    ddc::init_discrete_space_from_impl<DDimX>(
+            KnotsAsInterpolationPoints::template get_sampling<DDimX>());
     ddc::DiscreteDomain<DDimX> const interp_points_dom
             = KnotsAsInterpolationPoints::template get_domain<DDimX>();
     ddc::DiscreteDomain<Knots> break_points_dom
@@ -125,8 +126,9 @@ TYPED_TEST(NonUniformBSplinesFixture, KnotsAsInterpolationPoints)
     for (std::size_t i = 0; i < ncells + 1; ++i) {
         breaks[i] = xmin + i * dx;
     }
-    ddc::init_discrete_space<BSplinesX>(breaks);
-    ddc::init_discrete_space<DDimX>(KnotsAsInterpolationPoints::template get_sampling<DDimX>());
+    ddc::create_non_uniform_bsplines<BSplinesX>(breaks);
+    ddc::init_discrete_space_from_impl<DDimX>(
+            KnotsAsInterpolationPoints::template get_sampling<DDimX>());
     ddc::DiscreteDomain<DDimX> const interp_points_dom
             = KnotsAsInterpolationPoints::template get_domain<DDimX>();
     ddc::DiscreteDomain<Knots> break_points_dom

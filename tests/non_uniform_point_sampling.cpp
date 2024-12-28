@@ -113,8 +113,8 @@ TEST(NonUniformPointSampling, Formatting)
 
 TEST(NonUniformPointSampling, Coordinate)
 {
-    ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(vector_points_x));
-    ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(vector_points_y));
+    ddc::create_non_uniform_point_sampling<DDimX>(vector_points_x);
+    ddc::create_non_uniform_point_sampling<DDimY>(vector_points_y);
     EXPECT_EQ(ddc::coordinate(point_ix), point_rx);
     EXPECT_EQ(ddc::coordinate(point_iy), point_ry);
     EXPECT_EQ(ddc::coordinate(point_ixy), point_rxy);

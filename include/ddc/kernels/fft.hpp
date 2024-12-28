@@ -301,6 +301,47 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
 }
 
 /**
+ * @brief Initialize a Fourier discrete dimension.
+ *
+ * Initialize the (1D) discrete space representing the Fourier discrete dimension associated
+ * to the (1D) mesh passed as argument. It is a N-periodic PeriodicSampling with a periodic window of width 2*pi/dx.
+ *
+ * This value comes from the Nyquist-Shannon theorem: the period of the spectral domain is N*dk = 2*pi/dx.
+ * Adding to this the relations dx = (xmax-xmin)/(N-1), and dk = (kmax-kmin)/(N-1), we get kmax-kmin = 2*pi*(N-1)^2/N/(xmax-xmin),
+ * which is used in the implementation (xmax, xmin, kmin and kmax are the centers of lower and upper cells inside a single period of the meshes).
+ *
+ * @tparam DDimFx A PeriodicSampling representing the Fourier discrete dimension.
+ * @tparam DDimX The type of the original discrete dimension.
+ *
+ * @param x_mesh The DiscreteDomain representing the (1D) original mesh.
+ *
+ * @see PeriodicSampling
+ */
+template <typename DDimFx, typename DDimX>
+void create_fourier_space(ddc::DiscreteDomain<DDimX> x_mesh)
+{
+    static_assert(
+            is_uniform_point_sampling_v<DDimX>,
+            "DDimX dimension must derive from UniformPointSampling");
+    static_assert(
+            is_periodic_sampling_v<DDimFx>,
+            "DDimFx dimension must derive from PeriodicSampling");
+    using CDimFx = typename DDimFx::continuous_dimension_type;
+    using CDimX = typename DDimX::continuous_dimension_type;
+    static_assert(
+            std::is_same_v<CDimFx, ddc::Fourier<CDimX>>,
+            "DDimX and DDimFx dimensions must be defined over the same continuous dimension");
+
+    DiscreteVectorElement const nx = get<DDimX>(x_mesh.extents());
+    double const lx = ddc::rlength(x_mesh);
+    create_periodic_sampling<DDimFx>(
+            ddc::Coordinate<CDimFx>(0),
+            ddc::Coordinate<CDimFx>(2 * (nx - 1) * (nx - 1) / (nx * lx) * Kokkos::numbers::pi),
+            ddc::DiscreteVector<DDimFx>(nx),
+            ddc::DiscreteVector<DDimFx>(nx));
+}
+
+/**
  * @brief Get the Fourier mesh.
  *
  * Compute the Fourier (or spectral) mesh on which the Discrete Fourier Transform of a

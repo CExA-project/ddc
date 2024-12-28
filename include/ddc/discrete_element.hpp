@@ -182,10 +182,10 @@ public:
     template <
             class... Params,
             class = std::enable_if_t<(!is_discrete_element_v<Params> && ...)>,
-            class = std::enable_if_t<(std::is_integral_v<Params> && ...)>,
+            class = std::enable_if_t<(std::is_convertible_v<Params, DiscreteElementType> && ...)>,
             class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
     KOKKOS_FUNCTION constexpr explicit DiscreteElement(Params const&... params) noexcept
-        : m_values {static_cast<value_type>(params)...}
+        : m_values {static_cast<DiscreteElementType>(params)...}
     {
     }
 

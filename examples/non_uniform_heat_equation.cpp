@@ -59,6 +59,42 @@ std::vector<double> generate_random_vector(int n, double lower_bound, double hig
 }
 //! [vector_generator]
 
+std::vector<double> periodic_extrapolation_left(int gw, std::vector<double> const& points)
+{
+    assert(gw > 0);
+    assert(points.size() >= gw);
+
+    std::vector<double> ghost(gw);
+    if (gw > 0) {
+        auto rit1 = ghost.rbegin();
+        auto const rit1_e = ghost.rend();
+        auto rit2 = std::next(points.crbegin());
+        for (; rit1 != rit1_e; ++rit1, ++rit2) {
+            *rit1 = *rit2 - (points.back() - points.front());
+        }
+    }
+
+    return ghost;
+}
+
+std::vector<double> periodic_extrapolation_right(int gw, std::vector<double> const& points)
+{
+    assert(gw > 0);
+    assert(points.size() >= gw);
+
+    std::vector<double> ghost(gw);
+    if (gw > 0) {
+        auto it1 = ghost.begin();
+        auto const it1_e = ghost.end();
+        auto it2 = std::next(points.cbegin());
+        for (; it1 != it1_e; ++it1, ++it2) {
+            *it1 = *it2 + (points.back() - points.front());
+        }
+    }
+
+    return ghost;
+}
+
 //! [X-dimension]
 struct X;
 //! [X-dimension]
@@ -150,11 +186,8 @@ int main(int argc, char** argv)
     //! [iterator_main-domain]
 
     //! [ghost_points_x]
-    std::vector<double> const x_pre_ghost_vect {
-            x_domain_vect.front() - (x_domain_vect.back() - x_domain_vect[nb_x_points - 2])};
-
-    std::vector<double> const x_post_ghost_vect {
-            x_domain_vect.back() + (x_domain_vect[1] - x_domain_vect.front())};
+    std::vector<double> const x_pre_ghost_vect = periodic_extrapolation_left(1, x_domain_vect);
+    std::vector<double> const x_post_ghost_vect = periodic_extrapolation_right(1, x_domain_vect);
     //! [ghost_points_x]
 
     //! [build-domains]
@@ -172,10 +205,8 @@ int main(int argc, char** argv)
     std::vector<double> const y_domain_vect = generate_random_vector(nb_y_points, y_start, y_end);
 
     //! [ghost_points_y]
-    std::vector<double> const y_pre_ghost_vect {
-            y_domain_vect.front() - (y_domain_vect.back() - y_domain_vect[nb_y_points - 2])};
-    std::vector<double> const y_post_ghost_vect {
-            y_domain_vect.back() + (y_domain_vect[1] - y_domain_vect.front())};
+    std::vector<double> const y_pre_ghost_vect = periodic_extrapolation_left(1, y_domain_vect);
+    std::vector<double> const y_post_ghost_vect = periodic_extrapolation_right(1, y_domain_vect);
     //! [ghost_points_y]
     //! [Y-vectors]
 

@@ -171,40 +171,11 @@ And we display the initial data.
 
 \snippet{trimleft} uniform_heat_equation.cpp initial-display
 
-\snippet{trimleft} uniform_heat_equation.cpp time iteration
-
-To display the data, a chunk is created on the host using the \ref ddc::create_mirror function.
-
-\snippet{trimleft} uniform_heat_equation.cpp host-chunk
-
-We deepcopy the data from the `ghosted_last_temp` chunk to `ghosted_temp` on the host.
-
-\snippet{trimleft} uniform_heat_equation.cpp boundary conditions
-
-\snippet{trimleft} uniform_heat_equation.cpp initial-deepcopy
-
-And we display the initial data.
-
-\snippet{trimleft} uniform_heat_equation.cpp initial-display
-
-For the numerical scheme, two chunkspans are created:
-
-* `next_temp` a span excluding ghosts of the temperature at the time-step we will build.
-* `last_temp` a read-only view of the temperature at the previous time-step.Note that *span_cview* returns a read-only ChunkSpan.
-
-\snippet{trimleft} uniform_heat_equation.cpp manipulated views
-
-We then solve the equation.
-
-\snippet{trimleft} uniform_heat_equation.cpp numerical scheme
-
 ## Time loop
 
 \snippet{trimleft} uniform_heat_equation.cpp time iteration
 
 ### Periodic conditions
-
-\snippet{trimleft} uniform_heat_equation.cpp output
 
 \snippet{trimleft} uniform_heat_equation.cpp boundary conditions
 
@@ -220,7 +191,5 @@ For the numerical scheme, two chunkspans are created:
 \snippet{trimleft} uniform_heat_equation.cpp manipulated views
 
 We then solve the equation.
-
-\snippet{trimleft} uniform_heat_equation.cpp final output
 
 \snippet{trimleft} uniform_heat_equation.cpp numerical scheme

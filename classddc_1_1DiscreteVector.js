@@ -1,5 +1,6 @@
 var classddc_1_1DiscreteVector =
 [
+    [ "value_type", "classddc_1_1DiscreteVector.html#ad4ae7888a4d1201b461040da96d4c134", null ],
     [ "DiscreteVector", "classddc_1_1DiscreteVector.html#a7c9712ea11ebe42eb6950913378cb383", null ],
     [ "DiscreteVector", "classddc_1_1DiscreteVector.html#a9045137fe082813dfc071f9ca15b4bc8", null ],
     [ "DiscreteVector", "classddc_1_1DiscreteVector.html#af8e0b6074c1b563ede2626d7e1503248", null ],

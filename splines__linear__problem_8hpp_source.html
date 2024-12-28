@@ -200,7 +200,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem_8hpp_source.h
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">/**</span></div>
 <div class="line"><span class="lineno">   72</span><span class="comment">     * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.</span></div>
 <div class="line"><span class="lineno">   73</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   74</span><span class="comment">     * @param[in, out] multi_rhs A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.</span></div>
+<div class="line"><span class="lineno">   74</span><span class="comment">     * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.</span></div>
 <div class="line"><span class="lineno">   75</span><span class="comment">     * @param transpose Choose between the direct or transposed version of the linear problem.</span></div>
 <div class="line"><span class="lineno">   76</span><span class="comment">     */</span></div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> solve(MultiRHS b, <span class="keywordtype">bool</span> transpose) <span class="keyword">const</span> = 0;</div>

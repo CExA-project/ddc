@@ -1,5 +1,7 @@
 var NAVTREEINDEX5 =
 {
+"namespaceddc.html#a36c0210a850dde0979ad8b5772ee730ca7015270b41ffefb4e67d40c8bd451a4d":[5,0,0,86,1],
+"namespaceddc.html#a36c0210a850dde0979ad8b5772ee730caa3a0305034fc65890f8e232fdf60ab46":[5,0,0,86,0],
 "namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b":[5,0,0,173],
 "namespaceddc.html#a39f234f0f9635b7c542f7f2abc5221b9":[5,0,0,118],
 "namespaceddc.html#a3acee30af3a428e9ca4b56fbc764a64f":[5,0,0,140],
@@ -247,7 +249,5 @@ var NAVTREEINDEX5 =
 "structddc_1_1reducer_1_1bxor.html#acb1f20fd98ae083425bdcf428788da3c":[5,0,0,0,2,1],
 "structddc_1_1reducer_1_1bxor.html#acb1f20fd98ae083425bdcf428788da3c":[6,0,0,0,2,1],
 "structddc_1_1reducer_1_1land.html":[5,0,0,0,3],
-"structddc_1_1reducer_1_1land.html":[6,0,0,0,3],
-"structddc_1_1reducer_1_1land.html#a32733e5ad651b36dccc7243802cce3a2":[5,0,0,0,3,0],
-"structddc_1_1reducer_1_1land.html#a32733e5ad651b36dccc7243802cce3a2":[6,0,0,0,3,0]
+"structddc_1_1reducer_1_1land.html":[6,0,0,0,3]
 };

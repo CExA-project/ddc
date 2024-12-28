@@ -1,5 +1,7 @@
 var NAVTREEINDEX6 =
 {
+"structddc_1_1reducer_1_1land.html#a32733e5ad651b36dccc7243802cce3a2":[5,0,0,0,3,0],
+"structddc_1_1reducer_1_1land.html#a32733e5ad651b36dccc7243802cce3a2":[6,0,0,0,3,0],
 "structddc_1_1reducer_1_1land.html#a80490e289b6fedf06453be8f1b2b6d51":[6,0,0,0,3,1],
 "structddc_1_1reducer_1_1land.html#a80490e289b6fedf06453be8f1b2b6d51":[5,0,0,0,3,1],
 "structddc_1_1reducer_1_1lor.html":[6,0,0,0,4],

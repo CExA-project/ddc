@@ -83,19 +83,6 @@ struct is_complex<Kokkos::complex<T>> : std::true_type
 template <typename T>
 constexpr bool is_complex_v = is_complex<T>::value;
 
-// LastSelector: returns a if Dim==Last, else b
-template <typename T, typename Dim, typename Last>
-KOKKOS_FUNCTION constexpr T LastSelector(const T a, const T b)
-{
-    return std::is_same_v<Dim, Last> ? a : b;
-}
-
-template <typename T, typename Dim, typename First, typename Second, typename... Tail>
-KOKKOS_FUNCTION constexpr T LastSelector(const T a, const T b)
-{
-    return LastSelector<T, Dim, Second, Tail...>(a, b);
-}
-
 /*
  * @brief A structure embedding the configuration of the impl FFT function: direction and type of normalization.
  *
@@ -352,13 +339,13 @@ ddc::DiscreteDomain<DDimFx...> fourier_mesh(ddc::DiscreteDomain<DDimX...> x_mesh
     static_assert(
             (is_periodic_sampling_v<DDimFx> && ...),
             "DDimFx dimensions should derive from PeriodicPointSampling");
+    ddc::DiscreteVector<DDimX...> extents = x_mesh.extents();
+    if (!C2C) {
+        detail::array(extents).back() = detail::array(extents).back() / 2 + 1;
+    }
     return ddc::DiscreteDomain<DDimFx...>(ddc::DiscreteDomain<DDimFx>(
             ddc::DiscreteElement<DDimFx>(0),
-            ddc::DiscreteVector<DDimFx>(
-                    (C2C ? ddc::detail::fft::N<DDimX>(x_mesh)
-                         : ddc::detail::fft::LastSelector<int, DDimX, DDimX...>(
-                                   ddc::detail::fft::N<DDimX>(x_mesh) / 2 + 1,
-                                   ddc::detail::fft::N<DDimX>(x_mesh)))))...);
+            ddc::DiscreteVector<DDimFx>(get<DDimX>(extents)))...);
 }
 
 /**

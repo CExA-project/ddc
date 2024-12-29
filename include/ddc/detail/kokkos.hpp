@@ -157,20 +157,34 @@ KOKKOS_FUNCTION mdspan_to_kokkos_layout_t<typename MP::layout_type> build_kokkos
     DDC_IF_NVCC_THEN_POP
 }
 
+// If is Kokkos::LayoutLeft/Kokkos::LayoutRight
+// check it is contiguous to be compatible with Kokkos::layout_left/Kokkos::layout_right
+template <class DataType, class... Properties>
+KOKKOS_FUNCTION bool is_kokkos_layout_compatible(Kokkos::View<DataType, Properties...> const& view)
+{
+    using layout_type = typename Kokkos::View<DataType, Properties...>::array_layout;
+    if (std::is_same_v<layout_type, Kokkos::LayoutLeft>
+        || std::is_same_v<layout_type, Kokkos::LayoutRight>) {
+        return view.span_is_contiguous();
+    }
+    return true;
+}
+
 template <class DataType, class... Properties, std::size_t... Is>
 KOKKOS_FUNCTION auto build_mdspan(
         Kokkos::View<DataType, Properties...> const view,
         std::index_sequence<Is...>)
 {
+    assert(is_kokkos_layout_compatible(view));
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
     using element_type = kokkos_to_mdspan_element_t<DataType>;
     using extents_type = Kokkos::dextents<std::size_t, Kokkos::View<DataType, Properties...>::rank>;
     using layout_type = kokkos_to_mdspan_layout_t<
             typename Kokkos::View<DataType, Properties...>::array_layout>;
     using mapping_type = typename layout_type::template mapping<extents_type>;
-    extents_type exts(view.extent(Is)...);
+    extents_type const exts(view.extent(Is)...);
     if constexpr (std::is_same_v<layout_type, Kokkos::layout_stride>) {
-        return Kokkos::mdspan(view.data(), mapping_type(exts, {view.stride(Is)...}));
+        return Kokkos::mdspan(view.data(), mapping_type(exts, std::array {view.stride(Is)...}));
     } else {
         return Kokkos::
                 mdspan<element_type, extents_type, layout_type>(view.data(), mapping_type(exts));

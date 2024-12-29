@@ -40,14 +40,14 @@ struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree_x>
 using GrevillePoints = ddc::
         GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 
-struct IDimX : GrevillePoints::interpolation_discrete_dimension_type
+struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
 
-using evaluator_type = CosineEvaluator::Evaluator<IDimX>;
+using evaluator_type = CosineEvaluator::Evaluator<DDimX>;
 
-using IndexX = ddc::DiscreteElement<IDimX>;
-using DVectX = ddc::DiscreteVector<IDimX>;
+using IndexX = ddc::DiscreteElement<DDimX>;
+using DVectX = ddc::DiscreteVector<DDimX>;
 using BsplIndexX = ddc::DiscreteElement<BSplinesX>;
 using CoordX = ddc::Coordinate<DimX>;
 
@@ -84,19 +84,19 @@ void TestPeriodicSplineBuilderTestIdentity()
     ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<double, memory_space>());
 
     // 3. Create the interpolation domain
-    ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling<IDimX>());
-    ddc::DiscreteDomain<IDimX> const interpolation_domain(GrevillePoints::get_domain<IDimX>());
+    ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
+    ddc::DiscreteDomain<DDimX> const interpolation_domain(GrevillePoints::get_domain<DDimX>());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
     ddc::SplineBuilder<
             execution_space,
             memory_space,
             BSplinesX,
-            IDimX,
+            DDimX,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
             ddc::SplineSolver::GINKGO,
-            IDimX> const spline_builder(interpolation_domain);
+            DDimX> const spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
     ddc::Chunk yvals_alloc(interpolation_domain, ddc::KokkosAllocator<double, memory_space>());
@@ -116,10 +116,10 @@ void TestPeriodicSplineBuilderTestIdentity()
             execution_space,
             memory_space,
             BSplinesX,
-            IDimX,
+            DDimX,
             ddc::PeriodicExtrapolationRule<DimX>,
             ddc::PeriodicExtrapolationRule<DimX>,
-            IDimX> const spline_evaluator(periodic_extrapolation, periodic_extrapolation);
+            DDimX> const spline_evaluator(periodic_extrapolation, periodic_extrapolation);
 
     ddc::Chunk
             coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<CoordX, memory_space>());
@@ -145,7 +145,7 @@ void TestPeriodicSplineBuilderTestIdentity()
             integral(spline_builder.batch_domain(), ddc::KokkosAllocator<double, memory_space>());
     spline_evaluator.integrate(integral.span_view(), coef.span_cview());
 
-    ddc::Chunk<double, ddc::DiscreteDomain<IDimX>, ddc::KokkosAllocator<double, memory_space>>
+    ddc::Chunk<double, ddc::DiscreteDomain<DDimX>, ddc::KokkosAllocator<double, memory_space>>
             quadrature_coefficients_alloc;
     std::tie(std::ignore, quadrature_coefficients_alloc, std::ignore)
             = spline_builder.quadrature_coefficients();

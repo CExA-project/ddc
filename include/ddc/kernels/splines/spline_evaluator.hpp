@@ -29,7 +29,7 @@ namespace ddc {
  * @tparam EvaluationDDim The discrete dimension on which evaluation points are defined.
  * @tparam LowerExtrapolationRule The lower extrapolation rule type.
  * @tparam UpperExtrapolationRule The upper extrapolation rule type.
- * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (EvaluationDDim + batched dimensions).
+ * @tparam DDimX A variadic template of all the discrete dimensions forming the full space (EvaluationDDim + batched dimensions).
  */
 template <
         class ExecSpace,
@@ -38,7 +38,7 @@ template <
         class EvaluationDDim,
         class LowerExtrapolationRule,
         class UpperExtrapolationRule,
-        class... IDimX>
+        class... DDimX>
 class SplineEvaluator
 {
 private:
@@ -76,7 +76,7 @@ public:
     using evaluation_domain_type = ddc::DiscreteDomain<evaluation_discrete_dimension_type>;
 
     /// @brief The type of the whole domain representing evaluation points.
-    using batched_evaluation_domain_type = ddc::DiscreteDomain<IDimX...>;
+    using batched_evaluation_domain_type = ddc::DiscreteDomain<DDimX...>;
 
     /// @brief The type of the 1D spline domain corresponding to the dimension of interest.
     using spline_domain_type = ddc::DiscreteDomain<bsplines_type>;

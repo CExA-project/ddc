@@ -32,7 +32,7 @@ namespace ddc {
  * @tparam UpperExtrapolationRule1 The upper extrapolation rule type along first dimension of interest.
  * @tparam LowerExtrapolationRule2 The lower extrapolation rule type along second dimension of interest.
  * @tparam UpperExtrapolationRule2 The upper extrapolation rule type along second dimension of interest.
- * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (EvaluationDDim1 + EvaluationDDim2 + batched dimensions).
+ * @tparam DDimX A variadic template of all the discrete dimensions forming the full space (EvaluationDDim1 + EvaluationDDim2 + batched dimensions).
  */
 template <
         class ExecSpace,
@@ -45,7 +45,7 @@ template <
         class UpperExtrapolationRule1,
         class LowerExtrapolationRule2,
         class UpperExtrapolationRule2,
-        class... IDimX>
+        class... DDimX>
 class SplineEvaluator2D
 {
 private:
@@ -100,7 +100,7 @@ public:
             evaluation_discrete_dimension_type2>;
 
     /// @brief The type of the whole domain representing evaluation points.
-    using batched_evaluation_domain_type = ddc::DiscreteDomain<IDimX...>;
+    using batched_evaluation_domain_type = ddc::DiscreteDomain<DDimX...>;
 
     /// @brief The type of the 1D spline domain corresponding to the first dimension of interest.
     using spline_domain_type1 = ddc::DiscreteDomain<bsplines_type1>;
@@ -126,7 +126,7 @@ public:
      */
     using batched_spline_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
-                    ddc::detail::TypeSeq<IDimX...>,
+                    ddc::detail::TypeSeq<DDimX...>,
                     ddc::detail::TypeSeq<
                             evaluation_discrete_dimension_type1,
                             evaluation_discrete_dimension_type2>,

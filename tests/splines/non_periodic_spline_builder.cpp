@@ -56,21 +56,21 @@ struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree_x>
 
 using GrevillePoints = ddc::GrevilleInterpolationPoints<BSplinesX, s_bcl, s_bcr>;
 
-struct IDimX : GrevillePoints::interpolation_discrete_dimension_type
+struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
 
 #if defined(EVALUATOR_COSINE)
-using evaluator_type = CosineEvaluator::Evaluator<IDimX>;
+using evaluator_type = CosineEvaluator::Evaluator<DDimX>;
 #elif defined(EVALUATOR_POLYNOMIAL)
-using evaluator_type = PolynomialEvaluator::Evaluator<IDimX, s_degree_x>;
+using evaluator_type = PolynomialEvaluator::Evaluator<DDimX, s_degree_x>;
 #endif
 
-using IndexX = ddc::DiscreteElement<IDimX>;
-using DVectX = ddc::DiscreteVector<IDimX>;
+using IndexX = ddc::DiscreteElement<DDimX>;
+using DVectX = ddc::DiscreteVector<DDimX>;
 using BsplIndexX = ddc::DiscreteElement<BSplinesX>;
 using SplineX = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX>>;
-using FieldX = ddc::Chunk<double, ddc::DiscreteDomain<IDimX>>;
+using FieldX = ddc::Chunk<double, ddc::DiscreteDomain<DDimX>>;
 using CoordX = ddc::Coordinate<DimX>;
 
 // Checks that when evaluating the spline at interpolation points one
@@ -110,19 +110,19 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<double, memory_space>());
 
     // 3. Create the interpolation domain
-    ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling<IDimX>());
-    ddc::DiscreteDomain<IDimX> const interpolation_domain(GrevillePoints::get_domain<IDimX>());
+    ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
+    ddc::DiscreteDomain<DDimX> const interpolation_domain(GrevillePoints::get_domain<DDimX>());
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
     ddc::SplineBuilder<
             execution_space,
             memory_space,
             BSplinesX,
-            IDimX,
+            DDimX,
             s_bcl,
             s_bcr,
             ddc::SplineSolver::GINKGO,
-            IDimX> const spline_builder(interpolation_domain);
+            DDimX> const spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
     ddc::Chunk yvals_alloc(interpolation_domain, ddc::KokkosAllocator<double, memory_space>());
@@ -177,10 +177,10 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             execution_space,
             memory_space,
             BSplinesX,
-            IDimX,
+            DDimX,
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
-            IDimX> const spline_evaluator(extrapolation_rule, extrapolation_rule);
+            DDimX> const spline_evaluator(extrapolation_rule, extrapolation_rule);
 
     ddc::Chunk
             coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<CoordX, memory_space>());
@@ -208,14 +208,14 @@ void TestNonPeriodicSplineBuilderTestIdentity()
 
     ddc::Chunk<
             double,
-            ddc::DiscreteDomain<ddc::Deriv<typename IDimX::continuous_dimension_type>>,
+            ddc::DiscreteDomain<ddc::Deriv<typename DDimX::continuous_dimension_type>>,
             ddc::KokkosAllocator<double, memory_space>>
             quadrature_coefficients_derivs_xmin_alloc;
-    ddc::Chunk<double, ddc::DiscreteDomain<IDimX>, ddc::KokkosAllocator<double, memory_space>>
+    ddc::Chunk<double, ddc::DiscreteDomain<DDimX>, ddc::KokkosAllocator<double, memory_space>>
             quadrature_coefficients_alloc;
     ddc::Chunk<
             double,
-            ddc::DiscreteDomain<ddc::Deriv<typename IDimX::continuous_dimension_type>>,
+            ddc::DiscreteDomain<ddc::Deriv<typename DDimX::continuous_dimension_type>>,
             ddc::KokkosAllocator<double, memory_space>>
             quadrature_coefficients_derivs_xmax_alloc;
     std::
@@ -233,7 +233,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             0.0,
             ddc::reducer::sum<double>(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<
-                          ddc::Deriv<typename IDimX::continuous_dimension_type>> const ix) {
+                          ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
                 return quadrature_coefficients_derivs_xmin(ix) * derivs_lhs(ix);
             });
 #else
@@ -244,7 +244,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             quadrature_coefficients.domain(),
             0.0,
             ddc::reducer::sum<double>(),
-            KOKKOS_LAMBDA(ddc::DiscreteElement<IDimX> const ix) {
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX> const ix) {
                 return quadrature_coefficients(ix) * yvals(ix);
             });
 #if defined(BCR_HERMITE)
@@ -256,7 +256,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             0.0,
             ddc::reducer::sum<double>(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<
-                          ddc::Deriv<typename IDimX::continuous_dimension_type>> const ix) {
+                          ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
                 return quadrature_coefficients_derivs_xmax(ix) * derivs_rhs(ix);
             });
 #else
@@ -297,7 +297,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     double const max_norm_int = evaluator.max_norm(-1);
     if constexpr (std::is_same_v<
                           evaluator_type,
-                          PolynomialEvaluator::Evaluator<IDimX, s_degree_x>>) {
+                          PolynomialEvaluator::Evaluator<DDimX, s_degree_x>>) {
         EXPECT_LE(max_norm_error / max_norm, 1.0e-14);
         EXPECT_LE(max_norm_error_diff / max_norm_diff, 1.0e-12);
         EXPECT_LE(max_norm_error_integ / max_norm_int, 1.0e-14);

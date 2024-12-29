@@ -1,3 +1,3 @@
-<map id="ddc::SplineEvaluator&lt; ExecSpace, MemorySpace, BSplines, EvaluationDDim, LowerExtrapolationRule, UpperExtrapolationRule, IDimX &gt;" name="ddc::SplineEvaluator&lt; ExecSpace, MemorySpace, BSplines, EvaluationDDim, LowerExtrapolationRule, UpperExtrapolationRule, IDimX &gt;">
+<map id="ddc::SplineEvaluator&lt; ExecSpace, MemorySpace, BSplines, EvaluationDDim, LowerExtrapolationRule, UpperExtrapolationRule, DDimX &gt;" name="ddc::SplineEvaluator&lt; ExecSpace, MemorySpace, BSplines, EvaluationDDim, LowerExtrapolationRule, UpperExtrapolationRule, DDimX &gt;">
 <area shape="rect" id="Node000001" title="A class to evaluate, differentiate or integrate a spline function." alt="" coords="5,5,312,439"/>
 </map>

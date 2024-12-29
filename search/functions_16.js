@@ -11,8 +11,8 @@ var searchData=
   ['_7ekokkosallocator_8',['~KokkosAllocator',['../classddc_1_1KokkosAllocator.html#a5822844dedbb1bbdde3eb14d5fd37ecc',1,'ddc::KokkosAllocator']]],
   ['_7epdievent_9',['~PdiEvent',['../classddc_1_1PdiEvent.html#a515f802992d76072a6933e3185b5ae95',1,'ddc::PdiEvent']]],
   ['_7escopeguard_10',['~ScopeGuard',['../classddc_1_1ScopeGuard.html#a22954ab7588823e92c0c236493bb2775',1,'ddc::ScopeGuard']]],
-  ['_7esplinebuilder_11',['~SplineBuilder',['../classddc_1_1SplineBuilder.html#a471b0571c3d64fc75ad14be915dfe93d',1,'ddc::SplineBuilder']]],
-  ['_7esplinebuilder2d_12',['~SplineBuilder2D',['../classddc_1_1SplineBuilder2D.html#ab81e7c0d31d226440805c1c4482bedc8',1,'ddc::SplineBuilder2D']]],
-  ['_7esplineevaluator_13',['~SplineEvaluator',['../classddc_1_1SplineEvaluator.html#a94acc4e4bec41eec19182da277541029',1,'ddc::SplineEvaluator']]],
-  ['_7esplineevaluator2d_14',['~SplineEvaluator2D',['../classddc_1_1SplineEvaluator2D.html#aa3d79222f41924799e842c2510f95457',1,'ddc::SplineEvaluator2D']]]
+  ['_7esplinebuilder_11',['~SplineBuilder',['../classddc_1_1SplineBuilder.html#a90581a33bcb33ba4dc3d7fbd94ec5079',1,'ddc::SplineBuilder']]],
+  ['_7esplinebuilder2d_12',['~SplineBuilder2D',['../classddc_1_1SplineBuilder2D.html#ac462f09ee0f87df6f70a926ba5f2b444',1,'ddc::SplineBuilder2D']]],
+  ['_7esplineevaluator_13',['~SplineEvaluator',['../classddc_1_1SplineEvaluator.html#a619f2c0a953f1f4e02f3fe7f61040c5d',1,'ddc::SplineEvaluator']]],
+  ['_7esplineevaluator2d_14',['~SplineEvaluator2D',['../classddc_1_1SplineEvaluator2D.html#ac9afcbe384c3f2dd2c1ebc8fe9134f7f',1,'ddc::SplineEvaluator2D']]]
 ];

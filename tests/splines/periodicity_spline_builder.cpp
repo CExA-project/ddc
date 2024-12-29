@@ -102,15 +102,15 @@ struct DimsInitializer
     void operator()(std::size_t const ncells)
     {
 #if defined(BSPLINES_TYPE_UNIFORM)
-        ddc::init_discrete_space<BSplines<typename IDimX::continuous_dimension_type>>(
+        ddc::create_uniform_bsplines<BSplines<typename IDimX::continuous_dimension_type>>(
                 x0<typename IDimX::continuous_dimension_type>(),
                 xN<typename IDimX::continuous_dimension_type>(),
                 ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        ddc::init_discrete_space<BSplines<typename IDimX::continuous_dimension_type>>(
+        ddc::create_non_uniform_bsplines<BSplines<typename IDimX::continuous_dimension_type>>(
                 breaks<typename IDimX::continuous_dimension_type>(ncells));
 #endif
-        ddc::init_discrete_space<IDimX>(
+        ddc::init_discrete_space_from_impl<IDimX>(
                 GrevillePoints<BSplines<typename IDimX::continuous_dimension_type>>::
                         template get_sampling<IDimX>());
     }

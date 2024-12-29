@@ -111,7 +111,7 @@ void characteristics_advection_unitary(benchmark::State& state)
             std::ref(maxUsedMem));
 
     if constexpr (!IsNonUniform) {
-        ddc::init_discrete_space<BSplinesX<
+        ddc::create_uniform_bsplines<BSplinesX<
                 IsNonUniform,
                 s_degree_x>>(ddc::Coordinate<X>(0.), ddc::Coordinate<X>(1.), nx);
     } else {
@@ -119,18 +119,16 @@ void characteristics_advection_unitary(benchmark::State& state)
         for (std::size_t i(0); i < nx + 1; ++i) {
             breaks[i] = ddc::Coordinate<X>(static_cast<double>(i) / nx);
         }
-        ddc::init_discrete_space<BSplinesX<IsNonUniform, s_degree_x>>(breaks);
+        ddc::create_non_uniform_bsplines<BSplinesX<IsNonUniform, s_degree_x>>(breaks);
     }
-    ddc::init_discrete_space<DDimX<IsNonUniform, s_degree_x>>(
+    ddc::init_discrete_space_from_impl<DDimX<IsNonUniform, s_degree_x>>(
             ddc::GrevilleInterpolationPoints<
                     BSplinesX<IsNonUniform, s_degree_x>,
                     ddc::BoundCond::PERIODIC,
                     ddc::BoundCond::PERIODIC>::
                     template get_sampling<DDimX<IsNonUniform, s_degree_x>>());
-    ddc::DiscreteDomain<DDimY> const y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
-            ddc::Coordinate<Y>(-1.),
-            ddc::Coordinate<Y>(1.),
-            ddc::DiscreteVector<DDimY>(ny)));
+    ddc::DiscreteDomain<DDimY> const y_domain = ddc::create_uniform_point_sampling<
+            DDimY>(ddc::Coordinate<Y>(-1.), ddc::Coordinate<Y>(1.), ddc::DiscreteVector<DDimY>(ny));
 
     auto const x_domain = ddc::GrevilleInterpolationPoints<
             BSplinesX<IsNonUniform, s_degree_x>,

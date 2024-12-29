@@ -100,10 +100,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     }
     ddc::DiscreteDomain<BSplinesX> const dom_bsplines_x(
             ddc::discrete_space<BSplinesX>().full_domain());
-    ddc::DiscreteDomain<ddc::Deriv<DimX>> const derivs_domain
-            = ddc::DiscreteDomain<ddc::Deriv<DimX>>(
-                    ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
-                    ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree_x / 2));
+    ddc::DiscreteDomain<ddc::Deriv<DimX>> const derivs_domain(
+            ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
+            ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree_x / 2));
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
@@ -158,13 +157,13 @@ void TestNonPeriodicSplineBuilderTestIdentity()
 
     // 6. Finally build the spline by filling `coef`
 #if defined(BCL_HERMITE)
-    auto const deriv_l = std::optional(derivs_lhs.span_cview());
+    std::optional const deriv_l(derivs_lhs.span_cview());
 #else
     decltype(std::optional(derivs_lhs.span_cview())) const deriv_l = std::nullopt;
 #endif
 
 #if defined(BCR_HERMITE)
-    auto const deriv_r = std::optional(derivs_rhs.span_cview());
+    std::optional const deriv_r(derivs_rhs.span_cview());
 #else
     decltype(std::optional(derivs_rhs.span_cview())) const deriv_r = std::nullopt;
 #endif

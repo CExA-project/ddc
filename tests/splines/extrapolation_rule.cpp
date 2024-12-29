@@ -205,9 +205,10 @@ void ExtrapolationRuleSplineTest()
     dims_initializer(ncells);
 
     // Create the values domain (mesh)
-    auto interpolation_domain = ddc::DiscreteDomain<DDim<I1, I1, I2>, DDim<I2, I1, I2>>(
+    ddc::DiscreteDomain<DDim<I1, I1, I2>, DDim<I2, I1, I2>> const interpolation_domain(
             GrevillePoints<BSplines<I1>>::template get_domain<DDim<I1, I1, I2>>(),
             GrevillePoints<BSplines<I2>>::template get_domain<DDim<I2, I1, I2>>());
+    // If we remove auto using the constructor syntax, nvcc does not compile
     auto const dom_vals_tmp = ddc::DiscreteDomain<DDim<X, void, void>...>(
             ddc::DiscreteDomain<DDim<
                     X,

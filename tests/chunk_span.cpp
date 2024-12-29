@@ -18,6 +18,13 @@ using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
 using DDomX = ddc::DiscreteDomain<DDimX>;
 
+struct DDimY
+{
+};
+using DElemY = ddc::DiscreteElement<DDimY>;
+using DVectY = ddc::DiscreteVector<DDimY>;
+using DDomY = ddc::DiscreteDomain<DDimY>;
+
 template <class Datatype>
 using ChunkX = ddc::Chunk<Datatype, DDomX>;
 
@@ -59,4 +66,38 @@ TEST(ChunkSpan1DTest, CtadFromKokkosView)
     EXPECT_TRUE((std::is_same_v<
                  decltype(ddc::ChunkSpan(std::declval<ConstViewType>(), std::declval<DDomX>())),
                  ddc::ChunkSpan<const int, DDomX, Kokkos::layout_right, Kokkos::HostSpace>>));
+}
+
+TEST(ChunkSpan2DTest, CtorContiguousLayoutRightKokkosView)
+{
+    Kokkos::View<int**, Kokkos::LayoutRight> const view("view", 133, 189);
+    ddc::DiscreteDomain<DDimX, DDimY> const
+            ddom_xy(ddc::DiscreteElement<DDimX, DDimY>(0, 0),
+                    ddc::DiscreteVector<DDimX, DDimY>(view.extent(0), view.extent(1)));
+    EXPECT_NO_FATAL_FAILURE(ddc::ChunkSpan(view, ddom_xy));
+}
+
+TEST(ChunkSpan2DTest, CtorNonContiguousLayoutRightKokkosView)
+{
+    Kokkos::View<int**, Kokkos::LayoutRight> const
+            view(Kokkos::view_alloc("view", Kokkos::AllowPadding), 133, 189);
+    if (!view.span_is_contiguous()) {
+        ddc::DiscreteDomain<DDimX, DDimY> const
+                ddom_xy(ddc::DiscreteElement<DDimX, DDimY>(0, 0),
+                        ddc::DiscreteVector<DDimX, DDimY>(view.extent(0), view.extent(1)));
+        EXPECT_DEBUG_DEATH(ddc::ChunkSpan(view, ddom_xy), ".*is_kokkos_layout_compatible.*");
+    } else {
+        GTEST_SKIP() << "The view does not use padding";
+    }
+}
+
+TEST(ChunkSpan2DTest, CtorLayoutStrideKokkosView)
+{
+    Kokkos::View<int***, Kokkos::LayoutRight> const view("view", 3, 4, 5);
+    auto const subview = Kokkos::subview(view, Kokkos::ALL, Kokkos::ALL, 3);
+    ddc::DiscreteDomain<DDimX, DDimY> const
+            ddom_xy(ddc::DiscreteElement<DDimX, DDimY>(0, 0),
+                    ddc::DiscreteVector<DDimX, DDimY>(subview.extent(0), subview.extent(1)));
+    ASSERT_TRUE((std::is_same_v<decltype(subview)::array_layout, Kokkos::LayoutStride>));
+    EXPECT_NO_FATAL_FAILURE(ddc::ChunkSpan(subview, ddom_xy));
 }

@@ -140,6 +140,7 @@ void test_fft()
         return x * x;
     };
 
+    std::size_t const mesh_size = x_mesh.size();
     double const criterion = Kokkos::sqrt(ddc::transform_reduce(
             Ff_host.domain(),
             0.,
@@ -147,9 +148,7 @@ void test_fft()
             [=](DElem<DFDim<ddc::Fourier<X>>...> const e) {
                 double const xn2 = (pow2(ddc::coordinate(DElem<DFDim<ddc::Fourier<X>>>(e))) + ...);
                 double const diff = Kokkos::abs(Ff_host(e)) - Kokkos::exp(-xn2 / 2);
-                std::size_t const denom
-                        = (ddc::detail::fft::LastSelector<std::size_t, X, X...>(Nx / 2, Nx) * ...);
-                return pow2(diff) / denom;
+                return pow2(diff) / (mesh_size / 2);
             }));
 
     double const criterion2 = Kokkos::sqrt(ddc::transform_reduce(
@@ -158,7 +157,7 @@ void test_fft()
             ddc::reducer::sum<double>(),
             [=](DElem<DDim<X>...> const e) {
                 double const diff = Kokkos::abs(FFf_host(e)) - Kokkos::abs(f_host(e));
-                return pow2(diff) / Kokkos::pow(Nx, sizeof...(X));
+                return pow2(diff) / mesh_size;
             }));
     double const epsilon
             = std::is_same_v<ddc::detail::fft::real_type_t<Tin>, double> ? 1e-15 : 1e-7;
@@ -240,6 +239,38 @@ struct RDimY;
 struct RDimZ;
 
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FFT_CPP)
+
+TEST(FourierMesh, Extents)
+{
+    using DDimX = DDim<RDimX>;
+    using DDimY = DDim<RDimY>;
+    using DDimFx = DFDim<ddc::Fourier<RDimX>>;
+    using DDimFy = DFDim<ddc::Fourier<RDimY>>;
+
+    ddc::DiscreteElement<DDimX, DDimY> const delem_xy(0, 0);
+
+    ddc::DiscreteVector<DDimX, DDimY> const dvect_xy_odd(10, 11);
+    ddc::DiscreteDomain<DDimX, DDimY> const ddom_xy_odd(delem_xy, dvect_xy_odd);
+
+    ddc::DiscreteDomain<DDimFx, DDimFy> const ddom_c2c_odd
+            = ddc::fourier_mesh<DDimFx, DDimFy>(ddom_xy_odd, true);
+    EXPECT_EQ(ddom_c2c_odd.extents(), (ddc::DiscreteVector<DDimFx, DDimFy>(10, 11)));
+
+    ddc::DiscreteDomain<DDimFx, DDimFy> const ddom_c2r_odd
+            = ddc::fourier_mesh<DDimFx, DDimFy>(ddom_xy_odd, false);
+    EXPECT_EQ(ddom_c2r_odd.extents(), (ddc::DiscreteVector<DDimFx, DDimFy>(10, 6)));
+
+    ddc::DiscreteVector<DDimX, DDimY> const dvect_xy_even(11, 12);
+    ddc::DiscreteDomain<DDimX, DDimY> const ddom_xy_even(delem_xy, dvect_xy_even);
+
+    ddc::DiscreteDomain<DDimFx, DDimFy> const ddom_c2c_even
+            = ddc::fourier_mesh<DDimFx, DDimFy>(ddom_xy_even, true);
+    EXPECT_EQ(ddom_c2c_even.extents(), (ddc::DiscreteVector<DDimFx, DDimFy>(11, 12)));
+
+    ddc::DiscreteDomain<DDimFx, DDimFy> const ddom_c2r_even
+            = ddc::fourier_mesh<DDimFx, DDimFy>(ddom_xy_even, false);
+    EXPECT_EQ(ddom_c2r_even.extents(), (ddc::DiscreteVector<DDimFx, DDimFy>(11, 7)));
+}
 
 TEST(FourierMesh, Even)
 {

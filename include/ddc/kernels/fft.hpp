@@ -83,19 +83,6 @@ struct is_complex<Kokkos::complex<T>> : std::true_type
 template <typename T>
 constexpr bool is_complex_v = is_complex<T>::value;
 
-// LastSelector: returns a if Dim==Last, else b
-template <typename T, typename Dim, typename Last>
-KOKKOS_FUNCTION constexpr T LastSelector(const T a, const T b)
-{
-    return std::is_same_v<Dim, Last> ? a : b;
-}
-
-template <typename T, typename Dim, typename First, typename Second, typename... Tail>
-KOKKOS_FUNCTION constexpr T LastSelector(const T a, const T b)
-{
-    return LastSelector<T, Dim, Second, Tail...>(a, b);
-}
-
 /*
  * @brief A structure embedding the configuration of the impl FFT function: direction and type of normalization.
  *
@@ -107,23 +94,6 @@ struct kwArgs_impl
             direction; // Only effective for C2C transform and for normalization BACKWARD and FORWARD
     ddc::FFT_Normalization normalization;
 };
-
-/**
- * @brief Get the mesh size along a given dimension.
- *
- * @tparam DDim The dimension along which the mesh size is returned.
- * @param x_mesh The mesh.
- *
- * @return The mesh size along the required dimension.
- */
-template <typename DDim, typename... DDimX>
-int N(ddc::DiscreteDomain<DDimX...> x_mesh)
-{
-    static_assert(
-            (is_uniform_point_sampling_v<DDimX> && ...),
-            "DDimX dimensions should derive from UniformPointSampling");
-    return static_cast<int>(x_mesh.template extent<DDim>());
-}
 
 template <typename... DDimX>
 KokkosFFT::axis_type<sizeof...(DDimX)> axes()
@@ -310,21 +280,23 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
 {
     static_assert(
             is_uniform_point_sampling_v<DDimX>,
-            "DDimX dimensions should derive from UniformPointSampling");
+            "DDimX dimension must derive from UniformPointSampling");
     static_assert(
             is_periodic_sampling_v<DDimFx>,
-            "DDimFx dimensions should derive from PeriodicSampling");
+            "DDimFx dimension must derive from PeriodicSampling");
+    using CDimFx = typename DDimFx::continuous_dimension_type;
+    using CDimX = typename DDimX::continuous_dimension_type;
+    static_assert(
+            std::is_same_v<CDimFx, ddc::Fourier<CDimX>>,
+            "DDimX and DDimFx dimensions must be defined over the same continuous dimension");
+
+    DiscreteVectorElement const nx = get<DDimX>(x_mesh.extents());
+    double const lx = ddc::rlength(x_mesh);
     auto [impl, ddom] = DDimFx::template init<DDimFx>(
-            ddc::Coordinate<typename DDimFx::continuous_dimension_type>(0),
-            ddc::Coordinate<typename DDimFx::continuous_dimension_type>(
-                    2 * (ddc::detail::fft::N<DDimX>(x_mesh) - 1)
-                    * (ddc::detail::fft::N<DDimX>(x_mesh) - 1)
-                    / static_cast<double>(
-                            ddc::detail::fft::N<DDimX>(x_mesh)
-                            * (ddc::coordinate(x_mesh.back()) - ddc::coordinate(x_mesh.front())))
-                    * Kokkos::numbers::pi),
-            ddc::DiscreteVector<DDimFx>(ddc::detail::fft::N<DDimX>(x_mesh)),
-            ddc::DiscreteVector<DDimFx>(ddc::detail::fft::N<DDimX>(x_mesh)));
+            ddc::Coordinate<CDimFx>(0),
+            ddc::Coordinate<CDimFx>(2 * (nx - 1) * (nx - 1) / (nx * lx) * Kokkos::numbers::pi),
+            ddc::DiscreteVector<DDimFx>(nx),
+            ddc::DiscreteVector<DDimFx>(nx));
     return std::move(impl);
 }
 
@@ -352,13 +324,13 @@ ddc::DiscreteDomain<DDimFx...> fourier_mesh(ddc::DiscreteDomain<DDimX...> x_mesh
     static_assert(
             (is_periodic_sampling_v<DDimFx> && ...),
             "DDimFx dimensions should derive from PeriodicPointSampling");
+    ddc::DiscreteVector<DDimX...> extents = x_mesh.extents();
+    if (!C2C) {
+        detail::array(extents).back() = detail::array(extents).back() / 2 + 1;
+    }
     return ddc::DiscreteDomain<DDimFx...>(ddc::DiscreteDomain<DDimFx>(
             ddc::DiscreteElement<DDimFx>(0),
-            ddc::DiscreteVector<DDimFx>(
-                    (C2C ? ddc::detail::fft::N<DDimX>(x_mesh)
-                         : ddc::detail::fft::LastSelector<int, DDimX, DDimX...>(
-                                   ddc::detail::fft::N<DDimX>(x_mesh) / 2 + 1,
-                                   ddc::detail::fft::N<DDimX>(x_mesh)))))...);
+            ddc::DiscreteVector<DDimFx>(get<DDimX>(extents)))...);
 }
 
 /**

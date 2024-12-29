@@ -91,7 +91,7 @@ struct BSplines : ddc::UniformBSplines<X, s_degree_x>
 
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <class X, bool B>
-struct IDim_
+struct DDim_
     : std::conditional_t<
               B,
               typename GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type,
@@ -100,7 +100,7 @@ struct IDim_
 };
 
 template <typename X, typename Y>
-using IDim = IDim_<X, std::is_same_v<X, Y>>;
+using DDim = DDim_<X, std::is_same_v<X, Y>>;
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
@@ -108,25 +108,25 @@ struct BSplines : ddc::NonUniformBSplines<X, s_degree_x>
 {
 };
 template <class X>
-struct IDim_ : ddc::NonUniformPointSampling<X>
+struct DDim_ : ddc::NonUniformPointSampling<X>
 {
 };
 
 template <typename X, typename Y>
-using IDim = IDim_<X>;
+using DDim = DDim_<X>;
 #endif
 
-template <typename IDimX>
-using evaluator_type = CosineEvaluator::Evaluator<IDimX>;
+template <typename DDimX>
+using evaluator_type = CosineEvaluator::Evaluator<DDimX>;
 
-template <typename... IDimX>
-using Index = ddc::DiscreteElement<IDimX...>;
-template <typename... IDimX>
-using DVect = ddc::DiscreteVector<IDimX...>;
+template <typename... DDimX>
+using Index = ddc::DiscreteElement<DDimX...>;
+template <typename... DDimX>
+using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
 using Coord = ddc::Coordinate<X...>;
 
-// Extract batch dimensions from IDim (remove dimension of interest). Usefull
+// Extract batch dimensions from DDim (remove dimension of interest). Usefull
 template <typename X, typename... Y>
 using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<Y...>, ddc::detail::TypeSeq<X>>;
 
@@ -163,33 +163,33 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 }
 
 // Helper to initialize space
-template <class IDimI, class T>
+template <class DDimI, class T>
 struct DimsInitializer;
 
-template <class IDimI, class... IDimX>
-struct DimsInitializer<IDimI, ddc::detail::TypeSeq<IDimX...>>
+template <class DDimI, class... DDimX>
+struct DimsInitializer<DDimI, ddc::detail::TypeSeq<DDimX...>>
 {
     void operator()(std::size_t const ncells)
     {
 #if defined(BSPLINES_TYPE_UNIFORM)
-        (ddc::init_discrete_space<IDimX>(IDimX::template init<IDimX>(
-                 x0<typename IDimX::continuous_dimension_type>(),
-                 xN<typename IDimX::continuous_dimension_type>(),
-                 DVect<IDimX>(ncells))),
+        (ddc::init_discrete_space<DDimX>(DDimX::template init<DDimX>(
+                 x0<typename DDimX::continuous_dimension_type>(),
+                 xN<typename DDimX::continuous_dimension_type>(),
+                 DVect<DDimX>(ncells))),
          ...);
-        ddc::init_discrete_space<BSplines<typename IDimI::continuous_dimension_type>>(
-                x0<typename IDimI::continuous_dimension_type>(),
-                xN<typename IDimI::continuous_dimension_type>(),
+        ddc::init_discrete_space<BSplines<typename DDimI::continuous_dimension_type>>(
+                x0<typename DDimI::continuous_dimension_type>(),
+                xN<typename DDimI::continuous_dimension_type>(),
                 ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        (ddc::init_discrete_space<IDimX>(breaks<typename IDimX::continuous_dimension_type>(ncells)),
+        (ddc::init_discrete_space<DDimX>(breaks<typename DDimX::continuous_dimension_type>(ncells)),
          ...);
-        ddc::init_discrete_space<BSplines<typename IDimI::continuous_dimension_type>>(
-                breaks<typename IDimI::continuous_dimension_type>(ncells));
+        ddc::init_discrete_space<BSplines<typename DDimI::continuous_dimension_type>>(
+                breaks<typename DDimI::continuous_dimension_type>(ncells));
 #endif
-        ddc::init_discrete_space<IDimI>(
-                GrevillePoints<BSplines<typename IDimI::continuous_dimension_type>>::
-                        template get_sampling<IDimI>());
+        ddc::init_discrete_space<DDimI>(
+                GrevillePoints<BSplines<typename DDimI::continuous_dimension_type>>::
+                        template get_sampling<DDimI>());
     }
 };
 
@@ -203,23 +203,23 @@ void BatchedSplineTest()
     ExecSpace const exec_space;
 
     std::size_t constexpr ncells = 10;
-    DimsInitializer<IDim<I, I>, BatchDims<IDim<I, I>, IDim<X, I>...>> dims_initializer;
+    DimsInitializer<DDim<I, I>, BatchDims<DDim<I, I>, DDim<X, I>...>> dims_initializer;
     dims_initializer(ncells);
 
     // Create the values domain (mesh)
-    ddc::DiscreteDomain<IDim<I, I>> const interpolation_domain
-            = GrevillePoints<BSplines<I>>::template get_domain<IDim<I, I>>();
-    auto const dom_vals_tmp = ddc::DiscreteDomain<IDim<X, void>...>(
+    ddc::DiscreteDomain<DDim<I, I>> const interpolation_domain
+            = GrevillePoints<BSplines<I>>::template get_domain<DDim<I, I>>();
+    auto const dom_vals_tmp = ddc::DiscreteDomain<DDim<X, void>...>(
             ddc::DiscreteDomain<
-                    IDim<X, void>>(Index<IDim<X, void>>(0), DVect<IDim<X, void>>(ncells))...);
-    ddc::DiscreteDomain<IDim<X, I>...> const dom_vals
-            = ddc::replace_dim_of<IDim<I, void>, IDim<I, I>>(dom_vals_tmp, interpolation_domain);
+                    DDim<X, void>>(Index<DDim<X, void>>(0), DVect<DDim<X, void>>(ncells))...);
+    ddc::DiscreteDomain<DDim<X, I>...> const dom_vals
+            = ddc::replace_dim_of<DDim<I, void>, DDim<I, I>>(dom_vals_tmp, interpolation_domain);
 
 #if defined(BC_HERMITE)
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I>> const derivs_domain = ddc::DiscreteDomain<
             ddc::Deriv<I>>(Index<ddc::Deriv<I>>(1), DVect<ddc::Deriv<I>>(s_degree_x / 2));
-    auto const dom_derivs = ddc::replace_dim_of<IDim<I, I>, ddc::Deriv<I>>(dom_vals, derivs_domain);
+    auto const dom_derivs = ddc::replace_dim_of<DDim<I, I>, ddc::Deriv<I>>(dom_vals, derivs_domain);
 #endif
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
@@ -227,7 +227,7 @@ void BatchedSplineTest()
             ExecSpace,
             MemorySpace,
             BSplines<I>,
-            IDim<I, I>,
+            DDim<I, I>,
             s_bcl,
             s_bcr,
 #if defined(SOLVER_LAPACK)
@@ -235,10 +235,10 @@ void BatchedSplineTest()
 #elif defined(SOLVER_GINKGO)
             ddc::SplineSolver::GINKGO,
 #endif
-            IDim<X, I>...> const spline_builder(dom_vals);
+            DDim<X, I>...> const spline_builder(dom_vals);
 
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
-    ddc::DiscreteDomain<IDim<I, I>> const dom_interpolation = spline_builder.interpolation_domain();
+    ddc::DiscreteDomain<DDim<I, I>> const dom_interpolation = spline_builder.interpolation_domain();
     auto const dom_batch = spline_builder.batch_domain();
     auto const dom_spline = spline_builder.batched_spline_domain();
 
@@ -247,7 +247,7 @@ void BatchedSplineTest()
             dom_interpolation,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
     ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
-    evaluator_type<IDim<I, I>> const evaluator(dom_interpolation);
+    evaluator_type<DDim<I, I>> const evaluator(dom_interpolation);
     evaluator(vals_1d_host);
     auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
     ddc::ChunkSpan const vals_1d = vals_1d_alloc.span_view();
@@ -257,8 +257,8 @@ void BatchedSplineTest()
     ddc::parallel_for_each(
             exec_space,
             vals.domain(),
-            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
-                vals(e) = vals_1d(Index<IDim<I, I>>(e));
+            KOKKOS_LAMBDA(Index<DDim<X, I>...> const e) {
+                vals(e) = vals_1d(Index<DDim<I, I>>(e));
             });
 
 #if defined(BC_HERMITE)
@@ -335,7 +335,7 @@ void BatchedSplineTest()
             ExecSpace,
             MemorySpace,
             BSplines<I>,
-            IDim<I, I>,
+            DDim<I, I>,
 #if defined(BC_PERIODIC)
             ddc::PeriodicExtrapolationRule<I>,
             ddc::PeriodicExtrapolationRule<I>,
@@ -343,7 +343,7 @@ void BatchedSplineTest()
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
 #endif
-            IDim<X, I>...> const spline_evaluator_batched(extrapolation_rule, extrapolation_rule);
+            DDim<X, I>...> const spline_evaluator_batched(extrapolation_rule, extrapolation_rule);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
@@ -351,7 +351,7 @@ void BatchedSplineTest()
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
-            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
+            KOKKOS_LAMBDA(Index<DDim<X, I>...> const e) { coords_eval(e) = ddc::coordinate(e); });
 
 
     // Instantiate chunks to receive outputs of spline_evaluator
@@ -373,7 +373,7 @@ void BatchedSplineTest()
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
+            KOKKOS_LAMBDA(Index<DDim<X, I>...> const e) {
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
 
@@ -382,8 +382,8 @@ void BatchedSplineTest()
             spline_eval_deriv.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(Index<IDim<X, I>...> const e) {
-                Coord<I> const x = ddc::coordinate(Index<IDim<I, I>>(e));
+            KOKKOS_LAMBDA(Index<DDim<X, I>...> const e) {
+                Coord<I> const x = ddc::coordinate(Index<DDim<I, I>>(e));
                 return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, 1));
             });
     double const max_norm_error_integ = ddc::parallel_transform_reduce(
@@ -402,7 +402,7 @@ void BatchedSplineTest()
     double const max_norm_diff = evaluator.max_norm(1);
     double const max_norm_int = evaluator.max_norm(-1);
 
-    SplineErrorBounds<evaluator_type<IDim<I, I>>> error_bounds(evaluator);
+    SplineErrorBounds<evaluator_type<DDim<I, I>>> error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
             std::max(error_bounds.error_bound(dx<I>(ncells), s_degree_x), 1.0e-14 * max_norm));

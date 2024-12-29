@@ -27,14 +27,14 @@ template <
         class MemorySpace,
         class BSpline1,
         class BSpline2,
-        class IDimI1,
-        class IDimI2,
+        class DDimI1,
+        class DDimI2,
         ddc::BoundCond BcLower1,
         ddc::BoundCond BcUpper1,
         ddc::BoundCond BcLower2,
         ddc::BoundCond BcUpper2,
         ddc::SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 class SplineBuilder2D
 {
 public:
@@ -49,36 +49,36 @@ public:
             ExecSpace,
             MemorySpace,
             BSpline1,
-            IDimI1,
+            DDimI1,
             BcLower1,
             BcUpper1,
             Solver,
-            IDimX...>;
+            DDimX...>;
 
     /// @brief The type of the SplineBuilder used by this class to spline-approximate along second dimension.
     using builder_type2 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
             BSpline2,
-            IDimI2,
+            DDimI2,
             BcLower2,
             BcUpper2,
             Solver,
-            std::conditional_t<std::is_same_v<IDimX, IDimI1>, BSpline1, IDimX>...>;
+            std::conditional_t<std::is_same_v<DDimX, DDimI1>, BSpline1, DDimX>...>;
 
     /// @brief The type of the SplineBuilder used by this class to spline-approximate the second-dimension-derivatives along first dimension.
     using builder_deriv_type1 = ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
             BSpline1,
-            IDimI1,
+            DDimI1,
             BcLower1,
             BcUpper1,
             Solver,
             std::conditional_t<
-                    std::is_same_v<IDimX, IDimI2>,
+                    std::is_same_v<DDimX, DDimI2>,
                     typename builder_type2::deriv_type,
-                    IDimX>...>;
+                    DDimX>...>;
 
     /// @brief The type of the first interpolation continuous dimension.
     using continuous_dimension_type1 = typename builder_type1::continuous_dimension_type;
@@ -120,7 +120,7 @@ public:
             interpolation_discrete_dimension_type2>;
 
     /// @brief The type of the whole domain representing interpolation points.
-    using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
+    using batched_interpolation_domain_type = ddc::DiscreteDomain<DDimX...>;
 
     /**
      * @brief The type of the batch domain (obtained by removing the dimensions of interest
@@ -143,7 +143,7 @@ public:
      */
     using batched_spline_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
-                    ddc::detail::TypeSeq<IDimX...>,
+                    ddc::detail::TypeSeq<DDimX...>,
                     ddc::detail::TypeSeq<
                             interpolation_discrete_dimension_type1,
                             interpolation_discrete_dimension_type2>,
@@ -179,7 +179,7 @@ public:
      */
     using batched_derivs_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
-                    ddc::detail::TypeSeq<IDimX...>,
+                    ddc::detail::TypeSeq<DDimX...>,
                     ddc::detail::TypeSeq<
                             interpolation_discrete_dimension_type1,
                             interpolation_discrete_dimension_type2>,
@@ -401,28 +401,28 @@ template <
         class MemorySpace,
         class BSpline1,
         class BSpline2,
-        class IDimI1,
-        class IDimI2,
+        class DDimI1,
+        class DDimI2,
         ddc::BoundCond BcLower1,
         ddc::BoundCond BcUpper1,
         ddc::BoundCond BcLower2,
         ddc::BoundCond BcUpper2,
         ddc::SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 template <class Layout>
 void SplineBuilder2D<
         ExecSpace,
         MemorySpace,
         BSpline1,
         BSpline2,
-        IDimI1,
-        IDimI2,
+        DDimI1,
+        DDimI2,
         BcLower1,
         BcUpper1,
         BcLower2,
         BcUpper2,
         Solver,
-        IDimX...>::
+        DDimX...>::
 operator()(
         ddc::ChunkSpan<double, batched_spline_domain_type, Layout, memory_space> spline,
         ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space> vals,

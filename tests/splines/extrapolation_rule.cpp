@@ -70,7 +70,7 @@ struct BSplines : ddc::UniformBSplines<X, s_degree>
 
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <typename X, typename I1, typename I2>
-struct IDim
+struct DDim
     : std::conditional_t<
               std::is_same_v<X, I1> || std::is_same_v<X, I2>,
               typename GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type,
@@ -85,7 +85,7 @@ struct BSplines : ddc::NonUniformBSplines<X, s_degree>
 };
 
 template <typename X, typename I1, typename I2>
-struct IDim
+struct DDim
     : std::conditional_t<
               std::is_same_v<X, I1> || std::is_same_v<X, I2>,
               typename GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type,
@@ -95,24 +95,24 @@ struct IDim
 #endif
 
 #if defined(BC_PERIODIC)
-template <typename IDim1, typename IDim2>
+template <typename DDim1, typename DDim2>
 using evaluator_type = Evaluator2D::
-        Evaluator<CosineEvaluator::Evaluator<IDim1>, CosineEvaluator::Evaluator<IDim2>>;
+        Evaluator<CosineEvaluator::Evaluator<DDim1>, CosineEvaluator::Evaluator<DDim2>>;
 #else
-template <typename IDim1, typename IDim2>
+template <typename DDim1, typename DDim2>
 using evaluator_type = Evaluator2D::Evaluator<
-        PolynomialEvaluator::Evaluator<IDim1, s_degree>,
-        CosineEvaluator::Evaluator<IDim2>>;
+        PolynomialEvaluator::Evaluator<DDim1, s_degree>,
+        CosineEvaluator::Evaluator<DDim2>>;
 #endif
 
-template <typename... IDimX>
-using Index = ddc::DiscreteElement<IDimX...>;
-template <typename... IDimX>
-using DVect = ddc::DiscreteVector<IDimX...>;
+template <typename... DDimX>
+using Index = ddc::DiscreteElement<DDimX...>;
+template <typename... DDimX>
+using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
 using Coord = ddc::Coordinate<X...>;
 
-// Extract batch dimensions from IDim (remove dimension of interest). Usefull
+// Extract batch dimensions from DDim (remove dimension of interest). Usefull
 template <typename I1, typename I2, typename... X>
 using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>, ddc::detail::TypeSeq<I1, I2>>;
 
@@ -149,42 +149,42 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 }
 
 // Helper to initialize space
-template <class IDimI1, class IDimI2, class T>
+template <class DDimI1, class DDimI2, class T>
 struct DimsInitializer;
 
-template <class IDimI1, class IDimI2, class... IDimX>
-struct DimsInitializer<IDimI1, IDimI2, ddc::detail::TypeSeq<IDimX...>>
+template <class DDimI1, class DDimI2, class... DDimX>
+struct DimsInitializer<DDimI1, DDimI2, ddc::detail::TypeSeq<DDimX...>>
 {
     void operator()(std::size_t const ncells)
     {
 #if defined(BSPLINES_TYPE_UNIFORM)
-        (ddc::init_discrete_space<IDimX>(IDimX::template init<IDimX>(
-                 x0<typename IDimX::continuous_dimension_type>(),
-                 xN<typename IDimX::continuous_dimension_type>(),
-                 DVect<IDimX>(ncells))),
+        (ddc::init_discrete_space<DDimX>(DDimX::template init<DDimX>(
+                 x0<typename DDimX::continuous_dimension_type>(),
+                 xN<typename DDimX::continuous_dimension_type>(),
+                 DVect<DDimX>(ncells))),
          ...);
-        ddc::init_discrete_space<BSplines<typename IDimI1::continuous_dimension_type>>(
-                x0<typename IDimI1::continuous_dimension_type>(),
-                xN<typename IDimI1::continuous_dimension_type>(),
+        ddc::init_discrete_space<BSplines<typename DDimI1::continuous_dimension_type>>(
+                x0<typename DDimI1::continuous_dimension_type>(),
+                xN<typename DDimI1::continuous_dimension_type>(),
                 ncells);
-        ddc::init_discrete_space<BSplines<typename IDimI2::continuous_dimension_type>>(
-                x0<typename IDimI2::continuous_dimension_type>(),
-                xN<typename IDimI2::continuous_dimension_type>(),
+        ddc::init_discrete_space<BSplines<typename DDimI2::continuous_dimension_type>>(
+                x0<typename DDimI2::continuous_dimension_type>(),
+                xN<typename DDimI2::continuous_dimension_type>(),
                 ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        (ddc::init_discrete_space<IDimX>(breaks<typename IDimX::continuous_dimension_type>(ncells)),
+        (ddc::init_discrete_space<DDimX>(breaks<typename DDimX::continuous_dimension_type>(ncells)),
          ...);
-        ddc::init_discrete_space<BSplines<typename IDimI1::continuous_dimension_type>>(
-                breaks<typename IDimI1::continuous_dimension_type>(ncells));
-        ddc::init_discrete_space<BSplines<typename IDimI2::continuous_dimension_type>>(
-                breaks<typename IDimI2::continuous_dimension_type>(ncells));
+        ddc::init_discrete_space<BSplines<typename DDimI1::continuous_dimension_type>>(
+                breaks<typename DDimI1::continuous_dimension_type>(ncells));
+        ddc::init_discrete_space<BSplines<typename DDimI2::continuous_dimension_type>>(
+                breaks<typename DDimI2::continuous_dimension_type>(ncells));
 #endif
-        ddc::init_discrete_space<IDimI1>(
-                GrevillePoints<BSplines<typename IDimI1::continuous_dimension_type>>::
-                        template get_sampling<IDimI1>());
-        ddc::init_discrete_space<IDimI2>(
-                GrevillePoints<BSplines<typename IDimI2::continuous_dimension_type>>::
-                        template get_sampling<IDimI2>());
+        ddc::init_discrete_space<DDimI1>(
+                GrevillePoints<BSplines<typename DDimI1::continuous_dimension_type>>::
+                        template get_sampling<DDimI1>());
+        ddc::init_discrete_space<DDimI2>(
+                GrevillePoints<BSplines<typename DDimI2::continuous_dimension_type>>::
+                        template get_sampling<DDimI2>());
     }
 };
 
@@ -198,26 +198,26 @@ void ExtrapolationRuleSplineTest()
     ExecSpace const exec_space;
     std::size_t constexpr ncells = 10;
     DimsInitializer<
-            IDim<I1, I1, I2>,
-            IDim<I2, I1, I2>,
-            BatchDims<IDim<I1, I1, I2>, IDim<I2, I1, I2>, IDim<X, I1, I2>...>>
+            DDim<I1, I1, I2>,
+            DDim<I2, I1, I2>,
+            BatchDims<DDim<I1, I1, I2>, DDim<I2, I1, I2>, DDim<X, I1, I2>...>>
             dims_initializer;
     dims_initializer(ncells);
 
     // Create the values domain (mesh)
-    auto interpolation_domain = ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(
-            GrevillePoints<BSplines<I1>>::template get_domain<IDim<I1, I1, I2>>(),
-            GrevillePoints<BSplines<I2>>::template get_domain<IDim<I2, I1, I2>>());
-    auto const dom_vals_tmp = ddc::DiscreteDomain<IDim<X, void, void>...>(
-            ddc::DiscreteDomain<IDim<
+    auto interpolation_domain = ddc::DiscreteDomain<DDim<I1, I1, I2>, DDim<I2, I1, I2>>(
+            GrevillePoints<BSplines<I1>>::template get_domain<DDim<I1, I1, I2>>(),
+            GrevillePoints<BSplines<I2>>::template get_domain<DDim<I2, I1, I2>>());
+    auto const dom_vals_tmp = ddc::DiscreteDomain<DDim<X, void, void>...>(
+            ddc::DiscreteDomain<DDim<
                     X,
                     void,
-                    void>>(Index<IDim<X, void, void>>(0), DVect<IDim<X, void, void>>(ncells))...);
-    ddc::DiscreteDomain<IDim<X, I1, I2>...> const dom_vals
-            = ddc::replace_dim_of<IDim<I1, void, void>, IDim<I1, I1, I2>>(
+                    void>>(Index<DDim<X, void, void>>(0), DVect<DDim<X, void, void>>(ncells))...);
+    ddc::DiscreteDomain<DDim<X, I1, I2>...> const dom_vals
+            = ddc::replace_dim_of<DDim<I1, void, void>, DDim<I1, I1, I2>>(
                     ddc::replace_dim_of<
-                            IDim<I2, void, void>,
-                            IDim<I2, I1, I2>>(dom_vals_tmp, interpolation_domain),
+                            DDim<I2, void, void>,
+                            DDim<I2, I1, I2>>(dom_vals_tmp, interpolation_domain),
                     interpolation_domain);
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
@@ -226,17 +226,17 @@ void ExtrapolationRuleSplineTest()
             MemorySpace,
             BSplines<I1>,
             BSplines<I2>,
-            IDim<I1, I1, I2>,
-            IDim<I2, I1, I2>,
+            DDim<I1, I1, I2>,
+            DDim<I2, I1, I2>,
             s_bcl1,
             s_bcr1,
             s_bcl2,
             s_bcr2,
             ddc::SplineSolver::GINKGO,
-            IDim<X, I1, I2>...> const spline_builder(dom_vals);
+            DDim<X, I1, I2>...> const spline_builder(dom_vals);
 
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
-    ddc::DiscreteDomain<IDim<I1, I1, I2>, IDim<I2, I1, I2>> const dom_interpolation
+    ddc::DiscreteDomain<DDim<I1, I1, I2>, DDim<I2, I1, I2>> const dom_interpolation
             = spline_builder.interpolation_domain();
     auto const dom_spline = spline_builder.batched_spline_domain();
 
@@ -245,7 +245,7 @@ void ExtrapolationRuleSplineTest()
             dom_interpolation,
             ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
     ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
-    evaluator_type<IDim<I1, I1, I2>, IDim<I2, I1, I2>> const evaluator(dom_interpolation);
+    evaluator_type<DDim<I1, I1, I2>, DDim<I2, I1, I2>> const evaluator(dom_interpolation);
     evaluator(vals_1d_host);
     auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
     ddc::ChunkSpan const vals_1d = vals_1d_alloc.span_view();
@@ -255,8 +255,8 @@ void ExtrapolationRuleSplineTest()
     ddc::parallel_for_each(
             exec_space,
             vals.domain(),
-            KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
-                vals(e) = vals_1d(Index<IDim<I1, I1, I2>, IDim<I2, I1, I2>>(e));
+            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
+                vals(e) = vals_1d(Index<DDim<I1, I1, I2>, DDim<I2, I1, I2>>(e));
             });
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
@@ -299,8 +299,8 @@ void ExtrapolationRuleSplineTest()
             MemorySpace,
             BSplines<I1>,
             BSplines<I2>,
-            IDim<I1, I1, I2>,
-            IDim<I2, I1, I2>,
+            DDim<I1, I1, I2>,
+            DDim<I2, I1, I2>,
 #if defined(ER_NULL)
             ddc::NullExtrapolationRule,
             ddc::NullExtrapolationRule,
@@ -321,7 +321,7 @@ void ExtrapolationRuleSplineTest()
 #endif
 #endif
 
-            IDim<X, I1, I2>...> const
+            DDim<X, I1, I2>...> const
             spline_evaluator_batched(
                     extrapolation_rule_left_dim_1,
                     extrapolation_rule_right_dim_1,
@@ -334,7 +334,7 @@ void ExtrapolationRuleSplineTest()
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
-            KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
+            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);
                 // Set coords_eval outside of the domain (+1 to ensure left bound is outside domain)
                 ddc::get<I1>(coords_eval(e))
@@ -359,33 +359,33 @@ void ExtrapolationRuleSplineTest()
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(Index<IDim<X, I1, I2>...> const e) {
+            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
 #if defined(ER_NULL)
                 return Kokkos::abs(spline_eval(e));
 #elif defined(ER_CONSTANT)
                 typename decltype(ddc::remove_dims_of(
                         vals.domain(),
-                        vals.template domain<IDim<I1, I1, I2>>()))::discrete_element_type const
+                        vals.template domain<DDim<I1, I1, I2>>()))::discrete_element_type const
                         e_without_interest(e);
                 double tmp;
                 if (Coord<I2>(coords_eval(e)) > xN<I2>()) {
 #if defined(BC_PERIODIC)
-                    tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
-                            vals.template domain<IDim<I1, I1, I2>>().back(),
+                    tmp = vals(ddc::DiscreteElement<DDim<X, I1, I2>...>(
+                            vals.template domain<DDim<I1, I1, I2>>().back(),
                             e_without_interest));
 #else
                     typename decltype(ddc::remove_dims_of(
                             vals.domain(),
-                            vals.template domain<IDim<I1, I1, I2>, IDim<I2, I1, I2>>()))::
+                            vals.template domain<DDim<I1, I1, I2>, DDim<I2, I1, I2>>()))::
                             discrete_element_type const e_batch(e);
-                    tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
-                            vals.template domain<IDim<I1, I1, I2>>().back(),
-                            vals.template domain<IDim<I2, I1, I2>>().back(),
+                    tmp = vals(ddc::DiscreteElement<DDim<X, I1, I2>...>(
+                            vals.template domain<DDim<I1, I1, I2>>().back(),
+                            vals.template domain<DDim<I2, I1, I2>>().back(),
                             e_batch));
 #endif
                 } else {
-                    tmp = vals(ddc::DiscreteElement<IDim<X, I1, I2>...>(
-                            vals.template domain<IDim<I1, I1, I2>>().back(),
+                    tmp = vals(ddc::DiscreteElement<DDim<X, I1, I2>...>(
+                            vals.template domain<DDim<I1, I1, I2>>().back(),
                             e_without_interest));
                 }
                 return Kokkos::abs(spline_eval(e) - tmp);

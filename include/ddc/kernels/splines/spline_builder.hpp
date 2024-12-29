@@ -49,7 +49,7 @@ enum class SplineSolver {
  * @tparam BcLower The lower boundary condition.
  * @tparam BcUpper The upper boundary condition.
  * @tparam Solver The SplineSolver giving the backend used to perform the spline approximation.
- * @tparam IDimX A variadic template of all the discrete dimensions forming the full space (InterpolationDDim + batched dimensions).
+ * @tparam DDimX A variadic template of all the discrete dimensions forming the full space (InterpolationDDim + batched dimensions).
  */
 template <
         class ExecSpace,
@@ -59,7 +59,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 class SplineBuilder
 {
     static_assert(
@@ -91,7 +91,7 @@ public:
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_discrete_dimension_type>;
 
     /// @brief The type of the whole domain representing interpolation points.
-    using batched_interpolation_domain_type = ddc::DiscreteDomain<IDimX...>;
+    using batched_interpolation_domain_type = ddc::DiscreteDomain<DDimX...>;
 
     /**
      * @brief The type of the batch domain (obtained by removing the dimension of interest
@@ -128,7 +128,7 @@ private:
             typename ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
                     ddc::type_seq_remove_t<
-                            ddc::detail::TypeSeq<IDimX...>,
+                            ddc::detail::TypeSeq<DDimX...>,
                             ddc::detail::TypeSeq<interpolation_discrete_dimension_type>>>>;
 
 public:
@@ -461,7 +461,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 void SplineBuilder<
         ExecSpace,
         MemorySpace,
@@ -470,7 +470,7 @@ void SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::
+        DDimX...>::
         compute_offset(interpolation_domain_type const& interpolation_domain, int& offset)
 {
     if constexpr (bsplines_type::is_periodic()) {
@@ -505,7 +505,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 int SplineBuilder<
         ExecSpace,
         MemorySpace,
@@ -514,7 +514,7 @@ int SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::compute_block_sizes_uniform(ddc::BoundCond const bound_cond, int const nbc)
+        DDimX...>::compute_block_sizes_uniform(ddc::BoundCond const bound_cond, int const nbc)
 {
     if (bound_cond == ddc::BoundCond::PERIODIC) {
         return static_cast<int>(bsplines_type::degree()) / 2;
@@ -539,7 +539,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 int SplineBuilder<
         ExecSpace,
         MemorySpace,
@@ -548,7 +548,7 @@ int SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::compute_block_sizes_non_uniform(ddc::BoundCond const bound_cond, int const nbc)
+        DDimX...>::compute_block_sizes_non_uniform(ddc::BoundCond const bound_cond, int const nbc)
 {
     if (bound_cond == ddc::BoundCond::PERIODIC || bound_cond == ddc::BoundCond::GREVILLE) {
         return static_cast<int>(bsplines_type::degree()) - 1;
@@ -569,7 +569,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 void SplineBuilder<
         ExecSpace,
         MemorySpace,
@@ -578,7 +578,7 @@ void SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::
+        DDimX...>::
         allocate_matrix(
                 [[maybe_unused]] int lower_block_size,
                 [[maybe_unused]] int upper_block_size,
@@ -637,7 +637,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 void SplineBuilder<
         ExecSpace,
         MemorySpace,
@@ -646,7 +646,7 @@ void SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::build_matrix_system()
+        DDimX...>::build_matrix_system()
 {
     // Hermite boundary conditions at xmin, if any
     if constexpr (BcLower == ddc::BoundCond::HERMITE) {
@@ -740,7 +740,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 template <class Layout>
 void SplineBuilder<
         ExecSpace,
@@ -750,7 +750,7 @@ void SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::
+        DDimX...>::
 operator()(
         ddc::ChunkSpan<double, batched_spline_domain_type, Layout, memory_space> spline,
         ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space> vals,
@@ -914,7 +914,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 template <class OutMemorySpace>
 std::tuple<
         ddc::Chunk<
@@ -939,7 +939,7 @@ SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::quadrature_coefficients() const
+        DDimX...>::quadrature_coefficients() const
 {
     // Compute integrals of bsplines
     ddc::Chunk integral_bsplines(spline_domain(), ddc::KokkosAllocator<double, MemorySpace>());
@@ -1057,7 +1057,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 template <class KnotElement>
 void SplineBuilder<
         ExecSpace,
@@ -1067,7 +1067,7 @@ void SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::
+        DDimX...>::
         check_n_points_in_cell(int const n_points_in_cell, KnotElement const current_cell_end_idx)
 {
     if (n_points_in_cell > BSplines::degree() + 1) {
@@ -1088,7 +1088,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver,
-        class... IDimX>
+        class... DDimX>
 void SplineBuilder<
         ExecSpace,
         MemorySpace,
@@ -1097,7 +1097,7 @@ void SplineBuilder<
         BcLower,
         BcUpper,
         Solver,
-        IDimX...>::check_valid_grid()
+        DDimX...>::check_valid_grid()
 {
     std::size_t const n_interp_points = interpolation_domain().size();
     std::size_t const expected_npoints

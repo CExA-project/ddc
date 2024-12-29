@@ -24,15 +24,15 @@ struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree_x>
 using GrevillePoints = ddc::
         GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
 
-struct IDimX : GrevillePoints::interpolation_discrete_dimension_type
+struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
 
-using IndexX = ddc::DiscreteElement<IDimX>;
-using DVectX = ddc::DiscreteVector<IDimX>;
+using IndexX = ddc::DiscreteElement<DDimX>;
+using DVectX = ddc::DiscreteVector<DDimX>;
 using BsplIndexX = ddc::DiscreteElement<BSplinesX>;
 using SplineX = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX>>;
-using FieldX = ddc::Chunk<double, ddc::DiscreteDomain<IDimX>>;
+using FieldX = ddc::Chunk<double, ddc::DiscreteDomain<DDimX>>;
 using CoordX = ddc::Coordinate<DimX>;
 
 TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
@@ -49,8 +49,8 @@ TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
     ddc::init_discrete_space<BSplinesX>(breaks);
 
     // 2. Create the interpolation domain
-    ddc::init_discrete_space<IDimX>(GrevillePoints::get_sampling<IDimX>());
-    ddc::DiscreteDomain<IDimX> const interpolation_domain(GrevillePoints::get_domain<IDimX>());
+    ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
+    ddc::DiscreteDomain<DDimX> const interpolation_domain(GrevillePoints::get_domain<DDimX>());
 
     double last(ddc::coordinate(interpolation_domain.front()));
     double current;

@@ -244,34 +244,32 @@ TEST(FourierMesh, Extents)
 {
     using DDimX = DDim<RDimX>;
     using DDimY = DDim<RDimY>;
-    using DDimZ = DDim<RDimZ>;
     using DDimFx = DFDim<ddc::Fourier<RDimX>>;
     using DDimFy = DFDim<ddc::Fourier<RDimY>>;
-    using DDimFz = DFDim<ddc::Fourier<RDimZ>>;
 
-    ddc::DiscreteElement<DDimX, DDimY, DDimZ> const delem_xyz(0, 0, 0);
+    ddc::DiscreteElement<DDimX, DDimY> const delem_xy(0, 0);
 
-    ddc::DiscreteVector<DDimX, DDimY, DDimZ> const dvect_odd(9, 10, 11);
-    ddc::DiscreteDomain<DDimX, DDimY, DDimZ> const ddom_odd(delem_xyz, dvect_odd);
+    ddc::DiscreteVector<DDimX, DDimY> const dvect_xy_odd(10, 11);
+    ddc::DiscreteDomain<DDimX, DDimY> const ddom_xy_odd(delem_xy, dvect_xy_odd);
 
-    ddc::DiscreteDomain<DDimFx, DDimFy, DDimFz> const ddom_c2c_odd
-            = ddc::fourier_mesh<DDimFx, DDimFy, DDimFz>(ddom_odd, true);
-    EXPECT_EQ(ddom_c2c_odd.extents(), (ddc::DiscreteVector<DDimFx, DDimFy, DDimFz>(9, 10, 11)));
+    ddc::DiscreteDomain<DDimFx, DDimFy> const ddom_c2c_odd
+            = ddc::fourier_mesh<DDimFx, DDimFy>(ddom_xy_odd, true);
+    EXPECT_EQ(ddom_c2c_odd.extents(), (ddc::DiscreteVector<DDimFx, DDimFy>(10, 11)));
 
-    ddc::DiscreteDomain<DDimFx, DDimFy, DDimFz> const ddom_c2r_odd
-            = ddc::fourier_mesh<DDimFx, DDimFy, DDimFz>(ddom_odd, false);
-    EXPECT_EQ(ddom_c2r_odd.extents(), (ddc::DiscreteVector<DDimFx, DDimFy, DDimFz>(9, 10, 6)));
+    ddc::DiscreteDomain<DDimFx, DDimFy> const ddom_c2r_odd
+            = ddc::fourier_mesh<DDimFx, DDimFy>(ddom_xy_odd, false);
+    EXPECT_EQ(ddom_c2r_odd.extents(), (ddc::DiscreteVector<DDimFx, DDimFy>(10, 6)));
 
-    ddc::DiscreteVector<DDimX, DDimY, DDimZ> const dvect_even(10, 11, 12);
-    ddc::DiscreteDomain<DDimX, DDimY, DDimZ> const ddom_even(delem_xyz, dvect_even);
+    ddc::DiscreteVector<DDimX, DDimY> const dvect_xy_even(11, 12);
+    ddc::DiscreteDomain<DDimX, DDimY> const ddom_xy_even(delem_xy, dvect_xy_even);
 
-    ddc::DiscreteDomain<DDimFx, DDimFy, DDimFz> const ddom_c2c_even
-            = ddc::fourier_mesh<DDimFx, DDimFy, DDimFz>(ddom_even, true);
-    EXPECT_EQ(ddom_c2c_even.extents(), (ddc::DiscreteVector<DDimFx, DDimFy, DDimFz>(10, 11, 12)));
+    ddc::DiscreteDomain<DDimFx, DDimFy> const ddom_c2c_even
+            = ddc::fourier_mesh<DDimFx, DDimFy>(ddom_xy_even, true);
+    EXPECT_EQ(ddom_c2c_even.extents(), (ddc::DiscreteVector<DDimFx, DDimFy>(11, 12)));
 
-    ddc::DiscreteDomain<DDimFx, DDimFy, DDimFz> const ddom_c2r_even
-            = ddc::fourier_mesh<DDimFx, DDimFy, DDimFz>(ddom_even, false);
-    EXPECT_EQ(ddom_c2r_even.extents(), (ddc::DiscreteVector<DDimFx, DDimFy, DDimFz>(10, 11, 7)));
+    ddc::DiscreteDomain<DDimFx, DDimFy> const ddom_c2r_even
+            = ddc::fourier_mesh<DDimFx, DDimFy>(ddom_xy_even, false);
+    EXPECT_EQ(ddom_c2r_even.extents(), (ddc::DiscreteVector<DDimFx, DDimFy>(11, 7)));
 }
 
 TEST(FourierMesh, Even)

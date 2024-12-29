@@ -379,7 +379,7 @@ KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> select(
 {
     return DiscreteDomain<QueryDDims...>(
             DiscreteElement<QueryDDims...>(domain.front()),
-            DiscreteElement<QueryDDims...>(domain.extents()));
+            DiscreteVector<QueryDDims...>(domain.extents()));
 }
 
 namespace detail {

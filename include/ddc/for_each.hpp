@@ -44,7 +44,7 @@ KOKKOS_FUNCTION void annotated_for_each_serial(
     if constexpr (I == N) {
         f(RetType(is...));
     } else {
-        for (Element ii = begin[I]; ii < end[I]; ++ii) {
+        for (Element ii = static_cast<int>(begin[I]); ii < end[I]; ++ii) {
             annotated_for_each_serial<RetType>(begin, end, f, is..., ii);
         }
     }

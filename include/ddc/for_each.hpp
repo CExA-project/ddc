@@ -44,6 +44,7 @@ KOKKOS_FUNCTION void annotated_for_each_serial(
     if constexpr (I == N) {
         f(RetType(is...));
     } else {
+        // The following static_cast<int> is a nonsense workaround since Element aliases std::size_t. Without it the loop does not iterate with nvcc in the AnnotatedForEachSerialDevice tests.
         for (Element ii = static_cast<int>(begin[I]); ii < end[I]; ++ii) {
             annotated_for_each_serial<RetType>(begin, end, f, is..., ii);
         }

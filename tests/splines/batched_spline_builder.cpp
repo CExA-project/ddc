@@ -90,30 +90,30 @@ struct BSplines : ddc::UniformBSplines<X, s_degree_x>
 };
 
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
-template <class X, bool B>
-struct DDim_
-    : std::conditional_t<
-              B,
-              typename GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type,
-              ddc::UniformPointSampling<X>>
+template <typename X>
+struct DDimGPS : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
+{
+};
+template <typename X>
+struct DDimPS : ddc::UniformPointSampling<X>
 {
 };
 
 template <typename X, typename Y>
-using DDim = DDim_<X, std::is_same_v<X, Y>>;
+using DDim = std::conditional_t<std::is_same_v<X, Y>, DDimGPS<X>, DDimPS<X>>;
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
 struct BSplines : ddc::NonUniformBSplines<X, s_degree_x>
 {
 };
-template <class X>
-struct DDim_ : ddc::NonUniformPointSampling<X>
+template <typename X>
+struct DDimPS : ddc::NonUniformPointSampling<X>
 {
 };
 
 template <typename X, typename Y>
-using DDim = DDim_<X>;
+using DDim = DDimPS<X>;
 #endif
 
 template <typename DDimX>

@@ -87,7 +87,7 @@ int TestAnnotatedTransformReduce(ddc::ChunkSpan<
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
-            KOKKOS_LAMBDA([[maybe_unused]] DElem0D unused_elem) {
+            KOKKOS_LAMBDA(HIPCC_COMPATIBLE_MAYBE_UNUSED DElem0D unused_elem) {
                 count() = ddc::annotated_transform_reduce(
                         chunk.domain(),
                         0,

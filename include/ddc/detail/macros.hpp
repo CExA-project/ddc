@@ -52,3 +52,9 @@
 #else
 #define DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(NAME)
 #endif
+
+#if defined(__HIPCC__)
+#define HIPCC_COMPATIBLE_MAYBE_UNUSED
+#else
+#define HIPCC_COMPATIBLE_MAYBE_UNUSED [[maybe_unused]]
+#endif

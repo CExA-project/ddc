@@ -93,7 +93,7 @@ void TestAnnotatedForEachSerialDevice1D(ddc::ChunkSpan<
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
-            KOKKOS_LAMBDA(HIPCC_COMPATIBLE_MAYBE_UNUSED DElem0D unused_elem) {
+            KOKKOS_LAMBDA(DElem0D) {
                 ddc::annotated_for_each(view.domain(), [=](DElemX const ix) { view(ix) = 1; });
             });
 }
@@ -127,7 +127,7 @@ void TestAnnotatedForEachSerialDevice2D(ddc::ChunkSpan<
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
-            KOKKOS_LAMBDA(HIPCC_COMPATIBLE_MAYBE_UNUSED DElem0D unused_elem) {
+            KOKKOS_LAMBDA(DElem0D) {
                 ddc::annotated_for_each(view.domain(), [=](DElemXY const ixy) { view(ixy) = 1; });
             });
 }

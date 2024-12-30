@@ -94,9 +94,7 @@ void TestAnnotatedForEachSerialDevice1D(ddc::ChunkSpan<
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
             KOKKOS_LAMBDA([[maybe_unused]] DElem0D unused_elem) {
-                ddc::annotated_for_each(view.domain(), [=](DElemX const ix) {
-                    view(ix) = 1;
-                });
+                ddc::annotated_for_each(view.domain(), [=](DElemX const ix) { view(ix) = 1; });
             });
 }
 

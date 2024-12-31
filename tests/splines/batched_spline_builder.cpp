@@ -162,34 +162,40 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
     return out;
 }
 
-// Helper to initialize space
-template <class DDimI, class T>
-struct DimsInitializer;
-
-template <class DDimI, class... DDimX>
-struct DimsInitializer<DDimI, ddc::detail::TypeSeq<DDimX...>>
+template <class DDim>
+void InterestDimInitializer(std::size_t const ncells)
 {
-    void operator()(std::size_t const ncells)
-    {
+    using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-        (ddc::init_discrete_space<DDimX>(DDimX::template init<DDimX>(
-                 x0<typename DDimX::continuous_dimension_type>(),
-                 xN<typename DDimX::continuous_dimension_type>(),
-                 DVect<DDimX>(ncells))),
-         ...);
-        ddc::init_discrete_space<BSplines<typename DDimI::continuous_dimension_type>>(
-                x0<typename DDimI::continuous_dimension_type>(),
-                xN<typename DDimI::continuous_dimension_type>(),
-                ncells);
+    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        (ddc::init_discrete_space<DDimX>(breaks<typename DDimX::continuous_dimension_type>(ncells)),
-         ...);
-        ddc::init_discrete_space<BSplines<typename DDimI::continuous_dimension_type>>(
-                breaks<typename DDimI::continuous_dimension_type>(ncells));
+    ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
-        ddc::init_discrete_space<DDimI>(
-                GrevillePoints<BSplines<typename DDimI::continuous_dimension_type>>::
-                        template get_sampling<DDimI>());
+    ddc::init_discrete_space<DDim>(GrevillePoints<BSplines<CDim>>::template get_sampling<DDim>());
+}
+
+template <class DDim>
+void BatchDimInitializer(std::size_t const ncells)
+{
+    using CDim = typename DDim::continuous_dimension_type;
+#if defined(BSPLINES_TYPE_UNIFORM)
+    ddc::init_discrete_space<DDim>(
+            DDim::template init<DDim>(x0<CDim>(), xN<CDim>(), DVect<DDim>(ncells)));
+#elif defined(BSPLINES_TYPE_NON_UNIFORM)
+    ddc::init_discrete_space<DDim>(breaks<CDim>(ncells));
+#endif
+}
+
+// Helper to initialize space
+template <class T>
+struct BatchDimsInitializerFn;
+
+template <class... DDims>
+struct BatchDimsInitializerFn<ddc::detail::TypeSeq<DDims...>>
+{
+    void operator()([[maybe_unused]] std::size_t const ncells) const
+    {
+        (BatchDimInitializer<DDims>(ncells), ...);
     }
 };
 
@@ -203,8 +209,9 @@ void BatchedSplineTest()
     ExecSpace const exec_space;
 
     std::size_t const ncells = 10;
-    DimsInitializer<DDim<I, I>, BatchDims<DDim<I, I>, DDim<X, I>...>> dims_initializer;
-    dims_initializer(ncells);
+    InterestDimInitializer<DDim<I, I>>(ncells);
+    BatchDimsInitializerFn<BatchDims<DDim<I, I>, DDim<X, I>...>> const batch_dims_initializer;
+    batch_dims_initializer(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDim<I, I>> const interpolation_domain

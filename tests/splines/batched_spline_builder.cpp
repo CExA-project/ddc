@@ -132,21 +132,21 @@ using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<Y...>, ddc::detail
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
-constexpr Coord<X> x0()
+KOKKOS_FUNCTION Coord<X> x0()
 {
     return Coord<X>(0.);
 }
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-constexpr Coord<X> xN()
+KOKKOS_FUNCTION Coord<X> xN()
 {
     return Coord<X>(1.);
 }
 
 // Templated function giving step of the mesh in given dimension.
 template <typename X>
-constexpr double dx(std::size_t ncells)
+double dx(std::size_t ncells)
 {
     return (xN<X>() - x0<X>()) / ncells;
 }
@@ -202,7 +202,7 @@ void BatchedSplineTest()
     Kokkos::DefaultHostExecutionSpace const host_exec_space;
     ExecSpace const exec_space;
 
-    std::size_t constexpr ncells = 10;
+    std::size_t const ncells = 10;
     DimsInitializer<DDim<I, I>, BatchDims<DDim<I, I>, DDim<X, I>...>> dims_initializer;
     dims_initializer(ncells);
 
@@ -264,7 +264,7 @@ void BatchedSplineTest()
 
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
-    int constexpr shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
+    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {

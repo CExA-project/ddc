@@ -125,21 +125,21 @@ using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>, ddc::detail
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
-constexpr Coord<X> x0()
+KOKKOS_FUNCTION Coord<X> x0()
 {
     return Coord<X>(0.);
 }
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-constexpr Coord<X> xN()
+KOKKOS_FUNCTION Coord<X> xN()
 {
     return Coord<X>(1.);
 }
 
 // Templated function giving step of the mesh in given dimension.
 template <typename X>
-constexpr double dx(std::size_t ncells)
+double dx(std::size_t ncells)
 {
     return (xN<X>() - x0<X>()) / ncells;
 }
@@ -203,7 +203,7 @@ void ExtrapolationRuleSplineTest()
     // Instantiate execution spaces and initialize spaces
     Kokkos::DefaultHostExecutionSpace const host_exec_space;
     ExecSpace const exec_space;
-    std::size_t constexpr ncells = 10;
+    std::size_t const ncells = 10;
     DimsInitializer<
             DDim<I1, I1, I2>,
             DDim<I2, I1, I2>,

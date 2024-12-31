@@ -37,10 +37,10 @@ using CoordX = ddc::Coordinate<DimX>;
 
 TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
 {
-    std::size_t constexpr ncells = 10;
+    std::size_t const ncells = 10;
 
     // 1. Create BSplines
-    int constexpr npoints(ncells + 1);
+    int const npoints(ncells + 1);
     std::vector<double> d_breaks({0, 0.01, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0});
     std::vector<CoordX> breaks(npoints);
     for (std::size_t i(0); i < npoints; ++i) {

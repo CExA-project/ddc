@@ -96,25 +96,17 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 }
 
 // Helper to initialize space
-template <class DDimX>
-struct DimsInitializer
+template <class DDim>
+void InterestDimInitializer(std::size_t const ncells)
 {
-    void operator()(std::size_t const ncells)
-    {
+    using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-        ddc::init_discrete_space<BSplines<typename DDimX::continuous_dimension_type>>(
-                x0<typename DDimX::continuous_dimension_type>(),
-                xN<typename DDimX::continuous_dimension_type>(),
-                ncells);
+    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        ddc::init_discrete_space<BSplines<typename DDimX::continuous_dimension_type>>(
-                breaks<typename DDimX::continuous_dimension_type>(ncells));
+    ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
-        ddc::init_discrete_space<DDimX>(
-                GrevillePoints<BSplines<typename DDimX::continuous_dimension_type>>::
-                        template get_sampling<DDimX>());
-    }
-};
+    ddc::init_discrete_space<DDim>(GrevillePoints<BSplines<CDim>>::template get_sampling<DDim>());
+}
 
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
@@ -126,8 +118,7 @@ void PeriodicitySplineBuilderTest()
     ExecSpace const exec_space;
 
     std::size_t const ncells = 10;
-    DimsInitializer<DDim<X>> dims_initializer;
-    dims_initializer(ncells);
+    InterestDimInitializer<DDim<X>>(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDim<X>> const dom_vals

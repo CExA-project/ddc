@@ -209,6 +209,7 @@ void BatchedSplineTest()
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDim<I, I>> const interpolation_domain
             = GrevillePoints<BSplines<I>>::template get_domain<DDim<I, I>>();
+    // If we remove auto using the constructor syntax, nvcc does not compile
     auto const dom_vals_tmp = ddc::DiscreteDomain<DDim<X, void>...>(
             ddc::DiscreteDomain<
                     DDim<X, void>>(Index<DDim<X, void>>(0), DVect<DDim<X, void>>(ncells))...);
@@ -217,8 +218,8 @@ void BatchedSplineTest()
 
 #if defined(BC_HERMITE)
     // Create the derivs domain
-    ddc::DiscreteDomain<ddc::Deriv<I>> const derivs_domain = ddc::DiscreteDomain<
-            ddc::Deriv<I>>(Index<ddc::Deriv<I>>(1), DVect<ddc::Deriv<I>>(s_degree_x / 2));
+    ddc::DiscreteDomain<ddc::Deriv<I>> const
+            derivs_domain(Index<ddc::Deriv<I>>(1), DVect<ddc::Deriv<I>>(s_degree_x / 2));
     auto const dom_derivs = ddc::replace_dim_of<DDim<I, I>, ddc::Deriv<I>>(dom_vals, derivs_domain);
 #endif
 

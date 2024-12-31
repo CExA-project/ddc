@@ -130,8 +130,8 @@ void PeriodicitySplineBuilderTest()
     dims_initializer(ncells);
 
     // Create the values domain (mesh)
-    ddc::DiscreteDomain<DDim<X>> const dom_vals = ddc::DiscreteDomain<DDim<X>>(
-            GrevillePoints<BSplines<X>>::template get_domain<DDim<X>>());
+    ddc::DiscreteDomain<DDim<X>> const dom_vals
+            = GrevillePoints<BSplines<X>>::template get_domain<DDim<X>>();
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
     ddc::SplineBuilder<

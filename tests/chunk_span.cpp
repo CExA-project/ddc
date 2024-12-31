@@ -94,7 +94,8 @@ TEST(ChunkSpan2DTest, CtorNonContiguousLayoutRightKokkosView)
 TEST(ChunkSpan2DTest, CtorLayoutStrideKokkosView)
 {
     Kokkos::View<int***, Kokkos::LayoutRight> const view("view", 3, 4, 5);
-    auto const subview = Kokkos::subview(view, Kokkos::ALL, Kokkos::ALL, 3);
+    Kokkos::View<int**, Kokkos::LayoutStride> const subview
+            = Kokkos::subview(view, Kokkos::ALL, Kokkos::ALL, 3);
     ddc::DiscreteDomain<DDimX, DDimY> const
             ddom_xy(ddc::DiscreteElement<DDimX, DDimY>(0, 0),
                     ddc::DiscreteVector<DDimX, DDimY>(subview.extent(0), subview.extent(1)));

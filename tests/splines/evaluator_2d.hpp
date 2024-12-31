@@ -37,7 +37,7 @@ struct Evaluator2D
         template <class DDim1, class DDim2>
         void operator()(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim1, DDim2>> chunk) const
         {
-            auto const& domain = chunk.domain();
+            ddc::DiscreteDomain<DDim1, DDim2> const domain = chunk.domain();
 
             for (ddc::DiscreteElement<DDim1> const i : ddc::DiscreteDomain<DDim1>(domain)) {
                 for (ddc::DiscreteElement<DDim2> const j : ddc::DiscreteDomain<DDim2>(domain)) {
@@ -71,7 +71,7 @@ struct Evaluator2D
                 int const derivative_x,
                 int const derivative_y) const
         {
-            auto const& domain = chunk.domain();
+            ddc::DiscreteDomain<DDim1, DDim2> const domain = chunk.domain();
 
             for (ddc::DiscreteElement<DDim1> const i : ddc::DiscreteDomain<DDim1>(domain)) {
                 for (ddc::DiscreteElement<DDim2> const j : ddc::DiscreteDomain<DDim2>(domain)) {

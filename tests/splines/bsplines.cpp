@@ -58,8 +58,8 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityUniform)
     using DimX = typename TestFixture::DimX;
     using BSplinesX = typename TestFixture::UBSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
-    static constexpr CoordX xmin = CoordX(0.0);
-    static constexpr CoordX xmax = CoordX(0.2);
+    static constexpr CoordX xmin(0.0);
+    static constexpr CoordX xmax(0.2);
     static constexpr std::size_t ncells = TestFixture::ncells;
     ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
 
@@ -87,8 +87,8 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityNonUniform)
     using DimX = typename TestFixture::DimX;
     using BSplinesX = typename TestFixture::NUBSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
-    static constexpr CoordX xmin = CoordX(0.0);
-    static constexpr CoordX xmax = CoordX(0.2);
+    static constexpr CoordX xmin(0.0);
+    static constexpr CoordX xmax(0.2);
     static constexpr std::size_t ncells = TestFixture::ncells;
     std::vector<CoordX> breaks(ncells + 1);
     double dx = (xmax - xmin) / ncells;
@@ -139,8 +139,8 @@ TYPED_TEST(BSplinesFixture, RoundingNonUniform)
     using DimX = typename TestFixture::DimX;
     using BSplinesX = typename TestFixture::NUBSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
-    static constexpr CoordX xmin = CoordX(0.0);
-    static constexpr CoordX xmax = CoordX(0.2);
+    static constexpr CoordX xmin(0.0);
+    static constexpr CoordX xmax(0.2);
     static constexpr std::size_t ncells = TestFixture::ncells;
     std::vector<CoordX> breaks(ncells + 1);
     double const dx = (xmax - xmin) / ncells;
@@ -173,8 +173,8 @@ TYPED_TEST(BSplinesFixture, RoundingUniform)
     using DimX = typename TestFixture::DimX;
     using BSplinesX = typename TestFixture::UBSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
-    static constexpr CoordX xmin = CoordX(0.0);
-    static constexpr CoordX xmax = CoordX(0.2);
+    static constexpr CoordX xmin(0.0);
+    static constexpr CoordX xmax(0.2);
     static constexpr std::size_t ncells = TestFixture::ncells;
     ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
 

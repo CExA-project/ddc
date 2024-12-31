@@ -224,14 +224,15 @@ void Batched2dSplineTest()
 
     // Create the values domain (mesh)
 #if defined(BC_HERMITE)
-    auto interpolation_domain1 = ddc::DiscreteDomain<DDim<I1, I1, I2>>(
-            GrevillePoints<BSplines<I1>>::template get_domain<DDim<I1, I1, I2>>());
-    auto interpolation_domain2 = ddc::DiscreteDomain<DDim<I2, I1, I2>>(
-            GrevillePoints<BSplines<I2>>::template get_domain<DDim<I2, I1, I2>>());
+    ddc::DiscreteDomain<DDim<I1, I1, I2>> const interpolation_domain1
+            = GrevillePoints<BSplines<I1>>::template get_domain<DDim<I1, I1, I2>>();
+    ddc::DiscreteDomain<DDim<I2, I1, I2>> const interpolation_domain2
+            = GrevillePoints<BSplines<I2>>::template get_domain<DDim<I2, I1, I2>>();
 #endif
-    auto interpolation_domain = ddc::DiscreteDomain<DDim<I1, I1, I2>, DDim<I2, I1, I2>>(
+    ddc::DiscreteDomain<DDim<I1, I1, I2>, DDim<I2, I1, I2>> const interpolation_domain(
             GrevillePoints<BSplines<I1>>::template get_domain<DDim<I1, I1, I2>>(),
             GrevillePoints<BSplines<I2>>::template get_domain<DDim<I2, I1, I2>>());
+    // If we remove auto using the constructor syntax, nvcc does not compile
     auto const dom_vals_tmp = ddc::DiscreteDomain<DDim<X, void, void>...>(
             ddc::DiscreteDomain<DDim<
                     X,
@@ -246,12 +247,12 @@ void Batched2dSplineTest()
 
 #if defined(BC_HERMITE)
     // Create the derivs domain
-    ddc::DiscreteDomain<ddc::Deriv<I1>> const derivs_domain1 = ddc::DiscreteDomain<
-            ddc::Deriv<I1>>(Index<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(s_degree / 2));
-    ddc::DiscreteDomain<ddc::Deriv<I2>> const derivs_domain2 = ddc::DiscreteDomain<
-            ddc::Deriv<I2>>(Index<ddc::Deriv<I2>>(1), DVect<ddc::Deriv<I2>>(s_degree / 2));
-    ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>> const derivs_domain
-            = ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>>(derivs_domain1, derivs_domain2);
+    ddc::DiscreteDomain<ddc::Deriv<I1>> const
+            derivs_domain1(Index<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(s_degree / 2));
+    ddc::DiscreteDomain<ddc::Deriv<I2>> const
+            derivs_domain2(Index<ddc::Deriv<I2>>(1), DVect<ddc::Deriv<I2>>(s_degree / 2));
+    ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>> const
+            derivs_domain(derivs_domain1, derivs_domain2);
 
     auto const dom_derivs_1d
             = ddc::replace_dim_of<DDim<I1, I1, I2>, ddc::Deriv<I1>>(dom_vals, derivs_domain1);

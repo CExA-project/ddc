@@ -80,16 +80,16 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     using execution_space = Kokkos::DefaultExecutionSpace;
     using memory_space = execution_space::memory_space;
 
-    CoordX constexpr x0(0.);
-    CoordX constexpr xN(1.);
-    std::size_t constexpr ncells = 10;
+    CoordX const x0(0.);
+    CoordX const xN(1.);
+    std::size_t const ncells = 10;
 
     // 1. Create BSplines
     {
 #if defined(BSPLINES_TYPE_UNIFORM)
         ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        DVectX constexpr npoints(ncells + 1);
+        DVectX const npoints(ncells + 1);
         std::vector<CoordX> breaks(npoints);
         double const dx = (xN - x0) / ncells;
         for (int i(0); i < npoints; ++i) {
@@ -132,7 +132,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             yvals.domain(),
             KOKKOS_LAMBDA(IndexX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
 
-    int constexpr shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
+    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_lhs_alloc(derivs_domain, ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {

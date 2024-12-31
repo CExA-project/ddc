@@ -58,16 +58,16 @@ void TestPeriodicSplineBuilderTestIdentity()
     using execution_space = Kokkos::DefaultExecutionSpace;
     using memory_space = execution_space::memory_space;
 
-    CoordX constexpr x0(0.);
-    CoordX constexpr xN(1.);
-    std::size_t constexpr ncells = 10;
+    CoordX const x0(0.);
+    CoordX const xN(1.);
+    std::size_t const ncells = 10;
 
     // 1. Create BSplines
     {
 #if defined(BSPLINES_TYPE_UNIFORM)
         ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        DVectX constexpr npoints(ncells + 1);
+        DVectX const npoints(ncells + 1);
         std::vector<CoordX> breaks(npoints);
         double const dx = (xN - x0) / ncells;
         for (int i(0); i < npoints; ++i) {

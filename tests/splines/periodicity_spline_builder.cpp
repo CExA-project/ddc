@@ -57,7 +57,7 @@ template <typename DDimX>
 using evaluator_type = CosineEvaluator::Evaluator<DDimX>;
 
 template <typename... DDimX>
-using Index = ddc::DiscreteElement<DDimX...>;
+using DElem = ddc::DiscreteElement<DDimX...>;
 template <typename... DDimX>
 using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
@@ -139,9 +139,7 @@ void PeriodicitySplineBuilderTest()
     ddc::DiscreteDomain<BSplines<X>> const dom_bsplines = spline_builder.spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals_host_alloc(
-            dom_vals,
-            ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
+    ddc::Chunk vals_host_alloc(dom_vals, ddc::HostAllocator<double>());
     ddc::ChunkSpan const vals_host = vals_host_alloc.span_view();
     evaluator_type<DDim<X>> const evaluator(dom_vals);
     evaluator(vals_host);
@@ -172,7 +170,7 @@ void PeriodicitySplineBuilderTest()
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
-            KOKKOS_LAMBDA(Index<DDim<X>> const e) {
+            KOKKOS_LAMBDA(DElem<DDim<X>> const e) {
                 coords_eval(e) = ddc::coordinate(e) + Coord<X>(1.5);
             }); // Translate function 1.5x domain width to the right.
 
@@ -190,7 +188,7 @@ void PeriodicitySplineBuilderTest()
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(Index<DDim<X>> const e) {
+            KOKKOS_LAMBDA(DElem<DDim<X>> const e) {
                 return Kokkos::abs(
                         spline_eval(e)
                         - (-vals(e))); // Because function is even, we get f_eval = -f

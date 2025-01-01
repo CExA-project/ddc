@@ -66,9 +66,8 @@ using evaluator_type = CosineEvaluator::Evaluator<DDimX>;
 using evaluator_type = PolynomialEvaluator::Evaluator<DDimX, s_degree_x>;
 #endif
 
-using IndexX = ddc::DiscreteElement<DDimX>;
+using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
-using BsplIndexX = ddc::DiscreteElement<BSplinesX>;
 using SplineX = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX>>;
 using FieldX = ddc::Chunk<double, ddc::DiscreteDomain<DDimX>>;
 using CoordX = ddc::Coordinate<DimX>;
@@ -130,7 +129,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::parallel_for_each(
             execution_space(),
             yvals.domain(),
-            KOKKOS_LAMBDA(IndexX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
+            KOKKOS_LAMBDA(DElemX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
 
     int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_lhs_alloc(derivs_domain, ddc::KokkosAllocator<double, memory_space>());
@@ -187,7 +186,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::parallel_for_each(
             execution_space(),
             interpolation_domain,
-            KOKKOS_LAMBDA(IndexX const ix) { coords_eval(ix) = ddc::coordinate(ix); });
+            KOKKOS_LAMBDA(DElemX const ix) { coords_eval(ix) = ddc::coordinate(ix); });
 
     ddc::Chunk
             spline_eval_alloc(interpolation_domain, ddc::KokkosAllocator<double, memory_space>());
@@ -269,7 +268,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             interpolation_domain,
             0.0,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(IndexX const ix) {
+            KOKKOS_LAMBDA(DElemX const ix) {
                 double const error = spline_eval(ix) - yvals(ix);
                 return Kokkos::fabs(error);
             });
@@ -278,7 +277,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             interpolation_domain,
             0.0,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(IndexX const ix) {
+            KOKKOS_LAMBDA(DElemX const ix) {
                 CoordX const x = ddc::coordinate(ix);
                 double const error_deriv = spline_eval_deriv(ix) - evaluator.deriv(x, 1);
                 return Kokkos::fabs(error_deriv);

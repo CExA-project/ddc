@@ -125,7 +125,7 @@ using evaluator_type = Evaluator2D::Evaluator<
 #endif
 
 template <typename... DDimX>
-using Index = ddc::DiscreteElement<DDimX...>;
+using DElem = ddc::DiscreteElement<DDimX...>;
 template <typename... DDimX>
 using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
@@ -220,21 +220,18 @@ void Batched2dSplineTest()
     batch_dims_initializer(ncells);
 
     // Create the values domain (mesh)
-#if defined(BC_HERMITE)
     ddc::DiscreteDomain<DDim<I1, I1, I2>> const interpolation_domain1
             = GrevillePoints<BSplines<I1>>::template get_domain<DDim<I1, I1, I2>>();
     ddc::DiscreteDomain<DDim<I2, I1, I2>> const interpolation_domain2
             = GrevillePoints<BSplines<I2>>::template get_domain<DDim<I2, I1, I2>>();
-#endif
-    ddc::DiscreteDomain<DDim<I1, I1, I2>, DDim<I2, I1, I2>> const interpolation_domain(
-            GrevillePoints<BSplines<I1>>::template get_domain<DDim<I1, I1, I2>>(),
-            GrevillePoints<BSplines<I2>>::template get_domain<DDim<I2, I1, I2>>());
+    ddc::DiscreteDomain<DDim<I1, I1, I2>, DDim<I2, I1, I2>> const
+            interpolation_domain(interpolation_domain1, interpolation_domain2);
     // If we remove auto using the constructor syntax, nvcc does not compile
     auto const dom_vals_tmp = ddc::DiscreteDomain<DDim<X, void, void>...>(
             ddc::DiscreteDomain<DDim<
                     X,
                     void,
-                    void>>(Index<DDim<X, void, void>>(0), DVect<DDim<X, void, void>>(ncells))...);
+                    void>>(DElem<DDim<X, void, void>>(0), DVect<DDim<X, void, void>>(ncells))...);
     ddc::DiscreteDomain<DDim<X, I1, I2>...> const dom_vals
             = ddc::replace_dim_of<DDim<I1, void, void>, DDim<I1, I1, I2>>(
                     ddc::replace_dim_of<
@@ -245,9 +242,9 @@ void Batched2dSplineTest()
 #if defined(BC_HERMITE)
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I1>> const
-            derivs_domain1(Index<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(s_degree / 2));
+            derivs_domain1(DElem<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(s_degree / 2));
     ddc::DiscreteDomain<ddc::Deriv<I2>> const
-            derivs_domain2(Index<ddc::Deriv<I2>>(1), DVect<ddc::Deriv<I2>>(s_degree / 2));
+            derivs_domain2(DElem<ddc::Deriv<I2>>(1), DVect<ddc::Deriv<I2>>(s_degree / 2));
     ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>> const
             derivs_domain(derivs_domain1, derivs_domain2);
 
@@ -280,9 +277,7 @@ void Batched2dSplineTest()
     auto const dom_spline = spline_builder.batched_spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals_1d_host_alloc(
-            dom_interpolation,
-            ddc::KokkosAllocator<double, Kokkos::DefaultHostExecutionSpace::memory_space>());
+    ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
     ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
     evaluator_type<DDim<I1, I1, I2>, DDim<I2, I1, I2>> const evaluator(dom_interpolation);
     evaluator(vals_1d_host);
@@ -294,8 +289,8 @@ void Batched2dSplineTest()
     ddc::parallel_for_each(
             exec_space,
             vals.domain(),
-            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
-                vals(e) = vals_1d(Index<DDim<I1, I1, I2>, DDim<I2, I1, I2>>(e));
+            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
+                vals(e) = vals_1d(DElem<DDim<I1, I1, I2>, DDim<I2, I1, I2>>(e));
             });
 
 #if defined(BC_HERMITE)
@@ -327,7 +322,7 @@ void Batched2dSplineTest()
                 derivs_1d_lhs.domain(),
                 KOKKOS_LAMBDA(
                         typename decltype(derivs_1d_lhs.domain())::discrete_element_type const e) {
-                    derivs_1d_lhs(e) = derivs_1d_lhs1(Index<ddc::Deriv<I1>, DDim<I2, I1, I2>>(e));
+                    derivs_1d_lhs(e) = derivs_1d_lhs1(DElem<ddc::Deriv<I1>, DDim<I2, I1, I2>>(e));
                 });
     }
 
@@ -357,7 +352,7 @@ void Batched2dSplineTest()
                 derivs_1d_rhs.domain(),
                 KOKKOS_LAMBDA(
                         typename decltype(derivs_1d_rhs.domain())::discrete_element_type const e) {
-                    derivs_1d_rhs(e) = derivs_1d_rhs1(Index<ddc::Deriv<I1>, DDim<I2, I1, I2>>(e));
+                    derivs_1d_rhs(e) = derivs_1d_rhs1(DElem<ddc::Deriv<I1>, DDim<I2, I1, I2>>(e));
                 });
     }
 
@@ -386,7 +381,7 @@ void Batched2dSplineTest()
                 derivs2_lhs.domain(),
                 KOKKOS_LAMBDA(
                         typename decltype(derivs2_lhs.domain())::discrete_element_type const e) {
-                    derivs2_lhs(e) = derivs2_lhs1(Index<DDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
+                    derivs2_lhs(e) = derivs2_lhs1(DElem<DDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
                 });
     }
 
@@ -415,7 +410,7 @@ void Batched2dSplineTest()
                 derivs2_rhs.domain(),
                 KOKKOS_LAMBDA(
                         typename decltype(derivs2_rhs.domain())::discrete_element_type const e) {
-                    derivs2_rhs(e) = derivs2_rhs1(Index<DDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
+                    derivs2_rhs(e) = derivs2_rhs1(DElem<DDim<I1, I1, I2>, ddc::Deriv<I2>>(e));
                 });
     }
 
@@ -480,13 +475,13 @@ void Batched2dSplineTest()
                 dom_derivs,
                 KOKKOS_LAMBDA(typename decltype(dom_derivs)::discrete_element_type const e) {
                     derivs_mixed_lhs_lhs(e)
-                            = derivs_mixed_lhs_lhs1(Index<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                            = derivs_mixed_lhs_lhs1(DElem<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
                     derivs_mixed_rhs_lhs(e)
-                            = derivs_mixed_rhs_lhs1(Index<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                            = derivs_mixed_rhs_lhs1(DElem<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
                     derivs_mixed_lhs_rhs(e)
-                            = derivs_mixed_lhs_rhs1(Index<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                            = derivs_mixed_lhs_rhs1(DElem<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
                     derivs_mixed_rhs_rhs(e)
-                            = derivs_mixed_rhs_rhs1(Index<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
+                            = derivs_mixed_rhs_rhs1(DElem<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
                 });
     }
 #endif
@@ -511,14 +506,18 @@ void Batched2dSplineTest()
 #else
     spline_builder(coef, vals.span_cview());
 #endif
+
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
 #if defined(BC_PERIODIC)
-    ddc::PeriodicExtrapolationRule<I1> const extrapolation_rule_1;
-    ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_2;
+    using extrapolation_rule_1_type = ddc::PeriodicExtrapolationRule<I1>;
+    using extrapolation_rule_2_type = ddc::PeriodicExtrapolationRule<I2>;
 #else
-    ddc::NullExtrapolationRule const extrapolation_rule_1;
-    ddc::NullExtrapolationRule const extrapolation_rule_2;
+    using extrapolation_rule_1_type = ddc::NullExtrapolationRule;
+    using extrapolation_rule_2_type = ddc::NullExtrapolationRule;
 #endif
+    extrapolation_rule_1_type const extrapolation_rule_1;
+    extrapolation_rule_2_type const extrapolation_rule_2;
+
     ddc::SplineEvaluator2D<
             ExecSpace,
             MemorySpace,
@@ -526,17 +525,10 @@ void Batched2dSplineTest()
             BSplines<I2>,
             DDim<I1, I1, I2>,
             DDim<I2, I1, I2>,
-#if defined(BC_PERIODIC)
-            ddc::PeriodicExtrapolationRule<I1>,
-            ddc::PeriodicExtrapolationRule<I1>,
-            ddc::PeriodicExtrapolationRule<I2>,
-            ddc::PeriodicExtrapolationRule<I2>,
-#else
-            ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
-#endif
+            extrapolation_rule_1_type,
+            extrapolation_rule_1_type,
+            extrapolation_rule_2_type,
+            extrapolation_rule_2_type,
             DDim<X, I1, I2>...> const
             spline_evaluator(
                     extrapolation_rule_1,
@@ -550,7 +542,7 @@ void Batched2dSplineTest()
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
-            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
+            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);
             });
 
@@ -581,7 +573,7 @@ void Batched2dSplineTest()
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
+            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
     double const max_norm_error_diff1 = ddc::parallel_transform_reduce(
@@ -589,9 +581,9 @@ void Batched2dSplineTest()
             spline_eval_deriv1.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
-                Coord<I1> const x = ddc::coordinate(Index<DDim<I1, I1, I2>>(e));
-                Coord<I2> const y = ddc::coordinate(Index<DDim<I2, I1, I2>>(e));
+            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
+                Coord<I1> const x = ddc::coordinate(DElem<DDim<I1, I1, I2>>(e));
+                Coord<I2> const y = ddc::coordinate(DElem<DDim<I2, I1, I2>>(e));
                 return Kokkos::abs(spline_eval_deriv1(e) - evaluator.deriv(x, y, 1, 0));
             });
     double const max_norm_error_diff2 = ddc::parallel_transform_reduce(
@@ -599,9 +591,9 @@ void Batched2dSplineTest()
             spline_eval_deriv2.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
-                Coord<I1> const x = ddc::coordinate(Index<DDim<I1, I1, I2>>(e));
-                Coord<I2> const y = ddc::coordinate(Index<DDim<I2, I1, I2>>(e));
+            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
+                Coord<I1> const x = ddc::coordinate(DElem<DDim<I1, I1, I2>>(e));
+                Coord<I2> const y = ddc::coordinate(DElem<DDim<I2, I1, I2>>(e));
                 return Kokkos::abs(spline_eval_deriv2(e) - evaluator.deriv(x, y, 0, 1));
             });
     double const max_norm_error_diff12 = ddc::parallel_transform_reduce(
@@ -609,9 +601,9 @@ void Batched2dSplineTest()
             spline_eval_deriv1.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
-                Coord<I1> const x = ddc::coordinate(Index<DDim<I1, I1, I2>>(e));
-                Coord<I2> const y = ddc::coordinate(Index<DDim<I2, I1, I2>>(e));
+            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
+                Coord<I1> const x = ddc::coordinate(DElem<DDim<I1, I1, I2>>(e));
+                Coord<I2> const y = ddc::coordinate(DElem<DDim<I2, I1, I2>>(e));
                 return Kokkos::abs(spline_eval_deriv12(e) - evaluator.deriv(x, y, 1, 1));
             });
 

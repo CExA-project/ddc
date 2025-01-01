@@ -210,7 +210,6 @@ template <typename ExecSpace, typename MemorySpace, typename I1, typename I2, ty
 void Batched2dSplineTest()
 {
     // Instantiate execution spaces and initialize spaces
-    Kokkos::DefaultHostExecutionSpace const host_exec_space;
     ExecSpace const exec_space;
     std::size_t const ncells = 10;
     InterestDimInitializer<DDim<I1, I1, I2>>(ncells);

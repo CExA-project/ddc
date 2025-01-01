@@ -205,7 +205,6 @@ template <typename ExecSpace, typename MemorySpace, typename I, typename... X>
 void BatchedSplineTest()
 {
     // Instantiate execution spaces and initialize spaces
-    Kokkos::DefaultHostExecutionSpace const host_exec_space;
     ExecSpace const exec_space;
 
     std::size_t const ncells = 10;

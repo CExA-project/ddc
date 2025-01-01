@@ -57,7 +57,7 @@ template <typename DDimX>
 using evaluator_type = CosineEvaluator::Evaluator<DDimX>;
 
 template <typename... DDimX>
-using Index = ddc::DiscreteElement<DDimX...>;
+using DElem = ddc::DiscreteElement<DDimX...>;
 template <typename... DDimX>
 using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
@@ -172,7 +172,7 @@ void PeriodicitySplineBuilderTest()
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
-            KOKKOS_LAMBDA(Index<DDim<X>> const e) {
+            KOKKOS_LAMBDA(DElem<DDim<X>> const e) {
                 coords_eval(e) = ddc::coordinate(e) + Coord<X>(1.5);
             }); // Translate function 1.5x domain width to the right.
 
@@ -190,7 +190,7 @@ void PeriodicitySplineBuilderTest()
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(Index<DDim<X>> const e) {
+            KOKKOS_LAMBDA(DElem<DDim<X>> const e) {
                 return Kokkos::abs(
                         spline_eval(e)
                         - (-vals(e))); // Because function is even, we get f_eval = -f

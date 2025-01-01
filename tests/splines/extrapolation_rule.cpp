@@ -113,7 +113,7 @@ using evaluator_type = Evaluator2D::Evaluator<
 #endif
 
 template <typename... DDimX>
-using Index = ddc::DiscreteElement<DDimX...>;
+using DElem = ddc::DiscreteElement<DDimX...>;
 template <typename... DDimX>
 using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
@@ -216,7 +216,7 @@ void ExtrapolationRuleSplineTest()
             ddc::DiscreteDomain<DDim<
                     X,
                     void,
-                    void>>(Index<DDim<X, void, void>>(0), DVect<DDim<X, void, void>>(ncells))...);
+                    void>>(DElem<DDim<X, void, void>>(0), DVect<DDim<X, void, void>>(ncells))...);
     ddc::DiscreteDomain<DDim<X, I1, I2>...> const dom_vals
             = ddc::replace_dim_of<DDim<I1, void, void>, DDim<I1, I1, I2>>(
                     ddc::replace_dim_of<
@@ -259,8 +259,8 @@ void ExtrapolationRuleSplineTest()
     ddc::parallel_for_each(
             exec_space,
             vals.domain(),
-            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
-                vals(e) = vals_1d(Index<DDim<I1, I1, I2>, DDim<I2, I1, I2>>(e));
+            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
+                vals(e) = vals_1d(DElem<DDim<I1, I1, I2>, DDim<I2, I1, I2>>(e));
             });
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
@@ -272,32 +272,38 @@ void ExtrapolationRuleSplineTest()
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
 #if defined(ER_NULL)
-    ddc::NullExtrapolationRule const extrapolation_rule_left_dim_1;
-    ddc::NullExtrapolationRule const extrapolation_rule_right_dim_1;
+    using extrapolation_rule_dim_1_type = ddc::NullExtrapolationRule;
+    extrapolation_rule_dim_1_type const extrapolation_rule_left_dim_1;
+    extrapolation_rule_dim_1_type const extrapolation_rule_right_dim_1;
 #if defined(BC_PERIODIC)
-    ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_left_dim_2;
-    ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_right_dim_2;
+    using extrapolation_rule_dim_2_type = ddc::PeriodicExtrapolationRule<I2>;
+    extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2;
+    extrapolation_rule_dim_2_type const extrapolation_rule_right_dim_2;
 #else
-    ddc::NullExtrapolationRule const extrapolation_rule_left_dim_2;
-    ddc::NullExtrapolationRule const extrapolation_rule_right_dim_2;
+    using extrapolation_rule_dim_2_type = ddc::NullExtrapolationRule;
+    extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2;
+    extrapolation_rule_dim_2_type const extrapolation_rule_right_dim_2;
 #endif
 #elif defined(ER_CONSTANT)
 #if defined(BC_PERIODIC)
-    ddc::ConstantExtrapolationRule<I1, I2> const extrapolation_rule_left_dim_1(x0<I1>());
-    ddc::ConstantExtrapolationRule<I1, I2> const extrapolation_rule_right_dim_1(xN<I1>());
-    ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_left_dim_2;
-    ddc::PeriodicExtrapolationRule<I2> const extrapolation_rule_right_dim_2;
+    using extrapolation_rule_dim_1_type = ddc::ConstantExtrapolationRule<I1, I2>;
+    using extrapolation_rule_dim_2_type = ddc::PeriodicExtrapolationRule<I2>;
+    extrapolation_rule_dim_1_type const extrapolation_rule_left_dim_1(x0<I1>());
+    extrapolation_rule_dim_1_type const extrapolation_rule_right_dim_1(xN<I1>());
+    extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2;
+    extrapolation_rule_dim_2_type const extrapolation_rule_right_dim_2;
 #else
-    ddc::ConstantExtrapolationRule<I1, I2> const
-            extrapolation_rule_left_dim_1(x0<I1>(), x0<I2>(), xN<I2>());
-    ddc::ConstantExtrapolationRule<I1, I2> const
+    using extrapolation_rule_dim_1_type = ddc::ConstantExtrapolationRule<I1, I2>;
+    using extrapolation_rule_dim_2_type = ddc::ConstantExtrapolationRule<I2, I1>;
+    extrapolation_rule_dim_1_type const extrapolation_rule_left_dim_1(x0<I1>(), x0<I2>(), xN<I2>());
+    extrapolation_rule_dim_1_type const
             extrapolation_rule_right_dim_1(xN<I1>(), x0<I2>(), xN<I2>());
-    ddc::ConstantExtrapolationRule<I2, I1> const
-            extrapolation_rule_left_dim_2(x0<I2>(), x0<I1>(), xN<I1>());
-    ddc::ConstantExtrapolationRule<I2, I1> const
+    extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2(x0<I2>(), x0<I1>(), xN<I1>());
+    extrapolation_rule_dim_2_type const
             extrapolation_rule_right_dim_2(xN<I2>(), x0<I1>(), xN<I1>());
 #endif
 #endif
+
     ddc::SplineEvaluator2D<
             ExecSpace,
             MemorySpace,
@@ -305,26 +311,10 @@ void ExtrapolationRuleSplineTest()
             BSplines<I2>,
             DDim<I1, I1, I2>,
             DDim<I2, I1, I2>,
-#if defined(ER_NULL)
-            ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
-#elif defined(ER_CONSTANT)
-            ddc::ConstantExtrapolationRule<I1, I2>,
-            ddc::ConstantExtrapolationRule<I1, I2>,
-#endif
-#if defined(BC_PERIODIC)
-            ddc::PeriodicExtrapolationRule<I2>,
-            ddc::PeriodicExtrapolationRule<I2>,
-#else
-#if defined(ER_NULL)
-            ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
-#elif defined(ER_CONSTANT)
-            ddc::ConstantExtrapolationRule<I2, I1>,
-            ddc::ConstantExtrapolationRule<I2, I1>,
-#endif
-#endif
-
+            extrapolation_rule_dim_1_type,
+            extrapolation_rule_dim_1_type,
+            extrapolation_rule_dim_2_type,
+            extrapolation_rule_dim_2_type,
             DDim<X, I1, I2>...> const
             spline_evaluator_batched(
                     extrapolation_rule_left_dim_1,
@@ -338,7 +328,7 @@ void ExtrapolationRuleSplineTest()
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
-            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
+            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
                 coords_eval(e) = ddc::coordinate(e);
                 // Set coords_eval outside of the domain (+1 to ensure left bound is outside domain)
                 ddc::get<I1>(coords_eval(e))
@@ -363,7 +353,7 @@ void ExtrapolationRuleSplineTest()
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(Index<DDim<X, I1, I2>...> const e) {
+            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
 #if defined(ER_NULL)
                 return Kokkos::abs(spline_eval(e));
 #elif defined(ER_CONSTANT)

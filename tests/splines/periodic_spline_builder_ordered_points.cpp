@@ -28,9 +28,8 @@ struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
 
-using IndexX = ddc::DiscreteElement<DDimX>;
+using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
-using BsplIndexX = ddc::DiscreteElement<BSplinesX>;
 using SplineX = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX>>;
 using FieldX = ddc::Chunk<double, ddc::DiscreteDomain<DDimX>>;
 using CoordX = ddc::Coordinate<DimX>;
@@ -54,7 +53,7 @@ TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
 
     double last(ddc::coordinate(interpolation_domain.front()));
     double current;
-    for (IndexX const ix : interpolation_domain) {
+    for (DElemX const ix : interpolation_domain) {
         current = ddc::coordinate(ix);
         EXPECT_LE(current, ddc::discrete_space<BSplinesX>().rmax());
         EXPECT_GE(current, ddc::discrete_space<BSplinesX>().rmin());

@@ -46,9 +46,8 @@ struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 
 using evaluator_type = CosineEvaluator::Evaluator<DDimX>;
 
-using IndexX = ddc::DiscreteElement<DDimX>;
+using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
-using BsplIndexX = ddc::DiscreteElement<BSplinesX>;
 using CoordX = ddc::Coordinate<DimX>;
 
 // Checks that when evaluating the spline at interpolation points one
@@ -105,7 +104,7 @@ void TestPeriodicSplineBuilderTestIdentity()
     ddc::parallel_for_each(
             execution_space(),
             yvals.domain(),
-            KOKKOS_LAMBDA(IndexX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
+            KOKKOS_LAMBDA(DElemX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
 
     // 6. Finally build the spline by filling `coef`
     spline_builder(coef.span_view(), yvals.span_cview());
@@ -127,7 +126,7 @@ void TestPeriodicSplineBuilderTestIdentity()
     ddc::parallel_for_each(
             execution_space(),
             interpolation_domain,
-            KOKKOS_LAMBDA(IndexX const ix) { coords_eval(ix) = ddc::coordinate(ix); });
+            KOKKOS_LAMBDA(DElemX const ix) { coords_eval(ix) = ddc::coordinate(ix); });
 
     ddc::Chunk
             spline_eval_alloc(interpolation_domain, ddc::KokkosAllocator<double, memory_space>());
@@ -155,7 +154,7 @@ void TestPeriodicSplineBuilderTestIdentity()
             quadrature_coefficients.domain(),
             0.0,
             ddc::reducer::sum<double>(),
-            KOKKOS_LAMBDA(IndexX const ix) { return quadrature_coefficients(ix) * yvals(ix); });
+            KOKKOS_LAMBDA(DElemX const ix) { return quadrature_coefficients(ix) * yvals(ix); });
 
     // 8. Checking errors
     double const max_norm_error = ddc::parallel_transform_reduce(
@@ -163,7 +162,7 @@ void TestPeriodicSplineBuilderTestIdentity()
             interpolation_domain,
             0.0,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(IndexX const ix) {
+            KOKKOS_LAMBDA(DElemX const ix) {
                 double const error = spline_eval(ix) - yvals(ix);
                 return Kokkos::fabs(error);
             });
@@ -172,7 +171,7 @@ void TestPeriodicSplineBuilderTestIdentity()
             interpolation_domain,
             0.0,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(IndexX const ix) {
+            KOKKOS_LAMBDA(DElemX const ix) {
                 CoordX const x = ddc::coordinate(ix);
                 double const error_deriv = spline_eval_deriv(ix) - evaluator.deriv(x, 1);
                 return Kokkos::fabs(error_deriv);

@@ -59,8 +59,10 @@ constexpr ddc::BoundCond s_bcr2 = ddc::BoundCond::GREVILLE;
 #endif
 
 template <typename BSpX>
-using GrevillePoints = ddc::
-        GrevilleInterpolationPoints<BSpX, ddc::BoundCond::GREVILLE, ddc::BoundCond::GREVILLE>;
+using GrevillePoints1 = ddc::GrevilleInterpolationPoints<BSpX, s_bcl1, s_bcr1>;
+
+template <typename BSpX>
+using GrevillePoints2 = ddc::GrevilleInterpolationPoints<BSpX, s_bcl2, s_bcr2>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
@@ -70,7 +72,11 @@ struct BSplines : ddc::UniformBSplines<X, s_degree>
 
 // Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
 template <typename X>
-struct DDimGPS : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
+struct DDimGPS1 : GrevillePoints1<BSplines<X>>::interpolation_discrete_dimension_type
+{
+};
+template <typename X>
+struct DDimGPS2 : GrevillePoints2<BSplines<X>>::interpolation_discrete_dimension_type
 {
 };
 template <typename X>
@@ -79,8 +85,10 @@ struct DDimPS : ddc::UniformPointSampling<X>
 };
 
 template <typename X, typename I1, typename I2>
-using DDim
-        = std::conditional_t<std::is_same_v<X, I1> || std::is_same_v<X, I2>, DDimGPS<X>, DDimPS<X>>;
+using DDim = std::conditional_t<
+        std::is_same_v<X, I1>,
+        DDimGPS1<X>,
+        std::conditional_t<std::is_same_v<X, I2>, DDimGPS2<X>, DDimPS<X>>>;
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
@@ -88,7 +96,11 @@ struct BSplines : ddc::NonUniformBSplines<X, s_degree>
 {
 };
 template <typename X>
-struct DDimGPS : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
+struct DDimGPS1 : GrevillePoints1<BSplines<X>>::interpolation_discrete_dimension_type
+{
+};
+template <typename X>
+struct DDimGPS2 : GrevillePoints2<BSplines<X>>::interpolation_discrete_dimension_type
 {
 };
 template <typename X>
@@ -97,8 +109,10 @@ struct DDimPS : ddc::NonUniformPointSampling<X>
 };
 
 template <typename X, typename I1, typename I2>
-using DDim
-        = std::conditional_t<std::is_same_v<X, I1> || std::is_same_v<X, I2>, DDimGPS<X>, DDimPS<X>>;
+using DDim = std::conditional_t<
+        std::is_same_v<X, I1>,
+        DDimGPS1<X>,
+        std::conditional_t<std::is_same_v<X, I2>, DDimGPS2<X>, DDimPS<X>>>;
 #endif
 
 #if defined(BC_PERIODIC)
@@ -164,7 +178,6 @@ void InterestDimInitializer(std::size_t const ncells)
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
-    ddc::init_discrete_space<DDim>(GrevillePoints<BSplines<CDim>>::template get_sampling<DDim>());
 }
 
 template <class DDim>
@@ -201,15 +214,19 @@ void ExtrapolationRuleSplineTest()
     ExecSpace const exec_space;
     std::size_t const ncells = 10;
     InterestDimInitializer<DDim<I1, I1, I2>>(ncells);
+    ddc::init_discrete_space<DDim<I1, I1, I2>>(
+            GrevillePoints1<BSplines<I1>>::template get_sampling<DDim<I1, I1, I2>>());
     InterestDimInitializer<DDim<I2, I1, I2>>(ncells);
+    ddc::init_discrete_space<DDim<I2, I1, I2>>(
+            GrevillePoints2<BSplines<I2>>::template get_sampling<DDim<I2, I1, I2>>());
     BatchDimsInitializerFn<BatchDims<DDim<I1, I1, I2>, DDim<I2, I1, I2>, DDim<X, I1, I2>...>> const
             batch_dims_initializer;
     batch_dims_initializer(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDim<I1, I1, I2>, DDim<I2, I1, I2>> const interpolation_domain(
-            GrevillePoints<BSplines<I1>>::template get_domain<DDim<I1, I1, I2>>(),
-            GrevillePoints<BSplines<I2>>::template get_domain<DDim<I2, I1, I2>>());
+            GrevillePoints1<BSplines<I1>>::template get_domain<DDim<I1, I1, I2>>(),
+            GrevillePoints2<BSplines<I2>>::template get_domain<DDim<I2, I1, I2>>());
     // If we remove auto using the constructor syntax, nvcc does not compile
     auto const dom_vals_tmp = ddc::DiscreteDomain<DDim<X, void, void>...>(
             ddc::DiscreteDomain<DDim<

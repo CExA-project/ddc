@@ -33,7 +33,9 @@ class SingleDiscretization : SingleDiscretizationBase
 public:
     using continuous_dimension_type = CDim;
 
-    using continuous_element_type = ddc::Coordinate<CDim>;
+    using continuous_element_type
+            [[deprecated("Use ddc::Coordinate<continuous_dimension_type> instead.")]]
+            = Coordinate<CDim>;
 
 
     using discrete_dimension_type = SingleDiscretization;
@@ -47,7 +49,7 @@ public:
 
     private:
         /// origin
-        continuous_element_type m_point;
+        Coordinate<CDim> m_point;
 
     public:
         using discrete_dimension_type = SingleDiscretization;
@@ -58,7 +60,7 @@ public:
 
         using discrete_vector_type = DiscreteVector<DDim>;
 
-        explicit Impl(continuous_element_type origin) noexcept : m_point(std::move(origin)) {}
+        explicit Impl(Coordinate<CDim> origin) noexcept : m_point(std::move(origin)) {}
 
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_point(impl.m_point)
@@ -75,13 +77,13 @@ public:
 
         Impl& operator=(Impl&& x) = default;
 
-        KOKKOS_FUNCTION continuous_element_type origin() const noexcept
+        KOKKOS_FUNCTION Coordinate<CDim> origin() const noexcept
         {
             return m_point;
         }
 
-        KOKKOS_FUNCTION continuous_element_type
-        coordinate([[maybe_unused]] discrete_element_type icoord) const noexcept
+        KOKKOS_FUNCTION Coordinate<CDim> coordinate(
+                [[maybe_unused]] discrete_element_type icoord) const noexcept
         {
             assert(icoord == discrete_element_type(0));
             return m_point;
@@ -105,9 +107,10 @@ std::ostream& operator<<(std::ostream& out, SingleDiscretization<Tag> const& dom
 
 /// @brief coordinate of the mesh
 template <class DDim>
-KOKKOS_FUNCTION std::
-        enable_if_t<is_single_discretization_v<DDim>, typename DDim::continuous_element_type>
-        origin() noexcept
+KOKKOS_FUNCTION std::enable_if_t<
+        is_single_discretization_v<DDim>,
+        Coordinate<typename DDim::continuous_dimension_type>>
+origin() noexcept
 {
     return discrete_space<DDim>().origin();
 }

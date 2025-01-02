@@ -40,7 +40,9 @@ class NonUniformPointSampling : detail::NonUniformPointSamplingBase
 public:
     using continuous_dimension_type = CDim;
 
-    using continuous_element_type = Coordinate<CDim>;
+    using continuous_element_type
+            [[deprecated("Use ddc::Coordinate<continuous_dimension_type> instead.")]]
+            = Coordinate<CDim>;
 
 
     using discrete_dimension_type = NonUniformPointSampling;
@@ -52,7 +54,7 @@ public:
         template <class ODDim, class OMemorySpace>
         friend class Impl;
 
-        Kokkos::View<continuous_element_type*, MemorySpace> m_points;
+        Kokkos::View<Coordinate<CDim>*, MemorySpace> m_points;
 
     public:
         using discrete_dimension_type = NonUniformPointSampling;
@@ -66,7 +68,7 @@ public:
         Impl() = default;
 
         /// @brief Construct a `NonUniformPointSampling` using a brace-list, i.e. `NonUniformPointSampling mesh({0., 1.})`
-        Impl(std::initializer_list<continuous_element_type> const points)
+        Impl(std::initializer_list<Coordinate<CDim>> const points)
             : Impl(points.begin(), points.end())
         {
         }
@@ -81,12 +83,12 @@ public:
         template <class InputIt>
         Impl(InputIt const points_begin, InputIt const points_end)
         {
-            using view_type = Kokkos::View<continuous_element_type*, MemorySpace>;
+            using view_type = Kokkos::View<Coordinate<CDim>*, MemorySpace>;
             if (!std::is_sorted(points_begin, points_end)) {
                 throw std::runtime_error("Input points must be sorted");
             }
             // Make a contiguous copy of [points_begin, points_end[
-            std::vector<continuous_element_type> host_points(points_begin, points_end);
+            std::vector<Coordinate<CDim>> host_points(points_begin, points_end);
             m_points = view_type("NonUniformPointSampling::points", host_points.size());
             Kokkos::deep_copy(m_points, view_type(host_points.data(), host_points.size()));
         }
@@ -119,8 +121,8 @@ public:
         }
 
         /// @brief Convert a mesh index into a position in `CDim`
-        KOKKOS_FUNCTION continuous_element_type
-        coordinate(discrete_element_type const& icoord) const noexcept
+        KOKKOS_FUNCTION Coordinate<CDim> coordinate(
+                discrete_element_type const& icoord) const noexcept
         {
             return m_points(icoord.uid());
         }

@@ -69,32 +69,14 @@ template <typename X>
 struct BSplines : ddc::UniformBSplines<X, s_degree>
 {
 };
-
-// Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
-template <typename X>
-struct DDimGPS1 : GrevillePoints1<BSplines<X>>::interpolation_discrete_dimension_type
-{
-};
-template <typename X>
-struct DDimGPS2 : GrevillePoints2<BSplines<X>>::interpolation_discrete_dimension_type
-{
-};
-template <typename X>
-struct DDimPS : ddc::UniformPointSampling<X>
-{
-};
-
-template <typename X, typename I1, typename I2>
-using DDim = std::conditional_t<
-        std::is_same_v<X, I1>,
-        DDimGPS1<X>,
-        std::conditional_t<std::is_same_v<X, I2>, DDimGPS2<X>, DDimPS<X>>>;
-
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
 struct BSplines : ddc::NonUniformBSplines<X, s_degree>
 {
 };
+#endif
+
+// In the dimensions of interest, the discrete dimension is deduced from the Greville points type.
 template <typename X>
 struct DDimGPS1 : GrevillePoints1<BSplines<X>>::interpolation_discrete_dimension_type
 {
@@ -103,17 +85,12 @@ template <typename X>
 struct DDimGPS2 : GrevillePoints2<BSplines<X>>::interpolation_discrete_dimension_type
 {
 };
-template <typename X>
-struct DDimPS : ddc::NonUniformPointSampling<X>
-{
-};
 
 template <typename X, typename I1, typename I2>
 using DDim = std::conditional_t<
         std::is_same_v<X, I1>,
         DDimGPS1<X>,
-        std::conditional_t<std::is_same_v<X, I2>, DDimGPS2<X>, DDimPS<X>>>;
-#endif
+        std::conditional_t<std::is_same_v<X, I2>, DDimGPS2<X>, X>>;
 
 #if defined(BC_PERIODIC)
 template <typename DDim1, typename DDim2>
@@ -180,31 +157,6 @@ void InterestDimInitializer(std::size_t const ncells)
 #endif
 }
 
-template <class DDim>
-void BatchDimInitializer(std::size_t const ncells)
-{
-    using CDim = typename DDim::continuous_dimension_type;
-#if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<DDim>(
-            DDim::template init<DDim>(x0<CDim>(), xN<CDim>(), DVect<DDim>(ncells)));
-#elif defined(BSPLINES_TYPE_NON_UNIFORM)
-    ddc::init_discrete_space<DDim>(breaks<CDim>(ncells));
-#endif
-}
-
-// Helper to initialize space
-template <class T>
-struct BatchDimsInitializerFn;
-
-template <class... DDims>
-struct BatchDimsInitializerFn<ddc::detail::TypeSeq<DDims...>>
-{
-    void operator()([[maybe_unused]] std::size_t const ncells) const
-    {
-        (BatchDimInitializer<DDims>(ncells), ...);
-    }
-};
-
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename I1, typename I2, typename... X>
@@ -219,9 +171,6 @@ void ExtrapolationRuleSplineTest()
     InterestDimInitializer<DDim<I2, I1, I2>>(ncells);
     ddc::init_discrete_space<DDim<I2, I1, I2>>(
             GrevillePoints2<BSplines<I2>>::template get_sampling<DDim<I2, I1, I2>>());
-    BatchDimsInitializerFn<BatchDims<DDim<I1, I1, I2>, DDim<I2, I1, I2>, DDim<X, I1, I2>...>> const
-            batch_dims_initializer;
-    batch_dims_initializer(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDim<I1, I1, I2>, DDim<I2, I1, I2>> const interpolation_domain(
@@ -337,20 +286,18 @@ void ExtrapolationRuleSplineTest()
                     extrapolation_rule_right_dim_2);
 
     // Instantiate chunk of coordinates of dom_interpolation
-    ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X...>, MemorySpace>());
+    ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<I1, I2>, MemorySpace>());
     ddc::ChunkSpan const coords_eval = coords_eval_alloc.span_view();
+    // Set coords_eval outside of the domain
+    // - I1: +1 to ensure left bound is outside domain
+    // - I2 this point should be found on the grid in the periodic case
+    Coord<I1, I2> const displ(xN<I1>() - x0<I1>() + 1, 2 * xN<I2>() - x0<I2>());
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
             KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
-                coords_eval(e) = ddc::coordinate(e);
-                // Set coords_eval outside of the domain (+1 to ensure left bound is outside domain)
-                ddc::get<I1>(coords_eval(e))
-                        = xN<I1>() + (Coord<I1>(ddc::coordinate(e)) - x0<I1>()) + 1;
-                // Set coords_eval outside of the domain (this point should be found on the grid in
-                // the periodic case)
-                ddc::get<I2>(coords_eval(e))
-                        = 2 * xN<I2>() + (Coord<I2>(ddc::coordinate(e)) - x0<I2>());
+                coords_eval(e)
+                        = ddc::coordinate(DElem<DDim<I1, I1, I2>, DDim<I2, I1, I2>>(e)) + displ;
             });
 
 

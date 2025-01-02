@@ -587,11 +587,10 @@ void SplineBuilder<
 {
     // Special case: linear spline
     // No need for matrix assembly
-    // (desactivated)
-    /*
-    if constexpr (bsplines_type::degree() == 1)
-        return;
-	*/
+    // (disabled)
+    // if constexpr (bsplines_type::degree() == 1) {
+    //     return;
+    // }
 
     if constexpr (Solver == ddc::SplineSolver::LAPACK) {
         int upper_band_width;

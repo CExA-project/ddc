@@ -37,18 +37,15 @@ public:
      *
      * The boundary value will be the same as at the coordinate eval_pos given.
      *
-     * @param[in] eval_pos
-     * 			Coordinate inside the domain where we will evaluate each points outside the domain.
+     * @param[in] eval_pos Coordinate inside the domain where we will evaluate each points outside the domain.
      */
     explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos) : m_eval_pos(eval_pos) {}
 
     /**
      * @brief Get the value of the function on B-splines at a coordinate outside the domain.
      *
-     * @param[in] pos
-     * 			The coordinate where we want to evaluate the function on B-splines.
-     * @param[in] spline_coef
-     *			The coefficients of the function on B-splines.
+     * @param[in] pos The coordinate where we want to evaluate the function on B-splines.
+     * @param[in] spline_coef The coefficients of the function on B-splines.
      *
      * @return A double with the value of the function on B-splines evaluated at the coordinate.
      */
@@ -99,13 +96,9 @@ public:
      * dimension off-interest (the complementary dimension of the boundary condition),
      * because the evaluator can receive coordinates outside the domain in both dimension.
      *
-     * @param[in] eval_pos
-     * 			Coordinate in the dimension given inside the domain where we will evaluate
-     * 			each points outside the domain.
-     * @param[in] eval_pos_not_interest_min
-     * 			The minimum coordinate inside the domain on the complementary dimension of the boundary condition.
-     * @param[in] eval_pos_not_interest_max
-     * 			The maximum coordinate inside the domain on the complementary dimension of the boundary condition.
+     * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.
+     * @param[in] eval_pos_not_interest_min The minimum coordinate inside the domain on the complementary dimension of the boundary condition.
+     * @param[in] eval_pos_not_interest_max The maximum coordinate inside the domain on the complementary dimension of the boundary condition.
      */
     explicit ConstantExtrapolationRule(
             ddc::Coordinate<DimI> eval_pos,
@@ -125,9 +118,7 @@ public:
      * No second and third parameters are needed in case of periodic splines on the
      * dimension off-interest (the complementary dimension of the boundary condition).
      *
-     * @param[in] eval_pos
-     * 			Coordinate in the dimension given inside the domain where we will evaluate
-     * 			each points outside the domain.
+     * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.
      */
     template <class DimNI_sfinae = DimNI, std::enable_if_t<DimNI_sfinae::PERIODIC, int> = 0>
     explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos)
@@ -147,10 +138,8 @@ public:
      * (if ddc::Coordinate<DimNI>(coord_extrap) @f$ < @f$ eval_pos_not_interest_min) or
      * at eval_pos_not_interest_max (if ddc::Coordinate<DimNI>(coord_extrap) @f$ > @f$ eval_pos_not_interest_max).
      *
-     * @param[in] coord_extrap
-     * 			The coordinates where we want to evaluate the function on B-splines
-     * @param[in] spline_coef
-     *			The coefficients of the function on B-splines.
+     * @param[in] coord_extrap The coordinates where we want to evaluate the function on B-splines
+     * @param[in] spline_coef The coefficients of the function on B-splines.
      *
      *@return A double with the value of the function on B-splines evaluated at the coordinate.
      */

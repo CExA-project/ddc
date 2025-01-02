@@ -404,7 +404,7 @@ void BatchedSplineTest()
     double const max_norm_diff = evaluator.max_norm(1);
     double const max_norm_int = evaluator.max_norm(-1);
 
-    SplineErrorBounds<evaluator_type<DDim<I, I>>> error_bounds(evaluator);
+    SplineErrorBounds<evaluator_type<DDim<I, I>>> const error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
             std::max(error_bounds.error_bound(dx<I>(ncells), s_degree_x), 1.0e-14 * max_norm));

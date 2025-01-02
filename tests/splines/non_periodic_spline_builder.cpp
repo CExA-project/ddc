@@ -301,7 +301,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
         EXPECT_LE(max_norm_error_integ / max_norm_int, 1.0e-14);
         EXPECT_LE(max_norm_error_quadrature_integ / max_norm_int, 1.0e-14);
     } else {
-        SplineErrorBounds<evaluator_type> error_bounds(evaluator);
+        SplineErrorBounds<evaluator_type> const error_bounds(evaluator);
         const double h = (xN - x0) / ncells;
         EXPECT_LE(
                 max_norm_error,

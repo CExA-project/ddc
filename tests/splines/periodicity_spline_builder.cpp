@@ -195,7 +195,7 @@ void PeriodicitySplineBuilderTest()
 
     double const max_norm = evaluator.max_norm();
 
-    SplineErrorBounds<evaluator_type<DDim<X>>> error_bounds(evaluator);
+    SplineErrorBounds<evaluator_type<DDim<X>>> const error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
             std::max(error_bounds.error_bound(dx<X>(ncells), s_degree_x), 1.0e-14 * max_norm));

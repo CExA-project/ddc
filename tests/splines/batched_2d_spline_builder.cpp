@@ -612,7 +612,8 @@ void Batched2dSplineTest()
     double const max_norm_diff2 = evaluator.max_norm(0, 1);
     double const max_norm_diff12 = evaluator.max_norm(1, 1);
 
-    SplineErrorBounds<evaluator_type<DDim<I1, I1, I2>, DDim<I2, I1, I2>>> error_bounds(evaluator);
+    SplineErrorBounds<evaluator_type<DDim<I1, I1, I2>, DDim<I2, I1, I2>>> const error_bounds(
+            evaluator);
     EXPECT_LE(
             max_norm_error,
             std::

@@ -192,20 +192,4 @@ KOKKOS_FUNCTION auto build_mdspan(
     DDC_IF_NVCC_THEN_POP
 }
 
-struct use_annotated_operator
-{
-};
-
-template <class ExecSpace>
-constexpr bool need_annotated_operator() noexcept
-{
-#if defined(KOKKOS_ENABLE_CUDA)
-    return std::is_same_v<ExecSpace, Kokkos::Cuda>;
-#elif defined(KOKKOS_ENABLE_HIP)
-    return std::is_same_v<ExecSpace, Kokkos::HIP>;
-#else
-    return false;
-#endif
-}
-
 } // namespace ddc::detail

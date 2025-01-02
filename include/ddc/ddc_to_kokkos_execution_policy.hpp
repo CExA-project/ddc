@@ -20,8 +20,7 @@ auto ddc_to_kokkos_execution_policy(
         ExecSpace const& execution_space,
         DiscreteDomain<DDims...> const& domain)
 {
-    using work_tag = std::
-            conditional_t<need_annotated_operator<ExecSpace>(), use_annotated_operator, void>;
+    using work_tag = void;
     using index_type = Kokkos::IndexType<DiscreteElementType>;
     if constexpr (sizeof...(DDims) == 0) {
         return Kokkos::RangePolicy<ExecSpace, work_tag, index_type>(execution_space, 0, 1);

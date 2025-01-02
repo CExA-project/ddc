@@ -188,7 +188,7 @@ void TestPeriodicSplineBuilderTestIdentity()
     double const max_norm_diff = evaluator.max_norm(1);
     double const max_norm_int = evaluator.max_norm(-1);
 
-    SplineErrorBounds<evaluator_type> error_bounds(evaluator);
+    SplineErrorBounds<evaluator_type> const error_bounds(evaluator);
     const double h = (xN - x0) / ncells;
     EXPECT_LE(
             max_norm_error,

@@ -51,29 +51,35 @@ private:
 public:
     explicit SplineErrorBounds(Evaluator const& evaluator) : m_evaluator(evaluator) {}
 
-    double error_bound(double cell_width, int degree)
+    double error_bound(double cell_width, int degree) const
     {
         return tihomirov_error_bound(cell_width, degree, m_evaluator.max_norm(degree + 1));
     }
-    double error_bound(double cell_width1, double cell_width2, int degree1, int degree2)
+
+    double error_bound(double cell_width1, double cell_width2, int degree1, int degree2) const
     {
         double const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
         double const norm2 = m_evaluator.max_norm(0, degree2 + 1);
         return tihomirov_error_bound(cell_width1, degree1, norm1)
                + tihomirov_error_bound(cell_width2, degree2, norm2);
     }
-    double error_bound_on_deriv(double cell_width, int degree)
+
+    double error_bound_on_deriv(double cell_width, int degree) const
     {
         return tihomirov_error_bound(cell_width, degree - 1, m_evaluator.max_norm(degree + 1));
     }
+
     double error_bound_on_deriv_1(double cell_width1, double cell_width2, int degree1, int degree2)
+            const
     {
         double const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
         double const norm2 = m_evaluator.max_norm(0, degree2 + 1);
         return tihomirov_error_bound(cell_width1, degree1 - 1, norm1)
                + tihomirov_error_bound(cell_width2, degree2, norm2);
     }
+
     double error_bound_on_deriv_2(double cell_width1, double cell_width2, int degree1, int degree2)
+            const
     {
         double const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
         double const norm2 = m_evaluator.max_norm(0, degree2 + 1);
@@ -87,6 +93,7 @@ public:
      *       The error constant may be overestimated.
      *******************************************************************************/
     double error_bound_on_deriv_12(double cell_width1, double cell_width2, int degree1, int degree2)
+            const
     {
         double const norm1 = m_evaluator.max_norm(degree1 + 1, 1);
         double const norm2 = m_evaluator.max_norm(1, degree2 + 1);
@@ -94,7 +101,7 @@ public:
                + tihomirov_error_bound(cell_width2, degree2 - 1, norm2);
     }
 
-    double error_bound_on_int(double cell_width, int degree)
+    double error_bound_on_int(double cell_width, int degree) const
     {
         return tihomirov_error_bound(cell_width, degree + 1, m_evaluator.max_norm(degree + 1));
     }

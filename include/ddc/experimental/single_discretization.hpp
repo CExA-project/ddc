@@ -33,10 +33,11 @@ class SingleDiscretization : SingleDiscretizationBase
 public:
     using continuous_dimension_type = CDim;
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
     using continuous_element_type
             [[deprecated("Use ddc::Coordinate<continuous_dimension_type> instead.")]]
             = Coordinate<CDim>;
-
+#endif
 
     using discrete_dimension_type = SingleDiscretization;
 

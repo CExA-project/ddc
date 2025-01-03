@@ -18,8 +18,9 @@
 #include <lapacke.h>
 #endif
 
-#include <KokkosBatched_Getrs.hpp>
 #include <KokkosBatched_Util.hpp>
+
+#include "kokkos-kernels-ext/KokkosBatched_Getrs.hpp"
 
 #include "splines_linear_problem.hpp"
 
@@ -132,7 +133,7 @@ public:
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                         KokkosBatched::SerialGetrs<
                                 KokkosBatched::Trans::Transpose,
-                                KokkosBatched::Algo::Getrs::Unblocked>::
+                                KokkosBatched::Algo::Level3::Unblocked>::
                                 invoke(a_device, ipiv_device, sub_b);
                     });
         } else {
@@ -143,7 +144,7 @@ public:
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                         KokkosBatched::SerialGetrs<
                                 KokkosBatched::Trans::NoTranspose,
-                                KokkosBatched::Algo::Getrs::Unblocked>::
+                                KokkosBatched::Algo::Level3::Unblocked>::
                                 invoke(a_device, ipiv_device, sub_b);
                     });
         }

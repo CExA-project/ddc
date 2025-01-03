@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include <memory_resource>
+#include <any>
+#include <list>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -32,8 +33,31 @@ class PdiEvent
 
     std::vector<std::string> m_names;
 
-    /// a memory buffer where temporary variables are stored until the class is destroyed
-    std::pmr::monotonic_buffer_resource m_metadata;
+    std::list<std::any> m_metadata;
+
+    char const* store_name(std::string&& name)
+    {
+        return m_names.emplace_back(std::move(name)).c_str();
+    }
+
+    char const* store_name(std::string const& name)
+    {
+        return m_names.emplace_back(name).c_str();
+    }
+
+    template <class T>
+    T* store_scalar(T t)
+    {
+        std::any& ref = m_metadata.emplace_back(std::in_place_type<T>, std::move(t));
+        return std::any_cast<T>(&ref);
+    }
+
+    template <class T>
+    T* store_array(std::vector<T> v)
+    {
+        std::any& ref = m_metadata.emplace_back(std::in_place_type<std::vector<T>>, std::move(v));
+        return std::any_cast<std::vector<T>>(&ref)->data();
+    }
 
 public:
     explicit PdiEvent(std::string const& event_name) : m_event_name(event_name) {}
@@ -66,21 +90,16 @@ public:
         static_assert(
                 !(access & PDI_IN) || (chunk_default_access_v<BorrowedChunk> & PDI_IN),
                 "Invalid access for constant data");
-        auto extents = detail::array(data.domain().extents());
-        std::size_t& rank = *std::pmr::polymorphic_allocator<std::size_t>(&m_metadata).allocate(1);
-        rank = extents.size();
-        PDI_share((name + "_rank").c_str(), &rank, PDI_OUT);
-        m_names.push_back(name + "_rank");
+        std::array const extents = detail::array(data.domain().extents());
+        PDI_share(store_name(name + "_rank"), store_scalar(extents.size()), PDI_OUT);
         PDI_share(
-                (name + "_extents").c_str(),
-                std::pmr::vector<std::size_t>(extents.begin(), extents.end(), &m_metadata).data(),
+                store_name(name + "_extents"),
+                store_array(std::vector<std::size_t>(extents.begin(), extents.end())),
                 PDI_OUT);
-        m_names.push_back(name + "_extents");
         PDI_share(
-                name.c_str(),
+                store_name(name),
                 const_cast<chunk_value_t<BorrowedChunk>*>(data.data_handle()),
                 access);
-        m_names.push_back(name);
         return *this;
     }
 
@@ -97,11 +116,9 @@ public:
         value_type* data_ptr = const_cast<value_type*>(&data);
         // for read-only data, we share a copy instead of the data itself in case we received a ref on a temporary,
         if constexpr (!(access & PDI_IN)) {
-            data_ptr = std::pmr::polymorphic_allocator<value_type>(&m_metadata).allocate(1);
-            *data_ptr = data;
+            data_ptr = store_scalar(data);
         }
-        PDI_share(name.c_str(), data_ptr, access);
-        m_names.push_back(name);
+        PDI_share(store_name(name), data_ptr, access);
         return *this;
     }
 

@@ -29,6 +29,28 @@ If you like the project, please leave us a github star.
 
 If you want to know more, join un on [Slack](https://join.slack.com/t/ddc-lib/shared_invite/zt-14b6rjcrn-AwSfM6_arEamAKk_VgQPhg)
 
+## Prerequisites
+
+To use DDC core, one needs the following dependencies:
+
+* a C++17-compliant compiler
+* CMake 3.22...<4
+* Kokkos 4.4...4.5
+* (optional) Benchmark 1.8...<2
+* (optional) Doxygen 1.8.13...<2
+* (optional) GoogleTest 1.14...<2
+
+To use DDC components, one needs the following dependencies:
+
+* (optional) DDC::fft
+  * Kokkos-fft 0.2.1...<1
+* (optional) DDC::pdi
+  * PDI 1.6...<2
+* (optional) DDC::splines
+  * Ginkgo 1.8.0
+  * Kokkos Kernels fork <https://github.com/yasahi-hpc/kokkos-kernels> on branch develop-spline-kernels-v2
+
+
 ## Getting the code and basic configuration
 
 ```bash

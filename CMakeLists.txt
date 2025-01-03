@@ -63,7 +63,7 @@ endif()
 
 if("${DDC_BUILD_PDI_WRAPPER}")
     if(NOT TARGET PDI::PDI_C)
-        find_package(PDI REQUIRED COMPONENTS C)
+        find_package(PDI 1.6...<2 REQUIRED COMPONENTS C)
     endif()
 endif()
 
@@ -79,7 +79,8 @@ if("${BUILD_TESTING}" AND "${DDC_BUILD_TESTS}")
 
     if("${DDC_GTest_DEPENDENCY_POLICY}" STREQUAL "AUTO")
         if(NOT TARGET GTest::GTest AND NOT TARGET GTest::gtest)
-            find_package(GTest QUIET)
+            # 1.14...<2 but GTest module does not support range version
+            find_package(GTest 1.14 QUIET)
             if(NOT GTest_FOUND)
                 ddc_configure_googletest()
             endif()
@@ -87,7 +88,8 @@ if("${BUILD_TESTING}" AND "${DDC_BUILD_TESTS}")
     elseif("${DDC_GTest_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
         ddc_configure_googletest()
     elseif("${DDC_GTest_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(GTest REQUIRED)
+        # 1.14...<2 but GTest module does not support range version
+        find_package(GTest 1.14 REQUIRED)
     endif()
 endif()
 
@@ -103,7 +105,7 @@ if("${DDC_BUILD_BENCHMARKS}")
 
     if("${DDC_benchmark_DEPENDENCY_POLICY}" STREQUAL "AUTO")
         if(NOT TARGET benchmark::benchmark)
-            find_package(benchmark QUIET)
+            find_package(benchmark 1.8...<2 QUIET)
             if(NOT benchmark_FOUND)
                 ddc_configure_benchmark()
             endif()
@@ -111,14 +113,14 @@ if("${DDC_BUILD_BENCHMARKS}")
     elseif("${DDC_benchmark_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
         ddc_configure_benchmark()
     elseif("${DDC_benchmark_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(benchmark REQUIRED)
+        find_package(benchmark 1.8...<2 REQUIRED)
     endif()
 endif()
 
 ## Doxygen
 
 if("${DDC_BUILD_DOCUMENTATION}")
-    find_package(Doxygen 1.8.13 REQUIRED OPTIONAL_COMPONENTS dot)
+    find_package(Doxygen 1.8.13...<2 REQUIRED OPTIONAL_COMPONENTS dot)
 endif()
 
 # Our project
@@ -203,6 +205,8 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     )
     if("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "AUTO")
         if(NOT TARGET Kokkos::kokkoskernels)
+            # fork https://github.com/yasahi-hpc/kokkos-kernels
+            # on branch develop-spline-kernels-v2
             find_package(KokkosKernels QUIET)
             if(NOT KokkosKernels_FOUND)
                 ddc_configure_kokkos_kernels()
@@ -211,6 +215,8 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
         ddc_configure_kokkos_kernels()
     elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
+        # fork https://github.com/yasahi-hpc/kokkos-kernels
+        # on branch develop-spline-kernels-v2
         find_package(KokkosKernels REQUIRED)
     endif()
 

@@ -28,11 +28,13 @@ if(@DDC_BUILD_KERNELS_SPLINES@)
    list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
    ddc_find_dependency(LAPACKE)
    list(POP_FRONT CMAKE_MODULE_PATH)
+   # fork https://github.com/yasahi-hpc/kokkos-kernels
+   # on branch develop-spline-kernels-v2
    ddc_find_dependency(KokkosKernels)
 endif()
 
 if(@DDC_BUILD_PDI_WRAPPER@)
-   ddc_find_dependency(PDI COMPONENTS C)
+   ddc_find_dependency(PDI 1.6...<2 COMPONENTS C)
 endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/DDCTargets.cmake)

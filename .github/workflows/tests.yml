@@ -197,7 +197,7 @@ jobs:
           export DDC_CXXFLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}"
           if [ 'xcpu-g++-Debug' = 'x${{matrix.backend.name}}-${{matrix.backend.cxx_compiler}}-${{matrix.cmake_build_type}}' ]
           then
-            export DDC_CXXFLAGS="$DDC_CXXFLAGS -fno-omit-frame-pointer -fsanitize=address"
+            export DDC_CXXFLAGS="$DDC_CXXFLAGS -fno-omit-frame-pointer -fsanitize=address -fsanitize-address-use-after-return=always"
           fi
 
           cmake \

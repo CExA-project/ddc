@@ -188,7 +188,7 @@ jobs:
           export KokkosFFT_ROOT=$PWD/opt/kokkos-fft
           export KokkosKernels_ROOT=$PWD/opt/kokkos-kernels
 
-          export CMAKE_BUILD_PARALLEL_LEVEL=2
+          export CMAKE_BUILD_PARALLEL_LEVEL=4
           export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
 
           export CC=${{matrix.backend.c_compiler}}
@@ -343,7 +343,7 @@ jobs:
           set -xe
           git config --global --add safe.directory '*'
 
-          export CMAKE_BUILD_PARALLEL_LEVEL=2
+          export CMAKE_BUILD_PARALLEL_LEVEL=4
           export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
 
           export CC=${{matrix.backend.c_compiler}}
@@ -422,7 +422,7 @@ jobs:
           set -xe
           git config --global --add safe.directory '*'
 
-          export CMAKE_BUILD_PARALLEL_LEVEL=2
+          export CMAKE_BUILD_PARALLEL_LEVEL=4
           export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
 
           export CC=${{matrix.backend.c_compiler}}

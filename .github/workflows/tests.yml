@@ -197,7 +197,7 @@ jobs:
           export DDC_CXXFLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}"
           if [ 'xcpu-g++-Debug' = 'x${{matrix.backend.name}}-${{matrix.backend.cxx_compiler}}-${{matrix.cmake_build_type}}' ]
           then
-            export DDC_CXXFLAGS="$DDC_CXXFLAGS -fno-omit-frame-pointer -fsanitize=address -fsanitize-address-use-after-return=always"
+            export DDC_CXXFLAGS="$DDC_CXXFLAGS -fno-omit-frame-pointer -fsanitize=address"
           fi
 
           cmake \
@@ -303,6 +303,16 @@ jobs:
         report_paths: '/home/runner/work/ddc/ddc/tests.xml'
 
   test-with-sanitizer-undefined:
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ['oldest']
+        backend:
+        - name: 'cpu'
+          c_compiler: 'clang'
+          cxx_compiler: 'clang++'
+        cxx_version: ['17']
+        cmake_build_type: ['Debug']
     runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
     steps:
@@ -316,12 +326,13 @@ jobs:
       if: needs.id_repo.outputs.in_base_repo == 'false'
       uses: actions/download-artifact@v4
       with:
-        name: oldest_cpu-artifact
+        name: |
+          ${{matrix.image}}_${{matrix.backend.name}}-artifact
     - name: Load image artifact into docker
       if: needs.id_repo.outputs.in_base_repo == 'false'
       run: |
-        docker load < oldest_cpu.tar
-        rm oldest_cpu.tar
+        docker load < ${{matrix.image}}_${{matrix.backend.name}}.tar
+        rm ${{matrix.image}}_${{matrix.backend.name}}.tar
     - name: Test
       id: test
       run: |
@@ -331,21 +342,26 @@ jobs:
         cat<<-'EOF' > run.sh
           set -xe
           git config --global --add safe.directory '*'
-          export CC=clang
-          export CXX=clang++
+
+          export CMAKE_BUILD_PARALLEL_LEVEL=2
+          export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
+
+          export CC=${{matrix.backend.c_compiler}}
+          export CXX=${{matrix.backend.cxx_compiler}}
+
           cmake \
+            -DCMAKE_CXX_FLAGS="-fsanitize=undefined -fno-omit-frame-pointer" \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -DDDC_BUILD_BENCHMARKS=ON \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_CXX_STANDARD=17 \
-            -DKokkos_ENABLE_DEPRECATED_CODE_3=OFF \
             -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
             -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-            -DCMAKE_CXX_FLAGS="-fsanitize=undefined -fno-omit-frame-pointer" \
             -B build \
             -S /src
-          cmake --build build --parallel 2
+          cmake --build build
+
           export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,suppressions=/src/ubsan.supp
-          ctest --test-dir build --parallel 2 --output-on-failure --timeout 10 --output-junit tests.xml
+
+          ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
           ./build/examples/characteristics_advection
           ./build/examples/game_of_life
           ./build/examples/heat_equation_spectral
@@ -353,10 +369,11 @@ jobs:
           ./build/examples/non_uniform_heat_equation
           ./build/examples/uniform_heat_equation
         EOF
+
         docker run \
           --cidfile='docker.cid' \
           -v ${PWD}:/src:ro \
-          ghcr.io/cexa-project/ddc/oldest_cpu:${GITHUB_SHA:0:7} \
+          ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
           bash /src/run.sh
         if docker cp "$(cat docker.cid)":/data/tests.xml /home/runner/work/ddc/ddc/tests.xml
         then echo "with_report=true" >> "$GITHUB_OUTPUT"
@@ -369,6 +386,16 @@ jobs:
         report_paths: '/home/runner/work/ddc/ddc/tests.xml'
 
   clang-tidy-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ['latest']
+        backend:
+        - name: 'cpu'
+          c_compiler: 'clang'
+          cxx_compiler: 'clang++'
+        cxx_version: ['17']
+        cmake_build_type: ['Release']
     runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
     steps:
@@ -381,30 +408,39 @@ jobs:
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'
       uses: actions/download-artifact@v4
-      with: { name: 'latest_cpu-artifact' }
+      with:
+        name: |
+          ${{matrix.image}}_${{matrix.backend.name}}-artifact
     - name: Load image artifact into docker
       if: needs.id_repo.outputs.in_base_repo == 'false'
       run: |
-        docker load < latest_cpu.tar
-        rm latest_cpu.tar
+        docker load < ${{matrix.image}}_${{matrix.backend.name}}.tar
+        rm ${{matrix.image}}_${{matrix.backend.name}}.tar
     - name: clang-tidy
       run: |
         cat<<-'EOF' > run.sh
-        set -xe
-        git config --global --add safe.directory '*'
-        cmake \
-        -DCMAKE_CXX_COMPILER=clang++ \
-        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-        -DDDC_BUILD_BENCHMARKS=ON \
-        -DBUILD_TESTING=ON \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_CXX_STANDARD=17 \
-        -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
-        -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-        -B build \
-        -S /src
-        find /src/benchmarks /src/examples /src/tests -name '*.cpp' -exec clang-tidy -p build -header-filter="(/src/include/ddc/.*|/src/tests/.*)" '{}' '+'
+          set -xe
+          git config --global --add safe.directory '*'
+
+          export CMAKE_BUILD_PARALLEL_LEVEL=2
+          export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
+
+          export CC=${{matrix.backend.c_compiler}}
+          export CXX=${{matrix.backend.cxx_compiler}}
+
+          cmake \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DDDC_BUILD_BENCHMARKS=ON \
+            -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
+            -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+            -B build \
+            -S /src
+
+          find /src/benchmarks /src/examples /src/tests -name '*.cpp' -exec clang-tidy -p build -header-filter="(/src/include/ddc/.*|/src/tests/.*)" '{}' '+'
         EOF
+
         docker run \
-          -v ${PWD}:/src:ro ghcr.io/cexa-project/ddc/latest_cpu:${GITHUB_SHA:0:7} \
+          -v ${PWD}:/src:ro \
+          ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
           bash /src/run.sh

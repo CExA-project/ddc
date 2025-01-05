@@ -194,12 +194,6 @@ jobs:
           export CC=${{matrix.backend.c_compiler}}
           export CXX=${{matrix.backend.cxx_compiler}}
 
-          export DDC_CXXFLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}"
-          if [ 'xcpu-g++-Debug' = 'x${{matrix.backend.name}}-${{matrix.backend.cxx_compiler}}-${{matrix.cmake_build_type}}' ]
-          then
-            export DDC_CXXFLAGS="$DDC_CXXFLAGS -fno-omit-frame-pointer -fsanitize=address"
-          fi
-
           cmake \
             -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -DBENCHMARK_ENABLE_GTEST_TESTS=OFF \
@@ -258,7 +252,7 @@ jobs:
           rm -rf build
 
           cmake \
-            -DCMAKE_CXX_FLAGS="$DDC_CXXFLAGS" \
+            -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
             -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -DDDC_BUILD_BENCHMARKS=ON \
             -DDDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
@@ -302,17 +296,18 @@ jobs:
       with:
         report_paths: '/home/runner/work/ddc/ddc/tests.xml'
 
-  test-with-sanitizer-undefined:
+  test-with-sanitizer:
     strategy:
       fail-fast: false
       matrix:
-        image: ['oldest']
+        image: ['latest']
         backend:
         - name: 'cpu'
-          c_compiler: 'clang'
-          cxx_compiler: 'clang++'
+          c_compiler: 'gcc'
+          cxx_compiler: 'g++'
         cxx_version: ['17']
         cmake_build_type: ['Debug']
+        sanitizer: ['address', 'undefined']
     runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
     steps:
@@ -333,12 +328,19 @@ jobs:
       run: |
         docker load < ${{matrix.image}}_${{matrix.backend.name}}.tar
         rm ${{matrix.image}}_${{matrix.backend.name}}.tar
+    - name: Generate undefined sanitizer environment
+      if: ${{matrix.sanitizer}} == 'undefined'
+      run: |
+        cat<<-'UBSAN_SUPP_EOF' > ubsan.supp
+          vptr:ginkgo/core/solver/solver_base.hpp
+        UBSAN_SUPP_EOF
+
+        cat<<-'SANITIZER_ENV_EOF' > sanitizer_env.sh
+          export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,suppressions=/src/ubsan.supp
+        SANITIZER_ENV_EOF
     - name: Test
       id: test
       run: |
-        cat<<-'UBSAN_EOF' > ubsan.supp
-          vptr:ginkgo/core/solver/solver_base.hpp
-        UBSAN_EOF
         cat<<-'EOF' > run.sh
           set -xe
           git config --global --add safe.directory '*'
@@ -350,7 +352,7 @@ jobs:
           export CXX=${{matrix.backend.cxx_compiler}}
 
           cmake \
-            -DCMAKE_CXX_FLAGS="-fsanitize=undefined -fno-omit-frame-pointer" \
+            -DCMAKE_CXX_FLAGS="-fsanitize=${{matrix.sanitizer}} -fno-omit-frame-pointer" \
             -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -DDDC_BUILD_BENCHMARKS=ON \
             -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
@@ -359,7 +361,10 @@ jobs:
             -S /src
           cmake --build build
 
-          export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,suppressions=/src/ubsan.supp
+          if [ -f /src/sanitizer_env.sh ];
+          then
+            . /src/sanitizer_env.sh
+          fi
 
           ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
           ./build/examples/characteristics_advection

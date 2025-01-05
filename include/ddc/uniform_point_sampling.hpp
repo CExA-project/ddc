@@ -212,6 +212,94 @@ public:
 };
 
 template <class DDim>
+void create_uniform_point_sampling(
+        Coordinate<typename DDim::continuous_dimension_type> origin,
+        Coordinate<typename DDim::continuous_dimension_type> step)
+{
+    init_discrete_space_from_impl<DDim>(
+            typename DDim::template Impl<DDim, Kokkos::HostSpace>(origin, step));
+}
+
+/** Construct a Impl<Kokkos::HostSpace> and associated discrete_domain_type from a segment
+ *  \f$[a, b] \subset [a, +\infty[\f$ and a number of points `n`.
+ *  Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling.
+ *  One should expect usual floating point rounding errors.
+ *
+ * @param a coordinate of the first point of the domain
+ * @param b coordinate of the last point of the domain
+ * @param n number of points to map on the segment \f$[a, b]\f$ including a & b
+ */
+template <class DDim>
+DiscreteDomain<DDim> create_uniform_point_sampling(
+        Coordinate<typename DDim::continuous_dimension_type> a,
+        Coordinate<typename DDim::continuous_dimension_type> b,
+        DiscreteVector<DDim> n)
+{
+    assert(a < b);
+    assert(n > 1);
+    Coordinate<typename DDim::continuous_dimension_type> const step((b - a) / (n - 1));
+    create_uniform_point_sampling<DDim>(a, step);
+    return DiscreteDomain<DDim>(discrete_space<DDim>().front(), n);
+}
+
+/** Construct a uniform `DiscreteDomain` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a
+ *  number of points `n`.
+ *  Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling.
+ *  One should expect usual floating point rounding errors.
+ *
+ * @param a coordinate of the first point of the domain
+ * @param b coordinate of the last point of the domain
+ * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
+ * @param n_ghosts_before number of additional "ghost" points before the segment
+ * @param n_ghosts_after number of additional "ghost" points after the segment
+ */
+template <class DDim>
+std::tuple<DiscreteDomain<DDim>, DiscreteDomain<DDim>, DiscreteDomain<DDim>, DiscreteDomain<DDim>>
+create_uniform_point_sampling_ghosted(
+        Coordinate<typename DDim::continuous_dimension_type> a,
+        Coordinate<typename DDim::continuous_dimension_type> b,
+        DiscreteVector<DDim> n,
+        DiscreteVector<DDim> n_ghosts_before,
+        DiscreteVector<DDim> n_ghosts_after)
+{
+    assert(a < b);
+    assert(n > 1);
+    Coordinate<typename DDim::continuous_dimension_type> const step((b - a) / (n - 1));
+    create_uniform_point_sampling<DDim>(a - n_ghosts_before.value() * step, step);
+    DiscreteDomain<DDim>
+            ghosted_domain(discrete_space<DDim>().front(), n + n_ghosts_before + n_ghosts_after);
+    DiscreteDomain<DDim> pre_ghost = ghosted_domain.take_first(n_ghosts_before);
+    DiscreteDomain<DDim> main_domain = ghosted_domain.remove(n_ghosts_before, n_ghosts_after);
+    DiscreteDomain<DDim> post_ghost = ghosted_domain.take_last(n_ghosts_after);
+    return std::make_tuple(
+            std::move(main_domain),
+            std::move(ghosted_domain),
+            std::move(pre_ghost),
+            std::move(post_ghost));
+}
+
+/** Construct a uniform `DiscreteDomain` from a segment \f$[a, b] \subset [a, +\infty[\f$ and a
+ *  number of points `n`.
+ *  Note that there is no guarantee that either the boundaries a or b will be exactly represented in the sampling.
+ *  One should expect usual floating point rounding errors.
+ *
+ * @param a coordinate of the first point of the domain
+ * @param b coordinate of the last point of the domain
+ * @param n the number of points to map the segment \f$[a, b]\f$ including a & b
+ * @param n_ghosts number of additional "ghost" points before and after the segment
+ */
+template <class DDim>
+std::tuple<DiscreteDomain<DDim>, DiscreteDomain<DDim>, DiscreteDomain<DDim>, DiscreteDomain<DDim>>
+create_uniform_point_sampling_ghosted(
+        Coordinate<typename DDim::continuous_dimension_type> a,
+        Coordinate<typename DDim::continuous_dimension_type> b,
+        DiscreteVector<DDim> n,
+        DiscreteVector<DDim> n_ghosts)
+{
+    return create_uniform_point_sampling_ghosted(a, b, n, n_ghosts, n_ghosts);
+}
+
+template <class DDim>
 struct is_uniform_point_sampling
     : public std::is_base_of<detail::UniformPointSamplingBase, DDim>::type
 {

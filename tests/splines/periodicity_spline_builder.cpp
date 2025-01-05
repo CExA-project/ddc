@@ -101,11 +101,12 @@ void InterestDimInitializer(std::size_t const ncells)
 {
     using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
+    ddc::create_uniform_bsplines<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-    ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
+    ddc::create_non_uniform_bsplines<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
-    ddc::init_discrete_space<DDim>(GrevillePoints<BSplines<CDim>>::template get_sampling<DDim>());
+    ddc::init_discrete_space_from_impl<DDim>(
+            GrevillePoints<BSplines<CDim>>::template get_sampling<DDim>());
 }
 
 // Checks that when evaluating the spline at interpolation points one

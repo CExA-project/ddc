@@ -216,6 +216,16 @@ std::tuple<Arg0, Arg1, Args...> init_discrete_space(std::tuple<DDimImpl, Arg0, A
     return detail::extract_after(std::move(a), std::index_sequence_for<Arg0, Arg1, Args...>());
 }
 
+/** Initialize (emplace) a global singleton discrete space
+ *
+ * @param ddim_impl the impl discrete space object
+ */
+template <class DDim, class DDimImpl>
+void init_discrete_space_from_impl(DDimImpl&& ddim_impl)
+{
+    init_discrete_space<DDim>(std::forward<DDimImpl>(ddim_impl));
+}
+
 /**
  * @tparam DDim a discrete dimension
  * @return the discrete space instance associated with `DDim`.

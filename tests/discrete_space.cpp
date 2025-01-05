@@ -18,9 +18,9 @@ struct DDimX : ddc::UniformPointSampling<DimX>
 TEST(DiscreteSpace, IsDiscreteSpaceInitialized)
 {
     EXPECT_FALSE(ddc::is_discrete_space_initialized<DDimX>());
-    ddc::init_discrete_space<DDimX>(DDimX::template init<DDimX>(
+    ddc::create_uniform_point_sampling<DDimX>(
             ddc::Coordinate<DimX>(0),
             ddc::Coordinate<DimX>(1),
-            ddc::DiscreteVector<DDimX>(2)));
+            ddc::DiscreteVector<DDimX>(2));
     EXPECT_TRUE(ddc::is_discrete_space_initialized<DDimX>());
 }

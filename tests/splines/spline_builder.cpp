@@ -39,13 +39,13 @@ TEST(SplineBuilder, ShortInterpolationGrid)
     CoordX const xN(1.);
     std::size_t const ncells = 5;
 
-    ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
+    ddc::create_uniform_bsplines<BSplinesX>(x0, xN, ncells);
 
     // One point missing
     std::vector<double> const range {0.1, 0.3, 0.5, 0.7};
 
     ddc::DiscreteDomain<DDimX> const interpolation_domain
-            = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(range));
+            = ddc::create_non_uniform_point_sampling<DDimX>(range);
 
     EXPECT_THROW(
             (ddc::SplineBuilder<
@@ -66,13 +66,13 @@ TEST(SplineBuilder, LongInterpolationGrid)
     CoordX const xN(1.);
     std::size_t const ncells = 5;
 
-    ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
+    ddc::create_uniform_bsplines<BSplinesX>(x0, xN, ncells);
 
     // One point too much
     std::vector<double> const range {0.1, 0.3, 0.5, 0.7, 0.9, 0.95};
 
     ddc::DiscreteDomain<DDimX> const interpolation_domain
-            = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(range));
+            = ddc::create_non_uniform_point_sampling<DDimX>(range);
 
     EXPECT_THROW(
             (ddc::SplineBuilder<
@@ -93,13 +93,13 @@ TEST(SplineBuilder, BadShapeInterpolationGrid)
     CoordX const xN(1.);
     std::size_t const ncells = 5;
 
-    ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
+    ddc::create_uniform_bsplines<BSplinesX>(x0, xN, ncells);
 
     // All points end up in the first cell ]0, 0.2[
     std::vector<double> const range {0.1, 0.11, 0.12, 0.13, 0.14};
 
     ddc::DiscreteDomain<DDimX> const interpolation_domain
-            = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(range));
+            = ddc::create_non_uniform_point_sampling<DDimX>(range);
 
     EXPECT_THROW(
             (ddc::SplineBuilder<
@@ -120,12 +120,12 @@ TEST(SplineBuilder, CorrectInterpolationGrid)
     CoordX const xN(1.);
     std::size_t const ncells = 5;
 
-    ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
+    ddc::create_uniform_bsplines<BSplinesX>(x0, xN, ncells);
 
     std::vector<double> const range {0.05, 0.15, 0.5, 0.85, 0.95};
 
     ddc::DiscreteDomain<DDimX> const interpolation_domain
-            = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(range));
+            = ddc::create_non_uniform_point_sampling<DDimX>(range);
 
     EXPECT_NO_THROW((ddc::SplineBuilder<
                      execution_space,

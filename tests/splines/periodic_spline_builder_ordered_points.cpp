@@ -45,10 +45,10 @@ TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
     for (std::size_t i(0); i < npoints; ++i) {
         breaks[i] = CoordX(d_breaks[i]);
     }
-    ddc::init_discrete_space<BSplinesX>(breaks);
+    ddc::create_non_uniform_bsplines<BSplinesX>(breaks);
 
     // 2. Create the interpolation domain
-    ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
+    ddc::init_discrete_space_from_impl<DDimX>(GrevillePoints::get_sampling<DDimX>());
     ddc::DiscreteDomain<DDimX> const interpolation_domain(GrevillePoints::get_domain<DDimX>());
 
     double last(ddc::coordinate(interpolation_domain.front()));

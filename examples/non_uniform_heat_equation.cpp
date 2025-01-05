@@ -173,8 +173,8 @@ int main(int argc, char** argv)
 
     //! [build-domains]
     auto const [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]
-            = ddc::init_discrete_space<DDimX>(
-                    DDimX::init_ghosted<DDimX>(x_domain_vect, x_pre_ghost_vect, x_post_ghost_vect));
+            = ddc::create_non_uniform_point_sampling_ghosted<
+                    DDimX>(x_domain_vect, x_pre_ghost_vect, x_post_ghost_vect);
     //! [build-domains]
 
     ddc::DiscreteDomain<DDimX> const
@@ -193,8 +193,8 @@ int main(int argc, char** argv)
 
     //! [build-Y-domain]
     auto const [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]
-            = ddc::init_discrete_space<DDimY>(
-                    DDimY::init_ghosted<DDimY>(y_domain_vect, y_pre_ghost_vect, y_post_ghost_vect));
+            = ddc::create_non_uniform_point_sampling_ghosted<
+                    DDimY>(y_domain_vect, y_pre_ghost_vect, y_post_ghost_vect);
     //! [build-Y-domain]
 
     ddc::DiscreteDomain<DDimY> const
@@ -227,11 +227,8 @@ int main(int argc, char** argv)
     ddc::DiscreteVector<DDimT> const nb_time_steps(
             std::ceil((end_time - start_time) / max_dt) + .2);
 
-    ddc::DiscreteDomain<DDimT> const time_domain
-            = ddc::init_discrete_space<DDimT>(DDimT::init<DDimT>(
-                    ddc::Coordinate<T>(start_time),
-                    ddc::Coordinate<T>(end_time),
-                    nb_time_steps + 1));
+    ddc::DiscreteDomain<DDimT> const time_domain = ddc::create_uniform_point_sampling<
+            DDimT>(ddc::Coordinate<T>(start_time), ddc::Coordinate<T>(end_time), nb_time_steps + 1);
     //! [time-domain]
 
     //! [data allocation]

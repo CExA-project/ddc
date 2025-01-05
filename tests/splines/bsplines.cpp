@@ -61,7 +61,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityUniform)
     CoordX const xmin(0.0);
     CoordX const xmax(0.2);
     std::size_t const ncells = TestFixture::ncells;
-    ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
+    ddc::create_uniform_bsplines<BSplinesX>(xmin, xmax, ncells);
 
     std::array<double, degree + 1> values_ptr;
     Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree + 1>> const values(
@@ -95,7 +95,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityNonUniform)
     for (std::size_t i(0); i < ncells + 1; ++i) {
         breaks[i] = CoordX(xmin + i * dx);
     }
-    ddc::init_discrete_space<BSplinesX>(breaks);
+    ddc::create_non_uniform_bsplines<BSplinesX>(breaks);
 
     std::array<double, degree + 1> values_ptr;
     Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree + 1>> const values(
@@ -147,7 +147,7 @@ TYPED_TEST(BSplinesFixture, RoundingNonUniform)
     for (std::size_t i(0); i < ncells + 1; ++i) {
         breaks[i] = CoordX(xmin + i * dx);
     }
-    ddc::init_discrete_space<BSplinesX>(breaks);
+    ddc::create_non_uniform_bsplines<BSplinesX>(breaks);
 
     ddc::DiscreteDomain<BSplinesX> const bspl_full_domain
             = ddc::discrete_space<BSplinesX>().full_domain();
@@ -176,7 +176,7 @@ TYPED_TEST(BSplinesFixture, RoundingUniform)
     CoordX const xmin(0.0);
     CoordX const xmax(0.2);
     std::size_t const ncells = TestFixture::ncells;
-    ddc::init_discrete_space<BSplinesX>(xmin, xmax, ncells);
+    ddc::create_uniform_bsplines<BSplinesX>(xmin, xmax, ncells);
 
     ddc::DiscreteDomain<BSplinesX> const bspl_full_domain
             = ddc::discrete_space<BSplinesX>().full_domain();

@@ -54,6 +54,7 @@ RUN chmod +x /bin/bash_run \
     libhwloc-dev \
     libpdi-dev \
     pdidev-archive-keyring \
+    pdiplugin-user-code \
     pkg-config \
  # Installing cmake < 3.28 to workaround issue with Kokkos
  && wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-x86_64.tar.gz \

@@ -35,7 +35,7 @@ struct BSplines : ddc::UniformBSplines<X, s_degree_x>
 {
 };
 
-// Gives discrete dimension. In the dimension of interest, it is deduced from the BSplines type. In the other dimensions, it has to be newly defined. In practice both types coincide in the test, but it may not be the case.
+// In the dimension of interest, the discrete dimension is deduced from the Greville points type.
 template <typename X>
 struct DDim : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
 {
@@ -166,12 +166,12 @@ void PeriodicitySplineBuilderTest()
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());
     ddc::ChunkSpan const coords_eval = coords_eval_alloc.span_view();
+    // Translate function 1.5x domain width to the right.
+    Coord<X> const displ(1.5);
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
-            KOKKOS_LAMBDA(DElem<DDim<X>> const e) {
-                coords_eval(e) = ddc::coordinate(e) + Coord<X>(1.5);
-            }); // Translate function 1.5x domain width to the right.
+            KOKKOS_LAMBDA(DElem<DDim<X>> const e) { coords_eval(e) = ddc::coordinate(e) + displ; });
 
 
     // Instantiate chunks to receive outputs of spline_evaluator

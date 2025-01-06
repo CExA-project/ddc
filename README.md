@@ -83,3 +83,7 @@ One can find the formatting style in the file `.clang-format`.
 
 > [!WARNING]
 > The formatting might not give the same result with different versions of a tool.
+
+## Known issues
+
+* Kokkos 4.5.0 embeds a version of mdspan that is not compatible with DDC, see <https://github.com/kokkos/mdspan/pull/368>. This issue has been fixed in Kokkos 4.5.1.

@@ -35,7 +35,7 @@ To use DDC core, one needs the following dependencies:
 
 * a C++17-compliant compiler
 * CMake 3.22...<4
-* Kokkos 4.4...4.5
+* Kokkos 4.4...<5
 * (optional, micro benchmarking) Benchmark 1.8...<2
 * (optional, documentation) Doxygen 1.8.13...<2
 * (optional, unit-testing) GoogleTest 1.14...<2
@@ -48,8 +48,7 @@ To use DDC components, one needs the following dependencies:
   * PDI 1.6...<2
 * (optional, spline interpolation) DDC::splines
   * Ginkgo 1.8.0
-  * Kokkos Kernels fork <https://github.com/yasahi-hpc/kokkos-kernels> on branch develop-spline-kernels-v2
-
+  * Kokkos Kernels 4.5.1...<5
 
 ## Getting the code and basic configuration
 
@@ -84,3 +83,7 @@ One can find the formatting style in the file `.clang-format`.
 
 > [!WARNING]
 > The formatting might not give the same result with different versions of a tool.
+
+## Known issues
+
+* Kokkos 4.5.0 embeds a version of mdspan that is not compatible with DDC, see <https://github.com/kokkos/mdspan/pull/368>. This issue has been fixed in Kokkos 4.5.1.

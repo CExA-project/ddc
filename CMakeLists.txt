@@ -36,6 +36,7 @@ set(DDC_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
 
 ## Custom cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(DDCCheckRequiredKokkosOptions)
 include(DDCVendorConfiguration)
 
 ## kokkos
@@ -299,6 +300,7 @@ write_basic_package_version_file(
 
 install(
     FILES
+        cmake/DDCCheckRequiredKokkosOptions.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
     DESTINATION ${DDC_INSTALL_CMAKEDIR}

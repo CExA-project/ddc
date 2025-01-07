@@ -73,8 +73,8 @@ jobs:
     - name: Checkout built branch
       uses: actions/checkout@v4
       with:
-        submodules: recursive
         fetch-depth: 0
+        submodules: true
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'
       uses: actions/download-artifact@v4
@@ -133,7 +133,7 @@ jobs:
       with: { tool-cache: true, large-packages: false }
     - name: Checkout built branch
       uses: actions/checkout@v4
-      with: { submodules: recursive }
+      with: { submodules: true }
     - name: Collect image artifact
       if: needs.id_repo.outputs.in_base_repo == 'false'
       uses: actions/download-artifact@v4

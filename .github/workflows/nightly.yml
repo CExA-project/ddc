@@ -97,6 +97,16 @@ jobs:
         cd vendor/kokkos
         git fetch
         git checkout develop
+    - name: Checkout Kokkos Kernels devel branch
+      run: |
+        cd vendor/kokkos-kernels
+        git fetch
+        git checkout develop
+    - name: Checkout Kokkos-fft devel branch
+      run: |
+        cd vendor/kokkos-fft
+        git fetch
+        git checkout main
     - name: Test
       id: test
       run: |

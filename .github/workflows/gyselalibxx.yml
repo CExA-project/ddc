@@ -28,8 +28,6 @@ jobs:
       run: |
         cat<<-EOF > run.sh
           set -xe
-
-          cd /src
           git config --global --add safe.directory '*'
 
           export CMAKE_BUILD_PARALLEL_LEVEL=4
@@ -45,5 +43,5 @@ jobs:
           ctest --test-dir build --output-on-failure --timeout 5 -LE test_on_Release_only
         EOF
 
-        docker run --user $(id -u):$(id -g) -v ${PWD}:/src:rw ghcr.io/gyselax/gyselalibxx_env bash /src/run.sh
+        docker run -v ${PWD}:/src:ro ghcr.io/gyselax/gyselalibxx_env bash /src/run.sh
       continue-on-error: true

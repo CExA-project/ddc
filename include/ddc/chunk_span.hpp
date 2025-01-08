@@ -381,13 +381,15 @@ public:
     }
 };
 
-template <class KokkosView, class... DDims, class = std::enable_if_t<Kokkos::is_view_v<KokkosView>>>
-ChunkSpan(KokkosView const& view, DiscreteDomain<DDims...> domain)
+template <class DataType, class... Properties, class... DDims>
+ChunkSpan(Kokkos::View<DataType, Properties...> const& view, DiscreteDomain<DDims...> domain)
         -> ChunkSpan<
-                detail::kokkos_to_mdspan_element_t<typename KokkosView::data_type>,
+                detail::kokkos_to_mdspan_element_t<
+                        typename Kokkos::View<DataType, Properties...>::data_type>,
                 DiscreteDomain<DDims...>,
-                detail::kokkos_to_mdspan_layout_t<typename KokkosView::array_layout>,
-                typename KokkosView::memory_space>;
+                detail::kokkos_to_mdspan_layout_t<
+                        typename Kokkos::View<DataType, Properties...>::array_layout>,
+                typename Kokkos::View<DataType, Properties...>::memory_space>;
 
 template <class ElementType, class SupportType, class Allocator>
 ChunkSpan(Chunk<ElementType, SupportType, Allocator>& other)

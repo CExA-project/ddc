@@ -43,5 +43,5 @@ jobs:
           ctest --test-dir build --output-on-failure --timeout 5 -LE test_on_Release_only
         EOF
 
-        docker run -v ${PWD}:/src:ro ghcr.io/gyselax/gyselalibxx_env bash /src/run.sh
+        docker run -v ${PWD}:/src:rw ghcr.io/gyselax/gyselalibxx_env bash /src/run.sh
       continue-on-error: true

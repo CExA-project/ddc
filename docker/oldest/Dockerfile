@@ -54,6 +54,7 @@ RUN chmod +x /bin/bash_run \
     libhwloc-dev \
     libpdi-dev \
     pdidev-archive-keyring \
+    pdiplugin-user-code \
     pkg-config \
  && case "${BACKEND}" in \
     "cpu") \

@@ -75,10 +75,6 @@ jobs:
           backend:
             name: 'cuda'
           cxx_version: '23'
-        - image: 'oldest' # clang bug with multidimensional bracket operator and parameter packs
-          backend:
-            name: 'hip'
-          cxx_version: '23'
         - image: 'latest' # nvcc 12 only supports C++-20
           backend:
             name: 'cuda'

@@ -28,7 +28,7 @@ jobs:
       run: |
         cat<<-EOF > run.sh
           set -xe
-          git config --global --add safe.directory /src/vendor/kokkos
+          git config --global --add safe.directory '*'
 
           export CMAKE_BUILD_PARALLEL_LEVEL=4
           export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}

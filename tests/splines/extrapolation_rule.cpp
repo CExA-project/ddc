@@ -86,12 +86,6 @@ struct DDimGPS2 : GrevillePoints2<BSplines<X>>::interpolation_discrete_dimension
 {
 };
 
-template <typename X, typename I1, typename I2>
-using DDim = std::conditional_t<
-        std::is_same_v<X, I1>,
-        DDimGPS1<X>,
-        std::conditional_t<std::is_same_v<X, I2>, DDimGPS2<X>, X>>;
-
 #if defined(BC_PERIODIC)
 template <typename DDim1, typename DDim2>
 using evaluator_type = Evaluator2D::
@@ -109,10 +103,6 @@ template <typename... DDimX>
 using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
 using Coord = ddc::Coordinate<X...>;
-
-// Extract batch dimensions from DDim (remove dimension of interest). Usefull
-template <typename I1, typename I2, typename... X>
-using BatchDims = ddc::type_seq_remove_t<ddc::detail::TypeSeq<X...>, ddc::detail::TypeSeq<I1, I2>>;
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
@@ -159,11 +149,16 @@ void InterestDimInitializer(std::size_t const ncells)
 
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
-template <typename ExecSpace, typename MemorySpace, typename I1, typename I2, typename... X>
+template <
+        typename ExecSpace,
+        typename MemorySpace,
+        typename DDimI1,
+        typename DDimI2,
+        typename... DDims>
 void ExtrapolationRuleSplineTest()
 {
-    using DDimI1 = DDimGPS1<I1>;
-    using DDimI2 = DDimGPS2<I2>;
+    using I1 = typename DDimI1::continuous_dimension_type;
+    using I2 = typename DDimI2::continuous_dimension_type;
 
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;
@@ -179,12 +174,12 @@ void ExtrapolationRuleSplineTest()
     ddc::DiscreteDomain<DDimI1, DDimI2> const interpolation_domain(
             GrevillePoints1<BSplines<I1>>::template get_domain<DDimI1>(),
             GrevillePoints2<BSplines<I2>>::template get_domain<DDimI2>());
-    // If we remove auto using the constructor syntax, nvcc does not compile
-    auto const dom_vals_tmp
-            = ddc::DiscreteDomain<X...>(ddc::DiscreteDomain<X>(DElem<X>(0), DVect<X>(ncells))...);
-    ddc::DiscreteDomain<DDim<X, I1, I2>...> const dom_vals = ddc::replace_dim_of<I1, DDimI1>(
-            ddc::replace_dim_of<I2, DDimI2>(dom_vals_tmp, interpolation_domain),
-            interpolation_domain);
+    // The following line creates a discrete domain over all dimensions (DDims...) where we immediately
+    // remove the dimensions DDimI1 and DDimI2.
+    ddc::remove_dims_of_t<ddc::DiscreteDomain<DDims...>, DDimI1, DDimI2> const dom_vals_tmp(
+            ddc::DiscreteDomain<DDims...>(
+                    ddc::DiscreteDomain<DDims>(DElem<DDims>(0), DVect<DDims>(ncells))...));
+    ddc::DiscreteDomain<DDims...> const dom_vals(dom_vals_tmp, interpolation_domain);
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
     ddc::SplineBuilder2D<
@@ -199,7 +194,7 @@ void ExtrapolationRuleSplineTest()
             s_bcl2,
             s_bcr2,
             ddc::SplineSolver::GINKGO,
-            DDim<X, I1, I2>...> const spline_builder(dom_vals);
+            DDims...> const spline_builder(dom_vals);
 
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<DDimI1, DDimI2> const dom_interpolation
@@ -219,7 +214,7 @@ void ExtrapolationRuleSplineTest()
     ddc::parallel_for_each(
             exec_space,
             vals.domain(),
-            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
+            KOKKOS_LAMBDA(DElem<DDims...> const e) {
                 vals(e) = vals_1d(DElem<DDimI1, DDimI2>(e));
             });
 
@@ -275,7 +270,7 @@ void ExtrapolationRuleSplineTest()
             extrapolation_rule_dim_1_type,
             extrapolation_rule_dim_2_type,
             extrapolation_rule_dim_2_type,
-            DDim<X, I1, I2>...> const
+            DDims...> const
             spline_evaluator_batched(
                     extrapolation_rule_left_dim_1,
                     extrapolation_rule_right_dim_1,
@@ -292,7 +287,7 @@ void ExtrapolationRuleSplineTest()
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
-            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
+            KOKKOS_LAMBDA(DElem<DDims...> const e) {
                 coords_eval(e) = ddc::coordinate(DElem<DDimI1, DDimI2>(e)) + displ;
             });
 
@@ -310,7 +305,7 @@ void ExtrapolationRuleSplineTest()
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(DElem<DDim<X, I1, I2>...> const e) {
+            KOKKOS_LAMBDA(DElem<DDims...> const e) {
 #if defined(ER_NULL)
                 return Kokkos::abs(spline_eval(e));
 #elif defined(ER_CONSTANT)
@@ -321,7 +316,7 @@ void ExtrapolationRuleSplineTest()
                 double tmp;
                 if (Coord<I2>(coords_eval(e)) > xN<I2>()) {
 #if defined(BC_PERIODIC)
-                    tmp = vals(ddc::DiscreteElement<DDim<X, I1, I2>...>(
+                    tmp = vals(ddc::DiscreteElement<DDims...>(
                             vals.template domain<DDimI1>().back(),
                             e_without_interest));
 #else
@@ -329,13 +324,13 @@ void ExtrapolationRuleSplineTest()
                             vals.domain(),
                             vals.template domain<DDimI1, DDimI2>()))::discrete_element_type const
                             e_batch(e);
-                    tmp = vals(ddc::DiscreteElement<DDim<X, I1, I2>...>(
+                    tmp = vals(ddc::DiscreteElement<DDims...>(
                             vals.template domain<DDimI1>().back(),
                             vals.template domain<DDimI2>().back(),
                             e_batch));
 #endif
                 } else {
-                    tmp = vals(ddc::DiscreteElement<DDim<X, I1, I2>...>(
+                    tmp = vals(ddc::DiscreteElement<DDims...>(
                             vals.template domain<DDimI1>().back(),
                             e_without_interest));
                 }
@@ -373,10 +368,10 @@ TEST(SUFFIX(ExtrapolationRuleSplineHost), 2DXY)
     ExtrapolationRuleSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
-            DimX,
-            DimY,
-            DimX,
-            DimY>();
+            DDimGPS1<DimX>,
+            DDimGPS2<DimY>,
+            DDimGPS1<DimX>,
+            DDimGPS2<DimY>>();
 }
 
 TEST(SUFFIX(ExtrapolationRuleSplineDevice), 2DXY)
@@ -384,8 +379,8 @@ TEST(SUFFIX(ExtrapolationRuleSplineDevice), 2DXY)
     ExtrapolationRuleSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
-            DimX,
-            DimY,
-            DimX,
-            DimY>();
+            DDimGPS1<DimX>,
+            DDimGPS2<DimY>,
+            DDimGPS1<DimX>,
+            DDimGPS2<DimY>>();
 }

@@ -264,10 +264,9 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteDomain() = default;
 
-    // Construct a DiscreteDomain from a reordered copy of `domain`
-    template <class... ODDims>
-    KOKKOS_FUNCTION constexpr explicit DiscreteDomain(
-            [[maybe_unused]] DiscreteDomain<ODDims...> const& domain)
+    /// Construct a DiscreteDomain by copies and merge of domains
+    template <class... DDoms, class = std::enable_if_t<(is_discrete_domain_v<DDoms> && ...)>>
+    KOKKOS_FUNCTION constexpr explicit DiscreteDomain([[maybe_unused]] DDoms const&... domains)
     {
     }
 

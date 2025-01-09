@@ -179,27 +179,28 @@ void InterestDimInitializer(std::size_t const ncells)
 template <typename ExecSpace, typename MemorySpace, typename I, typename... X>
 void BatchedSplineTest()
 {
+    using DDimI = DDimGPS<I>;
+
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;
 
     std::size_t const ncells = 10;
-    InterestDimInitializer<DDim<I, I>>(ncells);
+    InterestDimInitializer<DDimI>(ncells);
 
     // Create the values domain (mesh)
-    ddc::DiscreteDomain<DDim<I, I>> const interpolation_domain
-            = GrevillePoints<BSplines<I>>::template get_domain<DDim<I, I>>();
+    ddc::DiscreteDomain<DDimI> const interpolation_domain
+            = GrevillePoints<BSplines<I>>::template get_domain<DDimI>();
     // If we remove auto using the constructor syntax, nvcc does not compile
-    auto const dom_vals_tmp = ddc::DiscreteDomain<DDim<X, void>...>(
-            ddc::DiscreteDomain<
-                    DDim<X, void>>(DElem<DDim<X, void>>(0), DVect<DDim<X, void>>(ncells))...);
+    auto const dom_vals_tmp
+            = ddc::DiscreteDomain<X...>(ddc::DiscreteDomain<X>(DElem<X>(0), DVect<X>(ncells))...);
     ddc::DiscreteDomain<DDim<X, I>...> const dom_vals
-            = ddc::replace_dim_of<DDim<I, void>, DDim<I, I>>(dom_vals_tmp, interpolation_domain);
+            = ddc::replace_dim_of<I, DDimI>(dom_vals_tmp, interpolation_domain);
 
 #if defined(BC_HERMITE)
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I>> const
             derivs_domain(DElem<ddc::Deriv<I>>(1), DVect<ddc::Deriv<I>>(s_degree_x / 2));
-    auto const dom_derivs = ddc::replace_dim_of<DDim<I, I>, ddc::Deriv<I>>(dom_vals, derivs_domain);
+    auto const dom_derivs = ddc::replace_dim_of<DDimI, ddc::Deriv<I>>(dom_vals, derivs_domain);
 #endif
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
@@ -207,7 +208,7 @@ void BatchedSplineTest()
             ExecSpace,
             MemorySpace,
             BSplines<I>,
-            DDim<I, I>,
+            DDimI,
             s_bcl,
             s_bcr,
 #if defined(SOLVER_LAPACK)
@@ -218,14 +219,14 @@ void BatchedSplineTest()
             DDim<X, I>...> const spline_builder(dom_vals);
 
     // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
-    ddc::DiscreteDomain<DDim<I, I>> const dom_interpolation = spline_builder.interpolation_domain();
+    ddc::DiscreteDomain<DDimI> const dom_interpolation = spline_builder.interpolation_domain();
     auto const dom_batch = spline_builder.batch_domain();
     auto const dom_spline = spline_builder.batched_spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
     ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
-    evaluator_type<DDim<I, I>> const evaluator(dom_interpolation);
+    evaluator_type<DDimI> const evaluator(dom_interpolation);
     evaluator(vals_1d_host);
     auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
     ddc::ChunkSpan const vals_1d = vals_1d_alloc.span_view();
@@ -235,9 +236,7 @@ void BatchedSplineTest()
     ddc::parallel_for_each(
             exec_space,
             vals.domain(),
-            KOKKOS_LAMBDA(DElem<DDim<X, I>...> const e) {
-                vals(e) = vals_1d(DElem<DDim<I, I>>(e));
-            });
+            KOKKOS_LAMBDA(DElem<DDim<X, I>...> const e) { vals(e) = vals_1d(DElem<DDimI>(e)); });
 
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
@@ -315,7 +314,7 @@ void BatchedSplineTest()
             ExecSpace,
             MemorySpace,
             BSplines<I>,
-            DDim<I, I>,
+            DDimI,
             extrapolation_rule_type,
             extrapolation_rule_type,
             DDim<X, I>...> const spline_evaluator_batched(extrapolation_rule, extrapolation_rule);
@@ -327,7 +326,7 @@ void BatchedSplineTest()
             exec_space,
             coords_eval.domain(),
             KOKKOS_LAMBDA(DElem<DDim<X, I>...> const e) {
-                coords_eval(e) = ddc::coordinate(DElem<DDim<I, I>>(e));
+                coords_eval(e) = ddc::coordinate(DElem<DDimI>(e));
             });
 
 
@@ -360,7 +359,7 @@ void BatchedSplineTest()
             0.,
             ddc::reducer::max<double>(),
             KOKKOS_LAMBDA(DElem<DDim<X, I>...> const e) {
-                Coord<I> const x = ddc::coordinate(DElem<DDim<I, I>>(e));
+                Coord<I> const x = ddc::coordinate(DElem<DDimI>(e));
                 return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, 1));
             });
     double const max_norm_error_integ = ddc::parallel_transform_reduce(
@@ -379,7 +378,7 @@ void BatchedSplineTest()
     double const max_norm_diff = evaluator.max_norm(1);
     double const max_norm_int = evaluator.max_norm(-1);
 
-    SplineErrorBounds<evaluator_type<DDim<I, I>>> const error_bounds(evaluator);
+    SplineErrorBounds<evaluator_type<DDimI>> const error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
             std::max(error_bounds.error_bound(dx<I>(ncells), s_degree_x), 1.0e-14 * max_norm));

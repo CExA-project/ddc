@@ -382,7 +382,9 @@ public:
 };
 
 template <class DataType, class... Properties, class... DDims>
-ChunkSpan(Kokkos::View<DataType, Properties...> const& view, DiscreteDomain<DDims...> domain)
+KOKKOS_DEDUCTION_GUIDE ChunkSpan(
+        Kokkos::View<DataType, Properties...> const& view,
+        DiscreteDomain<DDims...> domain)
         -> ChunkSpan<
                 detail::kokkos_to_mdspan_element_t<
                         typename Kokkos::View<DataType, Properties...>::data_type>,

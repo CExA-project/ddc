@@ -68,7 +68,9 @@ TEST(ChunkSpan1DTest, CtadFromKokkosView)
                  ddc::ChunkSpan<const int, DDomX, Kokkos::layout_right, Kokkos::HostSpace>>));
 }
 
-TEST(ChunkSpan1DTest, CtadOnDevice)
+namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_SPAN_CPP) {
+
+void TestChunkSpan1DTestCtadOnDevice()
 {
     Kokkos::View<int*, Kokkos::LayoutRight> const view("view", 3);
     Kokkos::deep_copy(view, 1);
@@ -83,6 +85,13 @@ TEST(ChunkSpan1DTest, CtadOnDevice)
             },
             sum);
     EXPECT_EQ(sum, view.size());
+}
+
+} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_SPAN_CPP)
+
+TEST(ChunkSpan1DTest, CtadOnDevice)
+{
+    TestChunkSpan1DTestCtadOnDevice();
 }
 
 TEST(ChunkSpan2DTest, CtorContiguousLayoutRightKokkosView)

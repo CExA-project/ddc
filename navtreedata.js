@@ -97,7 +97,7 @@ var NAVTREEINDEX =
 "classddc_1_1KokkosAllocator.html#a1c8dc6e45deb6ba4ec9aabb72317ca6b",
 "classddc_1_1SplineBuilder.html#a698e5f8fbe4834fc142c4f9b68bb9c1a",
 "classddc_1_1SplineEvaluator2D.html#ad1615a10fc12ca15e6c34121e8d1f7ed",
-"namespaceddc.html#a3d600c6f06ea28fe24517e6ea9e918eb",
+"namespaceddc.html#a469cf66eab1419498e8bf75da55fbba4",
 "structddc_1_1reducer_1_1lor.html#a2a4a1a017019f131705656b77dcf537d"
 ];
 

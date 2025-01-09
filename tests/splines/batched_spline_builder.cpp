@@ -183,11 +183,9 @@ void BatchedSplineTest()
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDimI> const interpolation_domain
             = GrevillePoints<BSplines<I>>::template get_domain<DDimI>();
-    // The following line creates a discrete domain over all dimensions (DDims...) where we immediately
-    // remove the dimension DDimI.
-    ddc::remove_dims_of_t<ddc::DiscreteDomain<DDims...>, DDimI> const dom_vals_tmp(
-            ddc::DiscreteDomain<DDims...>(
-                    ddc::DiscreteDomain<DDims>(DElem<DDims>(0), DVect<DDims>(ncells))...));
+    // The following line creates a discrete domain over all dimensions (DDims...) except DDimI.
+    auto const dom_vals_tmp = ddc::remove_dims_of_t<ddc::DiscreteDomain<DDims...>, DDimI>(
+            ddc::DiscreteDomain<DDims>(DElem<DDims>(0), DVect<DDims>(ncells))...);
     ddc::DiscreteDomain<DDims...> const dom_vals(dom_vals_tmp, interpolation_domain);
 
 #if defined(BC_HERMITE)

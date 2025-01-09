@@ -174,11 +174,9 @@ void ExtrapolationRuleSplineTest()
     ddc::DiscreteDomain<DDimI1, DDimI2> const interpolation_domain(
             GrevillePoints1<BSplines<I1>>::template get_domain<DDimI1>(),
             GrevillePoints2<BSplines<I2>>::template get_domain<DDimI2>());
-    // The following line creates a discrete domain over all dimensions (DDims...) where we immediately
-    // remove the dimensions DDimI1 and DDimI2.
-    ddc::remove_dims_of_t<ddc::DiscreteDomain<DDims...>, DDimI1, DDimI2> const dom_vals_tmp(
-            ddc::DiscreteDomain<DDims...>(
-                    ddc::DiscreteDomain<DDims>(DElem<DDims>(0), DVect<DDims>(ncells))...));
+    // The following line creates a discrete domain over all dimensions (DDims...) except DDimI1 and DDimI2.
+    auto const dom_vals_tmp = ddc::remove_dims_of_t<ddc::DiscreteDomain<DDims...>, DDimI1, DDimI2>(
+            ddc::DiscreteDomain<DDims>(DElem<DDims>(0), DVect<DDims>(ncells))...);
     ddc::DiscreteDomain<DDims...> const dom_vals(dom_vals_tmp, interpolation_domain);
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions

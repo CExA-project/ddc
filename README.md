@@ -29,6 +29,27 @@ If you like the project, please leave us a github star.
 
 If you want to know more, join un on [Slack](https://join.slack.com/t/ddc-lib/shared_invite/zt-14b6rjcrn-AwSfM6_arEamAKk_VgQPhg)
 
+## Prerequisites
+
+To use DDC core, one needs the following dependencies:
+
+* a C++17-compliant compiler
+* CMake 3.22...<4
+* Kokkos 4.4...<5
+* (optional, micro benchmarking) Benchmark 1.8...<2
+* (optional, documentation) Doxygen 1.8.13...<2
+* (optional, unit-testing) GoogleTest 1.14...<2
+
+To use DDC components, one needs the following dependencies:
+
+* (optional, fft interface) DDC::fft
+  * Kokkos-fft 0.2.1...<1
+* (optional, IO interface) DDC::pdi
+  * PDI 1.6...<2
+* (optional, spline interpolation) DDC::splines
+  * Ginkgo 1.8.0
+  * Kokkos Kernels 4.5.1...<5
+
 ## Getting the code and basic configuration
 
 ```bash
@@ -62,3 +83,7 @@ One can find the formatting style in the file `.clang-format`.
 
 > [!WARNING]
 > The formatting might not give the same result with different versions of a tool.
+
+## Known issues
+
+* Kokkos 4.5.0 embeds a version of mdspan that is not compatible with DDC, see <https://github.com/kokkos/mdspan/pull/368>. This issue has been fixed in Kokkos 4.5.1.

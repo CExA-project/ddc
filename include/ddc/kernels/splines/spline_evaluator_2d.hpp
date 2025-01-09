@@ -1087,14 +1087,10 @@ private:
      * This function firstly deals with the boundary conditions and calls the SplineEvaluator2D::eval_no_bc function
      * to evaluate.
      *
-     * @param[in] coord_eval
-     * 			The 2D coordinate where we want to evaluate.
-     * @param[in] spline_coef
-     * 			The B-splines coefficients of the function we want to evaluate.
-     * @param[out] vals1
-     * 			A ChunkSpan with the not-null values of each function of the spline in the first dimension.
-     * @param[out] vals2
-     * 			A ChunkSpan with the not-null values of each function of the spline in the second dimension.
+     * @param[in] coord_eval The 2D coordinate where we want to evaluate.
+     * @param[in] spline_coef The B-splines coefficients of the function we want to evaluate.
+     * @param[out] vals1 A ChunkSpan with the not-null values of each function of the spline in the first dimension.
+     * @param[out] vals2 A ChunkSpan with the not-null values of each function of the spline in the second dimension.
      *
      * @return A double with the value of the function at the coordinate given.
      *
@@ -1156,16 +1152,10 @@ private:
     /**
      * @brief Evaluate the function or its derivative at the coordinate given.
      *
-     * @param[in] coord_eval
-     * 			The coordinate where we want to evaluate.
-     * @param[in] splne_coef
-     * 			The B-splines coefficients of the function we want to evaluate.
-     * @tparam EvalType1
-     * 			A flag indicating if we evaluate the function or its derivative in the first dimension.
-     * 			The type of this object is either `eval_type` or `eval_deriv_type`.
-     * @tparam EvalType2
-     * 			A flag indicating if we evaluate the function or its derivative in the second dimension.
-     *          The type of this object is either `eval_type` or `eval_deriv_type`.
+     * @param[in] coord_eval The coordinate where we want to evaluate.
+     * @param[in] splne_coef The B-splines coefficients of the function we want to evaluate.
+     * @tparam EvalType1 A flag indicating if we evaluate the function or its derivative in the first dimension. The type of this object is either `eval_type` or `eval_deriv_type`.
+     * @tparam EvalType2 A flag indicating if we evaluate the function or its derivative in the second dimension. The type of this object is either `eval_type` or `eval_deriv_type`.
      */
     template <class EvalType1, class EvalType2, class Layout, class... CoordsDims>
     KOKKOS_INLINE_FUNCTION double eval_no_bc(

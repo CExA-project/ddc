@@ -24,7 +24,7 @@
 namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP) {
 
 void fill_identity(
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS mat)
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const& mat)
 {
     for (std::size_t i(0); i < mat.extent(0); ++i) {
         for (std::size_t j(0); j < mat.extent(1); ++j) {
@@ -34,7 +34,7 @@ void fill_identity(
 }
 
 void copy_matrix(
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS copy,
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const& copy,
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace> const& mat)
 {
     assert(mat.size() == copy.extent(0));
@@ -48,8 +48,9 @@ void copy_matrix(
 }
 
 void check_inverse(
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const&
+                matrix,
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const& inv)
 {
     double const TOL = 1e-10;
     std::size_t const N = matrix.extent(0);
@@ -66,8 +67,9 @@ void check_inverse(
 }
 
 void check_inverse_transpose(
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS matrix,
-        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS inv)
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const&
+                matrix,
+        ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const& inv)
 {
     double const TOL = 1e-10;
     std::size_t const N = matrix.extent(0);

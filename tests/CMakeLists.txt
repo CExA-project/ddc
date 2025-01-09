@@ -45,3 +45,7 @@ endif()
 if("${DDC_BUILD_KERNELS_SPLINES}")
     add_subdirectory(splines)
 endif()
+
+if("${DDC_BUILD_PDI_WRAPPER}")
+    add_subdirectory(pdi)
+endif()

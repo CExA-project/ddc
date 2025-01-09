@@ -104,15 +104,7 @@ public:
     }
 
     template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
-    void operator()([[maybe_unused]] index_type<void> unused_id, typename Reducer::value_type& a)
-            const
-    {
-        a = reducer(a, functor(DiscreteElement<>()));
-    }
-
-    template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
     KOKKOS_FUNCTION void operator()(
-            use_annotated_operator,
             [[maybe_unused]] index_type<void> unused_id,
             typename Reducer::value_type& a) const
 
@@ -121,17 +113,7 @@ public:
     }
 
     template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N > 0), bool> = true>
-    void operator()(index_type<DDims>... ids, typename Reducer::value_type& a) const
-    {
-        a = reducer(a, functor(DiscreteElement<DDims...>(ids...)));
-    }
-
-
-    template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N > 0), bool> = true>
-    KOKKOS_FUNCTION void operator()(
-            use_annotated_operator,
-            index_type<DDims>... ids,
-            typename Reducer::value_type& a) const
+    KOKKOS_FUNCTION void operator()(index_type<DDims>... ids, typename Reducer::value_type& a) const
     {
         a = reducer(a, functor(DiscreteElement<DDims...>(ids...)));
     }

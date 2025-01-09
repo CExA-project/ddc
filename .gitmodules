@@ -14,7 +14,7 @@
 	url = https://github.com/kokkos/kokkos.git
 [submodule "vendor/kokkos-kernels"]
 	path = vendor/kokkos-kernels
-	url = https://github.com/yasahi-hpc/kokkos-kernels.git
+	url = https://github.com/kokkos/kokkos-kernels.git
 [submodule "vendor/doxygen-awesome-css"]
 	path = vendor/doxygen-awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css.git

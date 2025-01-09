@@ -459,7 +459,7 @@ TEST(Chunk2DTest, Cview)
             chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
         }
     }
-    auto const cview = chunk.span_cview();
+    ddc::ChunkSpan const cview = chunk.span_cview();
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
             // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy

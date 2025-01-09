@@ -37,9 +37,9 @@ using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
 
 TEST(DiscreteVectorXYZTest, ConstructorFromDiscreteVectors)
 {
-    std::ptrdiff_t const dv_x = 7;
-    std::ptrdiff_t const dv_y = 13;
-    std::ptrdiff_t const dv_z = 4;
+    ddc::DiscreteVectorElement const dv_x = 7;
+    ddc::DiscreteVectorElement const dv_y = 13;
+    ddc::DiscreteVectorElement const dv_z = 4;
     DVectXZ const ixz(dv_x, dv_z);
     DVectY const iy(dv_y);
     DVectXYZ const ixyz(ixz, iy);
@@ -86,13 +86,13 @@ TEST(DiscreteVectorXTest, PostDecrement)
 
 TEST(DiscreteVectorTest, ExternalBinaryOperatorPlus)
 {
-    std::ptrdiff_t const dv_x = 7;
-    std::ptrdiff_t const dv_y = -2;
-    std::ptrdiff_t const dv_z = 15;
+    ddc::DiscreteVectorElement const dv_x = 7;
+    ddc::DiscreteVectorElement const dv_y = -2;
+    ddc::DiscreteVectorElement const dv_z = 15;
     DVectXYZ const dxyz(dv_x, dv_y, dv_z);
-    std::ptrdiff_t const dv2_x = -4;
-    std::ptrdiff_t const dv2_y = 22;
-    std::ptrdiff_t const dv2_z = 8;
+    ddc::DiscreteVectorElement const dv2_x = -4;
+    ddc::DiscreteVectorElement const dv2_y = 22;
+    ddc::DiscreteVectorElement const dv2_z = 8;
     DVectX const dx(dv2_x);
     DVectXZ const dxz(dv2_x, dv2_z);
     DVectXYZ const dxyz2(dv2_x, dv2_y, dv2_z);
@@ -126,13 +126,13 @@ TEST(DiscreteVectorTest, ExternalBinaryOperatorPlus)
 
 TEST(DiscreteVectorTest, ExternalBinaryOperatorMinus)
 {
-    std::ptrdiff_t const dv_x = 7;
-    std::ptrdiff_t const dv_y = -2;
-    std::ptrdiff_t const dv_z = 15;
+    ddc::DiscreteVectorElement const dv_x = 7;
+    ddc::DiscreteVectorElement const dv_y = -2;
+    ddc::DiscreteVectorElement const dv_z = 15;
     DVectXYZ const dxyz(dv_x, dv_y, dv_z);
-    std::ptrdiff_t const dv2_x = -4;
-    std::ptrdiff_t const dv2_y = 22;
-    std::ptrdiff_t const dv2_z = 8;
+    ddc::DiscreteVectorElement const dv2_x = -4;
+    ddc::DiscreteVectorElement const dv2_y = 22;
+    ddc::DiscreteVectorElement const dv2_z = 8;
     DVectX const dx(dv2_x);
     DVectXZ const dxz(dv2_x, dv2_z);
     DVectXYZ const dxyz2(dv2_x, dv2_y, dv2_z);

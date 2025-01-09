@@ -38,8 +38,11 @@ class PeriodicSampling : detail::PeriodicSamplingBase
 public:
     using continuous_dimension_type = CDim;
 
-    using continuous_element_type = Coordinate<CDim>;
-
+#if defined(DDC_BUILD_DEPRECATED_CODE)
+    using continuous_element_type
+            [[deprecated("Use ddc::Coordinate<continuous_dimension_type> instead.")]]
+            = Coordinate<CDim>;
+#endif
 
     using discrete_dimension_type = PeriodicSampling;
 
@@ -51,7 +54,7 @@ public:
         friend class Impl;
 
     private:
-        continuous_element_type m_origin;
+        Coordinate<CDim> m_origin;
 
         Real m_step;
 
@@ -86,7 +89,7 @@ public:
          * @param step   the real distance between two points of mesh distance 1
          * @param n_period   the number of steps in a period
          */
-        Impl(continuous_element_type origin, Real step, std::size_t n_period)
+        Impl(Coordinate<CDim> origin, Real step, std::size_t n_period)
             : m_origin(origin)
             , m_step(step)
             , m_n_period(n_period)
@@ -102,7 +105,7 @@ public:
         Impl& operator=(Impl&& x) = default;
 
         /// @brief Lower bound index of the mesh
-        KOKKOS_FUNCTION continuous_element_type origin() const noexcept
+        KOKKOS_FUNCTION Coordinate<CDim> origin() const noexcept
         {
             return m_origin;
         }
@@ -126,11 +129,11 @@ public:
         }
 
         /// @brief Convert a mesh index into a position in `CDim`
-        KOKKOS_FUNCTION continuous_element_type
-        coordinate(discrete_element_type const& icoord) const noexcept
+        KOKKOS_FUNCTION Coordinate<CDim> coordinate(
+                discrete_element_type const& icoord) const noexcept
         {
             return m_origin
-                   + continuous_element_type(
+                   + Coordinate<CDim>(
                              static_cast<int>((icoord.uid() + m_n_period / 2) % m_n_period)
                              - static_cast<int>(m_n_period / 2))
                              * m_step;
@@ -183,8 +186,8 @@ public:
             DiscreteDomain<DDim>,
             DiscreteDomain<DDim>>
     init_ghosted(
-            continuous_element_type a,
-            continuous_element_type b,
+            Coordinate<CDim> a,
+            Coordinate<CDim> b,
             DiscreteVector<DDim> n,
             DiscreteVector<DDim> n_period,
             DiscreteVector<DDim> n_ghosts_before,
@@ -229,8 +232,8 @@ public:
             DiscreteDomain<DDim>,
             DiscreteDomain<DDim>>
     init_ghosted(
-            continuous_element_type a,
-            continuous_element_type b,
+            Coordinate<CDim> a,
+            Coordinate<CDim> b,
             DiscreteVector<DDim> n,
             DiscreteVector<DDim> n_period,
             DiscreteVector<DDim> n_ghosts)

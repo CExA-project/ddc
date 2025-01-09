@@ -37,8 +37,11 @@ class UniformPointSampling : detail::UniformPointSamplingBase
 public:
     using continuous_dimension_type = CDim;
 
-    using continuous_element_type = Coordinate<CDim>;
-
+#if defined(DDC_BUILD_DEPRECATED_CODE)
+    using continuous_element_type
+            [[deprecated("Use ddc::Coordinate<continuous_dimension_type> instead.")]]
+            = Coordinate<CDim>;
+#endif
 
     using discrete_dimension_type = UniformPointSampling;
 
@@ -50,7 +53,7 @@ public:
         friend class Impl;
 
     private:
-        continuous_element_type m_origin;
+        Coordinate<CDim> m_origin;
 
         Real m_step;
 
@@ -81,7 +84,7 @@ public:
          * @param origin the real coordinate of mesh coordinate 0
          * @param step   the real distance between two points of mesh distance 1
          */
-        Impl(continuous_element_type origin, Real step) : m_origin(origin), m_step(step)
+        Impl(Coordinate<CDim> origin, Real step) : m_origin(origin), m_step(step)
         {
             assert(step > 0);
         }
@@ -93,7 +96,7 @@ public:
         Impl& operator=(Impl&& x) = default;
 
         /// @brief Lower bound index of the mesh
-        KOKKOS_FUNCTION continuous_element_type origin() const noexcept
+        KOKKOS_FUNCTION Coordinate<CDim> origin() const noexcept
         {
             return m_origin;
         }
@@ -111,10 +114,10 @@ public:
         }
 
         /// @brief Convert a mesh index into a position in `CDim`
-        KOKKOS_FUNCTION continuous_element_type
-        coordinate(discrete_element_type const& icoord) const noexcept
+        KOKKOS_FUNCTION Coordinate<CDim> coordinate(
+                discrete_element_type const& icoord) const noexcept
         {
-            return m_origin + continuous_element_type(icoord.uid()) * m_step;
+            return m_origin + Coordinate<CDim>(icoord.uid() * m_step);
         }
     };
 

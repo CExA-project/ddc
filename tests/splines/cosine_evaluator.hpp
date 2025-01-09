@@ -44,7 +44,7 @@ struct CosineEvaluator
         KOKKOS_FUNCTION void operator()(
                 ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
         {
-            auto const& domain = chunk.domain();
+            ddc::DiscreteDomain<DDim> const domain = chunk.domain();
 
             for (ddc::DiscreteElement<DDim> const i : domain) {
                 chunk(i) = eval(ddc::coordinate(i), 0);
@@ -60,7 +60,7 @@ struct CosineEvaluator
                 ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk,
                 int const derivative) const
         {
-            auto const& domain = chunk.domain();
+            ddc::DiscreteDomain<DDim> const domain = chunk.domain();
 
             for (ddc::DiscreteElement<DDim> const i : domain) {
                 chunk(i) = eval(ddc::coordinate(i), derivative);

@@ -80,7 +80,7 @@ TYPED_TEST(UniformBSplinesFixture, KnotsAsInterpolationPoints)
     using DDimX = typename TestFixture::DDimX;
     using BSplinesX = typename TestFixture::BSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
-    constexpr ddc::BoundCond Bc = TestFixture::Bc;
+    ddc::BoundCond const Bc = TestFixture::Bc;
     using KnotsAsInterpolationPoints = ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>;
     using Knots = ddc::knot_discrete_dimension_t<BSplinesX>;
 

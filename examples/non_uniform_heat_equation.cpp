@@ -3,9 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 //! [includes]
-#ifndef NDEBUG
 #include <algorithm>
-#endif
 #include <cassert>
 #include <cmath>
 #include <cstddef>
@@ -36,36 +34,36 @@ std::vector<double> generate_random_vector(int n, double lower_bound, double hig
 
     double const dx = (higher_bound - lower_bound) / (n - 1);
 
-    std::vector<double> vec(n);
+    std::vector<double> points(n);
 
     // Generate a uniform mesh
     for (int i = 0; i < n; ++i) {
-        vec[i] = lower_bound + i * dx;
+        points[i] = lower_bound + i * dx;
     }
     // Add a random perturbation
     for (int i = 1; i < n - 1; ++i) {
-        vec[i] += dis(gen) * dx;
+        points[i] += dis(gen) * dx;
     }
 
-    assert(std::is_sorted(vec.begin(), vec.end()));
+    assert(std::is_sorted(points.begin(), points.end()));
 
-    return vec;
+    return points;
 }
 //! [vector_generator]
 
 std::vector<double> periodic_extrapolation_left(int gw, std::vector<double> const& points)
 {
-    assert(gw > 0);
-    assert(points.size() >= gw);
+    assert(gw >= 0);
+    assert(points.size() > gw);
+    assert(std::is_sorted(points.begin(), points.end()));
 
     std::vector<double> ghost(gw);
     if (gw > 0) {
-        auto rit1 = ghost.rbegin();
-        auto const rit1_e = ghost.rend();
-        auto rit2 = std::next(points.crbegin());
-        for (; rit1 != rit1_e; ++rit1, ++rit2) {
-            *rit1 = *rit2 - (points.back() - points.front());
-        }
+        double const period = points.back() - points.front();
+        auto const it = std::next(points.crbegin());
+        std::transform(it, std::next(it, gw), ghost.rbegin(), [period](double pos) {
+            return pos - period;
+        });
     }
 
     return ghost;
@@ -73,17 +71,17 @@ std::vector<double> periodic_extrapolation_left(int gw, std::vector<double> cons
 
 std::vector<double> periodic_extrapolation_right(int gw, std::vector<double> const& points)
 {
-    assert(gw > 0);
-    assert(points.size() >= gw);
+    assert(gw >= 0);
+    assert(points.size() > gw);
+    assert(std::is_sorted(points.begin(), points.end()));
 
     std::vector<double> ghost(gw);
     if (gw > 0) {
-        auto it1 = ghost.begin();
-        auto const it1_e = ghost.end();
-        auto it2 = std::next(points.cbegin());
-        for (; it1 != it1_e; ++it1, ++it2) {
-            *it1 = *it2 + (points.back() - points.front());
-        }
+        double const period = points.back() - points.front();
+        auto const it = std::next(points.cbegin());
+        std::transform(it, std::next(it, gw), ghost.begin(), [period](double pos) {
+            return pos + period;
+        });
     }
 
     return ghost;

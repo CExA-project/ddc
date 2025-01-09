@@ -32,27 +32,13 @@ public:
     explicit ForEachKokkosLambdaAdapter(F const& f) : m_f(f) {}
 
     template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
-    void operator()([[maybe_unused]] index_type<void> unused_id) const
-    {
-        m_f(DiscreteElement<>());
-    }
-
-    template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N == 0), bool> = true>
-    KOKKOS_FUNCTION void operator()(
-            use_annotated_operator,
-            [[maybe_unused]] index_type<void> unused_id) const
+    KOKKOS_FUNCTION void operator()([[maybe_unused]] index_type<void> unused_id) const
     {
         m_f(DiscreteElement<>());
     }
 
     template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N > 0), bool> = true>
-    void operator()(index_type<DDims>... ids) const
-    {
-        m_f(DiscreteElement<DDims...>(ids...));
-    }
-
-    template <std::size_t N = sizeof...(DDims), std::enable_if_t<(N > 0), bool> = true>
-    KOKKOS_FUNCTION void operator()(use_annotated_operator, index_type<DDims>... ids) const
+    KOKKOS_FUNCTION void operator()(index_type<DDims>... ids) const
     {
         m_f(DiscreteElement<DDims...>(ids...));
     }

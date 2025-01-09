@@ -7,6 +7,7 @@
 #include <array>
 #include <cassert>
 #include <memory>
+#include <tuple>
 
 #include <ddc/ddc.hpp>
 
@@ -130,9 +131,7 @@ public:
         explicit Impl(ddc::Coordinate<CDim> rmin, ddc::Coordinate<CDim> rmax, std::size_t ncells)
         {
             assert(ncells > 0);
-            ddc::DiscreteDomain<knot_discrete_dimension_type> pre_ghost;
-            ddc::DiscreteDomain<knot_discrete_dimension_type> post_ghost;
-            std::tie(m_break_point_domain, m_knot_domain, pre_ghost, post_ghost)
+            std::tie(m_break_point_domain, m_knot_domain, std::ignore, std::ignore)
                     = ddc::init_discrete_space<knot_discrete_dimension_type>(
                             knot_discrete_dimension_type::template init_ghosted<
                                     knot_discrete_dimension_type>(

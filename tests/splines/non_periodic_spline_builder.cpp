@@ -66,9 +66,8 @@ using evaluator_type = CosineEvaluator::Evaluator<DDimX>;
 using evaluator_type = PolynomialEvaluator::Evaluator<DDimX, s_degree_x>;
 #endif
 
-using IndexX = ddc::DiscreteElement<DDimX>;
+using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
-using BsplIndexX = ddc::DiscreteElement<BSplinesX>;
 using SplineX = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX>>;
 using FieldX = ddc::Chunk<double, ddc::DiscreteDomain<DDimX>>;
 using CoordX = ddc::Coordinate<DimX>;
@@ -80,16 +79,16 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     using execution_space = Kokkos::DefaultExecutionSpace;
     using memory_space = execution_space::memory_space;
 
-    CoordX constexpr x0(0.);
-    CoordX constexpr xN(1.);
-    std::size_t constexpr ncells = 10;
+    CoordX const x0(0.);
+    CoordX const xN(1.);
+    std::size_t const ncells = 10;
 
     // 1. Create BSplines
     {
 #if defined(BSPLINES_TYPE_UNIFORM)
         ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-        DVectX constexpr npoints(ncells + 1);
+        DVectX const npoints(ncells + 1);
         std::vector<CoordX> breaks(npoints);
         double const dx = (xN - x0) / ncells;
         for (int i(0); i < npoints; ++i) {
@@ -100,10 +99,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     }
     ddc::DiscreteDomain<BSplinesX> const dom_bsplines_x(
             ddc::discrete_space<BSplinesX>().full_domain());
-    ddc::DiscreteDomain<ddc::Deriv<DimX>> const derivs_domain
-            = ddc::DiscreteDomain<ddc::Deriv<DimX>>(
-                    ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
-                    ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree_x / 2));
+    ddc::DiscreteDomain<ddc::Deriv<DimX>> const derivs_domain(
+            ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
+            ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree_x / 2));
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
@@ -131,9 +129,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::parallel_for_each(
             execution_space(),
             yvals.domain(),
-            KOKKOS_LAMBDA(IndexX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
+            KOKKOS_LAMBDA(DElemX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
 
-    int constexpr shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
+    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_lhs_alloc(derivs_domain, ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
@@ -158,13 +156,13 @@ void TestNonPeriodicSplineBuilderTestIdentity()
 
     // 6. Finally build the spline by filling `coef`
 #if defined(BCL_HERMITE)
-    auto const deriv_l = std::optional(derivs_lhs.span_cview());
+    std::optional const deriv_l(derivs_lhs.span_cview());
 #else
     decltype(std::optional(derivs_lhs.span_cview())) const deriv_l = std::nullopt;
 #endif
 
 #if defined(BCR_HERMITE)
-    auto const deriv_r = std::optional(derivs_rhs.span_cview());
+    std::optional const deriv_r(derivs_rhs.span_cview());
 #else
     decltype(std::optional(derivs_rhs.span_cview())) const deriv_r = std::nullopt;
 #endif
@@ -188,7 +186,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::parallel_for_each(
             execution_space(),
             interpolation_domain,
-            KOKKOS_LAMBDA(IndexX const ix) { coords_eval(ix) = ddc::coordinate(ix); });
+            KOKKOS_LAMBDA(DElemX const ix) { coords_eval(ix) = ddc::coordinate(ix); });
 
     ddc::Chunk
             spline_eval_alloc(interpolation_domain, ddc::KokkosAllocator<double, memory_space>());
@@ -270,7 +268,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             interpolation_domain,
             0.0,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(IndexX const ix) {
+            KOKKOS_LAMBDA(DElemX const ix) {
                 double const error = spline_eval(ix) - yvals(ix);
                 return Kokkos::fabs(error);
             });
@@ -279,7 +277,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             interpolation_domain,
             0.0,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(IndexX const ix) {
+            KOKKOS_LAMBDA(DElemX const ix) {
                 CoordX const x = ddc::coordinate(ix);
                 double const error_deriv = spline_eval_deriv(ix) - evaluator.deriv(x, 1);
                 return Kokkos::fabs(error_deriv);
@@ -303,7 +301,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
         EXPECT_LE(max_norm_error_integ / max_norm_int, 1.0e-14);
         EXPECT_LE(max_norm_error_quadrature_integ / max_norm_int, 1.0e-14);
     } else {
-        SplineErrorBounds<evaluator_type> error_bounds(evaluator);
+        SplineErrorBounds<evaluator_type> const error_bounds(evaluator);
         const double h = (xN - x0) / ncells;
         EXPECT_LE(
                 max_norm_error,

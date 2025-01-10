@@ -192,7 +192,7 @@ endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
     # Ginkgo
-    find_package(Ginkgo 1.8.0 EXACT REQUIRED)
+    find_package(Ginkgo 1.8...<2 REQUIRED)
 
     # Lapacke
     find_package(LAPACKE REQUIRED)

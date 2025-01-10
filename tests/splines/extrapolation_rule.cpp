@@ -311,20 +311,20 @@ void ExtrapolationRuleSplineTest()
                         vals.domain(),
                         vals.template domain<DDimI1>()))::discrete_element_type const
                         e_without_interest(e);
+#if defined(BC_PERIODIC)
+                double const tmp = vals(vals.template domain<DDimI1>().back(), e_without_interest);
+#else
                 double tmp;
                 if (Coord<I2>(coords_eval(e)) > xN<I2>()) {
-#if defined(BC_PERIODIC)
-                    tmp = vals(vals.template domain<DDimI1>().back(), e_without_interest);
-#else
                     typename decltype(ddc::remove_dims_of(
                             vals.domain(),
                             vals.template domain<DDimI1, DDimI2>()))::discrete_element_type const
                             e_batch(e);
                     tmp = vals(vals.template domain<DDimI1, DDimI2>().back(), e_batch);
-#endif
                 } else {
                     tmp = vals(vals.template domain<DDimI1>().back(), e_without_interest);
                 }
+#endif
                 return Kokkos::abs(spline_eval(e) - tmp);
 #endif
             });

@@ -24,7 +24,7 @@ if(@DDC_BUILD_KERNELS_FFT@)
 endif()
 
 if(@DDC_BUILD_KERNELS_SPLINES@)
-   ddc_find_dependency(Ginkgo 1.8.0 EXACT)
+   ddc_find_dependency(Ginkgo 1.8...<2)
    # DDC installs a FindLAPACKE.cmake file.
    # We choose to rely on it by prepending to CMAKE_MODULE_PATH
    # only the time of calling ddc_find_dependency.

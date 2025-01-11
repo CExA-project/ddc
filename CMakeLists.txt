@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 cmake_minimum_required(VERSION 3.22)
-project(DDC VERSION 0.3.0 LANGUAGES CXX)
+project(DDC VERSION 0.4.0 LANGUAGES CXX)
 
 # List of options
 
@@ -192,7 +192,7 @@ endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
     # Ginkgo
-    find_package(Ginkgo 1.8.0 EXACT REQUIRED)
+    find_package(Ginkgo 1.8...<2 REQUIRED)
 
     # Lapacke
     find_package(LAPACKE REQUIRED)

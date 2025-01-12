@@ -40,15 +40,17 @@ endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/DDCTargets.cmake)
 
+# We always define public alias targets when impl targets are available.
 foreach(target core fft pdi splines)
-   if(TARGET DDC::impl::ddc_${target})
+   if((NOT TARGET DDC::${target}) AND (TARGET DDC::impl::ddc_${target}))
       add_library(DDC::${target} ALIAS DDC::impl::ddc_${target})
    endif()
 endforeach()
 
-foreach(target_component fft pdi splines)
-   if(TARGET DDC::impl::ddc_${target_component})
-      set(DDC_${target_component}_FOUND TRUE)
+# Components are found if the public targets exist
+foreach(component ${DDC_FIND_COMPONENTS})
+   if(TARGET DDC::${component})
+      set(DDC_${component}_FOUND TRUE)
    endif()
 endforeach()
 

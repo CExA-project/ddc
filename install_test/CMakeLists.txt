@@ -5,6 +5,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(test-installed-ddc LANGUAGES CXX)
 
+find_package(DDC 0.4 REQUIRED)
 find_package(DDC 0.4 REQUIRED COMPONENTS fft pdi splines)
 
 message("DDC options:")

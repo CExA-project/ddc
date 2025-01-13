@@ -233,7 +233,7 @@ Dimension Y</h3>
 <div class="line">        y_pre_mirror(y_pre_ghost.front() + y_domain.extents(), y_pre_ghost.extents());</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md7"></a>
 Time dimension</h3>
-<p>Then we handle the domains for the simulated time dimension. We first give the simulated time at which to stard and end the simulation.</p>
+<p>Then we handle the domains for the simulated time dimension. We first give the simulated time at which to start and end the simulation.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> start_time = 0.;</div>
 <div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> end_time = 10.;</div>
 </div><!-- fragment --><p>Then we use the CFL condition to determine the time step of the simulation.</p>
@@ -273,7 +273,7 @@ Data allocation</h1>
 </div><!-- fragment --><p>Note that the <code>DeviceAllocator</code> is responsible for allocating memory on the default memory space.</p>
 <h1><a class="anchor" id="autotoc_md9"></a>
 Initial conditions</h1>
-<p>To set the initial conditions, the <code>ghosted_intial_temp</code> is created and acts as a pointer to the chunk. The const qualifier makes it clear that ghosted_initial_temp always references the same chunk, <code>ghosted_last_temp</code> in this case.</p>
+<p>To set the initial conditions, the <code>ghosted_initial_temp</code> is created and acts as a pointer to the chunk. The const qualifier makes it clear that ghosted_initial_temp always references the same chunk, <code>ghosted_last_temp</code> in this case.</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> ghosted_initial_temp = ghosted_last_temp.span_view();</div>
 <div class="ttc" id="anamespaceddc_html_classddc_1_1ChunkSpan"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition</b> <a href="chunk__span_8hpp_source.html#l00030">chunk_span.hpp:30</a></div></div>
 </div><!-- fragment --><p>Then, we iterate over each <em>DiscreteElement</em> of the domain to fill <code>ghosted_initial_temp</code> with the initial values of the simulation.</p>

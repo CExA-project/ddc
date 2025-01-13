@@ -342,14 +342,14 @@ $(document).ready(function(){initNavTree('bsplines__non__uniform_8hpp_source.htm
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        <span class="comment">/** @brief Evaluates non-zero B-spline derivatives at a given coordinate</span></div>
 <div class="line"><span class="lineno">  214</span><span class="comment">         *</span></div>
 <div class="line"><span class="lineno">  215</span><span class="comment">         * The derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)</span></div>
-<div class="line"><span class="lineno">  216</span><span class="comment">         * B-splines which are non-zero at any given point. It is these B-splines which are derivated.</span></div>
+<div class="line"><span class="lineno">  216</span><span class="comment">         * B-splines which are non-zero at any given point. It is these B-splines which are differentiated.</span></div>
 <div class="line"><span class="lineno">  217</span><span class="comment">         * A spline approximation of a derivative at coordinate x is a linear</span></div>
 <div class="line"><span class="lineno">  218</span><span class="comment">         * combination of those B-spline derivatives weighted with the spline coefficients of the spline-transformed</span></div>
 <div class="line"><span class="lineno">  219</span><span class="comment">         * initial discrete function.</span></div>
 <div class="line"><span class="lineno">  220</span><span class="comment">         *</span></div>
 <div class="line"><span class="lineno">  221</span><span class="comment">         * @param[out] derivs The derivatives of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.</span></div>
 <div class="line"><span class="lineno">  222</span><span class="comment">         * @param[in] x The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates.</span></div>
-<div class="line"><span class="lineno">  223</span><span class="comment">         * @return The index of the first B-spline which is derivated.</span></div>
+<div class="line"><span class="lineno">  223</span><span class="comment">         * @return The index of the first B-spline which is differentiated.</span></div>
 <div class="line"><span class="lineno">  224</span><span class="comment">         */</span></div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <a class="code hl_class" href="classddc_1_1NonUniformBSplines_1_1Impl.html">KOKKOS_INLINE_FUNCTION</a> discrete_element_type</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        <a class="code hl_function" href="classddc_1_1NonUniformBSplines_1_1Impl.html#af9113e1cf985b328239b7fd2f61a1097">eval_deriv</a>(DSpan1D derivs, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CDim&gt; <span class="keyword">const</span>&amp; x) <span class="keyword">const</span>;</div>
@@ -357,7 +357,7 @@ $(document).ready(function(){initNavTree('bsplines__non__uniform_8hpp_source.htm
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        <span class="comment">/** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate</span></div>
 <div class="line"><span class="lineno">  229</span><span class="comment">         *</span></div>
 <div class="line"><span class="lineno">  230</span><span class="comment">         * The values and derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)</span></div>
-<div class="line"><span class="lineno">  231</span><span class="comment">         * B-splines which are non-zero at any given point. It is these B-splines which are evaluated and derivated.</span></div>
+<div class="line"><span class="lineno">  231</span><span class="comment">         * B-splines which are non-zero at any given point. It is these B-splines which are evaluated and differentiated.</span></div>
 <div class="line"><span class="lineno">  232</span><span class="comment">         * A spline approximation of a derivative at coordinate x is a linear</span></div>
 <div class="line"><span class="lineno">  233</span><span class="comment">         * combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed</span></div>
 <div class="line"><span class="lineno">  234</span><span class="comment">         * initial discrete function.</span></div>

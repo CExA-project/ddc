@@ -755,7 +755,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>Evaluates non-zero B-spline derivatives at a given coordinate. </p>
-<p>The derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1) B-splines which are non-zero at any given point. It is these B-splines which are derivated. A spline approximation of a derivative at coordinate x is a linear combination of those B-spline derivatives weighted with the spline coefficients of the spline-transformed initial discrete function.</p>
+<p>The derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1) B-splines which are non-zero at any given point. It is these B-splines which are differentiated. A spline approximation of a derivative at coordinate x is a linear combination of those B-spline derivatives weighted with the spline coefficients of the spline-transformed initial discrete function.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">derivs</td><td>The derivatives of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements. </td></tr>
@@ -806,7 +806,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>Evaluates non-zero B-spline values and \(n\) derivatives at a given coordinate. </p>
-<p>The values and derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1) B-splines which are non-zero at any given point. It is these B-splines which are evaluated and derivated. A spline approximation of a derivative at coordinate x is a linear combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed initial discrete function.</p>
+<p>The values and derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1) B-splines which are non-zero at any given point. It is these B-splines which are evaluated and differentiated. A spline approximation of a derivative at coordinate x is a linear combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed initial discrete function.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">derivs</td><td>The values and \(n\) derivatives of the B-splines evaluated at coordinate x. It has to be a 2D mdspan of sizes (degree+1, n+1). </td></tr>

@@ -4,6 +4,5 @@
 
 [default.extend-words]
 # Don't correct these word (parts)
-benchs = "benchs"
 iy = "iy"
 ND = "ND"

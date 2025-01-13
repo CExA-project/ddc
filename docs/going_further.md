@@ -84,7 +84,7 @@ And we use them to build the 4 domains in the same way as for the X dimension.
 
 #### Time dimension
 
-Then we handle the domains for the simulated time dimension. We first give the simulated time at which to stard and end the simulation.
+Then we handle the domains for the simulated time dimension. We first give the simulated time at which to start and end the simulation.
 
 \snippet{trimleft} non_uniform_heat_equation.cpp main-start-t-parameters
 

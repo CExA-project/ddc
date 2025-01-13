@@ -186,7 +186,7 @@ public:
      *
      * [SHOULD BE PRIVATE (GPU programming limitation)]
      *
-     * Runs on a single thread to garantee ordering.
+     * Runs on a single thread to guarantee ordering.
      *
      * @param[in] dense_matrix The dense storage matrix whose non-zeros are extracted to fill the COO matrix.
      * @param[in] tol The tolerancy applied to filter the non-zeros.

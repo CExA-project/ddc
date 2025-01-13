@@ -48,7 +48,7 @@ public:
      * @param n The size of one of the dimensions of the square matrix.
      * @param kl The number of subdiagonals.
      * @param ku The number of superdiagonals.
-     * @param pds A boolean indicating if the matrix is positive-definite symetric or not.
+     * @param pds A boolean indicating if the matrix is positive-definite symmetric or not.
      *
      * @return The SplinesLinearProblem instance.
      */
@@ -82,7 +82,7 @@ public:
      * @param n The size of one of the dimensions of the whole square matrix.
      * @param kl The number of subdiagonals in the band block.
      * @param ku The number of superdiagonals in the band block.
-     * @param pds A boolean indicating if the band block is positive-definite symetric or not.
+     * @param pds A boolean indicating if the band block is positive-definite symmetric or not.
      * @param bottom_right_size The size of one of the dimensions of the bottom-right square block.
      * @param top_left_size The size of one of the dimensions of the top-left square block.
      *
@@ -121,7 +121,7 @@ public:
      * @param n The size of one of the dimensions of the whole square matrix.
      * @param kl The number of subdiagonals in the band block.
      * @param ku The number of superdiagonals in the band block.
-     * @param pds A boolean indicating if the band block is positive-definite symetric or not.
+     * @param pds A boolean indicating if the band block is positive-definite symmetric or not.
      *
      * @return The SplinesLinearProblem instance.
      */

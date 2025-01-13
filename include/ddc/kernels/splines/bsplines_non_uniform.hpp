@@ -213,14 +213,14 @@ public:
         /** @brief Evaluates non-zero B-spline derivatives at a given coordinate
          *
          * The derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
-         * B-splines which are non-zero at any given point. It is these B-splines which are derived.
+         * B-splines which are non-zero at any given point. It is these B-splines which are differentiated.
          * A spline approximation of a derivative at coordinate x is a linear
          * combination of those B-spline derivatives weighted with the spline coefficients of the spline-transformed
          * initial discrete function.
          *
          * @param[out] derivs The derivatives of the B-splines evaluated at coordinate x. It has to be a 1D mdspan with (degree+1) elements.
          * @param[in] x The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates.
-         * @return The index of the first B-spline which is derived.
+         * @return The index of the first B-spline which is differentiated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_deriv(DSpan1D derivs, ddc::Coordinate<CDim> const& x) const;
@@ -228,7 +228,7 @@ public:
         /** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate
          *
          * The values and derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
-         * B-splines which are non-zero at any given point. It is these B-splines which are evaluated and derived.
+         * B-splines which are non-zero at any given point. It is these B-splines which are evaluated and differentiated.
          * A spline approximation of a derivative at coordinate x is a linear
          * combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed
          * initial discrete function.

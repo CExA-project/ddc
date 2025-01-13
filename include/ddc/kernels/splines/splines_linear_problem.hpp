@@ -57,8 +57,8 @@ public:
     /**
      * @brief Set an element of the matrix at indexes i, j. It must not be called after `setup_solver`.
      *
-     * @param i The row index of the setted element.
-     * @param j The column index of the setted element.
+     * @param i The row index of the set element.
+     * @param j The column index of the set element.
      * @param aij The value to set in the element of the matrix.
      */
     virtual void set_element(std::size_t i, std::size_t j, double aij) = 0;

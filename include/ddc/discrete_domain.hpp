@@ -423,7 +423,7 @@ struct cartesian_prod<>
 template <typename... DDoms>
 using cartesian_prod_t = typename cartesian_prod<DDoms...>::type;
 
-// Computes the substraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
+// Computes the subtraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
 template <class... DDimsA, class... DDimsB>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
         DiscreteDomain<DDimsA...> const& DDom_a,
@@ -455,7 +455,7 @@ using remove_dims_of_t = decltype(remove_dims_of<DDims...>(std::declval<DDom>())
 
 namespace detail {
 
-// Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be usefull in its own, it helps for replace_dim_of
+// Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be useful in its own, it helps for replace_dim_of
 template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>
 KOKKOS_FUNCTION constexpr std::conditional_t<
         std::is_same_v<DDimA, DDim1>,

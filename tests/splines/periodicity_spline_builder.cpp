@@ -134,7 +134,7 @@ void PeriodicitySplineBuilderTest()
             ddc::SplineSolver::GINKGO,
             DDim<X>> const spline_builder(dom_vals);
 
-    // Compute usefull domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
+    // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<BSplines<X>> const dom_bsplines = spline_builder.spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions

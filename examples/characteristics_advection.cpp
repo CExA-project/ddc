@@ -256,7 +256,7 @@ int main(int argc, char** argv)
                     feet_coords(e) = ddc::coordinate(ddc::DiscreteElement<DDimX>(e))
                                      - ddc::Coordinate<X>(vx * ddc::step<DDimT>());
                 });
-        // Interpolate the values at feets on the grid
+        // Interpolate the values at feet on the grid
         spline_builder(coef, last_density.span_cview());
         spline_evaluator(next_density, feet_coords.span_cview(), coef.span_cview());
         //! [numerical scheme]

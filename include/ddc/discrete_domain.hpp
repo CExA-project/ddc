@@ -390,7 +390,7 @@ public:
     KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
             DiscreteVector<> const& /* dvect */) const noexcept
     {
-        return DiscreteElement<>();
+        return {};
     }
 
     template <class... ODims>
@@ -412,12 +412,12 @@ public:
 
     static DiscreteVector<> distance_from_front() noexcept
     {
-        return DiscreteVector<>();
+        return {};
     }
 
     static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
     {
-        return DiscreteVector<>();
+        return {};
     }
 
     static KOKKOS_FUNCTION constexpr bool empty() noexcept

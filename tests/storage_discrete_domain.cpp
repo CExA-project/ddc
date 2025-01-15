@@ -59,25 +59,25 @@ using DVectZYX = ddc::DiscreteVector<DDimZ, DDimY, DDimX>;
 using DDomZYX = ddc::StorageDiscreteDomain<DDimZ, DDimY, DDimX>;
 
 DElemX constexpr lbound_x(50);
-DVectX constexpr nelems_x(3);
-DElemX constexpr sentinel_x(lbound_x + nelems_x);
-DElemX constexpr ubound_x(sentinel_x - 1);
+// DVectX constexpr nelems_x(3);
+// DElemX constexpr sentinel_x(lbound_x + nelems_x);
+// DElemX constexpr ubound_x(sentinel_x - 1);
 
 
 DElemY constexpr lbound_y(4);
-DVectY constexpr nelems_y(10);
-DElemY constexpr sentinel_y(lbound_y);
-DElemY constexpr ubound_y(sentinel_y - 1);
+// DVectY constexpr nelems_y(10);
+// DElemY constexpr sentinel_y(lbound_y);
+// DElemY constexpr ubound_y(sentinel_y - 1);
 
-DElemZ constexpr lbound_z(7);
-DVectZ constexpr nelems_z(15);
+// DElemZ constexpr lbound_z(7);
+// DVectZ constexpr nelems_z(15);
 
-DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
-DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
-DElemXY constexpr ubound_x_y(ubound_x, ubound_y);
+// DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
+// DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
+// DElemXY constexpr ubound_x_y(ubound_x, ubound_y);
 
-DElemXZ constexpr lbound_x_z(lbound_x, lbound_z);
-DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
+// DElemXZ constexpr lbound_x_z(lbound_x, lbound_z);
+// DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
 
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_DOMAIN_CPP)
 

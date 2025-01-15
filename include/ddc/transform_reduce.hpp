@@ -9,7 +9,6 @@
 #include "ddc/detail/macros.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
-#include "ddc/strided_discrete_domain.hpp"
 
 namespace ddc {
 

@@ -49,7 +49,7 @@ struct ToTypeSeq<StridedDiscreteDomain<Tags...>>
 } // namespace detail
 
 template <class... ODDims>
-DiscreteVector<ODDims...> prod(
+KOKKOS_FUNCTION DiscreteVector<ODDims...> prod(
         DiscreteVector<ODDims...> const& lhs,
         DiscreteVector<ODDims...> const& rhs) noexcept
 {
@@ -95,7 +95,8 @@ public:
 
     /** Construct a StridedDiscreteDomain starting from element_begin with size points.
      * @param element_begin the lower bound in each direction
-     * @param size the number of points in each direction
+     * @param extents the number of points in each direction
+     * @param strides the step between two elements
      */
     KOKKOS_FUNCTION constexpr StridedDiscreteDomain(
             discrete_element_type const& element_begin,
@@ -218,7 +219,7 @@ public:
     // }
 
     template <class... DElems>
-    bool is_inside(DElems const&... delems) const noexcept
+    KOKKOS_FUNCTION bool is_inside(DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -243,7 +244,8 @@ public:
     }
 
     template <class... DElems>
-    DiscreteVector<DDims...> distance_from_front(DElems const&... delems) const noexcept
+    KOKKOS_FUNCTION DiscreteVector<DDims...> distance_from_front(
+            DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -429,9 +431,9 @@ public:
     }
 
     KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
-            DiscreteVector<> const& dvect) const noexcept
+            DiscreteVector<> const& /* dvect */) const noexcept
     {
-        return DiscreteElement<>();
+        return {};
     }
 
 #if defined(DDC_BUILD_DEPRECATED_CODE)
@@ -465,12 +467,12 @@ public:
 
     static DiscreteVector<> distance_from_front() noexcept
     {
-        return DiscreteVector<>();
+        return {};
     }
 
     static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
     {
-        return DiscreteVector<>();
+        return {};
     }
 
     static KOKKOS_FUNCTION constexpr bool empty() noexcept
@@ -510,7 +512,7 @@ using convert_type_seq_to_strided_discrete_domain_t =
 
 } // namespace detail
 
-// Computes the substraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
+// Computes the subtraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
 template <class... DDimsA, class... DDimsB>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
         StridedDiscreteDomain<DDimsA...> const& DDom_a,
@@ -525,7 +527,7 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
 
 namespace detail {
 
-// Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be usefull in its own, it helps for replace_dim_of
+// Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be useful in its own, it helps for replace_dim_of
 template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>
 KOKKOS_FUNCTION constexpr std::conditional_t<
         std::is_same_v<DDimA, DDim1>,

@@ -80,8 +80,8 @@ DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 DVectXY constexpr strides_x_y(strides_x, strides_y);
 DElemXY constexpr ubound_x_y(ubound_x, ubound_y);
 
-DElemXZ constexpr lbound_x_z(lbound_x, lbound_z);
-DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
+// DElemXZ constexpr lbound_x_z(lbound_x, lbound_z);
+// DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
 
 } // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_DOMAIN_CPP)
 

@@ -95,10 +95,10 @@ var NAVTREEINDEX =
 "annotated.html",
 "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a9f136133b73bafda0b8c4ff181f2ca42",
 "classddc_1_1KokkosAllocator.html#a1c8dc6e45deb6ba4ec9aabb72317ca6b",
-"classddc_1_1SplineBuilder.html#a698e5f8fbe4834fc142c4f9b68bb9c1a",
-"classddc_1_1SplineEvaluator2D.html#ad1615a10fc12ca15e6c34121e8d1f7ed",
-"namespaceddc.html#a469cf66eab1419498e8bf75da55fbba4",
-"structddc_1_1reducer_1_1lor.html#a2a4a1a017019f131705656b77dcf537d"
+"classddc_1_1SplineBuilder.html#a76d324d4ed4b62147185a718c248c0aa",
+"classddc_1_1SplineEvaluator2D.html#ad7e44f476b58daa7540526fae09852b5",
+"namespaceddc.html#a4a2fc8ce660318bd042ba52e917851a7",
+"structddc_1_1reducer_1_1max.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

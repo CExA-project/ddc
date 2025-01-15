@@ -8,8 +8,6 @@ var classddc_1_1PdiEvent =
     [ "operator=", "classddc_1_1PdiEvent.html#a4d05bd0db8022f1c59e9b92cdbb60855", null ],
     [ "with", "classddc_1_1PdiEvent.html#ada4058655f4cadaf359894d0a544d3b8", null ],
     [ "with", "classddc_1_1PdiEvent.html#ac52d3155e073493a6c1d93cc3938434a", null ],
-    [ "and_with", "classddc_1_1PdiEvent.html#a3d8e467ce0fc1b1d74795836e50775e3", null ],
     [ "with", "classddc_1_1PdiEvent.html#abe26c98bf242fc1140c668a830ee9a43", null ],
-    [ "with", "classddc_1_1PdiEvent.html#aa6da8de102bba2ca52f6ce201cf2b915", null ],
-    [ "and_with", "classddc_1_1PdiEvent.html#a2ccd8ca0c860ee77f9a62ce17354bbcd", null ]
+    [ "with", "classddc_1_1PdiEvent.html#aa6da8de102bba2ca52f6ce201cf2b915", null ]
 ];

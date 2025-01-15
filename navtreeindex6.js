@@ -1,9 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"structddc_1_1reducer_1_1lor.html#a2a4a1a017019f131705656b77dcf537d":[6,0,0,0,4,0],
-"structddc_1_1reducer_1_1lor.html#a2a4a1a017019f131705656b77dcf537d":[5,0,0,0,4,0],
-"structddc_1_1reducer_1_1lor.html#ad55bf58dbee06048a5b7a80f88c6f715":[6,0,0,0,4,1],
-"structddc_1_1reducer_1_1lor.html#ad55bf58dbee06048a5b7a80f88c6f715":[5,0,0,0,4,1],
 "structddc_1_1reducer_1_1max.html":[5,0,0,0,5],
 "structddc_1_1reducer_1_1max.html":[6,0,0,0,5],
 "structddc_1_1reducer_1_1max.html#ab07f0de9e0215ecf27bc51cdd9130dc5":[6,0,0,0,5,0],

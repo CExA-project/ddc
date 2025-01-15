@@ -109,15 +109,15 @@ plugins:
 
         ddc::PdiEvent("some_event")
                 .with("pdi_chunk_label", chunk)
-                .and_with("nb_event_called", nb_event_called);
+                .with("nb_event_called", nb_event_called);
 
         ddc::PdiEvent("some_event")
                 .with("pdi_chunk_label", chunk.span_view())
-                .and_with("nb_event_called", nb_event_called);
+                .with("nb_event_called", nb_event_called);
 
         ddc::PdiEvent("some_event")
                 .with("pdi_chunk_label", chunk.span_cview())
-                .and_with("nb_event_called", nb_event_called);
+                .with("nb_event_called", nb_event_called);
 
         EXPECT_EQ(nb_event_called, 3);
     }

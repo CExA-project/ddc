@@ -71,7 +71,7 @@ KOKKOS_FUNCTION ForwardIt lower_bound(ForwardIt first, ForwardIt last, const T& 
     typename std::iterator_traits<ForwardIt>::difference_type count = last - first;
     while (count > 0) {
         it = first;
-        typename std::iterator_traits<ForwardIt>::difference_type step = count / 2;
+        typename std::iterator_traits<ForwardIt>::difference_type const step = count / 2;
         it += step;
 
         if (comp(*it, value)) {
@@ -94,6 +94,16 @@ bool binary_search(ForwardIt first, ForwardIt last, const T& value, Compare comp
     first = ::ddc::detail::lower_bound(first, last, value, comp);
     return (!(first == last) && !(comp(value, *first)));
 }
+
+template <class DDim>
+struct GetUidFn
+{
+    KOKKOS_FUNCTION DiscreteElementType
+    operator()(DiscreteElement<DDim> const& delem) const noexcept
+    {
+        return delem.uid();
+    }
+};
 
 } // namespace detail
 
@@ -128,11 +138,10 @@ public:
     {
     }
 
-    /** Construct a StridedDiscreteDomain starting from element_begin with size points.
-     * @param element_begin the lower bound in each direction
-     * @param size the number of points in each direction
+    /** Construct a StorageDiscreteDomain with Kokkos::View explicitly listing the discrete elements.
+     * @param views list of Kokkos::View
      */
-    KOKKOS_FUNCTION explicit constexpr StorageDiscreteDomain(
+    explicit constexpr StorageDiscreteDomain(
             Kokkos::View<DiscreteElement<DDims>*, Kokkos::SharedSpace> const&... views)
     {
         ((m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>]
@@ -143,7 +152,7 @@ public:
                  Kokkos::DefaultExecutionSpace(),
                  views,
                  m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>],
-                 KOKKOS_LAMBDA(DiscreteElement<DDims> const& delem) { return delem.uid(); })),
+                 detail::GetUidFn<DDims>())),
          ...);
         Kokkos::fence("StorageDiscreteDomainCtor");
     }
@@ -550,7 +559,7 @@ using convert_type_seq_to_storage_discrete_domain_t =
 
 } // namespace detail
 
-// Computes the substraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
+// Computes the subtraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
 template <class... DDimsA, class... DDimsB>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
         StorageDiscreteDomain<DDimsA...> const& DDom_a,
@@ -565,7 +574,7 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
 
 namespace detail {
 
-// Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be usefull in its own, it helps for replace_dim_of
+// Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be useful in its own, it helps for replace_dim_of
 template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>
 KOKKOS_FUNCTION constexpr std::conditional_t<
         std::is_same_v<DDimA, DDim1>,

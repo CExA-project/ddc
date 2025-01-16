@@ -174,6 +174,12 @@ public:
         return DiscreteDomain(front() + n1, extents() - n1 - n2);
     }
 
+    KOKKOS_FUNCTION constexpr DiscreteElement<DDims...> operator()(
+            DiscreteVector<DDims...> const& dvect) const noexcept
+    {
+        return m_element_begin + dvect;
+    }
+
     template <class... ODDims>
     KOKKOS_FUNCTION constexpr auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
     {
@@ -185,6 +191,33 @@ public:
                 DiscreteElement<DDims...>(
                         (uid_or<DDims>(odomain.m_element_begin, uid<DDims>(m_element_begin)))...),
                 DiscreteVector<DDims...>((get_or<DDims>(oextents, get<DDims>(myextents)))...));
+    }
+
+    template <class... DElems>
+    bool contains(DElems const&... delems) const noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DElems::size()),
+                "Invalid number of dimensions");
+        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
+        return (((DiscreteElement<DDims>(take<DDims>(delems...))
+                  >= DiscreteElement<DDims>(m_element_begin))
+                 && ...)
+                && ((DiscreteElement<DDims>(take<DDims>(delems...))
+                     < DiscreteElement<DDims>(m_element_end))
+                    && ...));
+    }
+
+    template <class... DElems>
+    DiscreteVector<DDims...> distance_from_front(DElems const&... delems) const noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DElems::size()),
+                "Invalid number of dimensions");
+        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
+        return DiscreteVector<DDims...>(
+                (DiscreteElement<DDims>(take<DDims>(delems...))
+                 - DiscreteElement<DDims>(m_element_begin))...);
     }
 
     KOKKOS_FUNCTION constexpr bool empty() const noexcept
@@ -354,11 +387,37 @@ public:
         return *this;
     }
 
+    KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
+            DiscreteVector<> const& /* dvect */) const noexcept
+    {
+        return {};
+    }
+
     template <class... ODims>
     KOKKOS_FUNCTION constexpr DiscreteDomain restrict_with(
             DiscreteDomain<ODims...> const& /* odomain */) const
     {
         return *this;
+    }
+
+    static bool contains() noexcept
+    {
+        return true;
+    }
+
+    static bool contains(DiscreteElement<>) noexcept
+    {
+        return true;
+    }
+
+    static DiscreteVector<> distance_from_front() noexcept
+    {
+        return {};
+    }
+
+    static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
+    {
+        return {};
     }
 
     static KOKKOS_FUNCTION constexpr bool empty() noexcept

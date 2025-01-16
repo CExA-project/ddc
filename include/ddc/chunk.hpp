@@ -449,7 +449,7 @@ public:
                 SupportType::rank() == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        assert(this->m_domain.is_inside(delems...));
+        assert(this->m_domain.contains(delems...));
         return DDC_MDSPAN_ACCESS_OP(
                 this->m_allocation_mdspan,
                 detail::array(this->m_domain.distance_from_front(delems...)));
@@ -466,7 +466,7 @@ public:
                 SupportType::rank() == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        assert(this->m_domain.is_inside(delems...));
+        assert(this->m_domain.contains(delems...));
         return DDC_MDSPAN_ACCESS_OP(
                 this->m_allocation_mdspan,
                 detail::array(this->m_domain.distance_from_front(delems...)));

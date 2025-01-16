@@ -274,7 +274,7 @@ public:
     // }
 
     template <class... DElems>
-    KOKKOS_FUNCTION bool is_inside(DElems const&... delems) const noexcept
+    KOKKOS_FUNCTION bool contains(DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -296,7 +296,7 @@ public:
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        assert(is_inside(delems...));
+        assert(contains(delems...));
         return DiscreteVector<DDims...>(
                 (detail::lower_bound(
                          get<DDims>(m_views).data(),
@@ -502,12 +502,12 @@ public:
 //         return *this;
 //     }
 
-//     static bool is_inside() noexcept
+//     static bool contains() noexcept
 //     {
 //         return true;
 //     }
 
-//     static bool is_inside(DiscreteElement<>) noexcept
+//     static bool contains(DiscreteElement<>) noexcept
 //     {
 //         return true;
 //     }

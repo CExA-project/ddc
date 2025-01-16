@@ -248,8 +248,8 @@ TEST(DiscreteDomainTest, Remove)
 TEST(DiscreteDomainTest, IsInside)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
-    EXPECT_TRUE(dom_x_y.is_inside(lbound_x_y));
-    EXPECT_FALSE(dom_x_y.is_inside(lbound_x_y + nelems_x_y));
+    EXPECT_TRUE(dom_x_y.contains(lbound_x_y));
+    EXPECT_FALSE(dom_x_y.contains(lbound_x_y + nelems_x_y));
 }
 
 TEST(DiscreteDomainTest, DistanceFromFront)

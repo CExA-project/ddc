@@ -260,8 +260,8 @@ TEST(StridedDiscreteDomainTest, Remove)
 TEST(StridedDiscreteDomainTest, IsInside)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y, strides_x_y);
-    EXPECT_TRUE(dom_x_y.is_inside(lbound_x_y));
-    EXPECT_FALSE(dom_x_y.is_inside(lbound_x_y + DVectXY(1, 1)));
+    EXPECT_TRUE(dom_x_y.contains(lbound_x_y));
+    EXPECT_FALSE(dom_x_y.contains(lbound_x_y + DVectXY(1, 1)));
 }
 
 TEST(StridedDiscreteDomainTest, DistanceFromFront)

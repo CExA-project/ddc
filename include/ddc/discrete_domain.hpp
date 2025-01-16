@@ -194,7 +194,7 @@ public:
     }
 
     template <class... DElems>
-    bool is_inside(DElems const&... delems) const noexcept
+    bool contains(DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -400,12 +400,12 @@ public:
         return *this;
     }
 
-    static bool is_inside() noexcept
+    static bool contains() noexcept
     {
         return true;
     }
 
-    static bool is_inside(DiscreteElement<>) noexcept
+    static bool contains(DiscreteElement<>) noexcept
     {
         return true;
     }

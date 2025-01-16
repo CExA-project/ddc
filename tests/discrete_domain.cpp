@@ -245,11 +245,11 @@ TEST(DiscreteDomainTest, Remove)
             DDomXY(dom_x_y.front() + DVectXY(1, 4), dom_x_y.extents() - DVectXY(2, 5)));
 }
 
-TEST(DiscreteDomainTest, IsInside)
+TEST(DiscreteDomainTest, Contains)
 {
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
-    EXPECT_TRUE(dom_x_y.is_inside(lbound_x_y));
-    EXPECT_FALSE(dom_x_y.is_inside(lbound_x_y + nelems_x_y));
+    EXPECT_TRUE(dom_x_y.contains(lbound_x_y));
+    EXPECT_FALSE(dom_x_y.contains(lbound_x_y + nelems_x_y));
 }
 
 TEST(DiscreteDomainTest, DistanceFromFront)

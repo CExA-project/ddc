@@ -97,5 +97,5 @@ TEST(StorageDiscreteDomainTest, Constructor)
     EXPECT_EQ(dom_xy.distance_from_front(lbound_x + 2, lbound_y + 0), DVectXY(1, 0));
     EXPECT_EQ(dom_xy.distance_from_front(lbound_x + 2, lbound_y + 2), DVectXY(1, 1));
     EXPECT_EQ(dom_xy.distance_from_front(lbound_x + 2, lbound_y + 5), DVectXY(1, 2));
-    EXPECT_FALSE(dom_xy.is_inside(lbound_x + 1, lbound_y + 0));
+    EXPECT_FALSE(dom_xy.contains(lbound_x + 1, lbound_y + 0));
 }

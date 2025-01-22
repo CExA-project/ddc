@@ -300,7 +300,6 @@ write_basic_package_version_file(
 
 install(
     FILES
-        cmake/DDCCheckRequiredKokkosOptions.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
     DESTINATION ${DDC_INSTALL_CMAKEDIR}

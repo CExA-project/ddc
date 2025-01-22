@@ -14,28 +14,28 @@ endmacro()
 
 set(DDC_BUILD_DOUBLE_PRECISION @DDC_BUILD_DOUBLE_PRECISION@)
 
-ddc_find_dependency(Kokkos 4.4...<5)
+ddc_find_dependency(Kokkos @Kokkos_VERSION_MAJOR@.@Kokkos_VERSION_MINOR@.@Kokkos_VERSION_PATCH@)
 
 include(${CMAKE_CURRENT_LIST_DIR}/DDCCheckRequiredKokkosOptions.cmake)
 ddc_check_required_kokkos_options()
 
 if(@DDC_BUILD_KERNELS_FFT@)
-   ddc_find_dependency(KokkosFFT 0.2.1...<1)
+   ddc_find_dependency(KokkosFFT @KokkosFFT_VERSION_MAJOR@.@KokkosFFT_VERSION_MINOR@.@KokkosFFT_VERSION_PATCH@)
 endif()
 
 if(@DDC_BUILD_KERNELS_SPLINES@)
-   ddc_find_dependency(Ginkgo 1.8...<2)
+   ddc_find_dependency(Ginkgo @Ginkgo_VERSION_MAJOR@.@Ginkgo_VERSION_MINOR@.@Ginkgo_VERSION_PATCH@)
    # DDC installs a FindLAPACKE.cmake file.
    # We choose to rely on it by prepending to CMAKE_MODULE_PATH
    # only the time of calling ddc_find_dependency.
    list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
    ddc_find_dependency(LAPACKE)
    list(POP_FRONT CMAKE_MODULE_PATH)
-   ddc_find_dependency(KokkosKernels 4.5.1...<5)
+   ddc_find_dependency(KokkosKernels @KokkosKernels_VERSION_MAJOR@.@KokkosKernels_VERSION_MINOR@.@KokkosKernels_VERSION_PATCH@)
 endif()
 
 if(@DDC_BUILD_PDI_WRAPPER@)
-   ddc_find_dependency(PDI 1.6...<2 COMPONENTS C)
+   ddc_find_dependency(PDI @PDI_VERSION_MAJOR@.@PDI_VERSION_MINOR@.@PDI_VERSION_PATCH@ COMPONENTS C)
 endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/DDCTargets.cmake)

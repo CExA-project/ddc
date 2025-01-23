@@ -204,20 +204,6 @@ public:
         return m_element_begin + prod(dvect, m_strides);
     }
 
-    // template <class... ODDims>
-    // KOKKOS_FUNCTION constexpr auto restrict_with(
-    //         StridedDiscreteDomain<ODDims...> const& odomain) const
-    // {
-    //     assert(((uid<ODDims>(m_element_begin) <= uid<ODDims>(odomain.m_element_begin)) && ...));
-    //     assert(((uid<ODDims>(m_element_end) >= uid<ODDims>(odomain.m_element_end)) && ...));
-    //     const DiscreteVector<DDims...> myextents = extents();
-    //     const DiscreteVector<ODDims...> oextents = odomain.extents();
-    //     return StridedDiscreteDomain(
-    //             DiscreteElement<DDims...>(
-    //                     (uid_or<DDims>(odomain.m_element_begin, uid<DDims>(m_element_begin)))...),
-    //             DiscreteVector<DDims...>((get_or<DDims>(oextents, get<DDims>(myextents)))...));
-    // }
-
     template <class... DElems>
     KOKKOS_FUNCTION bool contains(DElems const&... delems) const noexcept
     {
@@ -347,10 +333,12 @@ public:
     /** Construct a StridedDiscreteDomain starting from element_begin with size points.
      * @param element_begin the lower bound in each direction
      * @param size the number of points in each direction
+     * @param strides the step between two elements
      */
     KOKKOS_FUNCTION constexpr StridedDiscreteDomain(
             [[maybe_unused]] discrete_element_type const& element_begin,
-            [[maybe_unused]] discrete_vector_type const& size)
+            [[maybe_unused]] discrete_vector_type const& size,
+            [[maybe_unused]] discrete_vector_type const& strides)
     {
     }
 
@@ -436,25 +424,6 @@ public:
         return {};
     }
 
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-    template <class... ODims>
-    [[deprecated(
-            "Use `restrict_with` "
-            "instead")]] KOKKOS_FUNCTION constexpr StridedDiscreteDomain restrict(StridedDiscreteDomain<ODims...> const&
-                                                                                          odomain)
-            const
-    {
-        return restrict_with(odomain);
-    }
-#endif
-
-    template <class... ODims>
-    KOKKOS_FUNCTION constexpr StridedDiscreteDomain restrict_with(
-            StridedDiscreteDomain<ODims...> const& /* odomain */) const
-    {
-        return *this;
-    }
-
     static bool contains() noexcept
     {
         return true;
@@ -492,7 +461,8 @@ KOKKOS_FUNCTION constexpr StridedDiscreteDomain<QueryDDims...> select(
 {
     return StridedDiscreteDomain<QueryDDims...>(
             DiscreteElement<QueryDDims...>(domain.front()),
-            DiscreteElement<QueryDDims...>(domain.extents()));
+            DiscreteVector<QueryDDims...>(domain.extents()),
+            DiscreteVector<QueryDDims...>(domain.strides()));
 }
 
 namespace detail {

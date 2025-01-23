@@ -141,20 +141,21 @@ public:
     /** Construct a StorageDiscreteDomain with Kokkos::View explicitly listing the discrete elements.
      * @param views list of Kokkos::View
      */
-    explicit constexpr StorageDiscreteDomain(
+    explicit StorageDiscreteDomain(
             Kokkos::View<DiscreteElement<DDims>*, Kokkos::SharedSpace> const&... views)
     {
         ((m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>]
           = Kokkos::View<DiscreteElementType*, Kokkos::SharedSpace>(views.label(), views.size())),
          ...);
+        Kokkos::DefaultExecutionSpace const execution_space;
         ((Kokkos::Experimental::transform(
                  "StorageDiscreteDomainCtor",
-                 Kokkos::DefaultExecutionSpace(),
+                 execution_space,
                  views,
                  m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>],
                  detail::GetUidFn<DDims>())),
          ...);
-        Kokkos::fence("StorageDiscreteDomainCtor");
+        execution_space.fence("StorageDiscreteDomainCtor");
     }
 
     KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain(StorageDiscreteDomain const& x) = default;
@@ -210,6 +211,11 @@ public:
         return discrete_vector_type(get<DDims>(m_views).size()...);
     }
 
+    KOKKOS_FUNCTION constexpr auto discrete_elements() const noexcept
+    {
+        return m_views;
+    }
+
     template <class QueryDDim>
     KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDim> extent() const noexcept
     {
@@ -259,20 +265,6 @@ public:
         return m_views(get<DDims>(dvect)...);
     }
 
-    // template <class... ODDims>
-    // KOKKOS_FUNCTION constexpr auto restrict_with(
-    //         StorageDiscreteDomain<ODDims...> const& odomain) const
-    // {
-    //     assert(((uid<ODDims>(m_element_begin) <= uid<ODDims>(odomain.m_element_begin)) && ...));
-    //     assert(((uid<ODDims>(m_element_end) >= uid<ODDims>(odomain.m_element_end)) && ...));
-    //     const DiscreteVector<DDims...> myextents = extents();
-    //     const DiscreteVector<ODDims...> oextents = odomain.extents();
-    //     return StorageDiscreteDomain(
-    //             DiscreteElement<DDims...>(
-    //                     (uid_or<DDims>(odomain.m_element_begin, uid<DDims>(m_element_begin)))...),
-    //             DiscreteVector<DDims...>((get_or<DDims>(oextents, get<DDims>(myextents)))...));
-    // }
-
     template <class... DElems>
     KOKKOS_FUNCTION bool contains(DElems const&... delems) const noexcept
     {
@@ -316,222 +308,192 @@ public:
         return !empty();
     }
 
-    // template <
-    //         std::size_t N = sizeof...(DDims),
-    //         class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    // KOKKOS_FUNCTION auto begin() const
-    // {
-    //     return StorageDiscreteDomainIterator<DDim0>(front(), m_strides);
-    // }
+    template <
+            std::size_t N = sizeof...(DDims),
+            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION auto begin() const
+    {
+        return Kokkos::Experimental::begin(get<DDim0>(m_views));
+    }
 
-    // template <
-    //         std::size_t N = sizeof...(DDims),
-    //         class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    // KOKKOS_FUNCTION auto end() const
-    // {
-    //     return StorageDiscreteDomainIterator<
-    //             DDim0>(m_element_begin + m_extents * m_strides, m_strides);
-    // }
+    template <
+            std::size_t N = sizeof...(DDims),
+            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION auto end() const
+    {
+        return Kokkos::Experimental::end(get<DDim0>(m_views));
+    }
 
-    // template <
-    //         std::size_t N = sizeof...(DDims),
-    //         class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    // KOKKOS_FUNCTION auto cbegin() const
-    // {
-    //     return StorageDiscreteDomainIterator<DDim0>(front() s);
-    // }
+    template <
+            std::size_t N = sizeof...(DDims),
+            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION auto cbegin() const
+    {
+        return Kokkos::Experimental::cbegin(get<DDim0>(m_views));
+    }
 
-    // template <
-    //         std::size_t N = sizeof...(DDims),
-    //         class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    // KOKKOS_FUNCTION auto cend() const
-    // {
-    //     return StorageDiscreteDomainIterator<DDim0>(m_element_begin);
-    // }
+    template <
+            std::size_t N = sizeof...(DDims),
+            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION auto cend() const
+    {
+        return Kokkos::Experimental::cend(get<DDim0>(m_views));
+    }
 
-    // template <
-    //         std::size_t N = sizeof...(DDims),
-    //         class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    // KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n)
-    // {
-    //     return begin()[n];
-    // }
+    template <
+            std::size_t N = sizeof...(DDims),
+            class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n)
+    {
+        return begin()[n];
+    }
 
-    // template <
-    //         std::size_t N = sizeof...(DDims),
-    //         class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    // KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n) const
-    // {
-    //     return begin()[n];
-    // }
+    template <
+            std::size_t N = sizeof...(DDims),
+            class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n) const
+    {
+        return begin()[n];
+    }
 };
 
-// template <>
-// class StorageDiscreteDomain<>
-// {
-//     template <class...>
-//     friend class StorageDiscreteDomain;
+template <>
+class StorageDiscreteDomain<>
+{
+    template <class...>
+    friend class StorageDiscreteDomain;
 
-// public:
-//     using discrete_element_type = DiscreteElement<>;
+public:
+    using discrete_element_type = DiscreteElement<>;
 
-//     using discrete_vector_type = DiscreteVector<>;
+    using discrete_vector_type = DiscreteVector<>;
 
-//     static KOKKOS_FUNCTION constexpr std::size_t rank()
-//     {
-//         return 0;
-//     }
+    static KOKKOS_FUNCTION constexpr std::size_t rank()
+    {
+        return 0;
+    }
 
-//     KOKKOS_DEFAULTED_FUNCTION constexpr StorageDiscreteDomain() = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr StorageDiscreteDomain() = default;
 
-//     // Construct a StorageDiscreteDomain from a reordered copy of `domain`
-//     template <class... ODDims>
-//     KOKKOS_FUNCTION constexpr explicit StorageDiscreteDomain(
-//             [[maybe_unused]] StorageDiscreteDomain<ODDims...> const& domain)
-//     {
-//     }
+    // Construct a StorageDiscreteDomain from a reordered copy of `domain`
+    template <class... ODDims>
+    KOKKOS_FUNCTION constexpr explicit StorageDiscreteDomain(
+            [[maybe_unused]] StorageDiscreteDomain<ODDims...> const& domain)
+    {
+    }
 
-//     /** Construct a StorageDiscreteDomain starting from element_begin with size points.
-//      * @param element_begin the lower bound in each direction
-//      * @param size the number of points in each direction
-//      */
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomain(
-//             [[maybe_unused]] discrete_element_type const& element_begin,
-//             [[maybe_unused]] discrete_vector_type const& size)
-//     {
-//     }
+    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain(StorageDiscreteDomain const& x) = default;
 
-//     KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain(StorageDiscreteDomain const& x) = default;
+    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain(StorageDiscreteDomain&& x) = default;
 
-//     KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain(StorageDiscreteDomain&& x) = default;
+    KOKKOS_DEFAULTED_FUNCTION ~StorageDiscreteDomain() = default;
 
-//     KOKKOS_DEFAULTED_FUNCTION ~StorageDiscreteDomain() = default;
+    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain& operator=(StorageDiscreteDomain const& x)
+            = default;
 
-//     KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain& operator=(StorageDiscreteDomain const& x)
-//             = default;
+    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain& operator=(StorageDiscreteDomain&& x) = default;
 
-//     KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain& operator=(StorageDiscreteDomain&& x) = default;
+    KOKKOS_FUNCTION constexpr bool operator==(
+            [[maybe_unused]] StorageDiscreteDomain const& other) const
+    {
+        return true;
+    }
 
-//     KOKKOS_FUNCTION constexpr bool operator==(
-//             [[maybe_unused]] StorageDiscreteDomain const& other) const
-//     {
-//         return true;
-//     }
+#if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
+    // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
+    KOKKOS_FUNCTION constexpr bool operator!=(StorageDiscreteDomain const& other) const
+    {
+        return !(*this == other);
+    }
+#endif
 
-// #if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
-//     // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
-//     KOKKOS_FUNCTION constexpr bool operator!=(StorageDiscreteDomain const& other) const
-//     {
-//         return !(*this == other);
-//     }
-// #endif
+    static KOKKOS_FUNCTION constexpr std::size_t size()
+    {
+        return 1;
+    }
 
-//     static KOKKOS_FUNCTION constexpr std::size_t size()
-//     {
-//         return 1;
-//     }
+    static KOKKOS_FUNCTION constexpr discrete_vector_type extents() noexcept
+    {
+        return {};
+    }
 
-//     static KOKKOS_FUNCTION constexpr discrete_vector_type extents() noexcept
-//     {
-//         return {};
-//     }
+    static KOKKOS_FUNCTION constexpr discrete_element_type front() noexcept
+    {
+        return {};
+    }
 
-//     static KOKKOS_FUNCTION constexpr discrete_element_type front() noexcept
-//     {
-//         return {};
-//     }
+    static KOKKOS_FUNCTION constexpr discrete_element_type back() noexcept
+    {
+        return {};
+    }
 
-//     static KOKKOS_FUNCTION constexpr discrete_element_type back() noexcept
-//     {
-//         return {};
-//     }
+    KOKKOS_FUNCTION constexpr StorageDiscreteDomain take_first(
+            [[maybe_unused]] discrete_vector_type n) const
+    {
+        return *this;
+    }
 
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomain take_first(
-//             [[maybe_unused]] discrete_vector_type n) const
-//     {
-//         return *this;
-//     }
+    KOKKOS_FUNCTION constexpr StorageDiscreteDomain take_last(
+            [[maybe_unused]] discrete_vector_type n) const
+    {
+        return *this;
+    }
 
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomain take_last(
-//             [[maybe_unused]] discrete_vector_type n) const
-//     {
-//         return *this;
-//     }
+    KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove_first(
+            [[maybe_unused]] discrete_vector_type n) const
+    {
+        return *this;
+    }
 
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove_first(
-//             [[maybe_unused]] discrete_vector_type n) const
-//     {
-//         return *this;
-//     }
+    KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove_last(
+            [[maybe_unused]] discrete_vector_type n) const
+    {
+        return *this;
+    }
 
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove_last(
-//             [[maybe_unused]] discrete_vector_type n) const
-//     {
-//         return *this;
-//     }
+    KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove(
+            [[maybe_unused]] discrete_vector_type n1,
+            [[maybe_unused]] discrete_vector_type n2) const
+    {
+        return *this;
+    }
 
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove(
-//             [[maybe_unused]] discrete_vector_type n1,
-//             [[maybe_unused]] discrete_vector_type n2) const
-//     {
-//         return *this;
-//     }
+    KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
+            DiscreteVector<> const& /* dvect */) const noexcept
+    {
+        return {};
+    }
 
-//     KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
-//             DiscreteVector<> const& /* dvect */) const noexcept
-//     {
-//         return DiscreteElement<>();
-//     }
+    static bool contains() noexcept
+    {
+        return true;
+    }
 
-// #if defined(DDC_BUILD_DEPRECATED_CODE)
-//     template <class... ODims>
-//     [[deprecated(
-//             "Use `restrict_with` "
-//             "instead")]] KOKKOS_FUNCTION constexpr StorageDiscreteDomain restrict(StorageDiscreteDomain<ODims...> const&
-//                                                                                           odomain)
-//             const
-//     {
-//         return restrict_with(odomain);
-//     }
-// #endif
+    static bool contains(DiscreteElement<>) noexcept
+    {
+        return true;
+    }
 
-//     template <class... ODims>
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomain restrict_with(
-//             StorageDiscreteDomain<ODims...> const& /* odomain */) const
-//     {
-//         return *this;
-//     }
+    static DiscreteVector<> distance_from_front() noexcept
+    {
+        return {};
+    }
 
-//     static bool contains() noexcept
-//     {
-//         return true;
-//     }
+    static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
+    {
+        return {};
+    }
 
-//     static bool contains(DiscreteElement<>) noexcept
-//     {
-//         return true;
-//     }
+    static KOKKOS_FUNCTION constexpr bool empty() noexcept
+    {
+        return false;
+    }
 
-//     static DiscreteVector<> distance_from_front() noexcept
-//     {
-//         return DiscreteVector<>();
-//     }
-
-//     static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
-//     {
-//         return DiscreteVector<>();
-//     }
-
-//     static KOKKOS_FUNCTION constexpr bool empty() noexcept
-//     {
-//         return false;
-//     }
-
-//     KOKKOS_FUNCTION constexpr explicit operator bool()
-//     {
-//         return true;
-//     }
-// };
+    KOKKOS_FUNCTION constexpr explicit operator bool()
+    {
+        return true;
+    }
+};
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr StorageDiscreteDomain<QueryDDims...> select(
@@ -633,161 +595,5 @@ KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> back(
 {
     return DiscreteElement<QueryDDims...>(StorageDiscreteDomain<QueryDDims>(domain).back()...);
 }
-
-// template <class DDim>
-// struct StorageDiscreteDomainIterator
-// {
-// private:
-//     DiscreteElement<DDim> m_value = DiscreteElement<DDim>();
-
-//     DiscreteVector<DDim> m_stride = DiscreteVector<DDim>();
-
-// public:
-//     using iterator_category = std::random_access_iterator_tag;
-
-//     using value_type = DiscreteElement<DDim>;
-
-//     using difference_type = std::ptrdiff_t;
-
-//     KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomainIterator() = default;
-
-//     KOKKOS_FUNCTION constexpr explicit StorageDiscreteDomainIterator(
-//             DiscreteElement<DDim> value,
-//             DiscreteVector<DDim> stride)
-//         : m_value(value)
-//         , m_stride(stride)
-//     {
-//     }
-
-//     KOKKOS_FUNCTION constexpr DiscreteElement<DDim> operator*() const noexcept
-//     {
-//         return m_value;
-//     }
-
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomainIterator& operator++()
-//     {
-//         m_value.uid() += m_stride.value();
-//         return *this;
-//     }
-
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomainIterator operator++(int)
-//     {
-//         auto tmp = *this;
-//         ++*this;
-//         return tmp;
-//     }
-
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomainIterator& operator--()
-//     {
-//         m_value.uid() -= m_stride.value();
-//         return *this;
-//     }
-
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomainIterator operator--(int)
-//     {
-//         auto tmp = *this;
-//         --*this;
-//         return tmp;
-//     }
-
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomainIterator& operator+=(difference_type n)
-//     {
-//         if (n >= difference_type(0)) {
-//             m_value.uid() += static_cast<DiscreteElementType>(n) * m_stride.value();
-//         } else {
-//             m_value.uid() -= static_cast<DiscreteElementType>(-n) * m_stride.value();
-//         }
-//         return *this;
-//     }
-
-//     KOKKOS_FUNCTION constexpr StorageDiscreteDomainIterator& operator-=(difference_type n)
-//     {
-//         if (n >= difference_type(0)) {
-//             m_value.uid() -= static_cast<DiscreteElementType>(n) * m_stride.value();
-//         } else {
-//             m_value.uid() += static_cast<DiscreteElementType>(-n) * m_stride.value();
-//         }
-//         return *this;
-//     }
-
-//     KOKKOS_FUNCTION constexpr DiscreteElement<DDim> operator[](difference_type n) const
-//     {
-//         return m_value + n * m_stride.value();
-//     }
-
-//     friend KOKKOS_FUNCTION constexpr bool operator==(
-//             StorageDiscreteDomainIterator const& xx,
-//             StorageDiscreteDomainIterator const& yy)
-//     {
-//         return xx.m_value == yy.m_value;
-//     }
-
-// #if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
-//     // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
-//     friend KOKKOS_FUNCTION constexpr bool operator!=(
-//             StorageDiscreteDomainIterator const& xx,
-//             StorageDiscreteDomainIterator const& yy)
-//     {
-//         return xx.m_value != yy.m_value;
-//     }
-// #endif
-
-//     friend KOKKOS_FUNCTION constexpr bool operator<(
-//             StorageDiscreteDomainIterator const& xx,
-//             StorageDiscreteDomainIterator const& yy)
-//     {
-//         return xx.m_value < yy.m_value;
-//     }
-
-//     friend KOKKOS_FUNCTION constexpr bool operator>(
-//             StorageDiscreteDomainIterator const& xx,
-//             StorageDiscreteDomainIterator const& yy)
-//     {
-//         return yy < xx;
-//     }
-
-//     friend KOKKOS_FUNCTION constexpr bool operator<=(
-//             StorageDiscreteDomainIterator const& xx,
-//             StorageDiscreteDomainIterator const& yy)
-//     {
-//         return !(yy < xx);
-//     }
-
-//     friend KOKKOS_FUNCTION constexpr bool operator>=(
-//             StorageDiscreteDomainIterator const& xx,
-//             StorageDiscreteDomainIterator const& yy)
-//     {
-//         return !(xx < yy);
-//     }
-
-//     friend KOKKOS_FUNCTION constexpr StorageDiscreteDomainIterator operator+(
-//             StorageDiscreteDomainIterator i,
-//             difference_type n)
-//     {
-//         return i += n;
-//     }
-
-//     friend KOKKOS_FUNCTION constexpr StorageDiscreteDomainIterator operator+(
-//             difference_type n,
-//             StorageDiscreteDomainIterator i)
-//     {
-//         return i += n;
-//     }
-
-//     friend KOKKOS_FUNCTION constexpr StorageDiscreteDomainIterator operator-(
-//             StorageDiscreteDomainIterator i,
-//             difference_type n)
-//     {
-//         return i -= n;
-//     }
-
-//     friend KOKKOS_FUNCTION constexpr difference_type operator-(
-//             StorageDiscreteDomainIterator const& xx,
-//             StorageDiscreteDomainIterator const& yy)
-//     {
-//         return (yy.m_value > xx.m_value) ? (-static_cast<difference_type>(yy.m_value - xx.m_value))
-//                                          : (xx.m_value - yy.m_value);
-//     }
-// };
 
 } // namespace ddc

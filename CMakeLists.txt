@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 cmake_minimum_required(VERSION 3.22)
-project(DDC VERSION 0.4.1 LANGUAGES CXX)
+project(DDC VERSION 0.4.2 LANGUAGES CXX)
 
 # List of options
 

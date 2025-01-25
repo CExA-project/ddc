@@ -46,6 +46,15 @@ struct ToTypeSeq<StridedDiscreteDomain<Tags...>>
     using type = TypeSeq<Tags...>;
 };
 
+template <class T, class U>
+struct RebindDomain;
+
+template <class... DDims, class... ODDims>
+struct RebindDomain<StridedDiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
+{
+    using type = StridedDiscreteDomain<ODDims...>;
+};
+
 } // namespace detail
 
 template <class... ODDims>

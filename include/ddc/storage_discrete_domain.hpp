@@ -49,6 +49,15 @@ struct ToTypeSeq<StorageDiscreteDomain<Tags...>>
     using type = TypeSeq<Tags...>;
 };
 
+template <class T, class U>
+struct RebindDomain;
+
+template <class... DDims, class... ODDims>
+struct RebindDomain<StorageDiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
+{
+    using type = StorageDiscreteDomain<ODDims...>;
+};
+
 template <class InputIt1, class InputIt2>
 KOKKOS_FUNCTION bool equal(InputIt1 first1, InputIt1 last1, InputIt2 first2)
 {
@@ -134,7 +143,7 @@ public:
             class... DDoms,
             class = std::enable_if_t<(is_storage_discrete_domain_v<DDoms> && ...)>>
     KOKKOS_FUNCTION constexpr explicit StorageDiscreteDomain(DDoms const&... domains)
-        : m_views(domains...)
+        : m_views(domains.m_views...)
     {
     }
 

@@ -543,6 +543,20 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
     return detail::convert_type_seq_to_storage_discrete_domain_t<type_seq_r>(DDom_a);
 }
 
+//! Remove the dimensions DDimsB from DDom_a
+//! @param[in] DDom_a The discrete domain on which to remove dimensions
+//! @return The discrete domain without DDimsB dimensions
+template <class... DDimsB, class... DDimsA>
+KOKKOS_FUNCTION constexpr auto remove_dims_of(
+        StorageDiscreteDomain<DDimsA...> const& DDom_a) noexcept
+{
+    using TagSeqA = detail::TypeSeq<DDimsA...>;
+    using TagSeqB = detail::TypeSeq<DDimsB...>;
+
+    using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
+    return detail::convert_type_seq_to_storage_discrete_domain_t<type_seq_r>(DDom_a);
+}
+
 namespace detail {
 
 // Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be useful in its own, it helps for replace_dim_of

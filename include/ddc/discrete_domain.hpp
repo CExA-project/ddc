@@ -507,10 +507,10 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
 //! Remove the dimensions DDimsB from DDom_a
 //! @param[in] DDom_a The discrete domain on which to remove dimensions
 //! @return The discrete domain without DDimsB dimensions
-template <class... DDimsB, class DDomA>
-KOKKOS_FUNCTION constexpr auto remove_dims_of(DDomA const& DDom_a) noexcept
+template <class... DDimsB, class... DDimsA>
+KOKKOS_FUNCTION constexpr auto remove_dims_of(DiscreteDomain<DDimsA...> const& DDom_a) noexcept
 {
-    using TagSeqA = typename detail::ToTypeSeq<DDomA>::type;
+    using TagSeqA = detail::TypeSeq<DDimsA...>;
     using TagSeqB = detail::TypeSeq<DDimsB...>;
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
@@ -564,10 +564,9 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
 
 // Replace dimensions from a domain type
 template <typename DDom, typename DDim1, typename DDim2>
-using replace_dim_of_t
-        = decltype(replace_dim_of<
-                   DDim1,
-                   DDim2>(std::declval<DDom>(), std::declval<DiscreteDomain<DDim2>>()));
+using replace_dim_of_t = decltype(replace_dim_of<DDim1, DDim2>(
+        std::declval<DDom>(),
+        std::declval<typename detail::RebindDomain<DDom, detail::TypeSeq<DDim2>>::type>()));
 
 
 template <class... QueryDDims, class... DDims>

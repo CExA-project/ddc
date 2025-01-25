@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-name: Nightly tests
+name: Early integration
 
 on:
   schedule:

@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT
 -->
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Early integration](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yml/badge.svg)](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yml)
 [![test](https://github.com/CExA-project/ddc/actions/workflows/tests.yml/badge.svg)](https://github.com/CExA-project/ddc/actions/workflows/tests.yml)
 
 See <https://ddc.mdls.fr/>

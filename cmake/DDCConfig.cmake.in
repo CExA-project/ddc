@@ -4,6 +4,9 @@
 
 @PACKAGE_INIT@
 
+# This macro extends the cmake macro `check_required_components`.
+# It checks if all required components for a package are found and
+# sets a custom NOT_FOUND_MESSAGE listing missing required components.
 macro(ddc_check_required_components _NAME)
    set(REQUIRED_COMPONENTS_NOT_FOUND "")
    foreach(comp ${${_NAME}_FIND_COMPONENTS})

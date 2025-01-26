@@ -4,6 +4,23 @@
 
 @PACKAGE_INIT@
 
+macro(ddc_check_required_components _NAME)
+   set(REQUIRED_COMPONENTS_NOT_FOUND "")
+   foreach(comp ${${_NAME}_FIND_COMPONENTS})
+      if(NOT ${_NAME}_${comp}_FOUND)
+         if(${_NAME}_FIND_REQUIRED_${comp})
+            list(APPEND REQUIRED_COMPONENTS_NOT_FOUND "${comp}")
+            set(${_NAME}_FOUND FALSE)
+         endif()
+      endif()
+   endforeach()
+
+   if(REQUIRED_COMPONENTS_NOT_FOUND)
+      set(${_NAME}_NOT_FOUND_MESSAGE "Component(s) not found: ${REQUIRED_COMPONENTS_NOT_FOUND}")
+   endif()
+   unset(REQUIRED_COMPONENTS_NOT_FOUND)
+endmacro()
+
 # Workaround for rocm <6 setting a cmake_minimum_required <3.12.
 # When redefining `find_dependency` we get a better chance
 # to use the NEW policy for CMP0074.
@@ -51,4 +68,4 @@ foreach(component ${DDC_FIND_COMPONENTS})
    endif()
 endforeach()
 
-check_required_components(DDC)
+ddc_check_required_components(DDC)

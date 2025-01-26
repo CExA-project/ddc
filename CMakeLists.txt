@@ -287,6 +287,7 @@ configure_package_config_file(
     cmake/DDCConfig.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
     INSTALL_DESTINATION ${DDC_INSTALL_CMAKEDIR}
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
 # We use SameMinorVersion until major version 1

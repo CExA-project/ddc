@@ -63,14 +63,6 @@ elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
     ddc_check_required_kokkos_options()
 endif()
 
-## PDI
-
-if("${DDC_BUILD_PDI_WRAPPER}")
-    if(NOT TARGET PDI::PDI_C)
-        find_package(PDI 1.6...<2 REQUIRED COMPONENTS C)
-    endif()
-endif()
-
 ## GoogleTest
 
 if("${BUILD_TESTING}" AND "${DDC_BUILD_TESTS}")
@@ -175,8 +167,10 @@ if("${DDC_BUILD_KERNELS_FFT}")
 
     add_library(ddc_fft INTERFACE)
     add_library(DDC::fft ALIAS ddc_fft)
-    install(TARGETS ddc_fft EXPORT DDCTargets)
+    install(TARGETS ddc_fft EXPORT DDCFftTargets)
     target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
+
+    install(EXPORT DDCFftTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -212,20 +206,26 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     add_library(ddc_splines INTERFACE)
     add_library(DDC::splines ALIAS ddc_splines)
     install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
-    install(TARGETS ddc_splines EXPORT DDCTargets)
+    install(TARGETS ddc_splines EXPORT DDCSplinesTargets)
     target_include_directories(ddc_splines SYSTEM INTERFACE ${LAPACKE_INCLUDE_DIRS})
     target_link_libraries(
         ddc_splines
         INTERFACE DDC::core Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels ${LAPACKE_LIBRARIES}
     )
+
+    install(EXPORT DDCSplinesTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
 
 ## The PDI wrapper
 
 if("${DDC_BUILD_PDI_WRAPPER}")
+    if(NOT TARGET PDI::PDI_C)
+        find_package(PDI 1.6...<2 REQUIRED COMPONENTS C)
+    endif()
+
     add_library(ddc_pdi INTERFACE)
     add_library(DDC::pdi ALIAS ddc_pdi)
-    install(TARGETS ddc_pdi EXPORT DDCTargets)
+    install(TARGETS ddc_pdi EXPORT DDCPdiTargets)
     target_compile_features(ddc_pdi INTERFACE cxx_std_17)
     target_include_directories(
         ddc_pdi
@@ -234,6 +234,8 @@ if("${DDC_BUILD_PDI_WRAPPER}")
             "$<INSTALL_INTERFACE:${DDC_INSTALL_INCLUDEDIR}>"
     )
     target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
+
+    install(EXPORT DDCPdiTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
 
 ## if examples are enabled, build them

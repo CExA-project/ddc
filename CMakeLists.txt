@@ -131,11 +131,6 @@ endif()
 
 ## The library itself
 
-### DDC legacy target
-add_library(DDC INTERFACE)
-add_library(DDC::DDC ALIAS DDC)
-install(TARGETS DDC EXPORT DDCTargets)
-
 add_library(ddc_core INTERFACE)
 add_library(DDC::core ALIAS ddc_core)
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
@@ -150,9 +145,6 @@ target_include_directories(
         "$<INSTALL_INTERFACE:${DDC_INSTALL_INCLUDEDIR}>"
 )
 target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
-
-### DDC legacy target
-target_link_libraries(DDC INTERFACE DDC::core)
 
 # Link library to DDC
 
@@ -185,9 +177,6 @@ if("${DDC_BUILD_KERNELS_FFT}")
     add_library(DDC::fft ALIAS ddc_fft)
     install(TARGETS ddc_fft EXPORT DDCTargets)
     target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
-
-    ### DDC legacy target
-    target_link_libraries(DDC INTERFACE DDC::fft)
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -229,9 +218,6 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
         ddc_splines
         INTERFACE DDC::core Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels ${LAPACKE_LIBRARIES}
     )
-
-    ### DDC legacy target
-    target_link_libraries(DDC INTERFACE DDC::splines)
 endif()
 
 ## The PDI wrapper
@@ -248,9 +234,6 @@ if("${DDC_BUILD_PDI_WRAPPER}")
             "$<INSTALL_INTERFACE:${DDC_INSTALL_INCLUDEDIR}>"
     )
     target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
-
-    ### DDC legacy target
-    target_link_libraries(DDC INTERFACE DDC::pdi)
 endif()
 
 ## if examples are enabled, build them

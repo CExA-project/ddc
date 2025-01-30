@@ -83,7 +83,7 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
-        [ "Typedefs", "functions_type.html", null ],
+        [ "Typedefs", "functions_type.html", "functions_type" ],
         [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ]
@@ -93,12 +93,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a9f136133b73bafda0b8c4ff181f2ca42",
-"classddc_1_1KokkosAllocator.html#a1c8dc6e45deb6ba4ec9aabb72317ca6b",
-"classddc_1_1SplineBuilder.html#a76d324d4ed4b62147185a718c248c0aa",
-"classddc_1_1SplineEvaluator2D.html#ad7e44f476b58daa7540526fae09852b5",
-"namespaceddc.html#a4a2fc8ce660318bd042ba52e917851a7",
-"structddc_1_1reducer_1_1max.html"
+"classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#aa852be327827cbb7fe86ed0bd29e0db7",
+"classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ab68f0579869e02cd8aae7eb756f743c7",
+"classddc_1_1KokkosAllocator.html#a2bdf2a47bb76872e469ab05b689ab1dc",
+"classddc_1_1SplineBuilder.html#a82aff86b6ed75f95b130a1c99cf23fb6",
+"classddc_1_1SplineEvaluator2D.html#aed85809bed86c504a79d7f7f2bd13e64",
+"classddc_1_1UniformBSplines_1_1Impl.html#a2c23209a0bb9af5c7b7ca3a2eaa3c1ba",
+"namespaceddc.html#a527ffc7bfc33850ef64720205544a21d",
+"structddc_1_1StridedDiscreteDomainIterator.html#af15cfc4196f12dfbfdea2480cea1324b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

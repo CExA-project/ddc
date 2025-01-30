@@ -199,7 +199,7 @@ Dimension X</h3>
 <div class="line">        x_post_mirror(x_post_ghost.front() - x_domain.extents(), x_post_ghost.extents());</div>
 <div class="line"><a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX&gt;</a> <span class="keyword">const</span></div>
 <div class="line">        x_pre_mirror(x_pre_ghost.front() + x_domain.extents(), x_pre_ghost.extents());</div>
-<div class="ttc" id="aclassddc_1_1DiscreteDomain_html"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a></div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00052">discrete_domain.hpp:53</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteDomain_html"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a></div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00061">discrete_domain.hpp:62</a></div></div>
 </div><!-- fragment --><p><code>x_domain_begin</code> is the sub-domain at the beginning of <code>x_domain</code> of the same shape as <code>x_post_ghost</code> that will be mirrored to it. Reciprocally for <code>x_domain_end</code> with <code>x_pre_ghost</code>.</p>
 <p>The first parameter given to the constructor is the first element of the domain, a <code>DiscreteElement&lt;DDimX&gt;</code>, the second parameter is a number of elements to include, a <code>DiscreteVector&lt;DDimX&gt;</code>.</p>
 <p><b>To summarize,</b> in this section, we have introduced the following types:</p>
@@ -259,25 +259,26 @@ Data allocation</h1>
 <li><em>ghosted_last_temp</em> for the last fully computed time-step.</li>
 <li><em>ghosted_next_temp</em> for time-step being computed.</li>
 </ul>
-<div class="fragment"><div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_last_temp(</div>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classddc_1_1Chunk.html">ddc::Chunk</a> ghosted_last_temp(</div>
 <div class="line">        <span class="stringliteral">&quot;ghosted_last_temp&quot;</span>,</div>
 <div class="line">        <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(ghosted_x_domain, ghosted_y_domain),</div>
 <div class="line">        <a class="code hl_class" href="classddc_1_1KokkosAllocator.html">ddc::DeviceAllocator&lt;double&gt;</a>());</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_next_temp(</div>
+<div class="line"><a class="code hl_class" href="classddc_1_1Chunk.html">ddc::Chunk</a> ghosted_next_temp(</div>
 <div class="line">        <span class="stringliteral">&quot;ghosted_next_temp&quot;</span>,</div>
 <div class="line">        <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(ghosted_x_domain, ghosted_y_domain),</div>
 <div class="line">        <a class="code hl_class" href="classddc_1_1KokkosAllocator.html">ddc::DeviceAllocator&lt;double&gt;</a>());</div>
+<div class="ttc" id="aclassddc_1_1Chunk_html"><div class="ttname"><a href="classddc_1_1Chunk.html">ddc::Chunk</a></div><div class="ttdef"><b>Definition</b> <a href="chunk_8hpp_source.html#l00305">chunk.hpp:306</a></div></div>
 <div class="ttc" id="aclassddc_1_1KokkosAllocator_html"><div class="ttname"><a href="classddc_1_1KokkosAllocator.html">ddc::KokkosAllocator</a></div><div class="ttdef"><b>Definition</b> <a href="kokkos__allocator_8hpp_source.html#l00016">kokkos_allocator.hpp:17</a></div></div>
-<div class="ttc" id="anamespaceddc_html_classddc_1_1Chunk"><div class="ttname"><a href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a></div><div class="ttdef"><b>Definition</b> <a href="chunk_8hpp_source.html#l00022">chunk.hpp:22</a></div></div>
 </div><!-- fragment --><p>Note that the <code>DeviceAllocator</code> is responsible for allocating memory on the default memory space.</p>
 <h1><a class="anchor" id="autotoc_md9"></a>
 Initial conditions</h1>
 <p>To set the initial conditions, the <code>ghosted_initial_temp</code> is created and acts as a pointer to the chunk. The const qualifier makes it clear that ghosted_initial_temp always references the same chunk, <code>ghosted_last_temp</code> in this case.</p>
-<div class="fragment"><div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> ghosted_initial_temp = ghosted_last_temp.span_view();</div>
-<div class="ttc" id="anamespaceddc_html_classddc_1_1ChunkSpan"><div class="ttname"><a href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition</b> <a href="chunk__span_8hpp_source.html#l00030">chunk_span.hpp:30</a></div></div>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a> <span class="keyword">const</span> ghosted_initial_temp = ghosted_last_temp.<a class="code hl_function" href="classddc_1_1ChunkSpan.html#acd92b9f56d40555293ae51dee908822d">span_view</a>();</div>
+<div class="ttc" id="aclassddc_1_1ChunkSpan_html"><div class="ttname"><a href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition</b> <a href="chunk__span_8hpp_source.html#l00386">chunk_span.hpp:387</a></div></div>
+<div class="ttc" id="aclassddc_1_1ChunkSpan_html_acd92b9f56d40555293ae51dee908822d"><div class="ttname"><a href="classddc_1_1ChunkSpan.html#acd92b9f56d40555293ae51dee908822d">ddc::ChunkSpan::span_view</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr span_type span_view() const</div><div class="ttdef"><b>Definition</b> <a href="chunk__span_8hpp_source.html#l00667">chunk_span.hpp:667</a></div></div>
 </div><!-- fragment --><p>Then, we iterate over each <em>DiscreteElement</em> of the domain to fill <code>ghosted_initial_temp</code> with the initial values of the simulation.</p>
-<div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
+<div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#ad92ed4439bc27c12aba3e0784dc369d4">ddc::parallel_for_each</a>(</div>
 <div class="line">        <a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain),</div>
 <div class="line">        KOKKOS_LAMBDA(<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> ixy) {</div>
 <div class="line">            <span class="keywordtype">double</span> <span class="keyword">const</span> x = <a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a>(ixy));</div>
@@ -286,16 +287,16 @@ Initial conditions</h1>
 <div class="line">        });</div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html"><div class="ttname"><a href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00148">discrete_element.hpp:149</a></div></div>
 <div class="ttc" id="anamespaceddc_html_a6b058df8c02517deafeeb424e2f8803a"><div class="ttname"><a href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a></div><div class="ttdeci">KOKKOS_FUNCTION Coordinate&lt; typename DDim::continuous_dimension_type... &gt; coordinate(DiscreteElement&lt; DDim... &gt; const &amp;c)</div><div class="ttdef"><b>Definition</b> <a href="coordinate_8hpp_source.html#l00032">coordinate.hpp:32</a></div></div>
-<div class="ttc" id="anamespaceddc_html_a96a2f39201f11e37e7334285cca07b37"><div class="ttname"><a href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a></div><div class="ttdeci">void parallel_for_each(std::string const &amp;label, ExecSpace const &amp;execution_space, DiscreteDomain&lt; DDims... &gt; const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using a given Kokkos execution space</div><div class="ttdef"><b>Definition</b> <a href="parallel__for__each_8hpp_source.html#l00069">parallel_for_each.hpp:69</a></div></div>
+<div class="ttc" id="anamespaceddc_html_ad92ed4439bc27c12aba3e0784dc369d4"><div class="ttname"><a href="namespaceddc.html#ad92ed4439bc27c12aba3e0784dc369d4">ddc::parallel_for_each</a></div><div class="ttdeci">void parallel_for_each(std::string const &amp;label, ExecSpace const &amp;execution_space, Support const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using a given Kokkos execution space</div><div class="ttdef"><b>Definition</b> <a href="parallel__for__each_8hpp_source.html#l00081">parallel_for_each.hpp:81</a></div></div>
 </div><!-- fragment --><p>To display the data, a chunk is created on the host using the <a class="el" href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">ddc::create_mirror</a> function.</p>
-<div class="fragment"><div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1Chunk">ddc::Chunk</a> ghosted_temp = <a class="code hl_function" href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">ddc::create_mirror</a>(ghosted_last_temp.span_cview());</div>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classddc_1_1Chunk.html">ddc::Chunk</a> ghosted_temp = <a class="code hl_function" href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">ddc::create_mirror</a>(ghosted_last_temp.span_cview());</div>
 <div class="ttc" id="anamespaceddc_html_af5a820cbfa67651ae082f77f446ed882"><div class="ttname"><a href="namespaceddc.html#af5a820cbfa67651ae082f77f446ed882">ddc::create_mirror</a></div><div class="ttdeci">auto create_mirror(Space const &amp;space, ChunkSpan&lt; ElementType, Support, Layout, MemorySpace &gt; const &amp;src)</div><div class="ttdef"><b>Definition</b> <a href="create__mirror_8hpp_source.html#l00020">create_mirror.hpp:20</a></div></div>
 </div><!-- fragment --><p>We deepcopy the data from the <code>ghosted_last_temp</code> chunk to <code>ghosted_temp</code> on the host.</p>
 <div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(ghosted_temp, ghosted_last_temp);</div>
 <div class="ttc" id="anamespaceddc_html_a37d4f1dc7122e72c049517a90ff0b98b"><div class="ttname"><a href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a></div><div class="ttdeci">auto parallel_deepcopy(ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)</div><div class="ttdoc">Copy the content of a borrowed chunk into another.</div><div class="ttdef"><b>Definition</b> <a href="parallel__deepcopy_8hpp_source.html#l00022">parallel_deepcopy.hpp:22</a></div></div>
 </div><!-- fragment --><p>And we display the initial data.</p>
 <div class="fragment"><div class="line">display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>()), ghosted_temp[x_domain][y_domain]);</div>
-<div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a75660adbd6207e6dd4eec152cae420de"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">ddc::DiscreteDomain::front</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00140">discrete_domain.hpp:140</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a75660adbd6207e6dd4eec152cae420de"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">ddc::DiscreteDomain::front</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00149">discrete_domain.hpp:149</a></div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
 Time loop</h1>
 <div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> <span class="keyword">const</span> iter :</div>
@@ -332,11 +333,11 @@ Numerical scheme</h2>
 <li><code>next_temp</code> a span excluding ghosts of the temperature at the time-step we will build.</li>
 <li><code>last_temp</code> a read-only view of the temperature at the previous time-step.Note that <em>span_cview</em> returns a read-only ChunkSpan.</li>
 </ul>
-<div class="fragment"><div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> next_temp(</div>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a> <span class="keyword">const</span> next_temp(</div>
 <div class="line">        ghosted_next_temp[<a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimX, DDimY&gt;</a>(x_domain, y_domain)]);</div>
-<div class="line"><a class="code hl_class" href="namespaceddc.html#classddc_1_1ChunkSpan">ddc::ChunkSpan</a> <span class="keyword">const</span> last_temp(ghosted_last_temp.span_cview());</div>
+<div class="line"><a class="code hl_class" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a> <span class="keyword">const</span> last_temp(ghosted_last_temp.span_cview());</div>
 </div><!-- fragment --><p>We then solve the equation.</p>
-<div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a96a2f39201f11e37e7334285cca07b37">ddc::parallel_for_each</a>(</div>
+<div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#ad92ed4439bc27c12aba3e0784dc369d4">ddc::parallel_for_each</a>(</div>
 <div class="line">        next_temp.domain(),</div>
 <div class="line">        KOKKOS_LAMBDA(<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX, DDimY&gt;</a> <span class="keyword">const</span> ixy) {</div>
 <div class="line">            <a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimX&gt;</a> <span class="keyword">const</span> ix(ixy);</div>

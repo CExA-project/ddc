@@ -1,9 +1,9 @@
 var searchData=
 [
   ['_7ealignedallocator_0',['~AlignedAllocator',['../classddc_1_1AlignedAllocator.html#a4dfb96c2077d414660e0af2aaee5489e',1,'ddc::AlignedAllocator']]],
-  ['_7echunk_1',['~Chunk',['../classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a8a86f04ad8af2e8abe922689dd33a2e2',1,'ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt;']]],
-  ['_7echunkcommon_2',['~ChunkCommon',['../classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0b6bda975f5b46e4276abbee114709b3',1,'ddc::ChunkCommon&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy &gt;']]],
-  ['_7echunkspan_3',['~ChunkSpan',['../classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a90fd99e2727b4605ea307709448de0c0',1,'ddc::ChunkSpan&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy, MemorySpace &gt;']]],
+  ['_7echunk_1',['~chunk',['../classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a8a86f04ad8af2e8abe922689dd33a2e2',1,'ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt;::~Chunk()'],['../classddc_1_1Chunk.html#a8cb65d84412ef13ac65ef69d9ed37012',1,'ddc::Chunk::~Chunk()']]],
+  ['_7echunkcommon_2',['~chunkcommon',['../classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a0b6bda975f5b46e4276abbee114709b3',1,'ddc::ChunkCommon&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy &gt;::~ChunkCommon()'],['../classddc_1_1ChunkCommon.html#a0e1c1dc403f978dda1ca7c90cb96df8c',1,'ddc::ChunkCommon::~ChunkCommon()']]],
+  ['_7echunkspan_3',['~chunkspan',['../classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a90fd99e2727b4605ea307709448de0c0',1,'ddc::ChunkSpan&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy, MemorySpace &gt;::~ChunkSpan()'],['../classddc_1_1ChunkSpan.html#ab33ca5a187914e21d41b168d73d77244',1,'ddc::ChunkSpan::~ChunkSpan()']]],
   ['_7ediscretedomain_4',['~discretedomain',['../classddc_1_1DiscreteDomain.html#aa309faf3c8ef32e28433044fa56b3906',1,'ddc::DiscreteDomain::~DiscreteDomain()'],['../classddc_1_1DiscreteDomain_3_4.html#a1adeb0b1b2ba40d66b0b5725cb2a8d56',1,'ddc::DiscreteDomain&lt;&gt;::~DiscreteDomain()']]],
   ['_7ediscreteelement_5',['~DiscreteElement',['../classddc_1_1DiscreteElement.html#a293505e9414c9901ecfecd6bb8cac68b',1,'ddc::DiscreteElement']]],
   ['_7ediscretevector_6',['~DiscreteVector',['../classddc_1_1DiscreteVector.html#a39f496c7cb108bfd1fbea0a63765fac3',1,'ddc::DiscreteVector']]],
@@ -14,5 +14,7 @@ var searchData=
   ['_7esplinebuilder_11',['~SplineBuilder',['../classddc_1_1SplineBuilder.html#a90581a33bcb33ba4dc3d7fbd94ec5079',1,'ddc::SplineBuilder']]],
   ['_7esplinebuilder2d_12',['~SplineBuilder2D',['../classddc_1_1SplineBuilder2D.html#ac462f09ee0f87df6f70a926ba5f2b444',1,'ddc::SplineBuilder2D']]],
   ['_7esplineevaluator_13',['~SplineEvaluator',['../classddc_1_1SplineEvaluator.html#a619f2c0a953f1f4e02f3fe7f61040c5d',1,'ddc::SplineEvaluator']]],
-  ['_7esplineevaluator2d_14',['~SplineEvaluator2D',['../classddc_1_1SplineEvaluator2D.html#ac9afcbe384c3f2dd2c1ebc8fe9134f7f',1,'ddc::SplineEvaluator2D']]]
+  ['_7esplineevaluator2d_14',['~SplineEvaluator2D',['../classddc_1_1SplineEvaluator2D.html#ac9afcbe384c3f2dd2c1ebc8fe9134f7f',1,'ddc::SplineEvaluator2D']]],
+  ['_7estoragediscretedomain_15',['~storagediscretedomain',['../classddc_1_1StorageDiscreteDomain.html#aa4f88cc4e2d059345cc42188749ac134',1,'ddc::StorageDiscreteDomain::~StorageDiscreteDomain()'],['../classddc_1_1StorageDiscreteDomain_3_4.html#a741eb9c81e631d80e7cfdea5b4d01379',1,'ddc::StorageDiscreteDomain&lt;&gt;::~StorageDiscreteDomain()']]],
+  ['_7estrideddiscretedomain_16',['~strideddiscretedomain',['../classddc_1_1StridedDiscreteDomain.html#aaaad3bf019594b5d812b38e83b9327ec',1,'ddc::StridedDiscreteDomain::~StridedDiscreteDomain()'],['../classddc_1_1StridedDiscreteDomain_3_4.html#ad59184147539a90ef37b9e8c02e0e1dc',1,'ddc::StridedDiscreteDomain&lt;&gt;::~StridedDiscreteDomain()']]]
 ];

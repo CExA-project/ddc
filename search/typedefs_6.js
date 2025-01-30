@@ -7,5 +7,5 @@ var searchData=
   ['interpolation_5fdomain_5ftype_4',['interpolation_domain_type',['../classddc_1_1SplineBuilder.html#a76d324d4ed4b62147185a718c248c0aa',1,'ddc::SplineBuilder::interpolation_domain_type'],['../classddc_1_1SplineBuilder2D.html#adff108544d7a67210a8a8e936d8f10b2',1,'ddc::SplineBuilder2D::interpolation_domain_type']]],
   ['interpolation_5fdomain_5ftype1_5',['interpolation_domain_type1',['../classddc_1_1SplineBuilder2D.html#a1969f0bf4d5c94186ea6343a8a05ea2b',1,'ddc::SplineBuilder2D']]],
   ['interpolation_5fdomain_5ftype2_6',['interpolation_domain_type2',['../classddc_1_1SplineBuilder2D.html#a0a29c6362fe6b07e8682bfccebfe750b',1,'ddc::SplineBuilder2D']]],
-  ['iterator_5fcategory_7',['iterator_category',['../structddc_1_1DiscreteDomainIterator.html#ad0853d95f2b1d52b9252aaf6f837dd0f',1,'ddc::DiscreteDomainIterator']]]
+  ['iterator_5fcategory_7',['iterator_category',['../structddc_1_1DiscreteDomainIterator.html#ad0853d95f2b1d52b9252aaf6f837dd0f',1,'ddc::DiscreteDomainIterator::iterator_category'],['../structddc_1_1StridedDiscreteDomainIterator.html#a337036ee40e92559d7dced9648e433ef',1,'ddc::StridedDiscreteDomainIterator::iterator_category']]]
 ];

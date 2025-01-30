@@ -8,7 +8,9 @@ var searchData=
   ['is_5fnon_5funiform_5fbsplines_5fv_5',['is_non_uniform_bsplines_v',['../namespaceddc.html#ada3d7043e906da448cc6a8ae965014b3',1,'ddc']]],
   ['is_5fnon_5funiform_5fpoint_5fsampling_5fv_6',['is_non_uniform_point_sampling_v',['../namespaceddc.html#a0c621cc4a504cb9368d8e6ce080067e9',1,'ddc']]],
   ['is_5fperiodic_5fsampling_5fv_7',['is_periodic_sampling_v',['../namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0',1,'ddc']]],
-  ['is_5funiform_5fbsplines_5fv_8',['is_uniform_bsplines_v',['../namespaceddc.html#a20d13e258d90b019d44b38be91885f35',1,'ddc']]],
-  ['is_5funiform_5fpoint_5fsampling_5fv_9',['is_uniform_point_sampling_v',['../namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8',1,'ddc']]],
-  ['is_5fwritable_5fchunk_5fv_10',['is_writable_chunk_v',['../namespaceddc.html#a6b0404afeb25a439cafc10e9bd7cbec6',1,'ddc']]]
+  ['is_5fstorage_5fdiscrete_5fdomain_5fv_8',['is_storage_discrete_domain_v',['../namespaceddc.html#a58fb69ae6bb47b0478ad065f0b21e241',1,'ddc']]],
+  ['is_5fstrided_5fdiscrete_5fdomain_5fv_9',['is_strided_discrete_domain_v',['../namespaceddc.html#a9e7351728b259a0f934c1309d571185c',1,'ddc']]],
+  ['is_5funiform_5fbsplines_5fv_10',['is_uniform_bsplines_v',['../namespaceddc.html#a20d13e258d90b019d44b38be91885f35',1,'ddc']]],
+  ['is_5funiform_5fpoint_5fsampling_5fv_11',['is_uniform_point_sampling_v',['../namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8',1,'ddc']]],
+  ['is_5fwritable_5fchunk_5fv_12',['is_writable_chunk_v',['../namespaceddc.html#a6b0404afeb25a439cafc10e9bd7cbec6',1,'ddc']]]
 ];

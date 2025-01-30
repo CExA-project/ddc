@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,13,271,38"/>
-<area shape="rect" id="Node000001" href="$classddc_1_1NonUniformBSplines.html" title="The type of a non&#45;uniform 1D spline basis (B&#45;spline)." alt="" coords="319,5,507,45"/>
-<area shape="poly" id="edge4_Node000000_Node000001" title=" " alt="" coords="284,23,318,23,318,28,284,28"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,37,203,77"/>
+<area shape="rect" id="Node000001" href="$classddc_1_1DiscreteVector.html" title=" " alt="" coords="251,5,399,45"/>
+<area shape="poly" id="edge6_Node000000_Node000001" title=" " alt="" coords="216,38,250,33,250,39,217,44"/>
+<area shape="rect" id="Node000002" href="$classddc_1_1DiscreteVector.html" title=" " alt="" coords="251,69,399,109"/>
+<area shape="poly" id="edge7_Node000000_Node000002" title=" " alt="" coords="217,71,250,76,250,81,216,76"/>
 </map>

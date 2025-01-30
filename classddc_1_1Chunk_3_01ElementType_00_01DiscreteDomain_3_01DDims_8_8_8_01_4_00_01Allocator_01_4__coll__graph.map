@@ -1,5 +1,7 @@
 <map id="ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt;" name="ddc::Chunk&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, Allocator &gt;">
-<area shape="rect" id="Node000001" title=" " alt="" coords="22,148,217,703"/>
-<area shape="rect" id="Node000002" href="$namespaceddc.html" title=" " alt="" coords="5,5,233,100"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,114,122,148,117,148,117,114"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="22,1232,217,1787"/>
+<area shape="rect" id="Node000002" href="$classddc_1_1ChunkCommon.html" title=" " alt="" coords="5,568,233,1183"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,1197,122,1232,117,1232,117,1197"/>
+<area shape="rect" id="Node000003" href="$classddc_1_1DiscreteDomain.html" title=" " alt="" coords="42,5,197,505"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,506,122,551,117,551,117,506"/>
 </map>

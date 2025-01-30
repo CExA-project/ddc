@@ -11,5 +11,7 @@ var searchData=
   ['discreteelement_8',['DiscreteElement',['../classddc_1_1DiscreteElement.html',1,'ddc']]],
   ['discreteelement_3c_20ddim_20_3e_9',['DiscreteElement&lt; DDim &gt;',['../classddc_1_1DiscreteElement.html',1,'ddc']]],
   ['discreteelement_3c_20ddims_2e_2e_2e_20_3e_10',['DiscreteElement&lt; DDims... &gt;',['../classddc_1_1DiscreteElement.html',1,'ddc']]],
-  ['discretevector_11',['DiscreteVector',['../classddc_1_1DiscreteVector.html',1,'ddc']]]
+  ['discretevector_11',['DiscreteVector',['../classddc_1_1DiscreteVector.html',1,'ddc']]],
+  ['discretevector_3c_20ddim_20_3e_12',['DiscreteVector&lt; DDim &gt;',['../classddc_1_1DiscreteVector.html',1,'ddc']]],
+  ['discretevector_3c_20ddims_2e_2e_2e_20_3e_13',['DiscreteVector&lt; DDims... &gt;',['../classddc_1_1DiscreteVector.html',1,'ddc']]]
 ];

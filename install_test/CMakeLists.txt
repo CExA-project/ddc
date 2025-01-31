@@ -6,9 +6,9 @@ cmake_minimum_required(VERSION 3.22)
 project(test-installed-ddc LANGUAGES CXX)
 
 # Test whether `find_package(DDC)` can be called multiple times
-find_package(DDC 0.4 REQUIRED)
-find_package(DDC 0.4 REQUIRED COMPONENTS fft)
-find_package(DDC 0.4 REQUIRED COMPONENTS pdi splines)
+find_package(DDC 0.5 REQUIRED)
+find_package(DDC 0.5 REQUIRED COMPONENTS fft)
+find_package(DDC 0.5 REQUIRED COMPONENTS pdi splines)
 
 message(STATUS "DDC options:")
 message(STATUS "* DDC_BUILD_DOUBLE_PRECISION=${DDC_BUILD_DOUBLE_PRECISION}")

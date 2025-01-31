@@ -2,13 +2,17 @@
 #
 # SPDX-License-Identifier: MIT
 
-name: test
+name: Tests
+
 on:
-  push: { branches: [ main ] }
+  schedule:
+    - cron: "0 1 * * *" # every day at 1am
   pull_request:
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -33,6 +37,17 @@ jobs:
     - name: REUSE Compliance Check
       if: always()
       uses: fsfe/reuse-action@v5
+
+  spelling:
+    name: Spell Check with Typos
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Actions Repository
+      uses: actions/checkout@v4
+    - name: Spell Check Repo
+      uses: crate-ci/typos@v1.29.4
+      with:
+        files: ./AUTHORS ./benchmarks/ ./cmake/ ./CMakeLists.txt ./docs/ ./examples/ ./include/ ./README.md ./tests/
 
   cmake-format:
     runs-on: ubuntu-latest

@@ -204,7 +204,7 @@ public:
         /** @brief Evaluates non-zero B-spline derivatives at a given coordinate
          *
          * The derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
-         * B-splines which are non-zero at any given point. It is these B-splines which are derivated.
+         * B-splines which are non-zero at any given point. It is these B-splines which are differentiated.
          * A spline approximation of a derivative at coordinate x is a linear
          * combination of those B-spline derivatives weighted with the spline coefficients of the spline-transformed
          * initial discrete function.
@@ -219,7 +219,7 @@ public:
         /** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate
          *
          * The values and derivatives are computed for every B-spline with support at the given coordinate x. There are only (degree+1)
-         * B-splines which are non-zero at any given point. It is these B-splines which are evaluated and derivated.
+         * B-splines which are non-zero at any given point. It is these B-splines which are evaluated and differentiated.
          * A spline approximation of a derivative at coordinate x is a linear
          * combination of those B-spline derivatives weighted with spline coefficients of the spline-transformed
          * initial discrete function.

@@ -124,7 +124,7 @@ Then we initialize the domain along this dimension just like we did with the `X`
 
 #### Time dimension
 
-Then we handle the domains for the simulated time dimension. We first give the simulated time at which to stard and end the simulation.
+Then we handle the domains for the simulated time dimension. We first give the simulated time at which to start and end the simulation.
 
 \snippet{trimleft} uniform_heat_equation.cpp main-start-t-parameters
 
@@ -151,7 +151,7 @@ Note that the `DeviceAllocator` is responsible for allocating memory on the defa
 
 ## Initial conditions
 
-To set the initial conditions, the `ghosted_intial_temp` is created and acts as a pointer to the chunk. The const qualifier makes it clear that ghosted_initial_temp always references the same chunk, `ghosted_last_temp` in this case.
+To set the initial conditions, the `ghosted_initial_temp` is created and acts as a pointer to the chunk. The const qualifier makes it clear that ghosted_initial_temp always references the same chunk, `ghosted_last_temp` in this case.
 
 \snippet{trimleft} uniform_heat_equation.cpp initial-chunkspan
 

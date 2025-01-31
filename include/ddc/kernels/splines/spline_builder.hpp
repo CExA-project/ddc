@@ -400,7 +400,7 @@ public:
      *
      * This function solves matrix equation A^t*Q=integral_bsplines. In case of HERMITE boundary conditions,
      * integral_bsplines contains the integral coefficients at the boundaries, and Q thus has to
-     * be splitted in three parts (quadrature coefficients for the derivatives at lower boundary,
+     * be split in three parts (quadrature coefficients for the derivatives at lower boundary,
      * for the values inside the domain and for the derivatives at upper boundary).
      *
      * A discrete function f can then be integrated using sum_j Q_j*f_j for j in interpolation_domain.

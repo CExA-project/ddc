@@ -2,11 +2,12 @@
 #
 # SPDX-License-Identifier: MIT
 
-name: Nightly tests
+name: Early integration
 
 on:
   schedule:
     - cron: "0 1 * * 1-5" # every weekday at 1am
+  workflow_dispatch:
 
 jobs:
   docker-build:
@@ -35,7 +36,6 @@ jobs:
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           --cache-from ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
           -t ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
-          -t ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}:${GITHUB_SHA:0:7} \
           docker/${{matrix.image}}
 
   test:
@@ -213,7 +213,7 @@ jobs:
         docker run \
           --cidfile='docker.cid' \
           -v ${PWD}:/src:ro \
-          ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
+          ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}} \
           bash /src/run.sh
         if docker cp "$(cat docker.cid)":/data/tests.xml /home/runner/work/ddc/ddc/tests.xml
         then echo "with_report=true" >> "$GITHUB_OUTPUT"

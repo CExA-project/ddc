@@ -105,7 +105,7 @@ struct TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<HeadTagsB, TailTagsB...>, TypeSeq
 };
 
 /// A is replaced by element of C at same position than the first element of B equal to A.
-/// Remark : It may not be usefull in its own, it is an helper for TypeSeqReplace
+/// Remark : It may not be useful in its own, it is an helper for TypeSeqReplace
 template <class TagA, class TagSeqB, class TagSeqC>
 struct TypeSeqReplaceSingle;
 

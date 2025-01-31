@@ -48,7 +48,7 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
 /**
  * @brief Return the default value of the parameter cols_per_chunk for a given Kokkos::ExecutionSpace.
  *
- * The values are hardware-specific (but they can be overriden in the constructor of SplinesLinearProblemSparse).
+ * The values are hardware-specific (but they can be overridden in the constructor of SplinesLinearProblemSparse).
  * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace type.
@@ -83,7 +83,7 @@ std::size_t default_cols_per_chunk() noexcept
 /**
  * @brief Return the default value of the parameter preconditioner_max_block_size for a given Kokkos::ExecutionSpace.
  *
- * The values are hardware-specific (but they can be overriden in the constructor of SplinesLinearProblemSparse).
+ * The values are hardware-specific (but they can be overridden in the constructor of SplinesLinearProblemSparse).
  * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
  *
  * @tparam ExecSpace The Kokkos::ExecutionSpace type.

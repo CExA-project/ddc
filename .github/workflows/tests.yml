@@ -97,15 +97,21 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Build
+    # - name: Build
+    #   run: |
+    #     DOCKER_BUILDKIT=1 docker build \
+    #       --build-arg BACKEND=${{matrix.backend}} \
+    #       --build-arg BUILDKIT_INLINE_CACHE=1 \
+    #       --cache-from ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
+    #       -t ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
+    #       -t ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}:${GITHUB_SHA:0:7} \
+    #       docker/${{matrix.image}}
+    - name: Pull image
       run: |
-        DOCKER_BUILDKIT=1 docker build \
-          --build-arg BACKEND=${{matrix.backend}} \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
-          -t ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
-          -t ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}:${GITHUB_SHA:0:7} \
-          docker/${{matrix.image}}
+        docker pull ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}
+        docker image tag \
+            ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
+            ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}:${GITHUB_SHA:0:7}
     - name: Publish image for current SHA
       if: needs.id_repo.outputs.in_base_repo == 'true'
       run: |

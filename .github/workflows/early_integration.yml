@@ -29,17 +29,14 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    # - name: Build
-    #   run: |
-    #     DOCKER_BUILDKIT=1 docker build \
-    #       --build-arg BACKEND=${{matrix.backend}} \
-    #       --build-arg BUILDKIT_INLINE_CACHE=1 \
-    #       --cache-from ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
-    #       -t ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
-    #       docker/${{matrix.image}}
-    - name: Pull image
+    - name: Build
       run: |
-        docker pull ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}
+        DOCKER_BUILDKIT=1 docker build \
+          --build-arg BACKEND=${{matrix.backend}} \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --cache-from ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
+          -t ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}} \
+          docker/${{matrix.image}}
 
   test:
     strategy:

@@ -26,12 +26,14 @@ class DualDiscretization
     using DDimImplDevice = typename DDim::template Impl<DDim, Kokkos::CudaSpace>;
 #elif defined(__HIPCC__)
     using DDimImplDevice = typename DDim::template Impl<DDim, Kokkos::HIPSpace>;
+#elif defined(KOKKOS_ENABLE_SYCL)
+    using DDimImplDevice = typename DDim::template Impl<DDim, Kokkos::SYCLDeviceUSMSpace>;
 #else
     using DDimImplDevice = DDimImplHost;
 #endif
 
     DDimImplHost m_host;
-#if defined(__CUDACC__) || defined(__HIPCC__)
+#if defined(__CUDACC__) || defined(__HIPCC__) || defined(KOKKOS_ENABLE_SYCL)
     DDimImplDevice m_device_on_host;
 #endif
 
@@ -39,7 +41,7 @@ public:
     template <class... Args>
     explicit DualDiscretization(Args&&... args)
         : m_host(std::forward<Args>(args)...)
-#if defined(__CUDACC__) || defined(__HIPCC__)
+#if defined(__CUDACC__) || defined(__HIPCC__) || defined(KOKKOS_ENABLE_SYCL)
         , m_device_on_host(m_host)
 #endif
     {
@@ -59,6 +61,10 @@ public:
         else if constexpr (std::is_same_v<MemorySpace, Kokkos::HIPSpace>) {
             return m_device_on_host;
         }
+#elif defined(KOKKOS_ENABLE_SYCL)
+        else if constexpr (std::is_same_v<MemorySpace, Kokkos::SYCLDeviceUSMSpace>) {
+            return m_device_on_host;
+        }
 #endif
         else {
             static_assert(!std::is_same_v<MemorySpace, MemorySpace>);
@@ -72,7 +78,7 @@ public:
 
     KOKKOS_FUNCTION DDimImplDevice const& get_device()
     {
-#if defined(__CUDACC__) || defined(__HIPCC__)
+#if defined(__CUDACC__) || defined(__HIPCC__) || defined(KOKKOS_ENABLE_SYCL)
         return m_device_on_host;
 #else
         return m_host;

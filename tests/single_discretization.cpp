@@ -7,7 +7,6 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
-#include "ddc/coordinate.hpp"
 
 namespace ddcexp = ddc::experimental;
 

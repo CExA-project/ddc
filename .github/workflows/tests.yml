@@ -8,6 +8,9 @@ on:
   schedule:
     - cron: "0 1 * * *" # every day at 1am
   pull_request:
+  push:
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref }}
@@ -127,6 +130,7 @@ jobs:
         retention-days: 1
 
   test:
+    if: github.ref_name != 'main'
     strategy:
       fail-fast: false
       matrix:
@@ -314,6 +318,7 @@ jobs:
         report_paths: '/home/runner/work/ddc/ddc/tests.xml'
 
   test-with-sanitizer:
+    if: github.ref_name != 'main'
     strategy:
       fail-fast: false
       matrix:
@@ -408,6 +413,7 @@ jobs:
         report_paths: '/home/runner/work/ddc/ddc/tests.xml'
 
   clang-tidy-test:
+    if: github.ref_name != 'main'
     strategy:
       fail-fast: false
       matrix:

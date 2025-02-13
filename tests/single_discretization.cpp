@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+#include "ddc/coordinate.hpp"
 
 namespace ddcexp = ddc::experimental;
 
@@ -26,7 +27,7 @@ using DElemX = ddc::DiscreteElement<DDimX>;
 
 TEST(SingleDiscretization, ClassSize)
 {
-    EXPECT_EQ(sizeof(DDimX::Impl<DDimX, Kokkos::HostSpace>), sizeof(double));
+    EXPECT_EQ(sizeof(DDimX::Impl<DDimX, Kokkos::HostSpace>), sizeof(ddc::CoordinateElement));
 }
 
 TEST(SingleDiscretization, Constructor)

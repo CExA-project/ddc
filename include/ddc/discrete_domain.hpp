@@ -203,7 +203,7 @@ public:
     }
 
     template <class... DElems>
-    bool contains(DElems const&... delems) const noexcept
+    KOKKOS_FUNCTION bool contains(DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -218,7 +218,8 @@ public:
     }
 
     template <class... DElems>
-    DiscreteVector<DDims...> distance_from_front(DElems const&... delems) const noexcept
+    KOKKOS_FUNCTION DiscreteVector<DDims...> distance_from_front(
+            DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -409,22 +410,22 @@ public:
         return *this;
     }
 
-    static bool contains() noexcept
+    static KOKKOS_FUNCTION bool contains() noexcept
     {
         return true;
     }
 
-    static bool contains(DiscreteElement<>) noexcept
+    static KOKKOS_FUNCTION bool contains(DiscreteElement<>) noexcept
     {
         return true;
     }
 
-    static DiscreteVector<> distance_from_front() noexcept
+    static KOKKOS_FUNCTION DiscreteVector<> distance_from_front() noexcept
     {
         return {};
     }
 
-    static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
+    static KOKKOS_FUNCTION DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
     {
         return {};
     }

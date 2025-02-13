@@ -473,22 +473,22 @@ public:
         return {};
     }
 
-    static bool contains() noexcept
+    static KOKKOS_FUNCTION bool contains() noexcept
     {
         return true;
     }
 
-    static bool contains(DiscreteElement<>) noexcept
+    static KOKKOS_FUNCTION bool contains(DiscreteElement<>) noexcept
     {
         return true;
     }
 
-    static DiscreteVector<> distance_from_front() noexcept
+    static KOKKOS_FUNCTION DiscreteVector<> distance_from_front() noexcept
     {
         return {};
     }
 
-    static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
+    static KOKKOS_FUNCTION DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
     {
         return {};
     }

@@ -28,18 +28,13 @@ void blinker_init(
                 Kokkos::layout_right,
                 Kokkos::DefaultExecutionSpace::memory_space> cells)
 {
+    ddc::DiscreteDomain<DDimX, DDimY> const cells_alive
+            = domain.remove_first(ddc::DiscreteVector<DDimX, DDimY>(1, 2))
+                      .take_first(ddc::DiscreteVector<DDimX, DDimY>(3, 1));
     ddc::parallel_for_each(
             domain,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
-                ddc::DiscreteElement<DDimX> const ix(ixy);
-                ddc::DiscreteElement<DDimY> const iy(ixy);
-                if (iy == ddc::DiscreteElement<DDimY>(2)
-                    && (ix >= ddc::DiscreteElement<DDimX>(1)
-                        && ix <= ddc::DiscreteElement<DDimX>(3))) {
-                    cells(ixy) = true;
-                } else {
-                    cells(ixy) = false;
-                }
+                cells(ixy) = cells_alive.contains(ixy);
             });
 }
 
@@ -70,13 +65,17 @@ int main()
     unsigned const length = 5;
     unsigned const height = 5;
 
-    ddc::DiscreteDomain<DDimX, DDimY> const domain_xy(
-            ddc::DiscreteElement<DDimX, DDimY>(0, 0),
-            ddc::DiscreteVector<DDimX, DDimY>(length, height));
+    ddc::DiscreteDomain<DDimX> const domain_x
+            = ddc::init_trivial_space(ddc::DiscreteVector<DDimX>(length));
+    ddc::DiscreteDomain<DDimY> const domain_y
+            = ddc::init_trivial_space(ddc::DiscreteVector<DDimY>(height));
 
-    ddc::DiscreteDomain<DDimX, DDimY> const inner_domain_xy(
-            ddc::DiscreteElement<DDimX, DDimY>(1, 1),
-            ddc::DiscreteVector<DDimX, DDimY>(length - 2, height - 2));
+    ddc::DiscreteDomain<DDimX, DDimY> const domain_xy(domain_x, domain_y);
+
+    ddc::DiscreteDomain<DDimX, DDimY> const inner_domain_xy
+            = domain_xy
+                      .remove(ddc::DiscreteVector<DDimX, DDimY>(1, 1),
+                              ddc::DiscreteVector<DDimX, DDimY>(1, 1));
 
     ddc::Chunk cells_in_dev_alloc("cells_in_dev", domain_xy, ddc::DeviceAllocator<cell>());
     ddc::Chunk cells_out_dev_alloc("cells_out_dev", domain_xy, ddc::DeviceAllocator<cell>());

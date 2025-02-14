@@ -232,6 +232,7 @@ var namespaceddc =
     [ "front", "namespaceddc.html#a1a318d7811f1570932fc262f465c8dd3", null ],
     [ "back", "namespaceddc.html#a61d8562206ff05aa8ff364d2053db3aa", null ],
     [ "transform_reduce", "namespaceddc.html#aa89bc28d3c56d7127ac57fc05bfd01e6", null ],
+    [ "init_trivial_space", "namespaceddc.html#a618b9b3ece874b58e4a6595861b5cba5", null ],
     [ "coordinate", "namespaceddc.html#ad1dd2f87c3672f42f1adbddcdaa78b97", null ],
     [ "origin", "namespaceddc.html#a976dd0529ee8d77478a94062c8fdc990", null ],
     [ "front", "namespaceddc.html#a5fcc420419c1228f8087acb91c118da2", null ],

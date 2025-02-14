@@ -53,6 +53,12 @@ static_assert(false, "DDC requires option -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE
 #endif
 #endif
 
+#if defined(KOKKOS_ENABLE_SYCL)
+#if !defined(KOKKOS_ENABLE_SYCL_RELOCATABLE_DEVICE_CODE)
+static_assert(false, "DDC requires option -DKokkos_ENABLE_SYCL_RELOCATABLE_DEVICE_CODE=ON");
+#endif
+#endif
+
 namespace ddc {
 
 namespace detail {
@@ -140,6 +146,10 @@ __constant__ gpu_proxy<ddim_impl_t<DDim, Kokkos::CudaSpace>> g_discrete_space_de
 // WARNING: do not put the `inline` keyword, seems to fail on MI100 rocm/4.5.0
 template <class DDim>
 __constant__ gpu_proxy<ddim_impl_t<DDim, Kokkos::HIPSpace>> g_discrete_space_device;
+#elif defined(KOKKOS_ENABLE_SYCL)
+// Global GPU variable viewing data owned by the CPU
+template <class DDim>
+SYCL_EXTERNAL inline sycl::ext::oneapi::experimental::device_global<gpu_proxy<ddim_impl_t<DDim, Kokkos::SYCLDeviceUSMSpace>>> g_discrete_space_device;
 #endif
 
 inline void display_discretization_store(std::ostream& os)
@@ -189,6 +199,11 @@ void init_discrete_space(Args&&... args)
             detail::g_discrete_space_device<DDim>,
             &detail::g_discrete_space_dual<DDim>->get_device(),
             sizeof(detail::g_discrete_space_dual<DDim>->get_device())));
+#elif defined(KOKKOS_ENABLE_SYCL)
+    Kokkos::DefaultExecutionSpace exec;
+    sycl::queue q = exec.sycl_queue();
+    q.memcpy(detail::g_discrete_space_device<DDim>,
+             &detail::g_discrete_space_dual<DDim>->get_device()).wait();
 #endif
 }
 
@@ -235,6 +250,10 @@ KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
 #elif defined(__HIPCC__)
     else if constexpr (std::is_same_v<MemorySpace, Kokkos::HIPSpace>) {
         return *detail::g_discrete_space_device<DDim>;
+    }
+#elif defined(KOKKOS_ENABLE_SYCL)
+    else if constexpr (std::is_same_v<MemorySpace, Kokkos::SYCLDeviceUSMSpace>) {
+        return *detail::g_discrete_space_device<DDim>.get();
     }
 #endif
     else {

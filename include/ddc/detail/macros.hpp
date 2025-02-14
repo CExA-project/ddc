@@ -40,6 +40,8 @@
 #define DDC_CURRENT_KOKKOS_SPACE Kokkos::HIPSpace
 #elif defined(__CUDA_ARCH__)
 #define DDC_CURRENT_KOKKOS_SPACE Kokkos::CudaSpace
+#elif defined(__SYCL_DEVICE_ONLY__)
+#define DDC_CURRENT_KOKKOS_SPACE Kokkos::SYCLDeviceUSMSpace
 #else
 #define DDC_CURRENT_KOKKOS_SPACE Kokkos::HostSpace
 #endif

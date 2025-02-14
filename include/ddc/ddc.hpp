@@ -33,6 +33,7 @@ namespace ddc {
 #include "ddc/periodic_sampling.hpp"
 #include "ddc/storage_discrete_domain.hpp"
 #include "ddc/strided_discrete_domain.hpp"
+#include "ddc/trivial_space.hpp"
 #include "ddc/uniform_point_sampling.hpp"
 
 // Algorithms

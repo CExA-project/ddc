@@ -64,7 +64,7 @@ jobs:
       run: |
         python3 -m venv ./gersemi
         . ./gersemi/bin/activate
-        python3 -m pip install gersemi==0.17
+        python3 -m pip install gersemi==0.19
     - name: Run gersemi
       run: |
         . ./gersemi/bin/activate

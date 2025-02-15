@@ -273,13 +273,16 @@ jobs:
           rm -rf build
 
           cmake \
-            -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
+            -DCMAKE_COMPILE_WARNING_AS_ERROR=ON \
+            -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
             -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -DDDC_BUILD_BENCHMARKS=ON \
             -DDDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
             -DDDC_GTest_DEPENDENCY_POLICY=INSTALLED \
             -DDDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
             -DDDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
+            -Werror=deprecated \
+            -Werror=dev \
             -B build \
             -S /src
           cmake --build build

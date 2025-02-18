@@ -101,13 +101,15 @@ void solve_and_validate(
     Kokkos::DualView<double*>
             inv_ptr("inv_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
     ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
-            inv(inv_ptr.h_view.data(), splines_linear_problem.required_number_of_rhs_rows(), N);
+            inv(inv_ptr.view_host().data(),
+                splines_linear_problem.required_number_of_rhs_rows(),
+                N);
     fill_identity(inv);
     inv_ptr.modify_host();
     inv_ptr.sync_device();
     splines_linear_problem
             .solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
-                           inv_ptr.d_view.data(),
+                           inv_ptr.view_device().data(),
                            splines_linear_problem.required_number_of_rhs_rows(),
                            N),
                    false);
@@ -117,7 +119,7 @@ void solve_and_validate(
     Kokkos::DualView<double*>
             inv_tr_ptr("inv_tr_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
     ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
-            inv_tr(inv_tr_ptr.h_view.data(),
+            inv_tr(inv_tr_ptr.view_host().data(),
                    splines_linear_problem.required_number_of_rhs_rows(),
                    N);
     fill_identity(inv_tr);
@@ -125,7 +127,7 @@ void solve_and_validate(
     inv_tr_ptr.sync_device();
     splines_linear_problem
             .solve(ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>::MultiRHS(
-                           inv_tr_ptr.d_view.data(),
+                           inv_tr_ptr.view_device().data(),
                            splines_linear_problem.required_number_of_rhs_rows(),
                            N),
                    true);

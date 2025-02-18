@@ -139,8 +139,8 @@ public:
     {
         assert(m_top_left_block->size() <= mat_size);
 
-        Kokkos::deep_copy(m_top_right_block.h_view, 0.);
-        Kokkos::deep_copy(m_bottom_left_block.h_view, 0.);
+        Kokkos::deep_copy(m_top_right_block.view_host(), 0.);
+        Kokkos::deep_copy(m_bottom_left_block.view_host(), 0.);
     }
 
     double get_element(std::size_t const i, std::size_t const j) const override
@@ -158,10 +158,10 @@ public:
         }
 
         if (j >= nq) {
-            return m_top_right_block.h_view(i, j - nq);
+            return m_top_right_block.view_host()(i, j - nq);
         }
 
-        return m_bottom_left_block.h_view(i - nq, j);
+        return m_bottom_left_block.view_host()(i - nq, j);
     }
 
     void set_element(std::size_t const i, std::size_t const j, double const aij) override
@@ -175,9 +175,9 @@ public:
         } else if (i >= nq && j >= nq) {
             m_bottom_right_block->set_element(i - nq, j - nq, aij);
         } else if (j >= nq) {
-            m_top_right_block.h_view(i, j - nq) = aij;
+            m_top_right_block.view_host()(i, j - nq) = aij;
         } else {
-            m_bottom_left_block.h_view(i - nq, j) = aij;
+            m_bottom_left_block.view_host()(i - nq, j) = aij;
         }
     }
 
@@ -209,10 +209,11 @@ public:
 
         Kokkos::DualView<std::size_t, Kokkos::LayoutRight, typename ExecSpace::memory_space>
                 n_nonzeros("ddc_splines_n_nonzeros");
-        n_nonzeros.h_view() = 0;
+        n_nonzeros.view_host()() = 0;
         n_nonzeros.modify_host();
         n_nonzeros.sync_device();
 
+        auto const n_nonzeros_device = n_nonzeros.view_device();
         Kokkos::parallel_for(
                 "dense2coo",
                 Kokkos::RangePolicy(ExecSpace(), 0, 1),
@@ -221,19 +222,19 @@ public:
                         for (int j = 0; j < dense_matrix.extent(1); ++j) {
                             double const aij = dense_matrix(i, j);
                             if (Kokkos::abs(aij) >= tol) {
-                                rows_idx(n_nonzeros.d_view()) = i;
-                                cols_idx(n_nonzeros.d_view()) = j;
-                                values(n_nonzeros.d_view()) = aij;
-                                n_nonzeros.d_view()++;
+                                rows_idx(n_nonzeros_device()) = i;
+                                cols_idx(n_nonzeros_device()) = j;
+                                values(n_nonzeros_device()) = aij;
+                                n_nonzeros_device()++;
                             }
                         }
                     }
                 });
         n_nonzeros.modify_device();
         n_nonzeros.sync_host();
-        Kokkos::resize(rows_idx, n_nonzeros.h_view());
-        Kokkos::resize(cols_idx, n_nonzeros.h_view());
-        Kokkos::resize(values, n_nonzeros.h_view());
+        Kokkos::resize(rows_idx, n_nonzeros.view_host()());
+        Kokkos::resize(cols_idx, n_nonzeros.view_host()());
+        Kokkos::resize(values, n_nonzeros.view_host()());
 
         return Coo(dense_matrix.extent(0), dense_matrix.extent(1), rows_idx, cols_idx, values);
     }
@@ -242,6 +243,8 @@ private:
     /// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.
     void compute_schur_complement()
     {
+        auto const bottom_left_block = m_bottom_left_block.view_host();
+        auto const top_right_block = m_top_right_block.view_host();
         Kokkos::parallel_for(
                 "compute_schur_complement",
                 Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
@@ -250,7 +253,7 @@ private:
                 [&](const int i, const int j) {
                     double val = 0.0;
                     for (int l = 0; l < m_top_left_block->size(); ++l) {
-                        val += m_bottom_left_block.h_view(i, l) * m_top_right_block.h_view(l, j);
+                        val += bottom_left_block(i, l) * top_right_block(l, j);
                     }
                     m_bottom_right_block
                             ->set_element(i, j, m_bottom_right_block->get_element(i, j) - val);
@@ -280,15 +283,15 @@ public:
         // Compute Q^-1*gamma in top-right block
         m_top_right_block.modify_host();
         m_top_right_block.sync_device();
-        m_top_left_block->solve(m_top_right_block.d_view, false);
-        m_top_right_block_coo = dense2coo(m_top_right_block.d_view);
+        m_top_left_block->solve(m_top_right_block.view_device(), false);
+        m_top_right_block_coo = dense2coo(m_top_right_block.view_device());
         m_top_right_block.modify_device();
         m_top_right_block.sync_host();
 
         // Push lambda on device in bottom-left block
         m_bottom_left_block.modify_host();
         m_bottom_left_block.sync_device();
-        m_bottom_left_block_coo = dense2coo(m_bottom_left_block.d_view);
+        m_bottom_left_block_coo = dense2coo(m_bottom_left_block.view_device());
 
         // Compute delta - lambda*Q^-1*gamma in bottom-right block & setup the bottom-right solver
         compute_schur_complement();

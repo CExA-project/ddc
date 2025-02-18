@@ -154,7 +154,7 @@ public:
         }
 
         // Convert 1-based index to 0-based index
-        for (int i = 0; i < size(); ++i) {
+        for (std::size_t i = 0; i < size(); ++i) {
             m_ipiv.view_host()(i) -= 1;
         }
 

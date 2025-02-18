@@ -268,8 +268,8 @@ $(document).ready(function(){initNavTree('splines__linear__problem__2x2__blocks_
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    {</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        assert(m_top_left_block-&gt;size() &lt;= mat_size);</div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        Kokkos::deep_copy(m_top_right_block.h_view, 0.);</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        Kokkos::deep_copy(m_bottom_left_block.h_view, 0.);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        Kokkos::deep_copy(m_top_right_block.view_host(), 0.);</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        Kokkos::deep_copy(m_bottom_left_block.view_host(), 0.);</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    }</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keywordtype">double</span> get_element(std::size_t <span class="keyword">const</span> i, std::size_t <span class="keyword">const</span> j) <span class="keyword">const</span> <span class="keyword">override</span></div>
@@ -287,10 +287,10 @@ $(document).ready(function(){initNavTree('splines__linear__problem__2x2__blocks_
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        }</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="keywordflow">if</span> (j &gt;= nq) {</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            <span class="keywordflow">return</span> m_top_right_block.h_view(i, j - nq);</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            <span class="keywordflow">return</span> m_top_right_block.view_host()(i, j - nq);</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        }</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordflow">return</span> m_bottom_left_block.h_view(i - nq, j);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordflow">return</span> m_bottom_left_block.view_host()(i - nq, j);</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    }</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keywordtype">void</span> set_element(std::size_t <span class="keyword">const</span> i, std::size_t <span class="keyword">const</span> j, <span class="keywordtype">double</span> <span class="keyword">const</span> aij) <span class="keyword">override</span></div>
@@ -304,9 +304,9 @@ $(document).ready(function(){initNavTree('splines__linear__problem__2x2__blocks_
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (i &gt;= nq &amp;&amp; j &gt;= nq) {</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>            m_bottom_right_block-&gt;set_element(i - nq, j - nq, aij);</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (j &gt;= nq) {</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            m_top_right_block.h_view(i, j - nq) = aij;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            m_top_right_block.view_host()(i, j - nq) = aij;</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            m_bottom_left_block.h_view(i - nq, j) = aij;</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            m_bottom_left_block.view_host()(i - nq, j) = aij;</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        }</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    }</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
@@ -338,184 +338,187 @@ $(document).ready(function(){initNavTree('splines__linear__problem__2x2__blocks_
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        Kokkos::DualView&lt;std::size_t, Kokkos::LayoutRight, <span class="keyword">typename</span> ExecSpace::memory_space&gt;</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                n_nonzeros(<span class="stringliteral">&quot;ddc_splines_n_nonzeros&quot;</span>);</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        n_nonzeros.h_view() = 0;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        n_nonzeros.view_host()() = 0;</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        n_nonzeros.modify_host();</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        n_nonzeros.sync_device();</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        Kokkos::parallel_for(</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                <span class="stringliteral">&quot;dense2coo&quot;</span>,</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                Kokkos::RangePolicy(ExecSpace(), 0, 1),</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                KOKKOS_LAMBDA(<span class="keyword">const</span> <span class="keywordtype">int</span>) {</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; dense_matrix.extent(0); ++i) {</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; dense_matrix.extent(1); ++j) {</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                            <span class="keywordtype">double</span> <span class="keyword">const</span> aij = dense_matrix(i, j);</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                            <span class="keywordflow">if</span> (Kokkos::abs(aij) &gt;= tol) {</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                                rows_idx(n_nonzeros.d_view()) = i;</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                                cols_idx(n_nonzeros.d_view()) = j;</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                                values(n_nonzeros.d_view()) = aij;</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                                n_nonzeros.d_view()++;</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                            }</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                        }</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                    }</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                });</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        n_nonzeros.modify_device();</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        n_nonzeros.sync_host();</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        Kokkos::resize(rows_idx, n_nonzeros.h_view());</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        Kokkos::resize(cols_idx, n_nonzeros.h_view());</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        Kokkos::resize(values, n_nonzeros.h_view());</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        <span class="keywordflow">return</span> Coo(dense_matrix.extent(0), dense_matrix.extent(1), rows_idx, cols_idx, values);</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    }</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="comment">/// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.</span></div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keywordtype">void</span> compute_schur_complement()</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    {</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        Kokkos::parallel_for(</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                <span class="stringliteral">&quot;compute_schur_complement&quot;</span>,</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                Kokkos::MDRangePolicy&lt;Kokkos::DefaultHostExecutionSpace, Kokkos::Rank&lt;2&gt;&gt;(</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                        {0, 0},</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                        {m_bottom_right_block-&gt;size(), m_bottom_right_block-&gt;size()}),</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                [&amp;](<span class="keyword">const</span> <span class="keywordtype">int</span> i, <span class="keyword">const</span> <span class="keywordtype">int</span> j) {</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                    <span class="keywordtype">double</span> val = 0.0;</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; m_top_left_block-&gt;size(); ++l) {</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>                        val += m_bottom_left_block.h_view(i, l) * m_top_right_block.h_view(l, j);</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                    }</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>                    m_bottom_right_block</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                            -&gt;set_element(i, j, m_bottom_right_block-&gt;get_element(i, j) - val);</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>                });</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    }</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  262</span><span class="comment">     * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.</span></div>
-<div class="line"><span class="lineno">  263</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  264</span><span class="comment">     * Block-LU factorize the matrix A according to the Schur complement method. The block-LU factorization is:</span></div>
-<div class="line"><span class="lineno">  265</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  266</span><span class="comment">     * A = |   Q    |             0             |  | I | Q^-1*gamma |</span></div>
-<div class="line"><span class="lineno">  267</span><span class="comment">     *     | lambda | delta - lambda*Q^-1*gamma |  | 0 |      I     |</span></div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        <span class="keyword">auto</span> <span class="keyword">const</span> n_nonzeros_device = n_nonzeros.view_device();</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        Kokkos::parallel_for(</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                <span class="stringliteral">&quot;dense2coo&quot;</span>,</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                Kokkos::RangePolicy(ExecSpace(), 0, 1),</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                KOKKOS_LAMBDA(<span class="keyword">const</span> <span class="keywordtype">int</span>) {</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; dense_matrix.extent(0); ++i) {</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; dense_matrix.extent(1); ++j) {</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                            <span class="keywordtype">double</span> <span class="keyword">const</span> aij = dense_matrix(i, j);</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                            <span class="keywordflow">if</span> (Kokkos::abs(aij) &gt;= tol) {</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                                rows_idx(n_nonzeros_device()) = i;</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                                cols_idx(n_nonzeros_device()) = j;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                                values(n_nonzeros_device()) = aij;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                                n_nonzeros_device()++;</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                            }</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                        }</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                    }</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                });</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        n_nonzeros.modify_device();</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        n_nonzeros.sync_host();</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        Kokkos::resize(rows_idx, n_nonzeros.view_host()());</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        Kokkos::resize(cols_idx, n_nonzeros.view_host()());</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        Kokkos::resize(values, n_nonzeros.view_host()());</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        <span class="keywordflow">return</span> Coo(dense_matrix.extent(0), dense_matrix.extent(1), rows_idx, cols_idx, values);</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    }</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="comment">/// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keywordtype">void</span> compute_schur_complement()</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    {</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="keyword">auto</span> <span class="keyword">const</span> bottom_left_block = m_bottom_left_block.view_host();</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        <span class="keyword">auto</span> <span class="keyword">const</span> top_right_block = m_top_right_block.view_host();</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        Kokkos::parallel_for(</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                <span class="stringliteral">&quot;compute_schur_complement&quot;</span>,</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                Kokkos::MDRangePolicy&lt;Kokkos::DefaultHostExecutionSpace, Kokkos::Rank&lt;2&gt;&gt;(</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                        {0, 0},</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                        {m_bottom_right_block-&gt;size(), m_bottom_right_block-&gt;size()}),</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>                [&amp;](<span class="keyword">const</span> <span class="keywordtype">int</span> i, <span class="keyword">const</span> <span class="keywordtype">int</span> j) {</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                    <span class="keywordtype">double</span> val = 0.0;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; m_top_left_block-&gt;size(); ++l) {</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                        val += bottom_left_block(i, l) * top_right_block(l, j);</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>                    }</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>                    m_bottom_right_block</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>                            -&gt;set_element(i, j, m_bottom_right_block-&gt;get_element(i, j) - val);</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                });</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    }</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  265</span><span class="comment">     * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.</span></div>
+<div class="line"><span class="lineno">  266</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  267</span><span class="comment">     * Block-LU factorize the matrix A according to the Schur complement method. The block-LU factorization is:</span></div>
 <div class="line"><span class="lineno">  268</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  269</span><span class="comment">     * So we perform the factorization inplace to store only the relevant blocks in the matrix (while factorizing</span></div>
-<div class="line"><span class="lineno">  270</span><span class="comment">     * the blocks themselves if necessary):</span></div>
+<div class="line"><span class="lineno">  269</span><span class="comment">     * A = |   Q    |             0             |  | I | Q^-1*gamma |</span></div>
+<div class="line"><span class="lineno">  270</span><span class="comment">     *     | lambda | delta - lambda*Q^-1*gamma |  | 0 |      I     |</span></div>
 <div class="line"><span class="lineno">  271</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  272</span><span class="comment">     * |   Q    |         Q^-1*gamma        |</span></div>
-<div class="line"><span class="lineno">  273</span><span class="comment">     * | lambda | delta - lambda*Q^-1*gamma |</span></div>
-<div class="line"><span class="lineno">  274</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="keywordtype">void</span> setup_solver() <span class="keyword">override</span></div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    {</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <span class="comment">// Setup the top-left solver</span></div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        m_top_left_block-&gt;setup_solver();</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        <span class="comment">// Compute Q^-1*gamma in top-right block</span></div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        m_top_right_block.modify_host();</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        m_top_right_block.sync_device();</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        m_top_left_block-&gt;solve(m_top_right_block.d_view, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>        m_top_right_block_coo = dense2coo(m_top_right_block.d_view);</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        m_top_right_block.modify_device();</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        m_top_right_block.sync_host();</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        <span class="comment">// Push lambda on device in bottom-left block</span></div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        m_bottom_left_block.modify_host();</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        m_bottom_left_block.sync_device();</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        m_bottom_left_block_coo = dense2coo(m_bottom_left_block.d_view);</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>        <span class="comment">// Compute delta - lambda*Q^-1*gamma in bottom-right block &amp; setup the bottom-right solver</span></div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        compute_schur_complement();</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        m_bottom_right_block-&gt;setup_solver();</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    }</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  299</span><span class="comment">     * @brief Compute y &lt;- y - LinOp*x or y &lt;- y - LinOp^t*x with a sparse LinOp.</span></div>
-<div class="line"><span class="lineno">  300</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  301</span><span class="comment">     * [SHOULD BE PRIVATE (GPU programming limitation)]</span></div>
-<div class="line"><span class="lineno">  302</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  303</span><span class="comment">     * Perform a spdm operation (sparse-dense matrix multiplication) with parameters alpha=-1 and beta=1 between</span></div>
-<div class="line"><span class="lineno">  304</span><span class="comment">     * a sparse matrix stored in COO format and a dense matrix x.</span></div>
+<div class="line"><span class="lineno">  272</span><span class="comment">     * So we perform the factorization inplace to store only the relevant blocks in the matrix (while factorizing</span></div>
+<div class="line"><span class="lineno">  273</span><span class="comment">     * the blocks themselves if necessary):</span></div>
+<div class="line"><span class="lineno">  274</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  275</span><span class="comment">     * |   Q    |         Q^-1*gamma        |</span></div>
+<div class="line"><span class="lineno">  276</span><span class="comment">     * | lambda | delta - lambda*Q^-1*gamma |</span></div>
+<div class="line"><span class="lineno">  277</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    <span class="keywordtype">void</span> setup_solver() <span class="keyword">override</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    {</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        <span class="comment">// Setup the top-left solver</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        m_top_left_block-&gt;setup_solver();</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        <span class="comment">// Compute Q^-1*gamma in top-right block</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>        m_top_right_block.modify_host();</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        m_top_right_block.sync_device();</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        m_top_left_block-&gt;solve(m_top_right_block.view_device(), <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        m_top_right_block_coo = dense2coo(m_top_right_block.view_device());</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        m_top_right_block.modify_device();</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        m_top_right_block.sync_host();</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        <span class="comment">// Push lambda on device in bottom-left block</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        m_bottom_left_block.modify_host();</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>        m_bottom_left_block.sync_device();</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        m_bottom_left_block_coo = dense2coo(m_bottom_left_block.view_device());</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>        <span class="comment">// Compute delta - lambda*Q^-1*gamma in bottom-right block &amp; setup the bottom-right solver</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        compute_schur_complement();</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        m_bottom_right_block-&gt;setup_solver();</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    }</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  302</span><span class="comment">     * @brief Compute y &lt;- y - LinOp*x or y &lt;- y - LinOp^t*x with a sparse LinOp.</span></div>
+<div class="line"><span class="lineno">  303</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  304</span><span class="comment">     * [SHOULD BE PRIVATE (GPU programming limitation)]</span></div>
 <div class="line"><span class="lineno">  305</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  306</span><span class="comment">     * @param[in] LinOp The sparse matrix, left side of the matrix multiplication.</span></div>
-<div class="line"><span class="lineno">  307</span><span class="comment">     * @param[in] x The dense matrix, right side of the matrix multiplication.</span></div>
-<div class="line"><span class="lineno">  308</span><span class="comment">     * @param[inout] y The dense matrix to be altered by the operation.</span></div>
-<div class="line"><span class="lineno">  309</span><span class="comment">     * @param transpose A flag to indicate if the direct or transposed version of the operation is performed.</span></div>
-<div class="line"><span class="lineno">  310</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="keywordtype">void</span> spdm_minus1_1(Coo LinOp, MultiRHS <span class="keyword">const</span> x, MultiRHS <span class="keyword">const</span> y, <span class="keywordtype">bool</span> <span class="keyword">const</span> transpose = <span class="keyword">false</span>)</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>            <span class="keyword">const</span></div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    {</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        assert((!transpose &amp;&amp; LinOp.nrows() == y.extent(0))</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>               || (transpose &amp;&amp; LinOp.ncols() == y.extent(0)));</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        assert((!transpose &amp;&amp; LinOp.ncols() == x.extent(0))</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>               || (transpose &amp;&amp; LinOp.nrows() == x.extent(0)));</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        assert(x.extent(1) == y.extent(1));</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span> </div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <span class="keywordflow">if</span> (!transpose) {</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            Kokkos::parallel_for(</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>                    <span class="stringliteral">&quot;ddc_splines_spdm_minus1_1&quot;</span>,</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>                    Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>                    KOKKOS_LAMBDA(<span class="keyword">const</span> <span class="keywordtype">int</span> j) {</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> nz_idx = 0; nz_idx &lt; LinOp.nnz(); ++nz_idx) {</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                            <span class="keyword">const</span> <span class="keywordtype">int</span> i = LinOp.rows_idx()(nz_idx);</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                            <span class="keyword">const</span> <span class="keywordtype">int</span> k = LinOp.cols_idx()(nz_idx);</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                            y(i, j) -= LinOp.values()(nz_idx) * x(k, j);</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                        }</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                    });</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>            Kokkos::parallel_for(</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                    <span class="stringliteral">&quot;ddc_splines_spdm_minus1_1_tr&quot;</span>,</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                    Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                    KOKKOS_LAMBDA(<span class="keyword">const</span> <span class="keywordtype">int</span> j) {</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>                        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> nz_idx = 0; nz_idx &lt; LinOp.nnz(); ++nz_idx) {</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>                            <span class="keyword">const</span> <span class="keywordtype">int</span> i = LinOp.rows_idx()(nz_idx);</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>                            <span class="keyword">const</span> <span class="keywordtype">int</span> k = LinOp.cols_idx()(nz_idx);</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>                            y(k, j) -= LinOp.values()(nz_idx) * x(i, j);</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                        }</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>                    });</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        }</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    }</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span> </div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  346</span><span class="comment">     * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.</span></div>
-<div class="line"><span class="lineno">  347</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  348</span><span class="comment">     * The solver method is the one known as Schur complement method. It can be summarized as follow,</span></div>
-<div class="line"><span class="lineno">  349</span><span class="comment">     * starting with the pre-computed elements of the matrix:</span></div>
+<div class="line"><span class="lineno">  306</span><span class="comment">     * Perform a spdm operation (sparse-dense matrix multiplication) with parameters alpha=-1 and beta=1 between</span></div>
+<div class="line"><span class="lineno">  307</span><span class="comment">     * a sparse matrix stored in COO format and a dense matrix x.</span></div>
+<div class="line"><span class="lineno">  308</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  309</span><span class="comment">     * @param[in] LinOp The sparse matrix, left side of the matrix multiplication.</span></div>
+<div class="line"><span class="lineno">  310</span><span class="comment">     * @param[in] x The dense matrix, right side of the matrix multiplication.</span></div>
+<div class="line"><span class="lineno">  311</span><span class="comment">     * @param[inout] y The dense matrix to be altered by the operation.</span></div>
+<div class="line"><span class="lineno">  312</span><span class="comment">     * @param transpose A flag to indicate if the direct or transposed version of the operation is performed.</span></div>
+<div class="line"><span class="lineno">  313</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    <span class="keywordtype">void</span> spdm_minus1_1(Coo LinOp, MultiRHS <span class="keyword">const</span> x, MultiRHS <span class="keyword">const</span> y, <span class="keywordtype">bool</span> <span class="keyword">const</span> transpose = <span class="keyword">false</span>)</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            <span class="keyword">const</span></div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    {</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        assert((!transpose &amp;&amp; LinOp.nrows() == y.extent(0))</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>               || (transpose &amp;&amp; LinOp.ncols() == y.extent(0)));</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        assert((!transpose &amp;&amp; LinOp.ncols() == x.extent(0))</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>               || (transpose &amp;&amp; LinOp.nrows() == x.extent(0)));</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        assert(x.extent(1) == y.extent(1));</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span> </div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        <span class="keywordflow">if</span> (!transpose) {</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>            Kokkos::parallel_for(</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                    <span class="stringliteral">&quot;ddc_splines_spdm_minus1_1&quot;</span>,</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                    Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                    KOKKOS_LAMBDA(<span class="keyword">const</span> <span class="keywordtype">int</span> j) {</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> nz_idx = 0; nz_idx &lt; LinOp.nnz(); ++nz_idx) {</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                            <span class="keyword">const</span> <span class="keywordtype">int</span> i = LinOp.rows_idx()(nz_idx);</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                            <span class="keyword">const</span> <span class="keywordtype">int</span> k = LinOp.cols_idx()(nz_idx);</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                            y(i, j) -= LinOp.values()(nz_idx) * x(k, j);</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                        }</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                    });</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            Kokkos::parallel_for(</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>                    <span class="stringliteral">&quot;ddc_splines_spdm_minus1_1_tr&quot;</span>,</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>                    Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>                    KOKKOS_LAMBDA(<span class="keyword">const</span> <span class="keywordtype">int</span> j) {</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>                        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> nz_idx = 0; nz_idx &lt; LinOp.nnz(); ++nz_idx) {</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                            <span class="keyword">const</span> <span class="keywordtype">int</span> i = LinOp.rows_idx()(nz_idx);</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>                            <span class="keyword">const</span> <span class="keywordtype">int</span> k = LinOp.cols_idx()(nz_idx);</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>                            y(k, j) -= LinOp.values()(nz_idx) * x(i, j);</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                        }</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>                    });</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>        }</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    }</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span> </div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  349</span><span class="comment">     * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.</span></div>
 <div class="line"><span class="lineno">  350</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  351</span><span class="comment">     * |   Q    |         Q^-1*gamma        |</span></div>
-<div class="line"><span class="lineno">  352</span><span class="comment">     * | lambda | delta - lambda*Q^-1*gamma |</span></div>
+<div class="line"><span class="lineno">  351</span><span class="comment">     * The solver method is the one known as Schur complement method. It can be summarized as follow,</span></div>
+<div class="line"><span class="lineno">  352</span><span class="comment">     * starting with the pre-computed elements of the matrix:</span></div>
 <div class="line"><span class="lineno">  353</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  354</span><span class="comment">     * For the non-transposed case:</span></div>
-<div class="line"><span class="lineno">  355</span><span class="comment">     * - Solve inplace Q * x&#39;1 = b1 (using the solver internal to Q).</span></div>
-<div class="line"><span class="lineno">  356</span><span class="comment">     * - Compute inplace b&#39;2 = b2 - lambda*x&#39;1.</span></div>
-<div class="line"><span class="lineno">  357</span><span class="comment">     * - Solve inplace (delta - lambda*Q^-1*gamma) * x2 = b&#39;2.</span></div>
-<div class="line"><span class="lineno">  358</span><span class="comment">     * - Compute inplace x1 = x&#39;1 - (delta - lambda*Q^-1*gamma)*x2.</span></div>
-<div class="line"><span class="lineno">  359</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  360</span><span class="comment">     * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.</span></div>
-<div class="line"><span class="lineno">  361</span><span class="comment">     * @param transpose Choose between the direct or transposed version of the linear problem.</span></div>
-<div class="line"><span class="lineno">  362</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    <span class="keywordtype">void</span> solve(MultiRHS <span class="keyword">const</span> b, <span class="keywordtype">bool</span> <span class="keyword">const</span> transpose) <span class="keyword">const</span> <span class="keyword">override</span></div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    {</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>        assert(b.extent(0) == size());</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        MultiRHS <span class="keyword">const</span> b1 = Kokkos::</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>                subview(b,</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>                        std::pair&lt;std::size_t, std::size_t&gt;(0, m_top_left_block-&gt;size()),</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>                        Kokkos::ALL);</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        MultiRHS <span class="keyword">const</span> b2 = Kokkos::</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>                subview(b,</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>                        std::pair&lt;std::size_t, std::size_t&gt;(m_top_left_block-&gt;size(), b.extent(0)),</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>                        Kokkos::ALL);</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        <span class="keywordflow">if</span> (!transpose) {</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>            m_top_left_block-&gt;solve(b1, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>            spdm_minus1_1(m_bottom_left_block_coo, b1, b2);</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>            m_bottom_right_block-&gt;solve(b2, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            spdm_minus1_1(m_top_right_block_coo, b2, b1);</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>            spdm_minus1_1(m_top_right_block_coo, b1, b2, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>            m_bottom_right_block-&gt;solve(b2, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>            spdm_minus1_1(m_bottom_left_block_coo, b2, b1, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>            m_top_left_block-&gt;solve(b1, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>        }</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    }</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>};</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span> </div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>} <span class="comment">// namespace ddc::detail</span></div>
+<div class="line"><span class="lineno">  354</span><span class="comment">     * |   Q    |         Q^-1*gamma        |</span></div>
+<div class="line"><span class="lineno">  355</span><span class="comment">     * | lambda | delta - lambda*Q^-1*gamma |</span></div>
+<div class="line"><span class="lineno">  356</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  357</span><span class="comment">     * For the non-transposed case:</span></div>
+<div class="line"><span class="lineno">  358</span><span class="comment">     * - Solve inplace Q * x&#39;1 = b1 (using the solver internal to Q).</span></div>
+<div class="line"><span class="lineno">  359</span><span class="comment">     * - Compute inplace b&#39;2 = b2 - lambda*x&#39;1.</span></div>
+<div class="line"><span class="lineno">  360</span><span class="comment">     * - Solve inplace (delta - lambda*Q^-1*gamma) * x2 = b&#39;2.</span></div>
+<div class="line"><span class="lineno">  361</span><span class="comment">     * - Compute inplace x1 = x&#39;1 - (delta - lambda*Q^-1*gamma)*x2.</span></div>
+<div class="line"><span class="lineno">  362</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  363</span><span class="comment">     * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.</span></div>
+<div class="line"><span class="lineno">  364</span><span class="comment">     * @param transpose Choose between the direct or transposed version of the linear problem.</span></div>
+<div class="line"><span class="lineno">  365</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="keywordtype">void</span> solve(MultiRHS <span class="keyword">const</span> b, <span class="keywordtype">bool</span> <span class="keyword">const</span> transpose) <span class="keyword">const</span> <span class="keyword">override</span></div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    {</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        assert(b.extent(0) == size());</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span> </div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        MultiRHS <span class="keyword">const</span> b1 = Kokkos::</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>                subview(b,</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>                        std::pair&lt;std::size_t, std::size_t&gt;(0, m_top_left_block-&gt;size()),</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>                        Kokkos::ALL);</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        MultiRHS <span class="keyword">const</span> b2 = Kokkos::</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>                subview(b,</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>                        std::pair&lt;std::size_t, std::size_t&gt;(m_top_left_block-&gt;size(), b.extent(0)),</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                        Kokkos::ALL);</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        <span class="keywordflow">if</span> (!transpose) {</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            m_top_left_block-&gt;solve(b1, <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            spdm_minus1_1(m_bottom_left_block_coo, b1, b2);</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>            m_bottom_right_block-&gt;solve(b2, <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>            spdm_minus1_1(m_top_right_block_coo, b2, b1);</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>            spdm_minus1_1(m_top_right_block_coo, b1, b2, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>            m_bottom_right_block-&gt;solve(b2, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>            spdm_minus1_1(m_bottom_left_block_coo, b2, b1, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>            m_top_left_block-&gt;solve(b1, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        }</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    }</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>};</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span> </div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>} <span class="comment">// namespace ddc::detail</span></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

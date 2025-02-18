@@ -81,7 +81,7 @@ public:
         assert(m_kl <= mat_size);
         assert(m_ku <= mat_size);
 
-        Kokkos::deep_copy(m_q.h_view, 0.);
+        Kokkos::deep_copy(m_q.view_host(), 0.);
     }
 
 private:
@@ -105,7 +105,7 @@ public:
                             max(static_cast<std::ptrdiff_t>(0),
                                 static_cast<std::ptrdiff_t>(j) - static_cast<std::ptrdiff_t>(m_ku))
             && i < std::min(size(), j + m_kl + 1)) {
-            return m_q.h_view(band_storage_row_index(i, j), j);
+            return m_q.view_host()(band_storage_row_index(i, j), j);
         }
 
         return 0.0;
@@ -125,7 +125,7 @@ public:
                             max(static_cast<std::ptrdiff_t>(0),
                                 static_cast<std::ptrdiff_t>(j) - static_cast<std::ptrdiff_t>(m_ku))
             && i < std::min(size(), j + m_kl + 1)) {
-            m_q.h_view(band_storage_row_index(i, j), j) = aij;
+            m_q.view_host()(band_storage_row_index(i, j), j) = aij;
         } else {
             assert(std::fabs(aij) < 1e-20);
         }
@@ -144,10 +144,10 @@ public:
                 size(),
                 m_kl,
                 m_ku,
-                m_q.h_view.data(),
-                m_q.h_view.stride(
-                        0), // m_q.h_view.stride(0) if LAPACK_ROW_MAJOR, m_q.h_view.stride(1) if LAPACK_COL_MAJOR
-                m_ipiv.h_view.data());
+                m_q.view_host().data(),
+                m_q.view_host().stride(
+                        0), // m_q.view_host().stride(0) if LAPACK_ROW_MAJOR, m_q.view_host().stride(1) if LAPACK_COL_MAJOR
+                m_ipiv.view_host().data());
         if (info != 0) {
             throw std::runtime_error(
                     "LAPACKE_dgbtrf failed with error code " + std::to_string(info));
@@ -155,7 +155,7 @@ public:
 
         // Convert 1-based index to 0-based index
         for (int i = 0; i < size(); ++i) {
-            m_ipiv.h_view(i) -= 1;
+            m_ipiv.view_host()(i) -= 1;
         }
 
         // Push on device
@@ -179,8 +179,8 @@ public:
 
         std::size_t const kl_proxy = m_kl;
         std::size_t const ku_proxy = m_ku;
-        auto q_device = m_q.d_view;
-        auto ipiv_device = m_ipiv.d_view;
+        auto q_device = m_q.view_device();
+        auto ipiv_device = m_ipiv.view_device();
         Kokkos::RangePolicy<ExecSpace> const policy(0, b.extent(1));
         if (transpose) {
             Kokkos::parallel_for(

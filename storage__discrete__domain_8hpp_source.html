@@ -227,7 +227,7 @@ $(document).ready(function(){initNavTree('storage__discrete__domain_8hpp_source.
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keyword">class</span> ForwardIt,</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keyword">class</span> T = <span class="keyword">typename</span> std::iterator_traits&lt;ForwardIt&gt;::value_type,</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keyword">class</span> Compare&gt;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="keywordtype">bool</span> binary_search(ForwardIt first, ForwardIt last, <span class="keyword">const</span> T&amp; value, Compare comp)</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>KOKKOS_FUNCTION <span class="keywordtype">bool</span> binary_search(ForwardIt first, ForwardIt last, <span class="keyword">const</span> T&amp; value, Compare comp)</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>{</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    first = ::<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail::lower_bound(first, last, value, comp);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordflow">return</span> (!(first == last) &amp;&amp; !(comp(value, *first)));</div>

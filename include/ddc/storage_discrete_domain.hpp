@@ -98,7 +98,7 @@ template <
         class ForwardIt,
         class T = typename std::iterator_traits<ForwardIt>::value_type,
         class Compare>
-bool binary_search(ForwardIt first, ForwardIt last, const T& value, Compare comp)
+KOKKOS_FUNCTION bool binary_search(ForwardIt first, ForwardIt last, const T& value, Compare comp)
 {
     first = ::ddc::detail::lower_bound(first, last, value, comp);
     return (!(first == last) && !(comp(value, *first)));

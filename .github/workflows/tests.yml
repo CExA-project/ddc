@@ -286,6 +286,7 @@ jobs:
           if [ 'xcpu' = 'x${{matrix.backend.name}}' ]
           then
             ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
+            cp build/tests.xml .
             ./build/examples/characteristics_advection
             ./build/examples/game_of_life
             ./build/examples/heat_equation_spectral
@@ -304,10 +305,10 @@ jobs:
 
         docker run \
           --cidfile='docker.cid' \
-          -v ${PWD}:/src:ro \
+          --volume ${PWD}:/src:ro \
           ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
           bash /src/run.sh
-        if docker cp "$(cat docker.cid)":/data/tests.xml /home/runner/work/ddc/ddc/tests.xml
+        if docker cp "$(cat docker.cid)":/data/tests.xml ${{github.workspace}}/tests.xml
         then echo "with_report=true" >> "$GITHUB_OUTPUT"
         else echo "with_report=false" >> "$GITHUB_OUTPUT"
         fi
@@ -315,7 +316,7 @@ jobs:
       uses: mikepenz/action-junit-report@v5
       if: ( success() || failure() ) && steps.test.outputs.with_report == 'true' # always run even if the previous step fails
       with:
-        report_paths: '/home/runner/work/ddc/ddc/tests.xml'
+        report_paths: '${{github.workspace}}/tests.xml'
 
   test-with-sanitizer:
     if: github.ref_name != 'main'
@@ -389,6 +390,7 @@ jobs:
           fi
 
           ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
+          cp build/tests.xml .
           ./build/examples/characteristics_advection
           ./build/examples/game_of_life
           ./build/examples/heat_equation_spectral
@@ -402,7 +404,7 @@ jobs:
           -v ${PWD}:/src:ro \
           ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
           bash /src/run.sh
-        if docker cp "$(cat docker.cid)":/data/tests.xml /home/runner/work/ddc/ddc/tests.xml
+        if docker cp "$(cat docker.cid)":/data/tests.xml ${{github.workspace}}/tests.xml
         then echo "with_report=true" >> "$GITHUB_OUTPUT"
         else echo "with_report=false" >> "$GITHUB_OUTPUT"
         fi
@@ -410,7 +412,7 @@ jobs:
       uses: mikepenz/action-junit-report@v5
       if: ( success() || failure() ) && steps.test.outputs.with_report == 'true' # always run even if the previous step fails
       with:
-        report_paths: '/home/runner/work/ddc/ddc/tests.xml'
+        report_paths: '${{github.workspace}}/tests.xml'
 
   clang-tidy-test:
     if: github.ref_name != 'main'

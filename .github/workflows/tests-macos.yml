@@ -39,6 +39,9 @@ jobs:
           kokkos_extra_cmake_flags: ''
         cxx_version: ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
+        exclude:
+        - cxx_version: '20' # To be remove as soon as PDI supports C++20 with clang
+        - cxx_version: '23' # To be remove as soon as PDI supports C++20 with clang
     runs-on: macos-latest
     needs: [id_repo]
     env:
@@ -49,6 +52,7 @@ jobs:
       Kokkos_ROOT: ${{github.workspace}}/opt/kokkos
       KokkosFFT_ROOT: ${{github.workspace}}/opt/kokkos-fft
       KokkosKernels_ROOT: ${{github.workspace}}/opt/kokkos-kernels
+      PDI_ROOT: ${{github.workspace}}/opt/pdi
       CMAKE_BUILD_PARALLEL_LEVEL: 4
       PKG_CONFIG_PATH: /opt/homebrew/opt/lapack/lib/pkgconfig
       LAPACKE_DIR: /opt/homebrew/opt/lapack
@@ -59,6 +63,32 @@ jobs:
     - name: Checkout built branch
       uses: actions/checkout@v4
       with: { submodules: true }
+    - name: Install PDI+user code plugin and dependencies
+      run: |
+        git clone --branch 1.8.1 --depth 1 https://github.com/pdidev/pdi.git
+        # PATCH: remove <link.h> for macOS
+        sed -i.bak 's|#include <link.h>||g' pdi/plugins/user_code/user_code.cxx
+        rm -f pdi/plugins/user_code/user_code.cxx.bak
+        cmake \
+          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+          -DBUILD_BENCHMARKING=OFF \
+          -DBUILD_DECL_HDF5_PLUGIN=OFF \
+          -DBUILD_DECL_NETCDF_PLUGIN=OFF \
+          -DBUILD_DEISA_PLUGIN=OFF \
+          -DBUILD_DOCUMENTATION=OFF \
+          -DBUILD_FORTRAN=OFF \
+          -DBUILD_MPI_PLUGIN=OFF \
+          -DBUILD_PYCALL_PLUGIN=OFF \
+          -DBUILD_SERIALIZE_PLUGIN=OFF \
+          -DBUILD_SET_VALUE_PLUGIN=OFF \
+          -DBUILD_TESTING=OFF \
+          -DBUILD_TRACE_PLUGIN=OFF \
+          -DBUILD_USER_CODE_PLUGIN=ON \
+          -B build \
+          -S ./pdi
+        cmake --build build
+        cmake --install build --prefix $PDI_ROOT
+        rm -rf build
     - name: Install fftw
       run: brew install fftw
     - name: Install lapack
@@ -151,7 +181,6 @@ jobs:
           -DDDC_GTest_DEPENDENCY_POLICY=INSTALLED \
           -DDDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
           -DDDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
-          -DDDC_BUILD_PDI_WRAPPER=OFF \
           -DBLA_PREFER_PKGCONFIG=ON \
           -B build
         cmake --build build
@@ -174,9 +203,9 @@ jobs:
       run: |
         cmake --install build --prefix $DDC_ROOT
         rm -rf build
-    # - name: Run install tests
-    #   run: |
-    #     cmake \
-    #       -B build \
-    #       -S ./install_test
-    #     cmake --build build
+    - name: Run install tests
+      run: |
+        cmake \
+          -B build \
+          -S ./install_test
+        cmake --build build

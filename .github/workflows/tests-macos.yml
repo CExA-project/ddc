@@ -70,7 +70,6 @@ jobs:
         sed -i.bak 's|#include <link.h>||g' pdi/plugins/user_code/user_code.cxx
         rm -f pdi/plugins/user_code/user_code.cxx.bak
         cmake \
-          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
           -DBUILD_BENCHMARKING=OFF \
           -DBUILD_DECL_HDF5_PLUGIN=OFF \
           -DBUILD_DECL_NETCDF_PLUGIN=OFF \
@@ -84,6 +83,8 @@ jobs:
           -DBUILD_TESTING=OFF \
           -DBUILD_TRACE_PLUGIN=OFF \
           -DBUILD_USER_CODE_PLUGIN=ON \
+          -DCMAKE_CXX_FLAGS="-Wno-unqualified-std-cast-call" \
+          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
           -B build \
           -S ./pdi
         cmake --build build

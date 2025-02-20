@@ -228,35 +228,35 @@ void characteristics_advection_unitary(benchmark::State& state)
 
 void characteristics_advection(benchmark::State& state)
 {
-    long const host = 0;
-    long const dev = 1;
-    long const uniform = 0;
-    long const non_uniform = 1;
+    std::int64_t const host = 0;
+    std::int64_t const dev = 1;
+    std::int64_t const uniform = 0;
+    std::int64_t const non_uniform = 1;
     // Preallocate 12 unitary benchmarks for each combination of cpu/gpu execution space, uniform/non-uniform and spline degree we may want to benchmark (those are determined at compile-time, that's why we need to build explicitly 12 variants of the bench even if we call only one of them)
-    std::map<std::array<long, 3>, std::function<void(benchmark::State&)>> benchmarks;
-    benchmarks[std::array {host, uniform, 3L}]
+    std::map<std::array<std::int64_t, 3>, std::function<void(benchmark::State&)>> benchmarks;
+    benchmarks[std::array {host, uniform, std::int64_t(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, false, 3>;
-    benchmarks[std::array {host, uniform, 4L}]
+    benchmarks[std::array {host, uniform, std::int64_t(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, false, 4>;
-    benchmarks[std::array {host, uniform, 5L}]
+    benchmarks[std::array {host, uniform, std::int64_t(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, false, 5>;
-    benchmarks[std::array {host, non_uniform, 3L}]
+    benchmarks[std::array {host, non_uniform, std::int64_t(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, true, 3>;
-    benchmarks[std::array {host, non_uniform, 4L}]
+    benchmarks[std::array {host, non_uniform, std::int64_t(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, true, 4>;
-    benchmarks[std::array {host, non_uniform, 5L}]
+    benchmarks[std::array {host, non_uniform, std::int64_t(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, true, 5>;
-    benchmarks[std::array {dev, uniform, 3L}]
+    benchmarks[std::array {dev, uniform, std::int64_t(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, false, 3>;
-    benchmarks[std::array {dev, uniform, 4L}]
+    benchmarks[std::array {dev, uniform, std::int64_t(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, false, 4>;
-    benchmarks[std::array {dev, uniform, 5L}]
+    benchmarks[std::array {dev, uniform, std::int64_t(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, false, 5>;
-    benchmarks[std::array {dev, non_uniform, 3L}]
+    benchmarks[std::array {dev, non_uniform, std::int64_t(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, true, 3>;
-    benchmarks[std::array {dev, non_uniform, 4L}]
+    benchmarks[std::array {dev, non_uniform, std::int64_t(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, true, 4>;
-    benchmarks[std::array {dev, non_uniform, 5L}]
+    benchmarks[std::array {dev, non_uniform, std::int64_t(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, true, 5>;
 
     // Run the desired bench

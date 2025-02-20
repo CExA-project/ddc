@@ -45,10 +45,8 @@ jobs:
     runs-on: macos-latest
     needs: [id_repo]
     env:
-      benchmark_ROOT: ${{github.workspace}}/opt/benchmark
       DDC_ROOT: ${{github.workspace}}/opt/ddc
       Ginkgo_ROOT: ${{github.workspace}}/opt/ginkgo
-      GTest_ROOT: ${{github.workspace}}/opt/gtest
       Kokkos_ROOT: ${{github.workspace}}/opt/kokkos
       KokkosFFT_ROOT: ${{github.workspace}}/opt/kokkos-fft
       KokkosKernels_ROOT: ${{github.workspace}}/opt/kokkos-kernels
@@ -94,6 +92,10 @@ jobs:
       run: brew install fftw
     - name: Install lapack
       run: brew install lapack
+    - name: Install Google Test
+      run: brew install googletest
+    - name: Install Google benchmark
+      run: brew install google-benchmark
     - run: git config --global --add safe.directory '*'
     - name: Install Ginkgo
       run: |
@@ -109,28 +111,6 @@ jobs:
           -S ./ginkgo
         cmake --build build
         cmake --install build --prefix $Ginkgo_ROOT
-        rm -rf build
-    - name: Install Google benchmark
-      run: |
-        cmake \
-          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-          -DBENCHMARK_ENABLE_GTEST_TESTS=OFF \
-          -DBENCHMARK_ENABLE_TESTING=OFF \
-          -DBENCHMARK_INSTALL_DOCS=OFF \
-          -DBENCHMARK_USE_BUNDLED_GTEST=OFF \
-          -B build \
-          -S ./vendor/benchmark
-        cmake --build build
-        cmake --install build --prefix $benchmark_ROOT
-        rm -rf build
-    - name: Install Google Test
-      run: |
-        cmake \
-          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-          -B build \
-          -S ./vendor/googletest
-        cmake --build build
-        cmake --install build --prefix $GTest_ROOT
         rm -rf build
     - name: Install Kokkos
       run: |

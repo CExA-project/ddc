@@ -40,8 +40,8 @@ jobs:
         cxx_version: ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
         exclude:
-        - cxx_version: '20' # To be remove as soon as PDI supports C++20 with clang
-        - cxx_version: '23' # To be remove as soon as PDI supports C++20 with clang
+        - cxx_version: '20' # To be removed as soon as PDI supports C++20 with clang
+        - cxx_version: '23' # To be removed as soon as PDI supports C++20 with clang
     runs-on: macos-latest
     needs: [id_repo]
     env:

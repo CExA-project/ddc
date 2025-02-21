@@ -9,10 +9,10 @@
 
 #include <Kokkos_Core.hpp>
 
-#if defined(__CUDACC__)
+#if defined(KOKKOS_ENABLE_CUDA)
 #include <cuda.h>
 #endif
-#if defined(__HIPCC__)
+#if defined(KOKKOS_ENABLE_HIP)
 #include <hip/hip_runtime.h>
 #endif
 
@@ -22,16 +22,16 @@ template <class DDim>
 class DualDiscretization
 {
     using DDimImplHost = typename DDim::template Impl<DDim, Kokkos::HostSpace>;
-#if defined(__CUDACC__)
+#if defined(KOKKOS_ENABLE_CUDA)
     using DDimImplDevice = typename DDim::template Impl<DDim, Kokkos::CudaSpace>;
-#elif defined(__HIPCC__)
+#elif defined(KOKKOS_ENABLE_HIP)
     using DDimImplDevice = typename DDim::template Impl<DDim, Kokkos::HIPSpace>;
 #else
     using DDimImplDevice = DDimImplHost;
 #endif
 
     DDimImplHost m_host;
-#if defined(__CUDACC__) || defined(__HIPCC__)
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
     DDimImplDevice m_device_on_host;
 #endif
 
@@ -39,7 +39,7 @@ public:
     template <class... Args>
     explicit DualDiscretization(Args&&... args)
         : m_host(std::forward<Args>(args)...)
-#if defined(__CUDACC__) || defined(__HIPCC__)
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
         , m_device_on_host(m_host)
 #endif
     {
@@ -51,11 +51,11 @@ public:
         if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
             return m_host;
         }
-#if defined(__CUDACC__)
+#if defined(KOKKOS_ENABLE_CUDA)
         else if constexpr (std::is_same_v<MemorySpace, Kokkos::CudaSpace>) {
             return m_device_on_host;
         }
-#elif defined(__HIPCC__)
+#elif defined(KOKKOS_ENABLE_HIP)
         else if constexpr (std::is_same_v<MemorySpace, Kokkos::HIPSpace>) {
             return m_device_on_host;
         }
@@ -72,7 +72,7 @@ public:
 
     KOKKOS_FUNCTION DDimImplDevice const& get_device()
     {
-#if defined(__CUDACC__) || defined(__HIPCC__)
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
         return m_device_on_host;
 #else
         return m_host;

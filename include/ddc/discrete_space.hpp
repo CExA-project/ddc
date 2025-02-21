@@ -20,15 +20,14 @@
 #include "ddc/detail/dual_discretization.hpp"
 #include "ddc/detail/macros.hpp"
 
-#if defined(__CUDACC__)
+#if defined(KOKKOS_ENABLE_CUDA)
 #include <sstream>
 
 #include <cuda.h>
 
 #define DDC_DETAIL_CUDA_THROW_ON_ERROR(val)                                                        \
     ddc::detail::cuda_throw_on_error((val), #val, __FILE__, __LINE__)
-#endif
-#if defined(__HIPCC__)
+#elif defined(KOKKOS_ENABLE_HIP)
 #include <sstream>
 
 #include <hip/hip_runtime.h>
@@ -41,7 +40,7 @@ namespace ddc {
 
 namespace detail {
 
-#if defined(__CUDACC__)
+#if defined(KOKKOS_ENABLE_CUDA)
 template <class T>
 void cuda_throw_on_error(
         T const err,
@@ -56,7 +55,7 @@ void cuda_throw_on_error(
         throw std::runtime_error(ss.str());
     }
 }
-#elif defined(__HIPCC__)
+#elif defined(KOKKOS_ENABLE_HIP)
 template <class T>
 void hip_throw_on_error(T const err, const char* const func, const char* const file, const int line)
 {
@@ -115,11 +114,11 @@ inline std::optional<std::map<std::string, std::function<void()>>> g_discretizat
 template <class DDim>
 inline std::optional<DualDiscretization<DDim>> g_discrete_space_dual;
 
-#if defined(__CUDACC__)
+#if defined(KOKKOS_ENABLE_CUDA)
 // Global GPU variable viewing data owned by the CPU
 template <class DDim>
 __constant__ gpu_proxy<ddim_impl_t<DDim, Kokkos::CudaSpace>> g_discrete_space_device;
-#elif defined(__HIPCC__)
+#elif defined(KOKKOS_ENABLE_HIP)
 // Global GPU variable viewing data owned by the CPU
 // WARNING: do not put the `inline` keyword, seems to fail on MI100 rocm/4.5.0
 template <class DDim>
@@ -163,12 +162,12 @@ void init_discrete_space(Args&&... args)
     detail::g_discretization_store->emplace(typeid(DDim).name(), []() {
         detail::g_discrete_space_dual<DDim>.reset();
     });
-#if defined(__CUDACC__)
+#if defined(KOKKOS_ENABLE_CUDA)
     DDC_DETAIL_CUDA_THROW_ON_ERROR(cudaMemcpyToSymbol(
             detail::g_discrete_space_device<DDim>,
             &detail::g_discrete_space_dual<DDim>->get_device(),
             sizeof(detail::g_discrete_space_dual<DDim>->get_device())));
-#elif defined(__HIPCC__)
+#elif defined(KOKKOS_ENABLE_HIP)
     DDC_DETAIL_HIP_THROW_ON_ERROR(hipMemcpyToSymbol(
             detail::g_discrete_space_device<DDim>,
             &detail::g_discrete_space_dual<DDim>->get_device(),
@@ -212,11 +211,11 @@ KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
     if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
         return detail::g_discrete_space_dual<DDim>->get_host();
     }
-#if defined(__CUDACC__)
+#if defined(KOKKOS_ENABLE_CUDA)
     else if constexpr (std::is_same_v<MemorySpace, Kokkos::CudaSpace>) {
         return *detail::g_discrete_space_device<DDim>;
     }
-#elif defined(__HIPCC__)
+#elif defined(KOKKOS_ENABLE_HIP)
     else if constexpr (std::is_same_v<MemorySpace, Kokkos::HIPSpace>) {
         return *detail::g_discrete_space_device<DDim>;
     }
@@ -240,9 +239,9 @@ detail::ddim_impl_t<DDim, Kokkos::HostSpace> const& host_discrete_space()
 
 } // namespace ddc
 
-#if defined(__CUDACC__)
+#if defined(KOKKOS_ENABLE_CUDA)
 #undef DDC_DETAIL_CUDA_THROW_ON_ERROR
 #endif
-#if defined(__HIPCC__)
+#if defined(KOKKOS_ENABLE_HIP)
 #undef DDC_DETAIL_HIP_THROW_ON_ERROR
 #endif

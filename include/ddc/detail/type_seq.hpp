@@ -104,21 +104,15 @@ struct TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<HeadTagsB, TailTagsB...>, TypeSeq
 {
 };
 
-/// R contains all elements in A then all elements in B.
-/// Example: A = [a, b, c], B = [z, c, y], R = [a, b, c, z, c, y]
-template <class TagSeqA, class TagSeqB, class TagSeqR>
+/// `type` contains all elements in A then all elements in B.
+/// Example: A = [a, b, c], B = [z, c, y], returned type [a, b, c, z, c, y]
+template <class TagSeqA, class TagSeqB>
 struct TypeSeqCat;
 
-template <class... TagsR>
-struct TypeSeqCat<TypeSeq<>, TypeSeq<>, TypeSeq<TagsR...>>
-{
-    using type = TypeSeq<TagsR...>;
-};
-
 template <class... TagsA, class... TagsB>
-struct TypeSeqCat<TypeSeq<TagsA...>, TypeSeq<TagsB...>, TypeSeq<>>
-    : TypeSeqCat<TypeSeq<>, TypeSeq<>, TypeSeq<TagsA..., TagsB...>>
+struct TypeSeqCat<TypeSeq<TagsA...>, TypeSeq<TagsB...>>
 {
+    using type = TypeSeq<TagsA..., TagsB...>;
 };
 
 /// A is replaced by element of C at same position than the first element of B equal to A.
@@ -219,7 +213,7 @@ template <class TagSeqA, class TagSeqB>
 using type_seq_merge_t = typename detail::TypeSeqMerge<TagSeqA, TagSeqB, TagSeqA>::type;
 
 template <class TagSeqA, class TagSeqB>
-using type_seq_cat_t = typename detail::TypeSeqCat<TagSeqA, TagSeqB, detail::TypeSeq<>>::type;
+using type_seq_cat_t = typename detail::TypeSeqCat<TagSeqA, TagSeqB>::type;
 
 template <class TagSeqA, class TagSeqB, class TagSeqC>
 using type_seq_replace_t =

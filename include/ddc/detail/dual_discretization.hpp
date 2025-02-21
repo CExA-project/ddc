@@ -18,14 +18,18 @@
 
 namespace ddc::detail {
 
+#if defined(KOKKOS_ENABLE_CUDA)
+using GlobalVariableDeviceSpace = Kokkos::CudaSpace;
+#elif defined(KOKKOS_ENABLE_HIP)
+using GlobalVariableDeviceSpace = Kokkos::HIPSpace;
+#endif
+
 template <class DDim>
 class DualDiscretization
 {
     using DDimImplHost = typename DDim::template Impl<DDim, Kokkos::HostSpace>;
-#if defined(KOKKOS_ENABLE_CUDA)
-    using DDimImplDevice = typename DDim::template Impl<DDim, Kokkos::CudaSpace>;
-#elif defined(KOKKOS_ENABLE_HIP)
-    using DDimImplDevice = typename DDim::template Impl<DDim, Kokkos::HIPSpace>;
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+    using DDimImplDevice = typename DDim::template Impl<DDim, GlobalVariableDeviceSpace>;
 #else
     using DDimImplDevice = DDimImplHost;
 #endif
@@ -51,12 +55,8 @@ public:
         if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
             return m_host;
         }
-#if defined(KOKKOS_ENABLE_CUDA)
-        else if constexpr (std::is_same_v<MemorySpace, Kokkos::CudaSpace>) {
-            return m_device_on_host;
-        }
-#elif defined(KOKKOS_ENABLE_HIP)
-        else if constexpr (std::is_same_v<MemorySpace, Kokkos::HIPSpace>) {
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+        else if constexpr (std::is_same_v<MemorySpace, GlobalVariableDeviceSpace>) {
             return m_device_on_host;
         }
 #endif

@@ -117,12 +117,12 @@ inline std::optional<DualDiscretization<DDim>> g_discrete_space_dual;
 #if defined(KOKKOS_ENABLE_CUDA)
 // Global GPU variable viewing data owned by the CPU
 template <class DDim>
-__constant__ gpu_proxy<ddim_impl_t<DDim, Kokkos::CudaSpace>> g_discrete_space_device;
+__constant__ gpu_proxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>> g_discrete_space_device;
 #elif defined(KOKKOS_ENABLE_HIP)
 // Global GPU variable viewing data owned by the CPU
 // WARNING: do not put the `inline` keyword, seems to fail on MI100 rocm/4.5.0
 template <class DDim>
-__constant__ gpu_proxy<ddim_impl_t<DDim, Kokkos::HIPSpace>> g_discrete_space_device;
+__constant__ gpu_proxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>> g_discrete_space_device;
 #endif
 
 inline void display_discretization_store(std::ostream& os)
@@ -211,12 +211,8 @@ KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
     if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
         return detail::g_discrete_space_dual<DDim>->get_host();
     }
-#if defined(KOKKOS_ENABLE_CUDA)
-    else if constexpr (std::is_same_v<MemorySpace, Kokkos::CudaSpace>) {
-        return *detail::g_discrete_space_device<DDim>;
-    }
-#elif defined(KOKKOS_ENABLE_HIP)
-    else if constexpr (std::is_same_v<MemorySpace, Kokkos::HIPSpace>) {
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+    else if constexpr (std::is_same_v<MemorySpace, detail::GlobalVariableDeviceSpace>) {
         return *detail::g_discrete_space_device<DDim>;
     }
 #endif

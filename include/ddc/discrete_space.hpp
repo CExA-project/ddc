@@ -24,16 +24,15 @@
 #include <sstream>
 
 #include <cuda.h>
-
-#define DDC_DETAIL_CUDA_THROW_ON_ERROR(val)                                                        \
-    ddc::detail::cuda_throw_on_error((val), #val, __FILE__, __LINE__)
 #elif defined(KOKKOS_ENABLE_HIP)
 #include <sstream>
 
 #include <hip/hip_runtime.h>
+#endif
 
-#define DDC_DETAIL_HIP_THROW_ON_ERROR(val)                                                         \
-    ddc::detail::hip_throw_on_error((val), #val, __FILE__, __LINE__)
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+#define DDC_DETAIL_DEVICE_THROW_ON_ERROR(val)                                                      \
+    ddc::detail::device_throw_on_error((val), #val, __FILE__, __LINE__)
 #endif
 
 namespace ddc {
@@ -42,7 +41,7 @@ namespace detail {
 
 #if defined(KOKKOS_ENABLE_CUDA)
 template <class T>
-void cuda_throw_on_error(
+void device_throw_on_error(
         T const err,
         const char* const func,
         const char* const file,
@@ -57,7 +56,11 @@ void cuda_throw_on_error(
 }
 #elif defined(KOKKOS_ENABLE_HIP)
 template <class T>
-void hip_throw_on_error(T const err, const char* const func, const char* const file, const int line)
+void device_throw_on_error(
+        T const err,
+        const char* const func,
+        const char* const file,
+        const int line)
 {
     if (err != hipSuccess) {
         std::stringstream ss;
@@ -163,12 +166,12 @@ void init_discrete_space(Args&&... args)
         detail::g_discrete_space_dual<DDim>.reset();
     });
 #if defined(KOKKOS_ENABLE_CUDA)
-    DDC_DETAIL_CUDA_THROW_ON_ERROR(cudaMemcpyToSymbol(
+    DDC_DETAIL_DEVICE_THROW_ON_ERROR(cudaMemcpyToSymbol(
             detail::g_discrete_space_device<DDim>,
             &detail::g_discrete_space_dual<DDim>->get_device(),
             sizeof(detail::g_discrete_space_dual<DDim>->get_device())));
 #elif defined(KOKKOS_ENABLE_HIP)
-    DDC_DETAIL_HIP_THROW_ON_ERROR(hipMemcpyToSymbol(
+    DDC_DETAIL_DEVICE_THROW_ON_ERROR(hipMemcpyToSymbol(
             detail::g_discrete_space_device<DDim>,
             &detail::g_discrete_space_dual<DDim>->get_device(),
             sizeof(detail::g_discrete_space_dual<DDim>->get_device())));
@@ -235,9 +238,6 @@ detail::ddim_impl_t<DDim, Kokkos::HostSpace> const& host_discrete_space()
 
 } // namespace ddc
 
-#if defined(KOKKOS_ENABLE_CUDA)
-#undef DDC_DETAIL_CUDA_THROW_ON_ERROR
-#endif
-#if defined(KOKKOS_ENABLE_HIP)
-#undef DDC_DETAIL_HIP_THROW_ON_ERROR
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+#undef DDC_DETAIL_DEVICE_THROW_ON_ERROR
 #endif

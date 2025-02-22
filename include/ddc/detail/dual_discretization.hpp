@@ -15,20 +15,22 @@ namespace ddc::detail {
 using GlobalVariableDeviceSpace = Kokkos::CudaSpace;
 #elif defined(KOKKOS_ENABLE_HIP)
 using GlobalVariableDeviceSpace = Kokkos::HIPSpace;
+#elif defined(KOKKOS_ENABLE_SYCL)
+using GlobalVariableDeviceSpace = Kokkos::SYCLDeviceUSMSpace;
 #endif
 
 template <class DDim>
 class DualDiscretization
 {
     using DDimImplHost = typename DDim::template Impl<DDim, Kokkos::HostSpace>;
-#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP) || defined(KOKKOS_ENABLE_SYCL)
     using DDimImplDevice = typename DDim::template Impl<DDim, GlobalVariableDeviceSpace>;
 #else
     using DDimImplDevice = DDimImplHost;
 #endif
 
     DDimImplHost m_host;
-#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP) || defined(KOKKOS_ENABLE_SYCL)
     DDimImplDevice m_device_on_host;
 #endif
 
@@ -36,7 +38,7 @@ public:
     template <class... Args>
     explicit DualDiscretization(Args&&... args)
         : m_host(std::forward<Args>(args)...)
-#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP) || defined(KOKKOS_ENABLE_SYCL)
         , m_device_on_host(m_host)
 #endif
     {
@@ -52,6 +54,10 @@ public:
         else if constexpr (std::is_same_v<MemorySpace, GlobalVariableDeviceSpace>) {
             return m_device_on_host;
         }
+#elif defined(KOKKOS_ENABLE_SYCL)
+        else if constexpr (std::is_same_v<MemorySpace, Kokkos::SYCLDeviceUSMSpace>) {
+            return m_device_on_host;
+        }
 #endif
         else {
             static_assert(!std::is_same_v<MemorySpace, MemorySpace>);
@@ -65,7 +71,7 @@ public:
 
     DDimImplDevice const& get_device()
     {
-#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP) || defined(KOKKOS_ENABLE_SYCL)
         return m_device_on_host;
 #else
         return m_host;

@@ -22,6 +22,12 @@ static_assert(false, "DDC requires option -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE
 #endif
 #endif
 
+#if defined(KOKKOS_ENABLE_SYCL)
+#if !defined(KOKKOS_ENABLE_SYCL_RELOCATABLE_DEVICE_CODE)
+static_assert(false, "DDC requires option -DKokkos_ENABLE_SYCL_RELOCATABLE_DEVICE_CODE=ON");
+#endif
+#endif
+
 //! @brief The top-level namespace of DDC.
 //! All DDC symbols are defined either in this namespace or in a nested namespace.
 namespace ddc {

@@ -9,13 +9,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#if defined(KOKKOS_ENABLE_CUDA)
-#include <cuda.h>
-#endif
-#if defined(KOKKOS_ENABLE_HIP)
-#include <hip/hip_runtime.h>
-#endif
-
 namespace ddc::detail {
 
 #if defined(KOKKOS_ENABLE_CUDA)
@@ -50,7 +43,7 @@ public:
     }
 
     template <class MemorySpace>
-    KOKKOS_FUNCTION typename DDim::template Impl<DDim, MemorySpace> const& get()
+    typename DDim::template Impl<DDim, MemorySpace> const& get()
     {
         if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
             return m_host;
@@ -65,12 +58,12 @@ public:
         }
     }
 
-    KOKKOS_FUNCTION DDimImplHost const& get_host()
+    DDimImplHost const& get_host()
     {
         return m_host;
     }
 
-    KOKKOS_FUNCTION DDimImplDevice const& get_device()
+    DDimImplDevice const& get_device()
     {
 #if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
         return m_device_on_host;

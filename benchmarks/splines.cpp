@@ -269,7 +269,7 @@ void characteristics_advection(benchmark::State& state)
 bool on_gpu_ref = true;
 bool non_uniform_ref = false;
 std::size_t degree_x_ref = 3;
-#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP) || defined(KOKKOS_ENABLE_SYCL)
 std::size_t cols_per_chunk_ref = 65535;
 unsigned int preconditioner_max_block_size_ref = 1U;
 #elif defined(KOKKOS_ENABLE_OPENMP)

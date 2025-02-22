@@ -77,6 +77,11 @@ std::size_t default_cols_per_chunk() noexcept
         return 65535;
     }
 #endif
+#if defined(KOKKOS_ENABLE_SYCL)
+    if (std::is_same_v<ExecSpace, Kokkos::SYCL>) {
+        return 65535;
+    }
+#endif
     return 1;
 }
 
@@ -109,6 +114,11 @@ unsigned int default_preconditioner_max_block_size() noexcept
 #endif
 #if defined(KOKKOS_ENABLE_HIP)
     if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+        return 1U;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_SYCL)
+    if (std::is_same_v<ExecSpace, Kokkos::SYCL>) {
         return 1U;
     }
 #endif

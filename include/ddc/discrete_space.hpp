@@ -40,9 +40,8 @@ namespace ddc {
 namespace detail {
 
 #if defined(KOKKOS_ENABLE_CUDA)
-template <class T>
-void device_throw_on_error(
-        T const err,
+inline void device_throw_on_error(
+        cudaError_t const err,
         const char* const func,
         const char* const file,
         const int line)
@@ -55,9 +54,8 @@ void device_throw_on_error(
     }
 }
 #elif defined(KOKKOS_ENABLE_HIP)
-template <class T>
-void device_throw_on_error(
-        T const err,
+inline void device_throw_on_error(
+        hipError_t const err,
         const char* const func,
         const char* const file,
         const int line)

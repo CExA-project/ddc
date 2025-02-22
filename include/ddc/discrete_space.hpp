@@ -127,7 +127,9 @@ __constant__ gpu_proxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>> g_discrete_
 #elif defined(KOKKOS_ENABLE_SYCL)
 // Global GPU variable viewing data owned by the CPU
 template <class DDim>
-SYCL_EXTERNAL inline sycl::ext::oneapi::experimental::device_global<gpu_proxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>>> g_discrete_space_device;
+SYCL_EXTERNAL inline sycl::ext::oneapi::experimental::device_global<
+        gpu_proxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>>>
+        g_discrete_space_device;
 #endif
 
 inline void display_discretization_store(std::ostream& os)
@@ -181,7 +183,8 @@ void init_discrete_space(Args&&... args)
     Kokkos::DefaultExecutionSpace exec;
     sycl::queue q = exec.sycl_queue();
     q.memcpy(detail::g_discrete_space_device<DDim>,
-             &detail::g_discrete_space_dual<DDim>->get_device()).wait();
+             &detail::g_discrete_space_dual<DDim>->get_device())
+            .wait();
 #endif
 }
 

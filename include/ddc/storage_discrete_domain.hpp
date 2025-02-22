@@ -98,7 +98,7 @@ template <
         class ForwardIt,
         class T = typename std::iterator_traits<ForwardIt>::value_type,
         class Compare>
-bool binary_search(ForwardIt first, ForwardIt last, const T& value, Compare comp)
+KOKKOS_FUNCTION bool binary_search(ForwardIt first, ForwardIt last, const T& value, Compare comp)
 {
     first = ::ddc::detail::lower_bound(first, last, value, comp);
     return (!(first == last) && !(comp(value, *first)));
@@ -473,22 +473,22 @@ public:
         return {};
     }
 
-    static bool contains() noexcept
+    static KOKKOS_FUNCTION bool contains() noexcept
     {
         return true;
     }
 
-    static bool contains(DiscreteElement<>) noexcept
+    static KOKKOS_FUNCTION bool contains(DiscreteElement<>) noexcept
     {
         return true;
     }
 
-    static DiscreteVector<> distance_from_front() noexcept
+    static KOKKOS_FUNCTION DiscreteVector<> distance_from_front() noexcept
     {
         return {};
     }
 
-    static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
+    static KOKKOS_FUNCTION DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
     {
         return {};
     }

@@ -33,6 +33,7 @@ add_executable(
     strided_discrete_domain.cpp
     tagged_vector.cpp
     transform_reduce.cpp
+    trivial_space.cpp
     type_seq.cpp
     uniform_point_sampling.cpp
 )

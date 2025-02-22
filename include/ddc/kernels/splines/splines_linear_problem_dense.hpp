@@ -55,21 +55,21 @@ public:
         , m_a("a", mat_size, mat_size)
         , m_ipiv("ipiv", mat_size)
     {
-        Kokkos::deep_copy(m_a.h_view, 0.);
+        Kokkos::deep_copy(m_a.view_host(), 0.);
     }
 
     double get_element(std::size_t const i, std::size_t const j) const override
     {
         assert(i < size());
         assert(j < size());
-        return m_a.h_view(i, j);
+        return m_a.view_host()(i, j);
     }
 
     void set_element(std::size_t const i, std::size_t const j, double const aij) override
     {
         assert(i < size());
         assert(j < size());
-        m_a.h_view(i, j) = aij;
+        m_a.view_host()(i, j) = aij;
     }
 
     /**
@@ -83,17 +83,17 @@ public:
                 LAPACK_ROW_MAJOR,
                 size(),
                 size(),
-                m_a.h_view.data(),
+                m_a.view_host().data(),
                 size(),
-                m_ipiv.h_view.data());
+                m_ipiv.view_host().data());
         if (info != 0) {
             throw std::runtime_error(
                     "LAPACKE_dgetrf failed with error code " + std::to_string(info));
         }
 
         // Convert 1-based index to 0-based index
-        for (int i = 0; i < size(); ++i) {
-            m_ipiv.h_view(i) -= 1;
+        for (std::size_t i = 0; i < size(); ++i) {
+            m_ipiv.view_host()(i) -= 1;
         }
 
         // Push on device
@@ -120,8 +120,8 @@ public:
             return;
         }
 
-        auto a_device = m_a.d_view;
-        auto ipiv_device = m_ipiv.d_view;
+        auto a_device = m_a.view_device();
+        auto ipiv_device = m_ipiv.view_device();
 
         Kokkos::RangePolicy<ExecSpace> const policy(0, b.extent(1));
 

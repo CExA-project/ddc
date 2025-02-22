@@ -63,7 +63,7 @@ public:
     {
         assert(m_q.extent(0) <= mat_size);
 
-        Kokkos::deep_copy(m_q.h_view, 0.);
+        Kokkos::deep_copy(m_q.view_host(), 0.);
     }
 
     double get_element(std::size_t i, std::size_t j) const override
@@ -77,7 +77,7 @@ public:
         }
 
         if (j - i < m_q.extent(0)) {
-            return m_q.h_view(j - i, i);
+            return m_q.view_host()(j - i, i);
         }
 
         return 0.0;
@@ -93,7 +93,7 @@ public:
             std::swap(i, j);
         }
         if (j - i < m_q.extent(0)) {
-            m_q.h_view(j - i, i) = aij;
+            m_q.view_host()(j - i, i) = aij;
         } else {
             assert(std::fabs(aij) < 1e-20);
         }
@@ -111,9 +111,9 @@ public:
                 'L',
                 size(),
                 m_q.extent(0) - 1,
-                m_q.h_view.data(),
-                m_q.h_view.stride(
-                        0) // m_q.h_view.stride(0) if LAPACK_ROW_MAJOR, m_q.h_view.stride(1) if LAPACK_COL_MAJOR
+                m_q.view_host().data(),
+                m_q.view_host().stride(
+                        0) // m_q.view_host().stride(0) if LAPACK_ROW_MAJOR, m_q.view_host().stride(1) if LAPACK_COL_MAJOR
         );
         if (info != 0) {
             throw std::runtime_error(
@@ -137,7 +137,7 @@ public:
     {
         assert(b.extent(0) == size());
 
-        auto q_device = m_q.d_view;
+        auto q_device = m_q.view_device();
         Kokkos::RangePolicy<ExecSpace> const policy(0, b.extent(1));
         Kokkos::parallel_for(
                 "pbtrs",

@@ -7,7 +7,8 @@ SPDX-License-Identifier: MIT
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nightly early integration](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yml)
-[![Nightly tests](https://github.com/CExA-project/ddc/actions/workflows/tests.yml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/tests.yml)
+[![Nightly tests on Ubuntu](https://github.com/CExA-project/ddc/actions/workflows/tests-ubuntu.yml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/tests-ubuntu.yml)
+[![Nightly tests on macOS](https://github.com/CExA-project/ddc/actions/workflows/tests-macos.yml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/tests-macos.yml)
 [![Pages](https://github.com/CExA-project/ddc/actions/workflows/pages.yml/badge.svg)](https://github.com/CExA-project/ddc/actions/workflows/pages.yml)
 
 See <https://ddc.mdls.fr/>

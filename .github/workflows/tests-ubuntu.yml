@@ -2,12 +2,15 @@
 #
 # SPDX-License-Identifier: MIT
 
-name: Tests
+name: Tests on Ubuntu
 
 on:
   schedule:
     - cron: "0 1 * * *" # every day at 1am
   pull_request:
+  push:
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref }}
@@ -45,7 +48,7 @@ jobs:
     - name: Checkout Actions Repository
       uses: actions/checkout@v4
     - name: Spell Check Repo
-      uses: crate-ci/typos@v1.29.5
+      uses: crate-ci/typos@v1.29.7
       with:
         files: ./AUTHORS ./benchmarks/ ./cmake/ ./CMakeLists.txt ./docs/ ./examples/ ./include/ ./README.md ./tests/
 
@@ -61,7 +64,7 @@ jobs:
       run: |
         python3 -m venv ./gersemi
         . ./gersemi/bin/activate
-        python3 -m pip install gersemi==0.17
+        python3 -m pip install gersemi==0.19
     - name: Run gersemi
       run: |
         . ./gersemi/bin/activate
@@ -127,6 +130,7 @@ jobs:
         retention-days: 1
 
   test:
+    if: github.ref_name != 'main'
     strategy:
       fail-fast: false
       matrix:
@@ -171,7 +175,7 @@ jobs:
           backend:
             name: 'cuda'
           cxx_version: '23'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
     steps:
     - name: Free Disk Space (Ubuntu)
@@ -282,6 +286,7 @@ jobs:
           if [ 'xcpu' = 'x${{matrix.backend.name}}' ]
           then
             ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
+            cp build/tests.xml .
             ./build/examples/characteristics_advection
             ./build/examples/game_of_life
             ./build/examples/heat_equation_spectral
@@ -300,10 +305,10 @@ jobs:
 
         docker run \
           --cidfile='docker.cid' \
-          -v ${PWD}:/src:ro \
+          --volume ${PWD}:/src:ro \
           ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
           bash /src/run.sh
-        if docker cp "$(cat docker.cid)":/data/tests.xml /home/runner/work/ddc/ddc/tests.xml
+        if docker cp "$(cat docker.cid)":/data/tests.xml ${{github.workspace}}/tests.xml
         then echo "with_report=true" >> "$GITHUB_OUTPUT"
         else echo "with_report=false" >> "$GITHUB_OUTPUT"
         fi
@@ -311,9 +316,10 @@ jobs:
       uses: mikepenz/action-junit-report@v5
       if: ( success() || failure() ) && steps.test.outputs.with_report == 'true' # always run even if the previous step fails
       with:
-        report_paths: '/home/runner/work/ddc/ddc/tests.xml'
+        report_paths: '${{github.workspace}}/tests.xml'
 
   test-with-sanitizer:
+    if: github.ref_name != 'main'
     strategy:
       fail-fast: false
       matrix:
@@ -384,6 +390,7 @@ jobs:
           fi
 
           ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
+          cp build/tests.xml .
           ./build/examples/characteristics_advection
           ./build/examples/game_of_life
           ./build/examples/heat_equation_spectral
@@ -397,7 +404,7 @@ jobs:
           -v ${PWD}:/src:ro \
           ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
           bash /src/run.sh
-        if docker cp "$(cat docker.cid)":/data/tests.xml /home/runner/work/ddc/ddc/tests.xml
+        if docker cp "$(cat docker.cid)":/data/tests.xml ${{github.workspace}}/tests.xml
         then echo "with_report=true" >> "$GITHUB_OUTPUT"
         else echo "with_report=false" >> "$GITHUB_OUTPUT"
         fi
@@ -405,9 +412,10 @@ jobs:
       uses: mikepenz/action-junit-report@v5
       if: ( success() || failure() ) && steps.test.outputs.with_report == 'true' # always run even if the previous step fails
       with:
-        report_paths: '/home/runner/work/ddc/ddc/tests.xml'
+        report_paths: '${{github.workspace}}/tests.xml'
 
   clang-tidy-test:
+    if: github.ref_name != 'main'
     strategy:
       fail-fast: false
       matrix:

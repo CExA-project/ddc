@@ -52,3 +52,5 @@ endif()
 if("${DDC_BUILD_PDI_WRAPPER}")
     add_subdirectory(pdi)
 endif()
+
+add_subdirectory(nvcc_reproducer)

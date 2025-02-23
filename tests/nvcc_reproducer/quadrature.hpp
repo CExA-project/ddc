@@ -26,7 +26,11 @@ private:
     QuadConstChunkSpan m_coefficients;
 
 public:
-    explicit Quadrature(QuadConstChunkSpan coeffs) : m_coefficients(coeffs) {}
+    explicit Quadrature(
+            ddc::ChunkSpan<const double, DDomQuadrature, Kokkos::layout_right, MemorySpace> coeffs)
+        : m_coefficients(coeffs)
+    {
+    }
 
     template <class ExecutionSpace, class IntegratorFunction>
     double operator()(ExecutionSpace exec_space, IntegratorFunction integrated_function) const

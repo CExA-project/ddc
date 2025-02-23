@@ -15,7 +15,7 @@ TEST(Quadrature, VersionB)
 
     ddc::Chunk quadrature_coeffs(gridvx, ddc::DeviceAllocator<double>());
     ddc::parallel_fill(quadrature_coeffs, 3.);
-    Quadrature<ddc::DiscreteDomain<GridVx>> const integrate_v(quadrature_coeffs.span_cview());
+    Quadrature const integrate_v(quadrature_coeffs.span_cview());
 
     ddc::Chunk fdistribu_alloc(gridvx, ddc::DeviceAllocator<double>());
     ddc::parallel_fill(fdistribu_alloc.span_view(), 2);

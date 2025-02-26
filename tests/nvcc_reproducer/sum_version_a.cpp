@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-#include "quadrature.hpp"
+#include "sum.hpp"
 
 TEST(SumVersionA, Small)
 {

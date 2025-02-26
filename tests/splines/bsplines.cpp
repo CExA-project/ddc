@@ -39,6 +39,12 @@ struct BSplinesFixture<std::tuple<
     struct NUBSplinesX : ddc::NonUniformBSplines<DimX, D>
     {
     };
+    struct RoundingUBSplinesX : ddc::UniformBSplines<DimX, D>
+    {
+    };
+    struct RoundingNUBSplinesX : ddc::NonUniformBSplines<DimX, D>
+    {
+    };
     static constexpr std::size_t spline_degree = D;
     static constexpr std::size_t ncells = Nc;
 };
@@ -137,7 +143,7 @@ TYPED_TEST(BSplinesFixture, RoundingNonUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
     using DimX = typename TestFixture::DimX;
-    using BSplinesX = typename TestFixture::NUBSplinesX;
+    using BSplinesX = typename TestFixture::RoundingNUBSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
     CoordX const xmin(0.0);
     CoordX const xmax(0.2);
@@ -171,7 +177,7 @@ TYPED_TEST(BSplinesFixture, RoundingUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
     using DimX = typename TestFixture::DimX;
-    using BSplinesX = typename TestFixture::UBSplinesX;
+    using BSplinesX = typename TestFixture::RoundingUBSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
     CoordX const xmin(0.0);
     CoordX const xmax(0.2);

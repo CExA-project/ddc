@@ -22,19 +22,19 @@ using CoordX = ddc::Coordinate<DimX>;
 
 static constexpr std::size_t s_degree_x = 2;
 
-struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
-{
-};
-
-struct DDimX : ddc::NonUniformPointSampling<DimX>
-{
-};
-
 using execution_space = Kokkos::DefaultHostExecutionSpace;
 using memory_space = Kokkos::HostSpace;
 
 TEST(SplineBuilder, ShortInterpolationGrid)
 {
+    struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+    {
+    };
+
+    struct DDimX : ddc::NonUniformPointSampling<DimX>
+    {
+    };
+
     CoordX const x0(0.);
     CoordX const xN(1.);
     std::size_t const ncells = 5;
@@ -62,6 +62,14 @@ TEST(SplineBuilder, ShortInterpolationGrid)
 
 TEST(SplineBuilder, LongInterpolationGrid)
 {
+    struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+    {
+    };
+
+    struct DDimX : ddc::NonUniformPointSampling<DimX>
+    {
+    };
+
     CoordX const x0(0.);
     CoordX const xN(1.);
     std::size_t const ncells = 5;
@@ -89,6 +97,14 @@ TEST(SplineBuilder, LongInterpolationGrid)
 
 TEST(SplineBuilder, BadShapeInterpolationGrid)
 {
+    struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+    {
+    };
+
+    struct DDimX : ddc::NonUniformPointSampling<DimX>
+    {
+    };
+
     CoordX const x0(0.);
     CoordX const xN(1.);
     std::size_t const ncells = 5;
@@ -116,6 +132,14 @@ TEST(SplineBuilder, BadShapeInterpolationGrid)
 
 TEST(SplineBuilder, CorrectInterpolationGrid)
 {
+    struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+    {
+    };
+
+    struct DDimX : ddc::NonUniformPointSampling<DimX>
+    {
+    };
+
     CoordX const x0(0.);
     CoordX const xN(1.);
     std::size_t const ncells = 5;

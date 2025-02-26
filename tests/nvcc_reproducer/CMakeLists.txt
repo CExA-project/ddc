@@ -7,8 +7,8 @@ cmake_minimum_required(VERSION 3.22)
 include(GoogleTest)
 
 add_executable(reproducer
-    test_a.cpp
-    test_b.cpp
+    sum_version_a.cpp
+    sum_version_b.cpp
     ../main.cpp
 )
 

@@ -1,22 +1,24 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <ddc/ddc.hpp>
 
-struct GridVx
+struct DDimX
 {
 };
 
-inline int integrate(ddc::ChunkSpan<
-                     const int,
-                     ddc::DiscreteDomain<GridVx>,
-                     Kokkos::layout_right,
-                     Kokkos::DefaultExecutionSpace::memory_space> const& integrated_function)
+inline int sum(ddc::ChunkSpan<
+               const int,
+               ddc::DiscreteDomain<DDimX>,
+               Kokkos::layout_right,
+               Kokkos::DefaultExecutionSpace::memory_space> const& chk_span)
 {
     return ddc::parallel_transform_reduce(
-            integrated_function.domain(),
+            chk_span.domain(),
             0,
             ddc::reducer::sum<int>(),
-            KOKKOS_LAMBDA(ddc::DiscreteElement<GridVx> const ix) {
-                return integrated_function(ix);
-            });
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX> const ix) { return chk_span(ix); });
 }

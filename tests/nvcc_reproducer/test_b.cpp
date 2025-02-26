@@ -6,8 +6,6 @@
 
 #include <gtest/gtest.h>
 
-#include "ddc/trivial_space.hpp"
-
 #include "quadrature.hpp"
 
 TEST(Quadrature, VersionB)

@@ -2,8 +2,6 @@
 
 #include <ddc/ddc.hpp>
 
-#include <gtest/gtest.h>
-
 struct GridVx
 {
 };

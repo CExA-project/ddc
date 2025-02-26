@@ -4,6 +4,9 @@
 
 #include <gtest/gtest.h>
 
+#include "ddc/discrete_domain.hpp"
+#include "ddc/discrete_element.hpp"
+
 struct Vx
 {
 };
@@ -12,38 +15,25 @@ struct GridVx : ddc::UniformPointSampling<Vx>
 {
 };
 
-template <class DDomQuadrature>
-class Quadrature
+inline double integrate(
+        Kokkos::DefaultExecutionSpace const& exec_space,
+        ddc::ChunkSpan<
+                const double,
+                ddc::DiscreteDomain<GridVx>,
+                Kokkos::layout_right,
+                Kokkos::DefaultExecutionSpace::memory_space> const& coeffs,
+        ddc::ChunkSpan<
+                const double,
+                ddc::DiscreteDomain<GridVx>,
+                Kokkos::layout_right,
+                Kokkos::DefaultExecutionSpace::memory_space> const& integrated_function)
 {
-private:
-    using MemorySpace = Kokkos::DefaultExecutionSpace::memory_space;
-
-    using DElemQuadrature = typename DDomQuadrature::discrete_element_type;
-
-    using QuadConstChunkSpan
-            = ddc::ChunkSpan<const double, DDomQuadrature, Kokkos::layout_right, MemorySpace>;
-
-    QuadConstChunkSpan m_coefficients;
-
-public:
-    explicit Quadrature(
-            ddc::ChunkSpan<const double, DDomQuadrature, Kokkos::layout_right, MemorySpace> coeffs)
-        : m_coefficients(coeffs)
-    {
-    }
-
-    template <class ExecutionSpace, class IntegratorFunction>
-    double operator()(ExecutionSpace exec_space, IntegratorFunction integrated_function) const
-    {
-        QuadConstChunkSpan const coeff_proxy = m_coefficients;
-
-        return ddc::parallel_transform_reduce(
-                exec_space,
-                coeff_proxy.domain(),
-                0.0,
-                ddc::reducer::sum<double>(),
-                KOKKOS_LAMBDA(DElemQuadrature const ix) {
-                    return coeff_proxy(ix) * integrated_function(ix);
-                });
-    }
-};
+    return ddc::parallel_transform_reduce(
+            exec_space,
+            coeffs.domain(),
+            0.0,
+            ddc::reducer::sum<double>(),
+            KOKKOS_LAMBDA(ddc::DiscreteElement<GridVx> const ix) {
+                return coeffs(ix) * integrated_function(ix);
+            });
+}

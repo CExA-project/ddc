@@ -15,12 +15,13 @@ TEST(Quadrature, VersionA)
 
     ddc::Chunk quadrature_coeffs(gridvx, ddc::DeviceAllocator<double>());
     ddc::parallel_fill(quadrature_coeffs, 3.);
-    Quadrature const integrate_v(quadrature_coeffs.span_cview());
 
     ddc::Chunk fdistribu_alloc(gridvx, ddc::DeviceAllocator<double>());
     ddc::parallel_fill(fdistribu_alloc.span_view(), 2);
 
     // density
-    double const density_res
-            = integrate_v(Kokkos::DefaultExecutionSpace(), fdistribu_alloc.span_view());
+    double const density_res = integrate(
+            Kokkos::DefaultExecutionSpace(),
+            quadrature_coeffs.span_cview(),
+            fdistribu_alloc.span_cview());
 }

@@ -10,14 +10,11 @@
 
 TEST(Quadrature, VersionA)
 {
-    ddc::DiscreteDomain<GridVx> const gridvx
-            = ddc::init_trivial_space(ddc::DiscreteVector<GridVx>(100));
+    ddc::DiscreteVector<GridVx> const n(100);
+    ddc::DiscreteDomain<GridVx> const gridvx = ddc::init_trivial_space(n);
 
     ddc::Chunk quadrature_coeffs(gridvx, ddc::DeviceAllocator<int>());
     ddc::parallel_fill(quadrature_coeffs, 1);
 
-    // density
-    int const density_res
-            = integrate(Kokkos::DefaultExecutionSpace(), quadrature_coeffs.span_cview());
-    EXPECT_EQ(density_res, 100);
+    EXPECT_EQ(integrate(quadrature_coeffs.span_cview()), n.value());
 }

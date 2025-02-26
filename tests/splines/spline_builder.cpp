@@ -22,142 +22,143 @@ using CoordX = ddc::Coordinate<DimX>;
 
 static constexpr std::size_t s_degree_x = 2;
 
+struct ShortBSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+{
+};
+
+struct ShortDDimX : ddc::NonUniformPointSampling<DimX>
+{
+};
+
+struct LongBSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+{
+};
+
+struct LongDDimX : ddc::NonUniformPointSampling<DimX>
+{
+};
+
+struct BadBSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+{
+};
+
+struct BadDDimX : ddc::NonUniformPointSampling<DimX>
+{
+};
+
+struct CorrectBSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+{
+};
+
+struct CorrectDDimX : ddc::NonUniformPointSampling<DimX>
+{
+};
+
+
 using execution_space = Kokkos::DefaultHostExecutionSpace;
 using memory_space = Kokkos::HostSpace;
 
 TEST(SplineBuilder, ShortInterpolationGrid)
 {
-    struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
-    {
-    };
-
-    struct DDimX : ddc::NonUniformPointSampling<DimX>
-    {
-    };
-
     CoordX const x0(0.);
     CoordX const xN(1.);
     std::size_t const ncells = 5;
 
-    ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
+    ddc::init_discrete_space<ShortBSplinesX>(x0, xN, ncells);
 
     // One point missing
     std::vector<double> const range {0.1, 0.3, 0.5, 0.7};
 
-    ddc::DiscreteDomain<DDimX> const interpolation_domain
-            = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(range));
+    ddc::DiscreteDomain<ShortDDimX> const interpolation_domain
+            = ddc::init_discrete_space<ShortDDimX>(ShortDDimX::init<ShortDDimX>(range));
 
     EXPECT_THROW(
             (ddc::SplineBuilder<
                     execution_space,
                     memory_space,
-                    BSplinesX,
-                    DDimX,
+                    ShortBSplinesX,
+                    ShortDDimX,
                     ddc::BoundCond::PERIODIC,
                     ddc::BoundCond::PERIODIC,
                     ddc::SplineSolver::GINKGO,
-                    DDimX>(interpolation_domain)),
+                    ShortDDimX>(interpolation_domain)),
             std::runtime_error);
 }
 
 TEST(SplineBuilder, LongInterpolationGrid)
 {
-    struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
-    {
-    };
-
-    struct DDimX : ddc::NonUniformPointSampling<DimX>
-    {
-    };
-
     CoordX const x0(0.);
     CoordX const xN(1.);
     std::size_t const ncells = 5;
 
-    ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
+    ddc::init_discrete_space<LongBSplinesX>(x0, xN, ncells);
 
     // One point too much
     std::vector<double> const range {0.1, 0.3, 0.5, 0.7, 0.9, 0.95};
 
-    ddc::DiscreteDomain<DDimX> const interpolation_domain
-            = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(range));
+    ddc::DiscreteDomain<LongDDimX> const interpolation_domain
+            = ddc::init_discrete_space<LongDDimX>(LongDDimX::init<LongDDimX>(range));
 
     EXPECT_THROW(
             (ddc::SplineBuilder<
                     execution_space,
                     memory_space,
-                    BSplinesX,
-                    DDimX,
+                    LongBSplinesX,
+                    LongDDimX,
                     ddc::BoundCond::PERIODIC,
                     ddc::BoundCond::PERIODIC,
                     ddc::SplineSolver::GINKGO,
-                    DDimX>(interpolation_domain)),
+                    LongDDimX>(interpolation_domain)),
             std::runtime_error);
 }
 
 TEST(SplineBuilder, BadShapeInterpolationGrid)
 {
-    struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
-    {
-    };
-
-    struct DDimX : ddc::NonUniformPointSampling<DimX>
-    {
-    };
-
     CoordX const x0(0.);
     CoordX const xN(1.);
     std::size_t const ncells = 5;
 
-    ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
+    ddc::init_discrete_space<BadBSplinesX>(x0, xN, ncells);
 
     // All points end up in the first cell ]0, 0.2[
     std::vector<double> const range {0.1, 0.11, 0.12, 0.13, 0.14};
 
-    ddc::DiscreteDomain<DDimX> const interpolation_domain
-            = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(range));
+    ddc::DiscreteDomain<BadDDimX> const interpolation_domain
+            = ddc::init_discrete_space<BadDDimX>(BadDDimX::init<BadDDimX>(range));
 
     EXPECT_THROW(
             (ddc::SplineBuilder<
                     execution_space,
                     memory_space,
-                    BSplinesX,
-                    DDimX,
+                    BadBSplinesX,
+                    BadDDimX,
                     ddc::BoundCond::PERIODIC,
                     ddc::BoundCond::PERIODIC,
                     ddc::SplineSolver::GINKGO,
-                    DDimX>(interpolation_domain)),
+                    BadDDimX>(interpolation_domain)),
             std::runtime_error);
 }
 
 TEST(SplineBuilder, CorrectInterpolationGrid)
 {
-    struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
-    {
-    };
-
-    struct DDimX : ddc::NonUniformPointSampling<DimX>
-    {
-    };
-
     CoordX const x0(0.);
     CoordX const xN(1.);
     std::size_t const ncells = 5;
 
-    ddc::init_discrete_space<BSplinesX>(x0, xN, ncells);
+    ddc::init_discrete_space<CorrectBSplinesX>(x0, xN, ncells);
 
     std::vector<double> const range {0.05, 0.15, 0.5, 0.85, 0.95};
 
-    ddc::DiscreteDomain<DDimX> const interpolation_domain
-            = ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(range));
+    ddc::DiscreteDomain<CorrectDDimX> const interpolation_domain
+            = ddc::init_discrete_space<CorrectDDimX>(CorrectDDimX::init<CorrectDDimX>(range));
 
     EXPECT_NO_THROW((ddc::SplineBuilder<
                      execution_space,
                      memory_space,
-                     BSplinesX,
-                     DDimX,
+                     CorrectBSplinesX,
+                     CorrectDDimX,
                      ddc::BoundCond::PERIODIC,
                      ddc::BoundCond::PERIODIC,
                      ddc::SplineSolver::GINKGO,
-                     DDimX>(interpolation_domain)));
+                     CorrectDDimX>(interpolation_domain)));
 }

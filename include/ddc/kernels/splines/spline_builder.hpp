@@ -49,7 +49,6 @@ enum class SplineSolver {
  * @tparam BcLower The lower boundary condition.
  * @tparam BcUpper The upper boundary condition.
  * @tparam Solver The SplineSolver giving the backend used to perform the spline approximation.
- * @tparam DDimX A variadic template of all the discrete dimensions forming the full space (InterpolationDDim + batched dimensions).
  */
 template <
         class ExecSpace,

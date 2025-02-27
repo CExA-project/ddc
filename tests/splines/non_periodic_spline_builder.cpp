@@ -176,8 +176,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             BSplinesX,
             DDimX,
             ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
-            DDimX> const spline_evaluator(extrapolation_rule, extrapolation_rule);
+            ddc::NullExtrapolationRule> const spline_evaluator(extrapolation_rule, extrapolation_rule);
 
     ddc::Chunk
             coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<CoordX, memory_space>());
@@ -202,7 +201,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::Chunk integral(
             spline_builder.batch_domain(interpolation_domain),
             ddc::KokkosAllocator<double, memory_space>());
-    spline_evaluator.integrate(integral.span_view(), coef.span_cview());
+    spline_evaluator.integrate<DDimX>(integral.span_view(), coef.span_cview());
 
     ddc::Chunk<
             double,

@@ -159,8 +159,7 @@ void PeriodicitySplineBuilderTest()
             BSplines<X>,
             DDim<X>,
             ddc::PeriodicExtrapolationRule<X>,
-            ddc::PeriodicExtrapolationRule<X>,
-            DDim<X>> const spline_evaluator(extrapolation_rule, extrapolation_rule);
+            ddc::PeriodicExtrapolationRule<X>> const spline_evaluator(extrapolation_rule, extrapolation_rule);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());

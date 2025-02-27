@@ -215,9 +215,7 @@ int main(int argc, char** argv)
             BSplinesX,
             DDimX,
             ExtrapolationRule,
-            ExtrapolationRule,
-            DDimX,
-            DDimY> const spline_evaluator(extrapolation_rule, extrapolation_rule);
+            ExtrapolationRule> const spline_evaluator(extrapolation_rule, extrapolation_rule);
     //! [instantiate solver]
 
     //! [instantiate intermediate chunks]

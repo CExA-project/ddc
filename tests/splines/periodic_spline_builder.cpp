@@ -116,8 +116,7 @@ void TestPeriodicSplineBuilderTestIdentity()
             BSplinesX,
             DDimX,
             ddc::PeriodicExtrapolationRule<DimX>,
-            ddc::PeriodicExtrapolationRule<DimX>,
-            DDimX> const spline_evaluator(periodic_extrapolation, periodic_extrapolation);
+            ddc::PeriodicExtrapolationRule<DimX>> const spline_evaluator(periodic_extrapolation, periodic_extrapolation);
 
     ddc::Chunk
             coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<CoordX, memory_space>());
@@ -142,7 +141,7 @@ void TestPeriodicSplineBuilderTestIdentity()
     ddc::Chunk integral(
             spline_builder.batch_domain(interpolation_domain),
             ddc::KokkosAllocator<double, memory_space>());
-    spline_evaluator.integrate(integral.span_view(), coef.span_cview());
+    spline_evaluator.integrate<DDimX>(integral.span_view(), coef.span_cview());
 
     ddc::Chunk<double, ddc::DiscreteDomain<DDimX>, ddc::KokkosAllocator<double, memory_space>>
             quadrature_coefficients_alloc;

@@ -220,13 +220,12 @@ void Batched2dSplineTest()
             s_bcr,
             s_bcl,
             s_bcr,
-            ddc::SplineSolver::GINKGO,
-            DDims...> const spline_builder(dom_vals);
+            ddc::SplineSolver::GINKGO> const spline_builder(dom_vals);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<DDimI1, DDimI2> const dom_interpolation
             = spline_builder.interpolation_domain();
-    auto const dom_spline = spline_builder.batched_spline_domain();
+    auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());

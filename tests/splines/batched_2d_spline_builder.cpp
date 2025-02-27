@@ -471,8 +471,7 @@ void Batched2dSplineTest()
             extrapolation_rule_1_type,
             extrapolation_rule_1_type,
             extrapolation_rule_2_type,
-            extrapolation_rule_2_type,
-            DDims...> const
+            extrapolation_rule_2_type> const
             spline_evaluator(
                     extrapolation_rule_1,
                     extrapolation_rule_1,

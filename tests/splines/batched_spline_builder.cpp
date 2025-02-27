@@ -308,8 +308,7 @@ void BatchedSplineTest()
             BSplines<I>,
             DDimI,
             extrapolation_rule_type,
-            extrapolation_rule_type,
-            DDims...> const spline_evaluator_batched(extrapolation_rule, extrapolation_rule);
+            extrapolation_rule_type> const spline_evaluator_batched(extrapolation_rule, extrapolation_rule);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<I>, MemorySpace>());
@@ -333,7 +332,7 @@ void BatchedSplineTest()
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
     spline_evaluator_batched.deriv(spline_eval_deriv, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator_batched.integrate(spline_eval_integrals, coef.span_cview());
+    spline_evaluator_batched.template integrate<DDims...>(spline_eval_integrals, coef.span_cview());
 
     // Checking errors (we recover the initial values)
     double const max_norm_error = ddc::parallel_transform_reduce(

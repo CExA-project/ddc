@@ -266,8 +266,7 @@ void ExtrapolationRuleSplineTest()
             extrapolation_rule_dim_1_type,
             extrapolation_rule_dim_1_type,
             extrapolation_rule_dim_2_type,
-            extrapolation_rule_dim_2_type,
-            DDims...> const
+            extrapolation_rule_dim_2_type> const
             spline_evaluator_batched(
                     extrapolation_rule_left_dim_1,
                     extrapolation_rule_right_dim_1,

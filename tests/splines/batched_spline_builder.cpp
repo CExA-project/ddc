@@ -204,16 +204,16 @@ void BatchedSplineTest()
             s_bcl,
             s_bcr,
 #if defined(SOLVER_LAPACK)
-            ddc::SplineSolver::LAPACK,
+            ddc::SplineSolver::LAPACK
 #elif defined(SOLVER_GINKGO)
-            ddc::SplineSolver::GINKGO,
+            ddc::SplineSolver::GINKGO
 #endif
-            DDims...> const spline_builder(dom_vals);
+            > const spline_builder(dom_vals);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<DDimI> const dom_interpolation = spline_builder.interpolation_domain();
-    auto const dom_batch = spline_builder.batch_domain();
-    auto const dom_spline = spline_builder.batched_spline_domain();
+    auto const dom_batch = spline_builder.batch_domain(dom_vals);
+    auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
@@ -359,8 +359,8 @@ void BatchedSplineTest()
             spline_eval_integrals.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(typename decltype(spline_builder)::batch_domain_type::
-                                  discrete_element_type const e) {
+            KOKKOS_LAMBDA(typename decltype(spline_builder)::template batch_domain_type<
+                          DDims...>::discrete_element_type const e) {
                 return Kokkos::abs(
                         spline_eval_integrals(e) - evaluator.deriv(xN<I>(), -1)
                         + evaluator.deriv(x0<I>(), -1));

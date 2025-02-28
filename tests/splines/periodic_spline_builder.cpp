@@ -116,7 +116,8 @@ void TestPeriodicSplineBuilderTestIdentity()
             BSplinesX,
             DDimX,
             ddc::PeriodicExtrapolationRule<DimX>,
-            ddc::PeriodicExtrapolationRule<DimX>> const spline_evaluator(periodic_extrapolation, periodic_extrapolation);
+            ddc::PeriodicExtrapolationRule<DimX>> const
+            spline_evaluator(periodic_extrapolation, periodic_extrapolation);
 
     ddc::Chunk
             coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<CoordX, memory_space>());

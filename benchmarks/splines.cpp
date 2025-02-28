@@ -160,9 +160,7 @@ void characteristics_advection_unitary(benchmark::State& state)
             DDimX<IsNonUniform, s_degree_x>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            Backend,
-            DDimX<IsNonUniform, s_degree_x>,
-            DDimY> const spline_builder(x_mesh, cols_per_chunk, preconditioner_max_block_size);
+            Backend> const spline_builder(x_mesh, cols_per_chunk, preconditioner_max_block_size);
     ddc::PeriodicExtrapolationRule<X> const periodic_extrapolation;
     ddc::SplineEvaluator<
             ExecSpace,
@@ -170,15 +168,14 @@ void characteristics_advection_unitary(benchmark::State& state)
             BSplinesX<IsNonUniform, s_degree_x>,
             DDimX<IsNonUniform, s_degree_x>,
             ddc::PeriodicExtrapolationRule<X>,
-            ddc::PeriodicExtrapolationRule<X>,
-            DDimX<IsNonUniform, s_degree_x>,
-            DDimY> const spline_evaluator(periodic_extrapolation, periodic_extrapolation);
+            ddc::PeriodicExtrapolationRule<X>> const
+            spline_evaluator(periodic_extrapolation, periodic_extrapolation);
     ddc::Chunk coef_alloc(
-            spline_builder.batched_spline_domain(),
+            spline_builder.batched_spline_domain(x_mesh),
             ddc::KokkosAllocator<double, typename ExecSpace::memory_space>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
     ddc::Chunk feet_coords_alloc(
-            spline_builder.batched_interpolation_domain(),
+            spline_builder.batched_interpolation_domain(x_mesh),
             ddc::KokkosAllocator<ddc::Coordinate<X>, typename ExecSpace::memory_space>());
     ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
 

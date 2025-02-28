@@ -201,7 +201,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::Chunk integral(
             spline_builder.batch_domain(interpolation_domain),
             ddc::KokkosAllocator<double, memory_space>());
-    spline_evaluator.integrate<DDimX>(integral.span_view(), coef.span_cview());
+    spline_evaluator.integrate(integral.span_view(), coef.span_cview());
 
     ddc::Chunk<
             double,

@@ -220,7 +220,9 @@ int main(int argc, char** argv)
 
     //! [instantiate intermediate chunks]
     // Instantiate chunk of spline coefs to receive output of spline_builder
-    ddc::Chunk coef_alloc(spline_builder.batched_spline_domain(x_mesh), ddc::DeviceAllocator<double>());
+    ddc::Chunk coef_alloc(
+            spline_builder.batched_spline_domain(x_mesh),
+            ddc::DeviceAllocator<double>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Instantiate chunk to receive feet coords

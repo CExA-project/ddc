@@ -9,40 +9,20 @@
 #include <optional>
 #include <string>
 
-#include "discrete_space.hpp"
-
 namespace ddc {
 
 class ScopeGuard
 {
-    static void discretization_store_initialization()
-    {
-        detail::g_discretization_store
-                = std::make_optional<std::map<std::string, std::function<void()>>>();
-    }
-
 public:
-    ScopeGuard()
-    {
-        discretization_store_initialization();
-    }
+    ScopeGuard() {}
 
-    ScopeGuard([[maybe_unused]] int argc, [[maybe_unused]] char**& argv)
-    {
-        discretization_store_initialization();
-    }
+    ScopeGuard([[maybe_unused]] int argc, [[maybe_unused]] char**& argv) {}
 
     ScopeGuard(ScopeGuard const& x) = delete;
 
     ScopeGuard(ScopeGuard&& x) noexcept = delete;
 
-    ~ScopeGuard() noexcept
-    {
-        for (auto const& [name, fn] : *detail::g_discretization_store) {
-            fn();
-        }
-        detail::g_discretization_store.reset();
-    }
+    ~ScopeGuard() noexcept {}
 
     ScopeGuard& operator=(ScopeGuard const& x) = delete;
 

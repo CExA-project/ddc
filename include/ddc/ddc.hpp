@@ -51,14 +51,10 @@ namespace ddc {
 // Discretizations
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
-#include "ddc/discrete_space.hpp"
 #include "ddc/discrete_vector.hpp"
-#include "ddc/non_uniform_point_sampling.hpp"
-#include "ddc/periodic_sampling.hpp"
 #include "ddc/storage_discrete_domain.hpp"
 #include "ddc/strided_discrete_domain.hpp"
 #include "ddc/trivial_space.hpp"
-#include "ddc/uniform_point_sampling.hpp"
 
 // Algorithms
 #include "ddc/create_mirror.hpp"

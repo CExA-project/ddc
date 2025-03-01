@@ -6,8 +6,6 @@ cmake_minimum_required(VERSION 3.22)
 
 include(GoogleTest)
 
-add_subdirectory(discrete_space)
-
 add_executable(
     ddc_tests
     main.cpp
@@ -17,25 +15,18 @@ add_executable(
     create_mirror.cpp
     discrete_domain.cpp
     discrete_element.cpp
-    discrete_space.cpp
     discrete_vector.cpp
     for_each.cpp
-    multiple_discrete_dimensions.cpp
-    non_uniform_point_sampling.cpp
     parallel_deepcopy.cpp
     parallel_fill.cpp
     parallel_for_each.cpp
     parallel_transform_reduce.cpp
-    relocatable_device_code.cpp
-    relocatable_device_code_initialization.cpp
-    single_discretization.cpp
     storage_discrete_domain.cpp
     strided_discrete_domain.cpp
     tagged_vector.cpp
     transform_reduce.cpp
     trivial_space.cpp
     type_seq.cpp
-    uniform_point_sampling.cpp
 )
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
 target_link_libraries(ddc_tests PUBLIC GTest::gtest DDC::core)

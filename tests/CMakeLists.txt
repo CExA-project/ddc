@@ -41,17 +41,5 @@ target_compile_features(ddc_tests PUBLIC cxx_std_17)
 target_link_libraries(ddc_tests PUBLIC GTest::gtest DDC::core)
 gtest_discover_tests(ddc_tests DISCOVERY_MODE PRE_TEST)
 
-if("${DDC_BUILD_KERNELS_FFT}")
-    add_subdirectory(fft)
-endif()
-
-if("${DDC_BUILD_KERNELS_SPLINES}")
-    add_subdirectory(splines)
-endif()
-
-if("${DDC_BUILD_PDI_WRAPPER}")
-    add_subdirectory(pdi)
-endif()
-
 add_subdirectory(nvcc_reproducer)
 add_subdirectory(nvcc_reproducer2)

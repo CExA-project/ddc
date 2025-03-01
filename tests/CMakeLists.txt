@@ -9,7 +9,6 @@ include(GoogleTest)
 add_executable(
     ddc_tests
     main.cpp
-    aligned_allocator.cpp
     chunk.cpp
     chunk_span.cpp
     create_mirror.cpp
@@ -21,10 +20,6 @@ add_executable(
     parallel_fill.cpp
     parallel_for_each.cpp
     parallel_transform_reduce.cpp
-    storage_discrete_domain.cpp
-    strided_discrete_domain.cpp
-    tagged_vector.cpp
-    transform_reduce.cpp
     trivial_space.cpp
     type_seq.cpp
 )

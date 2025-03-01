@@ -5,5 +5,3 @@
 #pragma once
 
 #cmakedefine DDC_BUILD_DEPRECATED_CODE
-
-#cmakedefine DDC_BUILD_DOUBLE_PRECISION

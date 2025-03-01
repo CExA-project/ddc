@@ -8,11 +8,6 @@ project(DDC VERSION 0.5.0 LANGUAGES CXX)
 # List of options
 
 option(DDC_BUILD_DEPRECATED_CODE "Build DDC deprecated code." ON)
-option(
-    DDC_BUILD_DOUBLE_PRECISION
-    "Build DDC with double precision support, float is used otherwise"
-    ON
-)
 option(DDC_BUILD_EXAMPLES "Build DDC examples" ON)
 option(DDC_BUILD_TESTS "Build DDC tests if BUILD_TESTING is enabled" ON)
 

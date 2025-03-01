@@ -59,7 +59,6 @@ std::ostream& print_2DChunk(
 int main()
 {
     Kokkos::ScopeGuard const kokkos_scope;
-    ddc::ScopeGuard const ddc_scope;
 
     unsigned const nt = 10;
     unsigned const length = 5;

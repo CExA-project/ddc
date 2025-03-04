@@ -107,7 +107,6 @@ template <
         = 1>
 KOKKOS_FUNCTION constexpr auto const& take(HeadDElem const& head, TailDElems const&... tail)
 {
-    DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
     if constexpr (type_seq_contains_v<detail::TypeSeq<QueryTag>, to_type_seq_t<HeadDElem>>) {
         static_assert(
                 (!type_seq_contains_v<detail::TypeSeq<QueryTag>, to_type_seq_t<TailDElems>> && ...),
@@ -117,7 +116,6 @@ KOKKOS_FUNCTION constexpr auto const& take(HeadDElem const& head, TailDElems con
         static_assert(sizeof...(TailDElems) > 0, "ERROR: tag not found");
         return take<QueryTag>(tail...);
     }
-    DDC_IF_NVCC_THEN_POP
 }
 
 namespace detail {
@@ -198,13 +196,11 @@ public:
     template <class QueryTag>
     KOKKOS_FUNCTION constexpr value_type const& uid_or(value_type const& default_value) const&
     {
-        DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
         if constexpr (in_tags_v<QueryTag, tags_seq>) {
             return m_values[type_seq_rank_v<QueryTag, tags_seq>];
         } else {
             return default_value;
         }
-        DDC_IF_NVCC_THEN_POP
     }
 
     template <class QueryTag>

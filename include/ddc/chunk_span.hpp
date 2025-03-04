@@ -122,19 +122,16 @@ protected:
     template <class QueryDDim, class... ODDims>
     KOKKOS_FUNCTION constexpr auto get_slicer_for(DiscreteElement<ODDims...> const& c) const
     {
-        DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
         if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
             return (uid<QueryDDim>(c) - front<QueryDDim>(this->m_domain).uid());
         } else {
             return Kokkos::full_extent;
         }
-        DDC_IF_NVCC_THEN_POP
     }
 
     template <class QueryDDim, class... ODDims>
     KOKKOS_FUNCTION constexpr auto get_slicer_for(DiscreteDomain<ODDims...> const& c) const
     {
-        DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
         if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
             return std::pair<std::size_t, std::size_t>(
                     front<QueryDDim>(c) - front<QueryDDim>(this->m_domain),
@@ -142,7 +139,6 @@ protected:
         } else {
             return Kokkos::full_extent;
         }
-        DDC_IF_NVCC_THEN_POP
     }
 
 public:
@@ -437,13 +433,11 @@ protected:
     template <class QueryDDim, class... ODDims>
     KOKKOS_FUNCTION static constexpr auto get_slicer_for(DiscreteVector<ODDims...> const& c)
     {
-        DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
         if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
             return c.template get<QueryDDim>();
         } else {
             return Kokkos::full_extent;
         }
-        DDC_IF_NVCC_THEN_POP
     }
 
     template <class TypeSeq>

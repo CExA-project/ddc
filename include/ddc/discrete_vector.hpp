@@ -193,7 +193,6 @@ template <
         = 1>
 KOKKOS_FUNCTION constexpr auto const& take(HeadDVect const& head, TailDVects const&... tail)
 {
-    DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
     if constexpr (type_seq_contains_v<detail::TypeSeq<QueryTag>, to_type_seq_t<HeadDVect>>) {
         static_assert(
                 (!type_seq_contains_v<detail::TypeSeq<QueryTag>, to_type_seq_t<TailDVects>> && ...),
@@ -203,7 +202,6 @@ KOKKOS_FUNCTION constexpr auto const& take(HeadDVect const& head, TailDVects con
         static_assert(sizeof...(TailDVects) > 0, "ERROR: tag not found");
         return take<QueryTag>(tail...);
     }
-    DDC_IF_NVCC_THEN_POP
 }
 
 namespace detail {
@@ -338,13 +336,11 @@ public:
     KOKKOS_FUNCTION constexpr DiscreteVectorElement const& get_or(
             DiscreteVectorElement const& default_value) const&
     {
-        DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
         if constexpr (in_tags_v<QueryTag, tags_seq>) {
             return m_values[type_seq_rank_v<QueryTag, tags_seq>];
         } else {
             return default_value;
         }
-        DDC_IF_NVCC_THEN_POP
     }
 
     template <std::size_t N = sizeof...(Tags)>

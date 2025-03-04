@@ -291,7 +291,6 @@ protected:
      */
     KOKKOS_FUNCTION constexpr allocation_mdspan_type allocation_mdspan() const
     {
-        DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
         extents_type const extents_s(::ddc::extents<DDims>(m_domain).value()...);
         if constexpr (std::is_same_v<LayoutStridedPolicy, Kokkos::layout_stride>) {
             mapping_type const map(extents_s, m_internal_mdspan.mapping().strides());
@@ -300,7 +299,6 @@ protected:
             mapping_type const map(extents_s);
             return allocation_mdspan_type(data_handle(), map);
         }
-        DDC_IF_NVCC_THEN_POP
     }
 };
 

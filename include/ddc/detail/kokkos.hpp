@@ -139,7 +139,6 @@ KOKKOS_FUNCTION mdspan_to_kokkos_layout_t<typename MP::layout_type> build_kokkos
         MP const& mapping,
         std::index_sequence<Is...>)
 {
-    DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
     using kokkos_layout_type = mdspan_to_kokkos_layout_t<typename MP::layout_type>;
     if constexpr (std::is_same_v<kokkos_layout_type, Kokkos::LayoutStride>) {
         std::array<std::size_t, sizeof...(Is) * 2> storage;
@@ -154,7 +153,6 @@ KOKKOS_FUNCTION mdspan_to_kokkos_layout_t<typename MP::layout_type> build_kokkos
     } else {
         return kokkos_layout_type(ep.extent(Is)...);
     }
-    DDC_IF_NVCC_THEN_POP
 }
 
 // If is Kokkos::LayoutLeft/Kokkos::LayoutRight
@@ -176,7 +174,6 @@ KOKKOS_FUNCTION auto build_mdspan(
         std::index_sequence<Is...>)
 {
     assert(is_kokkos_layout_compatible(view));
-    DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
     using element_type = kokkos_to_mdspan_element_t<DataType>;
     using extents_type = Kokkos::dextents<std::size_t, Kokkos::View<DataType, Properties...>::rank>;
     using layout_type = kokkos_to_mdspan_layout_t<
@@ -189,7 +186,6 @@ KOKKOS_FUNCTION auto build_mdspan(
         return Kokkos::
                 mdspan<element_type, extents_type, layout_type>(view.data(), mapping_type(exts));
     }
-    DDC_IF_NVCC_THEN_POP
 }
 
 } // namespace ddc::detail

@@ -179,8 +179,6 @@ template <
 std::tuple<double, double, double, double> ComputeEvaluationError(
         ExecSpace const& exec_space,
         ddc::DiscreteDomain<DDims...> const& dom_vals,
-        ddc::DiscreteDomain<DDimI1> const& interpolation_domain1,
-        ddc::DiscreteDomain<DDimI2> const& interpolation_domain2,
         Builder const& spline_builder,
         Evaluator const& spline_evaluator,
         evaluator_type<DDimI1, DDimI2> const& evaluator)
@@ -189,6 +187,8 @@ std::tuple<double, double, double, double> ComputeEvaluationError(
     using I2 = typename DDimI2::continuous_dimension_type;
 
 #if defined(BC_HERMITE)
+    ddc::DiscreteDomain<DDimI1> const interpolation_domain1(dom_vals);
+    ddc::DiscreteDomain<DDimI2> const interpolation_domain2(dom_vals);
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I1>> const
             derivs_domain1(DElem<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(s_degree / 2));
@@ -506,7 +506,7 @@ std::tuple<double, double, double, double> ComputeEvaluationError(
             max_norm_error,
             max_norm_error_diff1,
             max_norm_error_diff2,
-            max_norm_error_diff2);
+            max_norm_error_diff12);
 }
 
 // Checks that when evaluating the spline at interpolation points one
@@ -595,14 +595,9 @@ void MultipleBatchDomain2dSplineTest()
 
     // Check the evaluation error for the first domain
     const auto [max_norm_error, max_norm_error_diff1, max_norm_error_diff2, max_norm_error_diff12]
-            = ComputeEvaluationError<ExecSpace, MemorySpace>(
-                    exec_space,
-                    dom_vals,
-                    interpolation_domain1,
-                    interpolation_domain2,
-                    spline_builder,
-                    spline_evaluator,
-                    evaluator);
+            = ComputeEvaluationError<
+                    ExecSpace,
+                    MemorySpace>(exec_space, dom_vals, spline_builder, spline_evaluator, evaluator);
 
     double const max_norm = evaluator.max_norm();
     double const max_norm_diff1 = evaluator.max_norm(1, 0);
@@ -653,8 +648,6 @@ void MultipleBatchDomain2dSplineTest()
             = ComputeEvaluationError<ExecSpace, MemorySpace>(
                     exec_space,
                     dom_vals_extra,
-                    interpolation_domain1,
-                    interpolation_domain2,
                     spline_builder,
                     spline_evaluator,
                     evaluator);

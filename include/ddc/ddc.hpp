@@ -11,7 +11,6 @@ namespace ddc {
 
 // Misc
 #include "ddc/config.hpp"
-#include "ddc/detail/macros.hpp"
 #include "ddc/detail/type_seq.hpp"
 
 // Containers

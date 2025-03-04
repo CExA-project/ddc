@@ -12,7 +12,6 @@
 
 #include <Kokkos_Macros.hpp>
 
-#include "ddc/detail/macros.hpp"
 #include "ddc/detail/type_seq.hpp"
 #include "ddc/discrete_vector.hpp"
 

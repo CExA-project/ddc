@@ -332,7 +332,7 @@ public:
                 && ...));
         assert(((DiscreteElement<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain))
                 && ...));
-        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
+        return this->m_internal_mdspan(uid<DDims>(take<DDims>(delems...))...);
     }
 
     /** Access to the underlying allocation pointer

@@ -10,7 +10,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP) {
+namespace {
 
 using DElem0D = ddc::DiscreteElement<>;
 using DVect0D = ddc::DiscreteVector<>;
@@ -43,7 +43,7 @@ DVectY constexpr nelems_y(12);
 DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP)
+} // namespace
 
 TEST(ParallelTransformReduceHost, ZeroDimension)
 {
@@ -96,7 +96,7 @@ TEST(ParallelTransformReduceHost, TwoDimensions)
             dom.size() * (dom.size() - 1) / 2);
 }
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP) {
+namespace {
 
 void TestParallelTransformReduceDeviceZeroDimension()
 {
@@ -113,14 +113,14 @@ void TestParallelTransformReduceDeviceZeroDimension()
             dom.size() * (dom.size() - 1) / 2);
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP)
+} // namespace
 
 TEST(ParallelTransformReduceDevice, ZeroDimension)
 {
     TestParallelTransformReduceDeviceZeroDimension();
 }
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP) {
+namespace {
 
 void TestParallelTransformReduceDeviceOneDimension()
 {
@@ -137,14 +137,14 @@ void TestParallelTransformReduceDeviceOneDimension()
             dom.size() * (dom.size() - 1) / 2);
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP)
+} // namespace
 
 TEST(ParallelTransformReduceDevice, OneDimension)
 {
     TestParallelTransformReduceDeviceOneDimension();
 }
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP) {
+namespace {
 
 void TestParallelTransformReduceDeviceTwoDimensions()
 {
@@ -163,7 +163,7 @@ void TestParallelTransformReduceDeviceTwoDimensions()
             dom.size() * (dom.size() - 1) / 2);
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_TRANSFORM_REDUCE_CPP)
+} // namespace
 
 TEST(ParallelTransformReduceDevice, TwoDimensions)
 {

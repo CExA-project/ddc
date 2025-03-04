@@ -6,11 +6,11 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(TRIVIAL_DIMENSION_CPP) {
+namespace {
 
 class DDimX;
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(TRIVIAL_DIMENSION_CPP)
+} // namespace
 
 TEST(TrivialDimension, Size)
 {

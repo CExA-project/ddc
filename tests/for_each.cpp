@@ -10,7 +10,7 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FOR_EACH_CPP) {
+namespace {
 
 using DElem0D = ddc::DiscreteElement<>;
 using DVect0D = ddc::DiscreteVector<>;
@@ -43,7 +43,7 @@ DVectY constexpr nelems_y(12);
 DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FOR_EACH_CPP)
+} // namespace
 
 TEST(ForEachSerialHost, Empty)
 {

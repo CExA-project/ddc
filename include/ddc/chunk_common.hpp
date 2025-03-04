@@ -13,7 +13,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "ddc/chunk_traits.hpp"
-#include "ddc/detail/macros.hpp"
 #include "ddc/discrete_domain.hpp"
 
 namespace ddc {

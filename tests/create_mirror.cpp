@@ -11,7 +11,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP) {
+namespace {
 
 struct DDimX
 {
@@ -38,7 +38,7 @@ template <class ElementType, class Support, class Layout, class MemorySpace, cla
             KOKKOS_LAMBDA(DElemX elem_x) { return chunk_span(elem_x) == value; });
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP)
+} // namespace
 
 TEST(CreateMirror, Host)
 {

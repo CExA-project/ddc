@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_ELEMENT_CPP) {
+namespace {
 
 struct DDimX
 {
@@ -42,7 +42,7 @@ using DVectYX = ddc::DiscreteVector<DDimY, DDimX>;
 using DElemXYZ = ddc::DiscreteElement<DDimX, DDimY, DDimZ>;
 using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_ELEMENT_CPP)
+} // namespace
 
 TEST(DiscreteElementXYZTest, ConstructorFromDiscreteElements)
 {

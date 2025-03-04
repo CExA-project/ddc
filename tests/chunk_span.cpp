@@ -9,7 +9,7 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_SPAN_CPP) {
+namespace {
 
 struct DDimX
 {
@@ -31,7 +31,7 @@ using ChunkX = ddc::Chunk<Datatype, DDomX>;
 template <class Datatype>
 using ChunkSpanX = ddc::ChunkSpan<Datatype, DDomX>;
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_SPAN_CPP)
+} // namespace
 
 TEST(ChunkSpan1DTest, ConstructionFromChunk)
 {
@@ -68,7 +68,7 @@ TEST(ChunkSpan1DTest, CtadFromKokkosView)
                  ddc::ChunkSpan<const int, DDomX, Kokkos::layout_right, Kokkos::HostSpace>>));
 }
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_SPAN_CPP) {
+namespace {
 
 void TestChunkSpan1DTestCtadOnDevice()
 {
@@ -87,7 +87,7 @@ void TestChunkSpan1DTestCtadOnDevice()
     EXPECT_EQ(sum, view.size());
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_SPAN_CPP)
+} // namespace
 
 TEST(ChunkSpan1DTest, CtadOnDevice)
 {

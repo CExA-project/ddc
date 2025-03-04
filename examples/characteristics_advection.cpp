@@ -207,9 +207,7 @@ int main(int argc, char** argv)
             DDimX,
             BoundCond,
             BoundCond,
-            ddc::SplineSolver::LAPACK,
-            DDimX,
-            DDimY> const spline_builder(x_mesh);
+            ddc::SplineSolver::LAPACK> const spline_builder(x_domain);
     ExtrapolationRule const extrapolation_rule;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,
@@ -217,19 +215,19 @@ int main(int argc, char** argv)
             BSplinesX,
             DDimX,
             ExtrapolationRule,
-            ExtrapolationRule,
-            DDimX,
-            DDimY> const spline_evaluator(extrapolation_rule, extrapolation_rule);
+            ExtrapolationRule> const spline_evaluator(extrapolation_rule, extrapolation_rule);
     //! [instantiate solver]
 
     //! [instantiate intermediate chunks]
     // Instantiate chunk of spline coefs to receive output of spline_builder
-    ddc::Chunk coef_alloc(spline_builder.batched_spline_domain(), ddc::DeviceAllocator<double>());
+    ddc::Chunk coef_alloc(
+            spline_builder.batched_spline_domain(x_mesh),
+            ddc::DeviceAllocator<double>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Instantiate chunk to receive feet coords
     ddc::Chunk feet_coords_alloc(
-            spline_builder.batched_interpolation_domain(),
+            spline_builder.batched_interpolation_domain(x_mesh),
             ddc::DeviceAllocator<ddc::Coordinate<X>>());
     ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
     //! [instantiate intermediate chunks]

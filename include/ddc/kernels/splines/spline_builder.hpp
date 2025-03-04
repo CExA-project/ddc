@@ -10,6 +10,7 @@
 #include <optional>
 #include <stdexcept>
 #include <tuple>
+#include <type_traits>
 #include <utility>
 
 #include <ddc/ddc.hpp>
@@ -49,7 +50,6 @@ enum class SplineSolver {
  * @tparam BcLower The lower boundary condition.
  * @tparam BcUpper The upper boundary condition.
  * @tparam Solver The SplineSolver giving the backend used to perform the spline approximation.
- * @tparam DDimX A variadic template of all the discrete dimensions forming the full space (InterpolationDDim + batched dimensions).
  */
 template <
         class ExecSpace,
@@ -58,8 +58,7 @@ template <
         class InterpolationDDim,
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
-        SplineSolver Solver,
-        class... DDimX>
+        SplineSolver Solver>
 class SplineBuilder
 {
     static_assert(
@@ -90,45 +89,55 @@ public:
     /// @brief The type of the domain for the 1D interpolation mesh used by this class.
     using interpolation_domain_type = ddc::DiscreteDomain<interpolation_discrete_dimension_type>;
 
-    /// @brief The type of the whole domain representing interpolation points.
-    using batched_interpolation_domain_type = ddc::DiscreteDomain<DDimX...>;
+    /**
+     * @brief The type of the whole domain representing interpolation points.
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     */
+    template <class DDom, class = std::enable_if_t<ddc::is_discrete_domain_v<DDom>>>
+    using batched_interpolation_domain_type = DDom;
 
     /**
      * @brief The type of the batch domain (obtained by removing the dimension of interest
      * from the whole domain).
      *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
      * this is DiscreteDomain<X,Z>
      */
-    using batch_domain_type = ddc::remove_dims_of_t<
-            batched_interpolation_domain_type,
-            interpolation_discrete_dimension_type>;
+    template <class DDom, class = std::enable_if_t<ddc::is_discrete_domain_v<DDom>>>
+    using batch_domain_type = ddc::remove_dims_of_t<DDom, interpolation_discrete_dimension_type>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain
      * and batch domain) preserving the underlying memory layout (order of dimensions).
      *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
      * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<X,BSplinesY,Z>.
      */
-    using batched_spline_domain_type = ddc::replace_dim_of_t<
-            batched_interpolation_domain_type,
-            interpolation_discrete_dimension_type,
-            bsplines_type>;
+    template <class DDom, class = std::enable_if_t<ddc::is_discrete_domain_v<DDom>>>
+    using batched_spline_domain_type
+            = ddc::replace_dim_of_t<DDom, interpolation_discrete_dimension_type, bsplines_type>;
 
 private:
     /**
      * @brief The type of the whole spline domain (cartesian product of the 1D spline domain
      * and the batch domain) with 1D spline dimension being the leading dimension.
      *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
      * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<BSplinesY,X,Z>.
      */
+    template <class DDom, class = std::enable_if_t<ddc::is_discrete_domain_v<DDom>>>
     using batched_spline_tr_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
                     ddc::type_seq_remove_t<
-                            ddc::detail::TypeSeq<DDimX...>,
+                            ddc::to_type_seq_t<DDom>,
                             ddc::detail::TypeSeq<interpolation_discrete_dimension_type>>>>;
 
 public:
@@ -136,13 +145,14 @@ public:
      * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain
      * and batch domain) preserving the underlying memory layout (order of dimensions).
      *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
      * this is DiscreteDomain<X,Deriv<Y>,Z>
      */
-    using batched_derivs_domain_type = ddc::replace_dim_of_t<
-            batched_interpolation_domain_type,
-            interpolation_discrete_dimension_type,
-            deriv_type>;
+    template <class DDom, class = std::enable_if_t<ddc::is_discrete_domain_v<DDom>>>
+    using batched_derivs_domain_type
+            = ddc::replace_dim_of_t<DDom, interpolation_discrete_dimension_type, deriv_type>;
 
     /// @brief Indicates if the degree of the splines is odd or even.
     static constexpr bool s_odd = BSplines::degree() % 2;
@@ -163,7 +173,7 @@ public:
     static constexpr SplineSolver s_spline_solver = Solver;
 
 private:
-    batched_interpolation_domain_type m_batched_interpolation_domain;
+    interpolation_domain_type m_interpolation_domain;
 
     int m_offset = 0;
 
@@ -177,9 +187,9 @@ private:
 
 public:
     /**
-     * @brief Build a SplineBuilder acting on batched_interpolation_domain.
+     * @brief Build a SplineBuilder acting on interpolation_domain.
      *
-     * @param batched_interpolation_domain The domain on which the interpolation points are defined.
+     * @param interpolation_domain The domain on which the interpolation points are defined.
      *
      * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
      * of a chunk of right-hand sides of the linear problem to be computed in parallel (chunks are treated
@@ -193,10 +203,10 @@ public:
      * @see MatrixSparse
      */
     explicit SplineBuilder(
-            batched_interpolation_domain_type const& batched_interpolation_domain,
+            interpolation_domain_type const& interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
-        : m_batched_interpolation_domain(batched_interpolation_domain)
+        : m_interpolation_domain(interpolation_domain)
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                / ddc::discrete_space<BSplines>().ncells())
     {
@@ -205,7 +215,7 @@ public:
                 "Incompatible boundary conditions");
         check_valid_grid();
 
-        compute_offset(interpolation_domain(), m_offset);
+        compute_offset(this->interpolation_domain(), m_offset);
 
         // Calculate block sizes
         int lower_block_size;
@@ -223,6 +233,35 @@ public:
                 cols_per_chunk,
                 preconditioner_max_block_size);
     }
+
+    /**
+     * @brief Build a SplineBuilder acting on the interpolation domain contained by batched_interpolation_domain.
+     *
+     * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
+     *
+     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
+     * of a chunk of right-hand sides of the linear problem to be computed in parallel (chunks are treated
+     * by the linear solver one-after-the-other).
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @param preconditioner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * define the size of a block used by the Block-Jacobi preconditioner.
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @see MatrixSparse
+     */
+    template <class DDom, class = std::enable_if_t<ddc::is_discrete_domain_v<DDom>>>
+    explicit SplineBuilder(
+            DDom const& batched_interpolation_domain,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+        : SplineBuilder(
+                  interpolation_domain_type(batched_interpolation_domain),
+                  cols_per_chunk,
+                  preconditioner_max_block_size)
+    {
+    }
+
 
     /// @brief Copy-constructor is deleted.
     SplineBuilder(SplineBuilder const& x) = delete;
@@ -255,7 +294,7 @@ public:
      */
     interpolation_domain_type interpolation_domain() const noexcept
     {
-        return interpolation_domain_type(m_batched_interpolation_domain);
+        return m_interpolation_domain;
     }
 
     /**
@@ -264,11 +303,14 @@ public:
      * Values of the function must be provided on this domain in order
      * to build a spline representation of the function (cartesian product of 1D interpolation_domain and batch_domain).
      *
+     * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
+     *
      * @return The domain for the interpolation mesh.
      */
-    batched_interpolation_domain_type batched_interpolation_domain() const noexcept
+    template <class DDom, class = std::enable_if_t<ddc::is_discrete_domain_v<DDom>>>
+    DDom batched_interpolation_domain(DDom const& batched_interpolation_domain) const noexcept
     {
-        return m_batched_interpolation_domain;
+        return batched_interpolation_domain;
     }
 
     /**
@@ -276,11 +318,14 @@ public:
      *
      * Obtained by removing the dimension of interest from the whole interpolation domain.
      *
+     * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
+     *
      * @return The batch domain.
      */
-    batch_domain_type batch_domain() const noexcept
+    template <class DDom>
+    batch_domain_type<DDom> batch_domain(DDom const& batched_interpolation_domain) const noexcept
     {
-        return ddc::remove_dims_of(batched_interpolation_domain(), interpolation_domain());
+        return ddc::remove_dims_of(batched_interpolation_domain, interpolation_domain());
     }
 
     /**
@@ -300,13 +345,17 @@ public:
      *
      * Spline approximations (spline-transformed functions) are computed on this domain.
      *
+     * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
+     *
      * @return The domain for the spline coefficients.
      */
-    batched_spline_domain_type batched_spline_domain() const noexcept
+    template <class DDom>
+    batched_spline_domain_type<DDom> batched_spline_domain(
+            DDom const& batched_interpolation_domain) const noexcept
     {
         return ddc::replace_dim_of<
                 interpolation_discrete_dimension_type,
-                bsplines_type>(batched_interpolation_domain(), spline_domain());
+                bsplines_type>(batched_interpolation_domain, spline_domain());
     }
 
 private:
@@ -315,16 +364,21 @@ private:
      *
      * This is used internally due to solver limitation and because it may be beneficial to computation performance. For LAPACK backend and non-periodic boundary condition, we are using SplinesLinearSolver3x3Blocks which requires upper_block_size additional rows for internal operations.
      *
+     * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
+     *
      * @return The (transposed) domain for the spline coefficients.
      */
-    batched_spline_tr_domain_type batched_spline_tr_domain() const noexcept
+    template <class DDom>
+    batched_spline_tr_domain_type<DDom> batched_spline_tr_domain(
+            DDom const& batched_interpolation_domain) const noexcept
     {
-        return batched_spline_tr_domain_type(ddc::replace_dim_of<bsplines_type, bsplines_type>(
-                batched_spline_domain(),
-                ddc::DiscreteDomain<bsplines_type>(
-                        ddc::DiscreteElement<bsplines_type>(0),
-                        ddc::DiscreteVector<bsplines_type>(
-                                matrix->required_number_of_rhs_rows()))));
+        return batched_spline_tr_domain_type<DDom>(
+                ddc::replace_dim_of<bsplines_type, bsplines_type>(
+                        batched_spline_domain(batched_interpolation_domain),
+                        ddc::DiscreteDomain<bsplines_type>(
+                                ddc::DiscreteElement<bsplines_type>(0),
+                                ddc::DiscreteVector<bsplines_type>(
+                                        matrix->required_number_of_rhs_rows()))));
     }
 
 public:
@@ -333,12 +387,16 @@ public:
      *
      * This is only used with BoundCond::HERMITE boundary conditions.
      *
+     * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
+     *
      * @return The domain for the Derivs values.
      */
-    batched_derivs_domain_type batched_derivs_xmin_domain() const noexcept
+    template <class DDom>
+    batched_derivs_domain_type<DDom> batched_derivs_xmin_domain(
+            DDom const& batched_interpolation_domain) const noexcept
     {
         return ddc::replace_dim_of<interpolation_discrete_dimension_type, deriv_type>(
-                batched_interpolation_domain(),
+                batched_interpolation_domain,
                 ddc::DiscreteDomain<deriv_type>(
                         ddc::DiscreteElement<deriv_type>(1),
                         ddc::DiscreteVector<deriv_type>(s_nbc_xmin)));
@@ -349,12 +407,16 @@ public:
      *
      * This is only used with BoundCond::HERMITE boundary conditions.
      *
+     * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
+     *
      * @return The domain for the Derivs values.
      */
-    batched_derivs_domain_type batched_derivs_xmax_domain() const noexcept
+    template <class DDom>
+    batched_derivs_domain_type<DDom> batched_derivs_xmax_domain(
+            DDom const& batched_interpolation_domain) const noexcept
     {
         return ddc::replace_dim_of<interpolation_discrete_dimension_type, deriv_type>(
-                batched_interpolation_domain(),
+                batched_interpolation_domain,
                 ddc::DiscreteDomain<deriv_type>(
                         ddc::DiscreteElement<deriv_type>(1),
                         ddc::DiscreteVector<deriv_type>(s_nbc_xmax)));
@@ -379,18 +441,21 @@ public:
      * @param[in] derivs_xmax The values of the derivatives at the upper boundary
      * (used only with BoundCond::HERMITE upper boundary condition).
      */
-    template <class Layout>
+    template <class Layout, class DDom>
     void operator()(
-            ddc::ChunkSpan<double, batched_spline_domain_type, Layout, memory_space> spline,
-            ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space>
-                    vals,
-            std::optional<
-                    ddc::ChunkSpan<double const, batched_derivs_domain_type, Layout, memory_space>>
-                    derivs_xmin
+            ddc::ChunkSpan<double, batched_spline_domain_type<DDom>, Layout, memory_space> spline,
+            ddc::ChunkSpan<double const, DDom, Layout, memory_space> vals,
+            std::optional<ddc::ChunkSpan<
+                    double const,
+                    batched_derivs_domain_type<DDom>,
+                    Layout,
+                    memory_space>> derivs_xmin
             = std::nullopt,
-            std::optional<
-                    ddc::ChunkSpan<double const, batched_derivs_domain_type, Layout, memory_space>>
-                    derivs_xmax
+            std::optional<ddc::ChunkSpan<
+                    double const,
+                    batched_derivs_domain_type<DDom>,
+                    Layout,
+                    memory_space>> derivs_xmax
             = std::nullopt) const;
 
     /**
@@ -460,17 +525,8 @@ template <
         class InterpolationDDim,
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
-        SplineSolver Solver,
-        class... DDimX>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        BcLower,
-        BcUpper,
-        Solver,
-        DDimX...>::
+        SplineSolver Solver>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
         compute_offset(interpolation_domain_type const& interpolation_domain, int& offset)
 {
     if constexpr (bsplines_type::is_periodic()) {
@@ -504,17 +560,9 @@ template <
         class InterpolationDDim,
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
-        SplineSolver Solver,
-        class... DDimX>
-int SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        BcLower,
-        BcUpper,
-        Solver,
-        DDimX...>::compute_block_sizes_uniform(ddc::BoundCond const bound_cond, int const nbc)
+        SplineSolver Solver>
+int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
+        compute_block_sizes_uniform(ddc::BoundCond const bound_cond, int const nbc)
 {
     if (bound_cond == ddc::BoundCond::PERIODIC) {
         return static_cast<int>(bsplines_type::degree()) / 2;
@@ -538,17 +586,9 @@ template <
         class InterpolationDDim,
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
-        SplineSolver Solver,
-        class... DDimX>
-int SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        BcLower,
-        BcUpper,
-        Solver,
-        DDimX...>::compute_block_sizes_non_uniform(ddc::BoundCond const bound_cond, int const nbc)
+        SplineSolver Solver>
+int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
+        compute_block_sizes_non_uniform(ddc::BoundCond const bound_cond, int const nbc)
 {
     if (bound_cond == ddc::BoundCond::PERIODIC || bound_cond == ddc::BoundCond::GREVILLE) {
         return static_cast<int>(bsplines_type::degree()) - 1;
@@ -568,17 +608,8 @@ template <
         class InterpolationDDim,
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
-        SplineSolver Solver,
-        class... DDimX>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        BcLower,
-        BcUpper,
-        Solver,
-        DDimX...>::
+        SplineSolver Solver>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
         allocate_matrix(
                 [[maybe_unused]] int lower_block_size,
                 [[maybe_unused]] int upper_block_size,
@@ -635,17 +666,9 @@ template <
         class InterpolationDDim,
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
-        SplineSolver Solver,
-        class... DDimX>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        BcLower,
-        BcUpper,
-        Solver,
-        DDimX...>::build_matrix_system()
+        SplineSolver Solver>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
+        build_matrix_system()
 {
     // Hermite boundary conditions at xmin, if any
     if constexpr (BcLower == ddc::BoundCond::HERMITE) {
@@ -738,32 +761,27 @@ template <
         class InterpolationDDim,
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
-        SplineSolver Solver,
-        class... DDimX>
-template <class Layout>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        BcLower,
-        BcUpper,
-        Solver,
-        DDimX...>::
+        SplineSolver Solver>
+template <class Layout, class DDom>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
 operator()(
-        ddc::ChunkSpan<double, batched_spline_domain_type, Layout, memory_space> spline,
-        ddc::ChunkSpan<double const, batched_interpolation_domain_type, Layout, memory_space> vals,
+        ddc::ChunkSpan<double, batched_spline_domain_type<DDom>, Layout, memory_space> spline,
+        ddc::ChunkSpan<double const, DDom, Layout, memory_space> vals,
         std::optional<ddc::ChunkSpan<
                 double const,
-                batched_derivs_domain_type,
+                batched_derivs_domain_type<DDom>,
                 Layout,
                 memory_space>> const derivs_xmin,
         std::optional<ddc::ChunkSpan<
                 double const,
-                batched_derivs_domain_type,
+                batched_derivs_domain_type<DDom>,
                 Layout,
                 memory_space>> const derivs_xmax) const
 {
+    auto const batched_interpolation_domain = vals.domain();
+
+    assert(interpolation_domain_type(batched_interpolation_domain) == m_interpolation_domain);
+
     assert(vals.template extent<interpolation_discrete_dimension_type>()
            == ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin - s_nbc_xmax);
 
@@ -788,8 +806,8 @@ operator()(
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_lower_coefficients",
                 exec_space(),
-                batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
+                batch_domain(batched_interpolation_domain),
+                KOKKOS_LAMBDA(typename batch_domain_type<DDom>::discrete_element_type j) {
                     for (int i = s_nbc_xmin; i > 0; --i) {
                         spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin - i), j)
                                 = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i), j)
@@ -831,8 +849,8 @@ operator()(
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_upper_coefficients",
                 exec_space(),
-                batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type j) {
+                batch_domain(batched_interpolation_domain),
+                KOKKOS_LAMBDA(typename batch_domain_type<DDom>::discrete_element_type j) {
                     for (int i = 0; i < s_nbc_xmax; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbc_xmax - i),
                                j)
@@ -845,14 +863,14 @@ operator()(
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo). Also select only relevant rows in case of periodic boundaries
     auto const& offset_proxy = m_offset;
     ddc::Chunk spline_tr_alloc(
-            batched_spline_tr_domain(),
+            batched_spline_tr_domain(batched_interpolation_domain),
             ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const spline_tr = spline_tr_alloc.span_view();
     ddc::parallel_for_each(
             "ddc_splines_transpose_rhs",
             exec_space(),
-            batch_domain(),
-            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+            batch_domain(batched_interpolation_domain),
+            KOKKOS_LAMBDA(typename batch_domain_type<DDom>::discrete_element_type const j) {
                 for (std::size_t i = 0; i < nbasis_proxy; ++i) {
                     spline_tr(ddc::DiscreteElement<bsplines_type>(i), j)
                             = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
@@ -862,15 +880,15 @@ operator()(
     Kokkos::View<double**, Kokkos::LayoutRight, exec_space> const bcoef_section(
             spline_tr.data_handle(),
             static_cast<std::size_t>(spline_tr.template extent<bsplines_type>()),
-            batch_domain().size());
+            batch_domain(batched_interpolation_domain).size());
     // Compute spline coef
     matrix->solve(bcoef_section, false);
     // Transpose back spline_tr into spline.
     ddc::parallel_for_each(
             "ddc_splines_transpose_back_rhs",
             exec_space(),
-            batch_domain(),
-            KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+            batch_domain(batched_interpolation_domain),
+            KOKKOS_LAMBDA(typename batch_domain_type<DDom>::discrete_element_type const j) {
                 for (std::size_t i = 0; i < nbasis_proxy; ++i) {
                     spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j)
                             = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
@@ -882,8 +900,8 @@ operator()(
         ddc::parallel_for_each(
                 "ddc_splines_periodic_rows_duplicate_rhs",
                 exec_space(),
-                batch_domain(),
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                batch_domain(batched_interpolation_domain),
+                KOKKOS_LAMBDA(typename batch_domain_type<DDom>::discrete_element_type const j) {
                     if (offset_proxy != 0) {
                         for (int i = 0; i < offset_proxy; ++i) {
                             spline(ddc::DiscreteElement<bsplines_type>(i), j) = spline(
@@ -912,8 +930,7 @@ template <
         class InterpolationDDim,
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
-        SplineSolver Solver,
-        class... DDimX>
+        SplineSolver Solver>
 template <class OutMemorySpace>
 std::tuple<
         ddc::Chunk<
@@ -930,15 +947,8 @@ std::tuple<
                 ddc::DiscreteDomain<
                         ddc::Deriv<typename InterpolationDDim::continuous_dimension_type>>,
                 ddc::KokkosAllocator<double, OutMemorySpace>>>
-SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        BcLower,
-        BcUpper,
-        Solver,
-        DDimX...>::quadrature_coefficients() const
+SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
+        quadrature_coefficients() const
 {
     // Compute integrals of bsplines
     ddc::Chunk integral_bsplines(spline_domain(), ddc::KokkosAllocator<double, MemorySpace>());
@@ -1055,18 +1065,9 @@ template <
         class InterpolationDDim,
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
-        SplineSolver Solver,
-        class... DDimX>
+        SplineSolver Solver>
 template <class KnotElement>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        BcLower,
-        BcUpper,
-        Solver,
-        DDimX...>::
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
         check_n_points_in_cell(int const n_points_in_cell, KnotElement const current_cell_end_idx)
 {
     if (n_points_in_cell > BSplines::degree() + 1) {
@@ -1086,17 +1087,9 @@ template <
         class InterpolationDDim,
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
-        SplineSolver Solver,
-        class... DDimX>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        BcLower,
-        BcUpper,
-        Solver,
-        DDimX...>::check_valid_grid()
+        SplineSolver Solver>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
+        check_valid_grid()
 {
     std::size_t const n_interp_points = interpolation_domain().size();
     std::size_t const expected_npoints

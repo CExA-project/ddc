@@ -191,13 +191,12 @@ void ExtrapolationRuleSplineTest()
             s_bcr1,
             s_bcl2,
             s_bcr2,
-            ddc::SplineSolver::GINKGO,
-            DDims...> const spline_builder(dom_vals);
+            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<DDimI1, DDimI2> const dom_interpolation
             = spline_builder.interpolation_domain();
-    auto const dom_spline = spline_builder.batched_spline_domain();
+    auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
@@ -267,8 +266,7 @@ void ExtrapolationRuleSplineTest()
             extrapolation_rule_dim_1_type,
             extrapolation_rule_dim_1_type,
             extrapolation_rule_dim_2_type,
-            extrapolation_rule_dim_2_type,
-            DDims...> const
+            extrapolation_rule_dim_2_type> const
             spline_evaluator_batched(
                     extrapolation_rule_left_dim_1,
                     extrapolation_rule_right_dim_1,

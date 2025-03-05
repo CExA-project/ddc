@@ -541,7 +541,7 @@ void MultipleBatchDomain2dSplineTest()
     ddc::DiscreteDomain<DDims...> const
             dom_vals(dom_vals_tmp, interpolation_domain1, interpolation_domain2);
 
-    ddc::DiscreteDomain<DDimBatchExtra>
+    ddc::DiscreteDomain<DDimBatchExtra> const
             extra_batch_domain(DElem<DDimBatchExtra>(0), DVect<DDimBatchExtra>(ncells));
     ddc::DiscreteDomain<DDims..., DDimBatchExtra> const dom_vals_extra(
             dom_vals_tmp,
@@ -594,7 +594,7 @@ void MultipleBatchDomain2dSplineTest()
                     extrapolation_rule_2);
 
     // Check the evaluation error for the first domain
-    const auto [max_norm_error, max_norm_error_diff1, max_norm_error_diff2, max_norm_error_diff12]
+    auto const [max_norm_error, max_norm_error_diff1, max_norm_error_diff2, max_norm_error_diff12]
             = ComputeEvaluationError<
                     ExecSpace,
                     MemorySpace>(exec_space, dom_vals, spline_builder, spline_evaluator, evaluator);
@@ -639,8 +639,8 @@ void MultipleBatchDomain2dSplineTest()
                                 s_degree),
                         1e-11 * max_norm_diff12));
 
-    // Check the evaluation for the domain with an additional batch dimension
-    const auto
+    // Check the evaluation error for the domain with an additional batch dimension
+    auto const
             [max_norm_error_extra,
              max_norm_error_diff1_extra,
              max_norm_error_diff2_extra,

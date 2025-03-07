@@ -15,6 +15,12 @@ namespace ddc {
 template <class T, class MemorySpace>
 class KokkosAllocator
 {
+    // Kokkos natively supports alignment for any scalar type that can be represented by the type `std::max_align_t`
+    static_assert(
+            alignof(T)
+                    <= std::max(alignof(std::max_align_t), alignof(Kokkos::complex<long double>)),
+            "Alignment not supported");
+
 public:
     using value_type = T;
 

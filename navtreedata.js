@@ -96,11 +96,11 @@ var NAVTREEINDEX =
 "classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#aa852be327827cbb7fe86ed0bd29e0db7",
 "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ab68f0579869e02cd8aae7eb756f743c7",
 "classddc_1_1KokkosAllocator.html#a2bdf2a47bb76872e469ab05b689ab1dc",
-"classddc_1_1SplineBuilder.html#a82aff86b6ed75f95b130a1c99cf23fb6",
-"classddc_1_1SplineEvaluator2D.html#aed85809bed86c504a79d7f7f2bd13e64",
-"classddc_1_1UniformBSplines_1_1Impl.html#a2c23209a0bb9af5c7b7ca3a2eaa3c1ba",
-"namespaceddc.html#a527ffc7bfc33850ef64720205544a21d",
-"structddc_1_1StridedDiscreteDomainIterator.html#af15cfc4196f12dfbfdea2480cea1324b"
+"classddc_1_1SplineBuilder.html#a6cc8c816889a61364b77063fb741dff4",
+"classddc_1_1SplineEvaluator2D.html#af12f005573c6b0b4903fb4ec90561d5e",
+"classddc_1_1UniformBSplines_1_1Impl.html#a24b9621c7a03174130420452ea0934c7",
+"namespaceddc.html#a4a2fc8ce660318bd042ba52e917851a7",
+"structddc_1_1StridedDiscreteDomainIterator.html#ae62ec53762dd682853d8e6b475506555"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

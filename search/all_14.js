@@ -10,11 +10,11 @@ var searchData=
   ['uniformpointsampling_7',['UniformPointSampling',['../classddc_1_1UniformPointSampling.html',1,'ddc']]],
   ['uniformpointsampling_3c_20sampling_3a_3acontinuous_5fdimension_5ftype_20_3e_8',['UniformPointSampling&lt; Sampling::continuous_dimension_type &gt;',['../classddc_1_1UniformPointSampling.html',1,'ddc']]],
   ['uniformpointsampling_3c_20t_3a_3acontinuous_5fdimension_5ftype_20_3e_9',['UniformPointSampling&lt; T::continuous_dimension_type &gt;',['../classddc_1_1UniformPointSampling.html',1,'ddc']]],
-  ['upper_5fextrapolation_5frule_10',['upper_extrapolation_rule',['../classddc_1_1SplineEvaluator.html#a403850f67afce54a261b3e3da0f26833',1,'ddc::SplineEvaluator']]],
-  ['upper_5fextrapolation_5frule_5f1_5ftype_11',['upper_extrapolation_rule_1_type',['../classddc_1_1SplineEvaluator2D.html#a8066284cc2d86e1dc8006ff5b229bdd7',1,'ddc::SplineEvaluator2D']]],
-  ['upper_5fextrapolation_5frule_5f2_5ftype_12',['upper_extrapolation_rule_2_type',['../classddc_1_1SplineEvaluator2D.html#a4236103df3562597faf3d8a4e0bd70af',1,'ddc::SplineEvaluator2D']]],
-  ['upper_5fextrapolation_5frule_5fdim_5f1_13',['upper_extrapolation_rule_dim_1',['../classddc_1_1SplineEvaluator2D.html#ad7e44f476b58daa7540526fae09852b5',1,'ddc::SplineEvaluator2D']]],
-  ['upper_5fextrapolation_5frule_5fdim_5f2_14',['upper_extrapolation_rule_dim_2',['../classddc_1_1SplineEvaluator2D.html#a4a4098bdf28fc8146ddd2bbe90182ab5',1,'ddc::SplineEvaluator2D']]],
-  ['upper_5fextrapolation_5frule_5ftype_15',['upper_extrapolation_rule_type',['../classddc_1_1SplineEvaluator.html#aba8638da3f58764e65479d5e7ab3c5c7',1,'ddc::SplineEvaluator']]],
+  ['upper_5fextrapolation_5frule_10',['upper_extrapolation_rule',['../classddc_1_1SplineEvaluator.html#a2955c7bfc010d401f09e2078a5a79544',1,'ddc::SplineEvaluator']]],
+  ['upper_5fextrapolation_5frule_5f1_5ftype_11',['upper_extrapolation_rule_1_type',['../classddc_1_1SplineEvaluator2D.html#a48e530373c941433235a91adb1636218',1,'ddc::SplineEvaluator2D']]],
+  ['upper_5fextrapolation_5frule_5f2_5ftype_12',['upper_extrapolation_rule_2_type',['../classddc_1_1SplineEvaluator2D.html#af9dd237d3be3d692e8204a1e2261e4e8',1,'ddc::SplineEvaluator2D']]],
+  ['upper_5fextrapolation_5frule_5fdim_5f1_13',['upper_extrapolation_rule_dim_1',['../classddc_1_1SplineEvaluator2D.html#ad7e2ce4dba00ac5801987978cd42e169',1,'ddc::SplineEvaluator2D']]],
+  ['upper_5fextrapolation_5frule_5fdim_5f2_14',['upper_extrapolation_rule_dim_2',['../classddc_1_1SplineEvaluator2D.html#ad326988914e40f7e23a32396b6607d60',1,'ddc::SplineEvaluator2D']]],
+  ['upper_5fextrapolation_5frule_5ftype_15',['upper_extrapolation_rule_type',['../classddc_1_1SplineEvaluator.html#abc686d4f32888defc8a424b5a7fe3dcd',1,'ddc::SplineEvaluator']]],
   ['us_16',['Join us',['../index.html#autotoc_md1',1,'']]]
 ];

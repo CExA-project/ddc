@@ -1,5 +1,9 @@
 var NAVTREEINDEX7 =
 {
+"namespaceddc.html#a4a2fc8ce660318bd042ba52e917851a7":[5,0,0,140],
+"namespaceddc.html#a4c7a2930d12432d53c1fcfbb1a1ecda9":[5,0,0,75],
+"namespaceddc.html#a4f36a871e49681abe05cc39604126187":[5,0,0,68],
+"namespaceddc.html#a4fd0669e1de7ebdbf5fb4fb6f9fc5fca":[5,0,0,212],
 "namespaceddc.html#a527ffc7bfc33850ef64720205544a21d":[5,0,0,87],
 "namespaceddc.html#a55329c09ef34e180c2a4dc5d59e876fb":[5,0,0,141],
 "namespaceddc.html#a58bc68cbac7014336c686be80a89907d":[5,0,0,205],
@@ -174,8 +178,8 @@ var NAVTREEINDEX7 =
 "structddc_1_1DiscreteDomainIterator.html#a6f6e25808499026840dbb113394b7505":[5,0,0,20,14],
 "structddc_1_1DiscreteDomainIterator.html#a9c1dcb8065ea018da83b6e34c60adee7":[5,0,0,20,15],
 "structddc_1_1DiscreteDomainIterator.html#a9c1dcb8065ea018da83b6e34c60adee7":[6,0,0,20,15],
-"structddc_1_1DiscreteDomainIterator.html#aa36964789d38fad298d0e60c7fb1b876":[5,0,0,20,10],
 "structddc_1_1DiscreteDomainIterator.html#aa36964789d38fad298d0e60c7fb1b876":[6,0,0,20,10],
+"structddc_1_1DiscreteDomainIterator.html#aa36964789d38fad298d0e60c7fb1b876":[5,0,0,20,10],
 "structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51":[6,0,0,20,2],
 "structddc_1_1DiscreteDomainIterator.html#aa628f55f4f3fd7466f94e50302623f51":[5,0,0,20,2],
 "structddc_1_1DiscreteDomainIterator.html#aa728327d43534207fc926384cb378daa":[5,0,0,20,6],
@@ -245,9 +249,5 @@ var NAVTREEINDEX7 =
 "structddc_1_1StridedDiscreteDomainIterator.html#ac212f5ce29aa679241fc920f70c8958c":[5,0,0,61,18],
 "structddc_1_1StridedDiscreteDomainIterator.html#ac212f5ce29aa679241fc920f70c8958c":[6,0,0,61,18],
 "structddc_1_1StridedDiscreteDomainIterator.html#ac307934c78fc1515e131612609fc8f37":[5,0,0,61,19],
-"structddc_1_1StridedDiscreteDomainIterator.html#ac307934c78fc1515e131612609fc8f37":[6,0,0,61,19],
-"structddc_1_1StridedDiscreteDomainIterator.html#ae62ec53762dd682853d8e6b475506555":[5,0,0,61,16],
-"structddc_1_1StridedDiscreteDomainIterator.html#ae62ec53762dd682853d8e6b475506555":[6,0,0,61,16],
-"structddc_1_1StridedDiscreteDomainIterator.html#ae8138543e874a24b2b3268fff4badf93":[6,0,0,61,14],
-"structddc_1_1StridedDiscreteDomainIterator.html#ae8138543e874a24b2b3268fff4badf93":[5,0,0,61,14]
+"structddc_1_1StridedDiscreteDomainIterator.html#ac307934c78fc1515e131612609fc8f37":[6,0,0,61,19]
 };

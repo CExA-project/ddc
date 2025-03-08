@@ -60,10 +60,13 @@ jobs:
     steps:
     - name: Checkout built branch
       uses: actions/checkout@v4
-      with: { submodules: true }
+    - uses: actions/checkout@v4
+      with:
+        repository: pdidev/pdi
+        ref: 1.8.3
+        path: pdi
     - name: Install PDI+user code plugin and dependencies
       run: |
-        git clone --branch 1.8.1 --depth 1 https://github.com/pdidev/pdi.git
         # PATCH: remove <link.h> for macOS
         sed -i.bak 's|#include <link.h>||g' pdi/plugins/user_code/user_code.cxx
         rm -f pdi/plugins/user_code/user_code.cxx.bak
@@ -96,10 +99,13 @@ jobs:
       run: brew install googletest
     - name: Install Google benchmark
       run: brew install google-benchmark
-    - run: git config --global --add safe.directory '*'
+    - uses: actions/checkout@v4
+      with:
+        repository: ginkgo-project/ginkgo
+        ref: v1.8.0
+        path: ginkgo
     - name: Install Ginkgo
       run: |
-        git clone --branch v1.8.0 --depth 1 https://github.com/ginkgo-project/ginkgo.git
         cmake \
           -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
           -DGINKGO_BUILD_BENCHMARKS=OFF \
@@ -112,6 +118,11 @@ jobs:
         cmake --build build
         cmake --install build --prefix $Ginkgo_ROOT
         rm -rf build
+    - uses: actions/checkout@v4
+      with:
+        repository: kokkos/kokkos
+        ref: 4.5.01
+        path: kokkos
     - name: Install Kokkos
       run: |
         cmake \
@@ -121,20 +132,30 @@ jobs:
           -DKokkos_ENABLE_SERIAL=ON \
           ${{matrix.backend.kokkos_extra_cmake_flags}} \
           -B build \
-          -S ./vendor/kokkos
+          -S ./kokkos
         cmake --build build
         cmake --install build --prefix $Kokkos_ROOT
         rm -rf build
+    - uses: actions/checkout@v4
+      with:
+        repository: kokkos/kokkos-fft
+        ref: v0.2.1
+        path: kokkos-fft
     - name: Install Kokkos-fft
       run: |
         cmake \
           -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
           -DKokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
           -B build \
-          -S ./vendor/kokkos-fft
+          -S ./kokkos-fft
         cmake --build build
         cmake --install build --prefix $KokkosFFT_ROOT
         rm -rf build
+    - uses: actions/checkout@v4
+      with:
+        repository: kokkos/kokkos-kernels
+        ref: 4.5.01
+        path: kokkos-kernels
     - name: Install Kokkos Kernels
       run: |
         cmake \
@@ -148,7 +169,7 @@ jobs:
           -DKokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
           -DKokkosKernels_ENABLE_TPL_LAPACK=OFF \
           -B build \
-          -S ./vendor/kokkos-kernels
+          -S ./kokkos-kernels
         cmake --build build
         cmake --install build --prefix $KokkosKernels_ROOT
         rm -rf build

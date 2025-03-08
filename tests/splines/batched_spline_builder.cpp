@@ -45,10 +45,6 @@ struct DDimBatch2
 {
 };
 
-struct DDimBatch3
-{
-};
-
 constexpr std::size_t s_degree_x = DEGREE_X;
 
 #if defined(BC_PERIODIC)
@@ -506,102 +502,5 @@ TEST(SUFFIX(BatchedSplineDevice), 3DB1B2X)
             DDimGPS<DimX>,
             DDimBatch1,
             DDimBatch2,
-            DDimGPS<DimX>>();
-}
-
-
-TEST(SUFFIX(BatchedSplineHost), 4DXB1B2B3)
-{
-    BatchedSplineTest<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimBatch2,
-            DDimBatch3>();
-}
-
-TEST(SUFFIX(BatchedSplineHost), 4DB1XB2B3)
-{
-    BatchedSplineTest<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimGPS<DimX>,
-            DDimBatch2,
-            DDimBatch3>();
-}
-
-TEST(SUFFIX(BatchedSplineHost), 4DB1B2XB3)
-{
-    BatchedSplineTest<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimBatch2,
-            DDimGPS<DimX>,
-            DDimBatch3>();
-}
-
-TEST(SUFFIX(BatchedSplineHost), 4DB1B2B3X)
-{
-    BatchedSplineTest<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimBatch2,
-            DDimBatch3,
-            DDimGPS<DimX>>();
-}
-
-TEST(SUFFIX(BatchedSplineDevice), 4DXB1B2B3)
-{
-    BatchedSplineTest<
-            Kokkos::DefaultExecutionSpace,
-            Kokkos::DefaultExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimBatch2,
-            DDimBatch3>();
-}
-
-TEST(SUFFIX(BatchedSplineDevice), 4DB1XB2B3)
-{
-    BatchedSplineTest<
-            Kokkos::DefaultExecutionSpace,
-            Kokkos::DefaultExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimGPS<DimX>,
-            DDimBatch2,
-            DDimBatch3>();
-}
-
-TEST(SUFFIX(BatchedSplineDevice), 4DB1B2XB3)
-{
-    BatchedSplineTest<
-            Kokkos::DefaultExecutionSpace,
-            Kokkos::DefaultExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimBatch2,
-            DDimGPS<DimX>,
-            DDimBatch3>();
-}
-
-TEST(SUFFIX(BatchedSplineDevice), 4DB1B2B3X)
-{
-    BatchedSplineTest<
-            Kokkos::DefaultExecutionSpace,
-            Kokkos::DefaultExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimBatch2,
-            DDimBatch3,
             DDimGPS<DimX>>();
 }

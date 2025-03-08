@@ -30,25 +30,15 @@ struct DimX
 {
     static constexpr bool PERIODIC = true;
 };
-
-struct DimY
-{
-    static constexpr bool PERIODIC = true;
-};
 #else
 
 struct DimX
 {
     static constexpr bool PERIODIC = false;
 };
-
-struct DimY
-{
-    static constexpr bool PERIODIC = false;
-};
 #endif
 
-struct DDimBatch1
+struct DDimBatch
 {
 };
 
@@ -99,6 +89,12 @@ template <typename... DDimX>
 using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
 using Coord = ddc::Coordinate<X...>;
+
+#if defined(SOLVER_LAPACK)
+constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::LAPACK;
+#elif defined(SOLVER_GINKGO)
+constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::GINKGO;
+#endif
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
@@ -345,12 +341,7 @@ void MultipleBatchDomainSplineTest()
             DDimI,
             s_bcl,
             s_bcr,
-#if defined(SOLVER_LAPACK)
-            ddc::SplineSolver::LAPACK
-#elif defined(SOLVER_GINKGO)
-            ddc::SplineSolver::GINKGO
-#endif
-            > const spline_builder(interpolation_domain);
+            s_spline_solver> const spline_builder(interpolation_domain);
 
     // Instantiate a SplineEvaluator over interest dimension
 #if defined(BC_PERIODIC)
@@ -464,22 +455,22 @@ TEST(SUFFIX(MultipleBatchDomainSpline), 1DX)
             DDimGPS<DimX>>();
 }
 
-TEST(SUFFIX(MultipleBatchDomainSpline), 2DX)
+TEST(SUFFIX(MultipleBatchDomainSpline), 2DXB)
 {
     MultipleBatchDomainSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
             DDimGPS<DimX>,
-            DDimBatch1>();
+            DDimBatch>();
 }
 
-TEST(SUFFIX(MultipleBatchDomainSpline), 2DY)
+TEST(SUFFIX(MultipleBatchDomainSpline), 2DBX)
 {
     MultipleBatchDomainSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
-            DDimGPS<DimY>,
-            DDimBatch1,
-            DDimGPS<DimY>>();
+            DDimGPS<DimX>,
+            DDimBatch,
+            DDimGPS<DimX>>();
 }

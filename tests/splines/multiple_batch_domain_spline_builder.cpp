@@ -100,6 +100,12 @@ using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
 using Coord = ddc::Coordinate<X...>;
 
+#if defined(SOLVER_LAPACK)
+constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::LAPACK;
+#elif defined(SOLVER_GINKGO)
+constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::GINKGO;
+#endif
+
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
 KOKKOS_FUNCTION Coord<X> x0()
@@ -345,12 +351,7 @@ void MultipleBatchDomainSplineTest()
             DDimI,
             s_bcl,
             s_bcr,
-#if defined(SOLVER_LAPACK)
-            ddc::SplineSolver::LAPACK
-#elif defined(SOLVER_GINKGO)
-            ddc::SplineSolver::GINKGO
-#endif
-            > const spline_builder(interpolation_domain);
+            s_spline_solver> const spline_builder(interpolation_domain);
 
     // Instantiate a SplineEvaluator over interest dimension
 #if defined(BC_PERIODIC)

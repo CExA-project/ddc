@@ -30,25 +30,15 @@ struct DimX
 {
     static constexpr bool PERIODIC = true;
 };
-
-struct DimY
-{
-    static constexpr bool PERIODIC = true;
-};
 #else
 
 struct DimX
 {
     static constexpr bool PERIODIC = false;
 };
-
-struct DimY
-{
-    static constexpr bool PERIODIC = false;
-};
 #endif
 
-struct DDimBatch1
+struct DDimBatch
 {
 };
 
@@ -465,22 +455,22 @@ TEST(SUFFIX(MultipleBatchDomainSpline), 1DX)
             DDimGPS<DimX>>();
 }
 
-TEST(SUFFIX(MultipleBatchDomainSpline), 2DX)
+TEST(SUFFIX(MultipleBatchDomainSpline), 2DXB)
 {
     MultipleBatchDomainSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
             DDimGPS<DimX>,
-            DDimBatch1>();
+            DDimBatch>();
 }
 
-TEST(SUFFIX(MultipleBatchDomainSpline), 2DY)
+TEST(SUFFIX(MultipleBatchDomainSpline), 2DBX)
 {
     MultipleBatchDomainSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
-            DDimGPS<DimY>,
-            DDimBatch1,
-            DDimGPS<DimY>>();
+            DDimGPS<DimX>,
+            DDimBatch,
+            DDimGPS<DimX>>();
 }

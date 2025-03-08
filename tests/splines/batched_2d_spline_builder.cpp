@@ -39,11 +39,6 @@ struct DimY
 {
     static constexpr bool PERIODIC = true;
 };
-
-struct DimZ
-{
-    static constexpr bool PERIODIC = true;
-};
 #else
 
 struct DimX
@@ -52,11 +47,6 @@ struct DimX
 };
 
 struct DimY
-{
-    static constexpr bool PERIODIC = false;
-};
-
-struct DimZ
 {
     static constexpr bool PERIODIC = false;
 };
@@ -631,7 +621,7 @@ TEST(SUFFIX(Batched2dSplineDevice), 2DXY)
             DDimGPS<DimY>>();
 }
 
-TEST(SUFFIX(Batched2dSplineHost), 3DXY)
+TEST(SUFFIX(Batched2dSplineHost), 3DXYB)
 {
     Batched2dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -643,31 +633,31 @@ TEST(SUFFIX(Batched2dSplineHost), 3DXY)
             DDimBatch>();
 }
 
-TEST(SUFFIX(Batched2dSplineHost), 3DXZ)
+TEST(SUFFIX(Batched2dSplineHost), 3DXBY)
 {
     Batched2dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimZ>,
+            DDimGPS<DimY>,
             DDimGPS<DimX>,
             DDimBatch,
-            DDimGPS<DimZ>>();
+            DDimGPS<DimY>>();
 }
 
-TEST(SUFFIX(Batched2dSplineHost), 3DYZ)
+TEST(SUFFIX(Batched2dSplineHost), 3DBXY)
 {
     Batched2dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
+            DDimGPS<DimX>,
             DDimGPS<DimY>,
-            DDimGPS<DimZ>,
             DDimBatch,
-            DDimGPS<DimY>,
-            DDimGPS<DimZ>>();
+            DDimGPS<DimX>,
+            DDimGPS<DimY>>();
 }
 
-TEST(SUFFIX(Batched2dSplineDevice), 3DXY)
+TEST(SUFFIX(Batched2dSplineDevice), 3DXYB)
 {
     Batched2dSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -679,26 +669,26 @@ TEST(SUFFIX(Batched2dSplineDevice), 3DXY)
             DDimBatch>();
 }
 
-TEST(SUFFIX(Batched2dSplineDevice), 3DXZ)
+TEST(SUFFIX(Batched2dSplineDevice), 3DXBY)
 {
     Batched2dSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimZ>,
+            DDimGPS<DimY>,
             DDimGPS<DimX>,
             DDimBatch,
-            DDimGPS<DimZ>>();
+            DDimGPS<DimY>>();
 }
 
-TEST(SUFFIX(Batched2dSplineDevice), 3DYZ)
+TEST(SUFFIX(Batched2dSplineDevice), 3DBXY)
 {
     Batched2dSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
+            DDimGPS<DimX>,
             DDimGPS<DimY>,
-            DDimGPS<DimZ>,
             DDimBatch,
-            DDimGPS<DimY>,
-            DDimGPS<DimZ>>();
+            DDimGPS<DimX>,
+            DDimGPS<DimY>>();
 }

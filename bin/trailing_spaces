@@ -4,8 +4,11 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""
+This module finds and eventually removes trailing spaces.
+"""
+
 import argparse
-import os
 import re
 import sys
 

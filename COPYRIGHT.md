@@ -1,3 +1,5 @@
+# Copyright
+
 <!--
 Copyright (C) The DDC development team, see below
 
@@ -10,6 +12,7 @@ It is distributed under the MIT License whose full text is available in the
 LICENSES/MIT.txt file.
 
 For the purpose of copyright, the DDC development team is defined as follow:
+
 * Centre national de la recherche scientifique (CNRS)
 * Commissariat a l'énergie atomique et aux énergies alternatives (CEA)
 * École polytechnique fédérale de Lausanne

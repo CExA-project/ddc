@@ -2,7 +2,10 @@
 #
 # SPDX-License-Identifier: MIT
 
-[default.extend-words]
-# Don't correct these word (parts)
-iy = "iy"
-ND = "ND"
+---
+
+config:
+  MD013:
+    line_length: 1000
+
+showFound: true

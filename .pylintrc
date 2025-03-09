@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-[default.extend-words]
-# Don't correct these word (parts)
-iy = "iy"
-ND = "ND"
+[FORMAT]
+
+# Maximum number of characters on a single line.
+max-line-length=200

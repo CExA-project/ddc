@@ -2,8 +2,13 @@
 #
 # SPDX-License-Identifier: MIT
 
+---
 name: gyselalibxx
-on: workflow_dispatch
+
+# yamllint disable-line rule:truthy
+on:
+  workflow_dispatch
+
 jobs:
   tests:
     strategy:
@@ -12,36 +17,36 @@ jobs:
         cmake_build_type: ['Debug', 'Release']
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout gyselalibxx
-      uses: actions/checkout@v4
-      with:
-        repository: gyselax/gyselalibxx
-        submodules: true
-    - name: rm ddc
-      run: rm -rf vendor/ddc
-    - name: Checkout ddc
-      uses: actions/checkout@v4
-      with:
-        submodules: true
-        path: vendor/ddc
-    - name: Build
-      run: |
-        cat<<-EOF > run.sh
-          set -xe
-          git config --global --add safe.directory '*'
+      - name: Checkout gyselalibxx
+        uses: actions/checkout@v4
+        with:
+          repository: gyselax/gyselalibxx
+          submodules: true
+      - name: rm ddc
+        run: rm -rf vendor/ddc
+      - name: Checkout ddc
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          path: vendor/ddc
+      - name: Build
+        run: |
+          cat<<-EOF > run.sh
+            set -xe
+            git config --global --add safe.directory '*'
 
-          export CMAKE_BUILD_PARALLEL_LEVEL=4
-          export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
+            export CMAKE_BUILD_PARALLEL_LEVEL=4
+            export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
 
-          cmake \
-            -DGYSELALIBXX_DEFAULT_CXX_FLAGS="" \
-            -B build \
-            -S /src
+            cmake \
+              -DGYSELALIBXX_DEFAULT_CXX_FLAGS="" \
+              -B build \
+              -S /src
 
-          cmake --build build
+            cmake --build build
 
-          ctest --test-dir build --output-on-failure --timeout 5 -LE test_on_Release_only
-        EOF
+            ctest --test-dir build --output-on-failure --timeout 5 -LE test_on_Release_only
+          EOF
 
-        docker run -v ${PWD}:/src:ro ghcr.io/gyselax/gyselalibxx_env bash /src/run.sh
-      continue-on-error: true
+          docker run -v ${PWD}:/src:ro ghcr.io/gyselax/gyselalibxx_env bash /src/run.sh
+        continue-on-error: true

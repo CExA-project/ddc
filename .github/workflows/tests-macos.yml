@@ -2,29 +2,31 @@
 #
 # SPDX-License-Identifier: MIT
 
+---
 name: Tests on macOS
 
+# yamllint disable-line rule:truthy
 on:
   schedule:
-    - cron: "0 1 * * *" # every day at 1am
+    - cron: "0 1 * * *"  # every day at 1am
   pull_request:
   push:
     branches:
       - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref }}
+  group: ${{github.workflow}}-${{github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref}}
   cancel-in-progress: true
 
 jobs:
   id_repo:
     runs-on: macos-latest
     steps:
-    - name: Identify repository
-      id: identify_repo
-      run: |
-        echo "in_base_repo=${{ (github.event_name == 'push' && github.repository == 'CExA-project/ddc') || github.event.pull_request.head.repo.full_name == 'CExA-project/ddc' }}" >> "$GITHUB_OUTPUT"
-    outputs: { in_base_repo: '${{ steps.identify_repo.outputs.in_base_repo }}' }
+      - name: Identify repository
+        id: identify_repo
+        run: |
+          echo "in_base_repo=${{(github.event_name == 'push' && github.repository == 'CExA-project/ddc') || github.event.pull_request.head.repo.full_name == 'CExA-project/ddc'}}" >> "$GITHUB_OUTPUT"
+    outputs: {in_base_repo: '${{steps.identify_repo.outputs.in_base_repo}}'}
 
   test-macos:
     if: github.ref_name != 'main'
@@ -32,16 +34,16 @@ jobs:
       fail-fast: false
       matrix:
         backend:
-        - name: 'cpu'
-          c_compiler: 'clang'
-          cxx_compiler: 'clang++'
-          ddc_extra_cxx_flags: '-Wextra-semi -Wextra-semi-stmt -Wold-style-cast'
-          kokkos_extra_cmake_flags: ''
+          - name: 'cpu'
+            c_compiler: 'clang'
+            cxx_compiler: 'clang++'
+            ddc_extra_cxx_flags: '-Wextra-semi -Wextra-semi-stmt -Wold-style-cast'
+            kokkos_extra_cmake_flags: ''
         cxx_version: ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
         exclude:
-        - cxx_version: '20' # To be removed as soon as PDI supports C++20 with clang
-        - cxx_version: '23' # To be removed as soon as PDI supports C++20 with clang
+          - cxx_version: '20'  # To be removed as soon as PDI supports C++20 with clang
+          - cxx_version: '23'  # To be removed as soon as PDI supports C++20 with clang
     runs-on: macos-latest
     needs: [id_repo]
     env:
@@ -58,156 +60,156 @@ jobs:
       CXX: ${{matrix.backend.cxx_compiler}}
       CMAKE_BUILD_TYPE: ${{matrix.cmake_build_type}}
     steps:
-    - name: Checkout built branch
-      uses: actions/checkout@v4
-    - uses: actions/checkout@v4
-      with:
-        repository: pdidev/pdi
-        ref: 1.8.3
-        path: pdi
-    - name: Install PDI+user code plugin and dependencies
-      run: |
-        # PATCH: remove <link.h> for macOS
-        sed -i.bak 's|#include <link.h>||g' pdi/plugins/user_code/user_code.cxx
-        rm -f pdi/plugins/user_code/user_code.cxx.bak
-        cmake \
-          -DBUILD_BENCHMARKING=OFF \
-          -DBUILD_DECL_HDF5_PLUGIN=OFF \
-          -DBUILD_DECL_NETCDF_PLUGIN=OFF \
-          -DBUILD_DEISA_PLUGIN=OFF \
-          -DBUILD_DOCUMENTATION=OFF \
-          -DBUILD_FORTRAN=OFF \
-          -DBUILD_MPI_PLUGIN=OFF \
-          -DBUILD_PYCALL_PLUGIN=OFF \
-          -DBUILD_SERIALIZE_PLUGIN=OFF \
-          -DBUILD_SET_VALUE_PLUGIN=OFF \
-          -DBUILD_TESTING=OFF \
-          -DBUILD_TRACE_PLUGIN=OFF \
-          -DBUILD_USER_CODE_PLUGIN=ON \
-          -DCMAKE_CXX_FLAGS="-Wno-unqualified-std-cast-call" \
-          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-          -B build \
-          -S ./pdi
-        cmake --build build
-        cmake --install build --prefix $PDI_ROOT
-        rm -rf build
-    - name: Install fftw
-      run: brew install fftw
-    - name: Install lapack
-      run: brew install lapack
-    - name: Install Google Test
-      run: brew install googletest
-    - name: Install Google benchmark
-      run: brew install google-benchmark
-    - uses: actions/checkout@v4
-      with:
-        repository: ginkgo-project/ginkgo
-        ref: v1.8.0
-        path: ginkgo
-    - name: Install Ginkgo
-      run: |
-        cmake \
-          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-          -DGINKGO_BUILD_BENCHMARKS=OFF \
-          -DGINKGO_BUILD_EXAMPLES=OFF \
-          -DGINKGO_BUILD_MPI=OFF \
-          -DGINKGO_BUILD_REFERENCE=ON \
-          -DGINKGO_BUILD_TESTS=OFF \
-          -B build \
-          -S ./ginkgo
-        cmake --build build
-        cmake --install build --prefix $Ginkgo_ROOT
-        rm -rf build
-    - uses: actions/checkout@v4
-      with:
-        repository: kokkos/kokkos
-        ref: 4.5.01
-        path: kokkos
-    - name: Install Kokkos
-      run: |
-        cmake \
-          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-          -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
-          -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-          -DKokkos_ENABLE_SERIAL=ON \
-          ${{matrix.backend.kokkos_extra_cmake_flags}} \
-          -B build \
-          -S ./kokkos
-        cmake --build build
-        cmake --install build --prefix $Kokkos_ROOT
-        rm -rf build
-    - uses: actions/checkout@v4
-      with:
-        repository: kokkos/kokkos-fft
-        ref: v0.2.1
-        path: kokkos-fft
-    - name: Install Kokkos-fft
-      run: |
-        cmake \
-          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-          -DKokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
-          -B build \
-          -S ./kokkos-fft
-        cmake --build build
-        cmake --install build --prefix $KokkosFFT_ROOT
-        rm -rf build
-    - uses: actions/checkout@v4
-      with:
-        repository: kokkos/kokkos-kernels
-        ref: 4.5.01
-        path: kokkos-kernels
-    - name: Install Kokkos Kernels
-      run: |
-        cmake \
-          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-          -DKokkosKernels_ADD_DEFAULT_ETI=OFF \
-          -DKokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
-          -DKokkosKernels_ENABLE_COMPONENT_BLAS=ON \
-          -DKokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
-          -DKokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
-          -DKokkosKernels_ENABLE_TPL_BLAS=OFF \
-          -DKokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
-          -DKokkosKernels_ENABLE_TPL_LAPACK=OFF \
-          -B build \
-          -S ./kokkos-kernels
-        cmake --build build
-        cmake --install build --prefix $KokkosKernels_ROOT
-        rm -rf build
-    - name: Build DDC
-      run: |
-        cmake \
-          -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
-          -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-          -DDDC_BUILD_BENCHMARKS=ON \
-          -DDDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
-          -DDDC_GTest_DEPENDENCY_POLICY=INSTALLED \
-          -DDDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
-          -DDDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
-          -DBLA_PREFER_PKGCONFIG=ON \
-          -B build
-        cmake --build build
-    - name: Run unit tests
-      run: ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
-    - name: Publish Test Report
-      uses: mikepenz/action-junit-report@v5
-      if: ( success() || failure() ) # always run even if the previous step fails
-      with:
-        report_paths: '${{github.workspace}}/build/tests.xml'
-    - name: Run examples
-      run: |
-        ./build/examples/characteristics_advection
-        ./build/examples/game_of_life
-        ./build/examples/heat_equation_spectral
-        ./build/examples/heat_equation
-        ./build/examples/non_uniform_heat_equation
-        ./build/examples/uniform_heat_equation
-    - name: Install DDC
-      run: |
-        cmake --install build --prefix $DDC_ROOT
-        rm -rf build
-    - name: Run install tests
-      run: |
-        cmake \
-          -B build \
-          -S ./install_test
-        cmake --build build
+      - name: Checkout built branch
+        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: pdidev/pdi
+          ref: 1.8.3
+          path: pdi
+      - name: Install PDI+user code plugin and dependencies
+        run: |
+          # PATCH: remove <link.h> for macOS
+          sed -i.bak 's|#include <link.h>||g' pdi/plugins/user_code/user_code.cxx
+          rm -f pdi/plugins/user_code/user_code.cxx.bak
+          cmake \
+            -DBUILD_BENCHMARKING=OFF \
+            -DBUILD_DECL_HDF5_PLUGIN=OFF \
+            -DBUILD_DECL_NETCDF_PLUGIN=OFF \
+            -DBUILD_DEISA_PLUGIN=OFF \
+            -DBUILD_DOCUMENTATION=OFF \
+            -DBUILD_FORTRAN=OFF \
+            -DBUILD_MPI_PLUGIN=OFF \
+            -DBUILD_PYCALL_PLUGIN=OFF \
+            -DBUILD_SERIALIZE_PLUGIN=OFF \
+            -DBUILD_SET_VALUE_PLUGIN=OFF \
+            -DBUILD_TESTING=OFF \
+            -DBUILD_TRACE_PLUGIN=OFF \
+            -DBUILD_USER_CODE_PLUGIN=ON \
+            -DCMAKE_CXX_FLAGS="-Wno-unqualified-std-cast-call" \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -B build \
+            -S ./pdi
+          cmake --build build
+          cmake --install build --prefix $PDI_ROOT
+          rm -rf build
+      - name: Install fftw
+        run: brew install fftw
+      - name: Install lapack
+        run: brew install lapack
+      - name: Install Google Test
+        run: brew install googletest
+      - name: Install Google benchmark
+        run: brew install google-benchmark
+      - uses: actions/checkout@v4
+        with:
+          repository: ginkgo-project/ginkgo
+          ref: v1.8.0
+          path: ginkgo
+      - name: Install Ginkgo
+        run: |
+          cmake \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -DGINKGO_BUILD_BENCHMARKS=OFF \
+            -DGINKGO_BUILD_EXAMPLES=OFF \
+            -DGINKGO_BUILD_MPI=OFF \
+            -DGINKGO_BUILD_REFERENCE=ON \
+            -DGINKGO_BUILD_TESTS=OFF \
+            -B build \
+            -S ./ginkgo
+          cmake --build build
+          cmake --install build --prefix $Ginkgo_ROOT
+          rm -rf build
+      - uses: actions/checkout@v4
+        with:
+          repository: kokkos/kokkos
+          ref: 4.5.01
+          path: kokkos
+      - name: Install Kokkos
+        run: |
+          cmake \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
+            -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+            -DKokkos_ENABLE_SERIAL=ON \
+            ${{matrix.backend.kokkos_extra_cmake_flags}} \
+            -B build \
+            -S ./kokkos
+          cmake --build build
+          cmake --install build --prefix $Kokkos_ROOT
+          rm -rf build
+      - uses: actions/checkout@v4
+        with:
+          repository: kokkos/kokkos-fft
+          ref: v0.2.1
+          path: kokkos-fft
+      - name: Install Kokkos-fft
+        run: |
+          cmake \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -DKokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
+            -B build \
+            -S ./kokkos-fft
+          cmake --build build
+          cmake --install build --prefix $KokkosFFT_ROOT
+          rm -rf build
+      - uses: actions/checkout@v4
+        with:
+          repository: kokkos/kokkos-kernels
+          ref: 4.5.01
+          path: kokkos-kernels
+      - name: Install Kokkos Kernels
+        run: |
+          cmake \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -DKokkosKernels_ADD_DEFAULT_ETI=OFF \
+            -DKokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
+            -DKokkosKernels_ENABLE_COMPONENT_BLAS=ON \
+            -DKokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
+            -DKokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
+            -DKokkosKernels_ENABLE_TPL_BLAS=OFF \
+            -DKokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
+            -DKokkosKernels_ENABLE_TPL_LAPACK=OFF \
+            -B build \
+            -S ./kokkos-kernels
+          cmake --build build
+          cmake --install build --prefix $KokkosKernels_ROOT
+          rm -rf build
+      - name: Build DDC
+        run: |
+          cmake \
+            -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
+            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -DDDC_BUILD_BENCHMARKS=ON \
+            -DDDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
+            -DDDC_GTest_DEPENDENCY_POLICY=INSTALLED \
+            -DDDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
+            -DDDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
+            -DBLA_PREFER_PKGCONFIG=ON \
+            -B build
+          cmake --build build
+      - name: Run unit tests
+        run: ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: ( success() || failure() )  # always run even if the previous step fails
+        with:
+          report_paths: '${{github.workspace}}/build/tests.xml'
+      - name: Run examples
+        run: |
+          ./build/examples/characteristics_advection
+          ./build/examples/game_of_life
+          ./build/examples/heat_equation_spectral
+          ./build/examples/heat_equation
+          ./build/examples/non_uniform_heat_equation
+          ./build/examples/uniform_heat_equation
+      - name: Install DDC
+        run: |
+          cmake --install build --prefix $DDC_ROOT
+          rm -rf build
+      - name: Run install tests
+        run: |
+          cmake \
+            -B build \
+            -S ./install_test
+          cmake --build build

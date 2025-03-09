@@ -1,0 +1,40 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: YAML checks
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    paths:
+      - '.clang-format'
+      - '.clang-tidy'
+      - '.gersemirc'
+      - '.github/workflows/yaml-checks.yml'
+      - '**.yaml'
+      - '**.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - '.clang-format'
+      - '.clang-tidy'
+      - '.gersemirc'
+      - '.github/workflows/yaml-checks.yml'
+      - '**.yaml'
+      - '**.yml'
+  workflow_dispatch:
+
+jobs:
+  yaml-lint:
+    name: YAML lint using yamllint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install yamllint
+        run: pipx install yamllint~=1.35
+      - run: |
+          yamllint $(git ls-files '*.yml' '*.yaml')
+          yamllint .clang-format .clang-tidy .gersemirc

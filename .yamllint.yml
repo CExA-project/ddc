@@ -3,8 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 ---
-config:
-  MD013:
-    line_length: 1000
-
-showFound: true
+extends: default
+rules:
+  line-length:
+    max: 200

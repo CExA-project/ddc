@@ -36,7 +36,7 @@ jobs:
     - name: Find modifications of Kokkos reserved macros
       run: if grep -RE "(define|undef) KOKKOS_" benchmarks/ examples/ include/ddc/ install_test/ tests/; then exit 1; fi
     - name: Find trailing whitespaces
-      run: find . -not -path './vendor/*' -type f \( -name '*.[c|h]pp' -o -name 'CMakeLists.txt' -o -name '*.cmake' -o -name '*.md' -o -name '*.py' \) -exec ./bin/trailing_spaces --Werror '{}' '+'
+      run: find . -not -path '*/.git*' -not -path '*/docs/images/*' -not -path '*/docs/_template/*' -type f -exec ./bin/trailing_spaces --Werror '{}' '+'
     - name: REUSE Compliance Check
       if: always()
       uses: fsfe/reuse-action@v5

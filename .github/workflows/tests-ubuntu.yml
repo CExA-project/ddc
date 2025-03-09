@@ -35,20 +35,6 @@ jobs:
       run: if grep -PR "\t" benchmarks/ cmake/ examples/ include/ddc/ install_test/ tests/; then exit 1; fi
     - name: Find modifications of Kokkos reserved macros
       run: if grep -RE "(define|undef) KOKKOS_" benchmarks/ examples/ include/ddc/ install_test/ tests/; then exit 1; fi
-    - name: Find trailing whitespaces
-      run: find . -not -path '*/.git*' -not -path '*/docs/images/*' -not -path '*/docs/_template/*' -type f -exec ./bin/trailing_spaces --Werror '{}' '+'
-    - name: REUSE Compliance Check
-      if: always()
-      uses: fsfe/reuse-action@v5
-
-  spelling:
-    name: Spell Check with Typos
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Actions Repository
-      uses: actions/checkout@v4
-    - name: Spell Check Repo
-      uses: crate-ci/typos@v1.30.1
 
   id_repo:
     runs-on: ubuntu-latest

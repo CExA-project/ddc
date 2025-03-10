@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
-[default.extend-words]
-# Don't correct these word (parts)
-iy = "iy"
-ND = "ND"
+---
+extends: default
+rules:
+  line-length:
+    max: 200

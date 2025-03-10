@@ -6,6 +6,3 @@
 # Don't correct these word (parts)
 iy = "iy"
 ND = "ND"
-
-[files]
-extend-exclude = ["LICENSES/CECILL-C.txt"]

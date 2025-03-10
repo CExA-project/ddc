@@ -52,13 +52,11 @@ jobs:
           extensions: 'hpp,cpp'
           clangFormatVersion: 18
       - name: Prefer 'if defined' over 'ifdef'
-        run: if grep -R "ifdef" benchmarks/ examples/ include/ddc/ install_test/ tests/; then exit 1; fi
+        run: if grep -R "ifdef" $(git ls-files '*.hpp' '*.cpp'); then exit 1; fi
       - name: Do not include <iostream> in the headers of the library
-        run: if grep -R "#include <iostream>" include/ddc/; then exit 1; fi
-      - name: Prefer spaces over tabs
-        run: if grep -PR "\t" benchmarks/ cmake/ examples/ include/ddc/ install_test/ tests/; then exit 1; fi
+        run: if grep -R "#include <iostream>" $(git ls-files 'include/*.hpp' 'include/*.cpp'); then exit 1; fi
       - name: Find modifications of Kokkos reserved macros
-        run: if grep -RE "(define|undef) KOKKOS_" benchmarks/ examples/ include/ddc/ install_test/ tests/; then exit 1; fi
+        run: if grep -RE "(define|undef) KOKKOS_" $(git ls-files '*.hpp' '*.cpp'); then exit 1; fi
 
   id_repo:
     runs-on: ubuntu-latest

@@ -10,9 +10,31 @@ on:
   schedule:
     - cron: "0 1 * * *"  # every day at 1am
   pull_request:
+    paths:
+      - '.github/workflows/tests-ubuntu.yml'
+      - '**.cpp'
+      - '**.hpp'
+      - '**.hpp.in'
+      - 'CMakeLists.txt'
+      - '**/CMakeLists.txt'
+      - '**.cmake'
+      - '**.cmake.in'
+      - 'docker/**'
+      - 'vendor/**'
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/tests-ubuntu.yml'
+      - '**.cpp'
+      - '**.hpp'
+      - '**.hpp.in'
+      - 'CMakeLists.txt'
+      - '**/CMakeLists.txt'
+      - '**.cmake'
+      - '**.cmake.in'
+      - 'docker/**'
+      - 'vendor/**'
 
 concurrency:
   group: ${{github.workflow}}-${{github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref}}

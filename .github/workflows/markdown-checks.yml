@@ -1,0 +1,31 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Markdown checks
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/markdown-checks.yml'
+      - '**.md'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/markdown-checks.yml'
+      - '**.md'
+  workflow_dispatch:
+
+jobs:
+  markdown-lint:
+    name: Markdown lint using markdownlint-cli2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: |
+            **.md

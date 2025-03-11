@@ -1,0 +1,8 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+[FORMAT]
+
+# Maximum number of characters on a single line.
+max-line-length=200

@@ -1,0 +1,27 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Website tests
+
+# yamllint disable-line rule:truthy
+on:
+  schedule:
+    - cron: "0 1 * * *"  # every day at 1am
+  workflow_dispatch:
+
+jobs:
+  links-check:
+    name: Links check using linkchecker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+      - name: Install linkchecker
+        run: |
+          pipx install linkchecker
+      - name: Analysing the links of the website
+        run: |
+          linkchecker index.html

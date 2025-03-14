@@ -25,7 +25,7 @@ Thomas Padioleau - CEA (thomas.padioleau@cea.fr)
 * Maintainer
 * Co-designer
 * Main developer
-* Redesign and reimplementation of splines using DCC
+* Redesign and reimplementation of splines using DDC
 
 Baptiste Legouix - CEA (baptiste.legouix@cea.fr)
 * FFT kernel

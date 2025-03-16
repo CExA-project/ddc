@@ -1,0 +1,21 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Packages cleanup
+
+# yamllint disable-line rule:truthy
+on:
+  workflow_dispatch:
+
+jobs:
+  delete-packages:
+    name: Delete old packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'ddc/doxygen'
+          package-type: 'docker'
+          num-old-versions-to-delete: 10

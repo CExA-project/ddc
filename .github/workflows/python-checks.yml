@@ -22,6 +22,18 @@ on:
   workflow_dispatch:
 
 jobs:
+  python-format:
+    name: Python format using black
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          pipx install black
+      - name: Check format using black
+        run: |
+          black --line-length 100 --check bin/trailing_spaces $(git ls-files '*.py')
+
   python-lint:
     name: Python lint using pylint
     runs-on: ubuntu-latest

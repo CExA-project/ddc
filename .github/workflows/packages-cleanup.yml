@@ -17,5 +17,5 @@ jobs:
       - uses: actions/delete-package-versions@v5
         with:
           package-name: 'doxygen'
-          package-type: 'docker'
+          package-type: 'container'
           num-old-versions-to-delete: 10

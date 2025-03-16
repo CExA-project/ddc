@@ -12,6 +12,7 @@ import argparse
 import re
 import sys
 
+
 def find_trailing_whitespaces(files):
     """
     Find all lines with trailing whitespaces in C++ and CMake files within the given directory.
@@ -26,12 +27,13 @@ def find_trailing_whitespaces(files):
 
     # Check each file for trailing whitespaces
     for filename in files:
-        with open(filename, 'r', encoding='utf-8') as file:
+        with open(filename, "r", encoding="utf-8") as file:
             for line_number, line in enumerate(file, 1):
-                if re.search(r'[ \t]+$', line):
+                if re.search(r"[ \t]+$", line):
                     files_with_trailing_whitespaces.append((filename, line_number, line.rstrip()))
 
     return files_with_trailing_whitespaces
+
 
 def remove_trailing_whitespaces(files_with_trailing_whitespaces):
     """
@@ -42,23 +44,26 @@ def remove_trailing_whitespaces(files_with_trailing_whitespaces):
                                                 and line content with trailing whitespaces.
     """
     for filename, _, _ in files_with_trailing_whitespaces:
-        with open(filename, 'r', encoding='utf-8') as file:
+        with open(filename, "r", encoding="utf-8") as file:
             lines = file.readlines()
 
-        with open(filename, 'w', encoding='utf-8') as file:
+        with open(filename, "w", encoding="utf-8") as file:
             for line in lines:
-                file.write(re.sub(r'[ \t]+$', '', line))
+                file.write(re.sub(r"[ \t]+$", "", line))
 
         # print(f"Removed trailing whitespaces from: {filename}")
+
 
 def main():
     """
     The main function to parse arguments and find/remove trailing whitespaces.
     """
-    parser = argparse.ArgumentParser(description="Find and optionally remove trailing whitespaces in given files.")
-    parser.add_argument('file', type=str, nargs='+', help="File to analyze.")
-    parser.add_argument('-i', action='store_true', help="Remove trailing whitespaces.")
-    parser.add_argument('--Werror', action='store_true', help="If set, treat warnings as errors")
+    parser = argparse.ArgumentParser(
+        description="Find and optionally remove trailing whitespaces in given files."
+    )
+    parser.add_argument("file", type=str, nargs="+", help="File to analyze.")
+    parser.add_argument("-i", action="store_true", help="Remove trailing whitespaces.")
+    parser.add_argument("--Werror", action="store_true", help="If set, treat warnings as errors")
     args = parser.parse_args()
 
     files_with_trailing_whitespaces = find_trailing_whitespaces(args.file)
@@ -72,6 +77,7 @@ def main():
 
             if args.Werror:
                 sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

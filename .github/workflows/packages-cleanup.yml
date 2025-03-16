@@ -19,3 +19,33 @@ jobs:
           package-name: 'ddc/doxygen'
           package-type: 'container'
           min-versions-to-keep: 10
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'ddc/latest_cpu'
+          package-type: 'container'
+          min-versions-to-keep: 10
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'ddc/latest_cuda'
+          package-type: 'container'
+          min-versions-to-keep: 10
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'ddc/latest_hip'
+          package-type: 'container'
+          min-versions-to-keep: 10
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'ddc/oldest_cpu'
+          package-type: 'container'
+          min-versions-to-keep: 10
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'ddc/oldest_cuda'
+          package-type: 'container'
+          min-versions-to-keep: 10
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'ddc/oldest_hip'
+          package-type: 'container'
+          min-versions-to-keep: 10

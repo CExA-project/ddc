@@ -18,4 +18,4 @@ jobs:
         with:
           package-name: 'ddc/doxygen'
           package-type: 'container'
-          num-old-versions-to-delete: 10
+          min-versions-to-keep: 10

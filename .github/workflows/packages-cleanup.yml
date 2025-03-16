@@ -16,6 +16,6 @@ jobs:
     steps:
       - uses: actions/delete-package-versions@v5
         with:
-          package-name: 'doxygen'
+          package-name: 'ddc/doxygen'
           package-type: 'container'
           num-old-versions-to-delete: 10

@@ -7,7 +7,7 @@
 #include <cstddef>
 #include <tuple>
 #if defined(BSPLINES_TYPE_NON_UNIFORM)
-#include <vector>
+#    include <vector>
 #endif
 
 #include <ddc/ddc.hpp>

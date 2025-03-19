@@ -15,9 +15,9 @@
 #include <Kokkos_DualView.hpp>
 
 #if __has_include(<mkl_lapacke.h>)
-#include <mkl_lapacke.h>
+#    include <mkl_lapacke.h>
 #else
-#include <lapacke.h>
+#    include <lapacke.h>
 #endif
 
 #include <KokkosBatched_Util.hpp>

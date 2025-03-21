@@ -909,8 +909,9 @@ operator()(
             "ddc_splines_transpose_rhs",
             exec_space(),
             batch_domain(batched_interpolation_domain),
-            KOKKOS_LAMBDA(typename batch_domain_type<
-                          BatchedInterpolationDDom>::discrete_element_type const j) {
+            KOKKOS_LAMBDA(
+                    typename batch_domain_type<
+                            BatchedInterpolationDDom>::discrete_element_type const j) {
                 for (std::size_t i = 0; i < nbasis_proxy; ++i) {
                     spline_tr(ddc::DiscreteElement<bsplines_type>(i), j)
                             = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
@@ -928,8 +929,9 @@ operator()(
             "ddc_splines_transpose_back_rhs",
             exec_space(),
             batch_domain(batched_interpolation_domain),
-            KOKKOS_LAMBDA(typename batch_domain_type<
-                          BatchedInterpolationDDom>::discrete_element_type const j) {
+            KOKKOS_LAMBDA(
+                    typename batch_domain_type<
+                            BatchedInterpolationDDom>::discrete_element_type const j) {
                 for (std::size_t i = 0; i < nbasis_proxy; ++i) {
                     spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j)
                             = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
@@ -942,8 +944,9 @@ operator()(
                 "ddc_splines_periodic_rows_duplicate_rhs",
                 exec_space(),
                 batch_domain(batched_interpolation_domain),
-                KOKKOS_LAMBDA(typename batch_domain_type<
-                              BatchedInterpolationDDom>::discrete_element_type const j) {
+                KOKKOS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
                     if (offset_proxy != 0) {
                         for (int i = 0; i < offset_proxy; ++i) {
                             spline(ddc::DiscreteElement<bsplines_type>(i), j) = spline(
@@ -1034,14 +1037,16 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     ddc::ChunkSpan const coefficients = integral_bsplines_without_periodic_additional_bsplines
             [spline_domain()
                      .remove_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))
-                     .take_first(ddc::DiscreteVector<bsplines_type>(
-                             ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin
-                             - s_nbc_xmax))];
+                     .take_first(
+                             ddc::DiscreteVector<bsplines_type>(
+                                     ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin
+                                     - s_nbc_xmax))];
     ddc::ChunkSpan const coefficients_derivs_xmax
             = integral_bsplines_without_periodic_additional_bsplines
                     [spline_domain()
-                             .remove_first(ddc::DiscreteVector<bsplines_type>(
-                                     s_nbc_xmin + coefficients.size()))
+                             .remove_first(
+                                     ddc::DiscreteVector<bsplines_type>(
+                                             s_nbc_xmin + coefficients.size()))
                              .take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))];
     interpolation_domain_type const interpolation_domain_proxy = interpolation_domain();
 

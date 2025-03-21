@@ -6,14 +6,14 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_SPACE_CPP) {
+inline namespace anonymous_namespace_workaround_discrete_space_cpp {
 
 struct DimX;
 struct DDimX : ddc::UniformPointSampling<DimX>
 {
 };
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_SPACE_CPP)
+} // namespace anonymous_namespace_workaround_discrete_space_cpp
 
 TEST(DiscreteSpace, IsDiscreteSpaceInitialized)
 {

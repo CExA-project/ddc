@@ -22,7 +22,7 @@
 #include "cosine_evaluator.hpp"
 #include "spline_error_bounds.hpp"
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_SPLINE_BUILDER_CPP) {
+inline namespace anonymous_namespace_workaround_batched_spline_builder_cpp {
 
 #if defined(BC_PERIODIC)
 struct DimX
@@ -326,8 +326,9 @@ void BatchedSplineTest()
             spline_eval_integrals.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(typename decltype(spline_builder)::template batch_domain_type<
-                          ddc::DiscreteDomain<DDims...>>::discrete_element_type const e) {
+            KOKKOS_LAMBDA(
+                    typename decltype(spline_builder)::template batch_domain_type<
+                            ddc::DiscreteDomain<DDims...>>::discrete_element_type const e) {
                 return Kokkos::abs(
                         spline_eval_integrals(e) - evaluator.deriv(xN<I>(), -1)
                         + evaluator.deriv(x0<I>(), -1));
@@ -353,7 +354,7 @@ void BatchedSplineTest()
                         1.0e-14 * max_norm_int));
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_SPLINE_BUILDER_CPP)
+} // namespace anonymous_namespace_workaround_batched_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
 #    define SUFFIX(name) name##Lapack##Periodic##Uniform

@@ -24,7 +24,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP) {
+inline namespace anonymous_namespace_workaround_splines_cpp {
 
 ddc::SplineSolver const Backend = ddc::SplineSolver::LAPACK;
 
@@ -260,7 +260,7 @@ void characteristics_advection(benchmark::State& state)
     benchmarks.at(std::array {state.range(0), state.range(1), state.range(2)})(state);
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
+} // namespace anonymous_namespace_workaround_splines_cpp
 
 // Reference parameters: the benchmarks sweep on two parameters and fix all the others according to those reference parameters.
 bool on_gpu_ref = true;

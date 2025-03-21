@@ -10,7 +10,7 @@
 
 namespace ddcexp = ddc::experimental;
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SINGLE_DISCRETIZATION_CPP) {
+inline namespace anonymous_namespace_workaround_single_discretization_cpp {
 
 class DimX;
 
@@ -22,7 +22,7 @@ struct DDimX : ddcexp::SingleDiscretization<DimX>
 
 using DElemX = ddc::DiscreteElement<DDimX>;
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SINGLE_DISCRETIZATION_CPP)
+} // namespace anonymous_namespace_workaround_single_discretization_cpp
 
 TEST(SingleDiscretization, ClassSize)
 {

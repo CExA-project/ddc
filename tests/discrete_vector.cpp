@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_VECTOR_CPP) {
+inline namespace anonymous_namespace_workaround_discrete_vector_cpp {
 
 struct DDimX
 {
@@ -33,7 +33,7 @@ using DVectXZ = ddc::DiscreteVector<DDimX, DDimZ>;
 
 using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_VECTOR_CPP)
+} // namespace anonymous_namespace_workaround_discrete_vector_cpp
 
 TEST(DiscreteVectorXYZTest, ConstructorFromDiscreteVectors)
 {

@@ -224,8 +224,8 @@ public:
                     points_with_bcs[npoints - 1 - i] /= BSplines::degree();
                 }
             } else {
-                points_with_bcs[npoints - 1]
-                        = points_wo_bcs.coordinate(ddc::DiscreteElement<IntermediateSampling>(
+                points_with_bcs[npoints - 1] = points_wo_bcs.coordinate(
+                        ddc::DiscreteElement<IntermediateSampling>(
                                 ddc::discrete_space<BSplines>().ncells() - 1
                                 + BSplines::degree() % 2));
             }

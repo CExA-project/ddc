@@ -43,12 +43,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: DoozyX/clang-format-lint-action@v0.18
+      - uses: jidicula/clang-format-action@v4.15.0
         with:
-          source: 'benchmarks/ examples/ include/ddc/ install_test/ tests/'
-          exclude: ''
-          extensions: 'hpp,cpp'
-          clangFormatVersion: 18
+          clang-format-version: '20'
       - name: Prefer 'if defined' over 'ifdef'
         run: if grep -R "ifdef" $(git ls-files '*.hpp' '*.cpp'); then exit 1; fi
       - name: Do not include <iostream> in the headers of the library

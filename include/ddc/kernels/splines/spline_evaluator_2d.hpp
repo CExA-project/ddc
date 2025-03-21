@@ -414,8 +414,9 @@ public:
                 "ddc_splines_evaluate_2d",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type<
-                                    BatchedInterpolationDDom>::discrete_element_type const j) {
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
@@ -459,8 +460,9 @@ public:
                 "ddc_splines_evaluate_2d",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type<
-                                    BatchedInterpolationDDom>::discrete_element_type const j) {
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
                     for (auto const i1 : evaluation_domain1) {
@@ -649,8 +651,9 @@ public:
                 "ddc_splines_differentiate_2d_dim_1",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type<
-                                    BatchedInterpolationDDom>::discrete_element_type const j) {
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
@@ -694,8 +697,9 @@ public:
                 "ddc_splines_differentiate_2d_dim_1",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type<
-                                    BatchedInterpolationDDom>::discrete_element_type const j) {
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
                     for (auto const i1 : evaluation_domain1) {
@@ -755,8 +759,9 @@ public:
                 "ddc_splines_differentiate_2d_dim_2",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type<
-                                    BatchedInterpolationDDom>::discrete_element_type const j) {
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
@@ -800,8 +805,9 @@ public:
                 "ddc_splines_differentiate_2d_dim_2",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type<
-                                    BatchedInterpolationDDom>::discrete_element_type const j) {
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
                     for (auto const i1 : evaluation_domain1) {
@@ -861,8 +867,9 @@ public:
                 "ddc_splines_cross_differentiate",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type<
-                                    BatchedInterpolationDDom>::discrete_element_type const j) {
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto coords_eval_2D = coords_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
@@ -906,8 +913,9 @@ public:
                 "ddc_splines_cross_differentiate",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type<
-                                    BatchedInterpolationDDom>::discrete_element_type const j) {
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
                     const auto spline_eval_2D = spline_eval[j];
                     const auto spline_coef_2D = spline_coef[j];
                     for (auto const i1 : evaluation_domain1) {
@@ -1295,9 +1303,10 @@ private:
         double y = 0.0;
         for (std::size_t i = 0; i < bsplines_type1::degree() + 1; ++i) {
             for (std::size_t j = 0; j < bsplines_type2::degree() + 1; ++j) {
-                y += spline_coef(ddc::DiscreteElement<
-                                 bsplines_type1,
-                                 bsplines_type2>(jmin1 + i, jmin2 + j))
+                y += spline_coef(
+                             ddc::DiscreteElement<
+                                     bsplines_type1,
+                                     bsplines_type2>(jmin1 + i, jmin2 + j))
                      * vals1[i] * vals2[j];
             }
         }

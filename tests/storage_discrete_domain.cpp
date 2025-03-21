@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_DOMAIN_CPP) {
+inline namespace anonymous_namespace_workaround_discrete_domain_cpp {
 
 struct DDimX
 {
@@ -79,7 +79,7 @@ DElemY constexpr lbound_y(4);
 // DElemXZ constexpr lbound_x_z(lbound_x, lbound_z);
 // DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_DOMAIN_CPP)
+} // namespace anonymous_namespace_workaround_discrete_domain_cpp
 
 TEST(StorageDiscreteDomainTest, Constructor)
 {

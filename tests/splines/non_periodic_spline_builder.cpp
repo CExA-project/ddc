@@ -230,8 +230,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             quadrature_coefficients_derivs_xmin.domain(),
             0.0,
             ddc::reducer::sum<double>(),
-            KOKKOS_LAMBDA(ddc::DiscreteElement<
-                          ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
+            KOKKOS_LAMBDA(
+                    ddc::DiscreteElement<
+                            ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
                 return quadrature_coefficients_derivs_xmin(ix) * derivs_lhs(ix);
             });
 #else
@@ -253,8 +254,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             quadrature_coefficients_derivs_xmax.domain(),
             0.0,
             ddc::reducer::sum<double>(),
-            KOKKOS_LAMBDA(ddc::DiscreteElement<
-                          ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
+            KOKKOS_LAMBDA(
+                    ddc::DiscreteElement<
+                            ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
                 return quadrature_coefficients_derivs_xmax(ix) * derivs_rhs(ix);
             });
 #else

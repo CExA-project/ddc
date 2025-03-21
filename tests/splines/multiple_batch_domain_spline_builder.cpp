@@ -295,8 +295,9 @@ std::tuple<double, double, double> ComputeEvaluationError(
             spline_eval_integrals.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(typename Builder::template batch_domain_type<
-                          ddc::DiscreteDomain<DDims...>>::discrete_element_type const e) {
+            KOKKOS_LAMBDA(
+                    typename Builder::template batch_domain_type<
+                            ddc::DiscreteDomain<DDims...>>::discrete_element_type const e) {
                 return Kokkos::abs(
                         spline_eval_integrals(e) - evaluator.deriv(xN<I>(), -1)
                         + evaluator.deriv(x0<I>(), -1));

@@ -16,7 +16,7 @@
 #include "cosine_evaluator.hpp"
 #include "spline_error_bounds.hpp"
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PERIODICITY_SPLINE_BUILDER_CPP) {
+inline namespace anonymous_namespace_workaround_periodicity_spline_builder_cpp {
 
 struct DimX
 {
@@ -200,7 +200,7 @@ void PeriodicitySplineBuilderTest()
             std::max(error_bounds.error_bound(dx<X>(ncells), s_degree_x), 1.0e-14 * max_norm));
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PERIODICITY_SPLINE_BUILDER_CPP)
+} // namespace anonymous_namespace_workaround_periodicity_spline_builder_cpp
 
 TEST(PeriodicitySplineBuilderHost, 1D)
 {

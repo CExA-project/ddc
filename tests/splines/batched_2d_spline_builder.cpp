@@ -27,7 +27,7 @@
 #endif
 #include "spline_error_bounds.hpp"
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_2D_SPLINE_BUILDER_CPP) {
+inline namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp {
 
 #if defined(BC_PERIODIC)
 struct DimX
@@ -583,7 +583,7 @@ void Batched2dSplineTest()
                         1e-11 * max_norm_diff12));
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_2D_SPLINE_BUILDER_CPP)
+} // namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
 #    define SUFFIX(name) name##Periodic##Uniform

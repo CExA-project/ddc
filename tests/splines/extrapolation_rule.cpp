@@ -19,7 +19,7 @@
 #    include "polynomial_evaluator.hpp"
 #endif
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(EXTRAPOLATION_RULE_CPP) {
+inline namespace anonymous_namespace_workaround_extrapolation_rule_cpp {
 
 #if defined(BC_PERIODIC)
 struct DimX
@@ -332,7 +332,7 @@ void ExtrapolationRuleSplineTest()
     EXPECT_LE(max_norm_error, 1.0e-14 * max_norm);
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(EXTRAPOLATION_RULE_CPP)
+} // namespace anonymous_namespace_workaround_extrapolation_rule_cpp
 
 #if defined(ER_NULL) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
 #    define SUFFIX(name) name##Null##Periodic##Uniform

@@ -21,7 +21,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_DualView.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP) {
+inline namespace anonymous_namespace_workaround_matrix_cpp {
 
 void fill_identity(
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const& mat)
@@ -142,7 +142,7 @@ void solve_and_validate(
             Kokkos::subview(inv_tr, std::pair<std::size_t, std::size_t> {0, N}, Kokkos::ALL));
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MATRIX_CPP)
+} // namespace anonymous_namespace_workaround_matrix_cpp
 
 TEST(SplinesLinearProblemSparse, Formatting)
 {

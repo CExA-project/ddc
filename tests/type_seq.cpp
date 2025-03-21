@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(TYPE_SED_CPP) {
+inline namespace anonymous_namespace_workaround_type_sed_cpp {
 
 struct a;
 struct b;
@@ -18,7 +18,7 @@ struct e;
 struct y;
 struct z;
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(TYPE_SED_CPP)
+} // namespace anonymous_namespace_workaround_type_sed_cpp
 
 TEST(TypeSeqTest, Size)
 {

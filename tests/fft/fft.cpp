@@ -25,7 +25,7 @@
 #    endif
 #endif
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FFT_CPP) {
+inline namespace anonymous_namespace_workaround_fft_cpp {
 
 template <typename X>
 struct DDim : ddc::UniformPointSampling<X>
@@ -238,7 +238,7 @@ struct RDimX;
 struct RDimY;
 struct RDimZ;
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FFT_CPP)
+} // namespace anonymous_namespace_workaround_fft_cpp
 
 TEST(FourierMesh, Extents)
 {

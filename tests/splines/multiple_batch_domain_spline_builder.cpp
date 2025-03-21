@@ -23,7 +23,7 @@
 #include "cosine_evaluator.hpp"
 #include "spline_error_bounds.hpp"
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_SPLINE_BUILDER_CPP) {
+inline namespace anonymous_namespace_workaround_batched_spline_builder_cpp {
 
 #if defined(BC_PERIODIC)
 struct DimX
@@ -418,7 +418,7 @@ void MultipleBatchDomainSplineTest()
 }
 
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_SPLINE_BUILDER_CPP)
+} // namespace anonymous_namespace_workaround_batched_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
 #    define SUFFIX(name) name##Lapack##Periodic##Uniform

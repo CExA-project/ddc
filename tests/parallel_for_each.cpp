@@ -12,7 +12,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FOR_EACH_CPP) {
+inline namespace anonymous_namespace_workaround_parallel_for_each_cpp {
 
 using DElem0D = ddc::DiscreteElement<>;
 using DVect0D = ddc::DiscreteVector<>;
@@ -45,7 +45,7 @@ DVectY constexpr nelems_y(12);
 DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FOR_EACH_CPP)
+} // namespace anonymous_namespace_workaround_parallel_for_each_cpp
 
 TEST(ParallelForEachParallelHost, ZeroDimension)
 {
@@ -80,7 +80,7 @@ TEST(ParallelForEachParallelHost, TwoDimensions)
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FOR_EACH_CPP) {
+inline namespace anonymous_namespace_workaround_parallel_for_each_cpp {
 
 void TestParallelForEachParallelDeviceZeroDimension()
 {
@@ -98,14 +98,14 @@ void TestParallelForEachParallelDeviceZeroDimension()
     EXPECT_EQ(sum, DDom0D::size());
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FOR_EACH_CPP)
+} // namespace anonymous_namespace_workaround_parallel_for_each_cpp
 
 TEST(ParallelForEachParallelDevice, ZeroDimension)
 {
     TestParallelForEachParallelDeviceZeroDimension();
 }
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FOR_EACH_CPP) {
+inline namespace anonymous_namespace_workaround_parallel_for_each_cpp {
 
 void TestParallelForEachParallelDeviceOneDimension()
 {
@@ -123,14 +123,14 @@ void TestParallelForEachParallelDeviceOneDimension()
     EXPECT_EQ(sum, dom.size());
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FOR_EACH_CPP)
+} // namespace anonymous_namespace_workaround_parallel_for_each_cpp
 
 TEST(ParallelForEachParallelDevice, OneDimension)
 {
     TestParallelForEachParallelDeviceOneDimension();
 }
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FOR_EACH_CPP) {
+inline namespace anonymous_namespace_workaround_parallel_for_each_cpp {
 
 void TestParallelForEachParallelDeviceTwoDimensions()
 {
@@ -148,7 +148,7 @@ void TestParallelForEachParallelDeviceTwoDimensions()
     EXPECT_EQ(sum, dom.size());
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FOR_EACH_CPP)
+} // namespace anonymous_namespace_workaround_parallel_for_each_cpp
 
 TEST(ParallelForEachParallelDevice, TwoDimensions)
 {

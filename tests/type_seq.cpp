@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-inline namespace anonymous_namespace_workaround_type_sed_cpp {
+inline namespace anonymous_namespace_workaround_type_seq_cpp {
 
 struct a;
 struct b;
@@ -18,7 +18,7 @@ struct e;
 struct y;
 struct z;
 
-} // namespace anonymous_namespace_workaround_type_sed_cpp
+} // namespace anonymous_namespace_workaround_type_seq_cpp
 
 TEST(TypeSeqTest, Size)
 {

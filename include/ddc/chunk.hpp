@@ -561,12 +561,11 @@ public:
 };
 
 template <class SupportType, class Allocator>
-Chunk(std::string const&,
-      SupportType const&,
-      Allocator) -> Chunk<typename Allocator::value_type, SupportType, Allocator>;
+Chunk(std::string const&, SupportType const&, Allocator)
+        -> Chunk<typename Allocator::value_type, SupportType, Allocator>;
 
 template <class SupportType, class Allocator>
-Chunk(SupportType const&,
-      Allocator) -> Chunk<typename Allocator::value_type, SupportType, Allocator>;
+Chunk(SupportType const&, Allocator)
+        -> Chunk<typename Allocator::value_type, SupportType, Allocator>;
 
 } // namespace ddc

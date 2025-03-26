@@ -1,0 +1,29 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Shell checks
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/shell-checks.yml'
+      - '**.sh'
+      - 'bin/applyreuse'
+      - 'docker/*/bash_run'
+  workflow_dispatch:
+
+jobs:
+  shell-lint:
+    name: Shell lint using shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@2.0.0
+        env:
+          SHELLCHECK_OPTS: -e SC1091
+        with:
+          additional_files: 'bin/applyreuse docker/*/bash_run'

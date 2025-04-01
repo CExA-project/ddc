@@ -52,7 +52,7 @@ The use of multidimensional arrays is widespread across various fields, particul
 
 Many programming languages commonly used in scientific computing support multidimensional arrays in different ways. Fortran, a longstanding choice in the field, and Julia, a more recent language, both natively support these data structures. In contrast, the Python ecosystem relies on the popular NumPy library’s `numpy.Array`. Meanwhile, C++23 introduced `std::mdspan` to the standard library. This container was inspired by `Kokkos::View` from the Kokkos library which also serves as the foundation of DDC.
 
-Despite their importance, multidimensional arrays introduce several practical challenges. In a sense, they encourage the usage of implicits in the source code. A frequent source of errors is the inadvertent swapping of indices when accessing elements. Such errors can be difficult to detect, especially given the common convention of using single-letter variable names like `i` and `j` for indexing. Another challenge arises in medium to large codebases because of raw multidimensional lacking semantic clarity in function signatures. When array dimensions carry specific meanings, this information is not explicitly represented in the source code, leaving it up to the user to ensure that dimensions are ordered correctly according to implicit expectations.
+Despite their importance, multidimensional arrays introduce several practical challenges. In a sense, they encourage the usage of implicits in the source code. A frequent source of errors is the inadvertent swapping of indices when accessing elements. Such errors can be difficult to detect, especially given the common convention of using single-letter variable names like `i` and `j` for indexing. Another challenge arises in medium to large codebases because of raw multidimensional lacking semantics clarity in function signatures. When array dimensions carry specific meanings, this information is not explicitly represented in the source code, leaving it up to the user to ensure that dimensions are ordered correctly according to implicit expectations.
 
 Along with this problem, when performing slices that remove dimensions of arrays, this operation changes the relative ordering of dimensions.
 
@@ -66,44 +66,71 @@ DDC core:
 - Algorithms
 -->
 
-The DDC library is a C++ library designed for safety handling of multidimensional data. Its core components, `Chunk` and `ChunkSpan`, provide flexible data containers along with algorithms for efficient manipulation built on top of the performance portable Kokkos library.
+The DDC library is a C++ library designed for expressive and safe handling of multidimensional data. Its core component provides flexible data containers along with algorithms built on top of the performance portable Kokkos library.
 
-DDC offers two containers `Chunk` and `ChunkSpan`. They are designed over the C++ 23 `std::mdspan` interface. The former one, `Chunk`, is owning the data whereas the latter one, `ChunkSpan`, is a view on the data.
+### Containers
 
-DDC employs strongly-typed indices to label dimensions and access data. It introduces two types of indices:
+DDC offers two containers designed over the C++ 23 `std::mdspan` interface:
+
+- `Chunk` an owning container, i.e. it manages the lifetime of the underlying memory allocation,
+- `ChunkSpan` is a non-owning container view over existing memory allocation.
+
+### Strongly-typed labelled indices
+
+DDC employs strongly-typed multi-indices to label dimensions and access data. It introduces two types of indices:
 
 - `DiscreteVector` indices:
-  - these are strongly-typed labelled integers,
-  - they provide a multidimensional array access semantic to the container's data,
+  - strongly-typed labelled integers,
+  - provide a multidimensional array access semantics to the container's data,
 - `DiscreteElement` indices:
-  - these are strongly-typed labelled opaque identifiers.
-  - they provide an associative access semantic to the container's data.
+  - strongly-typed labelled opaque identifiers.
+  - provide an associative access semantics to the container's data.
 
-Unlike `DiscreteVector` indices, users cannot directly interpret the internal representation of `DiscreteElement` and must reason about them based solely on their relative ordering. The set of possible `DiscreteElement` is typically established at the initialisation of the program.
+Unlike `DiscreteVector` indices, users cannot directly interpret the internal representation of `DiscreteElement` and must reason about them based solely on their relative ordering. The set of possible `DiscreteElement` is typically established at program initialisation.
 
-These two sets of indices are linked together by a similar semantic to vector and affine spaces in mathematics. As the names suggest, a `DiscreteVector` behaves as a vector in a vector space and a `DiscreteElement` behaves as a point in an affine space. That is to say, if `v1` and `v2` are `DiscreteVector`, `e1` and `e2` are `DiscreteElement`, the following operations are valid:
+### Algebra semantics
+
+The relationship between `DiscreteVector` and `DiscreteElement` is analogous to vector and affine spaces in mathematics, more specifically:
+
+- a `DiscreteVector` behaves like a vector in a vector space,
+- a `DiscreteElement` behaves like a point in an affine space.
+
+That is to say, if `v1` and `v2` are `DiscreteVector`, `e1` and `e2` are `DiscreteElement`, the following operations are valid:
 
 - v1 + v2 returns a`DiscreteVector`,
 - v2 - v1 returns a`DiscreteVector`,
 - e1 + v1 = v1 + e1 is `DiscreteElement`,
 - e2 - e1 returns a`DiscreteVector`.
 
-When constructing a DDC container, a set of `DiscreteElement` indices must be provided. Only the `DiscreteElement` from this predefined set can be used to access the container’s data, ensuring strict control over indexing. The set of `DiscreteElement` is a customization point but has always the form of a Cartesian product of the different dimensions. DDC predefines the following sets:
+### Sets of `DiscreteElement`
+
+When constructing a DDC container, a set of `DiscreteElement` indices must be provided. Only the `DiscreteElement` from this predefined set can be used to access the container’s data, ensuring strict control over indexing.
+
+The set of `DiscreteElement` is a customization point but has always the form of a Cartesian product of the different dimensions. DDC predefines the following sets:
 
 - `DiscreteDomain`, a contiguous set of `DiscreteElement`,
 - `StridedDiscreteDomain`, a set of `DiscreteElement` with a fixed step/stride in each dimension,
-- `SparseDiscreteDomain`, an explicit ordered list of `DiscreteElement` in each dimension.
+- `SparseDiscreteDomain`, an explicitly ordered list of `DiscreteElement` in each dimension.
 
-As for `std::mdspan`, DDC containers define slicing operators in the form of the bracket operator that always return a `ChunkSpan`. One key point is that the set of `DiscreteElement` of the slice result is a subset of the initial set of `DiscreteElement`.
+### Slicing
+
+Like `std::mdspan`, DDC containers support slicing through the bracket operator that always returns a `ChunkSpan`. The key property is that the resulting slice’s set of `DiscreteElement` is a subset of the original set.
+
+### Multidimensional algorithms
 
 Finally, DDC offers multidimensional algorithms to manipulate the containers and the `DiscreteElement`. Here is a list as of today:
 
-- `parallel_for_each`
-- `parallel_fill`
-- `parallel_deepcopy`
-- `parallel_transform_reduce`
+- `parallel_deepcopy`, copies two `ChunkSpan` that are defined on the same set of `DiscreteElement`,
+- `parallel_for_each`, applies a function once per `DiscreteElement` of a set of `DiscreteElement`,
+- `parallel_fill`, fills a `ChunkSpan` with a value,
+- `parallel_transform_reduce`, applies a function once per `DiscreteElement` of a set of `DiscreteElement` and combines the returned values with a reducer.
 
-We emphasize that some interoperability is possible with existing code. It is possible to construct a `ChunkSpan` from a raw pointer or on the contrary to retrieve the pointer from a `ChunkSpan`.
+### Interoperability
+
+Some interoperability with existing code is also supported:
+
+- a `ChunkSpan` can be constructed from a raw pointer,
+- a raw pointer can be retrieved from a `ChunkSpan`.
 
 ## Example
 
@@ -142,7 +169,7 @@ For a quick reference, the following citation commands can be used:
 
 ## Acknowledgements
 
-This work has received support by the CExA Moonshot project of the CEA (https://cexa-project.org). We acknowledge contributions from the Maison de la Simulation. We also thank the developers and contributors of the DDC project for their efforts in making numerical modeling more accessible and efficient.
+This work has received support by the CExA Moonshot project of the CEA [cexa-project](https://cexa-project.org). We acknowledge contributions from the Maison de la Simulation. We also thank the developers and contributors of the DDC project for their efforts in making numerical modeling more accessible and efficient.
 
 ## References
 

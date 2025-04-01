@@ -56,7 +56,7 @@ Despite their importance, multidimensional arrays introduce several practical ch
 
 Along with this problem, when performing slices that remove dimensions of arrays, this operation changes the relative ordering of dimensions.
 
-Solutions have been proposed in Python and Julia to address these issues. In Python, the Xarray library allows users to label dimensions that can then be used to perform computation. Following a similar approach, the "Discrete Domain Computation" (DDC) library aims to bring equivalent functionality to the C++ ecosystem using a zero overhead abstraction approach, i.e. with labels fixed at compile-time.
+Solutions have been proposed in Python and Julia to address these issues. In Python, the Xarray library allows users to label dimensions that can then be used to perform computation. Following a similar approach, the "Discrete Domain Computation" (DDC) library aims to bring equivalent functionality to the C++ ecosystem. It uses a zero overhead abstraction approach, i.e. with labels fixed at compile-time, on top of different performant portable libraries, such as: Kokkos, Kokkos Kernels, Kokkos-fft and Ginkgo.
 
 ## DDC Core key features
 
@@ -77,16 +77,18 @@ DDC offers two containers designed over the C++ 23 `std::mdspan` interface:
 
 ### Strongly-typed labelled indices
 
-DDC employs strongly-typed multi-indices to label dimensions and access data. It introduces two types of indices:
+DDC employs strongly-typed multi-indices to label dimensions and access data. It introduces two types of indices to access the container's data:
 
 - `DiscreteVector` indices:
   - strongly-typed labelled integers,
-  - provide a multidimensional array access semantics to the container's data,
+  - provide a multidimensional array access semantics,
+  - always as fast access as raw multidimensional array,
 - `DiscreteElement` indices:
-  - strongly-typed labelled opaque identifiers.
-  - provide an associative access semantics to the container's data.
+  - strongly-typed labelled opaque identifiers/keys,
+  - provide an associative access semantics, as keys in a map container,
+  - potentially slower access, depending on the type of set of `DiscreteElement`.
 
-Unlike `DiscreteVector` indices, users cannot directly interpret the internal representation of `DiscreteElement` and must reason about them based solely on their relative ordering. The set of possible `DiscreteElement` is typically established at program initialisation.
+Unlike `DiscreteVector` indices, users cannot directly interpret the internal representation of `DiscreteElement` and must reason about them based solely on their relative position.
 
 ### Algebra semantics
 
@@ -99,31 +101,24 @@ That is to say, if `v1` and `v2` are `DiscreteVector`, `e1` and `e2` are `Discre
 
 - v1 + v2 returns a`DiscreteVector`,
 - v2 - v1 returns a`DiscreteVector`,
-- e1 + v1 = v1 + e1 is `DiscreteElement`,
-- e2 - e1 returns a`DiscreteVector`.
+- e2 - e1 returns a`DiscreteVector`,
+- e1 + v1 and v1 + e1 return a `DiscreteElement`.
 
 ### Sets of `DiscreteElement`
 
-When constructing a DDC container, a set of `DiscreteElement` indices must be provided. Only the `DiscreteElement` from this predefined set can be used to access the container’s data, ensuring strict control over indexing.
+The semantics of DDC containers is to associate data to a set of `DiscreteElement` indices. Let us note that the finite set of all possible `DiscreteElement` has a total order that is typically established once and for all at program initialisation. Thus to be able to construct a DDC container one must provide a multidimensional set of `DiscreteElement` indices, only these indices can be later used to access the container’s data.
 
-The set of `DiscreteElement` is a customization point but has always the form of a Cartesian product of the different dimensions. DDC predefines the following sets:
+The set of `DiscreteElement` is a customization point of the library. It takes the form of a Cartesian product of the different dimensions. DDC predefines the following sets:
 
-- `DiscreteDomain`, a contiguous set of `DiscreteElement`,
-- `StridedDiscreteDomain`, a set of `DiscreteElement` with a fixed step/stride in each dimension,
-- `SparseDiscreteDomain`, an explicitly ordered list of `DiscreteElement` in each dimension.
+- `DiscreteDomain`, a Cartesian product of intervals of `DiscreteElement` in each dimension,
+- `StridedDiscreteDomain`, a Cartesian product of sets of `DiscreteElement` with a fixed step/stride in each dimension,
+- `SparseDiscreteDomain`, a Cartesian product of explicitly ordered lists of `DiscreteElement` in each dimension.
+
+The reason to introduce multiple sets is to mitigate the cost of containers access through `DiscreteElement` indices. Indeed they are used to retrieve the position of a given multi-index relatively to the front multi-index. Thus the cost of this operation depends on the information available in the set.
 
 ### Slicing
 
 Like `std::mdspan`, DDC containers support slicing through the bracket operator that always returns a `ChunkSpan`. The key property is that the resulting slice’s set of `DiscreteElement` is a subset of the original set.
-
-### Multidimensional algorithms
-
-Finally, DDC offers multidimensional algorithms to manipulate the containers and the `DiscreteElement`. Here is a list as of today:
-
-- `parallel_deepcopy`, copies two `ChunkSpan` that are defined on the same set of `DiscreteElement`,
-- `parallel_for_each`, applies a function once per `DiscreteElement` of a set of `DiscreteElement`,
-- `parallel_fill`, fills a `ChunkSpan` with a value,
-- `parallel_transform_reduce`, applies a function once per `DiscreteElement` of a set of `DiscreteElement` and combines the returned values with a reducer.
 
 ### Interoperability
 
@@ -131,6 +126,17 @@ Some interoperability with existing code is also supported:
 
 - a `ChunkSpan` can be constructed from a raw pointer,
 - a raw pointer can be retrieved from a `ChunkSpan`.
+
+### Multidimensional algorithms
+
+Finally, DDC offers multidimensional algorithms to manipulate the containers and associated `DiscreteElement` indices. Here is a list as of today:
+
+- `parallel_deepcopy`, copies two `ChunkSpan` that are defined on the same set of `DiscreteElement`,
+- `parallel_for_each`, applies a function once per `DiscreteElement` of a set of `DiscreteElement`,
+- `parallel_fill`, fills a `ChunkSpan` with a value,
+- `parallel_transform_reduce`, applies a function once per `DiscreteElement` of a set of `DiscreteElement` and combines the returned values with a reducer.
+
+<!-- The labelling at compile-time then allows one to pass indices in any order to access container's data, for example `chunk_xyz(x, y, z)` would result in the same access as `chunk_xyz(z, x, y)`. -->
 
 ## Example
 

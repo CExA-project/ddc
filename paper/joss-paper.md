@@ -60,10 +60,16 @@ Solutions have been proposed in Python and Julia to address these issues. In Pyt
 
 ## DDC Core key features
 
+<!-- Questions:
+Shall we prefer the term "domain" to "set" -->
 <!--
 DDC core:
 - Data structures
 - Algorithms
+
+out of scope of the paper:
+- *discretization*, not well defined
+- *performance*, we see DDC as a thin wrapper over existing performant portable libraries
 -->
 
 The DDC library is a C++ library designed for expressive and safe handling of multidimensional data. Its core component provides flexible data containers along with algorithms built on top of the performance portable Kokkos library.
@@ -106,7 +112,7 @@ That is to say, if `v1` and `v2` are `DiscreteVector`, `e1` and `e2` are `Discre
 
 ### Sets of `DiscreteElement`
 
-The semantics of DDC containers is to associate data to a set of `DiscreteElement` indices. Let us note that the finite set of all possible `DiscreteElement` has a total order that is typically established once and for all at program initialisation. Thus to be able to construct a DDC container one must provide a multidimensional set of `DiscreteElement` indices, only these indices can be later used to access the container’s data.
+The semantics of DDC containers is to associate data to a set of `DiscreteElement` indices. Let us note that the set of all possible `DiscreteElement` has a total order that is typically established once and for all at program initialisation. Thus to be able to construct a DDC container one must provide a multidimensional set of `DiscreteElement` indices, only these indices can be later used to access the container’s data.
 
 The set of `DiscreteElement` is a customization point of the library. It takes the form of a Cartesian product of the different dimensions. DDC predefines the following sets:
 
@@ -125,7 +131,7 @@ Like `std::mdspan`, DDC containers support slicing through the bracket operator 
 Some interoperability with existing code is also supported:
 
 - a `ChunkSpan` can be constructed from a raw pointer,
-- a raw pointer can be retrieved from a `ChunkSpan`.
+- conversely, a raw pointer can be retrieved from a `ChunkSpan`.
 
 ### Multidimensional algorithms
 
@@ -140,23 +146,39 @@ Finally, DDC offers multidimensional algorithms to manipulate the containers and
 
 ## Example
 
-Let us illustrate the concepts introduced above with the example of the game of life. We start by identifying the dimensions of the problem: two axes X and Y that will be used to locate the cells. In DDC this is corresponds to create two `struct` that will be used as labels for the two dimensions. We call them `DDimX` and `DDimY` respectively
+Let us illustrate some of the concepts introduced above with the example of the game of life. We start by identifying the dimensions of the problem: two axes X and Y that will be used to locate the cells. In DDC this is corresponds to create two `struct` that will be used as labels for the two dimensions. We call them `DDimX` and `DDimY` respectively
 
 ```cpp
 struct DDimX {};
 struct DDimY {};
 ```
 
-In order to store the state of each cell, alive or dead, we need to create the set of `DiscreteElement` that will uniquely identify each cell. This is achieved by calling the function `init_trivial_space`
+In order to store the state of each cell, alive or dead, we need to create the set of `DiscreteElement` that will uniquely identify each cell. This is achieved by calling the function `init_trivial_bounded_space`
 
 ```cpp
-DiscreteDomain<DDimX> domain_x = init_trivial_space(DiscreteVector<DDimX>(nx));
-DiscreteDomain<DDimY> domain_y = init_trivial_space(DiscreteVector<DDimY>(ny));
+DiscreteDomain<DDimX> domain_x = init_trivial_bounded_space(DiscreteVector<DDimX>(nx));
+DiscreteDomain<DDimY> domain_y = init_trivial_bounded_space(DiscreteVector<DDimY>(ny));
 DiscreteDomain<DDimX, DDimY> domain_xy(domain_x, domain_y);
 ```
 
 This step also sets up the relative ordering of each element. The last line creates a Cartesian product of the two sets.
 <!-- It is also responsible of initialising static attributes if present. -->
+
+## DDC extensions
+
+Built on top of DDC core, we also provide optional extensions as in the Xarray ecosystem. As of today we provide three extensions: fft, pdi and splines. The fft and splines extensions work with dimensions of a specific form provided by DDC called `UniformPointSampling` and `NonUniformPointSampling`.
+
+### DDC fft
+
+This extension provides a thin wrapper on top of the Kokkos-fft library to provide labelled semantics of the discrete Fourier transform. The input array is expected to be defined over `UniformPointSampling` dimensions. The output of the transformation is an array where dimensions over `PeriodicPointSampling`.
+
+### DDC splines
+
+This extension provides a Spline transform either from `UniformPointSampling` or `NonUniformPointSampling` array dimensions.
+
+### DDC pdi
+
+PDI is a C data interface library allowing loose coupling with external libraries through PDI plugins like HDF5, NetCDF, Catalyst... This extension eases the metadata serialisation of the DDC containers. Instead of manually expose, sizes, strides and the pointer of the underlying array, the user can directly expose the DDC container.
 
 ## Citations
 

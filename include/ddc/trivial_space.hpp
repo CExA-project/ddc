@@ -9,15 +9,25 @@
 
 namespace ddc {
 
-/** Construct a dimension without attributes.
+/** Construct a bounded dimension without attributes.
  *
  * @param n number of elements
  * @return a DiscreteDomain of size `n`
  */
 template <class DDim>
-DiscreteDomain<DDim> init_trivial_space(DiscreteVector<DDim> const n) noexcept
+constexpr DiscreteDomain<DDim> init_trivial_bounded_space(DiscreteVector<DDim> const n) noexcept
 {
     return DiscreteDomain<DDim>(DiscreteElement<DDim>(0), n);
+}
+
+/** Construct a half bounded dimension without attributes.
+ *
+ * @return the first DiscreteElement of the dimension
+ */
+template <class DDim>
+constexpr DiscreteElement<DDim> init_trivial_half_bounded_space() noexcept
+{
+    return DiscreteElement<DDim>(0);
 }
 
 } // namespace ddc

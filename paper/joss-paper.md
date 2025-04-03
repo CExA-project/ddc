@@ -43,15 +43,19 @@ bibliography: paper.bib
 
 ## Summary
 
+The Discrete Domain Computation (DDC) library is a C++ library designed to provide high-performance, strongly-typed labelled multidimensional arrays. Inspired by Python's Xarray and built on top of performance-portable libraries like Kokkos, DDC enables expressive, safe, and efficient numerical computations. It provides a coherent ecosystem to work with labelled dimensions from data structures to algorithms. Additionally, DDC extends functionality through modules such as FFT (based on Kokkos-fft), splines, and with a bridge to the PDI library. The library is actively used to modernize legacy scientific codes, such as the Fortran-based Gysela plasma simulation code.
+
 ## Statement of need
 
 The use of multidimensional arrays is widespread across various fields, particularly in scientific computing, where they serve as fundamental data containers. A primary motivation for their use is their potential to improve computational performance by leveraging problem-specific structure. For instance, when solving a partial differential equation that results in a stencil problem, computations typically achieve higher efficiency on a structured mesh compared to an unstructured mesh. This advantage primarily stems from a better usage of memory like predictable memory accesses and better cache utilization.
 
 Many programming languages commonly used in scientific computing support multidimensional arrays in different ways. Fortran, a longstanding choice in the field, and Julia, a more recent language, both natively support these data structures. In contrast, the Python ecosystem relies on the popular NumPy library’s `numpy.Array` [@harris2020array]. Meanwhile, C++23 introduced `std::mdspan` to the standard library. This container was inspired by `Kokkos::View` from the Kokkos library which also serves as the foundation of DDC.
 
-Despite their importance, multidimensional arrays introduce several practical challenges. In a sense, they encourage the usage of implicits in the source code. A frequent source of errors is the inadvertent swapping of indices when accessing elements. Such errors can be difficult to detect, especially given the common convention of using single-letter variable names like `i` and `j` for indexing. Another challenge arises in medium to large codebases because of raw multidimensional lacking semantics clarity in function signatures. When array dimensions carry specific meanings, this information is not explicitly represented in the source code, leaving it up to the user to ensure that dimensions are ordered correctly according to implicit expectations. For example it is quite usual to use the same index for multiple interpretations: looping over mesh cells identified by `i` and interpreting `i+1` as the face at right. Another example is slicing that removes dimensions, this operation may change the relative ordering of dimensions.
+Despite their importance, multidimensional arrays introduce several practical challenges. In a sense, they encourage the usage of implicits in the source code. A frequent source of errors is the inadvertent swapping of indices when accessing elements. Such errors can be difficult to detect, especially given the common convention of using single-letter variable names like `i` and `j` for indexing. Another challenge in medium to large codebases is the lack of semantic clarity in function signatures when using raw multidimensional arrays. When array dimensions carry specific meanings, this information is not explicitly represented in the source code, leaving it up to the user to ensure that dimensions are ordered correctly according to implicit expectations. For example it is quite usual to use the same index for multiple interpretations: looping over mesh cells identified by `i` and interpreting `i+1` as the face at right. Another example is slicing that removes dimensions, this operation may change the relative ordering of dimensions.
 
-Solutions have been proposed in Python and Julia to address these issues. In Python, the Xarray [@hoyer2017xarray] and Pandas [@reback2020pandas] libraries allow users to label dimensions that can then be used to perform computation. Following a similar approach, the "Discrete Domain Computation" (DDC) library aims to bring equivalent functionality to the C++ ecosystem. It uses a zero overhead abstraction approach, i.e. with labels fixed at compile-time, on top of different performant portable libraries, such as: Kokkos [@9485033], Kokkos Kernels (HOW-TO-CITE), Kokkos-fft (HOW-TO-CITE) and Ginkgo [@GinkgoJoss2020]. The library is used to write a new version of the Fortran Gysela
+Solutions have been proposed in Python and Julia to address these issues. In Python, the Xarray [@hoyer2017xarray] and Pandas [@reback2020pandas] libraries allow users to label dimensions that can then be used to perform computation. Following a similar approach, the "Discrete Domain Computation" (DDC) library aims to bring equivalent functionality to the C++ ecosystem. It uses a zero overhead abstraction approach, i.e. with labels fixed at compile-time, on top of different performant portable libraries, such as: Kokkos [@9485033], Kokkos Kernels (TODO: add a citation), Kokkos-fft (TODO: add a citation) and Ginkgo [@GinkgoJoss2020].
+
+The library is actively used to modernize the Fortran-based Gysela plasma simulation code (TODO: add a citation). This simulation code relies heavily on high-dimensional arrays that span multiple representations, including Fourier, Spline, Cartesian, and various curvilinear meshes. In the legacy Fortran implementation, these arrays were manipulated using implicit conventions, making it difficult to enforce correctness at the API level. DDC enables a more explicit, strongly-typed representation of these arrays, ensuring at compile-time that function calls respect the expected dimensions. This reduces indexing errors and improves code maintainability, particularly in large-scale scientific software.
 
 ## DDC Core key features
 
@@ -59,7 +63,7 @@ The DDC library is a C++ library designed for expressive and safe handling of mu
 
 ### Containers
 
-DDC offers two containers designed over the C++ 23 `std::mdspan` interface:
+DDC offers two containers designed over the C++ 23 `std::mdspan` API:
 
 - `Chunk` an owning container, i.e. it manages the lifetime of the underlying memory allocation,
 - `ChunkSpan` is a non-owning container view over existing memory allocation.
@@ -123,13 +127,29 @@ Finally, DDC offers multidimensional algorithms to manipulate the containers and
 Let us illustrate the basic concepts introduced above with an example that initializes an array with a given value.
 
 ```cpp
+#include <iostream>
+
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
 
 // Define two independent dimensions
-struct Dim1 {};
-struct Dim2 {};
+struct Dim1
+{
+};
+struct Dim2
+{
+};
+
+// For the purpose of the demonstration, this function makes only sense with Dim2
+int sum_over_dim2(ddc::ChunkSpan<int, ddc::DiscreteDomain<Dim2>> slice)
+{
+    int sum = 0;
+    for (ddc::DiscreteElement<Dim2> idx2 : slice.domain()) {
+        sum += slice(idx2);
+    }
+    return sum;
+}
 
 int main()
 {
@@ -154,15 +174,22 @@ int main()
     ddc::Chunk my_array("my_array", dom, ddc::HostAllocator<int>());
 
     // Iterate over the first dimension (Dim1)
-    for (ddc::DiscreteElement<Dim1> idx1 : dom1) {
+    for (ddc::DiscreteElement<Dim1> const idx1 : dom1) {
         // Iterate over the second dimension (Dim2)
-        for (ddc::DiscreteElement<Dim2> idx2 : dom2) {
+        for (ddc::DiscreteElement<Dim2> const idx2 : dom2) {
             // Assign the value 1 to each element in the 2D array
             my_array(idx1, idx2) = 1;
 
-            // The following would not compile as my_array expects a DiscreteElement over Dim2
+            // The following would NOT compile as my_array expects a DiscreteElement over Dim2
             // my_array(idx1, idx1) = 1;
         }
+    }
+
+    // Extracting a 1D view over Dim2 for each idx1
+    for (ddc::DiscreteElement<Dim1> const idx1 : dom1) {
+        // The following would NOT compile if sum_over_dim2 si called
+        // with a `DiscreteDomain<Dim1>`, ensuring type safety.
+        std::cout << sum_over_dim2(my_array[idx1]) << '\n';
     }
 
     return 0;
@@ -179,7 +206,7 @@ This extension provides a thin wrapper on top of the Kokkos-fft library to provi
 
 ### DDC splines
 
-This extension provides a Spline transform either from `UniformPointSampling` or `NonUniformPointSampling` array dimensions. (CITE-EMILY-THESIS)
+This extension provides a Spline transform either from `UniformPointSampling` or `NonUniformPointSampling` array dimensions. (TODO: add a citation)
 
 ### DDC pdi
 

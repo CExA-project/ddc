@@ -4,6 +4,9 @@
 
 cmake_minimum_required(VERSION 3.22)
 
+add_executable(simple simple.cpp)
+target_link_libraries(simple PUBLIC DDC::core)
+
 add_executable(derivatives derivatives.cpp)
 target_link_libraries(derivatives PUBLIC DDC::core)
 

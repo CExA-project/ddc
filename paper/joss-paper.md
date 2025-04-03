@@ -59,7 +59,7 @@ The library is actively used to modernize the Fortran-based Gysela plasma simula
 
 ## DDC Core key features
 
-The DDC library is a C++ library designed for expressive and safe handling of multidimensional data. Its core component provides flexible data containers along with algorithms built on top of the performance portable Kokkos library. The library is fully compatible with Kokkos and does not attempt to hide it, allowing users to leverage Kokkos' full capabilities while benefiting from DDC’s strongly-typed, labeled multidimensional arrays.
+The DDC library is a C++ library designed for expressive and safe handling of multidimensional data. Its core component provides flexible data containers along with algorithms built on top of the performance portable Kokkos library. The library is fully compatible with Kokkos and does not attempt to hide it, allowing users to leverage Kokkos' full capabilities while benefiting from DDC’s strongly-typed, labelled multidimensional arrays.
 
 ### Containers
 
@@ -204,7 +204,7 @@ Built on top of DDC core, we also provide optional components as in the Xarray e
 
 The FFT and splines components both operate on specialized dimensions provided by DDC: `UniformPointSampling` and `NonUniformPointSampling`.
 
-- FFT extension: This component wraps the Kokkos-fft library to provide labeled semantics for the discrete Fourier transform (DFT). It converts data between a uniform sampling and Fourier coefficients in the Fourier basis. Depending on the transformation direction, the input array is defined over `UniformPointSampling`, while the output is defined over `PeriodicPointSampling`, which represents the Fourier dimension in DDC.
+- FFT extension: This component wraps the Kokkos-fft library to provide labelled semantics for the discrete Fourier transform (DFT). It converts data between a uniform sampling and Fourier coefficients in the Fourier basis. Depending on the transformation direction, the input array is defined over `UniformPointSampling`, while the output is defined over `PeriodicPointSampling`, which represents the Fourier dimension in DDC.
 - Splines extension: Similar to FFT, this component provides a spline transform, converting between sampled data and B-spline coefficients in a spline basis. Depending on the transformation direction, the input array is defined over `UniformPointSampling` or `NonUniformPointSampling`, while the output is defined over `UniformBSplines` or `NonUniformBSplines`. (TODO: add a citation)
 
 ### DDC pdi

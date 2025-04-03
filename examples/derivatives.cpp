@@ -42,7 +42,7 @@ int main()
     double const x = 2 * Kokkos::numbers::pi / 3;
 
     // Loop over the domain to compute and store cosine derivatives
-    for (ddc::DiscreteElement<DimDerivOrder> order_idx : cosine_derivatives.domain()) {
+    for (ddc::DiscreteElement<DimDerivOrder> const order_idx : cosine_derivatives.domain()) {
         // Compute the cosine derivative using the pattern:
         // cos(x + order * π/2): follows the derivative cycle of cosine
         cosine_derivatives(order_idx) = Kokkos::cos(x + order(order_idx) * Kokkos::numbers::pi / 2);

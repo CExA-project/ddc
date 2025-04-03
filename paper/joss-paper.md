@@ -55,7 +55,7 @@ Despite their importance, multidimensional arrays introduce several practical ch
 
 Solutions have been proposed in Python and Julia to address these issues. In Python, the Xarray [@hoyer2017xarray] and Pandas [@reback2020pandas] libraries allow users to label dimensions that can then be used to perform computation. Following a similar approach, the "Discrete Domain Computation" (DDC) library aims to bring equivalent functionality to the C++ ecosystem. It uses a zero overhead abstraction approach, i.e. with labels fixed at compile-time, on top of different performant portable libraries, such as: Kokkos [@9485033], Kokkos Kernels (TODO: add a citation), Kokkos-fft (TODO: add a citation) and Ginkgo [@GinkgoJoss2020].
 
-The library is actively used to modernize the Fortran-based Gysela plasma simulation code (TODO: add a citation). This simulation code relies heavily on high-dimensional arrays that span multiple representations, including Fourier, Spline, Cartesian, and various curvilinear meshes. In the legacy Fortran implementation, these arrays were manipulated using implicit conventions, making it difficult to enforce correctness at the API level. DDC enables a more explicit, strongly-typed representation of these arrays, ensuring at compile-time that function calls respect the expected dimensions. This reduces indexing errors and improves code maintainability, particularly in large-scale scientific software.
+The library is actively used to modernize the Fortran-based Gysela plasma simulation code (TODO: add a citation). This simulation code relies heavily on high-dimensional arrays that span multiple representations, including Fourier, spline, Cartesian, and various curvilinear meshes. In the legacy Fortran implementation, these arrays were manipulated using implicit conventions, making it difficult to enforce correctness at the API level. DDC enables a more explicit, strongly-typed representation of these arrays, ensuring at compile-time that function calls respect the expected dimensions. This reduces indexing errors and improves code maintainability, particularly in large-scale scientific software.
 
 ## DDC Core key features
 
@@ -198,19 +198,18 @@ int main()
 
 ## DDC components
 
-Built on top of DDC core, we also provide optional components as in the Xarray ecosystem. As of today we provide three components: fft, pdi and splines. The fft and splines components work with dimensions of a specific form provided by DDC called `UniformPointSampling` and `NonUniformPointSampling`.
+Built on top of DDC core, we also provide optional components as in the Xarray ecosystem. As of today we provide three components: fft, pdi and splines.
 
-### DDC fft
+### DDC fft and splines
 
-This extension provides a thin wrapper on top of the Kokkos-fft library to provide labelled semantics of the discrete Fourier transform. The input array is expected to be defined over `UniformPointSampling` dimensions. The output of the transformation is an array where dimensions over `PeriodicPointSampling`.
+The FFT and splines components both operate on specialized dimensions provided by DDC: `UniformPointSampling` and `NonUniformPointSampling`.
 
-### DDC splines
-
-This extension provides a Spline transform either from `UniformPointSampling` or `NonUniformPointSampling` array dimensions. (TODO: add a citation)
+- FFT extension: This component wraps the Kokkos-fft library to provide labeled semantics for the discrete Fourier transform (DFT). It converts data between a uniform sampling and Fourier coefficients in the Fourier basis. Depending on the transformation direction, the input array is defined over `UniformPointSampling`, while the output is defined over `PeriodicPointSampling`, which represents the Fourier dimension in DDC.
+- Splines extension: Similar to FFT, this component provides a spline transform, converting between sampled data and B-spline coefficients in a spline basis. Depending on the transformation direction, the input array is defined over `UniformPointSampling` or `NonUniformPointSampling`, while the output is defined over `UniformBSplines` or `NonUniformBSplines`. (TODO: add a citation)
 
 ### DDC pdi
 
-PDI ([website](https://pdi.dev/main)) is a C data interface library allowing loose coupling with external libraries through PDI plugins like HDF5, NetCDF, Catalyst... This extension eases the metadata serialisation of the DDC containers. Instead of manually expose, sizes, strides and the pointer of the underlying array, the user can directly expose the DDC container.
+PDI ([website](https://pdi.dev/main)) is a C data interface library allowing loose coupling with external libraries through PDI plugins like HDF5, NetCDF, Catalyst and more. This extension eases the metadata serialisation of the DDC containers. Instead of manually expose, sizes, strides and the pointer of the underlying array, the user can directly expose the DDC container.
 
 ## Acknowledgements
 

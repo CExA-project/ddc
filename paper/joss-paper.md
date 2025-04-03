@@ -92,9 +92,9 @@ The relationship between `DiscreteVector` and `DiscreteElement` is analogous to 
 
 That is to say, if `v1` and `v2` are `DiscreteVector`, `e1` and `e2` are `DiscreteElement`, the following operations are valid:
 
-- v1 + v2 returns a`DiscreteVector`,
-- v2 - v1 returns a`DiscreteVector`,
-- e2 - e1 returns a`DiscreteVector`,
+- v1 + v2 returns a `DiscreteVector`,
+- v2 - v1 returns a `DiscreteVector`,
+- e2 - e1 returns a `DiscreteVector`,
 - e1 + v1 and v1 + e1 return a `DiscreteElement`.
 
 ### Sets of `DiscreteElement`
@@ -196,9 +196,9 @@ int main()
 }
 ```
 
-## DDC extensions
+## DDC components
 
-Built on top of DDC core, we also provide optional extensions as in the Xarray ecosystem. As of today we provide three extensions: fft, pdi and splines. The fft and splines extensions work with dimensions of a specific form provided by DDC called `UniformPointSampling` and `NonUniformPointSampling`.
+Built on top of DDC core, we also provide optional components as in the Xarray ecosystem. As of today we provide three components: fft, pdi and splines. The fft and splines components work with dimensions of a specific form provided by DDC called `UniformPointSampling` and `NonUniformPointSampling`.
 
 ### DDC fft
 

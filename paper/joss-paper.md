@@ -59,7 +59,7 @@ The library is actively used to modernize the Fortran-based Gysela plasma simula
 
 ## DDC Core key features
 
-The DDC library is a C++ library designed for expressive and safe handling of multidimensional data. Its core component provides flexible data containers along with algorithms built on top of the performance portable Kokkos library.
+The DDC library is a C++ library designed for expressive and safe handling of multidimensional data. Its core component provides flexible data containers along with algorithms built on top of the performance portable Kokkos library. The library is fully compatible with Kokkos and does not attempt to hide it, allowing users to leverage Kokkos' full capabilities while benefiting from DDC’s strongly-typed, labeled multidimensional arrays.
 
 ### Containers
 

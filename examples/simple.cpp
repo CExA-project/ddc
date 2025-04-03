@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <iostream>
+
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
@@ -10,10 +12,19 @@
 struct Dim1
 {
 };
-
 struct Dim2
 {
 };
+
+// For the purpose of the demonstration, this function makes only sense with Dim2
+int sum_over_dim2(ddc::ChunkSpan<int, ddc::DiscreteDomain<Dim2>> slice)
+{
+    int sum = 0;
+    for (ddc::DiscreteElement<Dim2> idx2 : slice.domain()) {
+        sum += slice(idx2);
+    }
+    return sum;
+}
 
 int main()
 {
@@ -38,15 +49,22 @@ int main()
     ddc::Chunk my_array("my_array", dom, ddc::HostAllocator<int>());
 
     // Iterate over the first dimension (Dim1)
-    for (ddc::DiscreteElement<Dim1> idx1 : dom1) {
+    for (ddc::DiscreteElement<Dim1> const idx1 : dom1) {
         // Iterate over the second dimension (Dim2)
-        for (ddc::DiscreteElement<Dim2> idx2 : dom2) {
+        for (ddc::DiscreteElement<Dim2> const idx2 : dom2) {
             // Assign the value 1 to each element in the 2D array
             my_array(idx1, idx2) = 1;
 
-            // The following would not compile as my_array expects a DiscreteElement over Dim2
+            // The following would NOT compile as my_array expects a DiscreteElement over Dim2
             // my_array(idx1, idx1) = 1;
         }
+    }
+
+    // Extracting a 1D view over Dim2 for each idx1
+    for (ddc::DiscreteElement<Dim1> const idx1 : dom1) {
+        // The following would NOT compile if sum_over_dim2 si called
+        // with a `DiscreteDomain<Dim1>`, ensuring type safety.
+        std::cout << sum_over_dim2(my_array[idx1]) << '\n';
     }
 
     return 0;

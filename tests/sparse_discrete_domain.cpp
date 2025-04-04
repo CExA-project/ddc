@@ -13,7 +13,7 @@ struct DDimX
 };
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
-using DDomX = ddc::StorageDiscreteDomain<DDimX>;
+using DDomX = ddc::SparseDiscreteDomain<DDimX>;
 
 
 struct DDimY
@@ -21,7 +21,7 @@ struct DDimY
 };
 using DElemY = ddc::DiscreteElement<DDimY>;
 using DVectY = ddc::DiscreteVector<DDimY>;
-using DDomY = ddc::StorageDiscreteDomain<DDimY>;
+using DDomY = ddc::SparseDiscreteDomain<DDimY>;
 
 
 struct DDimZ
@@ -29,34 +29,34 @@ struct DDimZ
 };
 using DElemZ = ddc::DiscreteElement<DDimZ>;
 using DVectZ = ddc::DiscreteVector<DDimZ>;
-using DDomZ = ddc::StorageDiscreteDomain<DDimZ>;
+using DDomZ = ddc::SparseDiscreteDomain<DDimZ>;
 
 
 using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
 using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
-using DDomXY = ddc::StorageDiscreteDomain<DDimX, DDimY>;
+using DDomXY = ddc::SparseDiscreteDomain<DDimX, DDimY>;
 
 
 using DElemYX = ddc::DiscreteElement<DDimY, DDimX>;
 using DVectYX = ddc::DiscreteVector<DDimY, DDimX>;
-using DDomYX = ddc::StorageDiscreteDomain<DDimY, DDimX>;
+using DDomYX = ddc::SparseDiscreteDomain<DDimY, DDimX>;
 
 using DElemXZ = ddc::DiscreteElement<DDimX, DDimZ>;
 using DVectXZ = ddc::DiscreteVector<DDimX, DDimZ>;
-using DDomXZ = ddc::StorageDiscreteDomain<DDimX, DDimZ>;
+using DDomXZ = ddc::SparseDiscreteDomain<DDimX, DDimZ>;
 
 using DElemZY = ddc::DiscreteElement<DDimZ, DDimY>;
 using DVectZY = ddc::DiscreteVector<DDimZ, DDimY>;
-using DDomZY = ddc::StorageDiscreteDomain<DDimZ, DDimY>;
+using DDomZY = ddc::SparseDiscreteDomain<DDimZ, DDimY>;
 
 
 using DElemXYZ = ddc::DiscreteElement<DDimX, DDimY, DDimZ>;
 using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
-using DDomXYZ = ddc::StorageDiscreteDomain<DDimX, DDimY, DDimZ>;
+using DDomXYZ = ddc::SparseDiscreteDomain<DDimX, DDimY, DDimZ>;
 
 using DElemZYX = ddc::DiscreteElement<DDimZ, DDimY, DDimX>;
 using DVectZYX = ddc::DiscreteVector<DDimZ, DDimY, DDimX>;
-using DDomZYX = ddc::StorageDiscreteDomain<DDimZ, DDimY, DDimX>;
+using DDomZYX = ddc::SparseDiscreteDomain<DDimZ, DDimY, DDimX>;
 
 DElemX constexpr lbound_x(50);
 // DVectX constexpr nelems_x(3);
@@ -81,7 +81,7 @@ DElemY constexpr lbound_y(4);
 
 } // namespace anonymous_namespace_workaround_discrete_domain_cpp
 
-TEST(StorageDiscreteDomainTest, Constructor)
+TEST(SparseDiscreteDomainTest, Constructor)
 {
     Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x("view_x", 2);
     view_x(0) = lbound_x + 0;

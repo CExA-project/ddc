@@ -66,9 +66,9 @@ int main()
     unsigned const height = 5;
 
     ddc::DiscreteDomain<DDimX> const domain_x
-            = ddc::init_trivial_space(ddc::DiscreteVector<DDimX>(length));
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDimX>(length));
     ddc::DiscreteDomain<DDimY> const domain_y
-            = ddc::init_trivial_space(ddc::DiscreteVector<DDimY>(height));
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDimY>(height));
 
     ddc::DiscreteDomain<DDimX, DDimY> const domain_xy(domain_x, domain_y);
 

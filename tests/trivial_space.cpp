@@ -8,13 +8,22 @@
 
 inline namespace anonymous_namespace_workaround_trivial_dimension_cpp {
 
-class DDimX;
+struct DDimX
+{
+};
 
 } // namespace anonymous_namespace_workaround_trivial_dimension_cpp
 
-TEST(TrivialDimension, Size)
+TEST(TrivialBoundedSpace, Size)
 {
-    ddc::DiscreteVector<DDimX> const n(10);
-    ddc::DiscreteDomain<DDimX> const ddom = ddc::init_trivial_space(n);
+    ddc::DiscreteVector<DDimX> constexpr n(10);
+    ddc::DiscreteDomain<DDimX> constexpr ddom = ddc::init_trivial_bounded_space(n);
     EXPECT_EQ(ddom.extents(), n);
+    EXPECT_EQ(ddom.front().uid(), 0);
+}
+
+TEST(TrivialHalfBoundedSpace, Size)
+{
+    ddc::DiscreteElement<DDimX> constexpr delem = ddc::init_trivial_half_bounded_space<DDimX>();
+    EXPECT_EQ(delem.uid(), 0);
 }

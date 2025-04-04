@@ -11,10 +11,10 @@ var searchData=
   ['_7ekokkosallocator_8',['~KokkosAllocator',['../classddc_1_1KokkosAllocator.html#a5822844dedbb1bbdde3eb14d5fd37ecc',1,'ddc::KokkosAllocator']]],
   ['_7epdievent_9',['~PdiEvent',['../classddc_1_1PdiEvent.html#a515f802992d76072a6933e3185b5ae95',1,'ddc::PdiEvent']]],
   ['_7escopeguard_10',['~ScopeGuard',['../classddc_1_1ScopeGuard.html#a22954ab7588823e92c0c236493bb2775',1,'ddc::ScopeGuard']]],
-  ['_7esplinebuilder_11',['~SplineBuilder',['../classddc_1_1SplineBuilder.html#af145f7498d92b21d241283cf45f538c1',1,'ddc::SplineBuilder']]],
-  ['_7esplinebuilder2d_12',['~SplineBuilder2D',['../classddc_1_1SplineBuilder2D.html#a9d32cc2cdca461c49e6973cfc6a60bf8',1,'ddc::SplineBuilder2D']]],
-  ['_7esplineevaluator_13',['~SplineEvaluator',['../classddc_1_1SplineEvaluator.html#aeff7d4749adf2afc3dc8bd20ad641d1a',1,'ddc::SplineEvaluator']]],
-  ['_7esplineevaluator2d_14',['~SplineEvaluator2D',['../classddc_1_1SplineEvaluator2D.html#a5a8b1cfcc584f6ab50ee30145f029ebf',1,'ddc::SplineEvaluator2D']]],
-  ['_7estoragediscretedomain_15',['~storagediscretedomain',['../classddc_1_1StorageDiscreteDomain.html#aa4f88cc4e2d059345cc42188749ac134',1,'ddc::StorageDiscreteDomain::~StorageDiscreteDomain()'],['../classddc_1_1StorageDiscreteDomain_3_4.html#a741eb9c81e631d80e7cfdea5b4d01379',1,'ddc::StorageDiscreteDomain&lt;&gt;::~StorageDiscreteDomain()']]],
+  ['_7esparsediscretedomain_11',['~sparsediscretedomain',['../classddc_1_1SparseDiscreteDomain.html#afe2261f847dbd6c4a48e84f0846ee900',1,'ddc::SparseDiscreteDomain::~SparseDiscreteDomain()'],['../classddc_1_1SparseDiscreteDomain_3_4.html#ae52f17992a63f9fbbd29901a723160ae',1,'ddc::SparseDiscreteDomain&lt;&gt;::~SparseDiscreteDomain()']]],
+  ['_7esplinebuilder_12',['~SplineBuilder',['../classddc_1_1SplineBuilder.html#af145f7498d92b21d241283cf45f538c1',1,'ddc::SplineBuilder']]],
+  ['_7esplinebuilder2d_13',['~SplineBuilder2D',['../classddc_1_1SplineBuilder2D.html#a9d32cc2cdca461c49e6973cfc6a60bf8',1,'ddc::SplineBuilder2D']]],
+  ['_7esplineevaluator_14',['~SplineEvaluator',['../classddc_1_1SplineEvaluator.html#aeff7d4749adf2afc3dc8bd20ad641d1a',1,'ddc::SplineEvaluator']]],
+  ['_7esplineevaluator2d_15',['~SplineEvaluator2D',['../classddc_1_1SplineEvaluator2D.html#a5a8b1cfcc584f6ab50ee30145f029ebf',1,'ddc::SplineEvaluator2D']]],
   ['_7estrideddiscretedomain_16',['~strideddiscretedomain',['../classddc_1_1StridedDiscreteDomain.html#aaaad3bf019594b5d812b38e83b9327ec',1,'ddc::StridedDiscreteDomain::~StridedDiscreteDomain()'],['../classddc_1_1StridedDiscreteDomain_3_4.html#ad59184147539a90ef37b9e8c02e0e1dc',1,'ddc::StridedDiscreteDomain&lt;&gt;::~StridedDiscreteDomain()']]]
 ];

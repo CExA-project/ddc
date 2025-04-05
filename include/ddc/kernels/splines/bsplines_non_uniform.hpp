@@ -107,6 +107,8 @@ public:
         ddc::DiscreteDomain<knot_discrete_dimension_type> m_knot_domain;
         ddc::DiscreteDomain<knot_discrete_dimension_type> m_break_point_domain;
 
+        ddc::DiscreteElement<DDim> m_reference;
+
     public:
         Impl() = default;
 
@@ -163,6 +165,7 @@ public:
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
             : m_knot_domain(impl.m_knot_domain)
             , m_break_point_domain(impl.m_break_point_domain)
+            , m_reference(impl.m_reference)
         {
         }
 
@@ -255,8 +258,7 @@ public:
         KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_discrete_dimension_type>
         get_first_support_knot(discrete_element_type const& ix) const
         {
-            return ddc::DiscreteElement<knot_discrete_dimension_type>(
-                    (ix - discrete_element_type(0)).value());
+            return m_knot_domain.front() + (ix - m_reference).value();
         }
 
         /** @brief Returns the coordinate of the last support knot associated to a DiscreteElement identifying a B-spline.
@@ -321,7 +323,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION discrete_domain_type full_domain() const
         {
-            return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
+            return discrete_domain_type(m_reference, discrete_vector_type(size()));
         }
 
         /** @brief Returns the discrete domain which describes the break points.
@@ -372,7 +374,7 @@ public:
         KOKKOS_INLINE_FUNCTION discrete_element_type get_first_bspline_in_cell(
                 ddc::DiscreteElement<knot_discrete_dimension_type> const& ic) const
         {
-            return discrete_element_type((ic - m_break_point_domain.front()).value());
+            return m_reference + (ic - m_break_point_domain.front()).value();
         }
 
         /**
@@ -413,6 +415,7 @@ NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::Impl(
               ddc::DiscreteElement<knot_discrete_dimension_type>(degree()),
               ddc::DiscreteVector<knot_discrete_dimension_type>(
                       (breaks_end - breaks_begin))) // Create a mesh of break points
+    , m_reference(ddc::create_reference_discrete_element<DDim>())
 {
     std::vector<ddc::Coordinate<CDim>> knots((breaks_end - breaks_begin) + 2 * degree());
     // Fill the provided knots

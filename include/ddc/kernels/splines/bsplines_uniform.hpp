@@ -119,6 +119,8 @@ public:
         ddc::DiscreteDomain<knot_discrete_dimension_type> m_knot_domain;
         ddc::DiscreteDomain<knot_discrete_dimension_type> m_break_point_domain;
 
+        ddc::DiscreteElement<DDim> m_reference;
+
     public:
         Impl() = default;
 
@@ -129,6 +131,7 @@ public:
          * @param ncells The number of cells in the range [rmin, rmax].
          */
         explicit Impl(ddc::Coordinate<CDim> rmin, ddc::Coordinate<CDim> rmax, std::size_t ncells)
+            : m_reference(ddc::create_reference_discrete_element<DDim>())
         {
             assert(ncells > 0);
             std::tie(m_break_point_domain, m_knot_domain, std::ignore, std::ignore)
@@ -150,6 +153,7 @@ public:
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
             : m_knot_domain(impl.m_knot_domain)
             , m_break_point_domain(impl.m_break_point_domain)
+            , m_reference(impl.m_reference)
         {
         }
 
@@ -246,8 +250,7 @@ public:
         KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<knot_discrete_dimension_type>
         get_first_support_knot(discrete_element_type const& ix) const
         {
-            return ddc::DiscreteElement<knot_discrete_dimension_type>(
-                    (ix - discrete_element_type(0)).value());
+            return m_knot_domain.front() + (ix - m_reference).value();
         }
 
         /** @brief Returns the coordinate of the last support knot associated to a DiscreteElement identifying a B-spline.
@@ -312,7 +315,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION discrete_domain_type full_domain() const
         {
-            return discrete_domain_type(discrete_element_type(0), discrete_vector_type(size()));
+            return discrete_domain_type(m_reference, discrete_vector_type(size()));
         }
 
         /** @brief Returns the discrete domain which describes the break points.
@@ -410,7 +413,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
         DDC_MDSPAN_ACCESS_OP(values, j) = saved;
     }
 
-    return discrete_element_type(jmin);
+    return m_reference + jmin;
 }
 
 template <class CDim, std::size_t D>
@@ -455,7 +458,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     }
     DDC_MDSPAN_ACCESS_OP(derivs, degree()) = bj;
 
-    return discrete_element_type(jmin);
+    return m_reference + jmin;
 }
 
 template <class CDim, std::size_t D>
@@ -548,7 +551,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
         d *= (degree() - k) * inv_dx;
     }
 
-    return discrete_element_type(jmin);
+    return m_reference + jmin;
 }
 
 template <class CDim, std::size_t D>

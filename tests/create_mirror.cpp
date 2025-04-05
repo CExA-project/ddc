@@ -11,7 +11,7 @@
 
 #include <Kokkos_Core.hpp>
 
-inline namespace anonymous_namespace_workaround_chunk_cpp {
+inline namespace anonymous_namespace_workaround_create_mirror_cpp {
 
 struct DDimX
 {
@@ -20,7 +20,7 @@ using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
 using DDomX = ddc::DiscreteDomain<DDimX>;
 
-DElemX constexpr lbound_x(50);
+DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
 DVectX constexpr nelems_x(3);
 DDomX constexpr dom_x(lbound_x, nelems_x);
 
@@ -38,7 +38,7 @@ template <class ElementType, class Support, class Layout, class MemorySpace, cla
             KOKKOS_LAMBDA(DElemX elem_x) { return chunk_span(elem_x) == value; });
 }
 
-} // namespace anonymous_namespace_workaround_chunk_cpp
+} // namespace anonymous_namespace_workaround_create_mirror_cpp
 
 TEST(CreateMirror, Host)
 {

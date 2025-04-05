@@ -69,6 +69,18 @@ KOKKOS_FUNCTION constexpr DiscreteVectorElement const& get_or(
     return tuple.template get_or<QueryTag>(default_value);
 }
 
+template <class QueryTag, class... Tags>
+KOKKOS_FUNCTION constexpr DiscreteVector<QueryTag> select_or(
+        DiscreteVector<Tags...> const& arr,
+        DiscreteVector<QueryTag> const& default_value) noexcept
+{
+    if constexpr (in_tags_v<QueryTag, detail::TypeSeq<Tags...>>) {
+        return DiscreteVector<QueryTag>(arr);
+    } else {
+        return default_value;
+    }
+}
+
 /// Unary operators: +, -
 
 template <class... Tags>

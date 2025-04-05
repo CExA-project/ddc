@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-inline namespace anonymous_namespace_workaround_discrete_domain_cpp {
+inline namespace anonymous_namespace_workaround_sparse_discrete_domain_cpp {
 
 struct DDimX
 {
@@ -58,13 +58,13 @@ using DElemZYX = ddc::DiscreteElement<DDimZ, DDimY, DDimX>;
 using DVectZYX = ddc::DiscreteVector<DDimZ, DDimY, DDimX>;
 using DDomZYX = ddc::SparseDiscreteDomain<DDimZ, DDimY, DDimX>;
 
-DElemX constexpr lbound_x(50);
+DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
 // DVectX constexpr nelems_x(3);
 // DElemX constexpr sentinel_x(lbound_x + nelems_x);
 // DElemX constexpr ubound_x(sentinel_x - 1);
 
 
-DElemY constexpr lbound_y(4);
+DElemY constexpr lbound_y = ddc::init_trivial_half_bounded_space<DDimY>();
 // DVectY constexpr nelems_y(10);
 // DElemY constexpr sentinel_y(lbound_y);
 // DElemY constexpr ubound_y(sentinel_y - 1);
@@ -79,7 +79,7 @@ DElemY constexpr lbound_y(4);
 // DElemXZ constexpr lbound_x_z(lbound_x, lbound_z);
 // DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
 
-} // namespace anonymous_namespace_workaround_discrete_domain_cpp
+} // namespace anonymous_namespace_workaround_sparse_discrete_domain_cpp
 
 TEST(SparseDiscreteDomainTest, Constructor)
 {

@@ -52,6 +52,8 @@ public:
         /// origin
         Coordinate<CDim> m_point;
 
+        DiscreteElement<DDim> m_reference;
+
     public:
         using discrete_dimension_type = SingleDiscretization;
 
@@ -61,10 +63,16 @@ public:
 
         using discrete_vector_type = DiscreteVector<DDim>;
 
-        explicit Impl(Coordinate<CDim> origin) noexcept : m_point(std::move(origin)) {}
+        explicit Impl(Coordinate<CDim> origin) noexcept
+            : m_point(std::move(origin))
+            , m_reference(create_reference_discrete_element<DDim>())
+        {
+        }
 
         template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_point(impl.m_point)
+        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
+            : m_point(impl.m_point)
+            , m_reference(impl.m_reference)
         {
         }
 
@@ -83,10 +91,15 @@ public:
             return m_point;
         }
 
+        KOKKOS_FUNCTION discrete_element_type front() const noexcept
+        {
+            return m_reference;
+        }
+
         KOKKOS_FUNCTION Coordinate<CDim> coordinate(
                 [[maybe_unused]] discrete_element_type icoord) const noexcept
         {
-            assert(icoord == discrete_element_type(0));
+            assert(icoord == front());
             return m_point;
         }
     };

@@ -165,7 +165,7 @@ public:
     template <class QueryDDim>
     KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDim> extent() const noexcept
     {
-        return DiscreteVector<QueryDDim>(uid<QueryDDim>(m_extents));
+        return DiscreteVector<QueryDDim>(m_extents);
     }
 
     KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept
@@ -176,7 +176,7 @@ public:
     KOKKOS_FUNCTION constexpr discrete_element_type back() const noexcept
     {
         return discrete_element_type(
-                (uid<DDims>(m_element_begin)
+                (DiscreteElement<DDims>(m_element_begin)
                  + (get<DDims>(m_extents) - 1) * get<DDims>(m_strides))...);
     }
 
@@ -612,7 +612,7 @@ public:
 
     KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator& operator++()
     {
-        m_value.uid() += m_stride.value();
+        m_value += m_stride;
         return *this;
     }
 
@@ -625,7 +625,7 @@ public:
 
     KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator& operator--()
     {
-        m_value.uid() -= m_stride.value();
+        m_value -= m_stride;
         return *this;
     }
 
@@ -639,9 +639,9 @@ public:
     KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator& operator+=(difference_type n)
     {
         if (n >= difference_type(0)) {
-            m_value.uid() += static_cast<DiscreteElementType>(n) * m_stride.value();
+            m_value += static_cast<DiscreteElementType>(n) * m_stride;
         } else {
-            m_value.uid() -= static_cast<DiscreteElementType>(-n) * m_stride.value();
+            m_value -= static_cast<DiscreteElementType>(-n) * m_stride;
         }
         return *this;
     }
@@ -649,16 +649,16 @@ public:
     KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator& operator-=(difference_type n)
     {
         if (n >= difference_type(0)) {
-            m_value.uid() -= static_cast<DiscreteElementType>(n) * m_stride.value();
+            m_value -= static_cast<DiscreteElementType>(n) * m_stride;
         } else {
-            m_value.uid() += static_cast<DiscreteElementType>(-n) * m_stride.value();
+            m_value += static_cast<DiscreteElementType>(-n) * m_stride;
         }
         return *this;
     }
 
     KOKKOS_FUNCTION constexpr DiscreteElement<DDim> operator[](difference_type n) const
     {
-        return m_value + n * m_stride.value();
+        return m_value + n * m_stride;
     }
 
     friend KOKKOS_FUNCTION constexpr bool operator==(

@@ -14,7 +14,7 @@
 
 std::pair<ddc::Coordinate<rdc::DimX>, ddc::Coordinate<rdc::DimX>> read_from_device()
 {
-    rdc::DDomX const dom_x(rdc::DElemX(0), rdc::DVectX(2));
+    rdc::DDomX const dom_x = ddc::init_trivial_bounded_space(rdc::DVectX(2));
     ddc::Chunk allocation_d(dom_x, ddc::DeviceAllocator<double>());
     ddc::ChunkSpan const array = allocation_d.span_view();
     ddc::parallel_for_each(
@@ -27,7 +27,8 @@ std::pair<ddc::Coordinate<rdc::DimX>, ddc::Coordinate<rdc::DimX>> read_from_devi
     ddc::parallel_deepcopy(allocation_h, allocation_d);
     return std::pair<
             ddc::Coordinate<rdc::DimX>,
-            ddc::Coordinate<rdc::DimX>>(allocation_h(rdc::DElemX(0)), allocation_h(rdc::DElemX(1)));
+            ddc::Coordinate<
+                    rdc::DimX>>(allocation_h(dom_x.front()), allocation_h(dom_x.front() + 1));
 }
 
 TEST(RelocatableDeviceCode, ReadFromDevice)

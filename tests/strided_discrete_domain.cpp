@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-inline namespace anonymous_namespace_workaround_discrete_domain_cpp {
+inline namespace anonymous_namespace_workaround_strided_discrete_domain_cpp {
 
 struct DDimX
 {
@@ -58,20 +58,20 @@ using DElemZYX = ddc::DiscreteElement<DDimZ, DDimY, DDimX>;
 using DVectZYX = ddc::DiscreteVector<DDimZ, DDimY, DDimX>;
 using DDomZYX = ddc::StridedDiscreteDomain<DDimZ, DDimY, DDimX>;
 
-DElemX constexpr lbound_x(50);
+DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
 DVectX constexpr nelems_x(3);
 DVectX constexpr strides_x(10);
 DElemX constexpr sentinel_x(lbound_x + nelems_x * strides_x);
 DElemX constexpr ubound_x(sentinel_x - strides_x);
 
 
-DElemY constexpr lbound_y(4);
+DElemY constexpr lbound_y = ddc::init_trivial_half_bounded_space<DDimY>();
 DVectY constexpr nelems_y(12);
 DVectY constexpr strides_y(10);
 DElemY constexpr sentinel_y(lbound_y + nelems_y * strides_y);
 DElemY constexpr ubound_y(sentinel_y - strides_y);
 
-DElemZ constexpr lbound_z(7);
+DElemZ constexpr lbound_z = ddc::init_trivial_half_bounded_space<DDimZ>();
 DVectZ constexpr nelems_z(15);
 DVectZ constexpr strides_z(3);
 
@@ -84,7 +84,7 @@ DElemXZ constexpr lbound_x_z(lbound_x, lbound_z);
 DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
 DVectXZ constexpr strides_x_z(strides_x, strides_z);
 
-} // namespace anonymous_namespace_workaround_discrete_domain_cpp
+} // namespace anonymous_namespace_workaround_strided_discrete_domain_cpp
 
 TEST(StridedDiscreteDomainTest, Constructor)
 {
@@ -136,8 +136,8 @@ TEST(StridedDiscreteDomainTest, CompareSameDomains)
 
 TEST(StridedDiscreteDomainTest, CompareDifferentDomains)
 {
-    DDomXY const dom_x_y_1(DElemXY(0, 1), DVectXY(1, 2), strides_x_y);
-    DDomXY const dom_x_y_2(DElemXY(2, 3), DVectXY(3, 4), strides_x_y);
+    DDomXY const dom_x_y_1(lbound_x_y + DVectXY(0, 1), DVectXY(1, 2), strides_x_y);
+    DDomXY const dom_x_y_2(lbound_x_y + DVectXY(2, 3), DVectXY(3, 4), strides_x_y);
     EXPECT_FALSE(dom_x_y_1 == dom_x_y_2);
     EXPECT_FALSE(dom_x_y_1 == DDomYX(dom_x_y_2));
     EXPECT_TRUE(dom_x_y_1 != dom_x_y_2);
@@ -146,8 +146,8 @@ TEST(StridedDiscreteDomainTest, CompareDifferentDomains)
 
 TEST(StridedDiscreteDomainTest, CompareEmptyDomains)
 {
-    DDomXY const dom_x_y_1(DElemXY(4, 1), DVectXY(0, 0), strides_x_y);
-    DDomXY const dom_x_y_2(DElemXY(3, 9), DVectXY(0, 0), strides_x_y);
+    DDomXY const dom_x_y_1(lbound_x_y + DVectXY(4, 1), DVectXY(0, 0), strides_x_y);
+    DDomXY const dom_x_y_2(lbound_x_y + DVectXY(3, 9), DVectXY(0, 0), strides_x_y);
     EXPECT_TRUE(dom_x_y_1.empty());
     EXPECT_TRUE(dom_x_y_2.empty());
     EXPECT_TRUE(dom_x_y_1 == dom_x_y_2);
@@ -175,7 +175,7 @@ TEST(StridedDiscreteDomainTest, RangeFor)
         EXPECT_LE(lbound_x, ix);
         EXPECT_EQ(ix, ii);
         EXPECT_LE(ix, ubound_x);
-        ii.uid<DDimX>() += strides_x.value();
+        ii += strides_x;
     }
 }
 
@@ -279,7 +279,7 @@ TEST(StridedDiscreteDomainTest, DistanceFromFront)
 //     // the error message is checked with clang & gcc only
 //     EXPECT_DEATH(
 //             dom_x_y.restrict_with(subdomain_x),
-//             R"rgx([Aa]ssert.*uid<ODDims>\(m_element_begin\).*uid<ODDims>\(odomain\.m_element_begin\))rgx");
+//             R"rgx([Aa]ssert.*DiscreteElement<ODDims>\(m_element_begin\).*DiscreteElement<ODDims>\(odomain\.m_element_begin\))rgx");
 // #else
 //     GTEST_SKIP();
 // #endif
@@ -293,7 +293,7 @@ TEST(StridedDiscreteDomainTest, DistanceFromFront)
 //     // the error message is checked with clang & gcc only
 //     EXPECT_DEATH(
 //             dom_x_y.restrict_with(subdomain_x),
-//             R"rgx([Aa]ssert.*uid<ODDims>\(m_element_end\).*uid<ODDims>\(odomain\.m_element_end\).*)rgx");
+//             R"rgx([Aa]ssert.*DiscreteElement<ODDims>\(m_element_end\).*DiscreteElement<ODDims>\(odomain\.m_element_end\).*)rgx");
 // #else
 //     GTEST_SKIP();
 // #endif

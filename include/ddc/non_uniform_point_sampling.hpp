@@ -57,6 +57,8 @@ public:
 
         Kokkos::View<Coordinate<CDim>*, MemorySpace> m_points;
 
+        DiscreteElement<DDim> m_reference;
+
     public:
         using discrete_dimension_type = NonUniformPointSampling;
 
@@ -83,6 +85,7 @@ public:
         /// @brief Construct a `NonUniformPointSampling` using a pair of iterators.
         template <class InputIt>
         Impl(InputIt const points_begin, InputIt const points_end)
+            : m_reference(create_reference_discrete_element<DDim>())
         {
             using view_type = Kokkos::View<Coordinate<CDim>*, MemorySpace>;
             if (!std::is_sorted(points_begin, points_end)) {
@@ -97,6 +100,7 @@ public:
         template <class OriginMemorySpace>
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
             : m_points(Kokkos::create_mirror_view_and_copy(MemorySpace(), impl.m_points))
+            , m_reference(impl.m_reference)
         {
         }
 
@@ -118,14 +122,14 @@ public:
         /// @brief Lower bound index of the mesh
         KOKKOS_FUNCTION discrete_element_type front() const noexcept
         {
-            return discrete_element_type(0);
+            return m_reference;
         }
 
         /// @brief Convert a mesh index into a position in `CDim`
         KOKKOS_FUNCTION Coordinate<CDim> coordinate(
                 discrete_element_type const& icoord) const noexcept
         {
-            return m_points(icoord.uid());
+            return m_points((icoord - front()).value());
         }
     };
 

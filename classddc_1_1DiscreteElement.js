@@ -9,7 +9,6 @@ var classddc_1_1DiscreteElement =
     [ "~DiscreteElement", "classddc_1_1DiscreteElement.html#a293505e9414c9901ecfecd6bb8cac68b", null ],
     [ "operator=", "classddc_1_1DiscreteElement.html#ab5ff44dfae4fc04a643937cb85fc5d58", null ],
     [ "operator=", "classddc_1_1DiscreteElement.html#af482b2025b8acab47b16dd381471bc2d", null ],
-    [ "uid_or", "classddc_1_1DiscreteElement.html#a9a2d95d083a799eb040613934cf4fdd1", null ],
     [ "uid", "classddc_1_1DiscreteElement.html#a1cf25c7978e4e81cb194966f7a7ae154", null ],
     [ "uid", "classddc_1_1DiscreteElement.html#a137ec8ab82fce4d40d7f763c0f277586", null ],
     [ "uid", "classddc_1_1DiscreteElement.html#ac40188cb36135f8260b73696f3ee7242", null ],

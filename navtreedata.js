@@ -95,11 +95,11 @@ var NAVTREEINDEX =
 "annotated.html",
 "classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#aa852be327827cbb7fe86ed0bd29e0db7",
 "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#ab68f0579869e02cd8aae7eb756f743c7",
-"classddc_1_1KokkosAllocator.html#a2bdf2a47bb76872e469ab05b689ab1dc",
-"classddc_1_1SparseDiscreteDomain.html#a4c537f8a6c4c3cd232e40ef6e68740a4",
-"classddc_1_1SplineEvaluator.html#aa7e0c79516dff00341775124dc69d61d",
-"classddc_1_1UniformBSplines_1_1Impl.html#a24b9621c7a03174130420452ea0934c7",
-"namespaceddc.html#a4949624204145ca2a0390c7b73a02480",
+"classddc_1_1KokkosAllocator.html#a2e365ed5fc56fdbc3ccc5ae3f96a5ad8",
+"classddc_1_1SparseDiscreteDomain.html#a54f7321e65ea8762e136e7ff6c867a2e",
+"classddc_1_1SplineEvaluator.html#aaff5facf824889023832086180900f05",
+"classddc_1_1UniformBSplines_1_1Impl.html#a2b3b80a14c5d0bed1f4ea38e71188a71",
+"namespaceddc.html#a4c7a2930d12432d53c1fcfbb1a1ecda9",
 "structddc_1_1StridedDiscreteDomainIterator.html#ac307934c78fc1515e131612609fc8f37"
 ];
 

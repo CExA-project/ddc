@@ -134,37 +134,38 @@ $(document).ready(function(){initNavTree('trivial__space_8hpp_source.html',''); 
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#</span><span class="preprocessor">pragma</span> <span class="preprocessor">once</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;ddc/discrete_domain.hpp&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;ddc/discrete_vector.hpp&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">/** Construct a bounded dimension without attributes.</span></div>
-<div class="line"><span class="lineno">   13</span><span class="comment"> *</span></div>
-<div class="line"><span class="lineno">   14</span><span class="comment"> * @param n number of elements</span></div>
-<div class="line"><span class="lineno">   15</span><span class="comment"> * @return a DiscreteDomain of size `n`</span></div>
-<div class="line"><span class="lineno">   16</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">constexpr</span> <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt; <a class="code hl_function" href="namespaceddc.html#a7bda6c333be8318413a5d84aef2bbcb3">init_trivial_bounded_space</a>(<a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; <span class="keyword">const</span> n) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordflow">return</span> <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt;(DiscreteElement&lt;DDim&gt;(0), n);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">/** Construct a half bounded dimension without attributes.</span></div>
-<div class="line"><span class="lineno">   24</span><span class="comment"> *</span></div>
-<div class="line"><span class="lineno">   25</span><span class="comment"> * @return the first DiscreteElement of the dimension</span></div>
-<div class="line"><span class="lineno">   26</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">constexpr</span> DiscreteElement&lt;DDim&gt; <a class="code hl_function" href="namespaceddc.html#a734e4f17c96910498fc0a81433d98781">init_trivial_half_bounded_space</a>() <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keywordflow">return</span> DiscreteElement&lt;DDim&gt;(0);</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;ddc/discrete_element.hpp&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;ddc/discrete_vector.hpp&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">/** Construct a bounded dimension without attributes.</span></div>
+<div class="line"><span class="lineno">   14</span><span class="comment"> *</span></div>
+<div class="line"><span class="lineno">   15</span><span class="comment"> * @param n number of elements</span></div>
+<div class="line"><span class="lineno">   16</span><span class="comment"> * @return a DiscreteDomain of size `n`</span></div>
+<div class="line"><span class="lineno">   17</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">constexpr</span> <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt; <a class="code hl_function" href="namespaceddc.html#a7bda6c333be8318413a5d84aef2bbcb3">init_trivial_bounded_space</a>(<a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDim&gt; <span class="keyword">const</span> n) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordflow">return</span> <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDim&gt;(create_reference_discrete_element&lt;DDim&gt;(), n);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>}</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">/** Construct a half bounded dimension without attributes.</span></div>
+<div class="line"><span class="lineno">   25</span><span class="comment"> *</span></div>
+<div class="line"><span class="lineno">   26</span><span class="comment"> * @return the first DiscreteElement of the dimension</span></div>
+<div class="line"><span class="lineno">   27</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DDim&gt;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">constexpr</span> DiscreteElement&lt;DDim&gt; <a class="code hl_function" href="namespaceddc.html#a734e4f17c96910498fc0a81433d98781">init_trivial_half_bounded_space</a>() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordflow">return</span> create_reference_discrete_element&lt;DDim&gt;();</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>}</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00064">discrete_domain.hpp:64</a></div></div>
-<div class="ttc" id="aclassddc_1_1DiscreteVector_html_a62e896bfa78045521042a0eab87c0acb"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">ddc::DiscreteVector::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteVector&lt; OTags... &gt; const &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00317">discrete_vector.hpp:317</a></div></div>
+<div class="ttc" id="aclassddc_1_1DiscreteVector_html_a62e896bfa78045521042a0eab87c0acb"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">ddc::DiscreteVector::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteVector&lt; OTags... &gt; const &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00329">discrete_vector.hpp:329</a></div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
-<div class="ttc" id="anamespaceddc_html_a734e4f17c96910498fc0a81433d98781"><div class="ttname"><a href="namespaceddc.html#a734e4f17c96910498fc0a81433d98781">ddc::init_trivial_half_bounded_space</a></div><div class="ttdeci">constexpr DiscreteElement&lt; DDim &gt; init_trivial_half_bounded_space() noexcept</div><div class="ttdoc">Construct a half bounded dimension without attributes.</div><div class="ttdef"><b>Definition</b> <a href="trivial__space_8hpp_source.html#l00028">trivial_space.hpp:28</a></div></div>
-<div class="ttc" id="anamespaceddc_html_a7bda6c333be8318413a5d84aef2bbcb3"><div class="ttname"><a href="namespaceddc.html#a7bda6c333be8318413a5d84aef2bbcb3">ddc::init_trivial_bounded_space</a></div><div class="ttdeci">constexpr DiscreteDomain&lt; DDim &gt; init_trivial_bounded_space(DiscreteVector&lt; DDim &gt; const n) noexcept</div><div class="ttdoc">Construct a bounded dimension without attributes.</div><div class="ttdef"><b>Definition</b> <a href="trivial__space_8hpp_source.html#l00018">trivial_space.hpp:18</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a734e4f17c96910498fc0a81433d98781"><div class="ttname"><a href="namespaceddc.html#a734e4f17c96910498fc0a81433d98781">ddc::init_trivial_half_bounded_space</a></div><div class="ttdeci">constexpr DiscreteElement&lt; DDim &gt; init_trivial_half_bounded_space() noexcept</div><div class="ttdoc">Construct a half bounded dimension without attributes.</div><div class="ttdef"><b>Definition</b> <a href="trivial__space_8hpp_source.html#l00029">trivial_space.hpp:29</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a7bda6c333be8318413a5d84aef2bbcb3"><div class="ttname"><a href="namespaceddc.html#a7bda6c333be8318413a5d84aef2bbcb3">ddc::init_trivial_bounded_space</a></div><div class="ttdeci">constexpr DiscreteDomain&lt; DDim &gt; init_trivial_bounded_space(DiscreteVector&lt; DDim &gt; const n) noexcept</div><div class="ttdoc">Construct a bounded dimension without attributes.</div><div class="ttdef"><b>Definition</b> <a href="trivial__space_8hpp_source.html#l00019">trivial_space.hpp:19</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!--

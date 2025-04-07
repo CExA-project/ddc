@@ -83,20 +83,6 @@ DDC employs strongly-typed multi-indices to label dimensions and access data. It
 
 Unlike `DiscreteVector` indices, users cannot directly interpret the internal representation of `DiscreteElement` and must reason about them based solely on their relative position.
 
-### Algebra semantics
-
-The relationship between `DiscreteVector` and `DiscreteElement` is analogous to vector and affine spaces in mathematics, more specifically:
-
-- a `DiscreteVector` behaves like a vector in a vector space,
-- a `DiscreteElement` behaves like a point in an affine space.
-
-That is to say, if `v1` and `v2` are `DiscreteVector`, `e1` and `e2` are `DiscreteElement`, the following operations are valid:
-
-- v1 + v2 returns a `DiscreteVector`,
-- v2 - v1 returns a `DiscreteVector`,
-- e2 - e1 returns a `DiscreteVector`,
-- e1 + v1 and v1 + e1 return a `DiscreteElement`.
-
 ### Sets of `DiscreteElement`
 
 The semantics of DDC containers is to associate data to a set of `DiscreteElement` indices. Let us note that the set of all possible `DiscreteElement` has a total order that is typically established once and for all at program initialisation. Thus to be able to construct a DDC container one must provide a multidimensional set of `DiscreteElement` indices, only these indices can be later used to access the container’s data.

@@ -253,7 +253,10 @@ TEST(FourierMesh, Extents)
     using DDimFx = DFDim<ddc::Fourier<RDimX>>;
     using DDimFy = DFDim<ddc::Fourier<RDimY>>;
 
-    ddc::DiscreteElement<DDimX, DDimY> const delem_xy(0, 0);
+    ddc::DiscreteElement<DDimX> const delem_x = ddc::init_trivial_half_bounded_space<DDimX>();
+    ddc::DiscreteElement<DDimY> const delem_y = ddc::init_trivial_half_bounded_space<DDimY>();
+
+    ddc::DiscreteElement<DDimX, DDimY> const delem_xy(delem_x, delem_y);
 
     ddc::DiscreteVector<DDimX, DDimY> const dvect_xy_odd(10, 11);
     ddc::DiscreteDomain<DDimX, DDimY> const ddom_xy_odd(delem_xy, dvect_xy_odd);

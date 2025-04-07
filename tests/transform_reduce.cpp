@@ -8,6 +8,8 @@
 
 #include <gtest/gtest.h>
 
+inline namespace anonymous_namespace_workaround_transform_reduce_cpp {
+
 using DElem0D = ddc::DiscreteElement<>;
 using DVect0D = ddc::DiscreteVector<>;
 using DDom0D = ddc::DiscreteDomain<>;
@@ -30,14 +32,16 @@ using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
 using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
 using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 
-static DElemX constexpr lbound_x(0);
-static DVectX constexpr nelems_x(10);
+DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
+DVectX constexpr nelems_x(10);
 
-static DElemY constexpr lbound_y(0);
-static DVectY constexpr nelems_y(12);
+DElemY constexpr lbound_y = ddc::init_trivial_half_bounded_space<DDimY>();
+DVectY constexpr nelems_y(12);
 
-static DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
-static DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
+DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
+DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
+
+} // namespace anonymous_namespace_workaround_transform_reduce_cpp
 
 TEST(TransformReduce, ZeroDimension)
 {

@@ -57,6 +57,8 @@ public:
 
         Real m_step;
 
+        DiscreteElement<DDim> m_reference;
+
     public:
         using discrete_dimension_type = UniformPointSampling;
 
@@ -66,7 +68,12 @@ public:
 
         using discrete_vector_type = DiscreteVector<DDim>;
 
-        Impl() noexcept : m_origin(0), m_step(1) {}
+        Impl() noexcept
+            : m_origin(0)
+            , m_step(1)
+            , m_reference(create_reference_discrete_element<DDim>())
+        {
+        }
 
         Impl(Impl const&) = delete;
 
@@ -74,6 +81,7 @@ public:
         explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
             : m_origin(impl.m_origin)
             , m_step(impl.m_step)
+            , m_reference(impl.m_reference)
         {
         }
 
@@ -84,7 +92,10 @@ public:
          * @param origin the real coordinate of mesh coordinate 0
          * @param step   the real distance between two points of mesh distance 1
          */
-        Impl(Coordinate<CDim> origin, Real step) : m_origin(origin), m_step(step)
+        Impl(Coordinate<CDim> origin, Real step)
+            : m_origin(origin)
+            , m_step(step)
+            , m_reference(create_reference_discrete_element<DDim>())
         {
             assert(step > 0);
         }
@@ -104,7 +115,7 @@ public:
         /// @brief Lower bound index of the mesh
         KOKKOS_FUNCTION discrete_element_type front() const noexcept
         {
-            return discrete_element_type(0);
+            return m_reference;
         }
 
         /// @brief Spacing step of the mesh
@@ -117,7 +128,7 @@ public:
         KOKKOS_FUNCTION Coordinate<CDim> coordinate(
                 discrete_element_type const& icoord) const noexcept
         {
-            return m_origin + Coordinate<CDim>(icoord.uid() * m_step);
+            return m_origin + Coordinate<CDim>((icoord - front()) * m_step);
         }
     };
 

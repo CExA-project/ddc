@@ -5,6 +5,7 @@
 #pragma once
 
 #include "ddc/discrete_domain.hpp"
+#include "ddc/discrete_element.hpp"
 #include "ddc/discrete_vector.hpp"
 
 namespace ddc {
@@ -17,7 +18,7 @@ namespace ddc {
 template <class DDim>
 constexpr DiscreteDomain<DDim> init_trivial_bounded_space(DiscreteVector<DDim> const n) noexcept
 {
-    return DiscreteDomain<DDim>(DiscreteElement<DDim>(0), n);
+    return DiscreteDomain<DDim>(create_reference_discrete_element<DDim>(), n);
 }
 
 /** Construct a half bounded dimension without attributes.
@@ -27,7 +28,7 @@ constexpr DiscreteDomain<DDim> init_trivial_bounded_space(DiscreteVector<DDim> c
 template <class DDim>
 constexpr DiscreteElement<DDim> init_trivial_half_bounded_space() noexcept
 {
-    return DiscreteElement<DDim>(0);
+    return create_reference_discrete_element<DDim>();
 }
 
 } // namespace ddc

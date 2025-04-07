@@ -98,9 +98,11 @@ plugins:
     PDI_errhandler(PDI_NULL_HANDLER);
 
     {
-        ddc::DiscreteDomain<DDimX, DDimY> const
-                ddom_xy(ddc::DiscreteElement<DDimX, DDimY>(7, 11),
-                        ddc::DiscreteVector<DDimX, DDimY>(3, 5));
+        ddc::DiscreteDomain<DDimX> const ddom_x
+                = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDimX>(3));
+        ddc::DiscreteDomain<DDimY> const ddom_y
+                = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDimY>(5));
+        ddc::DiscreteDomain<DDimX, DDimY> const ddom_xy(ddom_x, ddom_y);
 
         ddc::Chunk chunk("ddc_chunk_label", ddom_xy, ddc::HostAllocator<int>());
         ddc::parallel_fill(chunk, 3);

@@ -36,11 +36,11 @@ int main()
 
     // Create a discrete domain for Dim1 with 5 elements
     ddc::DiscreteDomain<Dim1> const dom1
-            = ddc::init_trivial_space<Dim1>(ddc::DiscreteVector<Dim1>(5));
+            = ddc::init_trivial_bounded_space<Dim1>(ddc::DiscreteVector<Dim1>(5));
 
     // Create a discrete domain for Dim2 with 7 elements
     ddc::DiscreteDomain<Dim2> const dom2
-            = ddc::init_trivial_space<Dim2>(ddc::DiscreteVector<Dim2>(7));
+            = ddc::init_trivial_bounded_space<Dim2>(ddc::DiscreteVector<Dim2>(7));
 
     // Define a 2D discrete domain combining Dim1 and Dim2
     ddc::DiscreteDomain<Dim1, Dim2> const dom(dom1, dom2);
@@ -62,9 +62,11 @@ int main()
 
     // Extracting a 1D view over Dim2 for each idx1
     for (ddc::DiscreteElement<Dim1> const idx1 : dom1) {
+        ddc::ChunkSpan<int, ddc::DiscreteDomain<Dim2>> const slice = my_array[idx1];
+
         // The following would NOT compile if sum_over_dim2 si called
         // with a `DiscreteDomain<Dim1>`, ensuring type safety.
-        std::cout << sum_over_dim2(my_array[idx1]) << '\n';
+        std::cout << sum_over_dim2(slice) << '\n';
     }
 
     return 0;

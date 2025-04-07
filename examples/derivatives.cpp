@@ -23,7 +23,8 @@ int main()
 
     // Create a discrete domain of derivative orders with 100 elements
     ddc::DiscreteDomain<DimDerivOrder> const all_orders
-            = ddc::init_trivial_space<DimDerivOrder>(ddc::DiscreteVector<DimDerivOrder>(100));
+            = ddc::init_trivial_bounded_space<DimDerivOrder>(
+                    ddc::DiscreteVector<DimDerivOrder>(100));
 
     // Define a lambda function to compute the order index relative to the first element
     auto const order = [order_0_idx

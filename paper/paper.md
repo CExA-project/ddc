@@ -63,7 +63,7 @@ The DDC library is a C++ library designed for expressive and safe handling of mu
 
 ### Containers
 
-DDC offers two containers designed over the C++ 23 `std::mdspan` API:
+DDC offers two multidimensional containers designed over the C++ 23 multidimensional array `std::mdspan`:
 
 - `Chunk` an owning container, i.e. it manages the lifetime of the underlying memory allocation,
 - `ChunkSpan` is a non-owning container view over existing memory allocation.
@@ -93,7 +93,7 @@ The set of `DiscreteElement` is a customization point of the library. It takes t
 - `StridedDiscreteDomain`, a Cartesian product of sets of `DiscreteElement` with a fixed step/stride in each dimension,
 - `SparseDiscreteDomain`, a Cartesian product of explicitly ordered lists of `DiscreteElement` in each dimension.
 
-The reason to introduce multiple sets is to mitigate the cost of containers access through `DiscreteElement` indices. Indeed they are used to retrieve the position of a given multi-index relatively to the front multi-index. Thus the cost of this operation depends on the information available in the set.
+The reason to introduce multiple sets is to mitigate the cost of containers access through `DiscreteElement` indices. Indeed they are used to retrieve the position of a given multi-index relatively to the front multi-index. Thus the performance of this operation depends on the information available in the set.
 
 ### Slicing
 

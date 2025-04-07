@@ -190,7 +190,7 @@ public:
     }
 
     template <class... ODDims>
-    KOKKOS_FUNCTION auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
+    KOKKOS_FUNCTION constexpr auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
     {
         assert(((DiscreteElement<ODDims>(m_element_begin)
                  <= DiscreteElement<ODDims>(odomain.m_element_begin))

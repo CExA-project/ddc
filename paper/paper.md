@@ -77,7 +77,7 @@ DDC employs strongly-typed multi-indices to label dimensions and access data. It
   - provide a multidimensional array access semantics,
   - always as fast access as raw multidimensional array,
 - `DiscreteElement` indices:
-  - strongly-typed labelled opaque identifiers/keys,
+  - strongly-typed labelled keys or opaque identifiers,
   - provide an associative access semantics, as keys in a map container,
   - potentially slower access, depending on the type of set of `DiscreteElement`.
 
@@ -93,11 +93,11 @@ The set of `DiscreteElement` is a customization point of the library. It takes t
 - `StridedDiscreteDomain`, a Cartesian product of sets of `DiscreteElement` with a fixed step/stride in each dimension,
 - `SparseDiscreteDomain`, a Cartesian product of explicitly ordered lists of `DiscreteElement` in each dimension.
 
-The reason to introduce multiple sets is to mitigate the cost of containers access through `DiscreteElement` indices. Indeed they are used to retrieve the position of a given multi-index relatively to the front multi-index. Thus the performance of this operation depends on the information available in the set.
+The performance of the container's data access depends on the properties of the set considered. Indeed the set is used to retrieve the position of a given multi-index relatively to the front multi-index. Thus the performance of this operation depends on the information available in the set.
 
 ### Slicing
 
-Like `std::mdspan`, DDC containers support slicing through the bracket operator that always returns a `ChunkSpan`. The key property is that the resulting slice’s set of `DiscreteElement` is a subset of the original set.
+Similar to `std::mdspan`, DDC containers support slicing through the bracket operator that always returns a `ChunkSpan`. The key property is that the resulting slice’s set of `DiscreteElement` is a subset of the original set.
 
 ### Multidimensional algorithms
 

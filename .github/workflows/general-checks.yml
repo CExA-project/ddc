@@ -30,7 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Spell Check Repo
-        uses: crate-ci/typos@v1.31.0
+        uses: crate-ci/typos@v1.31.1
 
   trailing-whitespaces-check:
     name: Trailing whitespaces check

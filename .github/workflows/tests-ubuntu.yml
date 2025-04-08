@@ -46,12 +46,12 @@ jobs:
       - uses: jidicula/clang-format-action@v4.15.0
         with:
           clang-format-version: '20'
-      - name: Prefer 'if defined' over 'ifdef'
-        run: if grep -R "ifdef" $(git ls-files '*.hpp' '*.cpp'); then exit 1; fi
+      - name: Prefer 'if defined'/'if !defined' over 'ifdef'/'ifndef'
+        run: if grep -RE "(ifdef|ifndef)" $(git ls-files '*.[ch]pp' ':!*/kokkos-kernels-ext/*'); then exit 1; fi
       - name: Do not include <iostream> in the headers of the library
-        run: if grep -R "#include <iostream>" $(git ls-files 'include/*.hpp' 'include/*.cpp'); then exit 1; fi
+        run: if grep -R "#include <iostream>" $(git ls-files 'include/*.[ch]pp'); then exit 1; fi
       - name: Find modifications of Kokkos reserved macros
-        run: if grep -RE "(define|undef) KOKKOS_" $(git ls-files '*.hpp' '*.cpp'); then exit 1; fi
+        run: if grep -RE "(define|undef) KOKKOS_" $(git ls-files '*.[ch]pp'); then exit 1; fi
 
   id_repo:
     runs-on: ubuntu-latest

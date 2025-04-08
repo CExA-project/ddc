@@ -273,7 +273,7 @@ TEST(StridedDiscreteDomainTest, DistanceFromFront)
 
 // TEST(StridedDiscreteDomainTest, SliceDomainXTooearly)
 // {
-// #ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
+// #if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
 //     DDomX const subdomain_x(lbound_x - 1, nelems_x);
 //     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
 //     // the error message is checked with clang & gcc only
@@ -287,7 +287,7 @@ TEST(StridedDiscreteDomainTest, DistanceFromFront)
 
 // TEST(StridedDiscreteDomainTest, SliceDomainXToolate)
 // {
-// #ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
+// #if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
 //     DDomX const subdomain_x(lbound_x, nelems_x + 1);
 //     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
 //     // the error message is checked with clang & gcc only

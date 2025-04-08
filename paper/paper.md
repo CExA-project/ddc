@@ -27,7 +27,7 @@ authors:
   affiliation: 1
 
 - name: Emily Bourne
-  order: 0000-0002-3469-2338
+  orcid: 0000-0002-3469-2338
   affiliation: 2
 
 affiliations:
@@ -173,7 +173,7 @@ int main()
 
     // Extracting a 1D view over Dim2 for each idx1
     for (ddc::DiscreteElement<Dim1> const idx1 : dom1) {
-        // The following would NOT compile if sum_over_dim2 si called
+        // The following would NOT compile if sum_over_dim2 was called
         // with a `DiscreteDomain<Dim1>`, ensuring type safety.
         std::cout << sum_over_dim2(my_array[idx1]) << '\n';
     }
@@ -195,7 +195,7 @@ The FFT and splines components both operate on specialized dimensions provided b
 
 ### DDC pdi
 
-PDI ([website](https://pdi.dev/main)) is a C data interface library allowing loose coupling with external libraries through PDI plugins like HDF5, NetCDF, Catalyst and more. This extension eases the metadata serialisation of the DDC containers. Instead of manually expose, sizes, strides and the pointer of the underlying array, the user can directly expose the DDC container.
+[PDI](https://pdi.dev/main) is a C data interface library allowing loose coupling with external libraries through PDI plugins like HDF5, NetCDF, Catalyst and more. This extension eases the metadata serialisation of the DDC containers. Instead of manually exposing sizes, strides and the pointer of the underlying array, the user can directly expose the DDC container.
 
 ## Acknowledgements
 

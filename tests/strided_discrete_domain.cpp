@@ -154,19 +154,6 @@ TEST(StridedDiscreteDomainTest, CompareEmptyDomains)
     EXPECT_FALSE(dom_x_y_1 != dom_x_y_2);
 }
 
-// TEST(StridedDiscreteDomainTest, Subdomain)
-// {
-//     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
-//     ddc::DiscreteElement<DDimX> const lbound_subdomain_x(lbound_x + 1);
-//     ddc::DiscreteVector<DDimX> const npoints_subdomain_x(nelems_x - 2);
-//     DDomX const subdomain_x(lbound_subdomain_x, npoints_subdomain_x);
-//     DDomXY const subdomain = dom_x_y.restrict_with(subdomain_x);
-//     EXPECT_EQ(
-//             subdomain,
-//             DDomXY(ddc::DiscreteElement<DDimX, DDimY>(lbound_subdomain_x, lbound_y),
-//                    ddc::DiscreteVector<DDimX, DDimY>(npoints_subdomain_x, nelems_y)));
-// }
-
 TEST(StridedDiscreteDomainTest, RangeFor)
 {
     DDomX const dom(lbound_x, nelems_x, strides_x);
@@ -270,34 +257,6 @@ TEST(StridedDiscreteDomainTest, DistanceFromFront)
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y, strides_x_y);
     EXPECT_EQ(dom_x_y.distance_from_front(lbound_x_y), DVectXY(0, 0));
 }
-
-// TEST(StridedDiscreteDomainTest, SliceDomainXTooearly)
-// {
-// #if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
-//     DDomX const subdomain_x(lbound_x - 1, nelems_x);
-//     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
-//     // the error message is checked with clang & gcc only
-//     EXPECT_DEATH(
-//             dom_x_y.restrict_with(subdomain_x),
-//             R"rgx([Aa]ssert.*DiscreteElement<ODDims>\(m_element_begin\).*DiscreteElement<ODDims>\(odomain\.m_element_begin\))rgx");
-// #else
-//     GTEST_SKIP();
-// #endif
-// }
-
-// TEST(StridedDiscreteDomainTest, SliceDomainXToolate)
-// {
-// #if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
-//     DDomX const subdomain_x(lbound_x, nelems_x + 1);
-//     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
-//     // the error message is checked with clang & gcc only
-//     EXPECT_DEATH(
-//             dom_x_y.restrict_with(subdomain_x),
-//             R"rgx([Aa]ssert.*DiscreteElement<ODDims>\(m_element_end\).*DiscreteElement<ODDims>\(odomain\.m_element_end\).*)rgx");
-// #else
-//     GTEST_SKIP();
-// #endif
-// }
 
 TEST(StridedDiscreteDomainTest, Transpose3DConstructor)
 {

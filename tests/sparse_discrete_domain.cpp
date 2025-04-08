@@ -24,14 +24,6 @@ using DVectY = ddc::DiscreteVector<DDimY>;
 using DDomY = ddc::SparseDiscreteDomain<DDimY>;
 
 
-struct DDimZ
-{
-};
-using DElemZ = ddc::DiscreteElement<DDimZ>;
-using DVectZ = ddc::DiscreteVector<DDimZ>;
-using DDomZ = ddc::SparseDiscreteDomain<DDimZ>;
-
-
 using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
 using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
 using DDomXY = ddc::SparseDiscreteDomain<DDimX, DDimY>;
@@ -41,43 +33,10 @@ using DElemYX = ddc::DiscreteElement<DDimY, DDimX>;
 using DVectYX = ddc::DiscreteVector<DDimY, DDimX>;
 using DDomYX = ddc::SparseDiscreteDomain<DDimY, DDimX>;
 
-using DElemXZ = ddc::DiscreteElement<DDimX, DDimZ>;
-using DVectXZ = ddc::DiscreteVector<DDimX, DDimZ>;
-using DDomXZ = ddc::SparseDiscreteDomain<DDimX, DDimZ>;
-
-using DElemZY = ddc::DiscreteElement<DDimZ, DDimY>;
-using DVectZY = ddc::DiscreteVector<DDimZ, DDimY>;
-using DDomZY = ddc::SparseDiscreteDomain<DDimZ, DDimY>;
-
-
-using DElemXYZ = ddc::DiscreteElement<DDimX, DDimY, DDimZ>;
-using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
-using DDomXYZ = ddc::SparseDiscreteDomain<DDimX, DDimY, DDimZ>;
-
-using DElemZYX = ddc::DiscreteElement<DDimZ, DDimY, DDimX>;
-using DVectZYX = ddc::DiscreteVector<DDimZ, DDimY, DDimX>;
-using DDomZYX = ddc::SparseDiscreteDomain<DDimZ, DDimY, DDimX>;
 
 DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
-// DVectX constexpr nelems_x(3);
-// DElemX constexpr sentinel_x(lbound_x + nelems_x);
-// DElemX constexpr ubound_x(sentinel_x - 1);
-
 
 DElemY constexpr lbound_y = ddc::init_trivial_half_bounded_space<DDimY>();
-// DVectY constexpr nelems_y(10);
-// DElemY constexpr sentinel_y(lbound_y);
-// DElemY constexpr ubound_y(sentinel_y - 1);
-
-// DElemZ constexpr lbound_z(7);
-// DVectZ constexpr nelems_z(15);
-
-// DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
-// DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
-// DElemXY constexpr ubound_x_y(ubound_x, ubound_y);
-
-// DElemXZ constexpr lbound_x_z(lbound_x, lbound_z);
-// DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
 
 } // namespace anonymous_namespace_workaround_sparse_discrete_domain_cpp
 

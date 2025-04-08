@@ -28,7 +28,6 @@ add_executable(
     parallel_transform_reduce.cpp
     relocatable_device_code.cpp
     relocatable_device_code_initialization.cpp
-    single_discretization.cpp
     sparse_discrete_domain.cpp
     strided_discrete_domain.cpp
     tagged_vector.cpp

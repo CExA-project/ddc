@@ -108,7 +108,7 @@ struct OutputChecker
     {
         std::size_t line;
         std::size_t pos;
-        std::size_t alignement;
+        std::size_t alignment;
         std::size_t largest_element_seen;
         std::size_t total_dims;
     };
@@ -117,7 +117,7 @@ struct OutputChecker
     {
         bool leading_spaces = false;
 
-        if (state.alignement == 0) {
+        if (state.alignment == 0) {
             // First element seen
             std::size_t elem_size = 0;
             std::size_t n_spaces = 0;
@@ -137,7 +137,7 @@ struct OutputChecker
                 return false;
             }
 
-            state.alignement = elem_size;
+            state.alignment = elem_size;
             state.largest_element_seen = (n_spaces == 0);
         } else {
             std::size_t elem_size = 0;
@@ -163,11 +163,11 @@ struct OutputChecker
                 ++state.pos;
                 ++elem_size;
             }
-            if (state.alignement != elem_size) {
+            if (state.alignment != elem_size) {
                 error(input,
                       state.line,
                       "Element '" + input.substr(elem_start, elem_size)
-                              + "' badly aligned. Expected " + std::to_string(state.alignement)
+                              + "' badly aligned. Expected " + std::to_string(state.alignment)
                               + " chars but got " + std::to_string(elem_size) + " instead.\n");
                 return false;
             }
@@ -262,7 +262,7 @@ struct OutputChecker
         ParserState state;
         state.line = 1;
         state.pos = 0;
-        state.alignement = 0;
+        state.alignment = 0;
         state.largest_element_seen = false;
         state.total_dims = num_dims;
 

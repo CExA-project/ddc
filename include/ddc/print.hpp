@@ -54,11 +54,11 @@ struct ChunkPrinter
             std::ostream& os,
             Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
             std::size_t largest_element,
-            std::size_t begining,
+            std::size_t beginning,
             std::size_t end,
             std::size_t extent)
     {
-        for (std::size_t i0 = begining; i0 < end; ++i0) {
+        for (std::size_t i0 = beginning; i0 < end; ++i0) {
             display_aligned_element(os, s(i0), largest_element);
             if (i0 < extent - 1) {
                 os << " ";
@@ -73,10 +73,10 @@ struct ChunkPrinter
             Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
             int level,
             std::size_t largest_element,
-            std::size_t begining,
+            std::size_t beginning,
             std::size_t end)
     {
-        for (std::size_t i0 = begining; i0 < end; ++i0) {
+        for (std::size_t i0 = beginning; i0 < end; ++i0) {
             print_impl(
                     os,
                     Kokkos::submdspan(s, i0, ((void)Is, Kokkos::full_extent)...),

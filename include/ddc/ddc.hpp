@@ -69,3 +69,6 @@ namespace ddc {
 #include "ddc/parallel_transform_reduce.hpp"
 #include "ddc/reducer.hpp"
 #include "ddc/transform_reduce.hpp"
+
+// Output
+#include "ddc/print.hpp"

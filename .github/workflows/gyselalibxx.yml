@@ -22,8 +22,6 @@ jobs:
         with:
           repository: gyselax/gyselalibxx
           submodules: true
-      - name: rm ddc
-        run: rm -rf vendor/ddc
       - name: Checkout ddc
         uses: actions/checkout@v4
         with:

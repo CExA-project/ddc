@@ -9,7 +9,7 @@ name: Shell checks
 on:
   pull_request:
     paths:
-      - '.github/workflows/shell-checks.yml'
+      - '.github/workflows/shell-checks.yaml'
       - '**.sh'
       - 'bin/applyreuse'
       - 'docker/*/bash_run'

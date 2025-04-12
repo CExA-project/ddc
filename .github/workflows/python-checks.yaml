@@ -9,14 +9,14 @@ name: Python checks
 on:
   pull_request:
     paths:
-      - '.github/workflows/python-checks.yml'
+      - '.github/workflows/python-checks.yaml'
       - '**.py'
       - 'bin/trailing_spaces'
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/python-checks.yml'
+      - '.github/workflows/python-checks.yaml'
       - '**.py'
       - 'bin/trailing_spaces'
   workflow_dispatch:

@@ -9,7 +9,7 @@ name: Tests on macOS
 on:
   pull_request:
     paths:
-      - '.github/workflows/tests-macos.yml'
+      - '.github/workflows/tests-macos.yaml'
       - '**.cpp'
       - '**.hpp'
       - '**.hpp.in'
@@ -23,7 +23,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/tests-macos.yml'
+      - '.github/workflows/tests-macos.yaml'
       - '**.cpp'
       - '**.hpp'
       - '**.hpp.in'

@@ -122,14 +122,6 @@ public:
         return *this;
     }
 
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-    template <PDI_inout_t access, class T>
-    [[deprecated("Use 'with' instead.")]] PdiEvent& and_with(std::string const& name, T&& t)
-    {
-        return with<access>(name, std::forward<T>(t));
-    }
-#endif
-
     /// @}
     /// API with access deduction
     /// @{
@@ -149,15 +141,6 @@ public:
     {
         return with<default_access_v<Arithmetic>>(name, std::forward<Arithmetic>(data));
     }
-
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-    /// With synonym
-    template <class T>
-    [[deprecated("Use 'with' instead.")]] PdiEvent& and_with(std::string const& name, T&& t)
-    {
-        return with(name, std::forward<T>(t));
-    }
-#endif
 
     /// @}
 };

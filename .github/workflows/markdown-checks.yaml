@@ -9,13 +9,13 @@ name: Markdown checks
 on:
   pull_request:
     paths:
-      - '.github/workflows/markdown-checks.yml'
+      - '.github/workflows/markdown-checks.yaml'
       - '**.md'
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/markdown-checks.yml'
+      - '.github/workflows/markdown-checks.yaml'
       - '**.md'
   workflow_dispatch:
 

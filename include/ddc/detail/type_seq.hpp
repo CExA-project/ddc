@@ -27,6 +27,7 @@ template <class QueryTag>
 struct TypeSeqRank<SingleType<QueryTag>, TypeSeq<>>
 {
     static constexpr bool present = false;
+    static constexpr std::size_t val = std::numeric_limits<std::size_t>::max();
 };
 
 template <class QueryTag, class... TagsTail>

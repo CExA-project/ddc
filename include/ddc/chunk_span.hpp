@@ -106,7 +106,8 @@ protected:
             discrete_domain_type const& domain)
     {
         if (!domain.empty()) {
-            extents_type const extents_s((front<DDims>(domain) + extents<DDims>(domain)).uid()...);
+            extents_type const extents_s(
+                    (front<DDims>(domain) + ddc::extents<DDims>(domain)).uid()...);
             std::array<std::size_t, sizeof...(DDims)> const strides_s {
                     allocation_mdspan.mapping().stride(
                             type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>)...};

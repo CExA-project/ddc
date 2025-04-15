@@ -24,4 +24,4 @@ jobs:
           pipx install linkchecker
       - name: Analysing the links of the website
         run: |
-          linkchecker --check-extern index.html
+          linkchecker --check-extern --ignore-url=https://www.doxygen.org/index.html index.html

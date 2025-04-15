@@ -165,7 +165,8 @@ jobs:
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-        with: {submodules: true}
+        with:
+          submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
         uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e  # v4.2.1
@@ -321,7 +322,8 @@ jobs:
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-        with: {submodules: true}
+        with:
+          submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
         uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e  # v4.2.1
@@ -416,7 +418,8 @@ jobs:
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-        with: {submodules: true}
+        with:
+          submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
         uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e  # v4.2.1

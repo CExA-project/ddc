@@ -101,7 +101,7 @@ Similar to `std::mdspan`, DDC containers support slicing through the bracket ope
 
 ### Multidimensional algorithms
 
-Finally, DDC offers multidimensional algorithms to manipulate the containers and associated `DiscreteElement` indices. The parallel versions are based on Kokkos providing performance portability. Here is a list as of today:
+Finally, DDC offers multidimensional algorithms to manipulate the containers and associated `DiscreteElement` indices. The parallel versions are based on Kokkos providing performance portability. Here is a list as of version 0.5:
 
 - `parallel_deepcopy`, copies two `ChunkSpan` that are defined on the same set of `DiscreteElement`,
 - `parallel_for_each`, applies a function once per `DiscreteElement` of a set of `DiscreteElement`,

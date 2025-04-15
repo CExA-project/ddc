@@ -11,7 +11,7 @@
 namespace ddc {
 
 /** @brief An enum representing a spline boundary condition. Please refer to
- * Emily Bourne's thesis (https://www.theses.fr/2022AIXM0412.pdf)
+ * Emily Bourne's thesis (https://theses.fr/2022AIXM0412.pdf)
  */
 enum class BoundCond {
     PERIODIC, ///< Periodic boundary condition u(1)=u(n)

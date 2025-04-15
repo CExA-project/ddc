@@ -24,4 +24,4 @@ jobs:
           pipx install linkchecker
       - name: Analysing the links of the website
         run: |
-          linkchecker index.html
+          linkchecker --check-extern index.html

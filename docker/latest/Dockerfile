@@ -4,7 +4,7 @@
 
 FROM ubuntu:noble
 
-LABEL "org.opencontainers.image.source"="https://github.com/Maison-de-la-Simulation/ddc"
+LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
 ARG BACKEND
 ARG AMDGPU_VERSION=6.2.1

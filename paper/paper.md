@@ -47,13 +47,13 @@ The Discrete Domain Computation (DDC) library is a C++ library designed to provi
 
 ## Statement of need
 
-The use of multidimensional arrays is widespread across various fields, particularly in scientific computing, where they serve as fundamental data containers. A primary motivation for their use is their potential to improve computational performance by leveraging problem-specific structure. For instance, when solving a partial differential equation that results in a stencil problem, computations typically achieve higher efficiency on a structured mesh compared to an unstructured mesh. This advantage primarily stems from a better usage of memory like predictable memory accesses and better cache utilization.
+The use of multidimensional arrays is widespread across various fields, particularly in scientific computing, where they serve as fundamental data containers. A primary motivation for their use is their potential to improve computational performance by leveraging problem-specific structures. For instance, when solving a partial differential equation that results in a stencil problem, computations typically achieve higher efficiency on a structured mesh compared to an unstructured mesh. This advantage primarily stems from a better usage of memory, for example predictable memory accesses and better cache utilization.
 
 Many programming languages commonly used in scientific computing support multidimensional arrays in different ways. Fortran, a longstanding choice in the field, and Julia, a more recent language, both natively support these data structures. In contrast, the Python ecosystem relies on the popular NumPy library’s `numpy.Array` [@harris2020array]. Meanwhile, C++23 introduced `std::mdspan` to the standard library. This container was inspired by `Kokkos::View` from the Kokkos library which also serves as the foundation of DDC.
 
 Despite their importance, multidimensional arrays introduce several practical challenges. In a sense, they encourage the usage of implicits in the source code. A frequent source of errors is the inadvertent swapping of indices when accessing elements. Such errors can be difficult to detect, especially given the common convention of using single-letter variable names like `i` and `j` for indexing. Another challenge in medium to large codebases is the lack of semantic clarity in function signatures when using raw multidimensional arrays. When array dimensions carry specific meanings, this information is not explicitly represented in the source code, leaving it up to the user to ensure that dimensions are ordered correctly according to implicit expectations. For example it is quite usual to use the same index for multiple interpretations: looping over mesh cells identified by `i` and interpreting `i+1` as the face to the right. Another example is slicing that removes dimensions, this operation may change the relative ordering of dimensions.
 
-Solutions have been proposed in Python and Julia to address these issues. In Python, the Xarray [@hoyer2017xarray] and Pandas [@reback2020pandas] libraries allow users to label dimensions that can then be used to perform computation. Following a similar approach, the "Discrete Domain Computation" (DDC) library aims to bring equivalent functionality to the C++ ecosystem. It uses a zero overhead abstraction approach, i.e. with labels fixed at compile-time, on top of different performant portable libraries, such as: Kokkos [@9485033], Kokkos Kernels (TODO: add a citation), Kokkos-fft (TODO: add a citation) and Ginkgo [@GinkgoJoss2020].
+Solutions have been proposed in Python and Julia to address these issues. In Python, the Xarray [@hoyer2017xarray] and Pandas [@reback2020pandas] libraries allow users to label dimensions that can then be used to perform computations. Following a similar approach, the "Discrete Domain Computation" (DDC) library aims to bring equivalent functionality to the C++ ecosystem. It uses a zero overhead abstraction approach, i.e. with labels fixed at compile-time, on top of different performant portable libraries, such as: Kokkos [@9485033], Kokkos Kernels (TODO: add a citation), Kokkos-fft (TODO: add a citation) and Ginkgo [@GinkgoJoss2020].
 
 The library is actively used to modernize the Fortran-based Gysela plasma simulation code (TODO: add a citation). This simulation code relies heavily on high-dimensional arrays that span multiple representations, including Fourier, spline, Cartesian, and various curvilinear meshes. In the legacy Fortran implementation, these arrays were manipulated using implicit conventions, making it difficult to enforce correctness at the API level. DDC enables a more explicit, strongly-typed representation of these arrays, ensuring at compile-time that function calls respect the expected dimensions. This reduces indexing errors and improves code maintainability, particularly in large-scale scientific software.
 
@@ -66,7 +66,7 @@ The DDC library is a C++ library designed for expressive and safe handling of mu
 DDC offers two multidimensional containers designed over the C++ 23 multidimensional array `std::mdspan`:
 
 - `Chunk` an owning container, i.e. it manages the lifetime of the underlying memory allocation,
-- `ChunkSpan` is a non-owning container view over existing memory allocation.
+- `ChunkSpan` is a non-owning container view on an existing memory allocation.
 
 ### Strongly-typed labelled indices
 
@@ -85,7 +85,7 @@ Unlike `DiscreteVector` indices, users cannot directly interpret the internal re
 
 ### Sets of `DiscreteElement`
 
-The semantics of DDC containers is to associate data to a set of `DiscreteElement` indices. Let us note that the set of all possible `DiscreteElement` has a total order that is typically established once and for all at program initialisation. Thus to be able to construct a DDC container one must provide a multidimensional set of `DiscreteElement` indices, only these indices can be later used to access the container’s data.
+The semantics of DDC containers associates data to a set of `DiscreteElement` indices. Let us note that the set of all possible `DiscreteElement` has a total order that is typically established once and for all at program initialization. Thus to be able to construct a DDC container one must provide a multidimensional set of `DiscreteElement` indices, only these indices can be later used to access the container’s data.
 
 The set of `DiscreteElement` is a customization point of the library. It takes the form of a Cartesian product of the different dimensions. DDC predefines the following sets:
 
@@ -93,7 +93,7 @@ The set of `DiscreteElement` is a customization point of the library. It takes t
 - `StridedDiscreteDomain`, a Cartesian product of sets of `DiscreteElement` with a fixed step/stride in each dimension,
 - `SparseDiscreteDomain`, a Cartesian product of explicitly ordered lists of `DiscreteElement` in each dimension.
 
-The performance of the container's data access depends on the properties of the set considered. Indeed the set is used to retrieve the position of a given multi-index relatively to the front multi-index. Thus the performance of this operation depends on the information available in the set.
+The performance of the container's data access depends on the properties of the set considered. Indeed the set is used to retrieve the position of a given multi-index relative to the front multi-index. Thus the performance of this operation depends on the information available in the set.
 
 ### Slicing
 

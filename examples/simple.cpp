@@ -64,7 +64,7 @@ int main()
     for (ddc::DiscreteElement<Dim1> const idx1 : dom1) {
         ddc::ChunkSpan<int, ddc::DiscreteDomain<Dim2>> const slice = my_array[idx1];
 
-        // The following would NOT compile if sum_over_dim2 si called
+        // The following would NOT compile if sum_over_dim2 is called
         // with a `DiscreteDomain<Dim1>`, ensuring type safety.
         std::cout << sum_over_dim2(slice) << '\n';
     }

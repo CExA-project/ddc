@@ -70,18 +70,18 @@ DDC offers two multidimensional containers designed over the C++ 23 multidimensi
 
 ### Strongly-typed labelled indices
 
-DDC employs strongly-typed multi-indices to label dimensions and access data. It introduces two types of indices to access the container's data:
+DDC employs strongly-typed multi-indices to label dimensions and access data. It introduces two types of multi-indices to access the container's data:
 
-- `DiscreteVector` indices:
+- `DiscreteVector` multi-indices:
   - strongly-typed labelled integers,
   - provide a multidimensional array access semantics,
   - always as fast access as raw multidimensional array,
-- `DiscreteElement` indices:
+- `DiscreteElement` multi-indices:
   - strongly-typed labelled keys or opaque identifiers,
   - provide an associative access semantics, as keys in a map container,
   - potentially slower access, depending on the type of set of `DiscreteElement`.
 
-Unlike `DiscreteVector` indices, users cannot directly interpret the internal representation of `DiscreteElement` and must reason about them based solely on their relative position.
+Unlike `DiscreteVector` multi-indices, users cannot directly interpret the internal representation of `DiscreteElement` and must reason about them based solely on their relative position.
 
 ### Sets of `DiscreteElement`
 

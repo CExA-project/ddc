@@ -17,10 +17,10 @@ struct Dim2
 };
 
 // For the purpose of the demonstration, this function makes only sense with Dim2
-int sum_over_dim2(ddc::ChunkSpan<int, ddc::DiscreteDomain<Dim2>> slice)
+int sum_over_dim2(ddc::ChunkSpan<int, ddc::DiscreteDomain<Dim2>> const slice)
 {
     int sum = 0;
-    for (ddc::DiscreteElement<Dim2> idx2 : slice.domain()) {
+    for (ddc::DiscreteElement<Dim2> const idx2 : slice.domain()) {
         sum += slice(idx2);
     }
     return sum;

@@ -34,7 +34,7 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
     static_assert((Kokkos::is_view_v<KokkosViewType> && KokkosViewType::rank == 2));
     using value_type = typename KokkosViewType::traits::value_type;
 
-    if (view.stride_1() != 1) {
+    if (view.stride(1) != 1) {
         throw std::runtime_error("The view needs to be contiguous in the second dimension");
     }
 
@@ -42,7 +42,7 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
             create(gko_exec,
                    gko::dim<2>(view.extent(0), view.extent(1)),
                    gko::array<value_type>::view(gko_exec, view.span(), view.data()),
-                   view.stride_0());
+                   view.stride(0));
 }
 
 /**

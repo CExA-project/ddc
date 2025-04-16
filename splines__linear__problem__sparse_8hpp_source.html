@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__sparse_8hpp_
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">static_assert</span>((Kokkos::is_view_v&lt;KokkosViewType&gt; &amp;&amp; KokkosViewType::rank == 2));</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">using</span> value_type = <span class="keyword">typename</span> KokkosViewType::traits::value_type;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordflow">if</span> (view.stride_1() != 1) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordflow">if</span> (view.stride(1) != 1) {</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;The view needs to be contiguous in the second dimension&quot;</span>);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
@@ -171,7 +171,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__sparse_8hpp_
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            create(gko_exec,</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                   gko::dim&lt;2&gt;(view.extent(0), view.extent(1)),</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                   gko::array&lt;value_type&gt;::view(gko_exec, view.span(), view.data()),</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                   view.stride_0());</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                   view.stride(0));</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">/**</span></div>

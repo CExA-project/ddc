@@ -6,14 +6,20 @@
 
 #include <sstream>
 
-#ifdef KOKKOS_COMPILER_GNU
+#include "ddc/chunk_span.hpp"
+#include "ddc/discrete_domain.hpp"
+
+#if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
 #    include <cxxabi.h>
 #endif
 
 namespace ddc {
+namespace detail {
 struct ChunkPrinter
 {
     const int threshold = 10;
+    // If this ever becomes modifiable by the user, we need to ensure that 
+    // edgeitems < (threshold / 2) stays true.
     const int edgeitems = 3;
 
     std::stringstream ss;
@@ -31,7 +37,7 @@ struct ChunkPrinter
     }
 
     template <class T>
-    size_t get_element_width(T& elem)
+    std::size_t get_element_width(T& elem)
     {
         ss.seekp(0);
         ss << elem;
@@ -39,9 +45,9 @@ struct ChunkPrinter
     }
 
     template <class T>
-    void display_aligned_element(std::ostream& os, T& elem, size_t largest_element)
+    void display_aligned_element(std::ostream& os, T& elem, std::size_t largest_element)
     {
-        size_t elem_width = get_element_width(elem);
+        std::size_t elem_width = get_element_width(elem);
 
         for (int i = 0; i < largest_element - elem_width; ++i) {
             os << " ";
@@ -94,6 +100,18 @@ struct ChunkPrinter
         return os;
     }
 
+    // 0D chunk span
+    template <class ElementType, class Extents, class Layout, class Accessor>
+    std::ostream& print_impl(
+            std::ostream& os,
+            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
+            int /*level*/,
+            std::size_t /*largest_element*/,
+            std::index_sequence<>)
+    {
+        return os << s();
+    }
+
     template <
             class ElementType,
             class Extents,
@@ -119,8 +137,6 @@ struct ChunkPrinter
                         Accessor,
                         Is...>(os, s, level, largest_element, 0, extent);
             } else {
-                // TODO: fixme, find other ways to test for this, not crashing on wrong parameters
-                assert(edgeitems < extent && edgeitems < threshold / 2);
                 recursive_display<
                         ElementType,
                         Extents,
@@ -149,9 +165,6 @@ struct ChunkPrinter
             if (extent < threshold) {
                 base_case_display(os, s, largest_element, 0, extent, extent);
             } else {
-                // TODO: fixme, find other ways to test for this, not crashing on wrong parameters
-                assert(edgeitems < extent && edgeitems < threshold / 2);
-
                 base_case_display(os, s, largest_element, 0, edgeitems, extent);
                 os << "... ";
                 base_case_display(os, s, largest_element, extent - edgeitems, extent, extent);
@@ -162,6 +175,15 @@ struct ChunkPrinter
         return os;
     }
 
+    // 0D, we don't need the element size in this case so the actual returned value can be anything.
+    template <class ElementType, class Extents, class Layout, class Accessor>
+    std::size_t find_largest_displayed_element(
+            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
+            std::index_sequence<>)
+    {
+        return 0;
+    }
+
     template <
             class ElementType,
             class Extents,
@@ -169,7 +191,7 @@ struct ChunkPrinter
             class Accessor,
             std::size_t I0,
             std::size_t... Is>
-    size_t find_largest_displayed_element(
+    std::size_t find_largest_displayed_element(
             Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
             std::index_sequence<I0, Is...>)
     {
@@ -219,22 +241,20 @@ struct ChunkPrinter
     }
 };
 
-#ifdef KOKKOS_COMPILER_GNU
-
+#if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
 template <class Type>
 void print_demangled_type_name(std::ostream& os)
 {
-    char* demangled_name;
     int status;
 
-    demangled_name = abi::__cxa_demangle(typeid(Type).name(), nullptr, 0, &status);
+    std::unique_ptr<char, decltype(free)*>
+            demangled_name(abi::__cxa_demangle(typeid(Type).name(), nullptr, 0, &status), free);
     if (status != 0) {
-        os << "Error demangling dimension name:" << status;
+        os << "Error demangling dimension name: " << status;
         return;
     }
 
-    os << demangled_name;
-    free(demangled_name);
+    os << demangled_name.get();
 }
 
 #else
@@ -244,39 +264,47 @@ void print_demangled_type_name(std::ostream& os)
     os << typeid(Type).name();
 }
 #endif
+inline void print_dim_name(std::ostream& os, const DiscreteDomain<>)
+{
+    os << "Scalar";
+}
 
 template <class Dim>
-void print_dim_name(std::ostream& os, const DiscreteDomain<Dim>)
+void print_dim_name(std::ostream& os, const DiscreteDomain<Dim> dd)
 {
     print_demangled_type_name<Dim>(os);
-    os << " ";
+    os << "(" << dd.size() << ")";
 }
 
 template <class Dim0, class... Dims>
-void print_dim_name(std::ostream& os, const DiscreteDomain<Dim0, Dims...>)
+void print_dim_name(std::ostream& os, const DiscreteDomain<Dim0, Dims...> dd)
 {
     print_demangled_type_name<Dim0>(os);
-    os << " ";
-    print_dim_name(os, DiscreteDomain<Dims...> {});
+	DiscreteDomain<Dims...> smaller_dd(dd);
+    os << "(" << dd.size()/smaller_dd.size() << ")×";
+    print_dim_name(os, smaller_dd);
 }
 
+} // namespace detail
 
 template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
-std::ostream& print(
+std::ostream& print_content(
         std::ostream& os,
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
     auto h_chunk_span = create_mirror_view_and_copy(Kokkos::HostSpace(), chunk_span);
+
     using chunkspan_type = std::remove_cv_t<std::remove_reference_t<decltype(h_chunk_span)>>;
     using mdspan_type = typename chunkspan_type::allocation_mdspan_type;
     using extents = typename mdspan_type::extents_type;
 
-    mdspan_type allocated_mdspan = chunk_span.allocation_mdspan();
+    mdspan_type allocated_mdspan = h_chunk_span.allocation_mdspan();
 
-    ChunkPrinter printer(os);
+    ddc::detail::ChunkPrinter printer(os);
     std::size_t largest_element = printer.find_largest_displayed_element(
             allocated_mdspan,
             std::make_index_sequence<extents::rank()>());
+
     printer.print_impl(
             os,
             allocated_mdspan,
@@ -288,18 +316,29 @@ std::ostream& print(
 }
 
 template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
-std::ostream& print_chunk_info(
+std::ostream& print_type_info(
         std::ostream& os,
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
     os << "\n";
-    print_dim_name(os, chunk_span.domain());
+    ddc::detail::print_dim_name(os, chunk_span.domain());
     os << "\n";
-    print_demangled_type_name<decltype(chunk_span)>(os);
+    ddc::detail::print_demangled_type_name<decltype(chunk_span)>(os);
     os << "\n";
-    print_demangled_type_name<SupportType>(os);
 
     return os;
+}
+
+template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
+std::ostream& print(
+        std::ostream& os,
+        ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
+{
+	print_type_info(os, chunk_span);
+	print_content(os, chunk_span);
+
+	return os;
+
 }
 
 

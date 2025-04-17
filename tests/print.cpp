@@ -126,7 +126,7 @@ TEST(Print, CheckOutput2d)
     TestPrintCheckOutput2d();
 }
 
-void TestPrintCheckoutOutput2d_elision()
+void TestPrintCheckoutOutput2dElision()
 {
     using cell = double;
 
@@ -167,9 +167,9 @@ void TestPrintCheckoutOutput2d_elision()
     }
 }
 
-TEST(Print, CheckOutput2d_elision)
+TEST(Print, CheckOutput2dElision)
 {
-    TestPrintCheckoutOutput2d_elision();
+    TestPrintCheckoutOutput2dElision();
 }
 
 void PrintTestCheckoutOutput3d()

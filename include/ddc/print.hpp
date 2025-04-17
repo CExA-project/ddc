@@ -18,7 +18,7 @@ namespace detail {
 struct ChunkPrinter
 {
     const int threshold = 10;
-    // If this ever becomes modifiable by the user, we need to ensure that 
+    // If this ever becomes modifiable by the user, we need to ensure that
     // edgeitems < (threshold / 2) stays true.
     const int edgeitems = 3;
 
@@ -280,8 +280,8 @@ template <class Dim0, class... Dims>
 void print_dim_name(std::ostream& os, const DiscreteDomain<Dim0, Dims...> dd)
 {
     print_demangled_type_name<Dim0>(os);
-	DiscreteDomain<Dims...> smaller_dd(dd);
-    os << "(" << dd.size()/smaller_dd.size() << ")×";
+    DiscreteDomain<Dims...> smaller_dd(dd);
+    os << "(" << dd.size() / smaller_dd.size() << ")×";
     print_dim_name(os, smaller_dd);
 }
 
@@ -334,11 +334,10 @@ std::ostream& print(
         std::ostream& os,
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
-	print_type_info(os, chunk_span);
-	print_content(os, chunk_span);
+    print_type_info(os, chunk_span);
+    print_content(os, chunk_span);
 
-	return os;
-
+    return os;
 }
 
 

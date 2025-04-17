@@ -17,18 +17,18 @@ namespace ddc {
 namespace detail {
 struct ChunkPrinter
 {
-    const int threshold = 10;
+    static const int threshold = 10;
     // If this ever becomes modifiable by the user, we need to ensure that
     // edgeitems < (threshold / 2) stays true.
-    const int edgeitems = 3;
+    static const int edgeitems = 3;
 
     std::stringstream ss;
-    ChunkPrinter(const std::ostream& os)
+    explicit ChunkPrinter(const std::ostream& os)
     {
         ss.copyfmt(os);
     }
 
-    std::ostream& alignment(std::ostream& os, int level)
+    static std::ostream& alignment(std::ostream& os, int level)
     {
         for (int i = 0; i <= level; ++i) {
             os << ' ';
@@ -47,7 +47,7 @@ struct ChunkPrinter
     template <class T>
     void display_aligned_element(std::ostream& os, T& elem, std::size_t largest_element)
     {
-        std::size_t elem_width = get_element_width(elem);
+        const std::size_t elem_width = get_element_width(elem);
 
         for (int i = 0; i < largest_element - elem_width; ++i) {
             os << " ";
@@ -248,7 +248,7 @@ void print_demangled_type_name(std::ostream& os)
     int status;
 
     std::unique_ptr<char, decltype(std::free)*> demangled_name(
-            abi::__cxa_demangle(typeid(Type).name(), nullptr, 0, &status),
+            abi::__cxa_demangle(typeid(Type).name(), nullptr, nullptr, &status),
             std::free);
     if (status != 0) {
         os << "Error demangling dimension name: " << status;
@@ -302,7 +302,7 @@ std::ostream& print_content(
     mdspan_type allocated_mdspan = h_chunk_span.allocation_mdspan();
 
     ddc::detail::ChunkPrinter printer(os);
-    std::size_t largest_element = printer.find_largest_displayed_element(
+    const std::size_t largest_element = printer.find_largest_displayed_element(
             allocated_mdspan,
             std::make_index_sequence<extents::rank()>());
 

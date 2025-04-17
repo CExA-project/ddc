@@ -52,7 +52,7 @@ void PrintTestCheckOutput0d()
 
     {
         std::stringstream ss;
-		print_content(ss, cells_in);
+        print_content(ss, cells_in);
         EXPECT_EQ("0.12345", ss.str());
     }
 }
@@ -83,10 +83,10 @@ void TestPrintCheckOutput2d()
             domain_2d,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1> const i) { cells_in(i) = 0.12345; });
 
-	cells_in(ddc::DiscreteElement<DDim0, DDim1>(1,1)) = -0.12345;
+    cells_in(ddc::DiscreteElement<DDim0, DDim1>(1, 1)) = -0.12345;
     {
         std::stringstream ss;
-		print_content(ss, cells_in);
+        print_content(ss, cells_in);
         EXPECT_EQ(
                 "[[ 0.12345  0.12345]\n"
                 " [ 0.12345 -0.12345]]",
@@ -95,7 +95,7 @@ void TestPrintCheckOutput2d()
     {
         std::stringstream ss;
         ss << std::setprecision(2);
-		print_content(ss, cells_in);
+        print_content(ss, cells_in);
         EXPECT_EQ(
                 "[[ 0.12  0.12]\n"
                 " [ 0.12 -0.12]]",
@@ -104,7 +104,7 @@ void TestPrintCheckOutput2d()
     {
         std::stringstream ss;
         ss << std::hexfloat;
-		print_content(ss, cells_in);
+        print_content(ss, cells_in);
         EXPECT_EQ(
                 "[[ 0x1.f9a6b50b0f27cp-4  0x1.f9a6b50b0f27cp-4]\n"
                 " [ 0x1.f9a6b50b0f27cp-4 -0x1.f9a6b50b0f27cp-4]]",
@@ -113,7 +113,7 @@ void TestPrintCheckOutput2d()
     {
         std::stringstream ss;
         ss << std::scientific;
-		print_content(ss, cells_in);
+        print_content(ss, cells_in);
         EXPECT_EQ(
                 "[[ 1.234500e-01  1.234500e-01]\n"
                 " [ 1.234500e-01 -1.234500e-01]]",
@@ -147,14 +147,14 @@ void TestPrintCheckoutOutput2d_elision()
             domain_2d,
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1> const i) { cells_in(i) = 0.12345; });
 
-	// All the following values are just outside the bound of what is visible and thus should not affect alignment
-	cells_in(ddc::DiscreteElement<DDim0, DDim1>(0,3)) = -0.12345;
-	cells_in(ddc::DiscreteElement<DDim0, DDim1>(0,96)) = -0.12345;
-	cells_in(ddc::DiscreteElement<DDim0, DDim1>(3,0)) = -0.12345;
-	cells_in(ddc::DiscreteElement<DDim0, DDim1>(96,0)) = -0.12345;
+    // All the following values are just outside the bound of what is visible and thus should not affect alignment
+    cells_in(ddc::DiscreteElement<DDim0, DDim1>(0, 3)) = -0.12345;
+    cells_in(ddc::DiscreteElement<DDim0, DDim1>(0, 96)) = -0.12345;
+    cells_in(ddc::DiscreteElement<DDim0, DDim1>(3, 0)) = -0.12345;
+    cells_in(ddc::DiscreteElement<DDim0, DDim1>(96, 0)) = -0.12345;
     {
         std::stringstream ss;
-		print_content(ss, cells_in);
+        print_content(ss, cells_in);
         EXPECT_EQ(
                 "[[0.12345 0.12345 0.12345 ... 0.12345 0.12345 0.12345]\n"
                 " [0.12345 0.12345 0.12345 ... 0.12345 0.12345 0.12345]\n"
@@ -200,7 +200,7 @@ void PrintTestCheckoutOutput3d()
 
     {
         std::stringstream ss;
-		print_content(ss, cells_in);
+        print_content(ss, cells_in);
         EXPECT_EQ(
                 "[[[0.12345 0.12345 0.12345]\n"
                 "  [0.12345 0.12345 0.12345]\n"

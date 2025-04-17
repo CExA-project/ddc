@@ -247,8 +247,9 @@ void print_demangled_type_name(std::ostream& os)
 {
     int status;
 
-    std::unique_ptr<char, decltype(free)*>
-            demangled_name(abi::__cxa_demangle(typeid(Type).name(), nullptr, 0, &status), free);
+    std::unique_ptr<char, decltype(std::free)*> demangled_name(
+            abi::__cxa_demangle(typeid(Type).name(), nullptr, 0, &status),
+            std::free);
     if (status != 0) {
         os << "Error demangling dimension name: " << status;
         return;

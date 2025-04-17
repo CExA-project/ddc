@@ -178,7 +178,7 @@ struct ChunkPrinter
     // 0D, we don't need the element size in this case so the actual returned value can be anything.
     template <class ElementType, class Extents, class Layout, class Accessor>
     std::size_t find_largest_displayed_element(
-            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
+            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const&,
             std::index_sequence<>)
     {
         return 0;

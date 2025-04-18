@@ -277,11 +277,11 @@ void print_dim_name(std::ostream& os, const DiscreteDomain<Dim> dd)
     os << "(" << dd.size() << ")";
 }
 
-template <class Dim0, class... Dims>
-void print_dim_name(std::ostream& os, const DiscreteDomain<Dim0, Dims...> dd)
+template <class Dim0, class Dim1, class... Dims>
+void print_dim_name(std::ostream& os, const DiscreteDomain<Dim0, Dim1, Dims...> dd)
 {
     print_demangled_type_name<Dim0>(os);
-    DiscreteDomain<Dims...> smaller_dd(dd);
+    DiscreteDomain<Dim1, Dims...> smaller_dd(dd);
     os << "(" << dd.size() / smaller_dd.size() << ")×";
     print_dim_name(os, smaller_dd);
 }

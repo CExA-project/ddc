@@ -247,7 +247,7 @@ void print_demangled_type_name(std::ostream& os)
 {
     int status;
 
-    std::unique_ptr<char, decltype(std::free)*> demangled_name(
+    const std::unique_ptr<char, decltype(std::free)*> demangled_name(
             abi::__cxa_demangle(typeid(Type).name(), nullptr, nullptr, &status),
             std::free);
     if (status != 0) {
@@ -281,7 +281,7 @@ template <class Dim0, class Dim1, class... Dims>
 void print_dim_name(std::ostream& os, const DiscreteDomain<Dim0, Dim1, Dims...> dd)
 {
     print_demangled_type_name<Dim0>(os);
-    DiscreteDomain<Dim1, Dims...> smaller_dd(dd);
+    const DiscreteDomain<Dim1, Dims...> smaller_dd(dd);
     os << "(" << dd.size() / smaller_dd.size() << ")×";
     print_dim_name(os, smaller_dd);
 }
@@ -299,7 +299,7 @@ std::ostream& print_content(
     using mdspan_type = typename chunkspan_type::allocation_mdspan_type;
     using extents = typename mdspan_type::extents_type;
 
-    mdspan_type allocated_mdspan = h_chunk_span.allocation_mdspan();
+    const mdspan_type allocated_mdspan = h_chunk_span.allocation_mdspan();
 
     ddc::detail::ChunkPrinter printer(os);
     const std::size_t largest_element = printer.find_largest_displayed_element(

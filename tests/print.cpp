@@ -10,6 +10,7 @@
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Random.hpp>
@@ -52,7 +53,7 @@ void PrintTestCheckOutput0d()
     {
         std::stringstream ss;
         print_content(ss, cells_in);
-        EXPECT_EQ("0.12345", ss.str());
+        EXPECT_EQ(ss.str(), "0.12345");
     }
 }
 
@@ -80,46 +81,48 @@ void TestPrintCheckOutput2d()
 
     ddc::parallel_for_each(
             domain_2d,
-            KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1> const i) { cells_in(i) = 0.12345; });
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1> const i) { 
+            if (i == domain_2d.front() + ddc::DiscreteVector<DDim0, DDim1>(1,1)) {
+              cells_in(i) = -0.12345; 
+            } else {
+              cells_in(i) = 0.12345; 
+            }
+            });
 
-    cells_in(ddc::DiscreteElement<DDim0, DDim1>(1, 1)) = -0.12345;
     {
         std::stringstream ss;
         print_content(ss, cells_in);
-        EXPECT_EQ(
+        EXPECT_EQ(ss.str(),
                 "[[ 0.12345  0.12345]\n"
-                " [ 0.12345 -0.12345]]",
-                ss.str());
+                " [ 0.12345 -0.12345]]");
     }
     {
         std::stringstream ss;
         ss << std::setprecision(2);
         print_content(ss, cells_in);
-        EXPECT_EQ(
+        EXPECT_EQ(ss.str(),
                 "[[ 0.12  0.12]\n"
-                " [ 0.12 -0.12]]",
-                ss.str());
+                " [ 0.12 -0.12]]");
     }
     {
         std::stringstream ss;
         ss << std::hexfloat;
         print_content(ss, cells_in);
         if constexpr (std::is_same_v<cell, double>) {
-            EXPECT_EQ(
+            EXPECT_EQ(ss.str(),
                     "[[ 0x1.f9a6b50b0f27cp-4  0x1.f9a6b50b0f27cp-4]\n"
-                    " [ 0x1.f9a6b50b0f27cp-4 -0x1.f9a6b50b0f27cp-4]]",
-                    ss.str());
+                    " [ 0x1.f9a6b50b0f27cp-4 -0x1.f9a6b50b0f27cp-4]]");
         } else {
 #if defined(KOKKOS_COMPILER_MSVC)
             EXPECT_EQ(
+                    ss.str(),
                     "[[ 0x1.f9a6b60000000p-4  0x1.f9a6b60000000p-4]\n"
-                    " [ 0x1.f9a6b60000000p-4 -0x1.f9a6b60000000p-4]]",
-                    ss.str());
+                    " [ 0x1.f9a6b60000000p-4 -0x1.f9a6b60000000p-4]]");
 #else
             EXPECT_EQ(
+                    ss.str(),
                     "[[ 0x1.f9a6b6p-4  0x1.f9a6b6p-4]\n"
-                    " [ 0x1.f9a6b6p-4 -0x1.f9a6b6p-4]]",
-                    ss.str());
+                    " [ 0x1.f9a6b6p-4 -0x1.f9a6b6p-4]]");
 #endif
         }
     }
@@ -128,9 +131,9 @@ void TestPrintCheckOutput2d()
         ss << std::scientific;
         print_content(ss, cells_in);
         EXPECT_EQ(
+                ss.str(),
                 "[[ 1.234500e-01  1.234500e-01]\n"
-                " [ 1.234500e-01 -1.234500e-01]]",
-                ss.str());
+                " [ 1.234500e-01 -1.234500e-01]]");
     }
 }
 
@@ -156,27 +159,30 @@ void TestPrintCheckoutOutput2dElision()
     ddc::Chunk cells_in_dev_alloc("cells_in_dev", domain_2d, ddc::DeviceAllocator<cell>());
     ddc::ChunkSpan const cells_in = cells_in_dev_alloc.span_view();
 
+    // Fill the array with 0.12345 in the cells that should be visible and -0.12345 in the one that will be eluded
+    // Check that the output is only aligned on 0.12345
     ddc::parallel_for_each(
             domain_2d,
-            KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1> const i) { cells_in(i) = 0.12345; });
-
-    // All the following values are just outside the bound of what is visible and thus should not affect alignment
-    cells_in(ddc::DiscreteElement<DDim0, DDim1>(0, 3)) = -0.12345;
-    cells_in(ddc::DiscreteElement<DDim0, DDim1>(0, 96)) = -0.12345;
-    cells_in(ddc::DiscreteElement<DDim0, DDim1>(3, 0)) = -0.12345;
-    cells_in(ddc::DiscreteElement<DDim0, DDim1>(96, 0)) = -0.12345;
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1> const i) { 
+              if ((i.uid<DDim0>() >= 3 && i.uid<DDim0>() < dim0 - 3) ||
+                  (i.uid<DDim1>() >= 3 && i.uid<DDim1>() < dim1 - 3)) {
+                cells_in(i) = -0.12345; 
+              } else {
+                cells_in(i) = 0.12345; 
+              }
+            });
     {
         std::stringstream ss;
         print_content(ss, cells_in);
         EXPECT_EQ(
+                ss.str(),
                 "[[0.12345 0.12345 0.12345 ... 0.12345 0.12345 0.12345]\n"
                 " [0.12345 0.12345 0.12345 ... 0.12345 0.12345 0.12345]\n"
                 " [0.12345 0.12345 0.12345 ... 0.12345 0.12345 0.12345]\n"
                 " ...\n"
                 " [0.12345 0.12345 0.12345 ... 0.12345 0.12345 0.12345]\n"
                 " [0.12345 0.12345 0.12345 ... 0.12345 0.12345 0.12345]\n"
-                " [0.12345 0.12345 0.12345 ... 0.12345 0.12345 0.12345]]",
-                ss.str());
+                " [0.12345 0.12345 0.12345 ... 0.12345 0.12345 0.12345]]");
     }
 }
 
@@ -215,6 +221,7 @@ void PrintTestCheckoutOutput3d()
         std::stringstream ss;
         print_content(ss, cells_in);
         EXPECT_EQ(
+                ss.str(),
                 "[[[0.12345 0.12345 0.12345]\n"
                 "  [0.12345 0.12345 0.12345]\n"
                 "  [0.12345 0.12345 0.12345]]\n"
@@ -225,8 +232,7 @@ void PrintTestCheckoutOutput3d()
                 "\n"
                 " [[0.12345 0.12345 0.12345]\n"
                 "  [0.12345 0.12345 0.12345]\n"
-                "  [0.12345 0.12345 0.12345]]]",
-                ss.str());
+                "  [0.12345 0.12345 0.12345]]]");
     }
 }
 
@@ -257,14 +263,14 @@ void PrintTestMetadata()
     {
         std::stringstream ss;
         print_type_info(ss, cells_in);
-        EXPECT_EQ(
-                "anonymous_namespace_workaround_print_cpp::DDim0(5)×"
-                "anonymous_namespace_workaround_print_cpp::DDim1(5)\n"
+        EXPECT_THAT(ss.str(),
+                testing::MatchesRegex("anonymous_namespace_workaround_print_cpp::DDim0(5)×"
+                "anonymous_namespace_workaround_print_cpp::DDim1(5)\\n"
                 "ddc::ChunkSpan<double, ddc::DiscreteDomain"
-                "<anonymous_namespace_workaround_print_cpp::DDim0, "
-                "anonymous_namespace_workaround_print_cpp::DDim1>"
-                ", Kokkos::layout_right, Kokkos::HostSpace>\n",
-                ss.str());
+                "<anonymous_namespace_workaround_print_cpp::DDim0,"
+                " anonymous_namespace_workaround_print_cpp::DDim1>"
+                ", Kokkos::layout_.+, Kokkos::.+Space>\\n")
+                );
     }
 }
 

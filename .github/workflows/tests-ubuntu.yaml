@@ -178,12 +178,11 @@ jobs:
             -v ${{github.workspace}}:${{github.workspace}} \
             ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
             bash run.sh
-
-          gcovr --verbose --filter include/ddc --lcov coverage.txt --merge-mode-functions=merge-use-line-0 build
-          cat coverage.txt
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d  # v5.4.2
         with:
           files: ./coverage.txt
+          gcov_include: include/ddc
+          gcov_ignore: tests
           token: ${{secrets.CODECOV_TOKEN}}
           verbose: true

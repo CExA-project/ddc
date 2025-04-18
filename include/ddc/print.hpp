@@ -65,7 +65,7 @@ struct ChunkPrinter
             std::size_t extent)
     {
         for (std::size_t i0 = beginning; i0 < end; ++i0) {
-            display_aligned_element(os, s(i0), largest_element);
+            display_aligned_element(os, s[i0], largest_element);
             if (i0 < extent - 1) {
                 os << " ";
             }
@@ -109,7 +109,7 @@ struct ChunkPrinter
             std::size_t /*largest_element*/,
             std::index_sequence<>)
     {
-        return os << s();
+        return os << *s.data_handle();
     }
 
     template <
@@ -225,14 +225,14 @@ struct ChunkPrinter
         } else {
             if (extent < threshold) {
                 for (std::size_t i0 = 0; i0 < extent; ++i0) {
-                    ret = std::max(ret, get_element_width(s(i0)));
+                    ret = std::max(ret, get_element_width(s[i0]));
                 }
             } else {
                 for (std::size_t i0 = 0; i0 < edgeitems; ++i0) {
-                    ret = std::max(ret, get_element_width(s(i0)));
+                    ret = std::max(ret, get_element_width(s[i0]));
                 }
                 for (std::size_t i0 = extent - edgeitems; i0 < extent; ++i0) {
-                    ret = std::max(ret, get_element_width(s(i0)));
+                    ret = std::max(ret, get_element_width(s[i0]));
                 }
             }
         }
@@ -321,7 +321,6 @@ std::ostream& print_type_info(
         std::ostream& os,
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
-    os << "\n";
     ddc::detail::print_dim_name(os, chunk_span.domain());
     os << "\n";
     ddc::detail::print_demangled_type_name<decltype(chunk_span)>(os);

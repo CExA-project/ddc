@@ -37,10 +37,9 @@ struct DDim5
 
 } // namespace anonymous_namespace_workaround_print_cpp
 
+template <typename cell>
 void PrintTestCheckOutput0d()
 {
-    using cell = double;
-
     ddc::DiscreteDomain<> const domain_full;
 
     ddc::Chunk cells_in_dev_alloc("cells_in_dev", domain_full, ddc::DeviceAllocator<cell>());
@@ -59,13 +58,13 @@ void PrintTestCheckOutput0d()
 
 TEST(Print, CheckOutput0d)
 {
-    PrintTestCheckOutput0d();
+    PrintTestCheckOutput0d<float>();
+    PrintTestCheckOutput0d<double>();
 }
 
+template <typename cell>
 void TestPrintCheckOutput2d()
 {
-    using cell = double;
-
     unsigned const dim0 = 2;
     unsigned const dim1 = 2;
 
@@ -105,10 +104,17 @@ void TestPrintCheckOutput2d()
         std::stringstream ss;
         ss << std::hexfloat;
         print_content(ss, cells_in);
-        EXPECT_EQ(
-                "[[ 0x1.f9a6b50b0f27cp-4  0x1.f9a6b50b0f27cp-4]\n"
-                " [ 0x1.f9a6b50b0f27cp-4 -0x1.f9a6b50b0f27cp-4]]",
-                ss.str());
+        if constexpr (std::is_same_v<cell, double>) {
+            EXPECT_EQ(
+                    "[[ 0x1.f9a6b50b0f27cp-4  0x1.f9a6b50b0f27cp-4]\n"
+                    " [ 0x1.f9a6b50b0f27cp-4 -0x1.f9a6b50b0f27cp-4]]",
+                    ss.str());
+        } else {
+            EXPECT_EQ(
+                    "[[ 0x1.f9a6b6p-4  0x1.f9a6b6p-4]\n"
+                    " [ 0x1.f9a6b6p-4 -0x1.f9a6b6p-4]]",
+                    ss.str());
+        }
     }
     {
         std::stringstream ss;
@@ -123,13 +129,13 @@ void TestPrintCheckOutput2d()
 
 TEST(Print, CheckOutput2d)
 {
-    TestPrintCheckOutput2d();
+    TestPrintCheckOutput2d<float>();
+    TestPrintCheckOutput2d<double>();
 }
 
+template <typename cell>
 void TestPrintCheckoutOutput2dElision()
 {
-    using cell = double;
-
     unsigned const dim0 = 100;
     unsigned const dim1 = 100;
 
@@ -169,13 +175,13 @@ void TestPrintCheckoutOutput2dElision()
 
 TEST(Print, CheckOutput2dElision)
 {
-    TestPrintCheckoutOutput2dElision();
+    TestPrintCheckoutOutput2dElision<float>();
+    TestPrintCheckoutOutput2dElision<double>();
 }
 
+template <typename cell>
 void PrintTestCheckoutOutput3d()
 {
-    using cell = double;
-
     unsigned const dim0 = 3;
     unsigned const dim1 = 3;
     unsigned const dim2 = 3;
@@ -219,5 +225,44 @@ void PrintTestCheckoutOutput3d()
 
 TEST(Print, CheckOutput3d)
 {
-    PrintTestCheckoutOutput3d();
+    PrintTestCheckoutOutput3d<float>();
+    PrintTestCheckoutOutput3d<double>();
 }
+
+#if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
+void PrintTestMetadata()
+{
+    using cell = double;
+
+    unsigned const dim0 = 5;
+    unsigned const dim1 = 5;
+
+    ddc::DiscreteDomain<DDim0> const domain_0
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDim0>(dim0));
+    ddc::DiscreteDomain<DDim1> const domain_1
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDim1>(dim1));
+
+    ddc::DiscreteDomain<DDim0, DDim1> const domain_2d(domain_0, domain_1);
+
+    ddc::Chunk cells_in_dev_alloc("cells_in_dev", domain_2d, ddc::DeviceAllocator<cell>());
+    ddc::ChunkSpan const cells_in = cells_in_dev_alloc.span_view();
+
+    {
+        std::stringstream ss;
+        print_type_info(ss, cells_in);
+        EXPECT_EQ(
+                "anonymous_namespace_workaround_print_cpp::DDim0(5)×"
+                "anonymous_namespace_workaround_print_cpp::DDim1(5)\n"
+                "ddc::ChunkSpan<double, ddc::DiscreteDomain"
+                "<anonymous_namespace_workaround_print_cpp::DDim0, "
+                "anonymous_namespace_workaround_print_cpp::DDim1>"
+                ", Kokkos::layout_right, Kokkos::HostSpace>\n",
+                ss.str());
+    }
+}
+
+TEST(Print, CheckMetadata)
+{
+    PrintTestMetadata();
+}
+#endif

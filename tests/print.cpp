@@ -110,10 +110,17 @@ void TestPrintCheckOutput2d()
                     " [ 0x1.f9a6b50b0f27cp-4 -0x1.f9a6b50b0f27cp-4]]",
                     ss.str());
         } else {
+#if defined(KOKKOS_COMPILER_MSVC)
+            EXPECT_EQ(
+                    "[[ 0x1.f9a6b60000000p-4  0x1.f9a6b60000000p-4]\n"
+                    " [ 0x1.f9a6b60000000p-4 -0x1.f9a6b60000000p-4]]",
+                    ss.str());
+#else
             EXPECT_EQ(
                     "[[ 0x1.f9a6b6p-4  0x1.f9a6b6p-4]\n"
                     " [ 0x1.f9a6b6p-4 -0x1.f9a6b6p-4]]",
                     ss.str());
+#endif
         }
     }
     {

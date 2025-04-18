@@ -166,24 +166,20 @@ jobs:
               -DDDC_BUILD_EXAMPLES=OFF \
               -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
               -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-              -B build \
-              -S ${{github.workspace}}
+              -B build
 
             cmake --build build
             ctest --test-dir build
           EOF
 
           docker run \
+            --workdir ${{github.workspace}} \
             --cidfile='docker.cid' \
-            -v ${PWD}:${{github.workspace}}:ro \
+            -v ${{github.workspace}}:${{github.workspace}} \
             ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
-            bash ${{github.workspace}}/run.sh
-          if docker cp "$(cat docker.cid)":/data/build ${{github.workspace}}/build
-          then echo "with_report=true" >> "$GITHUB_OUTPUT"
-          else echo "with_report=false" >> "$GITHUB_OUTPUT"
-          fi
+            bash run.sh
 
-          gcovr --verbose --root . --filter '.*include/ddc/.*\.h(pp)?$' --exclude '.*' --lcov coverage.lcov --merge-mode-functions=merge-use-line-0 build
+          gcovr --verbose --filter include/ddc --lcov coverage.lcov --merge-mode-functions=merge-use-line-0 build
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d  # v5.4.2
         with:

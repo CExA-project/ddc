@@ -215,7 +215,7 @@ jobs:
             -v ${PWD}:/src:ro \
             ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}} \
             bash /src/run.sh
-          if docker cp "$(cat docker.cid)":/data/tests.xml /home/runner/work/ddc/ddc/tests.xml
+          if docker cp "$(cat docker.cid)":/data/tests.xml ${{github.workspace}}/tests.xml
           then echo "with_report=true" >> "$GITHUB_OUTPUT"
           else echo "with_report=false" >> "$GITHUB_OUTPUT"
           fi
@@ -223,4 +223,4 @@ jobs:
         uses: mikepenz/action-junit-report@cf701569b05ccdd861a76b8607a66d76f6fd4857  # v5.5.1
         if: ( success() || failure() ) && steps.test.outputs.with_report == 'true'  # always run even if the previous step fails
         with:
-          report_paths: '/home/runner/work/ddc/ddc/tests.xml'
+          report_paths: '${{github.workspace}}/tests.xml'

@@ -91,21 +91,21 @@ jobs:
           sed -i.bak 's|#include <link.h>||g' pdi/plugins/user_code/user_code.cxx
           rm -f pdi/plugins/user_code/user_code.cxx.bak
           cmake \
-            -DBUILD_BENCHMARKING=OFF \
-            -DBUILD_DECL_HDF5_PLUGIN=OFF \
-            -DBUILD_DECL_NETCDF_PLUGIN=OFF \
-            -DBUILD_DEISA_PLUGIN=OFF \
-            -DBUILD_DOCUMENTATION=OFF \
-            -DBUILD_FORTRAN=OFF \
-            -DBUILD_MPI_PLUGIN=OFF \
-            -DBUILD_PYCALL_PLUGIN=OFF \
-            -DBUILD_SERIALIZE_PLUGIN=OFF \
-            -DBUILD_SET_VALUE_PLUGIN=OFF \
-            -DBUILD_TESTING=OFF \
-            -DBUILD_TRACE_PLUGIN=OFF \
-            -DBUILD_USER_CODE_PLUGIN=ON \
-            -DCMAKE_CXX_FLAGS="-Wno-unqualified-std-cast-call" \
-            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D BUILD_BENCHMARKING=OFF \
+            -D BUILD_DECL_HDF5_PLUGIN=OFF \
+            -D BUILD_DECL_NETCDF_PLUGIN=OFF \
+            -D BUILD_DEISA_PLUGIN=OFF \
+            -D BUILD_DOCUMENTATION=OFF \
+            -D BUILD_FORTRAN=OFF \
+            -D BUILD_MPI_PLUGIN=OFF \
+            -D BUILD_PYCALL_PLUGIN=OFF \
+            -D BUILD_SERIALIZE_PLUGIN=OFF \
+            -D BUILD_SET_VALUE_PLUGIN=OFF \
+            -D BUILD_TESTING=OFF \
+            -D BUILD_TRACE_PLUGIN=OFF \
+            -D BUILD_USER_CODE_PLUGIN=ON \
+            -D CMAKE_CXX_FLAGS="-Wno-unqualified-std-cast-call" \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -B build \
             -S ./pdi
           cmake --build build
@@ -127,12 +127,12 @@ jobs:
       - name: Install Ginkgo
         run: |
           cmake \
-            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -DGINKGO_BUILD_BENCHMARKS=OFF \
-            -DGINKGO_BUILD_EXAMPLES=OFF \
-            -DGINKGO_BUILD_MPI=OFF \
-            -DGINKGO_BUILD_REFERENCE=ON \
-            -DGINKGO_BUILD_TESTS=OFF \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D GINKGO_BUILD_BENCHMARKS=OFF \
+            -D GINKGO_BUILD_EXAMPLES=OFF \
+            -D GINKGO_BUILD_MPI=OFF \
+            -D GINKGO_BUILD_REFERENCE=ON \
+            -D GINKGO_BUILD_TESTS=OFF \
             -B build \
             -S ./ginkgo
           cmake --build build
@@ -146,10 +146,10 @@ jobs:
       - name: Install Kokkos
         run: |
           cmake \
-            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
-            -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-            -DKokkos_ENABLE_SERIAL=ON \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
+            -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+            -D Kokkos_ENABLE_SERIAL=ON \
             ${{matrix.backend.kokkos_extra_cmake_flags}} \
             -B build \
             -S ./kokkos
@@ -164,8 +164,8 @@ jobs:
       - name: Install Kokkos-fft
         run: |
           cmake \
-            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -DKokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D KokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
             -B build \
             -S ./kokkos-fft
           cmake --build build
@@ -179,15 +179,15 @@ jobs:
       - name: Install Kokkos Kernels
         run: |
           cmake \
-            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -DKokkosKernels_ADD_DEFAULT_ETI=OFF \
-            -DKokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
-            -DKokkosKernels_ENABLE_COMPONENT_BLAS=ON \
-            -DKokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
-            -DKokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
-            -DKokkosKernels_ENABLE_TPL_BLAS=OFF \
-            -DKokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
-            -DKokkosKernels_ENABLE_TPL_LAPACK=OFF \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D KokkosKernels_ADD_DEFAULT_ETI=OFF \
+            -D KokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
+            -D KokkosKernels_ENABLE_COMPONENT_BLAS=ON \
+            -D KokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
+            -D KokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
+            -D KokkosKernels_ENABLE_TPL_BLAS=OFF \
+            -D KokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
+            -D KokkosKernels_ENABLE_TPL_LAPACK=OFF \
             -B build \
             -S ./kokkos-kernels
           cmake --build build
@@ -196,14 +196,14 @@ jobs:
       - name: Build DDC
         run: |
           cmake \
-            -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
-            -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -DDDC_BUILD_BENCHMARKS=ON \
-            -DDDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
-            -DDDC_GTest_DEPENDENCY_POLICY=INSTALLED \
-            -DDDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
-            -DDDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
-            -DBLA_PREFER_PKGCONFIG=ON \
+            -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D DDC_BUILD_BENCHMARKS=ON \
+            -D DDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
+            -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
+            -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
+            -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
+            -D BLA_PREFER_PKGCONFIG=ON \
             -B build
           cmake --build build
       - name: Run unit tests

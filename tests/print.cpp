@@ -9,8 +9,8 @@
 
 #include <ddc/ddc.hpp>
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Random.hpp>
@@ -81,18 +81,19 @@ void TestPrintCheckOutput2d()
 
     ddc::parallel_for_each(
             domain_2d,
-            KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1> const i) { 
-            if (i == domain_2d.front() + ddc::DiscreteVector<DDim0, DDim1>(1,1)) {
-              cells_in(i) = -0.12345; 
-            } else {
-              cells_in(i) = 0.12345; 
-            }
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1> const i) {
+                if (i == domain_2d.front() + ddc::DiscreteVector<DDim0, DDim1>(1, 1)) {
+                    cells_in(i) = -0.12345;
+                } else {
+                    cells_in(i) = 0.12345;
+                }
             });
 
     {
         std::stringstream ss;
         print_content(ss, cells_in);
-        EXPECT_EQ(ss.str(),
+        EXPECT_EQ(
+                ss.str(),
                 "[[ 0.12345  0.12345]\n"
                 " [ 0.12345 -0.12345]]");
     }
@@ -100,7 +101,8 @@ void TestPrintCheckOutput2d()
         std::stringstream ss;
         ss << std::setprecision(2);
         print_content(ss, cells_in);
-        EXPECT_EQ(ss.str(),
+        EXPECT_EQ(
+                ss.str(),
                 "[[ 0.12  0.12]\n"
                 " [ 0.12 -0.12]]");
     }
@@ -109,7 +111,8 @@ void TestPrintCheckOutput2d()
         ss << std::hexfloat;
         print_content(ss, cells_in);
         if constexpr (std::is_same_v<cell, double>) {
-            EXPECT_EQ(ss.str(),
+            EXPECT_EQ(
+                    ss.str(),
                     "[[ 0x1.f9a6b50b0f27cp-4  0x1.f9a6b50b0f27cp-4]\n"
                     " [ 0x1.f9a6b50b0f27cp-4 -0x1.f9a6b50b0f27cp-4]]");
         } else {
@@ -163,13 +166,13 @@ void TestPrintCheckoutOutput2dElision()
     // Check that the output is only aligned on 0.12345
     ddc::parallel_for_each(
             domain_2d,
-            KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1> const i) { 
-              if ((i.uid<DDim0>() >= 3 && i.uid<DDim0>() < dim0 - 3) ||
-                  (i.uid<DDim1>() >= 3 && i.uid<DDim1>() < dim1 - 3)) {
-                cells_in(i) = -0.12345; 
-              } else {
-                cells_in(i) = 0.12345; 
-              }
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1> const i) {
+                if ((i.uid<DDim0>() >= 3 && i.uid<DDim0>() < dim0 - 3)
+                    || (i.uid<DDim1>() >= 3 && i.uid<DDim1>() < dim1 - 3)) {
+                    cells_in(i) = -0.12345;
+                } else {
+                    cells_in(i) = 0.12345;
+                }
             });
     {
         std::stringstream ss;
@@ -263,14 +266,15 @@ void PrintTestMetadata()
     {
         std::stringstream ss;
         print_type_info(ss, cells_in);
-        EXPECT_THAT(ss.str(),
-                testing::MatchesRegex("anonymous_namespace_workaround_print_cpp::DDim0(5)×"
-                "anonymous_namespace_workaround_print_cpp::DDim1(5)\\n"
-                "ddc::ChunkSpan<double, ddc::DiscreteDomain"
-                "<anonymous_namespace_workaround_print_cpp::DDim0,"
-                " anonymous_namespace_workaround_print_cpp::DDim1>"
-                ", Kokkos::layout_.+, Kokkos::.+Space>\\n")
-                );
+        EXPECT_THAT(
+                ss.str(),
+                testing::MatchesRegex(
+                        "anonymous_namespace_workaround_print_cpp::DDim0(5)×"
+                        "anonymous_namespace_workaround_print_cpp::DDim1(5)\\n"
+                        "ddc::ChunkSpan<double, ddc::DiscreteDomain"
+                        "<anonymous_namespace_workaround_print_cpp::DDim0,"
+                        " anonymous_namespace_workaround_print_cpp::DDim1>"
+                        ", Kokkos::layout_.+, Kokkos::.+Space>\\n"));
     }
 }
 

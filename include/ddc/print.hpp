@@ -23,13 +23,13 @@ namespace ddc {
 namespace detail {
 struct ChunkPrinter
 {
-    static const int threshold = 10;
+    static int const threshold = 10;
     // If this ever becomes modifiable by the user, we need to ensure that
     // edgeitems < (threshold / 2) stays true.
-    static const int edgeitems = 3;
+    static int const edgeitems = 3;
 
     std::stringstream ss;
-    explicit ChunkPrinter(const std::ostream& os)
+    explicit ChunkPrinter(std::ostream const& os)
     {
         ss.copyfmt(os);
     }
@@ -53,7 +53,7 @@ struct ChunkPrinter
     template <class T>
     void display_aligned_element(std::ostream& os, T& elem, std::size_t largest_element)
     {
-        const std::size_t elem_width = get_element_width(elem);
+        std::size_t const elem_width = get_element_width(elem);
 
         for (int i = 0; i < largest_element - elem_width; ++i) {
             os << " ";
@@ -253,7 +253,7 @@ void print_demangled_type_name(std::ostream& os)
 {
     int status;
 
-    const std::unique_ptr<char, decltype(std::free)*> demangled_name(
+    std::unique_ptr<char, decltype(std::free)*> const demangled_name(
             abi::__cxa_demangle(typeid(Type).name(), nullptr, nullptr, &status),
             std::free);
     if (status != 0) {
@@ -271,23 +271,23 @@ void print_demangled_type_name(std::ostream& os)
     os << typeid(Type).name();
 }
 #endif
-inline void print_dim_name(std::ostream& os, const DiscreteDomain<>)
+inline void print_dim_name(std::ostream& os, DiscreteDomain<> const)
 {
     os << "Scalar";
 }
 
 template <class Dim>
-void print_dim_name(std::ostream& os, const DiscreteDomain<Dim> dd)
+void print_dim_name(std::ostream& os, DiscreteDomain<Dim> const dd)
 {
     print_demangled_type_name<Dim>(os);
     os << "(" << dd.size() << ")";
 }
 
 template <class Dim0, class Dim1, class... Dims>
-void print_dim_name(std::ostream& os, const DiscreteDomain<Dim0, Dim1, Dims...> dd)
+void print_dim_name(std::ostream& os, DiscreteDomain<Dim0, Dim1, Dims...> const dd)
 {
     print_demangled_type_name<Dim0>(os);
-    const DiscreteDomain<Dim1, Dims...> smaller_dd(dd);
+    DiscreteDomain<Dim1, Dims...> const smaller_dd(dd);
     os << "(" << dd.size() / smaller_dd.size() << ")×";
     print_dim_name(os, smaller_dd);
 }
@@ -305,10 +305,10 @@ std::ostream& print_content(
     using mdspan_type = typename chunkspan_type::allocation_mdspan_type;
     using extents = typename mdspan_type::extents_type;
 
-    const mdspan_type allocated_mdspan = h_chunk_span.allocation_mdspan();
+    mdspan_type const allocated_mdspan = h_chunk_span.allocation_mdspan();
 
     ddc::detail::ChunkPrinter printer(os);
-    const std::size_t largest_element = printer.find_largest_displayed_element(
+    std::size_t const largest_element = printer.find_largest_displayed_element(
             allocated_mdspan,
             std::make_index_sequence<extents::rank()>());
 

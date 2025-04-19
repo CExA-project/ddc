@@ -105,7 +105,6 @@ jobs:
                 -D DOXYGEN_WARN_NO_PARAMDOC=YES \
                 -D DOXYGEN_WARN_IF_UNDOC_ENUM_VAL=YES \
                 -D DOXYGEN_WARN_AS_ERROR=NO \
-                -D MDSPAN_CXX_STANDARD=20 \
                 -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
                 -B build \
                 -S /src

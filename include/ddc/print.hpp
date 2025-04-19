@@ -97,7 +97,7 @@ struct ChunkPrinter
                     std::make_index_sequence<sizeof...(Is)>());
             if (i0 < end - 1) {
                 for (int ndims = 0; ndims < sizeof...(Is); ++ndims) {
-                    os << "\n";
+                    os << '\n';
                 }
                 alignment(os, level);
             }
@@ -150,12 +150,12 @@ struct ChunkPrinter
                         Accessor,
                         Is...>(os, s, level, largest_element, 0, edgeitems);
                 for (int ndims = 0; ndims < sizeof...(Is); ++ndims) {
-                    os << "\n";
+                    os << '\n';
                 }
                 alignment(os, level);
                 os << "...";
                 for (int ndims = 0; ndims < sizeof...(Is); ++ndims) {
-                    os << "\n";
+                    os << '\n';
                 }
                 alignment(os, level);
                 recursive_display<
@@ -280,7 +280,7 @@ template <class Dim>
 void print_dim_name(std::ostream& os, DiscreteDomain<Dim> const dd)
 {
     print_demangled_type_name<Dim>(os);
-    os << "(" << dd.size() << ")";
+    os << '(' << dd.size() << ')';
 }
 
 template <class Dim0, class Dim1, class... Dims>
@@ -288,7 +288,7 @@ void print_dim_name(std::ostream& os, DiscreteDomain<Dim0, Dim1, Dims...> const 
 {
     print_demangled_type_name<Dim0>(os);
     DiscreteDomain<Dim1, Dims...> const smaller_dd(dd);
-    os << "(" << dd.size() / smaller_dd.size() << ")×";
+    os << '(' << dd.size() / smaller_dd.size() << ")×";
     print_dim_name(os, smaller_dd);
 }
 
@@ -328,9 +328,9 @@ std::ostream& print_type_info(
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
     ddc::detail::print_dim_name(os, chunk_span.domain());
-    os << "\n";
+    os << '\n';
     ddc::detail::print_demangled_type_name<decltype(chunk_span)>(os);
-    os << "\n";
+    os << '\n';
 
     return os;
 }

@@ -17,7 +17,6 @@ on:
       - '**/CMakeLists.txt'
       - '**.cmake'
       - '**.cmake.in'
-      - 'docker/**'
       - 'vendor/**'
   push:
     branches:
@@ -31,7 +30,6 @@ on:
       - '**/CMakeLists.txt'
       - '**.cmake'
       - '**.cmake.in'
-      - 'docker/**'
       - 'vendor/**'
 
 concurrency:

@@ -96,17 +96,16 @@ jobs:
             set -xe
             git config --global --add safe.directory '*'
             cmake \
-                -DDDC_BUILD_DOCUMENTATION=ON \
-                -DCMAKE_CXX_STANDARD=20 \
-                -DDOXYGEN_EXTRACT_ALL=NO \
-                -DDOXYGEN_WARN_IF_UNDOCUMENTED=YES \
-                -DDOXYGEN_WARN_IF_DOC_ERROR=YES \
-                -DDOXYGEN_WARN_IF_INCOMPLETE_DOC=YES \
-                -DDOXYGEN_WARN_NO_PARAMDOC=YES \
-                -DDOXYGEN_WARN_IF_UNDOC_ENUM_VAL=YES \
-                -DDOXYGEN_WARN_AS_ERROR=NO \
-                -DMDSPAN_CXX_STANDARD=20 \
-                -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+                -D DDC_BUILD_DOCUMENTATION=ON \
+                -D CMAKE_CXX_STANDARD=20 \
+                -D DOXYGEN_EXTRACT_ALL=NO \
+                -D DOXYGEN_WARN_IF_UNDOCUMENTED=YES \
+                -D DOXYGEN_WARN_IF_DOC_ERROR=YES \
+                -D DOXYGEN_WARN_IF_INCOMPLETE_DOC=YES \
+                -D DOXYGEN_WARN_NO_PARAMDOC=YES \
+                -D DOXYGEN_WARN_IF_UNDOC_ENUM_VAL=YES \
+                -D DOXYGEN_WARN_AS_ERROR=NO \
+                -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
                 -B build \
                 -S /src
             cmake --build build --verbose --target doc
@@ -158,11 +157,11 @@ jobs:
             export CC=clang
             export CXX=clang++
             cmake \
-                -DDDC_BUILD_DOCUMENTATION=ON \
-                -DCMAKE_CXX_FLAGS="-Wno-unused-command-line-argument" \
-                -DCMAKE_CXX_STANDARD=20 \
-                -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-                -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+                -D DDC_BUILD_DOCUMENTATION=ON \
+                -D CMAKE_CXX_FLAGS="-Wno-unused-command-line-argument" \
+                -D CMAKE_CXX_STANDARD=20 \
+                -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
+                -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
                 -B build \
                 -S /src
             cmake --build build --verbose --target doc || true

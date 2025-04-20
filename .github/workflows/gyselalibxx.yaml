@@ -37,7 +37,7 @@ jobs:
             export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
 
             cmake \
-              -DGYSELALIBXX_DEFAULT_CXX_FLAGS="" \
+              -D GYSELALIBXX_DEFAULT_CXX_FLAGS="" \
               -B build \
               -S /src
 

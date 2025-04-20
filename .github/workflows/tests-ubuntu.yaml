@@ -132,12 +132,12 @@ jobs:
             c_compiler: '${CUDA_GCC}'
             cxx_compiler: '${CUDA_GXX}'
             ddc_extra_cxx_flags: ''
-            kokkos_extra_cmake_flags: '-DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_CUDA_CONSTEXPR=ON -DKokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ARCH_AMPERE80=ON'
+            kokkos_extra_cmake_flags: '-D Kokkos_ENABLE_CUDA=ON -D Kokkos_ENABLE_CUDA_CONSTEXPR=ON -D Kokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON -D Kokkos_ARCH_AMPERE80=ON'
           - name: 'hip'
             c_compiler: 'hipcc'
             cxx_compiler: 'hipcc'
             ddc_extra_cxx_flags: ''
-            kokkos_extra_cmake_flags: '-DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ENABLE_ROCTHRUST=OFF -DKokkos_ARCH_AMD_GFX90A=ON'
+            kokkos_extra_cmake_flags: '-D Kokkos_ENABLE_HIP=ON -D Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -D Kokkos_ENABLE_ROCTHRUST=OFF -D Kokkos_ARCH_AMD_GFX90A=ON'
         cxx_version: ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
         exclude:
@@ -199,11 +199,11 @@ jobs:
             export CXX=${{matrix.backend.cxx_compiler}}
 
             cmake \
-              -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -DBENCHMARK_ENABLE_GTEST_TESTS=OFF \
-              -DBENCHMARK_ENABLE_TESTING=OFF \
-              -DBENCHMARK_INSTALL_DOCS=OFF \
-              -DBENCHMARK_USE_BUNDLED_GTEST=OFF \
+              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+              -D BENCHMARK_ENABLE_GTEST_TESTS=OFF \
+              -D BENCHMARK_ENABLE_TESTING=OFF \
+              -D BENCHMARK_INSTALL_DOCS=OFF \
+              -D BENCHMARK_USE_BUNDLED_GTEST=OFF \
               -B build \
               -S /src/vendor/benchmark
             cmake --build build
@@ -211,7 +211,7 @@ jobs:
             rm -rf build
 
             cmake \
-              -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
               -B build \
               -S /src/vendor/googletest
             cmake --build build
@@ -219,10 +219,10 @@ jobs:
             rm -rf build
 
             cmake \
-              -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
-              -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-              -DKokkos_ENABLE_SERIAL=ON \
+              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+              -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
+              -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+              -D Kokkos_ENABLE_SERIAL=ON \
               ${{matrix.backend.kokkos_extra_cmake_flags}} \
               -B build \
               -S /src/vendor/kokkos
@@ -231,8 +231,8 @@ jobs:
             rm -rf build
 
             cmake \
-              -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -DKokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
+              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+              -D KokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
               -B build \
               -S /src/vendor/kokkos-fft
             cmake --build build
@@ -240,15 +240,15 @@ jobs:
             rm -rf build
 
             cmake \
-              -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -DKokkosKernels_ADD_DEFAULT_ETI=OFF \
-              -DKokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
-              -DKokkosKernels_ENABLE_COMPONENT_BLAS=ON \
-              -DKokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
-              -DKokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
-              -DKokkosKernels_ENABLE_TPL_BLAS=OFF \
-              -DKokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
-              -DKokkosKernels_ENABLE_TPL_LAPACK=OFF \
+              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+              -D KokkosKernels_ADD_DEFAULT_ETI=OFF \
+              -D KokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
+              -D KokkosKernels_ENABLE_COMPONENT_BLAS=ON \
+              -D KokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
+              -D KokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
+              -D KokkosKernels_ENABLE_TPL_BLAS=OFF \
+              -D KokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
+              -D KokkosKernels_ENABLE_TPL_LAPACK=OFF \
               -B build \
               -S /src/vendor/kokkos-kernels
             cmake --build build
@@ -256,13 +256,13 @@ jobs:
             rm -rf build
 
             cmake \
-              -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
-              -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -DDDC_BUILD_BENCHMARKS=ON \
-              -DDDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
-              -DDDC_GTest_DEPENDENCY_POLICY=INSTALLED \
-              -DDDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
-              -DDDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
+              -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
+              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+              -D DDC_BUILD_BENCHMARKS=ON \
+              -D DDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
+              -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
+              -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
+              -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
               -B build \
               -S /src
             cmake --build build
@@ -359,11 +359,11 @@ jobs:
             export CXX=${{matrix.backend.cxx_compiler}}
 
             cmake \
-              -DCMAKE_CXX_FLAGS="-fsanitize=${{matrix.sanitizer}} -fno-omit-frame-pointer" \
-              -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -DDDC_BUILD_BENCHMARKS=ON \
-              -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
-              -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+              -D CMAKE_CXX_FLAGS="-fsanitize=${{matrix.sanitizer}} -fno-omit-frame-pointer" \
+              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+              -D DDC_BUILD_BENCHMARKS=ON \
+              -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
+              -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
               -B build \
               -S /src
             cmake --build build
@@ -444,11 +444,11 @@ jobs:
             export CXX=${{matrix.backend.cxx_compiler}}
 
             cmake \
-              -DCMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-              -DDDC_BUILD_BENCHMARKS=ON \
-              -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF \
-              -DKokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+              -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
+              -D DDC_BUILD_BENCHMARKS=ON \
+              -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
+              -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
               -B build \
               -S /src
 

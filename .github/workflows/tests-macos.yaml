@@ -36,6 +36,9 @@ concurrency:
   group: ${{github.workflow}}-${{github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref}}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   id_repo:
     runs-on: macos-latest
@@ -77,6 +80,8 @@ jobs:
       CC: ${{matrix.backend.c_compiler}}
       CXX: ${{matrix.backend.cxx_compiler}}
       CMAKE_BUILD_TYPE: ${{matrix.cmake_build_type}}
+    permissions:
+      checks: write  # Required by mikepenz/action-junit-report
     steps:
       - name: Checkout built branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2

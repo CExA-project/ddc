@@ -9,6 +9,9 @@ name: gyselalibxx
 on:
   workflow_dispatch
 
+permissions:
+  contents: read
+
 jobs:
   tests:
     strategy:

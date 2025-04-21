@@ -21,6 +21,9 @@ on:
       - 'bin/trailing_spaces'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   python-format:
     name: Python format using black

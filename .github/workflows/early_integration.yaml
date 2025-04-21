@@ -99,14 +99,17 @@ jobs:
       - name: Checkout Kokkos devel branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with:
+          repository: kokkos/kokkos
           path: vendor/kokkos
       - name: Checkout Kokkos Kernels devel branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with:
+          repository: kokkos/kokkos-kernels
           path: vendor/kokkos-kernels
       - name: Checkout Kokkos-fft devel branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with:
+          repository: kokkos/kokkos-fft
           path: vendor/kokkos-fft
       - name: Test
         id: test

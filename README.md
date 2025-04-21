@@ -5,6 +5,7 @@ Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/CExA-project/ddc/badge)](https://scorecard.dev/viewer/?uri=github.com/CExA-project/ddc)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nightly early integration](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yaml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yaml)
 [![Nightly tests on Ubuntu](https://github.com/CExA-project/ddc/actions/workflows/tests-ubuntu.yaml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/tests-ubuntu.yaml)

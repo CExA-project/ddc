@@ -19,6 +19,9 @@ on:
       - '**.md'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   markdown-lint:
     name: Markdown lint using markdownlint-cli2

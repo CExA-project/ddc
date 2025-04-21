@@ -25,6 +25,9 @@ on:
       - '**.cmake.in'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   cmake-format:
     name: CMake format check using gersemi

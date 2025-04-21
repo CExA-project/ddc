@@ -11,6 +11,9 @@ on:
     - cron: "0 1 * * *"  # every day at 1am
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   links-check:
     name: Links check using linkchecker

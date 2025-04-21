@@ -38,6 +38,9 @@ concurrency:
   group: ${{github.workflow}}-${{github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref}}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   id_repo:
     runs-on: windows-latest
@@ -60,6 +63,8 @@ jobs:
       Kokkos_ROOT: ${{github.workspace}}/opt/kokkos
       GTest_ROOT: ${{github.workspace}}/opt/gtest
       CMAKE_BUILD_PARALLEL_LEVEL: 4
+    permissions:
+      checks: write  # Required by mikepenz/action-junit-report
     steps:
       - name: Checkout built branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2

@@ -9,6 +9,9 @@ name: Packages cleanup
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   delete-packages:
     strategy:
@@ -24,6 +27,8 @@ jobs:
           - 'oldest_hip'
     name: Delete old packages
     runs-on: ubuntu-latest
+    permissions:
+      packages: write  # Required by actions/delete-package-versions
     steps:
       - uses: actions/delete-package-versions@e5bc658cc4c965c472efe991f8beea3981499c55  # v5.0.0
         with:

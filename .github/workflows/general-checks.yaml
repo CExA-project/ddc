@@ -13,6 +13,9 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   reuse-compliance-check:
     name: Reuse compliance check

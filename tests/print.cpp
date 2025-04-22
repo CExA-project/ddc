@@ -46,9 +46,7 @@ void PrintTestCheckOutput0d()
     ddc::Chunk cells_in_dev_alloc("cells_in_dev", domain_full, ddc::DeviceAllocator<cell>());
     ddc::ChunkSpan const cells_in = cells_in_dev_alloc.span_view();
 
-    ddc::parallel_for_each(
-            domain_full,
-            KOKKOS_LAMBDA(ddc::DiscreteElement<> const i) { cells_in(i) = 0.12345; });
+    ddc::parallel_fill(cells_in, 0.12345);
 
     {
         std::stringstream ss;
@@ -214,11 +212,7 @@ void PrintTestCheckoutOutput3d()
     ddc::Chunk cells_in_dev_alloc("cells_in_dev", domain_3d, ddc::DeviceAllocator<cell>());
     ddc::ChunkSpan const cells_in = cells_in_dev_alloc.span_view();
 
-    ddc::parallel_for_each(
-            domain_3d,
-            KOKKOS_LAMBDA(ddc::DiscreteElement<DDim0, DDim1, DDim2> const i) {
-                cells_in(i) = 0.12345;
-            });
+    ddc::parallel_fill(cells_in, 0.12345);
 
     {
         std::stringstream ss;

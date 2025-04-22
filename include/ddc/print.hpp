@@ -263,7 +263,6 @@ void print_demangled_type_name(std::ostream& os)
 
     os << demangled_name.get();
 }
-
 #else
 template <class Type>
 void print_demangled_type_name(std::ostream& os)
@@ -271,6 +270,7 @@ void print_demangled_type_name(std::ostream& os)
     os << typeid(Type).name();
 }
 #endif
+
 inline void print_dim_name(std::ostream& os, DiscreteDomain<> const)
 {
     os << "Scalar";

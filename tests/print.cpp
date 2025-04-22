@@ -269,12 +269,12 @@ void PrintTestMetadata()
         EXPECT_THAT(
                 ss.str(),
                 testing::MatchesRegex(
-                        "anonymous_namespace_workaround_print_cpp::DDim0(5)×"
-                        "anonymous_namespace_workaround_print_cpp::DDim1(5)\\n"
+                        "anonymous_namespace_workaround_print_cpp::DDim0\\(5\\)×"
+                        "anonymous_namespace_workaround_print_cpp::DDim1\\(5\\)\n"
                         "ddc::ChunkSpan<double, ddc::DiscreteDomain"
                         "<anonymous_namespace_workaround_print_cpp::DDim0,"
                         " anonymous_namespace_workaround_print_cpp::DDim1>"
-                        ", Kokkos::layout_.+, Kokkos::.+Space>\\n"));
+                        ", Kokkos::layout_.+, Kokkos::.+Space>\n"));
     }
 }
 

@@ -21,18 +21,14 @@
 
 namespace ddc {
 namespace detail {
-struct ChunkPrinter
+class ChunkPrinter
 {
-    static int const threshold = 10;
+    static constexpr int const threshold = 10;
     // If this ever becomes modifiable by the user, we need to ensure that
     // edgeitems < (threshold / 2) stays true.
-    static int const edgeitems = 3;
+    static constexpr int const edgeitems = 3;
 
-    std::stringstream ss;
-    explicit ChunkPrinter(std::ostream const& os)
-    {
-        ss.copyfmt(os);
-    }
+    std::stringstream m_ss;
 
     static std::ostream& alignment(std::ostream& os, int level)
     {
@@ -43,19 +39,19 @@ struct ChunkPrinter
     }
 
     template <class T>
-    std::size_t get_element_width(T& elem)
+    std::size_t get_element_width(T const& elem)
     {
-        ss.seekp(0);
-        ss << elem;
-        return ss.tellp();
+        m_ss.seekp(0);
+        m_ss << elem;
+        return m_ss.tellp();
     }
 
     template <class T>
-    void display_aligned_element(std::ostream& os, T& elem, std::size_t largest_element)
+    void display_aligned_element(std::ostream& os, T const& elem, std::size_t largest_element)
     {
         std::size_t const elem_width = get_element_width(elem);
 
-        for (int i = 0; i < largest_element - elem_width; ++i) {
+        for (std::size_t i = 0; i < largest_element - elem_width; ++i) {
             os << " ";
         }
         os << elem;
@@ -86,7 +82,8 @@ struct ChunkPrinter
             int level,
             std::size_t largest_element,
             std::size_t beginning,
-            std::size_t end)
+            std::size_t end,
+            std::index_sequence<Is...>)
     {
         for (std::size_t i0 = beginning; i0 < end; ++i0) {
             print_impl(
@@ -106,6 +103,7 @@ struct ChunkPrinter
         return os;
     }
 
+public:
     // 0D chunk span
     template <class ElementType, class Extents, class Layout, class Accessor>
     std::ostream& print_impl(
@@ -118,6 +116,7 @@ struct ChunkPrinter
         return os << *s.data_handle();
     }
 
+    // Recursively parse the chunk to print it
     template <
             class ElementType,
             class Extents,
@@ -136,19 +135,23 @@ struct ChunkPrinter
         if constexpr (sizeof...(Is) > 0) {
             os << '[';
             if (extent < threshold) {
-                recursive_display<
-                        ElementType,
-                        Extents,
-                        Layout,
-                        Accessor,
-                        Is...>(os, s, level, largest_element, 0, extent);
+                recursive_display(
+                        os,
+                        s,
+                        level,
+                        largest_element,
+                        0,
+                        extent,
+                        std::make_index_sequence<sizeof...(Is)>());
             } else {
-                recursive_display<
-                        ElementType,
-                        Extents,
-                        Layout,
-                        Accessor,
-                        Is...>(os, s, level, largest_element, 0, edgeitems);
+                recursive_display(
+                        os,
+                        s,
+                        level,
+                        largest_element,
+                        0,
+                        edgeitems,
+                        std::make_index_sequence<sizeof...(Is)>());
                 for (int ndims = 0; ndims < sizeof...(Is); ++ndims) {
                     os << '\n';
                 }
@@ -158,12 +161,14 @@ struct ChunkPrinter
                     os << '\n';
                 }
                 alignment(os, level);
-                recursive_display<
-                        ElementType,
-                        Extents,
-                        Layout,
-                        Accessor,
-                        Is...>(os, s, level, largest_element, extent - edgeitems, extent);
+                recursive_display(
+                        os,
+                        s,
+                        level,
+                        largest_element,
+                        extent - edgeitems,
+                        extent,
+                        std::make_index_sequence<sizeof...(Is)>());
             }
             os << "]";
         } else {
@@ -190,6 +195,8 @@ struct ChunkPrinter
         return 0;
     }
 
+    // Find the largest element we have to print to allow alignement (it ignore
+    // element that will be elided).
     template <
             class ElementType,
             class Extents,
@@ -244,6 +251,11 @@ struct ChunkPrinter
         }
 
         return ret;
+    }
+
+    explicit ChunkPrinter(std::ostream const& os)
+    {
+        m_ss.copyfmt(os);
     }
 };
 

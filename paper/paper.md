@@ -81,7 +81,13 @@ DDC employs strongly-typed multi-indices to label dimensions and access data. It
   - provide an associative access semantics, as keys in a map container,
   - potentially slower access, depending on the type of set of `DiscreteElement`.
 
-In a DDC container, `DiscreteElement` indices represent absolute positions, while `DiscreteVector` indices are always relative to the beginning of the container ![Example of two sets of `DiscreteElement`.\label{fig:domains}](domains.png). For example consider Figure \autoref{fig:domains}, where `chunk_r` is a container over the red area and `chunk_b` is a slice of `chunk_r` over the blue area. In this case, the following expressions all refer to the same memory location:
+In a DDC container, `DiscreteElement` indices represent absolute positions, while `DiscreteVector` indices are always relative to the beginning of the container. ![Example of two sets of `DiscreteElement`.\label{fig:domains}](domains.png) For example consider Figure \autoref{fig:domains} that illustrates a two-dimensional with axes `X` and `Y`. Here `chunk_r` is a container defined over the red area and `chunk_b` is a slice of `chunk_r` over the blue area. Let us define
+
+- `DiscreteElement<X, Y> e(x_c, y_b)`,
+- `DiscreteVector<X, Y> v(2, 1)`,
+- `DiscreteVector<X, Y> w(0, 1)`.
+
+In this case, the following expressions all refer to the same memory location:
 
 - `chunk_r(e)`,
 - `chunk_b(e)`,

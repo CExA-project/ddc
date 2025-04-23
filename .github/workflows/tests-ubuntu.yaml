@@ -182,6 +182,7 @@ jobs:
           EOF
 
           docker run \
+            --user 0 \
             --workdir ${{github.workspace}} \
             --volume ${{github.workspace}}:${{github.workspace}} \
             ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \

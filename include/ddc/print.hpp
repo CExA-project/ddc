@@ -23,10 +23,10 @@ namespace ddc {
 namespace detail {
 class ChunkPrinter
 {
-    static constexpr int const threshold = 10;
+    static constexpr int const s_threshold = 10;
     // If this ever becomes modifiable by the user, we need to ensure that
-    // edgeitems < (threshold / 2) stays true.
-    static constexpr int const edgeitems = 3;
+    // s_edgeitems < (s_threshold / 2) stays true.
+    static constexpr int const s_edgeitems = 3;
 
     std::stringstream m_ss;
 
@@ -134,7 +134,7 @@ public:
         auto extent = s.extent(I0);
         if constexpr (sizeof...(Is) > 0) {
             os << '[';
-            if (extent < threshold) {
+            if (extent < s_threshold) {
                 recursive_display(
                         os,
                         s,
@@ -150,7 +150,7 @@ public:
                         level,
                         largest_element,
                         0,
-                        edgeitems,
+                        s_edgeitems,
                         std::make_index_sequence<sizeof...(Is)>());
                 for (int ndims = 0; ndims < sizeof...(Is); ++ndims) {
                     os << '\n';
@@ -166,19 +166,19 @@ public:
                         s,
                         level,
                         largest_element,
-                        extent - edgeitems,
+                        extent - s_edgeitems,
                         extent,
                         std::make_index_sequence<sizeof...(Is)>());
             }
             os << "]";
         } else {
             os << "[";
-            if (extent < threshold) {
+            if (extent < s_threshold) {
                 base_case_display(os, s, largest_element, 0, extent, extent);
             } else {
-                base_case_display(os, s, largest_element, 0, edgeitems, extent);
+                base_case_display(os, s, largest_element, 0, s_edgeitems, extent);
                 os << "... ";
-                base_case_display(os, s, largest_element, extent - edgeitems, extent, extent);
+                base_case_display(os, s, largest_element, extent - s_edgeitems, extent, extent);
             }
             os << "]";
         }
@@ -211,7 +211,7 @@ public:
         std::size_t ret = 0;
         auto extent = s.extent(I0);
         if constexpr (sizeof...(Is) > 0) {
-            if (extent < threshold) {
+            if (extent < s_threshold) {
                 for (std::size_t i0 = 0; i0 < extent; ++i0) {
                     ret = std::max(
                             ret,
@@ -220,14 +220,14 @@ public:
                                     std::make_index_sequence<sizeof...(Is)>()));
                 }
             } else {
-                for (std::size_t i0 = 0; i0 < edgeitems; ++i0) {
+                for (std::size_t i0 = 0; i0 < s_edgeitems; ++i0) {
                     ret = std::max(
                             ret,
                             find_largest_displayed_element(
                                     Kokkos::submdspan(s, i0, ((void)Is, Kokkos::full_extent)...),
                                     std::make_index_sequence<sizeof...(Is)>()));
                 }
-                for (std::size_t i0 = extent - edgeitems; i0 < extent; ++i0) {
+                for (std::size_t i0 = extent - s_edgeitems; i0 < extent; ++i0) {
                     ret = std::max(
                             ret,
                             find_largest_displayed_element(
@@ -236,15 +236,15 @@ public:
                 }
             }
         } else {
-            if (extent < threshold) {
+            if (extent < s_threshold) {
                 for (std::size_t i0 = 0; i0 < extent; ++i0) {
                     ret = std::max(ret, get_element_width(s[i0]));
                 }
             } else {
-                for (std::size_t i0 = 0; i0 < edgeitems; ++i0) {
+                for (std::size_t i0 = 0; i0 < s_edgeitems; ++i0) {
                     ret = std::max(ret, get_element_width(s[i0]));
                 }
-                for (std::size_t i0 = extent - edgeitems; i0 < extent; ++i0) {
+                for (std::size_t i0 = extent - s_edgeitems; i0 < extent; ++i0) {
                     ret = std::max(ret, get_element_width(s[i0]));
                 }
             }

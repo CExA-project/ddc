@@ -162,9 +162,9 @@ void TestPrintCheckoutOutput2dElision()
 
     // Fill the array with 0.12345 in the cells that should be visible and -0.12345 in the one that will be eluded
     // Check that the output is only aligned on 0.12345
-    const auto subdom_0
+    auto const subdom_0
             = domain_0.remove(ddc::DiscreteVector<Dim0>(3), ddc::DiscreteVector<Dim0>(3));
-    const auto subdom_1
+    auto const subdom_1
             = domain_1.remove(ddc::DiscreteVector<Dim1>(3), ddc::DiscreteVector<Dim1>(3));
     ddc::parallel_for_each(
             domain_2d,

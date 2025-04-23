@@ -51,6 +51,9 @@ RUN chmod +x /bin/bash_run \
     liblapacke-dev \
     libhwloc-dev \
     pkg-config \
+    pipx \
+ && python3 -m pipx install gcovr \
+ && python3 -m pipx ensurepath \
  # Installing cmake < 3.28 to workaround issue with Kokkos
  && wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-x86_64.tar.gz \
  && tar -xvf cmake-3.27.9-linux-x86_64.tar.gz --directory /opt \

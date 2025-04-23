@@ -149,9 +149,6 @@ jobs:
         run: |
           docker load < ${{matrix.image}}_${{matrix.backend.name}}.tar
           rm ${{matrix.image}}_${{matrix.backend.name}}.tar
-      - name: Install gcovr
-        run: |
-          pipx install gcovr
       - name: Coverage test
         run: |
           cat<<-'EOF' > run.sh
@@ -175,6 +172,13 @@ jobs:
 
             cmake --build build
             ctest --test-dir build
+
+            /root/.local/bin/gcovr \
+              --exclude-throw-branches \
+              --filter include/ddc \
+              --lcov coverage.lcov \
+              --merge-mode-functions=merge-use-line-0 \
+              build
           EOF
 
           docker run \
@@ -182,13 +186,6 @@ jobs:
             --volume ${{github.workspace}}:${{github.workspace}} \
             ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
             bash run.sh
-
-          gcovr \
-            --exclude-throw-branches \
-            --filter include/ddc \
-            --lcov coverage.lcov \
-            --merge-mode-functions=merge-use-line-0 \
-            build
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d  # v5.4.2
         with:

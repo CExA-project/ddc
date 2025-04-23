@@ -195,7 +195,7 @@ public:
         return 0;
     }
 
-    // Find the largest element we have to print to allow alignement (it ignore
+    // Find the largest element we have to print to allow alignment (it ignore
     // element that will be elided).
     template <
             class ElementType,

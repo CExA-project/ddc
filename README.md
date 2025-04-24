@@ -1,9 +1,10 @@
-# The discrete domain computation library (DDC)
 <!--
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 
 SPDX-License-Identifier: MIT
 -->
+
+# The discrete domain computation library (DDC)
 
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/CExA-project/ddc/badge)](https://scorecard.dev/viewer/?uri=github.com/CExA-project/ddc)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

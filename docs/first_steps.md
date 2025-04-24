@@ -1,9 +1,10 @@
-# Commented example: the uniform heat equation {#first_steps}
 <!--
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 
 SPDX-License-Identifier: MIT
 -->
+
+# Commented example: the uniform heat equation {#first_steps}
 
 In \subpage uniform_heat_equation "examples/uniform_heat_equation.cpp" is a DDC example implementing a forward
 finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary

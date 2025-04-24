@@ -1,9 +1,10 @@
-# Commented example: the non uniform heat equation {#going_further}
 <!--
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 
 SPDX-License-Identifier: MIT
 -->
+
+# Commented example: the non uniform heat equation {#going_further}
 
 In \subpage non_uniform_heat_equation "examples/non_uniform_heat_equation.cpp" is a DDC example implementing a forward
 finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary

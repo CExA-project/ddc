@@ -1,10 +1,10 @@
-# Copyright
-
 <!--
 Copyright (C) The DDC development team, see below
 
 SPDX-License-Identifier: MIT
 -->
+
+# Copyright
 
 The DDC project licencing information follows the REUSE specification.
 

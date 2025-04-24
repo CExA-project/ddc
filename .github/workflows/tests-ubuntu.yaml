@@ -173,7 +173,7 @@ jobs:
             cmake --build build
             ctest --test-dir build
 
-            /root/.local/bin/gcovr \
+            gcovr \
               --exclude-throw-branches \
               --filter include/ddc \
               --lcov coverage.lcov \

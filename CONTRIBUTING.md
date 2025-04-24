@@ -35,7 +35,7 @@ This process helps prevent disappointment from having a significant contribution
 
 ## 🤝 Code Contributions
 
-We’re happy to accept code contributions that improve the project. If you're new to the project, we recommend starting with issues labeled `good first issue` or `help wanted`.
+We’re happy to accept code contributions that improve the project. If you're new to the project, we recommend starting with issues labeled [good first issue](https://github.com/CExA-project/ddc/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22) or [help wanted](https://github.com/CExA-project/ddc/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22help%20wanted%22).
 
 1. Fork the repo and create your branch from `main`.
 2. Make your changes and ensure they follow the existing code style, we can guide you during the review process.

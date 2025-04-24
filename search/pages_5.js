@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['non_5funiform_5fheat_5fequation_0',['non_uniform_heat_equation',['../md_non__uniform__heat__equation.html',1,'']]]
+  ['non_20uniform_20heat_20equation_0',['The non uniform heat equation',['../going_further.html',1,'md_examples']]],
+  ['non_5funiform_5fheat_5fequation_20cpp_1',['examples/non_uniform_heat_equation.cpp',['../non_uniform_heat_equation.html',1,'going_further']]]
 ];

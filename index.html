@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DDC: Main Page</title>
+<title>DDC: About</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -118,10 +118,33 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">DDC Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">About </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="mainpage"></a></p>
+<p>DDC is the discrete domain computation library, a C++-17 library that aims to offer to the C++/MPI world an equivalent to the <a href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html"><code>xarray.DataArray</code></a>/<a href="https://docs.dask.org/en/stable/array.html"><code>dask.Array</code></a> python environment. Where these two libraries are based on <a href="https://numpy.org/">numpy</a>, DDC relies on <a href="https://github.com/kokkos/kokkos">Kokkos</a> and <a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p0009r10.html">mdspan</a> to offer CPU/GPU performance-portable multi-dimensional arrays and iterators.</p>
+<p>DDC aims to offer abstractions to represent:</p>
+<ul>
+<li>tagged continuous dimensions,</li>
+<li>discretizations of these (multiple kinds of meshes, function spaces, Fourier, etc.),</li>
+<li>domains in these discretized dimensions,</li>
+<li>associating data to the elements of these discrete domains,</li>
+<li>efficient distribution and iteration over this data.</li>
+</ul>
+<p>All these abstractions are handled at compilation using C++ template meta-programming to ensure zero overhead at execution and enable developers to change their design choices (<em>eg.</em> from a regular mesh to a non-uniform one) with performance portability.</p>
+<h1><a class="anchor" id="autotoc_md0"></a>
+Discover more</h1>
+<ul>
+<li>First, you should <a class="el" href="first_steps.html">have a look at our commented example / tutorial</a>.</li>
+<li>To know more, you can <a href="annotated.html">delve in the reference documentation</a>.</li>
+<li><a href="https://github.com/CExA-project/ddc">Use the source, Luke</a>.</li>
+<li><a href="https://ddc-lib.slack.com/join/shared_invite/zt-33v61oiip-UHnWCavFC0cmff5a94HYwQ">You should definitely come see us on Slack</a>.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Join us</h1>
+<p>If you like the project, <a href="https://github.com/CExA-project/ddc">leave us a ⭐star⭐ on Github</a>. And of course, we would love to talk with you on our <a href="https://ddc-lib.slack.com/join/shared_invite/zt-33v61oiip-UHnWCavFC0cmff5a94HYwQ">Slack channel<img src="slack.png" alt="" class="inline" title="Slack"/>     https://ddc-lib.slack.com/</a>. </p>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!--

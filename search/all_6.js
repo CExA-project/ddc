@@ -8,7 +8,6 @@ var searchData=
   ['get_5fsampling_5',['get_sampling',['../classddc_1_1GrevilleInterpolationPoints.html#a5db23f8d9cb7cae226ab0917c7acf65f',1,'ddc::GrevilleInterpolationPoints::get_sampling()'],['../classddc_1_1KnotsAsInterpolationPoints.html#ae20ae15be8ced4a236f7c2bace9b0fef',1,'ddc::KnotsAsInterpolationPoints::get_sampling()'],['../classddc_1_1GrevilleInterpolationPoints.html#a5db23f8d9cb7cae226ab0917c7acf65f',1,'ddc::GrevilleInterpolationPoints::get_sampling()']]],
   ['get_5fslicer_5ffor_6',['get_slicer_for',['../classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#aca2ecab533603b2c78dfb085645ce9f5',1,'ddc::ChunkSpan&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy, MemorySpace &gt;::get_slicer_for()'],['../classddc_1_1ChunkSpan.html#a4ce7d79f9bb8b3dd43c89a2f0a95c2ec',1,'ddc::ChunkSpan::get_slicer_for()'],['../classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html#a31bf6f4aa42ccac4c13e60633b788be1',1,'ddc::ChunkSpan&lt; ElementType, DiscreteDomain&lt; DDims... &gt;, LayoutStridedPolicy, MemorySpace &gt;::get_slicer_for()']]],
   ['ginkgo_7',['GINKGO',['../namespaceddc.html#a36c0210a850dde0979ad8b5772ee730caa3a0305034fc65890f8e232fdf60ab46',1,'ddc']]],
-  ['going_5ffurther_8',['going_further',['../md_going__further.html',1,'']]],
-  ['greville_9',['GREVILLE',['../namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9',1,'ddc']]],
-  ['grevilleinterpolationpoints_10',['GrevilleInterpolationPoints',['../classddc_1_1GrevilleInterpolationPoints.html',1,'ddc']]]
+  ['greville_8',['GREVILLE',['../namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9',1,'ddc']]],
+  ['grevilleinterpolationpoints_9',['GrevilleInterpolationPoints',['../classddc_1_1GrevilleInterpolationPoints.html',1,'ddc']]]
 ];

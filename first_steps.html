@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DDC: first_steps</title>
+<title>DDC: The uniform heat equation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -93,7 +93,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('md_first__steps.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('first_steps.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -119,12 +119,10 @@ $(document).ready(function(){initNavTree('md_first__steps.html',''); initResizab
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">first_steps</div></div>
+  <div class="headertitle"><div class="title">The uniform heat equation</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="first_steps"></a>
-Commented example: the uniform heat equation</h1>
-<p>In <a class="el" href="md_uniform__heat__equation.html#uniform_heat_equation">examples/uniform_heat_equation.cpp</a> is a DDC example implementing a forward finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary conditions.</p>
+<div class="textblock"><p>In <a class="el" href="uniform_heat_equation.html">examples/uniform_heat_equation.cpp</a> is a DDC example implementing a forward finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary conditions.</p>
 <p>As usual, the file starts with a few includes that will be used in the code.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
@@ -137,16 +135,16 @@ Commented example: the uniform heat equation</h1>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
 </div><!-- fragment --><p>As you can see, to use DDC, we have to include <code>&lt;<a class="el" href="ddc_8hpp_source.html">ddc/ddc.hpp</a>&gt;</code></p>
-<h2><a class="anchor" id="autotoc_md2"></a>
-Definition of the discretization</h2>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Definition of the discretization</h1>
 <p>Before solving the equation, DDC's primary goal is to define a discrete domain of dimensions specified by the user, along with a discretization along each dimension, which also needs to be specified.</p>
 <div class="image">
 <img src="domains.png" alt=""/>
 <div class="caption">
 Domains</div></div>
     <p>Each point in the <em>DiscreteDomain</em> is a <em>DiscreteElement</em>. These concepts will be clarified later. Let's start by constructing this DiscreteDomain necessary for solving our 2D problem for the heat equation.</p>
-<h3><a class="anchor" id="autotoc_md3"></a>
-Dimensions naming</h3>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Dimensions naming</h2>
 <p>We start by defining types that we later use to name our dimensions.</p>
 <p>First, we create <code>X</code>: a type that is declared but never defined to act as a tag identifying our first dimension.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>X;</div>
@@ -165,10 +163,10 @@ Dimensions naming</h3>
 <div class="line"><span class="keyword">struct </span>DDimT : <a class="code hl_class" href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a>&lt;T&gt;</div>
 <div class="line">{</div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md4"></a>
-Domains</h3>
-<h4><a class="anchor" id="autotoc_md5"></a>
-Dimension X</h4>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
+Domains</h2>
+<h3><a class="anchor" id="autotoc_md5"></a>
+Dimension X</h3>
 <p>Once the types are defined, we can start the <code>main</code> function where we will define our various domains. Here for each dimension, the user needs to specify the starting and ending coordinates of the dimension of the domain, as well as the number of discretization points along each of these dimensions. Additionally, we specify here the physical characteristics specific to our equation (the thermal diffusion coefficient).</p>
 <div class="fragment"><div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> x_start = -1.;</div>
 <div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> x_end = 1.;</div>
@@ -211,8 +209,8 @@ Dimension X</h4>
 <li><code>DiscreteVector&lt;DDimX&gt;</code> that represents a number of elements of <code>DDimX</code>,</li>
 <li><code>DiscreteDomain&lt;DDimX&gt;</code> that represents an interval in <code>DDimX</code>, a set of contiguous elements of the discretization.</li>
 </ul>
-<h4><a class="anchor" id="autotoc_md6"></a>
-Dimension Y</h4>
+<h3><a class="anchor" id="autotoc_md6"></a>
+Dimension Y</h3>
 <p>The domains in the <code>Y</code> dimension are handled in a way very similar to the <code>X</code> dimension. We first define the domain characteristics along this dimension</p>
 <div class="fragment"><div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> y_start = -1.;</div>
 <div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> y_end = 1.;</div>
@@ -233,8 +231,8 @@ Dimension Y</h4>
 <div class="line"> </div>
 <div class="line"><a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimY&gt;</a> <span class="keyword">const</span></div>
 <div class="line">        y_pre_mirror(y_pre_ghost.front() + y_domain.extents(), y_pre_ghost.extents());</div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md7"></a>
-Time dimension</h4>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md7"></a>
+Time dimension</h3>
 <p>Then we handle the domains for the simulated time dimension. We first give the simulated time at which to start and end the simulation.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> start_time = 0.;</div>
 <div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> end_time = 10.;</div>
@@ -253,8 +251,8 @@ Time dimension</h4>
 <div class="line">                <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;T&gt;</a>(start_time),</div>
 <div class="line">                <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;T&gt;</a>(end_time),</div>
 <div class="line">                nb_time_steps + 1));</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
-Data allocation</h2>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
+Data allocation</h1>
 <p>We allocate two 2D Chunks along the X and Y dimensions which will be used to map temperature to the domains' points at t and t+dt. When constructing the Chunks one can give an optional string to label the memory allocations. This helps debugging and profiling applications using the Kokkos tools, see also <a href="https://github.com/kokkos/kokkos-tools">Kokkos Tools</a>.</p>
 <p>These chunks map the temperature into the full domain (including ghosts) twice:</p>
 <ul>
@@ -273,8 +271,8 @@ Data allocation</h2>
 <div class="ttc" id="aclassddc_1_1Chunk_html"><div class="ttname"><a href="classddc_1_1Chunk.html">ddc::Chunk</a></div><div class="ttdef"><b>Definition</b> <a href="chunk_8hpp_source.html#l00305">chunk.hpp:306</a></div></div>
 <div class="ttc" id="aclassddc_1_1KokkosAllocator_html"><div class="ttname"><a href="classddc_1_1KokkosAllocator.html">ddc::KokkosAllocator</a></div><div class="ttdef"><b>Definition</b> <a href="kokkos__allocator_8hpp_source.html#l00016">kokkos_allocator.hpp:17</a></div></div>
 </div><!-- fragment --><p>Note that the <code>DeviceAllocator</code> is responsible for allocating memory on the default memory space.</p>
-<h2><a class="anchor" id="autotoc_md9"></a>
-Initial conditions</h2>
+<h1><a class="anchor" id="autotoc_md9"></a>
+Initial conditions</h1>
 <p>To set the initial conditions, the <code>ghosted_initial_temp</code> is created and acts as a pointer to the chunk. The const qualifier makes it clear that ghosted_initial_temp always references the same chunk, <code>ghosted_last_temp</code> in this case.</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a> <span class="keyword">const</span> ghosted_initial_temp = ghosted_last_temp.<a class="code hl_function" href="classddc_1_1ChunkSpan.html#acd92b9f56d40555293ae51dee908822d">span_view</a>();</div>
 <div class="ttc" id="aclassddc_1_1ChunkSpan_html"><div class="ttname"><a href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a></div><div class="ttdef"><b>Definition</b> <a href="chunk__span_8hpp_source.html#l00387">chunk_span.hpp:388</a></div></div>
@@ -299,13 +297,13 @@ Initial conditions</h2>
 </div><!-- fragment --><p>And we display the initial data.</p>
 <div class="fragment"><div class="line">display(<a class="code hl_function" href="namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a">ddc::coordinate</a>(time_domain.<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">front</a>()), ghosted_temp[x_domain][y_domain]);</div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a75660adbd6207e6dd4eec152cae420de"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a75660adbd6207e6dd4eec152cae420de">ddc::DiscreteDomain::front</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00149">discrete_domain.hpp:149</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
-Time loop</h2>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
+Time loop</h1>
 <div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimT&gt;</a> <span class="keyword">const</span> iter :</div>
 <div class="line">     time_domain.remove_first(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteVector&lt;DDimT&gt;(1))) {</div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md11"></a>
-Periodic conditions</h3>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
+Periodic conditions</h2>
 <div class="fragment"><div class="line"><span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">ddc::DiscreteVectorElement</a> ix = 0; ix &lt; x_pre_ghost.extents().value(); ++ix) {</div>
 <div class="line">    <a class="code hl_function" href="namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b">ddc::parallel_deepcopy</a>(</div>
 <div class="line">            ghosted_last_temp[x_pre_ghost[ix]][y_domain],</div>
@@ -327,8 +325,8 @@ Periodic conditions</h3>
 <div class="line">            ghosted_last_temp[x_domain][y_post_mirror[iy]]);</div>
 <div class="line">}</div>
 <div class="ttc" id="anamespaceddc_html_ad6cf37f23e5e0fc7893bf8cb37bc1a7a"><div class="ttname"><a href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">ddc::DiscreteVectorElement</a></div><div class="ttdeci">std::ptrdiff_t DiscreteVectorElement</div><div class="ttdoc">A DiscreteVectorElement is a scalar that represents the difference between two coordinates.</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00049">discrete_vector.hpp:49</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md12"></a>
-Numerical scheme</h3>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
+Numerical scheme</h2>
 <div class="fragment"><div class="line">std::swap(ghosted_last_temp, ghosted_next_temp);</div>
 </div><!-- fragment --><p>For the numerical scheme, two chunkspans are created:</p>
 <ul>
@@ -368,6 +366,7 @@ SPDX-License-Identifier: MIT
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><a class="el" href="md_examples.html">Examples</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

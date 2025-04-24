@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DDC: concepts</title>
+<title>DDC: DDC concepts</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -119,18 +119,17 @@ $(document).ready(function(){initNavTree('md_concepts.html',''); initResizable()
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">concepts</div></div>
+  <div class="headertitle"><div class="title">DDC concepts</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md20"></a>
-DDC concepts</h1>
+<div class="textblock"><p><a class="anchor" id="autotoc_md20"></a></p>
 <p>DDC introduces labels in the form of dimensions and attributes on top of Kokkos arrays, which offer a more intuitive and less error-prone development experience.</p>
 <p>Using Kokkos, the indices of views are weakly typed, meaning that each index is a simple integer. Let's consider a multidimensional view intended to represent a physical quantity, such as a temperature field for example. The first index represents the temperature along the \(x\) axis, and the second index represents the temperature along the \(y\) axis. As both indices are simple integers, they may be swapped by mistake. The code would compile successfully, but the result would be incorrect, and the source of the error would be difficult to trace.</p>
 <p>DDC provides array-like containers that have labeled dimensions and strongly typed indices. For instance, by labeling dimensions <code>X</code> and <code>Y</code>, the indices along those labeled dimensions become strongly typed and cannot be swapped anymore.</p>
-<h2><a class="anchor" id="autotoc_md21"></a>
-ddc::DiscreteElement and ddc::DiscreteVector</h2>
-<h3><a class="anchor" id="autotoc_md22"></a>
-ddc::DiscreteElement</h3>
+<h1><a class="anchor" id="autotoc_md21"></a>
+ddc::DiscreteElement and ddc::DiscreteVector</h1>
+<h2><a class="anchor" id="autotoc_md22"></a>
+ddc::DiscreteElement</h2>
 <p>A <code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a></code> is a type that carries the label of the dimension it is defined from. Let's discretize the \(y\) axis as follows: \(\{y_0, y_1, ..., y_n\}\). Then the index <code>iy</code> defined as follows:</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDimY&gt;</a> iy(0);</div>
 <div class="ttc" id="aclassddc_1_1DiscreteElement_html"><div class="ttname"><a href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a></div><div class="ttdoc">A DiscreteElement identifies an element of the discrete dimension.</div><div class="ttdef"><b>Definition</b> <a href="discrete__element_8hpp_source.html#l00158">discrete_element.hpp:159</a></div></div>
@@ -141,8 +140,8 @@ ddc::DiscreteElement</h3>
 <p><code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a></code> is used to access arrays. Let's take a multidimensional container and access its element <code>(i, j)</code>, which corresponds to the grid point at the i-th row and the j-th column. We would do it like this:</p>
 <div class="fragment"><div class="line">container(i, j);</div>
 </div><!-- fragment --><p>Now, if we take a slice of this container and still want to access the same element <code>(i, j)</code> from the grid, we need to adjust the indices, because they are relative to the first point of the slice. Using DDC and a slice accessing with a <code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a></code> is the same between the slice and the original multidimensional array because of the uniqueness of each discrete element on the grid and because of the way we access data using DDC.</p>
-<h3><a class="anchor" id="autotoc_md23"></a>
-ddc::DiscreteVector</h3>
+<h2><a class="anchor" id="autotoc_md23"></a>
+ddc::DiscreteVector</h2>
 <p>A <code><a class="el" href="classddc_1_1DiscreteVector.html" title="A DiscreteVector is a vector in the discrete dimension.">ddc::DiscreteVector</a></code> corresponds to an integer that, like <code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a></code>, carries the label of the dimension in which it is defined. For instance in the uniform heat equation example, defining the <code><a class="el" href="classddc_1_1DiscreteVector.html" title="A DiscreteVector is a vector in the discrete dimension.">ddc::DiscreteVector</a></code> <code>gwx</code> as follows:</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector&lt;DDimX&gt;</a> gwx(5);</div>
 <div class="ttc" id="aclassddc_1_1DiscreteVector_html"><div class="ttname"><a href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00268">discrete_vector.hpp:269</a></div></div>
@@ -153,17 +152,17 @@ ddc::DiscreteVector</h3>
 <li><code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a></code> corresponds to unique points in the simulation labeled by a dimension. They can for instance represent discrete points along a dimension or be linked to particles, allowing access to certain data (e.g., mass, charge, etc.).</li>
 <li><code><a class="el" href="classddc_1_1DiscreteVector.html" title="A DiscreteVector is a vector in the discrete dimension.">ddc::DiscreteVector</a></code> corresponds to a <em>number</em> of points along a labeled dimensions.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md24"></a>
-ddc::DiscreteDomain</h2>
+<h1><a class="anchor" id="autotoc_md24"></a>
+ddc::DiscreteDomain</h1>
 <p><code><a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a></code> is an interval of <code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a></code> distributed according to each labeled dimension. It allows for the distribution of <code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a></code> across each previously defined labeled dimension. It is constructed using the method <code><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d" title="Initialize (emplace) a global singleton discrete space.">ddc::init_discrete_space</a></code>.</p>
-<h2><a class="anchor" id="autotoc_md25"></a>
-ddc::Chunk and ddc::ChunkSpan</h2>
+<h1><a class="anchor" id="autotoc_md25"></a>
+ddc::Chunk and ddc::ChunkSpan</h1>
 <p>The <code><a class="el" href="classddc_1_1Chunk.html">ddc::Chunk</a></code> is a container that holds the data, while <code><a class="el" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a></code> behaves like <code>std::mdspan</code>, meaning it is a pointer to the data contained within the <code><a class="el" href="classddc_1_1Chunk.html">ddc::Chunk</a></code>. Chunks contain data that can be accessed by <code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a></code>.</p>
 <p>Note that swapping the <code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a>&lt;DDim1&gt;</code> and <code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a>&lt;DDim2&gt;</code> indices when calling the <code><a class="el" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a></code> does not affect the correctness of the code; the result remains the same:</p>
 <div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::Chunkspan</a>(<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDim1&gt;</a>,<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDim2&gt;</a> ) == <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::Chunkspan</a>(<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDim2&gt;</a>,<a class="code hl_class" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement&lt;DDim1&gt;</a> );</div>
 <div class="ttc" id="anamespaceddc_html_a70f12a43ed0afbc092f4e974b024db3d"><div class="ttname"><a href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a></div><div class="ttdeci">void init_discrete_space(Args &amp;&amp;... args)</div><div class="ttdoc">Initialize (emplace) a global singleton discrete space.</div><div class="ttdef"><b>Definition</b> <a href="discrete__space_8hpp_source.html#l00160">discrete_space.hpp:160</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md26"></a>
-Algorithms in ddc ?</h2>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md26"></a>
+Algorithms in ddc ?</h1>
 <ul>
 <li><code>for_each</code>: this algorithm allows iterating over each <code><a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">ddc::DiscreteElement</a></code> in the domain of study.</li>
 <li><code>fill</code>: this algorithm allows filling a borrowed chunk with a given value.</li>

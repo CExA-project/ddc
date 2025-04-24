@@ -25,62 +25,47 @@
 var NAVTREE =
 [
   [ "DDC", "index.html", [
-    [ "About", "md_About.html", [
-      [ "About", "md_About.html#mainpage", [
-        [ "Discover more", "md_About.html#autotoc_md0", null ],
-        [ "Join us", "md_About.html#autotoc_md1", null ]
-      ] ]
+    [ "About", "index.html", "index" ],
+    [ "DDC concepts", "md_concepts.html", [
+      [ "ddc::DiscreteElement and ddc::DiscreteVector", "md_concepts.html#autotoc_md21", [
+        [ "ddc::DiscreteElement", "md_concepts.html#autotoc_md22", null ],
+        [ "ddc::DiscreteVector", "md_concepts.html#autotoc_md23", null ]
+      ] ],
+      [ "ddc::DiscreteDomain", "md_concepts.html#autotoc_md24", null ],
+      [ "ddc::Chunk and ddc::ChunkSpan", "md_concepts.html#autotoc_md25", null ],
+      [ "Algorithms in ddc ?", "md_concepts.html#autotoc_md26", null ]
     ] ],
-    [ "first_steps", "md_first__steps.html", [
-      [ "Commented example: the uniform heat equation", "md_first__steps.html#first_steps", [
-        [ "Definition of the discretization", "md_first__steps.html#autotoc_md2", [
-          [ "Dimensions naming", "md_first__steps.html#autotoc_md3", null ],
-          [ "Domains", "md_first__steps.html#autotoc_md4", [
-            [ "Dimension X", "md_first__steps.html#autotoc_md5", null ],
-            [ "Dimension Y", "md_first__steps.html#autotoc_md6", null ],
-            [ "Time dimension", "md_first__steps.html#autotoc_md7", null ]
+    [ "Examples", "md_examples.html", [
+      [ "The uniform heat equation", "first_steps.html", [
+        [ "Definition of the discretization", "first_steps.html#autotoc_md2", [
+          [ "Dimensions naming", "first_steps.html#autotoc_md3", null ],
+          [ "Domains", "first_steps.html#autotoc_md4", [
+            [ "Dimension X", "first_steps.html#autotoc_md5", null ],
+            [ "Dimension Y", "first_steps.html#autotoc_md6", null ],
+            [ "Time dimension", "first_steps.html#autotoc_md7", null ]
           ] ]
         ] ],
-        [ "Data allocation", "md_first__steps.html#autotoc_md8", null ],
-        [ "Initial conditions", "md_first__steps.html#autotoc_md9", null ],
-        [ "Time loop", "md_first__steps.html#autotoc_md10", [
-          [ "Periodic conditions", "md_first__steps.html#autotoc_md11", null ],
-          [ "Numerical scheme", "md_first__steps.html#autotoc_md12", null ]
-        ] ]
-      ] ]
-    ] ],
-    [ "going_further", "md_going__further.html", [
-      [ "Commented example: the non uniform heat equation", "md_going__further.html#going_further", [
-        [ "Differences with the uniform problem resolution", "md_going__further.html#autotoc_md13", [
-          [ "Dimensions naming", "md_going__further.html#autotoc_md14", null ],
-          [ "Domains", "md_going__further.html#autotoc_md15", [
-            [ "Dimension X", "md_going__further.html#autotoc_md16", null ],
-            [ "Dimension Y", "md_going__further.html#autotoc_md17", null ],
-            [ "Time dimension", "md_going__further.html#autotoc_md18", null ]
-          ] ],
-          [ "Time loop", "md_going__further.html#autotoc_md19", null ]
-        ] ]
-      ] ]
-    ] ],
-    [ "uniform_heat_equation", "md_uniform__heat__equation.html", [
-      [ "examples/uniform_heat_equation.cpp", "md_uniform__heat__equation.html#uniform_heat_equation", null ]
-    ] ],
-    [ "non_uniform_heat_equation", "md_non__uniform__heat__equation.html", [
-      [ "examples/non_uniform_heat_equation.cpp", "md_non__uniform__heat__equation.html#non_uniform_heat_equation", null ]
-    ] ],
-    [ "concepts", "md_concepts.html", [
-      [ "DDC concepts", "md_concepts.html#autotoc_md20", [
-        [ "ddc::DiscreteElement and ddc::DiscreteVector", "md_concepts.html#autotoc_md21", [
-          [ "ddc::DiscreteElement", "md_concepts.html#autotoc_md22", null ],
-          [ "ddc::DiscreteVector", "md_concepts.html#autotoc_md23", null ]
+        [ "Data allocation", "first_steps.html#autotoc_md8", null ],
+        [ "Initial conditions", "first_steps.html#autotoc_md9", null ],
+        [ "Time loop", "first_steps.html#autotoc_md10", [
+          [ "Periodic conditions", "first_steps.html#autotoc_md11", null ],
+          [ "Numerical scheme", "first_steps.html#autotoc_md12", null ]
         ] ],
-        [ "ddc::DiscreteDomain", "md_concepts.html#autotoc_md24", null ],
-        [ "ddc::Chunk and ddc::ChunkSpan", "md_concepts.html#autotoc_md25", null ],
-        [ "Algorithms in ddc ?", "md_concepts.html#autotoc_md26", null ]
-      ] ]
-    ] ],
-    [ "heat_equation_spectral", "md_heat__equation__spectral.html", [
-      [ "examples/heat_equation_spectral.cpp", "md_heat__equation__spectral.html#heat_equation_spectral", null ]
+        [ "examples/uniform_heat_equation.cpp", "uniform_heat_equation.html", null ]
+      ] ],
+      [ "The non uniform heat equation", "going_further.html", [
+        [ "Differences with the uniform problem resolution", "going_further.html#autotoc_md13", [
+          [ "Dimensions naming", "going_further.html#autotoc_md14", null ],
+          [ "Domains", "going_further.html#autotoc_md15", [
+            [ "Dimension X", "going_further.html#autotoc_md16", null ],
+            [ "Dimension Y", "going_further.html#autotoc_md17", null ],
+            [ "Time dimension", "going_further.html#autotoc_md18", null ]
+          ] ],
+          [ "Time loop", "going_further.html#autotoc_md19", null ]
+        ] ],
+        [ "examples/non_uniform_heat_equation.cpp", "non_uniform_heat_equation.html", null ]
+      ] ],
+      [ "examples/heat_equation_spectral.cpp", "heat_equation_spectral.html", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -116,8 +101,8 @@ var NAVTREEINDEX =
 "classddc_1_1SparseDiscreteDomain.html#a54f7321e65ea8762e136e7ff6c867a2e",
 "classddc_1_1SplineEvaluator.html#aaff5facf824889023832086180900f05",
 "classddc_1_1UniformBSplines_1_1Impl.html#a2b3b80a14c5d0bed1f4ea38e71188a71",
-"namespaceddc.html#a3acee30af3a428e9ca4b56fbc764a64f",
-"structddc_1_1StridedDiscreteDomainIterator.html#a907d9c0e74178591d8e798dc0b8de2b6"
+"namespaceddc.html#a4949624204145ca2a0390c7b73a02480",
+"structddc_1_1StridedDiscreteDomainIterator.html#abf4cfbb9ac879a60447ac42ec4e4aa98"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

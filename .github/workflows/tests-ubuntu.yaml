@@ -117,7 +117,6 @@ jobs:
           retention-days: 1
 
   coverage-test:
-    if: github.ref_name != 'main'
     strategy:
       fail-fast: false
       matrix:

@@ -7,11 +7,9 @@ SPDX-License-Identifier: MIT
 # The discrete domain computation library (DDC)
 
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/CExA-project/ddc/badge)](https://scorecard.dev/viewer/?uri=github.com/CExA-project/ddc)
+[![Codecov](https://codecov.io/gh/CExA-project/ddc/graph/badge.svg?token=4CZS4MNERP)](https://codecov.io/gh/CExA-project/ddc)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nightly early integration](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yaml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yaml)
-[![Nightly tests on Ubuntu](https://github.com/CExA-project/ddc/actions/workflows/tests-ubuntu.yaml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/tests-ubuntu.yaml)
-[![Nightly tests on macOS](https://github.com/CExA-project/ddc/actions/workflows/tests-macos.yaml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/tests-macos.yaml)
-[![Nightly tests on Windows](https://github.com/CExA-project/ddc/actions/workflows/tests-windows.yaml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/tests-windows.yaml)
 [![Pages](https://github.com/CExA-project/ddc/actions/workflows/pages.yaml/badge.svg)](https://github.com/CExA-project/ddc/actions/workflows/pages.yaml)
 
 See <https://ddc.mdls.fr/>

@@ -1,9 +1,10 @@
-# The discrete domain computation library (DDC)
 <!--
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 
 SPDX-License-Identifier: MIT
 -->
+
+# The discrete domain computation library (DDC)
 
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/CExA-project/ddc/badge)](https://scorecard.dev/viewer/?uri=github.com/CExA-project/ddc)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -66,28 +67,7 @@ cmake --build build --parallel 4
 
 ## Contributing
 
-### Formatting
-
-The project makes use of formatting tools for the C++ ([clang-format](https://clang.llvm.org/docs/ClangFormat.html)) and cmake ([gersemi](https://github.com/BlankSpruce/gersemi)) files. The formatting must be applied for a PR to be accepted.
-
-To format a cmake file, please apply the command
-
-```bash
-gersemi -i the-cmake-file
-```
-
-One can find the formatting style in the file `.gersemirc`.
-
-To format a C++ file, please apply the command
-
-```bash
-clang-format -i the-cpp-file
-```
-
-One can find the formatting style in the file `.clang-format`.
-
-> [!WARNING]
-> The formatting might not give the same result with different versions of a tool.
+Please see [this page](CONTRIBUTING.md) for details on how to contribute.
 
 ## Known issues
 

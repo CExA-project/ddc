@@ -1,10 +1,10 @@
+# DDC concepts
+
 <!--
 Copyright (C) The ddc development team, see COPYRIGHT.md file
 
 SPDX-License-Identifier: MIT
 -->
-
-# DDC concepts
 
 DDC introduces labels in the form of dimensions and attributes on top of Kokkos arrays, which offer a more intuitive and less error-prone development experience.
 

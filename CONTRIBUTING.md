@@ -18,7 +18,7 @@ If you find a bug, please help us by reporting it. A good bug report should incl
 - Information about your environment (OS, version of the project, etc.)
 - Relevant **logs or screenshots**, if available
 
-Please check the [Issues](../../issues) page to ensure your bug hasn't already been reported before creating a new one.
+Please check the [Issues](https://github.com/CExA-project/ddc/issues) page to ensure your bug hasn't already been reported before creating a new one.
 
 ## 💡 Feature Requests
 

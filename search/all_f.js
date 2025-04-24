@@ -10,6 +10,9 @@ var searchData=
   ['periodicextrapolationrule_7',['PeriodicExtrapolationRule',['../structddc_1_1PeriodicExtrapolationRule.html',1,'ddc']]],
   ['periodicsampling_8',['PeriodicSampling',['../classddc_1_1PeriodicSampling.html',1,'ddc']]],
   ['pointer_5ftype_9',['pointer_type',['../namespaceddc.html#add19ae83e32eaba2f1069e730470e047',1,'ddc::chunk_traits']]],
-  ['problem_20resolution_10',['Differences with the uniform problem resolution',['../going_further.html#autotoc_md13',1,'']]],
-  ['prod_11',['prod',['../structddc_1_1reducer_1_1prod.html',1,'ddc::reducer::prod&lt; T &gt;'],['../namespaceddc.html#aa559ea0e9e8d32a5114b06dabbc1544f',1,'ddc::prod()']]]
+  ['print_10',['print',['../namespaceddc.html#aa6fd39a90a53ff87a6e839a1f8156397',1,'ddc']]],
+  ['print_5fcontent_11',['print_content',['../namespaceddc.html#a43597abf7fbe2f49db6620a99dcf431c',1,'ddc']]],
+  ['print_5ftype_5finfo_12',['print_type_info',['../namespaceddc.html#ae907362bd0bfe2f35fe0f71e35380996',1,'ddc']]],
+  ['problem_20resolution_13',['Differences with the uniform problem resolution',['../going_further.html#autotoc_md13',1,'']]],
+  ['prod_14',['prod',['../structddc_1_1reducer_1_1prod.html',1,'ddc::reducer::prod&lt; T &gt;'],['../namespaceddc.html#aa559ea0e9e8d32a5114b06dabbc1544f',1,'ddc::prod()']]]
 ];

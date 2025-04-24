@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DDC: Commented example: the non uniform heat equation</title>
+<title>DDC: going_further</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -93,7 +93,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('going_further.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('md_going__further.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -119,10 +119,12 @@ $(document).ready(function(){initNavTree('going_further.html',''); initResizable
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Commented example: the non uniform heat equation</div></div>
+  <div class="headertitle"><div class="title">going_further</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>In <a class="el" href="non_uniform_heat_equation.html">examples/non_uniform_heat_equation.cpp</a> is a DDC example implementing a forward finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary conditions and non-uniform space discretization.</p>
+<div class="textblock"><h1><a class="anchor" id="going_further"></a>
+Commented example: the non uniform heat equation</h1>
+<p>In <a class="el" href="md_non__uniform__heat__equation.html#non_uniform_heat_equation">examples/non_uniform_heat_equation.cpp</a> is a DDC example implementing a forward finite-difference solver for the heat equation over a rectangle 2D domain with periodic boundary conditions and non-uniform space discretization.</p>
 <p>As usual, the file starts with a few includes that will be used in the code.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;cassert&gt;</span></div>
@@ -138,11 +140,11 @@ $(document).ready(function(){initNavTree('going_further.html',''); initResizable
 <div class="line"><span class="preprocessor">#include &lt;ddc/ddc.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md13"></a>
-Differences with the uniform problem resolution</h1>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md13"></a>
+Differences with the uniform problem resolution</h2>
 <p>For non-uniform discretization, differences arise compared to uniform discretization, particularly in terms of dimension labeling, domain construction, and even in the resolution of the problem.</p>
-<h2><a class="anchor" id="autotoc_md14"></a>
-Dimensions naming</h2>
+<h3><a class="anchor" id="autotoc_md14"></a>
+Dimensions naming</h3>
 <p>Just like the uniform case, we start by defining types that we later use to name our dimensions.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>X;</div>
 </div><!-- fragment --><p>However, we then define the discretization as non uniform.</p>
@@ -161,10 +163,10 @@ Dimensions naming</h2>
 <div class="line">{</div>
 <div class="line">};</div>
 <div class="ttc" id="aclassddc_1_1UniformPointSampling_html"><div class="ttname"><a href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a></div><div class="ttdoc">UniformPointSampling models a uniform discretization of the provided continuous dimension.</div><div class="ttdef"><b>Definition</b> <a href="uniform__point__sampling_8hpp_source.html#l00035">uniform_point_sampling.hpp:36</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md15"></a>
-Domains</h2>
-<h3><a class="anchor" id="autotoc_md16"></a>
-Dimension X</h3>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md15"></a>
+Domains</h3>
+<h4><a class="anchor" id="autotoc_md16"></a>
+Dimension X</h4>
 <p>Just like the uniform case, we define the main characteristics of the domain.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> x_start = -1.;</div>
 <div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> x_end = 1.;</div>
@@ -193,8 +195,8 @@ Dimension X</h3>
 <li>Create an iterator for your domain.</li>
 <li>Call the <code>init_discretization</code> function with <code>init_ghosted</code> if you need ghost points or with <code>init</code> for a regular domain.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md17"></a>
-Dimension Y</h3>
+<h4><a class="anchor" id="autotoc_md17"></a>
+Dimension Y</h4>
 <p>For the <code>Y</code> dimension, we do the same. We start by defining our 3 vectors.</p>
 <div class="fragment"><div class="line">std::vector&lt;double&gt; <span class="keyword">const</span> y_domain_vect = generate_random_vector(nb_y_points, y_start, y_end);</div>
 <div class="line"> </div>
@@ -204,8 +206,8 @@ Dimension Y</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> <span class="keyword">const</span> [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]</div>
 <div class="line">        = <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space&lt;DDimY&gt;</a>(</div>
 <div class="line">                DDimY::init_ghosted&lt;DDimY&gt;(y_domain_vect, y_pre_ghost_vect, y_post_ghost_vect));</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md18"></a>
-Time dimension</h3>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md18"></a>
+Time dimension</h4>
 <p>Then we handle the domains for the simulated time dimension. We first give the simulated time at which to start and end the simulation.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> start_time = 0.;</div>
 <div class="line"><span class="keywordtype">double</span> <span class="keyword">const</span> end_time = 10.;</div>
@@ -244,8 +246,8 @@ Time dimension</h3>
 <div class="line">                nb_time_steps + 1));</div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a></div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00061">discrete_domain.hpp:62</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteVector_html"><div class="ttname"><a href="classddc_1_1DiscreteVector.html">ddc::DiscreteVector</a></div><div class="ttdoc">A DiscreteVector is a vector in the discrete dimension.</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00268">discrete_vector.hpp:269</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md19"></a>
-Time loop</h2>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md19"></a>
+Time loop</h3>
 <p>Allocation and initialization are the same as for the uniform case. Let's focus on resolving the numerical scheme. The main difference in solving the numerical equation is that we need to account for the fact that the values of dx and dy on the left and right sides are different. We use the functions <code>distance_at_left</code> and <code>distance_at_right</code> to solve the equation.</p>
 <div class="fragment"><div class="line"><a class="code hl_function" href="namespaceddc.html#ad92ed4439bc27c12aba3e0784dc369d4">ddc::parallel_for_each</a>(</div>
 <div class="line">        next_temp.domain(),</div>

@@ -24,7 +24,7 @@ Please check the [Issues](https://github.com/CExA-project/ddc/issues) page to en
 
 We welcome suggestions for improvements or new features. To propose a new idea:
 
-1. **Open a discussion** (e.g., via GitHub Discussions) to present your idea and gather feedback.
+1. [**Open a discussion**](https://github.com/CExA-project/ddc/discussions) (e.g., via GitHub Discussions) to present your idea and gather feedback.
 2. Please **do not submit a large pull request for a new feature without prior discussion**. We want to make sure your efforts align with the project's goals and that there's community interest in the feature.
 3. When describing your feature request, include:
    - What the feature does

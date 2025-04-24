@@ -77,13 +77,14 @@ set(DOXYGEN_HTML_EXTRA_FILES
 
 doxygen_add_docs(
     doc
-    "${CMAKE_CURRENT_SOURCE_DIR}/About.md"
+    "${CMAKE_CURRENT_SOURCE_DIR}/about.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/first_steps.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/going_further.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/uniform_heat_equation.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/non_uniform_heat_equation.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/concepts.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/heat_equation_spectral.md"
+    "${CMAKE_CURRENT_SOURCE_DIR}/examples.md"
     "${DDC_SOURCE_DIR}/include/ddc/"
     ALL
 )

@@ -6,6 +6,7 @@
 
 #include <cassert>
 #include <string>
+#include <type_traits>
 #include <utility>
 
 #include <Kokkos_Core.hpp>
@@ -14,6 +15,7 @@
 #include "ddc/chunk_span.hpp"
 #include "ddc/chunk_traits.hpp"
 #include "ddc/detail/kokkos.hpp"
+#include "ddc/detail/type_traits.hpp"
 #include "ddc/kokkos_allocator.hpp"
 
 namespace ddc {
@@ -183,9 +185,10 @@ public:
      * @param delems discrete coordinates
      * @return const-reference to this element
      */
-    template <class... DElems>
-    std::enable_if_t<(is_discrete_element_v<DElems> && ...), element_type const&> operator()(
-            DElems const&... delems) const noexcept
+    template <
+            class... DElems,
+            std::enable_if_t<detail::all_of_v<is_discrete_element_v<DElems>...>, int> = 0>
+    element_type const& operator()(DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -199,11 +202,11 @@ public:
      * @param dvects discrete vectors
      * @return reference to this element
      */
-    template <class... DVects>
-    std::enable_if_t<
-            (is_discrete_vector_v<DVects> && ...) && (sizeof...(DVects) > 0),
-            element_type const&>
-    operator()(DVects const&... dvects) const noexcept
+    template <
+            class... DVects,
+            std::enable_if_t<detail::all_of_v<is_discrete_vector_v<DVects>...>, int> = 0,
+            std::enable_if_t<sizeof...(DVects) != 0, int> = 0>
+    element_type const& operator()(DVects const&... dvects) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DVects::size()),
@@ -217,9 +220,10 @@ public:
      * @param delems discrete coordinates
      * @return reference to this element
      */
-    template <class... DElems>
-    std::enable_if_t<(is_discrete_element_v<DElems> && ...), element_type&> operator()(
-            DElems const&... delems) noexcept
+    template <
+            class... DElems,
+            std::enable_if_t<detail::all_of_v<is_discrete_element_v<DElems>...>, int> = 0>
+    element_type& operator()(DElems const&... delems) noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -233,11 +237,11 @@ public:
      * @param dvects discrete vectors
      * @return reference to this element
      */
-    template <class... DVects>
-    std::enable_if_t<
-            (is_discrete_vector_v<DVects> && ...) && (sizeof...(DVects) > 0),
-            element_type&>
-    operator()(DVects const&... dvects) noexcept
+    template <
+            class... DVects,
+            std::enable_if_t<detail::all_of_v<is_discrete_vector_v<DVects>...>, int> = 0,
+            std::enable_if_t<sizeof...(DVects) != 0, int> = 0>
+    element_type& operator()(DVects const&... dvects) noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DVects::size()),
@@ -478,9 +482,10 @@ public:
      * @param delems discrete coordinates
      * @return const-reference to this element
      */
-    template <class... DElems>
-    std::enable_if_t<(is_discrete_element_v<DElems> && ...), element_type const&> operator()(
-            DElems const&... delems) const noexcept
+    template <
+            class... DElems,
+            std::enable_if_t<detail::all_of_v<is_discrete_element_v<DElems>...>, int> = 0>
+    element_type const& operator()(DElems const&... delems) const noexcept
     {
         static_assert(
                 SupportType::rank() == (0 + ... + DElems::size()),
@@ -495,11 +500,11 @@ public:
      * @param dvects discrete vectors
      * @return reference to this element
      */
-    template <class... DVects>
-    std::enable_if_t<
-            (is_discrete_vector_v<DVects> && ...) && (sizeof...(DVects) > 0),
-            element_type const&>
-    operator()(DVects const&... dvects) const noexcept
+    template <
+            class... DVects,
+            std::enable_if_t<detail::all_of_v<is_discrete_vector_v<DVects>...>, int> = 0,
+            std::enable_if_t<sizeof...(DVects) != 0, int> = 0>
+    element_type const& operator()(DVects const&... dvects) const noexcept
     {
         static_assert(
                 SupportType::rank() == (0 + ... + DVects::size()),
@@ -513,9 +518,10 @@ public:
      * @param delems discrete coordinates
      * @return reference to this element
      */
-    template <class... DElems>
-    std::enable_if_t<(is_discrete_element_v<DElems> && ...), element_type&> operator()(
-            DElems const&... delems) noexcept
+    template <
+            class... DElems,
+            std::enable_if_t<detail::all_of_v<is_discrete_element_v<DElems>...>, int> = 0>
+    element_type& operator()(DElems const&... delems) noexcept
     {
         static_assert(
                 SupportType::rank() == (0 + ... + DElems::size()),
@@ -530,11 +536,11 @@ public:
      * @param dvects discrete vectors
      * @return reference to this element
      */
-    template <class... DVects>
-    std::enable_if_t<
-            (is_discrete_vector_v<DVects> && ...) && (sizeof...(DVects) > 0),
-            element_type&>
-    operator()(DVects const&... dvects) noexcept
+    template <
+            class... DVects,
+            std::enable_if_t<detail::all_of_v<is_discrete_vector_v<DVects>...>, int> = 0,
+            std::enable_if_t<sizeof...(DVects) != 0, int> = 0>
+    element_type& operator()(DVects const&... dvects) noexcept
     {
         static_assert(
                 SupportType::rank() == (0 + ... + DVects::size()),

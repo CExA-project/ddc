@@ -15,6 +15,7 @@
 #include "ddc/chunk_common.hpp"
 #include "ddc/detail/kokkos.hpp"
 #include "ddc/detail/type_seq.hpp"
+#include "ddc/detail/type_traits.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
 
@@ -328,9 +329,10 @@ public:
      * @param delems discrete elements
      * @return reference to this element
      */
-    template <class... DElems>
-    KOKKOS_FUNCTION constexpr std::enable_if_t<(is_discrete_element_v<DElems> && ...), reference>
-    operator()(DElems const&... delems) const noexcept
+    template <
+            class... DElems,
+            std::enable_if_t<detail::all_of_v<is_discrete_element_v<DElems>...>, int> = 0>
+    KOKKOS_FUNCTION constexpr reference operator()(DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -343,10 +345,11 @@ public:
      * @param dvects discrete vectors
      * @return reference to this element
      */
-    template <class... DVects>
-    KOKKOS_FUNCTION constexpr std::
-            enable_if_t<(is_discrete_vector_v<DVects> && ...) && (sizeof...(DVects) > 0), reference>
-            operator()(DVects const&... dvects) const noexcept
+    template <
+            class... DVects,
+            std::enable_if_t<detail::all_of_v<is_discrete_vector_v<DVects>...>, int> = 0,
+            std::enable_if_t<sizeof...(DVects) != 0, int> = 0>
+    KOKKOS_FUNCTION constexpr reference operator()(DVects const&... dvects) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DVects::size()),
@@ -633,9 +636,10 @@ public:
      * @param delems discrete elements
      * @return reference to this element
      */
-    template <class... DElems>
-    KOKKOS_FUNCTION constexpr std::enable_if_t<(is_discrete_element_v<DElems> && ...), reference>
-    operator()(DElems const&... delems) const noexcept
+    template <
+            class... DElems,
+            std::enable_if_t<detail::all_of_v<is_discrete_element_v<DElems>...>, int> = 0>
+    KOKKOS_FUNCTION constexpr reference operator()(DElems const&... delems) const noexcept
     {
         static_assert(
                 SupportType::rank() == (0 + ... + DElems::size()),
@@ -650,10 +654,11 @@ public:
      * @param dvects discrete vectors
      * @return reference to this element
      */
-    template <class... DVects>
-    KOKKOS_FUNCTION constexpr std::
-            enable_if_t<(is_discrete_vector_v<DVects> && ...) && (sizeof...(DVects) > 0), reference>
-            operator()(DVects const&... dvects) const noexcept
+    template <
+            class... DVects,
+            std::enable_if_t<detail::all_of_v<is_discrete_vector_v<DVects>...>, int> = 0,
+            std::enable_if_t<sizeof...(DVects) != 0, int> = 0>
+    KOKKOS_FUNCTION constexpr reference operator()(DVects const&... dvects) const noexcept
     {
         static_assert(
                 SupportType::rank() == (0 + ... + DVects::size()),

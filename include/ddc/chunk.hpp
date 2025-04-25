@@ -60,6 +60,8 @@ public:
 
     using discrete_element_type = typename base_type::discrete_element_type;
 
+    using discrete_vector_type = typename base_type::discrete_vector_type;
+
     using extents_type = typename base_type::extents_type;
 
     using layout_type = typename base_type::layout_type;
@@ -182,17 +184,33 @@ public:
      * @return const-reference to this element
      */
     template <class... DElems>
-    element_type const& operator()(DElems const&... delems) const noexcept
+    std::enable_if_t<(is_discrete_element_v<DElems> && ...), element_type const&> operator()(
+            DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        assert(((DiscreteElement<DDims>(take<DDims>(delems...)) >= front<DDims>(this->m_domain))
-                && ...));
-        assert(((DiscreteElement<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain))
-                && ...));
+        assert(this->m_domain.contains(delems...));
         return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
+    }
+
+    /** Element access using a list of DiscreteVector
+     * @param dvects discrete vectors
+     * @return reference to this element
+     */
+    template <class... DVects>
+    std::enable_if_t<
+            (is_discrete_vector_v<DVects> && ...) && (sizeof...(DVects) > 0),
+            element_type const&>
+    operator()(DVects const&... dvects) const noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DVects::size()),
+                "Invalid number of dimensions");
+        discrete_element_type const delem
+                = this->m_domain.front() + discrete_vector_type(dvects...);
+        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(delem)...);
     }
 
     /** Element access using a list of DiscreteElement
@@ -200,17 +218,33 @@ public:
      * @return reference to this element
      */
     template <class... DElems>
-    element_type& operator()(DElems const&... delems) noexcept
+    std::enable_if_t<(is_discrete_element_v<DElems> && ...), element_type&> operator()(
+            DElems const&... delems) noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        assert(((DiscreteElement<DDims>(take<DDims>(delems...)) >= front<DDims>(this->m_domain))
-                && ...));
-        assert(((DiscreteElement<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain))
-                && ...));
+        assert(this->m_domain.contains(delems...));
         return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
+    }
+
+    /** Element access using a list of DiscreteVector
+     * @param dvects discrete vectors
+     * @return reference to this element
+     */
+    template <class... DVects>
+    std::enable_if_t<
+            (is_discrete_vector_v<DVects> && ...) && (sizeof...(DVects) > 0),
+            element_type&>
+    operator()(DVects const&... dvects) noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DVects::size()),
+                "Invalid number of dimensions");
+        discrete_element_type const delem
+                = this->m_domain.front() + discrete_vector_type(dvects...);
+        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(delem)...);
     }
 
     /** Returns the label of the Chunk
@@ -333,6 +367,8 @@ public:
 
     using discrete_element_type = typename base_type::discrete_element_type;
 
+    using discrete_vector_type = typename base_type::discrete_vector_type;
+
     using extents_type = typename base_type::extents_type;
 
     using layout_type = typename base_type::layout_type;
@@ -443,16 +479,34 @@ public:
      * @return const-reference to this element
      */
     template <class... DElems>
-    element_type const& operator()(DElems const&... delems) const noexcept
+    std::enable_if_t<(is_discrete_element_v<DElems> && ...), element_type const&> operator()(
+            DElems const&... delems) const noexcept
     {
         static_assert(
                 SupportType::rank() == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
-        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
         assert(this->m_domain.contains(delems...));
         return DDC_MDSPAN_ACCESS_OP(
                 this->m_allocation_mdspan,
                 detail::array(this->m_domain.distance_from_front(delems...)));
+    }
+
+    /** Element access using a list of DiscreteVector
+     * @param dvects discrete vectors
+     * @return reference to this element
+     */
+    template <class... DVects>
+    std::enable_if_t<
+            (is_discrete_vector_v<DVects> && ...) && (sizeof...(DVects) > 0),
+            element_type const&>
+    operator()(DVects const&... dvects) const noexcept
+    {
+        static_assert(
+                SupportType::rank() == (0 + ... + DVects::size()),
+                "Invalid number of dimensions");
+        return DDC_MDSPAN_ACCESS_OP(
+                this->m_allocation_mdspan,
+                detail::array(discrete_vector_type(dvects...)));
     }
 
     /** Element access using a list of DiscreteElement
@@ -460,16 +514,34 @@ public:
      * @return reference to this element
      */
     template <class... DElems>
-    element_type& operator()(DElems const&... delems) noexcept
+    std::enable_if_t<(is_discrete_element_v<DElems> && ...), element_type&> operator()(
+            DElems const&... delems) noexcept
     {
         static_assert(
                 SupportType::rank() == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
-        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
         assert(this->m_domain.contains(delems...));
         return DDC_MDSPAN_ACCESS_OP(
                 this->m_allocation_mdspan,
                 detail::array(this->m_domain.distance_from_front(delems...)));
+    }
+
+    /** Element access using a list of DiscreteVector
+     * @param dvects discrete vectors
+     * @return reference to this element
+     */
+    template <class... DVects>
+    std::enable_if_t<
+            (is_discrete_vector_v<DVects> && ...) && (sizeof...(DVects) > 0),
+            element_type&>
+    operator()(DVects const&... dvects) noexcept
+    {
+        static_assert(
+                SupportType::rank() == (0 + ... + DVects::size()),
+                "Invalid number of dimensions");
+        return DDC_MDSPAN_ACCESS_OP(
+                this->m_allocation_mdspan,
+                detail::array(discrete_vector_type(dvects...)));
     }
 
     /** Returns the label of the Chunk

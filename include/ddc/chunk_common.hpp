@@ -58,6 +58,8 @@ public:
 
     using discrete_element_type = typename discrete_domain_type::discrete_element_type;
 
+    using discrete_vector_type = typename discrete_domain_type::discrete_vector_type;
+
     using extents_type = typename allocation_mdspan_type::extents_type;
 
     using layout_type = typename allocation_mdspan_type::layout_type;
@@ -322,6 +324,8 @@ public:
             LayoutStridedPolicy>;
 
     using discrete_element_type = typename discrete_domain_type::discrete_element_type;
+
+    using discrete_vector_type = typename discrete_domain_type::discrete_vector_type;
 
     using extents_type = typename allocation_mdspan_type::extents_type;
 

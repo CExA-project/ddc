@@ -15,6 +15,7 @@
 #include "ddc/chunk_common.hpp"
 #include "ddc/detail/kokkos.hpp"
 #include "ddc/detail/type_seq.hpp"
+#include "ddc/detail/type_traits.hpp"
 #include "ddc/discrete_domain.hpp"
 #include "ddc/discrete_element.hpp"
 
@@ -78,6 +79,8 @@ public:
     using const_allocation_mdspan_type = typename base_type::const_allocation_mdspan_type;
 
     using discrete_element_type = typename discrete_domain_type::discrete_element_type;
+
+    using discrete_vector_type = typename discrete_domain_type::discrete_vector_type;
 
     using extents_type = typename base_type::extents_type;
 
@@ -326,18 +329,34 @@ public:
      * @param delems discrete elements
      * @return reference to this element
      */
-    template <class... DElems>
+    template <
+            class... DElems,
+            std::enable_if_t<detail::all_of_v<is_discrete_element_v<DElems>...>, int> = 0>
     KOKKOS_FUNCTION constexpr reference operator()(DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
-        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        assert(((DiscreteElement<DDims>(take<DDims>(delems...)) >= front<DDims>(this->m_domain))
-                && ...));
-        assert(((DiscreteElement<DDims>(take<DDims>(delems...)) <= back<DDims>(this->m_domain))
-                && ...));
+        assert(this->m_domain.contains(delems...));
         return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(take<DDims>(delems...))...);
+    }
+
+    /** Element access using a list of DiscreteVector
+     * @param dvects discrete vectors
+     * @return reference to this element
+     */
+    template <
+            class... DVects,
+            std::enable_if_t<detail::all_of_v<is_discrete_vector_v<DVects>...>, int> = 0,
+            std::enable_if_t<sizeof...(DVects) != 0, int> = 0>
+    KOKKOS_FUNCTION constexpr reference operator()(DVects const&... dvects) const noexcept
+    {
+        static_assert(
+                sizeof...(DDims) == (0 + ... + DVects::size()),
+                "Invalid number of dimensions");
+        discrete_element_type const delem
+                = this->m_domain.front() + discrete_vector_type(dvects...);
+        return DDC_MDSPAN_ACCESS_OP(this->m_internal_mdspan, uid<DDims>(delem)...);
     }
 
     /** Access to the underlying allocation pointer
@@ -412,6 +431,8 @@ public:
     using const_allocation_mdspan_type = typename base_type::const_allocation_mdspan_type;
 
     using discrete_element_type = typename discrete_domain_type::discrete_element_type;
+
+    using discrete_vector_type = typename discrete_domain_type::discrete_vector_type;
 
     using extents_type = typename base_type::extents_type;
 
@@ -615,17 +636,36 @@ public:
      * @param delems discrete elements
      * @return reference to this element
      */
-    template <class... DElems>
+    template <
+            class... DElems,
+            std::enable_if_t<detail::all_of_v<is_discrete_element_v<DElems>...>, int> = 0>
     KOKKOS_FUNCTION constexpr reference operator()(DElems const&... delems) const noexcept
     {
         static_assert(
                 SupportType::rank() == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
-        static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
         assert(this->m_domain.contains(delems...));
         return DDC_MDSPAN_ACCESS_OP(
                 this->m_allocation_mdspan,
                 detail::array(this->m_domain.distance_from_front(delems...)));
+    }
+
+    /** Element access using a list of DiscreteVector
+     * @param dvects discrete vectors
+     * @return reference to this element
+     */
+    template <
+            class... DVects,
+            std::enable_if_t<detail::all_of_v<is_discrete_vector_v<DVects>...>, int> = 0,
+            std::enable_if_t<sizeof...(DVects) != 0, int> = 0>
+    KOKKOS_FUNCTION constexpr reference operator()(DVects const&... dvects) const noexcept
+    {
+        static_assert(
+                SupportType::rank() == (0 + ... + DVects::size()),
+                "Invalid number of dimensions");
+        return DDC_MDSPAN_ACCESS_OP(
+                this->m_allocation_mdspan,
+                detail::array(discrete_vector_type(dvects...)));
     }
 
     /** Access to the underlying allocation pointer

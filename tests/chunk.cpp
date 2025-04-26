@@ -211,6 +211,7 @@ TEST(Chunk1DTest, AccessConst)
         chunk(ix) = factor * (ix - lbound_x);
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(chunk_cref(ix), factor * (ix - lbound_x));
+        EXPECT_EQ(chunk_cref(ix - lbound_x), factor * (ix - lbound_x));
     }
 }
 
@@ -222,6 +223,7 @@ TEST(Chunk1DTest, Access)
         chunk(ix) = factor * (ix - lbound_x);
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(chunk(ix), factor * (ix - lbound_x));
+        EXPECT_EQ(chunk(ix - lbound_x), factor * (ix - lbound_x));
     }
 }
 
@@ -434,9 +436,11 @@ TEST(Chunk2DTest, Access)
     ChunkXY<double> chunk(dom_x_y);
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
-            chunk(ix, iy) = 1.357 * (ix - lbound_x) + 1.159 * (iy - lbound_y);
+            double const value = 1.357 * (ix - lbound_x) + 1.159 * (iy - lbound_y);
+            chunk(ix, iy) = value;
             // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
-            EXPECT_EQ(chunk(ix, iy), chunk(ix, iy));
+            EXPECT_EQ(chunk(ix, iy), value);
+            EXPECT_EQ(chunk(ix - lbound_x, iy - lbound_y), value);
         }
     }
 }
@@ -449,6 +453,8 @@ TEST(Chunk2DTest, AccessReordered)
             chunk(ix, iy) = 1.455 * (ix - lbound_x) + 1.522 * (iy - lbound_y);
             // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
             EXPECT_EQ(chunk(iy, ix), chunk(ix, iy));
+            EXPECT_EQ(chunk(iy - lbound_y, ix - lbound_x), chunk(ix, iy));
+            EXPECT_EQ(chunk(iy - lbound_y, ix - lbound_x), chunk(ix - lbound_x, iy - lbound_y));
         }
     }
 }
@@ -611,6 +617,7 @@ TEST(Chunk3DTest, AccessFromDiscreteElements)
     DDomZ const dom_z(lbound_z, ddc::DiscreteVector<DDimZ>(4));
     ddc::Chunk<double, DDomXYZ> chunk(DDomXYZ(dom_x_y, dom_z));
     ddc::ChunkSpan const chunk_span = chunk.span_cview();
+    ddc::DiscreteElement<DDimZ, DDimX> const lbound_zx(lbound_z, lbound_x);
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
             for (DElemZ const iz : chunk.domain<DDimZ>()) {
@@ -620,6 +627,7 @@ TEST(Chunk3DTest, AccessFromDiscreteElements)
                 // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
                 EXPECT_EQ(chunk(ix, iy, iz), chunk(iy, izx));
                 EXPECT_EQ(chunk(ix, iy, iz), chunk_span(iy, izx));
+                EXPECT_EQ(chunk(ix, iy, iz), chunk(iy - lbound_y, izx - lbound_zx));
             }
         }
     }

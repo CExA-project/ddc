@@ -74,7 +74,7 @@ template <
         class ForwardIt,
         class T = typename std::iterator_traits<ForwardIt>::value_type,
         class Compare>
-KOKKOS_FUNCTION ForwardIt lower_bound(ForwardIt first, ForwardIt last, const T& value, Compare comp)
+KOKKOS_FUNCTION ForwardIt lower_bound(ForwardIt first, ForwardIt last, T const& value, Compare comp)
 {
     ForwardIt it;
     typename std::iterator_traits<ForwardIt>::difference_type count = last - first;
@@ -98,7 +98,7 @@ template <
         class ForwardIt,
         class T = typename std::iterator_traits<ForwardIt>::value_type,
         class Compare>
-KOKKOS_FUNCTION bool binary_search(ForwardIt first, ForwardIt last, const T& value, Compare comp)
+KOKKOS_FUNCTION bool binary_search(ForwardIt first, ForwardIt last, T const& value, Compare comp)
 {
     first = ::ddc::detail::lower_bound(first, last, value, comp);
     return (!(first == last) && !(comp(value, *first)));

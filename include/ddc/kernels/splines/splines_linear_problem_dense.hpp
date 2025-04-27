@@ -129,7 +129,7 @@ public:
             Kokkos::parallel_for(
                     "gerts",
                     policy,
-                    KOKKOS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(int const i) {
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                         KokkosBatched::SerialGetrs<
                                 KokkosBatched::Trans::Transpose,
@@ -140,7 +140,7 @@ public:
             Kokkos::parallel_for(
                     "gerts",
                     policy,
-                    KOKKOS_LAMBDA(const int i) {
+                    KOKKOS_LAMBDA(int const i) {
                         auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                         KokkosBatched::SerialGetrs<
                                 KokkosBatched::Trans::NoTranspose,

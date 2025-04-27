@@ -198,8 +198,8 @@ public:
         assert(((DiscreteElement<ODDims>(m_element_end)
                  >= DiscreteElement<ODDims>(odomain.m_element_end))
                 && ...));
-        const DiscreteVector<DDims...> myextents = extents();
-        const DiscreteVector<ODDims...> oextents = odomain.extents();
+        DiscreteVector<DDims...> const myextents = extents();
+        DiscreteVector<ODDims...> const oextents = odomain.extents();
         return DiscreteDomain(
                 DiscreteElement<DDims...>((select_or<DDims>(
                         odomain.m_element_begin,

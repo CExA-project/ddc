@@ -194,7 +194,7 @@ public:
      * @return The COO storage matrix filled with the non-zeros from dense_matrix.
      */
     Coo dense2coo(
-            Kokkos::View<const double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+            Kokkos::View<double const**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
                     dense_matrix,
             double const tol = 1e-14)
     {
@@ -217,7 +217,7 @@ public:
         Kokkos::parallel_for(
                 "dense2coo",
                 Kokkos::RangePolicy(ExecSpace(), 0, 1),
-                KOKKOS_LAMBDA(const int) {
+                KOKKOS_LAMBDA(int const) {
                     for (int i = 0; i < dense_matrix.extent(0); ++i) {
                         for (int j = 0; j < dense_matrix.extent(1); ++j) {
                             double const aij = dense_matrix(i, j);
@@ -250,7 +250,7 @@ private:
                 Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
                         {0, 0},
                         {m_bottom_right_block->size(), m_bottom_right_block->size()}),
-                [&](const int i, const int j) {
+                [&](int const i, int const j) {
                     double val = 0.0;
                     for (int l = 0; l < m_top_left_block->size(); ++l) {
                         val += bottom_left_block(i, l) * top_right_block(l, j);
@@ -324,10 +324,10 @@ public:
             Kokkos::parallel_for(
                     "ddc_splines_spdm_minus1_1",
                     Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
-                    KOKKOS_LAMBDA(const int j) {
+                    KOKKOS_LAMBDA(int const j) {
                         for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
-                            const int i = LinOp.rows_idx()(nz_idx);
-                            const int k = LinOp.cols_idx()(nz_idx);
+                            int const i = LinOp.rows_idx()(nz_idx);
+                            int const k = LinOp.cols_idx()(nz_idx);
                             y(i, j) -= LinOp.values()(nz_idx) * x(k, j);
                         }
                     });
@@ -335,10 +335,10 @@ public:
             Kokkos::parallel_for(
                     "ddc_splines_spdm_minus1_1_tr",
                     Kokkos::RangePolicy(ExecSpace(), 0, y.extent(1)),
-                    KOKKOS_LAMBDA(const int j) {
+                    KOKKOS_LAMBDA(int const j) {
                         for (int nz_idx = 0; nz_idx < LinOp.nnz(); ++nz_idx) {
-                            const int i = LinOp.rows_idx()(nz_idx);
-                            const int k = LinOp.cols_idx()(nz_idx);
+                            int const i = LinOp.rows_idx()(nz_idx);
+                            int const k = LinOp.cols_idx()(nz_idx);
                             y(k, j) -= LinOp.values()(nz_idx) * x(i, j);
                         }
                     });

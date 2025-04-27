@@ -732,7 +732,7 @@ ChunkSpan(Chunk<ElementType, SupportType, Allocator>& other) -> ChunkSpan<
 
 template <class ElementType, class SupportType, class Allocator>
 ChunkSpan(Chunk<ElementType, SupportType, Allocator> const& other) -> ChunkSpan<
-        const ElementType,
+        ElementType const,
         SupportType,
         Kokkos::layout_right,
         typename Allocator::memory_space>;

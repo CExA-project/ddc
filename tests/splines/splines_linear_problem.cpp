@@ -88,7 +88,7 @@ void check_inverse_transpose(
 void solve_and_validate(
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultExecutionSpace>& splines_linear_problem)
 {
-    const std::size_t N = splines_linear_problem.size();
+    std::size_t const N = splines_linear_problem.size();
 
     std::vector<double> val_ptr(N * N);
     ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const

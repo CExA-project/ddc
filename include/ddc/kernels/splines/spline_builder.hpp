@@ -959,8 +959,8 @@ operator()(
                         }
                     }
                     for (std::size_t i(0); i < bsplines_type::degree(); ++i) {
-                        const ddc::DiscreteElement<bsplines_type> i_start(i);
-                        const ddc::DiscreteElement<bsplines_type> i_end(nbasis_proxy + i);
+                        ddc::DiscreteElement<bsplines_type> const i_start(i);
+                        ddc::DiscreteElement<bsplines_type> const i_end(nbasis_proxy + i);
 
                         spline(i_end, j) = spline(i_start, j);
                     }

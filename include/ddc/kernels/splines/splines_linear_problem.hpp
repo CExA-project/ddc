@@ -30,7 +30,7 @@ private:
     std::size_t m_size;
 
 protected:
-    explicit SplinesLinearProblem(const std::size_t size) : m_size(size) {}
+    explicit SplinesLinearProblem(std::size_t const size) : m_size(size) {}
 
 public:
     SplinesLinearProblem(SplinesLinearProblem const& x) = delete;

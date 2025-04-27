@@ -142,7 +142,7 @@ public:
         Kokkos::parallel_for(
                 "pbtrs",
                 policy,
-                KOKKOS_LAMBDA(const int i) {
+                KOKKOS_LAMBDA(int const i) {
                     auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                     KokkosBatched::SerialPbtrs<
                             KokkosBatched::Uplo::Lower,

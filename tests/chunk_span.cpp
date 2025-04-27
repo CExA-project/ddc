@@ -38,8 +38,8 @@ TEST(ChunkSpan1DTest, ConstructionFromChunk)
     EXPECT_FALSE((std::is_constructible_v<ChunkSpanX<double>, ChunkX<double>>));
     EXPECT_FALSE((std::is_constructible_v<ChunkSpanX<double>, ChunkX<double> const>));
     EXPECT_TRUE((std::is_constructible_v<ChunkSpanX<double>, ChunkX<double>&>));
-    EXPECT_TRUE((std::is_constructible_v<ChunkSpanX<const double>, ChunkX<double>&>));
-    EXPECT_TRUE((std::is_constructible_v<ChunkSpanX<const double>, ChunkX<double> const&>));
+    EXPECT_TRUE((std::is_constructible_v<ChunkSpanX<double const>, ChunkX<double>&>));
+    EXPECT_TRUE((std::is_constructible_v<ChunkSpanX<double const>, ChunkX<double> const&>));
 }
 
 TEST(ChunkSpan1DTest, CtadFromChunk)
@@ -52,7 +52,7 @@ TEST(ChunkSpan1DTest, CtadFromChunk)
     using ConstLvalueRefChunkType = ChunkX<int> const&;
     EXPECT_TRUE((std::is_same_v<
                  decltype(ddc::ChunkSpan(std::declval<ConstLvalueRefChunkType>())),
-                 ddc::ChunkSpan<const int, DDomX, Kokkos::layout_right, Kokkos::HostSpace>>));
+                 ddc::ChunkSpan<int const, DDomX, Kokkos::layout_right, Kokkos::HostSpace>>));
 }
 
 TEST(ChunkSpan1DTest, CtadFromKokkosView)
@@ -62,10 +62,10 @@ TEST(ChunkSpan1DTest, CtadFromKokkosView)
                  decltype(ddc::ChunkSpan(std::declval<ViewType>(), std::declval<DDomX>())),
                  ddc::ChunkSpan<int, DDomX, Kokkos::layout_right, Kokkos::HostSpace>>));
 
-    using ConstViewType = Kokkos::View<const int*, Kokkos::LayoutRight, Kokkos::HostSpace>;
+    using ConstViewType = Kokkos::View<int const*, Kokkos::LayoutRight, Kokkos::HostSpace>;
     EXPECT_TRUE((std::is_same_v<
                  decltype(ddc::ChunkSpan(std::declval<ConstViewType>(), std::declval<DDomX>())),
-                 ddc::ChunkSpan<const int, DDomX, Kokkos::layout_right, Kokkos::HostSpace>>));
+                 ddc::ChunkSpan<int const, DDomX, Kokkos::layout_right, Kokkos::HostSpace>>));
 }
 
 inline namespace anonymous_namespace_workaround_chunk_span_cpp {

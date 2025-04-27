@@ -52,7 +52,7 @@ public:
             LayoutStridedPolicy>;
 
     using const_allocation_mdspan_type = Kokkos::mdspan<
-            const ElementType,
+            ElementType const,
             Kokkos::dextents<std::size_t, sizeof...(DDims)>,
             LayoutStridedPolicy>;
 
@@ -319,7 +319,7 @@ public:
             LayoutStridedPolicy>;
 
     using const_allocation_mdspan_type = Kokkos::mdspan<
-            const ElementType,
+            ElementType const,
             Kokkos::dextents<std::size_t, SupportType::rank()>,
             LayoutStridedPolicy>;
 

@@ -387,7 +387,7 @@ TEST(Chunk0DTest, AllocationMdspan)
     Chunk0D<int> chk(dom_0d);
     chk() = 5;
 
-    ChunkSpan0D<const int> const chunk_span(chk.allocation_mdspan(), dom_0d);
+    ChunkSpan0D<int const> const chunk_span(chk.allocation_mdspan(), dom_0d);
 
     EXPECT_EQ(chunk_span(), 5);
 }
@@ -399,7 +399,7 @@ TEST(Chunk1DTest, AllocationMdspan)
     chk(lbound_x + 1) = 6;
     chk(lbound_x + 2) = 7;
 
-    ddc::ChunkSpan<const int, DDomX> const chunk_span(chk.allocation_mdspan(), dom_x);
+    ddc::ChunkSpan<int const, DDomX> const chunk_span(chk.allocation_mdspan(), dom_x);
 
     EXPECT_EQ(chunk_span(lbound_x), 5);
     EXPECT_EQ(chunk_span(lbound_x + 1), 6);

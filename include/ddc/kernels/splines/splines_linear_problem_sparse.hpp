@@ -29,7 +29,7 @@ namespace ddc::detail {
  * @return A Ginkgo Dense matrix view over the Kokkos::View data
  */
 template <class KokkosViewType>
-auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosViewType const& view)
+auto to_gko_dense(std::shared_ptr<gko::Executor const> const& gko_exec, KokkosViewType const& view)
 {
     static_assert((Kokkos::is_view_v<KokkosViewType> && KokkosViewType::rank == 2));
     using value_type = typename KokkosViewType::traits::value_type;
@@ -174,7 +174,7 @@ public:
      * used by the block-Jacobi preconditioner. see default_preconditioner_max_block_size.
      */
     explicit SplinesLinearProblemSparse(
-            const std::size_t mat_size,
+            std::size_t const mat_size,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplinesLinearProblem<ExecSpace>(mat_size)

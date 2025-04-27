@@ -315,7 +315,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__band_8hpp_so
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            Kokkos::parallel_for(</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                    <span class="stringliteral">&quot;gbtrs&quot;</span>,</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                    policy,</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                    KOKKOS_LAMBDA(<span class="keyword">const</span> <span class="keywordtype">int</span> i) {</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                    KOKKOS_LAMBDA(<span class="keywordtype">int</span> <span class="keyword">const</span> i) {</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                        <span class="keyword">auto</span> sub_b = Kokkos::subview(b, Kokkos::ALL, i);</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                        KokkosBatched::SerialGbtrs&lt;</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                                KokkosBatched::Trans::Transpose,</div>
@@ -326,7 +326,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__band_8hpp_so
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>            Kokkos::parallel_for(</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                    <span class="stringliteral">&quot;gbtrs&quot;</span>,</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                    policy,</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                    KOKKOS_LAMBDA(<span class="keyword">const</span> <span class="keywordtype">int</span> i) {</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                    KOKKOS_LAMBDA(<span class="keywordtype">int</span> <span class="keyword">const</span> i) {</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                        <span class="keyword">auto</span> sub_b = Kokkos::subview(b, Kokkos::ALL, i);</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                        KokkosBatched::SerialGbtrs&lt;</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                                KokkosBatched::Trans::NoTranspose,</div>

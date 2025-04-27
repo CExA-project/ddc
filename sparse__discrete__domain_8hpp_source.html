@@ -203,7 +203,7 @@ $(document).ready(function(){initNavTree('sparse__discrete__domain_8hpp_source.h
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keyword">class</span> ForwardIt,</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keyword">class</span> T = <span class="keyword">typename</span> std::iterator_traits&lt;ForwardIt&gt;::value_type,</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">class</span> Compare&gt;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>KOKKOS_FUNCTION ForwardIt lower_bound(ForwardIt first, ForwardIt last, <span class="keyword">const</span> T&amp; value, Compare comp)</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>KOKKOS_FUNCTION ForwardIt lower_bound(ForwardIt first, ForwardIt last, T <span class="keyword">const</span>&amp; value, Compare comp)</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>{</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    ForwardIt it;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">typename</span> std::iterator_traits&lt;ForwardIt&gt;::difference_type count = last - first;</div>
@@ -227,7 +227,7 @@ $(document).ready(function(){initNavTree('sparse__discrete__domain_8hpp_source.h
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keyword">class</span> ForwardIt,</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keyword">class</span> T = <span class="keyword">typename</span> std::iterator_traits&lt;ForwardIt&gt;::value_type,</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keyword">class</span> Compare&gt;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>KOKKOS_FUNCTION <span class="keywordtype">bool</span> binary_search(ForwardIt first, ForwardIt last, <span class="keyword">const</span> T&amp; value, Compare comp)</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>KOKKOS_FUNCTION <span class="keywordtype">bool</span> binary_search(ForwardIt first, ForwardIt last, T <span class="keyword">const</span>&amp; value, Compare comp)</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>{</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    first = ::<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail::lower_bound(first, last, value, comp);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordflow">return</span> (!(first == last) &amp;&amp; !(comp(value, *first)));</div>

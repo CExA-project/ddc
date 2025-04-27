@@ -447,7 +447,7 @@ $(document).ready(function(){initNavTree('chunk_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>                s.mapping(),</div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>                std::make_index_sequence&lt;<span class="keyword">sizeof</span>...(DDims)&gt; {});</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <span class="keywordflow">return</span> Kokkos::View&lt;</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>                detail::mdspan_to_kokkos_element_t&lt;<span class="keyword">const</span> ElementType, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>                detail::mdspan_to_kokkos_element_t&lt;ElementType <span class="keyword">const</span>, <span class="keyword">sizeof</span>...(DDims)&gt;,</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>                <span class="keyword">decltype</span>(kokkos_layout),</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>                <span class="keyword">typename</span> Allocator::memory_space&gt;(s.data_handle(), kokkos_layout);</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    }</div>
@@ -746,7 +746,7 @@ $(document).ready(function(){initNavTree('chunk_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>                s.mapping(),</div>
 <div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>                std::make_index_sequence&lt;SupportType::rank()&gt; {});</div>
 <div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>        <span class="keywordflow">return</span> Kokkos::View&lt;</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>                detail::mdspan_to_kokkos_element_t&lt;<span class="keyword">const</span> ElementType, SupportType::rank()&gt;,</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>                detail::mdspan_to_kokkos_element_t&lt;ElementType <span class="keyword">const</span>, SupportType::rank()&gt;,</div>
 <div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>                <span class="keyword">decltype</span>(kokkos_layout),</div>
 <div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>                <span class="keyword">typename</span> Allocator::memory_space&gt;(s.data_handle(), kokkos_layout);</div>
 <div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>    }</div>

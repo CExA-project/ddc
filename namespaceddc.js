@@ -120,7 +120,7 @@ var namespaceddc =
     [ "get_domain", "namespaceddc.html#a03facdf8e4260396b89b134273fc4677", null ],
     [ "ChunkSpan", "namespaceddc.html#af5d3fdc1e8f41d500e4d5843b821fa82", null ],
     [ "ChunkSpan", "namespaceddc.html#a9092231cbfc4ea9b814f7ed7c06281e0", null ],
-    [ "ChunkSpan", "namespaceddc.html#ac28754ed318dd7231757154da265a388", null ],
+    [ "ChunkSpan", "namespaceddc.html#a73e0e5100cdf39add72fc342851de884", null ],
     [ "coordinate", "namespaceddc.html#a6b058df8c02517deafeeb424e2f8803a", null ],
     [ "create_mirror", "namespaceddc.html#af5a820cbfa67651ae082f77f446ed882", null ],
     [ "create_mirror", "namespaceddc.html#a9acf5aabb0421518743fe6e8eb57abf2", null ],

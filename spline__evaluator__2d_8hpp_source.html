@@ -546,9 +546,9 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>                KOKKOS_CLASS_LAMBDA(</div>
 <div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
 <div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_eval_2D = spline_eval[j];</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> coords_eval_2D = coords_eval[j];</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_coef_2D = spline_coef[j];</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> coords_eval_2D = coords_eval[j];</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
 <div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>                            spline_eval_2D(i1, i2) = eval(coords_eval_2D(i1, i2), spline_coef_2D);</div>
@@ -592,8 +592,8 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>                KOKKOS_CLASS_LAMBDA(</div>
 <div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
 <div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_eval_2D = spline_eval[j];</div>
-<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_coef_2D = spline_coef[j];</div>
+<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
 <div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1, continuous_dimension_type2&gt;</div>
@@ -783,9 +783,9 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>                KOKKOS_CLASS_LAMBDA(</div>
 <div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
 <div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_eval_2D = spline_eval[j];</div>
-<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> coords_eval_2D = coords_eval[j];</div>
-<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_coef_2D = spline_coef[j];</div>
+<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> coords_eval_2D = coords_eval[j];</div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
 <div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
 <div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
 <div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>                            spline_eval_2D(i1, i2) = eval_no_bc&lt;</div>
@@ -829,8 +829,8 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span>                KOKKOS_CLASS_LAMBDA(</div>
 <div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
 <div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_eval_2D = spline_eval[j];</div>
-<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_coef_2D = spline_coef[j];</div>
+<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
+<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
 <div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
 <div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
 <div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1, continuous_dimension_type2&gt;</div>
@@ -891,9 +891,9 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>                KOKKOS_CLASS_LAMBDA(</div>
 <div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
 <div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_eval_2D = spline_eval[j];</div>
-<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> coords_eval_2D = coords_eval[j];</div>
-<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_coef_2D = spline_coef[j];</div>
+<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
+<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> coords_eval_2D = coords_eval[j];</div>
+<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
 <div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
 <div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
 <div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span>                            spline_eval_2D(i1, i2) = eval_no_bc&lt;</div>
@@ -937,8 +937,8 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>                KOKKOS_CLASS_LAMBDA(</div>
 <div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
 <div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_eval_2D = spline_eval[j];</div>
-<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_coef_2D = spline_coef[j];</div>
+<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
+<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
 <div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
 <div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
 <div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1, continuous_dimension_type2&gt;</div>
@@ -999,9 +999,9 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span>                KOKKOS_CLASS_LAMBDA(</div>
 <div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
 <div class="line"><a id="l00872" name="l00872"></a><span class="lineno">  872</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_eval_2D = spline_eval[j];</div>
-<div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> coords_eval_2D = coords_eval[j];</div>
-<div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_coef_2D = spline_coef[j];</div>
+<div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
+<div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> coords_eval_2D = coords_eval[j];</div>
+<div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
 <div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
 <div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
 <div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span>                            spline_eval_2D(i1, i2) = eval_no_bc&lt;</div>
@@ -1045,8 +1045,8 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>                KOKKOS_CLASS_LAMBDA(</div>
 <div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
 <div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_eval_2D = spline_eval[j];</div>
-<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> spline_coef_2D = spline_coef[j];</div>
+<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
+<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
 <div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
 <div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
 <div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1, continuous_dimension_type2&gt;</div>

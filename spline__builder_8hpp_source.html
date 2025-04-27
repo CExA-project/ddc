@@ -1088,8 +1088,8 @@ $(document).ready(function(){initNavTree('spline__builder_8hpp_source.html','');
 <div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>                        }</div>
 <div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>                    }</div>
 <div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>                    <span class="keywordflow">for</span> (std::size_t i(0); i &lt; bsplines_type::degree(); ++i) {</div>
-<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>                        <span class="keyword">const</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type&gt; i_start(i);</div>
-<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>                        <span class="keyword">const</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type&gt; i_end(nbasis_proxy + i);</div>
+<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type&gt; <span class="keyword">const</span> i_start(i);</div>
+<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type&gt; <span class="keyword">const</span> i_end(nbasis_proxy + i);</div>
 <div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span> </div>
 <div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>                        spline(i_end, j) = spline(i_start, j);</div>
 <div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>                    }</div>

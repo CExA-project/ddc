@@ -77,6 +77,7 @@ set(DOXYGEN_HTML_EXTRA_FILES
 
 doxygen_add_docs(
     doc
+    "${CMAKE_CURRENT_SOURCE_DIR}/getting_started.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/about.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/first_steps.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/going_further.md"
@@ -85,6 +86,8 @@ doxygen_add_docs(
     "${CMAKE_CURRENT_SOURCE_DIR}/concepts.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/heat_equation_spectral.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/examples.md"
+    "${CMAKE_CURRENT_SOURCE_DIR}/using_ddc.md"
+    "${CMAKE_CURRENT_SOURCE_DIR}/installation.md"
     "${DDC_SOURCE_DIR}/include/ddc/"
     ALL
 )

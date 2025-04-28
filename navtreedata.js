@@ -26,42 +26,49 @@ var NAVTREE =
 [
   [ "DDC", "index.html", [
     [ "About", "index.html", "index" ],
+    [ "Getting started", "md_getting__started.html", [
+      [ "Installation", "installation.html", null ],
+      [ "Using DDC", "using_ddc.html", [
+        [ "Public targets and headers", "using_ddc.html#autotoc_md29", null ],
+        [ "CMake examples", "using_ddc.html#autotoc_md30", null ]
+      ] ]
+    ] ],
     [ "DDC concepts", "md_concepts.html", [
-      [ "ddc::DiscreteElement and ddc::DiscreteVector", "md_concepts.html#autotoc_md21", [
-        [ "ddc::DiscreteElement", "md_concepts.html#autotoc_md22", null ],
-        [ "ddc::DiscreteVector", "md_concepts.html#autotoc_md23", null ]
+      [ "ddc::DiscreteElement and ddc::DiscreteVector", "md_concepts.html#autotoc_md22", [
+        [ "ddc::DiscreteElement", "md_concepts.html#autotoc_md23", null ],
+        [ "ddc::DiscreteVector", "md_concepts.html#autotoc_md24", null ]
       ] ],
-      [ "ddc::DiscreteDomain", "md_concepts.html#autotoc_md24", null ],
-      [ "ddc::Chunk and ddc::ChunkSpan", "md_concepts.html#autotoc_md25", null ],
-      [ "Algorithms in ddc ?", "md_concepts.html#autotoc_md26", null ]
+      [ "ddc::DiscreteDomain", "md_concepts.html#autotoc_md25", null ],
+      [ "ddc::Chunk and ddc::ChunkSpan", "md_concepts.html#autotoc_md26", null ],
+      [ "Algorithms in ddc ?", "md_concepts.html#autotoc_md27", null ]
     ] ],
     [ "Examples", "md_examples.html", [
       [ "The uniform heat equation", "first_steps.html", [
-        [ "Definition of the discretization", "first_steps.html#autotoc_md2", [
-          [ "Dimensions naming", "first_steps.html#autotoc_md3", null ],
-          [ "Domains", "first_steps.html#autotoc_md4", [
-            [ "Dimension X", "first_steps.html#autotoc_md5", null ],
-            [ "Dimension Y", "first_steps.html#autotoc_md6", null ],
-            [ "Time dimension", "first_steps.html#autotoc_md7", null ]
+        [ "Definition of the discretization", "first_steps.html#autotoc_md3", [
+          [ "Dimensions naming", "first_steps.html#autotoc_md4", null ],
+          [ "Domains", "first_steps.html#autotoc_md5", [
+            [ "Dimension X", "first_steps.html#autotoc_md6", null ],
+            [ "Dimension Y", "first_steps.html#autotoc_md7", null ],
+            [ "Time dimension", "first_steps.html#autotoc_md8", null ]
           ] ]
         ] ],
-        [ "Data allocation", "first_steps.html#autotoc_md8", null ],
-        [ "Initial conditions", "first_steps.html#autotoc_md9", null ],
-        [ "Time loop", "first_steps.html#autotoc_md10", [
-          [ "Periodic conditions", "first_steps.html#autotoc_md11", null ],
-          [ "Numerical scheme", "first_steps.html#autotoc_md12", null ]
+        [ "Data allocation", "first_steps.html#autotoc_md9", null ],
+        [ "Initial conditions", "first_steps.html#autotoc_md10", null ],
+        [ "Time loop", "first_steps.html#autotoc_md11", [
+          [ "Periodic conditions", "first_steps.html#autotoc_md12", null ],
+          [ "Numerical scheme", "first_steps.html#autotoc_md13", null ]
         ] ],
         [ "examples/uniform_heat_equation.cpp", "uniform_heat_equation.html", null ]
       ] ],
       [ "The non uniform heat equation", "going_further.html", [
-        [ "Differences with the uniform problem resolution", "going_further.html#autotoc_md13", [
-          [ "Dimensions naming", "going_further.html#autotoc_md14", null ],
-          [ "Domains", "going_further.html#autotoc_md15", [
-            [ "Dimension X", "going_further.html#autotoc_md16", null ],
-            [ "Dimension Y", "going_further.html#autotoc_md17", null ],
-            [ "Time dimension", "going_further.html#autotoc_md18", null ]
+        [ "Differences with the uniform problem resolution", "going_further.html#autotoc_md14", [
+          [ "Dimensions naming", "going_further.html#autotoc_md15", null ],
+          [ "Domains", "going_further.html#autotoc_md16", [
+            [ "Dimension X", "going_further.html#autotoc_md17", null ],
+            [ "Dimension Y", "going_further.html#autotoc_md18", null ],
+            [ "Time dimension", "going_further.html#autotoc_md19", null ]
           ] ],
-          [ "Time loop", "going_further.html#autotoc_md19", null ]
+          [ "Time loop", "going_further.html#autotoc_md20", null ]
         ] ],
         [ "examples/non_uniform_heat_equation.cpp", "non_uniform_heat_equation.html", null ]
       ] ],
@@ -101,8 +108,8 @@ var NAVTREEINDEX =
 "classddc_1_1SparseDiscreteDomain.html#a112ce3cd48888a1b66d2210e4171ffd8",
 "classddc_1_1SplineEvaluator.html#a4eba6da156b2867cf75850fc427b3448",
 "classddc_1_1StridedDiscreteDomain_3_4.html#ad59184147539a90ef37b9e8c02e0e1dc",
-"namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad9d83fc826ae0d42075af007a477e2c9",
-"structddc_1_1StridedDiscreteDomainIterator.html#a392ad637a78bfa0e963786c23aa83abc"
+"namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9",
+"structddc_1_1StridedDiscreteDomainIterator.html#a337036ee40e92559d7dced9648e433ef"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

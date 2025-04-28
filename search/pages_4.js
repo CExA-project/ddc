@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['heat_20equation_0',['heat equation',['../going_further.html',1,'The non uniform heat equation'],['../first_steps.html',1,'The uniform heat equation']]],
-  ['heat_5fequation_5fspectral_20cpp_1',['examples/heat_equation_spectral.cpp',['../heat_equation_spectral.html',1,'md_examples']]]
+  ['getting_20started_0',['Getting started',['../md_getting__started.html',1,'']]]
 ];

@@ -142,10 +142,8 @@ Public targets and headers</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>splines</code>   </td><td class="markdownTableBodyNone"><code>DDC::splines</code>   </td><td class="markdownTableBodyNone"><code>&lt;<a class="el" href="splines_8hpp_source.html">ddc/kernels/splines.hpp</a>&gt;</code>   </td></tr>
 </table>
-<p>Keep in mind that the DDC components are optional.</p>
-<blockquote class="doxtable">
-<p>&zwj;[!WARNING] Please note that all other targets and headers are private and thus should not be used. </p>
-</blockquote>
+<dl class="section note"><dt>Note</dt><dd>Keep in mind that the DDC components are optional.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Please note that all other targets and headers are private and thus should not be used.</dd></dl>
 <h1><a class="anchor" id="autotoc_md30"></a>
 CMake examples</h1>
 <p>If you only need the core features of the library, you can simply write the following cmake code</p>
@@ -158,7 +156,7 @@ CMake examples</h1>
 <div class="line">find_package(DDC X.Y.Z REQUIRED fft)</div>
 <div class="line"># ...</div>
 <div class="line">target_link_libraries(YOUR_TARGET_USING_FFT DDC::core DDC::fft)</div>
-</div><!-- fragment --><p>Note that you must still link to <code>DDC::core</code> because most component functionalities (such as FFT) depend on features provided by the core library. </p>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>You must still link to <code>DDC::core</code> because most component functionalities (such as FFT) depend on features provided by the core library. </dd></dl>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

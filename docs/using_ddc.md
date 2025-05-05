@@ -19,10 +19,9 @@ The CMake package name is `DDC`, you will find below a table listing the targets
 | `fft`                | `DDC::fft`        | `<ddc/kernels/fft.hpp>`     |
 | `splines`            | `DDC::splines`    | `<ddc/kernels/splines.hpp>` |
 
-Keep in mind that the DDC components are optional.
+\note Keep in mind that the DDC components are optional.
 
-> [!WARNING]
-> Please note that all other targets and headers are private and thus should not be used.
+\warning Please note that all other targets and headers are private and thus should not be used.
 
 ## CMake examples
 
@@ -44,4 +43,4 @@ find_package(DDC X.Y.Z REQUIRED fft)
 target_link_libraries(YOUR_TARGET_USING_FFT DDC::core DDC::fft)
 ```
 
-Note that you must still link to `DDC::core` because most component functionalities (such as FFT) depend on features provided by the core library.
+\note You must still link to `DDC::core` because most component functionalities (such as FFT) depend on features provided by the core library.

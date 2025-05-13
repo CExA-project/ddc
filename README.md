@@ -56,12 +56,7 @@ To use DDC components, one needs the following dependencies:
 
 ## Getting the code and basic configuration
 
-```bash
-git clone --recurse-submodules --jobs 4 https://github.com/CExA-project/ddc.git
-cd ddc
-cmake -D DDC_BUILD_KERNELS_FFT=OFF -D DDC_BUILD_KERNELS_SPLINES=OFF -D DDC_BUILD_PDI_WRAPPER=OFF -B build
-cmake --build build --parallel 4
-```
+Please see [this page](docs/installation.md) for a detailed installation guide.
 
 ## Contributing
 

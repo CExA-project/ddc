@@ -20,7 +20,7 @@ cmake --install ddc/build --prefix path/to/ddc/install
 
 ## Using Spack package manager
 
-> **note** We are currently working on providing a DDC recipe for the Spack package manager.
+\note We are currently working on providing a DDC recipe for the Spack package manager.
 
 In the meantime, as of Spack 0.23.1, we provide a CPU Spack environment that contains almost all dependencies. The rest of the dependencies are provided by the git submodules.
 

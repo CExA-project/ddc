@@ -56,7 +56,7 @@ To use DDC components, one needs the following dependencies:
 
 ## Getting the code and basic configuration
 
-Please see [this page](installation.md) for a detailed installation guide.
+Please see [this page](docs/installation.md) for a detailed installation guide.
 
 ## Contributing
 

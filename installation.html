@@ -122,7 +122,71 @@ $(document).ready(function(){initNavTree('installation.html',''); initResizable(
   <div class="headertitle"><div class="title">Installation</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Under construction </p>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md31"></a>
+Quick start</h1>
+<p>A quick way to compile DDC is to disable all optional components providing only core features</p>
+<div class="fragment"><div class="line">git clone --recurse-submodules --jobs 4 https://github.com/CExA-project/ddc.git</div>
+<div class="line">cmake -D DDC_BUILD_KERNELS_FFT=OFF -D DDC_BUILD_KERNELS_SPLINES=OFF -D DDC_BUILD_PDI_WRAPPER=OFF -B ddc/build</div>
+<div class="line">cmake --build ddc/build --parallel 4</div>
+<div class="line">ctest --test-dir ddc/build</div>
+<div class="line">cmake --install ddc/build --prefix path/to/ddc/install</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md32"></a>
+Using Spack package manager</h1>
+<dl class="section note"><dt>Note</dt><dd>We are currently working on providing a DDC recipe for the Spack package manager.</dd></dl>
+<p>In the meantime, as of Spack 0.23.1, we provide a CPU Spack environment that contains almost all dependencies. The rest of the dependencies are provided by the git submodules.</p>
+<h2><a class="anchor" id="autotoc_md33"></a>
+Spack installation</h2>
+<h3><a class="anchor" id="autotoc_md34"></a>
+Download</h3>
+<div class="fragment"><div class="line">wget https://github.com/spack/spack/releases/download/v0.23.1/spack-0.23.1.tar.gz</div>
+<div class="line">tar -xvf spack-0.23.1.tar.gz</div>
+<div class="line">rm spack-0.23.1.tar.gz</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md35"></a>
+Activation</h3>
+<p>One first needs to activate Spack before executing any command.</p>
+<div class="fragment"><div class="line">. spack-0.23.1/share/spack/setup-env.sh</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md36"></a>
+DDC environment installation</h3>
+<div class="fragment"><div class="line">spack env create ddc-env ddc-env.yaml</div>
+</div><!-- fragment --><p>Here is the content of <code>ddc-env.yaml</code>:</p>
+<div class="fragment"><div class="line"># ddc-env.yaml</div>
+<div class="line">spack:</div>
+<div class="line">  concretizer:</div>
+<div class="line">    unify: true</div>
+<div class="line">  definitions:</div>
+<div class="line">    - compilers:</div>
+<div class="line">        - &#39;gcc@10:14&#39;</div>
+<div class="line">    - packages:</div>
+<div class="line">        - &#39;benchmark@1.8:1 ~performance_counters&#39;</div>
+<div class="line">        - &#39;cmake@3.22:3&#39;</div>
+<div class="line">        - &#39;doxygen@1.9.8:1&#39;</div>
+<div class="line">        - &#39;fftw@3.3:3&#39;</div>
+<div class="line">        - &#39;ginkgo@1.8:1&#39;</div>
+<div class="line">        - &#39;googletest@1.14:1 +gmock&#39;</div>
+<div class="line">        - &#39;kokkos@4.4.1:4&#39;</div>
+<div class="line">  specs:</div>
+<div class="line">    - lapack</div>
+<div class="line">    - matrix:</div>
+<div class="line">        - [$packages]</div>
+<div class="line">        - [$%compilers]</div>
+<div class="line">  view:</div>
+<div class="line">    default:</div>
+<div class="line">      root: .spack-env/view</div>
+<div class="line">      exclude: [&#39;gcc-runtime&#39;]</div>
+<div class="line">  packages:</div>
+<div class="line">    all:</div>
+<div class="line">      providers:</div>
+<div class="line">        lapack: [openblas]</div>
+<div class="line">      variants: cxxstd=17</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md37"></a>
+Compilation of DDC</h3>
+<div class="fragment"><div class="line">git clone --recurse-submodules --jobs 4 https://github.com/CExA-project/ddc.git</div>
+<div class="line">cmake -D DDC_BUILD_PDI_WRAPPER=OFF -B ddc/build</div>
+<div class="line">ctest --test-dir ddc/build</div>
+<div class="line">cmake --build ddc/build --parallel 4</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md38"></a>
+Installation of DDC</h3>
+<dl class="section warning"><dt>Warning</dt><dd>Installing DDC solely using the bundled libraries (provided via git submodules) is currently untested and not recommended. For better stability, we recommend using system-installed or Spack-installed dependencies whenever possible. </dd></dl>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

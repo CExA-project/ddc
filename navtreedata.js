@@ -27,7 +27,18 @@ var NAVTREE =
   [ "DDC", "index.html", [
     [ "About", "index.html", "index" ],
     [ "Getting started", "md_getting__started.html", [
-      [ "Installation", "installation.html", null ],
+      [ "Installation", "installation.html", [
+        [ "Quick start", "installation.html#autotoc_md31", null ],
+        [ "Using Spack package manager", "installation.html#autotoc_md32", [
+          [ "Spack installation", "installation.html#autotoc_md33", [
+            [ "Download", "installation.html#autotoc_md34", null ],
+            [ "Activation", "installation.html#autotoc_md35", null ],
+            [ "DDC environment installation", "installation.html#autotoc_md36", null ],
+            [ "Compilation of DDC", "installation.html#autotoc_md37", null ],
+            [ "Installation of DDC", "installation.html#autotoc_md38", null ]
+          ] ]
+        ] ]
+      ] ],
       [ "Using DDC", "using_ddc.html", [
         [ "Public targets and headers", "using_ddc.html#autotoc_md29", null ],
         [ "CMake examples", "using_ddc.html#autotoc_md30", null ]
@@ -108,8 +119,8 @@ var NAVTREEINDEX =
 "classddc_1_1SparseDiscreteDomain.html#a112ce3cd48888a1b66d2210e4171ffd8",
 "classddc_1_1SplineEvaluator.html#a4eba6da156b2867cf75850fc427b3448",
 "classddc_1_1StridedDiscreteDomain_3_4.html#ad59184147539a90ef37b9e8c02e0e1dc",
-"namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9",
-"structddc_1_1StridedDiscreteDomainIterator.html#a337036ee40e92559d7dced9648e433ef"
+"namespaceddc.html#a1db25c408e39437a0f9314809001d92f",
+"structddc_1_1StridedDiscreteDomainIterator.html#a031325bb3b1258951da152c9a6f51072"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

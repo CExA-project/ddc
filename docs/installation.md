@@ -24,9 +24,9 @@ cmake --install ddc/build --prefix path/to/ddc/install
 
 In the meantime, as of Spack 0.23.1, we provide a CPU Spack environment that contains almost all dependencies. The rest of the dependencies are provided by the git submodules.
 
-## Spack installation
+### Spack installation
 
-### Download
+#### Download
 
 ```bash
 wget https://github.com/spack/spack/releases/download/v0.23.1/spack-0.23.1.tar.gz
@@ -34,7 +34,7 @@ tar -xvf spack-0.23.1.tar.gz
 rm spack-0.23.1.tar.gz
 ```
 
-### Activation
+#### Activation
 
 One first needs to activate Spack before executing any command.
 
@@ -42,7 +42,7 @@ One first needs to activate Spack before executing any command.
 . spack-0.23.1/share/spack/setup-env.sh
 ```
 
-### DDC environment installation
+#### DDC environment installation
 
 ```bash
 spack env create ddc-env ddc-env.yaml
@@ -82,7 +82,7 @@ spack:
       variants: cxxstd=17
 ```
 
-### Compilation of DDC
+#### Compilation of DDC
 
 ```bash
 git clone --recurse-submodules --jobs 4 https://github.com/CExA-project/ddc.git
@@ -91,6 +91,6 @@ ctest --test-dir ddc/build
 cmake --build ddc/build --parallel 4
 ```
 
-### Installation of DDC
+#### Installation of DDC
 
 \warning Installing DDC solely using the bundled libraries (provided via git submodules) is currently untested and not recommended. For better stability, we recommend using system-installed or Spack-installed dependencies whenever possible.

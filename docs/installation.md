@@ -93,4 +93,4 @@ cmake --build ddc/build --parallel 4
 
 ### Installation of DDC
 
-> **warning** Installing DDC solely using the bundled libraries (provided via git submodules) is currently untested and not recommended. For better stability, we recommend using system-installed or Spack-installed dependencies whenever possible.
+\warning Installing DDC solely using the bundled libraries (provided via git submodules) is currently untested and not recommended. For better stability, we recommend using system-installed or Spack-installed dependencies whenever possible.

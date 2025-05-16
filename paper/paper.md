@@ -85,7 +85,7 @@ In a DDC container, `DiscreteElement` indices represent absolute positions, whil
 
 ![Example of two sets of `DiscreteElement`.\label{fig:domains}](domains.pdf)
 
-For example consider Figure \autoref{fig:domains} that illustrates a two-dimensional data chunk with axes `X` and `Y`. Here `chunk_r` is a container defined over the red area and `chunk_b` is a slice of `chunk_r` over the blue area. Let us define
+For example consider \autoref{fig:domains} that illustrates a two-dimensional data chunk with axes `X` and `Y`. Here `chunk_r` is a container defined over the red area and `chunk_b` is a slice of `chunk_r` over the blue area. Let us define
 
 - `DiscreteElement<X, Y> e(x_c, y_b)`,
 - `DiscreteVector<X, Y> v(2, 1)`,

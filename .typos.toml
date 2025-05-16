@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 [default]
-extend-ignore-identifiers-re = ["Gif-sur-Yvette"]
+extend-ignore-re = ["Gif-sur-Yvette"]
 
 
 [default.extend-words]

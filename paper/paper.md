@@ -104,7 +104,7 @@ This highlights the fact that `DiscreteElement` provides a globally consistent i
 
 The semantics of DDC containers associates data to a set of `DiscreteElement` indices. Let us note that the set of all possible `DiscreteElement` has a total order that is typically established once and for all at program initialization. Thus to be able to construct a DDC container one must provide a multidimensional set of `DiscreteElement` indices, only these indices can be later used to access the container’s data.
 
-The set of `DiscreteElement` is a customization point of the library. It takes the form of a Cartesian product of the different dimensions. DDC predefines the following sets:
+The library provides multiple ways to group `DiscreteElement`s into sets. Each set takes the form of a Cartesian product of the sets along each dimensions. DDC predefines the following sets:
 
 - `DiscreteDomain`, a Cartesian product of intervals of `DiscreteElement` in each dimension,
 - `StridedDiscreteDomain`, a Cartesian product of sets of `DiscreteElement` with a fixed step/stride in each dimension,
@@ -118,7 +118,7 @@ Similar to `std::mdspan`, DDC containers support slicing through the bracket ope
 
 ### Multidimensional algorithms
 
-Finally, DDC offers multidimensional algorithms to manipulate the containers and associated `DiscreteElement` indices. The parallel versions are based on Kokkos providing performance portability. Here is a list as of version 0.5:
+Finally, DDC offers multidimensional algorithms to manipulate the containers and associated `DiscreteElement` indices. The parallel versions are based on Kokkos providing performance portability. Here is a list as of version 0.7:
 
 - `parallel_deepcopy`, copies two `ChunkSpan` that are defined on the same set of `DiscreteElement`,
 - `parallel_for_each`, applies a function once per `DiscreteElement` of a set of `DiscreteElement`,
@@ -144,7 +144,7 @@ struct Dim2
 {
 };
 
-// For the purpose of the demonstration, this function makes only sense with Dim2
+// For the purpose of the demonstration, this function only makes sense with Dim2
 int sum_over_dim2(ddc::ChunkSpan<int, ddc::DiscreteDomain<Dim2>> slice)
 {
     int sum = 0;

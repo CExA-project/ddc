@@ -16,7 +16,7 @@ struct Dim2
 {
 };
 
-// For the purpose of the demonstration, this function makes only sense with Dim2
+// For the purpose of the demonstration, this function only makes sense with Dim2
 int sum_over_dim2(ddc::ChunkSpan<int, ddc::DiscreteDomain<Dim2>> const slice)
 {
     int sum = 0;

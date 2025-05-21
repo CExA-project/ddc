@@ -12,12 +12,6 @@ var hierarchy =
     [ "ddc::ChunkCommon< ElementType, SupportType, LayoutStridedPolicy >", "classddc_1_1ChunkCommon.html", [
       [ "ddc::ChunkSpan< ElementType, SupportType, LayoutStridedPolicy, MemorySpace >", "classddc_1_1ChunkSpan.html", null ]
     ] ],
-    [ "ddc::ChunkCommon< ElementType, DiscreteDomain< DDims... >, Kokkos::layout_right >", "classddc_1_1ChunkCommon.html", [
-      [ "ddc::Chunk< ElementType, DiscreteDomain< DDims... >, Allocator >", "classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html", null ]
-    ] ],
-    [ "ddc::ChunkCommon< ElementType, DiscreteDomain< DDims... >, LayoutStridedPolicy >", "classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html", [
-      [ "ddc::ChunkSpan< ElementType, DiscreteDomain< DDims... >, LayoutStridedPolicy, MemorySpace >", "classddc_1_1ChunkSpan_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_00_01MemorySpace_01_4.html", null ]
-    ] ],
     [ "ddc::ChunkCommon< ElementType, SupportType, Kokkos::layout_right >", "classddc_1_1ChunkCommon.html", [
       [ "ddc::Chunk< ElementType, SupportType, Allocator >", "classddc_1_1Chunk.html", null ]
     ] ],
@@ -29,7 +23,6 @@ var hierarchy =
     [ "ddc::DiscreteDomain< DDims >", "classddc_1_1DiscreteDomain.html", null ],
     [ "ddc::DiscreteDomain< ddc::NonUniformBsplinesKnots >", "classddc_1_1DiscreteDomain.html", null ],
     [ "ddc::DiscreteDomain< ddc::UniformBsplinesKnots >", "classddc_1_1DiscreteDomain.html", null ],
-    [ "ddc::DiscreteDomain< DDims... >", "classddc_1_1DiscreteDomain.html", null ],
     [ "ddc::DiscreteDomain< interpolation_discrete_dimension_type >", "classddc_1_1DiscreteDomain.html", null ],
     [ "ddc::DiscreteDomain<>", "classddc_1_1DiscreteDomain_3_4.html", null ],
     [ "ddc::DiscreteDomainIterator< DDim >", "structddc_1_1DiscreteDomainIterator.html", null ],

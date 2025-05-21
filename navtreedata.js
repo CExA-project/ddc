@@ -103,7 +103,7 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
-        [ "Typedefs", "functions_type.html", "functions_type" ],
+        [ "Typedefs", "functions_type.html", null ],
         [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ]
@@ -113,14 +113,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classddc_1_1ChunkCommon_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01LayoutStridedPolicy_01_4.html#a9dd5e677368d5d9ca90ce6abfa6e0881",
-"classddc_1_1Chunk_3_01ElementType_00_01DiscreteDomain_3_01DDims_8_8_8_01_4_00_01Allocator_01_4.html#a775265cfb0346957568890f722196f0d",
-"classddc_1_1DiscreteVector.html#aeebe074769b332626fb3fa496e27157f",
-"classddc_1_1SparseDiscreteDomain.html#a112ce3cd48888a1b66d2210e4171ffd8",
-"classddc_1_1SplineEvaluator.html#a4eba6da156b2867cf75850fc427b3448",
-"classddc_1_1StridedDiscreteDomain_3_4.html#ad59184147539a90ef37b9e8c02e0e1dc",
-"namespaceddc.html#a1db25c408e39437a0f9314809001d92f",
-"structddc_1_1StridedDiscreteDomainIterator.html#a031325bb3b1258951da152c9a6f51072"
+"classddc_1_1ChunkSpan.html#a6c85ad4bb4fc9107708d2072ea9038fb",
+"classddc_1_1GrevilleInterpolationPoints.html#a3aabc690bfdb30f7edb997cc16dd27ff",
+"classddc_1_1SparseDiscreteDomain.html#a281dba260b09841003df9aa0dec2ea43",
+"classddc_1_1SplineEvaluator.html#a7b46135fa35ae58103c38010607a1416",
+"classddc_1_1UniformBSplines.html#a002aee489309d7c95422c66304ae8bcb",
+"namespaceddc.html#a3d600c6f06ea28fe24517e6ea9e918eb",
+"structddc_1_1StridedDiscreteDomainIterator.html#a920b22ba4f1f77854dc1c7c4e9df34de"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -27,6 +27,8 @@ var classddc_1_1Chunk =
     [ "operator=", "classddc_1_1Chunk.html#a9961d06d6b9644d397084c183f74226f", null ],
     [ "operator[]", "classddc_1_1Chunk.html#a078d1f6864870e13906a8867c56242d6", null ],
     [ "operator[]", "classddc_1_1Chunk.html#af2f79ebd33a1c26fcf79f47d3aac3ed2", null ],
+    [ "operator[]", "classddc_1_1Chunk.html#a22a9453762c99b8d16750746243d865e", null ],
+    [ "operator[]", "classddc_1_1Chunk.html#af0b82c3ee5e2cd8fa1f25bffb9e2d32b", null ],
     [ "operator()", "classddc_1_1Chunk.html#ae90a33743c12fdbffd442358318d66ff", null ],
     [ "operator()", "classddc_1_1Chunk.html#a6dbf329e4633414de845098af738b7c8", null ],
     [ "operator()", "classddc_1_1Chunk.html#a961cb80695968ff505ab9c5d2c2dbd50", null ],

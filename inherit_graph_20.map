@@ -1,11 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,69,216,109"/>
-<area shape="rect" id="Node000001" href="$classddc_1_1NonUniformPointSampling.html" title=" " alt="" coords="264,5,567,45"/>
-<area shape="poly" id="edge9_Node000000_Node000001" title=" " alt="" coords="219,64,319,43,320,48,221,69"/>
-<area shape="rect" id="Node000002" href="$classddc_1_1NonUniformPointSampling.html" title=" " alt="" coords="291,69,540,109"/>
-<area shape="poly" id="edge10_Node000000_Node000002" title=" " alt="" coords="230,87,290,87,290,92,230,92"/>
-<area shape="rect" id="Node000004" href="$classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non&#45;uniform discretization of the CDim segment ." alt="" coords="302,133,529,173"/>
-<area shape="poly" id="edge12_Node000000_Node000004" title=" " alt="" coords="221,110,320,131,319,136,219,115"/>
-<area shape="rect" id="Node000003" href="$structddc_1_1NonUniformBsplinesKnots.html" title=" " alt="" coords="615,77,877,102"/>
-<area shape="poly" id="edge11_Node000002_Node000003" title=" " alt="" coords="554,87,614,87,614,92,554,92"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,13,244,38"/>
+<area shape="rect" id="Node000001" href="$classddc_1_1UniformBSplines.html" title="The type of a uniform 1D spline basis (B&#45;spline)." alt="" coords="292,5,455,45"/>
+<area shape="poly" id="edge12_Node000000_Node000001" title=" " alt="" coords="258,23,292,23,292,28,258,28"/>
 </map>

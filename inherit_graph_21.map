@@ -1,5 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,13,248,38"/>
-<area shape="rect" id="Node000001" href="$classddc_1_1PeriodicSampling.html" title="PeriodicSampling models a periodic discretization of the provided continuous dimension." alt="" coords="296,5,463,45"/>
-<area shape="poly" id="edge13_Node000000_Node000001" title=" " alt="" coords="262,23,296,23,296,28,262,28"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,85,189,125"/>
+<area shape="rect" id="Node000001" href="$classddc_1_1UniformPointSampling.html" title=" " alt="" coords="262,5,462,60"/>
+<area shape="poly" id="edge13_Node000000_Node000001" title=" " alt="" coords="184,78,261,57,262,62,185,84"/>
+<area shape="rect" id="Node000002" href="$classddc_1_1UniformPointSampling.html" title=" " alt="" coords="237,85,487,125"/>
+<area shape="poly" id="edge14_Node000000_Node000002" title=" " alt="" coords="203,102,237,102,237,107,203,107"/>
+<area shape="rect" id="Node000004" href="$classddc_1_1UniformPointSampling.html" title="UniformPointSampling models a uniform discretization of the provided continuous dimension." alt="" coords="262,149,462,189"/>
+<area shape="poly" id="edge16_Node000000_Node000004" title=" " alt="" coords="195,125,279,146,278,151,193,131"/>
+<area shape="rect" id="Node000003" href="$structddc_1_1UniformBsplinesKnots.html" title=" " alt="" coords="535,92,771,117"/>
+<area shape="poly" id="edge15_Node000002_Node000003" title=" " alt="" coords="500,102,535,102,535,107,500,107"/>
 </map>

@@ -214,6 +214,6 @@ The PDI library [@pdi] is a C data interface library allowing loose coupling wit
 
 ## Acknowledgements
 
-This work has received support by the CExA Moonshot project of the CEA [cexa-project](https://cexa-project.org). We acknowledge contributions from the Maison de la Simulation. We also thank the developers and contributors of the DDC project for their efforts in making numerical modeling more accessible and efficient.
+We acknowledge the financial support of the Cross-Disciplinary Program on "Numerical simulation" of CEA, the French Alternative Energies and Atomic Energy Commission. This work has received support by the CExA Moonshot project of the CEA [cexa-project](https://cexa-project.org). We acknowledge contributions from the Maison de la Simulation. We also thank the developers and contributors of the DDC project for their efforts in making numerical modeling more accessible and efficient.
 
 ## References

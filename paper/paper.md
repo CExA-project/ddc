@@ -183,7 +183,8 @@ int main()
             // Assign the value 1 to each element in the 2D array
             my_array(idx1, idx2) = 1;
 
-            // The following would NOT compile as my_array expects a DiscreteElement over Dim2
+            // The following would NOT compile as my_array expects a DiscreteElement
+            // over Dim2
             // my_array(idx1, idx1) = 1;
         }
     }

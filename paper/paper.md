@@ -55,13 +55,6 @@ The library is actively used to modernize the Fortran-based Gysela plasma simula
 
 The DDC library is a C++ library designed for expressive and safe handling of multidimensional data. Its core component provides flexible data containers along with algorithms built on top of the performance portable Kokkos library. The library is fully compatible with Kokkos and does not attempt to hide it, allowing users to leverage Kokkos' full capabilities while benefiting from DDC’s strongly-typed, labelled multidimensional arrays when and where it makes sense.
 
-### Containers
-
-DDC offers two multidimensional containers designed over the C++ 23 multidimensional array `std::mdspan`:
-
-- `Chunk` an owning container, i.e. it manages the lifetime of the underlying memory allocation,
-- `ChunkSpan` is a non-owning container view on an existing memory allocation.
-
 ### Strongly-typed labelled indices
 
 DDC employs strongly-typed multi-indices to label dimensions and access data. It introduces two types of multi-indices to access the container's data:
@@ -98,113 +91,11 @@ This highlights the fact that `DiscreteElement` provides a globally consistent i
 
 The semantics of DDC containers associates data to a set of `DiscreteElement` indices. Let us note that the set of all possible `DiscreteElement` has a total order that is typically established once and for all at program initialization. Thus to be able to construct a DDC container one must provide a multidimensional set of `DiscreteElement` indices, only these indices can be later used to access the container’s data.
 
-The library provides multiple ways to group `DiscreteElement`s into sets. Each set takes the form of a Cartesian product of the sets along each dimensions. DDC predefines the following sets:
-
-- `DiscreteDomain`, a Cartesian product of intervals of `DiscreteElement` in each dimension,
-- `StridedDiscreteDomain`, a Cartesian product of sets of `DiscreteElement` with a fixed step/stride in each dimension,
-- `SparseDiscreteDomain`, a Cartesian product of explicitly ordered lists of `DiscreteElement` in each dimension.
-
-The performance of the container's data access depends on the properties of the set considered. Indeed the set is used to retrieve the position of a given multi-index relative to the front multi-index. Thus the performance of this operation depends on the information available in the set.
-
-### Slicing
-
-Similar to `std::mdspan`, DDC containers support slicing through the bracket operator that always returns a `ChunkSpan`. The key property is that the resulting slice’s set of `DiscreteElement` is a subset of the original set.
+The library provides several ways to group `DiscreteElement` into sets, each represented as a Cartesian product of per-dimension sets. These sets offer a lookup function to retrieve the position of a multi-index relative to the front of the set. The performance of container data access depends significantly on the compile-time properties of the set used.
 
 ### Multidimensional algorithms
 
-Finally, DDC offers multidimensional algorithms to manipulate the containers and associated `DiscreteElement` indices. The parallel versions are based on Kokkos providing performance portability. Here is a list as of version 0.7:
-
-- `parallel_deepcopy`, copies two `ChunkSpan` that are defined on the same set of `DiscreteElement`,
-- `parallel_for_each`, applies a function once per `DiscreteElement` of a set of `DiscreteElement`,
-- `parallel_fill`, fills a `ChunkSpan` with a value,
-- `parallel_transform_reduce`, applies a function once per `DiscreteElement` of a set of `DiscreteElement` and combines the returned values with a reducer.
-
-## Example
-
-Let us illustrate the basic concepts introduced above with an example that initializes an array with a given value.
-
-```cpp
-#include <iostream>
-
-#include <ddc/ddc.hpp>
-
-#include <Kokkos_Core.hpp>
-
-// Define two independent dimensions
-struct Dim1
-{
-};
-struct Dim2
-{
-};
-
-// For the purpose of the demonstration, this function only makes sense with Dim2
-int sum_over_dim2(ddc::ChunkSpan<int, ddc::DiscreteDomain<Dim2>> slice)
-{
-    int sum = 0;
-    for (ddc::DiscreteElement<Dim2> idx2 : slice.domain()) {
-        sum += slice(idx2);
-    }
-    return sum;
-}
-
-int main()
-{
-    // Initialize Kokkos runtime (automatically finalized at the end of scope)
-    Kokkos::ScopeGuard const kokkos_scope;
-
-    // Initialize DDC runtime (automatically finalized at the end of scope)
-    ddc::ScopeGuard const ddc_scope;
-
-    // Create a discrete domain for Dim1 with 5 elements
-    ddc::DiscreteDomain<Dim1> const dom1
-            = ddc::init_trivial_space<Dim1>(ddc::DiscreteVector<Dim1>(5));
-
-    // Create a discrete domain for Dim2 with 7 elements
-    ddc::DiscreteDomain<Dim2> const dom2
-            = ddc::init_trivial_space<Dim2>(ddc::DiscreteVector<Dim2>(7));
-
-    // Define a 2D discrete domain combining Dim1 and Dim2
-    ddc::DiscreteDomain<Dim1, Dim2> const dom(dom1, dom2);
-
-    // Create a 2D array (Chunk) to store integer values on the combined domain
-    ddc::Chunk my_array("my_array", dom, ddc::HostAllocator<int>());
-
-    // Iterate over the first dimension (Dim1)
-    for (ddc::DiscreteElement<Dim1> const idx1 : dom1) {
-        // Iterate over the second dimension (Dim2)
-        for (ddc::DiscreteElement<Dim2> const idx2 : dom2) {
-            // Assign the value 1 to each element in the 2D array
-            my_array(idx1, idx2) = 1;
-
-            // The following would NOT compile as my_array expects a DiscreteElement
-            // over Dim2
-            // my_array(idx1, idx1) = 1;
-        }
-    }
-
-    // Extract a 1D view over Dim2 for each idx1
-    for (ddc::DiscreteElement<Dim1> const idx1 : dom1) {
-        // The following would NOT compile if sum_over_dim2 was called
-        // with a `DiscreteDomain<Dim1>`, ensuring type safety.
-        std::cout << sum_over_dim2(my_array[idx1]) << '\n';
-    }
-
-    return 0;
-}
-```
-
-## DDC components
-
-Built on top of DDC core, we also provide optional components as in the Xarray ecosystem. As of today we provide three components: fft, pdi and splines.
-
-### DDC fft and splines
-
-The DDC library leverages dimension labelling to provide FFT and spline transform components. Both operate on input data defined over point-sampled dimensions. The Fourier transform produces coefficients defined on a Fourier-space dimension, in a manner similar to the xrft library [@xrft] in Python. The spline transform returns coefficients defined over a B-Spline basis dimension [@10820764]. Both components are built on top of performance-portable libraries, including Kokkos Kernels, Kokkos-FFT, and Ginkgo.
-
-### DDC pdi
-
-The PDI library [@pdi] is a C data interface library allowing loose coupling with external libraries through PDI plugins like HDF5, NetCDF, Catalyst and more. This extension eases the metadata serialisation of the DDC containers. Instead of manually exposing sizes, strides and the pointer of the underlying array, the user can directly expose the DDC container.
+Finally, DDC offers multidimensional algorithms to manipulate the containers and associated `DiscreteElement` indices such as parallel loops and reductions. The parallel versions are based on Kokkos providing performance portability. DDC also provides transform-based algorithms such as discrete Fourier transforms (via a Kokkos-fft wrapper) and spline transforms, enabling conversions between sampled data and coefficients in Fourier or B-spline bases over labeled dimensions.
 
 ## Acknowledgements
 

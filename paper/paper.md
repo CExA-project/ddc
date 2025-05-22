@@ -1,9 +1,3 @@
-<!--
-Copyright (C) The DDC development team, see below
-
-SPDX-License-Identifier: MIT
--->
-
 # DDC: The Discrete Domain Computation library
 
 ---

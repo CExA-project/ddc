@@ -306,10 +306,9 @@ public:
             std::enable_if_t<is_discrete_domain_v<SFINAESupportType>, std::nullptr_t> = nullptr>
     KOKKOS_FUNCTION constexpr auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
     {
-        assert((!this->m_domain.empty() && !odomain.empty()
-                && DiscreteDomain<QueryDDims...>(this->m_domain).contains(odomain.front())
-                && DiscreteDomain<QueryDDims...>(this->m_domain).contains(odomain.back()))
-               || odomain.empty());
+        assert(odomain.empty()
+               || (DiscreteDomain<QueryDDims...>(this->m_domain).contains(odomain.front())
+                   && DiscreteDomain<QueryDDims...>(this->m_domain).contains(odomain.back())));
         slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(this->allocation_mdspan(), odomain, this->m_domain);
         using layout_type = typename decltype(subview)::layout_type;

@@ -12,12 +12,13 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/chunk_common.hpp"
-#include "ddc/detail/kokkos.hpp"
-#include "ddc/detail/type_seq.hpp"
-#include "ddc/detail/type_traits.hpp"
-#include "ddc/discrete_domain.hpp"
-#include "ddc/discrete_element.hpp"
+#include "detail/kokkos.hpp"
+#include "detail/type_seq.hpp"
+#include "detail/type_traits.hpp"
+
+#include "chunk_common.hpp"
+#include "discrete_domain.hpp"
+#include "discrete_element.hpp"
 
 namespace ddc {
 

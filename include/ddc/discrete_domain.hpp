@@ -12,9 +12,10 @@
 
 #include <Kokkos_Macros.hpp>
 
-#include "ddc/detail/type_seq.hpp"
-#include "ddc/discrete_element.hpp"
-#include "ddc/discrete_vector.hpp"
+#include "detail/type_seq.hpp"
+
+#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 

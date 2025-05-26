@@ -13,11 +13,12 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_StdAlgorithms.hpp>
 
-#include "ddc/detail/kokkos.hpp"
-#include "ddc/detail/tagged_vector.hpp"
-#include "ddc/detail/type_seq.hpp"
-#include "ddc/discrete_element.hpp"
-#include "ddc/discrete_vector.hpp"
+#include "detail/kokkos.hpp"
+#include "detail/tagged_vector.hpp"
+#include "detail/type_seq.hpp"
+
+#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 

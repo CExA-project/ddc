@@ -12,12 +12,12 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/coordinate.hpp"
-#include "ddc/discrete_domain.hpp"
-#include "ddc/discrete_element.hpp"
-#include "ddc/discrete_space.hpp"
-#include "ddc/discrete_vector.hpp"
-#include "ddc/real_type.hpp"
+#include "coordinate.hpp"
+#include "discrete_domain.hpp"
+#include "discrete_element.hpp"
+#include "discrete_space.hpp"
+#include "discrete_vector.hpp"
+#include "real_type.hpp"
 
 namespace ddc {
 

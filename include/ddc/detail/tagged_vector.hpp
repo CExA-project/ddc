@@ -10,8 +10,8 @@
 #include <type_traits>
 #include <utility>
 
-#include "ddc/detail/macros.hpp"
-#include "ddc/detail/type_seq.hpp"
+#include "macros.hpp"
+#include "type_seq.hpp"
 
 namespace ddc {
 

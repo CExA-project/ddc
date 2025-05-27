@@ -520,6 +520,21 @@ TEST(Chunk2DTest, SliceCoordY)
     }
 }
 
+TEST(Chunk2DTest, SliceCoordXOutOfBounds)
+{
+#if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
+    ChunkXY<double> chunk(dom_x_y);
+
+    char const* const death_msg
+            = R"rgx([Aa]ssert.*select<QueryDDims...>\(this->m_domain\).contains\(slice_spec\))rgx";
+
+    EXPECT_DEATH(chunk[dom_x.front() - 1], death_msg);
+    EXPECT_DEATH(chunk[dom_x.back() + 1], death_msg);
+#else
+    GTEST_SKIP();
+#endif
+}
+
 TEST(Chunk2DTest, SliceDomainX)
 {
     DDomX const subdomain_x(lbound_x + 1, nelems_x - 2);
@@ -570,6 +585,21 @@ TEST(Chunk2DTest, SliceDomainY)
             EXPECT_EQ(subchunk_y(ix, iy), chunk_cref(ix, iy));
         }
     }
+}
+
+TEST(Chunk2DTest, SliceDomainXOutOfBounds)
+{
+#if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
+    ChunkXY<double> chunk(dom_x_y.remove(DVectXY(1, 0), DVectXY(1, 0)));
+
+    char const* const death_msg
+            = R"rgx([Aa]ssert.*DiscreteDomain<QueryDDims...>\(this->m_domain\).contains\(odomain.front\(\)\) && DiscreteDomain<QueryDDims...>\(this->m_domain\).contains\(odomain.back\(\)\))rgx";
+
+    EXPECT_DEATH(chunk[dom_x_y.remove_last(DVectXY(1, 0))], death_msg);
+    EXPECT_DEATH(chunk[dom_x_y.remove_first(DVectXY(1, 0))], death_msg);
+#else
+    GTEST_SKIP();
+#endif
 }
 
 TEST(Chunk2DTest, Deepcopy)

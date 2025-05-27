@@ -34,41 +34,43 @@ namespace ddc {
 }
 
 // Misc
-#include "ddc/config.hpp"
-#include "ddc/detail/macros.hpp"
-#include "ddc/detail/tagged_vector.hpp"
-#include "ddc/detail/type_seq.hpp"
-#include "ddc/real_type.hpp"
-#include "ddc/scope_guard.hpp"
+#include <ddc/config.hpp>
+
+#include "detail/macros.hpp"
+#include "detail/tagged_vector.hpp"
+#include "detail/type_seq.hpp"
+
+#include "real_type.hpp"
+#include "scope_guard.hpp"
 
 // Containers
-#include "ddc/aligned_allocator.hpp"
-#include "ddc/chunk.hpp"
-#include "ddc/chunk_span.hpp"
-#include "ddc/chunk_traits.hpp"
-#include "ddc/kokkos_allocator.hpp"
+#include "aligned_allocator.hpp"
+#include "chunk.hpp"
+#include "chunk_span.hpp"
+#include "chunk_traits.hpp"
+#include "kokkos_allocator.hpp"
 
 // Discretizations
-#include "ddc/discrete_domain.hpp"
-#include "ddc/discrete_element.hpp"
-#include "ddc/discrete_space.hpp"
-#include "ddc/discrete_vector.hpp"
-#include "ddc/non_uniform_point_sampling.hpp"
-#include "ddc/periodic_sampling.hpp"
-#include "ddc/sparse_discrete_domain.hpp"
-#include "ddc/strided_discrete_domain.hpp"
-#include "ddc/trivial_space.hpp"
-#include "ddc/uniform_point_sampling.hpp"
+#include "discrete_domain.hpp"
+#include "discrete_element.hpp"
+#include "discrete_space.hpp"
+#include "discrete_vector.hpp"
+#include "non_uniform_point_sampling.hpp"
+#include "periodic_sampling.hpp"
+#include "sparse_discrete_domain.hpp"
+#include "strided_discrete_domain.hpp"
+#include "trivial_space.hpp"
+#include "uniform_point_sampling.hpp"
 
 // Algorithms
-#include "ddc/create_mirror.hpp"
-#include "ddc/for_each.hpp"
-#include "ddc/parallel_deepcopy.hpp"
-#include "ddc/parallel_fill.hpp"
-#include "ddc/parallel_for_each.hpp"
-#include "ddc/parallel_transform_reduce.hpp"
-#include "ddc/reducer.hpp"
-#include "ddc/transform_reduce.hpp"
+#include "create_mirror.hpp"
+#include "for_each.hpp"
+#include "parallel_deepcopy.hpp"
+#include "parallel_fill.hpp"
+#include "parallel_for_each.hpp"
+#include "parallel_transform_reduce.hpp"
+#include "reducer.hpp"
+#include "transform_reduce.hpp"
 
 // Output
-#include "ddc/print.hpp"
+#include "print.hpp"

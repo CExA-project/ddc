@@ -12,8 +12,8 @@
 
 #include <Kokkos_Macros.hpp>
 
-#include "ddc/detail/macros.hpp"
-#include "ddc/detail/type_seq.hpp"
+#include "detail/macros.hpp"
+#include "detail/type_seq.hpp"
 
 namespace ddc {
 

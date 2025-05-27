@@ -17,8 +17,8 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/detail/dual_discretization.hpp"
-#include "ddc/detail/macros.hpp"
+#include "detail/dual_discretization.hpp"
+#include "detail/macros.hpp"
 
 #if defined(KOKKOS_ENABLE_CUDA)
 #    include <sstream>

@@ -12,8 +12,8 @@
 #include <type_traits>
 #include <utility>
 
-#include "ddc/chunk_span.hpp"
-#include "ddc/discrete_domain.hpp"
+#include "chunk_span.hpp"
+#include "discrete_domain.hpp"
 
 #if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
 #    include <cxxabi.h>

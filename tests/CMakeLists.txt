@@ -12,6 +12,7 @@ add_executable(
     ddc_tests
     main.cpp
     aligned_allocator.cpp
+    batch.cpp
     chunk.cpp
     chunk_span.cpp
     create_mirror.cpp

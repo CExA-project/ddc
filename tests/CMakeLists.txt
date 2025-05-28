@@ -32,6 +32,7 @@ add_executable(
     for_each_block.cpp
     multiple_discrete_dimensions.cpp
     non_uniform_point_sampling.cpp
+    parallel_copy.cpp
     parallel_deepcopy.cpp
     parallel_fill.cpp
     parallel_for_each.cpp

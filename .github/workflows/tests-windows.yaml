@@ -56,7 +56,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cxx_version: ['17', '20']  # C++23 does not work
+        cxx_version: ['17', '20', '23']
         config: ['Release']
     runs-on: windows-latest
     env:

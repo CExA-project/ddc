@@ -62,9 +62,6 @@ jobs:
             kokkos_extra_cmake_flags: ''
         cxx_version: ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
-        exclude:
-          - cxx_version: '20'  # To be removed as soon as PDI supports C++20 with clang
-          - cxx_version: '23'  # To be removed as soon as PDI supports C++20 with clang
     runs-on: macos-latest
     needs: [id_repo]
     env:
@@ -88,13 +85,10 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with:
           repository: pdidev/pdi
-          ref: 1.8.3
+          ref: 1.9.2
           path: pdi
       - name: Install PDI+user code plugin and dependencies
         run: |
-          # PATCH: remove <link.h> for macOS
-          sed -i.bak 's|#include <link.h>||g' pdi/plugins/user_code/user_code.cxx
-          rm -f pdi/plugins/user_code/user_code.cxx.bak
           cmake \
             -D BUILD_BENCHMARKING=OFF \
             -D BUILD_DECL_HDF5_PLUGIN=OFF \
@@ -110,7 +104,7 @@ jobs:
             -D BUILD_TRACE_PLUGIN=OFF \
             -D BUILD_USER_CODE_PLUGIN=ON \
             -D CMAKE_CXX_FLAGS="-Wno-unqualified-std-cast-call" \
-            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D CMAKE_CXX_STANDARD=17 \
             -B build \
             -S ./pdi
           cmake --build build

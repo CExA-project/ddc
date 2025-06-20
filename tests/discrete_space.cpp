@@ -24,3 +24,25 @@ TEST(DiscreteSpace, IsDiscreteSpaceInitialized)
             ddc::DiscreteVector<DDimX>(2)));
     EXPECT_TRUE(ddc::is_discrete_space_initialized<DDimX>());
 }
+
+TEST(DiscreteSpace, HostDiscreteSpace)
+{
+#if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
+    EXPECT_DEATH(
+            ddc::host_discrete_space<DDimX>(),
+            R"rgx([Aa]ssert.*is_discrete_space_initialized<DDim>\(\))rgx");
+#else
+    GTEST_SKIP();
+#endif
+}
+
+TEST(DiscreteSpace, DiscreteSpace)
+{
+#if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
+    EXPECT_DEATH(
+            ddc::discrete_space<DDimX>(),
+            R"rgx([Aa]ssert.*is_discrete_space_initialized<DDim>\(\))rgx");
+#else
+    GTEST_SKIP();
+#endif
+}

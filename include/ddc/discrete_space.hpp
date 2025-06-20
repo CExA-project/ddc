@@ -214,6 +214,17 @@ std::tuple<Arg0, Arg1, Args...> init_discrete_space(std::tuple<DDimImpl, Arg0, A
 
 /**
  * @tparam DDim a discrete dimension
+ * @return a boolean indicating whether DDim is initialized.
+ * This function indicates whether a dimension is initialized.
+ */
+template <class DDim>
+bool is_discrete_space_initialized() noexcept
+{
+    return detail::g_discrete_space_dual<DDim>.has_value();
+}
+
+/**
+ * @tparam DDim a discrete dimension
  * @return the discrete space instance associated with `DDim`.
  * This function must be called from a `KOKKOS_FUNCTION`.
  * Call `ddc::host_discrete_space` for a host-only function instead.
@@ -221,7 +232,9 @@ std::tuple<Arg0, Arg1, Args...> init_discrete_space(std::tuple<DDimImpl, Arg0, A
 template <class DDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
 KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
 {
+    // This function requires that `ddc::init_discrete_space<DDim>(...);` be called first
     if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
+        assert(is_discrete_space_initialized<DDim>());
         return detail::g_discrete_space_dual<DDim>->get_host();
     }
 #if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
@@ -239,14 +252,10 @@ KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
 }
 
 template <class DDim>
-bool is_discrete_space_initialized() noexcept
-{
-    return detail::g_discrete_space_dual<DDim>.has_value();
-}
-
-template <class DDim>
 detail::ddim_impl_t<DDim, Kokkos::HostSpace> const& host_discrete_space()
 {
+    // This function requires that `ddc::init_discrete_space<DDim>(...);` be called first
+    assert(is_discrete_space_initialized<DDim>());
     return detail::g_discrete_space_dual<DDim>->get_host();
 }
 

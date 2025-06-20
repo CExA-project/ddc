@@ -232,6 +232,7 @@ bool is_discrete_space_initialized() noexcept
 template <class DDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
 KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
 {
+    // Calling this function requires to call first `ddc::init_discrete_space<DDim>(...);`
     if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
         assert(is_discrete_space_initialized<DDim>());
         return detail::g_discrete_space_dual<DDim>->get_host();
@@ -253,6 +254,8 @@ KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
 template <class DDim>
 detail::ddim_impl_t<DDim, Kokkos::HostSpace> const& host_discrete_space()
 {
+    // Calling this function requires to call first `ddc::init_discrete_space<DDim>(...);`
+    assert(is_discrete_space_initialized<DDim>());
     return detail::g_discrete_space_dual<DDim>->get_host();
 }
 

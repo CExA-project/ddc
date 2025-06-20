@@ -82,61 +82,61 @@ jobs:
     steps:
       - name: Checkout built branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-        with:
-          repository: pdidev/pdi
-          ref: 1.9.2
-          path: pdi
-      - name: Install PDI+user code plugin and dependencies
-        run: |
-          cmake \
-            -D BUILD_BENCHMARKING=OFF \
-            -D BUILD_DECL_HDF5_PLUGIN=OFF \
-            -D BUILD_DECL_NETCDF_PLUGIN=OFF \
-            -D BUILD_DEISA_PLUGIN=OFF \
-            -D BUILD_DOCUMENTATION=OFF \
-            -D BUILD_FORTRAN=OFF \
-            -D BUILD_MPI_PLUGIN=OFF \
-            -D BUILD_PYCALL_PLUGIN=OFF \
-            -D BUILD_SERIALIZE_PLUGIN=OFF \
-            -D BUILD_SET_VALUE_PLUGIN=OFF \
-            -D BUILD_TESTING=OFF \
-            -D BUILD_TRACE_PLUGIN=OFF \
-            -D BUILD_USER_CODE_PLUGIN=ON \
-            -D CMAKE_CXX_FLAGS="-Wno-unqualified-std-cast-call" \
-            -D CMAKE_CXX_STANDARD=17 \
-            -B build \
-            -S ./pdi
-          cmake --build build
-          cmake --install build --prefix $PDI_ROOT
-          rm -rf build
-      - name: Install fftw
-        run: brew install fftw
-      - name: Install lapack
-        run: brew install lapack
+      # - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      #   with:
+      #     repository: pdidev/pdi
+      #     ref: 1.9.2
+      #     path: pdi
+      # - name: Install PDI+user code plugin and dependencies
+      #   run: |
+      #     cmake \
+      #       -D BUILD_BENCHMARKING=OFF \
+      #       -D BUILD_DECL_HDF5_PLUGIN=OFF \
+      #       -D BUILD_DECL_NETCDF_PLUGIN=OFF \
+      #       -D BUILD_DEISA_PLUGIN=OFF \
+      #       -D BUILD_DOCUMENTATION=OFF \
+      #       -D BUILD_FORTRAN=OFF \
+      #       -D BUILD_MPI_PLUGIN=OFF \
+      #       -D BUILD_PYCALL_PLUGIN=OFF \
+      #       -D BUILD_SERIALIZE_PLUGIN=OFF \
+      #       -D BUILD_SET_VALUE_PLUGIN=OFF \
+      #       -D BUILD_TESTING=OFF \
+      #       -D BUILD_TRACE_PLUGIN=OFF \
+      #       -D BUILD_USER_CODE_PLUGIN=ON \
+      #       -D CMAKE_CXX_FLAGS="-Wno-unqualified-std-cast-call" \
+      #       -D CMAKE_CXX_STANDARD=17 \
+      #       -B build \
+      #       -S ./pdi
+      #     cmake --build build
+      #     cmake --install build --prefix $PDI_ROOT
+      #     rm -rf build
+      # - name: Install fftw
+      #   run: brew install fftw
+      # - name: Install lapack
+      #   run: brew install lapack
       - name: Install Google Test
         run: brew install googletest
       - name: Install Google benchmark
         run: brew install google-benchmark
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-        with:
-          repository: ginkgo-project/ginkgo
-          ref: v1.8.0
-          path: ginkgo
-      - name: Install Ginkgo
-        run: |
-          cmake \
-            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -D GINKGO_BUILD_BENCHMARKS=OFF \
-            -D GINKGO_BUILD_EXAMPLES=OFF \
-            -D GINKGO_BUILD_MPI=OFF \
-            -D GINKGO_BUILD_REFERENCE=ON \
-            -D GINKGO_BUILD_TESTS=OFF \
-            -B build \
-            -S ./ginkgo
-          cmake --build build
-          cmake --install build --prefix $Ginkgo_ROOT
-          rm -rf build
+      # - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      #   with:
+      #     repository: ginkgo-project/ginkgo
+      #     ref: v1.8.0
+      #     path: ginkgo
+      # - name: Install Ginkgo
+      #   run: |
+      #     cmake \
+      #       -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+      #       -D GINKGO_BUILD_BENCHMARKS=OFF \
+      #       -D GINKGO_BUILD_EXAMPLES=OFF \
+      #       -D GINKGO_BUILD_MPI=OFF \
+      #       -D GINKGO_BUILD_REFERENCE=ON \
+      #       -D GINKGO_BUILD_TESTS=OFF \
+      #       -B build \
+      #       -S ./ginkgo
+      #     cmake --build build
+      #     cmake --install build --prefix $Ginkgo_ROOT
+      #     rm -rf build
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with:
           repository: kokkos/kokkos
@@ -155,43 +155,43 @@ jobs:
           cmake --build build
           cmake --install build --prefix $Kokkos_ROOT
           rm -rf build
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-        with:
-          repository: kokkos/kokkos-fft
-          ref: v0.2.1
-          path: kokkos-fft
-      - name: Install Kokkos-fft
-        run: |
-          cmake \
-            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -D KokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
-            -B build \
-            -S ./kokkos-fft
-          cmake --build build
-          cmake --install build --prefix $KokkosFFT_ROOT
-          rm -rf build
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-        with:
-          repository: kokkos/kokkos-kernels
-          ref: 4.6.00
-          path: kokkos-kernels
-      - name: Install Kokkos Kernels
-        run: |
-          cmake \
-            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -D KokkosKernels_ADD_DEFAULT_ETI=OFF \
-            -D KokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
-            -D KokkosKernels_ENABLE_COMPONENT_BLAS=ON \
-            -D KokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
-            -D KokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
-            -D KokkosKernels_ENABLE_TPL_BLAS=OFF \
-            -D KokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
-            -D KokkosKernels_ENABLE_TPL_LAPACK=OFF \
-            -B build \
-            -S ./kokkos-kernels
-          cmake --build build
-          cmake --install build --prefix $KokkosKernels_ROOT
-          rm -rf build
+      # - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      #   with:
+      #     repository: kokkos/kokkos-fft
+      #     ref: v0.2.1
+      #     path: kokkos-fft
+      # - name: Install Kokkos-fft
+      #   run: |
+      #     cmake \
+      #       -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+      #       -D KokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
+      #       -B build \
+      #       -S ./kokkos-fft
+      #     cmake --build build
+      #     cmake --install build --prefix $KokkosFFT_ROOT
+      #     rm -rf build
+      # - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      #   with:
+      #     repository: kokkos/kokkos-kernels
+      #     ref: 4.6.00
+      #     path: kokkos-kernels
+      # - name: Install Kokkos Kernels
+      #   run: |
+      #     cmake \
+      #       -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+      #       -D KokkosKernels_ADD_DEFAULT_ETI=OFF \
+      #       -D KokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
+      #       -D KokkosKernels_ENABLE_COMPONENT_BLAS=ON \
+      #       -D KokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
+      #       -D KokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
+      #       -D KokkosKernels_ENABLE_TPL_BLAS=OFF \
+      #       -D KokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
+      #       -D KokkosKernels_ENABLE_TPL_LAPACK=OFF \
+      #       -B build \
+      #       -S ./kokkos-kernels
+      #     cmake --build build
+      #     cmake --install build --prefix $KokkosKernels_ROOT
+      #     rm -rf build
       - name: Build DDC
         run: |
           cmake \
@@ -202,6 +202,9 @@ jobs:
             -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
             -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
             -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
+            -D DDC_BUILD_KERNELS_FFT=OFF \
+            -D DDC_BUILD_KERNELS_SPLINES=OFF \
+            -D DDC_BUILD_PDI_WRAPPER=OFF \
             -D BLA_PREFER_PKGCONFIG=ON \
             -B build
           cmake --build build

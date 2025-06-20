@@ -265,7 +265,7 @@ int main(int argc, char** argv)
     //! [host-chunk]
 
     //! [initial-deepcopy]
-    ddc::parallel_deepcopy(ghosted_temp, ghosted_last_temp);
+    ddc::parallel_deepcopy(Kokkos::DefaultExecutionSpace(), ghosted_temp, ghosted_last_temp);
     //! [initial-deepcopy]
 
     //! [initial-display]

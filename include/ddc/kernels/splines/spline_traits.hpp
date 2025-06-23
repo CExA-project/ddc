@@ -78,7 +78,7 @@ struct is_spline_evaluator<SplineEvaluator<ExecSpace, MemorySpace, BSplines, Eva
 
 /**
  *  @brief A helper to check if T is a SplineEvaluator
- *  @tparam T The type to be checked if is a SplineEvalutor
+ *  @tparam T The type to be checked if is a SplineEvaluator
  */
 template <class T>
 inline constexpr bool is_spline_evaluator_v = is_spline_evaluator<T>::value;
@@ -101,7 +101,7 @@ struct is_spline_evaluator2D<SplineEvaluator2D<ExecSpace, MemorySpace, BSpline1,
 
 /**
  *  @brief A helper to check if T is a SplineEvaluator2D
- *  @tparam T The type to be checked if is a SplineEvalutor2D
+ *  @tparam T The type to be checked if is a SplineEvaluator2D
  */
 template <class T>
 inline constexpr bool is_spline_evaluator2D_v = is_spline_evaluator2D<T>::value;
@@ -141,7 +141,7 @@ struct is_evaluator_admissible<SplineBuilder2D<ExecSpace, MemorySpace, BSplines1
                                SplineEvaluator2D<ExecSpace, MemorySpace, BSplines1, BSplines2, DDimI1, DDimI2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2>> : std::true_type {};
 
 /**
- *  @brief A helper to check if SplineEvalutor is admissible for SplineBuilder
+ *  @brief A helper to check if SplineEvaluator is admissible for SplineBuilder
  *  @tparam Builder The builder type to be checked if it is admissible for Evaluator
  *  @tparam Evaluator The evaluator type to be checked if it is admissible for Builder
  */

@@ -201,7 +201,7 @@ TYPED_TEST(BSplinesTraits, IsSplineEvaluator2D)
     ASSERT_TRUE(ddc::is_spline_evaluator2D_v<Evaluator2D>);
 }
 
-TYPED_TEST(BSplinesTraits, IsCompatible1D)
+TYPED_TEST(BSplinesTraits, IsAdmissible1D)
 {
     using Builder1D_1 = typename TestFixture::Builder1D_1;
     using Evaluator1D_1 = typename TestFixture::Evaluator1D_1;
@@ -209,22 +209,22 @@ TYPED_TEST(BSplinesTraits, IsCompatible1D)
     using Evaluator1D_2 = typename TestFixture::Evaluator1D_2;
 
     // Builders are not compatible
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Builder1D_1, Builder1D_1>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Builder1D_1, Builder1D_2>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Builder1D_2, Builder1D_1>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Builder1D_2, Builder1D_2>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Builder1D_1>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Builder1D_2>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Builder1D_1>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Builder1D_2>));
 
     // Evaluators are not compatible
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator1D_1, Evaluator1D_1>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator1D_1, Evaluator1D_2>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator1D_2, Evaluator1D_1>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator1D_2, Evaluator1D_2>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Evaluator1D_1>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Evaluator1D_2>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Evaluator1D_1>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Evaluator1D_2>));
 
     // Compatible builder and evaluator pairs
-    ASSERT_TRUE((ddc::is_spline_compatible_v<Builder1D_1, Evaluator1D_1>));
-    ASSERT_TRUE((ddc::is_spline_compatible_v<Evaluator1D_1, Builder1D_1>));
-    ASSERT_TRUE((ddc::is_spline_compatible_v<Builder1D_2, Evaluator1D_2>));
-    ASSERT_TRUE((ddc::is_spline_compatible_v<Evaluator1D_2, Builder1D_2>));
+    ASSERT_TRUE((ddc::is_evaluator_admissible_v<Builder1D_1, Evaluator1D_1>));
+    ASSERT_TRUE((ddc::is_evaluator_admissible_v<Builder1D_2, Evaluator1D_2>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Builder1D_1>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Builder1D_2>));
 
     // Incompatible builder and evaluator pairs
     using execution_space1 = typename TestFixture::execution_space1;
@@ -233,14 +233,14 @@ TYPED_TEST(BSplinesTraits, IsCompatible1D)
     std::size_t constexpr m_spline_degree2 = TestFixture::m_spline_degree2;
 
     if ((!std::is_same_v<execution_space1, execution_space2>) || (m_spline_degree1 != m_spline_degree2)) {
-      ASSERT_FALSE((ddc::is_spline_compatible_v<Builder1D_1, Evaluator1D_2>));
-      ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator1D_2, Builder1D_1>));
-      ASSERT_FALSE((ddc::is_spline_compatible_v<Builder1D_2, Evaluator1D_1>));
-      ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator1D_1, Builder1D_2>));
+      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Evaluator1D_2>));
+      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Builder1D_1>));
+      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Evaluator1D_1>));
+      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Builder1D_2>));
     }
 }
 
-TYPED_TEST(BSplinesTraits, IsCompatible2D)
+TYPED_TEST(BSplinesTraits, IsAdmissible2D)
 {
     using Builder2D_1 = typename TestFixture::Builder2D_1;
     using Evaluator2D_1 = typename TestFixture::Evaluator2D_1;
@@ -248,22 +248,22 @@ TYPED_TEST(BSplinesTraits, IsCompatible2D)
     using Evaluator2D_2 = typename TestFixture::Evaluator2D_2;
 
     // Builders are not compatible
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Builder2D_1, Builder2D_1>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Builder2D_1, Builder2D_2>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Builder2D_2, Builder2D_1>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Builder2D_2, Builder2D_2>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Builder2D_1>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Builder2D_2>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Builder2D_1>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Builder2D_2>));
 
     // Evaluators are not compatible
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator2D_1, Evaluator2D_1>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator2D_1, Evaluator2D_2>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator2D_2, Evaluator2D_1>));
-    ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator2D_2, Evaluator2D_2>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Evaluator2D_1>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Evaluator2D_2>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Evaluator2D_1>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Evaluator2D_2>));
 
     // Compatible builder and evaluator pairs
-    ASSERT_TRUE((ddc::is_spline_compatible_v<Builder2D_1, Evaluator2D_1>));
-    ASSERT_TRUE((ddc::is_spline_compatible_v<Evaluator2D_1, Builder2D_1>));
-    ASSERT_TRUE((ddc::is_spline_compatible_v<Builder2D_2, Evaluator2D_2>));
-    ASSERT_TRUE((ddc::is_spline_compatible_v<Evaluator2D_2, Builder2D_2>));
+    ASSERT_TRUE((ddc::is_evaluator_admissible_v<Builder2D_1, Evaluator2D_1>));
+    ASSERT_TRUE((ddc::is_evaluator_admissible_v<Builder2D_2, Evaluator2D_2>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Builder2D_1>));
+    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Builder2D_2>));
 
     // Incompatible builder and evaluator pairs
     using execution_space1 = typename TestFixture::execution_space1;
@@ -272,10 +272,10 @@ TYPED_TEST(BSplinesTraits, IsCompatible2D)
     std::size_t constexpr m_spline_degree2 = TestFixture::m_spline_degree2;
 
     if ((!std::is_same_v<execution_space1, execution_space2>) || (m_spline_degree1 != m_spline_degree2)) {
-      ASSERT_FALSE((ddc::is_spline_compatible_v<Builder2D_1, Evaluator2D_2>));
-      ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator2D_2, Builder2D_1>));
-      ASSERT_FALSE((ddc::is_spline_compatible_v<Builder2D_2, Evaluator2D_1>));
-      ASSERT_FALSE((ddc::is_spline_compatible_v<Evaluator2D_1, Builder2D_2>));
+      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Evaluator2D_2>));
+      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Builder2D_1>));
+      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Evaluator2D_1>));
+      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Builder2D_2>));
     }
 }
 

@@ -12,6 +12,7 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+
 #include "test_utils.hpp"
 
 struct DimX
@@ -36,120 +37,131 @@ template <typename T>
 struct BSplinesTraits;
 
 template <typename ExecSpace1, std::size_t D1, typename ExecSpace2, std::size_t D2>
-struct BSplinesTraits<std::tuple<ExecSpace1, std::integral_constant<std::size_t, D1>, ExecSpace2, std::integral_constant<std::size_t, D2>>> : public ::testing::Test {
-  using execution_space1 = ExecSpace1;
-  using execution_space2 = ExecSpace2;
-  using memory_space1 = typename ExecSpace1::memory_space;
-  using memory_space2 = typename ExecSpace2::memory_space;
-  static constexpr std::size_t m_spline_degree1 = D1;
-  static constexpr std::size_t m_spline_degree2 = D2;
+struct BSplinesTraits<std::tuple<
+        ExecSpace1,
+        std::integral_constant<std::size_t, D1>,
+        ExecSpace2,
+        std::integral_constant<std::size_t, D2>>> : public ::testing::Test
+{
+    using execution_space1 = ExecSpace1;
+    using execution_space2 = ExecSpace2;
+    using memory_space1 = typename ExecSpace1::memory_space;
+    using memory_space2 = typename ExecSpace2::memory_space;
+    static constexpr std::size_t m_spline_degree1 = D1;
+    static constexpr std::size_t m_spline_degree2 = D2;
 
-  struct BSplinesX1 : ddc::UniformBSplines<DimX, D1>
-  {
-  };
+    struct BSplinesX1 : ddc::UniformBSplines<DimX, D1>
+    {
+    };
 
-  struct BSplinesX2 : ddc::UniformBSplines<DimX, D2>
-  {
-  };
+    struct BSplinesX2 : ddc::UniformBSplines<DimX, D2>
+    {
+    };
 
-  struct BSplinesY : ddc::UniformBSplines<DimY, D1>
-  {
-  };
-  
-  using Builder1D_1 = ddc::SplineBuilder<
-                    execution_space1,
-                    memory_space1,
-                    BSplinesX1,
-                    DDimX,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::SplineSolver::LAPACK>;
+    struct BSplinesY : ddc::UniformBSplines<DimY, D1>
+    {
+    };
 
-  using Evaluator1D_1 = ddc::SplineEvaluator<
-                    execution_space1,
-                    memory_space1,
-                    BSplinesX1,
-                    DDimX,
-                    ddc::PeriodicExtrapolationRule<DimX>,
-                    ddc::PeriodicExtrapolationRule<DimX>>;
+    using Builder1D_1 = ddc::SplineBuilder<
+            execution_space1,
+            memory_space1,
+            BSplinesX1,
+            DDimX,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::SplineSolver::LAPACK>;
 
-  using Builder1D_2 = ddc::SplineBuilder<
-                    execution_space2,
-                    memory_space2,
-                    BSplinesX2,
-                    DDimX,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::SplineSolver::LAPACK>;
+    using Evaluator1D_1 = ddc::SplineEvaluator<
+            execution_space1,
+            memory_space1,
+            BSplinesX1,
+            DDimX,
+            ddc::PeriodicExtrapolationRule<DimX>,
+            ddc::PeriodicExtrapolationRule<DimX>>;
 
-  using Evaluator1D_2 = ddc::SplineEvaluator<
-                    execution_space2,
-                    memory_space2,
-                    BSplinesX2,
-                    DDimX,
-                    ddc::PeriodicExtrapolationRule<DimX>,
-                    ddc::PeriodicExtrapolationRule<DimX>>;
+    using Builder1D_2 = ddc::SplineBuilder<
+            execution_space2,
+            memory_space2,
+            BSplinesX2,
+            DDimX,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::SplineSolver::LAPACK>;
 
-  using Builder2D_1 = ddc::SplineBuilder2D<
-                    execution_space1,
-                    memory_space1,
-                    BSplinesX1,
-                    BSplinesY,
-                    DDimX,
-                    DDimY,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::SplineSolver::LAPACK>;
+    using Evaluator1D_2 = ddc::SplineEvaluator<
+            execution_space2,
+            memory_space2,
+            BSplinesX2,
+            DDimX,
+            ddc::PeriodicExtrapolationRule<DimX>,
+            ddc::PeriodicExtrapolationRule<DimX>>;
 
-  using Evaluator2D_1 = ddc::SplineEvaluator2D<
-                    execution_space1,
-                    memory_space1,
-                    BSplinesX1,
-                    BSplinesY,
-                    DDimX,
-                    DDimY,
-                    ddc::PeriodicExtrapolationRule<DimX>,
-                    ddc::PeriodicExtrapolationRule<DimX>,
-                    ddc::PeriodicExtrapolationRule<DimY>,
-                    ddc::PeriodicExtrapolationRule<DimY>>;
+    using Builder2D_1 = ddc::SplineBuilder2D<
+            execution_space1,
+            memory_space1,
+            BSplinesX1,
+            BSplinesY,
+            DDimX,
+            DDimY,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::SplineSolver::LAPACK>;
 
-  using Builder2D_2 = ddc::SplineBuilder2D<
-                    execution_space2,
-                    memory_space2,
-                    BSplinesX2,
-                    BSplinesY,
-                    DDimX,
-                    DDimY,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::SplineSolver::LAPACK>;
+    using Evaluator2D_1 = ddc::SplineEvaluator2D<
+            execution_space1,
+            memory_space1,
+            BSplinesX1,
+            BSplinesY,
+            DDimX,
+            DDimY,
+            ddc::PeriodicExtrapolationRule<DimX>,
+            ddc::PeriodicExtrapolationRule<DimX>,
+            ddc::PeriodicExtrapolationRule<DimY>,
+            ddc::PeriodicExtrapolationRule<DimY>>;
 
-  using Evaluator2D_2 = ddc::SplineEvaluator2D<
-                    execution_space2,
-                    memory_space2,
-                    BSplinesX2,
-                    BSplinesY,
-                    DDimX,
-                    DDimY,
-                    ddc::PeriodicExtrapolationRule<DimX>,
-                    ddc::PeriodicExtrapolationRule<DimX>,
-                    ddc::PeriodicExtrapolationRule<DimY>,
-                    ddc::PeriodicExtrapolationRule<DimY>>;
+    using Builder2D_2 = ddc::SplineBuilder2D<
+            execution_space2,
+            memory_space2,
+            BSplinesX2,
+            BSplinesY,
+            DDimX,
+            DDimY,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::BoundCond::PERIODIC,
+            ddc::SplineSolver::LAPACK>;
+
+    using Evaluator2D_2 = ddc::SplineEvaluator2D<
+            execution_space2,
+            memory_space2,
+            BSplinesX2,
+            BSplinesY,
+            DDimX,
+            DDimY,
+            ddc::PeriodicExtrapolationRule<DimX>,
+            ddc::PeriodicExtrapolationRule<DimX>,
+            ddc::PeriodicExtrapolationRule<DimY>,
+            ddc::PeriodicExtrapolationRule<DimY>>;
 };
 
 #if defined(KOKKOS_ENABLE_SERIAL)
-using execution_space_types = std::tuple<Kokkos::Serial, Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultExecutionSpace>;
+using execution_space_types = std::
+        tuple<Kokkos::Serial, Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultExecutionSpace>;
 #else
-using execution_space_types = std::tuple<Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultExecutionSpace>;
+using execution_space_types
+        = std::tuple<Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultExecutionSpace>;
 #endif
 
 using spline_degrees = std::integer_sequence<std::size_t, 2, 3>;
 
-using TestTypes = tuple_to_types_t<cartesian_product_t<execution_space_types, spline_degrees, execution_space_types, spline_degrees>>;
+using TestTypes = tuple_to_types_t<cartesian_product_t<
+        execution_space_types,
+        spline_degrees,
+        execution_space_types,
+        spline_degrees>>;
 
 TYPED_TEST_SUITE(BSplinesTraits, TestTypes, );
 
@@ -232,11 +244,12 @@ TYPED_TEST(BSplinesTraits, IsAdmissible1D)
     std::size_t constexpr m_spline_degree1 = TestFixture::m_spline_degree1;
     std::size_t constexpr m_spline_degree2 = TestFixture::m_spline_degree2;
 
-    if ((!std::is_same_v<execution_space1, execution_space2>) || (m_spline_degree1 != m_spline_degree2)) {
-      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Evaluator1D_2>));
-      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Builder1D_1>));
-      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Evaluator1D_1>));
-      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Builder1D_2>));
+    if ((!std::is_same_v<execution_space1, execution_space2>)
+        || (m_spline_degree1 != m_spline_degree2)) {
+        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Evaluator1D_2>));
+        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Builder1D_1>));
+        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Evaluator1D_1>));
+        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Builder1D_2>));
     }
 }
 
@@ -271,11 +284,11 @@ TYPED_TEST(BSplinesTraits, IsAdmissible2D)
     std::size_t constexpr m_spline_degree1 = TestFixture::m_spline_degree1;
     std::size_t constexpr m_spline_degree2 = TestFixture::m_spline_degree2;
 
-    if ((!std::is_same_v<execution_space1, execution_space2>) || (m_spline_degree1 != m_spline_degree2)) {
-      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Evaluator2D_2>));
-      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Builder2D_1>));
-      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Evaluator2D_1>));
-      ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Builder2D_2>));
+    if ((!std::is_same_v<execution_space1, execution_space2>)
+        || (m_spline_degree1 != m_spline_degree2)) {
+        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Evaluator2D_2>));
+        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Builder2D_1>));
+        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Evaluator2D_1>));
+        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Builder2D_2>));
     }
 }
-

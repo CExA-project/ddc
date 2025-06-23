@@ -126,7 +126,6 @@ jobs:
             c_compiler: 'gcc'
             cxx_compiler: 'g++'
         cxx_version: ['17']
-        cmake_build_type: ['Debug']
     runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
     steps:
@@ -162,7 +161,7 @@ jobs:
 
             cmake \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -D CMAKE_CXX_FLAGS="--coverage -fprofile-update=atomic" \
+              -D CMAKE_CXX_FLAGS="-DNDEBUG --coverage -fprofile-update=atomic" \
               -D DDC_BUILD_BENCHMARKS=OFF \
               -D DDC_BUILD_EXAMPLES=OFF \
               -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \

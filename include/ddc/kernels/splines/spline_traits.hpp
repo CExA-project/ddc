@@ -4,14 +4,7 @@
 
 #pragma once
 
-#include <cassert>
-#include <cstddef>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <tuple>
 #include <type_traits>
-#include <utility>
 
 #include <ddc/ddc.hpp>
 
@@ -21,6 +14,7 @@
 #include "spline_evaluator_2d.hpp"
 
 namespace ddc {
+
 template <class T>
 struct is_spline_builder : std::false_type
 {
@@ -53,7 +47,7 @@ template <class T>
 inline constexpr bool is_spline_builder_v = is_spline_builder<T>::value;
 
 template <class T>
-struct is_spline_builder2D : std::false_type
+struct is_spline_builder2d : std::false_type
 {
 };
 
@@ -69,7 +63,7 @@ template <
         ddc::BoundCond BcLower2,
         ddc::BoundCond BcUpper2,
         ddc::SplineSolver Solver>
-struct is_spline_builder2D<SplineBuilder2D<
+struct is_spline_builder2d<SplineBuilder2D<
         ExecSpace,
         MemorySpace,
         BSpline1,
@@ -89,7 +83,7 @@ struct is_spline_builder2D<SplineBuilder2D<
  *  @tparam T The type to be checked if is a SplineBuilder2D
  */
 template <class T>
-inline constexpr bool is_spline_builder2D_v = is_spline_builder2D<T>::value;
+inline constexpr bool is_spline_builder2d_v = is_spline_builder2d<T>::value;
 
 template <class T>
 struct is_spline_evaluator : std::false_type
@@ -121,7 +115,7 @@ template <class T>
 inline constexpr bool is_spline_evaluator_v = is_spline_evaluator<T>::value;
 
 template <class T>
-struct is_spline_evaluator2D : std::false_type
+struct is_spline_evaluator2d : std::false_type
 {
 };
 
@@ -136,7 +130,7 @@ template <
         class UpperExtrapolationRule1,
         class LowerExtrapolationRule2,
         class UpperExtrapolationRule2>
-struct is_spline_evaluator2D<SplineEvaluator2D<
+struct is_spline_evaluator2d<SplineEvaluator2D<
         ExecSpace,
         MemorySpace,
         BSpline1,
@@ -155,7 +149,7 @@ struct is_spline_evaluator2D<SplineEvaluator2D<
  *  @tparam T The type to be checked if is a SplineEvaluator2D
  */
 template <class T>
-inline constexpr bool is_spline_evaluator2D_v = is_spline_evaluator2D<T>::value;
+inline constexpr bool is_spline_evaluator2d_v = is_spline_evaluator2d<T>::value;
 
 template <class Builder, class Evaluator>
 struct is_evaluator_admissible : std::false_type

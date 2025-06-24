@@ -2,10 +2,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <cstddef>
-#include <stdexcept>
-#include <vector>
-
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
 
@@ -14,6 +10,8 @@
 #include <Kokkos_Core.hpp>
 
 #include "test_utils.hpp"
+
+inline namespace anonymous_namespace_workaround_spline_traits_cpp {
 
 struct DimX
 {
@@ -163,6 +161,8 @@ using TestTypes = tuple_to_types_t<cartesian_product_t<
         execution_space_types,
         spline_degrees>>;
 
+} // namespace anonymous_namespace_workaround_spline_traits_cpp
+
 TYPED_TEST_SUITE(BSplinesTraits, TestTypes, );
 
 TYPED_TEST(BSplinesTraits, IsSplineBuilder)
@@ -183,10 +183,10 @@ TYPED_TEST(BSplinesTraits, IsSplineBuilder2D)
     using Evaluator1D = typename TestFixture::Evaluator1D_1;
     using Builder2D = typename TestFixture::Builder2D_1;
     using Evaluator2D = typename TestFixture::Evaluator2D_1;
-    ASSERT_FALSE(ddc::is_spline_builder2D_v<Builder1D>);
-    ASSERT_TRUE(ddc::is_spline_builder2D_v<Builder2D>);
-    ASSERT_FALSE(ddc::is_spline_builder2D_v<Evaluator1D>);
-    ASSERT_FALSE(ddc::is_spline_builder2D_v<Evaluator2D>);
+    ASSERT_FALSE(ddc::is_spline_builder2d_v<Builder1D>);
+    ASSERT_TRUE(ddc::is_spline_builder2d_v<Builder2D>);
+    ASSERT_FALSE(ddc::is_spline_builder2d_v<Evaluator1D>);
+    ASSERT_FALSE(ddc::is_spline_builder2d_v<Evaluator2D>);
 }
 
 TYPED_TEST(BSplinesTraits, IsSplineEvaluator)
@@ -207,10 +207,10 @@ TYPED_TEST(BSplinesTraits, IsSplineEvaluator2D)
     using Evaluator1D = typename TestFixture::Evaluator1D_1;
     using Builder2D = typename TestFixture::Builder2D_1;
     using Evaluator2D = typename TestFixture::Evaluator2D_1;
-    ASSERT_FALSE(ddc::is_spline_evaluator2D_v<Builder1D>);
-    ASSERT_FALSE(ddc::is_spline_evaluator2D_v<Builder2D>);
-    ASSERT_FALSE(ddc::is_spline_evaluator2D_v<Evaluator1D>);
-    ASSERT_TRUE(ddc::is_spline_evaluator2D_v<Evaluator2D>);
+    ASSERT_FALSE(ddc::is_spline_evaluator2d_v<Builder1D>);
+    ASSERT_FALSE(ddc::is_spline_evaluator2d_v<Builder2D>);
+    ASSERT_FALSE(ddc::is_spline_evaluator2d_v<Evaluator1D>);
+    ASSERT_TRUE(ddc::is_spline_evaluator2d_v<Evaluator2D>);
 }
 
 TYPED_TEST(BSplinesTraits, IsAdmissible1D)

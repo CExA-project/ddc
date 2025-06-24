@@ -16,6 +16,7 @@ add_executable(
     knots_as_interpolation_points.cpp
     splines_linear_problem.cpp
     spline_builder.cpp
+    spline_traits.cpp
     view.cpp
 )
 target_compile_features(splines_tests PUBLIC cxx_std_17)

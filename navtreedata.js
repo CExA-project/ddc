@@ -118,8 +118,8 @@ var NAVTREEINDEX =
 "classddc_1_1SparseDiscreteDomain.html#a281dba260b09841003df9aa0dec2ea43",
 "classddc_1_1SplineEvaluator.html#a7b46135fa35ae58103c38010607a1416",
 "classddc_1_1UniformBSplines.html#a002aee489309d7c95422c66304ae8bcb",
-"namespaceddc.html#a3d600c6f06ea28fe24517e6ea9e918eb",
-"structddc_1_1StridedDiscreteDomainIterator.html#a920b22ba4f1f77854dc1c7c4e9df34de"
+"namespaceddc.html#a3acee30af3a428e9ca4b56fbc764a64f",
+"structddc_1_1StridedDiscreteDomainIterator.html#a78e953225193fb1cf5fb24422687546a"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

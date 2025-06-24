@@ -40,7 +40,12 @@ var hierarchy =
       [ "ddc::is_discrete_domain< T >", "structddc_1_1is__discrete__domain.html", null ],
       [ "ddc::is_discrete_element< T >", "structddc_1_1is__discrete__element.html", null ],
       [ "ddc::is_discrete_vector< T >", "structddc_1_1is__discrete__vector.html", null ],
+      [ "ddc::is_evaluator_admissible< Builder, Evaluator >", "structddc_1_1is__evaluator__admissible.html", null ],
       [ "ddc::is_sparse_discrete_domain< T >", "structddc_1_1is__sparse__discrete__domain.html", null ],
+      [ "ddc::is_spline_builder< T >", "structddc_1_1is__spline__builder.html", null ],
+      [ "ddc::is_spline_builder2d< T >", "structddc_1_1is__spline__builder2d.html", null ],
+      [ "ddc::is_spline_evaluator< T >", "structddc_1_1is__spline__evaluator.html", null ],
+      [ "ddc::is_spline_evaluator2d< T >", "structddc_1_1is__spline__evaluator2d.html", null ],
       [ "ddc::is_strided_discrete_domain< T >", "structddc_1_1is__strided__discrete__domain.html", null ]
     ] ],
     [ "ddc::Fourier< Dim >", "namespaceddc.html#structddc_1_1Fourier", null ],
@@ -97,7 +102,13 @@ var hierarchy =
       [ "ddc::is_discrete_domain< DiscreteDomain< Tags... > >", "structddc_1_1is__discrete__domain_3_01DiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html", null ],
       [ "ddc::is_discrete_element< DiscreteElement< Tags... > >", "structddc_1_1is__discrete__element_3_01DiscreteElement_3_01Tags_8_8_8_01_4_01_4.html", null ],
       [ "ddc::is_discrete_vector< DiscreteVector< Tags... > >", "structddc_1_1is__discrete__vector_3_01DiscreteVector_3_01Tags_8_8_8_01_4_01_4.html", null ],
+      [ "ddc::is_evaluator_admissible< SplineBuilder2D< ExecSpace, MemorySpace, BSplines1, BSplines2, DDimI1, DDimI2, BcLower1, BcUpper1, BcLower2, BcUpper2, Solver >, SplineEvaluator2D< ExecSpace, MemorySpace, BSplines1, BSplines2, DDimI1, DDimI2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2 > >", "structddc_1_1is__evaluator__admissible_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01B3b9a0a284ab7d992c4eb7eb3baab8cf1.html", null ],
+      [ "ddc::is_evaluator_admissible< SplineBuilder< ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver >, SplineEvaluator< ExecSpace, MemorySpace, BSplines, InterpolationDDim, LowerExtrapolationRule, UpperExtrapolationRule > >", "structddc_1_1is__evaluator__admissible_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSp49a3b5cca1e507a8a1b59ab9867f3f9b.html", null ],
       [ "ddc::is_sparse_discrete_domain< SparseDiscreteDomain< Tags... > >", "structddc_1_1is__sparse__discrete__domain_3_01SparseDiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html", null ],
+      [ "ddc::is_spline_builder2d< SplineBuilder2D< ExecSpace, MemorySpace, BSpline1, BSpline2, DDimI1, DDimI2, BcLower1, BcUpper1, BcLower2, BcUpper2, Solver > >", "structddc_1_1is__spline__builder2d_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01BSpli7b60690c0d8d02d86807917fa974cfff.html", null ],
+      [ "ddc::is_spline_builder< SplineBuilder< ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver > >", "structddc_1_1is__spline__builder_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSplines_7fb20b4b3cb905fbec09104cc4d8bad0.html", null ],
+      [ "ddc::is_spline_evaluator2d< SplineEvaluator2D< ExecSpace, MemorySpace, BSpline1, BSpline2, EvaluationDDim1, EvaluationDDim2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2 > >", "structddc_1_1is__spline__evaluator2d_3_01SplineEvaluator2D_3_01ExecSpace_00_01MemorySpace_00_01Bab426b7c2afbbe95ee03abe88c8cadbb.html", null ],
+      [ "ddc::is_spline_evaluator< SplineEvaluator< ExecSpace, MemorySpace, BSplines, EvaluationDDim, LowerExtrapolationRule, UpperExtrapolationRule > >", "structddc_1_1is__spline__evaluator_3_01SplineEvaluator_3_01ExecSpace_00_01MemorySpace_00_01BSpli9c02ad999c3c97f462f5c25d3036992e.html", null ],
       [ "ddc::is_strided_discrete_domain< StridedDiscreteDomain< Tags... > >", "structddc_1_1is__strided__discrete__domain_3_01StridedDiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html", null ]
     ] ],
     [ "std::is_base_of::type", null, [

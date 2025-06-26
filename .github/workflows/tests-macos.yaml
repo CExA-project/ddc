@@ -158,13 +158,13 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with:
           repository: kokkos/kokkos-fft
-          ref: v0.2.1
+          ref: v0.3.0
           path: kokkos-fft
       - name: Install Kokkos-fft
         run: |
           cmake \
             -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -D KokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
+            -D KokkosFFT_ENABLE_FFTW=ON \
             -B build \
             -S ./kokkos-fft
           cmake --build build

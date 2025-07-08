@@ -60,7 +60,7 @@ jobs:
             cxx_compiler: 'clang++'
             ddc_extra_cxx_flags: '-Wextra-semi -Wextra-semi-stmt -Wold-style-cast'
             kokkos_extra_cmake_flags: ''
-        cxx_version: ['17', '20', '23']
+        cxx_version: ['17', '20']  # Kokkos 4.6 is not compatible with C++ 23
         cmake_build_type: ['Debug', 'Release']
     runs-on: macos-15
     needs: [id_repo]
@@ -125,6 +125,7 @@ jobs:
           path: ginkgo
       - name: Install Ginkgo
         run: |
+          # Ginkgo 1.8 needs the flags "-undefined dynamic_lookup" to link, recent versions should not need it
           cmake \
             -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -D CMAKE_SHARED_LINKER_FLAGS="-undefined dynamic_lookup" \

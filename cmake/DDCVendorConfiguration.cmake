@@ -43,7 +43,7 @@ macro(ddc_configure_kokkos)
 endmacro()
 
 macro(ddc_configure_kokkos_fft)
-    option(KokkosFFT_ENABLE_HOST_AND_DEVICE "Enable FFT on both host and device" ON)
+    option(KokkosFFT_ENABLE_FFTW "Enable fftw as a KokkosFFT backend on CPUs" ON)
     add_subdirectory(vendor/kokkos-fft)
 endmacro()
 

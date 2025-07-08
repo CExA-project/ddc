@@ -165,7 +165,7 @@ jobs:
 
             cmake \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -D KokkosFFT_ENABLE_HOST_AND_DEVICE=ON \
+              -D KokkosFFT_ENABLE_FFTW=ON \
               -B build \
               -S /src/vendor/kokkos-fft
             cmake --build build

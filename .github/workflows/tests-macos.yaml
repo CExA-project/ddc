@@ -121,7 +121,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with:
           repository: ginkgo-project/ginkgo
-          ref: v1.8.0
+          ref: v1.9.0
           path: ginkgo
       - name: Install Ginkgo
         run: |

@@ -41,7 +41,7 @@ permissions:
 
 jobs:
   id_repo:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - name: Identify repository
         id: identify_repo
@@ -62,7 +62,7 @@ jobs:
             kokkos_extra_cmake_flags: ''
         cxx_version: ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
-    runs-on: macos-latest
+    runs-on: macos-15
     needs: [id_repo]
     env:
       DDC_ROOT: ${{github.workspace}}/opt/ddc

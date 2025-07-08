@@ -127,7 +127,7 @@ jobs:
         run: |
           cmake \
             -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -D CMAKE_CXX_FLAGS="-undefined dynamic_lookup" \
+            -D CMAKE_SHARED_LINKER_FLAGS="-undefined dynamic_lookup" \
             -D GINKGO_BUILD_BENCHMARKS=OFF \
             -D GINKGO_BUILD_EXAMPLES=OFF \
             -D GINKGO_BUILD_MPI=OFF \

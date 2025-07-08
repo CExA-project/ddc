@@ -115,9 +115,11 @@ protected:
     {
         DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
         if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
+            DiscreteDomain<QueryDDim> const c_slice(c);
+            DiscreteDomain<QueryDDim> const origin_slice(origin);
             return std::pair<std::size_t, std::size_t>(
-                    front<QueryDDim>(c) - front<QueryDDim>(origin),
-                    back<QueryDDim>(c) + 1 - front<QueryDDim>(origin));
+                    c_slice.front() - origin_slice.front(),
+                    c_slice.back() + 1 - origin_slice.front());
         } else {
             return Kokkos::full_extent;
         }

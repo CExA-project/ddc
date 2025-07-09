@@ -5,8 +5,7 @@
 // clang-format off
 // NOLINTBEGIN(*)
 
-#ifndef KOKKOSBATCHED_GETRS_SERIAL_IMPL_HPP_
-#define KOKKOSBATCHED_GETRS_SERIAL_IMPL_HPP_
+#pragma once
 
 #include <KokkosBatched_Util.hpp>
 #include <KokkosBatched_Trsm_Decl.hpp>
@@ -92,8 +91,6 @@ struct SerialGetrs<Trans::Transpose, Algo::Level3::Unblocked> {
   }
 };
 }  // namespace KokkosBatched
-
-#endif  // KOKKOSBATCHED_GETRS_SERIAL_IMPL_HPP_
 
 // NOLINTEND(*)
 // clang-format on

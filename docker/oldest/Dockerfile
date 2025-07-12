@@ -51,6 +51,7 @@ RUN chmod +x /bin/bash_run \
     liblapacke-dev \
     libhwloc-dev \
     pkg-config \
+    python3 \
  && case "${BACKEND}" in \
     "cpu") \
       apt-get install -y --no-install-recommends \

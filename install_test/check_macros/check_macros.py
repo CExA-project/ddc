@@ -13,6 +13,7 @@ The reference file must be a JSON file containing a list of expected #define mac
 """
 
 import json
+import re
 import subprocess
 import shlex
 from pathlib import Path
@@ -121,14 +122,21 @@ def extract_macro_diff(macros_with, macros_without):
     Returns:
         list[str]: Sorted list of macro differences
     """
-    define_with = {
-        line.removeprefix("#define").strip() for line in macros_with if line.startswith("#define")
-    }
-    define_without = {
-        line.removeprefix("#define").strip()
-        for line in macros_without
-        if line.startswith("#define")
-    }
+    macro_pattern = r"#define\s+([A-Za-z_][A-Za-z0-9_]*)(\s+.*)?"
+    define_with = set()
+    for line in macros_with:
+        match = re.match(macro_pattern, line.strip())
+        if match:
+            define_with.add(str(match.group(1)))
+        else:
+            raise ValueError("Unhandled macro")
+    define_without = set()
+    for line in macros_without:
+        match = re.match(macro_pattern, line.strip())
+        if match:
+            define_without.add(str(match.group(1)))
+        else:
+            raise ValueError("Unhandled macro")
     return sorted(define_with - define_without)
 
 

@@ -52,6 +52,7 @@ RUN chmod +x /bin/bash_run \
     libhwloc-dev \
     pkg-config \
     pipx \
+    python3 \
  && python3 -m pipx install gcovr \
  && python3 -m pipx ensurepath \
  # Installing cmake < 3.28 to workaround issue with Kokkos

@@ -111,7 +111,13 @@ def prepare_commands(args):
     macros_with_diff = macros_with - macros_without
     macros_without_diff = macros_without - macros_with
 
-    if macros_without_diff:
+    # to be removed as soon as possible
+    whitelist_macros = {
+        "#define KOKKOS_IMPL_PUBLIC_INCLUDE ",
+        "#define KOKKOS_IMPL_PUBLIC_INCLUDE_PROFILING_SCOPEDREGION ",
+    }
+
+    if macros_without_diff - whitelist_macros:
         print(macros_without_diff)
         raise ValueError("Set should be empty")
 

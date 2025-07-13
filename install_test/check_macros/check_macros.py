@@ -108,7 +108,14 @@ def prepare_commands(args):
     print(f"Running preprocessor for: {args.without_src.name}")
     macros_without = run_preprocessor(cmd_without, dir_without)
 
-    return macros_with, macros_without
+    macros_with_diff = macros_with - macros_without
+    macros_without_diff = macros_without - macros_with
+
+    if macros_without_diff:
+        print(macros_without_diff)
+        raise ValueError("Set should be empty")
+
+    return macros_with_diff, macros_without_diff
 
 
 def extract_macro_diff(macros_with, macros_without):
@@ -129,14 +136,14 @@ def extract_macro_diff(macros_with, macros_without):
         if match:
             define_with.add(str(match.group(1)))
         else:
-            raise ValueError("Unhandled macro")
+            raise ValueError(f"Unhandled macro {line}")
     define_without = set()
     for line in macros_without:
         match = re.match(macro_pattern, line.strip())
         if match:
             define_without.add(str(match.group(1)))
         else:
-            raise ValueError("Unhandled macro")
+            raise ValueError(f"Unhandled macro {line}")
     return sorted(define_with - define_without)
 
 

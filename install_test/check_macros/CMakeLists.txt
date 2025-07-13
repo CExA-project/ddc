@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.25)
 project(test-ddc-macros LANGUAGES CXX)
 
-find_package(DDC 0.12 REQUIRED COMPONENTS fft pdi splines)
+find_package(DDC 0.15 REQUIRED COMPONENTS fft pdi splines)
 
 add_library(check-macros)
 target_sources(check-macros PRIVATE with_my_lib.cpp without_my_lib.cpp)

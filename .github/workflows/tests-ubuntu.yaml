@@ -366,16 +366,21 @@ jobs:
             cmake --build build
             rm -rf build
 
+            if [ 'xcuda' = 'x${{matrix.backend.name}}' ]
+            then
+              export CXX=$Kokkos_ROOT/bin/nvcc_wrapper
+            fi
+
             cmake \
               -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
               -B build \
               -S /src/install_test/check_macros
             python3 \
               /src/install_test/check_macros/check_macros.py \
-              --db ./build/compile_commands.json \
               --with-src /src/install_test/check_macros/with_my_lib.cpp \
               --without-src /src/install_test/check_macros/without_my_lib.cpp \
-              --reference /src/install_test/check_macros/whitelist_macros.json
+              --reference /src/install_test/check_macros/whitelist_macros.json \
+              -p ./build
           EOF
 
           docker run \

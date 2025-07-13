@@ -94,7 +94,7 @@ def prepare_commands(args):
     Returns:
         tuple[set[str], set[str]]: Macros with and without the library
     """
-    commands = json.loads(args.db.read_text())
+    commands = json.loads((args.p / "compile_commands.json").read_text())
 
     entry_with = find_entry(commands, args.with_src.resolve())
     entry_without = find_entry(commands, args.without_src.resolve())
@@ -202,10 +202,10 @@ def main():
         "--reference", required=True, type=Path, help="Reference JSON file with expected macro diff"
     )
     parser.add_argument(
-        "--db",
-        default="build-install-test/compile_commands.json",
+        "-p",
+        default="build",
         type=Path,
-        help="Path to compile_commands.json",
+        help="Path to build directory",
     )
 
     args = parser.parse_args()

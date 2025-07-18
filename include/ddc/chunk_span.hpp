@@ -19,6 +19,7 @@
 #include "chunk_common.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
+#include "strided_discrete_domain.hpp"
 
 namespace ddc {
 
@@ -274,7 +275,7 @@ public:
         slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(
                 this->allocation_mdspan(),
-                ddc::DiscreteDomain<QueryDDims...>(this->m_domain).distance_from_front(slice_spec));
+                ddc::select<QueryDDims...>(this->m_domain).distance_from_front(slice_spec));
         using layout_type = typename decltype(subview)::layout_type;
         using extents_type = typename decltype(subview)::extents_type;
         using detail::TypeSeq;

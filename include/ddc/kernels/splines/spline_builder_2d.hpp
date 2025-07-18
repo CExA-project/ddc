@@ -405,7 +405,7 @@ public:
      *      The values of the the cross-derivatives at the upper boundary in the first dimension
      *      and the upper boundary in the second dimension.
      */
-    template <class Layout, class BatchedInterpolationDDom>
+    template <class Layout, class BatchedInterpolationDDom, class LayoutDeriv = Kokkos::layout_right>
     void operator()(
             ddc::ChunkSpan<
                     double,
@@ -416,49 +416,49 @@ public:
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type1<BatchedInterpolationDDom>,
-                    Layout,
+                    LayoutDeriv,
                     memory_space>> derivs_min1
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type1<BatchedInterpolationDDom>,
-                    Layout,
+                    LayoutDeriv,
                     memory_space>> derivs_max1
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type2<BatchedInterpolationDDom>,
-                    Layout,
+                    LayoutDeriv,
                     memory_space>> derivs_min2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type2<BatchedInterpolationDDom>,
-                    Layout,
+                    LayoutDeriv,
                     memory_space>> derivs_max2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
+                    LayoutDeriv,
                     memory_space>> mixed_derivs_min1_min2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
+                    LayoutDeriv,
                     memory_space>> mixed_derivs_max1_min2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
+                    LayoutDeriv,
                     memory_space>> mixed_derivs_min1_max2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
+                    LayoutDeriv,
                     memory_space>> mixed_derivs_max1_max2
             = std::nullopt) const;
 };
@@ -476,7 +476,7 @@ template <
         ddc::BoundCond BcLower2,
         ddc::BoundCond BcUpper2,
         ddc::SplineSolver Solver>
-template <class Layout, class BatchedInterpolationDDom>
+template <class Layout, class BatchedInterpolationDDom, class LayoutDeriv>
 void SplineBuilder2D<
         ExecSpace,
         MemorySpace,
@@ -499,42 +499,42 @@ operator()(
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type1<BatchedInterpolationDDom>,
-                Layout,
+                LayoutDeriv,
                 memory_space>> const derivs_min1,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type1<BatchedInterpolationDDom>,
-                Layout,
+                LayoutDeriv,
                 memory_space>> const derivs_max1,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type2<BatchedInterpolationDDom>,
-                Layout,
+                LayoutDeriv,
                 memory_space>> const derivs_min2,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type2<BatchedInterpolationDDom>,
-                Layout,
+                LayoutDeriv,
                 memory_space>> const derivs_max2,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
+                LayoutDeriv,
                 memory_space>> const mixed_derivs_min1_min2,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
+                LayoutDeriv,
                 memory_space>> const mixed_derivs_max1_min2,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
+                LayoutDeriv,
                 memory_space>> const mixed_derivs_min1_max2,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
+                LayoutDeriv,
                 memory_space>> const mixed_derivs_max1_max2) const
 {
     auto const batched_interpolation_domain = vals.domain();

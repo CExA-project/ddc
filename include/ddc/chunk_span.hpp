@@ -270,9 +270,9 @@ public:
     KOKKOS_FUNCTION constexpr auto operator[](
             DiscreteElement<QueryDDims...> const& slice_spec) const
     {
-        assert(select<QueryDDims...>(this->m_domain).contains(slice_spec));
         using detail::TypeSeq;
         using QueryDDom = typename detail::RebindDomain<SupportType, TypeSeq<QueryDDims...>>::type;
+        assert(QueryDDom(this->m_domain).contains(slice_spec));
         slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(
                 this->allocation_mdspan(),

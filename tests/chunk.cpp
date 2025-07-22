@@ -526,7 +526,7 @@ TEST(Chunk2DTest, SliceCoordXOutOfBounds)
     ChunkXY<double> chunk(dom_x_y);
 
     char const* const death_msg
-            = R"rgx([Aa]ssert.*select<QueryDDims...>\(this->m_domain\).contains\(slice_spec\))rgx";
+            = R"rgx([Aa]ssert.*QueryDDom\(this->m_domain\).contains\(slice_spec\))rgx";
 
     EXPECT_DEATH(chunk[dom_x.front() - 1], death_msg);
     EXPECT_DEATH(chunk[dom_x.back() + 1], death_msg);

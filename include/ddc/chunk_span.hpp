@@ -270,14 +270,15 @@ public:
     KOKKOS_FUNCTION constexpr auto operator[](
             DiscreteElement<QueryDDims...> const& slice_spec) const
     {
-        assert(select<QueryDDims...>(this->m_domain).contains(slice_spec));
+        using detail::TypeSeq;
+        using QueryDDom = typename detail::RebindDomain<SupportType, TypeSeq<QueryDDims...>>::type;
+        assert(QueryDDom(this->m_domain).contains(slice_spec));
         slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(
                 this->allocation_mdspan(),
-                ddc::DiscreteDomain<QueryDDims...>(this->m_domain).distance_from_front(slice_spec));
+                QueryDDom(this->m_domain).distance_from_front(slice_spec));
         using layout_type = typename decltype(subview)::layout_type;
         using extents_type = typename decltype(subview)::extents_type;
-        using detail::TypeSeq;
         using OutTypeSeqDDims
                 = type_seq_remove_t<to_type_seq_t<SupportType>, TypeSeq<QueryDDims...>>;
         using OutDDom = typename detail::RebindDomain<SupportType, OutTypeSeqDDims>::type;

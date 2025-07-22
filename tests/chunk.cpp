@@ -684,3 +684,10 @@ TEST(ChunkStridedDiscreteDomain, Constructor)
     EXPECT_EQ(chk(lbound_x_y), 2);
     EXPECT_EQ(chk(lbound_x_y + DVectXY(10, 10)), 2);
 }
+
+TEST(ChunkStridedDiscreteDomain, Slice)
+{
+    ddc::StridedDiscreteDomain<DDimX, DDimY> const dom(lbound_x_y, nelems_x_y, DVectXY(10, 10));
+    ddc::Chunk chk("", dom, ddc::HostAllocator<int>());
+    EXPECT_EQ(chk(lbound_x_y), chk[lbound_x_y]());
+}

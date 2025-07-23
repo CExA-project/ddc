@@ -526,7 +526,7 @@ TEST(Chunk2DTest, SliceCoordXOutOfBounds)
     ChunkXY<double> chunk(dom_x_y);
 
     char const* const death_msg
-            = R"rgx([Aa]ssert.*select<QueryDDims...>\(this->m_domain\).contains\(slice_spec\))rgx";
+            = R"rgx([Aa]ssert.*QueryDDom\(this->m_domain\).contains\(slice_spec\))rgx";
 
     EXPECT_DEATH(chunk[dom_x.front() - 1], death_msg);
     EXPECT_DEATH(chunk[dom_x.back() + 1], death_msg);
@@ -683,4 +683,11 @@ TEST(ChunkStridedDiscreteDomain, Constructor)
     ddc::parallel_fill(chk.span_view(), 2);
     EXPECT_EQ(chk(lbound_x_y), 2);
     EXPECT_EQ(chk(lbound_x_y + DVectXY(10, 10)), 2);
+}
+
+TEST(ChunkStridedDiscreteDomain, Slice)
+{
+    ddc::StridedDiscreteDomain<DDimX, DDimY> const dom(lbound_x_y, nelems_x_y, DVectXY(10, 10));
+    ddc::Chunk chk("", dom, ddc::HostAllocator<int>());
+    EXPECT_EQ(chk(lbound_x_y), chk[lbound_x_y]());
 }

@@ -468,7 +468,11 @@ public:
      * @param[in] derivs_xmax The values of the derivatives at the upper boundary
      * (used only with BoundCond::HERMITE upper boundary condition).
      */
-    template <class Layout, class BatchedInterpolationDDom>
+    template <
+            class Layout,
+            class LayoutDerivs,
+            class BatchedInterpolationDDom,
+            class BatchedDerivSDDom>
     void operator()(
             ddc::ChunkSpan<
                     double,
@@ -476,18 +480,7 @@ public:
                     Layout,
                     memory_space> spline,
             ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> derivs_xmin
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> derivs_xmax
-            = std::nullopt) const;
+            ddc::ChunkSpan<double const, BatchedDerivSDDom, LayoutDerivs, memory_space> derivs) const;
 
     /**
      * @brief Compute the quadrature coefficients associated to the b-splines used by this SplineBuilder.
@@ -793,7 +786,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver>
-template <class Layout, class BatchedInterpolationDDom>
+template <class Layout, class LayoutDerivs, class BatchedInterpolationDDom, class BatchedDerivSDDom>
 void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
 operator()(
         ddc::ChunkSpan<
@@ -802,17 +795,14 @@ operator()(
                 Layout,
                 memory_space> spline,
         ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
-        std::optional<ddc::ChunkSpan<
-                double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> const derivs_xmin,
-        std::optional<ddc::ChunkSpan<
-                double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> const derivs_xmax) const
+        ddc::ChunkSpan<double const, BatchedDerivSDDom, LayoutDerivs, memory_space> derivs) const
 {
+    using A = ddc::detail::convert_type_seq_to_strided_discrete_domain_t<ddc::type_seq_merge_t<
+            ddc::detail::TypeSeq<deriv_type>,
+            ddc::to_type_seq_t<BatchedInterpolationDDom>>>;
+    using interpolation_dom = ddc::StridedDiscreteDomain<InterpolationDDim>;
+    static_assert(std::is_same_v<A, BatchedDerivSDDom>);
+
     auto const batched_interpolation_domain = vals.domain();
 
     assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
@@ -820,23 +810,26 @@ operator()(
     assert(vals.template extent<interpolation_discrete_dimension_type>()
            == ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin - s_nbc_xmax);
 
-    assert((BcLower == ddc::BoundCond::HERMITE)
-           != (!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0));
-    assert((BcUpper == ddc::BoundCond::HERMITE)
-           != (!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0));
-    if constexpr (BcLower == BoundCond::HERMITE) {
-        assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == 1);
-    }
-    if constexpr (BcUpper == BoundCond::HERMITE) {
-        assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == 1);
-    }
+    //     assert((BcLower == ddc::BoundCond::HERMITE)
+    //            != (!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0));
+    //     assert((BcUpper == ddc::BoundCond::HERMITE)
+    //            != (!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0));
+    //     if constexpr (BcLower == BoundCond::HERMITE) {
+    //         assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == 1);
+    //     }
+    //     if constexpr (BcUpper == BoundCond::HERMITE) {
+    //         assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == 1);
+    //     }
 
     // Hermite boundary conditions at xmin, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcLower == BoundCond::HERMITE) {
-        assert(derivs_xmin->template extent<deriv_type>() == s_nbc_xmin);
-        auto derivs_xmin_values = *derivs_xmin;
+        assert(!interpolation_dom(derivs.domain()).empty());
+        assert(interpolation_dom(derivs.domain()).front()
+               == interpolation_dom(spline.domain()).front());
+        ddc::ChunkSpan const derivs_xmin_values = derivs[interpolation_dom(derivs).front()];
+        assert(derivs.template extent<deriv_type>() == s_nbc_xmin);
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_lower_coefficients",
@@ -880,8 +873,11 @@ operator()(
     //       provided by the user must be multiplied by dx^i
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     if constexpr (BcUpper == BoundCond::HERMITE) {
-        assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
-        auto derivs_xmax_values = *derivs_xmax;
+        assert(!interpolation_dom(derivs.domain()).empty());
+        assert(interpolation_dom(derivs.domain()).back()
+               == interpolation_dom(spline.domain()).back());
+        ddc::ChunkSpan const derivs_xmax_values = derivs[interpolation_dom(derivs).back()];
+        assert(derivs_xmax_values.template extent<deriv_type>() == s_nbc_xmax);
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_upper_coefficients",

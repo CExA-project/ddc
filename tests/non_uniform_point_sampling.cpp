@@ -27,7 +27,7 @@
      ddc::Coordinate<DimY>(0.3),                                                                   \
      ddc::Coordinate<DimY>(0.4)}
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(NON_UNIFORM_POINT_SAMPLING_CPP) {
+inline namespace anonymous_namespace_workaround_non_uniform_point_sampling_cpp {
 
 struct DimX;
 struct DimY;
@@ -55,7 +55,7 @@ ddc::Coordinate<DimY> constexpr point_ry(0.2);
 ddc::DiscreteElement<DDimX, DDimY> constexpr point_ixy(2, 1);
 ddc::Coordinate<DimX, DimY> constexpr point_rxy(0.3, 0.2);
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(NON_UNIFORM_POINT_SAMPLING_CPP)
+} // namespace anonymous_namespace_workaround_non_uniform_point_sampling_cpp
 
 TEST(NonUniformPointSamplingTest, InitializerListConstructor)
 {

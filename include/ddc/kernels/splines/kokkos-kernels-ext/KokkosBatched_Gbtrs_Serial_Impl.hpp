@@ -148,8 +148,8 @@ struct SerialGbtrs<Trans::Transpose, Algo::Level3::Unblocked> {
 
         [[maybe_unused]] auto info_gemv =
             KokkosBlas::Impl::SerialGemvInternal<Algo::Gemv::Unblocked>::invoke(
-                1, a.extent(0), -1.0, a.data(), a.stride_0(), a.stride_0(),
-                x.data(), x.stride_0(), 1.0, y.data(), y.stride_0());
+                1, a.extent(0), -1.0, a.data(), a.stride(0), a.stride(0),
+                x.data(), x.stride(0), 1.0, y.data(), y.stride(0));
 
         // If pivot index is not j, swap rows l and j in b
         auto l = piv(j);

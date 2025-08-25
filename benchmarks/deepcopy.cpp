@@ -12,7 +12,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DEEPCOPY_CPP) {
+inline namespace anonymous_namespace_workaround_deepcopy_cpp {
 
 struct DDimX
 {
@@ -123,7 +123,7 @@ void deepcopy_subchunk_2d(benchmark::State& state)
             * int64_t(state.range(0) * state.range(1) * sizeof(double)));
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DEEPCOPY_CPP)
+} // namespace anonymous_namespace_workaround_deepcopy_cpp
 
 // NOLINTBEGIN(misc-use-anonymous-namespace)
 // 1D

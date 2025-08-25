@@ -16,15 +16,15 @@
 // if MDSPAN_USE_BRACKET_OPERATOR is defined then we are likely
 // using the Kokkos implementation of mdspan
 #if defined(MDSPAN_USE_BRACKET_OPERATOR)
-#if MDSPAN_USE_BRACKET_OPERATOR
-#define DDC_MDSPAN_ACCESS_OP(mds, ...) mds[__VA_ARGS__]
-#else
-#define DDC_MDSPAN_ACCESS_OP(mds, ...) mds(__VA_ARGS__)
-#endif
+#    if MDSPAN_USE_BRACKET_OPERATOR
+#        define DDC_MDSPAN_ACCESS_OP(mds, ...) mds[__VA_ARGS__]
+#    else
+#        define DDC_MDSPAN_ACCESS_OP(mds, ...) mds(__VA_ARGS__)
+#    endif
 // else we are likely using an other implementation
 // then we can only use the bracket operator
 #else
-#define DDC_MDSPAN_ACCESS_OP(mds, ...) mds[__VA_ARGS__]
+#    define DDC_MDSPAN_ACCESS_OP(mds, ...) mds[__VA_ARGS__]
 #endif
 
 namespace ddc::detail {

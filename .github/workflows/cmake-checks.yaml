@@ -1,0 +1,42 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: CMake checks
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/cmake-checks.yaml'
+      - 'CMakeLists.txt'
+      - '**/CMakeLists.txt'
+      - '**.cmake'
+      - '**.cmake.in'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/cmake-checks.yaml'
+      - 'CMakeLists.txt'
+      - '**/CMakeLists.txt'
+      - '**.cmake'
+      - '**.cmake.in'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cmake-format:
+    name: CMake format check using gersemi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: Install gersemi
+        run: pipx install gersemi~=0.19
+      - name: Run gersemi
+        run: |
+          gersemi --check $(git ls-files '*.cmake' ':!cmake/DDCCheckRequiredKokkosOptions.cmake' ':!cmake/FindLAPACKE.cmake')
+          gersemi --check $(git ls-files 'CMakeLists.txt' '*/CMakeLists.txt')

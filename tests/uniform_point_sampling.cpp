@@ -11,7 +11,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(UNIFORM_POINT_SAMPLING_CPP) {
+inline namespace anonymous_namespace_workaround_uniform_point_sampling_cpp {
 
 struct DimX;
 struct DimY;
@@ -29,7 +29,7 @@ ddc::Real constexpr step = 0.5;
 ddc::DiscreteElement<DDimX> constexpr point_ix(2);
 ddc::Coordinate<DimX> constexpr point_rx(0.);
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(UNIFORM_POINT_SAMPLING_CPP)
+} // namespace anonymous_namespace_workaround_uniform_point_sampling_cpp
 
 TEST(UniformPointSamplingTest, Constructor)
 {

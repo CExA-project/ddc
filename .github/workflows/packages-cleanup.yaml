@@ -1,0 +1,37 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Packages cleanup
+
+# yamllint disable-line rule:truthy
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  delete-packages:
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - 'doxygen'
+          - 'latest_cpu'
+          - 'latest_cuda'
+          - 'latest_hip'
+          - 'oldest_cpu'
+          - 'oldest_cuda'
+          - 'oldest_hip'
+    name: Delete old packages
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write  # Required by actions/delete-package-versions
+    steps:
+      - uses: actions/delete-package-versions@e5bc658cc4c965c472efe991f8beea3981499c55  # v5.0.0
+        with:
+          package-name: 'ddc/${{matrix.image}}'
+          package-type: 'container'
+          min-versions-to-keep: 10

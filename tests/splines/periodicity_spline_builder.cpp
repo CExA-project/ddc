@@ -16,7 +16,7 @@
 #include "cosine_evaluator.hpp"
 #include "spline_error_bounds.hpp"
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PERIODICITY_SPLINE_BUILDER_CPP) {
+inline namespace anonymous_namespace_workaround_periodicity_spline_builder_cpp {
 
 struct DimX
 {
@@ -131,8 +131,7 @@ void PeriodicitySplineBuilderTest()
             DDim<X>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::GINKGO,
-            DDim<X>> const spline_builder(dom_vals);
+            ddc::SplineSolver::GINKGO> const spline_builder(dom_vals);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<BSplines<X>> const dom_bsplines = spline_builder.spline_domain();
@@ -160,8 +159,8 @@ void PeriodicitySplineBuilderTest()
             BSplines<X>,
             DDim<X>,
             ddc::PeriodicExtrapolationRule<X>,
-            ddc::PeriodicExtrapolationRule<X>,
-            DDim<X>> const spline_evaluator(extrapolation_rule, extrapolation_rule);
+            ddc::PeriodicExtrapolationRule<X>> const
+            spline_evaluator(extrapolation_rule, extrapolation_rule);
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<X>, MemorySpace>());
@@ -201,7 +200,7 @@ void PeriodicitySplineBuilderTest()
             std::max(error_bounds.error_bound(dx<X>(ncells), s_degree_x), 1.0e-14 * max_norm));
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PERIODICITY_SPLINE_BUILDER_CPP)
+} // namespace anonymous_namespace_workaround_periodicity_spline_builder_cpp
 
 TEST(PeriodicitySplineBuilderHost, 1D)
 {

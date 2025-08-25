@@ -13,7 +13,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP) {
+inline namespace anonymous_namespace_workaround_chunk_cpp {
 
 using DElem0D = ddc::DiscreteElement<>;
 using DVect0D = ddc::DiscreteVector<>;
@@ -75,18 +75,20 @@ DElem0D constexpr lbound_0d {};
 DVect0D constexpr nelems_0d {};
 DDom0D constexpr dom_0d(lbound_0d, nelems_0d);
 
-DElemX constexpr lbound_x(50);
+DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
 DVectX constexpr nelems_x(3);
 DDomX constexpr dom_x(lbound_x, nelems_x);
 
-DElemY constexpr lbound_y(4);
+DElemY constexpr lbound_y = ddc::init_trivial_half_bounded_space<DDimY>();
 DVectY constexpr nelems_y(12);
+
+DElemZ constexpr lbound_z = ddc::init_trivial_half_bounded_space<DDimZ>();
 
 DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 DDomXY constexpr dom_x_y(lbound_x_y, nelems_x_y);
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(CHUNK_CPP)
+} // namespace anonymous_namespace_workaround_chunk_cpp
 
 // Member types of Chunk 1D \{
 
@@ -123,14 +125,14 @@ TEST(Chunk1DTest, MoveConstructor)
     double const factor = 1.391;
     ChunkX<double> chunk(dom_x);
     for (DElemX const ix : chunk.domain()) {
-        chunk(ix) = factor * ix.uid();
+        chunk(ix) = factor * (ix - lbound_x);
     }
 
     ChunkX<double> const chunk2(std::move(chunk));
     EXPECT_EQ(chunk2.domain(), dom_x);
     for (DElemX const ix : chunk2.domain()) {
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
-        EXPECT_EQ(factor * ix.uid(), chunk2(ix));
+        EXPECT_EQ(factor * (ix - lbound_x), chunk2(ix));
     }
 }
 
@@ -151,7 +153,7 @@ TEST(Chunk1DTest, MoveAssignment)
     double const factor = 1.976;
     ChunkX<double> chunk(dom_x);
     for (DElemX const ix : chunk.domain()) {
-        chunk(ix) = factor * ix.uid();
+        chunk(ix) = factor * (ix - lbound_x);
     }
 
     ChunkX<double> chunk2(DDomX(lbound_x, DVectX(0)));
@@ -159,7 +161,7 @@ TEST(Chunk1DTest, MoveAssignment)
     EXPECT_EQ(chunk2.domain(), dom_x);
     for (DElemX const ix : chunk2.domain()) {
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
-        EXPECT_EQ(factor * ix.uid(), chunk2(ix));
+        EXPECT_EQ(factor * (ix - lbound_x), chunk2(ix));
     }
 }
 
@@ -183,7 +185,7 @@ TEST(Chunk1DTest, Swap)
     double const factor = 1.976;
     ChunkX<double> chunk(dom_x);
     for (DElemX const ix : chunk.domain()) {
-        chunk(ix) = factor * ix.uid();
+        chunk(ix) = factor * (ix - lbound_x);
     }
 
     DDomX const empty_domain(lbound_x, DVectX(0));
@@ -194,7 +196,7 @@ TEST(Chunk1DTest, Swap)
     EXPECT_EQ(chunk2.domain(), dom_x);
     for (DElemX const ix : chunk2.domain()) {
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
-        EXPECT_EQ(factor * ix.uid(), chunk2(ix));
+        EXPECT_EQ(factor * (ix - lbound_x), chunk2(ix));
     }
 }
 
@@ -206,9 +208,10 @@ TEST(Chunk1DTest, AccessConst)
     ChunkX<double> chunk(dom_x);
     ChunkX<double> const& chunk_cref = chunk;
     for (DElemX const ix : chunk.domain()) {
-        chunk(ix) = factor * ix.uid();
+        chunk(ix) = factor * (ix - lbound_x);
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
-        EXPECT_EQ(chunk_cref(ix), factor * ix.uid());
+        EXPECT_EQ(chunk_cref(ix), factor * (ix - lbound_x));
+        EXPECT_EQ(chunk_cref(ix - lbound_x), factor * (ix - lbound_x));
     }
 }
 
@@ -217,9 +220,10 @@ TEST(Chunk1DTest, Access)
     double const factor = 1.012;
     ChunkX<double> chunk(dom_x);
     for (DElemX const ix : chunk.domain()) {
-        chunk(ix) = factor * ix.uid();
+        chunk(ix) = factor * (ix - lbound_x);
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
-        EXPECT_EQ(chunk(ix), factor * ix.uid());
+        EXPECT_EQ(chunk(ix), factor * (ix - lbound_x));
+        EXPECT_EQ(chunk(ix - lbound_x), factor * (ix - lbound_x));
     }
 }
 
@@ -228,9 +232,9 @@ TEST(Chunk1DTest, SpanCview)
     double const factor = 1.567;
     ChunkX<double> chunk(dom_x);
     for (DElemX const ix : chunk.domain()) {
-        chunk(ix) = factor * ix.uid();
+        chunk(ix) = factor * (ix - lbound_x);
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
-        EXPECT_EQ(chunk.span_cview()(ix), factor * ix.uid());
+        EXPECT_EQ(chunk.span_cview()(ix), factor * (ix - lbound_x));
     }
 }
 
@@ -240,9 +244,9 @@ TEST(Chunk1DTest, ViewConst)
     ChunkX<double> chunk(dom_x);
     ChunkX<double> const& chunk_cref = chunk;
     for (DElemX const ix : chunk.domain()) {
-        chunk(ix) = factor * ix.uid();
+        chunk(ix) = factor * (ix - lbound_x);
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
-        EXPECT_EQ(chunk_cref.span_view()(ix), factor * ix.uid());
+        EXPECT_EQ(chunk_cref.span_view()(ix), factor * (ix - lbound_x));
     }
 }
 
@@ -251,9 +255,9 @@ TEST(Chunk1DTest, View)
     double const factor = 1.259;
     ChunkX<double> chunk(dom_x);
     for (DElemX const ix : chunk.domain()) {
-        chunk.span_view()(ix) = factor * ix.uid();
+        chunk.span_view()(ix) = factor * (ix - lbound_x);
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
-        EXPECT_EQ(chunk(ix), factor * ix.uid());
+        EXPECT_EQ(chunk(ix), factor * (ix - lbound_x));
     }
 }
 
@@ -383,7 +387,7 @@ TEST(Chunk0DTest, AllocationMdspan)
     Chunk0D<int> chk(dom_0d);
     chk() = 5;
 
-    ChunkSpan0D<const int> const chunk_span(chk.allocation_mdspan(), dom_0d);
+    ChunkSpan0D<int const> const chunk_span(chk.allocation_mdspan(), dom_0d);
 
     EXPECT_EQ(chunk_span(), 5);
 }
@@ -395,7 +399,7 @@ TEST(Chunk1DTest, AllocationMdspan)
     chk(lbound_x + 1) = 6;
     chk(lbound_x + 2) = 7;
 
-    ddc::ChunkSpan<const int, DDomX> const chunk_span(chk.allocation_mdspan(), dom_x);
+    ddc::ChunkSpan<int const, DDomX> const chunk_span(chk.allocation_mdspan(), dom_x);
 
     EXPECT_EQ(chunk_span(lbound_x), 5);
     EXPECT_EQ(chunk_span(lbound_x + 1), 6);
@@ -412,7 +416,7 @@ TEST(Chunk1DTest, Deepcopy)
 {
     ChunkX<double> chunk(dom_x);
     for (DElemX const ix : chunk.domain()) {
-        chunk(ix) = 1.001 * ix.uid();
+        chunk(ix) = 1.001 * (ix - lbound_x);
     }
     ChunkX<double> chunk2(chunk.domain());
     ddc::parallel_deepcopy(chunk2, chunk);
@@ -432,9 +436,11 @@ TEST(Chunk2DTest, Access)
     ChunkXY<double> chunk(dom_x_y);
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
-            chunk(ix, iy) = 1.357 * ix.uid() + 1.159 * iy.uid();
+            double const value = 1.357 * (ix - lbound_x) + 1.159 * (iy - lbound_y);
+            chunk(ix, iy) = value;
             // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
-            EXPECT_EQ(chunk(ix, iy), chunk(ix, iy));
+            EXPECT_EQ(chunk(ix, iy), value);
+            EXPECT_EQ(chunk(ix - lbound_x, iy - lbound_y), value);
         }
     }
 }
@@ -444,9 +450,11 @@ TEST(Chunk2DTest, AccessReordered)
     ChunkXY<double> chunk(dom_x_y);
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
-            chunk(ix, iy) = 1.455 * ix.uid() + 1.522 * iy.uid();
+            chunk(ix, iy) = 1.455 * (ix - lbound_x) + 1.522 * (iy - lbound_y);
             // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
             EXPECT_EQ(chunk(iy, ix), chunk(ix, iy));
+            EXPECT_EQ(chunk(iy - lbound_y, ix - lbound_x), chunk(ix, iy));
+            EXPECT_EQ(chunk(iy - lbound_y, ix - lbound_x), chunk(ix - lbound_x, iy - lbound_y));
         }
     }
 }
@@ -456,7 +464,7 @@ TEST(Chunk2DTest, Cview)
     ChunkXY<double> chunk(dom_x_y);
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
-            chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
+            chunk(ix, iy) = 1. * (ix - lbound_x) + .001 * (iy - lbound_y);
         }
     }
     ddc::ChunkSpan const cview = chunk.span_cview();
@@ -476,7 +484,7 @@ TEST(Chunk2DTest, SliceCoordX)
     ChunkXY<double> const& chunk_cref = chunk;
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
-            chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
+            chunk(ix, iy) = 1. * (ix - lbound_x) + .001 * (iy - lbound_y);
         }
     }
 
@@ -498,7 +506,7 @@ TEST(Chunk2DTest, SliceCoordY)
     ChunkXY<double> const& chunk_cref = chunk;
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
-            chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
+            chunk(ix, iy) = 1. * (ix - lbound_x) + .001 * (iy - lbound_y);
         }
     }
 
@@ -512,6 +520,21 @@ TEST(Chunk2DTest, SliceCoordY)
     }
 }
 
+TEST(Chunk2DTest, SliceCoordXOutOfBounds)
+{
+#if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
+    ChunkXY<double> chunk(dom_x_y);
+
+    char const* const death_msg
+            = R"rgx([Aa]ssert.*QueryDDom\(this->m_domain\).contains\(slice_spec\))rgx";
+
+    EXPECT_DEATH(chunk[dom_x.front() - 1], death_msg);
+    EXPECT_DEATH(chunk[dom_x.back() + 1], death_msg);
+#else
+    GTEST_SKIP();
+#endif
+}
+
 TEST(Chunk2DTest, SliceDomainX)
 {
     DDomX const subdomain_x(lbound_x + 1, nelems_x - 2);
@@ -520,7 +543,7 @@ TEST(Chunk2DTest, SliceDomainX)
     ChunkXY<double> const& chunk_cref = chunk;
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
-            chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
+            chunk(ix, iy) = 1. * (ix - lbound_x) + .001 * (iy - lbound_y);
         }
     }
 
@@ -546,7 +569,7 @@ TEST(Chunk2DTest, SliceDomainY)
     ChunkXY<double> const& chunk_cref = chunk;
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
-            chunk(ix, iy) = 1. * ix.uid() + .001 * iy.uid();
+            chunk(ix, iy) = 1. * (ix - lbound_x) + .001 * (iy - lbound_y);
         }
     }
     ddc::ChunkSpan const subchunk_y = chunk_cref[subdomain_y];
@@ -564,12 +587,27 @@ TEST(Chunk2DTest, SliceDomainY)
     }
 }
 
+TEST(Chunk2DTest, SliceDomainXOutOfBounds)
+{
+#if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
+    ChunkXY<double> chunk(dom_x_y.remove(DVectXY(1, 0), DVectXY(1, 0)));
+
+    char const* const death_msg
+            = R"rgx([Aa]ssert.*DiscreteDomain<QueryDDims...>\(this->m_domain\).contains\(odomain.front\(\)\) && DiscreteDomain<QueryDDims...>\(this->m_domain\).contains\(odomain.back\(\)\))rgx";
+
+    EXPECT_DEATH(chunk[dom_x_y.remove_last(DVectXY(1, 0))], death_msg);
+    EXPECT_DEATH(chunk[dom_x_y.remove_first(DVectXY(1, 0))], death_msg);
+#else
+    GTEST_SKIP();
+#endif
+}
+
 TEST(Chunk2DTest, Deepcopy)
 {
     ChunkXY<double> chunk(dom_x_y);
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
-            chunk(ix, iy) = 1.739 * ix.uid() + 1.412 * iy.uid();
+            chunk(ix, iy) = 1.739 * (ix - lbound_x) + 1.412 * (iy - lbound_y);
         }
     }
     ChunkXY<double> chunk2(chunk.domain());
@@ -587,7 +625,7 @@ TEST(Chunk2DTest, DeepcopyReordered)
     ChunkXY<double> chunk(dom_x_y);
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
-            chunk(ix, iy) = 1.739 * ix.uid() + 1.412 * iy.uid();
+            chunk(ix, iy) = 1.739 * (ix - lbound_x) + 1.412 * (iy - lbound_y);
         }
     }
     ChunkYX<double> chunk2(DDomYX(chunk.domain()));
@@ -606,17 +644,20 @@ TEST(Chunk2DTest, DeepcopyReordered)
 TEST(Chunk3DTest, AccessFromDiscreteElements)
 {
     using DDomXYZ = ddc::DiscreteDomain<DDimX, DDimY, DDimZ>;
-    DDomZ const dom_z(ddc::DiscreteElement<DDimZ>(2), ddc::DiscreteVector<DDimZ>(4));
+    DDomZ const dom_z(lbound_z, ddc::DiscreteVector<DDimZ>(4));
     ddc::Chunk<double, DDomXYZ> chunk(DDomXYZ(dom_x_y, dom_z));
     ddc::ChunkSpan const chunk_span = chunk.span_cview();
+    ddc::DiscreteElement<DDimZ, DDimX> const lbound_zx(lbound_z, lbound_x);
     for (DElemX const ix : chunk.domain<DDimX>()) {
         for (DElemY const iy : chunk.domain<DDimY>()) {
             for (DElemZ const iz : chunk.domain<DDimZ>()) {
-                chunk(ix, iy, iz) = 1.357 * ix.uid() + 1.159 * iy.uid() + 3.2 * iz.uid();
+                chunk(ix, iy, iz)
+                        = 1.357 * (ix - lbound_x) + 1.159 * (iy - lbound_y) + 3.2 * (iz - lbound_z);
                 ddc::DiscreteElement<DDimX, DDimZ> const izx(iz, ix);
                 // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
                 EXPECT_EQ(chunk(ix, iy, iz), chunk(iy, izx));
                 EXPECT_EQ(chunk(ix, iy, iz), chunk_span(iy, izx));
+                EXPECT_EQ(chunk(ix, iy, iz), chunk(iy - lbound_y, izx - lbound_zx));
             }
         }
     }
@@ -642,4 +683,11 @@ TEST(ChunkStridedDiscreteDomain, Constructor)
     ddc::parallel_fill(chk.span_view(), 2);
     EXPECT_EQ(chk(lbound_x_y), 2);
     EXPECT_EQ(chk(lbound_x_y + DVectXY(10, 10)), 2);
+}
+
+TEST(ChunkStridedDiscreteDomain, Slice)
+{
+    ddc::StridedDiscreteDomain<DDimX, DDimY> const dom(lbound_x_y, nelems_x_y, DVectXY(10, 10));
+    ddc::Chunk chk("", dom, ddc::HostAllocator<int>());
+    EXPECT_EQ(chk(lbound_x_y), chk[lbound_x_y]());
 }

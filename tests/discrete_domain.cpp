@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_DOMAIN_CPP) {
+inline namespace anonymous_namespace_workaround_discrete_domain_cpp {
 
 struct DDimX
 {
@@ -58,18 +58,18 @@ using DElemZYX = ddc::DiscreteElement<DDimZ, DDimY, DDimX>;
 using DVectZYX = ddc::DiscreteVector<DDimZ, DDimY, DDimX>;
 using DDomZYX = ddc::DiscreteDomain<DDimZ, DDimY, DDimX>;
 
-DElemX constexpr lbound_x(50);
+DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
 DVectX constexpr nelems_x(3);
 DElemX constexpr sentinel_x(lbound_x + nelems_x);
 DElemX constexpr ubound_x(sentinel_x - 1);
 
 
-DElemY constexpr lbound_y(4);
+DElemY constexpr lbound_y = ddc::init_trivial_half_bounded_space<DDimY>();
 DVectY constexpr nelems_y(12);
 DElemY constexpr sentinel_y(lbound_y + nelems_y);
 DElemY constexpr ubound_y(sentinel_y - 1);
 
-DElemZ constexpr lbound_z(7);
+DElemZ constexpr lbound_z = ddc::init_trivial_half_bounded_space<DDimZ>();
 DVectZ constexpr nelems_z(15);
 
 DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
@@ -79,7 +79,7 @@ DElemXY constexpr ubound_x_y(ubound_x, ubound_y);
 DElemXZ constexpr lbound_x_z(lbound_x, lbound_z);
 DVectXZ constexpr nelems_x_z(nelems_x, nelems_z);
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(DISCRETE_DOMAIN_CPP)
+} // namespace anonymous_namespace_workaround_discrete_domain_cpp
 
 TEST(DiscreteDomainTest, Constructor)
 {
@@ -131,8 +131,8 @@ TEST(DiscreteDomainTest, CompareSameDomains)
 
 TEST(DiscreteDomainTest, CompareDifferentDomains)
 {
-    DDomXY const dom_x_y_1(DElemXY(0, 1), DVectXY(1, 2));
-    DDomXY const dom_x_y_2(DElemXY(2, 3), DVectXY(3, 4));
+    DDomXY const dom_x_y_1(lbound_x_y + DVectXY(0, 1), DVectXY(1, 2));
+    DDomXY const dom_x_y_2(lbound_x_y + DVectXY(2, 3), DVectXY(3, 4));
     EXPECT_FALSE(dom_x_y_1 == dom_x_y_2);
     EXPECT_FALSE(dom_x_y_1 == DDomYX(dom_x_y_2));
     EXPECT_TRUE(dom_x_y_1 != dom_x_y_2);
@@ -141,8 +141,8 @@ TEST(DiscreteDomainTest, CompareDifferentDomains)
 
 TEST(DiscreteDomainTest, CompareEmptyDomains)
 {
-    DDomXY const dom_x_y_1(DElemXY(4, 1), DVectXY(0, 0));
-    DDomXY const dom_x_y_2(DElemXY(3, 9), DVectXY(0, 0));
+    DDomXY const dom_x_y_1(lbound_x_y + DVectXY(4, 1), DVectXY(0, 0));
+    DDomXY const dom_x_y_2(lbound_x_y + DVectXY(3, 9), DVectXY(0, 0));
     EXPECT_TRUE(dom_x_y_1.empty());
     EXPECT_TRUE(dom_x_y_2.empty());
     EXPECT_TRUE(dom_x_y_1 == dom_x_y_2);
@@ -170,7 +170,7 @@ TEST(DiscreteDomainTest, RangeFor)
         EXPECT_LE(lbound_x, ix);
         EXPECT_EQ(ix, ii);
         EXPECT_LE(ix, ubound_x);
-        ++ii.uid<DDimX>();
+        ++ii;
     }
 }
 
@@ -260,13 +260,13 @@ TEST(DiscreteDomainTest, DistanceFromFront)
 
 TEST(DiscreteDomainTest, SliceDomainXTooearly)
 {
-#ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
-    DDomX const subdomain_x(lbound_x - 1, nelems_x);
-    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
+#if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
+    DDomX const subdomain_x(lbound_x, nelems_x);
+    DDomXY const dom_x_y(lbound_x_y + DVectXY(1, 1), nelems_x_y);
     // the error message is checked with clang & gcc only
     EXPECT_DEATH(
             dom_x_y.restrict_with(subdomain_x),
-            R"rgx([Aa]ssert.*uid<ODDims>\(m_element_begin\).*uid<ODDims>\(odomain\.m_element_begin\))rgx");
+            R"rgx([Aa]ssert.*DiscreteElement<ODDims>\(m_element_begin\).*DiscreteElement<ODDims>\(odomain\.m_element_begin\))rgx");
 #else
     GTEST_SKIP();
 #endif
@@ -274,13 +274,13 @@ TEST(DiscreteDomainTest, SliceDomainXTooearly)
 
 TEST(DiscreteDomainTest, SliceDomainXToolate)
 {
-#ifndef NDEBUG // The assertion is only checked if NDEBUG isn't defined
+#if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
     DDomX const subdomain_x(lbound_x, nelems_x + 1);
     DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
     // the error message is checked with clang & gcc only
     EXPECT_DEATH(
             dom_x_y.restrict_with(subdomain_x),
-            R"rgx([Aa]ssert.*uid<ODDims>\(m_element_end\).*uid<ODDims>\(odomain\.m_element_end\).*)rgx");
+            R"rgx([Aa]ssert.*DiscreteElement<ODDims>\(m_element_end\).*DiscreteElement<ODDims>\(odomain\.m_element_end\).*)rgx");
 #else
     GTEST_SKIP();
 #endif

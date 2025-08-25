@@ -11,7 +11,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FILL_CPP) {
+inline namespace anonymous_namespace_workaround_parallel_fill_cpp {
 
 struct DDimX
 {
@@ -31,16 +31,16 @@ using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
 using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
 using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 
-DElemX constexpr lbound_x(0);
+DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
 DVectX constexpr nelems_x(10);
 
-DElemY constexpr lbound_y(0);
+DElemY constexpr lbound_y = ddc::init_trivial_half_bounded_space<DDimY>();
 DVectY constexpr nelems_y(12);
 
 DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(PARALLEL_FILL_CPP)
+} // namespace anonymous_namespace_workaround_parallel_fill_cpp
 
 TEST(ParallelFill, OneDimension)
 {

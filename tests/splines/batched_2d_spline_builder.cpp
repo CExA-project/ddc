@@ -5,10 +5,10 @@
 #include <algorithm>
 #include <cstddef>
 #if defined(BC_HERMITE)
-#include <optional>
+#    include <optional>
 #endif
 #if defined(BSPLINES_TYPE_UNIFORM)
-#include <type_traits>
+#    include <type_traits>
 #endif
 #include <vector>
 
@@ -21,13 +21,13 @@
 
 #include "evaluator_2d.hpp"
 #if defined(BC_PERIODIC)
-#include "cosine_evaluator.hpp"
+#    include "cosine_evaluator.hpp"
 #else
-#include "polynomial_evaluator.hpp"
+#    include "polynomial_evaluator.hpp"
 #endif
 #include "spline_error_bounds.hpp"
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_2D_SPLINE_BUILDER_CPP) {
+inline namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp {
 
 #if defined(BC_PERIODIC)
 struct DimX
@@ -39,11 +39,6 @@ struct DimY
 {
     static constexpr bool PERIODIC = true;
 };
-
-struct DimZ
-{
-    static constexpr bool PERIODIC = true;
-};
 #else
 
 struct DimX
@@ -52,11 +47,6 @@ struct DimX
 };
 
 struct DimY
-{
-    static constexpr bool PERIODIC = false;
-};
-
-struct DimZ
 {
     static constexpr bool PERIODIC = false;
 };
@@ -186,6 +176,8 @@ void Batched2dSplineTest()
             = GrevillePoints<BSplines<I1>>::template get_domain<DDimI1>();
     ddc::DiscreteDomain<DDimI2> const interpolation_domain2
             = GrevillePoints<BSplines<I2>>::template get_domain<DDimI2>();
+    ddc::DiscreteDomain<DDimI1, DDimI2> const
+            interpolation_domain(interpolation_domain1, interpolation_domain2);
     // The following line creates a discrete domain over all dimensions (DDims...) except DDimI1 and DDimI2.
     auto const dom_vals_tmp = ddc::remove_dims_of_t<ddc::DiscreteDomain<DDims...>, DDimI1, DDimI2>(
             ddc::DiscreteDomain<DDims>(DElem<DDims>(0), DVect<DDims>(ncells))...);
@@ -220,13 +212,12 @@ void Batched2dSplineTest()
             s_bcr,
             s_bcl,
             s_bcr,
-            ddc::SplineSolver::GINKGO,
-            DDims...> const spline_builder(dom_vals);
+            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<DDimI1, DDimI2> const dom_interpolation
             = spline_builder.interpolation_domain();
-    auto const dom_spline = spline_builder.batched_spline_domain();
+    auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
@@ -472,8 +463,7 @@ void Batched2dSplineTest()
             extrapolation_rule_1_type,
             extrapolation_rule_1_type,
             extrapolation_rule_2_type,
-            extrapolation_rule_2_type,
-            DDims...> const
+            extrapolation_rule_2_type> const
             spline_evaluator(
                     extrapolation_rule_1,
                     extrapolation_rule_1,
@@ -593,20 +583,20 @@ void Batched2dSplineTest()
                         1e-11 * max_norm_diff12));
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(BATCHED_2D_SPLINE_BUILDER_CPP)
+} // namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Periodic##Uniform
+#    define SUFFIX(name) name##Periodic##Uniform
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Periodic##NonUniform
+#    define SUFFIX(name) name##Periodic##NonUniform
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Greville##Uniform
+#    define SUFFIX(name) name##Greville##Uniform
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Greville##NonUniform
+#    define SUFFIX(name) name##Greville##NonUniform
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM)
-#define SUFFIX(name) name##Hermite##Uniform
+#    define SUFFIX(name) name##Hermite##Uniform
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#define SUFFIX(name) name##Hermite##NonUniform
+#    define SUFFIX(name) name##Hermite##NonUniform
 #endif
 
 TEST(SUFFIX(Batched2dSplineHost), 2DXY)
@@ -631,7 +621,7 @@ TEST(SUFFIX(Batched2dSplineDevice), 2DXY)
             DDimGPS<DimY>>();
 }
 
-TEST(SUFFIX(Batched2dSplineHost), 3DXY)
+TEST(SUFFIX(Batched2dSplineHost), 3DXYB)
 {
     Batched2dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
@@ -643,31 +633,31 @@ TEST(SUFFIX(Batched2dSplineHost), 3DXY)
             DDimBatch>();
 }
 
-TEST(SUFFIX(Batched2dSplineHost), 3DXZ)
+TEST(SUFFIX(Batched2dSplineHost), 3DXBY)
 {
     Batched2dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimZ>,
+            DDimGPS<DimY>,
             DDimGPS<DimX>,
             DDimBatch,
-            DDimGPS<DimZ>>();
+            DDimGPS<DimY>>();
 }
 
-TEST(SUFFIX(Batched2dSplineHost), 3DYZ)
+TEST(SUFFIX(Batched2dSplineHost), 3DBXY)
 {
     Batched2dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
+            DDimGPS<DimX>,
             DDimGPS<DimY>,
-            DDimGPS<DimZ>,
             DDimBatch,
-            DDimGPS<DimY>,
-            DDimGPS<DimZ>>();
+            DDimGPS<DimX>,
+            DDimGPS<DimY>>();
 }
 
-TEST(SUFFIX(Batched2dSplineDevice), 3DXY)
+TEST(SUFFIX(Batched2dSplineDevice), 3DXYB)
 {
     Batched2dSplineTest<
             Kokkos::DefaultExecutionSpace,
@@ -679,26 +669,26 @@ TEST(SUFFIX(Batched2dSplineDevice), 3DXY)
             DDimBatch>();
 }
 
-TEST(SUFFIX(Batched2dSplineDevice), 3DXZ)
+TEST(SUFFIX(Batched2dSplineDevice), 3DXBY)
 {
     Batched2dSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimZ>,
+            DDimGPS<DimY>,
             DDimGPS<DimX>,
             DDimBatch,
-            DDimGPS<DimZ>>();
+            DDimGPS<DimY>>();
 }
 
-TEST(SUFFIX(Batched2dSplineDevice), 3DYZ)
+TEST(SUFFIX(Batched2dSplineDevice), 3DBXY)
 {
     Batched2dSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
+            DDimGPS<DimX>,
             DDimGPS<DimY>,
-            DDimGPS<DimZ>,
             DDimBatch,
-            DDimGPS<DimY>,
-            DDimGPS<DimZ>>();
+            DDimGPS<DimX>,
+            DDimGPS<DimY>>();
 }

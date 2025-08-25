@@ -12,8 +12,8 @@
 
 #include <Kokkos_Macros.hpp>
 
-#include "ddc/detail/macros.hpp"
-#include "ddc/detail/type_seq.hpp"
+#include "detail/macros.hpp"
+#include "detail/type_seq.hpp"
 
 namespace ddc {
 
@@ -67,6 +67,18 @@ KOKKOS_FUNCTION constexpr DiscreteVectorElement const& get_or(
         DiscreteVectorElement const& default_value) noexcept
 {
     return tuple.template get_or<QueryTag>(default_value);
+}
+
+template <class QueryTag, class... Tags>
+KOKKOS_FUNCTION constexpr DiscreteVector<QueryTag> select_or(
+        DiscreteVector<Tags...> const& arr,
+        DiscreteVector<QueryTag> const& default_value) noexcept
+{
+    if constexpr (in_tags_v<QueryTag, detail::TypeSeq<Tags...>>) {
+        return DiscreteVector<QueryTag>(arr);
+    } else {
+        return default_value;
+    }
 }
 
 /// Unary operators: +, -

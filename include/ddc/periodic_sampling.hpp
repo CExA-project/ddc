@@ -13,12 +13,12 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/coordinate.hpp"
-#include "ddc/discrete_domain.hpp"
-#include "ddc/discrete_element.hpp"
-#include "ddc/discrete_space.hpp"
-#include "ddc/discrete_vector.hpp"
-#include "ddc/real_type.hpp"
+#include "coordinate.hpp"
+#include "discrete_domain.hpp"
+#include "discrete_element.hpp"
+#include "discrete_space.hpp"
+#include "discrete_vector.hpp"
+#include "real_type.hpp"
 
 namespace ddc {
 
@@ -38,12 +38,6 @@ class PeriodicSampling : detail::PeriodicSamplingBase
 public:
     using continuous_dimension_type = CDim;
 
-#if defined(DDC_BUILD_DEPRECATED_CODE)
-    using continuous_element_type
-            [[deprecated("Use ddc::Coordinate<continuous_dimension_type> instead.")]]
-            = Coordinate<CDim>;
-#endif
-
     using discrete_dimension_type = PeriodicSampling;
 
 public:
@@ -60,6 +54,8 @@ public:
 
         std::size_t m_n_period;
 
+        DiscreteElement<DDim> m_reference;
+
     public:
         using discrete_dimension_type = PeriodicSampling;
 
@@ -69,7 +65,13 @@ public:
 
         using discrete_vector_type = DiscreteVector<DDim>;
 
-        Impl() noexcept : m_origin(0), m_step(1), m_n_period(2) {}
+        Impl() noexcept
+            : m_origin(0)
+            , m_step(1)
+            , m_n_period(2)
+            , m_reference(create_reference_discrete_element<DDim>())
+        {
+        }
 
         Impl(Impl const&) = delete;
 
@@ -78,6 +80,7 @@ public:
             : m_origin(impl.m_origin)
             , m_step(impl.m_step)
             , m_n_period(impl.m_n_period)
+            , m_reference(impl.m_reference)
         {
         }
 
@@ -93,6 +96,7 @@ public:
             : m_origin(origin)
             , m_step(step)
             , m_n_period(n_period)
+            , m_reference(create_reference_discrete_element<DDim>())
         {
             assert(step > 0);
             assert(n_period > 0);
@@ -113,7 +117,7 @@ public:
         /// @brief Lower bound index of the mesh
         KOKKOS_FUNCTION discrete_element_type front() const noexcept
         {
-            return discrete_element_type(0);
+            return m_reference;
         }
 
         /// @brief Spacing step of the mesh
@@ -134,7 +138,7 @@ public:
         {
             return m_origin
                    + Coordinate<CDim>(
-                             static_cast<int>((icoord.uid() + m_n_period / 2) % m_n_period)
+                             static_cast<int>(((icoord - front()) + m_n_period / 2) % m_n_period)
                              - static_cast<int>(m_n_period / 2))
                              * m_step;
         }

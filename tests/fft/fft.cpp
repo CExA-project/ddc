@@ -14,18 +14,18 @@
 #include <Kokkos_Core.hpp>
 
 #if !defined(KOKKOSFFT_ENABLE_SERIAL)
-#if defined(KOKKOS_ENABLE_SERIAL) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)
-#define KOKKOSFFT_ENABLE_SERIAL
-#endif
+#    if defined(KOKKOS_ENABLE_SERIAL) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)
+#        define KOKKOSFFT_ENABLE_SERIAL
+#    endif
 #endif
 
 #if !defined(KOKKOSFFT_ENABLE_OPENMP)
-#if defined(KOKKOS_ENABLE_OPENMP) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)
-#define KOKKOSFFT_ENABLE_OPENMP
-#endif
+#    if defined(KOKKOS_ENABLE_OPENMP) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)
+#        define KOKKOSFFT_ENABLE_OPENMP
+#    endif
 #endif
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FFT_CPP) {
+inline namespace anonymous_namespace_workaround_fft_cpp {
 
 template <typename X>
 struct DDim : ddc::UniformPointSampling<X>
@@ -52,10 +52,11 @@ void test_fourier_mesh(std::size_t Nx)
     double const a = -10;
     double const b = 10;
 
-    DDom<DDim<X>> const x_mesh(ddc::init_discrete_space<DDim<X>>(DDim<X>::template init<DDim<X>>(
-            ddc::Coordinate<X>(a + (b - a) / Nx / 2),
-            ddc::Coordinate<X>(b - (b - a) / Nx / 2),
-            DVect<DDim<X>>(Nx))));
+    DDom<DDim<X>> const x_mesh(
+            ddc::init_discrete_space<DDim<X>>(DDim<X>::template init<DDim<X>>(
+                    ddc::Coordinate<X>(a + (b - a) / Nx / 2),
+                    ddc::Coordinate<X>(b - (b - a) / Nx / 2),
+                    DVect<DDim<X>>(Nx))));
     ddc::init_discrete_space<DFDim<ddc::Fourier<X>>>(
             ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(ddc::DiscreteDomain<DDim<X>>(x_mesh)));
     DDom<DFDim<ddc::Fourier<X>>> const k_mesh
@@ -86,10 +87,11 @@ void test_fft()
     double const b = 10;
     std::size_t const Nx = 64; // Optimal value is (b-a)^2/(2*pi)
 
-    DDom<DDim<X>...> const x_mesh(ddc::init_discrete_space<DDim<X>>(DDim<X>::template init<DDim<X>>(
-            ddc::Coordinate<X>(a + (b - a) / Nx / 2),
-            ddc::Coordinate<X>(b - (b - a) / Nx / 2),
-            DVect<DDim<X>>(Nx)))...);
+    DDom<DDim<X>...> const x_mesh(
+            ddc::init_discrete_space<DDim<X>>(DDim<X>::template init<DDim<X>>(
+                    ddc::Coordinate<X>(a + (b - a) / Nx / 2),
+                    ddc::Coordinate<X>(b - (b - a) / Nx / 2),
+                    DVect<DDim<X>>(Nx)))...);
     (ddc::init_discrete_space<DFDim<ddc::Fourier<X>>>(
              ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(ddc::DiscreteDomain<DDim<X>>(x_mesh))),
      ...);
@@ -141,24 +143,27 @@ void test_fft()
     };
 
     std::size_t const mesh_size = x_mesh.size();
-    double const criterion = Kokkos::sqrt(ddc::transform_reduce(
-            Ff_host.domain(),
-            0.,
-            ddc::reducer::sum<double>(),
-            [=](DElem<DFDim<ddc::Fourier<X>>...> const e) {
-                double const xn2 = (pow2(ddc::coordinate(DElem<DFDim<ddc::Fourier<X>>>(e))) + ...);
-                double const diff = Kokkos::abs(Ff_host(e)) - Kokkos::exp(-xn2 / 2);
-                return pow2(diff) / (mesh_size / 2);
-            }));
+    double const criterion = Kokkos::sqrt(
+            ddc::transform_reduce(
+                    Ff_host.domain(),
+                    0.,
+                    ddc::reducer::sum<double>(),
+                    [=](DElem<DFDim<ddc::Fourier<X>>...> const e) {
+                        double const xn2
+                                = (pow2(ddc::coordinate(DElem<DFDim<ddc::Fourier<X>>>(e))) + ...);
+                        double const diff = Kokkos::abs(Ff_host(e)) - Kokkos::exp(-xn2 / 2);
+                        return pow2(diff) / (mesh_size / 2);
+                    }));
 
-    double const criterion2 = Kokkos::sqrt(ddc::transform_reduce(
-            FFf_host.domain(),
-            0.,
-            ddc::reducer::sum<double>(),
-            [=](DElem<DDim<X>...> const e) {
-                double const diff = Kokkos::abs(FFf_host(e)) - Kokkos::abs(f_host(e));
-                return pow2(diff) / mesh_size;
-            }));
+    double const criterion2 = Kokkos::sqrt(
+            ddc::transform_reduce(
+                    FFf_host.domain(),
+                    0.,
+                    ddc::reducer::sum<double>(),
+                    [=](DElem<DDim<X>...> const e) {
+                        double const diff = Kokkos::abs(FFf_host(e)) - Kokkos::abs(f_host(e));
+                        return pow2(diff) / mesh_size;
+                    }));
     double const epsilon
             = std::is_same_v<ddc::detail::fft::real_type_t<Tin>, double> ? 1e-15 : 1e-7;
     EXPECT_LE(criterion, epsilon)
@@ -174,10 +179,11 @@ void test_fft_norm(ddc::FFT_Normalization const norm)
     bool const full_fft
             = ddc::detail::fft::is_complex_v<Tin> && ddc::detail::fft::is_complex_v<Tout>;
 
-    DDom<DDim<X>> const x_mesh(ddc::init_discrete_space<DDim<X>>(DDim<X>::template init<DDim<X>>(
-            ddc::Coordinate<X>(-1. / 4),
-            ddc::Coordinate<X>(1. / 4),
-            DVect<DDim<X>>(2))));
+    DDom<DDim<X>> const x_mesh(
+            ddc::init_discrete_space<DDim<X>>(DDim<X>::template init<DDim<X>>(
+                    ddc::Coordinate<X>(-1. / 4),
+                    ddc::Coordinate<X>(1. / 4),
+                    DVect<DDim<X>>(2))));
     ddc::init_discrete_space<DFDim<ddc::Fourier<X>>>(
             ddc::init_fourier_space<DFDim<ddc::Fourier<X>>>(x_mesh));
     DDom<DFDim<ddc::Fourier<X>>> const k_mesh
@@ -238,7 +244,7 @@ struct RDimX;
 struct RDimY;
 struct RDimZ;
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FFT_CPP)
+} // namespace anonymous_namespace_workaround_fft_cpp
 
 TEST(FourierMesh, Extents)
 {
@@ -247,7 +253,10 @@ TEST(FourierMesh, Extents)
     using DDimFx = DFDim<ddc::Fourier<RDimX>>;
     using DDimFy = DFDim<ddc::Fourier<RDimY>>;
 
-    ddc::DiscreteElement<DDimX, DDimY> const delem_xy(0, 0);
+    ddc::DiscreteElement<DDimX> const delem_x = ddc::init_trivial_half_bounded_space<DDimX>();
+    ddc::DiscreteElement<DDimY> const delem_y = ddc::init_trivial_half_bounded_space<DDimY>();
+
+    ddc::DiscreteElement<DDimX, DDimY> const delem_xy(delem_x, delem_y);
 
     ddc::DiscreteVector<DDimX, DDimY> const dvect_xy_odd(10, 11);
     ddc::DiscreteDomain<DDimX, DDimY> const ddom_xy_odd(delem_xy, dvect_xy_odd);

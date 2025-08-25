@@ -1,0 +1,234 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Tests on macOS
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/tests-macos.yaml'
+      - '**.cpp'
+      - '**.hpp'
+      - '**.hpp.in'
+      - 'CMakeLists.txt'
+      - '**/CMakeLists.txt'
+      - '**.cmake'
+      - '**.cmake.in'
+      - 'vendor/**'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/tests-macos.yaml'
+      - '**.cpp'
+      - '**.hpp'
+      - '**.hpp.in'
+      - 'CMakeLists.txt'
+      - '**/CMakeLists.txt'
+      - '**.cmake'
+      - '**.cmake.in'
+      - 'vendor/**'
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref}}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  id_repo:
+    runs-on: macos-15
+    steps:
+      - name: Identify repository
+        id: identify_repo
+        run: |
+          echo "in_base_repo=${{(github.event_name == 'push' && github.repository == 'CExA-project/ddc') || github.event.pull_request.head.repo.full_name == 'CExA-project/ddc'}}" >> "$GITHUB_OUTPUT"
+    outputs: {in_base_repo: '${{steps.identify_repo.outputs.in_base_repo}}'}
+
+  test-macos:
+    if: github.ref_name != 'main'
+    strategy:
+      fail-fast: false
+      matrix:
+        backend:
+          - name: 'cpu'
+            c_compiler: 'clang'
+            cxx_compiler: 'clang++'
+            ddc_extra_cxx_flags: '-Wextra-semi -Wextra-semi-stmt -Wold-style-cast'
+            kokkos_extra_cmake_flags: ''
+        cxx_version: ['17', '20']  # Kokkos 4.6 is not compatible with C++ 23
+        cmake_build_type: ['Debug', 'Release']
+    runs-on: macos-15
+    needs: [id_repo]
+    env:
+      DDC_ROOT: ${{github.workspace}}/opt/ddc
+      Ginkgo_ROOT: ${{github.workspace}}/opt/ginkgo
+      Kokkos_ROOT: ${{github.workspace}}/opt/kokkos
+      KokkosFFT_ROOT: ${{github.workspace}}/opt/kokkos-fft
+      KokkosKernels_ROOT: ${{github.workspace}}/opt/kokkos-kernels
+      PDI_ROOT: ${{github.workspace}}/opt/pdi
+      CMAKE_BUILD_PARALLEL_LEVEL: 4
+      PKG_CONFIG_PATH: /opt/homebrew/opt/lapack/lib/pkgconfig
+      LAPACKE_DIR: /opt/homebrew/opt/lapack
+      CC: ${{matrix.backend.c_compiler}}
+      CXX: ${{matrix.backend.cxx_compiler}}
+      CMAKE_BUILD_TYPE: ${{matrix.cmake_build_type}}
+    permissions:
+      checks: write  # Required by mikepenz/action-junit-report
+    steps:
+      - name: Checkout built branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          repository: pdidev/pdi
+          ref: 1.9.2
+          path: pdi
+      - name: Install PDI+user code plugin and dependencies
+        run: |
+          cmake \
+            -D BUILD_BENCHMARKING=OFF \
+            -D BUILD_DECL_HDF5_PLUGIN=OFF \
+            -D BUILD_DECL_NETCDF_PLUGIN=OFF \
+            -D BUILD_DEISA_PLUGIN=OFF \
+            -D BUILD_DOCUMENTATION=OFF \
+            -D BUILD_FORTRAN=OFF \
+            -D BUILD_MPI_PLUGIN=OFF \
+            -D BUILD_PYCALL_PLUGIN=OFF \
+            -D BUILD_SERIALIZE_PLUGIN=OFF \
+            -D BUILD_SET_VALUE_PLUGIN=OFF \
+            -D BUILD_TESTING=OFF \
+            -D BUILD_TRACE_PLUGIN=OFF \
+            -D BUILD_USER_CODE_PLUGIN=ON \
+            -D CMAKE_CXX_FLAGS="-Wno-unqualified-std-cast-call" \
+            -D CMAKE_CXX_STANDARD=17 \
+            -B build \
+            -S ./pdi
+          cmake --build build
+          cmake --install build --prefix $PDI_ROOT
+          rm -rf build
+      - name: Install fftw
+        run: brew install fftw
+      - name: Install lapack
+        run: brew install lapack
+      - name: Install Google Test
+        run: brew install googletest
+      - name: Install Google benchmark
+        run: brew install google-benchmark
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          repository: ginkgo-project/ginkgo
+          ref: v1.8.0
+          path: ginkgo
+      - name: Install Ginkgo
+        run: |
+          # Ginkgo 1.8 needs the flags "-undefined dynamic_lookup" to link, recent versions should not need it
+          cmake \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D CMAKE_SHARED_LINKER_FLAGS="-undefined dynamic_lookup" \
+            -D GINKGO_BUILD_BENCHMARKS=OFF \
+            -D GINKGO_BUILD_EXAMPLES=OFF \
+            -D GINKGO_BUILD_MPI=OFF \
+            -D GINKGO_BUILD_REFERENCE=ON \
+            -D GINKGO_BUILD_TESTS=OFF \
+            -B build \
+            -S ./ginkgo
+          cmake --build build
+          cmake --install build --prefix $Ginkgo_ROOT
+          rm -rf build
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          repository: kokkos/kokkos
+          ref: 4.6.00
+          path: kokkos
+      - name: Install Kokkos
+        run: |
+          cmake \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
+            -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+            -D Kokkos_ENABLE_SERIAL=ON \
+            ${{matrix.backend.kokkos_extra_cmake_flags}} \
+            -B build \
+            -S ./kokkos
+          cmake --build build
+          cmake --install build --prefix $Kokkos_ROOT
+          rm -rf build
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          repository: kokkos/kokkos-fft
+          ref: v0.3.0
+          path: kokkos-fft
+      - name: Install Kokkos-fft
+        run: |
+          cmake \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D KokkosFFT_ENABLE_FFTW=ON \
+            -B build \
+            -S ./kokkos-fft
+          cmake --build build
+          cmake --install build --prefix $KokkosFFT_ROOT
+          rm -rf build
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          repository: kokkos/kokkos-kernels
+          ref: 4.6.00
+          path: kokkos-kernels
+      - name: Install Kokkos Kernels
+        run: |
+          cmake \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D KokkosKernels_ADD_DEFAULT_ETI=OFF \
+            -D KokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
+            -D KokkosKernels_ENABLE_COMPONENT_BLAS=ON \
+            -D KokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
+            -D KokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
+            -D KokkosKernels_ENABLE_TPL_BLAS=OFF \
+            -D KokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
+            -D KokkosKernels_ENABLE_TPL_LAPACK=OFF \
+            -B build \
+            -S ./kokkos-kernels
+          cmake --build build
+          cmake --install build --prefix $KokkosKernels_ROOT
+          rm -rf build
+      - name: Build DDC
+        run: |
+          cmake \
+            -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
+            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
+            -D DDC_BUILD_BENCHMARKS=ON \
+            -D DDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
+            -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
+            -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
+            -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
+            -D BLA_PREFER_PKGCONFIG=ON \
+            -B build
+          cmake --build build
+      - name: Run unit tests
+        run: ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@3585e9575db828022551b4231f165eb59a0e74e3  # v5.6.2
+        if: ( success() || failure() )  # always run even if the previous step fails
+        with:
+          report_paths: '${{github.workspace}}/build/tests.xml'
+      - name: Run examples
+        run: |
+          ./build/examples/characteristics_advection
+          ./build/examples/game_of_life
+          ./build/examples/heat_equation_spectral
+          ./build/examples/heat_equation
+          ./build/examples/non_uniform_heat_equation
+          ./build/examples/uniform_heat_equation
+      - name: Install DDC
+        run: |
+          cmake --install build --prefix $DDC_ROOT
+          rm -rf build
+      - name: Run install tests
+        run: |
+          cmake \
+            -B build \
+            -S ./install_test
+          cmake --build build

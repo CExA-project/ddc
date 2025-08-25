@@ -1,0 +1,30 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Website tests
+
+# yamllint disable-line rule:truthy
+on:
+  schedule:
+    - cron: "0 1 * * *"  # every day at 1am
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links-check:
+    name: Links check using linkchecker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          ref: gh-pages
+      - name: Install linkchecker
+        run: |
+          pipx install linkchecker
+      - name: Analysing the links of the website
+        run: |
+          linkchecker --check-extern --ignore-url=https://www.doxygen.org/index.html index.html

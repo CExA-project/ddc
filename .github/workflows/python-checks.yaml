@@ -1,0 +1,50 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Python checks
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/python-checks.yaml'
+      - '**.py'
+      - 'bin/trailing_spaces'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/python-checks.yaml'
+      - '**.py'
+      - 'bin/trailing_spaces'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-format:
+    name: Python format using black
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: Install dependencies
+        run: |
+          pipx install black
+      - name: Check format using black
+        run: |
+          black --line-length 100 --check bin/trailing_spaces $(git ls-files '*.py')
+
+  python-lint:
+    name: Python lint using pylint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: Install dependencies
+        run: |
+          pipx install pylint
+      - name: Analysing the code with pylint
+        run: |
+          pylint bin/trailing_spaces $(git ls-files '*.py' ':!benchmarks/splines_plot.py')

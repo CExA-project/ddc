@@ -1,0 +1,10 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+config:
+  MD013:
+    line_length: 1000
+
+showFound: true

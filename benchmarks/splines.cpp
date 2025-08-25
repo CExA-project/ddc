@@ -24,7 +24,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP) {
+inline namespace anonymous_namespace_workaround_splines_cpp {
 
 ddc::SplineSolver const Backend = ddc::SplineSolver::LAPACK;
 
@@ -160,9 +160,7 @@ void characteristics_advection_unitary(benchmark::State& state)
             DDimX<IsNonUniform, s_degree_x>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            Backend,
-            DDimX<IsNonUniform, s_degree_x>,
-            DDimY> const spline_builder(x_mesh, cols_per_chunk, preconditioner_max_block_size);
+            Backend> const spline_builder(x_domain, cols_per_chunk, preconditioner_max_block_size);
     ddc::PeriodicExtrapolationRule<X> const periodic_extrapolation;
     ddc::SplineEvaluator<
             ExecSpace,
@@ -170,15 +168,14 @@ void characteristics_advection_unitary(benchmark::State& state)
             BSplinesX<IsNonUniform, s_degree_x>,
             DDimX<IsNonUniform, s_degree_x>,
             ddc::PeriodicExtrapolationRule<X>,
-            ddc::PeriodicExtrapolationRule<X>,
-            DDimX<IsNonUniform, s_degree_x>,
-            DDimY> const spline_evaluator(periodic_extrapolation, periodic_extrapolation);
+            ddc::PeriodicExtrapolationRule<X>> const
+            spline_evaluator(periodic_extrapolation, periodic_extrapolation);
     ddc::Chunk coef_alloc(
-            spline_builder.batched_spline_domain(),
+            spline_builder.batched_spline_domain(x_mesh),
             ddc::KokkosAllocator<double, typename ExecSpace::memory_space>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
     ddc::Chunk feet_coords_alloc(
-            spline_builder.batched_interpolation_domain(),
+            spline_builder.batched_interpolation_domain(x_mesh),
             ddc::KokkosAllocator<ddc::Coordinate<X>, typename ExecSpace::memory_space>());
     ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
 
@@ -228,48 +225,48 @@ void characteristics_advection_unitary(benchmark::State& state)
 
 void characteristics_advection(benchmark::State& state)
 {
-    long const host = 0;
-    long const dev = 1;
-    long const uniform = 0;
-    long const non_uniform = 1;
+    std::int64_t const host = 0;
+    std::int64_t const dev = 1;
+    std::int64_t const uniform = 0;
+    std::int64_t const non_uniform = 1;
     // Preallocate 12 unitary benchmarks for each combination of cpu/gpu execution space, uniform/non-uniform and spline degree we may want to benchmark (those are determined at compile-time, that's why we need to build explicitly 12 variants of the bench even if we call only one of them)
-    std::map<std::array<long, 3>, std::function<void(benchmark::State&)>> benchmarks;
-    benchmarks[std::array {host, uniform, 3L}]
+    std::map<std::array<std::int64_t, 3>, std::function<void(benchmark::State&)>> benchmarks;
+    benchmarks[std::array {host, uniform, std::int64_t(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, false, 3>;
-    benchmarks[std::array {host, uniform, 4L}]
+    benchmarks[std::array {host, uniform, std::int64_t(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, false, 4>;
-    benchmarks[std::array {host, uniform, 5L}]
+    benchmarks[std::array {host, uniform, std::int64_t(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, false, 5>;
-    benchmarks[std::array {host, non_uniform, 3L}]
+    benchmarks[std::array {host, non_uniform, std::int64_t(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, true, 3>;
-    benchmarks[std::array {host, non_uniform, 4L}]
+    benchmarks[std::array {host, non_uniform, std::int64_t(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, true, 4>;
-    benchmarks[std::array {host, non_uniform, 5L}]
+    benchmarks[std::array {host, non_uniform, std::int64_t(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, true, 5>;
-    benchmarks[std::array {dev, uniform, 3L}]
+    benchmarks[std::array {dev, uniform, std::int64_t(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, false, 3>;
-    benchmarks[std::array {dev, uniform, 4L}]
+    benchmarks[std::array {dev, uniform, std::int64_t(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, false, 4>;
-    benchmarks[std::array {dev, uniform, 5L}]
+    benchmarks[std::array {dev, uniform, std::int64_t(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, false, 5>;
-    benchmarks[std::array {dev, non_uniform, 3L}]
+    benchmarks[std::array {dev, non_uniform, std::int64_t(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, true, 3>;
-    benchmarks[std::array {dev, non_uniform, 4L}]
+    benchmarks[std::array {dev, non_uniform, std::int64_t(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, true, 4>;
-    benchmarks[std::array {dev, non_uniform, 5L}]
+    benchmarks[std::array {dev, non_uniform, std::int64_t(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, true, 5>;
 
     // Run the desired bench
     benchmarks.at(std::array {state.range(0), state.range(1), state.range(2)})(state);
 }
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(SPLINES_CPP)
+} // namespace anonymous_namespace_workaround_splines_cpp
 
 // Reference parameters: the benchmarks sweep on two parameters and fix all the others according to those reference parameters.
 bool on_gpu_ref = true;
 bool non_uniform_ref = false;
 std::size_t degree_x_ref = 3;
-#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
+#if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP) || defined(KOKKOS_ENABLE_SYCL)
 std::size_t cols_per_chunk_ref = 65535;
 unsigned int preconditioner_max_block_size_ref = 1U;
 #elif defined(KOKKOS_ENABLE_OPENMP)

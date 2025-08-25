@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(TYPE_SED_CPP) {
+inline namespace anonymous_namespace_workaround_type_seq_cpp {
 
 struct a;
 struct b;
@@ -18,7 +18,7 @@ struct e;
 struct y;
 struct z;
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(TYPE_SED_CPP)
+} // namespace anonymous_namespace_workaround_type_seq_cpp
 
 TEST(TypeSeqTest, Size)
 {
@@ -72,6 +72,15 @@ TEST(TypeSeqTest, Merge)
     using B = ddc::detail::TypeSeq<z, c, y>;
     using R = ddc::type_seq_merge_t<A, B>;
     using ExpectedR = ddc::detail::TypeSeq<a, b, c, z, y>;
+    EXPECT_TRUE((ddc::type_seq_same_v<R, ExpectedR>));
+}
+
+TEST(TypeSeqTest, Cat)
+{
+    using A = ddc::detail::TypeSeq<a, b, c>;
+    using B = ddc::detail::TypeSeq<z, c, y>;
+    using R = ddc::type_seq_cat_t<A, B>;
+    using ExpectedR = ddc::detail::TypeSeq<a, b, c, z, c, y>;
     EXPECT_TRUE((ddc::type_seq_same_v<R, ExpectedR>));
 }
 

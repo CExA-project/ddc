@@ -12,7 +12,7 @@
 
 #include <Kokkos_StdAlgorithms.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FOR_EACH_CPP) {
+inline namespace anonymous_namespace_workaround_for_each_cpp {
 
 using DElem0D = ddc::DiscreteElement<>;
 using DVect0D = ddc::DiscreteVector<>;
@@ -36,16 +36,16 @@ using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
 using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
 using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 
-DElemX constexpr lbound_x(0);
+DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
 DVectX constexpr nelems_x(10);
 
-DElemY constexpr lbound_y(0);
+DElemY constexpr lbound_y = ddc::init_trivial_half_bounded_space<DDimY>();
 DVectY constexpr nelems_y(12);
 
 DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(FOR_EACH_CPP)
+} // namespace anonymous_namespace_workaround_for_each_cpp
 
 TEST(ForEachSerialHost, Empty)
 {

@@ -27,6 +27,7 @@ template <class QueryTag>
 struct TypeSeqRank<SingleType<QueryTag>, TypeSeq<>>
 {
     static constexpr bool present = false;
+    static constexpr std::size_t val = std::numeric_limits<std::size_t>::max();
 };
 
 template <class QueryTag, class... TagsTail>
@@ -102,6 +103,17 @@ struct TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<HeadTagsB, TailTagsB...>, TypeSeq
               TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<TailTagsB...>, TypeSeq<TagsR...>>,
               TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<TailTagsB...>, TypeSeq<TagsR..., HeadTagsB>>>
 {
+};
+
+/// `type` contains all elements in A then all elements in B.
+/// Example: A = [a, b, c], B = [z, c, y], returned type [a, b, c, z, c, y]
+template <class TagSeqA, class TagSeqB>
+struct TypeSeqCat;
+
+template <class... TagsA, class... TagsB>
+struct TypeSeqCat<TypeSeq<TagsA...>, TypeSeq<TagsB...>>
+{
+    using type = TypeSeq<TagsA..., TagsB...>;
 };
 
 /// A is replaced by element of C at same position than the first element of B equal to A.
@@ -200,6 +212,9 @@ using type_seq_remove_t = typename detail::TypeSeqRemove<TagSeqA, TagSeqB, detai
 
 template <class TagSeqA, class TagSeqB>
 using type_seq_merge_t = typename detail::TypeSeqMerge<TagSeqA, TagSeqB, TagSeqA>::type;
+
+template <class TagSeqA, class TagSeqB>
+using type_seq_cat_t = typename detail::TypeSeqCat<TagSeqA, TagSeqB>::type;
 
 template <class TagSeqA, class TagSeqB, class TagSeqC>
 using type_seq_replace_t =

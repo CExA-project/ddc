@@ -9,7 +9,7 @@
 #include <tuple>
 #include <type_traits>
 #if defined(BSPLINES_TYPE_NON_UNIFORM)
-#include <vector>
+#    include <vector>
 #endif
 
 #include <ddc/ddc.hpp>
@@ -20,7 +20,7 @@
 #include <Kokkos_Core.hpp>
 
 #if defined(EVALUATOR_COSINE)
-#include "cosine_evaluator.hpp"
+#    include "cosine_evaluator.hpp"
 #endif
 #include "polynomial_evaluator.hpp"
 #include "spline_error_bounds.hpp"
@@ -119,8 +119,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             DDimX,
             s_bcl,
             s_bcr,
-            ddc::SplineSolver::GINKGO,
-            DDimX> const spline_builder(interpolation_domain);
+            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
     ddc::Chunk yvals_alloc(interpolation_domain, ddc::KokkosAllocator<double, memory_space>());
@@ -177,8 +176,8 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             BSplinesX,
             DDimX,
             ddc::NullExtrapolationRule,
-            ddc::NullExtrapolationRule,
-            DDimX> const spline_evaluator(extrapolation_rule, extrapolation_rule);
+            ddc::NullExtrapolationRule> const
+            spline_evaluator(extrapolation_rule, extrapolation_rule);
 
     ddc::Chunk
             coords_eval_alloc(interpolation_domain, ddc::KokkosAllocator<CoordX, memory_space>());
@@ -200,8 +199,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     spline_evaluator
             .deriv(spline_eval_deriv.span_view(), coords_eval.span_cview(), coef.span_cview());
 
-    ddc::Chunk
-            integral(spline_builder.batch_domain(), ddc::KokkosAllocator<double, memory_space>());
+    ddc::Chunk integral(
+            spline_builder.batch_domain(interpolation_domain),
+            ddc::KokkosAllocator<double, memory_space>());
     spline_evaluator.integrate(integral.span_view(), coef.span_cview());
 
     ddc::Chunk<
@@ -230,8 +230,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             quadrature_coefficients_derivs_xmin.domain(),
             0.0,
             ddc::reducer::sum<double>(),
-            KOKKOS_LAMBDA(ddc::DiscreteElement<
-                          ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
+            KOKKOS_LAMBDA(
+                    ddc::DiscreteElement<
+                            ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
                 return quadrature_coefficients_derivs_xmin(ix) * derivs_lhs(ix);
             });
 #else
@@ -253,8 +254,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             quadrature_coefficients_derivs_xmax.domain(),
             0.0,
             ddc::reducer::sum<double>(),
-            KOKKOS_LAMBDA(ddc::DiscreteElement<
-                          ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
+            KOKKOS_LAMBDA(
+                    ddc::DiscreteElement<
+                            ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
                 return quadrature_coefficients_derivs_xmax(ix) * derivs_rhs(ix);
             });
 #else
@@ -302,7 +304,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
         EXPECT_LE(max_norm_error_quadrature_integ / max_norm_int, 1.0e-14);
     } else {
         SplineErrorBounds<evaluator_type> const error_bounds(evaluator);
-        const double h = (xN - x0) / ncells;
+        double const h = (xN - x0) / ncells;
         EXPECT_LE(
                 max_norm_error,
                 std::max(error_bounds.error_bound(h, s_degree_x), 1.0e-14 * max_norm));

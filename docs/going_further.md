@@ -1,4 +1,5 @@
-# Commented example: the non uniform heat equation {#going_further}
+# The non uniform heat equation {#going_further}
+
 <!--
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 

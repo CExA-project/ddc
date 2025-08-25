@@ -26,18 +26,19 @@ add_executable(
     parallel_fill.cpp
     parallel_for_each.cpp
     parallel_transform_reduce.cpp
+    print.cpp
     relocatable_device_code.cpp
     relocatable_device_code_initialization.cpp
-    single_discretization.cpp
-    storage_discrete_domain.cpp
+    sparse_discrete_domain.cpp
     strided_discrete_domain.cpp
     tagged_vector.cpp
     transform_reduce.cpp
+    trivial_space.cpp
     type_seq.cpp
     uniform_point_sampling.cpp
 )
 target_compile_features(ddc_tests PUBLIC cxx_std_17)
-target_link_libraries(ddc_tests PUBLIC GTest::gtest DDC::core)
+target_link_libraries(ddc_tests PUBLIC GTest::gmock GTest::gtest DDC::core)
 gtest_discover_tests(ddc_tests DISCOVERY_MODE PRE_TEST)
 
 if("${DDC_BUILD_KERNELS_FFT}")

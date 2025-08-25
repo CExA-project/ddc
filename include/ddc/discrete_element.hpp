@@ -12,9 +12,10 @@
 
 #include <Kokkos_Macros.hpp>
 
-#include "ddc/detail/macros.hpp"
-#include "ddc/detail/type_seq.hpp"
-#include "ddc/discrete_vector.hpp"
+#include "detail/macros.hpp"
+#include "detail/type_seq.hpp"
+
+#include "discrete_vector.hpp"
 
 namespace ddc {
 
@@ -75,11 +76,15 @@ KOKKOS_FUNCTION constexpr DiscreteElementType& uid(DiscreteElement<Tags...>& tup
 }
 
 template <class QueryTag, class... Tags>
-KOKKOS_FUNCTION constexpr DiscreteElementType const& uid_or(
-        DiscreteElement<Tags...> const& tuple,
-        DiscreteElementType const& default_value) noexcept
+KOKKOS_FUNCTION constexpr DiscreteElement<QueryTag> select_or(
+        DiscreteElement<Tags...> const& arr,
+        DiscreteElement<QueryTag> const& default_value) noexcept
 {
-    return tuple.template uid_or<QueryTag>(default_value);
+    if constexpr (in_tags_v<QueryTag, detail::TypeSeq<Tags...>>) {
+        return DiscreteElement<QueryTag>(arr);
+    } else {
+        return default_value;
+    }
 }
 
 template <class... QueryTags, class... Tags>
@@ -140,6 +145,12 @@ KOKKOS_FUNCTION constexpr std::array<DiscreteElementType, sizeof...(Tags)> const
 
 } // namespace detail
 
+template <class DDim>
+constexpr DiscreteElement<DDim> create_reference_discrete_element() noexcept
+{
+    return DiscreteElement<DDim>(0);
+}
+
 /** A DiscreteElement identifies an element of the discrete dimension
  *
  * Each one is tagged by its associated dimensions.
@@ -194,18 +205,6 @@ public:
     KOKKOS_DEFAULTED_FUNCTION DiscreteElement& operator=(DiscreteElement const& other) = default;
 
     KOKKOS_DEFAULTED_FUNCTION DiscreteElement& operator=(DiscreteElement&& other) = default;
-
-    template <class QueryTag>
-    KOKKOS_FUNCTION constexpr value_type const& uid_or(value_type const& default_value) const&
-    {
-        DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
-        if constexpr (in_tags_v<QueryTag, tags_seq>) {
-            return m_values[type_seq_rank_v<QueryTag, tags_seq>];
-        } else {
-            return default_value;
-        }
-        DDC_IF_NVCC_THEN_POP
-    }
 
     template <class QueryTag>
     KOKKOS_FUNCTION constexpr value_type& uid() noexcept
@@ -393,7 +392,9 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tag> operator+(
         DiscreteElement<Tag> const& lhs,
         IntegralType const& rhs)
 {
-    return DiscreteElement<Tag>(uid<Tag>(lhs) + rhs);
+    DiscreteElement<Tag> result(lhs);
+    result += rhs;
+    return result;
 }
 
 template <class... Tags, class... OTags>
@@ -417,7 +418,9 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tag> operator-(
         DiscreteElement<Tag> const& lhs,
         IntegralType const& rhs)
 {
-    return DiscreteElement<Tag>(uid<Tag>(lhs) - rhs);
+    DiscreteElement<Tag> result(lhs);
+    result -= rhs;
+    return result;
 }
 
 /// binary operator: -

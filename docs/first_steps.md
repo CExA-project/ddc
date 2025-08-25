@@ -1,4 +1,5 @@
-# Commented example: the uniform heat equation {#first_steps}
+# The uniform heat equation {#first_steps}
+
 <!--
 Copyright (C) The DDC development team, see COPYRIGHT.md file
 
@@ -71,7 +72,7 @@ function.
 Depending on the way the function is called, its return type can differ.
 Here we use it with an inner call to `init_ghosted` and receive four 1D domains as a result.
 Their type is not specified because we use C++
-[structured bindings](https://en.cppreference.com/w/cpp/language/structured_binding), but they are
+[structured bindings](https://en.cppreference.com/w/cpp/language/structured_binding.html), but they are
 all of the same type: `DiscreteDomain<DDimX>` that represents a set of contiguous points in the
 discretization of `X`.
 

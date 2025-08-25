@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 cmake_minimum_required(VERSION 3.22)
-project(DDC VERSION 0.4.2 LANGUAGES CXX)
+project(DDC VERSION 0.8.0 LANGUAGES CXX)
 
 # List of options
 
@@ -154,7 +154,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
 
     if("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "AUTO")
         if(NOT TARGET KokkosFFT::fft)
-            find_package(KokkosFFT 0.2.1...<1 QUIET)
+            find_package(KokkosFFT 0.3.0...<1 QUIET)
             if(NOT KokkosFFT_FOUND)
                 ddc_configure_kokkos_fft()
             endif()
@@ -162,7 +162,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
     elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
         ddc_configure_kokkos_fft()
     elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(KokkosFFT 0.2.1...<1 REQUIRED)
+        find_package(KokkosFFT 0.3.0...<1 REQUIRED)
     endif()
 
     add_library(ddc_fft INTERFACE)

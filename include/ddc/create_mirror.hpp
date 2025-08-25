@@ -8,8 +8,8 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/chunk_span.hpp"
-#include "ddc/kokkos_allocator.hpp"
+#include "chunk_span.hpp"
+#include "kokkos_allocator.hpp"
 
 namespace ddc {
 

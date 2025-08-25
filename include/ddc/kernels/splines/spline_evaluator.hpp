@@ -29,7 +29,6 @@ namespace ddc {
  * @tparam EvaluationDDim The discrete dimension on which evaluation points are defined.
  * @tparam LowerExtrapolationRule The lower extrapolation rule type.
  * @tparam UpperExtrapolationRule The upper extrapolation rule type.
- * @tparam DDimX A variadic template of all the discrete dimensions forming the full space (EvaluationDDim + batched dimensions).
  */
 template <
         class ExecSpace,
@@ -37,8 +36,7 @@ template <
         class BSplines,
         class EvaluationDDim,
         class LowerExtrapolationRule,
-        class UpperExtrapolationRule,
-        class... DDimX>
+        class UpperExtrapolationRule>
 class SplineEvaluator
 {
 private:
@@ -75,8 +73,15 @@ public:
     /// @brief The type of the domain for the 1D evaluation mesh used by this class.
     using evaluation_domain_type = ddc::DiscreteDomain<evaluation_discrete_dimension_type>;
 
-    /// @brief The type of the whole domain representing evaluation points.
-    using batched_evaluation_domain_type = ddc::DiscreteDomain<DDimX...>;
+    /**
+     * @brief The type of the whole domain representing evaluation points.
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using batched_evaluation_domain_type = BatchedInterpolationDDom;
 
     /// @brief The type of the 1D spline domain corresponding to the dimension of interest.
     using spline_domain_type = ddc::DiscreteDomain<bsplines_type>;
@@ -84,16 +89,26 @@ public:
     /**
      * @brief The type of the batch domain (obtained by removing the dimension of interest
      * from the whole domain).
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
      */
-    using batch_domain_type = ddc::
-            remove_dims_of_t<batched_evaluation_domain_type, evaluation_discrete_dimension_type>;
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using batch_domain_type
+            = ddc::remove_dims_of_t<BatchedInterpolationDDom, evaluation_discrete_dimension_type>;
 
     /**
      * @brief The type of the whole spline domain (cartesian product of 1D spline domain
      * and batch domain) preserving the order of dimensions.
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
      */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
     using batched_spline_domain_type = ddc::replace_dim_of_t<
-            batched_evaluation_domain_type,
+            BatchedInterpolationDDom,
             evaluation_discrete_dimension_type,
             bsplines_type>;
 
@@ -260,29 +275,39 @@ public:
      * the set of 1D spline coefficients retained to perform the evaluation).
      * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
-    template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
+    template <
+            class Layout1,
+            class Layout2,
+            class Layout3,
+            class BatchedInterpolationDDom,
+            class... CoordsDims>
     void operator()(
-            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_evaluation_domain_type,
+                    BatchedInterpolationDDom,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_spline_domain_type<BatchedInterpolationDDom>,
+                    Layout3,
+                    memory_space> const spline_coef) const
     {
         evaluation_domain_type const evaluation_domain(spline_eval.domain());
-        batch_domain_type const batch_domain(spline_eval.domain());
+        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
                 "ddc_splines_evaluate",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    const auto spline_eval_1D = spline_eval[j];
-                    const auto coords_eval_1D = coords_eval[j];
-                    const auto spline_coef_1D = spline_coef[j];
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                    auto const spline_eval_1D = spline_eval[j];
+                    auto const coords_eval_1D = coords_eval[j];
+                    auto const spline_coef_1D = spline_coef[j];
                     for (auto const i : evaluation_domain) {
                         spline_eval_1D(i) = eval(coords_eval_1D(i), spline_coef_1D);
                     }
@@ -307,23 +332,28 @@ public:
      * of the mesh.
      * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
-    template <class Layout1, class Layout2>
+    template <class Layout1, class Layout2, class BatchedInterpolationDDom>
     void operator()(
-            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
                     spline_eval,
-            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_spline_domain_type<BatchedInterpolationDDom>,
+                    Layout2,
+                    memory_space> const spline_coef) const
     {
         evaluation_domain_type const evaluation_domain(spline_eval.domain());
-        batch_domain_type const batch_domain(spline_eval.domain());
+        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
                 "ddc_splines_evaluate",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    const auto spline_eval_1D = spline_eval[j];
-                    const auto spline_coef_1D = spline_coef[j];
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                    auto const spline_eval_1D = spline_eval[j];
+                    auto const spline_coef_1D = spline_coef[j];
                     for (auto const i : evaluation_domain) {
                         ddc::Coordinate<continuous_dimension_type> coord_eval_1D
                                 = ddc::coordinate(i);
@@ -370,29 +400,39 @@ public:
      * the set of 1D spline coefficients retained to perform the evaluation).
      * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
-    template <class Layout1, class Layout2, class Layout3, class... CoordsDims>
+    template <
+            class Layout1,
+            class Layout2,
+            class Layout3,
+            class BatchedInterpolationDDom,
+            class... CoordsDims>
     void deriv(
-            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
-                    batched_evaluation_domain_type,
+                    BatchedInterpolationDDom,
                     Layout2,
                     memory_space> const coords_eval,
-            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout3, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_spline_domain_type<BatchedInterpolationDDom>,
+                    Layout3,
+                    memory_space> const spline_coef) const
     {
         evaluation_domain_type const evaluation_domain(spline_eval.domain());
-        batch_domain_type const batch_domain(spline_eval.domain());
+        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
                 "ddc_splines_differentiate",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    const auto spline_eval_1D = spline_eval[j];
-                    const auto coords_eval_1D = coords_eval[j];
-                    const auto spline_coef_1D = spline_coef[j];
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                    auto const spline_eval_1D = spline_eval[j];
+                    auto const coords_eval_1D = coords_eval[j];
+                    auto const spline_coef_1D = spline_coef[j];
                     for (auto const i : evaluation_domain) {
                         spline_eval_1D(i)
                                 = eval_no_bc<eval_deriv_type>(coords_eval_1D(i), spline_coef_1D);
@@ -414,23 +454,28 @@ public:
      * @param[out] spline_eval The derivatives of the spline function at the coordinates.
      * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
-    template <class Layout1, class Layout2>
+    template <class Layout1, class Layout2, class BatchedInterpolationDDom>
     void deriv(
-            ddc::ChunkSpan<double, batched_evaluation_domain_type, Layout1, memory_space> const
+            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
                     spline_eval,
-            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<
+                    double const,
+                    batched_spline_domain_type<BatchedInterpolationDDom>,
+                    Layout2,
+                    memory_space> const spline_coef) const
     {
         evaluation_domain_type const evaluation_domain(spline_eval.domain());
-        batch_domain_type const batch_domain(spline_eval.domain());
+        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
                 "ddc_splines_differentiate",
                 exec_space(),
                 batch_domain,
-                KOKKOS_CLASS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
-                    const auto spline_eval_1D = spline_eval[j];
-                    const auto spline_coef_1D = spline_coef[j];
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                    auto const spline_eval_1D = spline_eval[j];
+                    auto const spline_coef_1D = spline_coef[j];
                     for (auto const i : evaluation_domain) {
                         ddc::Coordinate<continuous_dimension_type> coord_eval_1D
                                 = ddc::coordinate(i);
@@ -453,13 +498,21 @@ public:
      * points represented by this domain are unused and irrelevant.
      * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
-    template <class Layout1, class Layout2>
+    template <class Layout1, class Layout2, class BatchedDDom, class BatchedSplineDDom>
     void integrate(
-            ddc::ChunkSpan<double, batch_domain_type, Layout1, memory_space> const integrals,
-            ddc::ChunkSpan<double const, batched_spline_domain_type, Layout2, memory_space> const
+            ddc::ChunkSpan<double, BatchedDDom, Layout1, memory_space> const integrals,
+            ddc::ChunkSpan<double const, BatchedSplineDDom, Layout2, memory_space> const
                     spline_coef) const
     {
-        batch_domain_type const batch_domain(integrals.domain());
+        static_assert(
+                ddc::in_tags_v<bsplines_type, to_type_seq_t<BatchedSplineDDom>>,
+                "The spline coefficients domain must contain the bsplines dimension");
+        using batch_domain_type = ddc::remove_dims_of_t<BatchedSplineDDom, bsplines_type>;
+        static_assert(
+                std::is_same_v<batch_domain_type, BatchedDDom>,
+                "The integrals domain must only contain the batch dimensions");
+
+        BatchedDDom const batch_domain(integrals.domain());
         ddc::Chunk values_alloc(
                 ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()),
                 ddc::KokkosAllocator<double, memory_space>());
@@ -470,7 +523,7 @@ public:
                 "ddc_splines_integrate",
                 exec_space(),
                 batch_domain,
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                KOKKOS_LAMBDA(typename BatchedDDom::discrete_element_type const j) {
                     integrals(j) = 0;
                     for (typename spline_domain_type::discrete_element_type const i :
                          values.domain()) {

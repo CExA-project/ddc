@@ -29,12 +29,12 @@ namespace ddc::detail {
  * @return A Ginkgo Dense matrix view over the Kokkos::View data
  */
 template <class KokkosViewType>
-auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosViewType const& view)
+auto to_gko_dense(std::shared_ptr<gko::Executor const> const& gko_exec, KokkosViewType const& view)
 {
     static_assert((Kokkos::is_view_v<KokkosViewType> && KokkosViewType::rank == 2));
     using value_type = typename KokkosViewType::traits::value_type;
 
-    if (view.stride_1() != 1) {
+    if (view.stride(1) != 1) {
         throw std::runtime_error("The view needs to be contiguous in the second dimension");
     }
 
@@ -42,7 +42,7 @@ auto to_gko_dense(std::shared_ptr<const gko::Executor> const& gko_exec, KokkosVi
             create(gko_exec,
                    gko::dim<2>(view.extent(0), view.extent(1)),
                    gko::array<value_type>::view(gko_exec, view.span(), view.data()),
-                   view.stride_0());
+                   view.stride(0));
 }
 
 /**
@@ -74,6 +74,11 @@ std::size_t default_cols_per_chunk() noexcept
 #endif
 #if defined(KOKKOS_ENABLE_HIP)
     if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+        return 65535;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_SYCL)
+    if (std::is_same_v<ExecSpace, Kokkos::SYCL>) {
         return 65535;
     }
 #endif
@@ -109,6 +114,11 @@ unsigned int default_preconditioner_max_block_size() noexcept
 #endif
 #if defined(KOKKOS_ENABLE_HIP)
     if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+        return 1U;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_SYCL)
+    if (std::is_same_v<ExecSpace, Kokkos::SYCL>) {
         return 1U;
     }
 #endif
@@ -164,7 +174,7 @@ public:
      * used by the block-Jacobi preconditioner. see default_preconditioner_max_block_size.
      */
     explicit SplinesLinearProblemSparse(
-            const std::size_t mat_size,
+            std::size_t const mat_size,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplinesLinearProblem<ExecSpace>(mat_size)

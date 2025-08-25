@@ -13,38 +13,39 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_StdAlgorithms.hpp>
 
-#include "ddc/detail/kokkos.hpp"
-#include "ddc/detail/tagged_vector.hpp"
-#include "ddc/detail/type_seq.hpp"
-#include "ddc/discrete_element.hpp"
-#include "ddc/discrete_vector.hpp"
+#include "detail/kokkos.hpp"
+#include "detail/tagged_vector.hpp"
+#include "detail/type_seq.hpp"
+
+#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 
 template <class DDim>
-struct StorageDiscreteDomainIterator;
+struct SparseDiscreteDomainIterator;
 
 template <class... DDims>
-class StorageDiscreteDomain;
+class SparseDiscreteDomain;
 
 template <class T>
-struct is_storage_discrete_domain : std::false_type
+struct is_sparse_discrete_domain : std::false_type
 {
 };
 
 template <class... Tags>
-struct is_storage_discrete_domain<StorageDiscreteDomain<Tags...>> : std::true_type
+struct is_sparse_discrete_domain<SparseDiscreteDomain<Tags...>> : std::true_type
 {
 };
 
 template <class T>
-inline constexpr bool is_storage_discrete_domain_v = is_storage_discrete_domain<T>::value;
+inline constexpr bool is_sparse_discrete_domain_v = is_sparse_discrete_domain<T>::value;
 
 
 namespace detail {
 
 template <class... Tags>
-struct ToTypeSeq<StorageDiscreteDomain<Tags...>>
+struct ToTypeSeq<SparseDiscreteDomain<Tags...>>
 {
     using type = TypeSeq<Tags...>;
 };
@@ -53,9 +54,9 @@ template <class T, class U>
 struct RebindDomain;
 
 template <class... DDims, class... ODDims>
-struct RebindDomain<StorageDiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
+struct RebindDomain<SparseDiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
 {
-    using type = StorageDiscreteDomain<ODDims...>;
+    using type = SparseDiscreteDomain<ODDims...>;
 };
 
 template <class InputIt1, class InputIt2>
@@ -74,7 +75,7 @@ template <
         class ForwardIt,
         class T = typename std::iterator_traits<ForwardIt>::value_type,
         class Compare>
-KOKKOS_FUNCTION ForwardIt lower_bound(ForwardIt first, ForwardIt last, const T& value, Compare comp)
+KOKKOS_FUNCTION ForwardIt lower_bound(ForwardIt first, ForwardIt last, T const& value, Compare comp)
 {
     ForwardIt it;
     typename std::iterator_traits<ForwardIt>::difference_type count = last - first;
@@ -98,7 +99,7 @@ template <
         class ForwardIt,
         class T = typename std::iterator_traits<ForwardIt>::value_type,
         class Compare>
-bool binary_search(ForwardIt first, ForwardIt last, const T& value, Compare comp)
+KOKKOS_FUNCTION bool binary_search(ForwardIt first, ForwardIt last, T const& value, Compare comp)
 {
     first = ::ddc::detail::lower_bound(first, last, value, comp);
     return (!(first == last) && !(comp(value, *first)));
@@ -117,10 +118,10 @@ struct GetUidFn
 } // namespace detail
 
 template <class... DDims>
-class StorageDiscreteDomain
+class SparseDiscreteDomain
 {
     template <class...>
-    friend class StorageDiscreteDomain;
+    friend class SparseDiscreteDomain;
 
 public:
     using discrete_element_type = DiscreteElement<DDims...>;
@@ -136,21 +137,19 @@ public:
         return sizeof...(DDims);
     }
 
-    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain() = default;
+    KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain() = default;
 
-    /// Construct a StorageDiscreteDomain by copies and merge of domains
-    template <
-            class... DDoms,
-            class = std::enable_if_t<(is_storage_discrete_domain_v<DDoms> && ...)>>
-    KOKKOS_FUNCTION constexpr explicit StorageDiscreteDomain(DDoms const&... domains)
+    /// Construct a SparseDiscreteDomain by copies and merge of domains
+    template <class... DDoms, class = std::enable_if_t<(is_sparse_discrete_domain_v<DDoms> && ...)>>
+    KOKKOS_FUNCTION constexpr explicit SparseDiscreteDomain(DDoms const&... domains)
         : m_views(domains.m_views...)
     {
     }
 
-    /** Construct a StorageDiscreteDomain with Kokkos::View explicitly listing the discrete elements.
+    /** Construct a SparseDiscreteDomain with Kokkos::View explicitly listing the discrete elements.
      * @param views list of Kokkos::View
      */
-    explicit StorageDiscreteDomain(
+    explicit SparseDiscreteDomain(
             Kokkos::View<DiscreteElement<DDims>*, Kokkos::SharedSpace> const&... views)
     {
         ((m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>]
@@ -158,28 +157,28 @@ public:
          ...);
         Kokkos::DefaultExecutionSpace const execution_space;
         ((Kokkos::Experimental::transform(
-                 "StorageDiscreteDomainCtor",
+                 "SparseDiscreteDomainCtor",
                  execution_space,
                  views,
                  m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>],
                  detail::GetUidFn<DDims>())),
          ...);
-        execution_space.fence("StorageDiscreteDomainCtor");
+        execution_space.fence("SparseDiscreteDomainCtor");
     }
 
-    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain(StorageDiscreteDomain const& x) = default;
+    KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain(SparseDiscreteDomain const& x) = default;
 
-    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain(StorageDiscreteDomain&& x) = default;
+    KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain(SparseDiscreteDomain&& x) = default;
 
-    KOKKOS_DEFAULTED_FUNCTION ~StorageDiscreteDomain() = default;
+    KOKKOS_DEFAULTED_FUNCTION ~SparseDiscreteDomain() = default;
 
-    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain& operator=(StorageDiscreteDomain const& x)
+    KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain& operator=(SparseDiscreteDomain const& x)
             = default;
 
-    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain& operator=(StorageDiscreteDomain&& x) = default;
+    KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain& operator=(SparseDiscreteDomain&& x) = default;
 
     template <class... ODims>
-    KOKKOS_FUNCTION constexpr bool operator==(StorageDiscreteDomain<ODims...> const& other) const
+    KOKKOS_FUNCTION constexpr bool operator==(SparseDiscreteDomain<ODims...> const& other) const
     {
         if (empty() && other.empty()) {
             return true;
@@ -204,7 +203,7 @@ public:
 #if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
     // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
     template <class... ODims>
-    KOKKOS_FUNCTION constexpr bool operator!=(StorageDiscreteDomain<ODims...> const& other) const
+    KOKKOS_FUNCTION constexpr bool operator!=(SparseDiscreteDomain<ODims...> const& other) const
     {
         return !(*this == other);
     }
@@ -241,31 +240,31 @@ public:
         return discrete_element_type(get<DDims>(m_views)(get<DDims>(m_views).size() - 1)...);
     }
 
-    KOKKOS_FUNCTION constexpr StorageDiscreteDomain take_first(discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain take_first(discrete_vector_type n) const
     {
-        return StorageDiscreteDomain(front(), n);
+        return SparseDiscreteDomain(front(), n);
     }
 
-    KOKKOS_FUNCTION constexpr StorageDiscreteDomain take_last(discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain take_last(discrete_vector_type n) const
     {
-        return StorageDiscreteDomain(front() + prod(extents() - n), n);
+        return SparseDiscreteDomain(front() + prod(extents() - n), n);
     }
 
-    KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove_first(discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove_first(discrete_vector_type n) const
     {
-        return StorageDiscreteDomain(front() + prod(n), extents() - n);
+        return SparseDiscreteDomain(front() + prod(n), extents() - n);
     }
 
-    KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove_last(discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove_last(discrete_vector_type n) const
     {
-        return StorageDiscreteDomain(front(), extents() - n);
+        return SparseDiscreteDomain(front(), extents() - n);
     }
 
-    KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove(
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove(
             discrete_vector_type n1,
             discrete_vector_type n2) const
     {
-        return StorageDiscreteDomain(front() + prod(n1), extents() - n1 - n2);
+        return SparseDiscreteDomain(front() + prod(n1), extents() - n1 - n2);
     }
 
     KOKKOS_FUNCTION constexpr DiscreteElement<DDims...> operator()(
@@ -367,10 +366,10 @@ public:
 };
 
 template <>
-class StorageDiscreteDomain<>
+class SparseDiscreteDomain<>
 {
     template <class...>
-    friend class StorageDiscreteDomain;
+    friend class SparseDiscreteDomain;
 
 public:
     using discrete_element_type = DiscreteElement<>;
@@ -382,35 +381,35 @@ public:
         return 0;
     }
 
-    KOKKOS_DEFAULTED_FUNCTION constexpr StorageDiscreteDomain() = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr SparseDiscreteDomain() = default;
 
-    // Construct a StorageDiscreteDomain from a reordered copy of `domain`
+    // Construct a SparseDiscreteDomain from a reordered copy of `domain`
     template <class... ODDims>
-    KOKKOS_FUNCTION constexpr explicit StorageDiscreteDomain(
-            [[maybe_unused]] StorageDiscreteDomain<ODDims...> const& domain)
+    KOKKOS_FUNCTION constexpr explicit SparseDiscreteDomain(
+            [[maybe_unused]] SparseDiscreteDomain<ODDims...> const& domain)
     {
     }
 
-    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain(StorageDiscreteDomain const& x) = default;
+    KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain(SparseDiscreteDomain const& x) = default;
 
-    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain(StorageDiscreteDomain&& x) = default;
+    KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain(SparseDiscreteDomain&& x) = default;
 
-    KOKKOS_DEFAULTED_FUNCTION ~StorageDiscreteDomain() = default;
+    KOKKOS_DEFAULTED_FUNCTION ~SparseDiscreteDomain() = default;
 
-    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain& operator=(StorageDiscreteDomain const& x)
+    KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain& operator=(SparseDiscreteDomain const& x)
             = default;
 
-    KOKKOS_DEFAULTED_FUNCTION StorageDiscreteDomain& operator=(StorageDiscreteDomain&& x) = default;
+    KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain& operator=(SparseDiscreteDomain&& x) = default;
 
     KOKKOS_FUNCTION constexpr bool operator==(
-            [[maybe_unused]] StorageDiscreteDomain const& other) const
+            [[maybe_unused]] SparseDiscreteDomain const& other) const
     {
         return true;
     }
 
 #if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
     // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
-    KOKKOS_FUNCTION constexpr bool operator!=(StorageDiscreteDomain const& other) const
+    KOKKOS_FUNCTION constexpr bool operator!=(SparseDiscreteDomain const& other) const
     {
         return !(*this == other);
     }
@@ -436,31 +435,31 @@ public:
         return {};
     }
 
-    KOKKOS_FUNCTION constexpr StorageDiscreteDomain take_first(
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain take_first(
             [[maybe_unused]] discrete_vector_type n) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr StorageDiscreteDomain take_last(
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain take_last(
             [[maybe_unused]] discrete_vector_type n) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove_first(
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove_first(
             [[maybe_unused]] discrete_vector_type n) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove_last(
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove_last(
             [[maybe_unused]] discrete_vector_type n) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr StorageDiscreteDomain remove(
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove(
             [[maybe_unused]] discrete_vector_type n1,
             [[maybe_unused]] discrete_vector_type n2) const
     {
@@ -473,22 +472,22 @@ public:
         return {};
     }
 
-    static bool contains() noexcept
+    static KOKKOS_FUNCTION bool contains() noexcept
     {
         return true;
     }
 
-    static bool contains(DiscreteElement<>) noexcept
+    static KOKKOS_FUNCTION bool contains(DiscreteElement<>) noexcept
     {
         return true;
     }
 
-    static DiscreteVector<> distance_from_front() noexcept
+    static KOKKOS_FUNCTION DiscreteVector<> distance_from_front() noexcept
     {
         return {};
     }
 
-    static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
+    static KOKKOS_FUNCTION DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
     {
         return {};
     }
@@ -505,10 +504,10 @@ public:
 };
 
 template <class... QueryDDims, class... DDims>
-KOKKOS_FUNCTION constexpr StorageDiscreteDomain<QueryDDims...> select(
-        StorageDiscreteDomain<DDims...> const& domain)
+KOKKOS_FUNCTION constexpr SparseDiscreteDomain<QueryDDims...> select(
+        SparseDiscreteDomain<DDims...> const& domain)
 {
-    return StorageDiscreteDomain<QueryDDims...>(
+    return SparseDiscreteDomain<QueryDDims...>(
             DiscreteElement<QueryDDims...>(domain.front()),
             DiscreteElement<QueryDDims...>(domain.extents()));
 }
@@ -516,31 +515,31 @@ KOKKOS_FUNCTION constexpr StorageDiscreteDomain<QueryDDims...> select(
 namespace detail {
 
 template <class T>
-struct ConvertTypeSeqToStorageDiscreteDomain;
+struct ConvertTypeSeqToSparseDiscreteDomain;
 
 template <class... DDims>
-struct ConvertTypeSeqToStorageDiscreteDomain<detail::TypeSeq<DDims...>>
+struct ConvertTypeSeqToSparseDiscreteDomain<detail::TypeSeq<DDims...>>
 {
-    using type = StorageDiscreteDomain<DDims...>;
+    using type = SparseDiscreteDomain<DDims...>;
 };
 
 template <class T>
-using convert_type_seq_to_storage_discrete_domain_t =
-        typename ConvertTypeSeqToStorageDiscreteDomain<T>::type;
+using convert_type_seq_to_sparse_discrete_domain_t =
+        typename ConvertTypeSeqToSparseDiscreteDomain<T>::type;
 
 } // namespace detail
 
 // Computes the subtraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
 template <class... DDimsA, class... DDimsB>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
-        StorageDiscreteDomain<DDimsA...> const& DDom_a,
-        [[maybe_unused]] StorageDiscreteDomain<DDimsB...> const& DDom_b) noexcept
+        SparseDiscreteDomain<DDimsA...> const& DDom_a,
+        [[maybe_unused]] SparseDiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
     using TagSeqA = detail::TypeSeq<DDimsA...>;
     using TagSeqB = detail::TypeSeq<DDimsB...>;
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
-    return detail::convert_type_seq_to_storage_discrete_domain_t<type_seq_r>(DDom_a);
+    return detail::convert_type_seq_to_sparse_discrete_domain_t<type_seq_r>(DDom_a);
 }
 
 //! Remove the dimensions DDimsB from DDom_a
@@ -548,13 +547,13 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
 //! @return The discrete domain without DDimsB dimensions
 template <class... DDimsB, class... DDimsA>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
-        StorageDiscreteDomain<DDimsA...> const& DDom_a) noexcept
+        SparseDiscreteDomain<DDimsA...> const& DDom_a) noexcept
 {
     using TagSeqA = detail::TypeSeq<DDimsA...>;
     using TagSeqB = detail::TypeSeq<DDimsB...>;
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
-    return detail::convert_type_seq_to_storage_discrete_domain_t<type_seq_r>(DDom_a);
+    return detail::convert_type_seq_to_sparse_discrete_domain_t<type_seq_r>(DDom_a);
 }
 
 namespace detail {
@@ -563,14 +562,14 @@ namespace detail {
 template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>
 KOKKOS_FUNCTION constexpr std::conditional_t<
         std::is_same_v<DDimA, DDim1>,
-        ddc::StorageDiscreteDomain<DDim2>,
-        ddc::StorageDiscreteDomain<DDimA>>
+        ddc::SparseDiscreteDomain<DDim2>,
+        ddc::SparseDiscreteDomain<DDimA>>
 replace_dim_of_1d(
-        StorageDiscreteDomain<DDimA> const& DDom_a,
-        [[maybe_unused]] StorageDiscreteDomain<DDimsB...> const& DDom_b) noexcept
+        SparseDiscreteDomain<DDimA> const& DDom_a,
+        [[maybe_unused]] SparseDiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
     if constexpr (std::is_same_v<DDimA, DDim1>) {
-        return ddc::StorageDiscreteDomain<DDim2>(DDom_b);
+        return ddc::SparseDiscreteDomain<DDim2>(DDom_b);
     } else {
         return DDom_a;
     }
@@ -581,8 +580,8 @@ replace_dim_of_1d(
 // Replace in DDom_a the dimension Dim1 by the dimension Dim2 of DDom_b
 template <typename DDim1, typename DDim2, typename... DDimsA, typename... DDimsB>
 KOKKOS_FUNCTION constexpr auto replace_dim_of(
-        StorageDiscreteDomain<DDimsA...> const& DDom_a,
-        [[maybe_unused]] StorageDiscreteDomain<DDimsB...> const& DDom_b) noexcept
+        SparseDiscreteDomain<DDimsA...> const& DDom_a,
+        [[maybe_unused]] SparseDiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
     // TODO : static_asserts
     using TagSeqA = detail::TypeSeq<DDimsA...>;
@@ -590,33 +589,33 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
     using TagSeqC = detail::TypeSeq<DDim2>;
 
     using type_seq_r = ddc::type_seq_replace_t<TagSeqA, TagSeqB, TagSeqC>;
-    return ddc::detail::convert_type_seq_to_storage_discrete_domain_t<type_seq_r>(
+    return ddc::detail::convert_type_seq_to_sparse_discrete_domain_t<type_seq_r>(
             detail::replace_dim_of_1d<
                     DDim1,
                     DDim2,
                     DDimsA,
-                    DDimsB...>(ddc::StorageDiscreteDomain<DDimsA>(DDom_a), DDom_b)...);
+                    DDimsB...>(ddc::SparseDiscreteDomain<DDimsA>(DDom_a), DDom_b)...);
 }
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDims...> extents(
-        StorageDiscreteDomain<DDims...> const& domain) noexcept
+        SparseDiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteVector<QueryDDims...>(StorageDiscreteDomain<QueryDDims>(domain).size()...);
+    return DiscreteVector<QueryDDims...>(SparseDiscreteDomain<QueryDDims>(domain).size()...);
 }
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> front(
-        StorageDiscreteDomain<DDims...> const& domain) noexcept
+        SparseDiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteElement<QueryDDims...>(StorageDiscreteDomain<QueryDDims>(domain).front()...);
+    return DiscreteElement<QueryDDims...>(SparseDiscreteDomain<QueryDDims>(domain).front()...);
 }
 
 template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> back(
-        StorageDiscreteDomain<DDims...> const& domain) noexcept
+        SparseDiscreteDomain<DDims...> const& domain) noexcept
 {
-    return DiscreteElement<QueryDDims...>(StorageDiscreteDomain<QueryDDims>(domain).back()...);
+    return DiscreteElement<QueryDDims...>(SparseDiscreteDomain<QueryDDims>(domain).back()...);
 }
 
 } // namespace ddc

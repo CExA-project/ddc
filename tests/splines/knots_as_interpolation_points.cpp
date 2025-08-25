@@ -15,7 +15,7 @@
 
 #include "test_utils.hpp"
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(KNOTS_AS_INTERPOLATION_POINTS_CPP) {
+inline namespace anonymous_namespace_workaround_knots_as_interpolation_points_cpp {
 
 template <class T>
 struct UniformBSplinesFixture;
@@ -65,7 +65,7 @@ struct NonUniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPerio
     };
 };
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(KNOTS_AS_INTERPOLATION_POINTS_CPP)
+} // namespace anonymous_namespace_workaround_knots_as_interpolation_points_cpp
 
 using periodicity = std::integer_sequence<bool, true, false>;
 

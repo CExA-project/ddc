@@ -8,7 +8,7 @@
 
 #include <Kokkos_Macros.hpp>
 
-namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MULTIPLE_DISCRETE_DIMENSIONS_CPP) {
+inline namespace anonymous_namespace_workaround_multiple_discrete_dimensions_cpp {
 
 class SingleValueDiscreteDimension
 {
@@ -62,7 +62,7 @@ struct SVDD2 : SingleValueDiscreteDimension
 {
 };
 
-} // namespace DDC_HIP_5_7_ANONYMOUS_NAMESPACE_WORKAROUND(MULTIPLE_DISCRETE_DIMENSIONS_CPP)
+} // namespace anonymous_namespace_workaround_multiple_discrete_dimensions_cpp
 
 TEST(MultipleDiscreteDimensions, Value)
 {

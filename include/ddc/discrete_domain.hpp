@@ -12,9 +12,10 @@
 
 #include <Kokkos_Macros.hpp>
 
-#include "ddc/detail/type_seq.hpp"
-#include "ddc/discrete_element.hpp"
-#include "ddc/discrete_vector.hpp"
+#include "detail/type_seq.hpp"
+
+#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 
@@ -131,19 +132,19 @@ public:
 
     KOKKOS_FUNCTION constexpr std::size_t size() const
     {
-        return (1UL * ... * (uid<DDims>(m_element_end) - uid<DDims>(m_element_begin)));
+        return (1UL * ... * extent<DDims>().value());
     }
 
     KOKKOS_FUNCTION constexpr discrete_vector_type extents() const noexcept
     {
-        return discrete_vector_type((uid<DDims>(m_element_end) - uid<DDims>(m_element_begin))...);
+        return m_element_end - m_element_begin;
     }
 
     template <class QueryDDim>
     KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDim> extent() const noexcept
     {
-        return DiscreteVector<QueryDDim>(
-                uid<QueryDDim>(m_element_end) - uid<QueryDDim>(m_element_begin));
+        return DiscreteElement<QueryDDim>(m_element_end)
+               - DiscreteElement<QueryDDim>(m_element_begin);
     }
 
     KOKKOS_FUNCTION constexpr discrete_element_type front() const noexcept
@@ -153,7 +154,7 @@ public:
 
     KOKKOS_FUNCTION constexpr discrete_element_type back() const noexcept
     {
-        return discrete_element_type((uid<DDims>(m_element_end) - 1)...);
+        return discrete_element_type((DiscreteElement<DDims>(m_element_end) - 1)...);
     }
 
     KOKKOS_FUNCTION constexpr DiscreteDomain take_first(discrete_vector_type n) const
@@ -192,18 +193,24 @@ public:
     template <class... ODDims>
     KOKKOS_FUNCTION constexpr auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
     {
-        assert(((uid<ODDims>(m_element_begin) <= uid<ODDims>(odomain.m_element_begin)) && ...));
-        assert(((uid<ODDims>(m_element_end) >= uid<ODDims>(odomain.m_element_end)) && ...));
-        const DiscreteVector<DDims...> myextents = extents();
-        const DiscreteVector<ODDims...> oextents = odomain.extents();
+        assert(((DiscreteElement<ODDims>(m_element_begin)
+                 <= DiscreteElement<ODDims>(odomain.m_element_begin))
+                && ...));
+        assert(((DiscreteElement<ODDims>(m_element_end)
+                 >= DiscreteElement<ODDims>(odomain.m_element_end))
+                && ...));
+        DiscreteVector<DDims...> const myextents = extents();
+        DiscreteVector<ODDims...> const oextents = odomain.extents();
         return DiscreteDomain(
-                DiscreteElement<DDims...>(
-                        (uid_or<DDims>(odomain.m_element_begin, uid<DDims>(m_element_begin)))...),
-                DiscreteVector<DDims...>((get_or<DDims>(oextents, get<DDims>(myextents)))...));
+                DiscreteElement<DDims...>((select_or<DDims>(
+                        odomain.m_element_begin,
+                        DiscreteElement<DDims>(m_element_begin)))...),
+                DiscreteVector<DDims...>(
+                        (select_or<DDims>(oextents, DiscreteVector<DDims>(myextents)))...));
     }
 
     template <class... DElems>
-    bool contains(DElems const&... delems) const noexcept
+    KOKKOS_FUNCTION bool contains(DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -218,7 +225,8 @@ public:
     }
 
     template <class... DElems>
-    DiscreteVector<DDims...> distance_from_front(DElems const&... delems) const noexcept
+    KOKKOS_FUNCTION DiscreteVector<DDims...> distance_from_front(
+            DElems const&... delems) const noexcept
     {
         static_assert(
                 sizeof...(DDims) == (0 + ... + DElems::size()),
@@ -409,22 +417,22 @@ public:
         return *this;
     }
 
-    static bool contains() noexcept
+    static KOKKOS_FUNCTION bool contains() noexcept
     {
         return true;
     }
 
-    static bool contains(DiscreteElement<>) noexcept
+    static KOKKOS_FUNCTION bool contains(DiscreteElement<>) noexcept
     {
         return true;
     }
 
-    static DiscreteVector<> distance_from_front() noexcept
+    static KOKKOS_FUNCTION DiscreteVector<> distance_from_front() noexcept
     {
         return {};
     }
 
-    static DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
+    static KOKKOS_FUNCTION DiscreteVector<> distance_from_front(DiscreteElement<>) noexcept
     {
         return {};
     }
@@ -617,7 +625,7 @@ public:
 
     KOKKOS_FUNCTION constexpr DiscreteDomainIterator& operator++()
     {
-        ++m_value.uid();
+        ++m_value;
         return *this;
     }
 
@@ -630,7 +638,7 @@ public:
 
     KOKKOS_FUNCTION constexpr DiscreteDomainIterator& operator--()
     {
-        --m_value.uid();
+        --m_value;
         return *this;
     }
 
@@ -644,9 +652,9 @@ public:
     KOKKOS_FUNCTION constexpr DiscreteDomainIterator& operator+=(difference_type n)
     {
         if (n >= difference_type(0)) {
-            m_value.uid() += static_cast<DiscreteElementType>(n);
+            m_value += static_cast<DiscreteElementType>(n);
         } else {
-            m_value.uid() -= static_cast<DiscreteElementType>(-n);
+            m_value -= static_cast<DiscreteElementType>(-n);
         }
         return *this;
     }
@@ -654,9 +662,9 @@ public:
     KOKKOS_FUNCTION constexpr DiscreteDomainIterator& operator-=(difference_type n)
     {
         if (n >= difference_type(0)) {
-            m_value.uid() -= static_cast<DiscreteElementType>(n);
+            m_value -= static_cast<DiscreteElementType>(n);
         } else {
-            m_value.uid() += static_cast<DiscreteElementType>(-n);
+            m_value += static_cast<DiscreteElementType>(-n);
         }
         return *this;
     }

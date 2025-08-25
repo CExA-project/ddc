@@ -10,8 +10,8 @@
 #include <type_traits>
 #include <utility>
 
-#include "ddc/detail/macros.hpp"
-#include "ddc/detail/type_seq.hpp"
+#include "macros.hpp"
+#include "type_seq.hpp"
 
 namespace ddc {
 
@@ -372,7 +372,9 @@ public:
         return *this;
     }
 
-    template <class OElementType>
+    template <
+            class OElementType,
+            class = std::enable_if_t<std::is_convertible_v<OElementType, ElementType>>>
     KOKKOS_FUNCTION constexpr TaggedVector& operator+=(OElementType const& rhs)
     {
         ((m_values[type_seq_rank_v<Tags, tags_seq>] += rhs), ...);
@@ -388,7 +390,9 @@ public:
         return *this;
     }
 
-    template <class OElementType>
+    template <
+            class OElementType,
+            class = std::enable_if_t<std::is_convertible_v<OElementType, ElementType>>>
     KOKKOS_FUNCTION constexpr TaggedVector& operator-=(OElementType const& rhs)
     {
         ((m_values[type_seq_rank_v<Tags, tags_seq>] -= rhs), ...);

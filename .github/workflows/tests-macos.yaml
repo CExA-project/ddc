@@ -81,8 +81,8 @@ jobs:
       checks: write  # Required by mikepenz/action-junit-report
     steps:
       - name: Checkout built branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: pdidev/pdi
           ref: 1.9.2
@@ -118,7 +118,7 @@ jobs:
         run: brew install googletest
       - name: Install Google benchmark
         run: brew install google-benchmark
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: ginkgo-project/ginkgo
           ref: v1.8.0
@@ -139,7 +139,7 @@ jobs:
           cmake --build build
           cmake --install build --prefix $Ginkgo_ROOT
           rm -rf build
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: kokkos/kokkos
           ref: 4.6.00
@@ -157,7 +157,7 @@ jobs:
           cmake --build build
           cmake --install build --prefix $Kokkos_ROOT
           rm -rf build
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: kokkos/kokkos-fft
           ref: v0.3.0
@@ -172,7 +172,7 @@ jobs:
           cmake --build build
           cmake --install build --prefix $KokkosFFT_ROOT
           rm -rf build
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: kokkos/kokkos-kernels
           ref: 4.6.00

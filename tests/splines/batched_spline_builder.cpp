@@ -165,6 +165,13 @@ void BatchedSplineTest()
     ddc::DiscreteDomain<ddc::Deriv<I>> const
             derivs_domain(DElem<ddc::Deriv<I>>(1), DVect<ddc::Deriv<I>>(s_degree_x / 2));
     auto const dom_derivs = ddc::replace_dim_of<DDimI, ddc::Deriv<I>>(dom_vals, derivs_domain);
+    // Create the derivs domain
+    ddc::StridedDiscreteDomain<DDimI, ddc::Deriv<I>> const
+            derivs_domain_strided(DElem<DDimI, ddc::Deriv<I>>(interpolation_domain.front(), derivs_domain.front()),
+                          DVect<DDimI, ddc::Deriv<I>>(DVect<DDimI>(1), derivs_domain.extents()),
+                          DVect<DDimI, ddc::Deriv<I>>(interpolation_domain.extents() - 1, DVect<ddc::Deriv<I>>(1)));
+    ddc::remove_dims_of_t<ddc::StridedDiscreteDomain<DDims...>, DDimI> const dom_vals_tmp_strided(dom_vals_tmp);
+    ddc::StridedDiscreteDomain<DDims..., ddc::Deriv<I>> const dom_derivs_strided(dom_vals_tmp_strided, derivs_domain_strided);
 #endif
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
@@ -200,6 +207,8 @@ void BatchedSplineTest()
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
     int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
+    ddc::Chunk derivs_strided_alloc(dom_derivs_strided, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan const derivs_strided = derivs_strided_alloc.span_view();
     ddc::Chunk derivs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
@@ -220,6 +229,8 @@ void BatchedSplineTest()
                         typename decltype(derivs_lhs.domain())::discrete_element_type const e) {
                     derivs_lhs(e) = derivs_lhs1(DElem<ddc::Deriv<I>>(e));
                 });
+
+        Kokkos::deep_copy(derivs_strided[interpolation_domain.front()].allocation_kokkos_view(), derivs_lhs.allocation_kokkos_view());
     }
 
     ddc::Chunk derivs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
@@ -243,6 +254,7 @@ void BatchedSplineTest()
                         typename decltype(derivs_rhs.domain())::discrete_element_type const e) {
                     derivs_rhs(e) = derivs_rhs1(DElem<ddc::Deriv<I>>(e));
                 });
+        Kokkos::deep_copy(derivs_strided[interpolation_domain.back()].allocation_kokkos_view(), derivs_rhs.allocation_kokkos_view());
     }
 #endif
 
@@ -257,6 +269,25 @@ void BatchedSplineTest()
             vals.span_cview(),
             std::optional(derivs_lhs.span_cview()),
             std::optional(derivs_rhs.span_cview()));
+
+    {
+        ddc::Chunk coef_2_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
+        ddc::ChunkSpan const coef_2 = coef_2_alloc.span_view();
+        spline_builder(
+                coef_2,
+                vals.span_cview(),
+                std::optional(derivs_strided[interpolation_domain.front()].span_cview()),
+                std::optional(derivs_strided[interpolation_domain.back()].span_cview()));
+        double const max_norm_error = ddc::parallel_transform_reduce(
+                exec_space,
+                coef.domain(),
+                0.,
+                ddc::reducer::max<double>(),
+                KOKKOS_LAMBDA(DElem<DDims...> const e) {
+                    return Kokkos::abs(coef(e) - coef_2(e));
+                });
+        EXPECT_LE(max_norm_error, 1e-14);
+    }
 #else
     spline_builder(coef, vals.span_cview());
 #endif

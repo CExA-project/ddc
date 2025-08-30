@@ -468,7 +468,7 @@ public:
      * @param[in] derivs_xmax The values of the derivatives at the upper boundary
      * (used only with BoundCond::HERMITE upper boundary condition).
      */
-    template <class Layout, class BatchedInterpolationDDom>
+    template <class Layout, class BatchedInterpolationDDom, class LayoutDeriv = Kokkos::layout_right>
     void operator()(
             ddc::ChunkSpan<
                     double,
@@ -479,13 +479,13 @@ public:
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
+                    LayoutDeriv,
                     memory_space>> derivs_xmin
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
+                    LayoutDeriv,
                     memory_space>> derivs_xmax
             = std::nullopt) const;
 
@@ -793,7 +793,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver>
-template <class Layout, class BatchedInterpolationDDom>
+template <class Layout, class BatchedInterpolationDDom, class LayoutDeriv>
 void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
 operator()(
         ddc::ChunkSpan<
@@ -805,12 +805,12 @@ operator()(
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
+                LayoutDeriv,
                 memory_space>> const derivs_xmin,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
+                LayoutDeriv,
                 memory_space>> const derivs_xmax) const
 {
     auto const batched_interpolation_domain = vals.domain();

@@ -47,7 +47,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ['oldest', 'latest']
+        image: ['latest']
         backend:
           - name: 'cpu'
             c_compiler: 'gcc'
@@ -69,17 +69,9 @@ jobs:
             cxx_compiler: 'hipcc'
             ddc_extra_cxx_flags: ''
             kokkos_extra_cmake_flags: '-DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ENABLE_ROCTHRUST=OFF -DKokkos_ARCH_AMD_GFX90A=ON'
-        cxx_version: ['17', '20', '23']
+        cxx_version: ['20', '23']
         cmake_build_type: ['Debug', 'Release']
         exclude:
-          - image: 'oldest'  # nvcc 11 only supports C++-17
-            backend:
-              name: 'cuda'
-            cxx_version: '20'
-          - image: 'oldest'  # nvcc 11 only supports C++-17
-            backend:
-              name: 'cuda'
-            cxx_version: '23'
           - image: 'latest'  # nvcc 12 only supports C++-20
             backend:
               name: 'cuda'

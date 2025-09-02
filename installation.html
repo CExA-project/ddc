@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DDC: Installation</title>
+<title>DDC: Installation guide</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -119,74 +119,72 @@ $(document).ready(function(){initNavTree('installation.html',''); initResizable(
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Installation</div></div>
+  <div class="headertitle"><div class="title">Installation guide</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md31"></a>
-Quick start</h1>
-<p>A quick way to compile DDC is to disable all optional components providing only core features</p>
+<div class="textblock"><p>This guide describes two ways to install <b>DDC</b>:</p>
+<ul>
+<li><b>Quick start build</b> → fastest way to compile the core features.</li>
+<li><b>Spack installation</b> → recommended for reproducible builds and HPC environments.</li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md32"></a>
+Quick Start (core features only)</h1>
+<p>This method compiles DDC with all optional components disabled.</p>
 <div class="fragment"><div class="line">git clone --recurse-submodules --jobs 4 https://github.com/CExA-project/ddc.git</div>
-<div class="line">cmake -D DDC_BUILD_KERNELS_FFT=OFF -D DDC_BUILD_KERNELS_SPLINES=OFF -D DDC_BUILD_PDI_WRAPPER=OFF -B ddc/build</div>
+<div class="line">cmake -D DDC_BUILD_KERNELS_FFT=OFF \</div>
+<div class="line">      -D DDC_BUILD_KERNELS_SPLINES=OFF \</div>
+<div class="line">      -D DDC_BUILD_PDI_WRAPPER=OFF \</div>
+<div class="line">      -B ddc/build</div>
 <div class="line">cmake --build ddc/build --parallel 4</div>
 <div class="line">ctest --test-dir ddc/build</div>
-<div class="line">cmake --install ddc/build --prefix path/to/ddc/install</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md32"></a>
-Using Spack package manager</h1>
-<dl class="section note"><dt>Note</dt><dd>We are currently working on providing a DDC recipe for the Spack package manager.</dd></dl>
-<p>In the meantime, as of Spack 0.23.1, we provide a CPU Spack environment that contains almost all dependencies. The rest of the dependencies are provided by the git submodules.</p>
+<div class="line">cmake --install ddc/build --prefix $HOME/.local/ddc</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Replace <code>$HOME/.local/ddc</code> with your preferred installation path.</dd></dl>
 <h2><a class="anchor" id="autotoc_md33"></a>
-Spack installation</h2>
-<h3><a class="anchor" id="autotoc_md34"></a>
-Download</h3>
-<div class="fragment"><div class="line">wget https://github.com/spack/spack/releases/download/v0.23.1/spack-0.23.1.tar.gz</div>
-<div class="line">tar -xvf spack-0.23.1.tar.gz</div>
-<div class="line">rm spack-0.23.1.tar.gz</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md35"></a>
-Activation</h3>
-<p>One first needs to activate Spack before executing any command.</p>
-<div class="fragment"><div class="line">. spack-0.23.1/share/spack/setup-env.sh</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md36"></a>
-DDC environment installation</h3>
-<div class="fragment"><div class="line">spack env create ddc-env ddc-env.yaml</div>
-</div><!-- fragment --><p>Here is the content of <code>ddc-env.yaml</code>:</p>
-<div class="fragment"><div class="line"># ddc-env.yaml</div>
-<div class="line">spack:</div>
-<div class="line">  concretizer:</div>
-<div class="line">    unify: true</div>
-<div class="line">  definitions:</div>
-<div class="line">    - compilers:</div>
-<div class="line">        - &#39;gcc@10:14&#39;</div>
-<div class="line">    - packages:</div>
-<div class="line">        - &#39;benchmark@1.8:1 ~performance_counters&#39;</div>
-<div class="line">        - &#39;cmake@3.22:3&#39;</div>
-<div class="line">        - &#39;doxygen@1.9.8:1&#39;</div>
-<div class="line">        - &#39;fftw@3.3:3&#39;</div>
-<div class="line">        - &#39;ginkgo@1.8:1&#39;</div>
-<div class="line">        - &#39;googletest@1.14:1 +gmock&#39;</div>
-<div class="line">        - &#39;kokkos@4.4.1:4&#39;</div>
-<div class="line">  specs:</div>
-<div class="line">    - lapack</div>
-<div class="line">    - matrix:</div>
-<div class="line">        - [$packages]</div>
-<div class="line">        - [$%compilers]</div>
-<div class="line">  view:</div>
-<div class="line">    default:</div>
-<div class="line">      root: .spack-env/view</div>
-<div class="line">      exclude: [&#39;gcc-runtime&#39;]</div>
-<div class="line">  packages:</div>
-<div class="line">    all:</div>
-<div class="line">      providers:</div>
-<div class="line">        lapack: [openblas]</div>
-<div class="line">      variants: cxxstd=17</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md37"></a>
-Compilation of DDC</h3>
-<div class="fragment"><div class="line">git clone --recurse-submodules --jobs 4 https://github.com/CExA-project/ddc.git</div>
-<div class="line">cmake -D DDC_BUILD_PDI_WRAPPER=OFF -B ddc/build</div>
-<div class="line">ctest --test-dir ddc/build</div>
-<div class="line">cmake --build ddc/build --parallel 4</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md38"></a>
-Installation of DDC</h3>
-<dl class="section warning"><dt>Warning</dt><dd>Installing DDC solely using the bundled libraries (provided via git submodules) is currently untested and not recommended. For better stability, we recommend using system-installed or Spack-installed dependencies whenever possible. </dd></dl>
+Using the installed package</h2>
+<p>To use DDC in your CMake project, point CMake to the installation prefix:</p>
+<div class="fragment"><div class="line">cmake -D DDC_ROOT=$HOME/.local/ddc &lt;your_project&gt;</div>
+</div><!-- fragment --><p>Then in your <code>CMakeLists.txt</code>:</p>
+<div class="fragment"><div class="line">find_package(DDC REQUIRED)</div>
+<div class="line">target_link_libraries(myapp PRIVATE DDC::ddc)</div>
+</div><!-- fragment --><hr  />
+<h1><a class="anchor" id="autotoc_md35"></a>
+Installing with Spack</h1>
+<p>This method leverages the <a href="https://spack.io/">Spack package manager</a> for reproducible builds and dependency management. It is recommended on HPC systems or if you want an isolated environment.</p>
+<h2><a class="anchor" id="autotoc_md36"></a>
+1. Install Spack</h2>
+<p>Download and extract the latest Spack release (replace version if newer is available):</p>
+<div class="fragment"><div class="line">wget https://github.com/spack/spack/releases/download/v1.0.1/spack-1.0.1.tar.gz</div>
+<div class="line">tar -xvf spack-1.0.1.tar.gz</div>
+<div class="line">rm spack-1.0.1.tar.gz</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md37"></a>
+2. Activate Spack</h2>
+<p>Spack must be activated before use:</p>
+<div class="fragment"><div class="line">. spack-1.0.1/share/spack/setup-env.sh</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Add this line to your <code>~/.bashrc</code> or <code>~/.zshrc</code> to avoid reactivating in each new shell.</dd></dl>
+<h2><a class="anchor" id="autotoc_md38"></a>
+3. Install DDC</h2>
+<p>To avoid polluting other Spack setups, create a dedicated environment:</p>
+<div class="fragment"><div class="line">spack env create ddc-env</div>
+</div><!-- fragment --><p>Pin the Spack built-in packages repository to the commit of DDC recipe release (ensures recipe compatibility):</p>
+<div class="fragment"><div class="line">spack --env ddc-env repo update builtin --commit 633ec00a198102d61e7ffcdd551cd455a8689e66</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Starting from <b>Spack packages v2025.7.0</b>, this step will no longer be needed.</dd></dl>
+<p>Add and install DDC with default variants:</p>
+<div class="fragment"><div class="line">spack --env ddc-env add ddc</div>
+<div class="line">spack --env ddc-env install</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Installation may take some time, as Spack builds required dependencies from source.</dd></dl>
+<h2><a class="anchor" id="autotoc_md39"></a>
+4. Use DDC from Spack</h2>
+<p>Activate the environment:</p>
+<div class="fragment"><div class="line">spack env activate ddc-env</div>
+</div><!-- fragment --><p>Now any CMake project can find DDC automatically:</p>
+<div class="fragment"><div class="line">find_package(DDC REQUIRED)</div>
+<div class="line">target_link_libraries(myapp PRIVATE DDC::ddc)</div>
+</div><!-- fragment --><p>To discover available build variants:</p>
+<div class="fragment"><div class="line">spack info ddc</div>
+</div><!-- fragment --><p>If you encounter issues with the Spack recipe, please open an issue on the <a href="https://github.com/spack/spack-packages/issues">spack-packages repository</a>.</p>
+<hr  />
+<p>✅ You now have DDC installed and ready to use! </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

@@ -1,20 +1,16 @@
 var searchData=
 [
-  ['package_20manager_0',['Using Spack package manager',['../installation.html#autotoc_md32',1,'']]],
-  ['parallel_5fdeepcopy_1',['parallel_deepcopy',['../namespaceddc.html#ad90d3688ee5986d7c9914cf94434375a',1,'ddc::parallel_deepcopy(ExecSpace const &amp;execution_space, ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)'],['../namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b',1,'ddc::parallel_deepcopy(ChunkDst &amp;&amp;dst, ChunkSrc &amp;&amp;src)']]],
-  ['parallel_5ffill_2',['parallel_fill',['../namespaceddc.html#a0c253d54d0b7c769c0e789d6eabf5f55',1,'ddc::parallel_fill(ExecSpace const &amp;execution_space, ChunkDst &amp;&amp;dst, T const &amp;value)'],['../namespaceddc.html#a9818f50e1b95ec461586abacca9b4819',1,'ddc::parallel_fill(ChunkDst &amp;&amp;dst, T const &amp;value)']]],
-  ['parallel_5ffor_5feach_3',['parallel_for_each',['../namespaceddc.html#a384e61079897673703217e03dad9dd84',1,'ddc::parallel_for_each(std::string const &amp;label, Support const &amp;domain, Functor &amp;&amp;f) noexcept'],['../namespaceddc.html#a38c84b63c494b0e01a5fcf79e41f95cc',1,'ddc::parallel_for_each(Support const &amp;domain, Functor &amp;&amp;f) noexcept'],['../namespaceddc.html#a8810239a0c359ab4612e79fadc7fbdab',1,'ddc::parallel_for_each(ExecSpace const &amp;execution_space, Support const &amp;domain, Functor &amp;&amp;f) noexcept'],['../namespaceddc.html#ad92ed4439bc27c12aba3e0784dc369d4',1,'ddc::parallel_for_each(std::string const &amp;label, ExecSpace const &amp;execution_space, Support const &amp;domain, Functor &amp;&amp;f) noexcept']]],
-  ['parallel_5ftransform_5freduce_4',['parallel_transform_reduce',['../namespaceddc.html#a3141ff839615992a3c9c144bda702653',1,'ddc::parallel_transform_reduce(Support const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept'],['../namespaceddc.html#ad1b2be9f0994282dd8bffdc235165d4b',1,'ddc::parallel_transform_reduce(std::string const &amp;label, Support const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept'],['../namespaceddc.html#ae07fd7890a84aa49971a4fccf63ff2cf',1,'ddc::parallel_transform_reduce(ExecSpace const &amp;execution_space, Support const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept'],['../namespaceddc.html#a35958049c996ae6af7dc9bbeaeb8a05a',1,'ddc::parallel_transform_reduce(std::string const &amp;label, ExecSpace const &amp;execution_space, Support const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept']]],
-  ['pdievent_5',['pdievent',['../classddc_1_1PdiEvent.html#af2227852b65ab74db0de2ca2aae6d304',1,'ddc::PdiEvent::PdiEvent()'],['../classddc_1_1PdiEvent.html',1,'ddc::PdiEvent'],['../classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258',1,'ddc::PdiEvent::PdiEvent(std::string const &amp;event_name)'],['../classddc_1_1PdiEvent.html#a1e12cf2d5971fa856d8abda63f9c56f8',1,'ddc::PdiEvent::PdiEvent(PdiEvent const &amp;rhs)=delete']]],
-  ['periodic_6',['PERIODIC',['../namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad9d83fc826ae0d42075af007a477e2c9',1,'ddc']]],
-  ['periodic_20conditions_7',['Periodic conditions',['../first_steps.html#autotoc_md12',1,'']]],
-  ['periodicextrapolationrule_8',['PeriodicExtrapolationRule',['../structddc_1_1PeriodicExtrapolationRule.html',1,'ddc']]],
-  ['periodicsampling_9',['PeriodicSampling',['../classddc_1_1PeriodicSampling.html',1,'ddc']]],
-  ['pointer_5ftype_10',['pointer_type',['../namespaceddc.html#add19ae83e32eaba2f1069e730470e047',1,'ddc::chunk_traits']]],
-  ['print_11',['print',['../namespaceddc.html#aa6fd39a90a53ff87a6e839a1f8156397',1,'ddc']]],
-  ['print_5fcontent_12',['print_content',['../namespaceddc.html#a43597abf7fbe2f49db6620a99dcf431c',1,'ddc']]],
-  ['print_5ftype_5finfo_13',['print_type_info',['../namespaceddc.html#ae907362bd0bfe2f35fe0f71e35380996',1,'ddc']]],
-  ['problem_20resolution_14',['Differences with the uniform problem resolution',['../going_further.html#autotoc_md14',1,'']]],
-  ['prod_15',['prod',['../structddc_1_1reducer_1_1prod.html',1,'ddc::reducer::prod&lt; T &gt;'],['../namespaceddc.html#aa559ea0e9e8d32a5114b06dabbc1544f',1,'ddc::prod()']]],
-  ['public_20targets_20and_20headers_16',['Public targets and headers',['../using_ddc.html#autotoc_md29',1,'']]]
+  ['label_0',['label',['../classddc_1_1Chunk.html#a1e2f35381f1bdd8792388ac9e986b54f',1,'ddc::Chunk']]],
+  ['land_1',['land',['../structddc_1_1reducer_1_1land.html',1,'ddc::reducer']]],
+  ['lapack_2',['LAPACK',['../namespaceddc.html#a36c0210a850dde0979ad8b5772ee730ca7015270b41ffefb4e67d40c8bd451a4d',1,'ddc']]],
+  ['layout_5ftype_3',['layout_type',['../classddc_1_1Chunk.html#a0859e9e11ba8dd18664a49cbf2df47af',1,'ddc::Chunk::layout_type'],['../classddc_1_1ChunkCommon.html#a26af65c8ae4222c61665750050491d80',1,'ddc::ChunkCommon::layout_type'],['../classddc_1_1ChunkSpan.html#a73e5ad0de82d64b8452547c083b8500e',1,'ddc::ChunkSpan::layout_type']]],
+  ['length_4',['length',['../classddc_1_1NonUniformBSplines_1_1Impl.html#afb5bb54f973fb9da7fb8a0cddbfc0b0e',1,'ddc::NonUniformBSplines::Impl::length()'],['../classddc_1_1UniformBSplines_1_1Impl.html#a8b04bc695a0d386ab705fe8d7b7587bb',1,'ddc::UniformBSplines::Impl::length()']]],
+  ['loop_5',['loop',['../going_further.html#autotoc_md20',1,'Time loop'],['../first_steps.html#autotoc_md11',1,'Time loop']]],
+  ['lor_6',['lor',['../structddc_1_1reducer_1_1lor.html',1,'ddc::reducer']]],
+  ['lower_5fextrapolation_5frule_7',['lower_extrapolation_rule',['../classddc_1_1SplineEvaluator.html#a6a63e3c1a768b045ebc41aaa5e82f883',1,'ddc::SplineEvaluator']]],
+  ['lower_5fextrapolation_5frule_5f1_5ftype_8',['lower_extrapolation_rule_1_type',['../classddc_1_1SplineEvaluator2D.html#a81b62d4145f7e4dff376b9b544c41ead',1,'ddc::SplineEvaluator2D']]],
+  ['lower_5fextrapolation_5frule_5f2_5ftype_9',['lower_extrapolation_rule_2_type',['../classddc_1_1SplineEvaluator2D.html#a0d4fe98acd1b39df0ab44399bf12add9',1,'ddc::SplineEvaluator2D']]],
+  ['lower_5fextrapolation_5frule_5fdim_5f1_10',['lower_extrapolation_rule_dim_1',['../classddc_1_1SplineEvaluator2D.html#a0f48eb7c1d37b93ff10b1203d917a8e5',1,'ddc::SplineEvaluator2D']]],
+  ['lower_5fextrapolation_5frule_5fdim_5f2_11',['lower_extrapolation_rule_dim_2',['../classddc_1_1SplineEvaluator2D.html#ad8594a9cead725650dc4697906710f5a',1,'ddc::SplineEvaluator2D']]],
+  ['lower_5fextrapolation_5frule_5ftype_12',['lower_extrapolation_rule_type',['../classddc_1_1SplineEvaluator.html#ade4f6dd144fca7df75505581fd8157c2',1,'ddc::SplineEvaluator']]]
 ];

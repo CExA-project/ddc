@@ -27,16 +27,15 @@ var NAVTREE =
   [ "DDC", "index.html", [
     [ "About", "index.html", "index" ],
     [ "Getting started", "md_getting__started.html", [
-      [ "Installation", "installation.html", [
-        [ "Quick start", "installation.html#autotoc_md31", null ],
-        [ "Using Spack package manager", "installation.html#autotoc_md32", [
-          [ "Spack installation", "installation.html#autotoc_md33", [
-            [ "Download", "installation.html#autotoc_md34", null ],
-            [ "Activation", "installation.html#autotoc_md35", null ],
-            [ "DDC environment installation", "installation.html#autotoc_md36", null ],
-            [ "Compilation of DDC", "installation.html#autotoc_md37", null ],
-            [ "Installation of DDC", "installation.html#autotoc_md38", null ]
-          ] ]
+      [ "Installation guide", "installation.html", [
+        [ "Quick Start (core features only)", "installation.html#autotoc_md32", [
+          [ "Using the installed package", "installation.html#autotoc_md33", null ]
+        ] ],
+        [ "Installing with Spack", "installation.html#autotoc_md35", [
+          [ "1. Install Spack", "installation.html#autotoc_md36", null ],
+          [ "2. Activate Spack", "installation.html#autotoc_md37", null ],
+          [ "3. Install DDC", "installation.html#autotoc_md38", null ],
+          [ "4. Use DDC from Spack", "installation.html#autotoc_md39", null ]
         ] ]
       ] ],
       [ "Using DDC", "using_ddc.html", [
@@ -118,8 +117,8 @@ var NAVTREEINDEX =
 "classddc_1_1SparseDiscreteDomain.html#a281dba260b09841003df9aa0dec2ea43",
 "classddc_1_1SplineEvaluator.html#a7b46135fa35ae58103c38010607a1416",
 "classddc_1_1UniformBSplines.html#a002aee489309d7c95422c66304ae8bcb",
-"namespaceddc.html#a3acee30af3a428e9ca4b56fbc764a64f",
-"structddc_1_1StridedDiscreteDomainIterator.html#a78e953225193fb1cf5fb24422687546a"
+"namespaceddc.html#a3cb193243e09bb06d637109d835433ba",
+"structddc_1_1StridedDiscreteDomainIterator.html#a80ed5b5a34ff8f4e7eced2a43d630849"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

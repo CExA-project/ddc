@@ -56,7 +56,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cxx_version: ['17', '20']  # C++23 does not work
+        cxx_version: ['17', '20', '23']
         config: ['Release']
     runs-on: windows-latest
     env:
@@ -87,7 +87,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: kokkos/kokkos
-          ref: 4.6.00
+          ref: 4.7.00
           path: kokkos
       - name: Install Kokkos
         shell: bash

@@ -60,7 +60,7 @@ jobs:
             cxx_compiler: 'clang++'
             ddc_extra_cxx_flags: '-Wextra-semi -Wextra-semi-stmt -Wold-style-cast'
             kokkos_extra_cmake_flags: ''
-        cxx_version: ['17', '20']  # Kokkos 4.6 is not compatible with C++ 23
+        cxx_version: ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
     runs-on: macos-15
     needs: [id_repo]
@@ -142,7 +142,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: kokkos/kokkos
-          ref: 4.6.00
+          ref: 4.7.00
           path: kokkos
       - name: Install Kokkos
         run: |
@@ -175,7 +175,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: kokkos/kokkos-kernels
-          ref: 4.6.00
+          ref: 4.7.00
           path: kokkos-kernels
       - name: Install Kokkos Kernels
         run: |

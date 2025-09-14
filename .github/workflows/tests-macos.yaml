@@ -40,15 +40,6 @@ permissions:
   contents: read
 
 jobs:
-  id_repo:
-    runs-on: macos-15
-    steps:
-      - name: Identify repository
-        id: identify_repo
-        run: |
-          echo "in_base_repo=${{(github.event_name == 'push' && github.repository == 'CExA-project/ddc') || github.event.pull_request.head.repo.full_name == 'CExA-project/ddc'}}" >> "$GITHUB_OUTPUT"
-    outputs: {in_base_repo: '${{steps.identify_repo.outputs.in_base_repo}}'}
-
   test-macos:
     if: github.ref_name != 'main'
     strategy:
@@ -62,8 +53,8 @@ jobs:
             kokkos_extra_cmake_flags: ''
         cxx_version: ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
-    runs-on: macos-15
-    needs: [id_repo]
+        os: [macos-14, macos-15]
+    runs-on: ${{matrix.os}}
     env:
       DDC_ROOT: ${{github.workspace}}/opt/ddc
       Ginkgo_ROOT: ${{github.workspace}}/opt/ginkgo

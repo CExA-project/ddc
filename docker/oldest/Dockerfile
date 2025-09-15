@@ -31,6 +31,8 @@ RUN chmod +x /bin/bash_run \
     gpg \
     wget \
  && mkdir --parents --mode=0755 /etc/apt/keyrings \
+ && wget -O /usr/share/keyrings/pdidev-archive-keyring.gpg https://repo.pdi.dev/ubuntu/pdidev-archive-keyring.gpg \
+ && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/pdidev-archive-keyring.gpg] https://repo.pdi.dev/ubuntu jammy main" > /etc/apt/sources.list.d/pdi.list \
  && case "x${BACKEND}" in \
     "xhip") \
       echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/${AMDGPU_VERSION}/ubuntu jammy main" > /etc/apt/sources.list.d/amdgpu.list \
@@ -48,8 +50,12 @@ RUN chmod +x /bin/bash_run \
     cmake \
     git \
     libfftw3-dev \
-    liblapacke-dev \
     libhwloc-dev \
+    liblapacke-dev \
+    libpdi-dev \
+    pdiplugin-decl-hdf5-serial \
+    pdiplugin-trace \
+    pdiplugin-user-code \
     pkg-config \
     python3 \
  && case "${BACKEND}" in \
@@ -78,11 +84,6 @@ RUN chmod +x /bin/bash_run \
       && echo "/opt/rocm/lib64" >> /etc/ld.so.conf.d/rocm.conf \
       && ldconfig \
  ;; esac \
- && git clone --branch 1.8.1 --depth 1 https://github.com/pdidev/pdi.git \
- && cmake -D BUILD_BENCHMARKING=OFF -D BUILD_DECL_HDF5_PLUGIN=OFF -D BUILD_FORTRAN=OFF -D BUILD_HDF5_PARALLEL=OFF -D BUILD_DECL_NETCDF_PLUGIN=OFF -D BUILD_MPI_PLUGIN=OFF -D BUILD_NETCDF_PARALLEL=OFF -D BUILD_SERIALIZE_PLUGIN=OFF -D BUILD_SET_VALUE_PLUGIN=OFF -D BUILD_SHARED_LIBS=ON -D BUILD_TESTING=OFF -D BUILD_TRACE_PLUGIN=ON -D BUILD_USER_CODE_PLUGIN=ON -D CMAKE_BUILD_TYPE=Release -D USE_paraconf=EMBEDDED -D USE_spdlog=EMBEDDED -D USE_yaml=EMBEDDED -B pdi/build -S pdi \
- && cmake --build pdi/build \
- && cmake --install pdi/build --prefix /usr \
- && rm -rf pdi \
  && git clone --branch v1.8.0 --depth 1 https://github.com/ginkgo-project/ginkgo.git \
  && case "${BACKEND}" in \
     "cpu") \

@@ -42,15 +42,6 @@ permissions:
   contents: read
 
 jobs:
-  id_repo:
-    runs-on: windows-latest
-    steps:
-      - name: Identify repository
-        id: identify_repo
-        run: |
-          echo "in_base_repo=${{(github.event_name == 'push' && github.repository == 'CExA-project/ddc') || github.event.pull_request.head.repo.full_name == 'CExA-project/ddc'}}" >> "$GITHUB_OUTPUT"
-    outputs: {in_base_repo: '${{steps.identify_repo.outputs.in_base_repo}}'}
-
   test-windows:
     if: github.ref_name != 'main'
     strategy:
@@ -58,7 +49,8 @@ jobs:
       matrix:
         cxx_version: ['17', '20', '23']
         config: ['Release']
-    runs-on: windows-latest
+        os: [windows-2022, windows-2025]
+    runs-on: ${{matrix.os}}
     env:
       Kokkos_ROOT: ${{github.workspace}}/opt/kokkos
       GTest_ROOT: ${{github.workspace}}/opt/gtest

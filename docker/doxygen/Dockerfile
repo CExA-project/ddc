@@ -4,9 +4,13 @@ FROM ubuntu:noble
 #
 # SPDX-License-Identifier: MIT
 
+ARG CMAKE_VERSION=3.25.3
+
 COPY bash_run /bin/
 ENV BASH_ENV=/etc/profile
 SHELL ["/bin/bash", "-c"]
+
+ENV PATH="/opt/cmake-${CMAKE_VERSION}-linux-x86_64/bin${PATH:+:${PATH}}"
 
 RUN chmod +x /bin/bash_run \
  && export DEBIAN_FRONTEND=noninteractive \
@@ -19,25 +23,24 @@ RUN chmod +x /bin/bash_run \
     apt-utils \
     ca-certificates \
     wget \
+ && wget -O /usr/share/keyrings/pdidev-archive-keyring.gpg https://repo.pdi.dev/ubuntu/pdidev-archive-keyring.gpg \
+ && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/pdidev-archive-keyring.gpg] https://repo.pdi.dev/ubuntu noble main" > /etc/apt/sources.list.d/pdi.list \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends \
     build-essential \
     clang \
     cm-super-minimal \
-    cmake \
-    cmake-data \
-    libfftw3-dev \
-    liblapacke-dev \
+    doxygen-latex \
     ghostscript \
     git \
     graphviz \
+    libfftw3-dev \
+    liblapacke-dev \
+    libpdi-dev \
     pkg-config \
-    doxygen-latex \
- && git clone --branch 1.8.1 --depth 1 https://github.com/pdidev/pdi.git \
- && cmake -D BUILD_BENCHMARKING=OFF -D BUILD_DECL_HDF5_PLUGIN=OFF -D BUILD_FORTRAN=OFF -D BUILD_HDF5_PARALLEL=OFF -D BUILD_DECL_NETCDF_PLUGIN=OFF -D BUILD_MPI_PLUGIN=OFF -D BUILD_NETCDF_PARALLEL=OFF -D BUILD_SERIALIZE_PLUGIN=OFF -D BUILD_SET_VALUE_PLUGIN=OFF -D BUILD_SHARED_LIBS=ON -D BUILD_TESTING=OFF -D BUILD_TRACE_PLUGIN=ON -D BUILD_USER_CODE_PLUGIN=ON -D CMAKE_BUILD_TYPE=Release -D USE_paraconf=EMBEDDED -D USE_spdlog=EMBEDDED -D USE_yaml=EMBEDDED -B pdi/build -S pdi \
- && cmake --build pdi/build \
- && cmake --install pdi/build \
- && rm -rf pdi \
+ && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
+ && tar -xvf cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz --directory /opt \
+ && rm -f cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
  && git clone --branch v1.8.0 --depth 1 https://github.com/ginkgo-project/ginkgo.git \
  && cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGINKGO_BUILD_OMP=OFF -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
  && cmake --build ginkgo/build \

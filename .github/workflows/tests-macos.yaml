@@ -213,6 +213,8 @@ jobs:
           ./build/examples/heat_equation
           ./build/examples/non_uniform_heat_equation
           ./build/examples/uniform_heat_equation
+          ./build/benchmarks/ddc_benchmark_deepcopy --benchmark_dry_run
+          ./build/benchmarks/ddc_benchmark_splines --benchmark_dry_run
       - name: Install DDC
         run: |
           cmake --install build --prefix $DDC_ROOT

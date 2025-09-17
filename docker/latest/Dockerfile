@@ -8,6 +8,7 @@ LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
 ARG BACKEND
 ARG AMDGPU_VERSION=6.2.1
+ARG CMAKE_VERSION=3.25.3
 ARG ROCM_VERSION=6.2.1
 
 COPY bash_run /bin/
@@ -15,7 +16,7 @@ ENV BASH_ENV=/etc/profile
 SHELL ["/bin/bash", "-c"]
 
 ENV PATH="/usr/local/cuda-12.6/bin${PATH:+:${PATH}}"
-ENV PATH="/opt/cmake-3.27.9-linux-x86_64/bin${PATH:+:${PATH}}"
+ENV PATH="/opt/cmake-${CMAKE_VERSION}-linux-x86_64/bin${PATH:+:${PATH}}"
 ENV PATH="${PATH:+$PATH:}/opt/rocm-${ROCM_VERSION}/bin"
 ENV CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:+$CMAKE_PREFIX_PATH:}/opt/rocm-${ROCM_VERSION}"
 
@@ -61,10 +62,6 @@ RUN chmod +x /bin/bash_run \
     python3 \
  && python3 -m pipx install gcovr \
  && python3 -m pipx ensurepath \
- # Installing cmake < 3.28 to workaround issue with Kokkos
- && wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-x86_64.tar.gz \
- && tar -xvf cmake-3.27.9-linux-x86_64.tar.gz --directory /opt \
- && rm -f cmake-3.27.9-linux-x86_64.tar.gz \
  && case "${BACKEND}" in \
     "cpu") \
       apt-get install -y --no-install-recommends \
@@ -98,6 +95,9 @@ RUN chmod +x /bin/bash_run \
       && echo "/opt/rocm/lib64" >> /etc/ld.so.conf.d/rocm.conf \
       && ldconfig \
  ;; esac \
+ && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
+ && tar -xvf cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz --directory /opt \
+ && rm -f cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
  && git clone -b v1.8.0 --depth 1 https://github.com/ginkgo-project/ginkgo.git \
  && case "${BACKEND}" in \
     "cpu") \

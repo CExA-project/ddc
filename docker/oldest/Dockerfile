@@ -8,6 +8,7 @@ LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
 ARG BACKEND
 ARG AMDGPU_VERSION=5.7.3
+ARG CMAKE_VERSION=3.25.3
 ARG ROCM_VERSION=5.7.3
 
 COPY bash_run /bin/
@@ -15,6 +16,7 @@ ENV BASH_ENV=/etc/profile
 SHELL ["/bin/bash", "-c"]
 
 ENV PATH="/usr/local/cuda-11.8/bin${PATH:+:${PATH}}"
+ENV PATH="/opt/cmake-${CMAKE_VERSION}-linux-x86_64/bin${PATH:+:${PATH}}"
 ENV PATH="${PATH:+$PATH:}/opt/rocm-${ROCM_VERSION}/bin"
 ENV CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:+$CMAKE_PREFIX_PATH:}/opt/rocm-${ROCM_VERSION}"
 
@@ -47,7 +49,6 @@ RUN chmod +x /bin/bash_run \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends \
     build-essential \
-    cmake \
     git \
     libfftw3-dev \
     libhwloc-dev \
@@ -84,6 +85,9 @@ RUN chmod +x /bin/bash_run \
       && echo "/opt/rocm/lib64" >> /etc/ld.so.conf.d/rocm.conf \
       && ldconfig \
  ;; esac \
+ && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
+ && tar -xvf cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz --directory /opt \
+ && rm -f cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
  && git clone --branch v1.8.0 --depth 1 https://github.com/ginkgo-project/ginkgo.git \
  && case "${BACKEND}" in \
     "cpu") \

@@ -12,11 +12,11 @@ macro(ddc_configure_benchmark)
         "Enable installation of benchmark. (Projects embedding benchmark may want to turn this OFF.)"
         OFF
     )
-    add_subdirectory(vendor/benchmark)
+    add_subdirectory(vendor/benchmark SYSTEM)
 endmacro()
 
 macro(ddc_configure_googletest)
-    add_subdirectory(vendor/googletest)
+    add_subdirectory(vendor/googletest SYSTEM)
 endmacro()
 
 macro(ddc_configure_kokkos)
@@ -39,12 +39,12 @@ macro(ddc_configure_kokkos)
             ON
         )
     endif()
-    add_subdirectory(vendor/kokkos)
+    add_subdirectory(vendor/kokkos SYSTEM)
 endmacro()
 
 macro(ddc_configure_kokkos_fft)
     option(KokkosFFT_ENABLE_FFTW "Enable fftw as a KokkosFFT backend on CPUs" ON)
-    add_subdirectory(vendor/kokkos-fft)
+    add_subdirectory(vendor/kokkos-fft SYSTEM)
 endmacro()
 
 macro(ddc_configure_kokkos_kernels)

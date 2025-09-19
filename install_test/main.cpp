@@ -12,14 +12,20 @@ static_assert(std::is_same_v<ddc::Real, float>);
 
 #if !__has_include(<ddc/kernels/fft.hpp>)
 #    error
+#else
+#    include <ddc/kernels/fft.hpp>
 #endif
 
 #if !__has_include(<ddc/kernels/splines.hpp>)
 #    error
+#else
+#    include <ddc/kernels/splines.hpp>
 #endif
 
 #if !__has_include(<ddc/pdi.hpp>)
 #    error
+#else
+#    include <ddc/pdi.hpp>
 #endif
 
 int main()

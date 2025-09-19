@@ -269,6 +269,10 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
                     include/ddc/kernels/splines/integrals.hpp
                     include/ddc/kernels/splines/knot_discrete_dimension_type.hpp
                     include/ddc/kernels/splines/knots_as_interpolation_points.hpp
+                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Gbtrs.hpp
+                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Gbtrs_Serial_Impl.hpp
+                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Getrs.hpp
+                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Getrs_Serial_Impl.hpp
                     include/ddc/kernels/splines/math_tools.hpp
                     include/ddc/kernels/splines/null_extrapolation_rule.hpp
                     include/ddc/kernels/splines/periodic_extrapolation_rule.hpp

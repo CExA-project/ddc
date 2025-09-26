@@ -144,6 +144,26 @@ foreach(BC "BC_PERIODIC" "BC_GREVILLE" "BC_HERMITE")
     endforeach()
 endforeach()
 
+foreach(BC "BC_PERIODIC") #"BC_GREVILLE" "BC_HERMITE")
+    foreach(EVALUATOR "EVALUATOR_POLYNOMIAL")
+        foreach(DEGREE RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")
+            foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
+                set(test_name
+                    "3d_splines_tests_BATCHED_DEGREE_${DEGREE}_${BSPLINES_TYPE}_${EVALUATOR}_${BC}"
+                )
+                add_executable("${test_name}" ../main.cpp batched_3d_spline_builder.cpp)
+                target_compile_definitions(
+                    "${test_name}"
+                    PUBLIC -DDEGREE=${DEGREE} -D${BSPLINES_TYPE} -D${EVALUATOR} -D${BC}
+                )
+                target_compile_features("${test_name}" PUBLIC cxx_std_17)
+                target_link_libraries("${test_name}" PUBLIC DDC::core DDC::splines GTest::gtest)
+                gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
+            endforeach()
+        endforeach()
+    endforeach()
+endforeach()
+
 foreach(SOLVER "GINKGO" "LAPACK")
     foreach(BC "BC_PERIODIC" "BC_GREVILLE" "BC_HERMITE")
         foreach(DEGREE_X RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")

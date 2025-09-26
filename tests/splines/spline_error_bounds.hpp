@@ -64,6 +64,22 @@ public:
                + tihomirov_error_bound(cell_width2, degree2, norm2);
     }
 
+    double error_bound(
+            double cell_width1,
+            double cell_width2,
+            double cell_width3,
+            int degree1,
+            int degree2,
+            int degree3) const
+    {
+        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
+        double const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
+        double const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
+        return tihomirov_error_bound(cell_width1, degree1, norm1)
+               + tihomirov_error_bound(cell_width2, degree2, norm2)
+               + tihomirov_error_bound(cell_width3, degree3, norm3);
+    }
+
     double error_bound_on_deriv(double cell_width, int degree) const
     {
         return tihomirov_error_bound(cell_width, degree - 1, m_evaluator.max_norm(degree + 1));
@@ -78,6 +94,22 @@ public:
                + tihomirov_error_bound(cell_width2, degree2, norm2);
     }
 
+    double error_bound_on_deriv_1(
+            double cell_width1,
+            double cell_width2,
+            double cell_width3,
+            int degree1,
+            int degree2,
+            int degree3) const
+    {
+        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
+        double const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
+        double const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
+        return tihomirov_error_bound(cell_width1, degree1 - 1, norm1)
+               + tihomirov_error_bound(cell_width2, degree2, norm2)
+               + tihomirov_error_bound(cell_width3, degree3, norm3);
+    }
+
     double error_bound_on_deriv_2(double cell_width1, double cell_width2, int degree1, int degree2)
             const
     {
@@ -85,6 +117,38 @@ public:
         double const norm2 = m_evaluator.max_norm(0, degree2 + 1);
         return tihomirov_error_bound(cell_width1, degree1, norm1)
                + tihomirov_error_bound(cell_width2, degree2 - 1, norm2);
+    }
+
+    double error_bound_on_deriv_2(
+            double cell_width1,
+            double cell_width2,
+            double cell_width3,
+            int degree1,
+            int degree2,
+            int degree3) const
+    {
+        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
+        double const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
+        double const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
+        return tihomirov_error_bound(cell_width1, degree1, norm1)
+               + tihomirov_error_bound(cell_width2, degree2 - 1, norm2)
+               + tihomirov_error_bound(cell_width3, degree3, norm3);
+    }
+
+    double error_bound_on_deriv_3(
+            double cell_width1,
+            double cell_width2,
+            double cell_width3,
+            int degree1,
+            int degree2,
+            int degree3) const
+    {
+        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
+        double const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
+        double const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
+        return tihomirov_error_bound(cell_width1, degree1, norm1)
+               + tihomirov_error_bound(cell_width2, degree2, norm2)
+               + tihomirov_error_bound(cell_width3, degree3 - 1, norm3);
     }
 
     /*******************************************************************************
@@ -99,6 +163,70 @@ public:
         double const norm2 = m_evaluator.max_norm(1, degree2 + 1);
         return tihomirov_error_bound(cell_width1, degree1 - 1, norm1)
                + tihomirov_error_bound(cell_width2, degree2 - 1, norm2);
+    }
+
+    double error_bound_on_deriv_12(
+            double cell_width1,
+            double cell_width2,
+            double cell_width3,
+            int degree1,
+            int degree2,
+            int degree3) const
+    {
+        double const norm1 = m_evaluator.max_norm(degree1 + 1, 1, 1);
+        double const norm2 = m_evaluator.max_norm(1, degree2 + 1, 1);
+        double const norm3 = m_evaluator.max_norm(1, 1, degree3 + 1);
+        return tihomirov_error_bound(cell_width1, degree1 - 1, norm1)
+               + tihomirov_error_bound(cell_width2, degree2 - 1, norm2)
+               + tihomirov_error_bound(cell_width3, degree3, norm3);
+    }
+
+    double error_bound_on_deriv_23(
+            double cell_width1,
+            double cell_width2,
+            double cell_width3,
+            int degree1,
+            int degree2,
+            int degree3) const
+    {
+        double const norm1 = m_evaluator.max_norm(degree1 + 1, 1, 1);
+        double const norm2 = m_evaluator.max_norm(1, degree2 + 1, 1);
+        double const norm3 = m_evaluator.max_norm(1, 1, degree3 + 1);
+        return tihomirov_error_bound(cell_width1, degree1, norm1)
+               + tihomirov_error_bound(cell_width2, degree2 - 1, norm2)
+               + tihomirov_error_bound(cell_width3, degree3 - 3, norm3);
+    }
+
+    double error_bound_on_deriv_13(
+            double cell_width1,
+            double cell_width2,
+            double cell_width3,
+            int degree1,
+            int degree2,
+            int degree3) const
+    {
+        double const norm1 = m_evaluator.max_norm(degree1 + 1, 1, 1);
+        double const norm2 = m_evaluator.max_norm(1, degree2 + 1, 1);
+        double const norm3 = m_evaluator.max_norm(1, 1, degree3 + 1);
+        return tihomirov_error_bound(cell_width1, degree1 - 1, norm1)
+               + tihomirov_error_bound(cell_width2, degree2, norm2)
+               + tihomirov_error_bound(cell_width3, degree3 - 1, norm3);
+    }
+
+    double error_bound_on_deriv_123(
+            double cell_width1,
+            double cell_width2,
+            double cell_width3,
+            int degree1,
+            int degree2,
+            int degree3) const
+    {
+        double const norm1 = m_evaluator.max_norm(degree1 + 1, 1, 1);
+        double const norm2 = m_evaluator.max_norm(1, degree2 + 1, 1);
+        double const norm3 = m_evaluator.max_norm(1, 1, degree3 + 1);
+        return tihomirov_error_bound(cell_width1, degree1 - 1, norm1)
+               + tihomirov_error_bound(cell_width2, degree2 - 1, norm2)
+               + tihomirov_error_bound(cell_width3, degree3 - 1, norm3);
     }
 
     double error_bound_on_int(double cell_width, int degree) const

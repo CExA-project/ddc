@@ -60,10 +60,11 @@ public:
     using builder_type3 = ddc::
             SplineBuilder<ExecSpace, MemorySpace, BSpline3, DDimI3, BcLower3, BcUpper3, Solver>;
 
-    // TODO: add documentation comment
+    /// @brief The type of the SplineBuilder used by this class to spline-approximate the second-dimension-derivatives along first dimension.
     using builder_deriv_type1 = ddc::
             SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, BcLower1, BcUpper1, Solver>;
 
+    /// @brief The type of the SplineBuilder used by this class to spline-approximate the third-dimension-derivatives along second dimension.
     using builder_deriv_type2 = ddc::
             SplineBuilder<ExecSpace, MemorySpace, BSpline2, DDimI2, BcLower2, BcUpper2, Solver>;
 
@@ -609,72 +610,72 @@ operator()(
                 Layout,
                 memory_space> spline,
         ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type1<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_min1,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type1<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_max1,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type2<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_min2,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type2<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_max2,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_min3,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_max3,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_min2_min3,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_min2_min3,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_max2_min3,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_max2_min3,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_min2_max3,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_min2_max3,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_max2_max3,
-        std::optional<ddc::ChunkSpan<
+        [[maybe_unused]] std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,

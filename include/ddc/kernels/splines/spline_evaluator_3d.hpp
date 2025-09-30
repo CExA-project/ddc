@@ -310,8 +310,8 @@ public:
      * @param upper_extrap_rule1 The extrapolation rule at the upper boundary along the first dimension.
      * @param lower_extrap_rule2 The extrapolation rule at the lower boundary along the second dimension.
      * @param upper_extrap_rule2 The extrapolation rule at the upper boundary along the second dimension.
-     * @param lower_extrap_rule2 The extrapolation rule at the lower boundary along the third dimension.
-     * @param upper_extrap_rule2 The extrapolation rule at the upper boundary along the third dimension.
+     * @param lower_extrap_rule3 The extrapolation rule at the lower boundary along the third dimension.
+     * @param upper_extrap_rule3 The extrapolation rule at the upper boundary along the third dimension.
      *
      * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
      */

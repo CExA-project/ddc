@@ -209,24 +209,21 @@ void Batched3dSplineTest()
             interpolation_domain3);
 
 #if defined(BC_HERMITE)
+    // FIXME: This is the 2D version, modify when adding the Hermite boundary conditions
+
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I1>> const
             derivs_domain1(DElem<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(s_degree / 2));
     ddc::DiscreteDomain<ddc::Deriv<I2>> const
             derivs_domain2(DElem<ddc::Deriv<I2>>(1), DVect<ddc::Deriv<I2>>(s_degree / 2));
-    ddc::DiscreteDomain<ddc::Deriv<I3>> const
-            derivs_domain3(DElem<ddc::Deriv<I3>>(1), DVect<ddc::Deriv<I3>>(s_degree / 2));
-    ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>, ddc::Deriv<I3>> const
-            derivs_domain(derivs_domain1, derivs_domain2, derivs_domain3);
+    ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>> const
+            derivs_domain(derivs_domain1, derivs_domain2);
 
     auto const dom_derivs_1d
             = ddc::replace_dim_of<DDimI1, ddc::Deriv<I1>>(dom_vals, derivs_domain1);
     auto const dom_derivs2 = ddc::replace_dim_of<DDimI2, ddc::Deriv<I2>>(dom_vals, derivs_domain2);
-    auto const dom_derivs3 = ddc::replace_dim_of<DDimI3, ddc::Deriv<I3>>(dom_vals, derivs_domain3);
-    auto const dom_derivs = ddc::replace_dim_of<DDimI3, ddc::Deriv<I3>>(
-            ddc::replace_dim_of<DDimI2, ddc::Deriv<I2>>(dom_derivs_1d, derivs_domain2),
-            derivs_domain3);
-    // FIXME: check later the correctness of this
+    auto const dom_derivs
+            = ddc::replace_dim_of<DDimI2, ddc::Deriv<I2>>(dom_derivs_1d, derivs_domain2);
 #endif
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
@@ -270,7 +267,7 @@ void Batched3dSplineTest()
             });
 
 #if defined(BC_HERMITE)
-    // FIXME: handle this later
+    // FIXME: This is the 2D version, modify when adding the Hermite boundary conditions
 
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
     int const shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
@@ -462,7 +459,7 @@ void Batched3dSplineTest()
 
     // Finally compute the spline by filling `coef`
 #if defined(BC_HERMITE)
-    // FIXME: handle this later
+    // FIXME: This is the 2D version, modify when adding the Hermite boundary conditions
     spline_builder(
             coef,
             vals.span_cview(),

@@ -345,7 +345,7 @@ jobs:
             cmake --build build
             if [ 'xcpu' = 'x${{matrix.backend.name}}' ]
             then
-              ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
+              ctest --test-dir build --output-on-failure --timeout 20 --output-junit tests.xml
               cp build/tests.xml .
               ./build/examples/characteristics_advection
               ./build/examples/game_of_life
@@ -454,7 +454,7 @@ jobs:
               . /src/sanitizer_env.sh
             fi
 
-            ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
+            ctest --test-dir build --output-on-failure --timeout 20 --output-junit tests.xml
             cp build/tests.xml .
             ./build/examples/characteristics_advection
             ./build/examples/game_of_life

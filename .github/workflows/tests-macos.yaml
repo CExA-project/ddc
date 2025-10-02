@@ -68,8 +68,6 @@ jobs:
       CC: ${{matrix.backend.c_compiler}}
       CXX: ${{matrix.backend.cxx_compiler}}
       CMAKE_BUILD_TYPE: ${{matrix.cmake_build_type}}
-    permissions:
-      checks: write  # Required by mikepenz/action-junit-report
     steps:
       - name: Checkout built branch
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
@@ -204,6 +202,7 @@ jobs:
         uses: mikepenz/action-junit-report@3585e9575db828022551b4231f165eb59a0e74e3  # v5.6.2
         if: ( success() || failure() )  # always run even if the previous step fails
         with:
+          annotate_only: true  # forked repo cannot write to checks so just do annotations
           report_paths: '${{github.workspace}}/build/tests.xml'
       - name: Run examples
         run: |

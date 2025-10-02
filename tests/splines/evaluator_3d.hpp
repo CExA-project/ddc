@@ -94,7 +94,7 @@ struct Evaluator3D
                     for (ddc::DiscreteElement<DDim3> const k : ddc::DiscreteDomain<DDim3>(domain)) {
                         chunk(i, j, k) = eval_func1.deriv(ddc::coordinate(i), derivative_x)
                                          * eval_func2.deriv(ddc::coordinate(j), derivative_y)
-                                         * eval_func3.deriv(ddc::coordinate(j), derivative_z);
+                                         * eval_func3.deriv(ddc::coordinate(k), derivative_z);
                     }
                 }
             }

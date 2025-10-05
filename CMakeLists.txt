@@ -125,6 +125,7 @@ endif()
 
 add_library(ddc_core INTERFACE)
 add_library(DDC::core ALIAS ddc_core)
+set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
 target_sources(
     ddc_core
@@ -204,6 +205,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
 
     add_library(ddc_fft INTERFACE)
     add_library(DDC::fft ALIAS ddc_fft)
+    set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
     target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
     target_sources(
         ddc_fft
@@ -214,7 +216,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
     )
 
     install(TARGETS ddc_fft EXPORT DDCFftTargets FILE_SET HEADERS)
-    install(EXPORT DDCFftTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -249,6 +251,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
     add_library(ddc_splines INTERFACE)
     add_library(DDC::splines ALIAS ddc_splines)
+    set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
     target_include_directories(ddc_splines SYSTEM INTERFACE ${LAPACKE_INCLUDE_DIRS})
     target_link_libraries(
         ddc_splines
@@ -296,7 +299,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
     install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
     install(TARGETS ddc_splines EXPORT DDCSplinesTargets FILE_SET HEADERS)
-    install(EXPORT DDCSplinesTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
 
 ## The PDI wrapper
@@ -308,12 +311,13 @@ if("${DDC_BUILD_PDI_WRAPPER}")
 
     add_library(ddc_pdi INTERFACE)
     add_library(DDC::pdi ALIAS ddc_pdi)
+    set_target_properties(ddc_pdi PROPERTIES EXPORT_NAME pdi)
     target_compile_features(ddc_pdi INTERFACE cxx_std_17)
     target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
     target_sources(ddc_pdi INTERFACE FILE_SET HEADERS BASE_DIRS include FILES include/ddc/pdi.hpp)
 
     install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
-    install(EXPORT DDCPdiTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
 
 ## if examples are enabled, build them
@@ -342,7 +346,7 @@ endif()
 
 ## installation
 
-install(EXPORT DDCTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+install(EXPORT DDCTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 
 configure_package_config_file(
     cmake/DDCConfig.cmake.in

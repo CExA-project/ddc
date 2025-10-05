@@ -37,17 +37,11 @@ set(DDC_BUILD_DOUBLE_PRECISION @DDC_BUILD_DOUBLE_PRECISION@)
 ddc_find_dependency(Kokkos 4.4...<5)
 
 include(${CMAKE_CURRENT_LIST_DIR}/DDCTargets.cmake)
-if(NOT TARGET DDC::core)
-   add_library(DDC::core ALIAS DDC::impl::ddc_core)
-endif()
 
 if(@DDC_BUILD_KERNELS_FFT@ AND ("fft" IN_LIST DDC_FIND_COMPONENTS))
    ddc_find_dependency(KokkosFFT 0.3.0...<1)
 
    include(${CMAKE_CURRENT_LIST_DIR}/DDCFftTargets.cmake)
-   if(NOT TARGET DDC::fft)
-      add_library(DDC::fft ALIAS DDC::impl::ddc_fft)
-   endif()
    set(DDC_fft_FOUND TRUE)
 endif()
 
@@ -62,9 +56,6 @@ if(@DDC_BUILD_KERNELS_SPLINES@ AND ("splines" IN_LIST DDC_FIND_COMPONENTS))
    ddc_find_dependency(KokkosKernels 4.5.1...<5)
 
    include(${CMAKE_CURRENT_LIST_DIR}/DDCSplinesTargets.cmake)
-   if(NOT TARGET DDC::splines)
-      add_library(DDC::splines ALIAS DDC::impl::ddc_splines)
-   endif()
    set(DDC_splines_FOUND TRUE)
 endif()
 
@@ -72,9 +63,6 @@ if(@DDC_BUILD_PDI_WRAPPER@ AND ("pdi" IN_LIST DDC_FIND_COMPONENTS))
    ddc_find_dependency(PDI 1.6...<2 COMPONENTS C)
 
    include(${CMAKE_CURRENT_LIST_DIR}/DDCPdiTargets.cmake)
-   if(NOT TARGET DDC::pdi)
-      add_library(DDC::pdi ALIAS DDC::impl::ddc_pdi)
-   endif()
    set(DDC_pdi_FOUND TRUE)
 endif()
 

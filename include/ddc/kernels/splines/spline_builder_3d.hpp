@@ -513,6 +513,30 @@ public:
      *      The values of the derivatives at the lower boundary in the third dimension.
      * @param[in] derivs_max3
      *      The values of the derivatives at the upper boundary in the third dimension.
+     * @param[in] mixed_derivs_min1_min2
+     *      The values of the the cross-derivatives at the lower boundary in the first dimension and the lower boundary in the second dimension.
+     * @param[in] mixed_derivs_max1_min2
+     *      The values of the the cross-derivatives at the upper boundary in the first dimension and the lower boundary in the second dimension.
+     * @param[in] mixed_derivs_min1_max2
+     *      The values of the the cross-derivatives at the lower boundary in the first dimension and the upper boundary in the second dimension.
+     * @param[in] mixed_derivs_max1_max2
+     *      The values of the the cross-derivatives at the upper boundary in the first dimension and the upper boundary in the second dimension.
+     * @param[in] mixed_derivs_min2_min3
+     *      The values of the the cross-derivatives at the lower boundary in the second dimension and the lower boundary in the third dimension.
+     * @param[in] mixed_derivs_max2_min3
+     *      The values of the the cross-derivatives at the upper boundary in the second dimension and the lower boundary in the third dimension.
+     * @param[in] mixed_derivs_min2_max3
+     *      The values of the the cross-derivatives at the lower boundary in the second dimension and the upper boundary in the third dimension.
+     * @param[in] mixed_derivs_max2_max3
+     *      The values of the the cross-derivatives at the upper boundary in the second dimension and the upper boundary in the third dimension.
+     * @param[in] mixed_derivs_min1_min3
+     *      The values of the the cross-derivatives at the lower boundary in the first dimension and the lower boundary in the third dimension.
+     * @param[in] mixed_derivs_max1_min3
+     *      The values of the the cross-derivatives at the upper boundary in the first dimension and the lower boundary in the third dimension.
+     * @param[in] mixed_derivs_min1_max3
+     *      The values of the the cross-derivatives at the lower boundary in the first dimension and the upper boundary in the third dimension.
+     * @param[in] mixed_derivs_max1_max3
+     *      The values of the the cross-derivatives at the upper boundary in the first dimension and the upper boundary in the third dimension.
      * @param[in] mixed_derivs_min1_min2_min3
      *      The values of the the cross-derivatives at the lower boundary in the first dimension, the lower boundary in the second dimension and the lower boundary in the third dimension.
      * @param[in] mixed_derivs_max1_min2_min3
@@ -584,13 +608,13 @@ public:
                     double const,
                     batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> mixed_derivs_min1_max2
+                    memory_space>> mixed_derivs_max1_min2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> mixed_derivs_max1_min2
+                    memory_space>> mixed_derivs_min1_max2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
@@ -608,13 +632,13 @@ public:
                     double const,
                     batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> mixed_derivs_min2_max3
+                    memory_space>> mixed_derivs_max2_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> mixed_derivs_max2_min3
+                    memory_space>> mixed_derivs_min2_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
@@ -632,13 +656,13 @@ public:
                     double const,
                     batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> mixed_derivs_min1_max3
+                    memory_space>> mixed_derivs_max1_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> mixed_derivs_max1_min3
+                    memory_space>> mixed_derivs_min1_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
@@ -656,13 +680,13 @@ public:
                     double const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> mixed_derivs_min1_max2_min3
+                    memory_space>> mixed_derivs_max1_min2_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> mixed_derivs_max1_min2_min3
+                    memory_space>> mixed_derivs_min1_max2_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
@@ -680,13 +704,13 @@ public:
                     double const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> mixed_derivs_min1_max2_max3
+                    memory_space>> mixed_derivs_max1_min2_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> mixed_derivs_max1_min2_max3
+                    memory_space>> mixed_derivs_min1_max2_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     double const,
@@ -776,12 +800,12 @@ operator()(
                 double const,
                 batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                 Layout,
-                memory_space>> mixed_derivs_min1_max2,
+                memory_space>> mixed_derivs_max1_min2,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                 Layout,
-                memory_space>> mixed_derivs_max1_min2,
+                memory_space>> mixed_derivs_min1_max2,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
@@ -796,12 +820,12 @@ operator()(
                 double const,
                 batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                 Layout,
-                memory_space>> mixed_derivs_min2_max3,
+                memory_space>> mixed_derivs_max2_min3,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                 Layout,
-                memory_space>> mixed_derivs_max2_min3,
+                memory_space>> mixed_derivs_min2_max3,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
@@ -816,12 +840,12 @@ operator()(
                 double const,
                 batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                 Layout,
-                memory_space>> mixed_derivs_min1_max3,
+                memory_space>> mixed_derivs_max1_min3,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                 Layout,
-                memory_space>> mixed_derivs_max1_min3,
+                memory_space>> mixed_derivs_min1_max3,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
@@ -836,12 +860,12 @@ operator()(
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
-                memory_space>> mixed_derivs_min1_max2_min3,
+                memory_space>> mixed_derivs_max1_min2_min3,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
-                memory_space>> mixed_derivs_max1_min2_min3,
+                memory_space>> mixed_derivs_min1_max2_min3,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
@@ -856,12 +880,12 @@ operator()(
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
-                memory_space>> mixed_derivs_min1_max2_max3,
+                memory_space>> mixed_derivs_max1_min2_max3,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
-                memory_space>> mixed_derivs_max1_min2_max3,
+                memory_space>> mixed_derivs_min1_max2_max3,
         std::optional<ddc::ChunkSpan<
                 double const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
@@ -872,7 +896,7 @@ operator()(
 
     assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
 
-    // Build derivs 2
+    // Build the derivatives along the second dimension
     auto const batched_interpolation_deriv_domain2
             = ddc::replace_dim_of<interpolation_discrete_dimension_type2, deriv_type2>(
                     batched_interpolation_domain,
@@ -910,7 +934,7 @@ operator()(
         spline_derivs_max2_opt = std::nullopt;
     }
 
-    // build derivs3
+    // Build the derivatives along the third dimension
     auto const batched_interpolation_deriv_domain3
             = ddc::replace_dim_of<interpolation_discrete_dimension_type3, deriv_type3>(
                     batched_interpolation_domain,
@@ -948,6 +972,7 @@ operator()(
         spline_derivs_max3_opt = std::nullopt;
     }
 
+    // Build the cross derivatives along the second and third dimensions
     auto batched_interpolation_deriv_domain2_3
             = ddc::replace_dim_of<interpolation_discrete_dimension_type3, deriv_type3>(
                     batched_interpolation_deriv_domain2,

@@ -5,14 +5,15 @@
 #pragma once
 
 #include <cstddef>
+#include <functional>
 #include <iterator>
+#include <string>
 #include <tuple>
 #include <type_traits>
 
 #include <Kokkos_Core.hpp>
 #include <Kokkos_StdAlgorithms.hpp>
 
-#include "detail/kokkos.hpp"
 #include "detail/tagged_vector.hpp"
 #include "detail/type_seq.hpp"
 

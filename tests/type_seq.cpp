@@ -10,13 +10,27 @@
 
 inline namespace anonymous_namespace_workaround_type_seq_cpp {
 
-struct a;
-struct b;
-struct c;
-struct d;
-struct e;
-struct y;
-struct z;
+struct a
+{
+};
+struct b
+{
+};
+struct c
+{
+};
+struct d
+{
+};
+struct e
+{
+};
+struct y
+{
+};
+struct z
+{
+};
 
 } // namespace anonymous_namespace_workaround_type_seq_cpp
 

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstddef>
+#include <tuple>
 #include <type_traits>
 #include <utility>
 

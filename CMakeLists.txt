@@ -174,7 +174,7 @@ target_sources(
 target_compile_features(ddc_core INTERFACE cxx_std_17)
 target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
 
-install(TARGETS ddc_core EXPORT DDCTargets FILE_SET HEADERS)
+install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET HEADERS)
 
 # Link library to DDC
 
@@ -346,7 +346,7 @@ endif()
 
 ## installation
 
-install(EXPORT DDCTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 
 configure_package_config_file(
     cmake/DDCConfig.cmake.in

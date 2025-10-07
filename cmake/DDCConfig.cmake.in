@@ -36,7 +36,7 @@ set(DDC_BUILD_DOUBLE_PRECISION @DDC_BUILD_DOUBLE_PRECISION@)
 
 ddc_find_dependency(Kokkos 4.4...<5)
 
-include(${CMAKE_CURRENT_LIST_DIR}/DDCTargets.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/DDCCoreTargets.cmake)
 
 if(@DDC_BUILD_KERNELS_FFT@ AND ("fft" IN_LIST DDC_FIND_COMPONENTS))
    ddc_find_dependency(KokkosFFT 0.3.0...<1)

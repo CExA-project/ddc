@@ -25,6 +25,27 @@
 
 namespace ddc {
 
+namespace detail {
+template <typename... DDims>
+struct make_discrete_vector
+{
+    template <std::size_t... Ints>
+    static ddc::DiscreteVector<DDims...> exec(std::index_sequence<Ints...>)
+    {
+        // Using the comma operator (Ints, 1)... gives an unused value warning
+        return ddc::DiscreteVector<DDims...>((Ints - Ints + 1)...);
+    }
+};
+template <typename... DDim>
+ddc::StridedDiscreteDomain<DDim...> to_strided_ddom(ddc::DiscreteDomain<DDim...> const& ddom)
+{
+    return ddc::StridedDiscreteDomain<DDim...>(
+            ddom.front(),
+            ddom.extents(),
+            make_discrete_vector<DDim...>::exec(std::make_index_sequence<sizeof...(DDim)> {}));
+}
+} // namespace detail
+
 /**
  * @brief An enum determining the backend solver of a SplineBuilder or SplineBuilder2d.
  *
@@ -153,6 +174,7 @@ private:
 
 public:
     /**
+     * TODO: update documentation
      * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain
      * and batch domain) preserving the underlying memory layout (order of dimensions).
      *
@@ -164,10 +186,26 @@ public:
     template <
             class BatchedInterpolationDDom,
             class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
-    using batched_derivs_domain_type = ddc::replace_dim_of_t<
-            BatchedInterpolationDDom,
-            interpolation_discrete_dimension_type,
-            deriv_type>;
+    using whole_derivs_domain_type
+            = ddc::detail::convert_type_seq_to_strided_discrete_domain_t<ddc::type_seq_cat_t<
+                    ddc::detail::TypeSeq<deriv_type>,
+                    ddc::to_type_seq_t<BatchedInterpolationDDom>>>;
+
+    /**
+     * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain
+     * and batch domain) preserving the underlying memory layout (order of dimensions).
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
+     * this is DiscreteDomain<X,Deriv<Y>,Z>
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using batched_derivs_domain_type = ddc::remove_dims_of_t<
+            whole_derivs_domain_type<BatchedInterpolationDDom>,
+            interpolation_discrete_dimension_type>;
 
     /// @brief Indicates if the degree of the splines is odd or even.
     static constexpr bool s_odd = BSplines::degree() % 2;
@@ -421,11 +459,13 @@ public:
             BatchedInterpolationDDom const& batched_interpolation_domain) const noexcept
     {
         assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
-        return ddc::replace_dim_of<interpolation_discrete_dimension_type, deriv_type>(
-                batched_interpolation_domain,
-                ddc::DiscreteDomain<deriv_type>(
-                        ddc::DiscreteElement<deriv_type>(1),
-                        ddc::DiscreteVector<deriv_type>(s_nbc_xmin)));
+        return ddc::StridedDiscreteDomain(
+                detail::to_strided_ddom(
+                        ddc::replace_dim_of<interpolation_discrete_dimension_type, deriv_type>(
+                                batched_interpolation_domain,
+                                ddc::DiscreteDomain<deriv_type>(
+                                        ddc::DiscreteElement<deriv_type>(1),
+                                        ddc::DiscreteVector<deriv_type>(s_nbc_xmin)))));
     }
 
     /**
@@ -442,11 +482,13 @@ public:
             BatchedInterpolationDDom const& batched_interpolation_domain) const noexcept
     {
         assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
-        return ddc::replace_dim_of<interpolation_discrete_dimension_type, deriv_type>(
-                batched_interpolation_domain,
-                ddc::DiscreteDomain<deriv_type>(
-                        ddc::DiscreteElement<deriv_type>(1),
-                        ddc::DiscreteVector<deriv_type>(s_nbc_xmax)));
+        return ddc::StridedDiscreteDomain(
+                detail::to_strided_ddom(
+                        ddc::replace_dim_of<interpolation_discrete_dimension_type, deriv_type>(
+                                batched_interpolation_domain,
+                                ddc::DiscreteDomain<deriv_type>(
+                                        ddc::DiscreteElement<deriv_type>(1),
+                                        ddc::DiscreteVector<deriv_type>(s_nbc_xmax)))));
     }
 
     /**
@@ -468,7 +510,7 @@ public:
      * @param[in] derivs_xmax The values of the derivatives at the upper boundary
      * (used only with BoundCond::HERMITE upper boundary condition).
      */
-    template <class Layout, class BatchedInterpolationDDom>
+    template <class Layout, class StridedLayout, class BatchedInterpolationDDom>
     void operator()(
             ddc::ChunkSpan<
                     double,
@@ -476,18 +518,11 @@ public:
                     Layout,
                     memory_space> spline,
             ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
-            std::optional<ddc::ChunkSpan<
+            ddc::ChunkSpan<
                     double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> derivs_xmin
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> derivs_xmax
-            = std::nullopt) const;
+                    whole_derivs_domain_type<BatchedInterpolationDDom>,
+                    StridedLayout,
+                    memory_space> derivs) const;
 
     /**
      * @brief Compute the quadrature coefficients associated to the b-splines used by this SplineBuilder.
@@ -793,7 +828,7 @@ template <
         ddc::BoundCond BcLower,
         ddc::BoundCond BcUpper,
         SplineSolver Solver>
-template <class Layout, class BatchedInterpolationDDom>
+template <class Layout, class StridedLayout, class BatchedInterpolationDDom>
 void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
 operator()(
         ddc::ChunkSpan<
@@ -802,17 +837,13 @@ operator()(
                 Layout,
                 memory_space> spline,
         ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
-        std::optional<ddc::ChunkSpan<
+        ddc::ChunkSpan<
                 double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> const derivs_xmin,
-        std::optional<ddc::ChunkSpan<
-                double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> const derivs_xmax) const
+                whole_derivs_domain_type<BatchedInterpolationDDom>,
+                StridedLayout,
+                memory_space> const derivs) const
 {
+    using interpolation_sddom = ddc::StridedDiscreteDomain<interpolation_discrete_dimension_type>;
     auto const batched_interpolation_domain = vals.domain();
 
     assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
@@ -835,8 +866,10 @@ operator()(
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcLower == BoundCond::HERMITE) {
-        assert(derivs_xmin->template extent<deriv_type>() == s_nbc_xmin);
-        auto derivs_xmin_values = *derivs_xmin;
+        assert(derivs->template extent<deriv_type>() == s_nbc_xmin);
+        auto derivs_xmin_values
+                = derivs[ddc::DiscreteElement<interpolation_discrete_dimension_type>(
+                        derivs.domain().front())];
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_lower_coefficients",
@@ -880,8 +913,10 @@ operator()(
     //       provided by the user must be multiplied by dx^i
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     if constexpr (BcUpper == BoundCond::HERMITE) {
-        assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
-        auto derivs_xmax_values = *derivs_xmax;
+        assert(derivs->template extent<deriv_type>() == s_nbc_xmax);
+        auto derivs_xmax_values
+                = derivs[ddc::DiscreteElement<interpolation_discrete_dimension_type>(
+                        derivs.domain().back())];
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_upper_coefficients",

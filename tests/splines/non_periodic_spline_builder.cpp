@@ -102,6 +102,10 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::DiscreteDomain<ddc::Deriv<DimX>> const derivs_domain(
             ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
             ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree_x / 2));
+    ddc::StridedDiscreteDomain<ddc::Deriv<DimX>, DDimX> const whole_derivs_domain(
+            ddc::DiscreteElement<ddc::Deriv<DimX>, DDimX>(1, 1),
+            ddc::DiscreteVector<ddc::Deriv<DimX>, DDimX>(s_degree_x / 2, 2),
+            ddc::DiscreteVector<ddc::Deriv<DimX>, DDimX>(1, 1));
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
@@ -131,8 +135,12 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             KOKKOS_LAMBDA(DElemX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
 
     int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
-    ddc::Chunk derivs_lhs_alloc(derivs_domain, ddc::KokkosAllocator<double, memory_space>());
-    ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
+
+    ddc::Chunk derivs_alloc(whole_derivs_domain, ddc::KokkosAllocator<double, memory_space>());
+    ddc::ChunkSpan const derivs = derivs_alloc.span_view();
+
+    ddc::ChunkSpan const derivs_lhs
+            = derivs[ddc::DiscreteElement<DDimX>(whole_derivs_domain.front())];
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::parallel_for_each(
                 execution_space(),
@@ -142,8 +150,8 @@ void TestNonPeriodicSplineBuilderTestIdentity()
                 });
     }
 
-    ddc::Chunk derivs_rhs_alloc(derivs_domain, ddc::KokkosAllocator<double, memory_space>());
-    ddc::ChunkSpan const derivs_rhs = derivs_rhs_alloc.span_view();
+    ddc::ChunkSpan const derivs_rhs
+            = derivs[ddc::DiscreteElement<DDimX>(whole_derivs_domain.back())];
     if (s_bcr == ddc::BoundCond::HERMITE) {
         ddc::parallel_for_each(
                 execution_space(),
@@ -154,19 +162,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     }
 
     // 6. Finally build the spline by filling `coef`
-#if defined(BCL_HERMITE)
-    std::optional const deriv_l(derivs_lhs.span_cview());
-#else
-    decltype(std::optional(derivs_lhs.span_cview())) const deriv_l = std::nullopt;
-#endif
-
-#if defined(BCR_HERMITE)
-    std::optional const deriv_r(derivs_rhs.span_cview());
-#else
-    decltype(std::optional(derivs_rhs.span_cview())) const deriv_r = std::nullopt;
-#endif
-
-    spline_builder(coef.span_view(), yvals.span_cview(), deriv_l, deriv_r);
+    spline_builder(coef.span_view(), yvals.span_cview(), derivs.span_cview());
 
     // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
     ddc::NullExtrapolationRule const extrapolation_rule;

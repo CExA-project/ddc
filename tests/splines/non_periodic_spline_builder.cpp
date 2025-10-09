@@ -102,18 +102,23 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::DiscreteDomain<ddc::Deriv<DimX>> const derivs_domain(
             ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
             ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree_x / 2));
-    ddc::StridedDiscreteDomain<ddc::Deriv<DimX>, DDimX> const whole_derivs_domain(
-            ddc::DiscreteElement<ddc::Deriv<DimX>, DDimX>(1, 1),
-            ddc::DiscreteVector<ddc::Deriv<DimX>, DDimX>(s_degree_x / 2, 2),
-            ddc::DiscreteVector<ddc::Deriv<DimX>, DDimX>(1, 1));
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
     ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<double, memory_space>());
 
-    // 3. Create the interpolation domain
+    // 3. Create the interpolation and deriv domains
     ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
     ddc::DiscreteDomain<DDimX> const interpolation_domain(GrevillePoints::get_domain<DDimX>());
+
+    auto const whole_derivs_domain = ddc::detail::get_whole_derivs_domain<
+            ddc::Deriv<DimX>>(interpolation_domain, s_degree_x);
+    // ddc::StridedDiscreteDomain<DDimX, ddc::Deriv<DimX>> const whole_derivs_domain(
+    //         ddc::DiscreteElement<DDimX, ddc::Deriv<DimX>>(0, 1),
+    //         ddc::DiscreteVector<DDimX, ddc::Deriv<DimX>>(2, s_degree_x / 2),
+    //         ddc::DiscreteVector<
+    //                 DDimX,
+    //                 ddc::Deriv<DimX>>(interpolation_domain.extent<DDimX>().value() - 2, 1));
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
     ddc::SplineBuilder<
@@ -139,8 +144,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::Chunk derivs_alloc(whole_derivs_domain, ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const derivs = derivs_alloc.span_view();
 
-    ddc::ChunkSpan const derivs_lhs
-            = derivs[ddc::DiscreteElement<DDimX>(whole_derivs_domain.front())];
+    ddc::ChunkSpan const derivs_lhs = derivs[interpolation_domain.front()];
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::parallel_for_each(
                 execution_space(),
@@ -150,8 +154,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
                 });
     }
 
-    ddc::ChunkSpan const derivs_rhs
-            = derivs[ddc::DiscreteElement<DDimX>(whole_derivs_domain.back())];
+    ddc::ChunkSpan const derivs_rhs = derivs[interpolation_domain.back()];
     if (s_bcr == ddc::BoundCond::HERMITE) {
         ddc::parallel_for_each(
                 execution_space(),

@@ -17,6 +17,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "ddc/detail/type_seq.hpp"
+
 #include "deriv.hpp"
 #include "integrals.hpp"
 #include "math_tools.hpp"
@@ -44,6 +46,63 @@ ddc::StridedDiscreteDomain<DDim...> to_strided_ddom(ddc::DiscreteDomain<DDim...>
             ddom.extents(),
             make_discrete_vector<DDim...>::exec(std::make_index_sequence<sizeof...(DDim)> {}));
 }
+
+// TODO: document, rename
+template <typename... T>
+struct to_whole_derivs_domain;
+
+template <typename... DDimsI, typename... DerivDims, typename... DDims>
+struct to_whole_derivs_domain<TypeSeq<DDimsI...>, TypeSeq<DerivDims...>, TypeSeq<DDims...>>
+{
+    using type = convert_type_seq_to_strided_discrete_domain_t<type_seq_cat_t<
+            TypeSeq<DDimsI...>,
+            type_seq_replace_t<TypeSeq<DDims...>, TypeSeq<DDimsI...>, TypeSeq<DerivDims...>>>>;
+};
+
+template <typename SeqDDimsI, typename SeqDerivDims, typename SeqDDims>
+using to_whole_derivs_domain_t =
+        typename to_whole_derivs_domain<SeqDDimsI, SeqDerivDims, SeqDDims>::type;
+
+template <
+        typename... DerivDims,
+        typename... DDimsI,
+        template <typename...> class DDomInterp,
+        typename... DDims,
+        template <typename...> class DDomBatched>
+auto get_whole_derivs_domain(
+        DDomInterp<DDimsI...> const& interpolation_dom,
+        DDomBatched<DDims...> const& batched_domain,
+        int degree)
+{
+    using result_domain_t = to_whole_derivs_domain_t<
+            TypeSeq<DDimsI...>,
+            TypeSeq<DerivDims...>,
+            TypeSeq<DDims...>>;
+    using DElem = typename result_domain_t::discrete_element_type;
+    using DVect = typename result_domain_t::discrete_vector_type;
+
+    auto const batch_domain = ddc::remove_dims_of<DDimsI...>(batched_domain);
+
+    return result_domain_t(
+            DElem(interpolation_dom.front(),
+                  batch_domain.front(),
+                  (ddc::DiscreteElement<DerivDims>(1))...),
+            DVect((ddc::DiscreteVector<DDimsI>(2))...,
+                  batch_domain.extents(),
+                  (ddc::DiscreteVector<DerivDims>(degree / 2))...),
+            DVect((ddc::DiscreteVector<DDimsI>(
+                          interpolation_dom.template extent<DDimsI>().value() - 2))...,
+                  typename decltype(batch_domain)::discrete_vector_type(
+                          (ddc::DiscreteVector<DDims>(1))...),
+                  (ddc::DiscreteVector<DerivDims>(1))...));
+}
+
+template <typename... DerivDims, typename... DDimsI, template <typename...> class DDomInterp>
+auto get_whole_derivs_domain(DDomInterp<DDimsI...> const& interpolation_dom, int degree)
+{
+    return get_whole_derivs_domain<DerivDims...>(interpolation_dom, interpolation_dom, degree);
+}
+
 } // namespace detail
 
 /**
@@ -181,15 +240,18 @@ public:
      * @tparam The batched discrete domain on which the interpolation points are defined.
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
-     * this is DiscreteDomain<X,Deriv<Y>,Z>
+     * this is StridedDiscreteDomain<Y,X,Deriv<Y>,Z>
      */
     template <
             class BatchedInterpolationDDom,
             class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
     using whole_derivs_domain_type
             = ddc::detail::convert_type_seq_to_strided_discrete_domain_t<ddc::type_seq_cat_t<
-                    ddc::detail::TypeSeq<deriv_type>,
-                    ddc::to_type_seq_t<BatchedInterpolationDDom>>>;
+                    ddc::to_type_seq_t<interpolation_domain_type>,
+                    ddc::to_type_seq_t<ddc::replace_dim_of_t<
+                            BatchedInterpolationDDom,
+                            interpolation_discrete_dimension_type,
+                            deriv_type>>>>;
 
     /**
      * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain
@@ -851,15 +913,10 @@ operator()(
     assert(vals.template extent<interpolation_discrete_dimension_type>()
            == ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin - s_nbc_xmax);
 
-    assert((BcLower == ddc::BoundCond::HERMITE)
-           != (!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0));
-    assert((BcUpper == ddc::BoundCond::HERMITE)
-           != (!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0));
-    if constexpr (BcLower == BoundCond::HERMITE) {
-        assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == 1);
-    }
-    if constexpr (BcUpper == BoundCond::HERMITE) {
-        assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == 1);
+    assert((BcLower == ddc::BoundCond::HERMITE || BcUpper == ddc::BoundCond::HERMITE)
+           != (derivs->template extent<deriv_type>() == 0));
+    if constexpr (BcLower == BoundCond::HERMITE || BcUpper == BoundCond::HERMITE) {
+        assert(ddc::DiscreteElement<deriv_type>(derivs->domain().front()).uid() == 1);
     }
 
     // Hermite boundary conditions at xmin, if any
@@ -867,9 +924,7 @@ operator()(
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcLower == BoundCond::HERMITE) {
         assert(derivs->template extent<deriv_type>() == s_nbc_xmin);
-        auto derivs_xmin_values
-                = derivs[ddc::DiscreteElement<interpolation_discrete_dimension_type>(
-                        derivs.domain().front())];
+        auto derivs_xmin_values = derivs[interpolation_domain().front()];
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_lower_coefficients",
@@ -914,9 +969,7 @@ operator()(
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     if constexpr (BcUpper == BoundCond::HERMITE) {
         assert(derivs->template extent<deriv_type>() == s_nbc_xmax);
-        auto derivs_xmax_values
-                = derivs[ddc::DiscreteElement<interpolation_discrete_dimension_type>(
-                        derivs.domain().back())];
+        auto derivs_xmax_values = derivs[interpolation_domain().back()];
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_upper_coefficients",

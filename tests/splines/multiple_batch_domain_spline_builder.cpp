@@ -157,21 +157,21 @@ std::tuple<double, double, double> ComputeEvaluationError(
 {
     using I = typename DDimI::continuous_dimension_type;
 
+    // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
+    ddc::DiscreteDomain<DDimI> const dom_interpolation = spline_builder.interpolation_domain();
+    auto const dom_batch = spline_builder.batch_domain(dom_vals);
+    auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
+
     // Create the derivs domains
     ddc::StridedDiscreteDomain<ddc::Deriv<I>> const derivs_domain(
             DElem<ddc::Deriv<I>>(1),
             DVect<ddc::Deriv<I>>(s_degree_x / 2),
             DVect<ddc::Deriv<I>>(1));
-    ddc::StridedDiscreteDomain<ddc::Deriv<I>, DDims...> const
-            whole_derivs_domain(derivs_domain, ddc::detail::to_strided_ddom(dom_vals));
     auto const dom_derivs = ddc::replace_dim_of<
             DDimI,
             ddc::Deriv<I>>(ddc::detail::to_strided_ddom(dom_vals), derivs_domain);
-
-    // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
-    ddc::DiscreteDomain<DDimI> const dom_interpolation = spline_builder.interpolation_domain();
-    auto const dom_batch = spline_builder.batch_domain(dom_vals);
-    auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
+    auto const whole_derivs_domain = ddc::detail::get_whole_derivs_domain<
+            ddc::Deriv<I>>(dom_interpolation, dom_vals, s_degree_x);
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
@@ -192,8 +192,7 @@ std::tuple<double, double, double> ComputeEvaluationError(
     ddc::Chunk derivs_alloc(whole_derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs = derivs_alloc.span_view();
 
-    ddc::ChunkSpan const derivs_lhs_view
-            = derivs[ddc::DiscreteElement<DDimI>(derivs.domain().front())];
+    ddc::ChunkSpan const derivs_lhs_view = derivs[dom_interpolation.front()];
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_lhs_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_lhs_host = derivs_lhs_host_alloc.span_view();
@@ -211,8 +210,7 @@ std::tuple<double, double, double> ComputeEvaluationError(
                                 e) { derivs_lhs_view(e) = derivs_lhs(DElem<ddc::Deriv<I>>(e)); });
     }
 
-    ddc::ChunkSpan const derivs_rhs_view
-            = derivs[ddc::DiscreteElement<DDimI>(derivs.domain().back())];
+    ddc::ChunkSpan const derivs_rhs_view = derivs[dom_interpolation.front()];
     if (s_bcr == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_rhs_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_rhs_host = derivs_rhs_host_alloc.span_view();

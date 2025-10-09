@@ -165,11 +165,12 @@ void BatchedSplineTest()
             DElem<ddc::Deriv<I>>(1),
             DVect<ddc::Deriv<I>>(s_degree_x / 2),
             DVect<ddc::Deriv<I>>(1));
-    ddc::StridedDiscreteDomain<ddc::Deriv<I>, DDims...>
-            whole_derivs_domain(derivs_domain, ddc::detail::to_strided_ddom(dom_vals));
     auto const dom_derivs = ddc::replace_dim_of<
             DDimI,
             ddc::Deriv<I>>(ddc::detail::to_strided_ddom(dom_vals), derivs_domain);
+
+    auto const whole_derivs_domain = ddc::detail::get_whole_derivs_domain<
+            ddc::Deriv<I>>(interpolation_domain, dom_vals, s_degree_x);
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
     ddc::SplineBuilder<
@@ -206,8 +207,7 @@ void BatchedSplineTest()
     ddc::Chunk derivs_alloc(whole_derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs = derivs_alloc.span_view();
 
-    ddc::ChunkSpan const derivs_lhs_view
-            = derivs[ddc::DiscreteElement<DDimI>(derivs.domain().front())];
+    ddc::ChunkSpan const derivs_lhs_view = derivs[interpolation_domain.front()];
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_lhs_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_lhs_host = derivs_lhs_host_alloc.span_view();
@@ -225,8 +225,7 @@ void BatchedSplineTest()
                                 e) { derivs_lhs_view(e) = derivs_lhs(DElem<ddc::Deriv<I>>(e)); });
     }
 
-    ddc::ChunkSpan const derivs_rhs_view
-            = derivs[ddc::DiscreteElement<DDimI>(derivs.domain().back())];
+    ddc::ChunkSpan const derivs_rhs_view = derivs[interpolation_domain.front()];
     if (s_bcr == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_rhs_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_rhs_host = derivs_rhs_host_alloc.span_view();

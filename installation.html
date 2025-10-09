@@ -146,7 +146,7 @@ Using the installed package</h2>
 <div class="fragment"><div class="line">cmake -D DDC_ROOT=$HOME/.local/ddc &lt;your_project&gt;</div>
 </div><!-- fragment --><p>Then in your <code>CMakeLists.txt</code>:</p>
 <div class="fragment"><div class="line">find_package(DDC REQUIRED)</div>
-<div class="line">target_link_libraries(myapp PRIVATE DDC::ddc)</div>
+<div class="line">target_link_libraries(myapp PRIVATE DDC::core)</div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md35"></a>
 Installing with Spack</h1>
@@ -179,7 +179,7 @@ Installing with Spack</h1>
 <div class="fragment"><div class="line">spack env activate ddc-env</div>
 </div><!-- fragment --><p>Now any CMake project can find DDC automatically:</p>
 <div class="fragment"><div class="line">find_package(DDC REQUIRED)</div>
-<div class="line">target_link_libraries(myapp PRIVATE DDC::ddc)</div>
+<div class="line">target_link_libraries(myapp PRIVATE DDC::core)</div>
 </div><!-- fragment --><p>To discover available build variants:</p>
 <div class="fragment"><div class="line">spack info ddc</div>
 </div><!-- fragment --><p>If you encounter issues with the Spack recipe, please open an issue on the <a href="https://github.com/spack/spack-packages/issues">spack-packages repository</a>.</p>

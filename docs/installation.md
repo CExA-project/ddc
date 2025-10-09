@@ -42,7 +42,7 @@ Then in your `CMakeLists.txt`:
 
 ```cmake
 find_package(DDC REQUIRED)
-target_link_libraries(myapp PRIVATE DDC::ddc)
+target_link_libraries(myapp PRIVATE DDC::core)
 ```
 
 ---
@@ -109,7 +109,7 @@ Now any CMake project can find DDC automatically:
 
 ```cmake
 find_package(DDC REQUIRED)
-target_link_libraries(myapp PRIVATE DDC::ddc)
+target_link_libraries(myapp PRIVATE DDC::core)
 ```
 
 To discover available build variants:

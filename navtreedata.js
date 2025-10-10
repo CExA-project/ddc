@@ -102,7 +102,7 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
-        [ "Typedefs", "functions_type.html", null ],
+        [ "Typedefs", "functions_type.html", "functions_type" ],
         [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ]
@@ -115,10 +115,11 @@ var NAVTREEINDEX =
 "classddc_1_1ChunkSpan.html#a6c85ad4bb4fc9107708d2072ea9038fb",
 "classddc_1_1GrevilleInterpolationPoints.html#a3aabc690bfdb30f7edb997cc16dd27ff",
 "classddc_1_1SparseDiscreteDomain.html#a281dba260b09841003df9aa0dec2ea43",
-"classddc_1_1SplineEvaluator.html#a7b46135fa35ae58103c38010607a1416",
-"classddc_1_1UniformBSplines.html#a002aee489309d7c95422c66304ae8bcb",
-"namespaceddc.html#a3cb193243e09bb06d637109d835433ba",
-"structddc_1_1StridedDiscreteDomainIterator.html#a80ed5b5a34ff8f4e7eced2a43d630849"
+"classddc_1_1SplineBuilder3D.html#a45603227c4e97942975b4fc1c42399ce",
+"classddc_1_1SplineEvaluator3D.html#a32635db86d79e4c6f4123596be049e75",
+"classddc_1_1UniformBSplines_1_1Impl.html#a2b3b80a14c5d0bed1f4ea38e71188a71",
+"namespaceddc.html#a38c84b63c494b0e01a5fcf79e41f95cc",
+"structddc_1_1StridedDiscreteDomainIterator.html#a7095a9f16bfaabeac4731f523b70f908"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

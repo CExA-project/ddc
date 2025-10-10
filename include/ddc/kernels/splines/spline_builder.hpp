@@ -28,23 +28,18 @@
 namespace ddc {
 
 namespace detail {
-template <typename... DDims>
-struct make_discrete_vector
+
+template <typename... DDims, typename T>
+ddc::DiscreteVector<DDims...> make_discrete_vector(T const& value)
 {
-    template <std::size_t... Ints>
-    static ddc::DiscreteVector<DDims...> exec(std::index_sequence<Ints...>)
-    {
-        // Using the comma operator (Ints, 1)... gives an unused value warning
-        return ddc::DiscreteVector<DDims...>((Ints - Ints + 1)...);
-    }
-};
+    return ddc::DiscreteVector<DDims...>((ddc::DiscreteVector<DDims>(value))...);
+}
+
 template <typename... DDim>
 ddc::StridedDiscreteDomain<DDim...> to_strided_ddom(ddc::DiscreteDomain<DDim...> const& ddom)
 {
-    return ddc::StridedDiscreteDomain<DDim...>(
-            ddom.front(),
-            ddom.extents(),
-            make_discrete_vector<DDim...>::exec(std::make_index_sequence<sizeof...(DDim)> {}));
+    return ddc::StridedDiscreteDomain<
+            DDim...>(ddom.front(), ddom.extents(), make_discrete_vector<DDim...>(1));
 }
 
 // TODO: document, rename

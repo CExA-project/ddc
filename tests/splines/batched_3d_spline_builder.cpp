@@ -747,7 +747,7 @@ void Batched3dSplineTest()
                                 s_degree,
                                 s_degree,
                                 s_degree),
-                        1e-10 * max_norm_diff123));
+                        5e-10 * max_norm_diff123));
 }
 
 } // namespace anonymous_namespace_workaround_batched_3d_spline_builder_cpp

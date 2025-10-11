@@ -60,6 +60,7 @@ using to_whole_derivs_domain_t =
 
 template <
         typename... DerivDims,
+        typename... Ints,
         typename... DDimsI,
         template <typename...> class DDomInterp,
         typename... DDims,
@@ -67,8 +68,10 @@ template <
 auto get_whole_derivs_domain(
         DDomInterp<DDimsI...> const& interpolation_dom,
         DDomBatched<DDims...> const& batched_domain,
-        int degree)
+        Ints... nb_constraints)
 {
+    static_assert(sizeof...(DerivDims) == sizeof...(Ints));
+
     using result_domain_t = to_whole_derivs_domain_t<
             TypeSeq<DDimsI...>,
             TypeSeq<DerivDims...>,
@@ -84,9 +87,9 @@ auto get_whole_derivs_domain(
                   (ddc::DiscreteElement<DerivDims>(1))...),
             DVect((ddc::DiscreteVector<DDimsI>(2))...,
                   batch_domain.extents(),
-                  (ddc::DiscreteVector<DerivDims>(degree / 2))...),
+                  (ddc::DiscreteVector<DerivDims>(nb_constraints))...),
             DVect((ddc::DiscreteVector<DDimsI>(
-                          interpolation_dom.template extent<DDimsI>().value() - 2))...,
+                          interpolation_dom.template extent<DDimsI>().value() - 1))...,
                   typename decltype(batch_domain)::discrete_vector_type(
                           (ddc::DiscreteVector<DDims>(1))...),
                   (ddc::DiscreteVector<DerivDims>(1))...));
@@ -94,8 +97,15 @@ auto get_whole_derivs_domain(
 
 template <typename... DerivDims, typename... DDimsI, template <typename...> class DDomInterp>
 auto get_whole_derivs_domain(DDomInterp<DDimsI...> const& interpolation_dom, int degree)
+template <
+        typename... DerivDims,
+        typename... Ints,
+        typename... DDimsI,
+        template <typename...> class DDomInterp>
+auto get_whole_derivs_domain(DDomInterp<DDimsI...> const& interpolation_dom, Ints... nb_constraints)
 {
-    return get_whole_derivs_domain<DerivDims...>(interpolation_dom, interpolation_dom, degree);
+    return get_whole_derivs_domain<
+            DerivDims...>(interpolation_dom, interpolation_dom, nb_constraints...);
 }
 
 } // namespace detail
@@ -908,17 +918,16 @@ operator()(
     assert(vals.template extent<interpolation_discrete_dimension_type>()
            == ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin - s_nbc_xmax);
 
-    assert((BcLower == ddc::BoundCond::HERMITE || BcUpper == ddc::BoundCond::HERMITE)
-           != (derivs->template extent<deriv_type>() == 0));
     if constexpr (BcLower == BoundCond::HERMITE || BcUpper == BoundCond::HERMITE) {
-        assert(ddc::DiscreteElement<deriv_type>(derivs->domain().front()).uid() == 1);
+        assert(derivs.template extent<deriv_type>() > 0);
+        assert(ddc::DiscreteElement<deriv_type>(derivs.domain().front()).uid() == 1);
     }
 
     // Hermite boundary conditions at xmin, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcLower == BoundCond::HERMITE) {
-        assert(derivs->template extent<deriv_type>() == s_nbc_xmin);
+        assert(derivs.template extent<deriv_type>() == s_nbc_xmin);
         auto derivs_xmin_values = derivs[interpolation_domain().front()];
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(
@@ -963,7 +972,7 @@ operator()(
     //       provided by the user must be multiplied by dx^i
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     if constexpr (BcUpper == BoundCond::HERMITE) {
-        assert(derivs->template extent<deriv_type>() == s_nbc_xmax);
+        assert(derivs.template extent<deriv_type>() == s_nbc_xmax);
         auto derivs_xmax_values = derivs[interpolation_domain().back()];
         auto const dx_proxy = m_dx;
         ddc::parallel_for_each(

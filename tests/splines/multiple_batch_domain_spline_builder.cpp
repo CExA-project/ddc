@@ -171,7 +171,7 @@ std::tuple<double, double, double> ComputeEvaluationError(
             DDimI,
             ddc::Deriv<I>>(ddc::detail::to_strided_ddom(dom_vals), derivs_domain);
     auto const whole_derivs_domain = ddc::detail::get_whole_derivs_domain<
-            ddc::Deriv<I>>(dom_interpolation, dom_vals, s_degree_x);
+            ddc::Deriv<I>>(dom_interpolation, dom_vals, s_degree_x / 2);
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());

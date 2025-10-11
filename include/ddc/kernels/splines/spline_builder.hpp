@@ -29,12 +29,20 @@ namespace ddc {
 
 namespace detail {
 
+// TODO: move all these functions to another file
+
+/**
+ * @brief Create a DiscreteVector with each component initalized to the same value.
+ */
 template <typename... DDims, typename T>
 ddc::DiscreteVector<DDims...> make_discrete_vector(T const& value)
 {
     return ddc::DiscreteVector<DDims...>((ddc::DiscreteVector<DDims>(value))...);
 }
 
+/**
+ * @brief Convert a DiscreteDomain to a stride 1 StridedDiscreteDomain.
+ */
 template <typename... DDim>
 ddc::StridedDiscreteDomain<DDim...> to_strided_ddom(ddc::DiscreteDomain<DDim...> const& ddom)
 {
@@ -42,7 +50,6 @@ ddc::StridedDiscreteDomain<DDim...> to_strided_ddom(ddc::DiscreteDomain<DDim...>
             DDim...>(ddom.front(), ddom.extents(), make_discrete_vector<DDim...>(1));
 }
 
-// TODO: document, rename
 template <typename... T>
 struct to_whole_derivs_domain;
 
@@ -54,10 +61,41 @@ struct to_whole_derivs_domain<TypeSeq<DDimsI...>, TypeSeq<DerivDims...>, TypeSeq
             type_seq_replace_t<TypeSeq<DDims...>, TypeSeq<DDimsI...>, TypeSeq<DerivDims...>>>>;
 };
 
+/**
+ * @brief The type of the deriv domain to be passed as argument to a spline builder.
+ *
+ * @tparam SeqDDimsI A TypeSeq containing the dimensions of interest.
+ * @tparam SeqDerivDims A TypeSeq containing the deriv dimensions.
+ * @tparam SeqDDims A TypeSeq containing all the dimensions (interpolation + batch).
+ */
 template <typename SeqDDimsI, typename SeqDerivDims, typename SeqDDims>
 using to_whole_derivs_domain_t =
         typename to_whole_derivs_domain<SeqDDimsI, SeqDerivDims, SeqDDims>::type;
 
+/**
+ * @brief Constructs a StridedDiscreteDomain to pass as argument to a spline builder.
+ *
+ * This function creates a StridedDiscreteDomain containing a strided dimension for the
+ * first and last point of each dimension of an interpolation domain, and the dimensions
+ * of a batched interpolation domain where the interpolation dimensions have been replaced
+ * by deriv dimensions.
+ *
+ * Example: For
+ * - interpolation_domain = DiscreteDomain<X,Z>(De(0,0), Dv(Nx,Nz))
+ * - batched_domain       = DiscreteDomain<X,Y,Z,T>(De(0,0,0,0), Dv(Nx,Ny,Nz,Nt))
+ * - DerivDims            = [DX, DZ],
+ * this is StridedDiscreteDomain<X,Z,DX,Y,DZ,T>(
+ *              De(0,0,1,0,1,0),
+ *              Dv(2,2,nbc_x,Ny,nbc_z,Nt),
+ *              Dv(Nx-2,Nz-2,1,1,1,1))
+ *
+ * @tparam DerivDims... The deriv dimensions which will replace the interpolation dimensions.
+ * @param interpolation_dom The domain containing only the interpolation dimensions.
+ * @param batched_domain The domain conatining both the interpolation and batch dimensions.
+ * @param nb_constraints The number of constraints for each of the deriv dimensions.
+ *
+ * @return A StridedDiscreteDomain with the batch dimensions, the deriv dimensions and the strided interpolation dimensions.
+ */
 template <
         typename... DerivDims,
         typename... Ints,
@@ -95,8 +133,26 @@ auto get_whole_derivs_domain(
                   (ddc::DiscreteVector<DerivDims>(1))...));
 }
 
-template <typename... DerivDims, typename... DDimsI, template <typename...> class DDomInterp>
-auto get_whole_derivs_domain(DDomInterp<DDimsI...> const& interpolation_dom, int degree)
+/**
+ * @brief Constructs a StridedDiscreteDomain to pass as argument to a spline builder.
+ *
+ * This function creates a StridedDiscreteDomain containing a strided dimension for the
+ * first and last point of each dimension of an interpolation domain, and the derivs dimensions.
+ *
+ * Example: For
+ * - interpolation_domain = DiscreteDomain<X,Y>(De(0,0), Dv(Nx,Nz))
+ * - DerivDims            = [DX,DY],
+ * this is StridedDiscreteDomain<X,Y,DX,DY>(
+ *              De(0,0,1,1),
+ *              Dv(2,2,nbc_x,nbc_y),
+ *              Dv(Nx-1,Ny-1,1,1))
+ *
+ * @tparam DerivDims... The deriv dimensions.
+ * @param interpolation_dom The domain containing the interpolation dimensions.
+ * @param nb_constraints The number of constraints for each of the deriv dimensions.
+ *
+ * @return A StridedDiscreteDomain with the deriv dimensions and the strided interpolation dimensions.
+ */
 template <
         typename... DerivDims,
         typename... Ints,
@@ -238,9 +294,9 @@ private:
 
 public:
     /**
-     * TODO: update documentation
-     * @brief The type of the whole Deriv domain (cartesian product of 1D Deriv domain
-     * and batch domain) preserving the underlying memory layout (order of dimensions).
+     * @brief The type of the whole Deriv domain (1D dimension of interest and cartesian
+     * product of 1D Deriv domain and batch domain) to be passed as argument to the buider,
+     * preserving the underlying memory layout (order of dimensions).
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
      *
@@ -265,7 +321,7 @@ public:
      * @tparam The batched discrete domain on which the interpolation points are defined.
      *
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
-     * this is DiscreteDomain<X,Deriv<Y>,Z>
+     * this is StridedDiscreteDomain<X,Deriv<Y>,Z>
      */
     template <
             class BatchedInterpolationDDom,

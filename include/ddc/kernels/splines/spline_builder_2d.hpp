@@ -262,7 +262,16 @@ public:
     using batched_derivs_domain_type1 =
             typename builder_type1::template batched_derivs_domain_type<BatchedInterpolationDDom>;
 
-    // FIXME: add doc comment
+    /**
+     * @brief The type of the whole Derivs domain (1D dimension of interest and cartesian
+     * product of 1D Deriv domain and batch domain) in the first dimension to be passed as argument to the buider,
+     * preserving the underlying memory layout (order of dimensions).
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+     * this is StridedDiscreteDomain<X, Deriv<X>, Y, Z>
+     */
     template <
             class BatchedInterpolationDDom,
             class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
@@ -286,7 +295,16 @@ public:
             interpolation_discrete_dimension_type2,
             deriv_type2>;
 
-    // FIXME: add doc comment
+    /**
+     * @brief The type of the whole Derivs domain (1D dimension of interest and cartesian
+     * product of 1D Deriv domain and batch domain) in the second dimension to be passed as argument to the buider,
+     * preserving the underlying memory layout (order of dimensions).
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+     * this is StridedDiscreteDomain<Y, X, Deriv<Y>, Z>
+     */
     template <
             class BatchedInterpolationDDom,
             class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
@@ -313,7 +331,16 @@ public:
                             interpolation_discrete_dimension_type2>,
                     ddc::detail::TypeSeq<deriv_type1, deriv_type2>>>;
 
-    // FIXME: add doc comment
+    /**
+     * @brief The type of the whole Derivs domain (all dimensions of interest and cartesian
+     * product of 2D Deriv domain and batch domain) to be passed as argument to the buider,
+     * preserving the underlying memory layout (order of dimensions).
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and dimensions of interest X and Y,
+     * this is StridedDiscreteDomain<X, Y, Deriv<X>, Deriv<Y>, Z>
+     */
     template <
             class BatchedInterpolationDDom,
             class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>

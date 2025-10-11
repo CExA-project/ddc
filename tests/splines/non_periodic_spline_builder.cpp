@@ -112,7 +112,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::DiscreteDomain<DDimX> const interpolation_domain(GrevillePoints::get_domain<DDimX>());
 
     auto const whole_derivs_domain = ddc::detail::get_whole_derivs_domain<
-            ddc::Deriv<DimX>>(interpolation_domain, s_degree_x);
+            ddc::Deriv<DimX>>(interpolation_domain, s_degree_x / 2);
 
     // 4. Create a SplineBuilder over BSplines using some boundary conditions
     ddc::SplineBuilder<

@@ -170,7 +170,7 @@ void BatchedSplineTest()
             ddc::Deriv<I>>(ddc::detail::to_strided_ddom(dom_vals), derivs_domain);
 
     auto const whole_derivs_domain = ddc::detail::get_whole_derivs_domain<
-            ddc::Deriv<I>>(interpolation_domain, dom_vals, s_degree_x);
+            ddc::Deriv<I>>(interpolation_domain, dom_vals, s_degree_x / 2);
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
     ddc::SplineBuilder<

@@ -183,25 +183,28 @@ void Batched2dSplineTest()
             dom_vals(dom_vals_tmp, interpolation_domain1, interpolation_domain2);
 
     // Create the derivs domain
+    int const nbc_i1 = s_degree / 2;
+    int const nbc_i2 = s_degree / 2;
+
     ddc::DiscreteDomain<ddc::Deriv<I1>> const
-            derivs_ddom1(DElem<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(s_degree / 2));
+            derivs_ddom1(DElem<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(nbc_i1));
     ddc::DiscreteDomain<ddc::Deriv<I2>> const
-            derivs_ddom2(DElem<ddc::Deriv<I2>>(1), DVect<ddc::Deriv<I2>>(s_degree / 2));
+            derivs_ddom2(DElem<ddc::Deriv<I2>>(1), DVect<ddc::Deriv<I2>>(nbc_i2));
     ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>> const
             derivs_ddom(derivs_ddom1, derivs_ddom2);
 
     ddc::StridedDiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>> const derivs_domain(
             DElem<ddc::Deriv<I1>, ddc::Deriv<I2>>(1, 1),
-            DVect<ddc::Deriv<I1>, ddc::Deriv<I2>>(s_degree / 2, s_degree / 2),
+            DVect<ddc::Deriv<I1>, ddc::Deriv<I2>>(nbc_i1, nbc_i2),
             DVect<ddc::Deriv<I1>, ddc::Deriv<I2>>(1, 1));
 
     auto const whole_derivs_domain1 = ddc::detail::get_whole_derivs_domain<
-            ddc::Deriv<I1>>(interpolation_domain1, dom_vals, s_degree);
+            ddc::Deriv<I1>>(interpolation_domain1, dom_vals, nbc_i1);
     auto const whole_derivs_domain2 = ddc::detail::get_whole_derivs_domain<
-            ddc::Deriv<I2>>(interpolation_domain2, dom_vals, s_degree);
+            ddc::Deriv<I2>>(interpolation_domain2, dom_vals, nbc_i2);
     auto const whole_derivs_domain = ddc::detail::get_whole_derivs_domain<
             ddc::Deriv<I1>,
-            ddc::Deriv<I2>>(interpolation_domain, dom_vals, s_degree);
+            ddc::Deriv<I2>>(interpolation_domain, dom_vals, nbc_i1, nbc_i2);
 
     auto const dom_derivs = ddc::remove_dims_of<DDimI1, DDimI2>(whole_derivs_domain);
 

@@ -614,12 +614,12 @@ operator()(
             = ddc::detail::get_whole_derivs_domain<deriv_type2>(
                     ddc::select<ddim2>(batched_interpolation_domain),
                     batched_interpolation_domain,
-                    bsplines_type2::degree());
+                    bsplines_type2::degree() / 2);
 
     auto const spline_batched_deriv_domain = ddc::detail::get_whole_derivs_domain<deriv_type2>(
             ddc::select<ddim2>(batched_interpolation_domain),
             m_spline_builder_deriv1.batched_spline_domain(batched_interpolation_domain),
-            bsplines_type2::degree());
+            bsplines_type2::degree() / 2);
 
     ddc::Chunk spline1_deriv_alloc(
             spline_batched_deriv_domain,

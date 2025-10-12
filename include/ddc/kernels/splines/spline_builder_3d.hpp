@@ -185,8 +185,10 @@ public:
     template <
             class BatchedInterpolationDDom,
             class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
-    using batched_derivs_domain_type1 =
-            typename builder_type1::template batched_derivs_domain_type<BatchedInterpolationDDom>;
+    using batched_derivs_domain_type1 = ddc::replace_dim_of_t<
+            BatchedInterpolationDDom,
+            interpolation_discrete_dimension_type1,
+            deriv_type1>;
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain

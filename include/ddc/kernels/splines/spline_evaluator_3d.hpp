@@ -757,20 +757,11 @@ public:
                 std::is_same_v<InterestDim, continuous_dimension_type1>
                 || std::is_same_v<InterestDim, continuous_dimension_type2>
                 || std::is_same_v<InterestDim, continuous_dimension_type3>);
-        if constexpr (std::is_same_v<
-                              InterestDim,
-                              typename evaluation_discrete_dimension_type1::
-                                      continuous_dimension_type>) {
+        if constexpr (std::is_same_v<InterestDim, continuous_dimension_type1>) {
             return deriv_dim_1(coord_eval, spline_coef);
-        } else if constexpr (std::is_same_v<
-                                     InterestDim,
-                                     typename evaluation_discrete_dimension_type2::
-                                             continuous_dimension_type>) {
+        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type2>) {
             return deriv_dim_2(coord_eval, spline_coef);
-        } else if constexpr (std::is_same_v<
-                                     InterestDim,
-                                     typename evaluation_discrete_dimension_type3::
-                                             continuous_dimension_type>) {
+        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type3>) {
             return deriv_dim_3(coord_eval, spline_coef);
         }
     }
@@ -798,59 +789,35 @@ public:
                     spline_coef) const
     {
         static_assert(
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>)
-                || (std::is_same_v<
-                            InterestDim1,
-                            typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                || (std::is_same_v<InterestDim1, continuous_dimension_type2>
                     && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim1,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim1, continuous_dimension_type1>
                     && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>));
 
         if constexpr (
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>)) {
             return deriv_1_and_2(coord_eval, spline_coef);
         } else if constexpr (
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type2>
                  && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
             return deriv_2_and_3(coord_eval, spline_coef);
         } else if constexpr (
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
             return deriv_1_and_3(coord_eval, spline_coef);
         }
@@ -885,19 +852,13 @@ public:
                     spline_coef) const
     {
         static_assert(
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type2>
                  && std::is_same_v<InterestDim3, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim3,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim3, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>
                     && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim3, continuous_dimension_type2>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>));
 
@@ -1803,25 +1764,14 @@ public:
                     memory_space> const spline_coef) const
     {
         static_assert(
-                std::is_same_v<
-                        InterestDim,
-                        typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                std::is_same_v<InterestDim, continuous_dimension_type1>
                 || std::is_same_v<InterestDim, continuous_dimension_type2>
                 || std::is_same_v<InterestDim, continuous_dimension_type3>);
-        if constexpr (std::is_same_v<
-                              InterestDim,
-                              typename evaluation_discrete_dimension_type1::
-                                      continuous_dimension_type>) {
+        if constexpr (std::is_same_v<InterestDim, continuous_dimension_type1>) {
             return deriv_dim_1(spline_eval, coords_eval, spline_coef);
-        } else if constexpr (std::is_same_v<
-                                     InterestDim,
-                                     typename evaluation_discrete_dimension_type2::
-                                             continuous_dimension_type>) {
+        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type2>) {
             return deriv_dim_2(spline_eval, coords_eval, spline_coef);
-        } else if constexpr (std::is_same_v<
-                                     InterestDim,
-                                     typename evaluation_discrete_dimension_type3::
-                                             continuous_dimension_type>) {
+        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type3>) {
             return deriv_dim_3(spline_eval, coords_eval, spline_coef);
         }
     }
@@ -1851,25 +1801,14 @@ public:
                     memory_space> const spline_coef) const
     {
         static_assert(
-                std::is_same_v<
-                        InterestDim,
-                        typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                std::is_same_v<InterestDim, continuous_dimension_type1>
                 || std::is_same_v<InterestDim, continuous_dimension_type2>
                 || std::is_same_v<InterestDim, continuous_dimension_type3>);
-        if constexpr (std::is_same_v<
-                              InterestDim,
-                              typename evaluation_discrete_dimension_type1::
-                                      continuous_dimension_type>) {
+        if constexpr (std::is_same_v<InterestDim, continuous_dimension_type1>) {
             return deriv_dim_1(spline_eval, spline_coef);
-        } else if constexpr (std::is_same_v<
-                                     InterestDim,
-                                     typename evaluation_discrete_dimension_type2::
-                                             continuous_dimension_type>) {
+        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type2>) {
             return deriv_dim_2(spline_eval, spline_coef);
-        } else if constexpr (std::is_same_v<
-                                     InterestDim,
-                                     typename evaluation_discrete_dimension_type3::
-                                             continuous_dimension_type>) {
+        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type3>) {
             return deriv_dim_3(spline_eval, spline_coef);
         }
     }
@@ -1920,59 +1859,35 @@ public:
                     memory_space> const spline_coef) const
     {
         static_assert(
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>)
-                || (std::is_same_v<
-                            InterestDim1,
-                            typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                || (std::is_same_v<InterestDim1, continuous_dimension_type2>
                     && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim1,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim1, continuous_dimension_type1>
                     && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>));
 
         if constexpr (
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>)) {
             return deriv_1_and_2(spline_eval, coords_eval, spline_coef);
         } else if constexpr (
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type2>
                  && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
             return deriv_2_and_3(spline_eval, coords_eval, spline_coef);
         } else if constexpr (
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
             return deriv_1_and_3(spline_eval, coords_eval, spline_coef);
         }
@@ -2012,59 +1927,35 @@ public:
                     memory_space> const spline_coef) const
     {
         static_assert(
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>)
-                || (std::is_same_v<
-                            InterestDim1,
-                            typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                || (std::is_same_v<InterestDim1, continuous_dimension_type2>
                     && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim1,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim1, continuous_dimension_type1>
                     && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>));
 
         if constexpr (
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>)) {
             return deriv_1_and_2(spline_eval, spline_coef);
         } else if constexpr (
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type2>
                  && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type2::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
             return deriv_2_and_3(spline_eval, spline_coef);
         } else if constexpr (
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
             return deriv_1_and_3(spline_eval, spline_coef);
         }
@@ -2118,19 +2009,13 @@ public:
                     memory_space> const spline_coef) const
     {
         static_assert(
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type2>
                  && std::is_same_v<InterestDim3, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim3,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim3, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>
                     && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim3, continuous_dimension_type2>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>));
 
@@ -2173,19 +2058,13 @@ public:
                     memory_space> const spline_coef) const
     {
         static_assert(
-                (std::is_same_v<
-                         InterestDim1,
-                         typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                (std::is_same_v<InterestDim1, continuous_dimension_type1>
                  && std::is_same_v<InterestDim2, continuous_dimension_type2>
                  && std::is_same_v<InterestDim3, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim3,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim3, continuous_dimension_type1>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>
                     && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<
-                            InterestDim2,
-                            typename evaluation_discrete_dimension_type1::continuous_dimension_type>
+                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
                     && std::is_same_v<InterestDim3, continuous_dimension_type2>
                     && std::is_same_v<InterestDim1, continuous_dimension_type3>));
 

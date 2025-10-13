@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <array>
 #include <cstddef>
 #include <type_traits>
 #include <utility>
@@ -12,16 +11,18 @@
 #include <Kokkos_Core.hpp>
 
 #include "detail/kokkos.hpp"
+#include "detail/macros.hpp"
 #include "detail/type_seq.hpp"
 #include "detail/type_traits.hpp"
 
 #include "chunk_common.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 
-template <class, class, class>
+template <class ElementType, class SupportType, class Allocator>
 class Chunk;
 
 template <
@@ -29,19 +30,6 @@ template <
         class SupportType,
         class LayoutStridedPolicy = Kokkos::layout_right,
         class MemorySpace = Kokkos::DefaultHostExecutionSpace::memory_space>
-class ChunkSpan;
-
-template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
-inline constexpr bool
-        enable_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>>
-        = true;
-
-template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
-inline constexpr bool
-        enable_borrowed_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>>
-        = true;
-
-template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
 class ChunkSpan : public ChunkCommon<ElementType, SupportType, LayoutStridedPolicy>
 {
     static_assert(
@@ -416,6 +404,16 @@ public:
         return *this;
     }
 };
+
+template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
+inline constexpr bool
+        enable_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>>
+        = true;
+
+template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
+inline constexpr bool
+        enable_borrowed_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>>
+        = true;
 
 template <class DataType, class... Properties, class SupportType>
 KOKKOS_DEDUCTION_GUIDE ChunkSpan(

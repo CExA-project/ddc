@@ -7,7 +7,6 @@
 #include <cassert>
 #include <cstddef>
 #include <memory>
-#include <string>
 #include <utility>
 
 #include <Kokkos_Core.hpp>

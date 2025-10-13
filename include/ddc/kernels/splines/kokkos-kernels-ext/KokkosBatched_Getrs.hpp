@@ -8,7 +8,7 @@
 #ifndef KOKKOSBATCHED_GETRS_HPP_
 #define KOKKOSBATCHED_GETRS_HPP_
 
-#include <KokkosBatched_Util.hpp>
+#include <Kokkos_Macros.hpp>
 
 /// \author Yuuichi Asahi (yuuichi.asahi@cea.fr)
 
@@ -40,7 +40,7 @@ struct SerialGetrs {
 };
 }  // namespace KokkosBatched
 
-#include "KokkosBatched_Getrs_Serial_Impl.hpp"
+#include "KokkosBatched_Getrs_Serial_Impl.hpp" // IWYU pragma: export
 
 #endif  // KOKKOSBATCHED_GETRS_HPP_
 

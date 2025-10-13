@@ -198,6 +198,16 @@ void ExtrapolationRuleSplineTest()
             = spline_builder.interpolation_domain();
     auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
 
+    // Create empty ChunkSpans for the derivatives, as they are not used here
+    ddc::ChunkSpan<double const, ddc::StridedDiscreteDomain<DDimI1, ddc::Deriv<I1>, DDimI2>>
+            derivs1;
+    ddc::ChunkSpan<double const, ddc::StridedDiscreteDomain<DDimI2, DDimI1, ddc::Deriv<I2>>>
+            derivs2;
+    ddc::ChunkSpan<
+            double const,
+            ddc::StridedDiscreteDomain<DDimI1, DDimI2, ddc::Deriv<I1>, ddc::Deriv<I2>>>
+            mixed_derivs1_2;
+
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
     ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
@@ -220,7 +230,12 @@ void ExtrapolationRuleSplineTest()
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
-    spline_builder(coef, vals.span_cview());
+    spline_builder(
+            coef,
+            vals.span_cview(),
+            derivs1.span_cview(),
+            derivs2.span_cview(),
+            mixed_derivs1_2.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
 #if defined(ER_NULL)

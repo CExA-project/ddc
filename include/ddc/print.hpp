@@ -5,12 +5,14 @@
 #pragma once
 
 #include <algorithm>
-#include <cstddef>
+#include <cstdlib>
 #include <memory>
-#include <ostream>
 #include <sstream>
 #include <type_traits>
+#include <typeinfo>
 #include <utility>
+
+#include <Kokkos_Core.hpp>
 
 #include "chunk_span.hpp"
 #include "discrete_domain.hpp"

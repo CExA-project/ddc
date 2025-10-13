@@ -10,6 +10,8 @@
 
 namespace ddc::reducer {
 
+inline namespace test {
+
 template <class T>
 struct sum
 {
@@ -131,5 +133,7 @@ struct minmax
                 lhs.second > rhs.second ? lhs.second : rhs.second);
     }
 };
+
+} // namespace test
 
 } // namespace ddc::reducer

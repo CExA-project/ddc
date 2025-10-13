@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <algorithm>
-#include <ostream>
+#include <string>
 #include <vector>
 
 #include <ddc/ddc.hpp>

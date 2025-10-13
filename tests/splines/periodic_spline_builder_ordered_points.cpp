@@ -3,12 +3,15 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstddef>
+#include <string>
 #include <vector>
 
 #include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
 
 #include <gtest/gtest.h>
+
+#include <Kokkos_Core.hpp>
 
 struct DimX
 {

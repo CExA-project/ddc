@@ -6,14 +6,15 @@
 
 #include <cassert>
 #include <cstddef>
+#include <functional>
 #include <iterator>
+#include <string>
 #include <tuple>
 #include <type_traits>
 
 #include <Kokkos_Core.hpp>
 #include <Kokkos_StdAlgorithms.hpp>
 
-#include "detail/kokkos.hpp"
 #include "detail/tagged_vector.hpp"
 #include "detail/type_seq.hpp"
 
@@ -22,11 +23,8 @@
 
 namespace ddc {
 
-template <class DDim>
-struct SparseDiscreteDomainIterator;
-
 template <class... DDims>
-class SparseDiscreteDomain;
+class SparseDiscreteDomain; // IWYU pragma: keep
 
 template <class T>
 struct is_sparse_discrete_domain : std::false_type

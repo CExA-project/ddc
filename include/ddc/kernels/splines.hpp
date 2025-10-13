@@ -4,6 +4,7 @@
 
 #pragma once
 
+// IWYU pragma: begin_exports
 #include "splines/bsplines_non_uniform.hpp"
 #include "splines/bsplines_uniform.hpp"
 #include "splines/constant_extrapolation_rule.hpp"
@@ -33,3 +34,4 @@
 #include "splines/splines_linear_problem_pds_tridiag.hpp"
 #include "splines/splines_linear_problem_sparse.hpp"
 #include "splines/view.hpp"
+// IWYU pragma: end_exports

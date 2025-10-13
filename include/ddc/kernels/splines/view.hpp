@@ -97,7 +97,7 @@ using View1D = ViewND<1, ElementType>;
 template <class ElementType>
 using View2D = ViewND<2, ElementType>;
 
-using DSpan1D = ddc::Span1D<double>;
+using DSpan1D = ddc::Span1D<double>; // IWYU pragma: export
 
 using DSpan2D = ddc::Span2D<double>;
 

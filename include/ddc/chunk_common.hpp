@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <array>
 #include <cassert>
 #include <cstddef>
 #include <type_traits>
@@ -12,10 +11,11 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "detail/macros.hpp"
+#include "detail/type_seq.hpp"
 
 #include "chunk_traits.hpp"
 #include "discrete_domain.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 

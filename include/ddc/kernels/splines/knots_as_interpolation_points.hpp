@@ -4,9 +4,14 @@
 
 #pragma once
 
+#include <tuple>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
 #include <ddc/ddc.hpp>
+
+#include <Kokkos_Core.hpp>
 
 #include "bsplines_uniform.hpp"
 #include "knot_discrete_dimension_type.hpp"
@@ -47,11 +52,12 @@ public:
     static auto get_sampling()
     {
         if constexpr (U::is_uniform()) {
-            return std::get<0>(Sampling::
-                                       init(ddc::discrete_space<BSplines>().rmin(),
-                                            ddc::discrete_space<BSplines>().rmax(),
-                                            ddc::DiscreteVector<Sampling>(
-                                                    ddc::discrete_space<BSplines>().ncells() + 1)));
+            std::tuple ret = Sampling::
+                    init(ddc::discrete_space<BSplines>().rmin(),
+                         ddc::discrete_space<BSplines>().rmax(),
+                         ddc::DiscreteVector<Sampling>(
+                                 ddc::discrete_space<BSplines>().ncells() + 1));
+            return std::get<0>(std::move(ret));
         } else {
             using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
             std::vector<double> knots(ddc::discrete_space<BSplines>().npoints());

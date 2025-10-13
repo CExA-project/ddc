@@ -10,6 +10,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <Kokkos_Macros.hpp>
+
 #include "macros.hpp"
 #include "type_seq.hpp"
 

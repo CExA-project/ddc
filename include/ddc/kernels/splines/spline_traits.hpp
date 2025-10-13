@@ -6,8 +6,7 @@
 
 #include <type_traits>
 
-#include <ddc/ddc.hpp>
-
+#include "spline_boundary_conditions.hpp"
 #include "spline_builder.hpp"
 #include "spline_builder_2d.hpp"
 #include "spline_evaluator.hpp"

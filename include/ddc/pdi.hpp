@@ -5,6 +5,8 @@
 #pragma once
 
 #include <any>
+#include <array>
+#include <cstddef>
 #include <list>
 #include <string>
 #include <type_traits>

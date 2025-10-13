@@ -5,7 +5,6 @@
 #pragma once
 
 #include <array>
-#include <cmath>
 #include <cstddef>
 
 #include <Kokkos_Core.hpp>

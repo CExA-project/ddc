@@ -10,8 +10,7 @@
 
 #include <ddc/ddc.hpp>
 
-#include <Kokkos_Macros.hpp>
-#include <Kokkos_MathematicalFunctions.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "integrals.hpp"
 #include "periodic_extrapolation_rule.hpp"

@@ -6,10 +6,14 @@
 
 #include <array>
 #include <cassert>
-#include <memory>
+#include <cstddef>
+#include <initializer_list>
+#include <type_traits>
 #include <vector>
 
 #include <ddc/ddc.hpp>
+
+#include <Kokkos_Core.hpp>
 
 #include "view.hpp"
 

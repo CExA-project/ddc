@@ -8,7 +8,6 @@
 #include <cstddef>
 #include <utility>
 
-#include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
 

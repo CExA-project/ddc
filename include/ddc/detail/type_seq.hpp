@@ -169,7 +169,10 @@ struct TypeSeqReplace<
 };
 
 template <class T>
-struct ToTypeSeq;
+struct ToTypeSeq
+{
+    static_assert(false);
+};
 
 } // namespace detail
 

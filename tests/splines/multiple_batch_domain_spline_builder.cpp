@@ -167,9 +167,7 @@ std::tuple<double, double, double> ComputeEvaluationError(
             DElem<ddc::Deriv<I>>(1),
             DVect<ddc::Deriv<I>>(s_degree_x / 2),
             DVect<ddc::Deriv<I>>(1));
-    auto const dom_derivs = ddc::replace_dim_of<
-            DDimI,
-            ddc::Deriv<I>>(ddc::detail::to_strided_ddom(dom_vals), derivs_domain);
+
     auto const whole_derivs_domain = ddc::detail::get_whole_derivs_domain<
             ddc::Deriv<I>>(dom_interpolation, dom_vals, s_degree_x / 2);
 

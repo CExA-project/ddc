@@ -627,18 +627,13 @@ operator()(
 {
     auto const batched_interpolation_domain = vals.domain();
 
-    using ddim1 = interpolation_discrete_dimension_type1;
-    using ddim2 = interpolation_discrete_dimension_type2;
-    using detail::dmax;
-    using detail::dmin;
-
     assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
 
     // TODO: perform computations along dimension 1 on different streams ?
 
     // Spline1-approximate derivs_min2 (to spline1_deriv_min)
     auto const spline_batched_deriv_domain = ddc::detail::get_whole_derivs_domain<deriv_type2>(
-            ddc::select<ddim2>(batched_interpolation_domain),
+            ddc::select<interpolation_discrete_dimension_type2>(batched_interpolation_domain),
             m_spline_builder_deriv1.batched_spline_domain(batched_interpolation_domain),
             bsplines_type2::degree() / 2);
 
@@ -648,17 +643,19 @@ operator()(
     auto spline1_deriv = spline1_deriv_alloc.span_view();
 
     if constexpr (BcLower2 == ddc::BoundCond::HERMITE) {
-        auto const spline1_deriv_min_strided = detail::derivs(spline1_deriv, dmin<ddim2>);
+        constexpr auto min_deriv_2 = ddc::detail::dmin<interpolation_discrete_dimension_type2>;
+
+        auto const spline1_deriv_min_strided = detail::derivs(spline1_deriv, min_deriv_2);
         auto const spline1_deriv_min
                 = detail::strided_to_discrete_domain_chunkspan(spline1_deriv_min_strided);
 
-        auto const derivs_min2_strided = detail::derivs(derivs2, dmin<ddim2>);
+        auto const derivs_min2_strided = detail::derivs(derivs2, min_deriv_2);
         auto const derivs_min2 = detail::strided_to_discrete_domain_chunkspan(derivs_min2_strided);
 
         m_spline_builder_deriv1(
                 spline1_deriv_min,
                 derivs_min2,
-                detail::derivs(mixed_derivs_1_2, dmin<ddim2>));
+                detail::derivs(mixed_derivs_1_2, min_deriv_2));
     }
 
     // Spline1-approximate vals (to spline1)
@@ -671,17 +668,19 @@ operator()(
 
     // Spline1-approximate derivs_max2 (to spline1_deriv_max)
     if constexpr (BcUpper2 == ddc::BoundCond::HERMITE) {
-        auto const spline1_deriv_max_strided = detail::derivs(spline1_deriv, dmax<ddim2>);
+        constexpr auto max_deriv_2 = ddc::detail::dmax<interpolation_discrete_dimension_type2>;
+
+        auto const spline1_deriv_max_strided = detail::derivs(spline1_deriv, max_deriv_2);
         auto const spline1_deriv_max
                 = detail::strided_to_discrete_domain_chunkspan(spline1_deriv_max_strided);
 
-        auto const derivs_max2_strided = detail::derivs(derivs2, dmax<ddim2>);
+        auto const derivs_max2_strided = detail::derivs(derivs2, max_deriv_2);
         auto const derivs_max2 = detail::strided_to_discrete_domain_chunkspan(derivs_max2_strided);
 
         m_spline_builder_deriv1(
                 spline1_deriv_max,
                 derivs_max2,
-                detail::derivs(mixed_derivs_1_2, dmax<ddim2>));
+                detail::derivs(mixed_derivs_1_2, max_deriv_2));
     }
 
     // Spline2-approximate spline1

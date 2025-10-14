@@ -232,6 +232,11 @@ int main(int argc, char** argv)
     ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
     //! [instantiate intermediate chunks]
 
+    // FIXME: comment
+    ddc::ChunkSpan<
+            double const,
+            ddc::StridedDiscreteDomain<DDimX, ddc::Deriv<DDimX::continuous_dimension_type>, DDimY>>
+            derivs;
 
     //! [time iteration]
     for (auto const iter : time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {
@@ -255,7 +260,7 @@ int main(int argc, char** argv)
                                      - ddc::Coordinate<X>(vx * ddc::step<DDimT>());
                 });
         // Interpolate the values at feet on the grid
-        spline_builder(coef, last_density.span_cview());
+        spline_builder(coef, last_density.span_cview(), derivs.span_cview());
         spline_evaluator(next_density, feet_coords.span_cview(), coef.span_cview());
         //! [numerical scheme]
 

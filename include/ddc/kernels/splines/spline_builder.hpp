@@ -964,7 +964,6 @@ operator()(
                 StridedLayout,
                 memory_space> const derivs) const
 {
-    using interpolation_sddom = ddc::StridedDiscreteDomain<interpolation_discrete_dimension_type>;
     auto const batched_interpolation_domain = vals.domain();
 
     assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));

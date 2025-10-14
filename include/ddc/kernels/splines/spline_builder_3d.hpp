@@ -777,7 +777,6 @@ operator()(
 {
     auto const batched_interpolation_domain = vals.domain();
 
-    using ddim1 = interpolation_discrete_dimension_type1;
     using ddim2 = interpolation_discrete_dimension_type2;
     using ddim3 = interpolation_discrete_dimension_type3;
     using detail::dmax;

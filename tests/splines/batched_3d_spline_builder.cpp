@@ -236,7 +236,7 @@ void Batched3dSplineTest()
     auto const dom_derivs23
             = ddc::replace_dim_of<DDimI3, ddc::Deriv<I3>>(dom_derivs2, derivs_domain3);
     auto const dom_derivs13
-            = ddc::replace_dim_of<DDimI3, ddc::Deriv<I3>>(dom_derivs1, derivs_domain3);
+            = ddc::replace_dim_of<DDimI1, ddc::Deriv<I1>>(dom_derivs3, derivs_domain1);
     auto const dom_derivs_all
             = ddc::replace_dim_of<DDimI3, ddc::Deriv<I3>>(dom_derivs12, derivs_domain3);
 

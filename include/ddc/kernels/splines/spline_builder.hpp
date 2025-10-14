@@ -628,9 +628,7 @@ public:
      *
      * @param[out] spline The coefficients of the spline computed by this SplineBuilder.
      * @param[in] vals The values of the function on the interpolation mesh.
-     * @param[in] derivs_xmin The values of the derivatives at the lower boundary
-     * (used only with BoundCond::HERMITE lower boundary condition).
-     * @param[in] derivs_xmax The values of the derivatives at the upper boundary
+     * @param[in] derivs The values of the derivatives.
      * (used only with BoundCond::HERMITE upper boundary condition).
      */
     template <class Layout, class StridedLayout, class BatchedInterpolationDDom>

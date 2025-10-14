@@ -478,11 +478,11 @@ void Batched3dSplineTest()
             derivs_mixed_lhs1_lhs2_alloc(dom_derivs12, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_lhs1_lhs2 = derivs_mixed_lhs1_lhs2_alloc.span_view();
     ddc::Chunk
-            derivs_mixed_lhs1_rhs2_alloc(dom_derivs12, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan const derivs_mixed_lhs1_rhs2 = derivs_mixed_lhs1_rhs2_alloc.span_view();
-    ddc::Chunk
             derivs_mixed_rhs1_lhs2_alloc(dom_derivs12, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_rhs1_lhs2 = derivs_mixed_rhs1_lhs2_alloc.span_view();
+    ddc::Chunk
+            derivs_mixed_lhs1_rhs2_alloc(dom_derivs12, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan const derivs_mixed_lhs1_rhs2 = derivs_mixed_lhs1_rhs2_alloc.span_view();
     ddc::Chunk
             derivs_mixed_rhs1_rhs2_alloc(dom_derivs12, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_rhs1_rhs2 = derivs_mixed_rhs1_rhs2_alloc.span_view();
@@ -491,12 +491,12 @@ void Batched3dSplineTest()
         ddc::Chunk derivs_mixed_lhs1_lhs2_host_alloc(derivs_domain12, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_mixed_lhs1_lhs2_host
                 = derivs_mixed_lhs1_lhs2_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_lhs1_rhs2_host_alloc(derivs_domain12, ddc::HostAllocator<double>());
-        ddc::ChunkSpan const derivs_mixed_lhs1_rhs2_host
-                = derivs_mixed_lhs1_rhs2_host_alloc.span_view();
         ddc::Chunk derivs_mixed_rhs1_lhs2_host_alloc(derivs_domain12, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_mixed_rhs1_lhs2_host
                 = derivs_mixed_rhs1_lhs2_host_alloc.span_view();
+        ddc::Chunk derivs_mixed_lhs1_rhs2_host_alloc(derivs_domain12, ddc::HostAllocator<double>());
+        ddc::ChunkSpan const derivs_mixed_lhs1_rhs2_host
+                = derivs_mixed_lhs1_rhs2_host_alloc.span_view();
         ddc::Chunk derivs_mixed_rhs1_rhs2_host_alloc(derivs_domain12, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_mixed_rhs1_rhs2_host
                 = derivs_mixed_rhs1_rhs2_host_alloc.span_view();
@@ -515,16 +515,16 @@ void Batched3dSplineTest()
                                                                     deriv_idx1 + shift - 1,
                                                                     deriv_idx2 + shift - 1,
                                                                     0);
-                    derivs_mixed_lhs1_rhs2_host(e) = evaluator
-                                                             .deriv(x0<I1>(),
-                                                                    xN<I2>(),
+                    derivs_mixed_rhs1_lhs2_host(e) = evaluator
+                                                             .deriv(xN<I1>(),
+                                                                    x0<I2>(),
                                                                     x3,
                                                                     deriv_idx1 + shift - 1,
                                                                     deriv_idx2 + shift - 1,
                                                                     0);
-                    derivs_mixed_rhs1_lhs2_host(e) = evaluator
-                                                             .deriv(xN<I1>(),
-                                                                    x0<I2>(),
+                    derivs_mixed_lhs1_rhs2_host(e) = evaluator
+                                                             .deriv(x0<I1>(),
+                                                                    xN<I2>(),
                                                                     x3,
                                                                     deriv_idx1 + shift - 1,
                                                                     deriv_idx2 + shift - 1,
@@ -541,12 +541,12 @@ void Batched3dSplineTest()
         auto derivs_mixed_lhs1_lhs2_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs1_lhs2_host);
         ddc::ChunkSpan const derivs_mixed_lhs1_lhs2_ = derivs_mixed_lhs1_lhs2_alloc.span_view();
-        auto derivs_mixed_lhs1_rhs2_alloc
-                = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs1_rhs2_host);
-        ddc::ChunkSpan const derivs_mixed_lhs1_rhs2_ = derivs_mixed_lhs1_rhs2_alloc.span_view();
         auto derivs_mixed_rhs1_lhs2_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_rhs1_lhs2_host);
         ddc::ChunkSpan const derivs_mixed_rhs1_lhs2_ = derivs_mixed_rhs1_lhs2_alloc.span_view();
+        auto derivs_mixed_lhs1_rhs2_alloc
+                = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs1_rhs2_host);
+        ddc::ChunkSpan const derivs_mixed_lhs1_rhs2_ = derivs_mixed_lhs1_rhs2_alloc.span_view();
         auto derivs_mixed_rhs1_rhs2_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_rhs1_rhs2_host);
         ddc::ChunkSpan const derivs_mixed_rhs1_rhs2_ = derivs_mixed_rhs1_rhs2_alloc.span_view();
@@ -557,9 +557,9 @@ void Batched3dSplineTest()
                 KOKKOS_LAMBDA(typename decltype(dom_derivs12)::discrete_element_type const e) {
                     derivs_mixed_lhs1_lhs2(e) = derivs_mixed_lhs1_lhs2_(
                             DElem<ddc::Deriv<I1>, ddc::Deriv<I2>, DDimI3>(e));
-                    derivs_mixed_lhs1_rhs2(e) = derivs_mixed_lhs1_rhs2_(
-                            DElem<ddc::Deriv<I1>, ddc::Deriv<I2>, DDimI3>(e));
                     derivs_mixed_rhs1_lhs2(e) = derivs_mixed_rhs1_lhs2_(
+                            DElem<ddc::Deriv<I1>, ddc::Deriv<I2>, DDimI3>(e));
+                    derivs_mixed_lhs1_rhs2(e) = derivs_mixed_lhs1_rhs2_(
                             DElem<ddc::Deriv<I1>, ddc::Deriv<I2>, DDimI3>(e));
                     derivs_mixed_rhs1_rhs2(e) = derivs_mixed_rhs1_rhs2_(
                             DElem<ddc::Deriv<I1>, ddc::Deriv<I2>, DDimI3>(e));
@@ -570,11 +570,11 @@ void Batched3dSplineTest()
             derivs_mixed_lhs2_lhs3_alloc(dom_derivs23, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_lhs2_lhs3 = derivs_mixed_lhs2_lhs3_alloc.span_view();
     ddc::Chunk
-            derivs_mixed_lhs2_rhs3_alloc(dom_derivs23, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan const derivs_mixed_lhs2_rhs3 = derivs_mixed_lhs2_rhs3_alloc.span_view();
-    ddc::Chunk
             derivs_mixed_rhs2_lhs3_alloc(dom_derivs23, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_rhs2_lhs3 = derivs_mixed_rhs2_lhs3_alloc.span_view();
+    ddc::Chunk
+            derivs_mixed_lhs2_rhs3_alloc(dom_derivs23, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan const derivs_mixed_lhs2_rhs3 = derivs_mixed_lhs2_rhs3_alloc.span_view();
     ddc::Chunk
             derivs_mixed_rhs2_rhs3_alloc(dom_derivs23, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_rhs2_rhs3 = derivs_mixed_rhs2_rhs3_alloc.span_view();
@@ -583,12 +583,12 @@ void Batched3dSplineTest()
         ddc::Chunk derivs_mixed_lhs2_lhs3_host_alloc(derivs_domain23, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_mixed_lhs2_lhs3_host
                 = derivs_mixed_lhs2_lhs3_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_lhs2_rhs3_host_alloc(derivs_domain23, ddc::HostAllocator<double>());
-        ddc::ChunkSpan const derivs_mixed_lhs2_rhs3_host
-                = derivs_mixed_lhs2_rhs3_host_alloc.span_view();
         ddc::Chunk derivs_mixed_rhs2_lhs3_host_alloc(derivs_domain23, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_mixed_rhs2_lhs3_host
                 = derivs_mixed_rhs2_lhs3_host_alloc.span_view();
+        ddc::Chunk derivs_mixed_lhs2_rhs3_host_alloc(derivs_domain23, ddc::HostAllocator<double>());
+        ddc::ChunkSpan const derivs_mixed_lhs2_rhs3_host
+                = derivs_mixed_lhs2_rhs3_host_alloc.span_view();
         ddc::Chunk derivs_mixed_rhs2_rhs3_host_alloc(derivs_domain23, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_mixed_rhs2_rhs3_host
                 = derivs_mixed_rhs2_rhs3_host_alloc.span_view();
@@ -607,17 +607,17 @@ void Batched3dSplineTest()
                                                                     0,
                                                                     deriv_idx2 + shift - 1,
                                                                     deriv_idx3 + shift - 1);
-                    derivs_mixed_lhs2_rhs3_host(e) = evaluator
-                                                             .deriv(x1,
-                                                                    x0<I2>(),
-                                                                    xN<I3>(),
-                                                                    0,
-                                                                    deriv_idx2 + shift - 1,
-                                                                    deriv_idx3 + shift - 1);
                     derivs_mixed_rhs2_lhs3_host(e) = evaluator
                                                              .deriv(x1,
                                                                     xN<I2>(),
                                                                     x0<I3>(),
+                                                                    0,
+                                                                    deriv_idx2 + shift - 1,
+                                                                    deriv_idx3 + shift - 1);
+                    derivs_mixed_lhs2_rhs3_host(e) = evaluator
+                                                             .deriv(x1,
+                                                                    x0<I2>(),
+                                                                    xN<I3>(),
                                                                     0,
                                                                     deriv_idx2 + shift - 1,
                                                                     deriv_idx3 + shift - 1);
@@ -633,12 +633,12 @@ void Batched3dSplineTest()
         auto derivs_mixed_lhs2_lhs3_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs2_lhs3_host);
         ddc::ChunkSpan const derivs_mixed_lhs2_lhs3_ = derivs_mixed_lhs2_lhs3_alloc.span_view();
-        auto derivs_mixed_lhs2_rhs3_alloc
-                = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs2_rhs3_host);
-        ddc::ChunkSpan const derivs_mixed_lhs2_rhs3_ = derivs_mixed_lhs2_rhs3_alloc.span_view();
         auto derivs_mixed_rhs2_lhs3_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_rhs2_lhs3_host);
         ddc::ChunkSpan const derivs_mixed_rhs2_lhs3_ = derivs_mixed_rhs2_lhs3_alloc.span_view();
+        auto derivs_mixed_lhs2_rhs3_alloc
+                = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs2_rhs3_host);
+        ddc::ChunkSpan const derivs_mixed_lhs2_rhs3_ = derivs_mixed_lhs2_rhs3_alloc.span_view();
         auto derivs_mixed_rhs2_rhs3_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_rhs2_rhs3_host);
         ddc::ChunkSpan const derivs_mixed_rhs2_rhs3_ = derivs_mixed_rhs2_rhs3_alloc.span_view();
@@ -649,9 +649,9 @@ void Batched3dSplineTest()
                 KOKKOS_LAMBDA(typename decltype(dom_derivs23)::discrete_element_type const e) {
                     derivs_mixed_lhs2_lhs3(e) = derivs_mixed_lhs2_lhs3_(
                             DElem<DDimI1, ddc::Deriv<I2>, ddc::Deriv<I3>>(e));
-                    derivs_mixed_lhs2_rhs3(e) = derivs_mixed_lhs2_rhs3_(
-                            DElem<DDimI1, ddc::Deriv<I2>, ddc::Deriv<I3>>(e));
                     derivs_mixed_rhs2_lhs3(e) = derivs_mixed_rhs2_lhs3_(
+                            DElem<DDimI1, ddc::Deriv<I2>, ddc::Deriv<I3>>(e));
+                    derivs_mixed_lhs2_rhs3(e) = derivs_mixed_lhs2_rhs3_(
                             DElem<DDimI1, ddc::Deriv<I2>, ddc::Deriv<I3>>(e));
                     derivs_mixed_rhs2_rhs3(e) = derivs_mixed_rhs2_rhs3_(
                             DElem<DDimI1, ddc::Deriv<I2>, ddc::Deriv<I3>>(e));
@@ -662,11 +662,11 @@ void Batched3dSplineTest()
             derivs_mixed_lhs1_lhs3_alloc(dom_derivs13, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_lhs1_lhs3 = derivs_mixed_lhs1_lhs3_alloc.span_view();
     ddc::Chunk
-            derivs_mixed_lhs1_rhs3_alloc(dom_derivs13, ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan const derivs_mixed_lhs1_rhs3 = derivs_mixed_lhs1_rhs3_alloc.span_view();
-    ddc::Chunk
             derivs_mixed_rhs1_lhs3_alloc(dom_derivs13, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_rhs1_lhs3 = derivs_mixed_rhs1_lhs3_alloc.span_view();
+    ddc::Chunk
+            derivs_mixed_lhs1_rhs3_alloc(dom_derivs13, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::ChunkSpan const derivs_mixed_lhs1_rhs3 = derivs_mixed_lhs1_rhs3_alloc.span_view();
     ddc::Chunk
             derivs_mixed_rhs1_rhs3_alloc(dom_derivs13, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_rhs1_rhs3 = derivs_mixed_rhs1_rhs3_alloc.span_view();
@@ -675,12 +675,12 @@ void Batched3dSplineTest()
         ddc::Chunk derivs_mixed_lhs1_lhs3_host_alloc(derivs_domain13, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_mixed_lhs1_lhs3_host
                 = derivs_mixed_lhs1_lhs3_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_lhs1_rhs3_host_alloc(derivs_domain13, ddc::HostAllocator<double>());
-        ddc::ChunkSpan const derivs_mixed_lhs1_rhs3_host
-                = derivs_mixed_lhs1_rhs3_host_alloc.span_view();
         ddc::Chunk derivs_mixed_rhs1_lhs3_host_alloc(derivs_domain13, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_mixed_rhs1_lhs3_host
                 = derivs_mixed_rhs1_lhs3_host_alloc.span_view();
+        ddc::Chunk derivs_mixed_lhs1_rhs3_host_alloc(derivs_domain13, ddc::HostAllocator<double>());
+        ddc::ChunkSpan const derivs_mixed_lhs1_rhs3_host
+                = derivs_mixed_lhs1_rhs3_host_alloc.span_view();
         ddc::Chunk derivs_mixed_rhs1_rhs3_host_alloc(derivs_domain13, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_mixed_rhs1_rhs3_host
                 = derivs_mixed_rhs1_rhs3_host_alloc.span_view();
@@ -699,17 +699,17 @@ void Batched3dSplineTest()
                                                                     deriv_idx1 + shift - 1,
                                                                     0,
                                                                     deriv_idx3 + shift - 1);
-                    derivs_mixed_lhs1_rhs3_host(e) = evaluator
-                                                             .deriv(x0<I1>(),
-                                                                    x2,
-                                                                    xN<I3>(),
-                                                                    deriv_idx1 + shift - 1,
-                                                                    0,
-                                                                    deriv_idx3 + shift - 1);
                     derivs_mixed_rhs1_lhs3_host(e) = evaluator
                                                              .deriv(xN<I1>(),
                                                                     x2,
                                                                     x0<I3>(),
+                                                                    deriv_idx1 + shift - 1,
+                                                                    0,
+                                                                    deriv_idx3 + shift - 1);
+                    derivs_mixed_lhs1_rhs3_host(e) = evaluator
+                                                             .deriv(x0<I1>(),
+                                                                    x2,
+                                                                    xN<I3>(),
                                                                     deriv_idx1 + shift - 1,
                                                                     0,
                                                                     deriv_idx3 + shift - 1);
@@ -725,12 +725,12 @@ void Batched3dSplineTest()
         auto derivs_mixed_lhs1_lhs3_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs1_lhs3_host);
         ddc::ChunkSpan const derivs_mixed_lhs1_lhs3_ = derivs_mixed_lhs1_lhs3_alloc.span_view();
-        auto derivs_mixed_lhs1_rhs3_alloc
-                = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs1_rhs3_host);
-        ddc::ChunkSpan const derivs_mixed_lhs1_rhs3_ = derivs_mixed_lhs1_rhs3_alloc.span_view();
         auto derivs_mixed_rhs1_lhs3_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_rhs1_lhs3_host);
         ddc::ChunkSpan const derivs_mixed_rhs1_lhs3_ = derivs_mixed_rhs1_lhs3_alloc.span_view();
+        auto derivs_mixed_lhs1_rhs3_alloc
+                = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_lhs1_rhs3_host);
+        ddc::ChunkSpan const derivs_mixed_lhs1_rhs3_ = derivs_mixed_lhs1_rhs3_alloc.span_view();
         auto derivs_mixed_rhs1_rhs3_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_mixed_rhs1_rhs3_host);
         ddc::ChunkSpan const derivs_mixed_rhs1_rhs3_ = derivs_mixed_rhs1_rhs3_alloc.span_view();
@@ -741,9 +741,9 @@ void Batched3dSplineTest()
                 KOKKOS_LAMBDA(typename decltype(dom_derivs13)::discrete_element_type const e) {
                     derivs_mixed_lhs1_lhs3(e) = derivs_mixed_lhs1_lhs3_(
                             DElem<ddc::Deriv<I1>, DDimI2, ddc::Deriv<I3>>(e));
-                    derivs_mixed_lhs1_rhs3(e) = derivs_mixed_lhs1_rhs3_(
-                            DElem<ddc::Deriv<I1>, DDimI2, ddc::Deriv<I3>>(e));
                     derivs_mixed_rhs1_lhs3(e) = derivs_mixed_rhs1_lhs3_(
+                            DElem<ddc::Deriv<I1>, DDimI2, ddc::Deriv<I3>>(e));
+                    derivs_mixed_lhs1_rhs3(e) = derivs_mixed_lhs1_rhs3_(
                             DElem<ddc::Deriv<I1>, DDimI2, ddc::Deriv<I3>>(e));
                     derivs_mixed_rhs1_rhs3(e) = derivs_mixed_rhs1_rhs3_(
                             DElem<ddc::Deriv<I1>, DDimI2, ddc::Deriv<I3>>(e));

@@ -32,7 +32,7 @@ namespace detail {
 // TODO: move all these functions to another file
 
 /**
- * @brief Create a DiscreteVector with each component initalized to the same value.
+ * @brief Create a DiscreteVector with each component initialized to the same value.
  */
 template <typename... DDims, typename T>
 ddc::DiscreteVector<DDims...> make_discrete_vector(T const& value)
@@ -91,7 +91,7 @@ using to_whole_derivs_domain_t =
  *
  * @tparam DerivDims... The deriv dimensions which will replace the interpolation dimensions.
  * @param interpolation_dom The domain containing only the interpolation dimensions.
- * @param batched_domain The domain conatining both the interpolation and batch dimensions.
+ * @param batched_domain The domain containing both the interpolation and batch dimensions.
  * @param nb_constraints The number of constraints for each of the deriv dimensions.
  *
  * @return A StridedDiscreteDomain with the batch dimensions, the deriv dimensions and the strided interpolation dimensions.
@@ -295,7 +295,7 @@ private:
 public:
     /**
      * @brief The type of the whole Deriv domain (1D dimension of interest and cartesian
-     * product of 1D Deriv domain and batch domain) to be passed as argument to the buider,
+     * product of 1D Deriv domain and batch domain) to be passed as argument to the builder,
      * preserving the underlying memory layout (order of dimensions).
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.

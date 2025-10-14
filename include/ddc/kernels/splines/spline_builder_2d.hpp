@@ -264,7 +264,7 @@ public:
 
     /**
      * @brief The type of the whole Derivs domain (1D dimension of interest and cartesian
-     * product of 1D Deriv domain and batch domain) in the first dimension to be passed as argument to the buider,
+     * product of 1D Deriv domain and batch domain) in the first dimension to be passed as argument to the builder,
      * preserving the underlying memory layout (order of dimensions).
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
@@ -297,7 +297,7 @@ public:
 
     /**
      * @brief The type of the whole Derivs domain (1D dimension of interest and cartesian
-     * product of 1D Deriv domain and batch domain) in the second dimension to be passed as argument to the buider,
+     * product of 1D Deriv domain and batch domain) in the second dimension to be passed as argument to the builder,
      * preserving the underlying memory layout (order of dimensions).
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
@@ -333,7 +333,7 @@ public:
 
     /**
      * @brief The type of the whole Derivs domain (all dimensions of interest and cartesian
-     * product of 2D Deriv domain and batch domain) to be passed as argument to the buider,
+     * product of 2D Deriv domain and batch domain) to be passed as argument to the builder,
      * preserving the underlying memory layout (order of dimensions).
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.

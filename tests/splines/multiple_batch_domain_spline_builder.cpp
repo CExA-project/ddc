@@ -190,8 +190,9 @@ std::tuple<double, double, double> ComputeEvaluationError(
     ddc::Chunk derivs_alloc(whole_derivs_domain, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs = derivs_alloc.span_view();
 
-    ddc::ChunkSpan const derivs_lhs_view = derivs[dom_interpolation.front()];
     if (s_bcl == ddc::BoundCond::HERMITE) {
+        ddc::ChunkSpan const derivs_lhs_view = derivs[dom_interpolation.front()];
+
         ddc::Chunk derivs_lhs_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_lhs_host = derivs_lhs_host_alloc.span_view();
         for (int ii = 1; ii < derivs_lhs_host.domain().template extent<ddc::Deriv<I>>() + 1; ++ii) {
@@ -208,8 +209,9 @@ std::tuple<double, double, double> ComputeEvaluationError(
                                 e) { derivs_lhs_view(e) = derivs_lhs(DElem<ddc::Deriv<I>>(e)); });
     }
 
-    ddc::ChunkSpan const derivs_rhs_view = derivs[dom_interpolation.front()];
     if (s_bcr == ddc::BoundCond::HERMITE) {
+        ddc::ChunkSpan const derivs_rhs_view = derivs[dom_interpolation.back()];
+
         ddc::Chunk derivs_rhs_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_rhs_host = derivs_rhs_host_alloc.span_view();
         for (int ii = 1; ii < derivs_rhs_host.domain().template extent<ddc::Deriv<I>>() + 1; ++ii) {

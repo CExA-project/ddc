@@ -183,7 +183,9 @@ void characteristics_advection_unitary(benchmark::State& state)
             ddc::StridedDiscreteDomain<
                     DDimX<IsNonUniform, s_degree_x>,
                     ddc::Deriv<typename DDimX<IsNonUniform, s_degree_x>::continuous_dimension_type>,
-                    DDimY>> const derivs {};
+                    DDimY>,
+            Kokkos::layout_right,
+            typename ExecSpace::memory_space> const derivs {};
 
     for (auto _ : state) {
         Kokkos::Profiling::pushRegion("FeetCharacteristics");

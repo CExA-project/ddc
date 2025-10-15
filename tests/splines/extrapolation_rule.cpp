@@ -199,14 +199,21 @@ void ExtrapolationRuleSplineTest()
     auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
 
     // Create empty ChunkSpans for the derivatives, as they are not used here
-    ddc::ChunkSpan<double const, ddc::StridedDiscreteDomain<DDimI1, ddc::Deriv<I1>, DDimI2>> const
-            derivs1 {};
-    ddc::ChunkSpan<double const, ddc::StridedDiscreteDomain<DDimI2, DDimI1, ddc::Deriv<I2>>> const
-            derivs2 {};
     ddc::ChunkSpan<
             double const,
-            ddc::StridedDiscreteDomain<DDimI1, DDimI2, ddc::Deriv<I1>, ddc::Deriv<I2>>> const
-            mixed_derivs1_2 {};
+            ddc::StridedDiscreteDomain<DDimI1, ddc::Deriv<I1>, DDimI2>,
+            Kokkos::layout_right,
+            MemorySpace> const derivs1 {};
+    ddc::ChunkSpan<
+            double const,
+            ddc::StridedDiscreteDomain<DDimI2, DDimI1, ddc::Deriv<I2>>,
+            Kokkos::layout_right,
+            MemorySpace> const derivs2 {};
+    ddc::ChunkSpan<
+            double const,
+            ddc::StridedDiscreteDomain<DDimI1, DDimI2, ddc::Deriv<I1>, ddc::Deriv<I2>>,
+            Kokkos::layout_right,
+            MemorySpace> const mixed_derivs1_2 {};
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());

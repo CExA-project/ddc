@@ -230,13 +230,16 @@ int main(int argc, char** argv)
             spline_builder.batched_interpolation_domain(x_mesh),
             ddc::DeviceAllocator<ddc::Coordinate<X>>());
     ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
-    //! [instantiate intermediate chunks]
 
-    // FIXME: comment
+    // Instantiate empty derivative chunkspan
     ddc::ChunkSpan<
             double const,
-            ddc::StridedDiscreteDomain<DDimX, ddc::Deriv<DDimX::continuous_dimension_type>, DDimY>>
-            derivs;
+            ddc::StridedDiscreteDomain<
+                    DDimX,
+                    ddc::Deriv<DDimX::continuous_dimension_type>,
+                    DDimY>> const derivs {};
+    //! [instantiate intermediate chunks]
+
 
     //! [time iteration]
     for (auto const iter : time_domain.remove_first(ddc::DiscreteVector<DDimT>(1))) {

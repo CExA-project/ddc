@@ -178,6 +178,14 @@ void characteristics_advection_unitary(benchmark::State& state)
             spline_builder.batched_interpolation_domain(x_mesh),
             ddc::KokkosAllocator<ddc::Coordinate<X>, typename ExecSpace::memory_space>());
     ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
+    ddc::ChunkSpan<
+            double const,
+            ddc::StridedDiscreteDomain<
+                    DDimX<IsNonUniform, s_degree_x>,
+                    ddc::Deriv<typename DDimX<IsNonUniform, s_degree_x>::continuous_dimension_type>,
+                    DDimY>,
+            Kokkos::layout_right,
+            typename ExecSpace::memory_space> const derivs {};
 
     for (auto _ : state) {
         Kokkos::Profiling::pushRegion("FeetCharacteristics");
@@ -193,7 +201,7 @@ void characteristics_advection_unitary(benchmark::State& state)
                 });
         Kokkos::Profiling::popRegion();
         Kokkos::Profiling::pushRegion("SplineBuilder");
-        spline_builder(coef, density.span_cview());
+        spline_builder(coef, density.span_cview(), derivs.span_cview());
         Kokkos::Profiling::popRegion();
         Kokkos::Profiling::pushRegion("SplineEvaluator");
         spline_evaluator(density, feet_coords.span_cview(), coef.span_cview());

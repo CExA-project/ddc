@@ -149,8 +149,11 @@ void PeriodicitySplineBuilderTest()
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Instantiate empty chunk of derivatives
-    ddc::ChunkSpan<double const, ddc::StridedDiscreteDomain<DDim<X>, ddc::Deriv<X>>> const
-            derivs {};
+    ddc::ChunkSpan<
+            double const,
+            ddc::StridedDiscreteDomain<DDim<X>, ddc::Deriv<X>>,
+            Kokkos::layout_right,
+            MemorySpace> const derivs {};
 
     // Finally compute the spline by filling `coef`
     spline_builder(coef, vals.span_cview(), derivs.span_cview());

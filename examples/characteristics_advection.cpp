@@ -13,6 +13,7 @@
 #include <ddc/kernels/splines.hpp>
 
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Core_fwd.hpp>
 
 #define PERIODIC_DOMAIN // Comment this to run non-periodic simulation
 
@@ -234,10 +235,9 @@ int main(int argc, char** argv)
     // Instantiate empty derivative chunkspan
     ddc::ChunkSpan<
             double const,
-            ddc::StridedDiscreteDomain<
-                    DDimX,
-                    ddc::Deriv<DDimX::continuous_dimension_type>,
-                    DDimY>> const derivs {};
+            ddc::StridedDiscreteDomain<DDimX, ddc::Deriv<DDimX::continuous_dimension_type>, DDimY>,
+            Kokkos::layout_right,
+            ddc::DeviceAllocator<double>::memory_space> const derivs {};
     //! [instantiate intermediate chunks]
 
 

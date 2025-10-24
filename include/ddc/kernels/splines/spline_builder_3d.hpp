@@ -12,6 +12,7 @@
 #include <ddc/ddc.hpp>
 
 #include "spline_builder.hpp"
+#include "spline_builder_2d.hpp"
 
 namespace ddc {
 
@@ -52,30 +53,28 @@ public:
     using builder_type1 = ddc::
             SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, BcLower1, BcUpper1, Solver>;
 
-    /// @brief The type of the SplineBuilder used by this class to spline-approximate along second dimension.
-    using builder_type2 = ddc::
-            SplineBuilder<ExecSpace, MemorySpace, BSpline2, DDimI2, BcLower2, BcUpper2, Solver>;
-
-    /// @brief The type of the SplineBuilder used by this class to spline-approximate along third dimension.
-    using builder_type3 = ddc::
-            SplineBuilder<ExecSpace, MemorySpace, BSpline3, DDimI3, BcLower3, BcUpper3, Solver>;
-
-    /// @brief The type of the SplineBuilder used by this class to spline-approximate the second-dimension-derivatives along first dimension.
-    using builder_deriv_type1 = ddc::
-            SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, BcLower1, BcUpper1, Solver>;
-
-    /// @brief The type of the SplineBuilder used by this class to spline-approximate the third-dimension-derivatives along second dimension.
-    using builder_deriv_type2 = ddc::
-            SplineBuilder<ExecSpace, MemorySpace, BSpline2, DDimI2, BcLower2, BcUpper2, Solver>;
+    /// @brief The type of SplineBuilder used by this class to spline-approximate along the second and third dimensions.
+    using builder_type2d = ddc::SplineBuilder2D<
+            ExecSpace,
+            MemorySpace,
+            BSpline2,
+            BSpline3,
+            DDimI2,
+            DDimI3,
+            BcLower2,
+            BcUpper2,
+            BcLower3,
+            BcUpper3,
+            Solver>;
 
     /// @brief The type of the first interpolation continuous dimension.
     using continuous_dimension_type1 = typename builder_type1::continuous_dimension_type;
 
     /// @brief The type of the second interpolation continuous dimension.
-    using continuous_dimension_type2 = typename builder_type2::continuous_dimension_type;
+    using continuous_dimension_type2 = typename builder_type2d::continuous_dimension_type1;
 
     /// @brief The type of the third interpolation continuous dimension.
-    using continuous_dimension_type3 = typename builder_type3::continuous_dimension_type;
+    using continuous_dimension_type3 = typename builder_type2d::continuous_dimension_type2;
 
     /// @brief The type of the first interpolation discrete dimension.
     using interpolation_discrete_dimension_type1 =
@@ -83,29 +82,29 @@ public:
 
     /// @brief The type of the second interpolation discrete dimension.
     using interpolation_discrete_dimension_type2 =
-            typename builder_type2::interpolation_discrete_dimension_type;
+            typename builder_type2d::interpolation_discrete_dimension_type1;
 
     /// @brief The type of the third interpolation discrete dimension.
     using interpolation_discrete_dimension_type3 =
-            typename builder_type3::interpolation_discrete_dimension_type;
+            typename builder_type2d::interpolation_discrete_dimension_type2;
 
     /// @brief The type of the B-splines in the first dimension.
     using bsplines_type1 = typename builder_type1::bsplines_type;
 
     /// @brief The type of the B-splines in the second dimension.
-    using bsplines_type2 = typename builder_type2::bsplines_type;
+    using bsplines_type2 = typename builder_type2d::bsplines_type1;
 
     /// @brief The type of the B-splines in the third dimension.
-    using bsplines_type3 = typename builder_type3::bsplines_type;
+    using bsplines_type3 = typename builder_type2d::bsplines_type2;
 
     /// @brief The type of the Deriv domain on boundaries in the first dimension.
     using deriv_type1 = typename builder_type1::deriv_type;
 
     /// @brief The type of the Deriv domain on boundaries in the second dimension.
-    using deriv_type2 = typename builder_type2::deriv_type;
+    using deriv_type2 = typename builder_type2d::deriv_type1;
 
     /// @brief The type of the Deriv domain on boundaries in the third dimension.
-    using deriv_type3 = typename builder_type3::deriv_type;
+    using deriv_type3 = typename builder_type2d::deriv_type2;
 
     /// @brief The type of the domain for the interpolation mesh in the first dimension.
     using interpolation_domain_type1 =
@@ -113,11 +112,11 @@ public:
 
     /// @brief The type of the domain for the interpolation mesh in the second dimension.
     using interpolation_domain_type2 =
-            typename builder_type2::interpolation_discrete_dimension_type;
+            typename builder_type2d::interpolation_discrete_dimension_type1;
 
     /// @brief The type of the domain for the interpolation mesh in the third dimension.
     using interpolation_domain_type3 =
-            typename builder_type3::interpolation_discrete_dimension_type;
+            typename builder_type2d::interpolation_discrete_dimension_type2;
 
     /// @brief The type of the domain for the interpolation mesh in the 3D dimension.
     using interpolation_domain_type = ddc::DiscreteDomain<
@@ -186,8 +185,28 @@ public:
     template <
             class BatchedInterpolationDDom,
             class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
-    using batched_derivs_domain_type1 =
-            typename builder_type1::template batched_derivs_domain_type<BatchedInterpolationDDom>;
+    using batched_derivs_domain_type1 = ddc::replace_dim_of_t<
+            BatchedInterpolationDDom,
+            interpolation_discrete_dimension_type1,
+            deriv_type1>;
+
+    /**
+     * @brief The type of the whole Derivs domain (1D dimension of interest and cartesian
+     * product of 1D Deriv domain and batch domain) in the first dimension, to be passed as
+     * argument to the builder, preserving the underlying memory layout (order of dimensions).
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z,T> and dimensions of interest X, Y and Z,
+     * this is StridedDiscreteDomain<X, Deriv<X>, Y, Z, T>
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using whole_derivs_domain_type1 = detail::to_whole_derivs_domain_t<
+            ddc::detail::TypeSeq<interpolation_discrete_dimension_type1>,
+            ddc::detail::TypeSeq<deriv_type1>,
+            ddc::to_type_seq_t<BatchedInterpolationDDom>>;
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
@@ -207,6 +226,24 @@ public:
             deriv_type2>;
 
     /**
+     * @brief The type of the whole Derivs domain (1D dimension of interest and cartesian
+     * product of 1D Deriv domain and batch domain) in the second dimension, to be passed as
+     * argument to the builder, preserving the underlying memory layout (order of dimensions).
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z,T> and dimensions of interest X, Y and Z,
+     * this is StridedDiscreteDomain<Y, X, Deriv<Y>, Z, T>
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using whole_derivs_domain_type2 = detail::to_whole_derivs_domain_t<
+            ddc::detail::TypeSeq<interpolation_discrete_dimension_type2>,
+            ddc::detail::TypeSeq<deriv_type2>,
+            ddc::to_type_seq_t<BatchedInterpolationDDom>>;
+
+    /**
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
      * and the associated batch domain) in the third dimension, preserving the order of dimensions.
      *
@@ -222,6 +259,147 @@ public:
             BatchedInterpolationDDom,
             interpolation_discrete_dimension_type3,
             deriv_type3>;
+
+    /**
+     * @brief The type of the whole Derivs domain (1D dimension of interest and cartesian
+     * product of 1D Deriv domain and batch domain) in the third dimension, to be passed as
+     * argument to the builder, preserving the underlying memory layout (order of dimensions).
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z,T> and dimensions of interest X, Y and Z,
+     * this is StridedDiscreteDomain<Z, X, Y, Deriv<Z>, T>
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using whole_derivs_domain_type3 = detail::to_whole_derivs_domain_t<
+            ddc::detail::TypeSeq<interpolation_discrete_dimension_type3>,
+            ddc::detail::TypeSeq<deriv_type3>,
+            ddc::to_type_seq_t<BatchedInterpolationDDom>>;
+
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
+     * and the associated batch domain) in the first and second dimensions, preserving the order
+     * of dimensions.
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z,T> and dimensions of interest X, Y and Z,
+     * this is DiscreteDomain<Deriv<X>, Deriv<Y>, Z, T>.
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using batched_derivs_domain_type1_2 = ddc::replace_dim_of_t<
+            ddc::replace_dim_of_t<
+                    BatchedInterpolationDDom,
+                    interpolation_discrete_dimension_type1,
+                    deriv_type1>,
+            interpolation_domain_type2,
+            deriv_type2>;
+
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
+     * and the associated batch domain) in the first and second dimensions, to be passed
+     * as argument to the builder, preserving the order of dimensions.
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z,T> and dimensions of interest X, Y and Z,
+     * this is StridedDiscreteDomain<X, Y, Deriv<X>, Deriv<Y>, Z, T>
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using whole_derivs_domain_type1_2 = detail::to_whole_derivs_domain_t<
+            ddc::detail::TypeSeq<
+                    interpolation_discrete_dimension_type1,
+                    interpolation_discrete_dimension_type2>,
+            ddc::detail::TypeSeq<deriv_type1, deriv_type2>,
+            ddc::to_type_seq_t<BatchedInterpolationDDom>>;
+
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
+     * and the associated batch domain) in the second and third dimensions, preserving the order
+     * of dimensions.
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z,T> and dimensions of interest X, Y, and Z
+     * this is DiscreteDomain<X, Deriv<Y>, Deriv<Z>, T>.
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using batched_derivs_domain_type2_3 = ddc::replace_dim_of_t<
+            ddc::replace_dim_of_t<
+                    BatchedInterpolationDDom,
+                    interpolation_discrete_dimension_type2,
+                    deriv_type2>,
+            interpolation_domain_type3,
+            deriv_type3>;
+
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
+     * and the associated batch domain) in the second and third dimensions, to be passed
+     * as argument to the builder, preserving the order of dimensions.
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z,T> and dimensions of interest X, Y and Z,
+     * this is StridedDiscreteDomain<Y, Z, X, Deriv<Y>, Deriv<Z>, T>
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using whole_derivs_domain_type2_3 = detail::to_whole_derivs_domain_t<
+            ddc::detail::TypeSeq<
+                    interpolation_discrete_dimension_type2,
+                    interpolation_discrete_dimension_type3>,
+            ddc::detail::TypeSeq<deriv_type2, deriv_type3>,
+            ddc::to_type_seq_t<BatchedInterpolationDDom>>;
+
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
+     * and the associated batch domain) in the first and third dimensions, preserving the order
+     * of dimensions.
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z,T> and dimensions of interest X, Y, and Z
+     * this is DiscreteDomain<Deriv<X>, Y, Deriv<Z>, T>.
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using batched_derivs_domain_type1_3 = ddc::replace_dim_of_t<
+            ddc::replace_dim_of_t<
+                    BatchedInterpolationDDom,
+                    interpolation_discrete_dimension_type1,
+                    deriv_type1>,
+            interpolation_domain_type3,
+            deriv_type3>;
+
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 2D Deriv domain
+     * and the associated batch domain) in the first and third dimensions, to be passed
+     * as argument to the builder, preserving the order of dimensions.
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z,T> and dimensions of interest X, Y and Z,
+     * this is StridedDiscreteDomain<X, Z, Deriv<X>, Y, Deriv<Z>, T>
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using whole_derivs_domain_type1_3 = detail::to_whole_derivs_domain_t<
+            ddc::detail::TypeSeq<
+                    interpolation_discrete_dimension_type1,
+                    interpolation_discrete_dimension_type3>,
+            ddc::detail::TypeSeq<deriv_type1, deriv_type3>,
+            ddc::to_type_seq_t<BatchedInterpolationDDom>>;
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 3D Deriv domain
@@ -244,12 +422,30 @@ public:
                             interpolation_discrete_dimension_type3>,
                     ddc::detail::TypeSeq<deriv_type1, deriv_type2, deriv_type3>>>;
 
+    /**
+     * @brief The type of the whole Derivs domain (cartesian product of the 3D Deriv domain
+     * and the associated batch domain) to be passed as argument to the builder, preserving
+     * the order of dimensions.
+     *
+     * @tparam The batched discrete domain on which the interpolation points are defined.
+     *
+     * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z,T> and dimensions of interest X, Y and Z,
+     * this is StridedDiscreteDomain<X, Y, Z, Deriv<X>, Deriv<Y>, Deriv<Z>, T>
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    using whole_derivs_domain_type = detail::to_whole_derivs_domain_t<
+            ddc::detail::TypeSeq<
+                    interpolation_discrete_dimension_type1,
+                    interpolation_discrete_dimension_type2,
+                    interpolation_discrete_dimension_type3>,
+            ddc::detail::TypeSeq<deriv_type1, deriv_type2, deriv_type3>,
+            ddc::to_type_seq_t<BatchedInterpolationDDom>>;
+
 private:
     builder_type1 m_spline_builder1;
-    builder_type2 m_spline_builder2;
-    builder_type3 m_spline_builder3;
-    builder_deriv_type1 m_spline_builder_deriv1;
-    builder_deriv_type2 m_spline_builder_deriv2;
+    builder_type2d m_spline_builder2d;
 
 public:
     /**
@@ -273,10 +469,7 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_spline_builder1(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
-        , m_spline_builder2(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
-        , m_spline_builder3(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
-        , m_spline_builder_deriv1(interpolation_domain)
-        , m_spline_builder_deriv2(interpolation_domain)
+        , m_spline_builder2d(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
     {
     }
 
@@ -347,8 +540,7 @@ public:
                 interpolation_domain_type2,
                 interpolation_domain_type3>(
                 m_spline_builder1.interpolation_domain(),
-                m_spline_builder2.interpolation_domain(),
-                m_spline_builder3.interpolation_domain());
+                m_spline_builder2d.interpolation_domain());
     }
 
     /**
@@ -446,36 +638,22 @@ public:
      *      The coefficients of the spline computed by this SplineBuilder.
      * @param[in] vals
      *      The values of the function at the interpolation mesh.
-     * @param[in] derivs_min1
-     *      The values of the derivatives at the lower boundary in the first dimension.
-     * @param[in] derivs_max1
-     *      The values of the derivatives at the upper boundary in the first dimension.
-     * @param[in] derivs_min2
-     *      The values of the derivatives at the lower boundary in the second dimension.
-     * @param[in] derivs_max2
-     *      The values of the derivatives at the upper boundary in the second dimension.
-     * @param[in] derivs_min3
-     *      The values of the derivatives at the lower boundary in the third dimension.
-     * @param[in] derivs_max3
-     *      The values of the derivatives at the upper boundary in the third dimension.
-     * @param[in] mixed_derivs_min1_min2_min3
-     *      The values of the the cross-derivatives at the lower boundary in the first dimension, the lower boundary in the second dimension and the lower boundary in the third dimension.
-     * @param[in] mixed_derivs_max1_min2_min3
-     *      The values of the the cross-derivatives at the upper boundary in the first dimension, the lower boundary in the second dimension and the lower boundary in the third dimension.
-     * @param[in] mixed_derivs_min1_max2_min3
-     *      The values of the the cross-derivatives at the lower boundary in the first dimension, the upper boundary in the second dimension and the lower boundary in the third dimension.
-     * @param[in] mixed_derivs_max1_max2_min3
-     *      The values of the the cross-derivatives at the upper boundary in the first dimension, the upper boundary in the second dimension and the lower boundary in the third dimension.
-     * @param[in] mixed_derivs_min1_min2_max3
-     *      The values of the the cross-derivatives at the lower boundary in the first dimension, the lower boundary in the second dimension and the upper boundary in the third dimension.
-     * @param[in] mixed_derivs_max1_min2_max3
-     *      The values of the the cross-derivatives at the upper boundary in the first dimension, the lower boundary in the second dimension and the upper boundary in the third dimension.
-     * @param[in] mixed_derivs_min1_max2_max3
-     *      The values of the the cross-derivatives at the lower boundary in the first dimension, the upper boundary in the second dimension and the upper boundary in the third dimension.
-     * @param[in] mixed_derivs_max1_max2_max3
-     *      The values of the the cross-derivatives at the upper boundary in the first dimension, the upper boundary in the second dimension and the upper boundary in the third dimension.
+     * @param[in] derivs1
+     *      The values of the derivatives in the first dimension.
+     * @param[in] derivs2
+     *      The values of the derivatives in the second dimension.
+     * @param[in] derivs3
+     *      The values of the derivatives in the third dimension.
+     * @param[in] mixed_derivs1_2
+     *      The values of the the cross-derivatives in the first dimension and in the second dimension.
+     * @param[in] mixed_derivs2_3
+     *      The values of the the cross-derivatives in the second dimension and in the third dimension.
+     * @param[in] mixed_derivs1_3
+     *      The values of the the cross-derivatives in the first dimension and in the third dimension.
+     * @param[in] mixed_derivs1_2_3
+     *      The values of the the cross-derivatives in the first dimension, in the second dimension and in the third dimension.
      */
-    template <class Layout, class BatchedInterpolationDDom>
+    template <class Layout, class DerivsLayout, class BatchedInterpolationDDom>
     void operator()(
             ddc::ChunkSpan<
                     double,
@@ -483,90 +661,41 @@ public:
                     Layout,
                     memory_space> spline,
             ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
-            std::optional<ddc::ChunkSpan<
+            ddc::ChunkSpan<
                     double const,
-                    batched_derivs_domain_type1<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> derivs_min1
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
+                    whole_derivs_domain_type1<BatchedInterpolationDDom>,
+                    DerivsLayout,
+                    memory_space> derivs1,
+            ddc::ChunkSpan<
                     double const,
-                    batched_derivs_domain_type1<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> derivs_max1
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
+                    whole_derivs_domain_type2<BatchedInterpolationDDom>,
+                    DerivsLayout,
+                    memory_space> derivs2,
+            ddc::ChunkSpan<
                     double const,
-                    batched_derivs_domain_type2<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> derivs_min2
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
+                    whole_derivs_domain_type3<BatchedInterpolationDDom>,
+                    DerivsLayout,
+                    memory_space> derivs3,
+            ddc::ChunkSpan<
                     double const,
-                    batched_derivs_domain_type2<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> derivs_max2
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
+                    whole_derivs_domain_type1_2<BatchedInterpolationDDom>,
+                    DerivsLayout,
+                    memory_space> mixed_derivs1_2,
+            ddc::ChunkSpan<
                     double const,
-                    batched_derivs_domain_type3<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> derivs_min3
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
+                    whole_derivs_domain_type2_3<BatchedInterpolationDDom>,
+                    DerivsLayout,
+                    memory_space> mixed_derivs2_3,
+            ddc::ChunkSpan<
                     double const,
-                    batched_derivs_domain_type3<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> derivs_max3
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
+                    whole_derivs_domain_type1_3<BatchedInterpolationDDom>,
+                    DerivsLayout,
+                    memory_space> mixed_derivs1_3,
+            ddc::ChunkSpan<
                     double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> mixed_derivs_min1_min2_min3
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> mixed_derivs_max1_min2_min3
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> mixed_derivs_min1_max2_min3
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> mixed_derivs_max1_max2_min3
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> mixed_derivs_min1_min2_max3
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> mixed_derivs_max1_min2_max3
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> mixed_derivs_min1_max2_max3
-            = std::nullopt,
-            std::optional<ddc::ChunkSpan<
-                    double const,
-                    batched_derivs_domain_type<BatchedInterpolationDDom>,
-                    Layout,
-                    memory_space>> mixed_derivs_max1_max2_max3
-            = std::nullopt) const;
+                    whole_derivs_domain_type<BatchedInterpolationDDom>,
+                    DerivsLayout,
+                    memory_space> mixed_derivs1_2_3) const;
 };
 
 
@@ -586,7 +715,7 @@ template <
         ddc::BoundCond BcLower3,
         ddc::BoundCond BcUpper3,
         ddc::SplineSolver Solver>
-template <class Layout, class BatchedInterpolationDDom>
+template <class Layout, class DerivsLayout, class BatchedInterpolationDDom>
 void SplineBuilder3D<
         ExecSpace,
         MemorySpace,
@@ -610,80 +739,201 @@ operator()(
                 Layout,
                 memory_space> spline,
         ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
+        ddc::ChunkSpan<
                 double const,
-                batched_derivs_domain_type1<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> derivs_min1,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
+                whole_derivs_domain_type1<BatchedInterpolationDDom>,
+                DerivsLayout,
+                memory_space> derivs1,
+        ddc::ChunkSpan<
                 double const,
-                batched_derivs_domain_type1<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> derivs_max1,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
+                whole_derivs_domain_type2<BatchedInterpolationDDom>,
+                DerivsLayout,
+                memory_space> derivs2,
+        ddc::ChunkSpan<
                 double const,
-                batched_derivs_domain_type2<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> derivs_min2,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
+                whole_derivs_domain_type3<BatchedInterpolationDDom>,
+                DerivsLayout,
+                memory_space> derivs3,
+        ddc::ChunkSpan<
                 double const,
-                batched_derivs_domain_type2<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> derivs_max2,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
+                whole_derivs_domain_type1_2<BatchedInterpolationDDom>,
+                DerivsLayout,
+                memory_space> mixed_derivs1_2,
+        ddc::ChunkSpan<
                 double const,
-                batched_derivs_domain_type3<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> derivs_min3,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
+                whole_derivs_domain_type2_3<BatchedInterpolationDDom>,
+                DerivsLayout,
+                memory_space> mixed_derivs2_3,
+        ddc::ChunkSpan<
                 double const,
-                batched_derivs_domain_type3<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> derivs_max3,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
+                whole_derivs_domain_type1_3<BatchedInterpolationDDom>,
+                DerivsLayout,
+                memory_space> mixed_derivs1_3,
+        ddc::ChunkSpan<
                 double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> mixed_derivs_min1_min2_min3,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
-                double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> mixed_derivs_max1_min2_min3,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
-                double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> mixed_derivs_min1_max2_min3,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
-                double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> mixed_derivs_max1_max2_min3,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
-                double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> mixed_derivs_min1_min2_max3,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
-                double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> mixed_derivs_max1_min2_max3,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
-                double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> mixed_derivs_min1_max2_max3,
-        [[maybe_unused]] std::optional<ddc::ChunkSpan<
-                double const,
-                batched_derivs_domain_type<BatchedInterpolationDDom>,
-                Layout,
-                memory_space>> mixed_derivs_max1_max2_max3) const
+                whole_derivs_domain_type<BatchedInterpolationDDom>,
+                DerivsLayout,
+                memory_space> mixed_derivs1_2_3) const
 {
     auto const batched_interpolation_domain = vals.domain();
 
+    using ddim2 = interpolation_discrete_dimension_type2;
+    using ddim3 = interpolation_discrete_dimension_type3;
+    using detail::dmax;
+    using detail::dmin;
+
     assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
+
+    // Build the derivatives along the second dimension
+    auto const spline_batched_derivs2_domain = ddc::detail::get_whole_derivs_domain<deriv_type2>(
+            ddc::select<ddim2>(batched_interpolation_domain),
+            m_spline_builder1.batched_spline_domain(batched_interpolation_domain),
+            bsplines_type2::degree() / 2);
+
+    ddc::Chunk spline_derivs2_alloc(
+            spline_batched_derivs2_domain,
+            ddc::KokkosAllocator<double, MemorySpace>());
+    auto spline_derivs2 = spline_derivs2_alloc.span_view();
+
+    if constexpr (BcLower2 == ddc::BoundCond::HERMITE) {
+        auto const spline_derivs_min2_strided = detail::derivs(spline_derivs2, dmin<ddim2>);
+        auto const spline_derivs_min2
+                = detail::strided_to_discrete_domain_chunkspan(spline_derivs_min2_strided);
+
+        auto const derivs_min2_strided = detail::derivs(derivs2, dmin<ddim2>);
+        auto const derivs_min2 = detail::strided_to_discrete_domain_chunkspan(derivs_min2_strided);
+        m_spline_builder1(
+                spline_derivs_min2,
+                derivs_min2,
+                detail::derivs(mixed_derivs1_2, dmin<ddim2>));
+    }
+
+    if constexpr (BcUpper2 == ddc::BoundCond::HERMITE) {
+        auto const spline_derivs_max2_strided = detail::derivs(spline_derivs2, dmax<ddim2>);
+        auto const spline_derivs_max2
+                = detail::strided_to_discrete_domain_chunkspan(spline_derivs_max2_strided);
+
+        auto const derivs_max2_strided = detail::derivs(derivs2, dmax<ddim2>);
+        auto const derivs_max2 = detail::strided_to_discrete_domain_chunkspan(derivs_max2_strided);
+        m_spline_builder1(
+                spline_derivs_max2,
+                derivs_max2,
+                detail::derivs(mixed_derivs1_2, dmax<ddim2>));
+    }
+
+    // Build the derivatives along the third dimension
+    auto const spline_batched_derivs3_domain = ddc::detail::get_whole_derivs_domain<deriv_type3>(
+            ddc::select<ddim3>(batched_interpolation_domain),
+            m_spline_builder1.batched_spline_domain(batched_interpolation_domain),
+            bsplines_type3::degree() / 2);
+
+    ddc::Chunk spline_derivs3_alloc(
+            spline_batched_derivs3_domain,
+            ddc::KokkosAllocator<double, MemorySpace>());
+    auto spline_derivs3 = spline_derivs3_alloc.span_view();
+
+    if constexpr (BcLower3 == ddc::BoundCond::HERMITE) {
+        auto const spline_derivs_min3_strided = detail::derivs(spline_derivs3, dmin<ddim3>);
+        auto const spline_derivs_min3
+                = detail::strided_to_discrete_domain_chunkspan(spline_derivs_min3_strided);
+
+        auto const derivs_min3_strided = detail::derivs(derivs3, dmin<ddim3>);
+        auto const derivs_min3 = detail::strided_to_discrete_domain_chunkspan(derivs_min3_strided);
+        m_spline_builder1(
+                spline_derivs_min3,
+                derivs_min3,
+                detail::derivs(mixed_derivs1_3, dmin<ddim3>));
+    }
+
+    if constexpr (BcUpper3 == ddc::BoundCond::HERMITE) {
+        auto const spline_derivs_max3_strided = detail::derivs(spline_derivs3, dmax<ddim3>);
+        auto const spline_derivs_max3
+                = detail::strided_to_discrete_domain_chunkspan(spline_derivs_max3_strided);
+
+        auto const derivs_max3_strided = detail::derivs(derivs3, dmax<ddim3>);
+        auto const derivs_max3 = detail::strided_to_discrete_domain_chunkspan(derivs_max3_strided);
+        m_spline_builder1(
+                spline_derivs_max3,
+                derivs_max3,
+                detail::derivs(mixed_derivs1_3, dmax<ddim3>));
+    }
+
+    // Build the cross derivatives along the second and third dimensions
+    auto const spline_batched_derivs2_3_domain
+            = ddc::detail::get_whole_derivs_domain<deriv_type2, deriv_type3>(
+                    ddc::select<ddim2, ddim3>(batched_interpolation_domain),
+                    m_spline_builder1.batched_spline_domain(batched_interpolation_domain),
+                    bsplines_type2::degree() / 2,
+                    bsplines_type3::degree() / 2);
+
+    ddc::Chunk spline_derivs2_3_alloc(
+            spline_batched_derivs2_3_domain,
+            ddc::KokkosAllocator<double, MemorySpace>());
+    auto spline_derivs2_3 = spline_derivs2_3_alloc.span_view();
+
+    if constexpr (BcLower2 == ddc::BoundCond::HERMITE || BcLower3 == ddc::BoundCond::HERMITE) {
+        auto const spline_derivs_min2_min3_strided
+                = detail::derivs(spline_derivs2_3, dmin<ddim2>, dmin<ddim3>);
+        auto const spline_derivs_min2_min3
+                = detail::strided_to_discrete_domain_chunkspan(spline_derivs_min2_min3_strided);
+
+        auto const derivs_min2_min3_strided
+                = detail::derivs(mixed_derivs2_3, dmin<ddim2>, dmin<ddim3>);
+        auto const derivs_min2_min3
+                = detail::strided_to_discrete_domain_chunkspan(derivs_min2_min3_strided);
+        m_spline_builder1(
+                spline_derivs_min2_min3,
+                derivs_min2_min3,
+                detail::derivs(mixed_derivs1_2_3, dmin<ddim2>, dmin<ddim3>));
+    }
+
+    if constexpr (BcLower2 == ddc::BoundCond::HERMITE || BcUpper3 == ddc::BoundCond::HERMITE) {
+        auto const spline_derivs_min2_max3_strided
+                = detail::derivs(spline_derivs2_3, dmin<ddim2>, dmax<ddim3>);
+        auto const spline_derivs_min2_max3
+                = detail::strided_to_discrete_domain_chunkspan(spline_derivs_min2_max3_strided);
+
+        auto const derivs_min2_max3_strided
+                = detail::derivs(mixed_derivs2_3, dmin<ddim2>, dmax<ddim3>);
+        auto const derivs_min2_max3
+                = detail::strided_to_discrete_domain_chunkspan(derivs_min2_max3_strided);
+        m_spline_builder1(
+                spline_derivs_min2_max3,
+                derivs_min2_max3,
+                detail::derivs(mixed_derivs1_2_3, dmin<ddim2>, dmax<ddim3>));
+    }
+
+    if constexpr (BcUpper2 == ddc::BoundCond::HERMITE || BcLower3 == ddc::BoundCond::HERMITE) {
+        auto const spline_derivs_max2_min3_strided
+                = detail::derivs(spline_derivs2_3, dmax<ddim2>, dmin<ddim3>);
+        auto const spline_derivs_max2_min3
+                = detail::strided_to_discrete_domain_chunkspan(spline_derivs_max2_min3_strided);
+
+        auto const derivs_max2_min3_strided
+                = detail::derivs(mixed_derivs2_3, dmax<ddim2>, dmin<ddim3>);
+        auto const derivs_max2_min3
+                = detail::strided_to_discrete_domain_chunkspan(derivs_max2_min3_strided);
+        m_spline_builder1(
+                spline_derivs_max2_min3,
+                derivs_max2_min3,
+                detail::derivs(mixed_derivs1_2_3, dmax<ddim2>, dmin<ddim3>));
+    }
+
+    if constexpr (BcUpper2 == ddc::BoundCond::HERMITE || BcUpper3 == ddc::BoundCond::HERMITE) {
+        auto const spline_derivs_max2_max3_strided
+                = detail::derivs(spline_derivs2_3, dmax<ddim2>, dmax<ddim3>);
+        auto const spline_derivs_max2_max3
+                = detail::strided_to_discrete_domain_chunkspan(spline_derivs_max2_max3_strided);
+
+        auto const derivs_max2_max3_strided
+                = detail::derivs(mixed_derivs2_3, dmax<ddim2>, dmax<ddim3>);
+        auto const derivs_max2_max3
+                = detail::strided_to_discrete_domain_chunkspan(derivs_max2_max3_strided);
+        m_spline_builder1(
+                spline_derivs_max2_max3,
+                derivs_max2_max3,
+                detail::derivs(mixed_derivs1_2_3, dmax<ddim2>, dmax<ddim3>));
+    }
 
     // Spline1-approximate vals (to spline1)
     ddc::Chunk spline1_alloc(
@@ -691,18 +941,14 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const spline1 = spline1_alloc.span_view();
 
-    m_spline_builder1(spline1, vals);
+    m_spline_builder1(spline1, vals, derivs1);
 
-    // Spline2-approximate spline1 (to spline2)
-    ddc::Chunk spline2_alloc(
-            m_spline_builder2.batched_spline_domain(spline1.domain()),
-            ddc::KokkosAllocator<double, MemorySpace>());
-    ddc::ChunkSpan const spline2 = spline2_alloc.span_view();
-
-    m_spline_builder2(spline2, spline1.span_cview());
-
-    // Spline3-approximate spline2
-    m_spline_builder3(spline, spline2.span_cview());
+    m_spline_builder2d(
+            spline,
+            spline1.span_cview(),
+            spline_derivs2.span_cview(),
+            spline_derivs3.span_cview(),
+            spline_derivs2_3.span_cview());
 }
 
 } // namespace ddc

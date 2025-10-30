@@ -39,7 +39,7 @@ To use DDC core, one needs the following dependencies:
 
 * a C++17-compliant compiler
 * CMake 3.25...<4
-* Kokkos 4.4...<5
+* Kokkos 4.4...<6
 * (optional, micro benchmarking) Benchmark 1.8...<2
 * (optional, documentation) Doxygen 1.8.13...<2
 * (optional, unit-testing) GoogleTest 1.14...<2
@@ -52,7 +52,7 @@ To use DDC components, one needs the following dependencies:
   * PDI 1.6...<2
 * (optional, spline interpolation) DDC::splines
   * Ginkgo 1.8...<2
-  * Kokkos Kernels 4.5.1...<5
+  * Kokkos Kernels 4.5.1...<6
 
 ## Getting the code and basic configuration
 

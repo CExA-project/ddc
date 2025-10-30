@@ -115,7 +115,7 @@ var NAVTREEINDEX =
 "classddc_1_1ChunkSpan.html#a6c85ad4bb4fc9107708d2072ea9038fb",
 "classddc_1_1GrevilleInterpolationPoints.html#a3aabc690bfdb30f7edb997cc16dd27ff",
 "classddc_1_1SparseDiscreteDomain.html#a281dba260b09841003df9aa0dec2ea43",
-"classddc_1_1SplineBuilder3D.html#a45603227c4e97942975b4fc1c42399ce",
+"classddc_1_1SplineBuilder3D.html#a3dfb4dcfe92af8e09a7f462477699451",
 "classddc_1_1SplineEvaluator3D.html#a32635db86d79e4c6f4123596be049e75",
 "classddc_1_1UniformBSplines_1_1Impl.html#a2b3b80a14c5d0bed1f4ea38e71188a71",
 "namespaceddc.html#a38c84b63c494b0e01a5fcf79e41f95cc",

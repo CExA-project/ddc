@@ -54,7 +54,7 @@ public:
             SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, BcLower1, BcUpper1, Solver>;
 
     /// @brief The type of SplineBuilder used by this class to spline-approximate along the second and third dimensions.
-    using builder_type2d = ddc::SplineBuilder2D<
+    using builder_type_2_3 = ddc::SplineBuilder2D<
             ExecSpace,
             MemorySpace,
             BSpline2,
@@ -71,10 +71,10 @@ public:
     using continuous_dimension_type1 = typename builder_type1::continuous_dimension_type;
 
     /// @brief The type of the second interpolation continuous dimension.
-    using continuous_dimension_type2 = typename builder_type2d::continuous_dimension_type1;
+    using continuous_dimension_type2 = typename builder_type_2_3::continuous_dimension_type1;
 
     /// @brief The type of the third interpolation continuous dimension.
-    using continuous_dimension_type3 = typename builder_type2d::continuous_dimension_type2;
+    using continuous_dimension_type3 = typename builder_type_2_3::continuous_dimension_type2;
 
     /// @brief The type of the first interpolation discrete dimension.
     using interpolation_discrete_dimension_type1 =
@@ -82,29 +82,29 @@ public:
 
     /// @brief The type of the second interpolation discrete dimension.
     using interpolation_discrete_dimension_type2 =
-            typename builder_type2d::interpolation_discrete_dimension_type1;
+            typename builder_type_2_3::interpolation_discrete_dimension_type1;
 
     /// @brief The type of the third interpolation discrete dimension.
     using interpolation_discrete_dimension_type3 =
-            typename builder_type2d::interpolation_discrete_dimension_type2;
+            typename builder_type_2_3::interpolation_discrete_dimension_type2;
 
     /// @brief The type of the B-splines in the first dimension.
     using bsplines_type1 = typename builder_type1::bsplines_type;
 
     /// @brief The type of the B-splines in the second dimension.
-    using bsplines_type2 = typename builder_type2d::bsplines_type1;
+    using bsplines_type2 = typename builder_type_2_3::bsplines_type1;
 
     /// @brief The type of the B-splines in the third dimension.
-    using bsplines_type3 = typename builder_type2d::bsplines_type2;
+    using bsplines_type3 = typename builder_type_2_3::bsplines_type2;
 
     /// @brief The type of the Deriv domain on boundaries in the first dimension.
     using deriv_type1 = typename builder_type1::deriv_type;
 
     /// @brief The type of the Deriv domain on boundaries in the second dimension.
-    using deriv_type2 = typename builder_type2d::deriv_type1;
+    using deriv_type2 = typename builder_type_2_3::deriv_type1;
 
     /// @brief The type of the Deriv domain on boundaries in the third dimension.
-    using deriv_type3 = typename builder_type2d::deriv_type2;
+    using deriv_type3 = typename builder_type_2_3::deriv_type2;
 
     /// @brief The type of the domain for the interpolation mesh in the first dimension.
     using interpolation_domain_type1 =
@@ -112,11 +112,11 @@ public:
 
     /// @brief The type of the domain for the interpolation mesh in the second dimension.
     using interpolation_domain_type2 =
-            typename builder_type2d::interpolation_discrete_dimension_type1;
+            typename builder_type_2_3::interpolation_discrete_dimension_type1;
 
     /// @brief The type of the domain for the interpolation mesh in the third dimension.
     using interpolation_domain_type3 =
-            typename builder_type2d::interpolation_discrete_dimension_type2;
+            typename builder_type_2_3::interpolation_discrete_dimension_type2;
 
     /// @brief The type of the domain for the interpolation mesh in the 3D dimension.
     using interpolation_domain_type = ddc::DiscreteDomain<
@@ -310,7 +310,7 @@ public:
 
 private:
     builder_type1 m_spline_builder1;
-    builder_type2d m_spline_builder2d;
+    builder_type_2_3 m_spline_builder_2_3;
 
 public:
     /**
@@ -334,7 +334,7 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_spline_builder1(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
-        , m_spline_builder2d(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
+        , m_spline_builder_2_3(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
     {
     }
 
@@ -405,7 +405,7 @@ public:
                 interpolation_domain_type2,
                 interpolation_domain_type3>(
                 m_spline_builder1.interpolation_domain(),
-                m_spline_builder2d.interpolation_domain());
+                m_spline_builder_2_3.interpolation_domain());
     }
 
     /**
@@ -1050,7 +1050,7 @@ operator()(
 
     m_spline_builder1(spline1, vals, derivs_min1, derivs_max1);
 
-    m_spline_builder2d(
+    m_spline_builder_2_3(
             spline,
             spline1.span_cview(),
             spline_derivs_min2_opt,

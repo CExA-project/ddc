@@ -22,7 +22,8 @@ git clone --recurse-submodules --jobs 4 https://github.com/CExA-project/ddc.git
 cmake -D DDC_BUILD_KERNELS_FFT=OFF \
       -D DDC_BUILD_KERNELS_SPLINES=OFF \
       -D DDC_BUILD_PDI_WRAPPER=OFF \
-      -B ddc/build
+      -B ddc/build \
+      -S ddc
 cmake --build ddc/build --parallel 4
 ctest --test-dir ddc/build
 cmake --install ddc/build --prefix $HOME/.local/ddc

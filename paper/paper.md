@@ -24,13 +24,19 @@ authors:
   orcid: 0000-0002-3469-2338
   affiliation: 2
 
+- name: Baptiste Legouix
+  orcid: 0009-0006-7585-669X
+  affiliation: 3
+
 affiliations:
 
 - name: Université Paris-Saclay, UVSQ, CNRS, CEA, Maison de la Simulation, 91191, Gif-sur-Yvette, France
   index: 1
 - name: SCITAS, EPFL, CH-1015 Lausanne, Switzerland
   index: 2
-date: 03 April 2025
+- name: CEA, IRFM, 13108 Saint-Paul-lez-Durance Cedex, France
+  index: 3
+date: 31 October 2025
 bibliography: paper.bib
 
 ---

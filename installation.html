@@ -135,7 +135,8 @@ Quick Start (core features only)</h1>
 <div class="line">cmake -D DDC_BUILD_KERNELS_FFT=OFF \</div>
 <div class="line">      -D DDC_BUILD_KERNELS_SPLINES=OFF \</div>
 <div class="line">      -D DDC_BUILD_PDI_WRAPPER=OFF \</div>
-<div class="line">      -B ddc/build</div>
+<div class="line">      -B ddc/build \</div>
+<div class="line">      -S ddc</div>
 <div class="line">cmake --build ddc/build --parallel 4</div>
 <div class="line">ctest --test-dir ddc/build</div>
 <div class="line">cmake --install ddc/build --prefix $HOME/.local/ddc</div>

@@ -93,10 +93,10 @@ Add and install DDC with default variants:
 
 ```bash
 spack --env ddc-env add ddc
-spack --env ddc-env install
+spack --env ddc-env install --jobs 1
 ```
 
-\note Installation may take some time, as Spack builds required dependencies from source.
+\note Installation can take a while since Spack builds dependencies from source. Use the `--jobs` option to run builds in parallel, but avoid setting it too high to prevent running out of memory.
 
 ### 4. Use DDC from Spack
 

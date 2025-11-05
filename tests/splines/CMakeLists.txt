@@ -239,6 +239,39 @@ foreach(bc "periodic" "greville" "hermite")
     endforeach()
 endforeach()
 
+foreach(bc "periodic" "greville" "hermite")
+    foreach(evaluator "polynomial")
+        foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")
+            foreach(bsplines_type "uniform" "non_uniform")
+                string(TOUPPER "bc_${bc}" bc_macro)
+                string(TOUPPER "evaluator_${evaluator}" evaluator_macro)
+                string(TOUPPER "degree=${degree}" degree_macro)
+                string(TOUPPER "bsplines_type_${bsplines_type}" bsplines_type_macro)
+                set(test_filename "batched_nd_spline_builder")
+                set(test_name
+                    "${test_filename}_tests_degree_${degree}_${bsplines_type}_${evaluator}_${bc}"
+                )
+
+                add_executable("${test_name}" "${test_filename}.cpp")
+                target_compile_definitions(
+                    "${test_name}"
+                    PRIVATE
+                        -D${bc_macro}
+                        -D${evaluator_macro}
+                        -D${degree_macro}
+                        -D${bsplines_type_macro}
+                )
+                target_compile_features("${test_name}" PRIVATE cxx_std_17)
+                target_link_libraries(
+                    "${test_name}"
+                    PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
+                )
+                gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
+            endforeach()
+        endforeach()
+    endforeach()
+endforeach()
+
 foreach(solver "ginkgo" "lapack")
     foreach(bc "periodic" "greville" "hermite")
         foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")

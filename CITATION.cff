@@ -1,3 +1,6 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
 cff-version: "1.2.0"
 authors:
 - family-names: Padioleau

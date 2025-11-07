@@ -27,7 +27,7 @@
 #endif
 #include "spline_error_bounds.hpp"
 
-inline namespace anonymous_namespace_workaround_batched_3d_spline_builder_cpp {
+inline namespace anonymous_namespace_workaround_batched_nd_spline_builder_cpp {
 
 #if defined(BC_PERIODIC)
 struct DimX
@@ -174,7 +174,7 @@ template <
         typename DDimI2,
         typename DDimI3,
         typename... DDims>
-void Batched3dSplineTest()
+void BatchedNdSplineTest()
 {
     using I1 = typename DDimI1::continuous_dimension_type;
     using I2 = typename DDimI2::continuous_dimension_type;
@@ -1117,25 +1117,25 @@ void Batched3dSplineTest()
 
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator
-            .template deriv<I1>(spline_eval_deriv1, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator
-            .template deriv<I2>(spline_eval_deriv2, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator
-            .template deriv<I3>(spline_eval_deriv3, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv<
+    spline_evaluator.template deriv<ddc::detail::TypeSeq<
+            I1>>(spline_eval_deriv1, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator.template deriv<ddc::detail::TypeSeq<
+            I2>>(spline_eval_deriv2, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator.template deriv<ddc::detail::TypeSeq<
+            I3>>(spline_eval_deriv3, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator.template deriv<ddc::detail::TypeSeq<
             I1,
-            I2>(spline_eval_deriv12, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv<
+            I2>>(spline_eval_deriv12, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator.template deriv<ddc::detail::TypeSeq<
             I2,
-            I3>(spline_eval_deriv23, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv<
+            I3>>(spline_eval_deriv23, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator.template deriv<ddc::detail::TypeSeq<
             I1,
-            I3>(spline_eval_deriv13, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv<
+            I3>>(spline_eval_deriv13, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator.template deriv<ddc::detail::TypeSeq<
             I1,
             I2,
-            I3>(spline_eval_deriv123, coords_eval.span_cview(), coef.span_cview());
+            I3>>(spline_eval_deriv123, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors (we recover the initial values)
     double const max_norm_error = ddc::parallel_transform_reduce(
@@ -1324,7 +1324,7 @@ void Batched3dSplineTest()
                         5e-10 * max_norm_diff123));
 }
 
-} // namespace anonymous_namespace_workaround_batched_3d_spline_builder_cpp
+} // namespace anonymous_namespace_workaround_batched_nd_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
 #    define SUFFIX(name) name##Periodic##Uniform
@@ -1340,9 +1340,9 @@ void Batched3dSplineTest()
 #    define SUFFIX(name) name##Hermite##NonUniform
 #endif
 
-TEST(SUFFIX(Batched3dSplineHost), 3DXYZ)
+TEST(SUFFIX(BatchedNdSplineHost), 3DXYZ)
 {
-    Batched3dSplineTest<
+    BatchedNdSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1353,9 +1353,9 @@ TEST(SUFFIX(Batched3dSplineHost), 3DXYZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(Batched3dSplineDevice), 3DXYZ)
+TEST(SUFFIX(BatchedNdSplineDevice), 3DXYZ)
 {
-    Batched3dSplineTest<
+    BatchedNdSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1366,9 +1366,9 @@ TEST(SUFFIX(Batched3dSplineDevice), 3DXYZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(Batched3dSplineHost), 4DXYZB)
+TEST(SUFFIX(BatchedNdSplineHost), 4DXYZB)
 {
-    Batched3dSplineTest<
+    BatchedNdSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1380,9 +1380,9 @@ TEST(SUFFIX(Batched3dSplineHost), 4DXYZB)
             DDimBatch>();
 }
 
-TEST(SUFFIX(Batched3dSplineHost), 4DXBYZ)
+TEST(SUFFIX(BatchedNdSplineHost), 4DXBYZ)
 {
-    Batched3dSplineTest<
+    BatchedNdSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1394,9 +1394,9 @@ TEST(SUFFIX(Batched3dSplineHost), 4DXBYZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(Batched3dSplineHost), 4DXYBZ)
+TEST(SUFFIX(BatchedNdSplineHost), 4DXYBZ)
 {
-    Batched3dSplineTest<
+    BatchedNdSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1408,9 +1408,9 @@ TEST(SUFFIX(Batched3dSplineHost), 4DXYBZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(Batched3dSplineHost), 4DBXYZ)
+TEST(SUFFIX(BatchedNdSplineHost), 4DBXYZ)
 {
-    Batched3dSplineTest<
+    BatchedNdSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,

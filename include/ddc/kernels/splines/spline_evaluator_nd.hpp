@@ -604,7 +604,7 @@ public:
      * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
      * the differentiation is performed with the ND set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
-     * @tparam InterestDims Dimensions along which differentiation is performed.
+     * @tparam InterestDims A TypeSeq conatining the dimensions along which differentiation is performed.
      * @param[out] spline_eval The derivatives of the ND spline function at the desired coordinates. For practical reasons those are
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
      * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
@@ -614,7 +614,7 @@ public:
      * @param[in] spline_coef A ChunkSpan storing the ND spline coefficients.
      */
     template <
-            class... InterestDims,
+            class InterestDims,
             class Layout1,
             class Layout2,
             class Layout3,
@@ -634,10 +634,8 @@ public:
                     Layout3,
                     memory_space> const spline_coef) const
     {
-        using interest_dims_ts = ddc::detail::TypeSeq<InterestDims...>;
-
         static_assert(ddc::type_seq_contains_v<
-                      interest_dims_ts,
+                      InterestDims,
                       ddc::detail::TypeSeq<continuous_dimension_type<Idx>...>>);
 
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
@@ -659,7 +657,7 @@ public:
                                 spline_eval_ND(i) = eval_no_bc<std::conditional_t<
                                         ddc::in_tags_v<
                                                 continuous_dimension_type<Idx>,
-                                                interest_dims_ts>,
+                                                InterestDims>,
                                         eval_deriv_type,
                                         eval_type>...>(coords_eval_ND(i), spline_coef_ND);
                             });

@@ -1,0 +1,45 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Padioleau
+  given-names: Thomas
+  orcid: "https://orcid.org/0000-0001-5496-0013"
+- family-names: Bigot
+  given-names: Julien
+  orcid: "https://orcid.org/0000-0002-0015-4304"
+- family-names: Bourne
+  given-names: Emily
+  orcid: "https://orcid.org/0000-0002-3469-2338"
+- family-names: Legouix
+  given-names: Baptiste
+  orcid: "https://orcid.org/0009-0006-7585-669X"
+doi: 10.5281/zenodo.17511922
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Padioleau
+    given-names: Thomas
+    orcid: "https://orcid.org/0000-0001-5496-0013"
+  - family-names: Bigot
+    given-names: Julien
+    orcid: "https://orcid.org/0000-0002-0015-4304"
+  - family-names: Bourne
+    given-names: Emily
+    orcid: "https://orcid.org/0000-0002-3469-2338"
+  - family-names: Legouix
+    given-names: Baptiste
+    orcid: "https://orcid.org/0009-0006-7585-669X"
+  date-published: 2025-11-06
+  doi: 10.21105/joss.09122
+  issn: 2475-9066
+  issue: 115
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 9122
+  title: "DDC: The Discrete Domain Computation library"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.09122"
+  volume: 10
+title: "DDC: The Discrete Domain Computation library"
+

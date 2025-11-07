@@ -11,6 +11,7 @@ SPDX-License-Identifier: MIT
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nightly early integration](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yaml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yaml)
 [![Pages](https://github.com/CExA-project/ddc/actions/workflows/pages.yaml/badge.svg)](https://github.com/CExA-project/ddc/actions/workflows/pages.yaml)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.09122/status.svg)](https://doi.org/10.21105/joss.09122)
 
 See <https://ddc.mdls.fr/>
 

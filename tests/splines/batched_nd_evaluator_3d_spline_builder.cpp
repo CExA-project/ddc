@@ -27,7 +27,7 @@
 #endif
 #include "spline_error_bounds.hpp"
 
-inline namespace anonymous_namespace_workaround_batched_nd_spline_builder_cpp {
+inline namespace anonymous_namespace_workaround_batched_nd_evaluator_3d_spline_builder_cpp {
 
 #if defined(BC_PERIODIC)
 struct DimX
@@ -1067,18 +1067,17 @@ void BatchedNdSplineTest()
             ddc::detail::TypeSeq<DDimI1, DDimI2, DDimI3>,
             ddc::detail::TypeSeq<
                     extrapolation_rule_1_type,
-                    extrapolation_rule_2_type,
-                    extrapolation_rule_3_type>,
-            ddc::detail::TypeSeq<
                     extrapolation_rule_1_type,
                     extrapolation_rule_2_type,
+                    extrapolation_rule_2_type,
+                    extrapolation_rule_3_type,
                     extrapolation_rule_3_type>> const
             spline_evaluator(
                     extrapolation_rule_1,
-                    extrapolation_rule_2,
-                    extrapolation_rule_3,
                     extrapolation_rule_1,
                     extrapolation_rule_2,
+                    extrapolation_rule_2,
+                    extrapolation_rule_3,
                     extrapolation_rule_3);
 
     // Instantiate chunk of coordinates of dom_interpolation
@@ -1319,7 +1318,7 @@ void BatchedNdSplineTest()
                         5e-10 * max_norm_diff123));
 }
 
-} // namespace anonymous_namespace_workaround_batched_nd_spline_builder_cpp
+} // namespace anonymous_namespace_workaround_batched_nd_evaluator_3d_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
 #    define SUFFIX(name) name##Periodic##Uniform

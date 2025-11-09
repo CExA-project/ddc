@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <cstddef>
 #include <functional>
 #include <map>
@@ -234,7 +235,7 @@ KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
 {
     // This function requires that `ddc::init_discrete_space<DDim>(...);` be called first
     if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
-        assert(is_discrete_space_initialized<DDim>());
+        KOKKOS_ASSERT(is_discrete_space_initialized<DDim>());
         return detail::g_discrete_space_dual<DDim>->get_host();
     }
 #if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)

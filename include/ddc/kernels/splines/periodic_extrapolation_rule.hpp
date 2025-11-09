@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include <cassert>
-
+#include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>
 
 namespace ddc {
@@ -18,7 +17,7 @@ struct PeriodicExtrapolationRule
     template <class CoordType, class ChunkSpan>
     KOKKOS_FUNCTION double operator()(CoordType, ChunkSpan) const
     {
-        assert("PeriodicExtrapolationRule::operator() should never be called");
+        KOKKOS_ASSERT("PeriodicExtrapolationRule::operator() should never be called");
 
         return 0.;
     }

@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <cassert>
 #include <cstddef>
 #include <iterator>
 #include <tuple>
@@ -193,12 +192,14 @@ public:
     template <class... ODDims>
     KOKKOS_FUNCTION constexpr auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
     {
-        assert(((DiscreteElement<ODDims>(m_element_begin)
-                 <= DiscreteElement<ODDims>(odomain.m_element_begin))
-                && ...));
-        assert(((DiscreteElement<ODDims>(m_element_end)
-                 >= DiscreteElement<ODDims>(odomain.m_element_end))
-                && ...));
+        KOKKOS_ASSERT(
+                ((DiscreteElement<ODDims>(m_element_begin)
+                  <= DiscreteElement<ODDims>(odomain.m_element_begin))
+                 && ...));
+        KOKKOS_ASSERT(
+                ((DiscreteElement<ODDims>(m_element_end)
+                  >= DiscreteElement<ODDims>(odomain.m_element_end))
+                 && ...));
         DiscreteVector<DDims...> const myextents = extents();
         DiscreteVector<ODDims...> const oextents = odomain.extents();
         return DiscreteDomain(

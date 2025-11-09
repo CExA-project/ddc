@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <cassert>
 #include <cstddef>
 #include <iterator>
 #include <tuple>
@@ -247,7 +246,7 @@ public:
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        assert(contains(delems...));
+        KOKKOS_ASSERT(contains(delems...));
         return DiscreteVector<DDims...>(
                 ((DiscreteElement<DDims>(take<DDims>(delems...))
                   - DiscreteElement<DDims>(m_element_begin))

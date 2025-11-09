@@ -195,11 +195,11 @@ public:
         KOKKOS_ASSERT(
                 ((DiscreteElement<ODDims>(m_element_begin)
                   <= DiscreteElement<ODDims>(odomain.m_element_begin))
-                 && ...));
+                 && ...))
         KOKKOS_ASSERT(
                 ((DiscreteElement<ODDims>(m_element_end)
                   >= DiscreteElement<ODDims>(odomain.m_element_end))
-                 && ...));
+                 && ...))
         DiscreteVector<DDims...> const myextents = extents();
         DiscreteVector<ODDims...> const oextents = odomain.extents();
         return DiscreteDomain(

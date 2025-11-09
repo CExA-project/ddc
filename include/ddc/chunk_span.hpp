@@ -234,7 +234,7 @@ public:
         for (std::size_t i = 0; i < SupportType::rank(); ++i) {
             KOKKOS_ASSERT(
                     allocation_mdspan.extent(i)
-                    == static_cast<std::size_t>(detail::array(domain.extents())[i]));
+                    == static_cast<std::size_t>(detail::array(domain.extents())[i]))
         }
     }
 
@@ -272,7 +272,7 @@ public:
     {
         using detail::TypeSeq;
         using QueryDDom = typename detail::RebindDomain<SupportType, TypeSeq<QueryDDims...>>::type;
-        KOKKOS_ASSERT(QueryDDom(this->m_domain).contains(slice_spec));
+        KOKKOS_ASSERT((QueryDDom(this->m_domain).contains(slice_spec)))
         slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(
                 this->allocation_mdspan(),
@@ -313,7 +313,7 @@ public:
         KOKKOS_ASSERT(
                 odomain.empty()
                 || (DiscreteDomain<QueryDDims...>(this->m_domain).contains(odomain.front())
-                    && DiscreteDomain<QueryDDims...>(this->m_domain).contains(odomain.back())));
+                    && DiscreteDomain<QueryDDims...>(this->m_domain).contains(odomain.back())))
         slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(this->allocation_mdspan(), odomain, this->m_domain);
         using layout_type = typename decltype(subview)::layout_type;
@@ -350,7 +350,7 @@ public:
         static_assert(
                 SupportType::rank() == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
-        KOKKOS_ASSERT(this->m_domain.contains(delems...));
+        KOKKOS_ASSERT((this->m_domain.contains(delems...)))
         return DDC_MDSPAN_ACCESS_OP(
                 this->m_allocation_mdspan,
                 detail::array(this->m_domain.distance_from_front(delems...)));

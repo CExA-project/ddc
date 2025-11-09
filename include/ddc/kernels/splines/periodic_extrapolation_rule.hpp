@@ -17,7 +17,7 @@ struct PeriodicExtrapolationRule
     template <class CoordType, class ChunkSpan>
     KOKKOS_FUNCTION double operator()(CoordType, ChunkSpan) const
     {
-        KOKKOS_ASSERT("PeriodicExtrapolationRule::operator() should never be called");
+        KOKKOS_ASSERT(("PeriodicExtrapolationRule::operator() should never be called"))
 
         return 0.;
     }

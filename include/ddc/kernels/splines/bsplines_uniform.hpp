@@ -201,7 +201,7 @@ public:
         KOKKOS_INLINE_FUNCTION discrete_element_type
         eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x) const
         {
-            KOKKOS_ASSERT(values.size() == degree() + 1);
+            KOKKOS_ASSERT((values.size() == degree() + 1))
             return eval_basis(values, x, degree());
         }
 
@@ -388,7 +388,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
                 ddc::Coordinate<CDim> const& x,
                 [[maybe_unused]] std::size_t const degree) const
 {
-    KOKKOS_ASSERT(values.size() == degree + 1);
+    KOKKOS_ASSERT((values.size() == degree + 1))
 
     double offset;
     int jmin;
@@ -421,7 +421,7 @@ template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
         Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<CDim> const& x) const
 {
-    KOKKOS_ASSERT(derivs.size() == degree() + 1);
+    KOKKOS_ASSERT((derivs.size() == degree() + 1))
 
     double offset;
     int jmin;
@@ -477,12 +477,12 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     double offset;
     int jmin;
 
-    KOKKOS_ASSERT(x - rmin() >= -length() * 1e-14);
-    KOKKOS_ASSERT(rmax() - x >= -length() * 1e-14);
-    // KOKKOS_ASSERT(n >= 0); as long as n is unsigned
-    KOKKOS_ASSERT(n <= degree());
-    KOKKOS_ASSERT(derivs.extent(0) == 1 + degree());
-    KOKKOS_ASSERT(derivs.extent(1) == 1 + n);
+    KOKKOS_ASSERT((x - rmin() >= -length() * 1e-14))
+    KOKKOS_ASSERT((rmax() - x >= -length() * 1e-14))
+    // KOKKOS_ASSERT((n >= 0)) as long as n is unsigned
+    KOKKOS_ASSERT((n <= degree()))
+    KOKKOS_ASSERT((derivs.extent(0) == 1 + degree()))
+    KOKKOS_ASSERT((derivs.extent(1) == 1 + n))
 
     // 1. Compute cell index 'icell' and x_offset
     // 2. Compute index range of B-splines with support over cell 'icell'
@@ -561,8 +561,8 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::g
         double& offset,
         ddc::Coordinate<CDim> const& x) const
 {
-    KOKKOS_ASSERT(x - rmin() >= -length() * 1e-14);
-    KOKKOS_ASSERT(rmax() - x >= -length() * 1e-14);
+    KOKKOS_ASSERT((x - rmin() >= -length() * 1e-14))
+    KOKKOS_ASSERT((rmax() - x >= -length() * 1e-14))
 
     double const inv_dx = inv_step();
     if (x <= rmin()) {

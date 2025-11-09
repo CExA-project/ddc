@@ -220,7 +220,7 @@ protected:
         , m_domain(domain)
     {
         // Handle the case where an allocation of size 0 returns a nullptr.
-        KOKKOS_ASSERT(domain.empty() || ((ptr != nullptr) && !domain.empty()));
+        KOKKOS_ASSERT(domain.empty() || ((ptr != nullptr) && !domain.empty()))
     }
 
     /** Constructs a new ChunkCommon by copy, yields a new view to the same data

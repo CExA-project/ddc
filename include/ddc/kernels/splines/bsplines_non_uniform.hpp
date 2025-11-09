@@ -450,22 +450,22 @@ template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
         Impl<DDim, MemorySpace>::eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x) const
 {
-    assert(values.size() == D + 1);
+    KOKKOS_ASSERT((values.size() == D + 1))
 
     std::array<double, degree()> left;
     std::array<double, degree()> right;
 
-    assert(x - rmin() >= -length() * 1e-14);
-    assert(rmax() - x >= -length() * 1e-14);
-    assert(values.size() == degree() + 1);
+    KOKKOS_ASSERT((x - rmin() >= -length() * 1e-14))
+    KOKKOS_ASSERT((rmax() - x >= -length() * 1e-14))
+    KOKKOS_ASSERT((values.size() == degree() + 1))
 
     // 1. Compute cell index 'icell'
     ddc::DiscreteElement<knot_discrete_dimension_type> const icell = find_cell_start(x);
 
-    assert(icell >= m_break_point_domain.front());
-    assert(icell <= m_break_point_domain.back());
-    assert(ddc::coordinate(icell) - x <= length() * 1e-14);
-    assert(x - ddc::coordinate(icell + 1) <= length() * 1e-14);
+    KOKKOS_ASSERT((icell >= m_break_point_domain.front()))
+    KOKKOS_ASSERT((icell <= m_break_point_domain.back()))
+    KOKKOS_ASSERT((ddc::coordinate(icell) - x <= length() * 1e-14))
+    KOKKOS_ASSERT((x - ddc::coordinate(icell + 1) <= length() * 1e-14))
 
     // 2. Compute values of B-splines with support over cell 'icell'
     double temp;
@@ -493,17 +493,17 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     std::array<double, degree()> left;
     std::array<double, degree()> right;
 
-    assert(x - rmin() >= -length() * 1e-14);
-    assert(rmax() - x >= -length() * 1e-14);
-    assert(derivs.size() == degree() + 1);
+    KOKKOS_ASSERT((x - rmin() >= -length() * 1e-14))
+    KOKKOS_ASSERT((rmax() - x >= -length() * 1e-14))
+    KOKKOS_ASSERT((derivs.size() == degree() + 1))
 
     // 1. Compute cell index 'icell'
     ddc::DiscreteElement<knot_discrete_dimension_type> const icell = find_cell_start(x);
 
-    assert(icell >= m_break_point_domain.front());
-    assert(icell <= m_break_point_domain.back());
-    assert(ddc::coordinate(icell) <= x);
-    assert(ddc::coordinate(icell + 1) >= x);
+    KOKKOS_ASSERT((icell >= m_break_point_domain.front()))
+    KOKKOS_ASSERT((icell <= m_break_point_domain.back()))
+    KOKKOS_ASSERT((ddc::coordinate(icell) <= x))
+    KOKKOS_ASSERT((ddc::coordinate(icell + 1) >= x))
 
     // 2. Compute values of derivatives of B-splines with support over cell 'icell'
 
@@ -563,20 +563,20 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree() + 1, degree() + 1>> const ndu(
             ndu_ptr.data());
 
-    assert(x - rmin() >= -length() * 1e-14);
-    assert(rmax() - x >= -length() * 1e-14);
-    // assert(n >= 0); as long as n is unsigned
-    assert(n <= degree());
-    assert(derivs.extent(0) == 1 + degree());
-    assert(derivs.extent(1) == 1 + n);
+    KOKKOS_ASSERT((x - rmin() >= -length() * 1e-14))
+    KOKKOS_ASSERT((rmax() - x >= -length() * 1e-14))
+    // KOKKOS_ASSERT((n >= 0)) as long as n is unsigned
+    KOKKOS_ASSERT((n <= degree()))
+    KOKKOS_ASSERT((derivs.extent(0) == 1 + degree()))
+    KOKKOS_ASSERT((derivs.extent(1) == 1 + n))
 
     // 1. Compute cell index 'icell' and x_offset
     ddc::DiscreteElement<knot_discrete_dimension_type> const icell = find_cell_start(x);
 
-    assert(icell >= m_break_point_domain.front());
-    assert(icell <= m_break_point_domain.back());
-    assert(ddc::coordinate(icell) <= x);
-    assert(ddc::coordinate(icell + 1) >= x);
+    KOKKOS_ASSERT((icell >= m_break_point_domain.front()))
+    KOKKOS_ASSERT((icell <= m_break_point_domain.back()))
+    KOKKOS_ASSERT((ddc::coordinate(icell) <= x))
+    KOKKOS_ASSERT((ddc::coordinate(icell + 1) >= x))
 
     // 2. Compute nonzero basis functions and knot differences for splines
     //    up to degree (degree-1) which are needed to compute derivative
@@ -658,8 +658,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUn
         CDim,
         D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<CDim> const& x) const
 {
-    assert(x - rmin() >= -length() * 1e-14);
-    assert(rmax() - x >= -length() * 1e-14);
+    KOKKOS_ASSERT((x - rmin() >= -length() * 1e-14))
+    KOKKOS_ASSERT((rmax() - x >= -length() * 1e-14))
 
     if (x <= rmin()) {
         return m_break_point_domain.front();

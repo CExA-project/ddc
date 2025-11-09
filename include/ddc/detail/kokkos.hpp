@@ -175,7 +175,7 @@ KOKKOS_FUNCTION auto build_mdspan(
         Kokkos::View<DataType, Properties...> const view,
         std::index_sequence<Is...>)
 {
-    assert(is_kokkos_layout_compatible(view));
+    KOKKOS_ASSERT((is_kokkos_layout_compatible(view)))
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
     using element_type = kokkos_to_mdspan_element_t<DataType>;
     using extents_type = Kokkos::dextents<std::size_t, Kokkos::View<DataType, Properties...>::rank>;

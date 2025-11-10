@@ -200,7 +200,6 @@ public:
                   detail::convert_array_to<
                           DiscreteElementType>(values, std::make_index_sequence<sizeof...(Tags)>()))
     {
-        static_assert(std::is_convertible_v<IntegerType, DiscreteElementType>);
     }
 
     template <

@@ -5,6 +5,7 @@ var classddc_1_1DiscreteVector =
     [ "DiscreteVector", "classddc_1_1DiscreteVector.html#a9045137fe082813dfc071f9ca15b4bc8", null ],
     [ "DiscreteVector", "classddc_1_1DiscreteVector.html#af8e0b6074c1b563ede2626d7e1503248", null ],
     [ "DiscreteVector", "classddc_1_1DiscreteVector.html#a95f40c21e2567a501e447d0588f3b374", null ],
+    [ "DiscreteVector", "classddc_1_1DiscreteVector.html#a92306f4c2ffc5ae71306d7ee3fc1811b", null ],
     [ "DiscreteVector", "classddc_1_1DiscreteVector.html#af73b8f2c3a806e472ff21507e3e3ed5d", null ],
     [ "~DiscreteVector", "classddc_1_1DiscreteVector.html#a39f496c7cb108bfd1fbea0a63765fac3", null ],
     [ "operator=", "classddc_1_1DiscreteVector.html#af8f929d7b9589a21c255c18f5afb6f07", null ],

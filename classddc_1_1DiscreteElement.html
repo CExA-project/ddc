@@ -137,7 +137,7 @@ Collaboration diagram for ddc::DiscreteElement&lt; Tags &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classddc_1_1DiscreteElement__coll__graph.png" border="0" usemap="#addc_1_1DiscreteElement_3_01Tags_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="addc_1_1DiscreteElement_3_01Tags_01_4_coll__map" id="addc_1_1DiscreteElement_3_01Tags_01_4_coll__map">
-<area shape="rect" title="A DiscreteElement identifies an element of the discrete dimension." alt="" coords="5,5,163,485"/>
+<area shape="rect" title="A DiscreteElement identifies an element of the discrete dimension." alt="" coords="5,5,163,505"/>
 </map>
 </div>
 <table class="memberdecls">
@@ -157,6 +157,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a89e6f84fc49cf4431e78c8ff2604ebb1" id="r_a89e6f84fc49cf4431e78c8ff2604ebb1"><td class="memTemplParams" colspan="2">template&lt;class... DElems, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;(is_discrete_element_v&lt;DElems&gt; &amp;&amp; ...)&gt;&gt; </td></tr>
 <tr class="memitem:a89e6f84fc49cf4431e78c8ff2604ebb1"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteElement.html#a89e6f84fc49cf4431e78c8ff2604ebb1">DiscreteElement</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DElems</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;... <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">delems</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="separator:a89e6f84fc49cf4431e78c8ff2604ebb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f8bfa0952d5706606f33b56156e5bcd" id="r_a2f8bfa0952d5706606f33b56156e5bcd"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">IntegerType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;std::is_convertible_v&lt;IntegerType, DiscreteElementType&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a2f8bfa0952d5706606f33b56156e5bcd"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteElement.html#a2f8bfa0952d5706606f33b56156e5bcd">DiscreteElement</a> (std::array&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">IntegerType</a>, sizeof...(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tags</a>)&gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;values) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="separator:a2f8bfa0952d5706606f33b56156e5bcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6776e89752caf2077e70f690502a5e5" id="r_af6776e89752caf2077e70f690502a5e5"><td class="memTemplParams" colspan="2">template&lt;class... Params, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;(!is_discrete_element_v&lt;Params&gt; &amp;&amp; ...)&gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;(std::is_convertible_v&lt;Params, DiscreteElementType&gt; &amp;&amp; ...)&gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;sizeof...(Params) == sizeof...(Tags)&gt;&gt; </td></tr>
 <tr class="memitem:af6776e89752caf2077e70f690502a5e5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1DiscreteElement.html#af6776e89752caf2077e70f690502a5e5">DiscreteElement</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Params</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;... <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">params</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="separator:af6776e89752caf2077e70f690502a5e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -213,7 +216,7 @@ Static Public Member Functions</h2></td></tr>
 class ddc::DiscreteElement&lt; Tags &gt;</div><p>A <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> identifies an element of the discrete dimension. </p>
 <p>Each one is tagged by its associated dimensions. </p>
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00159">159</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00160">160</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ab489330d3e21db64ec61d3743c570546" name="ab489330d3e21db64ec61d3743c570546"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab489330d3e21db64ec61d3743c570546">&#9670;&#160;</a></span>value_type</h2>
@@ -229,13 +232,13 @@ template&lt;class... Tags&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00173">173</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00174">174</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aae48d441289e8e21b6584903647e9c77" name="aae48d441289e8e21b6584903647e9c77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae48d441289e8e21b6584903647e9c77">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[1/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aae48d441289e8e21b6584903647e9c77">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -262,7 +265,7 @@ template&lt;class... Tags&gt; </div>
 </div>
 </div>
 <a id="a6e9396f1eb1143642d65de2088ad4c76" name="a6e9396f1eb1143642d65de2088ad4c76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e9396f1eb1143642d65de2088ad4c76">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[2/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e9396f1eb1143642d65de2088ad4c76">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[2/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -290,7 +293,7 @@ template&lt;class... Tags&gt; </div>
 </div>
 </div>
 <a id="af7be21f66a058dedbbb16898529357ed" name="af7be21f66a058dedbbb16898529357ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af7be21f66a058dedbbb16898529357ed">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[3/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af7be21f66a058dedbbb16898529357ed">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[3/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -318,7 +321,7 @@ template&lt;class... Tags&gt; </div>
 </div>
 </div>
 <a id="a89e6f84fc49cf4431e78c8ff2604ebb1" name="a89e6f84fc49cf4431e78c8ff2604ebb1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89e6f84fc49cf4431e78c8ff2604ebb1">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[4/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a89e6f84fc49cf4431e78c8ff2604ebb1">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -345,12 +348,44 @@ template&lt;class... DElems, <a class="el" href="namespaceddc.html#a70f12a43ed0a
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00188">188</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00189">189</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a2f8bfa0952d5706606f33b56156e5bcd" name="a2f8bfa0952d5706606f33b56156e5bcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f8bfa0952d5706606f33b56156e5bcd">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... Tags&gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">IntegerType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;std::is_convertible_v&lt;IntegerType, DiscreteElementType&gt;&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1DiscreteElement.html">ddc::DiscreteElement</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tags</a> &gt;::DiscreteElement </td>
+          <td>(</td>
+          <td class="paramtype">std::array&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">IntegerType</a>, sizeof...(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tags</a>)&gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>values</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00197">197</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
 <a id="af6776e89752caf2077e70f690502a5e5" name="af6776e89752caf2077e70f690502a5e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6776e89752caf2077e70f690502a5e5">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[5/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af6776e89752caf2077e70f690502a5e5">&#9670;&#160;</a></span>DiscreteElement() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -377,7 +412,7 @@ template&lt;class... Params, <a class="el" href="namespaceddc.html#a70f12a43ed0a
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00198">198</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00210">210</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -434,7 +469,7 @@ template&lt;class... Tags&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00175">175</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00176">176</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -521,7 +556,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00210">210</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00222">222</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -552,7 +587,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00217">217</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00229">229</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -583,7 +618,7 @@ template&lt;std::size_t N = sizeof...(Tags)&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00224">224</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00236">236</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -614,7 +649,7 @@ template&lt;std::size_t N = sizeof...(Tags)&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00230">230</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00242">242</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -645,7 +680,7 @@ template&lt;std::size_t N = sizeof...(Tags), <a class="el" href="namespaceddc.ht
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00236">236</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00248">248</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -677,7 +712,7 @@ template&lt;std::size_t N = sizeof...(Tags), <a class="el" href="namespaceddc.ht
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00243">243</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00255">255</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -708,7 +743,7 @@ template&lt;std::size_t N = sizeof...(Tags), <a class="el" href="namespaceddc.ht
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00251">251</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00263">263</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -740,7 +775,7 @@ template&lt;std::size_t N = sizeof...(Tags), <a class="el" href="namespaceddc.ht
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00258">258</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00270">270</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -772,7 +807,7 @@ template&lt;class... OTags&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00266">266</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00278">278</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -804,7 +839,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00278">278</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00290">290</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -836,7 +871,7 @@ template&lt;class... OTags&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00285">285</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00297">297</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>
@@ -868,7 +903,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00297">297</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__element_8hpp_source.html#l00309">309</a> of file <a class="el" href="discrete__element_8hpp_source.html">discrete_element.hpp</a>.</p>
 
 </div>
 </div>

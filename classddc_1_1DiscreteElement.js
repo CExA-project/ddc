@@ -5,6 +5,7 @@ var classddc_1_1DiscreteElement =
     [ "DiscreteElement", "classddc_1_1DiscreteElement.html#a6e9396f1eb1143642d65de2088ad4c76", null ],
     [ "DiscreteElement", "classddc_1_1DiscreteElement.html#af7be21f66a058dedbbb16898529357ed", null ],
     [ "DiscreteElement", "classddc_1_1DiscreteElement.html#a89e6f84fc49cf4431e78c8ff2604ebb1", null ],
+    [ "DiscreteElement", "classddc_1_1DiscreteElement.html#a2f8bfa0952d5706606f33b56156e5bcd", null ],
     [ "DiscreteElement", "classddc_1_1DiscreteElement.html#af6776e89752caf2077e70f690502a5e5", null ],
     [ "~DiscreteElement", "classddc_1_1DiscreteElement.html#a293505e9414c9901ecfecd6bb8cac68b", null ],
     [ "operator=", "classddc_1_1DiscreteElement.html#ab5ff44dfae4fc04a643937cb85fc5d58", null ],

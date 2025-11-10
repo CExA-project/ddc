@@ -113,13 +113,13 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classddc_1_1ChunkSpan.html#a6c85ad4bb4fc9107708d2072ea9038fb",
-"classddc_1_1GrevilleInterpolationPoints.html#a3aabc690bfdb30f7edb997cc16dd27ff",
-"classddc_1_1SparseDiscreteDomain.html#a281dba260b09841003df9aa0dec2ea43",
-"classddc_1_1SplineBuilder3D.html#a3dfb4dcfe92af8e09a7f462477699451",
-"classddc_1_1SplineEvaluator3D.html#a32635db86d79e4c6f4123596be049e75",
-"classddc_1_1UniformBSplines_1_1Impl.html#a2b3b80a14c5d0bed1f4ea38e71188a71",
-"namespaceddc.html#a38c84b63c494b0e01a5fcf79e41f95cc",
-"structddc_1_1StridedDiscreteDomainIterator.html#a7095a9f16bfaabeac4731f523b70f908"
+"classddc_1_1DiscreteVector.html#afb3c8c9ab49ebd9923116eda48657037",
+"classddc_1_1SparseDiscreteDomain.html#a20f0cff53d1c5f29d52e96a7b86272bb",
+"classddc_1_1SplineBuilder3D.html#a302c715f12851b09c304dcdb7719e3bc",
+"classddc_1_1SplineEvaluator3D.html#a21c2945c44806faea7b16c3dd71026a2",
+"classddc_1_1UniformBSplines_1_1Impl.html#a1027ba57ec532f30acea8614c4b016bd",
+"namespaceddc.html#a36c0210a850dde0979ad8b5772ee730ca7015270b41ffefb4e67d40c8bd451a4d",
+"structddc_1_1StridedDiscreteDomainIterator.html#a5680b51c8923c8ac278c13620ae75897"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -35,6 +35,47 @@ using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
 
 } // namespace anonymous_namespace_workaround_discrete_vector_cpp
 
+TEST(DiscreteVectorXZTest, ValueConstructor)
+{
+    DVectXZ const ixz {};
+    EXPECT_EQ(ixz.get<DDimX>(), ddc::DiscreteVectorElement());
+    EXPECT_EQ(ixz.get<DDimZ>(), ddc::DiscreteVectorElement());
+}
+
+TEST(DiscreteVectorXZTest, ConstructorFromIntegersWithoutConversion)
+{
+    ddc::DiscreteVectorElement const dv_x = 7;
+    ddc::DiscreteVectorElement const dv_z = 13;
+    DVectXZ const ixz(dv_x, dv_z);
+    EXPECT_EQ(ixz.get<DDimX>(), dv_x);
+    EXPECT_EQ(ixz.get<DDimZ>(), dv_z);
+}
+
+TEST(DiscreteVectorXZTest, ConstructorFromIntegersWithConversion)
+{
+    short const dv_x = 7;
+    short const dv_z = 13;
+    DVectXZ const ixz(dv_x, dv_z);
+    EXPECT_EQ(ixz.get<DDimX>(), dv_x);
+    EXPECT_EQ(ixz.get<DDimZ>(), dv_z);
+}
+
+TEST(DiscreteVectorXZTest, ConstructorFromArrayWithoutConversion)
+{
+    std::array<ddc::DiscreteVectorElement, 2> const dvs {7, 13};
+    DVectXZ const ixz(dvs);
+    EXPECT_EQ(ixz.get<DDimX>(), dvs[0]);
+    EXPECT_EQ(ixz.get<DDimZ>(), dvs[1]);
+}
+
+TEST(DiscreteVectorXZTest, ConstructorFromArrayWithConversion)
+{
+    std::array<short, 2> const dvs {7, 13};
+    DVectXZ const ixz(dvs);
+    EXPECT_EQ(ixz.get<DDimX>(), dvs[0]);
+    EXPECT_EQ(ixz.get<DDimZ>(), dvs[1]);
+}
+
 TEST(DiscreteVectorXYZTest, ConstructorFromDiscreteVectors)
 {
     ddc::DiscreteVectorElement const dv_x = 7;

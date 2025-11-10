@@ -14,6 +14,7 @@
 
 #include "detail/macros.hpp"
 #include "detail/type_seq.hpp"
+#include "detail/utils.hpp"
 
 #include "discrete_vector.hpp"
 
@@ -188,6 +189,18 @@ public:
     KOKKOS_FUNCTION constexpr explicit DiscreteElement(DElems const&... delems) noexcept
         : m_values {take<Tags>(delems...).template uid<Tags>()...}
     {
+    }
+
+    template <
+            class IntegerType,
+            class = std::enable_if_t<std::is_convertible_v<IntegerType, DiscreteElementType>>>
+    KOKKOS_FUNCTION constexpr explicit DiscreteElement(
+            std::array<IntegerType, sizeof...(Tags)> const& values) noexcept
+        : m_values(
+                  detail::convert_array_to<
+                          DiscreteElementType>(values, std::make_index_sequence<sizeof...(Tags)>()))
+    {
+        static_assert(std::is_convertible_v<IntegerType, DiscreteElementType>);
     }
 
     template <

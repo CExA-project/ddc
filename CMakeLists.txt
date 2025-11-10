@@ -140,6 +140,7 @@ target_sources(
                 include/ddc/detail/tagged_vector.hpp
                 include/ddc/detail/type_seq.hpp
                 include/ddc/detail/type_traits.hpp
+                include/ddc/detail/utils.hpp
                 include/ddc/aligned_allocator.hpp
                 include/ddc/chunk.hpp
                 include/ddc/chunk_common.hpp

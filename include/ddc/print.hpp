@@ -10,10 +10,11 @@
 #include <ostream>
 #include <sstream>
 #include <type_traits>
+#include <typeinfo>
 #include <utility>
 
 #include "chunk_span.hpp"
-#include "discrete_domain.hpp"
+#include "discrete_vector.hpp"
 
 #if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
 #    include <cxxabi.h>
@@ -259,49 +260,43 @@ public:
     }
 };
 
-#if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
-template <class Type>
-void print_demangled_type_name(std::ostream& os)
+inline void print_demangled_type_name(std::ostream& os, char const* const mangled_name)
 {
+#if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
     int status;
 
-    std::unique_ptr<char, decltype(std::free)*> const demangled_name(
-            abi::__cxa_demangle(typeid(Type).name(), nullptr, nullptr, &status),
-            std::free);
+    std::unique_ptr<char, decltype(std::free)*> const
+            demangled_name(abi::__cxa_demangle(mangled_name, nullptr, nullptr, &status), std::free);
     if (status != 0) {
         os << "Error demangling dimension name: " << status;
         return;
     }
 
     os << demangled_name.get();
-}
 #else
-template <class Type>
-void print_demangled_type_name(std::ostream& os)
-{
-    os << typeid(Type).name();
-}
+    os << mangled_name;
 #endif
+}
 
-inline void print_dim_name(std::ostream& os, DiscreteDomain<> const)
+inline void print_single_dim_name(
+        std::ostream& os,
+        std::type_info const& dim,
+        DiscreteVectorElement const size)
+{
+    print_demangled_type_name(os, dim.name());
+    os << '(' << size << ')';
+}
+
+inline void print_dim_name(std::ostream& os, DiscreteVector<> const&)
 {
     os << "Scalar";
 }
 
-template <class Dim>
-void print_dim_name(std::ostream& os, DiscreteDomain<Dim> const dd)
+template <class Dim0, class... Dims>
+void print_dim_name(std::ostream& os, DiscreteVector<Dim0, Dims...> const& dd)
 {
-    print_demangled_type_name<Dim>(os);
-    os << '(' << dd.size() << ')';
-}
-
-template <class Dim0, class Dim1, class... Dims>
-void print_dim_name(std::ostream& os, DiscreteDomain<Dim0, Dim1, Dims...> const dd)
-{
-    print_demangled_type_name<Dim0>(os);
-    DiscreteDomain<Dim1, Dims...> const smaller_dd(dd);
-    os << '(' << dd.size() / smaller_dd.size() << ")×";
-    print_dim_name(os, smaller_dd);
+    print_single_dim_name(os, typeid(Dim0), get<Dim0>(dd));
+    ((os << "×", print_single_dim_name(os, typeid(Dims), get<Dims>(dd))), ...);
 }
 
 } // namespace detail
@@ -339,9 +334,9 @@ std::ostream& print_type_info(
         std::ostream& os,
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
-    ddc::detail::print_dim_name(os, chunk_span.domain());
+    ddc::detail::print_dim_name(os, chunk_span.extents());
     os << '\n';
-    ddc::detail::print_demangled_type_name<decltype(chunk_span)>(os);
+    ddc::detail::print_demangled_type_name(os, typeid(chunk_span).name());
     os << '\n';
 
     return os;

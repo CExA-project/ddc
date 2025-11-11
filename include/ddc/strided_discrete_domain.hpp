@@ -224,22 +224,20 @@ public:
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        auto const test1
-                = ((DiscreteElement<DDims>(take<DDims>(delems...))
-                    >= DiscreteElement<DDims>(m_element_begin))
-                   && ...);
-        auto const test2
-                = ((DiscreteElement<DDims>(take<DDims>(delems...))
-                    < (DiscreteElement<DDims>(m_element_begin)
-                       + DiscreteVector<DDims>(m_extents) * DiscreteVector<DDims>(m_strides)))
-                   && ...);
-        auto const test3
-                = ((((DiscreteElement<DDims>(take<DDims>(delems...))
-                      - DiscreteElement<DDims>(m_element_begin))
-                     % DiscreteVector<DDims>(m_strides))
-                    == 0)
-                   && ...);
-        return test1 && test2 && test3;
+        auto const contains_1d = [](DiscreteElementType const i,
+                                    DiscreteElementType const b,
+                                    DiscreteVectorElement const n,
+                                    DiscreteVectorElement const s) {
+            return (i >= b) && (i < (b + (n - 1) * s + 1)) && ((i - b) % s == 0);
+        };
+        // GCOVR_EXCL_BR_START
+        return (contains_1d(
+                        DiscreteElement<DDims>(take<DDims>(delems...)).uid(),
+                        DiscreteElement<DDims>(m_element_begin).uid(),
+                        DiscreteVector<DDims>(m_extents).value(),
+                        DiscreteVector<DDims>(m_strides).value())
+                && ...);
+        // GCOVR_EXCL_BR_STOP
     }
 
     template <class... DElems>

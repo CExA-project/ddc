@@ -283,12 +283,14 @@ public:
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
+        // GCOVR_EXCL_BR_START
         return (detail::binary_search(
                         get<DDims>(m_views).data(),
                         get<DDims>(m_views).data() + get<DDims>(m_views).size(),
                         uid<DDims>(take<DDims>(delems...)),
                         std::less {})
                 && ...);
+        // GCOVR_EXCL_BR_STOP
     }
 
     template <class... DElems>

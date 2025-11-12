@@ -367,8 +367,9 @@ public:
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::for_each(
                             evaluation_domain_type<Idx...>(spline_eval.domain()),
-                            [=](typename evaluation_domain_type<Idx...>::discrete_element_type const
-                                        i) {
+                            [=,
+                             *this](typename evaluation_domain_type<
+                                    Idx...>::discrete_element_type const i) {
                                 spline_eval_ND(i) = eval(coords_eval_ND(i), spline_coef_ND);
                             });
                 });
@@ -754,7 +755,7 @@ public:
                 std::is_same_v<batch_domain_type<BatchedDDom>, BatchedDDom>,
                 "The integrals domain must only contain the batch dimensions");
 
-        batch_domain_type<BatchedDDom> batch_domain(integrals.domain());
+        batch_domain_type<BatchedDDom> const batch_domain(integrals.domain());
         auto values_alloc = std::make_tuple(
                 ddc::
                         Chunk(ddc::DiscreteDomain<bsplines_type<Idx>>(spline_coef.domain()),
@@ -847,9 +848,11 @@ private:
         (update_coord_eval<Idx>(coord_eval), ...);
 
         double res = 0.;
-        bool needs_extrap = (... || check_needs_extrapolation<Idx>(coord_eval, spline_coef, res));
+        // We rely on short circuit here. If we need to extrapolate on one of the dims, `res` will be set and `check_needs_extrapolation` will return true.
+        bool const needs_extrapolation
+                = (... || check_needs_extrapolation<Idx>(coord_eval, spline_coef, res));
 
-        if (needs_extrap) {
+        if (needs_extrapolation) {
             return res;
         }
 
@@ -962,6 +965,18 @@ struct SplineEvaluatorNDHelper<
 
 } // namespace detail
 
+/**
+ * @brief A class to evaluate, differentiate or integrate a spline function of arbitrary dimension.
+ *
+ * A class which contains an operator () which can be used to evaluate, differentiate or integrate a spline function of arbitrary dimension.
+ *
+ * @tparam Args... The template parameters of the evaluator:
+ * - ExecSpace The Kokkos execution space on which the spline evaluation is performed.
+ * - MemorySpace The Kokkos memory space on which the data (spline coefficients and evaluation) is stored.
+ * - BSplines A TypeSeq containing the N discrete dimensions representing the B-splines along the dimensions of interest.
+ * - EvaluationDDim A TypeSeq containing the discrete dimensions on which evaluation points are defined.
+ * - ExtrapolationRule A TypeSeq containing the lower and upper extrapolation rules along each dimension of interest.
+ */
 template <typename... Args>
 using SplineEvaluatorND = typename detail::SplineEvaluatorNDHelper<Args...>::type;
 

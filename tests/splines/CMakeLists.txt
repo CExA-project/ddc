@@ -189,7 +189,11 @@ foreach(BC "BC_PERIODIC" "BC_GREVILLE" "BC_HERMITE")
                 set(test_name
                     "Nd_evaluator_splines_tests_3d_BATCHED_DEGREE_${DEGREE}_${BSPLINES_TYPE}_${EVALUATOR}_${BC}"
                 )
-                add_executable("${test_name}" ../main.cpp batched_nd_evaluator_3d_spline_builder.cpp)
+                add_executable(
+                    "${test_name}"
+                    ../main.cpp
+                    batched_nd_evaluator_3d_spline_builder.cpp
+                )
                 target_compile_definitions(
                     "${test_name}"
                     PUBLIC -DDEGREE=${DEGREE} -D${BSPLINES_TYPE} -D${EVALUATOR} -D${BC}

@@ -296,6 +296,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
                     src/ddc/kernels/splines/spline_evaluator.hpp
                     src/ddc/kernels/splines/spline_evaluator_2d.hpp
                     src/ddc/kernels/splines/spline_evaluator_3d.hpp
+                    src/ddc/kernels/splines/spline_evaluator_nd.hpp
                     src/ddc/kernels/splines/spline_traits.hpp
                     src/ddc/kernels/splines/splines_linear_problem.hpp
                     src/ddc/kernels/splines/splines_linear_problem_2x2_blocks.hpp

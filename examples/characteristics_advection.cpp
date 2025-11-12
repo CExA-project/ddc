@@ -13,6 +13,7 @@
 #include <ddc/kernels/splines.hpp>
 
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Core_fwd.hpp>
 
 #define PERIODIC_DOMAIN // Comment this to run non-periodic simulation
 
@@ -230,6 +231,13 @@ int main(int argc, char** argv)
             spline_builder.batched_interpolation_domain(x_mesh),
             ddc::DeviceAllocator<ddc::Coordinate<X>>());
     ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
+
+    // Instantiate empty derivative chunkspan
+    ddc::ChunkSpan<
+            double const,
+            ddc::StridedDiscreteDomain<DDimX, ddc::Deriv<DDimX::continuous_dimension_type>, DDimY>,
+            Kokkos::layout_right,
+            ddc::DeviceAllocator<double>::memory_space> const derivs {};
     //! [instantiate intermediate chunks]
 
 
@@ -255,7 +263,7 @@ int main(int argc, char** argv)
                                      - ddc::Coordinate<X>(vx * ddc::step<DDimT>());
                 });
         // Interpolate the values at feet on the grid
-        spline_builder(coef, last_density.span_cview());
+        spline_builder(coef, last_density.span_cview(), derivs.span_cview());
         spline_evaluator(next_density, feet_coords.span_cview(), coef.span_cview());
         //! [numerical scheme]
 

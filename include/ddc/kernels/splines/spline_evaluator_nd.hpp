@@ -413,8 +413,9 @@ public:
 
                     ddc::for_each(
                             evaluation_domain_type<Idx...>(spline_eval.domain()),
-                            [=](typename evaluation_domain_type<Idx...>::discrete_element_type const
-                                        i) {
+                            [=,
+                             *this](typename evaluation_domain_type<
+                                    Idx...>::discrete_element_type const i) {
                                 ddc::Coordinate<continuous_dimension_type<Idx>...> coord_eval_ND(
                                         ddc::coordinate(i));
                                 spline_eval_ND(i) = eval(coord_eval_3D(i), spline_coef_ND);
@@ -506,7 +507,8 @@ public:
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::for_each(
                             evaluation_domain_type<Idx...>(spline_eval.domain()),
-                            [=](typename ddc::DiscreteDomain<
+                            [=,
+                             *this](typename ddc::DiscreteDomain<
                                     evaluation_domain_type<Idx>...>::discrete_element_type i) {
                                 spline_eval_ND(i)
                                         = eval_no_bc<ddc::detail::TypeSeq<std::conditional_t<
@@ -558,7 +560,8 @@ public:
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::for_each(
                             evaluation_domain_type<Idx...>(spline_eval.domain()),
-                            [=](typename ddc::DiscreteDomain<
+                            [=,
+                             *this](typename ddc::DiscreteDomain<
                                     evaluation_domain_type<Idx>...>::discrete_element_type i) {
                                 ddc::Coordinate<continuous_dimension_type<Idx>...> coord_eval_ND(
                                         ddc::coordinate(i));
@@ -660,8 +663,9 @@ public:
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::for_each(
                             evaluation_domain_type<Idx...>(spline_eval.domain()),
-                            [=](typename evaluation_domain_type<Idx...>::discrete_element_type const
-                                        i) {
+                            [=,
+                             *this](typename evaluation_domain_type<
+                                    Idx...>::discrete_element_type const i) {
                                 spline_eval_ND(i)
                                         = eval_no_bc<ddc::detail::TypeSeq<std::conditional_t<
                                                 ddc::in_tags_v<
@@ -714,8 +718,9 @@ public:
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::for_each(
                             evaluation_domain_type<Idx...>(spline_eval.domain()),
-                            [=](typename evaluation_domain_type<Idx...>::discrete_element_type const
-                                        i) {
+                            [=,
+                             *this](typename evaluation_domain_type<
+                                    Idx...>::discrete_element_type const i) {
                                 ddc::Coordinate<continuous_dimension_type<Idx>...> coord_eval_ND(
                                         ddc::coordinate(i));
                                 spline_eval_ND(i)

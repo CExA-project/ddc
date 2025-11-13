@@ -66,11 +66,31 @@ private:
 
     static constexpr std::size_t dimension = sizeof...(Idx);
 
-    template <std::size_t I, std::size_t... Others>
-    static constexpr bool index_seq_contains()
+    template <auto I, typename Seq>
+    struct integer_sequence_contains;
+
+    template <typename U, U I, typename T, T... Ints>
+    struct integer_sequence_contains<I, std::integer_sequence<T, Ints...>>
     {
-        return ((I == Others) || ...);
-    }
+        static constexpr bool value = ((I == Ints) || ...);
+    };
+
+    template <auto I, typename IntegerSeq>
+    static constexpr bool integer_sequence_contains_v
+            = integer_sequence_contains<I, IntegerSeq>::value;
+
+    template <typename T>
+    struct is_integer_sequence : public std::false_type
+    {
+    };
+
+    template <typename T, T... idx>
+    struct is_integer_sequence<std::integer_sequence<T, idx...>> : public std::true_type
+    {
+    };
+
+    template <typename T>
+    static constexpr bool is_integer_sequence_v = is_integer_sequence<T>::value;
 
 public:
     /// @brief The type of the Ith evaluation continuous dimension used by this class.
@@ -429,23 +449,28 @@ public:
      * The spline coefficients represent a ND spline function defined on a B-splines (basis splines). They can be
      * obtained via various methods, such as using a SplineBuilderND.
      *
+     * @tparam DerivDims A std::integer_sequence containing the indices of the dimensions which should be differentiated.
+     *
      * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the ND spline coefficients.
      *
      * @return The derivative of the spline function at the desired coordinate.
      */
-    template <
-            std::size_t... DerivDims,
-            class Layout,
-            class... CoordsDims> // FIXME: make DerivDims non-variadic
+    template <class DerivDims, class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv_dim_I(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
             ddc::ChunkSpan<double const, spline_domain_type<Idx...>, Layout, memory_space> const
                     spline_coef) const
     {
-        static_assert(sizeof...(DerivDims) > 0 && sizeof...(DerivDims) <= dimension);
+        // TODO: we could add some other static asserts (the indices should be unique,
+        // they should be in the interval [0, dimension[)
+        static_assert(
+                is_integer_sequence_v<DerivDims>,
+                "DerivDims should be a std::[index|integer]_sequence holding the dimensions which "
+                "should be differentiated");
+        static_assert(DerivDims::size() > 0 && DerivDims::size() <= dimension);
         return eval_no_bc<ddc::detail::TypeSeq<std::conditional_t<
-                index_seq_contains<Idx, DerivDims...>(),
+                integer_sequence_contains_v<Idx, DerivDims>,
                 eval_deriv_type,
                 eval_type>...>>(coord_eval, spline_coef);
     }
@@ -460,7 +485,7 @@ public:
      * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
      * the differentiation is performed with the ND set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
-     * @tparam DerivDims The dimensions which should be differentiated.
+     * @tparam DerivDims A std::integer_sequence containing the dimensions which should be differentiated.
      *
      * @param[out] spline_eval The derivatives of the ND spline function at the desired coordinates. For practical reasons those are
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
@@ -473,12 +498,12 @@ public:
      * @param[in] spline_coef A ChunkSpan storing the ND spline coefficients.
      */
     template <
-            std::size_t... DerivDims,
+            class DerivDims,
             class Layout1,
             class Layout2,
             class Layout3,
             class BatchedInterpolationDDom,
-            class... CoordsDims> // FIXME: make DerivDims non-variadic
+            class... CoordsDims>
     void deriv_dim_I(
             ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
                     spline_eval,
@@ -493,7 +518,11 @@ public:
                     Layout3,
                     memory_space> const spline_coef) const
     {
-        // FIXME: Add static_assert for DerivDims
+        static_assert(
+                is_integer_sequence_v<DerivDims>,
+                "DerivDims should be a std::[index|integer]_sequence holding the dimensions which "
+                "should be differentiated");
+        static_assert(DerivDims::size() > 0 && DerivDims::size() <= dimension);
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(coords_eval.domain());
         ddc::parallel_for_each(
                 "ddc_splines_differentiate_Nd_dims",
@@ -508,11 +537,11 @@ public:
                     ddc::for_each(
                             evaluation_domain_type<Idx...>(spline_eval.domain()),
                             [=,
-                             *this](typename ddc::DiscreteDomain<
-                                    evaluation_domain_type<Idx>...>::discrete_element_type i) {
+                             *this](typename evaluation_domain_type<Idx...>::discrete_element_type
+                                            i) {
                                 spline_eval_ND(i)
                                         = eval_no_bc<ddc::detail::TypeSeq<std::conditional_t<
-                                                index_seq_contains<Idx, DerivDims...>(),
+                                                integer_sequence_contains_v<Idx, DerivDims>,
                                                 eval_deriv_type,
                                                 eval_type>...>>(coords_eval_ND(i), spline_coef_ND);
                             });
@@ -529,16 +558,12 @@ public:
      * This means that for each slice of spline_eval the evaluation is performed with
      * the ND set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
-     * @tparam DerivDims The dimensions which should be differentiated.
+     * @tparam DerivDims A std::integer_sequence containing the dimensions which should be differentiated.
      *
      * @param[out] spline_eval The derivatives of the ND spline function at the desired coordinates.
      * @param[in] spline_coef A ChunkSpan storing the ND spline coefficients.
      */
-    template <
-            std::size_t... DerivDims,
-            class Layout1,
-            class Layout2,
-            class BatchedInterpolationDDom> // FIXME: make DerivDims non-variadic
+    template <class DerivDims, class Layout1, class Layout2, class BatchedInterpolationDDom>
     void deriv_dim_I(
             ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
                     spline_eval,
@@ -548,6 +573,11 @@ public:
                     Layout2,
                     memory_space> const spline_coef) const
     {
+        static_assert(
+                is_integer_sequence_v<DerivDims>,
+                "DerivDims should be a std::[index|integer]_sequence holding the dimensions which "
+                "should be differentiated");
+        static_assert(DerivDims::size() > 0 && DerivDims::size() <= dimension);
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
         ddc::parallel_for_each(
                 "ddc_splines_differentiate_Nd_dims",
@@ -561,14 +591,14 @@ public:
                     ddc::for_each(
                             evaluation_domain_type<Idx...>(spline_eval.domain()),
                             [=,
-                             *this](typename ddc::DiscreteDomain<
-                                    evaluation_domain_type<Idx>...>::discrete_element_type i) {
+                             *this](typename evaluation_domain_type<Idx...>::discrete_element_type
+                                            i) {
                                 ddc::Coordinate<continuous_dimension_type<Idx>...> coord_eval_ND(
                                         ddc::coordinate(i));
 
                                 spline_eval_ND(i)
                                         = eval_no_bc<ddc::detail::TypeSeq<std::conditional_t<
-                                                index_seq_contains<Idx, DerivDims...>(),
+                                                integer_sequence_contains_v<Idx, DerivDims>,
                                                 eval_deriv_type,
                                                 eval_type>...>>(coord_eval_ND, spline_coef_ND);
                             });

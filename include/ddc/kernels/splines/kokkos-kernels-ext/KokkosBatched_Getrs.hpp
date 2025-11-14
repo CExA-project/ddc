@@ -5,8 +5,7 @@
 // clang-format off
 // NOLINTBEGIN(*)
 
-#ifndef KOKKOSBATCHED_GETRS_HPP_
-#define KOKKOSBATCHED_GETRS_HPP_
+#pragma once
 
 #include <KokkosBatched_Util.hpp>
 
@@ -41,8 +40,6 @@ struct SerialGetrs {
 }  // namespace KokkosBatched
 
 #include "KokkosBatched_Getrs_Serial_Impl.hpp"
-
-#endif  // KOKKOSBATCHED_GETRS_HPP_
 
 // NOLINTEND(*)
 // clang-format on

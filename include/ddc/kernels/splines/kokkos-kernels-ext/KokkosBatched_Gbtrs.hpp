@@ -5,8 +5,7 @@
 // clang-format off
 // NOLINTBEGIN(*)
 
-#ifndef KOKKOSBATCHED_GBTRS_HPP_
-#define KOKKOSBATCHED_GBTRS_HPP_
+#pragma once
 
 #include <KokkosBatched_Util.hpp>
 
@@ -52,8 +51,6 @@ struct SerialGbtrs {
 }  // namespace KokkosBatched
 
 #include "KokkosBatched_Gbtrs_Serial_Impl.hpp"
-
-#endif  // KOKKOSBATCHED_GBTRS_HPP_
 
 // NOLINTEND(*)
 // clang-format on

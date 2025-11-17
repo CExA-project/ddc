@@ -270,22 +270,16 @@ void Batched3dSplineTest()
             ddc::Deriv<I3>>(interpolation_domain, dom_vals, nbc_i1, nbc_i2, nbc_i3);
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
+    using Dim1_info = ddc::DimInfo<BSplines<I1>, DDimI1, s_bcl, s_bcr>;
+    using Dim2_info = ddc::DimInfo<BSplines<I2>, DDimI2, s_bcl, s_bcr>;
+    using Dim3_info = ddc::DimInfo<BSplines<I3>, DDimI3, s_bcl, s_bcr>;
     ddc::SplineBuilder3D<
             ExecSpace,
             MemorySpace,
-            BSplines<I1>,
-            BSplines<I2>,
-            BSplines<I3>,
-            DDimI1,
-            DDimI2,
-            DDimI3,
-            s_bcl,
-            s_bcr,
-            s_bcl,
-            s_bcr,
-            s_bcl,
-            s_bcr,
-            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
+            ddc::SplineSolver::GINKGO,
+            Dim1_info,
+            Dim2_info,
+            Dim3_info> const spline_builder(interpolation_domain);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<DDimI1, DDimI2, DDimI3> const dom_interpolation
@@ -1039,13 +1033,18 @@ void Batched3dSplineTest()
     ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
+    using DerivsLayout = typename decltype(vals.span_cview())::layout_type;
+    using BatchedInterpolationDDom = typename decltype(vals.span_cview())::discrete_domain_type;
+    typename decltype(spline_builder)::DerivLvl1<DerivsLayout, BatchedInterpolationDDom>
+      lvl1(derivs1.span_cview(),
+           derivs2.span_cview(),
+           derivs3.span_cview());
+
     // Finally compute the spline by filling `coef`
     spline_builder(
             coef,
             vals.span_cview(),
-            derivs1.span_cview(),
-            derivs2.span_cview(),
-            derivs3.span_cview(),
+            lvl1,
             derivs_mixed_1_2.span_cview(),
             derivs_mixed_2_3.span_cview(),
             derivs_mixed_1_3.span_cview(),

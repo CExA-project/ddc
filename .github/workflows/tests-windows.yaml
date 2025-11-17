@@ -42,33 +42,23 @@ permissions:
   contents: read
 
 jobs:
-  id_repo:
-    runs-on: windows-latest
-    steps:
-      - name: Identify repository
-        id: identify_repo
-        run: |
-          echo "in_base_repo=${{(github.event_name == 'push' && github.repository == 'CExA-project/ddc') || github.event.pull_request.head.repo.full_name == 'CExA-project/ddc'}}" >> "$GITHUB_OUTPUT"
-    outputs: {in_base_repo: '${{steps.identify_repo.outputs.in_base_repo}}'}
-
   test-windows:
     if: github.ref_name != 'main'
     strategy:
       fail-fast: false
       matrix:
-        cxx_version: ['17', '20']  # C++23 does not work
+        cxx_version: ['17', '20', '23']
         config: ['Release']
-    runs-on: windows-latest
+        os: [windows-2022, windows-2025]
+    runs-on: ${{matrix.os}}
     env:
       Kokkos_ROOT: ${{github.workspace}}/opt/kokkos
       GTest_ROOT: ${{github.workspace}}/opt/gtest
       CMAKE_BUILD_PARALLEL_LEVEL: 4
-    permissions:
-      checks: write  # Required by mikepenz/action-junit-report
     steps:
       - name: Checkout built branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: google/googletest
           ref: v1.16.0
@@ -84,10 +74,10 @@ jobs:
           cmake --build build --config ${{matrix.config}}
           cmake --install build --config ${{matrix.config}} --prefix $GTest_ROOT
           rm -rf build
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: kokkos/kokkos
-          ref: 4.6.00
+          ref: 4.7.00
           path: kokkos
       - name: Install Kokkos
         shell: bash
@@ -118,9 +108,10 @@ jobs:
           cmake --build build --config ${{matrix.config}}
           ctest --test-dir build --build-config ${{matrix.config}} --output-on-failure --timeout 10 --output-junit tests.xml
       - name: Publish Test Report
-        uses: mikepenz/action-junit-report@3585e9575db828022551b4231f165eb59a0e74e3  # v5.6.2
+        uses: mikepenz/action-junit-report@e08919a3b1fb83a78393dfb775a9c37f17d8eea6  # v6.0.1
         if: ( success() || failure() )  # always run even if the previous step fails
         with:
+          annotate_only: true  # forked repo cannot write to checks so just do annotations
           report_paths: '${{github.workspace}}/build/tests.xml'
       - name: Run examples
         shell: bash

@@ -8,6 +8,7 @@ LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
 ARG BACKEND
 ARG AMDGPU_VERSION=6.2.1
+ARG CMAKE_VERSION=3.25.3
 ARG ROCM_VERSION=6.2.1
 
 COPY bash_run /bin/
@@ -15,7 +16,7 @@ ENV BASH_ENV=/etc/profile
 SHELL ["/bin/bash", "-c"]
 
 ENV PATH="/usr/local/cuda-12.6/bin${PATH:+:${PATH}}"
-ENV PATH="/opt/cmake-3.27.9-linux-x86_64/bin${PATH:+:${PATH}}"
+ENV PATH="/opt/cmake-${CMAKE_VERSION}-linux-x86_64/bin${PATH:+:${PATH}}"
 ENV PATH="${PATH:+$PATH:}/opt/rocm-${ROCM_VERSION}/bin"
 ENV CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:+$CMAKE_PREFIX_PATH:}/opt/rocm-${ROCM_VERSION}"
 
@@ -32,6 +33,8 @@ RUN chmod +x /bin/bash_run \
     gpg \
     wget \
  && mkdir --parents --mode=0755 /etc/apt/keyrings \
+ && wget -O /usr/share/keyrings/pdidev-archive-keyring.gpg https://repo.pdi.dev/ubuntu/pdidev-archive-keyring.gpg \
+ && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/pdidev-archive-keyring.gpg] https://repo.pdi.dev/ubuntu noble main" > /etc/apt/sources.list.d/pdi.list \
  && case "x${BACKEND}" in \
     "xhip") \
       echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/${AMDGPU_VERSION}/ubuntu noble main" > /etc/apt/sources.list.d/amdgpu.list \
@@ -48,17 +51,17 @@ RUN chmod +x /bin/bash_run \
     build-essential \
     git \
     libfftw3-dev \
-    liblapacke-dev \
     libhwloc-dev \
+    liblapacke-dev \
+    libpdi-dev \
+    pdiplugin-decl-hdf5-serial \
+    pdiplugin-trace \
+    pdiplugin-user-code \
     pkg-config \
     pipx \
     python3 \
  && python3 -m pipx install gcovr \
  && python3 -m pipx ensurepath \
- # Installing cmake < 3.28 to workaround issue with Kokkos
- && wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-x86_64.tar.gz \
- && tar -xvf cmake-3.27.9-linux-x86_64.tar.gz --directory /opt \
- && rm -f cmake-3.27.9-linux-x86_64.tar.gz \
  && case "${BACKEND}" in \
     "cpu") \
       apt-get install -y --no-install-recommends \
@@ -92,11 +95,9 @@ RUN chmod +x /bin/bash_run \
       && echo "/opt/rocm/lib64" >> /etc/ld.so.conf.d/rocm.conf \
       && ldconfig \
  ;; esac \
- && git clone --branch 1.8.1 --depth 1 https://github.com/pdidev/pdi.git \
- && cmake -D BUILD_BENCHMARKING=OFF -D BUILD_DECL_HDF5_PLUGIN=OFF -D BUILD_FORTRAN=OFF -D BUILD_HDF5_PARALLEL=OFF -D BUILD_DECL_NETCDF_PLUGIN=OFF -D BUILD_MPI_PLUGIN=OFF -D BUILD_NETCDF_PARALLEL=OFF -D BUILD_SERIALIZE_PLUGIN=OFF -D BUILD_SET_VALUE_PLUGIN=OFF -D BUILD_SHARED_LIBS=ON -D BUILD_TESTING=OFF -D BUILD_TRACE_PLUGIN=ON -D BUILD_USER_CODE_PLUGIN=ON -D CMAKE_BUILD_TYPE=Release -D USE_paraconf=EMBEDDED -D USE_spdlog=EMBEDDED -D USE_yaml=EMBEDDED -B pdi/build -S pdi \
- && cmake --build pdi/build \
- && cmake --install pdi/build --prefix /usr \
- && rm -rf pdi \
+ && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
+ && tar -xvf cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz --directory /opt \
+ && rm -f cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
  && git clone -b v1.8.0 --depth 1 https://github.com/ginkgo-project/ginkgo.git \
  && case "${BACKEND}" in \
     "cpu") \

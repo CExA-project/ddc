@@ -39,6 +39,7 @@ namespace ddc {
 #include "detail/macros.hpp"
 #include "detail/tagged_vector.hpp"
 #include "detail/type_seq.hpp"
+#include "detail/utils.hpp"
 
 #include "real_type.hpp"
 #include "scope_guard.hpp"

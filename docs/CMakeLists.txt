@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.25)
 
 if(NOT ("${DOXYGEN_VERSION}" VERSION_EQUAL "1.9.8"))
     message(WARNING "The documentation works best with Doxygen 1.9.8")

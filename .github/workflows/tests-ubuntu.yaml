@@ -45,10 +45,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      - uses: jidicula/clang-format-action@4726374d1aa3c6aecf132e5197e498979588ebc8  # v4.15.0
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+      - uses: jidicula/clang-format-action@6cd220de46c89139a0365edae93eee8eb30ca8fe  # v4.16.0
         with:
-          clang-format-version: '20'
+          clang-format-version: '21'
       - name: Prefer 'if defined'/'if !defined' over 'ifdef'/'ifndef'
         run: if grep -RE "(ifdef|ifndef)" $(git ls-files '*.[ch]pp' ':!*/kokkos-kernels-ext/*'); then exit 1; fi
       - name: Do not include <iostream> in the headers of the library
@@ -80,9 +80,9 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1  # v3.5.0
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef  # v3.6.0
         with:
           registry: ghcr.io
           username: ${{github.actor}}
@@ -110,7 +110,7 @@ jobs:
           docker save ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}:${GITHUB_SHA:0:7} > ${{matrix.image}}_${{matrix.backend}}.tar
       - name: Generate docker artifact from image
         if: needs.id_repo.outputs.in_base_repo == 'false'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4  # v5.0.0
         with:
           name: ${{matrix.image}}_${{matrix.backend}}-artifact
           path: ${{matrix.image}}_${{matrix.backend}}.tar
@@ -133,12 +133,12 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0  # v5.0.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53  # v6.0.0
         with:
           name: |
             ${{matrix.image}}_${{matrix.backend.name}}-artifact
@@ -186,7 +186,7 @@ jobs:
             ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
             bash run.sh
       - name: Upload coverage reports to Codecov with GitHub Action
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24  # v5.4.3
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7  # v5.5.1
         with:
           files: coverage.lcov
           disable_search: true
@@ -236,19 +236,17 @@ jobs:
             cxx_version: '23'
     runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
-    permissions:
-      checks: write  # Required by mikepenz/action-junit-report
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0  # v5.0.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53  # v6.0.0
         with:
           name: |
             ${{matrix.image}}_${{matrix.backend.name}}-artifact
@@ -347,14 +345,17 @@ jobs:
             cmake --build build
             if [ 'xcpu' = 'x${{matrix.backend.name}}' ]
             then
-              ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
+              ctest --test-dir build --output-on-failure --timeout 20 --output-junit tests.xml
               cp build/tests.xml .
               ./build/examples/characteristics_advection
               ./build/examples/game_of_life
               ./build/examples/heat_equation_spectral
               ./build/examples/heat_equation
               ./build/examples/non_uniform_heat_equation
+              ./build/examples/pdi_event
               ./build/examples/uniform_heat_equation
+              ./build/benchmarks/ddc_benchmark_deepcopy --benchmark_dry_run
+              ./build/benchmarks/ddc_benchmark_splines --benchmark_dry_run
             fi
             cmake --install build --prefix $DDC_ROOT
             rm -rf build
@@ -375,9 +376,10 @@ jobs:
           else echo "with_report=false" >> "$GITHUB_OUTPUT"
           fi
       - name: Publish Test Report
-        uses: mikepenz/action-junit-report@3585e9575db828022551b4231f165eb59a0e74e3  # v5.6.2
+        uses: mikepenz/action-junit-report@e08919a3b1fb83a78393dfb775a9c37f17d8eea6  # v6.0.1
         if: ( success() || failure() ) && steps.test.outputs.with_report == 'true'  # always run even if the previous step fails
         with:
+          annotate_only: true  # forked repo cannot write to checks so just do annotations
           report_paths: '${{github.workspace}}/tests.xml'
 
   test-with-sanitizer:
@@ -395,19 +397,17 @@ jobs:
         sanitizer: ['address', 'undefined']
     runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
-    permissions:
-      checks: write  # Required by mikepenz/action-junit-report
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0  # v5.0.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53  # v6.0.0
         with:
           name: |
             ${{matrix.image}}_${{matrix.backend.name}}-artifact
@@ -454,14 +454,17 @@ jobs:
               . /src/sanitizer_env.sh
             fi
 
-            ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
+            ctest --test-dir build --output-on-failure --timeout 20 --output-junit tests.xml
             cp build/tests.xml .
             ./build/examples/characteristics_advection
             ./build/examples/game_of_life
             ./build/examples/heat_equation_spectral
             ./build/examples/heat_equation
             ./build/examples/non_uniform_heat_equation
+            ./build/examples/pdi_event
             ./build/examples/uniform_heat_equation
+            ./build/benchmarks/ddc_benchmark_deepcopy --benchmark_dry_run
+            ./build/benchmarks/ddc_benchmark_splines --benchmark_dry_run
           EOF
 
           docker run \
@@ -474,9 +477,10 @@ jobs:
           else echo "with_report=false" >> "$GITHUB_OUTPUT"
           fi
       - name: Publish Test Report
-        uses: mikepenz/action-junit-report@3585e9575db828022551b4231f165eb59a0e74e3  # v5.6.2
+        uses: mikepenz/action-junit-report@e08919a3b1fb83a78393dfb775a9c37f17d8eea6  # v6.0.1
         if: ( success() || failure() ) && steps.test.outputs.with_report == 'true'  # always run even if the previous step fails
         with:
+          annotate_only: true  # forked repo cannot write to checks so just do annotations
           report_paths: '${{github.workspace}}/tests.xml'
 
   clang-tidy-test:
@@ -498,12 +502,12 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0  # v5.0.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53  # v6.0.0
         with:
           name: |
             ${{matrix.image}}_${{matrix.backend.name}}-artifact

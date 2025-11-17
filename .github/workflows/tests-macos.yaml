@@ -40,15 +40,6 @@ permissions:
   contents: read
 
 jobs:
-  id_repo:
-    runs-on: macos-15
-    steps:
-      - name: Identify repository
-        id: identify_repo
-        run: |
-          echo "in_base_repo=${{(github.event_name == 'push' && github.repository == 'CExA-project/ddc') || github.event.pull_request.head.repo.full_name == 'CExA-project/ddc'}}" >> "$GITHUB_OUTPUT"
-    outputs: {in_base_repo: '${{steps.identify_repo.outputs.in_base_repo}}'}
-
   test-macos:
     if: github.ref_name != 'main'
     strategy:
@@ -60,10 +51,10 @@ jobs:
             cxx_compiler: 'clang++'
             ddc_extra_cxx_flags: '-Wextra-semi -Wextra-semi-stmt -Wold-style-cast'
             kokkos_extra_cmake_flags: ''
-        cxx_version: ['17', '20']  # Kokkos 4.6 is not compatible with C++ 23
+        cxx_version: ['17', '20', '23']
         cmake_build_type: ['Debug', 'Release']
-    runs-on: macos-15
-    needs: [id_repo]
+        os: [macos-14, macos-15]
+    runs-on: ${{matrix.os}}
     env:
       DDC_ROOT: ${{github.workspace}}/opt/ddc
       Ginkgo_ROOT: ${{github.workspace}}/opt/ginkgo
@@ -77,12 +68,10 @@ jobs:
       CC: ${{matrix.backend.c_compiler}}
       CXX: ${{matrix.backend.cxx_compiler}}
       CMAKE_BUILD_TYPE: ${{matrix.cmake_build_type}}
-    permissions:
-      checks: write  # Required by mikepenz/action-junit-report
     steps:
       - name: Checkout built branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: pdidev/pdi
           ref: 1.9.2
@@ -118,7 +107,7 @@ jobs:
         run: brew install googletest
       - name: Install Google benchmark
         run: brew install google-benchmark
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: ginkgo-project/ginkgo
           ref: v1.8.0
@@ -139,10 +128,10 @@ jobs:
           cmake --build build
           cmake --install build --prefix $Ginkgo_ROOT
           rm -rf build
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: kokkos/kokkos
-          ref: 4.6.00
+          ref: 4.7.00
           path: kokkos
       - name: Install Kokkos
         run: |
@@ -157,7 +146,7 @@ jobs:
           cmake --build build
           cmake --install build --prefix $Kokkos_ROOT
           rm -rf build
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: kokkos/kokkos-fft
           ref: v0.3.0
@@ -172,10 +161,10 @@ jobs:
           cmake --build build
           cmake --install build --prefix $KokkosFFT_ROOT
           rm -rf build
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           repository: kokkos/kokkos-kernels
-          ref: 4.6.00
+          ref: 4.7.00
           path: kokkos-kernels
       - name: Install Kokkos Kernels
         run: |
@@ -210,9 +199,10 @@ jobs:
       - name: Run unit tests
         run: ctest --test-dir build --output-on-failure --timeout 10 --output-junit tests.xml
       - name: Publish Test Report
-        uses: mikepenz/action-junit-report@3585e9575db828022551b4231f165eb59a0e74e3  # v5.6.2
+        uses: mikepenz/action-junit-report@e08919a3b1fb83a78393dfb775a9c37f17d8eea6  # v6.0.1
         if: ( success() || failure() )  # always run even if the previous step fails
         with:
+          annotate_only: true  # forked repo cannot write to checks so just do annotations
           report_paths: '${{github.workspace}}/build/tests.xml'
       - name: Run examples
         run: |
@@ -222,6 +212,8 @@ jobs:
           ./build/examples/heat_equation
           ./build/examples/non_uniform_heat_equation
           ./build/examples/uniform_heat_equation
+          ./build/benchmarks/ddc_benchmark_deepcopy --benchmark_dry_run
+          ./build/benchmarks/ddc_benchmark_splines --benchmark_dry_run
       - name: Install DDC
         run: |
           cmake --install build --prefix $DDC_ROOT

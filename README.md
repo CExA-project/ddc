@@ -11,6 +11,7 @@ SPDX-License-Identifier: MIT
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nightly early integration](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yaml/badge.svg?event=schedule)](https://github.com/CExA-project/ddc/actions/workflows/early_integration.yaml)
 [![Pages](https://github.com/CExA-project/ddc/actions/workflows/pages.yaml/badge.svg)](https://github.com/CExA-project/ddc/actions/workflows/pages.yaml)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.09122/status.svg)](https://doi.org/10.21105/joss.09122)
 
 See <https://ddc.mdls.fr/>
 
@@ -38,8 +39,8 @@ If you want to know more, join un on [Slack](https://ddc-lib.slack.com/join/shar
 To use DDC core, one needs the following dependencies:
 
 * a C++17-compliant compiler
-* CMake 3.22...<4
-* Kokkos 4.4...<5
+* CMake 3.25...<4
+* Kokkos 4.4...<6
 * (optional, micro benchmarking) Benchmark 1.8...<2
 * (optional, documentation) Doxygen 1.8.13...<2
 * (optional, unit-testing) GoogleTest 1.14...<2
@@ -52,7 +53,7 @@ To use DDC components, one needs the following dependencies:
   * PDI 1.6...<2
 * (optional, spline interpolation) DDC::splines
   * Ginkgo 1.8...<2
-  * Kokkos Kernels 4.5.1...<5
+  * Kokkos Kernels 4.5.1...<6
 
 ## Getting the code and basic configuration
 

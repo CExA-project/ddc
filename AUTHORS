@@ -10,32 +10,36 @@ While individual authors are listed here, they might not be the actual
 copyright holders. If you are instead looking for the list of copyright
 holders, please look at the COPYRIGHT.md file.
 
-Thierry Antoun - CEA (thierry.antoun@cea.fr)
+Antoun Thierry - CEA (thierry.antoun@cea.fr)
 * Work on Documentation
 * Work on adding new features
 
-Julien Bigot - CEA (julien.bigot@cea.fr)
+Bigot Julien - CEA (julien.bigot@cea.fr)
 * Co-maintainer
 * Initial designer and first development steps
 * Co-developer
 * Participation to DDC-based redesign of splines
 
-Emily Bourne - CEA (emily.bourne@cea.fr)
+Bourne Emily - CEA (emily.bourne@cea.fr)
 * Work on splines and linear algebra
 * Work on documentation requirements in CI
 
-Paul Gannay - CEA (paul.gannay@cea.fr)
+Gannay Paul - CEA (paul.gannay@cea.fr)
 * Functions to print ChunkSpans
 
-Baptiste Legouix - CEA (baptiste.legouix@cea.fr)
+Kannan Hariprasad - CEA (hariprasad.kannan@cea.fr)
+* Implementation of 3d splines
+
+Legouix Baptiste - CEA (baptiste.legouix@cea.fr)
 * FFT kernel
 * Performance portability of splines kernel, batching
 * Ginkgo and KokkosKernels backends for splines linear algebra
 
-Trévis Morvany - CEA (trevis.morvany@cea.fr)
+Morvany Trévis - CEA (trevis.morvany@cea.fr)
 * Work on splines
+* Implementation of 3d splines
 
-Thomas Padioleau - CEA (thomas.padioleau@cea.fr)
+Padioleau Thomas - CEA (thomas.padioleau@cea.fr)
 * Maintainer
 * Co-designer
 * Main developer

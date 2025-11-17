@@ -44,6 +44,47 @@ using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
 
 } // namespace anonymous_namespace_workaround_discrete_element_cpp
 
+TEST(DiscreteElementXYTest, ValueConstructor)
+{
+    DElemXY const ixy {};
+    EXPECT_EQ(ixy.uid<DDimX>(), ddc::DiscreteElementType());
+    EXPECT_EQ(ixy.uid<DDimY>(), ddc::DiscreteElementType());
+}
+
+TEST(DiscreteElementXYTest, ConstructorFromIntegersWithoutConversion)
+{
+    ddc::DiscreteElementType const uid_x = 7;
+    ddc::DiscreteElementType const uid_y = 13;
+    DElemXY const ixy(uid_x, uid_y);
+    EXPECT_EQ(ixy.uid<DDimX>(), uid_x);
+    EXPECT_EQ(ixy.uid<DDimY>(), uid_y);
+}
+
+TEST(DiscreteElementXYTest, ConstructorFromIntegersWithConversion)
+{
+    short const uid_x = 7;
+    short const uid_y = 13;
+    DElemXY const ixy(uid_x, uid_y);
+    EXPECT_EQ(ixy.uid<DDimX>(), uid_x);
+    EXPECT_EQ(ixy.uid<DDimY>(), uid_y);
+}
+
+TEST(DiscreteElementXYTest, ConstructorFromArrayWithoutConversion)
+{
+    std::array<ddc::DiscreteElementType, 2> const uids {7, 13};
+    DElemXY const ixy(uids);
+    EXPECT_EQ(ixy.uid<DDimX>(), uids[0]);
+    EXPECT_EQ(ixy.uid<DDimY>(), uids[1]);
+}
+
+TEST(DiscreteElementXYTest, ConstructorFromArrayWithConversion)
+{
+    std::array<short, 2> const uids {7, 13};
+    DElemXY const ixy(uids);
+    EXPECT_EQ(ixy.uid<DDimX>(), uids[0]);
+    EXPECT_EQ(ixy.uid<DDimY>(), uids[1]);
+}
+
 TEST(DiscreteElementXYZTest, ConstructorFromDiscreteElements)
 {
     ddc::DiscreteElementType const uid_x = 7;
@@ -132,22 +173,6 @@ TEST(DiscreteElementXTest, BinaryOperatorMinus)
     DElemX const ix2 = ix + dv_x;
     DVectX dv2_x = ix2 - ix;
     EXPECT_EQ(ddc::get<DDimX>(dv2_x), dv_x);
-}
-
-TEST(DiscreteElementXYTest, ValueConstructor)
-{
-    DElemXY const ixy {};
-    EXPECT_EQ(ixy.uid<DDimX>(), ddc::DiscreteElementType());
-    EXPECT_EQ(ixy.uid<DDimY>(), ddc::DiscreteElementType());
-}
-
-TEST(DiscreteElementXYTest, UntaggedConstructor)
-{
-    ddc::DiscreteElementType const uid_x = 7;
-    ddc::DiscreteElementType const uid_y = 13;
-    DElemXY const ixy(uid_x, uid_y);
-    EXPECT_EQ(ixy.uid<DDimX>(), uid_x);
-    EXPECT_EQ(ixy.uid<DDimY>(), uid_y);
 }
 
 TEST(DiscreteElementXYTest, RightExternalBinaryOperatorPlus)

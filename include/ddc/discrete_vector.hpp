@@ -14,6 +14,7 @@
 
 #include "detail/macros.hpp"
 #include "detail/type_seq.hpp"
+#include "detail/utils.hpp"
 
 namespace ddc {
 
@@ -297,6 +298,18 @@ public:
     template <class... DVects, class = std::enable_if_t<(is_discrete_vector_v<DVects> && ...)>>
     KOKKOS_FUNCTION constexpr explicit DiscreteVector(DVects const&... delems) noexcept
         : m_values {take<Tags>(delems...).template get<Tags>()...}
+    {
+    }
+
+    template <
+            class IntegerType,
+            class = std::enable_if_t<std::is_convertible_v<IntegerType, DiscreteVectorElement>>>
+    KOKKOS_FUNCTION constexpr explicit DiscreteVector(
+            std::array<IntegerType, sizeof...(Tags)> const& values) noexcept
+        : m_values(
+                  detail::convert_array_to<DiscreteVectorElement>(
+                          values,
+                          std::make_index_sequence<sizeof...(Tags)>()))
     {
     }
 

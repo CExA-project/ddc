@@ -22,23 +22,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
       - name: REUSE Compliance Check
-        uses: fsfe/reuse-action@bb774aa972c2a89ff34781233d275075cbddf542  # v5.0.0
+        uses: fsfe/reuse-action@676e2d560c9a403aa252096d99fcab3e1132b0f5  # v6.0.0
 
   spelling-check:
     name: Spell check using typos
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
       - name: Spell Check Repo
-        uses: crate-ci/typos@52bd719c2c91f9d676e2aa359fc8e0db8925e6d8  # v1.35.3
+        uses: crate-ci/typos@07d900b8fa1097806b8adb6391b0d3e0ac2fdea7  # v1.39.0
 
   trailing-whitespaces-check:
     name: Trailing whitespaces check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
       - run: ./bin/trailing_spaces $(git ls-files ':!docs/images/*' ':!docs/_template/*' ':!vendor')

@@ -38,6 +38,30 @@ struct Dim5
 
 } // namespace anonymous_namespace_workaround_print_cpp
 
+TEST(Print, ValidDemangledTypeName)
+{
+    std::stringstream ss;
+    ddc::detail::print_demangled_type_name(ss, typeid(ddc::DiscreteDomain<>).name());
+#if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
+    EXPECT_EQ(ss.str(), "ddc::DiscreteDomain<>");
+#elif defined(KOKKOS_COMPILER_MSVC)
+    EXPECT_EQ(ss.str(), "class ddc::DiscreteDomain<>");
+#else
+    GTEST_SKIP();
+#endif
+}
+
+TEST(Print, InvalidDemangledTypeName)
+{
+    std::stringstream ss;
+    ddc::detail::print_demangled_type_name(ss, "0");
+#if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
+    EXPECT_EQ(ss.str(), "Error demangling dimension name: -2");
+#else
+    EXPECT_EQ(ss.str(), "0");
+#endif
+}
+
 template <typename ElementType>
 void PrintTestCheckOutput0d()
 {

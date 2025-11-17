@@ -2,13 +2,13 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.25)
 project(test-installed-ddc LANGUAGES CXX)
 
 # Test whether `find_package(DDC)` can be called multiple times
-find_package(DDC 0.8 REQUIRED)
-find_package(DDC 0.8 REQUIRED COMPONENTS fft)
-find_package(DDC 0.8 REQUIRED COMPONENTS pdi splines)
+find_package(DDC 0.9 REQUIRED)
+find_package(DDC 0.9 REQUIRED COMPONENTS fft)
+find_package(DDC 0.9 REQUIRED COMPONENTS pdi splines)
 
 message(STATUS "DDC options:")
 message(STATUS "* DDC_BUILD_DOUBLE_PRECISION=${DDC_BUILD_DOUBLE_PRECISION}")

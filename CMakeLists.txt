@@ -2,8 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.22)
-project(DDC VERSION 0.8.0 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.25)
+project(DDC VERSION 0.9.0 LANGUAGES CXX)
 
 # List of options
 
@@ -49,7 +49,7 @@ set(DDC_Kokkos_DEPENDENCY_POLICY
 set_property(CACHE DDC_Kokkos_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
 if("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "AUTO")
     if(NOT TARGET Kokkos::kokkos)
-        find_package(Kokkos 4.4...<5 QUIET)
+        find_package(Kokkos 4.4...<6 QUIET)
         if(NOT Kokkos_FOUND)
             ddc_configure_kokkos()
         else()
@@ -59,7 +59,7 @@ if("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "AUTO")
 elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
     ddc_configure_kokkos()
 elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-    find_package(Kokkos 4.4...<5 REQUIRED)
+    find_package(Kokkos 4.4...<6 REQUIRED)
     ddc_check_required_kokkos_options()
 endif()
 
@@ -125,18 +125,57 @@ endif()
 
 add_library(ddc_core INTERFACE)
 add_library(DDC::core ALIAS ddc_core)
+set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/config.hpp DESTINATION include/ddc)
-install(TARGETS ddc_core EXPORT DDCTargets)
-target_compile_features(ddc_core INTERFACE cxx_std_17)
-target_include_directories(
+target_sources(
     ddc_core
     INTERFACE
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-        "$<INSTALL_INTERFACE:${DDC_INSTALL_INCLUDEDIR}>"
+        FILE_SET HEADERS
+            BASE_DIRS include ${CMAKE_CURRENT_BINARY_DIR}/generated
+            FILES
+                ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/config.hpp
+                include/ddc/detail/dual_discretization.hpp
+                include/ddc/detail/kokkos.hpp
+                include/ddc/detail/macros.hpp
+                include/ddc/detail/tagged_vector.hpp
+                include/ddc/detail/type_seq.hpp
+                include/ddc/detail/type_traits.hpp
+                include/ddc/detail/utils.hpp
+                include/ddc/aligned_allocator.hpp
+                include/ddc/chunk.hpp
+                include/ddc/chunk_common.hpp
+                include/ddc/chunk_span.hpp
+                include/ddc/chunk_traits.hpp
+                include/ddc/coordinate.hpp
+                include/ddc/create_mirror.hpp
+                include/ddc/ddc.hpp
+                include/ddc/ddc_to_kokkos_execution_policy.hpp
+                include/ddc/discrete_domain.hpp
+                include/ddc/discrete_element.hpp
+                include/ddc/discrete_space.hpp
+                include/ddc/discrete_vector.hpp
+                include/ddc/for_each.hpp
+                include/ddc/kokkos_allocator.hpp
+                include/ddc/non_uniform_point_sampling.hpp
+                include/ddc/parallel_deepcopy.hpp
+                include/ddc/parallel_fill.hpp
+                include/ddc/parallel_for_each.hpp
+                include/ddc/parallel_transform_reduce.hpp
+                include/ddc/periodic_sampling.hpp
+                include/ddc/print.hpp
+                include/ddc/real_type.hpp
+                include/ddc/reducer.hpp
+                include/ddc/scope_guard.hpp
+                include/ddc/sparse_discrete_domain.hpp
+                include/ddc/strided_discrete_domain.hpp
+                include/ddc/transform_reduce.hpp
+                include/ddc/trivial_space.hpp
+                include/ddc/uniform_point_sampling.hpp
 )
+target_compile_features(ddc_core INTERFACE cxx_std_17)
 target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
+
+install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET HEADERS)
 
 # Link library to DDC
 
@@ -167,10 +206,18 @@ if("${DDC_BUILD_KERNELS_FFT}")
 
     add_library(ddc_fft INTERFACE)
     add_library(DDC::fft ALIAS ddc_fft)
-    install(TARGETS ddc_fft EXPORT DDCFftTargets)
+    set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
     target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
+    target_sources(
+        ddc_fft
+        INTERFACE
+            FILE_SET HEADERS
+                BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
+                FILES include/ddc/kernels/fft.hpp
+    )
 
-    install(EXPORT DDCFftTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(TARGETS ddc_fft EXPORT DDCFftTargets FILE_SET HEADERS)
+    install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -192,7 +239,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     )
     if("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "AUTO")
         if(NOT TARGET Kokkos::kokkoskernels)
-            find_package(KokkosKernels 4.5.1...<5 QUIET)
+            find_package(KokkosKernels 4.5.1...<6 QUIET)
             if(NOT KokkosKernels_FOUND)
                 ddc_configure_kokkos_kernels()
             endif()
@@ -200,20 +247,62 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
         ddc_configure_kokkos_kernels()
     elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(KokkosKernels 4.5.1...<5 REQUIRED)
+        find_package(KokkosKernels 4.5.1...<6 REQUIRED)
     endif()
 
     add_library(ddc_splines INTERFACE)
     add_library(DDC::splines ALIAS ddc_splines)
-    install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
-    install(TARGETS ddc_splines EXPORT DDCSplinesTargets)
+    set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
     target_include_directories(ddc_splines SYSTEM INTERFACE ${LAPACKE_INCLUDE_DIRS})
     target_link_libraries(
         ddc_splines
         INTERFACE DDC::core Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels ${LAPACKE_LIBRARIES}
     )
+    target_sources(
+        ddc_splines
+        INTERFACE
+            FILE_SET HEADERS
+                BASE_DIRS include
+                FILES
+                    include/ddc/kernels/splines.hpp
+                    include/ddc/kernels/splines/bsplines_non_uniform.hpp
+                    include/ddc/kernels/splines/bsplines_uniform.hpp
+                    include/ddc/kernels/splines/constant_extrapolation_rule.hpp
+                    include/ddc/kernels/splines/deriv.hpp
+                    include/ddc/kernels/splines/greville_interpolation_points.hpp
+                    include/ddc/kernels/splines/integrals.hpp
+                    include/ddc/kernels/splines/knot_discrete_dimension_type.hpp
+                    include/ddc/kernels/splines/knots_as_interpolation_points.hpp
+                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Gbtrs.hpp
+                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Gbtrs_Serial_Impl.hpp
+                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Getrs.hpp
+                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Getrs_Serial_Impl.hpp
+                    include/ddc/kernels/splines/math_tools.hpp
+                    include/ddc/kernels/splines/null_extrapolation_rule.hpp
+                    include/ddc/kernels/splines/periodic_extrapolation_rule.hpp
+                    include/ddc/kernels/splines/spline_boundary_conditions.hpp
+                    include/ddc/kernels/splines/spline_builder.hpp
+                    include/ddc/kernels/splines/spline_builder_2d.hpp
+                    include/ddc/kernels/splines/spline_builder_3d.hpp
+                    include/ddc/kernels/splines/spline_evaluator.hpp
+                    include/ddc/kernels/splines/spline_evaluator_2d.hpp
+                    include/ddc/kernels/splines/spline_evaluator_3d.hpp
+                    include/ddc/kernels/splines/spline_traits.hpp
+                    include/ddc/kernels/splines/splines_linear_problem.hpp
+                    include/ddc/kernels/splines/splines_linear_problem_2x2_blocks.hpp
+                    include/ddc/kernels/splines/splines_linear_problem_3x3_blocks.hpp
+                    include/ddc/kernels/splines/splines_linear_problem_band.hpp
+                    include/ddc/kernels/splines/splines_linear_problem_dense.hpp
+                    include/ddc/kernels/splines/splines_linear_problem_maker.hpp
+                    include/ddc/kernels/splines/splines_linear_problem_pds_band.hpp
+                    include/ddc/kernels/splines/splines_linear_problem_pds_tridiag.hpp
+                    include/ddc/kernels/splines/splines_linear_problem_sparse.hpp
+                    include/ddc/kernels/splines/view.hpp
+    )
 
-    install(EXPORT DDCSplinesTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(TARGETS ddc_splines EXPORT DDCSplinesTargets FILE_SET HEADERS)
+    install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
 
 ## The PDI wrapper
@@ -225,17 +314,13 @@ if("${DDC_BUILD_PDI_WRAPPER}")
 
     add_library(ddc_pdi INTERFACE)
     add_library(DDC::pdi ALIAS ddc_pdi)
-    install(TARGETS ddc_pdi EXPORT DDCPdiTargets)
+    set_target_properties(ddc_pdi PROPERTIES EXPORT_NAME pdi)
     target_compile_features(ddc_pdi INTERFACE cxx_std_17)
-    target_include_directories(
-        ddc_pdi
-        INTERFACE
-            "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-            "$<INSTALL_INTERFACE:${DDC_INSTALL_INCLUDEDIR}>"
-    )
     target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
+    target_sources(ddc_pdi INTERFACE FILE_SET HEADERS BASE_DIRS include FILES include/ddc/pdi.hpp)
 
-    install(EXPORT DDCPdiTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
+    install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
 
 ## if examples are enabled, build them
@@ -264,9 +349,7 @@ endif()
 
 ## installation
 
-install(EXPORT DDCTargets NAMESPACE DDC::impl:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
-
-install(DIRECTORY include/ddc TYPE INCLUDE)
+install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 
 configure_package_config_file(
     cmake/DDCConfig.cmake.in

@@ -277,6 +277,12 @@ class DiscreteVector : public detail::DiscreteVectorConversionOperators<Discrete
 
     using tags_seq = detail::TypeSeq<Tags...>;
 
+    static_assert(
+            ((type_seq_size_v<type_seq_remove_t<tags_seq, detail::TypeSeq<Tags>>>
+              == sizeof...(Tags) - 1)
+             && ...),
+            "The dimensions of a DiscreteVector must be unique");
+
 private:
     std::array<DiscreteVectorElement, sizeof...(Tags)> m_values;
 

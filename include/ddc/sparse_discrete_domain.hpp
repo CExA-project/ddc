@@ -122,6 +122,13 @@ class SparseDiscreteDomain
     template <class...>
     friend class SparseDiscreteDomain;
 
+    static_assert(
+            ((type_seq_size_v<type_seq_remove_t<detail::TypeSeq<DDims...>, detail::TypeSeq<DDims>>>
+              == sizeof...(DDims) - 1)
+             && ...),
+            "The dimensions of a SparseDiscreteDomain must be unique");
+
+
 public:
     using discrete_element_type = DiscreteElement<DDims...>;
 

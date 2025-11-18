@@ -71,6 +71,12 @@ class StridedDiscreteDomain
     template <class...>
     friend class StridedDiscreteDomain;
 
+    static_assert(
+            ((type_seq_size_v<type_seq_remove_t<detail::TypeSeq<DDims...>, detail::TypeSeq<DDims>>>
+              == sizeof...(DDims) - 1)
+             && ...),
+            "The dimensions of a StridedDiscreteDomain must be unique");
+
 public:
     using discrete_element_type = DiscreteElement<DDims...>;
 

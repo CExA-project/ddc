@@ -1363,8 +1363,8 @@ private:
 
         auto const order1 = select_or(deriv_order, DiscreteElement<deriv_dim1>(0)).uid();
         auto const order2 = select_or(deriv_order, DiscreteElement<deriv_dim2>(0)).uid();
-        KOKKOS_ASSERT(order1 >= 0 && order1 < 3);
-        KOKKOS_ASSERT(order2 >= 0 && order2 < 3);
+        KOKKOS_ASSERT(order1 >= 0 && order1 < 3)
+        KOKKOS_ASSERT(order2 >= 0 && order2 < 3)
 
         ddc::DiscreteElement<bsplines_type1> jmin1;
         ddc::DiscreteElement<bsplines_type2> jmin2;

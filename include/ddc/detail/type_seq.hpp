@@ -189,6 +189,9 @@ constexpr bool in_tags_v = false;
 template <class TypeSeq, class OTypeSeq>
 constexpr bool type_seq_contains_v = false;
 
+template <class TypeSeq>
+constexpr bool type_seq_is_unique_v = false;
+
 template <class TypeSeq, class B>
 constexpr bool type_seq_same_v = type_seq_contains_v<TypeSeq, B> && type_seq_contains_v<B, TypeSeq>;
 
@@ -219,6 +222,12 @@ using type_seq_cat_t = typename detail::TypeSeqCat<TagSeqA, TagSeqB>::type;
 template <class TagSeqA, class TagSeqB, class TagSeqC>
 using type_seq_replace_t =
         typename detail::TypeSeqReplace<TagSeqA, TagSeqB, TagSeqC, detail::TypeSeq<>>::type;
+
+template <class... Tags>
+constexpr bool type_seq_is_unique_v<detail::TypeSeq<Tags...>>
+        = ((type_seq_size_v<type_seq_remove_t<detail::TypeSeq<Tags...>, detail::TypeSeq<Tags>>>
+            == sizeof...(Tags) - 1)
+           && ...);
 
 template <class T>
 using to_type_seq_t = typename detail::ToTypeSeq<T>::type;

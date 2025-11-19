@@ -72,9 +72,7 @@ class StridedDiscreteDomain
     friend class StridedDiscreteDomain;
 
     static_assert(
-            ((type_seq_size_v<type_seq_remove_t<detail::TypeSeq<DDims...>, detail::TypeSeq<DDims>>>
-              == sizeof...(DDims) - 1)
-             && ...),
+            type_seq_is_unique_v<detail::TypeSeq<DDims...>>,
             "The dimensions of a StridedDiscreteDomain must be unique");
 
 public:

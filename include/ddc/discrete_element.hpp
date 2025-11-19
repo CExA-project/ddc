@@ -162,9 +162,7 @@ class DiscreteElement
     using tags_seq = detail::TypeSeq<Tags...>;
 
     static_assert(
-            ((type_seq_size_v<type_seq_remove_t<tags_seq, detail::TypeSeq<Tags>>>
-              == sizeof...(Tags) - 1)
-             && ...),
+            type_seq_is_unique_v<tags_seq>,
             "The dimensions of a DiscreteElement must be unique");
 
     friend KOKKOS_FUNCTION constexpr std::array<DiscreteElementType, sizeof...(Tags)>& detail::

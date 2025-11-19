@@ -278,9 +278,7 @@ class DiscreteVector : public detail::DiscreteVectorConversionOperators<Discrete
     using tags_seq = detail::TypeSeq<Tags...>;
 
     static_assert(
-            ((type_seq_size_v<type_seq_remove_t<tags_seq, detail::TypeSeq<Tags>>>
-              == sizeof...(Tags) - 1)
-             && ...),
+            type_seq_is_unique_v<tags_seq>,
             "The dimensions of a DiscreteVector must be unique");
 
 private:

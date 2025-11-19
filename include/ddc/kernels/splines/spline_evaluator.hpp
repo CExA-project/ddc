@@ -686,7 +686,7 @@ private:
         } else {
             if (order == 0) {
                 jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
-            } else if (order == 1) {
+            } else {
                 jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interest);
             }
         }

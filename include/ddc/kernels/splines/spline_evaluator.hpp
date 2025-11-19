@@ -13,6 +13,7 @@
 #include <Kokkos_Macros.hpp>
 #include <Kokkos_MathematicalFunctions.hpp>
 
+#include "deriv.hpp"
 #include "integrals.hpp"
 #include "periodic_extrapolation_rule.hpp"
 
@@ -39,21 +40,6 @@ template <
         class UpperExtrapolationRule>
 class SplineEvaluator
 {
-private:
-    /**
-     * @brief Tag to indicate that the value of the spline should be evaluated.
-     */
-    struct eval_type
-    {
-    };
-
-    /**
-     * @brief Tag to indicate that derivative of the spline should be evaluated.
-     */
-    struct eval_deriv_type
-    {
-    };
-
 public:
     /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
@@ -362,6 +348,7 @@ public:
                 });
     }
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
     /**
      * @brief Differentiate 1D spline function (described by its spline coefficients) at a given coordinate.
      *
@@ -374,12 +361,15 @@ public:
      * @return The derivative of the spline function at the desired coordinate.
      */
     template <class Layout, class... CoordsDims>
-    KOKKOS_FUNCTION double deriv(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
+    [[deprecated("Use deriv(DiscreteElement<Deriv<Dim>>(1), ...) instead")]] KOKKOS_FUNCTION double
+    deriv(ddc::Coordinate<CoordsDims...> const& coord_eval,
+          ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const spline_coef)
+            const
     {
-        return eval_no_bc<eval_deriv_type>(coord_eval, spline_coef);
+        return deriv(
+                ddc::DiscreteElement<Deriv<continuous_dimension_type>>(1),
+                coord_eval,
+                spline_coef);
     }
 
     /**
@@ -406,7 +396,7 @@ public:
             class Layout3,
             class BatchedInterpolationDDom,
             class... CoordsDims>
-    void deriv(
+    [[deprecated("Use deriv(DiscreteElement<Deriv<Dim>>(1), ...) instead")]] void deriv(
             ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
@@ -420,24 +410,11 @@ public:
                     Layout3,
                     memory_space> const spline_coef) const
     {
-        evaluation_domain_type const evaluation_domain(spline_eval.domain());
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
-
-        ddc::parallel_for_each(
-                "ddc_splines_differentiate",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_1D = spline_eval[j];
-                    auto const coords_eval_1D = coords_eval[j];
-                    auto const spline_coef_1D = spline_coef[j];
-                    for (auto const i : evaluation_domain) {
-                        spline_eval_1D(i)
-                                = eval_no_bc<eval_deriv_type>(coords_eval_1D(i), spline_coef_1D);
-                    }
-                });
+        return deriv(
+                ddc::DiscreteElement<Deriv<continuous_dimension_type>>(1),
+                spline_eval,
+                coords_eval,
+                spline_coef);
     }
 
     /**
@@ -455,7 +432,7 @@ public:
      * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
      */
     template <class Layout1, class Layout2, class BatchedInterpolationDDom>
-    void deriv(
+    [[deprecated("Use deriv(DiscreteElement<Deriv<Dim>>(1), ...) instead")]] void deriv(
             ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
@@ -464,6 +441,129 @@ public:
                     Layout2,
                     memory_space> const spline_coef) const
     {
+        return deriv(
+                ddc::DiscreteElement<Deriv<continuous_dimension_type>>(1),
+                spline_eval,
+                spline_coef);
+    }
+#endif
+
+    /**
+     * @brief Differentiate 1D spline function (described by its spline coefficients) at a given coordinate.
+     *
+     * The spline coefficients represent a 1D spline function defined on a B-splines (basis splines). They can be
+     * obtained via various methods, such as using a SplineBuilder.
+     *
+     * @param deriv_order A DiscreteElement containing the order of derivation for the dimension of interest.
+     * If the dimension is not present, the order of derivation is considered to be 0. The highest valid order is 1.
+     * @param coord_eval The coordinate where the spline is differentiated. Note that only the component along the dimension of interest is used.
+     * @param spline_coef A ChunkSpan storing the 1D spline coefficients.
+     *
+     * @return The derivative of the spline function at the desired coordinate.
+     */
+    template <class DElem, class Layout, class... CoordsDims>
+    KOKKOS_FUNCTION double deriv(
+            DElem const& deriv_order,
+            ddc::Coordinate<CoordsDims...> const& coord_eval,
+            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
+                    spline_coef) const
+    {
+        static_assert(is_discrete_domain_v<DElem>);
+        return eval_no_bc(deriv_order, coord_eval, spline_coef);
+    }
+
+    /**
+     * @brief Differentiate 1D spline function (described by its spline coefficients) on a mesh.
+     *
+     * The spline coefficients represent a spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
+     *
+     * The derivation is not performed in a multidimensional way (in any sense). This is a batched 1D derivation.
+     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
+     * the derivation is performed with the 1D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     *
+     * @param[in] deriv_order A DiscreteElement containing the order of derivation for the dimension of interest.
+     * If the dimension is not present, the order of derivation is considered to be 0. The highest valid order is 1.
+     * @param[out] spline_eval The derivatives of the spline function at the desired coordinates. For practical reasons those are
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
+     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
+     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
+     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
+     * the set of 1D spline coefficients retained to perform the evaluation).
+     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
+     */
+    template <
+            class DElem,
+            class Layout1,
+            class Layout2,
+            class Layout3,
+            class BatchedInterpolationDDom,
+            class... CoordsDims>
+    void deriv(
+            DElem const& deriv_order,
+            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
+                    spline_eval,
+            ddc::ChunkSpan<
+                    ddc::Coordinate<CoordsDims...> const,
+                    BatchedInterpolationDDom,
+                    Layout2,
+                    memory_space> const coords_eval,
+            ddc::ChunkSpan<
+                    double const,
+                    batched_spline_domain_type<BatchedInterpolationDDom>,
+                    Layout3,
+                    memory_space> const spline_coef) const
+    {
+        static_assert(is_discrete_element_v<DElem>);
+
+        evaluation_domain_type const evaluation_domain(spline_eval.domain());
+        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
+
+        ddc::parallel_for_each(
+                "ddc_splines_differentiate",
+                exec_space(),
+                batch_domain,
+                KOKKOS_CLASS_LAMBDA(
+                        typename batch_domain_type<
+                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                    auto const spline_eval_1D = spline_eval[j];
+                    auto const coords_eval_1D = coords_eval[j];
+                    auto const spline_coef_1D = spline_coef[j];
+                    for (auto const i : evaluation_domain) {
+                        spline_eval_1D(i)
+                                = eval_no_bc(deriv_order, coords_eval_1D(i), spline_coef_1D);
+                    }
+                });
+    }
+
+    /**
+     * @brief Differentiate 1D spline function (described by its spline coefficients) on a mesh.
+     *
+     * The spline coefficients represent a spline function defined on a cartesian product of batch_domain and B-splines
+     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder.
+     *
+     * The derivation is not performed in a multidimensional way (in any sense). This is a batched 1D derivation.
+     * This means that for each slice of spline_eval the evaluation is performed with
+     * the 1D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
+     *
+     * @param[in] deriv_order A DiscreteElement containing the order of derivation for the dimension of interest.
+     * If the dimension is not present, the order of derivation is considered to be 0. The highest valid order is 1.
+     * @param[out] spline_eval The derivatives of the spline function at the coordinates.
+     * @param[in] spline_coef A ChunkSpan storing the spline coefficients.
+     */
+    template <class DElem, class Layout1, class Layout2, class BatchedInterpolationDDom>
+    void deriv(
+            DElem const& deriv_order,
+            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
+                    spline_eval,
+            ddc::ChunkSpan<
+                    double const,
+                    batched_spline_domain_type<BatchedInterpolationDDom>,
+                    Layout2,
+                    memory_space> const spline_coef) const
+    {
+        static_assert(is_discrete_element_v<DElem>);
+
         evaluation_domain_type const evaluation_domain(spline_eval.domain());
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
 
@@ -479,8 +579,7 @@ public:
                     for (auto const i : evaluation_domain) {
                         ddc::Coordinate<continuous_dimension_type> coord_eval_1D
                                 = ddc::coordinate(i);
-                        spline_eval_1D(i)
-                                = eval_no_bc<eval_deriv_type>(coord_eval_1D, spline_coef_1D);
+                        spline_eval_1D(i) = eval_no_bc(deriv_order, coord_eval_1D, spline_coef_1D);
                     }
                 });
     }
@@ -557,27 +656,41 @@ private:
                 return m_upper_extrap_rule(coord_eval_interest, spline_coef);
             }
         }
-        return eval_no_bc<eval_type>(coord_eval_interest, spline_coef);
+        return eval_no_bc(ddc::DiscreteElement<>(), coord_eval_interest, spline_coef);
     }
 
-    template <class EvalType, class Layout, class... CoordsDims>
+    template <class... DDims, class Layout, class... CoordsDims>
     KOKKOS_INLINE_FUNCTION double eval_no_bc(
+            ddc::DiscreteElement<DDims...> const& deriv_order,
             ddc::Coordinate<CoordsDims...> const& coord_eval,
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
+        using deriv_dim = ddc::Deriv<continuous_dimension_type>;
         static_assert(
-                std::is_same_v<EvalType, eval_type> || std::is_same_v<EvalType, eval_deriv_type>);
+                sizeof...(DDims) == 0
+                        || type_seq_same_v<detail::TypeSeq<DDims...>, detail::TypeSeq<deriv_dim>>,
+                "The only valid dimension for deriv_order is Deriv<Dim>");
+
+        auto const order = select_or(deriv_order, ddc::DiscreteElement<deriv_dim>(0)).uid();
+        KOKKOS_ASSERT(order >= 0 && order < 2);
+
         ddc::DiscreteElement<bsplines_type> jmin;
         std::array<double, bsplines_type::degree() + 1> vals_ptr;
         Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type::degree() + 1>> const
                 vals(vals_ptr.data());
         ddc::Coordinate<continuous_dimension_type> const coord_eval_interest(coord_eval);
-        if constexpr (std::is_same_v<EvalType, eval_type>) {
+
+        if constexpr (sizeof...(DDims) == 0) {
             jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
-        } else if constexpr (std::is_same_v<EvalType, eval_deriv_type>) {
-            jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interest);
+        } else {
+            if (order == 0) {
+                jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
+            } else if (order == 1) {
+                jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interest);
+            }
         }
+
         double y = 0.0;
         for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {
             y += spline_coef(ddc::DiscreteElement<bsplines_type>(jmin + i)) * vals[i];

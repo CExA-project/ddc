@@ -2216,14 +2216,14 @@ private:
                         Kokkos::extents<
                                 std::size_t,
                                 bsplines_type1::degree() + 1,
-                                Kokkos::dynamic_extent>>
+                                Kokkos::dynamic_extent>> const
                         derivs1(derivs1_ptr.data(), order1 + 1);
 
                 jmin1 = ddc::discrete_space<bsplines_type1>()
                                 .eval_basis_and_n_derivs(derivs1, coord_eval_interest1, order1);
 
                 for (std::size_t i = 0; i < bsplines_type1::degree() + 1; ++i) {
-                    vals1[i] = derivs1(i, order1);
+                    vals1[i] = DDC_MDSPAN_ACCESS_OP(derivs1, i, order1);
                 }
             }
         }
@@ -2244,14 +2244,14 @@ private:
                         Kokkos::extents<
                                 std::size_t,
                                 bsplines_type2::degree() + 1,
-                                Kokkos::dynamic_extent>>
+                                Kokkos::dynamic_extent>> const
                         derivs2(derivs2_ptr.data(), order2 + 1);
 
                 jmin2 = ddc::discrete_space<bsplines_type2>()
                                 .eval_basis_and_n_derivs(derivs2, coord_eval_interest2, order2);
 
                 for (std::size_t i = 0; i < bsplines_type2::degree() + 1; ++i) {
-                    vals2[i] = derivs2(i, order2);
+                    vals2[i] = DDC_MDSPAN_ACCESS_OP(derivs2, i, order2);
                 }
             }
         }
@@ -2272,14 +2272,14 @@ private:
                         Kokkos::extents<
                                 std::size_t,
                                 bsplines_type3::degree() + 1,
-                                Kokkos::dynamic_extent>>
+                                Kokkos::dynamic_extent>> const
                         derivs3(derivs3_ptr.data(), order3 + 1);
 
                 jmin3 = ddc::discrete_space<bsplines_type3>()
                                 .eval_basis_and_n_derivs(derivs3, coord_eval_interest3, order3);
 
                 for (std::size_t i = 0; i < bsplines_type3::degree() + 1; ++i) {
-                    vals3[i] = derivs3(i, order3);
+                    vals3[i] = DDC_MDSPAN_ACCESS_OP(derivs3, i, order3);
                 }
             }
         }

@@ -299,7 +299,11 @@ void BatchedSplineTest()
 
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator_batched.deriv(spline_eval_deriv, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator_batched
+            .deriv(ddc::DiscreteElement<ddc::Deriv<I>>(1),
+                   spline_eval_deriv,
+                   coords_eval.span_cview(),
+                   coef.span_cview());
     spline_evaluator_batched.integrate(spline_eval_integrals, coef.span_cview());
 
     // Checking errors (we recover the initial values)

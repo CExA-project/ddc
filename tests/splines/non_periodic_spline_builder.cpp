@@ -197,7 +197,10 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const spline_eval_deriv(spline_eval_deriv_alloc.span_view());
     spline_evaluator
-            .deriv(spline_eval_deriv.span_view(), coords_eval.span_cview(), coef.span_cview());
+            .deriv(ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
+                   spline_eval_deriv.span_view(),
+                   coords_eval.span_cview(),
+                   coef.span_cview());
 
     ddc::Chunk integral(
             spline_builder.batch_domain(interpolation_domain),

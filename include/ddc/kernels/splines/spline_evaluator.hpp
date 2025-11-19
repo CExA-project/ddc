@@ -673,7 +673,7 @@ private:
                 "The only valid dimension for deriv_order is Deriv<Dim>");
 
         auto const order = select_or(deriv_order, ddc::DiscreteElement<deriv_dim>(0)).uid();
-        KOKKOS_ASSERT(order >= 0 && order < 2);
+        KOKKOS_ASSERT(order >= 0 && order < 2)
 
         ddc::DiscreteElement<bsplines_type> jmin;
         std::array<double, bsplines_type::degree() + 1> vals_ptr;

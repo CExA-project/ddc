@@ -81,11 +81,12 @@ TEST(TransformReduce, TwoDimensions)
             dom.size() * (dom.size() - 1) / 2);
 }
 
-int TestAnnotatedTransformReduce(ddc::ChunkSpan<
-                                 int,
-                                 DDomXY,
-                                 Kokkos::layout_right,
-                                 typename Kokkos::DefaultExecutionSpace::memory_space> chunk)
+int TestAnnotatedTransformReduce(
+        ddc::ChunkSpan<
+                int,
+                DDomXY,
+                Kokkos::layout_right,
+                typename Kokkos::DefaultExecutionSpace::memory_space> chunk)
 {
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const count("");
     ddc::parallel_for_each(

@@ -98,8 +98,9 @@ int TestAnnotatedTransformReduce(ddc::ChunkSpan<
                         ddc::reducer::sum<int>(),
                         chunk);
             });
-    Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultHostExecutionSpace> const count_host
-            = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), count);
+    Kokkos::fence();
+    auto const count_host = Kokkos::create_mirror_view(count);
+    Kokkos::deep_copy(count_host, count);
     return count_host();
 }
 

@@ -63,6 +63,10 @@ class DiscreteDomain
     template <class...>
     friend class DiscreteDomain;
 
+    static_assert(
+            type_seq_is_unique_v<detail::TypeSeq<DDims...>>,
+            "The dimensions of a DiscreteDomain must be unique");
+
 public:
     using discrete_element_type = DiscreteElement<DDims...>;
 

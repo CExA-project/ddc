@@ -93,3 +93,19 @@ TEST(TypeSeqTest, Replace)
     using ExpectedR = ddc::detail::TypeSeq<a, y, c, z, e>;
     EXPECT_TRUE((ddc::type_seq_same_v<R, ExpectedR>));
 }
+
+TEST(TypeSeqTest, IsUnique)
+{
+    using A = ddc::detail::TypeSeq<a, b, c, d, e>;
+    using B = ddc::detail::TypeSeq<>;
+    using C = ddc::detail::TypeSeq<y>;
+    using D = ddc::detail::TypeSeq<y, y>;
+    using E = ddc::detail::TypeSeq<a, b, c, d, b, e>;
+    using F = ddc::detail::TypeSeq<a, b, a, c, b, a, d, b, e, a>;
+    EXPECT_TRUE((ddc::type_seq_is_unique_v<A>));
+    EXPECT_TRUE((ddc::type_seq_is_unique_v<B>));
+    EXPECT_TRUE((ddc::type_seq_is_unique_v<C>));
+    EXPECT_FALSE((ddc::type_seq_is_unique_v<D>));
+    EXPECT_FALSE((ddc::type_seq_is_unique_v<E>));
+    EXPECT_FALSE((ddc::type_seq_is_unique_v<F>));
+}

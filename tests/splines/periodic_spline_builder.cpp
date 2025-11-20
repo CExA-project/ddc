@@ -105,10 +105,17 @@ void TestPeriodicSplineBuilderTestIdentity()
             yvals.domain(),
             KOKKOS_LAMBDA(DElemX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
 
-    // 6. Finally build the spline by filling `coef`
-    spline_builder(coef.span_view(), yvals.span_cview());
+    // 6. Create a empty chunk for the derivatives, as they are not used with periodic boundary conditions
+    ddc::ChunkSpan<
+            double const,
+            ddc::StridedDiscreteDomain<DDimX, ddc::Deriv<DimX>>,
+            Kokkos::layout_right,
+            memory_space> const derivs {};
 
-    // 7. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
+    // 7. Finally build the spline by filling `coef`
+    spline_builder(coef.span_view(), yvals.span_cview(), derivs);
+
+    // 8. Create a SplineEvaluator to evaluate the spline at any point in the domain of the BSplines
     ddc::PeriodicExtrapolationRule<DimX> const periodic_extrapolation;
     ddc::SplineEvaluator<
             execution_space,

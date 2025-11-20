@@ -33,7 +33,7 @@ void for_each_serial(
     }
 }
 
-template <class RetType, class Element, std::size_t N, class Functor, class... Is>
+template <class Support, class Element, std::size_t N, class Functor, class... Is>
 KOKKOS_FUNCTION void annotated_for_each_serial(
         std::array<Element, N> const& begin,
         std::array<Element, N> const& end,
@@ -42,10 +42,10 @@ KOKKOS_FUNCTION void annotated_for_each_serial(
 {
     static constexpr std::size_t I = sizeof...(Is);
     if constexpr (I == N) {
-        f(RetType(is...));
+        f(Support(is...));
     } else {
         for (Element ii = begin[I]; ii < end[I]; ++ii) {
-            annotated_for_each_serial<RetType>(begin, end, f, is..., ii);
+            annotated_for_each_serial<Support>(begin, end, f, is..., ii);
         }
     }
 }

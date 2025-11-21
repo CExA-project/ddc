@@ -291,12 +291,13 @@ void PrintTestMetadata()
         print_type_info(ss, chunk_span);
         EXPECT_THAT(
                 ss.str(),
-                testing::MatchesRegex("anonymous_namespace_workaround_print_cpp::Dim0\\(5\\)×"
-                                      "anonymous_namespace_workaround_print_cpp::Dim1\\(5\\)\n"
-                                      "ddc::ChunkSpan<double, ddc::DiscreteDomain"
-                                      "<anonymous_namespace_workaround_print_cpp::Dim0,"
-                                      " anonymous_namespace_workaround_print_cpp::Dim1>"
-                                      ", Kokkos::layout_.+, Kokkos::.+Space>\n"));
+                testing::MatchesRegex(
+                        "anonymous_namespace_workaround_print_cpp::Dim0\\(5\\)×"
+                        "anonymous_namespace_workaround_print_cpp::Dim1\\(5\\)\n"
+                        "ddc::ChunkSpan<double, ddc::DiscreteDomain"
+                        "<anonymous_namespace_workaround_print_cpp::Dim0,"
+                        " anonymous_namespace_workaround_print_cpp::Dim1>"
+                        ", Kokkos::layout_.+, Kokkos::.+Space>\n"));
     }
 }
 

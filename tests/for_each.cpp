@@ -84,11 +84,12 @@ TEST(ForEachSerialHost, TwoDimensions)
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
-void TestAnnotatedForEachSerialDevice1D(ddc::ChunkSpan<
-                                        int,
-                                        DDomX,
-                                        Kokkos::layout_right,
-                                        typename Kokkos::DefaultExecutionSpace::memory_space> view)
+void TestAnnotatedForEachSerialDevice1D(
+        ddc::ChunkSpan<
+                int,
+                DDomX,
+                Kokkos::layout_right,
+                typename Kokkos::DefaultExecutionSpace::memory_space> view)
 {
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
@@ -118,11 +119,12 @@ TEST(AnnotatedForEachSerialDevice, OneDimension)
             dom.size());
 }
 
-void TestAnnotatedForEachSerialDevice2D(ddc::ChunkSpan<
-                                        int,
-                                        DDomXY,
-                                        Kokkos::layout_right,
-                                        typename Kokkos::DefaultExecutionSpace::memory_space> view)
+void TestAnnotatedForEachSerialDevice2D(
+        ddc::ChunkSpan<
+                int,
+                DDomXY,
+                Kokkos::layout_right,
+                typename Kokkos::DefaultExecutionSpace::memory_space> view)
 {
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),

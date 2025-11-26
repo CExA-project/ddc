@@ -24,7 +24,7 @@ jobs:
           ref: gh-pages
       - name: Install linkchecker
         run: |
-          pipx install linkchecker
+          pipx install linkchecker~=10.6
       - name: Analysing the links of the website
         run: |
           linkchecker --check-extern --ignore-url=https://www.doxygen.org/index.html index.html

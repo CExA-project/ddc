@@ -32,7 +32,7 @@ jobs:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3  # v6.0.0
       - name: Install dependencies
         run: |
-          pipx install black
+          pipx install black~=25.11
       - name: Check format using black
         run: |
           black --line-length 100 --check bin/trailing_spaces $(git ls-files '*.py')
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3  # v6.0.0
       - name: Install dependencies
         run: |
-          pipx install pylint
+          pipx install pylint~=4.0
       - name: Analysing the code with pylint
         run: |
           pylint bin/trailing_spaces $(git ls-files '*.py' ':!benchmarks/splines_plot.py')

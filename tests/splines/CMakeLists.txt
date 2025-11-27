@@ -207,3 +207,31 @@ foreach(BC "BC_PERIODIC" "BC_GREVILLE" "BC_HERMITE")
         endforeach()
     endforeach()
 endforeach()
+
+foreach(DEGREE RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")
+    foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
+        set(test_name "2d_splines_derivatives_tests_BATCHED_DEGREE_${DEGREE}_${BSPLINES_TYPE}")
+        add_executable("${test_name}" ../main.cpp 2d_spline_evaluator_derivatives.cpp)
+        target_compile_definitions(
+            "${test_name}"
+            PUBLIC -DDEGREE=${DEGREE} -D${BSPLINES_TYPE}
+        )
+        target_compile_features("${test_name}" PUBLIC cxx_std_17)
+        target_link_libraries("${test_name}" PUBLIC DDC::core DDC::splines GTest::gtest)
+        gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
+    endforeach()
+endforeach()
+
+foreach(DEGREE RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")
+    foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
+        set(test_name "3d_splines_derivatives_tests_BATCHED_DEGREE_${DEGREE}_${BSPLINES_TYPE}")
+        add_executable("${test_name}" ../main.cpp 3d_spline_evaluator_derivatives.cpp)
+        target_compile_definitions(
+            "${test_name}"
+            PUBLIC -DDEGREE=${DEGREE} -D${BSPLINES_TYPE}
+        )
+        target_compile_features("${test_name}" PUBLIC cxx_std_17)
+        target_link_libraries("${test_name}" PUBLIC DDC::core DDC::splines GTest::gtest)
+        gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
+    endforeach()
+endforeach()

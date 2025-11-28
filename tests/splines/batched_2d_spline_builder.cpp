@@ -494,12 +494,20 @@ void Batched2dSplineTest()
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
     spline_evaluator
-            .template deriv<I1>(spline_eval_deriv1, coords_eval.span_cview(), coef.span_cview());
+            .deriv(ddc::DiscreteElement<ddc::Deriv<I1>>(1),
+                   spline_eval_deriv1,
+                   coords_eval.span_cview(),
+                   coef.span_cview());
     spline_evaluator
-            .template deriv<I2>(spline_eval_deriv2, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv2<
-            I1,
-            I2>(spline_eval_deriv12, coords_eval.span_cview(), coef.span_cview());
+            .deriv(ddc::DiscreteElement<ddc::Deriv<I2>>(1),
+                   spline_eval_deriv2,
+                   coords_eval.span_cview(),
+                   coef.span_cview());
+    spline_evaluator
+            .deriv(ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I2>>(1, 1),
+                   spline_eval_deriv12,
+                   coords_eval.span_cview(),
+                   coef.span_cview());
 
     // Checking errors (we recover the initial values)
     double const max_norm_error = ddc::parallel_transform_reduce(

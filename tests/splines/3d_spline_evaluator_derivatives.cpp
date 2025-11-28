@@ -18,7 +18,7 @@
 
 #include "cosine_evaluator.hpp"
 #include "evaluator_3d.hpp"
-#include "higher_order_spline_error_bounds.hpp"
+#include "spline_error_bounds.hpp"
 
 inline namespace anonymous_namespace_workaround_3d_spline_evaluator_derivatives_cpp {
 
@@ -175,8 +175,7 @@ void test_deriv(
 
     double const max_norm_diff = evaluator.max_norm(order1, order2);
 
-    HigherOrderSplineErrorBounds<evaluator_type<DDimI1, DDimI2, DDimI3>> const error_bounds(
-            evaluator);
+    SplineErrorBounds<evaluator_type<DDimI1, DDimI2, DDimI3>> const error_bounds(evaluator);
 
     EXPECT_LE(
             max_norm_error_diff,

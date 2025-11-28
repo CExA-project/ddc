@@ -25,10 +25,8 @@ private:
              31.0 / 725760.0,
              50521.0 / 3715891200.0});
 
-private:
     Evaluator m_evaluator;
 
-private:
     /*******************************************************************************
      * Error bound in max norm for spline interpolation of periodic functions from:
      *
@@ -46,6 +44,18 @@ private:
         degree = std::min(degree, 9);
         return tikhomirov_error_bound_array[degree] * ddc::detail::ipow(cell_width, degree + 1)
                * max_norm;
+    }
+
+    /// @brief Computes the max norm on the dimension DDimI
+    template <class DDimI, class... DDims>
+    double max_norm(
+            ddc::DiscreteElement<DDims...> const& orders,
+            std::array<int, sizeof...(DDims)> const& degrees) const
+    {
+        return m_evaluator.max_norm(
+                (std::is_same_v<DDims, DDimI>
+                         ? degrees[ddc::type_seq_rank_v<DDimI, ddc::detail::TypeSeq<DDims...>>] + 1
+                         : orders.template uid<DDims>())...);
     }
 
 public:
@@ -232,5 +242,19 @@ public:
     double error_bound_on_int(double cell_width, int degree) const
     {
         return tikhomirov_error_bound(cell_width, degree + 1, m_evaluator.max_norm(degree + 1));
+    }
+
+    template <class... DDims>
+    double error_bound(
+            ddc::DiscreteElement<DDims...> const& orders,
+            std::array<double, sizeof...(DDims)> const& cell_width,
+            std::array<int, sizeof...(DDims)> const& degrees) const
+    {
+        using ddims = ddc::detail::TypeSeq<DDims...>;
+        return (tikhomirov_error_bound(
+                        cell_width[ddc::type_seq_rank_v<DDims, ddims>],
+                        degrees[ddc::type_seq_rank_v<DDims, ddims>] - orders.template uid<DDims>(),
+                        max_norm<DDims>(orders, degrees))
+                + ...);
     }
 };

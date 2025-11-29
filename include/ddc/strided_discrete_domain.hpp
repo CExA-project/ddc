@@ -13,6 +13,7 @@
 
 #include "detail/type_seq.hpp"
 
+#include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
 
@@ -98,11 +99,19 @@ public:
     /// Construct a StridedDiscreteDomain by copies and merge of domains
     template <
             class... DDoms,
-            class = std::enable_if_t<(is_strided_discrete_domain_v<DDoms> && ...)>>
+            std::enable_if_t<(is_strided_discrete_domain_v<DDoms> && ...), bool> = true>
     KOKKOS_FUNCTION constexpr explicit StridedDiscreteDomain(DDoms const&... domains)
         : m_element_begin(domains.front()...)
         , m_extents(domains.extents()...)
         , m_strides(domains.strides()...)
+    {
+    }
+
+    /// Construct a StridedDiscreteDomain from a DiscreteDomain
+    KOKKOS_FUNCTION constexpr explicit StridedDiscreteDomain(DiscreteDomain<DDims...> const& domain)
+        : m_element_begin(domain.front())
+        , m_extents(domain.extents())
+        , m_strides((DiscreteVector<DDims>{1})...)
     {
     }
 
@@ -343,6 +352,13 @@ public:
     {
     }
 
+    // Construct a StridedDiscreteDomain from a reordered copy of `domain`
+    template <class... ODDims>
+    KOKKOS_FUNCTION constexpr explicit StridedDiscreteDomain(
+            [[maybe_unused]] DiscreteDomain<ODDims...> const& domain)
+    {
+    }
+
     /** Construct a StridedDiscreteDomain starting from element_begin with size points.
      * @param element_begin the lower bound in each direction
      * @param size the number of points in each direction
@@ -386,6 +402,11 @@ public:
     }
 
     static KOKKOS_FUNCTION constexpr discrete_vector_type extents() noexcept
+    {
+        return {};
+    }
+
+    static KOKKOS_FUNCTION constexpr discrete_vector_type strides() noexcept
     {
         return {};
     }

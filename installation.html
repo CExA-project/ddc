@@ -154,23 +154,21 @@ Installing with Spack</h1>
 <p>This method leverages the <a href="https://spack.io/">Spack package manager</a> for reproducible builds and dependency management. It is recommended on HPC systems or if you want an isolated environment.</p>
 <h2><a class="anchor" id="autotoc_md36"></a>
 1. Install Spack</h2>
-<p>Download and extract the latest Spack release (replace version if newer is available):</p>
-<div class="fragment"><div class="line">wget https://github.com/spack/spack/releases/download/v1.0.1/spack-1.0.1.tar.gz</div>
-<div class="line">tar -xvf spack-1.0.1.tar.gz</div>
-<div class="line">rm spack-1.0.1.tar.gz</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md37"></a>
+<p>Download and extract Spack:</p>
+<div class="fragment"><div class="line">wget https://github.com/spack/spack/releases/download/v1.1.0/spack-1.1.0.tar.gz</div>
+<div class="line">tar -xvf spack-1.1.0.tar.gz</div>
+<div class="line">rm spack-1.1.0.tar.gz</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>If you already have a Spack installation, the DDC package is available starting from builtin packages <code>v2025.11.0</code>.</dd></dl>
+<h2><a class="anchor" id="autotoc_md37"></a>
 2. Activate Spack</h2>
 <p>Spack must be activated before use:</p>
-<div class="fragment"><div class="line">. spack-1.0.1/share/spack/setup-env.sh</div>
+<div class="fragment"><div class="line">. spack-1.1.0/share/spack/setup-env.sh</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Add this line to your <code>~/.bashrc</code> or <code>~/.zshrc</code> to avoid reactivating in each new shell.</dd></dl>
 <h2><a class="anchor" id="autotoc_md38"></a>
 3. Install DDC</h2>
 <p>To avoid polluting other Spack setups, create a dedicated environment:</p>
 <div class="fragment"><div class="line">spack env create ddc-env</div>
-</div><!-- fragment --><p>Pin the Spack built-in packages repository to the commit of DDC recipe release (ensures recipe compatibility):</p>
-<div class="fragment"><div class="line">spack --env ddc-env repo update builtin --commit 633ec00a198102d61e7ffcdd551cd455a8689e66</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Starting from <b>Spack packages v2025.7.0</b>, this step will no longer be needed.</dd></dl>
-<p>Add and install DDC with default variants:</p>
+</div><!-- fragment --><p>Add and install DDC with default variants:</p>
 <div class="fragment"><div class="line">spack --env ddc-env add ddc</div>
 <div class="line">spack --env ddc-env install --jobs 1</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Installation can take a while since Spack builds dependencies from source. Use the <code>--jobs</code> option to run builds in parallel, but avoid setting it too high to prevent running out of memory.</dd></dl>

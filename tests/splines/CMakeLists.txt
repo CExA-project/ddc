@@ -221,11 +221,18 @@ endforeach()
 
 foreach(DEGREE RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")
     foreach(BSPLINES_TYPE "BSPLINES_TYPE_UNIFORM" "BSPLINES_TYPE_NON_UNIFORM")
-        set(test_name "3d_splines_derivatives_tests_BATCHED_DEGREE_${DEGREE}_${BSPLINES_TYPE}")
-        add_executable("${test_name}" ../main.cpp 3d_spline_evaluator_derivatives.cpp)
-        target_compile_definitions("${test_name}" PUBLIC -DDEGREE=${DEGREE} -D${BSPLINES_TYPE})
-        target_compile_features("${test_name}" PUBLIC cxx_std_17)
-        target_link_libraries("${test_name}" PUBLIC DDC::core DDC::splines GTest::gtest)
-        gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
+        foreach(IDX "1" "2" "3" "4")
+            set(test_name
+                "3d_splines_derivatives_tests_BATCHED_DEGREE_${DEGREE}_${BSPLINES_TYPE}_${IDX}"
+            )
+            add_executable("${test_name}" ../main.cpp 3d_spline_evaluator_derivatives.cpp)
+            target_compile_definitions(
+                "${test_name}"
+                PUBLIC -DDEGREE=${DEGREE} -D${BSPLINES_TYPE} -DSPLINE_EVALUATOR_3D_DERIV_TEST_${IDX}
+            )
+            target_compile_features("${test_name}" PUBLIC cxx_std_17)
+            target_link_libraries("${test_name}" PUBLIC DDC::core DDC::splines GTest::gtest)
+            gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
+        endforeach()
     endforeach()
 endforeach()

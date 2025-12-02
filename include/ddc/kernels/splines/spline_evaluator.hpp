@@ -468,7 +468,7 @@ public:
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        static_assert(is_discrete_domain_v<DElem>);
+        static_assert(is_discrete_element_v<DElem>);
         return eval_no_bc(deriv_order, coord_eval, spline_coef);
     }
 

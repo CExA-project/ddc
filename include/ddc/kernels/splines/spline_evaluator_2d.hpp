@@ -561,7 +561,7 @@ public:
           ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const spline_coef)
             const
     {
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_PUSH()
+        DDC_DISABLE_DEPRECATED_WARNINGS_PUSH()
         static_assert(
                 std::is_same_v<InterestDim, continuous_dimension_type1>
                 || std::is_same_v<InterestDim, continuous_dimension_type2>);
@@ -576,7 +576,7 @@ public:
                                              continuous_dimension_type>) {
             return deriv_dim_2(coord_eval, spline_coef);
         }
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_POP()
+        DDC_DISABLE_DEPRECATED_WARNINGS_POP()
     }
 
     /**
@@ -603,7 +603,7 @@ public:
            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const spline_coef)
             const
     {
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_PUSH()
+        DDC_DISABLE_DEPRECATED_WARNINGS_PUSH()
         static_assert(
                 (std::is_same_v<
                          InterestDim1,
@@ -614,7 +614,7 @@ public:
                             typename evaluation_discrete_dimension_type1::continuous_dimension_type>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>));
         return deriv_1_and_2(coord_eval, spline_coef);
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_POP()
+        DDC_DISABLE_DEPRECATED_WARNINGS_POP()
     }
 
     /**
@@ -887,7 +887,7 @@ public:
                     Layout3,
                     memory_space> const spline_coef) const
     {
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_PUSH()
+        DDC_DISABLE_DEPRECATED_WARNINGS_PUSH()
         static_assert(
                 std::is_same_v<
                         InterestDim,
@@ -904,7 +904,7 @@ public:
                                              continuous_dimension_type>) {
             return deriv_dim_2(spline_eval, coords_eval, spline_coef);
         }
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_POP()
+        DDC_DISABLE_DEPRECATED_WARNINGS_POP()
     }
 
     /**
@@ -931,7 +931,7 @@ public:
                     Layout2,
                     memory_space> const spline_coef) const
     {
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_PUSH()
+        DDC_DISABLE_DEPRECATED_WARNINGS_PUSH()
         static_assert(
                 std::is_same_v<
                         InterestDim,
@@ -948,7 +948,7 @@ public:
                                              continuous_dimension_type>) {
             return deriv_dim_2(spline_eval, spline_coef);
         }
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_POP()
+        DDC_DISABLE_DEPRECATED_WARNINGS_POP()
     }
 
     /**
@@ -998,7 +998,7 @@ public:
                    Layout3,
                    memory_space> const spline_coef) const
     {
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_PUSH()
+        DDC_DISABLE_DEPRECATED_WARNINGS_PUSH()
         static_assert(
                 (std::is_same_v<
                          InterestDim1,
@@ -1009,7 +1009,7 @@ public:
                             typename evaluation_discrete_dimension_type1::continuous_dimension_type>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>));
         return deriv_1_and_2(spline_eval, coords_eval, spline_coef);
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_POP()
+        DDC_DISABLE_DEPRECATED_WARNINGS_POP()
     }
 
     /**
@@ -1047,7 +1047,7 @@ public:
                    Layout2,
                    memory_space> const spline_coef) const
     {
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_PUSH()
+        DDC_DISABLE_DEPRECATED_WARNINGS_PUSH()
         static_assert(
                 (std::is_same_v<
                          InterestDim1,
@@ -1058,7 +1058,7 @@ public:
                             typename evaluation_discrete_dimension_type1::continuous_dimension_type>
                     && std::is_same_v<InterestDim1, continuous_dimension_type2>));
         return deriv_1_and_2(spline_eval, spline_coef);
-        KOKKOS_IMPL_DISABLE_DEPRECATED_WARNINGS_POP()
+        DDC_DISABLE_DEPRECATED_WARNINGS_POP()
     }
 #endif
 

@@ -942,13 +942,10 @@ private:
         if constexpr (!in_tags_v<deriv_dim1, deriv_dims>) {
             jmin1 = ddc::discrete_space<bsplines_type1>().eval_basis(vals1, coord_eval_interest1);
         } else {
-            auto const order1 = select_or(deriv_order, DiscreteElement<deriv_dim1>(0)).uid();
-            KOKKOS_ASSERT(order1 >= 0 && order1 < 4)
+            auto const order1 = deriv_order.template uid<deriv_dim1>();
+            KOKKOS_ASSERT(order1 > 0 && order1 < 4)
 
-            if (order1 == 0) {
-                jmin1 = ddc::discrete_space<bsplines_type1>()
-                                .eval_basis(vals1, coord_eval_interest1);
-            } else if (order1 == 1) {
+            if (order1 == 1) {
                 jmin1 = ddc::discrete_space<bsplines_type1>()
                                 .eval_deriv(vals1, coord_eval_interest1);
             } else {
@@ -973,13 +970,10 @@ private:
         if constexpr (!in_tags_v<deriv_dim2, deriv_dims>) {
             jmin2 = ddc::discrete_space<bsplines_type2>().eval_basis(vals2, coord_eval_interest2);
         } else {
-            auto const order2 = select_or(deriv_order, DiscreteElement<deriv_dim2>(0)).uid();
-            KOKKOS_ASSERT(order2 >= 0 && order2 < 4)
+            auto const order2 = deriv_order.template uid<deriv_dim2>();
+            KOKKOS_ASSERT(order2 > 0 && order2 < 4)
 
-            if (order2 == 0) {
-                jmin2 = ddc::discrete_space<bsplines_type2>()
-                                .eval_basis(vals2, coord_eval_interest2);
-            } else if (order2 == 1) {
+            if (order2 == 1) {
                 jmin2 = ddc::discrete_space<bsplines_type2>()
                                 .eval_deriv(vals2, coord_eval_interest2);
             } else {
@@ -1004,13 +998,10 @@ private:
         if constexpr (!in_tags_v<deriv_dim3, deriv_dims>) {
             jmin3 = ddc::discrete_space<bsplines_type3>().eval_basis(vals3, coord_eval_interest3);
         } else {
-            auto const order3 = select_or(deriv_order, DiscreteElement<deriv_dim3>(0)).uid();
-            KOKKOS_ASSERT(order3 >= 0 && order3 < 4)
+            auto const order3 = deriv_order.template uid<deriv_dim3>();
+            KOKKOS_ASSERT(order3 > 0 && order3 < 4)
 
-            if (order3 == 0) {
-                jmin3 = ddc::discrete_space<bsplines_type3>()
-                                .eval_basis(vals3, coord_eval_interest3);
-            } else if (order3 == 1) {
+            if (order3 == 1) {
                 jmin3 = ddc::discrete_space<bsplines_type3>()
                                 .eval_deriv(vals3, coord_eval_interest3);
             } else {

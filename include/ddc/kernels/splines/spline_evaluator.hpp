@@ -681,14 +681,8 @@ private:
         if constexpr (sizeof...(DDims) == 0) {
             jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
         } else {
-            auto const order = select_or(deriv_order, ddc::DiscreteElement<deriv_dim>(0)).uid();
-            KOKKOS_ASSERT(order >= 0 && order < 2)
-
-            if (order == 0) {
-                jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
-            } else {
-                jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interest);
-            }
+            KOKKOS_ASSERT(deriv_order.uid() == 1)
+            jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interest);
         }
 
         double y = 0.0;

@@ -132,7 +132,8 @@ template <
         class SplineEvaluator,
         class CoordsSpan,
         class CoefSpan,
-        class SplineDerivSpan>
+        class SplineDerivSpan,
+        class DElem>
 void test_deriv(
         ExecSpace const& exec_space,
         SplineEvaluator const& spline_evaluator,
@@ -140,10 +141,7 @@ void test_deriv(
         CoefSpan const& coef,
         SplineDerivSpan const& spline_eval_deriv,
         evaluator_type<DDimI1, DDimI2, DDimI3> const& evaluator,
-        ddc::DiscreteElement<
-                ddc::Deriv<typename DDimI1::continuous_dimension_type>,
-                ddc::Deriv<typename DDimI2::continuous_dimension_type>,
-                ddc::Deriv<typename DDimI3::continuous_dimension_type>> const& deriv_order,
+        DElem const& deriv_order,
         std::size_t const ncells)
 {
     using domain = decltype(spline_eval_deriv.domain());
@@ -156,9 +154,9 @@ void test_deriv(
 
     spline_evaluator.deriv(deriv_order, spline_eval_deriv, coords_eval, coef);
 
-    auto const order1 = deriv_order.template uid<ddc::Deriv<I1>>();
-    auto const order2 = deriv_order.template uid<ddc::Deriv<I2>>();
-    auto const order3 = deriv_order.template uid<ddc::Deriv<I3>>();
+    auto const order1 = ddc::select_or(deriv_order, ddc::DiscreteElement<ddc::Deriv<I1>>(0)).uid();
+    auto const order2 = ddc::select_or(deriv_order, ddc::DiscreteElement<ddc::Deriv<I2>>(0)).uid();
+    auto const order3 = ddc::select_or(deriv_order, ddc::DiscreteElement<ddc::Deriv<I3>>(0)).uid();
 
     double const max_norm_error_diff = ddc::parallel_transform_reduce(
             exec_space,
@@ -181,10 +179,41 @@ void test_deriv(
             max_norm_error_diff,
             std::
                     max(error_bounds.error_bound(
-                                ddc::detail::array(deriv_order),
+                                std::array<ddc::DiscreteElementType, 3> {order1, order2, order3},
                                 {dx<I1>(ncells), dx<I2>(ncells), dx<I3>(ncells)},
                                 {s_degree, s_degree, s_degree}),
                         1e-11 * max_norm_diff));
+}
+
+template <
+        typename I1,
+        typename I2,
+        typename I3,
+        std::size_t order1,
+        std::size_t order2,
+        std::size_t order3>
+auto make_deriv_order_delem()
+{
+    if constexpr (order1 == 0 && order2 == 0 && order3 == 0) {
+        return ddc::DiscreteElement<>();
+    } else if constexpr (order1 == 0 && order2 == 0 && order3 >= 1) {
+        return ddc::DiscreteElement<ddc::Deriv<I3>>(order3);
+    } else if constexpr (order1 == 0 && order2 >= 1 && order3 == 0) {
+        return ddc::DiscreteElement<ddc::Deriv<I2>>(order2);
+    } else if constexpr (order1 == 0 && order2 >= 1 && order3 >= 1) {
+        return ddc::DiscreteElement<ddc::Deriv<I2>, ddc::Deriv<I3>>(order2, order3);
+    } else if constexpr (order1 >= 1 && order2 == 0 && order3 == 0) {
+        return ddc::DiscreteElement<ddc::Deriv<I1>>(order1);
+    } else if constexpr (order1 >= 1 && order2 == 0 && order3 >= 1) {
+        return ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I3>>(order1, order3);
+    } else if constexpr (order1 >= 1 && order2 >= 1 && order3 == 0) {
+        return ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I2>>(order1, order2);
+    } else {
+        return ddc::DiscreteElement<
+                ddc::Deriv<I1>,
+                ddc::Deriv<I2>,
+                ddc::Deriv<I3>>(order1, order2, order3);
+    }
 }
 
 // Checks that when evaluating the spline at interpolation points one
@@ -332,10 +361,7 @@ void SplineEvaluator3dDerivativesTest()
             coef.span_cview(),                                                                     \
             spline_eval_deriv,                                                                     \
             evaluator,                                                                             \
-            ddc::DiscreteElement<                                                                  \
-                    ddc::Deriv<I1>,                                                                \
-                    ddc::Deriv<I2>,                                                                \
-                    ddc::Deriv<I3>>(order1, order2, order3),                                       \
+            make_deriv_order_delem<I1, I2, I3, order1, order2, order3>(),                          \
             ncells)
 
 #if defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1)

@@ -243,6 +243,11 @@ public:
         return tikhomirov_error_bound(cell_width, degree + 1, m_evaluator.max_norm(degree + 1));
     }
 
+    /*******************************************************************************
+     * NOTE: We assume that the error bound formula for derivatives of order 0 and
+     * 1 works for higher orders as well.
+     *******************************************************************************/
+
     template <std::size_t N>
     double error_bound(
             std::array<ddc::DiscreteElementType, N> const& orders,

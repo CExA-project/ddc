@@ -1361,11 +1361,6 @@ private:
                 (in_tags_v<DDims, ddc::detail::TypeSeq<deriv_dim1, deriv_dim2>> && ...),
                 "The only valid dimensions for deriv_order are Deriv<Dim1> and Deriv<Dim2>");
 
-        auto const order1 = select_or(deriv_order, DiscreteElement<deriv_dim1>(0)).uid();
-        auto const order2 = select_or(deriv_order, DiscreteElement<deriv_dim2>(0)).uid();
-        KOKKOS_ASSERT(order1 >= 0 && order1 < 3)
-        KOKKOS_ASSERT(order2 >= 0 && order2 < 3)
-
         ddc::DiscreteElement<bsplines_type1> jmin1;
         ddc::DiscreteElement<bsplines_type2> jmin2;
 
@@ -1381,6 +1376,9 @@ private:
         if constexpr (!in_tags_v<deriv_dim1, deriv_dims>) {
             jmin1 = ddc::discrete_space<bsplines_type1>().eval_basis(vals1, coord_eval_interest1);
         } else {
+            auto const order1 = select_or(deriv_order, DiscreteElement<deriv_dim1>(0)).uid();
+            KOKKOS_ASSERT(order1 >= 0 && order1 < 3)
+
             if (order1 == 0) {
                 jmin1 = ddc::discrete_space<bsplines_type1>()
                                 .eval_basis(vals1, coord_eval_interest1);
@@ -1406,6 +1404,9 @@ private:
         if constexpr (!in_tags_v<deriv_dim2, deriv_dims>) {
             jmin2 = ddc::discrete_space<bsplines_type2>().eval_basis(vals2, coord_eval_interest2);
         } else {
+            auto const order2 = select_or(deriv_order, DiscreteElement<deriv_dim2>(0)).uid();
+            KOKKOS_ASSERT(order2 >= 0 && order2 < 3)
+
             if (order2 == 0) {
                 jmin2 = ddc::discrete_space<bsplines_type2>()
                                 .eval_basis(vals2, coord_eval_interest2);

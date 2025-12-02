@@ -672,9 +672,6 @@ private:
                         || type_seq_same_v<detail::TypeSeq<DDims...>, detail::TypeSeq<deriv_dim>>,
                 "The only valid dimension for deriv_order is Deriv<Dim>");
 
-        auto const order = select_or(deriv_order, ddc::DiscreteElement<deriv_dim>(0)).uid();
-        KOKKOS_ASSERT(order >= 0 && order < 2)
-
         ddc::DiscreteElement<bsplines_type> jmin;
         std::array<double, bsplines_type::degree() + 1> vals_ptr;
         Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type::degree() + 1>> const
@@ -684,6 +681,9 @@ private:
         if constexpr (sizeof...(DDims) == 0) {
             jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
         } else {
+            auto const order = select_or(deriv_order, ddc::DiscreteElement<deriv_dim>(0)).uid();
+            KOKKOS_ASSERT(order >= 0 && order < 2)
+
             if (order == 0) {
                 jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
             } else {

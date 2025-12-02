@@ -181,7 +181,7 @@ void test_deriv(
             max_norm_error_diff,
             std::
                     max(error_bounds.error_bound(
-                                deriv_order,
+                                ddc::detail::array(deriv_order),
                                 {dx<I1>(ncells), dx<I2>(ncells), dx<I3>(ncells)},
                                 {s_degree, s_degree, s_degree}),
                         1e-11 * max_norm_diff));

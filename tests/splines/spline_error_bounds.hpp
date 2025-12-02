@@ -46,16 +46,15 @@ private:
                * max_norm;
     }
 
-    /// @brief Computes the max norm on the dimension DDimI
-    template <class DDimI, class... DDims>
+    /// @brief Computes the max norm on the ith component
+    template <std::size_t N, std::size_t... Ints>
     double max_norm(
-            ddc::DiscreteElement<DDims...> const& orders,
-            std::array<int, sizeof...(DDims)> const& degrees) const
+            std::array<ddc::DiscreteElementType, N> const& orders,
+            std::array<std::size_t, N> const& degrees,
+            std::size_t i,
+            std::index_sequence<Ints...>) const
     {
-        return m_evaluator.max_norm(
-                (std::is_same_v<DDims, DDimI>
-                         ? degrees[ddc::type_seq_rank_v<DDimI, ddc::detail::TypeSeq<DDims...>>] + 1
-                         : orders.template uid<DDims>())...);
+        return m_evaluator.max_norm((Ints == i ? degrees[i] + 1 : orders[Ints])...);
     }
 
 public:
@@ -244,17 +243,19 @@ public:
         return tikhomirov_error_bound(cell_width, degree + 1, m_evaluator.max_norm(degree + 1));
     }
 
-    template <class... DDims>
+    template <std::size_t N>
     double error_bound(
-            ddc::DiscreteElement<DDims...> const& orders,
-            std::array<double, sizeof...(DDims)> const& cell_width,
-            std::array<int, sizeof...(DDims)> const& degrees) const
+            std::array<ddc::DiscreteElementType, N> const& orders,
+            std::array<double, N> const& cell_width,
+            std::array<std::size_t, N> const& degrees) const
     {
-        using ddims = ddc::detail::TypeSeq<DDims...>;
-        return (tikhomirov_error_bound(
-                        cell_width[ddc::type_seq_rank_v<DDims, ddims>],
-                        degrees[ddc::type_seq_rank_v<DDims, ddims>] - orders.template uid<DDims>(),
-                        max_norm<DDims>(orders, degrees))
-                + ...);
+        double error = 0.;
+        for (std::size_t i = 0; i < N; i++) {
+            error += tikhomirov_error_bound(
+                    cell_width[i],
+                    degrees[i] - orders[i],
+                    max_norm(orders, degrees, i, std::make_index_sequence<N> {}));
+        }
+        return error;
     }
 };

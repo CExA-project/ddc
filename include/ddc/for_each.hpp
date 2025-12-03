@@ -17,7 +17,7 @@ namespace ddc {
 namespace detail {
 
 template <class Support, class Element, std::size_t N, class Functor, class... Is>
-void for_each_serial(
+KOKKOS_INLINE_FUNCTION void for_each_serial(
         Support const& support,
         std::array<Element, N> const& size,
         Functor const& f,
@@ -40,7 +40,7 @@ void for_each_serial(
  * @param[in] f      a functor taking an index as parameter
  */
 template <class Support, class Functor>
-void for_each(Support const& domain, Functor&& f) noexcept
+KOKKOS_INLINE_FUNCTION void for_each(Support const& domain, Functor&& f) noexcept
 {
     std::array const size = detail::array(domain.extents());
     detail::for_each_serial(domain, size, std::forward<Functor>(f));

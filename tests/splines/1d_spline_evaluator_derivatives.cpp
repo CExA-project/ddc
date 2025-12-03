@@ -17,26 +17,24 @@
 #include <Kokkos_Core.hpp>
 
 #include "cosine_evaluator.hpp"
-#include "evaluator_2d.hpp"
 #include "spline_error_bounds.hpp"
 
-inline namespace anonymous_namespace_workaround_2d_spline_evaluator_derivatives_cpp {
+inline namespace anonymous_namespace_workaround_1d_spline_evaluator_derivatives_cpp {
 
 struct DimX
 {
     static constexpr bool PERIODIC = true;
 };
 
-struct DimY
-{
-    static constexpr bool PERIODIC = true;
-};
-
-struct DDimBatch
+struct DDimBatch1
 {
 };
 
-constexpr std::size_t s_degree = DEGREE;
+struct DDimBatch2
+{
+};
+
+constexpr std::size_t s_degree_x = DEGREE_X;
 
 constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;
 constexpr ddc::BoundCond s_bcr = ddc::BoundCond::PERIODIC;
@@ -46,25 +44,24 @@ using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-struct BSplines : ddc::UniformBSplines<X, s_degree>
+struct BSplines : ddc::UniformBSplines<X, s_degree_x>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-struct BSplines : ddc::NonUniformBSplines<X, s_degree>
+struct BSplines : ddc::NonUniformBSplines<X, s_degree_x>
 {
 };
 #endif
 
-// In the dimensions of interest, the discrete dimension is deduced from the Greville points type.
+// In the dimension of interest, the discrete dimension is deduced from the Greville points type.
 template <typename X>
 struct DDimGPS : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
 {
 };
 
-template <typename DDim1, typename DDim2>
-using evaluator_type = Evaluator2D::
-        Evaluator<CosineEvaluator::Evaluator<DDim1>, CosineEvaluator::Evaluator<DDim2>>;
+template <typename DDimX>
+using evaluator_type = CosineEvaluator::Evaluator<DDimX>;
 
 template <typename... DDimX>
 using DElem = ddc::DiscreteElement<DDimX...>;
@@ -72,6 +69,8 @@ template <typename... DDimX>
 using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
 using Coord = ddc::Coordinate<X...>;
+
+constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::GINKGO;
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
@@ -118,8 +117,7 @@ void InterestDimInitializer(std::size_t const ncells)
 }
 
 template <
-        class DDimI1,
-        class DDimI2,
+        class DDimI,
         class ExecSpace,
         class SplineEvaluator,
         class CoordsSpan,
@@ -132,21 +130,19 @@ void test_deriv(
         CoordsSpan const& coords_eval,
         CoefSpan const& coef,
         SplineDerivSpan const& spline_eval_deriv,
-        evaluator_type<DDimI1, DDimI2> const& evaluator,
+        evaluator_type<DDimI> const& evaluator,
         DElem const& deriv_order,
         std::size_t const ncells)
 {
     using domain = decltype(spline_eval_deriv.domain());
-    using I1 = typename DDimI1::continuous_dimension_type;
-    using I2 = typename DDimI2::continuous_dimension_type;
+    using I = typename DDimI::continuous_dimension_type;
 
     ddc::parallel_fill(exec_space, spline_eval_deriv, 0.0);
     exec_space.fence();
 
     spline_evaluator.deriv(deriv_order, spline_eval_deriv, coords_eval, coef);
 
-    auto const order1 = ddc::select_or(deriv_order, ddc::DiscreteElement<ddc::Deriv<I1>>(0)).uid();
-    auto const order2 = ddc::select_or(deriv_order, ddc::DiscreteElement<ddc::Deriv<I2>>(0)).uid();
+    auto const order = ddc::select_or(deriv_order, ddc::DiscreteElement<ddc::Deriv<I>>(0)).uid();
 
     double const max_norm_error_diff = ddc::parallel_transform_reduce(
             exec_space,
@@ -154,44 +150,37 @@ void test_deriv(
             0.,
             ddc::reducer::max<double>(),
             KOKKOS_LAMBDA(typename domain::discrete_element_type const e) {
-                Coord<I1> const x = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
-                Coord<I2> const y = ddc::coordinate(ddc::DiscreteElement<DDimI2>(e));
-                return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, y, order1, order2));
+                Coord<I> const x = ddc::coordinate(ddc::DiscreteElement<DDimI>(e));
+                return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, order));
             });
 
-    double const max_norm_diff = evaluator.max_norm(order1, order2);
+    double const max_norm_diff = evaluator.max_norm(order);
 
-    SplineErrorBounds<evaluator_type<DDimI1, DDimI2>> const error_bounds(evaluator);
+    SplineErrorBounds<evaluator_type<DDimI>> const error_bounds(evaluator);
 
     EXPECT_LE(
             max_norm_error_diff,
             std::
                     max(error_bounds.error_bound(
-                                std::array<ddc::DiscreteElementType, 2> {order1, order2},
-                                {dx<I1>(ncells), dx<I2>(ncells)},
-                                {s_degree, s_degree}),
+                                std::array<ddc::DiscreteElementType, 1> {order},
+                                {dx<I>(ncells)},
+                                {s_degree_x}),
                         1e-11 * max_norm_diff));
 }
 
-template <typename I1, typename I2, std::size_t order1, std::size_t order2>
+template <typename I, std::size_t order>
 auto make_deriv_order_delem()
 {
-    if constexpr (order1 == 0 && order2 == 0) {
+    if constexpr (order == 0) {
         return ddc::DiscreteElement<>();
-    } else if constexpr (order1 == 0 && order2 >= 1) {
-        return ddc::DiscreteElement<ddc::Deriv<I2>>(order2);
-    } else if constexpr (order1 >= 1 && order2 == 0) {
-        return ddc::DiscreteElement<ddc::Deriv<I1>>(order1);
     } else {
-        return ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I2>>(order1, order2);
+        return ddc::DiscreteElement<ddc::Deriv<I>>(order);
     }
 }
 
 template <
-        std::size_t order1 = 0,
-        std::size_t order2 = 0,
-        class DDimI1,
-        class DDimI2,
+        std::size_t order = 0,
+        class DDimI,
         class ExecSpace,
         class SplineEvaluator,
         class CoordsSpan,
@@ -203,14 +192,11 @@ void launch_deriv_tests(
         CoordsSpan const& coords_eval,
         CoefSpan const& coef,
         SplineDerivSpan const& spline_eval_deriv,
-        evaluator_type<DDimI1, DDimI2> const& evaluator,
+        evaluator_type<DDimI> const& evaluator,
         std::size_t const ncells)
 {
-    using I1 = typename DDimI1::continuous_dimension_type;
-    using I2 = typename DDimI2::continuous_dimension_type;
-    constexpr std::size_t max_deriv_deg1 = BSplines<I1>::degree();
-    constexpr std::size_t max_deriv_deg2 = BSplines<I2>::degree();
-    if constexpr (order1 > max_deriv_deg1 || order2 > max_deriv_deg2) {
+    using I = typename DDimI::continuous_dimension_type;
+    if constexpr (order > BSplines<I>::degree()) {
         return;
     } else {
         test_deriv(
@@ -220,12 +206,10 @@ void launch_deriv_tests(
                 coef,
                 spline_eval_deriv,
                 evaluator,
-                make_deriv_order_delem<I1, I2, order1, order2>(),
+                make_deriv_order_delem<I, order>(),
                 ncells);
 
-        constexpr std::size_t next_order1 = order1 + order2 / max_deriv_deg2;
-        constexpr std::size_t next_order2 = (order2 + 1) % (max_deriv_deg2 + 1);
-        launch_deriv_tests<next_order1, next_order2>(
+        launch_deriv_tests<order + 1>(
                 exec_space,
                 spline_evaluator,
                 coords_eval,
@@ -238,59 +222,43 @@ void launch_deriv_tests(
 
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
-template <
-        typename ExecSpace,
-        typename MemorySpace,
-        typename DDimI1,
-        typename DDimI2,
-        typename... DDims>
-void SplineEvaluator2dDerivativesTest()
+template <typename ExecSpace, typename MemorySpace, typename DDimI, typename... DDims>
+void SplineEvaluator1dDerivativesTest()
 {
-    using I1 = typename DDimI1::continuous_dimension_type;
-    using I2 = typename DDimI2::continuous_dimension_type;
+    using I = typename DDimI::continuous_dimension_type;
 
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;
+
     std::size_t const ncells = 10;
-    InterestDimInitializer<DDimI1>(ncells);
-    InterestDimInitializer<DDimI2>(ncells);
+    InterestDimInitializer<DDimI>(ncells);
 
     // Create the values domain (mesh)
-    ddc::DiscreteDomain<DDimI1> const interpolation_domain1
-            = GrevillePoints<BSplines<I1>>::template get_domain<DDimI1>();
-    ddc::DiscreteDomain<DDimI2> const interpolation_domain2
-            = GrevillePoints<BSplines<I2>>::template get_domain<DDimI2>();
-    ddc::DiscreteDomain<DDimI1, DDimI2> const
-            interpolation_domain(interpolation_domain1, interpolation_domain2);
-    // The following line creates a discrete domain over all dimensions (DDims...) except DDimI1 and DDimI2.
-    auto const dom_vals_tmp = ddc::remove_dims_of_t<ddc::DiscreteDomain<DDims...>, DDimI1, DDimI2>(
+    ddc::DiscreteDomain<DDimI> const interpolation_domain
+            = GrevillePoints<BSplines<I>>::template get_domain<DDimI>();
+    // The following line creates a discrete domain over all dimensions (DDims...) except DDimI.
+    auto const dom_vals_tmp = ddc::remove_dims_of_t<ddc::DiscreteDomain<DDims...>, DDimI>(
             ddc::DiscreteDomain<DDims>(DElem<DDims>(0), DVect<DDims>(ncells))...);
-    ddc::DiscreteDomain<DDims...> const
-            dom_vals(dom_vals_tmp, interpolation_domain1, interpolation_domain2);
+    ddc::DiscreteDomain<DDims...> const dom_vals(dom_vals_tmp, interpolation_domain);
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
-    ddc::SplineBuilder2D<
+    ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
-            BSplines<I1>,
-            BSplines<I2>,
-            DDimI1,
-            DDimI2,
+            BSplines<I>,
+            DDimI,
             s_bcl,
             s_bcr,
-            s_bcl,
-            s_bcr,
-            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
+            s_spline_solver> const spline_builder(interpolation_domain);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
-    ddc::DiscreteDomain<DDimI1, DDimI2> const dom_interpolation
-            = spline_builder.interpolation_domain();
+    ddc::DiscreteDomain<DDimI> const dom_interpolation = spline_builder.interpolation_domain();
     auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
     ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
     ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
-    evaluator_type<DDimI1, DDimI2> const evaluator(dom_interpolation);
+    evaluator_type<DDimI> const evaluator(dom_interpolation);
     evaluator(vals_1d_host);
     auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
     ddc::ChunkSpan const vals_1d = vals_1d_alloc.span_view();
@@ -300,9 +268,7 @@ void SplineEvaluator2dDerivativesTest()
     ddc::parallel_for_each(
             exec_space,
             vals.domain(),
-            KOKKOS_LAMBDA(DElem<DDims...> const e) {
-                vals(e) = vals_1d(DElem<DDimI1, DDimI2>(e));
-            });
+            KOKKOS_LAMBDA(DElem<DDims...> const e) { vals(e) = vals_1d(DElem<DDimI>(e)); });
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
     ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
@@ -312,37 +278,26 @@ void SplineEvaluator2dDerivativesTest()
     spline_builder(coef, vals.span_cview());
 
     // Instantiate a SplineEvaluator over interest dimension and batched along other dimensions
-    using extrapolation_rule_1_type = ddc::PeriodicExtrapolationRule<I1>;
-    using extrapolation_rule_2_type = ddc::PeriodicExtrapolationRule<I2>;
+    using extrapolation_rule_type = ddc::PeriodicExtrapolationRule<I>;
+    extrapolation_rule_type const extrapolation_rule;
 
-    extrapolation_rule_1_type const extrapolation_rule_1;
-    extrapolation_rule_2_type const extrapolation_rule_2;
-
-    ddc::SplineEvaluator2D<
+    ddc::SplineEvaluator<
             ExecSpace,
             MemorySpace,
-            BSplines<I1>,
-            BSplines<I2>,
-            DDimI1,
-            DDimI2,
-            extrapolation_rule_1_type,
-            extrapolation_rule_1_type,
-            extrapolation_rule_2_type,
-            extrapolation_rule_2_type> const
-            spline_evaluator(
-                    extrapolation_rule_1,
-                    extrapolation_rule_1,
-                    extrapolation_rule_2,
-                    extrapolation_rule_2);
+            BSplines<I>,
+            DDimI,
+            extrapolation_rule_type,
+            extrapolation_rule_type> const
+            spline_evaluator_batched(extrapolation_rule, extrapolation_rule);
 
     // Instantiate chunk of coordinates of dom_interpolation
-    ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<I1, I2>, MemorySpace>());
+    ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<I>, MemorySpace>());
     ddc::ChunkSpan const coords_eval = coords_eval_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
             KOKKOS_LAMBDA(DElem<DDims...> const e) {
-                coords_eval(e) = ddc::coordinate(DElem<DDimI1, DDimI2>(e));
+                coords_eval(e) = ddc::coordinate(DElem<DDimI>(e));
             });
 
 
@@ -352,7 +307,7 @@ void SplineEvaluator2dDerivativesTest()
 
     launch_deriv_tests(
             exec_space,
-            spline_evaluator,
+            spline_evaluator_batched,
             coords_eval.span_cview(),
             coef.span_cview(),
             spline_eval_deriv,
@@ -360,7 +315,7 @@ void SplineEvaluator2dDerivativesTest()
             ncells);
 }
 
-} // namespace anonymous_namespace_workaround_2d_spline_evaluator_derivatives_cpp
+} // namespace anonymous_namespace_workaround_1d_spline_evaluator_derivatives_cpp
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 #    define SUFFIX(name) name##Periodic##Uniform
@@ -368,96 +323,126 @@ void SplineEvaluator2dDerivativesTest()
 #    define SUFFIX(name) name##Periodic##NonUniform
 #endif
 
-TEST(SUFFIX(SplineEvaluator2dDerivativesHost), 2DXY)
+TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 1DX)
 {
-    SplineEvaluator2dDerivativesTest<
+    SplineEvaluator1dDerivativesTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimY>,
-            DDimGPS<DimX>,
-            DDimGPS<DimY>>();
+            DDimGPS<DimX>>();
 }
 
-TEST(SUFFIX(SplineEvaluator2dDerivativesDevice), 2DXY)
+TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 1DX)
 {
-    SplineEvaluator2dDerivativesTest<
+    SplineEvaluator1dDerivativesTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimY>,
-            DDimGPS<DimX>,
-            DDimGPS<DimY>>();
+            DDimGPS<DimX>>();
 }
 
-TEST(SUFFIX(SplineEvaluator2dDerivativesHost), 3DXYB)
+TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 2DXB1)
 {
-    SplineEvaluator2dDerivativesTest<
+    SplineEvaluator1dDerivativesTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimY>,
             DDimGPS<DimX>,
-            DDimGPS<DimY>,
-            DDimBatch>();
+            DDimBatch1>();
 }
 
-TEST(SUFFIX(SplineEvaluator2dDerivativesHost), 3DXBY)
+TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 2DB1X)
 {
-    SplineEvaluator2dDerivativesTest<
+    SplineEvaluator1dDerivativesTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimY>,
-            DDimGPS<DimX>,
-            DDimBatch,
-            DDimGPS<DimY>>();
+            DDimBatch1,
+            DDimGPS<DimX>>();
 }
 
-TEST(SUFFIX(SplineEvaluator2dDerivativesHost), 3DBXY)
+TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 2DXB1)
 {
-    SplineEvaluator2dDerivativesTest<
+    SplineEvaluator1dDerivativesTest<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            DDimGPS<DimX>,
+            DDimGPS<DimX>,
+            DDimBatch1>();
+}
+
+TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 2DB1X)
+{
+    SplineEvaluator1dDerivativesTest<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            DDimGPS<DimX>,
+            DDimBatch1,
+            DDimGPS<DimX>>();
+}
+
+TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DXB1B2)
+{
+    SplineEvaluator1dDerivativesTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimY>,
-            DDimBatch,
             DDimGPS<DimX>,
-            DDimGPS<DimY>>();
+            DDimBatch1,
+            DDimBatch2>();
 }
 
-TEST(SUFFIX(SplineEvaluator2dDerivativesDevice), 3DXYB)
+TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DB1XB2)
 {
-    SplineEvaluator2dDerivativesTest<
+    SplineEvaluator1dDerivativesTest<
+            Kokkos::DefaultHostExecutionSpace,
+            Kokkos::DefaultHostExecutionSpace::memory_space,
+            DDimGPS<DimX>,
+            DDimBatch1,
+            DDimGPS<DimX>,
+            DDimBatch2>();
+}
+
+TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DB1B2X)
+{
+    SplineEvaluator1dDerivativesTest<
+            Kokkos::DefaultHostExecutionSpace,
+            Kokkos::DefaultHostExecutionSpace::memory_space,
+            DDimGPS<DimX>,
+            DDimBatch1,
+            DDimBatch2,
+            DDimGPS<DimX>>();
+}
+
+TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 3DXB1B2)
+{
+    SplineEvaluator1dDerivativesTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimY>,
             DDimGPS<DimX>,
-            DDimGPS<DimY>,
-            DDimBatch>();
+            DDimBatch1,
+            DDimBatch2>();
 }
 
-TEST(SUFFIX(SplineEvaluator2dDerivativesDevice), 3DXBY)
+TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 3DB1XB2)
 {
-    SplineEvaluator2dDerivativesTest<
+    SplineEvaluator1dDerivativesTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimY>,
+            DDimBatch1,
             DDimGPS<DimX>,
-            DDimBatch,
-            DDimGPS<DimY>>();
+            DDimBatch2>();
 }
 
-TEST(SUFFIX(SplineEvaluator2dDerivativesDevice), 3DBXY)
+TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 3DB1B2X)
 {
-    SplineEvaluator2dDerivativesTest<
+    SplineEvaluator1dDerivativesTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimY>,
-            DDimBatch,
-            DDimGPS<DimX>,
-            DDimGPS<DimY>>();
+            DDimBatch1,
+            DDimBatch2,
+            DDimGPS<DimX>>();
 }

@@ -681,8 +681,24 @@ private:
         if constexpr (sizeof...(DDims) == 0) {
             jmin = ddc::discrete_space<bsplines_type>().eval_basis(vals, coord_eval_interest);
         } else {
-            KOKKOS_ASSERT(deriv_order.uid() == 1)
-            jmin = ddc::discrete_space<bsplines_type>().eval_deriv(vals, coord_eval_interest);
+            auto const order = deriv_order.uid();
+            KOKKOS_ASSERT(order > 0 && order <= bsplines_type::degree())
+
+            std::array<double, (bsplines_type::degree() + 1) * (bsplines_type::degree() + 1)>
+                    derivs_ptr;
+            Kokkos::mdspan<
+                    double,
+                    Kokkos::extents<
+                            std::size_t,
+                            bsplines_type::degree() + 1,
+                            Kokkos::dynamic_extent>> const derivs(derivs_ptr.data(), order + 1);
+
+            jmin = ddc::discrete_space<bsplines_type>()
+                           .eval_basis_and_n_derivs(derivs, coord_eval_interest, order);
+
+            for (std::size_t i = 0; i < bsplines_type::degree() + 1; ++i) {
+                vals[i] = DDC_MDSPAN_ACCESS_OP(derivs, i, order);
+            }
         }
 
         double y = 0.0;

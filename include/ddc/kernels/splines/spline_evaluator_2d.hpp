@@ -1377,24 +1377,22 @@ private:
             jmin1 = ddc::discrete_space<bsplines_type1>().eval_basis(vals1, coord_eval_interest1);
         } else {
             auto const order1 = deriv_order.template uid<deriv_dim1>();
-            KOKKOS_ASSERT(order1 > 0 && order1 < 3)
+            KOKKOS_ASSERT(order1 > 0 && order1 <= bsplines_type1::degree())
 
-            if (order1 == 1) {
-                jmin1 = ddc::discrete_space<bsplines_type1>()
-                                .eval_deriv(vals1, coord_eval_interest1);
-            } else {
-                std::array<double, 3 * (bsplines_type1::degree() + 1)> derivs1_ptr;
-                Kokkos::mdspan<
-                        double,
-                        Kokkos::extents<std::size_t, bsplines_type1::degree() + 1, 3>> const
-                        derivs1(derivs1_ptr.data());
+            std::array<double, (bsplines_type1::degree() + 1) * (bsplines_type1::degree() + 1)>
+                    derivs1_ptr;
+            Kokkos::mdspan<
+                    double,
+                    Kokkos::extents<
+                            std::size_t,
+                            bsplines_type1::degree() + 1,
+                            Kokkos::dynamic_extent>> const derivs1(derivs1_ptr.data(), order1 + 1);
 
-                jmin1 = ddc::discrete_space<bsplines_type1>()
-                                .eval_basis_and_n_derivs(derivs1, coord_eval_interest1, order1);
+            jmin1 = ddc::discrete_space<bsplines_type1>()
+                            .eval_basis_and_n_derivs(derivs1, coord_eval_interest1, order1);
 
-                for (std::size_t i = 0; i < bsplines_type1::degree() + 1; ++i) {
-                    vals1[i] = DDC_MDSPAN_ACCESS_OP(derivs1, i, order1);
-                }
+            for (std::size_t i = 0; i < bsplines_type1::degree() + 1; ++i) {
+                vals1[i] = DDC_MDSPAN_ACCESS_OP(derivs1, i, order1);
             }
         }
 
@@ -1402,24 +1400,22 @@ private:
             jmin2 = ddc::discrete_space<bsplines_type2>().eval_basis(vals2, coord_eval_interest2);
         } else {
             auto const order2 = deriv_order.template uid<deriv_dim2>();
-            KOKKOS_ASSERT(order2 > 0 && order2 < 3)
+            KOKKOS_ASSERT(order2 > 0 && order2 <= bsplines_type2::degree())
 
-            if (order2 == 1) {
-                jmin2 = ddc::discrete_space<bsplines_type2>()
-                                .eval_deriv(vals2, coord_eval_interest2);
-            } else {
-                std::array<double, 3 * (bsplines_type2::degree() + 1)> derivs2_ptr;
-                Kokkos::mdspan<
-                        double,
-                        Kokkos::extents<std::size_t, bsplines_type2::degree() + 1, 3>> const
-                        derivs2(derivs2_ptr.data());
+            std::array<double, (bsplines_type2::degree() + 1) * (bsplines_type2::degree() + 1)>
+                    derivs2_ptr;
+            Kokkos::mdspan<
+                    double,
+                    Kokkos::extents<
+                            std::size_t,
+                            bsplines_type2::degree() + 1,
+                            Kokkos::dynamic_extent>> const derivs2(derivs2_ptr.data(), order2 + 1);
 
-                jmin2 = ddc::discrete_space<bsplines_type2>()
-                                .eval_basis_and_n_derivs(derivs2, coord_eval_interest2, order2);
+            jmin2 = ddc::discrete_space<bsplines_type2>()
+                            .eval_basis_and_n_derivs(derivs2, coord_eval_interest2, order2);
 
-                for (std::size_t i = 0; i < bsplines_type2::degree() + 1; ++i) {
-                    vals2[i] = DDC_MDSPAN_ACCESS_OP(derivs2, i, order2);
-                }
+            for (std::size_t i = 0; i < bsplines_type2::degree() + 1; ++i) {
+                vals2[i] = DDC_MDSPAN_ACCESS_OP(derivs2, i, order2);
             }
         }
 

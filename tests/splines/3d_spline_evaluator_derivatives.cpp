@@ -216,6 +216,63 @@ auto make_deriv_order_delem()
     }
 }
 
+template <
+        std::size_t order1 = 0,
+        std::size_t order2 = 0,
+        std::size_t order3 = 0,
+        class DDimI1,
+        class DDimI2,
+        class DDimI3,
+        class ExecSpace,
+        class SplineEvaluator,
+        class CoordsSpan,
+        class CoefSpan,
+        class SplineDerivSpan>
+void launch_deriv_tests(
+        ExecSpace const& exec_space,
+        SplineEvaluator const& spline_evaluator,
+        CoordsSpan const& coords_eval,
+        CoefSpan const& coef,
+        SplineDerivSpan const& spline_eval_deriv,
+        evaluator_type<DDimI1, DDimI2, DDimI3> const& evaluator,
+        std::size_t const ncells)
+{
+    using I1 = typename DDimI1::continuous_dimension_type;
+    using I2 = typename DDimI2::continuous_dimension_type;
+    using I3 = typename DDimI3::continuous_dimension_type;
+    constexpr std::size_t max_deriv_deg1 = BSplines<I1>::degree();
+    constexpr std::size_t max_deriv_deg2 = BSplines<I2>::degree();
+    constexpr std::size_t max_deriv_deg3 = BSplines<I3>::degree();
+
+    if constexpr (order1 > max_deriv_deg1 || order2 > max_deriv_deg2 || order3 > max_deriv_deg3) {
+        return;
+    } else {
+        test_deriv(
+                exec_space,
+                spline_evaluator,
+                coords_eval,
+                coef,
+                spline_eval_deriv,
+                evaluator,
+                make_deriv_order_delem<I1, I2, I3, order1, order2, order3>(),
+                ncells);
+
+        constexpr std::size_t next_order1
+                = order1 + (order2 + order3) / (max_deriv_deg2 + max_deriv_deg3);
+        constexpr std::size_t next_order2
+                = (order2 + order3 / max_deriv_deg3) % (max_deriv_deg2 + 1);
+        constexpr std::size_t next_order3 = (order3 + 1) % (max_deriv_deg3 + 1);
+        launch_deriv_tests<next_order1, next_order2, next_order3>(
+                exec_space,
+                spline_evaluator,
+                coords_eval,
+                coef,
+                spline_eval_deriv,
+                evaluator,
+                ncells);
+    }
+}
+
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <
@@ -353,106 +410,22 @@ void SplineEvaluator3dDerivativesTest()
     ddc::Chunk spline_eval_deriv_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const spline_eval_deriv = spline_eval_deriv_alloc.span_view();
 
-#define TEST_DERIV(order1, order2, order3)                                                         \
-    test_deriv(                                                                                    \
-            exec_space,                                                                            \
-            spline_evaluator,                                                                      \
-            coords_eval.span_cview(),                                                              \
-            coef.span_cview(),                                                                     \
-            spline_eval_deriv,                                                                     \
-            evaluator,                                                                             \
-            make_deriv_order_delem<I1, I2, I3, order1, order2, order3>(),                          \
-            ncells)
-
-#if defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1)
-    TEST_DERIV(0, 0, 0);
-    TEST_DERIV(0, 1, 1);
-    TEST_DERIV(0, 0, 2);
-    TEST_DERIV(0, 2, 1);
-    TEST_DERIV(2, 1, 0);
-    TEST_DERIV(0, 2, 2);
-    TEST_DERIV(0, 3, 0);
-    TEST_DERIV(3, 0, 0);
-    TEST_DERIV(1, 3, 0);
-    TEST_DERIV(1, 3, 1);
-    TEST_DERIV(0, 3, 2);
-    TEST_DERIV(3, 2, 0);
-    TEST_DERIV(2, 3, 1);
-    TEST_DERIV(2, 3, 2);
-    TEST_DERIV(3, 3, 0);
-    TEST_DERIV(2, 3, 3);
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2)
-    TEST_DERIV(0, 0, 1);
-    TEST_DERIV(1, 0, 1);
-    TEST_DERIV(0, 2, 0);
-    TEST_DERIV(1, 0, 2);
-    TEST_DERIV(1, 1, 2);
-    TEST_DERIV(2, 0, 2);
-    TEST_DERIV(1, 2, 2);
-    TEST_DERIV(0, 1, 3);
-    TEST_DERIV(3, 0, 1);
-    TEST_DERIV(3, 1, 1);
-    TEST_DERIV(2, 0, 3);
-    TEST_DERIV(1, 2, 3);
-    TEST_DERIV(3, 1, 2);
-    TEST_DERIV(3, 2, 2);
-    TEST_DERIV(1, 3, 3);
-    TEST_DERIV(3, 2, 3);
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3)
-    TEST_DERIV(0, 1, 0);
-    TEST_DERIV(1, 1, 0);
-    TEST_DERIV(2, 0, 0);
-    TEST_DERIV(1, 2, 0);
-    TEST_DERIV(1, 2, 1);
-    TEST_DERIV(2, 2, 0);
-    TEST_DERIV(2, 1, 2);
-    TEST_DERIV(0, 3, 1);
-    TEST_DERIV(3, 1, 0);
-    TEST_DERIV(2, 2, 2);
-    TEST_DERIV(2, 3, 0);
-    TEST_DERIV(1, 3, 2);
-    TEST_DERIV(3, 2, 1);
-    TEST_DERIV(0, 3, 3);
-    TEST_DERIV(3, 1, 3);
-    TEST_DERIV(3, 3, 2);
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4)
-    TEST_DERIV(1, 0, 0);
-    TEST_DERIV(1, 1, 1);
-    TEST_DERIV(0, 1, 2);
-    TEST_DERIV(2, 0, 1);
-    TEST_DERIV(2, 1, 1);
-    TEST_DERIV(0, 0, 3);
-    TEST_DERIV(2, 2, 1);
-    TEST_DERIV(1, 0, 3);
-    TEST_DERIV(1, 1, 3);
-    TEST_DERIV(0, 2, 3);
-    TEST_DERIV(3, 0, 2);
-    TEST_DERIV(2, 1, 3);
-    TEST_DERIV(2, 2, 3);
-    TEST_DERIV(3, 0, 3);
-    TEST_DERIV(3, 3, 1);
-    TEST_DERIV(3, 3, 3);
-#endif
+    launch_deriv_tests(
+            exec_space,
+            spline_evaluator,
+            coords_eval.span_cview(),
+            coef.span_cview(),
+            spline_eval_deriv,
+            evaluator,
+            ncells);
 }
 
 } // namespace anonymous_namespace_workaround_3d_spline_evaluator_derivatives_cpp
 
-#if defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform1
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform1
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform2
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform2
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform3
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform3
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform4
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform4
+#if defined(BSPLINES_TYPE_UNIFORM)
+#    define SUFFIX(name) name##Periodic##Uniform
+#elif defined(BSPLINES_TYPE_NON_UNIFORM)
+#    define SUFFIX(name) name##Periodic##NonUniform
 #endif
 
 TEST(SUFFIX(SplineEvaluator3dDerivativesHost), 3DXYZ)

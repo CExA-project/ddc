@@ -247,15 +247,34 @@ void launch_deriv_tests(
     if constexpr (order1 > max_deriv_deg1 || order2 > max_deriv_deg2 || order3 > max_deriv_deg3) {
         return;
     } else {
-        test_deriv(
-                exec_space,
-                spline_evaluator,
-                coords_eval,
-                coef,
-                spline_eval_deriv,
-                evaluator,
-                make_deriv_order_delem<I1, I2, I3, order1, order2, order3>(),
-                ncells);
+        // This is used to distribute the work between the 4 test executables.
+        // For max deriv degrees (3,3,3), TEST1 will evaluate (0,0,0), TEST2 (0,0,1),
+        // TEST3 (0,0,2), TEST4 (0,0,3), TEST1 (0,1,0), etc.
+        static constexpr std::size_t test_idx =
+#if defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1)
+                0;
+#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2)
+                1;
+#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3)
+                2;
+#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4)
+                3;
+#endif
+
+        constexpr std::size_t idx = order1 * (max_deriv_deg2 + 1) * (max_deriv_deg3 + 1)
+                                    + order2 * (max_deriv_deg3 + 1) + order3;
+
+        if constexpr (idx % 4 == test_idx) {
+            test_deriv(
+                    exec_space,
+                    spline_evaluator,
+                    coords_eval,
+                    coef,
+                    spline_eval_deriv,
+                    evaluator,
+                    make_deriv_order_delem<I1, I2, I3, order1, order2, order3>(),
+                    ncells);
+        }
 
         constexpr std::size_t next_order1
                 = order1 + (order2 + order3) / (max_deriv_deg2 + max_deriv_deg3);
@@ -422,10 +441,22 @@ void SplineEvaluator3dDerivativesTest()
 
 } // namespace anonymous_namespace_workaround_3d_spline_evaluator_derivatives_cpp
 
-#if defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform
-#elif defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform
+#if defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1) && defined(BSPLINES_TYPE_UNIFORM)
+#    define SUFFIX(name) name##Periodic##Uniform1
+#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#    define SUFFIX(name) name##Periodic##NonUniform1
+#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2) && defined(BSPLINES_TYPE_UNIFORM)
+#    define SUFFIX(name) name##Periodic##Uniform2
+#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#    define SUFFIX(name) name##Periodic##NonUniform2
+#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3) && defined(BSPLINES_TYPE_UNIFORM)
+#    define SUFFIX(name) name##Periodic##Uniform3
+#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#    define SUFFIX(name) name##Periodic##NonUniform3
+#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4) && defined(BSPLINES_TYPE_UNIFORM)
+#    define SUFFIX(name) name##Periodic##Uniform4
+#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#    define SUFFIX(name) name##Periodic##NonUniform4
 #endif
 
 TEST(SUFFIX(SplineEvaluator3dDerivativesHost), 3DXYZ)

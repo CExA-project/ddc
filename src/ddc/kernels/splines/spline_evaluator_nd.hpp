@@ -614,7 +614,7 @@ public:
                     ddc::for_each(
                             evaluation_domain(spline_eval.domain()),
                             [=, *this](typename evaluation_domain::discrete_element_type i) {
-                                ddc::Coordinate<typename BSplines::continuous_dimansion_type...>
+                                ddc::Coordinate<typename BSplines::continuous_dimension_type...>
                                         coord_eval_ND(ddc::coordinate(i));
 
                                 spline_eval_ND(i)
@@ -653,7 +653,7 @@ public:
                       ddc::detail::TypeSeq<typename BSplines::continuous_dimension_type...>>);
 
         return eval_no_bc<ddc::detail::TypeSeq<std::conditional_t<
-                ddc::in_tags_v<typename BSplines::continuous_dimansion_type, InterestDims>,
+                ddc::in_tags_v<typename BSplines::continuous_dimension_type, InterestDims>,
                 eval_deriv_type,
                 eval_type>...>>(coord_eval, spline_coef);
     }

@@ -208,7 +208,7 @@ template <
         typename DDimI2,
         typename DDimI3,
         typename... DDims>
-void BatchedNdSplineTest()
+void BatchedNd3dSplineTest()
 {
     using I1 = typename DDimI1::continuous_dimension_type;
     using I2 = typename DDimI2::continuous_dimension_type;
@@ -1409,9 +1409,9 @@ void BatchedNdSplineTest()
 #    define SUFFIX(name) name##Hermite##NonUniform
 #endif
 
-TEST(SUFFIX(BatchedNdSplineHost), 3DXYZ)
+TEST(SUFFIX(BatchedNd3dSplineHost), 3DXYZ)
 {
-    BatchedNdSplineTest<
+    BatchedNd3dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1422,9 +1422,9 @@ TEST(SUFFIX(BatchedNdSplineHost), 3DXYZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(BatchedNdSplineDevice), 3DXYZ)
+TEST(SUFFIX(BatchedNd3dSplineDevice), 3DXYZ)
 {
-    BatchedNdSplineTest<
+    BatchedNd3dSplineTest<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1435,9 +1435,9 @@ TEST(SUFFIX(BatchedNdSplineDevice), 3DXYZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(BatchedNdSplineHost), 4DXYZB)
+TEST(SUFFIX(BatchedNd3dSplineHost), 4DXYZB)
 {
-    BatchedNdSplineTest<
+    BatchedNd3dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1449,9 +1449,9 @@ TEST(SUFFIX(BatchedNdSplineHost), 4DXYZB)
             DDimBatch>();
 }
 
-TEST(SUFFIX(BatchedNdSplineHost), 4DXBYZ)
+TEST(SUFFIX(BatchedNd3dSplineHost), 4DXBYZ)
 {
-    BatchedNdSplineTest<
+    BatchedNd3dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1463,9 +1463,9 @@ TEST(SUFFIX(BatchedNdSplineHost), 4DXBYZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(BatchedNdSplineHost), 4DXYBZ)
+TEST(SUFFIX(BatchedNd3dSplineHost), 4DXYBZ)
 {
-    BatchedNdSplineTest<
+    BatchedNd3dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1477,9 +1477,9 @@ TEST(SUFFIX(BatchedNdSplineHost), 4DXYBZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(BatchedNdSplineHost), 4DBXYZ)
+TEST(SUFFIX(BatchedNd3dSplineHost), 4DBXYZ)
 {
-    BatchedNdSplineTest<
+    BatchedNd3dSplineTest<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,

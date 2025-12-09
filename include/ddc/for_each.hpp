@@ -80,4 +80,44 @@ KOKKOS_FUNCTION void annotated_for_each(
             DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
 }
 
+/** iterates over a nD sparse domain in serial. Can be called from a device kernel.
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking an discrete vector as parameter
+ */
+template <class... DDims, class Functor>
+KOKKOS_FUNCTION void annotated_for_each(
+        StridedDiscreteDomain<DDims...> const& domain,
+        Functor&& f) noexcept
+{
+    using discrete_element_type = typename StridedDiscreteDomain<DDims...>::discrete_element_type;
+    using discrete_vector_type = typename StridedDiscreteDomain<DDims...>::discrete_vector_type;
+    discrete_element_type const ddc_begin = domain.front();
+    discrete_element_type const ddc_end = domain.front() + domain.extents();
+
+    std::array const begin = detail::array(ddc_begin);
+    std::array const end = detail::array(ddc_end);
+    detail::annotated_for_each_serial<
+            discrete_vector_type>(begin, end, std::forward<Functor>(f));
+}
+
+/** iterates over a nD sparse domain in serial. Can be called from a device kernel.
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking an discrete vector as parameter
+ */
+template <class... DDims, class Functor>
+KOKKOS_FUNCTION void annotated_for_each(
+        SparseDiscreteDomain<DDims...> const& domain,
+        Functor&& f) noexcept
+{
+    using discrete_element_type = typename SparseDiscreteDomain<DDims...>::discrete_element_type;
+    using discrete_vector_type = typename SparseDiscreteDomain<DDims...>::discrete_vector_type;
+    discrete_element_type const ddc_begin = domain.front();
+    discrete_element_type const ddc_end = domain.front() + domain.extents();
+
+    std::array const begin = detail::array(ddc_begin);
+    std::array const end = detail::array(ddc_end);
+    detail::annotated_for_each_serial<
+            discrete_vector_type>(begin, end, std::forward<Functor>(f));
+}
+
 } // namespace ddc

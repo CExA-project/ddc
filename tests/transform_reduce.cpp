@@ -110,7 +110,7 @@ TEST(AnnotatedTransformReduce, TwoDimensions)
     DDomXY const dom(lbound_x_y, nelems_x_y);
     Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const
             storage("", dom.size());
-    Kokkos::Experimental::fill(Kokkos::DefaultExecutionSpace(), storage, 1);
+    Kokkos::deep_copy(storage, 1);
     ddc::ChunkSpan<
             int,
             DDomXY,

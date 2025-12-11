@@ -63,23 +63,22 @@ TEST(SparseDiscreteDomainTest, Constructor)
     EXPECT_FALSE(dom_xy.contains(lbound_x + 1, lbound_y + 0));
 }
 
-void TestAnnotatedForEachSparseDevice2D(ddc::ChunkSpan<
-                                        int,
-                                        DDomXY,
-                                        Kokkos::layout_right,
-                                        typename Kokkos::DefaultExecutionSpace::memory_space> view)
+void TestDeviceForEachSparseDevice2D(
+        ddc::ChunkSpan<
+                int,
+                DDomXY,
+                Kokkos::layout_right,
+                typename Kokkos::DefaultExecutionSpace::memory_space> view)
 {
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
             KOKKOS_LAMBDA(DElem0D) {
-                ddc::annotated_for_each(view.domain(), [=](DVectXY const ixy) {
-                    view(ixy) = 1;
-                    });
+                ddc::device_for_each(view.domain(), [=](DVectXY const ixy) { view(ixy) = 1; });
             });
 }
 
-TEST(AnnotatedForEachSparseDevice, TwoDimensions)
+TEST(DeviceForEachSparseDevice, TwoDimensions)
 {
     Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x("view_x", 2);
     view_x(0) = lbound_x + 0;
@@ -98,7 +97,7 @@ TEST(AnnotatedForEachSparseDevice, TwoDimensions)
             Kokkos::layout_right,
             typename Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
 
-    TestAnnotatedForEachSparseDevice2D(view);
+    TestDeviceForEachSparseDevice2D(view);
     EXPECT_EQ(
             Kokkos::Experimental::
                     count(Kokkos::DefaultExecutionSpace(),
@@ -108,7 +107,7 @@ TEST(AnnotatedForEachSparseDevice, TwoDimensions)
             dom.size());
 }
 
-int TestAnnotatedTransformReduceSparse(
+int TestDeviceTransformReduceSparse(
         ddc::ChunkSpan<
                 int,
                 DDomXY,
@@ -120,11 +119,8 @@ int TestAnnotatedTransformReduceSparse(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
             KOKKOS_LAMBDA(DElem0D) {
-                count() = ddc::annotated_transform_reduce(
-                        chunk.domain(),
-                        0,
-                        ddc::reducer::sum<int>(),
-                        chunk);
+                count() = ddc::
+                        device_transform_reduce(chunk.domain(), 0, ddc::reducer::sum<int>(), chunk);
             });
     Kokkos::fence();
     auto const count_host = Kokkos::create_mirror_view(count);
@@ -132,7 +128,7 @@ int TestAnnotatedTransformReduceSparse(
     return count_host();
 }
 
-TEST(AnnotatedTransformReduceSparse, TwoDimensions)
+TEST(DeviceTransformReduceSparse, TwoDimensions)
 {
     Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x("view_x", 2);
     view_x(0) = lbound_x + 0;
@@ -151,5 +147,5 @@ TEST(AnnotatedTransformReduceSparse, TwoDimensions)
             DDomXY,
             Kokkos::layout_right,
             typename Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
-    EXPECT_EQ(TestAnnotatedTransformReduceSparse(chunk), dom.size());
+    EXPECT_EQ(TestDeviceTransformReduceSparse(chunk), dom.size());
 }

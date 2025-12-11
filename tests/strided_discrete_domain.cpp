@@ -285,7 +285,7 @@ TEST(StridedDiscreteDomainTest, Transpose3DConstructor)
 //     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomZY, DDomX>, DDomZYX>));
 // }
 
-void TestAnnotatedForEachStritedSerialDevice1D(
+void TestDeviceForEachStritedSerialDevice1D(
         ddc::ChunkSpan<
                 int,
                 DDomX,
@@ -296,11 +296,11 @@ void TestAnnotatedForEachStritedSerialDevice1D(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
             KOKKOS_LAMBDA(DElem0D) {
-                ddc::annotated_for_each(view.domain(), [=](DVectX const ix) { view(ix) = 1; });
+                ddc::device_for_each(view.domain(), [=](DVectX const ix) { view(ix) = 1; });
             });
 }
 
-TEST(AnnotatedForEachStritedSerialDevice, OneDimension)
+TEST(DeviceForEachStritedSerialDevice, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x, strides_x);
     Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const
@@ -310,15 +310,17 @@ TEST(AnnotatedForEachStritedSerialDevice, OneDimension)
             DDomX,
             Kokkos::layout_right,
             typename Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
-    TestAnnotatedForEachStritedSerialDevice1D(view);
+    TestDeviceForEachStritedSerialDevice1D(view);
     EXPECT_EQ(
             Kokkos::Experimental::
                     count(Kokkos::DefaultExecutionSpace(),
-                          Kokkos::Experimental::begin(storage), Kokkos::Experimental::end(storage), 1),
+                          Kokkos::Experimental::begin(storage),
+                          Kokkos::Experimental::end(storage),
+                          1),
             dom.size());
 }
 
-void TestAnnotatedForEachStritedSerialDevice2D(
+void TestDeviceForEachStritedSerialDevice2D(
         ddc::ChunkSpan<
                 int,
                 DDomXY,
@@ -329,11 +331,11 @@ void TestAnnotatedForEachStritedSerialDevice2D(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
             KOKKOS_LAMBDA(DElem0D) {
-                ddc::annotated_for_each(view.domain(), [=](DVectXY const ixy) { view(ixy) = 1; });
+                ddc::device_for_each(view.domain(), [=](DVectXY const ixy) { view(ixy) = 1; });
             });
 }
 
-TEST(AnnotatedForEachStritedSerialDevice, TwoDimensions)
+TEST(DeviceForEachStritedSerialDevice, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y, strides_x_y);
     Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const
@@ -343,7 +345,7 @@ TEST(AnnotatedForEachStritedSerialDevice, TwoDimensions)
             DDomXY,
             Kokkos::layout_right,
             typename Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
-    TestAnnotatedForEachStritedSerialDevice2D(view);
+    TestDeviceForEachStritedSerialDevice2D(view);
     EXPECT_EQ(
             Kokkos::Experimental::
                     count(Kokkos::DefaultExecutionSpace(),
@@ -353,7 +355,7 @@ TEST(AnnotatedForEachStritedSerialDevice, TwoDimensions)
             dom.size());
 }
 
-int TestAnnotatedTransformReduceStrided(
+int TestDeviceTransformReduceStrided(
         ddc::ChunkSpan<
                 int,
                 DDomXY,
@@ -365,11 +367,8 @@ int TestAnnotatedTransformReduceStrided(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
             KOKKOS_LAMBDA(DElem0D) {
-                count() = ddc::annotated_transform_reduce(
-                        chunk.domain(),
-                        0,
-                        ddc::reducer::sum<int>(),
-                        chunk);
+                count() = ddc::
+                        device_transform_reduce(chunk.domain(), 0, ddc::reducer::sum<int>(), chunk);
             });
     Kokkos::fence();
     auto const count_host = Kokkos::create_mirror_view(count);
@@ -377,7 +376,7 @@ int TestAnnotatedTransformReduceStrided(
     return count_host();
 }
 
-TEST(AnnotatedTransformReduceStrided, TwoDimensions)
+TEST(DeviceTransformReduceStrided, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y, strides_x_y);
     Kokkos::View<int*, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const
@@ -388,5 +387,5 @@ TEST(AnnotatedTransformReduceStrided, TwoDimensions)
             DDomXY,
             Kokkos::layout_right,
             typename Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
-    EXPECT_EQ(TestAnnotatedTransformReduceStrided(chunk), dom.size());
+    EXPECT_EQ(TestDeviceTransformReduceStrided(chunk), dom.size());
 }

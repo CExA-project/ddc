@@ -43,10 +43,10 @@ std::ostream& print_2DChunk(
         std::ostream& os,
         ddc::ChunkSpan<ElementType, ddc::DiscreteDomain<DDimX, DDimY>> chunk)
 {
-    ddc::for_each(
+    ddc::host_for_each(
             ddc::DiscreteDomain<DDimY>(chunk.domain()),
             [&](ddc::DiscreteElement<DDimY> const iy) {
-                ddc::for_each(
+                ddc::host_for_each(
                         ddc::DiscreteDomain<DDimX>(chunk.domain()),
                         [&](ddc::DiscreteElement<DDimX> const ix) {
                             os << (chunk(ix, iy) ? "*" : ".");

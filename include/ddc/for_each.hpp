@@ -17,24 +17,7 @@ namespace ddc {
 namespace detail {
 
 template <class Support, class Element, std::size_t N, class Functor, class... Is>
-void for_each_serial(
-        Support const& support,
-        std::array<Element, N> const& size,
-        Functor const& f,
-        Is const&... is) noexcept
-{
-    static constexpr std::size_t I = sizeof...(Is);
-    if constexpr (I == N) {
-        f(support(typename Support::discrete_vector_type(is...)));
-    } else {
-        for (Element ii = 0; ii < size[I]; ++ii) {
-            for_each_serial(support, size, f, is..., ii);
-        }
-    }
-}
-
-template <class Support, class Element, std::size_t N, class Functor, class... Is>
-KOKKOS_FUNCTION void annotated_for_each_serial(
+void host_for_each_serial(
         std::array<Element, N> const& begin,
         std::array<Element, N> const& end,
         Functor const& f,
@@ -45,7 +28,24 @@ KOKKOS_FUNCTION void annotated_for_each_serial(
         f(Support(is...));
     } else {
         for (Element ii = begin[I]; ii < end[I]; ++ii) {
-            annotated_for_each_serial<Support>(begin, end, f, is..., ii);
+            host_for_each_serial<Support>(begin, end, f, is..., ii);
+        }
+    }
+}
+
+template <class Support, class Element, std::size_t N, class Functor, class... Is>
+KOKKOS_FUNCTION void device_for_each_serial(
+        std::array<Element, N> const& begin,
+        std::array<Element, N> const& end,
+        Functor const& f,
+        Is const&... is) noexcept
+{
+    static constexpr std::size_t I = sizeof...(Is);
+    if constexpr (I == N) {
+        f(Support(is...));
+    } else {
+        for (Element ii = begin[I]; ii < end[I]; ++ii) {
+            device_for_each_serial<Support>(begin, end, f, is..., ii);
         }
     }
 }
@@ -56,11 +56,25 @@ KOKKOS_FUNCTION void annotated_for_each_serial(
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
-template <class Support, class Functor>
-void for_each(Support const& domain, Functor&& f) noexcept
+template <class... DDims, class Functor>
+[[deprecated("Use host_for_each instead")]]
+void for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
-    std::array const size = detail::array(domain.extents());
-    detail::for_each_serial(domain, size, std::forward<Functor>(f));
+    host_for_each(domain, std::forward<Functor>(f));
+}
+
+/** iterates over a nD domain in serial
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking an index as parameter
+ */
+template <class... DDims, class Functor>
+void host_for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
+{
+    DiscreteElement<DDims...> const ddc_begin = domain.front();
+    DiscreteElement<DDims...> const ddc_end = domain.front() + domain.extents();
+    std::array const begin = detail::array(ddc_begin);
+    std::array const end = detail::array(ddc_end);
+    detail::host_for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
 }
 
 /** iterates over a nD domain in serial. Can be called from a device kernel.
@@ -68,16 +82,13 @@ void for_each(Support const& domain, Functor&& f) noexcept
  * @param[in] f      a functor taking an index as parameter
  */
 template <class... DDims, class Functor>
-KOKKOS_FUNCTION void annotated_for_each(
-        DiscreteDomain<DDims...> const& domain,
-        Functor&& f) noexcept
+KOKKOS_FUNCTION void device_for_each(DiscreteDomain<DDims...> const& domain, Functor&& f) noexcept
 {
     DiscreteElement<DDims...> const ddc_begin = domain.front();
     DiscreteElement<DDims...> const ddc_end = domain.front() + domain.extents();
     std::array const begin = detail::array(ddc_begin);
     std::array const end = detail::array(ddc_end);
-    detail::annotated_for_each_serial<
-            DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
+    detail::device_for_each_serial<DiscreteElement<DDims...>>(begin, end, std::forward<Functor>(f));
 }
 
 /** iterates over a nD sparse domain in serial. Can be called from a device kernel.
@@ -85,7 +96,7 @@ KOKKOS_FUNCTION void annotated_for_each(
  * @param[in] f      a functor taking an discrete vector as parameter
  */
 template <class... DDims, class Functor>
-KOKKOS_FUNCTION void annotated_for_each(
+KOKKOS_FUNCTION void device_for_each(
         StridedDiscreteDomain<DDims...> const& domain,
         Functor&& f) noexcept
 {
@@ -96,8 +107,7 @@ KOKKOS_FUNCTION void annotated_for_each(
 
     std::array const begin = detail::array(ddc_begin);
     std::array const end = detail::array(ddc_end);
-    detail::annotated_for_each_serial<
-            discrete_vector_type>(begin, end, std::forward<Functor>(f));
+    detail::device_for_each_serial<discrete_vector_type>(begin, end, std::forward<Functor>(f));
 }
 
 /** iterates over a nD sparse domain in serial. Can be called from a device kernel.
@@ -105,7 +115,7 @@ KOKKOS_FUNCTION void annotated_for_each(
  * @param[in] f      a functor taking an discrete vector as parameter
  */
 template <class... DDims, class Functor>
-KOKKOS_FUNCTION void annotated_for_each(
+KOKKOS_FUNCTION void device_for_each(
         SparseDiscreteDomain<DDims...> const& domain,
         Functor&& f) noexcept
 {
@@ -116,8 +126,7 @@ KOKKOS_FUNCTION void annotated_for_each(
 
     std::array const begin = detail::array(ddc_begin);
     std::array const end = detail::array(ddc_end);
-    detail::annotated_for_each_serial<
-            discrete_vector_type>(begin, end, std::forward<Functor>(f));
+    detail::device_for_each_serial<discrete_vector_type>(begin, end, std::forward<Functor>(f));
 }
 
 } // namespace ddc

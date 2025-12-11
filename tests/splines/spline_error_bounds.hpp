@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <array>
+#include <utility>
 
 #include <ddc/kernels/splines.hpp>
 
@@ -25,10 +26,8 @@ private:
              31.0 / 725760.0,
              50521.0 / 3715891200.0});
 
-private:
     Evaluator m_evaluator;
 
-private:
     /*******************************************************************************
      * Error bound in max norm for spline interpolation of periodic functions from:
      *
@@ -46,6 +45,17 @@ private:
         degree = std::min(degree, 9);
         return tikhomirov_error_bound_array[degree] * ddc::detail::ipow(cell_width, degree + 1)
                * max_norm;
+    }
+
+    /// @brief Computes the max norm on the ith component
+    template <std::size_t N, std::size_t... Ints>
+    double max_norm(
+            std::array<ddc::DiscreteElementType, N> const& orders,
+            std::array<std::size_t, N> const& degrees,
+            std::size_t i,
+            std::index_sequence<Ints...>) const
+    {
+        return m_evaluator.max_norm((Ints == i ? degrees[i] + 1 : orders[Ints])...);
     }
 
 public:
@@ -232,5 +242,26 @@ public:
     double error_bound_on_int(double cell_width, int degree) const
     {
         return tikhomirov_error_bound(cell_width, degree + 1, m_evaluator.max_norm(degree + 1));
+    }
+
+    /*******************************************************************************
+     * NOTE: We assume that the error bound formula for derivatives of order 0 and
+     * 1 works for higher orders as well.
+     *******************************************************************************/
+
+    template <std::size_t N>
+    double error_bound(
+            std::array<ddc::DiscreteElementType, N> const& orders,
+            std::array<double, N> const& cell_width,
+            std::array<std::size_t, N> const& degrees) const
+    {
+        double error = 0.;
+        for (std::size_t i = 0; i < N; i++) {
+            error += tikhomirov_error_bound(
+                    cell_width[i],
+                    degrees[i] - orders[i],
+                    max_norm(orders, degrees, i, std::make_index_sequence<N> {}));
+        }
+        return error;
     }
 };

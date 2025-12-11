@@ -268,7 +268,11 @@ std::tuple<double, double, double> ComputeEvaluationError(
 
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.deriv(spline_eval_deriv, coords_eval.span_cview(), coef.span_cview());
+    spline_evaluator
+            .deriv(ddc::DiscreteElement<ddc::Deriv<I>>(1),
+                   spline_eval_deriv,
+                   coords_eval.span_cview(),
+                   coef.span_cview());
     spline_evaluator.integrate(spline_eval_integrals, coef.span_cview());
 
     // Checking errors (we recover the initial values)

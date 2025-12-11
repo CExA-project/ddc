@@ -4,9 +4,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#if defined(BSPLINES_TYPE_UNIFORM)
-#    include <type_traits>
-#endif
 #include <vector>
 
 #include <ddc/ddc.hpp>

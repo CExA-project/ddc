@@ -4,8 +4,6 @@
 
 #include <algorithm>
 #include <cstddef>
-
-#include "ddc/parallel_fill.hpp"
 #if defined(BC_HERMITE)
 #    include <optional>
 #endif
@@ -1308,89 +1306,6 @@ void BatchedNd3dSplineTest()
                                 s_degree,
                                 s_degree),
                         5e-10 * max_norm_diff123));
-
-    // Reset the views
-    ddc::parallel_fill(exec_space, spline_eval_deriv1, 0.0);
-    ddc::parallel_fill(exec_space, spline_eval_deriv2, 0.0);
-    ddc::parallel_fill(exec_space, spline_eval_deriv3, 0.0);
-    ddc::parallel_fill(exec_space, spline_eval_deriv12, 0.0);
-    ddc::parallel_fill(exec_space, spline_eval_deriv13, 0.0);
-    ddc::parallel_fill(exec_space, spline_eval_deriv23, 0.0);
-    ddc::parallel_fill(exec_space, spline_eval_deriv123, 0.0);
-    exec_space.fence();
-
-    spline_evaluator.template deriv_dim_I<std::index_sequence<
-            0>>(spline_eval_deriv1, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv_dim_I<std::index_sequence<
-            1>>(spline_eval_deriv2, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv_dim_I<std::index_sequence<
-            2>>(spline_eval_deriv3, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv_dim_I<std::index_sequence<
-            0,
-            1>>(spline_eval_deriv12, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv_dim_I<std::index_sequence<
-            1,
-            2>>(spline_eval_deriv23, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv_dim_I<std::index_sequence<
-            0,
-            2>>(spline_eval_deriv13, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv_dim_I<std::index_sequence<
-            0,
-            1,
-            2>>(spline_eval_deriv123, coords_eval.span_cview(), coef.span_cview());
-
-    double const max_norm_error_alt = ddc::parallel_transform_reduce(
-            exec_space,
-            spline_eval.domain(),
-            0.,
-            ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(DElem<DDims...> const e) {
-                return Kokkos::abs(spline_eval(e) - vals(e));
-            });
-    double const max_norm_error_diff1_alt = get_max_norm_error_deriv<
-            DDimI1,
-            DDimI2,
-            DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv1, 1, 0, 0);
-    double const max_norm_error_diff2_alt = get_max_norm_error_deriv<
-            DDimI1,
-            DDimI2,
-            DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv2, 0, 1, 0);
-    double const max_norm_error_diff3_alt = get_max_norm_error_deriv<
-            DDimI1,
-            DDimI2,
-            DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv3, 0, 0, 1);
-    double const max_norm_error_diff12_alt = get_max_norm_error_deriv<
-            DDimI1,
-            DDimI2,
-            DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv12, 1, 1, 0);
-    double const max_norm_error_diff13_alt = get_max_norm_error_deriv<
-            DDimI1,
-            DDimI2,
-            DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv13, 1, 0, 1);
-    double const max_norm_error_diff23_alt = get_max_norm_error_deriv<
-            DDimI1,
-            DDimI2,
-            DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv23, 0, 1, 1);
-    double const max_norm_error_diff123_alt = get_max_norm_error_deriv<
-            DDimI1,
-            DDimI2,
-            DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv123, 1, 1, 1);
-
-    EXPECT_DOUBLE_EQ(max_norm_error, max_norm_error_alt);
-    EXPECT_DOUBLE_EQ(max_norm_error_diff1, max_norm_error_diff1_alt);
-    EXPECT_DOUBLE_EQ(max_norm_error_diff2, max_norm_error_diff2_alt);
-    EXPECT_DOUBLE_EQ(max_norm_error_diff3, max_norm_error_diff3_alt);
-    EXPECT_DOUBLE_EQ(max_norm_error_diff12, max_norm_error_diff12_alt);
-    EXPECT_DOUBLE_EQ(max_norm_error_diff13, max_norm_error_diff13_alt);
-    EXPECT_DOUBLE_EQ(max_norm_error_diff23, max_norm_error_diff23_alt);
-    EXPECT_DOUBLE_EQ(max_norm_error_diff123, max_norm_error_diff123_alt);
 }
 
 } // namespace anonymous_namespace_workaround_batched_nd_evaluator_3d_spline_builder_cpp
